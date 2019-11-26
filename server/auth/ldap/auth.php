@@ -689,6 +689,7 @@ class auth_plugin_ldap extends auth_plugin_base {
         ////
         // prepare some data we'll need
         $filter = '(&('.$this->config->user_attribute.'=*)'.$this->config->objectclass.')';
+        $servercontrols = array();
 
         $contexts = explode(';', $this->config->contexts);
 
@@ -706,20 +707,31 @@ class auth_plugin_ldap extends auth_plugin_base {
 
             do {
                 if ($ldap_pagedresults) {
-                    @ldap_control_paged_result($ldapconnection, $this->config->pagesize, true, $ldap_cookie);
+                    $servercontrols = array(array(
+                        'oid' => LDAP_CONTROL_PAGEDRESULTS, 'value' => array(
+                            'size' => $this->config->pagesize, 'cookie' => $ldap_cookie)));
                 }
                 if ($this->config->search_sub) {
                     // Use ldap_search to find first user from subtree.
-                    $ldap_result = ldap_search($ldapconnection, $context, $filter, array($this->config->user_attribute));
+                    $ldap_result = ldap_search($ldapconnection, $context, $filter, array($this->config->user_attribute),
+                        0, -1, -1, LDAP_DEREF_NEVER, $servercontrols);
                 } else {
                     // Search only in this context.
-                    $ldap_result = ldap_list($ldapconnection, $context, $filter, array($this->config->user_attribute));
+                        $ldap_result = ldap_list($ldapconnection, $context, $filter, array($this->config->user_attribute),
+                            0, -1, -1, LDAP_DEREF_NEVER, $servercontrols);
                 }
                 if(!$ldap_result) {
                     continue;
                 }
                 if ($ldap_pagedresults) {
-                    @ldap_control_paged_result_response($ldapconnection, $ldap_result, $ldap_cookie);
+                    // Get next server cookie to know if we'll need to continue searching.
+                    $ldap_cookie = '';
+                    // Get next cookie from controls.
+                    ldap_parse_result($ldapconnection, $ldap_result, $errcode, $matcheddn,
+                        $errmsg, $referrals, $controls);
+                    if (isset($controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'])) {
+                        $ldap_cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'];
+                    }
                 }
                 if ($entry = @ldap_first_entry($ldapconnection, $ldap_result)) {
                     do {
@@ -1603,6 +1615,7 @@ class auth_plugin_ldap extends auth_plugin_base {
         if ($filter == '*') {
            $filter = '(&('.$this->config->user_attribute.'=*)'.$this->config->objectclass.')';
         }
+        $servercontrols = array();
 
         $contexts = explode(';', $this->config->contexts);
         if (!empty($this->config->create_context)) {
@@ -1619,20 +1632,31 @@ class auth_plugin_ldap extends auth_plugin_base {
 
             do {
                 if ($ldap_pagedresults) {
-                    @ldap_control_paged_result($ldapconnection, $this->config->pagesize, true, $ldap_cookie);
+                    $servercontrols = array(array(
+                        'oid' => LDAP_CONTROL_PAGEDRESULTS, 'value' => array(
+                            'size' => $this->config->pagesize, 'cookie' => $ldap_cookie)));
                 }
                 if ($this->config->search_sub) {
                     // Use ldap_search to find first user from subtree.
-                    $ldap_result = ldap_search($ldapconnection, $context, $filter, array($this->config->user_attribute));
+                    $ldap_result = ldap_search($ldapconnection, $context, $filter, array($this->config->user_attribute),
+                        0, -1, -1, LDAP_DEREF_NEVER, $servercontrols);
                 } else {
                     // Search only in this context.
-                    $ldap_result = ldap_list($ldapconnection, $context, $filter, array($this->config->user_attribute));
+                    $ldap_result = ldap_list($ldapconnection, $context, $filter, array($this->config->user_attribute),
+                        0, -1, -1, LDAP_DEREF_NEVER, $servercontrols);
                 }
                 if(!$ldap_result) {
                     continue;
                 }
                 if ($ldap_pagedresults) {
-                    @ldap_control_paged_result_response($ldapconnection, $ldap_result, $ldap_cookie);
+                    // Get next server cookie to know if we'll need to continue searching.
+                    $ldap_cookie = '';
+                    // Get next cookie from controls.
+                    ldap_parse_result($ldapconnection, $ldap_result, $errcode, $matcheddn,
+                        $errmsg, $referrals, $controls);
+                    if (isset($controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'])) {
+                        $ldap_cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'];
+                    }
                 }
                 $users = ldap_get_entries_moodle($ldapconnection, $ldap_result);
                 // Add found users to list.
