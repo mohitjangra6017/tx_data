@@ -379,6 +379,7 @@ class enrol_ldap_plugin extends enrol_plugin {
             }
 
             $ldap_cookie = '';
+            $servercontrols = array();
             foreach ($ldap_contexts as $ldap_context) {
                 $ldap_context = trim($ldap_context);
                 if (empty($ldap_context)) {
@@ -388,28 +389,35 @@ class enrol_ldap_plugin extends enrol_plugin {
                 $flat_records = array();
                 do {
                     if ($ldap_pagedresults) {
-                        @ldap_control_paged_result($this->ldapconnection, $this->config->pagesize, true, $ldap_cookie);
+                        $servercontrols = array(array(
+                            'oid' => LDAP_CONTROL_PAGEDRESULTS, 'value' => array(
+                                'size' => $this->config->pagesize, 'cookie' => $ldap_cookie)));
                     }
 
                     if ($this->config->course_search_sub) {
                         // Use ldap_search to find first user from subtree
-                        $ldap_result = @ldap_search($this->ldapconnection,
-                                                    $ldap_context,
-                                                    $ldap_search_pattern,
-                                                    $ldap_fields_wanted);
+                        $ldap_result = @ldap_search($this->ldapconnection, $ldap_context,
+                            $ldap_search_pattern, $ldap_fields_wanted,
+                            0, -1, -1, LDAP_DEREF_NEVER, $servercontrols);
                     } else {
                         // Search only in this context
-                        $ldap_result = @ldap_list($this->ldapconnection,
-                                                  $ldap_context,
-                                                  $ldap_search_pattern,
-                                                  $ldap_fields_wanted);
+                        $ldap_result = @ldap_list($this->ldapconnection, $ldap_context,
+                            $ldap_search_pattern, $ldap_fields_wanted,
+                            0, -1, -1, LDAP_DEREF_NEVER, $servercontrols);
                     }
                     if (!$ldap_result) {
                         continue; // Next
                     }
 
                     if ($ldap_pagedresults) {
-                        @ldap_control_paged_result_response($this->ldapconnection, $ldap_result, $ldap_cookie);
+                        // Get next server cookie to know if we'll need to continue searching.
+                        $ldap_cookie = '';
+                        // Get next cookie from controls.
+                        ldap_parse_result($this->ldapconnection, $ldap_result, $errcode, $matcheddn,
+                            $errmsg, $referrals, $controls);
+                        if (isset($controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'])) {
+                            $ldap_cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'];
+                        }
                     }
 
                     // Check and push results
@@ -769,24 +777,25 @@ class enrol_ldap_plugin extends enrol_plugin {
             }
 
             $ldap_cookie = '';
+            $servercontrols = array();
             $flat_records = array();
             do {
                 if ($ldap_pagedresults) {
-                    @ldap_control_paged_result($this->ldapconnection, $this->config->pagesize, true, $ldap_cookie);
+                    $servercontrols = array(array(
+                        'oid' => LDAP_CONTROL_PAGEDRESULTS, 'value' => array(
+                            'size' => $this->config->pagesize, 'cookie' => $ldap_cookie)));
                 }
 
                 if ($this->get_config('course_search_sub')) {
                     // Use ldap_search to find first user from subtree
-                    $ldap_result = @ldap_search($this->ldapconnection,
-                                                $context,
-                                                $ldap_search_pattern,
-                                                $ldap_fields_wanted);
+                    $ldap_result = @ldap_search($this->ldapconnection, $context,
+                        $ldap_search_pattern, $ldap_fields_wanted,
+                        0, -1, -1, LDAP_DEREF_NEVER, $servercontrols);
                 } else {
                     // Search only in this context
-                    $ldap_result = @ldap_list($this->ldapconnection,
-                                              $context,
-                                              $ldap_search_pattern,
-                                              $ldap_fields_wanted);
+                    $ldap_result = @ldap_list($this->ldapconnection, $context,
+                        $ldap_search_pattern, $ldap_fields_wanted,
+                        0, -1, -1, LDAP_DEREF_NEVER, $servercontrols);
                 }
 
                 if (!$ldap_result) {
@@ -794,7 +803,14 @@ class enrol_ldap_plugin extends enrol_plugin {
                 }
 
                 if ($ldap_pagedresults) {
-                    @ldap_control_paged_result_response($this->ldapconnection, $ldap_result, $ldap_cookie);
+                    // Get next server cookie to know if we'll need to continue searching.
+                    $ldap_cookie = '';
+                    // Get next cookie from controls.
+                    ldap_parse_result($this->ldapconnection, $ldap_result, $errcode, $matcheddn,
+                        $errmsg, $referrals, $controls);
+                    if (isset($controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'])) {
+                        $ldap_cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'];
+                    }
                 }
 
                 // Check and push results. ldap_get_entries() already
