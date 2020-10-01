@@ -61,7 +61,7 @@ class totara_competency_models_activity_log_assignment_testcase extends advanced
 
         $entry = activity_log\assignment::load_by_entity($assignment_log);
 
-        $this->assertEquals('Competency active: Achievement tracking stopped', $entry->get_description());
+        $this->assertEquals('Competency archived: Achievement tracking stopped', $entry->get_description());
         $this->assertNull($entry->get_proficient_status());
         $this->assertEquals($time, $entry->get_date());
         $this->assertEquals($assignment->id, $entry->get_assignment()->get_id());

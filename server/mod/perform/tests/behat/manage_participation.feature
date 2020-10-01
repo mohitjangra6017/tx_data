@@ -200,7 +200,7 @@ Feature: Test management of activity participation
     And I should not see "User Three"
     And I should see "User One" in the "Subject full name" line of the perform activities instance info card
     And I should see "" in the "Job assignment" line of the perform activities instance info card
-    And I should see "3" in the "Instance count" line of the perform activities instance info card
+    And I should see "3" in the "Instance number" line of the perform activities instance info card
     And I should see "##today##j F Y##" in the "Creation date" line of the perform activities instance info card
 
     When I click on "Show all" "link"
