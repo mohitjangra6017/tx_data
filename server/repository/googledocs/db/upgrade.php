@@ -25,38 +25,7 @@ function xmldb_repository_googledocs_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 10 branching line.
-
-    // Moodle v3.1.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.2.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.3.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.4.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    if ($oldversion < 2017111300) {
-        // Set default import formats from Google.
-        if (get_config('googledocs', 'documentformat') === false) {
-            set_config('documentformat', 'rtf', 'googledocs');
-        }
-        if (get_config('googledocs', 'drawingformat') === false) {
-            set_config('drawingformat', 'pdf', 'googledocs');
-        }
-        if (get_config('googledocs', 'presentationformat') === false) {
-            set_config('presentationformat', 'pptx', 'googledocs');
-        }
-        if (get_config('googledocs', 'spreadsheetformat') === false) {
-            set_config('spreadsheetformat', 'xlsx', 'googledocs');
-        }
-
-        // Plugin savepoint reached.
-        upgrade_plugin_savepoint(true, 2017111300, 'repository', 'googledocs');
-    }
+    // Totara 13.0 release line.
 
     return true;
 }

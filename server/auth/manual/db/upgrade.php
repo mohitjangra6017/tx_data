@@ -34,33 +34,7 @@ function xmldb_auth_manual_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 10 branching line.
-
-    // Totara 11 branching line.
-
-    // Totara 12 branching line.
-
-    if ($oldversion < 2017020700) {
-        // Convert info in config plugins from auth/manual to auth_manual.
-        upgrade_fix_config_auth_plugin_names('manual');
-        upgrade_plugin_savepoint(true, 2017020700, 'auth', 'manual');
-    }
-
-    // Automatically generated Moodle v3.3.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.4.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    if ($oldversion < 2017111300.02) {
-        // Replace unlimited passwords with disabled expiry.
-        $expirytime = get_config('auth_manual', 'expirationtime');
-        if ($expirytime !== false && $expirytime <= 0) {
-            set_config('expiration', 0, 'auth_manual');
-            set_config('expirationtime', 30, 'auth_manual');
-        }
-        upgrade_plugin_savepoint(true, 2017111300.02, 'auth', 'manual');
-    }
+    // Totara 13.0 release line.
 
     return true;
 }

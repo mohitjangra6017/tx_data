@@ -25,23 +25,7 @@ function xmldb_repository_dropbox_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 10 branching line.
-
-    // Moodle v3.1.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    if ($oldversion < 2016091300) {
-        unset_config('legacyapi', 'dropbox');
-        upgrade_plugin_savepoint(true, 2016091300, 'repository', 'dropbox');
-    }
-    // Automatically generated Moodle v3.2.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.3.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.4.0 release upgrade line.
-    // Put any upgrade step following this.
+    // Totara 13.0 release line.
 
     return true;
 }

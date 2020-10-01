@@ -49,27 +49,7 @@ function xmldb_label_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 10 branching line.
-
-    // Moodle v3.1.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.2.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    if ($oldversion < 2016120501) {
-        // Update all records in 'course_modules' for labels to have showdescription = 1.
-        if ($modid = $DB->get_field('modules', 'id', ['name' => 'label'])) {
-            $DB->execute("UPDATE {course_modules} SET showdescription = ? WHERE module = ?",
-                [1, $modid]);
-        }
-
-        // Label savepoint reached.
-        upgrade_mod_savepoint(true, 2016120501, 'label');
-    }
-
-    // Automatically generated Moodle v3.4.0 release upgrade line.
-    // Put any upgrade step following this.
+    // Totara 13.0 release line.
 
     return true;
 }

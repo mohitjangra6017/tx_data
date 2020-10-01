@@ -26,7 +26,7 @@ function xmldb_message_totara_airnotifier_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 13 branching line.
+    // Totara 13.0 release line.
 
     return true;
 }

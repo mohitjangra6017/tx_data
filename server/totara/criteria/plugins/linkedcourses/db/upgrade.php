@@ -34,5 +34,7 @@ function xmldb_criteria_linkedcourses_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
+    // Totara 13.0 release line.
+
     return true;
 }

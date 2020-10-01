@@ -34,22 +34,7 @@ function xmldb_totara_workflow_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2018101900) {
-        // Clean up old config setting if it exists.
-        $oldclass = 'core\\workflow\\coursecreate\\standard';
-        $newclass = 'core\\workflow\\core_course\\coursecreate\\standard';
-        $oldsetting = get_config('totara_workflow', $oldclass);
-        if (!is_null($oldsetting)) {
-            if (!empty($oldsetting)) {
-                // If old setting was enabled, turn it on.
-                $workflow = $newclass::instance();
-                $workflow->enable();
-            }
-            // Remove old setting.
-            unset_config($oldclass, 'totara_workflow');
-        }
-        upgrade_plugin_savepoint(true, 2018101900, 'totara', 'workflow');
-    }
+    // Totara 13.0 release line.
 
     return true;
 }

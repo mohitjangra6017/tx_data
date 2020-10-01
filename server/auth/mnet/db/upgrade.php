@@ -34,36 +34,7 @@ function xmldb_auth_mnet_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 10 branching line.
-
-    // Totara 11 branching line.
-
-    // Totara 12 branching line.
-
-    if ($oldversion < 2017020700) {
-        // Convert info in config plugins from auth/mnet to auth_mnet.
-        upgrade_fix_config_auth_plugin_names('mnet');
-
-        // Totara: add default settings to make the upgrade settings page shorter.
-        if (!is_enabled_auth('mnet')) {
-            $defaults = array(
-                'rpc_negotiation_timeout' => '30',
-            );
-            foreach ($defaults as $name => $value) {
-                if (get_config('auth_mnet', $name) === false) {
-                    set_config($name, $value, 'auth_mnet');
-                }
-            }
-        }
-
-        upgrade_plugin_savepoint(true, 2017020700, 'auth', 'mnet');
-    }
-
-    // Automatically generated Moodle v3.3.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.4.0 release upgrade line.
-    // Put any upgrade step following this.
+    // Totara 13.0 release line.
 
     return true;
 }

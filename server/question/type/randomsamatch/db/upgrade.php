@@ -31,19 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 function xmldb_qtype_randomsamatch_upgrade($oldversion) {
     global $CFG;
 
-    // Totara 10 branching line.
-
-    // Moodle v3.1.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.2.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.3.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.4.0 release upgrade line.
-    // Put any upgrade step following this.
+    // Totara 13.0 release line.
 
     return true;
 }

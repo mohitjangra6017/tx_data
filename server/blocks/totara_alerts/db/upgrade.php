@@ -22,7 +22,7 @@ function xmldb_block_totara_alerts_upgrade($oldversion, $block) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 10 branching line.
+    // Totara 13.0 release line.
 
     return true;
 }

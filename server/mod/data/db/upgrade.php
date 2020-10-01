@@ -26,65 +26,7 @@ function xmldb_data_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 10 branching line.
-
-    if ($oldversion < 2016030300) {
-
-        // Define field timemodified to be added to data.
-        $table = new xmldb_table('data');
-        $field = new xmldb_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'notification');
-
-        // Conditionally launch add field timemodified.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        // Data savepoint reached.
-        upgrade_mod_savepoint(true, 2016030300, 'data');
-    }
-
-
-    // Moodle v3.1.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    if ($oldversion < 2016090600) {
-
-        // Define field config to be added to data.
-        $table = new xmldb_table('data');
-        $field = new xmldb_field('config', XMLDB_TYPE_TEXT, null, null, null, null, null, 'timemodified');
-
-        // Conditionally launch add field config.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        // Data savepoint reached.
-        upgrade_mod_savepoint(true, 2016090600, 'data');
-    }
-
-    // Automatically generated Moodle v3.2.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    if ($oldversion < 2017032800) {
-
-        // Define field completionentries to be added to data. Require a number of entries to be considered complete.
-        $table = new xmldb_table('data');
-        $field = new xmldb_field('completionentries', XMLDB_TYPE_INTEGER, '10', null, false, null, '0', 'config');
-
-        // Conditionally launch add field timemodified.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        // Data savepoint reached.
-        upgrade_mod_savepoint(true, 2017032800, 'data');
-    }
-
-    // Automatically generated Moodle v3.3.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.4.0 release upgrade line.
-    // Put any upgrade step following this.
+    // Totara 13.0 release line.
 
     return true;
 }

@@ -29,35 +29,7 @@ function xmldb_enrol_self_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 10 branching line.
-
-    // Moodle v3.1.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    if ($oldversion < 2016052301) {
-        global $DB;
-        // Get roles with manager archetype.
-        $managerroles = get_archetype_roles('manager');
-        if (!empty($managerroles)) {
-            // Remove wrong CAP_PROHIBIT from self:holdkey.
-            foreach ($managerroles as $role) {
-                $DB->execute("DELETE
-                                FROM {role_capabilities}
-                               WHERE roleid = ? AND capability = ? AND permission = ?",
-                        array($role->id, 'enrol/self:holdkey', CAP_PROHIBIT));
-            }
-        }
-        upgrade_plugin_savepoint(true, 2016052301, 'enrol', 'self');
-    }
-
-    // Automatically generated Moodle v3.2.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.3.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Automatically generated Moodle v3.4.0 release upgrade line.
-    // Put any upgrade step following this.
+    // Totara 13.0 release line.
 
     return true;
 }

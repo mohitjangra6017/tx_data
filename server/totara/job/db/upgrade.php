@@ -32,54 +32,7 @@ function xmldb_totara_job_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 10 branching line.
-
-    if ($oldversion < 2018092100) {
-        // Update the indexes on the job_assignment table to remove the additional index on id
-        $table = new xmldb_table('job_assignment');
-
-        // Define new index to be removed.
-        $index = new xmldb_index('id', XMLDB_INDEX_UNIQUE, array('id'));
-        // Conditionally launch to remove the index.
-        if ($dbman->index_exists($table, $index)) {
-            $dbman->drop_index($table, $index);
-        }
-
-        // Core savepoint reached.
-        upgrade_plugin_savepoint(true, 2018092100, 'totara', 'job');
-    }
-
-    if ($oldversion < 2020060200) {
-        require_once($CFG->dirroot . '/totara/core/db/upgradelib.php');
-
-        totara_core_upgrade_create_relationship('totara_job\relationship\resolvers\manager');
-        totara_core_upgrade_create_relationship('totara_job\relationship\resolvers\appraiser');
-
-        // Core savepoint reached.
-        upgrade_plugin_savepoint(true, 2020060200, 'totara', 'job');
-    }
-
-    if ($oldversion < 2020070300) {
-        require_once($CFG->dirroot . '/totara/core/db/upgradelib.php');
-
-        totara_core_upgrade_create_relationship(['totara_job\relationship\resolvers\manager'], 'manager', 2);
-        totara_core_upgrade_create_relationship(['totara_job\relationship\resolvers\appraiser'], 'appraiser', 3);
-
-        // Core savepoint reached.
-        upgrade_plugin_savepoint(true, 2020070300, 'totara', 'job');
-    }
-
-    if ($oldversion < 2020081700) {
-        require_once($CFG->dirroot . '/totara/core/db/upgradelib.php');
-
-        if (!$DB->record_exists('totara_core_relationship', ['idnumber' => 'managers_manager'])) {
-            $DB->execute("UPDATE {totara_core_relationship} SET sort_order = sort_order + 1 WHERE sort_order > 2");
-            totara_core_upgrade_create_relationship(['totara_job\relationship\resolvers\managers_manager'], 'managers_manager', 3);
-        }
-
-        // Core savepoint reached.
-        upgrade_plugin_savepoint(true, 2020081700, 'totara', 'job');
-    }
+    // Totara 13.0 release line.
 
     return true;
 }

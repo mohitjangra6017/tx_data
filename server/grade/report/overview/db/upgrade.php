@@ -32,21 +32,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 function xmldb_gradereport_overview_upgrade($oldversion) {
 
-    if ($oldversion < 2016120501) {
-        $context = context_system::instance();
-        $capability = 'gradereport/overview:view';
-
-        // Now allow authenticated user role to access that report.
-        $authenticateduserroles = get_archetype_roles('user');
-        foreach ($authenticateduserroles as $roleid => $notused) {
-            assign_capability($capability, CAP_ALLOW, $roleid, $context->id);
-        }
-
-        upgrade_plugin_savepoint(true, 2016120501, 'gradereport', 'overview');
-    }
-
-    // Automatically generated Moodle v3.4.0 release upgrade line.
-    // Put any upgrade step following this.
+    // Totara 13.0 release line.
 
     return true;
 }

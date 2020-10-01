@@ -36,16 +36,7 @@ function xmldb_repository_flickr_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2016120501) {
-        // Drop legacy flickr auth tokens and nsid's.
-        $DB->delete_records('user_preferences', ['name' => 'flickr_']);
-        $DB->delete_records('user_preferences', ['name' => 'flickr__nsid']);
-
-        upgrade_plugin_savepoint(true, 2016120501, 'repository', 'flickr');
-    }
-
-    // Automatically generated Moodle v3.4.0 release upgrade line.
-    // Put any upgrade step following this.
+    // Totara 13.0 release line.
 
     return true;
 }

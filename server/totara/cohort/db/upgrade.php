@@ -32,41 +32,7 @@ function xmldb_totara_cohort_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 10 branching line.
+    // Totara 13.0 release line.
 
-    if ($oldversion < 2017030300) {
-        totara_cohort_migrate_rules('learning', 'programcompletionduration', 'learning', 'programcompletiondurationassigned');
-
-        // Main savepoint reached.
-        upgrade_plugin_savepoint(true, 2017030300, 'totara', 'cohort');
-    }
-
-    // Set default scheduled tasks correctly.
-    if ($oldversion < 2017042800) {
-
-        $task = '\totara_cohort\task\cleanup_task';
-        // If schecdule is * 3 * * * change to 0 3 * * *
-        $incorrectschedule = array(
-            'minute' => '*',
-            'hour' => '3',
-            'day' => '*',
-            'month' => '*',
-            'dayofweek' => '*'
-        );
-        $newschedule = $incorrectschedule;
-        $newschedule['minute'] = '0';
-
-        totara_upgrade_default_schedule($task, $incorrectschedule, $newschedule);
-
-        // Main savepoint reached.
-        upgrade_plugin_savepoint(true, 2017042800, 'totara', 'cohort');
-    }
-
-    if ($oldversion < 2019020700) {
-
-        totara_cohort_update_has_direct_reports_rule();
-        // Main savepoint reached.
-        upgrade_plugin_savepoint(true, 2019020700, 'totara', 'cohort');
-    }
     return true;
 }

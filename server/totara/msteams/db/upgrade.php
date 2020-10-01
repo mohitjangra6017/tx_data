@@ -34,5 +34,7 @@ function xmldb_totara_msteams_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
+    // Totara 13.0 release line.
+
     return true;
 }

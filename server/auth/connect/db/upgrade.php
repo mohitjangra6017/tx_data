@@ -32,42 +32,7 @@ function xmldb_auth_connect_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 10 upgrade line.
-
-    if ($oldversion < 2016110200) {
-        // Define table auth_connect_ids to be created.
-        $table = new xmldb_table('auth_connect_ids');
-
-        // Adding fields to table auth_connect_ids.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('serverid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('tablename', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('remoteid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('localid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-
-        // Adding keys to table auth_connect_ids.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('serverid', XMLDB_KEY_FOREIGN, array('serverid'), 'auth_connect_servers', array('id'));
-
-        // Adding indexes to table auth_connect_ids.
-        $table->add_index('serverid-tablename-remoteid', XMLDB_INDEX_UNIQUE, array('serverid', 'tablename', 'remoteid'));
-        $table->add_index('tablename-localid', XMLDB_INDEX_UNIQUE, array('tablename', 'localid'));
-
-        // Conditionally launch create table for auth_connect_ids.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
-
-        // Connect savepoint reached.
-        upgrade_plugin_savepoint(true, 2016110200, 'auth', 'connect');
-    }
-
-    if ($oldversion < 2016110201) {
-        \core\task\manager::queue_adhoc_task(new \auth_connect\task\handshake_adhoc_task());
-
-        upgrade_plugin_savepoint(true, 2016110201, 'auth', 'connect');
-    }
+    // Totara 13.0 release line.
 
     return true;
 }

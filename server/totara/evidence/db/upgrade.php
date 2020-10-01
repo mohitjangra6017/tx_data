@@ -28,6 +28,7 @@
  * @return boolean
  */
 function xmldb_totara_evidence_upgrade($oldversion) {
-    // Nothing to upgrade... yet!
+    // Totara 13.0 release line.
+
     return true;
 }

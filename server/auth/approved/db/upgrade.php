@@ -31,30 +31,7 @@ function xmldb_auth_approved_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2019060400) {
-
-        // Define field extradata to be added to auth_approved_request.
-        $table = new xmldb_table('auth_approved_request');
-        $field = new xmldb_field('extradata', XMLDB_TYPE_TEXT, null, null, null, null, null, 'timeresolved');
-
-        // Conditionally launch add field extradata.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        // Approved savepoint reached.
-        upgrade_plugin_savepoint(true, 2019060400, 'auth', 'approved');
-    }
-
-    if ($oldversion < 2020090102) {
-        // Replace unlimited passwords with disabled expiry.
-        $expirytime = get_config('auth_approved', 'expirationtime');
-        if ($expirytime !== false && $expirytime <= 0) {
-            set_config('expiration', 0, 'auth_approved');
-            set_config('expirationtime', 30, 'auth_approved');
-        }
-        upgrade_plugin_savepoint(true, 2020090102, 'auth', 'approved');
-    }
+    // Totara 13.0 release line.
 
     return true;
 }
