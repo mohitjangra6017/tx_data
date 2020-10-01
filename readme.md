@@ -193,6 +193,22 @@ The following is a quick installation overview.
    copying the details from the browser to the file.  
    Once the config.php file exists the installation will continue to create the database structure and essential data,
    and prepare the site data directory.
+
+   As a partner you will now need to set the flavour that the site is using to ensure that the correct
+   functionality is available to the site.
+   This can be done by defining the following in your config.php:
+   ```php
+   $CFG->forceflavour = 'learn';
+   ```
+   
+   The following are valid flavours:
+   * learn_perform_engage
+   * learn_perform
+   * learn_engage
+   * perform_engage
+   * learn
+   * perform
+   * engage
    
 5. Configure cron.  
    Totara offloads heavy processing to cron. The likes of email, bulk enrolments, data imports all occur on cron. It is
@@ -210,6 +226,8 @@ For a set of complete instructions please see the help documentation on [install
 
 The following steps should be followed when upgrading any Totara site, to any newer release.
 For detailed instructions see [upgrading to Totara](https://help.totaralearning.com/display/latest/Upgrading+to+Totara)
+
+If your current Totara version is less than 13.0 then you need to upgrade to latest Totara 13 release first.
 
 1.  Check the live logs to check if any users are currently using the site.
     The site will be offline while the upgrades are performed.
@@ -239,29 +257,6 @@ For detailed instructions see [upgrading to Totara](https://help.totaralearning.
 10. Disable server maintenance mode.
 
 11. Congratulations, your site is now upgraded. Read changelog.md for details on what is new.
-
-### Totara 13
-
-Totara 13 brings with it a number of significant changes. For information on these changes please see our 
-[developer documentation](https://help.totaralearning.com/display/DEV/Totara+13+notable+technical+changes)
-
-Most notably, as a partner you will now need to set the flavour that the site is using to ensure that the correct
-functionality is available to the site.
-This can be done by defining the following in your config.php:
-```php
-$CFG->forceflavour = 'learn';
-```
-
-The following are valid flavours:
-* learn_perform_engage
-* learn_perform
-* learn_engage
-* perform_engage
-* learn
-* perform
-* engage
-
-This should be set between steps 6 and 7 above.
 
 <a name="development" />
 

@@ -369,18 +369,11 @@ if (function_exists('gc_enable')) {
 // Totara: do not localise these messages, they will change often and they are intended for admins only!
 if (!empty($CFG->version)) {
     if (empty($CFG->totara_release)) {
-        // Migration is now allowed from one specific Moodle release only!
-        if ($CFG->version < MOODLE_MIGRATION_VERSION) {
-            throw new Exception('You cannot migrate to this Totara version from Moodle ' . $CFG->release . '. Please upgrade to Moodle ' . MOODLE_MIGRATION_RELEASE . ' first.');
-        } else if ($CFG->version > MOODLE_MIGRATION_VERSION) {
-            if (!defined('MOODLE_PREMIGRATION_SCRIPT') || !MOODLE_PREMIGRATION_SCRIPT) {
-                throw new Exception('Totara pre-migration step is required before migrating from Moodle ' . $CFG->release . ', see MOODLEUPGRADE.txt file for more details.');
-            }
-        }
+        throw new Exception('You cannot upgrade directly to this Totara release from Moodle, please upgrade to latest Totara 13 first.');
     } else {
-        if ($CFG->version < 2015111606) {
+        if ($CFG->version < 2017111309) {
             // We cannot upgrade from Totara older than v9.0.
-            throw new Exception('You cannot upgrade to this Totara version from a Totara version prior to 9.0, please upgrade to latest Totara 9.0 first.');
+            throw new Exception('You cannot upgrade to this Totara version from a Totara version prior to 13.0, please upgrade to latest Totara 13 first.');
         }
     }
 }
