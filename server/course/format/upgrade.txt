@@ -2,6 +2,8 @@ This files describes API changes for course formats,
 information provided here is intended especially for developers.
 Overview of this plugin type at http://docs.moodle.org/dev/Course_formats
 
+=== 14.0 ===
+
 === 13.0 ===
 
 * Method create_course() will populate the new course with empty sections if $data->numsections is provided even if

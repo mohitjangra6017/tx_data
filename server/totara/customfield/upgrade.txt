@@ -1,6 +1,8 @@
 This files describes API changes for code that uses the question API,
 information provided here is intended especially for developers.
 
+=== 14.0 ===
+
 === 13.0 ===
 
 * Removed deprecated function customfield_get_fields()

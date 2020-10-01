@@ -1,6 +1,8 @@
 This files describes API changes in /search/*,
 information provided here is intended especially for developers.
 
+=== 14.0 ===
+
 === 13.0 ===
 
 * Search indexing now supports time limits to make the scheduled task run more neatly. In order for

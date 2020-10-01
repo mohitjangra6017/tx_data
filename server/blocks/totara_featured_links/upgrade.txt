@@ -1,6 +1,8 @@
 This files describes code changes in the Totara Featured Links block.
 Information provided here is intended especially for developers.
 
+=== 14.0 ===
+
 === 13.0 ===
 
 * course_tile class has been changed to hide the progress bar if no active enrolment

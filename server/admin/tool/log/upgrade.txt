@@ -1,6 +1,8 @@
 This files describes API changes in /admin/tool/log - plugins,
 information provided here is intended especially for developers.
 
+=== 14.0 ===
+
 === 13.0 ===
 
 * Deprecated logstore_legacy plugin. Please use one of the other log stores such as "standard" and "database".

@@ -1,6 +1,8 @@
 This files describes API changes in core libraries and APIs,
 information provided here is intended especially for developers.
 
+=== 14.0 ===
+
 === 13.0 ===
 
 * stored_file::get_imageinfo() added 1st parameter to optionally load the orientation information on a jpeg file.
