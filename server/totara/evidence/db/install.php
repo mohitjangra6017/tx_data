@@ -32,33 +32,5 @@ function xmldb_totara_evidence_install() {
 
     totara_evidence_create_completion_types();
 
-    $dbman = $DB->get_manager();
-
-    $old_tables = [
-        new xmldb_table('dp_plan_evidence'),
-        new xmldb_table('dp_plan_evidence_info_field'),
-        new xmldb_table('dp_plan_evidence_info_data'),
-        new xmldb_table('dp_plan_evidence_info_data_param'),
-        new xmldb_table('dp_evidence_type'),
-    ];
-
-    $all_tables_exist = true;
-    foreach ($old_tables as $table) {
-        $all_tables_exist &= $dbman->table_exists($table);
-    }
-
-    if ($all_tables_exist) {
-        totara_evidence_migrate();
-    }
-
     return true;
-}
-
-/**
- * Retry the installation if it failed
- *
- * @return boolean
- */
-function xmldb_totara_evidence_install_recovery() {
-    return xmldb_totara_evidence_install();
 }

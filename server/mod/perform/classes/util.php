@@ -40,64 +40,6 @@ use totara_core\advanced_feature;
 use totara_tenant\local\util as tenant_util;
 
 class util {
-
-    /**
-     * TODO this was largely copy/pasted from totara_tenant\local\util::check_roles_exist(). Abstract to single location?
-     * TODO if so, need to pull out enabled check and pass in specific roles to create.
-     *
-     * Ensure the required performance activity roles exist in the system:
-     * - performanceactivitycreator - intended for users that can create performance activities, assigned to category context.
-     * - performanceactivitymanager - intended for users to manage a specific performance activity, assigned to course context typically.
-     */
-    public static function create_performance_roles(): void {
-        global $DB;
-
-        // Ensure mod_perform enabled.
-        if (!$DB->record_exists('modules', ['name' => 'perform', 'visible' => 1])) {
-            return;
-        }
-
-        $systemcontext = \context_system::instance();
-
-        $shortnames = ['performanceactivitycreator', 'performanceactivitymanager'];
-        foreach ($shortnames as $shortname) {
-            if ($DB->record_exists('role', ['shortname' => $shortname])) {
-                continue;
-            }
-            $newroleid = create_role('', $shortname, '', $shortname);
-
-            $role = $DB->get_record('role', ['id' => $newroleid], '*', MUST_EXIST);
-            foreach (array('assign', 'override', 'switch') as $type) {
-                $function = 'allow_' . $type;
-                $allows = get_default_role_archetype_allows($type, $role->archetype);
-                foreach ($allows as $allowid) {
-                    $function($role->id, $allowid);
-                }
-                set_role_contextlevels($role->id, get_default_contextlevels($role->archetype));
-            }
-            $defaultcaps = get_default_capabilities($role->archetype);
-            foreach ($defaultcaps as $cap => $permission) {
-                assign_capability($cap, $permission, $role->id, $systemcontext->id);
-            }
-
-            // Add allow_* defaults related to the new role.
-            foreach ($DB->get_records('role') as $role) {
-                if ($role->id == $newroleid) {
-                    continue;
-                }
-                foreach (array('assign', 'override', 'switch') as $type) {
-                    $function = 'allow_'.$type;
-                    $allows = get_default_role_archetype_allows($type, $role->archetype);
-                    foreach ($allows as $allowid) {
-                        if ($allowid == $newroleid) {
-                            $function($role->id, $allowid);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     /**
      * Get the default category for performance activities.
      * If multi tenancy is turned on and the current user is part of a tenant

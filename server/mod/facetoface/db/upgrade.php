@@ -20,8 +20,6 @@
  * @package mod_facetoface
  */
 
-require_once($CFG->dirroot.'/mod/facetoface/db/upgradelib.php');
-
 // This file keeps track of upgrades to
 // the facetoface module
 //

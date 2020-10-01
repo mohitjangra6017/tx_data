@@ -23,8 +23,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use block_totara_featured_links\tile\base;
-
 /**
  * @param $oldversion
  * @param $block
@@ -32,7 +30,6 @@ use block_totara_featured_links\tile\base;
  */
 function xmldb_block_totara_featured_links_upgrade($oldversion, $block) {
     global $DB;
-    require_once(__DIR__ .'/upgradelib.php');
 
     $dbman = $DB->get_manager();
 

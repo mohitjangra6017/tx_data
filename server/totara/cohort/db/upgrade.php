@@ -22,8 +22,6 @@
  * @subpackage cohort
  */
 
-require_once($CFG->dirroot . '/totara/cohort/db/upgradelib.php');
-
 /**
  * DB upgrades for Totara dynamic cohorts
  */

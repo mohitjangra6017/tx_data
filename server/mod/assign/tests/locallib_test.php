@@ -28,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->dirroot . '/mod/assign/locallib.php');
-require_once($CFG->dirroot . '/mod/assign/upgradelib.php');
 require_once($CFG->dirroot . '/mod/assign/tests/generator.php');
 
 /**
@@ -3735,71 +3734,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
 
         $completiondata = $completion->get_data($cm, false, $otherstudent->id);
         $this->assertEquals(1, $completiondata->completionstate);
-    }
-
-    public function get_assignments_with_rescaled_null_grades_provider() {
-        return [
-            'Negative less than one is errant' => [
-                'grade' => -0.64,
-                'count' => 1,
-            ],
-            'Negative more than one is errant' => [
-                'grade' => -30.18,
-                'count' => 1,
-            ],
-            'Negative one exactly is not errant' => [
-                'grade' => -1,
-                'count' => 0,
-            ],
-            'Positive grade is not errant' => [
-                'grade' => 1,
-                'count' => 0,
-            ],
-            'Large grade is not errant' => [
-                'grade' => 100,
-                'count' => 0,
-            ],
-            'Zero grade is not errant' => [
-                'grade' => 0,
-                'count' => 0,
-            ],
-        ];
-    }
-
-    /**
-     * Test determining if the assignment as any null grades that were rescaled.
-     * @dataProvider get_assignments_with_rescaled_null_grades_provider
-     */
-    public function test_get_assignments_with_rescaled_null_grades($grade, $count) {
-        global $DB;
-
-        $this->resetAfterTest();
-
-        $course = $this->getDataGenerator()->create_course();
-        $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
-        $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
-
-        $this->setUser($teacher);
-        $assign = $this->create_instance($course, [
-                'grade' => 100,
-            ]);
-
-        // Try getting a student's grade. This will give a grade of -1.
-        // Then we can override it with a bad negative grade.
-        $assign->get_user_grade($student->id, true);
-
-        // Set the grade to something errant.
-        $DB->set_field(
-            'assign_grades',
-            'grade',
-            $grade,
-            [
-                'userid' => $student->id,
-                'assignment' => $assign->get_instance()->id,
-            ]
-        );
-
-        $this->assertCount($count, get_assignments_with_rescaled_null_grades());
     }
 
     /**

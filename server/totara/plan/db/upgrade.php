@@ -23,8 +23,6 @@
  * @subpackage plan
  */
 
-require_once($CFG->dirroot.'/totara/plan/db/upgradelib.php');
-
 /**
  * Local database upgrade script
  *

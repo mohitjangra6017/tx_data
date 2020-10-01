@@ -22,8 +22,6 @@
  * @subpackage feedback360
  */
 
-require_once($CFG->dirroot.'/totara/feedback360/db/upgradelib.php');
-
 /**
  * Local database upgrade script
  *

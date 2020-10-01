@@ -280,6 +280,10 @@ function xmldb_main_install() {
     $userrole           = create_role('', 'user', '', 'user');
     $frontpagerole      = create_role('', 'frontpage', '', 'frontpage');
     $staffmanagerrole   = create_role('', 'staffmanager', '', 'staffmanager');
+    $workspacecreatorrole = create_role('', 'workspacecreator', '', 'workspacecreator');
+    $workspaceownerrole  = create_role('', 'workspaceowner', '', 'workspaceowner');
+    $performanceactivitycreator = create_role('', 'performanceactivitycreator', '', 'performanceactivitycreator');
+    $performanceactivitymanager = create_role('', 'performanceactivitymanager', '', 'performanceactivitymanager');
 
     // Now is the correct moment to install capabilities - after creation of legacy roles, but before assigning of roles
     update_capabilities('moodle');
@@ -305,6 +309,10 @@ function xmldb_main_install() {
     set_role_contextlevels($guestrole,          get_default_contextlevels('guest'));
     set_role_contextlevels($userrole,           get_default_contextlevels('user'));
     set_role_contextlevels($staffmanagerrole,   get_default_contextlevels('staffmanager'));
+    set_role_contextlevels($workspacecreatorrole, get_default_contextlevels('workspacecreatorrole'));
+    set_role_contextlevels($workspaceownerrole, get_default_contextlevels('workspaceownerrole'));
+    set_role_contextlevels($performanceactivitycreator, get_default_contextlevels('performanceactivitycreator'));
+    set_role_contextlevels($performanceactivitymanager, get_default_contextlevels('performanceactivitymanager'));
 
     // Init theme and JS revisions
     set_config('themerev', time());

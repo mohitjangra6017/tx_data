@@ -32,7 +32,6 @@ function xmldb_filter_mathjaxloader_upgrade($oldversion) {
     global $CFG, $DB;
 
     $dbman = $DB->get_manager();
-    require_once($CFG->dirroot . '/filter/mathjaxloader/db/upgradelib.php');
 
     // Totara 13.0 release line.
 

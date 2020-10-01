@@ -24,8 +24,6 @@
 
 // Certification db upgrades.
 
-require_once($CFG->dirroot.'/totara/certification/db/upgradelib.php');
-
 /**
  * Certification database upgrade script
  *

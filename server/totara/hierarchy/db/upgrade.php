@@ -23,8 +23,6 @@
  * @subpackage totara_core
  */
 
-require_once($CFG->dirroot.'/totara/hierarchy/db/upgradelib.php');
-
 /**
  * Database upgrade script
  *

@@ -32,9 +32,6 @@ function xmldb_perform_install() {
     totara_core_upgrade_create_relationship(['mod_perform\relationship\resolvers\reviewer'], 'perform_reviewer', 7, 1, 'mod_perform');
     totara_core_upgrade_create_relationship(['mod_perform\relationship\resolvers\external'], 'perform_external', 8, 1, 'mod_perform');
 
-    // Ensure required performance activity roles exist.
-    mod_perform\util::create_performance_roles();
-
     // Create activity types.
     mod_perform\util::create_activity_types();
 }

@@ -23,8 +23,6 @@
  * @subpackage totara_appraisal
  */
 
-require_once($CFG->dirroot.'/totara/appraisal/db/upgradelib.php');
-
 /**
  * Local database upgrade script
  *

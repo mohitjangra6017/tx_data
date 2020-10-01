@@ -32,38 +32,10 @@ class container_workspace_role_testcase extends advanced_testcase {
      * @return void
      */
     public function test_role_creation(): void {
-        global $DB, $CFG;
+        global $DB;
 
-        // Delete any roles if  they exist
-        $shortnames = ['workspacecreator', 'workspaceowner'];
-
-        // We want to delete the already created roles
-        $DB->delete_records_list('role', 'shortname', $shortnames);
-
-        // Check they don't exist
-        foreach ($shortnames as $shortname) {
-            $this->assertFalse($DB->record_exists('role', ['shortname' => $shortname]));
-        }
-
-        // Create the roles
-        require_once $CFG->dirroot . '/container/type/workspace/db/upgradelib.php';
-        container_workspace_add_missing_roles();
-
-        // Now assert they do exist
-        foreach ($shortnames as $shortname) {
-            $this->assertTrue($DB->record_exists('role', ['shortname' => $shortname]));
-        }
-
-        // One final check, delete one role and make sure it's recreated
-        $DB->delete_records('role', ['shortname' => 'workspacecreator']);
-        $this->assertFalse($DB->record_exists('role', ['shortname' => 'workspacecreator']));
-
-        // Create the roles
-        container_workspace_add_missing_roles();
-
-        // Now assert they do exist
-        foreach ($shortnames as $shortname) {
-            $this->assertTrue($DB->record_exists('role', ['shortname' => $shortname]));
-        }
+        // Make sure roles were created.
+        $this->assertTrue($DB->record_exists('role', ['shortname' => 'workspacecreator']));
+        $this->assertTrue($DB->record_exists('role', ['shortname' => 'workspaceowner']));
     }
 }
