@@ -121,22 +121,14 @@ function totara_preupgrade() {
 
     print_upgrade_part_start('', false, true);
 
-    if (empty($CFG->totara_release)) {
-        // This is a migration from vanilla Moodle site to Totara.
-        $upgradefile = "{$CFG->dirroot}/totara/core/db/pre_moodle_upgrade.php";
-        core_php_time_limit::raise(0);
-        require($upgradefile);
+    // Only upgrade of existing Totara 13.0 and later is supported.
+    $upgradefile = "{$CFG->dirroot}/totara/core/db/pre_totara_upgrade.php";
+    core_php_time_limit::raise(0);
+    require($upgradefile);
 
-    } else {
-        // This is an upgrade of existing Totara site.
-        $upgradefile = "{$CFG->dirroot}/totara/core/db/pre_totara_upgrade.php";
-        core_php_time_limit::raise(0);
-        require($upgradefile);
-
-        // NOTE: 'previous_version' is a dangerous hack - watch out for interrupted upgrades and + in version numbers,
-        //       always use $oldversion in totara/core/upgrade.php instead if possible!!!
-        set_config('previous_version', $totarainfo->existingtotaraversion, 'totara_core');
-    }
+    // NOTE: 'previous_version' is a dangerous hack - watch out for interrupted upgrades and + in version numbers,
+    //       always use $oldversion in totara/core/upgrade.php instead if possible!!!
+    set_config('previous_version', $totarainfo->existingtotaraversion, 'totara_core');
 
     print_upgrade_part_end('', false, true);
 }

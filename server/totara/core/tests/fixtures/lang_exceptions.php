@@ -47,5 +47,4 @@ $exceptions = array(
     'tool_xmldb' => array('confirmcheckoraclesemantics'),
     'totara_core' => array('error:cannotupgradefromnewermoodle', 'moodlecore'),
     'enrol_ldap' => array('autocreate'),
-    'tool_premigration' => array('pluginname'),
 );

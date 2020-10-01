@@ -449,63 +449,8 @@ function upgrade_stale_php_files_present() {
     global $CFG;
 
     $someexamplesofremovedfiles = array(
-        // Removed in Totara 13.0
-        '/auth/README.txt',
-        // Removed in Totara 12.0
-        '/admin/auth_config.php',
-        '/totara/catalog/classes/totara/menu/catalog.php', // post RC removal
-        // Removed in 3.2.
-        '/calendar/preferences.php',
-        '/lib/alfresco/',
-        '/lib/jquery/jquery-1.12.1.min.js',
-        '/lib/password_compat/tests/',
-        '/lib/phpunit/classes/unittestcase.php',
-        // Removed in 3.1.
-        '/lib/classes/log/sql_internal_reader.php',
-        '/lib/zend/',
-        '/mod/forum/pix/icon.gif',
-        '/tag/templates/tagname.mustache',
-        // Removed in 3.0.
-        '/mod/lti/grade.php',
-        '/tag/coursetagslib.php',
-        // Removed in 2.9.
-        '/lib/timezone.txt',
-        // Removed in 2.8.
-        '/course/delete_category_form.php',
-        // Removed in 2.7.
-        '/admin/tool/qeupgradehelper/version.php',
-        // Removed in 2.6.
-        '/admin/block.php',
-        '/admin/oacleanup.php',
-        // Removed in 2.5.
-        '/backup/lib.php',
-        '/backup/bb/README.txt',
-        '/lib/excel/test.php',
-        // Removed in 2.4.
-        '/admin/tool/unittest/simpletestlib.php',
-        // Removed in 2.3.
-        '/lib/minify/builder/',
-        // Removed in 2.2.
-        '/lib/yui/3.4.1pr1/',
-        // Removed in 2.2.
-        '/search/cron_php5.php',
-        '/course/report/log/indexlive.php',
-        '/admin/report/backups/index.php',
-        '/admin/generator.php',
-        // Removed in 2.1.
-        '/lib/yui/2.8.0r4/',
-        // Removed in 2.0.
-        '/blocks/admin/block_admin.php',
-        '/blocks/admin_tree/block_admin_tree.php',
-
-        // Removed in Totara 10.
-        '/lib/editor/tinymce/version.php',
-        '/login/token.php',
-        // Removed in Totara 9.0.
-        '/blocks/facetoface/lib.php',
-        '/totara/core/db/pre_any_upgrade.php',
-        // Removed in Totara 2.7.
-        '/admin/bulk-course-restore.php',
+        // Removed in Totara 14.0
+        '/lib/db/premigrate.php',
     );
 
     foreach ($someexamplesofremovedfiles as $file) {

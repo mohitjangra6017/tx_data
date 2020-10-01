@@ -1137,103 +1137,9 @@ class core_plugin_manager {
      * @return bool
      */
     public static function is_deleted_standard_plugin($type, $name) {
-        // TOTARA: Do not include plugins that were removed during upgrades to Totara 9 or Moodle 3.0 and earlier.
+        // TOTARA: Inlcude only plugins removed after Totara 14 branching.
         $plugins = array(
-            // Moodle 3.9.x premigration removals.
-            'mod_h5pactivity',
-            'quizaccess_seb',
-            'tool_licensemanager',
-            'tool_moodlenet',
-            'report_status',
-            'repository_contentbank',
-            'contenttype_h5p',
-            'h5plib_v124',
-
-            // Moodle 3.8.x premigration removals.
-            'filter_displayh5p',
-            'atto_emojipicker',
-            'atto_h5p',
-            'forumreport_summary',
-
-            // Moodle 3.7.x premigration removals.
-            'dataformat_pdf',
-            'theme_classic',
-            'customfield_checkbox',
-            'customfield_date',
-            'customfield_select',
-            'customfield_text',
-            'customfield_textarea',
-
-            // Moodle 3.6.x premigration removals.
-            'repository_nextcloud',
-            'block_recentlyaccessedcourses',
-            'block_recentlyaccesseditems',
-            'block_starredcourses',
-            'block_timeline',
-            'tool_assignmentupgrade',
-
-            // Moodle 3.5.x premigration removals.
-            'atto_recordrtc',
-            'search_simpledb',
-
-            // Totara 13 removals.
-            'flavour_enterprise',
-            'assignment_offline',
-            'assignment_online',
-            'assignment_upload',
-            'assignment_uploadsingle',
-            'mod_assignment',
-            'block_community',
-            'block_quiz_results',
-            'block_course_progress_report',
-            'block_frontpage_combolist',
-            'block_messages',
-            'gradeexport_fusion',
-            'repository_picasa',
-            'portfolio_picasa',
-            'message_airnotifier',
-            // Moodle 3.4 merge skipped.
-            'tool_analytics', 'tool_httpsreplace', 'report_insights', 'mlbackend_php', 'mlbackend_python',
-
-            // Moodle merge 3.3 removals.
-            'block_myoverview', 'repository_onedrive',
-            'fileconverter_googledrive', 'fileconverter_unoconv',
-            'tool_dataprivacy', 'tool_policy',
-
-            // Totara 12.0 removals.
-            'auth_fc', 'auth_imap', 'auth_nntp', 'auth_none', 'auth_pam', 'auth_pop3',
-            'tool_innodb', 'cachestore_memcache',
-
-            // Totara 10.0 removals.
-            'theme_kiwifruitresponsive',
-            'theme_customtotararesponsive',
-            'theme_standardtotararesponsive',
-            'auth_gauth',
-
-            // Moodle merge removals - we do not want these!
-            'block_lp',
-            'editor_tinymce',
-            'report_competency',
-            'theme_boost',
-            'theme_bootstrapbase',
-            'theme_canvas',
-            'theme_clean',
-            'theme_more',
-            'tinymce_ctrlhelp', 'tinymce_managefiles', 'tinymce_moodleemoticon', 'tinymce_moodleimage',
-            'tinymce_moodlemedia', 'tinymce_moodlenolink', 'tinymce_pdw', 'tinymce_spellchecker', 'tinymce_wrap',
-            'tool_cohortroles',
-            'tool_installaddon',
-            'tool_lp',
-            'tool_lpimportcsv',
-            'tool_lpmigrate',
-            'tool_mobile',
-
-            // Upstream Moodle 3.1 removals.
-            'webservice_amf',
-
-            // Upstream Moodle 3.2 removals.
-            'auth_radius',
-            'repository_alfresco',
+            'tool_premigration',
         );
 
         return in_array($type . '_' . $name, $plugins);
@@ -1559,7 +1465,7 @@ class core_plugin_manager {
                 'phpunit', 'profiling', 'recyclebin', 'replace', 'spamcleaner', 'task', 'templatelibrary',
                 'uploadcourse', 'uploaduser', 'unsuproles', 'usertours', 'xmldb'
                 // Totara:
-                , 'totara_sync', 'totara_timezonefix', 'sitepolicy', 'premigration',
+                , 'totara_sync', 'totara_timezonefix', 'sitepolicy',
             ),
 
             // Totara:

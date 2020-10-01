@@ -116,36 +116,4 @@ class core_crop_image_testcase extends advanced_testcase {
         $result = $DB->record_exists('files', $params);
         $this->assertFalse($result);
     }
-
-    /**
-     * Create preview files for theme, then
-     *
-     * @return void
-     */
-    public function test_delete_purge_preview_files_cache(): void {
-        global $CFG, $DB;
-        require_once("{$CFG->dirroot}/lib/filelib.php");
-
-        $this->setAdminUser();
-        $stored_file = $this->create_stored_file();
-
-        $fs = get_file_storage();
-        $helper = preview_helper::instance();
-        $preview_file = $helper->get_file_preview($stored_file, 'thumb');
-
-        require_once("{$CFG->dirroot}/totara/core/db/upgradelib.php");
-        totara_core_clear_preview_image_cache('thumb');
-
-        $this->assertFalse($DB->record_exists('files', ['id' => $preview_file->get_id()]));
-        $this->assertFalse(
-            $fs->file_exists(
-                $preview_file->get_contextid(),
-                $preview_file->get_component(),
-                $preview_file->get_filearea(),
-                $preview_file->get_itemid(),
-                $preview_file->get_filepath(),
-                $preview_file->get_filename()
-            )
-        );
-    }
 }

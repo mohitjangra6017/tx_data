@@ -26,30 +26,6 @@ class core_container_container_type_testcase extends advanced_testcase {
     /**
      * @return void
      */
-    public function test_update_container_type_for_site(): void {
-        global $CFG, $DB;
-        require_once("{$CFG->dirroot}/totara/core/db/upgradelib.php");
-
-        // Update site to containertype empty. and check if the upgrade is working.
-        $site = $DB->get_record('course', ['category' => 0], '*', MUST_EXIST);
-        $this->assertEquals('container_site', $site->containertype);
-
-        $site->containertype = '';
-        $DB->update_record('course', $site);
-
-        $this->assertFalse(
-            $DB->record_exists('course', ['category' => 0, 'containertype' => 'container_site'])
-        );
-
-        totara_core_update_site_container_type();
-        $this->assertTrue(
-            $DB->record_exists('course', ['category' => 0, 'containertype' => 'container_site'])
-        );
-    }
-
-    /**
-     * @return void
-     */
     public function test_create_default_course_record(): void {
         global $DB;
 
