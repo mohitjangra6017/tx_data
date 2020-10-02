@@ -27,36 +27,6 @@ function xmldb_totara_core_install() {
     require_once(__DIR__ . '/upgradelib.php');
 
     $dbman = $DB->get_manager(); // loads ddl manager and xmldb classes
-    $systemcontext = context_system::instance();
-
-    // switch to new default theme in totara 13
-    set_config('theme', 'ventura');
-
-    // Turn completion on in Totara when upgrading from Moodle.
-    set_config('enablecompletion', 1);
-    set_config('enablecompletion', 1, 'moodlecourse');
-    set_config('completionstartonenrol', 1, 'moodlecourse');
-
-    // Disable editing execpaths by default for security.
-    set_config('preventexecpath', '1');
-    // Then provide default values to prevent them appearing on the upgradesettings page.
-    set_config('geoipfile', $CFG->dataroot . 'geoip/GeoLiteCity.dat');
-    set_config('location', '', 'enrol_flatfile');
-    set_config('filter_tex_pathlatex', '/usr/bin/latex');
-    set_config('filter_tex_pathdvips', '/usr/bin/dvips');
-    set_config('filter_tex_pathconvert', '/usr/bin/convert');
-    set_config('pathtodu', '');
-    set_config('pathtoclam', '');
-    set_config('aspellpath', '');
-    set_config('pathtodot', '');
-    set_config('quarantinedir', '');
-    set_config('backup_auto_destination', '', 'backup');
-    set_config('gspath', '/usr/bin/gs', 'assignfeedback_editpdf');
-    set_config('exporttofilesystempath', '', 'reportbuilder');
-    set_config('pathlatex', '/usr/bin/latex', 'filter_tex');
-    set_config('pathdvips', '/usr/bin/dvips', 'filter_tex');
-    set_config('pathconvert', '/usr/bin/convert', 'filter_tex');
-    set_config('pathmimetex', '', 'filter_tex');
 
     totara_core_upgrade_create_relationship('totara_core\relationship\resolvers\subject', 'subject', 1);
 

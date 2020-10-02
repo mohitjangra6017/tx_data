@@ -352,4 +352,29 @@ function xmldb_main_install() {
 
     require_once($CFG->dirroot . '/badges/upgradelib.php'); // Core install and upgrade related functions only for badges.
     badges_install_default_backpacks();
+
+    // Turn completion on in Totara when upgrading from Moodle.
+    set_config('enablecompletion', 1, 'moodlecourse');
+    set_config('completionstartonenrol', 1, 'moodlecourse');
+
+    // Disable editing execpaths by default for security.
+    set_config('preventexecpath', '1');
+    // Then provide default values to prevent them appearing on the upgradesettings page.
+    set_config('geoipfile', $CFG->dataroot . 'geoip/GeoLiteCity.dat');
+    set_config('location', '', 'enrol_flatfile');
+    set_config('filter_tex_pathlatex', '/usr/bin/latex');
+    set_config('filter_tex_pathdvips', '/usr/bin/dvips');
+    set_config('filter_tex_pathconvert', '/usr/bin/convert');
+    set_config('pathtodu', '');
+    set_config('pathtoclam', '');
+    set_config('aspellpath', '');
+    set_config('pathtodot', '');
+    set_config('quarantinedir', '');
+    set_config('backup_auto_destination', '', 'backup');
+    set_config('gspath', '/usr/bin/gs', 'assignfeedback_editpdf');
+    set_config('exporttofilesystempath', '', 'reportbuilder');
+    set_config('pathlatex', '/usr/bin/latex', 'filter_tex');
+    set_config('pathdvips', '/usr/bin/dvips', 'filter_tex');
+    set_config('pathconvert', '/usr/bin/convert', 'filter_tex');
+    set_config('pathmimetex', '', 'filter_tex');
 }

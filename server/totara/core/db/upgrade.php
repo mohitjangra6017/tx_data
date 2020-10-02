@@ -35,7 +35,7 @@ function xmldb_totara_core_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2020100700) {
+    if ($oldversion < 2020100100) {
         // Somebody must have hacked upgrade checks, stop them here.
         throw new coding_exception('Upgrades are supported only from Totara 13.0 or later!');
     }

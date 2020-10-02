@@ -1611,6 +1611,7 @@ class core_accesslib_testcase extends advanced_testcase {
      * Test default enrol roles.
      */
     public function test_get_default_enrol_roles() {
+        global $DB;
         $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
@@ -1622,13 +1623,9 @@ class core_accesslib_testcase extends advanced_testcase {
         $allroles = get_all_roles();
         $expected = array($id2=>$allroles[$id2]);
 
-        foreach (get_role_archetypes() as $archetype) {
-            $defaults = get_default_contextlevels($archetype);
-            if (in_array(CONTEXT_COURSE, $defaults)) {
-                $roles = get_archetype_roles($archetype);
-                foreach ($roles as $role) {
-                    $expected[$role->id] = $role;
-                }
+        foreach ($allroles as $role) {
+            if ($DB->record_exists('role_context_levels', ['roleid' => $role->id, 'contextlevel' => CONTEXT_COURSE])) {
+                $expected[$role->id] = $role;
             }
         }
 
@@ -3131,7 +3128,7 @@ class core_accesslib_testcase extends advanced_testcase {
         context_helper::preload_course($SITE->id);
         $numfrontpagemodules = $DB->count_records('course_modules', array('course' => $SITE->id));
         // Totara: counting [course_navigation, course_summary, calendar_month, 2 * online_users] blocks + page itself.
-        $this->assertEquals(6 + $numfrontpagemodules, context_inspection::test_context_cache_size()); // Depends on number of default blocks.
+        $this->assertEquals(5 + $numfrontpagemodules, context_inspection::test_context_cache_size()); // Depends on number of default blocks.
 
         // Test assign_capability(), unassign_capability() functions.
 
