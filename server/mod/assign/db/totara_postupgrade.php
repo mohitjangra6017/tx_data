@@ -23,14 +23,6 @@
 
 function xmldb_assign_totara_postupgrade($version) {
     global $DB;
-    $dbman = $DB->get_manager();
 
-    // Define field completionpass to be added to assign.
-    $table = new xmldb_table('assign');
-
-    // Conditionally launch add field completionpass.
-    $field = new xmldb_field('completionpass', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'preventsubmissionnotingroup');
-    if (!$dbman->field_exists($table, $field)) {
-        $dbman->add_field($table, $field);
-    }
+    // NOTE: keep this empty file because there is a Totara specific capability that requires .01 version bump.
 }

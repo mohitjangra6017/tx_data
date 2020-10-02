@@ -41,17 +41,5 @@
 function xmldb_forum_totara_postupgrade($version) {
     global $DB;
 
-    $dbman = $DB->get_manager();
-
-    $table = new xmldb_table('forum_discussions');
-    $field = new xmldb_field('archived', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'timeend');
-    if (!$dbman->field_exists($table, $field)) {
-        $dbman->add_field($table, $field);
-    }
-
-    $table = new xmldb_table('forum_posts');
-    $field = new xmldb_field('archived', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'mailnow');
-    if (!$dbman->field_exists($table, $field)) {
-        $dbman->add_field($table, $field);
-    }
+    // NOTE: keep this empty file because there is a Totara specific capability that requires .01 version bump.
 }

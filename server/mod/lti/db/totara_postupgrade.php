@@ -40,41 +40,5 @@
 function xmldb_lti_totara_postupgrade($version) {
     global $DB;
 
-    $dbman = $DB->get_manager();
-
-    // Define table lti_submission_history to be created.
-    $table = new xmldb_table('lti_submission_history');
-
-    // Adding fields to table lti_submission_history.
-    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-    $table->add_field('ltiid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-    $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-    $table->add_field('launchid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-    $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-
-    // Adding keys to table lti_submission_history.
-    $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-    $table->add_key('ltiid', XMLDB_KEY_FOREIGN, array('ltiid'), 'lti', array('id'), 'cascade');
-    $table->add_key('userid', XMLDB_KEY_FOREIGN, array('userid'), 'user', array('id'), 'restrict');
-
-    // Adding indexes to table lti_submission_history.
-    $table->add_index('ltiid-userid', XMLDB_INDEX_NOTUNIQUE, array('ltiid', 'userid'));
-
-    // Conditionally launch create table for lti_submission_history.
-    if (!$dbman->table_exists($table)) {
-        $dbman->create_table($table);
-    } else {
-        if (!$dbman->key_exists($table, $table->getKey('ltiid'))) {
-            // Delete any records that might conflict with the real foreign key.
-            $DB->execute('DELETE FROM {lti_submission_history}
-                WHERE NOT EXISTS (SELECT 1 FROM {lti} lti WHERE {lti_submission_history}.ltiid = lti.id)');
-            $dbman->add_key($table, $table->getKey('ltiid'));
-        }
-        if (!$dbman->key_exists($table, $table->getKey('userid'))) {
-            // Delete any records that might conflict with the real foreign key.
-            $DB->execute('DELETE FROM {lti_submission_history}
-                WHERE NOT EXISTS (SELECT 1 FROM {user} u WHERE {lti_submission_history}.userid = u.id)');
-            $dbman->add_key($table, $table->getKey('userid'));
-        }
-    }
+    // NOTE: keep this empty file because there is a Totara specific capability that requires .01 version bump.
 }

@@ -41,58 +41,5 @@
 function xmldb_quiz_totara_postupgrade($version) {
     global $DB;
 
-    $dbman = $DB->get_manager();
-
-    // TODO - Remove this if moodle ever fix passgrade completions.
-    mod_quiz_fix_passgrade_settings();
-
-    // Make 'quizid-slot' index on 'quiz_slots' table not to be unique.
-    // Indexes are found by column names only, so need a workaround.
-    if (!get_config('mod_quiz', 'uniqueslotsfixed')) {
-        $table = new xmldb_table('quiz_slots');
-        $index = new xmldb_index('quizid-slot', XMLDB_INDEX_UNIQUE, ['quizid', 'slot']);
-
-        // Conditionally launch drop index name.
-        if ($dbman->index_exists($table, $index)) {
-            $dbman->drop_index($table, $index);
-        }
-
-        $newindex = new xmldb_index('quizid-slot', XMLDB_INDEX_NOTUNIQUE, ['quizid', 'slot']);
-        $dbman->add_index($table, $newindex);
-        set_config('uniqueslotsfixed', 1, 'mod_quiz');
-    }
-}
-
-/**
- * previously (before TL-14750) quizzes using the "require passing grade"
- * completion setting were not setting the completiongradeitemnumber column
- * in the course module, leading to the completion status only being marked as
- * COMPLETION_COMPLETE instead of COMPLETION_COMPLETE_PASS/FAIL. This fixes the settings
- * of all of the quizzes currently affected so all future completions will be marked correctly,
- * and previously existing completions should be checked with the completion editor.
- */
-function mod_quiz_fix_passgrade_settings() {
-    global $DB;
-
-    $sql = " SELECT cm.*, gi.itemnumber
-               FROM {course_modules} cm
-               JOIN {modules} m
-                 ON cm.module = m.id
-                AND m.name = :mod
-               JOIN {quiz} q
-                 ON  cm.instance = q.id
-               JOIN {grade_items} gi
-                 ON q.id = gi.iteminstance
-                AND gi.itemmodule = m.name
-                AND gi.itemtype = :type
-              WHERE q.completionpass = 1
-                AND cm.completiongradeitemnumber IS NULL";
-    $quizzes = $DB->get_records_sql($sql, array('mod'=>'quiz', 'type'=>'mod'));
-
-    foreach ($quizzes as $quiz) {
-        $quiz->completiongradeitemnumber = $quiz->itemnumber;
-        unset($quiz->itemnumber);
-
-        $DB->update_record('course_modules', $quiz);
-    }
+    // NOTE: keep this empty file because there is a Totara specific capability that requires .01 version bump.
 }

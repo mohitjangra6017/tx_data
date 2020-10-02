@@ -40,38 +40,5 @@
 function xmldb_auth_db_totara_postupgrade($version) {
     global $DB;
 
-    $dbman = $DB->get_manager();
-
-    $dbtype = get_config('auth_db', 'type');
-
-    // See http://adodb.org/dokuwiki/doku.php?id=v5:database:supported
-    $migrations = [
-        'mssql' => 'mssqlnative',
-        'mssql_n' => 'mssqlnative',
-        'odbc_mssql' => 'mssqlnative',
-        'ado_mssql' => 'mssqlnative',
-        'postgres64' => 'postgres9',
-        'postgres' => 'postgres9',
-        'postgres7' => 'postgres9',
-        'oci8po' => 'oci8',
-        'oci805' => 'oci8',
-        'odbc_oracle' => 'oci8po',
-        'oracle' => 'oci8po',
-        'mysql' => 'mysqli',
-        'mysqlt' => 'mysqli',
-        'ado' => '',
-        'ado_access' => 'access',
-        'informix' => '',
-        'informix72' => '',
-        'vfp' => '',
-        'proxy' => '',
-        'sybase' => '',
-        'sqlanywhere' => '',
-        'fbsql' => '',
-        'firebird' => 'ibase',
-        'borland_ibase' => 'ibase',
-    ];
-    if (isset($migrations[$dbtype])) {
-        set_config('type', $migrations[$dbtype], 'auth_db');
-    }
+    // NOTE: keep this empty file because there is a Totara specific capability that requires .01 version bump.
 }

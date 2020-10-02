@@ -43,31 +43,5 @@
 function xmldb_certificate_totara_postupgrade($version) {
     global $DB;
 
-    $dbman = $DB->get_manager();
-
-    // Define table certificate_issues_history to be created.
-    $table = new xmldb_table('certificate_issues_history');
-
-    // Conditionally launch create table for certificate_issues_history.
-    if (!$dbman->table_exists($table)) {
-
-        // Adding fields to table certificate_issues_history.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
-        $table->add_field('certificateid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
-        $table->add_field('code', XMLDB_TYPE_CHAR, '40', null, null, null, null);
-        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
-        $table->add_field('timecompleted', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
-        $table->add_field('grade', XMLDB_TYPE_CHAR, '300', null, null, null, null);
-        $table->add_field('outcome', XMLDB_TYPE_CHAR, '300', null, null, null, null);
-        $table->add_field('timearchived', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('idarchived', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-
-        // Adding keys to table certificate_issues_history.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('certificateid', XMLDB_KEY_FOREIGN, array('certificateid'), 'certificate', array('id'));
-        $table->add_key('userid', XMLDB_KEY_FOREIGN, array('userid'), 'user', array('id'));
-
-        $dbman->create_table($table);
-    }
+    // NOTE: keep this empty file because there is a Totara specific capability that requires .01 version bump.
 }

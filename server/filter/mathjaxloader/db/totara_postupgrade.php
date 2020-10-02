@@ -39,4 +39,5 @@
  */
 function xmldb_filter_mathjaxloader_totara_postupgrade($version) {
 
+    // NOTE: keep this empty file because there is a Totara specific capability that requires .01 version bump.
 }
