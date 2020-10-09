@@ -1,7 +1,10 @@
 This files describes API changes in /message/output/popup message output provider.
 Information provided here is intended especially for developers.
 
+
 === 14.0 ===
+
+* Add new default settings for 'popup' message output provider
 
 === 13.0 ===
 
