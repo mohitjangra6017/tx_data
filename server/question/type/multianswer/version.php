@@ -30,9 +30,9 @@ $plugin->version   = 2020101200;
 
 $plugin->requires  = 2020101200;
 $plugin->dependencies = array(
-    'qtype_multichoice' => 2017110800,
-    'qtype_numerical'   => 2017110800,
-    'qtype_shortanswer' => 2017110800,
+    'qtype_multichoice' => 2020101200,
+    'qtype_numerical'   => 2020101200,
+    'qtype_shortanswer' => 2020101200,
 );
 
 $plugin->maturity  = MATURITY_STABLE;

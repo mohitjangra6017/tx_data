@@ -27,9 +27,9 @@ $plugin->requires = 2020101200;         // Requires this Totara version.
 $plugin->component = 'engage_article';
 
 $plugin->dependencies = [
-    'totara_topic' => 2019112700,
-    'totara_reaction' => 2019081200,
-    'totara_comment' => 2019101500,
-    'editor_weka' => 2019111800,
-    'totara_playlist' => 2020031201
+    'totara_topic' => 2020101200,
+    'totara_reaction' => 2020101200,
+    'totara_comment' => 2020101200,
+    'editor_weka' => 2020101200,
+    'totara_playlist' => 2020101200
 ];

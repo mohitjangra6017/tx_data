@@ -29,4 +29,4 @@ $plugin->version  = 2020101200;
 $plugin->requires = 2020101200;  // Requires this Totara version.
 $plugin->component= 'filter_glossary';
 
-$plugin->dependencies = array('mod_glossary' => 2017110800);
+$plugin->dependencies = array('mod_glossary' => 2020101200);

@@ -28,8 +28,8 @@ $plugin->requires  = 2020101200;             // Requires this Totara version
 $plugin->component = 'ml_recommender';   // Full name of the plugin (used for diagnostics)
 
 $plugin->dependencies = [
-    'totara_engage' => 2020062200,
-    'totara_playlist' => 2020031201,
-    'engage_article' => 2020052000,
-    'container_workspace' => 2020052800,
+    'totara_engage' => 2020101200,
+    'totara_playlist' => 2020101200,
+    'engage_article' => 2020101200,
+    'container_workspace' => 2020101200,
 ];

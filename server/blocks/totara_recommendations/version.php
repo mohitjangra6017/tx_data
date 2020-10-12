@@ -27,6 +27,6 @@ $plugin->version  = 2020101200;       // The current module version (Date: YYYYM
 $plugin->requires = 2020101200;       // Requires this Totara version.
 $plugin->component = 'block_totara_recommendations'; // To check on upgrade, that module sits in correct place
 $plugin->dependencies = array(
-    'ml_recommender' => 2020072200,
-    'block_totara_recently_viewed' => 2020060900,
+    'ml_recommender' => 2020101200,
+    'block_totara_recently_viewed' => 2020101200,
 );

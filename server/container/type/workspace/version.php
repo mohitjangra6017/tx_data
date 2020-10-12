@@ -30,9 +30,9 @@ $plugin->requires = 2020101200;                 // Requires this Totara version.
 $plugin->component = 'container_workspace';          // To check on upgrade, that module sits in correct place
 
 $plugin->dependencies = [
-    'totara_engage' => 2019101202,
-    'editor_weka' => 2019111800,
-    'totara_comment' => 2019101500,
-    'enrol_self' => 2017111300,
-    'enrol_manual' => 2017111300
+    'totara_engage' => 2020101200,
+    'editor_weka' => 2020101200,
+    'totara_comment' => 2020101200,
+    'enrol_self' => 2020101200,
+    'enrol_manual' => 2020101200
 ];

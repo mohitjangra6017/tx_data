@@ -28,4 +28,4 @@ $plugin->version   = 2020101200;        // The current plugin version (Date: YYY
 $plugin->requires  = 2020101200;        // Requires this Totara version
 $plugin->component = 'block_glossary_random'; // Full name of the plugin (used for diagnostics)
 
-$plugin->dependencies = array('mod_glossary' => 2017110800);
+$plugin->dependencies = array('mod_glossary' => 2020101200);

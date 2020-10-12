@@ -29,6 +29,6 @@ $plugin->requires = 2020101200;       // Requires this Totara version.
 $plugin->component = 'totara_comment';   // To check on upgrade, that module sits in correct place
 
 $plugin->dependencies = [
-    'editor_weka' => 2019111800,
-    'totara_reportedcontent' => 2020030200,
+    'editor_weka' => 2020101200,
+    'totara_reportedcontent' => 2020101200,
 ];

@@ -30,4 +30,4 @@ $plugin->version   = 2020101200;        // The current plugin version (Date: YYY
 $plugin->requires  = 2020101200;        // Requires this Totara version
 $plugin->component = 'auth_cas';        // Full name of the plugin (used for diagnostics)
 
-$plugin->dependencies = array('auth_ldap' => 2017110800);
+$plugin->dependencies = array('auth_ldap' => 2020101200);

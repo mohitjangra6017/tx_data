@@ -31,5 +31,5 @@ $plugin->component = 'container_site';          // To check on upgrade, that mod
 
 // Dependencies of container_site
 $plugin->dependencies = [
-    'container_course' => 2019070400
+    'container_course' => 2020101200
 ];

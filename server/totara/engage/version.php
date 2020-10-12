@@ -28,6 +28,6 @@ $plugin->requires = 2020101200;         // Requires this Totara version.
 $plugin->component = 'totara_engage';
 
 $plugin->dependencies = [
-    'totara_reaction' => 2019081200,
-    'totara_topic'=> 2019112700
+    'totara_reaction' => 2020101200,
+    'totara_topic'=> 2020101200
 ];

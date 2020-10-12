@@ -27,4 +27,4 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->version   = 2020101200;         // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2020101200;         // Requires this Totara version
 $plugin->component = 'block_news_items'; // Full name of the plugin (used for diagnostics)
-$plugin->dependencies = array('mod_forum' => 2017110800);
+$plugin->dependencies = array('mod_forum' => 2020101200);

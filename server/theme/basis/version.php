@@ -29,5 +29,5 @@ $plugin->version  = 2020101200;     // The current module version (Date: YYYYMMD
 $plugin->requires = 2020101200;       // Requires this Totara version.
 $plugin->component = 'theme_basis';   // Full name of the plugin (used for diagnostics).
 $plugin->dependencies = array(
-    'theme_roots' => 2018082400,
+    'theme_roots' => 2020101200,
 );

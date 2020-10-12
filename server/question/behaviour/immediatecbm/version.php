@@ -30,8 +30,8 @@ $plugin->version   = 2020101200;
 
 $plugin->requires  = 2020101200;
 $plugin->dependencies = array(
-    'qbehaviour_immediatefeedback' => 2017110800,
-    'qbehaviour_deferredcbm'       => 2017110800
+    'qbehaviour_immediatefeedback' => 2020101200,
+    'qbehaviour_deferredcbm'       => 2020101200
 );
 
 $plugin->maturity  = MATURITY_STABLE;

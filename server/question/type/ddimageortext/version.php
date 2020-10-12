@@ -31,5 +31,5 @@ $plugin->component = 'qtype_ddimageortext';
 $plugin->maturity  = MATURITY_STABLE;
 
 $plugin->dependencies = array(
-    'qtype_gapselect' => 2017110800,
+    'qtype_gapselect' => 2020101200,
 );

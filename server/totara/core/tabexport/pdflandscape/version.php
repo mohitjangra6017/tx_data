@@ -26,4 +26,4 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->version  = 2020101200;       // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2020101200;       // Requires this Totara version.
 $plugin->component = 'tabexport_pdflandscape';   // To check on upgrade, that module sits in correct place
-$plugin->dependencies = array('tabexport_pdfportrait' => 2016092000);
+$plugin->dependencies = array('tabexport_pdfportrait' => 2020101200);

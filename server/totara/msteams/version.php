@@ -27,9 +27,9 @@ $plugin->version  = 2020101200;       // The current module version (Date: YYYYM
 $plugin->requires = 2020101200;       // Requires this Totara version.
 $plugin->component = 'totara_msteams';
 $plugin->dependencies = [
-    'totara_engage' => 2019101200,
-    'auth_oauth2' => 2019111800,
+    'totara_engage' => 2020101200,
+    'auth_oauth2' => 2020101200,
     // Note: soft dependency of block_current_learning
     // 'block_current_learning' => 2019102300,
-    'theme_msteams' => 2020032500,
+    'theme_msteams' => 2020101200,
 ];

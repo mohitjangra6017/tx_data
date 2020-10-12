@@ -28,5 +28,5 @@ $plugin->version   = 2020101200;
 $plugin->requires  = 2020101200; // Totara 9+ is required.
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->dependencies = [
-    'mod_scorm' => 2016120501.01,
+    'mod_scorm' => 2020101200,
 ];

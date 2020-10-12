@@ -31,7 +31,7 @@ $plugin->version   = 2020101200;
 $plugin->requires  = 2020101200;
 $plugin->component = 'ltiservice_toolsettings';
 $plugin->dependencies = array(
-    'ltiservice_profile' => 2019111800,
-    'ltiservice_toolproxy' => 2019111800
+    'ltiservice_profile' => 2020101200,
+    'ltiservice_toolproxy' => 2020101200
 );
 $plugin->backported = 'v3.8.1'; // TOTARA: backported from this release
