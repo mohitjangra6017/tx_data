@@ -28,7 +28,6 @@ $plugin->version   = 2020101200;
 $plugin->requires  = 2020101200;
 
 $plugin->component = 'qtype_ddwtos';
-$plugin->maturity  = MATURITY_STABLE;
 
 $plugin->dependencies = array(
     'qtype_gapselect' => 2020101200,

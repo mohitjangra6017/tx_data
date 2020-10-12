@@ -32,5 +32,3 @@ $plugin->requires  = 2020101200;
 $plugin->dependencies = array(
     'qbehaviour_deferredfeedback' => 2020101200
 );
-
-$plugin->maturity  = MATURITY_STABLE;

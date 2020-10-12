@@ -32,5 +32,4 @@ $plugin->requires   = 2020101200;
 $plugin->dependencies = array(
     'workshopallocation_random'  => 2020101200,
 );
-$plugin->maturity   = MATURITY_STABLE;
 $plugin->cron       = 60;

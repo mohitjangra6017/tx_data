@@ -29,5 +29,3 @@ $plugin->component = 'qtype_truefalse';
 $plugin->version   = 2020101200;
 
 $plugin->requires  = 2020101200;
-
-$plugin->maturity  = MATURITY_STABLE;
