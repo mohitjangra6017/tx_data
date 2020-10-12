@@ -25,6 +25,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version   = 2020101200;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2020101200;        // Requires this Moodle version
+$plugin->requires  = 2020101200;        // Requires this Totara version
 $plugin->component = 'enrol_self';      // Full name of the plugin (used for diagnostics)
 $plugin->cron      = 600;

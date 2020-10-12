@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version  = 2020101200; // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020101200; // Requires this Moodle version.
+$plugin->requires = 2020101200; // Requires this Totara version.
 $plugin->component = 'tabexport_csv_excel'; // To check on upgrade, that module sits in correct place
 $plugin->dependencies = [
     'tabexport_csv' => 2018120700 // This plugin extends the CSV plugin.

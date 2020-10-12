@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version  = 2020101200;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020101200;       // Requires this Moodle version.
+$plugin->requires = 2020101200;       // Requires this Totara version.
 $plugin->component = 'totara_msteams';
 $plugin->dependencies = [
     'totara_engage' => 2019101200,
