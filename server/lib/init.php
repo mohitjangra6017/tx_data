@@ -341,12 +341,6 @@ namespace core\internal {
                 /** Used by library scripts to check they are being called by Moodle. */
                 define('MOODLE_INTERNAL', true);
             }
-
-            // Totara: we support migration from this particular Moodle release only.
-            if (!defined('MOODLE_MIGRATION_VERSION')) {
-                define('MOODLE_MIGRATION_VERSION', '2017111309.00'); // Keep as string to simplify comparison with DB data.
-                define('MOODLE_MIGRATION_RELEASE', '3.4.9 (Build: 20190513)');
-            }
         }
 
         public static function initialise_environment() {

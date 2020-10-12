@@ -82,6 +82,7 @@ if (!in_array('releasemoodle', $output)) {
 }
 
 list($moodleplugins, $totaraplugins) = dev_get_totara_and_moodle_plugins();
+$allplugins = array_merge($moodleplugins, $totaraplugins);
 
 if ($options['diffupstream']) {
     cli_heading('List of changed upstream plugin versions');
@@ -95,27 +96,10 @@ if ($options['diffupstream']) {
             $tag = MOODLE_DEFAULT_TAG;
         }
 
+        $error = '';
+
         $upstreamversion = (string)dev_get_plugin_version_upstream($fulldir, $tag);
         $ourversion = (string)dev_get_plugin_version($fulldir);
-
-        if ($upstreamversion === $ourversion) {
-            if (!file_exists("$fulldir/db/totara_postupgrade.php")) {
-                continue;
-            }
-            $error = 'error, missing .01 bump (postupgrade present)';
-            $exitcode = 1;
-
-        } else {
-            $error = 'error';
-            if ($ourversion > $upstreamversion and $ourversion < floor($upstreamversion) + 1) {
-                $error = 'looks ok';
-            } else {
-                $exitcode = 1;
-            }
-            if (file_exists("$fulldir/db/totara_postupgrade.php")) {
-                $error .= ' (postupgrade present)';
-            }
-        }
 
         cli_writeln(str_pad($component, 40, ' ', STR_PAD_RIGHT) . ' ' . $upstreamversion . ' ==> ' . $ourversion . ' ' . $error);
     }
@@ -124,11 +108,11 @@ if ($options['diffupstream']) {
 
 cli_heading('List of ' . count($totaraplugins) . ' Totara plugins');
 $today = date('Ymd') . '00';
-$today = '2020100700';
+$today = '2020101200';
 $requirement = dev_get_requires_version();
 $error = false;
 $todo = array();
-foreach ($totaraplugins as $component => $fulldir) {
+foreach ($allplugins as $component => $fulldir) {
     $version = dev_get_plugin_version($fulldir);
     if ($version > $today) {
         cli_writeln(str_pad($component, 40, ' ', STR_PAD_RIGHT) . ' ' . $version . ' ERROR!');
@@ -148,7 +132,7 @@ if (!$options['run']) {
 }
 
 if (dev_get_maturity() == MATURITY_STABLE) {
-    cli_error('Bumping up all Totara plugin versions cannot be done in stable branches!!!');
+    cli_error('Bumping up all plugin versions cannot be done in stable branches!!!');
 }
 
 $updated = array();
@@ -298,18 +282,7 @@ function dev_get_maturity() {
  * @return string Moodle tag name
  */
 function dev_get_moodle_tag() {
-    global $CFG;
-    $versionfile = $CFG->dirroot . '/version.php';
-    $release = null;
-    include($versionfile);
-    if (!preg_match('/^\d\.\d+(\.\d+)?/', $release, $matches)) {
-        throw new coding_exception('Invalid main moodle release detected');
-    }
-    if (substr_count($matches[0], '.') === 1) {
-        $matches[0] .= '.0';
-    }
-
-    return 'v' . $matches[0];
+    return 'v3.4.9';
 }
 
 /**

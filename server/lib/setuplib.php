@@ -1476,7 +1476,7 @@ function disable_output_buffering() {
 function is_major_upgrade_required() {
     global $CFG;
 
-    // Totara: do not modify, always keep in sync with Moodle branch!!!
+    // Totara: modify when major change happens in main upgrade file.
     $lastmajordbchanges = 2017111309.00;
 
     // Totara: bump up the following version to match /totara/core/version.php
