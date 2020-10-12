@@ -28,11 +28,11 @@ defined('MOODLE_INTERNAL') || die();
  */
 function xmldb_container_workspace_upgrade($old_version) {
     global $DB, $CFG;
-    require_once("{$CFG->dirroot}/container/type/workspace/db/upgradelib.php");
 
+    // Totara 13.0 release line.
     $db_manager = $DB->get_manager();
 
-    if ($old_version < 2020100700) {
+    if ($old_version < 2020101200) {
         // Define field to_be_deleted to be added to workspace.
         $table = new xmldb_table('workspace');
         $field = new xmldb_field('to_be_deleted', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'timestamp');
@@ -43,7 +43,7 @@ function xmldb_container_workspace_upgrade($old_version) {
         }
 
         // Workspace savepoint reached.
-        upgrade_plugin_savepoint(true, 2020100700, 'container', 'workspace');
+        upgrade_plugin_savepoint(true, 2020101200, 'container', 'workspace');
     }
 
     return true;
