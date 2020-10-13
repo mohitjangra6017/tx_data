@@ -1,0 +1,6 @@
+This file describes API changes in /tui/ information provided here is intended
+especially for developers.
+
+=== 14.0 ===
+
+* tenantid renamed to tenant_id in totara_tui\controllers\theme_settings
