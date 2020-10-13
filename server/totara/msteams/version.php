@@ -29,7 +29,7 @@ $plugin->component = 'totara_msteams';
 $plugin->dependencies = [
     'totara_engage' => 2020101200,
     'auth_oauth2' => 2020101200,
-    // Note: soft dependency of block_current_learning
-    // 'block_current_learning' => 2019102300,
+    // Note: soft dependency of block_current_learning in totara/msteams/db/tabs.php
+    // 'block_current_learning' => 2020101200,
     'theme_msteams' => 2020101200,
 ];

@@ -43,7 +43,7 @@ $tabs = [
         'url' => '/totara/msteams/tabs/mylearning.php',
         'redirectUrl' => '/totara/msteams/tabs/mylearning.php?redirect=1',
         'dependencies' => [
-            'block_current_learning' => 2019102300,
+            'block_current_learning' => 2020101200,
         ],
         'features' => [
         ],
