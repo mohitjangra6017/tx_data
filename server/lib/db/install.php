@@ -377,4 +377,7 @@ function xmldb_main_install() {
     set_config('pathdvips', '/usr/bin/dvips', 'filter_tex');
     set_config('pathconvert', '/usr/bin/convert', 'filter_tex');
     set_config('pathmimetex', '', 'filter_tex');
+
+    require_once(__DIR__ . '/../../totara/core/db/upgradelib.php');
+    totara_core_upgrade_create_relationship('totara_core\relationship\resolvers\subject', 'subject', 1);
 }

@@ -23,21 +23,30 @@
  */
 
 function xmldb_totara_core_install() {
-    global $CFG, $DB, $SITE;
-    require_once(__DIR__ . '/upgradelib.php');
+    global $DB;
 
-    $dbman = $DB->get_manager(); // loads ddl manager and xmldb classes
+    // NOTE: this file is now deprecated, please consider using lib/db/install.php instead.
 
-    totara_core_upgrade_create_relationship('totara_core\relationship\resolvers\subject', 'subject', 1);
+    // TODO: TL-28175 find out why the following code cannot be moved to lib/db/install.php
 
     // Installing default topic collection, as this is required to be done before any other component/plugin
     // being installed. If it is not being installed first, then by the time plugin get to installed, it will not be
     // able to find any topic collection.
-    require_once("{$CFG->dirroot}/totara/topic/db/upgradelib.php");
-    totara_topic_add_tag_collection();
-
+    $record = new stdClass();
+    $record->name = get_string('pluginname', 'totara_topic');
+    $record->isdefault = 1;
+    $record->component = 'totara_topic';
+    $record->sortorder = 1 + (int)$DB->get_field_sql('SELECT MAX(sortorder) FROM "ttr_tag_coll"');
+    $record->searchable = 1;
+    set_config('topic_collection_id', $DB->insert_record('tag_coll', $record));
     // Installing default hashtag collection.
-    totara_core_add_hashtag_tag_collection();
+    $record = new stdClass();
+    $record->name = get_string('hashtag', 'totara_core');
+    $record->isdefault = 1;
+    $record->component = 'totara_core';
+    $record->sortorder = 1 + (int)$DB->get_field_sql('SELECT MAX(sortorder) FROM "ttr_tag_coll"');
+    $record->searchable = 1;
+    set_config('hashtag_collection_id', $DB->insert_record('tag_coll', $record));
 
     return true;
 }

@@ -24,7 +24,10 @@
  */
 
 /**
- * Local database upgrade script
+ * Upgrade script execute right after main lib/db/upgrade.php script
+ * if version bump is detected in totara_core.
+ *
+ * NOTE: this file should not be used for core database changes any more.
  *
  * @param   integer $oldversion Current (pre-upgrade) local db version timestamp
  * @return  boolean $result
@@ -43,6 +46,8 @@ function xmldb_totara_core_upgrade($oldversion) {
     // Totara 13.0 release line.
 
     if ($oldversion < 2020100701) {
+        // Update the version numbers and move this block to the end
+        // if there are more plugins to uninstall.
         totara_core_upgrade_delete_removed_plugins();
         upgrade_plugin_savepoint(true, 2020100701, 'totara', 'core');
     }
