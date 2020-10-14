@@ -475,7 +475,8 @@ function totara_load_program_settings($navinode, $context, $forceopen = false) {
     $exceptions = $program->get_exception_count();
     $exceptioncount = $exceptions ? $exceptions : 0;
 
-    $adminnode = $navinode->add(get_string('programadministration', 'totara_program'), null, navigation_node::TYPE_COURSE, null, 'progadmin');
+    $str = $program->is_certif() ? get_string('certificationadministration', 'totara_certification') : get_string('programadministration', 'totara_program');
+    $adminnode = $navinode->add($str, null, navigation_node::TYPE_COURSE, null, 'progadmin');
     if ($forceopen) {
         $adminnode->force_open();
     }

@@ -38,6 +38,7 @@ define(['core/ajax', 'core/templates', 'core/config', 'core/notification', 'core
         this.dialog = null;
         this.baseURL = cfg.wwwroot + '/totara/program/assignment/';
         this.programId = parseInt(element.getAttribute('data-totara_program-id'), 10);
+        this.iscertif = element.getAttribute('data-totara_program-iscertif') === "1";
         this.canupdate = element.getAttribute('data-totara_program-canupdate') === "1";
         this.typeid = 0;
         this.actualduedatesdialog = null;
@@ -54,17 +55,18 @@ define(['core/ajax', 'core/templates', 'core/config', 'core/notification', 'core
         // Preload useful items
         M.util.js_pending('totara_program--assignments-strings');
         this.stringsPromise = new Promise(function(resolve) {
+            var component = (self.iscertif) ? 'totara_certification' : 'totara_program';
             var reqstrings = [
                 {component: 'totara_program', key: 'ok'},
                 {component: 'totara_program', key: 'remove'},
                 {component: 'totara_program', key: 'cancel'},
                 {component: 'totara_program', key: 'setduedate'},
                 {component: 'totara_program', key: 'completioncriteria'},
-                {component: 'totara_program', key: 'addorganisationstoprogram'},
-                {component: 'totara_program', key: 'addpositionstoprogram'},
-                {component: 'totara_program', key: 'addcohortstoprogram'},
-                {component: 'totara_program', key: 'addindividualstoprogram'},
-                {component: 'totara_program', key: 'addmanagerstoprogram'}
+                {component: component, key: 'addorganisationstoprogram'},
+                {component: component, key: 'addpositionstoprogram'},
+                {component: component, key: 'addcohortstoprogram'},
+                {component: component, key: 'addindividualstoprogram'},
+                {component: component, key: 'addmanagerstoprogram'}
             ];
             strLib.get_strings(reqstrings).done(function(strings) {
                 self.strings.ok = strings[0];
@@ -237,7 +239,8 @@ define(['core/ajax', 'core/templates', 'core/config', 'core/notification', 'core
                     if (response.success) {
                         row.remove();
                         self._clearNotifications();
-                        strLib.get_string('removedfromprogram', 'totara_program', name).done(function(message) {
+                        var component = (self.iscertif) ? 'totara_certification' : 'totara_program';
+                        strLib.get_string('removedfromprogram', component, name).done(function(message) {
                             Notification.addNotification({
                                 message: message,
                                 type: 'success',
@@ -657,7 +660,8 @@ define(['core/ajax', 'core/templates', 'core/config', 'core/notification', 'core
                     self._clearNotifications();
                     if (response.items.length < self.config.CONDENSED_LIMIT) {
                         response.items.forEach(function(item) {
-                            strLib.get_string('assignmentadded', 'totara_program', item.name).done(function(message) {
+                            var component = (self.iscertif) ? 'totara_certification' : 'totara_program';
+                            strLib.get_string('assignmentadded', component, item.name).done(function(message) {
                                 Notification.addNotification({
                                     message: message,
                                     type: 'success',

@@ -228,11 +228,12 @@ class prog_assignments {
      * Returns an HTML string suitable for displaying as the label for the
      * assignments in the program overview form
      *
+     * @param program $program
      * @return string
      */
-    public function display_form_label() {
+    public function display_form_label(program $program = null) : string {
         $out = '';
-        $out .= get_string('instructions:assignments1', 'totara_program');
+        $out .= get_string('instructions:assignments1', $program && $program->is_certif() ? 'totara_certification' : 'totara_program');
         return $out;
     }
 
@@ -240,9 +241,10 @@ class prog_assignments {
      * Returns an HTML string suitable for displaying as the element body
      * for the assignments in the program overview form
      *
+     * @param program $program
      * @return string
      */
-    public function display_form_element() {
+    public function display_form_element($program = null) {
         global $OUTPUT, $ASSIGNMENT_CATEGORY_CLASSNAMES;
 
         $emptyarray = array(
@@ -305,7 +307,7 @@ class prog_assignments {
             $out .= $OUTPUT->render($table);
 
         } else {
-            $out .= get_string('noprogramassignments', 'totara_program');
+            $out .= get_string('noprogramassignments', $program && $program->is_certif() ? 'totara_certification' : 'totara_program');
         }
 
         return $out;

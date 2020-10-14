@@ -213,10 +213,10 @@ Feature: Specific permissions allow users to manage programs
     And I log in as "admin"
     And I am on "Certification One" certification homepage
     And I press "Edit certification details"
-    Then "Edit program details" "button" should be visible
-    And "Edit program content" "button" should be visible
-    And "Edit program messages" "button" should be visible
-    And "Edit program assignments" "button" should be visible
+    Then "Edit certification details" "button" should be visible
+    And "Edit certification content" "button" should be visible
+    And "Edit certification messages" "button" should be visible
+    And "Edit certification assignments" "button" should be visible
     And "Completion" "link" should be visible
 
   Scenario: totara/certification:configurecertification does not allow a user view any management pages for a program (ie not a cert)

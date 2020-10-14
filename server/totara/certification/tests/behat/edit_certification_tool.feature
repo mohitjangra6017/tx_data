@@ -21,9 +21,9 @@ Feature: Certification editing tool
     And I click on "Settings" "link" in the "Cert 1" "table_row"
     And I switch to "Assignments" tab
     And I set the field "Add a new" to "Individuals"
-    And I click on "fn_001 ln_001" "link" in the "Add individuals to program" "totaradialogue"
-    And I click on "fn_002 ln_002" "link" in the "Add individuals to program" "totaradialogue"
-    And I click on "Ok" "button" in the "Add individuals to program" "totaradialogue"
+    And I click on "fn_001 ln_001" "link" in the "Add individuals to certification" "totaradialogue"
+    And I click on "fn_002 ln_002" "link" in the "Add individuals to certification" "totaradialogue"
+    And I click on "Ok" "button" in the "Add individuals to certification" "totaradialogue"
     And I wait "1" seconds
     And I switch to "Completion" tab
     And I click on "Edit completion records" "link" in the "fn_001 ln_001" "table_row"

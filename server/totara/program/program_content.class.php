@@ -1117,14 +1117,15 @@ class prog_content {
             }
         }
 
-        $templatehtml .= $OUTPUT->heading(get_string('programcontent', 'totara_program'));
+        $str = $iscertif ? get_string('header:certificationcontent', 'totara_certification') : get_string('header:programcontent', 'totara_program');
+        $templatehtml .= $OUTPUT->heading($str);
 
         // Show the program total minimum time required.
         $program = new program($this->programid);
         $programtime = $program->content->get_total_time_allowance($certifpath);
 
         if ($programtime > 0) {
-            $templatehtml .= prog_format_seconds($programtime);
+            $templatehtml .= prog_format_seconds($programtime, false, $iscertif);
         }
 
         if ($iscertif) {
@@ -1137,7 +1138,8 @@ class prog_content {
         $coursesetprefixesarray = array();
 
         if ($numcoursesets == 0) { // if there's no content yet
-            $templatehtml .= html_writer::start_tag('p') . get_string('noprogramcontent', 'totara_program') . html_writer::end_tag('p');
+            $str = $iscertif ? get_string('nocertificationcontent', 'totara_certification') : get_string('noprogramcontent', 'totara_program');
+            $templatehtml .= html_writer::start_tag('p') . $str . html_writer::end_tag('p');
         } else {
             foreach ($coursesets as $courseset) {
                 $coursesetprefixesarray[] = $courseset->get_set_prefix();
@@ -1190,7 +1192,8 @@ class prog_content {
             $templatehtml .= html_writer::start_tag('label', array('for' => 'contenttype'.$suffix)) . get_string('addnew', 'totara_program')
                                 . html_writer::end_tag('label');
             $templatehtml .= '%contenttype'.$suffix.'%';
-            $templatehtml .= html_writer::tag('span', get_string('toprogram', 'totara_program'));
+            $str = $iscertif ? get_string('tocertification', 'totara_certification') : get_string('toprogram', 'totara_program');
+            $templatehtml .= html_writer::tag('span', $str);
 
             // Add the add content button
             if ($updateform) {

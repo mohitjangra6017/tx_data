@@ -503,6 +503,7 @@ $string['header:hash'] = '#';
 $string['header:id'] = 'ID';
 $string['header:issue'] = 'Issue';
 $string['header:learners'] = 'Learners';
+$string['header:programcontent'] = 'Program content';
 $string['hiddenfield'] = '**Hidden field**';
 $string['historycompletionrecord'] = 'History completion record';
 $string['holdposof'] = 'Hold position of \'{$a}\'';
@@ -870,7 +871,6 @@ $string['programcompleted'] = 'Program completed';
 $string['programcompletedmessage'] = 'Program completed message';
 $string['programcompletedmessage_help'] = 'This message will be sent whenever a program is completed.';
 $string['programcompletion'] = 'Program completion';
-$string['programcontent'] = 'Program content';
 $string['programcontentsaved'] = 'Program content saved successfully';
 $string['programcreatefail'] = 'Program could not be created. Reason: "{$a}"';
 $string['programcreatesuccess'] = 'Program creation successful';
@@ -951,8 +951,8 @@ $string['recurringprogramhistory'] = 'History record for recurring program {$a}'
 $string['recurringprogramhistoryfor'] = 'History record for {$a->username} for recurring program {$a->progname}';
 $string['recurringprograms'] = 'Recurring programs';
 $string['remove'] = 'Remove';
-$string['removeassignment'] = 'Remove program assignment';
-$string['removeassignmentconfirmation'] = 'Are you sure you want to remove this program assignment?';
+$string['removeassignment'] = 'Remove assignment';
+$string['removeassignmentconfirmation'] = 'Are you sure you want to remove this assignment?';
 $string['removecompletiondate'] = 'Remove completion date';
 $string['removeduedate'] = 'Remove due date';
 $string['removed'] = 'Removed';
@@ -1121,3 +1121,6 @@ $string['z:incompleterecurringprogramsubject'] = 'Incomplete recurring course';
 
 $string['contentavailability'] = 'Hide currently unavailable content';
 $string['contentavailability_help'] = 'Sets whether the report will include programs before/after the available from/until settings';
+
+// Deprecated since Totara 13
+$string['programcontent'] = 'Program content';

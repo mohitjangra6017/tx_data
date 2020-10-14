@@ -90,9 +90,9 @@ Feature: Test the certification status rule in dynamic audiences
     And I click on "Settings" "link" in the "Certification 1" "table_row"
     And I switch to "Assignments" tab
     And I set the field "Add a new" to "Individuals"
-    And I click on "Learner1 One" "link" in the "Add individuals to program" "totaradialogue"
-    And I click on "Learner2 Two" "link" in the "Add individuals to program" "totaradialogue"
-    And I click on "Ok" "button" in the "Add individuals to program" "totaradialogue"
+    And I click on "Learner1 One" "link" in the "Add individuals to certification" "totaradialogue"
+    And I click on "Learner2 Two" "link" in the "Add individuals to certification" "totaradialogue"
+    And I click on "Ok" "button" in the "Add individuals to certification" "totaradialogue"
     And I wait "1" seconds
 
     # Create the rule.
@@ -130,9 +130,9 @@ Feature: Test the certification status rule in dynamic audiences
     And I click on "Settings" "link" in the "Certification 1" "table_row"
     And I switch to "Assignments" tab
     And I set the field "Add a new" to "Individuals"
-    And I click on "Learner1 One" "link" in the "Add individuals to program" "totaradialogue"
-    And I click on "Learner2 Two" "link" in the "Add individuals to program" "totaradialogue"
-    And I click on "Ok" "button" in the "Add individuals to program" "totaradialogue"
+    And I click on "Learner1 One" "link" in the "Add individuals to certification" "totaradialogue"
+    And I click on "Learner2 Two" "link" in the "Add individuals to certification" "totaradialogue"
+    And I click on "Ok" "button" in the "Add individuals to certification" "totaradialogue"
     And I wait "1" seconds
 
     # Create the rule.

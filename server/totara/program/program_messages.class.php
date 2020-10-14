@@ -486,11 +486,12 @@ class prog_messages_manager {
      * Returns an HTML string suitable for displaying as the label for the
      * messages in the program overview form
      *
+     * @param program $program
      * @return string
      */
-    public function display_form_label() {
+    public function display_form_label(program $program = null) : string {
         $out = '';
-        $out .= get_string('instructions:messages1', 'totara_program');
+        $out .= get_string('instructions:messages1', $program && $program->is_certif() ? 'totara_certification' : 'totara_program');
         return $out;
     }
 
@@ -522,6 +523,8 @@ class prog_messages_manager {
 
     public function get_message_form_template(&$mform, &$template_values, $messages=null, $updateform=true) {
         global $DB, $OUTPUT;
+
+        $iscertif = $DB->get_field('prog', 'certifid', array('id' => $this->programid)) ? true : false;
 
         if ($messages == null) {
             $messages = $this->messages;
@@ -581,8 +584,10 @@ class prog_messages_manager {
             $this->formdataobject->deletedmessages = $deletedmessageidsstr;
         }
 
-        $templatehtml .= $OUTPUT->heading(get_string('programmessages', 'totara_program'));
-        $templatehtml .= html_writer::tag('p', get_string('instructions:programmessages', 'totara_program'));
+        $str = $iscertif ? get_string('certificationmessages', 'totara_certification') : get_string('programmessages', 'totara_program');
+        $templatehtml .= $OUTPUT->heading($str);
+        $str = $iscertif ? get_string('instructions:certificationmessages', 'totara_certification') : get_string('instructions:programmessages', 'totara_program');
+        $templatehtml .= html_writer::tag('p', $str);
 
         $templatehtml .= html_writer::start_tag('div', array('id' => 'messages'));
 
@@ -628,9 +633,8 @@ class prog_messages_manager {
                     MESSAGETYPE_LEARNER_FOLLOWUP => get_string('learnerfollowup', 'totara_program')
                 );
 
-                // add extra messages if a certification-program
-                $prog = $DB->get_record('prog', array('id' => $this->programid));
-                if ($prog->certifid > 0) {
+                // Add extra messages if a certification.
+                if ($iscertif) {
                     $messageoptions[MESSAGETYPE_RECERT_WINDOWOPEN]     = get_string('recertwindowopen', 'totara_certification');
                     $messageoptions[MESSAGETYPE_RECERT_WINDOWDUECLOSE] = get_string('recertwindowdueclose', 'totara_certification');
                     $messageoptions[MESSAGETYPE_RECERT_FAILRECERT]     = get_string('recertfailrecert', 'totara_certification');
@@ -642,7 +646,8 @@ class prog_messages_manager {
             }
             $templatehtml .= html_writer::tag('label', get_string('addnew', 'totara_program'), array('for' => 'messagetype'));
             $templatehtml .= '%messagetype%';
-            $templatehtml .= html_writer::tag('span', get_string('toprogram', 'totara_program'));
+            $str = $iscertif ? get_string('tocertification', 'totara_certification') : get_string('toprogram', 'totara_program');
+            $templatehtml .= html_writer::tag('span', $str);
 
             // Add the add content button
             if ($updateform) {

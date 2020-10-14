@@ -2060,6 +2060,7 @@ class program {
         require_once($CFG->dirroot . '/totara/cohort/lib.php');
 
         $data = new stdClass();
+        $data->certifid = $this->certifid;
         $data->assignments = $this->assignments->count_active_user_assignments();
         $data->exceptions = $this->assignments->count_user_assignment_exceptions();
         $data->total = $this->assignments->count_total_user_assignments();
@@ -2083,26 +2084,26 @@ class program {
             if ($this->audiencevisible == COHORT_VISIBLE_ALL ||
                 $data->assignments > 0 ||
                 $this->audiencevisible == COHORT_VISIBLE_AUDIENCE && $DB->record_exists_sql($audiencesql, $audienceparams)) {
-                $data->statusstr = 'programlive';
+                $data->statusstr = $this->certifid ? 'certificationlive' : 'programlive';
                 $data->notification_state = core\output\notification::NOTIFY_WARNING;
             } else {
-                $data->statusstr = 'programnotlive';
+                $data->statusstr = $this->certifid ? 'certificationnotlive' : 'programnotlive';
                 $data->notification_state = core\output\notification::NOTIFY_INFO;
             }
 
         } else {
             if ($this->visible ||
                 $data->assignments > 0) {
-                $data->statusstr = 'programlive';
+                $data->statusstr = $this->certifid ? 'certificationlive' : 'programlive';
                 $data->notification_state = core\output\notification::NOTIFY_WARNING;
             } else {
-                $data->statusstr = 'programnotlive';
+                $data->statusstr = $this->certifid ? 'certificationnotlive' : 'programnotlive';
                 $data->notification_state = core\output\notification::NOTIFY_INFO;
             }
         }
 
         if (!prog_is_accessible($this)) {
-            $data->statusstr = 'programnotavailable';
+            $data->statusstr = $this->certifid ? 'certificationnotavailable' : 'programnotavailable';
         }
 
         $now = time();
@@ -2264,10 +2265,10 @@ class program {
             if ($includefull) {
                 if ($USER->id == $userid) {
                     // Viewing user's own records.
-                    $message .= html_writer::tag('p', get_string('assignmentcriterialearner', 'totara_program'));
+                    $message .= html_writer::tag('p', get_string('assignmentcriterialearner', $this->certifid ? 'totara_certification' : 'totara_program'));
                 } else {
                     // Viewing another's records.
-                    $message .= html_writer::tag('p', get_string('assignmentcriteriamanager', 'totara_program'));
+                    $message .= html_writer::tag('p', get_string('assignmentcriteriamanager', $this->certifid ? 'totara_certification' : 'totara_program'));
                 }
                 $message .= html_writer::start_tag('ul');
             }

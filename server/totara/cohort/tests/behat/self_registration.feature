@@ -568,7 +568,7 @@ Feature: Verify self registration updates audience membership and enrolled learn
     And I click on "Username - manual" "link" in the "add-assignment-dialog-3" "totaradialogue"
     And I click on "Ok" "button" in the "add-assignment-dialog-3" "totaradialogue"
     And I wait "1" seconds
-    Then I should see "'Username - manual' has been added to the program"
+    Then I should see "'Username - manual' has been added to the certification"
     And I should see "4 learner(s) assigned: 4 active, 0 exception(s)"
 
     When I navigate to "Manage certifications" node in "Site administration > Certifications"
@@ -580,7 +580,7 @@ Feature: Verify self registration updates audience membership and enrolled learn
     And I click on "Username - selfie" "link" in the "add-assignment-dialog-3" "totaradialogue"
     And I click on "Ok" "button" in the "add-assignment-dialog-3" "totaradialogue"
     And I wait "1" seconds
-    Then I should see "'Username - selfie' has been added to the program"
+    Then I should see "'Username - selfie' has been added to the certification"
     And I should see "0 learner(s) assigned: 0 active, 0 exception(s)"
 
     And I navigate to "Manage certifications" node in "Site administration > Certifications"
@@ -589,20 +589,20 @@ Feature: Verify self registration updates audience membership and enrolled learn
     And I click on "Edit certification details" "button"
     And I click on "Assignments" "link"
     And I set the field "Add a new" to "Organisations"
-    And I click on "Organisation Two" "link" in the "Add organisations to program" "totaradialogue"
-    And I click on "Ok" "button" in the "Add organisations to program" "totaradialogue"
+    And I click on "Organisation Two" "link" in the "Add organisations to certification" "totaradialogue"
+    And I click on "Ok" "button" in the "Add organisations to certification" "totaradialogue"
 
     And I set the field "Add a new" to "Positions"
-    And I click on "Position Two" "link" in the "Add positions to program" "totaradialogue"
-    And I click on "Ok" "button" in the "Add positions to program" "totaradialogue"
+    And I click on "Position Two" "link" in the "Add positions to certification" "totaradialogue"
+    And I click on "Ok" "button" in the "Add positions to certification" "totaradialogue"
     And I wait "1" seconds
 
     And I set the field "Add a new" to "Management hierarchy"
-    And I click on "fnameman lnameman (manager@example.com) - General Manager" "link" in the "Add managers to program" "totaradialogue"
-    And I click on "Ok" "button" in the "Add managers to program" "totaradialogue"
+    And I click on "fnameman lnameman (manager@example.com) - General Manager" "link" in the "Add managers to certification" "totaradialogue"
+    And I click on "Ok" "button" in the "Add managers to certification" "totaradialogue"
     And I wait "1" seconds
 
-    Then I should see "'fnameman lnameman - General Manager' has been added to the program"
+    Then I should see "'fnameman lnameman - General Manager' has been added to the certification"
     And I should see "3 learner(s) assigned: 3 active, 0 exception(s)"
     # Create the self auth user for positive testing.
     When I log out

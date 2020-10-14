@@ -312,4 +312,22 @@ class utils {
 
         return $prog_assigned[$key];
     }
+
+    /**
+     * Is certification?
+     *
+     * @param int $programid
+     * @return bool
+     */
+    public static function is_certif(int $programid): bool {
+
+        static $iscertif = [];
+
+        if (!isset($iscertif[$programid]) || PHPUNIT_TEST) {
+            $program = new \program($programid);
+            $iscertif[$programid] = $program->is_certif();
+        }
+
+        return $iscertif[$programid];
+    }
 }

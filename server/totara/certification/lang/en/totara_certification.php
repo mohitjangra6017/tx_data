@@ -23,19 +23,36 @@
  */
 
 $string['activeperiod'] = 'Active Period';
-$string['addcertifprogramcontent'] = 'Add certification program content';
-$string['addcertifprogramcontent_help'] = 'By adding sets of courses you can build up the learning path of the certification program.
+$string['addcertifprogramcontent'] = 'Add certification content';
+$string['addcohortstoprogram'] = 'Add audiences to certification';
+$string['addindividualstoprogram'] = 'Add individuals to certification';
+$string['addmanagerstoprogram'] = 'Add managers to certification';
+$string['addorganisationstoprogram'] = 'Add organisations to certification';
+$string['addpositionstoprogram'] = 'Add positions to certification';
+$string['addcertifprogramcontent_help'] = 'By adding sets of courses you can build up the learning path of the certification.
 Once sets are added the relationships between them can be defined. Sets are created from manually adding courses.
 
 Once a number of sets have been created, set dividers are employed to allow the creation of sequences (i.e. dependencies) between each set.
-An example program with four course sets defined could have dependencies as follows:
+An example certification with four course sets defined could have dependencies as follows:
 
 * From set one the learner must complete one course (courseA or courseB) before proceeding to set two.
 * From set two the learner must complete all courses (courseC and courseD and courseE) before proceeding to set three or set four.
 * From set three the learner must complete one course (courseE) or all courses from set four (courseF and courseG).
 
-Once the learning path is completed, the learner has finished the certification program.';
+Once the learning path is completed, the learner has finished the certification.';
 $string['addnewcertification'] = 'Add new certification';
+$string['allowextensionrequests'] = 'Allow extension requests';
+$string['allowextensionrequests_help'] = 'When enabled, learners can submit extension requests for this certification which can then be approved or denied by their manager.';
+$string['allowtimeforprogram'] = 'Allow at least {$a->num} {$a->periodstr} to complete this certification.';
+$string['allowtimeforprogramdays'] = 'Allow at least {$a} day(s) to complete this certification.';
+$string['allowtimeforprogramhours'] = 'Allow at least {$a} hour(s) to complete this certification.';
+$string['allowtimeforprogrammonths'] = 'Allow at least {$a} month(s) to complete this certification.';
+$string['allowtimeforprogramweeks'] = 'Allow at least {$a} week(s) to complete this certification.';
+$string['allowtimeforprogramyears'] = 'Allow at least {$a} year(s) to complete this certification.';
+$string['allowtimeforprograminfinity'] = 'There is no time limit to complete this certification.';
+$string['assignmentadded'] = '\'{$a}\' has been added to the certification';
+$string['assignmentcriterialearner'] = 'You are required to complete this certification under the following criteria:';
+$string['assignmentcriteriamanager'] = 'The learner is required to complete this certification under the following criteria:';
 $string['availablefrom'] = 'Available From';
 $string['availableuntil'] = 'Available Until';
 $string['beforewindowduetoclose'] = 'Before window is due to close';
@@ -49,19 +66,27 @@ $string['certcomplete'] = 'Your certification is complete.';
 $string['certexpired'] = 'Your certification has expired, you need to complete the original certification';
 $string['certifcategories'] = 'Certification Categories';
 $string['certification'] = 'Certification';
+$string['certificationadministration'] = 'Certification Administration';
+$string['certificationcontentsaved'] = 'Certification content saved successfully';
 $string['certification:configurecertification'] = 'Configure certification';
 $string['certification:configuredetails'] = 'Configure certification details';
 $string['certification:createcertification'] = 'Create certification';
 $string['certification:deletecertification'] = 'Delete certification';
 $string['certification:viewhiddencertifications'] = 'View hidden certifications';
-$string['certificationcontent'] = 'Define the program content by adding sets of courses';
+$string['certificationcontent'] = 'Define the certification content by adding sets of courses';
 $string['certificationcreatesuccess'] = 'Certification created successfully';
 $string['certificationdefaults'] = 'Certification default settings';
+
 $string['certificationdeletesuccess'] = 'Certification "{$a}" deleted successfully';
 $string['certificationdetailssaved'] = 'Certification details saved';
 $string['certificationduex'] = 'Certification due {$a}';
+$string['certificationexceptions'] = 'Certification exceptions';
 $string['certificationhistory'] = 'Previous Certification';
+$string['certificationlive'] = 'Caution: Certification is live - there are learners who will see or be affected by changes you make';
 $string['certificationmembership'] = 'Certification Membership';
+$string['certificationmessages'] = 'Certification messages';
+$string['certificationnotavailable'] = 'Certification is not available to learners';
+$string['certificationnotlive'] = 'Certification is not live';
 $string['certifications'] = 'Certifications';
 $string['certificationsdisabled'] = 'Certifications are not enabled on this site';
 $string['certificationsinthiscategory'] = 'Certifications in this category';
@@ -69,7 +94,7 @@ $string['certifdeletefail'] = 'Could not delete certification "{$a}"';
 $string['certified'] = 'Certified';
 $string['certifname'] = 'Certification Name';
 $string['certifprog'] = 'Certification program';
-$string['certifprogramcreatesuccess'] = 'Certification program creation successful';
+$string['certifcreatesuccess'] = 'Certification creation successful';
 $string['certifsmovedout'] = 'Certifications moved out from {$a}';
 $string['certinprogress'] = 'Your certification is in progress';
 $string['checkcertificationdelete'] = 'Are you sure you want to delete this certification and all its related items?';
@@ -146,17 +171,26 @@ $string['comptypenotimplemented'] = 'Certification type not implemented';
 $string['confirmchanges'] = 'Confirm certification changes';
 $string['course'] = 'Course';
 $string['createnewcertification'] = 'Create new certification';
-$string['createnewcertifprog'] = 'Create new certification program';
+$string['createnewcertif'] = 'Create new certification';
 $string['currentlycertified'] = 'You are currently certified - you do not need to work on this certification until the recertification window opens. Progress made before the recertification window opens will likely be lost.';
 $string['days'] = 'Day(s)';
-$string['defaultcertprogramfullname'] = 'Certification program fullname 101';
+$string['defaultcertprogramfullname'] = 'Certification fullname 101';
 $string['defaultcertprogramshortname'] = 'CP101';
+$string['deletecertificationbutton'] = 'Delete certification';
+$string['image'] = 'Image';
+$string['image_help'] = 'Upload an image that will get displayed with the certification. If no image is uploaded a default image will be used.';
 $string['imagedefault'] = 'Default image';
 $string['imagedefault_help'] = 'Set a default image to display if no image is uploaded by the certification creator.';
 $string['imagedefaultlink'] = 'Set default image for all certifications';
+$string['instructions:assignments1'] = 'Categories can be used to assign the certification to sets of learners.';
+
+$string['instructions:certificationmessages'] = 'Define certification messages and reminders as required';
+$string['instructions:messages1'] = 'Configure event and reminder triggers associated with the certification.';
 $string['duedate'] = 'Due date';
 $string['editcertif'] = 'Edit certification details';
 $string['editcertification'] = 'Edit certification';
+$string['editcertificationcontent'] = 'Edit certification content';
+$string['editcertificationmessages'] = 'Edit certification messages';
 $string['editdetailsactive'] = 'Certification is active for';
 $string['editdetailsactive_help'] = 'The period the certification is active for, before it expires.';
 $string['editdetailsactivep'] = 'Active Period';
@@ -184,6 +218,9 @@ $string['editdetailsvalid'] = 'Define how long the certification should be valid
 $string['editdetailswindow'] = 'Period window opens before expiration';
 $string['editdetailswindowupdate'] = 'Any changes to these details will not affect the data of users who are currently certified. The new values will be used the next time a user certifies, to calculate their next window open and expiry dates.';
 $string['editdetailswindow_help'] = 'The period before certification expires that a learner can start recertifying. When the window opens, all course and activity completion data will be reset, including courses and activities completed by RPL.';
+$string['editprogramassignments'] = 'Edit certification assignments';
+$string['endnote'] = 'Endnote';
+$string['endnote_help'] = 'Note to be displayed at the end of the certification.';
 $string['error:cannotcreatecompletion'] = 'Failure attempting to insert the certification completion record into the database';
 $string['error:categoryidwasincorrect'] = 'Category ID was incorrect';
 $string['error:categorymustbespecified'] = 'Category must be specified';
@@ -288,21 +325,43 @@ $string['eventcompletionhistoryedited'] = 'Certification completion history edit
 $string['eventexpired'] = 'Certification expired';
 $string['eventupdated'] = 'Certification\'s setting updated';
 $string['eventwindowopened'] = 'Certification window opened';
+$string['exceptiontypealreadyassigned'] = 'Already assigned to certification';
 $string['findcertifications'] = 'Find certifications';
+$string['header:certification'] = '{$a} (Certification)';
+$string['header:certificationcontent'] = 'Certification content';
 $string['learningcomptype'] = 'Learning component';
 $string['legend:recertfailrecertmessage'] = 'FAILURE TO RECERTIFY MESSAGE';
 $string['legend:recertwindowdueclosemessage'] = 'RECERTIFICATION WINDOW DUE TO CLOSE MESSAGE';
 $string['legend:recertwindowopenmessage'] = 'RECERTIFICATION WINDOW OPEN MESSAGE';
 $string['managecertifications'] = 'Manage certifications';
 $string['managecertifsinthiscat'] = 'Manage certifications in this category';
+$string['minprogramtimerequired'] = 'Certifications total minimum time required: ';
+$string['minimumtimerequired'] = 'Minimum time required';
+$string['minimumtimerequired_help'] = 'This value indicates a minimum amount of time that a user might realistically need to be able to complete the course set. It is used to determine if the completion period set on the **assignments** tab is realistic for a particular group of users. If the assignment is not realistic, a **time allowance** exception will be generated and the user will not be assigned to the certification until the exception has been resolved.
+
+For example, consider a certification consisting of a single course set with a minimum time required of 10 days. If a user was assigned with completion criteria that required them to complete it in less than 10 days, then it would raise an exception report for that user.
+
+When using completion criteria relative to a user, it is possible for some users to generate exceptions but not others. For example, when using the **days since first login** criteria, each user would have their own deadline that may or may not be realistic.
+
+When multiple course sets exist in a certification the overall minimum time required for the certification is calculated based on the worst-case scenario taking into account the course set logic. For example if a certification consists of:
+
+Course set1 [10 days] THEN Course set2 [5 days] OR Course set3 [7 days]
+
+then the overall time allowance would be 17 days.
+
+This minimum time value is also used to determine when the \'Course set due message\' and \'Course set overdue message\' should be sent.';
 $string['months'] = 'Month(s)';
 $string['moveselectedcertificationsto'] = 'Move selected certifications to...';
 $string['na'] = 'N/A'; // Abbreviation for not applicable.
+$string['nocertificationcontent'] = 'Certification does not contain any content';
 $string['nocertifdetailsfound'] = 'No certification details setup';
 $string['nocertifications'] = 'No certifications';
+$string['noprogramassignments'] = 'Certification does not contain any assignments';
 $string['notapplicable'] = 'Not applicable';
 $string['notassigned'] = 'Not assigned';
 $string['notcertified'] = 'Not certified';
+$string['notduetostartuntil'] = 'This certification is not yet available. Learner assignments will be applied following the start date.';
+$string['nolongeravailabletolearners'] = 'This certification is no longer available to learners.';
 $string['oricertpath'] = 'Original certification path';
 $string['oricertpathdesc'] = 'Define the content required for the original certification path.';
 $string['perioddays'] = '{$a} day(s)';
@@ -314,6 +373,36 @@ $string['prog_recert_failrecert_message'] = 'Program recertification failure mes
 $string['prog_recert_windowdueclose_message'] = 'Program Recertification Window due close message';
 $string['prog_recert_windowopen_message'] = 'Program recertification window open message';
 $string['program'] = 'Program';
+$string['programassignments'] = 'Certification assignments';
+$string['programavailability'] = 'Certification Availability';
+$string['programavailability_help'] = 'This option allows you to hide your certification completely.
+
+It will not appear on any certification listings, except to administrators.
+
+Even if learners try to access the certification URL directly, they will not be allowed to enter.
+
+If you set the **Available from** and **Available until** dates, learners will be able to find and enter the certification during the period specified by the dates but will be prevented from accessing the certification outside of those dates.';
+$string['programdetails'] = 'Certification details';
+$string['programfullname'] = 'Certification Fullname';
+$string['programfullname_help'] = 'The full name of the certification is displayed at the top of the screen and in the certification listings.';
+$string['programidnumber'] = 'Certification ID number';
+$string['programidnumber_help'] = 'The ID number of a certification is only used when matching this course against external systems - it is never displayed within Totara. If you have an official code name for this program then use it here, otherwise you can leave it blank.';
+$string['programoverviewfiles'] = 'Summary files';
+$string['programoverviewfiles_help'] = 'Certification summary files, such as images, are displayed in the list of certifications together with the summary.';
+$string['programshortname'] = 'Certification Short Name';
+$string['programshortname_help'] = 'The certification shortname will be used in several places where the full name isn\'t appropriate (such us in the subject line of an alert message).';
+$string['programvisibility'] = 'Certification Visibility';
+$string['programvisibility_help'] = 'If the certification is visible, it will appear in certification listings and search results and learners will be able to view the certification contents.
+
+If the certification is not visble, it will not appear in certification listings or search results but the certification will still be displayed in the learning plans of any learners who have been assigned to the certification and learners can still access the certification if they know the certification\'s URL.';
+$string['instructions:programdetails'] = 'Define the certification name, availability and description';
+
+$string['programcategory'] = 'Certification Category';
+$string['programcategory_help'] = 'Your Totara administrator may have set up several certification/course categories.
+
+For example, \'Human Resources\', \'Software development\', \'Marketing\' etc.
+
+Choose the one most applicable for your certification. This choice will affect where your certification is displayed on the certification listing and may make it easier for learners to find your certification.';
 $string['programenrolledincohort'] = 'Certification with enrolled audience(s)';
 $string['programexpandlink'] = 'Certification Name (expanding details)';
 $string['programname'] = 'Certification Name';
@@ -341,6 +430,7 @@ $string['recertwindowopendatelate'] = 'The recertification window was due to ope
 $string['recertwindowopendateverylate'] = 'ATTENTION! The recertification window was due to open on {$a} but has not yet occurred. Window opening should normally have occurred automatically by now, as more than one day has passed. You should contact your site administrator and inform them of this message. You should wait until this problem is resolved before making progress towards recertification. Progress made before the recertification window opens will likely be lost.';
 $string['recertwindowopenmessage'] = 'Recertification window open message';
 $string['recertwindowopenmessage_help'] = 'This message will be sent when a learner has entered the period when they can recertify.';
+$string['removedfromprogram'] = '\'{$a}\' has been removed from the certification';
 $string['renewalstatus_dueforrenewal'] = 'Due for renewal';
 $string['renewalstatus_expired'] = 'Renewal expired';
 $string['renewalstatus_notdue'] = 'Not due for renewal';
@@ -360,8 +450,13 @@ $string['status_expired'] = 'Expired';
 $string['status_inprogress'] = 'In progress';
 $string['status_notcertified'] = 'Not certified';
 $string['status_unset'] = 'Unset';
+$string['summary'] = 'Summary';
+$string['summary_help'] = 'Summary description of the certification.';
 $string['timeallowance'] = 'Minimum time required for recertification is {$a->timestring}';
+$string['tocertification'] = 'to certification';
 $string['tosaveall'] = 'To save all changes, click \'Save all changes\'. To edit click \'Edit certification details\'. Saving changes cannot be undone.';
+$string['totallearnersassigned'] = 'Total learners assigned';
+$string['totallearnersassigned_help'] = 'This total may differ from the sum of learners in groups below. This is because some users\' assignments may not have been processed by the system or the certification may not currently be active. Some users may also be in multiple assigned groups, but they are only assigned once.';
 $string['type_competency'] = 'Competency';
 $string['type_course'] = 'Course';
 $string['type_program'] = 'Program';
@@ -381,7 +476,9 @@ $string['years'] = 'Year(s)';
 $string['youhaveunsavedchanges'] = 'You have unsaved changes.';
 $string['youareassigned'] = 'You are assigned to this certification';
 
-// Deprecated.
+// Deprecated since Totara 13
 $string['error:info_fixprogincomplete'] = 'There are two known methods of resolving this problem.<br>
 It could have been caused in previous versions when a user was certified, before the recertification window opened, the user was then unassigned, and later re-assigned. If the record has a history completion record (most likely marked \'unassigned\') then this is likely the cause. In this case, you should manually edit the completion record, copying the details of the history record, then remove the history record. This will restore the user into the certification in the state that they were in before being unassigned.<br>
 If no history record exists, use the automatic fix to change the program completion record to \'incomplete\'. Users will be put into the primary certification path, but might automatically be marked certified again by cron, depending on the state of their courses (which are likely still marked complete). Beware that clicking this link will apply the change to all currently selected records. If some records need to be fixed using the method above, they should be done first, or you could activate this fix while editing a single completion record.';
+$string['createnewcertifprog'] = 'Create new certification program';
+$string['certifprogramcreatesuccess'] = 'Certification program creation successful';

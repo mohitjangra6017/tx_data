@@ -1,2 +1,3 @@
 contentavailability,totara_program
 contentavailability_help,totara_program
+programcontent,totara_program

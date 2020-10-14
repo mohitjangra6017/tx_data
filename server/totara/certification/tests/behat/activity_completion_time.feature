@@ -38,8 +38,8 @@ Feature: Certification completion date is based on course completion time
     And I click on "Save all changes" "button"
     And I switch to "Assignments" tab
     And I set the field "Add a new" to "Individuals"
-    And I click on "Learner One" "link" in the "Add individuals to program" "totaradialogue"
-    And I click on "Ok" "button" in the "Add individuals to program" "totaradialogue"
+    And I click on "Learner One" "link" in the "Add individuals to certification" "totaradialogue"
+    And I click on "Ok" "button" in the "Add individuals to certification" "totaradialogue"
     And I wait "1" seconds
     And I am on "Course One" course homepage with editing mode on
     And I add a "Seminar" to section "1" and I fill the form with:

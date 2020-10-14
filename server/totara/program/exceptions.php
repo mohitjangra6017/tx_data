@@ -111,13 +111,14 @@ echo $program->display_current_status();
 $currenttab = 'exceptions';
 require('tabs.php');
 
-echo $OUTPUT->heading(get_string('programexceptions', 'totara_program'));
+$str = $program->is_certif() ? get_string('certificationexceptions', 'totara_certification') : get_string('programexceptions', 'totara_program');
+echo $OUTPUT->heading($str);
 echo html_writer::start_tag('p') . get_string('instructions:programexceptions', 'totara_program') . html_writer::end_tag('p');
 
 $renderer = $PAGE->get_renderer('totara_program');
 echo $renderer->print_search($id, $searchterm, $foundexceptionscount);
 
-$programexceptionsmanager->print_exceptions_form($id, $programexceptions, $selected_exceptions, $selectiontype);
+$programexceptionsmanager->print_exceptions_form($id, $programexceptions, $selected_exceptions, $selectiontype, $program->is_certif());
 
 $pagingbar = new paging_bar($foundexceptionscount, $page, manager::RESULTS_PER_PAGE, $baseurl);
 echo $OUTPUT->render($pagingbar);

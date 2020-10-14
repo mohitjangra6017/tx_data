@@ -95,7 +95,7 @@ echo $renderer->header();
 
 $heading = format_string($program->fullname);
 if ($program->certifid) {
-    $heading .= ' ('.get_string('certification', 'totara_certification').')';
+    $heading = get_string('header:certification', 'totara_certification', $heading);
 }
 echo $OUTPUT->heading($heading);
 

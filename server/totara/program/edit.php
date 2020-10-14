@@ -310,7 +310,11 @@ echo $OUTPUT->header();
 
 echo $OUTPUT->container_start('program overview', $pageid);
 
-echo $OUTPUT->heading(format_string($program->fullname));
+$heading = format_string($program->fullname);
+if ($iscertif) {
+    $heading = get_string('header:certification', 'totara_certification', $heading);
+}
+echo $OUTPUT->heading($heading);
 
 $renderer = $PAGE->get_renderer('totara_program');
 // Display the current status

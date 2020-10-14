@@ -59,7 +59,7 @@ Feature: Availability of programs affects assignments
     Then I should see "2" in the "Audience1" "table_row"
     Then I should see "This program is not yet available. Learner assignments will be applied following the start date"
     And I should not see "2 learner(s) assigned: 2 active, 0 exception(s)"
-    When I click on "Remove program assignment" "link" in the "Audience1" "table_row"
+    When I click on "Remove assignment" "link" in the "Audience1" "table_row"
     And I click on "Remove" "button"
     Then "Audience1" "table_row" should not exist
 
@@ -93,7 +93,7 @@ Feature: Availability of programs affects assignments
     Then I should see "2" in the "Audience1" "table_row"
     Then I should see "Caution: Program is live - there are learners who will see or be affected by changes you make"
     And I should see "2 learner(s) assigned: 2 active, 0 exception(s)."
-    When I click on "Remove program assignment" "link" in the "Audience1" "table_row"
+    When I click on "Remove assignment" "link" in the "Audience1" "table_row"
     And I click on "Remove" "button"
     Then "Audience1" "table_row" should not exist
 
@@ -133,7 +133,7 @@ Feature: Availability of programs affects assignments
     When I switch to "Assignments" tab
     And I should see "Note: If program is reactivated, the assigned learners may be updated based on any changes within selected groups."
     Then "Add a new" "field" should not exist
-    And "Remove program assignment" "link" should not exist in the "Audience1" "table_row"
+    And "Remove assignment" "link" should not exist in the "Audience1" "table_row"
 
   Scenario: When a program is no longer available, an admin can view but not update due dates for assignments
     Given I switch to "Assignments" tab

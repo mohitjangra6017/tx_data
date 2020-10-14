@@ -1564,7 +1564,8 @@ class multi_course_set extends course_set {
             $template_values['%'.$prefix.'timeallowednum%'] = array('name'=>$prefix.'timeallowednum', 'value'=>null);
             $template_values['%'.$prefix.'timeallowedperiod%'] = array('name'=>$prefix.'timeallowedperiod', 'value'=>null);
         }
-        $helpbutton = $OUTPUT->help_icon('minimumtimerequired', 'totara_program');
+        $component = \totara_program\utils::is_certif($this->programid) ? 'totara_certification' : 'totara_program';
+        $helpbutton = $OUTPUT->help_icon('minimumtimerequired', $component);
         $templatehtml .= html_writer::start_tag('div', array('class' => 'fitem'));
         $templatehtml .= html_writer::start_tag('div', array('class' => 'fitemtitle'));
         $templatehtml .= html_writer::tag('label', get_string('label:minimumtimerequired', 'totara_program') . ' ' . $helpbutton,

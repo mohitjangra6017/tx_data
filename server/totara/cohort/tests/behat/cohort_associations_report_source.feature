@@ -55,10 +55,10 @@ Feature: Test the cohort associations report source.
     And I click on "Settings" "link" in the "Cert #1" "table_row"
     And I switch to "Assignments" tab
     And I set the field "Add a new" to "Audiences"
-    And I click on "Audience #1" "link" in the "Add audiences to program" "totaradialogue"
-    And I click on "Audience #2" "link" in the "Add audiences to program" "totaradialogue"
-    And I click on "Audience #4" "link" in the "Add audiences to program" "totaradialogue"
-    And I click on "Ok" "button" in the "Add audiences to program" "totaradialogue"
+    And I click on "Audience #1" "link" in the "Add audiences to certification" "totaradialogue"
+    And I click on "Audience #2" "link" in the "Add audiences to certification" "totaradialogue"
+    And I click on "Audience #4" "link" in the "Add audiences to certification" "totaradialogue"
+    And I click on "Ok" "button" in the "Add audiences to certification" "totaradialogue"
 
     Given I click on "Set due date" "link" in the "Audience #1" "table_row"
     And I set the following fields to these values:

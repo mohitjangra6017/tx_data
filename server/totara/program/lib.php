@@ -1997,9 +1997,11 @@ class program_in_list implements IteratorAggregate {
  *
  * @param int $seconds
  * @param boolean $timeonly false = output html, true = time string only
+ * @param boolean $iscertif Is this a certification?
  * @return string
  */
-function prog_format_seconds($seconds, $timeonly = false) {
+function prog_format_seconds($seconds, $timeonly = false, $iscertif = false) {
+    $component = $iscertif ? 'totara_certification' : 'totara_program';
 
     $years = floor($seconds / DURATION_YEAR);
     $str_years = get_string('xyears', 'totara_program', $years);
@@ -2028,7 +2030,7 @@ function prog_format_seconds($seconds, $timeonly = false) {
     $output = '';
     $output .= html_writer::start_tag('div', array('id' => 'programtimerequired'));
     $output .= html_writer::start_tag('p');
-    $output .= get_string('minprogramtimerequired', 'totara_program');
+    $output .= get_string('minprogramtimerequired', $component);
     $output .= $timestring;
     $output .= html_writer::end_tag('p');
     $output .= html_writer::end_tag('div');

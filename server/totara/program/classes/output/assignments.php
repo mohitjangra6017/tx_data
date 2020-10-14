@@ -89,6 +89,7 @@ final class assignments extends \core\output\template {
         $data['has_categories'] = false;
         $data['programid'] = $programid;
         $data['canupdate'] = $canupdate;
+        $data['iscertif'] = \totara_program\utils::is_certif($programid);
 
         return new assignments($data);
     }

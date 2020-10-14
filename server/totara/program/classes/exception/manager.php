@@ -310,7 +310,7 @@ class manager {
         return $exceptions;
     }
 
-    public function print_exceptions_form($programid, $exceptions, $selectedexceptions = null, $selectiontype = self::SELECTIONTYPE_NONE) {
+    public function print_exceptions_form($programid, $exceptions, $selectedexceptions = null, $selectiontype = self::SELECTIONTYPE_NONE, $iscertif = false) {
         global $PAGE;
         $numexceptions = count($exceptions);
         $numselectedexceptions = count($selectedexceptions);
@@ -346,7 +346,7 @@ class manager {
             $tabledata[] = $rowdata;
         }
         $renderer = $PAGE->get_renderer('totara_program');
-        echo $renderer->print_exceptions_form($numexceptions, $numselectedexceptions, $programid, $selectiontype, $tabledata);
+        echo $renderer->print_exceptions_form($numexceptions, $numselectedexceptions, $programid, $selectiontype, $tabledata, $iscertif);
     }
 
     /**

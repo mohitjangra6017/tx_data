@@ -46,12 +46,12 @@ $program = new program($id);
 $programcontext = $program->get_context();
 $timeallowance = new stdClass();
 $timeallowance->seconds = $program->content->get_total_time_allowance(CERTIFPATH_RECERT);
-$timeallowance->timestring = prog_format_seconds($timeallowance->seconds, true);
+$timeallowance->timestring = prog_format_seconds($timeallowance->seconds, true, true);
 
 // Minimum recertification window period is 1 day.
 if (empty($timeallowance->timestring)) {
     $timeallowance->seconds = DAYSECS;
-    $timeallowance->timestring = prog_format_seconds($timeallowance->seconds, true);
+    $timeallowance->timestring = prog_format_seconds($timeallowance->seconds, true, true);
 }
 
 $certification = $DB->get_record('certif', array('id' => $program->certifid));
@@ -112,8 +112,7 @@ if ($data = $form->get_data()) {
 
 // Display.
 
-$heading = format_string($program->fullname);
-$heading .= ' ('.get_string('certification', 'totara_certification').')';
+$heading = get_string('header:certification', 'totara_certification', format_string($program->fullname));
 
 // Javascript includes.
 $PAGE->requires->strings_for_js(array('editcertif', 'saveallchanges', 'confirmchanges',

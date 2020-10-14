@@ -45,4 +45,4 @@ Feature: Catalog metadata search
     And I click on "Find Learning" in the totara menu
     And I set the field with xpath "//*[@id='catalog_fts_input']" to "hello"
     When I click on "Search" "button" in the "#region-main" "css_element"
-    Then I should see "Certification program fullname 101"
+    Then I should see "Certification fullname 101"

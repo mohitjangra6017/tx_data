@@ -37,8 +37,8 @@ Feature: Yet another manual user data purging
 
     And I switch to "Assignments" tab
     And I set the field "Add a new" to "Individuals"
-    And I click on "One Uno" "link" in the "Add individuals to program" "totaradialogue"
-    And I click on "Ok" "button" in the "Add individuals to program" "totaradialogue"
+    And I click on "One Uno" "link" in the "Add individuals to certification" "totaradialogue"
+    And I click on "Ok" "button" in the "Add individuals to certification" "totaradialogue"
     And I wait "1" seconds
 
     And I am on "Akoranga" course homepage

@@ -285,8 +285,14 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         $this->setAdminUser();
 
         // Strings for start of assignment reason string, before show list of reasons.
-        $learnerisassignedtocomplete = '<p>The learner is required to complete this program under the following criteria:</p>';
-        $youarerequiredtocompleted = '<p>You are required to complete this program under the following criteria:</p>';
+        if ($type == 'program') {
+            $learnerisassignedtocomplete = '<p>The learner is required to complete this program under the following criteria:</p>';
+            $youarerequiredtocompleted = '<p>You are required to complete this program under the following criteria:</p>';
+        } else {
+            $learnerisassignedtocomplete = '<p>The learner is required to complete this certification under the following criteria:</p>';
+            $youarerequiredtocompleted = '<p>You are required to complete this certification under the following criteria:</p>';
+        }
+
         $expectedreasonstrings = $this->get_expected_assignment_reason_strings();
 
         foreach($assignmentdata as $userassigned) {
@@ -2404,6 +2410,7 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         $expected->notification_state = 'warning';
         $expected->audiencevisibilitywarning = false;
         $expected->expired = false;
+        $expected->certifid = null;
 
         $this->assertEquals($expected, $result);
 
@@ -2423,6 +2430,7 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         $expected2->notification_state = 'warning';
         $expected2->audiencevisibilitywarning = false;
         $expected2->expired = false;
+        $expected2->certifid = null;
 
         $this->assertEquals($expected2, $result);
     }

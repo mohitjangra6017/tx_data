@@ -36,6 +36,7 @@ information provided here is intended especially for developers.
 * program::assigned_to_users_non_required_learning() method has been deprecated.
 * \totara_program\assignment\helper::can_update() added second argument $typeid.
 * prog_assignment_category::get_categories() added first argument $excludeui.
+* prog_format_seconds() added third argument $iscertif.
 
 === 12.8 ===
 

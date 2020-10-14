@@ -259,7 +259,7 @@ if ($data = $form->get_data()) {
 
             $transaction->allow_commit();
 
-            $successmsg = get_string('certifprogramcreatesuccess', 'totara_certification');
+            $successmsg = get_string('certifcreatesuccess', 'totara_certification');
         } else {
             $successmsg = get_string('programcreatesuccess', 'totara_program');
         }
@@ -303,7 +303,7 @@ if (!$iscertif) {
     $heading = get_string('createnewprogram', 'totara_program');
     $pagetitle = format_string(get_string('program', 'totara_program').': '.$heading);
 } else {
-    $heading = get_string('createnewcertifprog', 'totara_certification');
+    $heading = get_string('createnewcertif', 'totara_certification');
     $pagetitle = format_string(get_string('certifprog', 'totara_certification').': '.$heading);
 }
 

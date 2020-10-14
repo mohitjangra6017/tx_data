@@ -193,7 +193,8 @@ if ($data = $contenteditform->get_data()) {
             $DB->update_record('prog', $prog_update);
 
             if (isset($data->savechanges) || $submitdata) {
-                \core\notification::success(get_string('programcontentsaved', 'totara_program'));
+                $str = $iscertif ? get_string('certificationcontentsaved', 'totara_certification') : get_string('programcontentsaved', 'totara_program');
+                \core\notification::success($str);
                 redirect('edit_content.php?id=' . $id);
             }
         }
@@ -208,7 +209,7 @@ $event = \totara_program\event\program_viewed::create_from_data($dataevent)->tri
 $heading = format_string($program->fullname);
 
 if ($iscertif) {
-    $heading .= ' ('.get_string('certification', 'totara_certification').')';
+    $heading = get_string('header:certification', 'totara_certification', $heading);
 }
 
 //Javascript includes

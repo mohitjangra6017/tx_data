@@ -100,7 +100,7 @@ class totara_program_renderer extends plugin_renderer_base {
         global $CFG;
 
         $programstatusclass = $data->notification_state;
-        $programstatusstring = get_string($data->statusstr, 'totara_program');
+        $programstatusstring = get_string($data->statusstr, $data->certifid ? 'totara_certification' : 'totara_program');
 
         if (($data->statusstr === 'notduetostartuntil') or ($data->statusstr === 'nolongeravailabletolearners')) {
             $notification = $programstatusstring;
@@ -245,7 +245,7 @@ class totara_program_renderer extends plugin_renderer_base {
             }
 
             if ($programtime > 0) {
-                $out .= prog_format_seconds($programtime);
+                $out .= prog_format_seconds($programtime, false, $program->is_certif());
             }
 
             $out .= html_writer::tag('p', get_string('instructions:programassignments', 'totara_program'));
@@ -378,7 +378,7 @@ class totara_program_renderer extends plugin_renderer_base {
     * @param int $selectiontype currently selected value in dropdown
     * @return string HTML Fragment
     */
-    public function print_exceptions_form($numexceptions, $numselectedexceptions, $programid, $selectiontype, $tabledata) {
+    public function print_exceptions_form($numexceptions, $numselectedexceptions, $programid, $selectiontype, $tabledata, $iscertif = false) {
         $out = '';
 
         if ($numexceptions == 0) {
@@ -388,7 +388,7 @@ class totara_program_renderer extends plugin_renderer_base {
             $out .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => "id", 'value' => $programid));
             $out .= html_writer::start_tag('div', array('class' => 'exceptionactions'));
 
-            $out .= $this->get_exceptiontype_selector($selectiontype);
+            $out .= $this->get_exceptiontype_selector($selectiontype, $iscertif);
 
             $out .= $this->get_exceptionaction_selector();
 
@@ -431,13 +431,14 @@ class totara_program_renderer extends plugin_renderer_base {
         return $out;
     }
 
-    public function get_exceptiontype_selector($selectiontype) {
+    public function get_exceptiontype_selector($selectiontype, $iscertif) {
         $out = '';
         $options = array();
         $options[exception_manager::SELECTIONTYPE_NONE] = get_string('select', 'totara_program');
         $options[exception_manager::SELECTIONTYPE_ALL] = get_string('alllearners', 'totara_program');
         $options[exception_manager::SELECTIONTYPE_TIME_ALLOWANCE] = get_string('timeallowance', 'totara_program');
-        $options[exception_manager::SELECTIONTYPE_ALREADY_ASSIGNED] = get_string('exceptiontypealreadyassigned', 'totara_program');
+        $options[exception_manager::SELECTIONTYPE_ALREADY_ASSIGNED] = get_string('exceptiontypealreadyassigned',
+            $iscertif ? 'totara_certification' : 'totara_program');
         $options[exception_manager::SELECTIONTYPE_COMPLETION_TIME_UNKNOWN] = get_string('completiontimeunknown', 'totara_program');
         $options[exception_manager::SELECTIONTYPE_DUPLICATE_COURSE] = get_string('exceptiontypeduplicatecourse', 'totara_program');
         $out .= html_writer::start_tag('div');

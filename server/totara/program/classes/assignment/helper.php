@@ -154,7 +154,7 @@ final class helper {
      * @return string
      */
     public static function build_status_string(\stdClass $data): string {
-        $programstatusstring = get_string($data->statusstr, 'totara_program');
+        $programstatusstring = get_string($data->statusstr, $data->certifid ? 'totara_certification' : 'totara_program');
 
         if (($data->statusstr === 'notduetostartuntil') or ($data->statusstr === 'nolongeravailabletolearners')) {
             $statusmessage = $programstatusstring;

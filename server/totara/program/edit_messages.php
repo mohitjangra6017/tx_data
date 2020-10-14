@@ -151,7 +151,7 @@ $event = \totara_program\event\program_viewed::create_from_data($dataevent)->tri
 $heading = format_string($program->fullname);
 
 if ($iscertif) {
-    $heading .= ' ('.get_string('certification','totara_certification').')';
+    $heading = get_string('header:certification', 'totara_certification', $heading);
 }
 
 // Javascript includes.
