@@ -52,7 +52,6 @@ abstract class restore_prechecks_helper {
         // Some handy vars to be used along the prechecks
         $samesite = $controller->is_samesite();
         $restoreusers = $controller->get_plan()->get_setting('users')->get_value();
-        $hasmnetusers = (int)$controller->get_info()->mnet_remoteusers;
         $restoreid = $controller->get_restoreid();
         $courseid = $controller->get_courseid();
         $userid = $controller->get_userid();
@@ -124,17 +123,6 @@ abstract class restore_prechecks_helper {
                 $originalcourseformat == 'site' &&
                 $controller->get_type() == backup::TYPE_1COURSE) {
             $errors[] = get_string('errorrestorefrontpagebackup', 'backup');
-        }
-
-        // If restoring to different site and restoring users and backup has mnet users warn/error
-        if (!$samesite && $restoreusers && $hasmnetusers) {
-            // User is admin (can create users at sysctx), warn
-            if (has_capability('moodle/user:create', context_system::instance(), $controller->get_userid())) {
-                $warnings[] = get_string('mnetrestore_extusers_admin', 'admin');
-            // User not admin
-            } else {
-                $errors[] = get_string('mnetrestore_extusers_noadmin', 'admin');
-            }
         }
 
         // Load all the inforef files, we are going to need them

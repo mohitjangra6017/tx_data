@@ -117,7 +117,6 @@ class helper {
         } else {
             $user->maildisplay = 2;
         }
-        $user->mnethostid = $CFG->mnet_localhost_id;
         $user->confirmed = 1;
         $user->lang = $tool->lang;
 
@@ -154,9 +153,6 @@ class helper {
             return false;
         }
         if ($newuser->maildisplay != $olduser->maildisplay) {
-            return false;
-        }
-        if ($newuser->mnethostid != $olduser->mnethostid) {
             return false;
         }
         if ($newuser->confirmed != $olduser->confirmed) {

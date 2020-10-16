@@ -53,10 +53,7 @@ class core_role_admins_potential_selector extends user_selector_base {
 
         // Totara: tenant users must not be administrators
         $sql = " FROM {user}
-                WHERE $wherecondition AND mnethostid = :localmnet AND tenantid IS NULL";
-
-        // It could be dangerous to make remote users admins and also this could lead to other problems.
-        $params['localmnet'] = $CFG->mnet_localhost_id;
+                WHERE $wherecondition AND tenantid IS NULL";
 
         list($sort, $sortparams) = users_order_by_sql('', $search, $this->accesscontext);
         $order = ' ORDER BY ' . $sort;

@@ -611,13 +611,6 @@ class core_renderer extends renderer_base {
             } else {
                 $username = $fullname;
             }
-            if (is_mnet_remote_user($USER) and $idprovider = $DB->get_record('mnet_host', array('id'=>$USER->mnethostid))) {
-                if ($withlinks) {
-                    $username .= " from <a href=\"{$idprovider->wwwroot}\">{$idprovider->name}</a>";
-                } else {
-                    $username .= " from {$idprovider->name}";
-                }
-            }
             if (isguestuser()) {
                 $loggedinas = $realuserinfo.get_string('loggedinasguest');
                 if (!$loginpage && $withlinks) {
@@ -3076,15 +3069,6 @@ EOD;
             $usertextcontents .= html_writer::span(
                 $opts->metadata['userloginfail'],
                 'meta loginfailures label label-info'
-            );
-        }
-
-        // MNet.
-        if (!empty($opts->metadata['asmnetuser'])) {
-            $mnet = strtolower(preg_replace('#[ ]+#', '-', trim($opts->metadata['mnetidprovidername'])));
-            $usertextcontents .= html_writer::span(
-                $opts->metadata['mnetidprovidername'],
-                'meta mnet mnet-' . $mnet . ' label label-info'
             );
         }
 

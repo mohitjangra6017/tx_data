@@ -255,7 +255,6 @@ class api {
         $user->username = $userinfo['username'];
         $user->email = $userinfo['email'];
         $user->auth = 'oauth2';
-        $user->mnethostid = $CFG->mnet_localhost_id;
         $user->lastname = isset($userinfo['lastname']) ? $userinfo['lastname'] : '';
         $user->firstname = isset($userinfo['firstname']) ? $userinfo['firstname'] : '';
         $user->url = isset($userinfo['url']) ? $userinfo['url'] : '';
@@ -304,7 +303,6 @@ class api {
         $user->username = $userinfo['username'];
         $user->email = $userinfo['email'];
         $user->auth = 'oauth2';
-        $user->mnethostid = $CFG->mnet_localhost_id;
         $user->lastname = isset($userinfo['lastname']) ? $userinfo['lastname'] : '';
         $user->firstname = isset($userinfo['firstname']) ? $userinfo['firstname'] : '';
         $user->url = isset($userinfo['url']) ? $userinfo['url'] : '';

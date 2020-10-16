@@ -81,7 +81,7 @@ if ($options['username'] == '' ) {
     $username = $options['username'];
 }
 
-if (!$user = $DB->get_record('user', array('auth'=>'manual', 'username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id))) {
+if (!$user = $DB->get_record('user', array('auth'=>'manual', 'username'=>$username))) {
     cli_error("Can not find user '$username'");
 }
 

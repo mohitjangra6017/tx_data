@@ -97,7 +97,6 @@ $STD_FIELDS = array('id', 'username', 'email',
         'oldusername', // use when renaming users - this is the original username
         'suspended',   // 1 means suspend user account, 0 means activate user account, nothing means keep as is for existing users
         'deleted',     // 1 means delete user
-        'mnethostid',  // Can not be used for adding, updating or deleting of users - only for enrolments, groups, cohorts and suspending.
         'interests',
     );
 // Include all name fields.
@@ -340,51 +339,14 @@ if ($formdata = $mform2->is_cancelled()) {
             $userserrors++;
         }
 
-        if (empty($user->mnethostid)) {
-            $user->mnethostid = $CFG->mnet_localhost_id;
-        }
-
-        if ($existinguser = $DB->get_record('user', array('username'=>$user->username, 'mnethostid'=>$user->mnethostid))) {
+        if ($existinguser = $DB->get_record('user', array('username'=>$user->username))) {
             $upt->track('id', $existinguser->id, 'normal', false);
         }
 
-        if ($user->mnethostid == $CFG->mnet_localhost_id) {
-            $remoteuser = false;
-
-            // Find out if username incrementing required.
-            if ($existinguser and $optype == UU_USER_ADDINC) {
-                $user->username = uu_increment_username($user->username);
-                $existinguser = false;
-            }
-
-        } else {
-            if (!$existinguser or $optype == UU_USER_ADDINC) {
-                $upt->track('status', get_string('errormnetadd', 'tool_uploaduser'), 'error');
-                $userserrors++;
-                continue;
-            }
-
-            $remoteuser = true;
-
-            // Make sure there are no changes of existing fields except the suspended status.
-            foreach ((array)$existinguser as $k => $v) {
-                if ($k === 'suspended') {
-                    continue;
-                }
-                if (property_exists($user, $k)) {
-                    $user->$k = $v;
-                }
-                if (in_array($k, $upt->columns)) {
-                    if ($k === 'password' or $k === 'oldusername' or $k === 'deleted') {
-                        $upt->track($k, '', 'normal', false);
-                    } else {
-                        $upt->track($k, s($v), 'normal', false);
-                    }
-                }
-            }
-            unset($user->oldusername);
-            unset($user->password);
-            $user->auth = $existinguser->auth;
+        // Find out if username incrementing required.
+        if ($existinguser and $optype == UU_USER_ADDINC) {
+            $user->username = uu_increment_username($user->username);
+            $existinguser = false;
         }
 
         // notify about nay username changes
@@ -436,7 +398,7 @@ if ($formdata = $mform2->is_cancelled()) {
 
         // delete user
         if (!empty($user->deleted)) {
-            if (!$allowdeletes or $remoteuser) {
+            if (!$allowdeletes) {
                 $usersskipped++;
                 $upt->track('status', $strusernotdeletedoff, 'warning');
                 continue;
@@ -495,7 +457,7 @@ if ($formdata = $mform2->is_cancelled()) {
             }
 
             // no guessing when looking for old username, it must be exact match
-            if ($olduser = $DB->get_record('user', array('username'=>$oldusername, 'mnethostid'=>$CFG->mnet_localhost_id))) {
+            if ($olduser = $DB->get_record('user', array('username'=>$oldusername))) {
                 $upt->track('id', $olduser->id, 'normal', false);
                 if (is_siteadmin($olduser->id)) {
                     $upt->track('status', $strusernotrenamedadmin, 'error');
@@ -578,7 +540,7 @@ if ($formdata = $mform2->is_cancelled()) {
             $doupdate = false;
             $dologout = false;
 
-            if ($updatetype != UU_UPDATE_NOCHANGES and !$remoteuser) {
+            if ($updatetype != UU_UPDATE_NOCHANGES) {
                 if (!empty($user->auth) and $user->auth !== $existinguser->auth) {
                     $upt->track('auth', s($existinguser->auth).'-->'.s($user->auth), 'info', false);
                     $existinguser->auth = $user->auth;
@@ -690,10 +652,7 @@ if ($formdata = $mform2->is_cancelled()) {
             // do not force password changes for external auth plugins!
             $oldpw = $existinguser->password;
 
-            if ($remoteuser) {
-                // Do not mess with passwords of remote users.
-
-            } else if (!$isinternalauth) {
+            if (!$isinternalauth) {
                 $existinguser->password = AUTH_PASSWORD_NOT_CACHED;
                 $upt->track('password', '-', 'normal', false);
                 // clean up prefs
@@ -736,12 +695,10 @@ if ($formdata = $mform2->is_cancelled()) {
                 $upt->track('status', $struserupdated);
                 $usersupdated++;
 
-                if (!$remoteuser) {
-                    // pre-process custom profile menu fields data from csv file
-                    $existinguser = uu_pre_process_custom_profile_data($existinguser);
-                    // save custom profile fields data from csv file
-                    profile_save_data($existinguser);
-                }
+                // pre-process custom profile menu fields data from csv file
+                $existinguser = uu_pre_process_custom_profile_data($existinguser);
+                // save custom profile fields data from csv file
+                profile_save_data($existinguser);
 
                 if ($bulk == UU_BULK_UPDATED or $bulk == UU_BULK_ALL) {
                     if (!in_array($user->id, $SESSION->bulk_users)) {
@@ -773,7 +730,6 @@ if ($formdata = $mform2->is_cancelled()) {
             $user->confirmed    = 1;
             $user->timemodified = time();
             $user->timecreated  = time();
-            $user->mnethostid   = $CFG->mnet_localhost_id; // we support ONLY local accounts here, sorry
 
             if (!isset($user->suspended) or $user->suspended === '') {
                 $user->suspended = 0;
@@ -1288,7 +1244,7 @@ while ($linenum <= $previewrows and $fields = $cir->next()) {
         }
         if ($k === 'username') {
             if (core_user::clean_field($v, 'username') === $v) {
-                $userid = $DB->get_field('user', 'id', ['username' => $v, 'mnethostid' => $CFG->mnet_localhost_id, 'deleted' => 0]);
+                $userid = $DB->get_field('user', 'id', ['username' => $v, 'deleted' => 0]);
             } else {
                 $userid = false;
             }

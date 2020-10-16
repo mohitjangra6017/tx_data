@@ -260,17 +260,16 @@ function import_data_checks($importname, $importtime) {
         $DB->execute($sql, $params);
 
         // Missing User names.
-        // Reference to mnethostid in subquery allows us to benefit from an index on user table.
         // This tool does not support importing historic records from networked sites
         // so local site id alway used.
         $params = array_merge($stdparams,
-            array('errorstring' => 'usernamenotfound;', 'mnetlocalhostid' => $CFG->mnet_localhost_id));
+            array('errorstring' => 'usernamenotfound;'));
         $sql = "UPDATE {{$tablename}}
                 SET importerrormsg = " . $DB->sql_concat('importerrormsg', ':errorstring') . "
                 {$sqlwhere}
                 AND " . $DB->sql_isnotempty($tablename, 'username', true, false) . "
                 AND NOT EXISTS (SELECT {user}.id FROM {user}
-                WHERE {user}.username = {{$tablename}}.username AND {user}.mnethostid = :mnetlocalhostid)";
+                WHERE {user}.username = {{$tablename}}.username)";
         $DB->execute($sql, $params);
     }
 

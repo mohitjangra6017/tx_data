@@ -181,7 +181,7 @@ class login_signup_form extends moodleform implements renderable, templatable {
 
         $authplugin = get_auth_plugin($CFG->registerauth);
 
-        if ($DB->record_exists('user', array('username'=>$data['username'], 'mnethostid'=>$CFG->mnet_localhost_id))) {
+        if ($DB->record_exists('user', array('username'=>$data['username']))) {
             $errors['username'] = get_string('usernameexists');
         } else {
             //check allowed characters

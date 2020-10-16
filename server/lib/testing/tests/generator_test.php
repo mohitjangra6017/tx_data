@@ -93,7 +93,6 @@ class core_test_generator_testcase extends advanced_testcase {
             'middlename' => 'Hopper',
             'alternatename' => 'horse',
             'idnumber' => 'abc1',
-            'mnethostid' => (string)$CFG->mnet_localhost_id,
             'username' => 'konic666',
             'password' => 'password1',
             'email' => 'email@example.com',

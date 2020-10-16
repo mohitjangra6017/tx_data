@@ -1309,7 +1309,7 @@ function totara_cohort_notify_users($cohortid, $userids, $action, $delaymessages
     $a->affectedcount = count($memberlist);
     unset($memberlist);
 
-    $fields  = "id, username, maildisplay, mailformat, maildigest, emailstop, imagealt, email, city, country, lastaccess, lastlogin, picture, timezone, theme, lang, trackforums, mnethostid, auth, suspended, deleted, tenantid, ";
+    $fields  = "id, username, maildisplay, mailformat, maildigest, emailstop, imagealt, email, city, country, lastaccess, lastlogin, picture, timezone, theme, lang, trackforums, auth, suspended, deleted, tenantid, ";
     $fields .= $usernamefields;
     switch ($cohort->alertmembers) {
         case COHORT_ALERT_AFFECTED:

@@ -97,13 +97,6 @@ function make_log_url($module, $url) {
         case 'lib':
         case 'admin':
         case 'category':
-        case 'mnet course':
-            if (strpos($url, '../') === 0) {
-                $url = ltrim($url, '.');
-            } else {
-                $url = "/course/$url";
-            }
-            break;
         case 'calendar':
             $url = "/calendar/$url";
             break;
@@ -195,98 +188,6 @@ function make_log_url($module, $url) {
     }
 
     return $script.$query;
-}
-
-
-function build_mnet_logs_array($hostid, $course, $user=0, $date=0, $order="l.time ASC", $limitfrom='', $limitnum='',
-                   $modname="", $modid=0, $modaction="", $groupid=0) {
-    global $CFG, $DB;
-
-    // It is assumed that $date is the GMT time of midnight for that day,
-    // and so the next 86400 seconds worth of logs are printed.
-
-    /// Setup for group handling.
-
-    // TODO: I don't understand group/context/etc. enough to be able to do
-    // something interesting with it here
-    // What is the context of a remote course?
-
-    /// If the group mode is separate, and this user does not have editing privileges,
-    /// then only the user's group can be viewed.
-    //if ($course->groupmode == SEPARATEGROUPS and !has_capability('moodle/course:managegroups', context_course::instance($course->id))) {
-    //    $groupid = get_current_group($course->id);
-    //}
-    /// If this course doesn't have groups, no groupid can be specified.
-    //else if (!$course->groupmode) {
-    //    $groupid = 0;
-    //}
-
-    $groupid = 0;
-
-    $joins = array();
-    $where = '';
-
-    $qry = "SELECT l.*, u.firstname, u.lastname, u.picture
-              FROM {mnet_log} l
-               LEFT JOIN {user} u ON l.userid = u.id
-              WHERE ";
-    $params = array();
-
-    $where .= "l.hostid = :hostid";
-    $params['hostid'] = $hostid;
-
-    // TODO: Is 1 really a magic number referring to the sitename?
-    if ($course != SITEID || $modid != 0) {
-        $where .= " AND l.course=:courseid";
-        $params['courseid'] = $course;
-    }
-
-    if ($modname) {
-        $where .= " AND l.module = :modname";
-        $params['modname'] = $modname;
-    }
-
-    if ('site_errors' === $modid) {
-        $where .= " AND ( l.action='error' OR l.action='infected' )";
-    } else if ($modid) {
-        //TODO: This assumes that modids are the same across sites... probably
-        //not true
-        $where .= " AND l.cmid = :modid";
-        $params['modid'] = $modid;
-    }
-
-    if ($modaction) {
-        $firstletter = substr($modaction, 0, 1);
-        if ($firstletter == '-') {
-            $where .= " AND ".$DB->sql_like('l.action', ':modaction', false, true, true);
-            $params['modaction'] = '%'.substr($modaction, 1).'%';
-        } else {
-            $where .= " AND ".$DB->sql_like('l.action', ':modaction', false);
-            $params['modaction'] = '%'.$modaction.'%';
-        }
-    }
-
-    if ($user) {
-        $where .= " AND l.userid = :user";
-        $params['user'] = $user;
-    }
-
-    if ($date) {
-        $enddate = $date + 86400;
-        $where .= " AND l.time > :date AND l.time < :enddate";
-        $params['date'] = $date;
-        $params['enddate'] = $enddate;
-    }
-
-    $result = array();
-    $result['totalcount'] = $DB->count_records_sql("SELECT COUNT('x') FROM {mnet_log} l WHERE $where", $params);
-    if(!empty($result['totalcount'])) {
-        $where .= " ORDER BY $order";
-        $result['logs'] = $DB->get_records_sql("$qry $where", $params, $limitfrom, $limitnum);
-    } else {
-        $result['logs'] = array();
-    }
-    return $result;
 }
 
 /**

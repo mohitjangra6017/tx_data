@@ -357,7 +357,6 @@ class auth_db_db_testcase extends advanced_testcase {
         $this->assertSame($user4->name, $iuser4->username);
         $this->assertSame($user4->email, $iuser4->email);
         $this->assertSame('db', $iuser4->auth);
-        $this->assertSame($CFG->mnet_localhost_id, $iuser4->mnethostid);
 
         $user4b = clone($user4);
         $user4b->email = 'u4b@example.com';

@@ -339,11 +339,6 @@ class moodle1_root_handler extends moodle1_xml_handler {
         $this->xmlwriter->full_tag('backup_date', $backupinfo['date']);
         // see the commit c0543b - all backups created in 1.9 and later declare the
         // information or it is considered as false
-        if (isset($backupinfo['mnet_remoteusers'])) {
-            $this->xmlwriter->full_tag('mnet_remoteusers', $backupinfo['mnet_remoteusers']);
-        } else {
-            $this->xmlwriter->full_tag('mnet_remoteusers', false);
-        }
         $this->xmlwriter->full_tag('original_wwwroot', $backupinfo['original_wwwroot']);
         // {@see backup_general_helper::backup_is_samesite()}
         if (isset($backupinfo['original_site_identifier_hash'])) {

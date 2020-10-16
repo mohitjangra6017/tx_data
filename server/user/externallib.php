@@ -146,7 +146,6 @@ class core_user_external extends external_api {
         $params = self::validate_parameters(self::create_users_parameters(), array('users' => $users));
 
         $availableauths  = core_component::get_plugin_list('auth');
-        unset($availableauths['mnet']);       // These would need mnethostid too.
         unset($availableauths['webservice']); // We do not want new webservice users for now.
 
         $availablethemes = core_component::get_plugin_list('theme');
@@ -165,7 +164,7 @@ class core_user_external extends external_api {
             }
 
             // Make sure that the username doesn't already exist.
-            if ($DB->record_exists('user', array('username' => $user['username'], 'mnethostid' => $CFG->mnet_localhost_id))) {
+            if ($DB->record_exists('user', array('username' => $user['username']))) {
                 throw new invalid_parameter_exception('Username already exists: '.$user['username']);
             }
 
@@ -193,14 +192,13 @@ class core_user_external extends external_api {
             }
 
             $user['confirmed'] = true;
-            $user['mnethostid'] = $CFG->mnet_localhost_id;
 
             // Start of user info validation.
             // Make sure we validate current user info as handled by current GUI. See user/editadvanced_form.php func validation().
             if (!validate_email($user['email'])) {
                 throw new invalid_parameter_exception('Email address is invalid: '.$user['email']);
             } else if (empty($CFG->allowaccountssameemail) &&
-                    $DB->record_exists('user', array('email' => $user['email'], 'mnethostid' => $user['mnethostid']))) {
+                    $DB->record_exists('user', array('email' => $user['email']))) {
                 throw new invalid_parameter_exception('Email address already exists: '.$user['email']);
             }
             // End of user info validation.
@@ -550,7 +548,7 @@ class core_user_external extends external_api {
                 continue;
             }
             // Other checks (deleted, remote or guest users).
-            if ($existinguser->deleted or is_mnet_remote_user($existinguser) or isguestuser($existinguser->id)) {
+            if ($existinguser->deleted or isguestuser($existinguser->id)) {
                 continue;
             }
 
@@ -568,7 +566,7 @@ class core_user_external extends external_api {
                 if (!validate_email($user['email'])) {
                     continue;
                 } else if (empty($CFG->allowaccountssameemail) &&
-                        $DB->record_exists('user', array('email' => $user['email'], 'mnethostid' => $CFG->mnet_localhost_id))) {
+                        $DB->record_exists('user', array('email' => $user['email']))) {
                     continue;
                 }
             }
@@ -1564,7 +1562,7 @@ class core_user_external extends external_api {
 
         // Load the appropriate auth plugin.
         $userauth = get_auth_plugin($user->auth);
-        if (is_mnet_remote_user($user) or !$userauth->can_edit_profile() or $userauth->edit_profile_url($user->id)) {
+        if (!$userauth->can_edit_profile() or $userauth->edit_profile_url($user->id)) {
             throw new moodle_exception('noprofileedit', 'auth');
         }
 

@@ -73,7 +73,7 @@ class auth_plugin_webservice extends auth_plugin_base {
     function user_login_webservice($username, $password) {
         global $CFG, $DB;
         // special web service login
-        if ($user = $DB->get_record('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id))) {
+        if ($user = $DB->get_record('user', array('username'=>$username))) {
             return validate_internal_user_password($user, $password);
         }
         return false;

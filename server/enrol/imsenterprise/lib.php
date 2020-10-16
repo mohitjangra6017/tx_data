@@ -532,7 +532,7 @@ class enrol_imsenterprise_plugin extends enrol_plugin {
 
             if ($imsdeleteusers) { // If we're allowed to delete user records.
                 // Do not dare to hack the user.deleted field directly in database!!!
-                $params = array('username' => $person->username, 'mnethostid' => $CFG->mnet_localhost_id, 'deleted' => 0);
+                $params = array('username' => $person->username, 'deleted' => 0);
                 if ($user = $DB->get_record('user', $params)) {
                     if (delete_user($user)) {
                         $this->log_line("Deleted user '$person->username' (ID number $person->idnumber).");
@@ -581,7 +581,6 @@ class enrol_imsenterprise_plugin extends enrol_plugin {
                     }
                     $person->confirmed = 1;
                     $person->timemodified = time();
-                    $person->mnethostid = $CFG->mnet_localhost_id;
                     $id = $DB->insert_record('user', $person);
                     $this->log_line("Created user record ('.$id.') for user '$person->username' (ID number $person->idnumber).");
                 }

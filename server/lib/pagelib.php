@@ -1658,17 +1658,6 @@ class moodle_page {
             $themeorder[] = 'site';
         }
 
-        $mnetpeertheme = '';
-        // Totara: Check that $USER-mnethostid is set, it may not be for Totara external users.
-        if (isloggedin() and isset($CFG->mnet_localhost_id) and isset($USER->mnethostid) and $USER->mnethostid != $CFG->mnet_localhost_id) {
-            require_once($CFG->dirroot.'/mnet/peer.php');
-            $mnetpeer = new mnet_peer();
-            $mnetpeer->set_id($USER->mnethostid);
-            if ($mnetpeer->force_theme == 1 && $mnetpeer->theme != '') {
-                $mnetpeertheme = $mnetpeer->theme;
-            }
-        }
-
         $devicetheme = core_useragent::get_device_type_theme($this->devicetypeinuse);
 
         // The user is using another device than default, and we have a theme for that, we should use it.
@@ -1702,11 +1691,7 @@ class moodle_page {
 
                 case 'user':
                     if (!empty($CFG->allowuserthemes) && !empty($USER->theme) && !$hascustomdevicetheme) {
-                        if ($mnetpeertheme) {
-                            return $mnetpeertheme;
-                        } else {
-                            return $USER->theme;
-                        }
+                        return $USER->theme;
                     }
                 break;
 
@@ -1723,9 +1708,6 @@ class moodle_page {
                 break;
 
                 case 'site':
-                    if ($mnetpeertheme) {
-                        return $mnetpeertheme;
-                    }
                     // First try for the device the user is using.
                     if (!empty($devicetheme)) {
                         return $devicetheme;

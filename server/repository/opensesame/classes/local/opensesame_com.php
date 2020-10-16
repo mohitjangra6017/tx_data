@@ -76,7 +76,7 @@ class opensesame_com {
             'FirstName' => $user->firstname,
             'LastName' => $user->lastname,
             'Email' => $user->email,
-            'UserId' => sha1($user->username . '_' . $user->mnethostid . '_' . get_site_identifier()),
+            'UserId' => sha1($user->username . '_1_' . get_site_identifier()),
         );
 
         if ($config->tenanttype === 'Demo') {

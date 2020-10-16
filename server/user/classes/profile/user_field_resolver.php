@@ -41,7 +41,6 @@ final class user_field_resolver {
         'policyagreed',             // Type: smallint               , default 0 (not null)
         'deleted',                  // Type: smallint               , default 0 (not null)
         'suspended',                // Type: smallint               , default 0 (not null)
-        'mnethostid',               // Type: bigint                 , default 0 (not null)
         'username',                 // Type: character varying(100) , default '' (not null)
         'password',                 // Type: character varying(255) , default '' (not null)
         'idnumber',                 // Type: character varying(255) , default '' (not null)

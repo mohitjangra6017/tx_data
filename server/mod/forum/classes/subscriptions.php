@@ -411,8 +411,7 @@ class subscriptions {
                       u.theme,
                       u.lang,
                       u.trackforums,
-                      u.tenantid,
-                      u.mnethostid";
+                      u.tenantid";
         }
 
         // Retrieve the forum context if it wasn't specified.

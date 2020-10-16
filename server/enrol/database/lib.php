@@ -498,10 +498,6 @@ class enrol_database_plugin extends enrol_plugin {
                  LEFT JOIN {user_enrolments} ue ON (ue.userid = u.id AND ue.enrolid = ra.itemid)
                      WHERE u.deleted = 0";
             $params = array('enrolid'=>$instance->id);
-            if ($localuserfield === 'username') {
-                $sql .= " AND u.mnethostid = :mnethostid";
-                $params['mnethostid'] = $CFG->mnet_localhost_id;
-            }
             $rs = $DB->get_recordset_sql($sql, $params);
             foreach ($rs as $ue) {
                 $currentroles[$ue->userid][$ue->roleid] = $ue->roleid;
@@ -521,9 +517,6 @@ class enrol_database_plugin extends enrol_plugin {
             if ($rs = $extdb->Execute($sql)) {
                 if (!$rs->EOF) {
                     $usersearch = array('deleted' => 0);
-                    if ($localuserfield === 'username') {
-                        $usersearch['mnethostid'] = $CFG->mnet_localhost_id;
-                    }
                     while ($fields = $rs->FetchRow()) {
                         $fields = array_change_key_case($fields, CASE_LOWER);
                         if (empty($fields[$userfield_l])) {

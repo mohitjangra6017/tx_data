@@ -227,12 +227,6 @@ class user_editadvanced_form extends moodleform {
             }
         }
 
-        if ($user and is_mnet_remote_user($user)) {
-            // Only local accounts can be suspended.
-            if ($mform->elementExists('suspended')) {
-                $mform->removeElement('suspended');
-            }
-        }
         if ($user and ($user->id == $USER->id or is_siteadmin($user))) {
             // Prevent self and admin mess ups.
             if ($mform->elementExists('suspended')) {
@@ -312,7 +306,7 @@ class user_editadvanced_form extends moodleform {
             $err['username'] = get_string('required');
         } else if (!$user or $user->username !== $usernew->username) {
             // Check new username does not exist.
-            if ($DB->record_exists('user', array('username' => $usernew->username, 'mnethostid' => $CFG->mnet_localhost_id))) {
+            if ($DB->record_exists('user', array('username' => $usernew->username))) {
                 $err['username'] = get_string('usernameexists');
             }
             // Check allowed characters.
@@ -329,8 +323,8 @@ class user_editadvanced_form extends moodleform {
             if (!validate_email($usernew->email)) {
                 $err['email'] = get_string('invalidemail');
             } else if (empty($CFG->allowaccountssameemail)
-                and $DB->record_exists_select('user', "LOWER(email) = LOWER(:email) AND mnethostid = :mnethostid AND id <> :userid",
-                                              array('email' => $usernew->email, 'mnethostid' => $CFG->mnet_localhost_id, 'userid' => $usernew->id))) {
+                and $DB->record_exists_select('user', "LOWER(email) = LOWER(:email) AND id <> :userid",
+                                              array('email' => $usernew->email, 'userid' => $usernew->id))) {
                 $err['email'] = get_string('emailexists');
             }
         }

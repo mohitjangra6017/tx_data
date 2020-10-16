@@ -1366,7 +1366,7 @@ class backup_users_structure_step extends backup_structure_step {
         $users = new backup_nested_element('users');
 
         // Create the array of user fields by hand, as far as we have various bits to control
-        // anonymize option, password backup, mnethostid...
+        // anonymize option, password backup...
 
         // First, the fields not needing anonymization nor special handling
         $normalfields = array(
@@ -1393,9 +1393,6 @@ class backup_users_structure_step extends backup_structure_step {
                 $userfields[] = $field; // No anonymization, normally added
             }
         }
-
-        // mnethosturl requires special handling (custom final element)
-        $userfields[] = new mnethosturl_final_element('mnethosturl');
 
         // password added conditionally
         if (!empty($CFG->includeuserpasswordsinbackup)) {
@@ -1459,11 +1456,10 @@ class backup_users_structure_step extends backup_structure_step {
 
         // Define sources
 
-        $user->set_source_sql('SELECT u.*, c.id AS contextid, m.wwwroot AS mnethosturl
+        $user->set_source_sql('SELECT u.*, c.id AS contextid
                                  FROM {user} u
                                  JOIN {backup_ids_temp} bi ON bi.itemid = u.id
                             LEFT JOIN {context} c ON c.instanceid = u.id AND c.contextlevel = ' . CONTEXT_USER . '
-                            LEFT JOIN {mnet_host} m ON m.id = u.mnethostid
                                 WHERE bi.backupid = ?
                                   AND bi.itemname = ?', array(
                                       backup_helper::is_sqlparam($this->get_backupid()),
@@ -1791,7 +1787,6 @@ class backup_main_structure_step extends backup_structure_step {
         $info['backup_release'] = $CFG->backup_release;
         $info['backup_date']    = time();
         $info['backup_uniqueid']= $this->get_backupid();
-        $info['mnet_remoteusers']=backup_controller_dbops::backup_includes_mnet_remote_users($this->get_backupid());
         $info['include_files'] = backup_controller_dbops::backup_includes_files($this->get_backupid());
         $info['include_file_references_to_external_content'] =
                 backup_controller_dbops::backup_includes_file_references($this->get_backupid());
@@ -1817,7 +1812,7 @@ class backup_main_structure_step extends backup_structure_step {
 
         $information = new backup_nested_element('information', null, array(
             'name', 'moodle_version', 'moodle_release', 'totara_version', 'totara_build', 'totara_release', 'backup_version',
-            'backup_release', 'backup_date', 'mnet_remoteusers', 'include_files', 'include_file_references_to_external_content', 'original_wwwroot',
+            'backup_release', 'backup_date', 'include_files', 'include_file_references_to_external_content', 'original_wwwroot',
             'original_site_identifier_hash', 'original_course_id', 'original_course_format',
             'original_course_fullname', 'original_course_shortname', 'original_course_startdate', 'original_course_enddate',
             'original_course_contextid', 'original_system_contextid'));

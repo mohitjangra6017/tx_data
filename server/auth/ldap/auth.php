@@ -678,9 +678,8 @@ class auth_plugin_ldap extends auth_plugin_base {
         $table = new xmldb_table('tmp_extuser');
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('username', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('mnethostid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null);
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_index('username', XMLDB_INDEX_UNIQUE, array('mnethostid', 'username'));
+        $table->add_index('username', XMLDB_INDEX_UNIQUE, array('username'));
 
         print_string('creatingtemptable', 'auth_ldap', 'tmp_extuser');
         $dbman->create_temp_table($table);
@@ -760,7 +759,7 @@ class auth_plugin_ldap extends auth_plugin_base {
         if ($this->config->removeuser == AUTH_REMOVEUSER_FULLDELETE) {
             $sql = "SELECT u.*
                       FROM {user} u
-                 LEFT JOIN {tmp_extuser} e ON (u.username = e.username AND u.mnethostid = e.mnethostid)
+                 LEFT JOIN {tmp_extuser} e ON (u.username = e.username)
                      WHERE u.auth = :auth
                            AND u.deleted = 0
                            AND e.username IS NULL";
@@ -783,7 +782,7 @@ class auth_plugin_ldap extends auth_plugin_base {
         } else if ($this->config->removeuser == AUTH_REMOVEUSER_SUSPEND) {
             $sql = "SELECT u.*
                       FROM {user} u
-                 LEFT JOIN {tmp_extuser} e ON (u.username = e.username AND u.mnethostid = e.mnethostid)
+                 LEFT JOIN {tmp_extuser} e ON (u.username = e.username)
                      WHERE u.auth = :auth
                            AND u.deleted = 0
                            AND u.suspended = 0
@@ -811,7 +810,7 @@ class auth_plugin_ldap extends auth_plugin_base {
         if (!empty($this->config->removeuser) and $this->config->removeuser == AUTH_REMOVEUSER_SUSPEND) {
             $sql = "SELECT u.id, u.username
                       FROM {user} u
-                      JOIN {tmp_extuser} e ON (u.username = e.username AND u.mnethostid = e.mnethostid)
+                      JOIN {tmp_extuser} e ON (u.username = e.username)
                      WHERE (u.auth = 'nologin' OR (u.auth = ? AND u.suspended = 1)) AND u.deleted = 0";
             // Note: 'nologin' is there for backwards compatibility.
             $revive_users = $DB->get_records_sql($sql, array($this->authtype));
@@ -846,8 +845,8 @@ class auth_plugin_ldap extends auth_plugin_base {
         if ($do_updates and !empty($updatekeys)) { // run updates only if relevant
             $users = $DB->get_records_sql('SELECT u.username, u.id
                                              FROM {user} u
-                                            WHERE u.deleted = 0 AND u.auth = ? AND u.mnethostid = ?',
-                                          array($this->authtype, $CFG->mnet_localhost_id));
+                                            WHERE u.deleted = 0 AND u.auth = ?',
+                                          array($this->authtype));
             if (!empty($users)) {
                 print_string('userentriestoupdate', 'auth_ldap', count($users));
 
@@ -879,7 +878,7 @@ class auth_plugin_ldap extends auth_plugin_base {
         // note: we do not care about deleted accounts anymore, this feature was replaced by suspending to nologin auth plugin
         $sql = 'SELECT e.id, e.username
                   FROM {tmp_extuser} e
-                  LEFT JOIN {user} u ON (e.username = u.username AND e.mnethostid = u.mnethostid)
+                  LEFT JOIN {user} u ON (e.username = u.username)
                  WHERE u.id IS NULL';
         $add_users = $DB->get_records_sql($sql);
 
@@ -894,7 +893,6 @@ class auth_plugin_ldap extends auth_plugin_base {
                 $user->modified   = time();
                 $user->confirmed  = 1;
                 $user->auth       = $this->authtype;
-                $user->mnethostid = $CFG->mnet_localhost_id;
                 // get_userinfo_asobj() might have replaced $user->username with the value
                 // from the LDAP server (which can be mixed-case). Make sure it's lowercase
                 $user->username = trim(core_text::strtolower($user->username));
@@ -962,7 +960,7 @@ class auth_plugin_ldap extends auth_plugin_base {
         $username = trim(core_text::strtolower($username));
 
         // Get the current user record
-        $user = $DB->get_record('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id));
+        $user = $DB->get_record('user', array('username'=>$username));
         if (empty($user)) { // trouble
             error_log($this->errorlogtag.get_string('auth_dbusernotexist', 'auth_db', '', $username));
             print_error('auth_dbusernotexist', 'auth_db', '', $username);
@@ -1057,8 +1055,7 @@ class auth_plugin_ldap extends auth_plugin_base {
         global $DB, $CFG;
 
         $username = core_text::strtolower($username); // usernames are __always__ lowercase.
-        $DB->insert_record_raw('tmp_extuser', array('username'=>$username,
-                                                    'mnethostid'=>$CFG->mnet_localhost_id), false, true);
+        $DB->insert_record_raw('tmp_extuser', array('username'=>$username), false, true);
         echo '.';
     }
 

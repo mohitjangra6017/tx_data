@@ -39,7 +39,7 @@ defined('MOODLE_INTERNAL') || die();
  * if you ever change it back to theme A, the settings will be ready.
  *
  * It also means that other themes which are not the one set up for the course,
- * but might be seen by some users (eg user themes, session themes, mnet themes)
+ * but might be seen by some users (eg user themes, session themes)
  * can store data.
  *
  * If this behaviour is not desired for a particular theme's data, the subclass

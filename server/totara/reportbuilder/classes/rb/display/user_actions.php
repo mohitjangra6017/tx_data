@@ -50,15 +50,6 @@ class user_actions extends base {
         $user = self::get_extrafields_row($row, $column);
         $user->id = $userid;
 
-        if ($user->mnethostid != $CFG->mnet_localhost_id) {
-            // We will not support Mnet in this report!
-            return \html_writer::span(
-                get_string('mnetuser', 'totara_reportbuilder'),
-                'label label-info',
-                array('title' => get_string('mnetnotsupported', 'totara_reportbuilder'))
-            );
-        }
-
         $returnurl = new \moodle_url($report->get_current_url());
         $spage = optional_param('spage', '', PARAM_INT);
         if ($spage) {

@@ -136,7 +136,6 @@ function xmldb_main_install() {
         'registrationenabled'   => 1,
         'backup_version'        => 2008111700,
         'backup_release'        => '2.0 dev',
-        'mnet_dispatcher_mode'  => 'off',
         'sessiontimeout'        => 7200, // must be present during roles installation
         'stringfilters'         => '', // These two are managed in a strange way by the filters
         'filterall'             => 0, // setting page, so have to be initialised here.
@@ -152,62 +151,6 @@ function xmldb_main_install() {
         set_config($key, $value);
     }
 
-
-    // Bootstrap mnet
-    $mnethost = new stdClass();
-    $mnethost->wwwroot    = $CFG->wwwroot;
-    $mnethost->name       = '';
-    $mnethost->name       = '';
-    $mnethost->public_key = '';
-
-    if (empty($_SERVER['SERVER_ADDR'])) {
-        // SERVER_ADDR is only returned by Apache-like webservers
-        preg_match("@^(?:http[s]?://)?([A-Z0-9\-\.]+).*@i", $CFG->wwwroot, $matches);
-        $my_hostname = $matches[1];
-        $my_ip       = gethostbyname($my_hostname);  // Returns unmodified hostname on failure. DOH!
-        if ($my_ip == $my_hostname) {
-            $mnethost->ip_address = 'UNKNOWN';
-        } else {
-            $mnethost->ip_address = $my_ip;
-        }
-    } else {
-        $mnethost->ip_address = $_SERVER['SERVER_ADDR'];
-    }
-
-    $mnetid = $DB->insert_record('mnet_host', $mnethost);
-    set_config('mnet_localhost_id', $mnetid);
-
-    // Initial insert of mnet applications info
-    $mnet_app = new stdClass();
-    $mnet_app->name              = 'moodle';
-    $mnet_app->display_name      = 'Moodle';
-    $mnet_app->xmlrpc_server_url = '/mnet/xmlrpc/server.php';
-    $mnet_app->sso_land_url      = '/auth/mnet/land.php';
-    $mnet_app->sso_jump_url      = '/auth/mnet/jump.php';
-    $moodleapplicationid = $DB->insert_record('mnet_application', $mnet_app);
-
-    $mnet_app = new stdClass();
-    $mnet_app->name              = 'mahara';
-    $mnet_app->display_name      = 'Mahara';
-    $mnet_app->xmlrpc_server_url = '/api/xmlrpc/server.php';
-    $mnet_app->sso_land_url      = '/auth/xmlrpc/land.php';
-    $mnet_app->sso_jump_url      = '/auth/xmlrpc/jump.php';
-    $DB->insert_record('mnet_application', $mnet_app);
-
-    // Set up the probably-to-be-removed-soon 'All hosts' record
-    $mnetallhosts                     = new stdClass();
-    $mnetallhosts->wwwroot            = '';
-    $mnetallhosts->ip_address         = '';
-    $mnetallhosts->public_key         = '';
-    $mnetallhosts->public_key_expires = 0;
-    $mnetallhosts->last_connect_time  = 0;
-    $mnetallhosts->last_log_id        = 0;
-    $mnetallhosts->deleted            = 0;
-    $mnetallhosts->name               = 'All Hosts';
-    $mnetallhosts->applicationid      = $moodleapplicationid;
-    $mnetallhosts->id                 = $DB->insert_record('mnet_host', $mnetallhosts, true);
-    set_config('mnet_all_hosts_id', $mnetallhosts->id);
-
     // Create guest record - do not assign any role, guest user gets the default guest role automatically on the fly
     if ($DB->record_exists('user', array())) {
         throw new moodle_exception('generalexceptionmessage', 'error', '', 'Can not create default users, users already exist.');
@@ -220,7 +163,6 @@ function xmldb_main_install() {
     $guest->lastname    = ' ';
     $guest->email       = 'root@localhost';
     $guest->description = get_string('guestuserinfo');
-    $guest->mnethostid  = $CFG->mnet_localhost_id;
     $guest->confirmed   = 1;
     $guest->lang        = $CFG->lang;
     $guest->timemodified= time();
@@ -243,7 +185,6 @@ function xmldb_main_install() {
     $admin->password     = 'adminsetuppending';
     $admin->email        = '';
     $admin->confirmed    = 1;
-    $admin->mnethostid   = $CFG->mnet_localhost_id;
     $admin->lang         = $CFG->lang;
     $admin->maildisplay  = 1;
     $admin->timemodified = time();

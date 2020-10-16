@@ -288,7 +288,6 @@ Requested accounts cannot be approved by tenant user managers, but it is possibl
  * hierarchy and goals
  * Appraisals
  * Feedback 360
- * MNET - automatically disabled when support for tenants activated
  * enrol_category - not recommended to be used at all
  * entol_imsenterprise
  * enrol_meta - not recommended to be used at all

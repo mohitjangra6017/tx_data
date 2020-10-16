@@ -34,7 +34,7 @@ class core_component_testcase extends advanced_testcase {
     // To be changed if number of subsystems increases/decreases,
     // this is defined here to annoy devs that try to add more without any thinking,
     // always verify that it does not collide with any existing add-on modules and subplugins!!!
-    const SUBSYSTEMCOUNT = 64;
+    const SUBSYSTEMCOUNT = 63;
 
     public function setUp(): void {
         $psr0namespaces = new ReflectionProperty('core_component', 'psr0namespaces');
@@ -266,10 +266,8 @@ class core_component_testcase extends advanced_testcase {
         $this->assertSame('datafield_checkbox', core_component::normalize_componentname('datafield_checkbox'));
 
         // Other plugin types.
-        $this->assertSame('auth_mnet', core_component::normalize_componentname('auth_mnet'));
         $this->assertSame('enrol_self', core_component::normalize_componentname('enrol_self'));
         $this->assertSame('block_html', core_component::normalize_componentname('block_html'));
-        $this->assertSame('block_mnet_hosts', core_component::normalize_componentname('block_mnet_hosts'));
         $this->assertSame('local_amos', core_component::normalize_componentname('local_amos'));
         $this->assertSame('local_admin', core_component::normalize_componentname('local_admin'));
 
@@ -304,10 +302,8 @@ class core_component_testcase extends advanced_testcase {
         $this->assertSame(array('datafield', 'checkbox'), core_component::normalize_component('datafield_checkbox'));
 
         // Other plugin types.
-        $this->assertSame(array('auth', 'mnet'), core_component::normalize_component('auth_mnet'));
         $this->assertSame(array('enrol', 'self'), core_component::normalize_component('enrol_self'));
         $this->assertSame(array('block', 'html'), core_component::normalize_component('block_html'));
-        $this->assertSame(array('block', 'mnet_hosts'), core_component::normalize_component('block_mnet_hosts'));
         $this->assertSame(array('local', 'amos'), core_component::normalize_component('local_amos'));
         $this->assertSame(array('local', 'admin'), core_component::normalize_component('local_admin'));
 
@@ -342,10 +338,8 @@ class core_component_testcase extends advanced_testcase {
         $this->assertSame(array('datafield', 'checkbox'), normalize_component('datafield_checkbox'));
 
         // Other plugin types.
-        $this->assertSame(array('auth', 'mnet'), normalize_component('auth_mnet'));
         $this->assertSame(array('enrol', 'self'), normalize_component('enrol_self'));
         $this->assertSame(array('block', 'html'), normalize_component('block_html'));
-        $this->assertSame(array('block', 'mnet_hosts'), normalize_component('block_mnet_hosts'));
         $this->assertSame(array('local', 'amos'), normalize_component('local_amos'));
         $this->assertSame(array('local', 'admin'), normalize_component('local_admin'));
 

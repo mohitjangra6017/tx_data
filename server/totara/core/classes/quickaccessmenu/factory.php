@@ -72,7 +72,7 @@ final class factory {
      */
     public static function can_current_user_have_quickaccessmenu() {
         global $USER;
-        return (isloggedin() && !isguestuser($USER) && !is_mnet_remote_user($USER));
+        return (isloggedin() && !isguestuser($USER));
     }
 
     /**

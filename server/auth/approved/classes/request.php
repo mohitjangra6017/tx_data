@@ -260,7 +260,6 @@ final class request {
 
         unset($user->id);
         $user->auth = 'approved';
-        $user->mnethostid = $CFG->mnet_localhost_id;
         $user->confirmed = 1; // Approval supersedes email confirmation!
         $user->deleted = 0;
         $user->suspended = 0;
@@ -510,7 +509,7 @@ final class request {
             else if ($data['username'] !== clean_param($data['username'], PARAM_USERNAME)) {
                 $errors['username'] = get_string('invalidusername');
             }
-            else if ($DB->record_exists_select('user', "LOWER(username) = LOWER(:username) AND mnethostid = :mnethostid", array('username' => $data['username'], 'mnethostid' => $CFG->mnet_localhost_id))) {
+            else if ($DB->record_exists_select('user', "LOWER(username) = LOWER(:username)", array('username' => $data['username']))) {
                 $errors['username'] = get_string('usernameexists');
             }
         }

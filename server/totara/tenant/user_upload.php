@@ -150,7 +150,6 @@ if ($formdata = $form->get_data()) {
             // Set required fields that cannot come from upload
             $user->tenantid = $tenantid;
             $user->auth = 'manual';
-            $user->mnethostid = $CFG->mnet_localhost_id;
             $user->confirmed = 1;
             $user->deleted = 0;
 

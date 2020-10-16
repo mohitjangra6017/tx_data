@@ -66,7 +66,7 @@ class user_filtering {
             $fieldnames = array('realname' => 0, 'lastname' => 1, 'firstname' => 1, 'username' => 1, 'email' => 1, 'city' => 1, 'country' => 1,
                                 'confirmed' => 1, 'suspended' => 1, 'profile' => 1, 'courserole' => 1, 'systemrole' => 1,
                                 'cohort' => 1, 'firstaccess' => 1, 'lastaccess' => 1, 'neveraccessed' => 1, 'timemodified' => 1,
-                                'nevermodified' => 1, 'auth' => 1, 'mnethostid' => 1, 'idnumber' => 1, 'totarasync'=>1);
+                                'nevermodified' => 1, 'auth' => 1, 'idnumber' => 1, 'totarasync'=>1);
         }
 
         $systemcontext = context_system::instance();
@@ -168,34 +168,6 @@ class user_filtering {
                     $choices[$auth] = get_string('pluginname', "auth_{$auth}");
                 }
                 return new user_filter_simpleselect('auth', get_string('authentication'), $advanced, 'auth', $choices);
-
-            case 'mnethostid':
-                // Include all hosts even those deleted or otherwise problematic.
-                if (!$hosts = $DB->get_records('mnet_host', null, 'id', 'id, wwwroot, name')) {
-                    $hosts = array();
-                }
-                $choices = array();
-                foreach ($hosts as $host) {
-                    if ($host->id == $CFG->mnet_localhost_id) {
-                        $choices[$host->id] = format_string($SITE->fullname).' ('.get_string('local').')';
-                    } else if (empty($host->wwwroot)) {
-                        // All hosts.
-                        continue;
-                    } else {
-                        $choices[$host->id] = $host->name.' ('.$host->wwwroot.')';
-                    }
-                }
-                if ($usedhosts = $DB->get_fieldset_sql("SELECT DISTINCT mnethostid FROM {user} WHERE deleted=0")) {
-                    foreach ($usedhosts as $hostid) {
-                        if (empty($hosts[$hostid])) {
-                            $choices[$hostid] = 'id: '.$hostid.' ('.get_string('error').')';
-                        }
-                    }
-                }
-                if (count($choices) < 2) {
-                    return null; // Filter not needed.
-                }
-                return new user_filter_simpleselect('mnethostid', get_string('mnetidprovider', 'mnet'), $advanced, 'mnethostid', $choices);
 
             default:
                 return null;

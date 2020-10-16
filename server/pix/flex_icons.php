@@ -1319,13 +1319,6 @@ $icons = array(
                     'classes' => 'tfont-var-dash-square',
                 ),
         ),
-    'mnet-host' =>
-        array(
-            'data' =>
-                array(
-                    'classes' => 'ft-mnethost',
-                ),
-        ),
     'more' =>
         array(
             'data' =>
@@ -2297,7 +2290,6 @@ $deprecated = array(
     'core|i/marker' => 'marker-off',
     'core|i/mean' => 'mean',
     'core|i/menu' => 'bars',
-    'core|i/mnethost' => 'mnet-host',
     'core|i/moodle_host' => 'totara', // Intentional change of branding for repositories on other Totara servers.
     'core|i/move_2d' => 'arrows',
     'core|i/navigationitem' => 'navitem',

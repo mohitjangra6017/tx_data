@@ -1671,14 +1671,6 @@ $capabilities = array(
         'clonepermissionsfrom' => 'moodle/course:update'
     ),
 
-    'moodle/site:mnetlogintoremote' => array(
-
-        'captype' => 'read',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
-        )
-    ),
-
     'moodle/grade:viewall' => array(
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',

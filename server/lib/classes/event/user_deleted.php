@@ -35,7 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  *      - string email: user email.
  *      - string idnumber: user idnumber.
  *      - string picture: user picture.
- *      - int mnethostid: mnet host id.
  * }
  *
  * @package    core
@@ -136,20 +135,9 @@ class user_deleted extends base {
         if (!isset($this->other['picture'])) {
             throw new \coding_exception('The \'picture\' value must be set in other.');
         }
-
-        if (!isset($this->other['mnethostid'])) {
-            throw new \coding_exception('The \'mnethostid\' value must be set in other.');
-        }
     }
 
     public static function get_objectid_mapping() {
         return array('db' => 'user', 'restore' => 'user');
-    }
-
-    public static function get_other_mapping() {
-        $othermapped = array();
-        $othermapped['mnethostid'] = array('db' => 'mnet_host', 'restore' => base::NOT_MAPPED);
-
-        return $othermapped;
     }
 }

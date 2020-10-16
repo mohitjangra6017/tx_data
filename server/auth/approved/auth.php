@@ -41,7 +41,7 @@ final class auth_plugin_approved extends auth_plugin_base {
      */
     public function user_login($username, $password) {
         global $CFG, $DB;
-        if ($user = $DB->get_record('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id))) {
+        if ($user = $DB->get_record('user', array('username' => $username))) {
             return validate_internal_user_password($user, $password);
         }
         return false;

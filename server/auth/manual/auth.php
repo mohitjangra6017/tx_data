@@ -62,7 +62,7 @@ class auth_plugin_manual extends auth_plugin_base {
 
     /**
      * Returns true if the username and password work and false if they are
-     * wrong or don't exist. (Non-mnet accounts only!)
+     * wrong or don't exist.
      *
      * @param string $username The username
      * @param string $password The password
@@ -70,7 +70,7 @@ class auth_plugin_manual extends auth_plugin_base {
      */
     function user_login($username, $password) {
         global $CFG, $DB, $USER;
-        if (!$user = $DB->get_record('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id))) {
+        if (!$user = $DB->get_record('user', array('username'=>$username))) {
             return false;
         }
         if (!validate_internal_user_password($user, $password)) {

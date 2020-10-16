@@ -39,7 +39,6 @@ class user_formatter extends formatter {
             'policyagreed' => null,
             'deleted' => null,
             'suspended' => null,
-            'mnethostid' => null,
             'username' => null,
             'idnumber' => null,
             'firstname' => string_field_formatter::class,

@@ -72,7 +72,6 @@ class unit_test_user_data_object extends data_object {
     public $auth;
     public $confirmed;
     public $policyagreed;
-    public $mnethostid;
     public $password;
     public $skype;
     public $phone1;
@@ -126,7 +125,6 @@ class unit_test_user_data_object extends data_object {
         'auth',
         'confirmed',
         'policyagreed',
-        'mnethostid',
         'password',
         'skype',
         'phone1',

@@ -850,7 +850,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'alternatename', 'fullname', 'interests', 'profileimagealt', 'profileimageurl', 'profileimageurlsmall', 'lastip',
         ];
         $notallowed = [
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -887,7 +887,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'theme', 'timezone', 'firstaccess', 'lastaccess', 'url', 'description', 'descriptionformat', 'mailformat',
             'timecreated', 'timemodified', 'imagealt', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
             'alternatename', 'fullname', 'interests', 'profileimagealt', 'profileimageurl', 'profileimageurlsmall',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -917,7 +917,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'alternatename', 'fullname', 'interests', 'profileimagealt', 'profileimageurl', 'profileimageurlsmall', 'lastip',
         ];
         $notallowed = [
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -947,7 +947,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'alternatename', 'fullname', 'interests', 'profileimagealt', 'profileimageurl', 'profileimageurlsmall', 'lastip',
         ];
         $notallowed = [
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -976,7 +976,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'theme', 'timezone', 'firstaccess', 'lastaccess', 'url', 'description', 'descriptionformat', 'mailformat',
             'timecreated', 'timemodified', 'imagealt', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
             'alternatename', 'fullname', 'interests', 'profileimagealt', 'profileimageurl', 'profileimageurlsmall',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -992,7 +992,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'phone1', 'phone2', 'institution', 'department', 'address', 'lang',
             'theme', 'timezone', 'lastip', 'description', 'descriptionformat', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields(access_controller::for($user), $allowed, $notallowed);
@@ -1022,7 +1022,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'theme', 'timezone', 'firstaccess', 'lastaccess', 'url', 'description', 'descriptionformat', 'mailformat',
             'timecreated', 'timemodified', 'imagealt', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
             'alternatename', 'fullname', 'interests', 'profileimagealt', 'profileimageurl', 'profileimageurlsmall',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1038,7 +1038,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'phone1', 'phone2', 'institution', 'department', 'address', 'lang',
             'theme', 'timezone', 'lastip', 'description', 'descriptionformat', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields(access_controller::for($user), $allowed, $notallowed);
@@ -1066,7 +1066,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'theme', 'timezone', 'firstaccess', 'lastaccess', 'url', 'description', 'descriptionformat', 'mailformat',
             'timecreated', 'timemodified', 'imagealt', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
             'alternatename', 'fullname', 'interests', 'profileimagealt', 'profileimageurl', 'profileimageurlsmall',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1082,7 +1082,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'phone1', 'phone2', 'institution', 'department', 'address', 'lang',
             'theme', 'timezone', 'lastip', 'description', 'descriptionformat', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields(access_controller::for($user), $allowed, $notallowed);
@@ -1112,7 +1112,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'theme', 'timezone', 'firstaccess', 'lastaccess', 'url', 'description', 'descriptionformat', 'mailformat',
             'timecreated', 'timemodified', 'imagealt', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
             'alternatename', 'fullname', 'interests', 'profileimagealt', 'profileimageurl', 'profileimageurlsmall',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1128,7 +1128,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'phone1', 'phone2', 'institution', 'department', 'address', 'lang',
             'theme', 'timezone', 'lastip', 'description', 'descriptionformat', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields(access_controller::for($user), $allowed, $notallowed);
@@ -1162,7 +1162,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'alternatename', 'fullname', 'interests', 'profileimagealt', 'profileimageurl', 'profileimageurlsmall',
         ];
         $notallowed = [
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1207,7 +1207,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'alternatename', 'fullname', 'interests', 'profileimagealt', 'profileimageurl', 'profileimageurlsmall',
         ];
         $notallowed = [
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1240,7 +1240,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'alternatename', 'fullname', 'interests', 'profileimagealt', 'profileimageurl', 'profileimageurlsmall',
         ];
         $notallowed = [
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1271,7 +1271,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'phone1', 'phone2', 'institution', 'department', 'address', 'lang',
             'theme', 'timezone', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
-            'alternatename', 'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'alternatename', 'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1318,7 +1318,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'phone1', 'phone2', 'institution', 'department', 'address', 'lang',
             'theme', 'timezone', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
-            'alternatename', 'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'alternatename', 'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1353,7 +1353,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'phone1', 'phone2', 'institution', 'department', 'address', 'lang',
             'theme', 'timezone', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
-            'alternatename', 'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'alternatename', 'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1387,7 +1387,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'phone1', 'phone2', 'institution', 'department', 'address', 'lang',
             'theme', 'timezone', 'description', 'descriptionformat', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
-            'alternatename', 'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'alternatename', 'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1422,7 +1422,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'phone1', 'phone2', 'institution', 'department', 'address', 'lang',
             'theme', 'timezone', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
-            'alternatename', 'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'alternatename', 'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1453,7 +1453,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename', 'lastip',
         ];
         $notallowed = [
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync',
             'description', 'descriptionformat',
         ];
@@ -1471,7 +1471,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename', 'lastip',
         ];
         $notallowed = [
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync',
         ];
         self::assert_expected_fields(access_controller::for($user), $allowed, $notallowed);
@@ -1504,7 +1504,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         $notallowed = [
             'auth', 'confirmed', 'username', 'idnumber', 'institution', 'department', 'lang', 'theme', 'timezone', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
-            'alternatename', 'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'alternatename', 'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1537,7 +1537,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         $notallowed = [
             'auth', 'confirmed', 'username', 'idnumber', 'institution', 'department', 'lang', 'theme', 'timezone', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
-            'alternatename', 'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'alternatename', 'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1570,7 +1570,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         $notallowed = [
             'auth', 'confirmed', 'username', 'idnumber', 'institution', 'department', 'lang', 'theme', 'timezone', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
-            'alternatename', 'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'alternatename', 'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1601,7 +1601,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'auth', 'confirmed', 'username', 'idnumber', 'firstname', 'lastname', 'phone1', 'phone2', 'institution', 'department', 'address', 'lang',
             'theme', 'timezone', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
-            'alternatename', 'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'alternatename', 'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1633,7 +1633,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'phone1', 'phone2', 'institution', 'department', 'address', 'lang',
             'theme', 'timezone', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename',
-            'alternatename', 'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'alternatename', 'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1659,7 +1659,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename',
         ];
         $notallowed = [
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1685,7 +1685,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename',
         ];
         $notallowed = [
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1721,7 +1721,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         ];
         $notallowed = [
             'firstname', 'lastname', 'phone1', 'phone2', 'address',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1750,7 +1750,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         $notallowed = [
             'firstname', 'lastname', 'phone1', 'phone2', 'address', 'suspended', 'lastaccess', 'url', 'skype',
             'city', 'country', 'firstaccess', 'description', 'descriptionformat',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1774,7 +1774,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         ];
         $notallowed = [
             'firstname', 'lastname',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1811,7 +1811,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'auth', 'confirmed', 'username', 'idnumber', 'institution', 'department', 'lang', 'theme', 'timezone', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename',
             'firstname', 'lastname', 'phone1', 'phone2', 'address',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1840,7 +1840,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename',
             'firstname', 'lastname', 'phone1', 'phone2', 'address', 'suspended', 'lastaccess', 'url', 'skype',
             'city', 'country', 'firstaccess', 'description', 'descriptionformat',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1865,7 +1865,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'auth', 'confirmed', 'username', 'idnumber', 'institution', 'department', 'lang', 'theme', 'timezone', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename',
             'firstname', 'lastname',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);
@@ -1914,7 +1914,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
             'auth', 'confirmed', 'username', 'idnumber', 'institution', 'department', 'lang', 'theme', 'timezone', 'mailformat',
             'timecreated', 'timemodified', 'lastnamephonetic', 'firstnamephonetic', 'middlename', 'alternatename',
             'firstname', 'lastname', 'phone1', 'phone2', 'address',
-            'policyagreed', 'deleted', 'mnethostid', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
+            'policyagreed', 'deleted', 'password', 'secret', 'emailstop', 'calendartype', 'lastlogin', 'currentlogin',
             'lastip', 'picture', 'maildigest', 'maildisplay', 'autosubscribe', 'trackforums', 'trustbitmask', 'totarasync'
         ];
         self::assert_expected_fields($controller, $allowed, $notallowed);

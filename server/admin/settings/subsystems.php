@@ -300,15 +300,4 @@ if ($hassiteconfig && isset($optionalsubsystems)) {
             0
         )
     );
-
-    $options = array('off'=>new lang_string('off', 'mnet'), 'strict'=>new lang_string('on', 'mnet'));
-    $optionalsubsystems->add(
-        new admin_setting_configselect(
-            'mnet_dispatcher_mode',
-            new lang_string('net', 'mnet'),
-            new lang_string('configmnet', 'mnet'),
-            'off',
-            $options
-        )
-    );
 }

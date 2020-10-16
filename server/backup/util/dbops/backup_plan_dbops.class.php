@@ -133,7 +133,7 @@ abstract class backup_plan_dbops extends backup_dbops {
      * Given a course id, returns its theme. This can either be the course
      * theme or (if not specified in course) the category, site theme.
      *
-     * User, session, and inherited-from-mnet themes cannot have backed-up
+     * User, session themes cannot have backed-up
      * per course data. This is course-related data so it must be in a course
      * theme specified as part of the course structure
      * @param int $courseid
@@ -166,21 +166,6 @@ abstract class backup_plan_dbops extends backup_dbops {
 
         // Finally use site theme
         return $CFG->theme;
-    }
-
-    /**
-     * Return the wwwroot of the $CFG->mnet_localhost_id host
-     * caching it along the request
-     */
-    public static function get_mnet_localhost_wwwroot() {
-        global $CFG, $DB;
-
-        static $wwwroot = null;
-
-        if (is_null($wwwroot)) {
-            $wwwroot = $DB->get_field('mnet_host', 'wwwroot', array('id' => $CFG->mnet_localhost_id));
-        }
-        return $wwwroot;
     }
 
     /**

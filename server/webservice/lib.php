@@ -911,7 +911,7 @@ abstract class webservice_server implements webservice_server_interface {
             }
 
             // TOTARA: We need the user record now to check login attempts.
-            $user = $DB->get_record('user', array('username'=>$this->username, 'mnethostid'=>$CFG->mnet_localhost_id), '*', IGNORE_MISSING);
+            $user = $DB->get_record('user', array('username'=>$this->username), '*', IGNORE_MISSING);
 
             if (empty($user)) {
                 throw new moodle_exception('wrongusernamepassword', 'webservice','', null,'Login attempted with username which does not exist: ' . $this->username);

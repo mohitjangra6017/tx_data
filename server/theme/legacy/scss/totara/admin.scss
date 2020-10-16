@@ -673,23 +673,6 @@ img.iconsmall {
   }
 }
 
-/** MNet networking */
-#page-admin-mnet-peers .box.deletedhosts {
-  margin-bottom: 1em;
-  font-size: $font-size-small;
-}
-
-#page-admin-mnet-peers .mform .certdetails {
-  background-color: var(--color-neutral-1);
-}
-
-#page-admin-mnet-peers .mform .deletedhostinfo {
-  background-color: $state-danger-bg;
-  border: 2px solid $state-danger-border;
-  padding: 4px;
-  margin-bottom: 5px;
-}
-
 #core-cache-rescan-definitions,
 #core-cache-mode-mappings .edit-link,
 #core-cache-lock-summary .new-instance {

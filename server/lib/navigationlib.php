@@ -4770,7 +4770,7 @@ class settings_navigation extends navigation_node {
         $useraccount = $usersetting->add(get_string('useraccount'), null, self::TYPE_CONTAINER, null, 'useraccount');
 
         // Add the profile edit link.
-        if (isloggedin() && !isguestuser($user) && !is_mnet_remote_user($user)) {
+        if (isloggedin() && !isguestuser($user)) {
             if (($currentuser || is_siteadmin($USER) || !is_siteadmin($user)) &&
                     has_capability('moodle/user:update', $systemcontext)) {
                 $url = new moodle_url('/user/editadvanced.php', array('id'=>$user->id, 'course'=>$course->id));
@@ -4797,7 +4797,7 @@ class settings_navigation extends navigation_node {
             $useraccount->add(get_string("changepassword"), $passwordchangeurl, self::TYPE_SETTING, null, 'changepassword');
         }
 
-        if (isloggedin() && !isguestuser($user) && !is_mnet_remote_user($user)) {
+        if (isloggedin() && !isguestuser($user)) {
             if ($currentuser && has_capability('moodle/user:editownprofile', $usercontext) ||
                     has_capability('moodle/user:editprofile', $usercontext)) {
                 $url = new moodle_url('/user/language.php', array('id' => $user->id, 'course' => $course->id));
@@ -4806,7 +4806,7 @@ class settings_navigation extends navigation_node {
         }
         $pluginmanager = core_plugin_manager::instance();
         $enabled = $pluginmanager->get_enabled_plugins('mod');
-        if (isset($enabled['forum']) && isloggedin() && !isguestuser($user) && !is_mnet_remote_user($user)) {
+        if (isset($enabled['forum']) && isloggedin() && !isguestuser($user)) {
             if ($currentuser && has_capability('moodle/user:editownprofile', $usercontext) ||
                     has_capability('moodle/user:editprofile', $usercontext)) {
                 $url = new moodle_url('/user/forum.php', array('id' => $user->id, 'course' => $course->id));
@@ -4815,7 +4815,7 @@ class settings_navigation extends navigation_node {
         }
         $editors = editors_get_enabled();
         if (count($editors) > 1) {
-            if (isloggedin() && !isguestuser($user) && !is_mnet_remote_user($user)) {
+            if (isloggedin() && !isguestuser($user)) {
                 if ($currentuser && has_capability('moodle/user:editownprofile', $usercontext) ||
                         has_capability('moodle/user:editprofile', $usercontext)) {
                     $url = new moodle_url('/user/editor.php', array('id' => $user->id, 'course' => $course->id));
@@ -4923,7 +4923,7 @@ class settings_navigation extends navigation_node {
         }
 
         // Totara: Admin navigation preferences.
-        if (isloggedin() && !isguestuser($user) && !is_mnet_remote_user($user)) {
+        if (isloggedin() && !isguestuser($user)) {
             $adminmenu = totara_core\quickaccessmenu\factory::instance($USER->id)->get_possible_items();
             if ($currentuser && !empty($adminmenu) && has_capability('totara/core:editownquickaccessmenu', context_user::instance($USER->id))) {
                 $url = new moodle_url('/user/quickaccessmenu.php', array('id' => $user->id));

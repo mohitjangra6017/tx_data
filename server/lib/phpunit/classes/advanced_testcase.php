@@ -636,7 +636,6 @@ abstract class advanced_testcase extends base_testcase {
         } else if (!$user) {
             $user = new stdClass();
             $user->id = 0;
-            $user->mnethostid = $CFG->mnet_localhost_id;
         } else {
             $user = $DB->get_record('user', array('id'=>$user));
         }

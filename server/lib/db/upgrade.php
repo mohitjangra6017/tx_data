@@ -97,5 +97,44 @@ function xmldb_main_upgrade($oldversion) {
 
     // Totara 13.0 release line.
 
+    if ($oldversion < 2020101500) {
+        // Remove all MNET functionality and settings.
+
+        $droptables = ['mnet_sso_access_control', 'mnet_session', 'mnet_remote_service2rpc', 'mnet_service2rpc',
+            'mnet_service', 'mnet_remote_rpc', 'mnet_rpc', 'mnet_log', 'mnet_host2service', 'mnet_host', 'mnet_application'];
+        foreach ($droptables as $tablename) {
+            $table = new xmldb_table($tablename);
+            if ($dbman->table_exists($table)) {
+                $dbman->drop_table($table);
+            }
+        }
+
+        $DB->set_field('user', 'auth', 'nologin', ['auth' => 'mnet']);
+
+        $table = new xmldb_table('user');
+        $index = new xmldb_index('username', XMLDB_INDEX_UNIQUE, array('mnethostid', 'username'));
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+
+        $table = new xmldb_table('user');
+        $field = new xmldb_field('mnethostid');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        $table = new xmldb_table('user');
+        $index = new xmldb_index('username', XMLDB_INDEX_UNIQUE, array('username'));
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        unset_config('mnetkeylifetime');
+        unset_config('mnet_dispatcher_mode');
+        unset_config('mnet_localhost_id');
+
+        upgrade_main_savepoint(true, 2020101500.00);
+    }
+
     return true;
 }

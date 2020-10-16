@@ -471,7 +471,6 @@ class access_controller {
             // They aren't there to be displayed, predominantly they are just flags.
             case 'policyagreed':
             case 'deleted':
-            case 'mnethostid':
             case 'password':
             case 'secret':
             case 'emailstop':

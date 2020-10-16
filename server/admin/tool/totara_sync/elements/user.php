@@ -536,7 +536,6 @@ class totara_sync_element_user extends totara_sync_element {
             $user->idnumber = $suser->idnumber;
             $user->confirmed = 1;
             $user->totarasync = 1;
-            $user->mnethostid = $CFG->mnet_localhost_id;
             $user->lang = $CFG->lang;
             $user->timecreated = time();
             $user->auth = isset($suser->auth) ? $suser->auth : 'manual';

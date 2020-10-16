@@ -207,11 +207,6 @@ class core_user_profilelib_testcase extends advanced_testcase {
         $this->assertTrue(user_not_fully_set_up($hermione, true));
         $this->assertTrue(user_not_fully_set_up($hermione, false));
 
-        // Totara: we do not really support mnet, strict mode is ignored.
-        $ron->mnethostid = 11212121;
-        $this->assertFalse(user_not_fully_set_up($ron, true));
-        $this->assertFalse(user_not_fully_set_up($ron, false));
-
         // Totara: test cache flag $USER->fullysetupaccount was set properly.
         $hermione = $DB->get_record('user', array('id' => $hermione->id));
         $this->assertObjectNotHasAttribute('fullysetupaccount', $hermione);

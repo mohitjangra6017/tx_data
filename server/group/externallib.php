@@ -463,7 +463,7 @@ class core_group_external extends external_api {
             $userid = $member['userid'];
 
             $group = groups_get_group($groupid, 'id, courseid', MUST_EXIST);
-            $user = $DB->get_record('user', array('id'=>$userid, 'deleted'=>0, 'mnethostid'=>$CFG->mnet_localhost_id), '*', MUST_EXIST);
+            $user = $DB->get_record('user', array('id'=>$userid, 'deleted'=>0), '*', MUST_EXIST);
 
             // now security checks
             $context = context_course::instance($group->courseid, IGNORE_MISSING);
@@ -541,7 +541,7 @@ class core_group_external extends external_api {
             $userid = $member['userid'];
 
             $group = groups_get_group($groupid, 'id, courseid', MUST_EXIST);
-            $user = $DB->get_record('user', array('id'=>$userid, 'deleted'=>0, 'mnethostid'=>$CFG->mnet_localhost_id), '*', MUST_EXIST);
+            $user = $DB->get_record('user', array('id'=>$userid, 'deleted'=>0), '*', MUST_EXIST);
 
             // now security checks
             $context = context_course::instance($group->courseid, IGNORE_MISSING);

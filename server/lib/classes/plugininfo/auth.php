@@ -34,7 +34,7 @@ class auth extends base {
     public function is_uninstall_allowed() {
         global $DB;
 
-        if (in_array($this->name, array('manual', 'nologin', 'webservice', 'mnet'))) {
+        if (in_array($this->name, array('manual', 'nologin', 'webservice'))) {
             return false;
         }
 

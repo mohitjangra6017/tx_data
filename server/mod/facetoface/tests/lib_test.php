@@ -426,7 +426,7 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
 
     protected $user_data = array(
         array('id',                 'auth',             'confirmed',
-            'policyagreed',         'deleted',          'mnethostid',
+            'policyagreed',         'deleted',
             'username',             'password',         'idnumber',
             'firstname',            'lastname',         'email',
             'emailstop',            'skype',

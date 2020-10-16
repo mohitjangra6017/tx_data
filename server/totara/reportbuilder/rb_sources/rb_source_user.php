@@ -427,7 +427,6 @@ class rb_source_user extends rb_base_source {
                         'fullname' => $DB->sql_concat_join("' '", $usednamefields),
                         'username' => 'base.username',
                         'email' => 'base.email',
-                        'mnethostid' => 'base.mnethostid',
                         'confirmed' => 'base.confirmed',
                         'suspended' => 'base.suspended',
                         'deleted' => 'base.deleted'

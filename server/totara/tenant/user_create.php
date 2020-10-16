@@ -76,7 +76,6 @@ if ($usernew = $userform->get_data()) {
     $usernew = file_postupdate_standard_editor($usernew, 'description', $editoroptions, null, 'user', 'profile', null);
     $usernew->tenantid = $tenant->id;
     $usernew->auth = 'manual';
-    $usernew->mnethostid = $CFG->mnet_localhost_id; // Always local user.
     $usernew->confirmed  = 1;
     if ($createpassword) {
         $usernew->password = '';

@@ -1140,6 +1140,11 @@ class core_plugin_manager {
         // TOTARA: Inlcude only plugins removed after Totara 14 branching.
         $plugins = array(
             'tool_premigration',
+            'auth_mnet',
+            'block_mnet_hosts',
+            'enrol_mnet',
+            'portfolio_mahara',
+            'mnetservice_enrol',
         );
 
         return in_array($type . '_' . $name, $plugins);
@@ -1185,7 +1190,7 @@ class core_plugin_manager {
             ),
 
             'auth' => array(
-                'cas', 'db', 'email', 'ldap', 'lti', 'manual', 'mnet',
+                'cas', 'db', 'email', 'ldap', 'lti', 'manual',
                 'nologin', 'oauth2', 'shibboleth', 'webservice'
                 // Totara
                 , 'connect', 'approved'
@@ -1203,7 +1208,7 @@ class core_plugin_manager {
                 'calendar_upcoming', 'comments', 'community',
                 'completionstatus', 'course_list', 'course_overview',
                 'course_summary', 'feedback', 'globalsearch', 'glossary_random', 'html',
-                'login', 'mentees', 'mnet_hosts', 'myprofile',
+                'login', 'mentees', 'myprofile',
                 'navigation', 'news_items', 'online_users', 'participants',
                 'private_files', 'recent_activity',
                 'rss_client', 'search_forums', 'section_links',
@@ -1286,7 +1291,7 @@ class core_plugin_manager {
 
             'enrol' => array(
                 'category', 'cohort', 'database', 'flatfile',
-                'guest', 'imsenterprise', 'ldap', 'lti', 'manual', 'meta', 'mnet',
+                'guest', 'imsenterprise', 'ldap', 'lti', 'manual', 'meta',
                 'paypal', 'self'
                 // Totara
                 , 'totara_learningplan', 'totara_program', 'totara_facetoface',
@@ -1357,10 +1362,6 @@ class core_plugin_manager {
                 , 'totara_alert', 'totara_task', 'msteams', 'totara_airnotifier'
             ),
 
-            'mnetservice' => array(
-                'enrol'
-            ),
-
             'mod' => array(
                 'assign', 'book', 'chat', 'choice', 'data', 'feedback', 'folder',
                 'forum', 'glossary', 'imscp', 'label', 'lesson', 'lti', 'page',
@@ -1387,7 +1388,7 @@ class core_plugin_manager {
             ),
 
             'portfolio' => array(
-                'boxnet', 'download', 'flickr', 'googledocs', 'mahara'
+                'boxnet', 'download', 'flickr', 'googledocs',
             ),
 
             'profilefield' => array(

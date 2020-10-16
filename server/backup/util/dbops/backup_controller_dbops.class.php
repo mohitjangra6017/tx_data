@@ -463,22 +463,6 @@ abstract class backup_controller_dbops extends backup_dbops {
     }
 
     /**
-     * Given the backupid, detect if the backup includes "mnet" remote users or no
-     */
-    public static function backup_includes_mnet_remote_users($backupid) {
-        global $CFG, $DB;
-
-        $sql = "SELECT COUNT(*)
-                  FROM {backup_ids_temp} b
-                  JOIN {user} u ON u.id = b.itemid
-                 WHERE b.backupid = ?
-                   AND b.itemname = 'userfinal'
-                   AND u.mnethostid != ?";
-        $count = $DB->count_records_sql($sql, array($backupid, $CFG->mnet_localhost_id));
-        return (int)(bool)$count;
-    }
-
-    /**
      * Given the backupid, determine whether this backup should include
      * files from the moodle file storage system.
      *

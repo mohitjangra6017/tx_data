@@ -33,6 +33,63 @@ defined('MOODLE_INTERNAL') || die();
 /* === Start of deprecated Totara stuff === */
 
 /**
+ * @deprecated since Totara 14.0
+ */
+function get_my_remotecourses($userid=0) {
+    debugging('MNET functionality was removed completely in Totara 14.0', DEBUG_DEVELOPER);
+    return [];
+}
+
+/**
+ * @deprecated since Totara 14.0
+ */
+function get_my_remotehosts() {
+    debugging('MNET functionality was removed completely in Totara 14.0', DEBUG_DEVELOPER);
+    return false;
+}
+
+/**
+ * @deprecated since Totara 14.0
+ */
+function is_mnet_remote_user($user) {
+    debugging('MNET functionality was removed completely in Totara 14.0', DEBUG_DEVELOPER);
+    return false;
+}
+
+
+/**
+ * @deprecated since Totara 14.0
+ */
+function get_mnet_environment() {
+    debugging('MNET functionality was removed completely in Totara 14.0', DEBUG_DEVELOPER);
+    return null;
+}
+
+/**
+ * @deprecated since Totara 14.0
+ */
+function get_mnet_remote_client() {
+    debugging('MNET functionality was removed completely in Totara 14.0', DEBUG_DEVELOPER);
+    return null;
+}
+
+/**
+ * @deprecated since Totara 14.0
+ */
+function set_mnet_remote_client($client) {
+    debugging('MNET functionality was removed completely in Totara 14.0', DEBUG_DEVELOPER);
+    return null;
+}
+
+/**
+ * @deprecated since Totara 14.0
+ */
+function mnet_get_idp_jump_url($user) {
+    debugging('MNET functionality was removed completely in Totara 14.0', DEBUG_DEVELOPER);
+    return null;
+}
+
+/**
  * Totara: Capability and conditions check to see if current user can login as another.
  *
  * @deprecated since Totara 13.0
@@ -5411,113 +5468,6 @@ function print_log($course, $user=0, $date=0, $order="l.time ASC", $page=0, $per
     }
 
     echo html_writer::table($table);
-    echo $OUTPUT->paging_bar($totalcount, $page, $perpage, "$url&perpage=$perpage");
-}
-
-/**
- * Display MNET logs.
- *
- * @deprecated since 3.2
- */
-function print_mnet_log($hostid, $course, $user=0, $date=0, $order="l.time ASC", $page=0, $perpage=100,
-                   $url="", $modname="", $modid=0, $modaction="", $groupid=0) {
-    debugging(__FUNCTION__ . '() is deprecated. Please use the report_log framework instead.', DEBUG_DEVELOPER);
-
-    global $CFG, $DB, $OUTPUT;
-
-    if (!$logs = build_mnet_logs_array($hostid, $course, $user, $date, $order, $page*$perpage, $perpage,
-                       $modname, $modid, $modaction, $groupid)) {
-        echo $OUTPUT->notification("No logs found!");
-        echo $OUTPUT->footer();
-        exit;
-    }
-
-    if ($course->id == SITEID) {
-        $courses[0] = '';
-        if ($ccc = get_courses('all', 'c.id ASC', 'c.id,c.shortname,c.visible')) {
-            foreach ($ccc as $cc) {
-                $courses[$cc->id] = $cc->shortname;
-            }
-        }
-    }
-
-    $totalcount = $logs['totalcount'];
-    $ldcache = array();
-
-    $strftimedatetime = get_string("strftimedatetime");
-
-    echo "<div class=\"info\">\n";
-    print_string("displayingrecords", "", $totalcount);
-    echo "</div>\n";
-
-    echo $OUTPUT->paging_bar($totalcount, $page, $perpage, "$url&perpage=$perpage");
-
-    echo "<table class=\"logtable\" cellpadding=\"3\" cellspacing=\"0\">\n";
-    echo "<tr>";
-    if ($course->id == SITEID) {
-        echo "<th class=\"c0 header\">".get_string('course')."</th>\n";
-    }
-    echo "<th class=\"c1 header\">".get_string('time')."</th>\n";
-    echo "<th class=\"c2 header\">".get_string('ip_address')."</th>\n";
-    echo "<th class=\"c3 header\">".get_string('fullnameuser')."</th>\n";
-    echo "<th class=\"c4 header\">".get_string('action')."</th>\n";
-    echo "<th class=\"c5 header\">".get_string('info')."</th>\n";
-    echo "</tr>\n";
-
-    if (empty($logs['logs'])) {
-        echo "</table>\n";
-        return;
-    }
-
-    $row = 1;
-    foreach ($logs['logs'] as $log) {
-
-        $log->info = $log->coursename;
-        $row = ($row + 1) % 2;
-
-        if (isset($ldcache[$log->module][$log->action])) {
-            $ld = $ldcache[$log->module][$log->action];
-        } else {
-            $ld = $DB->get_record('log_display', array('module'=>$log->module, 'action'=>$log->action));
-            $ldcache[$log->module][$log->action] = $ld;
-        }
-        if (0 && $ld && !empty($log->info)) {
-            // ugly hack to make sure fullname is shown correctly
-            if (($ld->mtable == 'user') and ($ld->field == $DB->sql_concat('firstname', "' '" , 'lastname'))) {
-                $log->info = fullname($DB->get_record($ld->mtable, array('id'=>$log->info)), true);
-            } else {
-                $log->info = $DB->get_field($ld->mtable, $ld->field, array('id'=>$log->info));
-            }
-        }
-
-        //Filter log->info
-        $log->info = format_string($log->info);
-
-        echo '<tr class="r'.$row.'">';
-        if ($course->id == SITEID) {
-            $courseshortname = format_string($courses[$log->course], true, array('context' => context_course::instance(SITEID)));
-            echo "<td class=\"r$row c0\" >\n";
-            echo "    <a href=\"{$CFG->wwwroot}/course/view.php?id={$log->course}\">".$courseshortname."</a>\n";
-            echo "</td>\n";
-        }
-        echo "<td class=\"r$row c1\" align=\"right\">".userdate($log->time, '%a').
-             ' '.userdate($log->time, $strftimedatetime)."</td>\n";
-        echo "<td class=\"r$row c2\" >\n";
-        $link = new moodle_url("/iplookup/index.php?ip=$log->ip&user=$log->userid");
-        echo $OUTPUT->action_link($link, $log->ip, new popup_action('click', $link, 'iplookup', array('height' => 400, 'width' => 700)));
-        echo "</td>\n";
-        $fullname = fullname($log, has_capability('moodle/site:viewfullnames', context_course::instance($course->id)));
-        echo "<td class=\"r$row c3\" >\n";
-        echo "    <a href=\"$CFG->wwwroot/user/profile.php?id={$log->userid}\">$fullname</a>\n";
-        echo "</td>\n";
-        echo "<td class=\"r$row c4\">\n";
-        echo $log->action .': '.$log->module;
-        echo "</td>\n";
-        echo "<td class=\"r$row c5\">{$log->info}</td>\n";
-        echo "</tr>\n";
-    }
-    echo "</table>\n";
-
     echo $OUTPUT->paging_bar($totalcount, $page, $perpage, "$url&perpage=$perpage");
 }
 

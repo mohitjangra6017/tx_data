@@ -41,7 +41,7 @@ $PAGE->set_pagelayout('noblocks'); // All we need is to confirm delete/undelete 
 
 require_login();
 
-$user = $DB->get_record('user', array('id' => $id, 'mnethostid' => $CFG->mnet_localhost_id), '*', MUST_EXIST);
+$user = $DB->get_record('user', array('id' => $id), '*', MUST_EXIST);
 $returnurl = useredit_get_return_url($user, $returnto, null, $customreturn);
 
 $fullname = fullname($user, true);

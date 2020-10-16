@@ -31,7 +31,6 @@ $string['csvdelimiter'] = 'CSV delimiter';
 $string['defaultvalues'] = 'Default values';
 $string['deleteerrors'] = 'Delete errors';
 $string['encoding'] = 'Encoding';
-$string['errormnetadd'] = 'Can not add remote users';
 $string['errors'] = 'Errors';
 $string['invalidupdatetype'] = 'This option cannot be selected with the chosen upload type.';
 $string['invaliduserdata'] = 'Invalid data detected for user {$a} and it has been automatically cleaned.';

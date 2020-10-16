@@ -472,7 +472,7 @@ class auth_plugin_base {
 
     /**
      * Hook called before timing out of database session.
-     * This is useful for SSO and MNET.
+     * This is useful for SSO
      *
      * @param object $user
      * @param string $sid session id
@@ -614,7 +614,7 @@ class auth_plugin_base {
         $username = trim(core_text::strtolower($username));
 
         // Get the current user record.
-        $user = $DB->get_record('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id));
+        $user = $DB->get_record('user', array('username' => $username));
         if (empty($user)) { // Trouble.
             error_log($this->errorlogtag . get_string('auth_usernotexist', 'auth', $username));
             print_error('auth_usernotexist', 'auth', '', $username);
@@ -795,9 +795,6 @@ class auth_plugin_base {
 function login_is_lockedout($user) {
     global $CFG;
 
-    if ($user->mnethostid != $CFG->mnet_localhost_id) {
-        return false;
-    }
     if (isguestuser($user)) {
         return false;
     }
@@ -840,9 +837,6 @@ function login_attempt_valid($user) {
 
     // Note: user_loggedin event is triggered in complete_user_login().
 
-    if ($user->mnethostid != $CFG->mnet_localhost_id) {
-        return;
-    }
     if (isguestuser($user)) {
         return;
     }
@@ -858,9 +852,6 @@ function login_attempt_valid($user) {
 function login_attempt_failed($user) {
     global $CFG;
 
-    if ($user->mnethostid != $CFG->mnet_localhost_id) {
-        return;
-    }
     if (isguestuser($user)) {
         return;
     }
@@ -900,9 +891,6 @@ function login_attempt_failed($user) {
 function login_lock_account($user) {
     global $CFG;
 
-    if ($user->mnethostid != $CFG->mnet_localhost_id) {
-        return;
-    }
     if (isguestuser($user)) {
         return;
     }

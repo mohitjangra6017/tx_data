@@ -39,7 +39,6 @@ defined('MOODLE_INTERNAL') || die();
  * @property-read string $policyagreed
  * @property-read string $deleted
  * @property-read string $suspended
- * @property-read string $mnethostid
  * @property-read string $username
  * @property-read string $password
  * @property-read string $idnumber

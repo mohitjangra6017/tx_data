@@ -149,6 +149,7 @@ $string['showitems'] = 'Display';
 $string['updatewildcardvalues'] = 'Update the wild card(s) values';
 $string['unsupportedformulafunction'] = 'The function {$a} is not supported';
 $string['useadvance'] = 'Use the advance button to see the errors';
+$string['warning'] = 'Warning';
 $string['wildcard'] = 'Wild card {<strong>{$a}</strong>}';
 $string['wildcardparam'] = 'Wild cards parameters used to generate the values';
 $string['wildcardrole'] = 'The wild cards <strong>{x..}</strong> will be substituted by a numerical value from the generated values';

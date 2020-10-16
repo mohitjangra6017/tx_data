@@ -114,10 +114,6 @@ class block_course_overview_renderer extends plugin_renderer_base {
                 $coursefullname = format_string(get_course_display_name_for_list($course), true, $course->id);
                 $link = html_writer::link($courseurl, $coursefullname, $attributes);
                 $html .= $this->output->heading($link, 2, 'title');
-            } else {
-                $html .= $this->output->heading(html_writer::link(
-                    new moodle_url('/auth/mnet/jump.php', array('hostid' => $course->hostid, 'wantsurl' => '/course/view.php?id='.$course->remoteid)),
-                    format_string($course->shortname, true), $attributes) . ' (' . format_string($course->hostname) . ')', 2, 'title');
             }
             $html .= $this->output->container('', 'flush');
             $html .= html_writer::end_tag('div');

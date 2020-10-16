@@ -647,7 +647,6 @@ class util {
         $serveruser = (object)$serveruser;
 
         // Set local values.
-        $user->mnethostid = $CFG->mnet_localhost_id;
         $user->auth       = 'connect';
         $user->confirmed  = '1'; // There is no way to confirm server account, luckily they cannot SSO without it.
 
@@ -695,9 +694,9 @@ class util {
                               FROM {user} u
                          LEFT JOIN {auth_connect_users} cu ON cu.userid = u.id
                              WHERE cu.id IS NULL AND u.deleted = 0 AND u.username = :username
-                                   AND u.auth <> 'connect' AND u.mnethostid = :mnethostid
+                                   AND u.auth <> 'connect'
                           ORDER BY u.id ASC";
-                $params = array('username' => self::create_local_username($server, $serveruser), 'mnethostid' => $CFG->mnet_localhost_id);
+                $params = array('username' => self::create_local_username($server, $serveruser));
                 $candidates = $DB->get_records_sql($sql, $params);
 
             } else if ($mapfield === 'email') {
@@ -706,9 +705,9 @@ class util {
                               FROM {user} u
                          LEFT JOIN {auth_connect_users} cu ON cu.userid = u.id
                              WHERE cu.id IS NULL AND u.deleted = 0 AND u.email = :email
-                                   AND u.auth <> 'connect' AND u.mnethostid = :mnethostid
+                                   AND u.auth <> 'connect'
                           ORDER BY u.id ASC";
-                    $params = array('email' => $serveruser->email, 'mnethostid' => $CFG->mnet_localhost_id);
+                    $params = array('email' => $serveruser->email);
                     $candidates = $DB->get_records_sql($sql, $params);
                 }
 
@@ -718,9 +717,9 @@ class util {
                               FROM {user} u
                          LEFT JOIN {auth_connect_users} cu ON cu.userid = u.id
                              WHERE cu.id IS NULL AND u.deleted = 0 AND u.idnumber = :idnumber
-                                   AND u.auth <> 'connect' AND u.mnethostid = :mnethostid
+                                   AND u.auth <> 'connect'
                           ORDER BY u.id ASC";
-                    $params = array('idnumber' => $serveruser->idnumber, 'mnethostid' => $CFG->mnet_localhost_id);
+                    $params = array('idnumber' => $serveruser->idnumber);
                     $candidates = $DB->get_records_sql($sql, $params);
                 }
 
@@ -730,9 +729,9 @@ class util {
                               FROM {user} u
                          LEFT JOIN {auth_connect_users} cu ON cu.userid = u.id
                              WHERE cu.id IS NULL AND u.deleted = 0 AND u.username = :username
-                                   AND u.auth <> 'connect' AND u.mnethostid = :mnethostid
+                                   AND u.auth <> 'connect'
                           ORDER BY u.id ASC";
-                    $params = array('username' => $serveruser->username, 'mnethostid' => $CFG->mnet_localhost_id);
+                    $params = array('username' => $serveruser->username);
                     $candidates = $DB->get_records_sql($sql, $params);
                 }
             }
@@ -838,7 +837,7 @@ class util {
             }
 
             // Make sure the username is not taken, if yes skip this user completely.
-            if ($DB->record_exists('user', array('username' => $record['username'], 'mnethostid' => $CFG->mnet_localhost_id))) {
+            if ($DB->record_exists('user', array('username' => $record['username']))) {
                 return null;
             }
 

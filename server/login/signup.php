@@ -85,7 +85,6 @@ if ($mform_signup->is_cancelled()) {
     $user->lang        = current_language();
     $user->firstaccess = 0;
     $user->timecreated = time();
-    $user->mnethostid  = $CFG->mnet_localhost_id;
     $user->secret      = random_string(15);
     $user->auth        = $CFG->registerauth;
     // Initialize alternate name fields to empty strings.

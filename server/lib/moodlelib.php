@@ -3478,7 +3478,7 @@ function update_user_login_times() {
  *
  * The lax mode (with $strict = false) has been introduced for special cases
  * only where we want to skip certain checks intentionally. This is valid in
- * certain mnet or ajax scenarios when the user cannot / should not be
+ * certain ajax scenarios when the user cannot / should not be
  * redirected to edit their profile. In most cases, you should perform the
  * strict check.
  *
@@ -3507,11 +3507,6 @@ function user_not_fully_set_up($user, $strict = true) {
     // Strict mode may lead to dead ends, we need to prevent those situations here,
     // the intention is to force users to fill missing data in profile, but only if they can!
     if (!$strict) {
-        return false;
-    }
-
-    // Ignore strict mode for mnet users.
-    if (is_mnet_remote_user($user)) {
         return false;
     }
 
@@ -4143,7 +4138,7 @@ function is_internal_auth($auth) {
 function is_restored_user($username) {
     global $CFG, $DB;
 
-    return $DB->record_exists('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id, 'password' => 'restored'));
+    return $DB->record_exists('user', array('username' => $username, 'password' => 'restored'));
 }
 
 /**
@@ -4214,7 +4209,6 @@ function create_user_record($username, $password, $auth = 'manual') {
     $newuser->lastip = getremoteaddr();
     $newuser->timecreated = time();
     $newuser->timemodified = $newuser->timecreated;
-    $newuser->mnethostid = $CFG->mnet_localhost_id;
 
     $newuser->id = user_create_user($newuser, false, false);
 
@@ -4235,7 +4229,7 @@ function create_user_record($username, $password, $auth = 'manual') {
 }
 
 /**
- * Will update a local user record from an external source (MNET users can not be updated using this method!).
+ * Will update a local user record from an external source.
  *
  * @param string $username user's username to update the record
  * @return stdClass A complete user object
@@ -4245,12 +4239,12 @@ function update_user_record($username) {
     // Just in case check text case.
     $username = trim(core_text::strtolower($username));
 
-    $oldinfo = $DB->get_record('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id), '*', MUST_EXIST);
+    $oldinfo = $DB->get_record('user', array('username' => $username), '*', MUST_EXIST);
     return update_user_record_by_id($oldinfo->id);
 }
 
 /**
- * Will update a local user record from an external source (MNET users can not be updated using this method!).
+ * Will update a local user record from an external source.
  *
  * @param int $id user id
  * @param boolean $sync whether this is being called from sync and needs pre-preprocessing.
@@ -4261,7 +4255,7 @@ function update_user_record_by_id($id, $sync=false) {
     require_once($CFG->dirroot."/user/profile/lib.php");
     require_once($CFG->dirroot.'/user/lib.php');
 
-    $params = array('mnethostid' => $CFG->mnet_localhost_id, 'id' => $id, 'deleted' => 0);
+    $params = array('id' => $id, 'deleted' => 0);
     $oldinfo = $DB->get_record('user', $params, '*', MUST_EXIST);
 
     $newuser = array();
@@ -4277,7 +4271,7 @@ function update_user_record_by_id($id, $sync=false) {
                 $key = strtolower($key);
             }
             if ((!property_exists($oldinfo, $key) && !$iscustom) or $key === 'username' or $key === 'id'
-                    or $key === 'auth' or $key === 'mnethostid' or $key === 'deleted') {
+                    or $key === 'auth' or $key === 'deleted') {
                 // Unknown or must not be changed.
                 continue;
             }
@@ -4477,7 +4471,7 @@ function delete_user(stdClass $user) {
         // Do not leave any personal info behind!
         do {
             $updateuser->username = 'deleted_' . strtolower(random_string(32)); // We need something unique because null is not allowed.
-        } while ($DB->record_exists('user', array('username' => $updateuser->username))); // No need to use mnethostid here.
+        } while ($DB->record_exists('user', array('username' => $updateuser->username)));
         $updateuser->email = '';
         $updateuser->idnumber = '';
         $updateuser->password = AUTH_PASSWORD_NOT_CACHED;
@@ -4493,7 +4487,7 @@ function delete_user(stdClass $user) {
         $delname = clean_param($delemail . "." . $delnameid, PARAM_USERNAME);
 
         // Workaround for bulk deletes of users with the same email address.
-        while ($DB->record_exists('user', array('username' => $delname))) { // No need to use mnethostid here.
+        while ($DB->record_exists('user', array('username' => $delname))) {
             $delnameid++;
             $delname = clean_param($delemail . "." . $delnameid, PARAM_USERNAME);
         }
@@ -4521,7 +4515,6 @@ function delete_user(stdClass $user) {
                     'email' => $user->email,
                     'idnumber' => $user->idnumber,
                     'picture' => $user->picture,
-                    'mnethostid' => $user->mnethostid
                     )
                 )
             );
@@ -4651,8 +4644,6 @@ function guest_user() {
  * log that the user has logged in, and call complete_user_login() to set
  * the session up.
  *
- * Note: this function works only with non-mnet accounts!
- *
  * @param string $username  User's username (or also email if $CFG->authloginviaemail enabled)
  * @param string $password  User's password
  * @param bool $ignorelockout useful when guessing is prevented by other mechanism such as captcha or SSO
@@ -4663,13 +4654,13 @@ function authenticate_user_login($username, $password, $ignorelockout=false, &$f
     global $CFG, $DB;
     require_once("$CFG->libdir/authlib.php");
 
-    if ($user = get_complete_user_data('username', $username, $CFG->mnet_localhost_id)) {
+    if ($user = get_complete_user_data('username', $username)) {
         // we have found the user
 
     } else if (!empty($CFG->authloginviaemail)) {
         if ($email = clean_param($username, PARAM_EMAIL)) {
-            $select = "mnethostid = :mnethostid AND LOWER(email) = LOWER(:email) AND deleted = 0";
-            $params = array('mnethostid' => $CFG->mnet_localhost_id, 'email' => $email);
+            $select = "LOWER(email) = LOWER(:email) AND deleted = 0";
+            $params = array('email' => $email);
             $users = $DB->get_records_select('user', $select, $params, 'id', 'id', 0, 2);
             if (count($users) === 1) {
                 // Use email for login only if unique.
@@ -4736,7 +4727,7 @@ function authenticate_user_login($username, $password, $ignorelockout=false, &$f
 
     } else {
         // Check if there's a deleted record (cheaply), this should not happen because we mangle usernames in delete_user().
-        if ($DB->get_field('user', 'id', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id,  'deleted' => 1))) {
+        if ($DB->get_field('user', 'id', array('username' => $username, 'deleted' => 1))) {
             $failurereason = AUTH_LOGIN_NOUSER;
 
             // Trigger login failed event.
@@ -5137,10 +5128,10 @@ function update_internal_user_password($user, $password, $fasthash = false) {
  *
  * @param string $field The user field to be checked for a given value.
  * @param string $value The value to match for $field.
- * @param int $mnethostid
+ * @param int $mnethostidignored ignored since Totara 14.0
  * @return mixed False, or A {@link $USER} object.
  */
-function get_complete_user_data($field, $value, $mnethostid = null) {
+function get_complete_user_data($field, $value, $mnethostidignored = null) {
     global $CFG, $DB;
 
     if (!$field || !$value) {
@@ -5150,19 +5141,6 @@ function get_complete_user_data($field, $value, $mnethostid = null) {
     // Build the WHERE clause for an SQL query.
     $params = array('fieldval' => $value);
     $constraints = "$field = :fieldval AND deleted <> 1";
-
-    // If we are loading user data based on anything other than id,
-    // we must also restrict our search based on mnet host.
-    if ($field != 'id') {
-        if (empty($mnethostid)) {
-            // If empty, we restrict to local users.
-            $mnethostid = $CFG->mnet_localhost_id;
-        }
-    }
-    if (!empty($mnethostid)) {
-        $params['mnethostid'] = $mnethostid;
-        $constraints .= " AND mnethostid = :mnethostid";
-    }
 
     // Get all the basic user data.
     if (! $user = $DB->get_record_select('user', $constraints, $params)) {
@@ -6307,22 +6285,6 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
         return true; // This is not an error.
     }
 
-    // If the user is a remote mnet user, parse the email text for URL to the
-    // wwwroot and modify the url to direct the user's browser to login at their
-    // home site (identity provider - idp) before hitting the link itself.
-    if (is_mnet_remote_user($user)) {
-        require_once($CFG->dirroot.'/mnet/lib.php');
-
-        $jumpurl = mnet_get_idp_jump_url($user);
-        $callback = partial('mnet_sso_apply_indirection', $jumpurl);
-
-        $messagetext = preg_replace_callback("%($CFG->wwwroot[^[:space:]]*)%",
-                $callback,
-                $messagetext);
-        $messagehtml = preg_replace_callback("%href=[\"'`]($CFG->wwwroot[\w_:\?=#&@/;.~-]*)[\"'`]%",
-                $callback,
-                $messagehtml);
-    }
     $mail = get_mailer();
 
     if (!empty($mail->SMTPDebug)) {
@@ -9986,26 +9948,6 @@ function custom_script_path() {
 }
 
 /**
- * Returns whether or not the user object is a remote MNET user. This function
- * is in moodlelib because it does not rely on loading any of the MNET code.
- *
- * @param object $user A valid user object
- * @return bool        True if the user is from a remote Moodle.
- */
-function is_mnet_remote_user($user) {
-    global $CFG;
-
-    if (!isset($CFG->mnet_localhost_id)) {
-        include_once($CFG->dirroot . '/mnet/lib.php');
-        $env = new mnet_environment();
-        $env->init();
-        unset($env);
-    }
-
-    return (!empty($user->mnethostid) && $user->mnethostid != $CFG->mnet_localhost_id);
-}
-
-/**
  * This function will search for browser prefereed languages, setting Moodle
  * to use the best one available if $SESSION->lang is undefined
  */
@@ -10292,74 +10234,6 @@ function partial() {
     $func = array_shift($args);
     $p = new partial($func, $args);
     return array($p, 'method');
-}
-
-/**
- * helper function to load up and initialise the mnet environment
- * this must be called before you use mnet functions.
- *
- * @return mnet_environment the equivalent of old $MNET global
- */
-function get_mnet_environment() {
-    global $CFG;
-    require_once($CFG->dirroot . '/mnet/lib.php');
-    static $instance = null;
-    if (empty($instance)) {
-        $instance = new mnet_environment();
-        $instance->init();
-    }
-    return $instance;
-}
-
-/**
- * during xmlrpc server code execution, any code wishing to access
- * information about the remote peer must use this to get it.
- *
- * @return mnet_remote_client the equivalent of old $MNETREMOTE_CLIENT global
- */
-function get_mnet_remote_client() {
-    if (!defined('MNET_SERVER')) {
-        debugging(get_string('notinxmlrpcserver', 'mnet'));
-        return false;
-    }
-    global $MNET_REMOTE_CLIENT;
-    if (isset($MNET_REMOTE_CLIENT)) {
-        return $MNET_REMOTE_CLIENT;
-    }
-    return false;
-}
-
-/**
- * during the xmlrpc server code execution, this will be called
- * to setup the object returned by {@link get_mnet_remote_client}
- *
- * @param mnet_remote_client $client the client to set up
- * @throws moodle_exception
- */
-function set_mnet_remote_client($client) {
-    if (!defined('MNET_SERVER')) {
-        throw new moodle_exception('notinxmlrpcserver', 'mnet');
-    }
-    global $MNET_REMOTE_CLIENT;
-    $MNET_REMOTE_CLIENT = $client;
-}
-
-/**
- * return the jump url for a given remote user
- * this is used for rewriting forum post links in emails, etc
- *
- * @param stdclass $user the user to get the idp url for
- */
-function mnet_get_idp_jump_url($user) {
-    global $CFG;
-
-    static $mnetjumps = array();
-    if (!array_key_exists($user->mnethostid, $mnetjumps)) {
-        $idp = mnet_get_peer_host($user->mnethostid);
-        $idpjumppath = mnet_get_app_jumppath($idp->applicationid);
-        $mnetjumps[$user->mnethostid] = $idp->wwwroot . $idpjumppath . '?hostwwwroot=' . $CFG->wwwroot . '&wantsurl=';
-    }
-    return $mnetjumps[$user->mnethostid];
 }
 
 /**

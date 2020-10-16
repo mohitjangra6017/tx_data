@@ -80,7 +80,7 @@ class auth_plugin_db extends auth_plugin_base {
 
             if (isset($this->config->removeuser) and $this->config->removeuser == AUTH_REMOVEUSER_KEEP) {
                 // No need to connect to external database in this case because users are never removed and we verify password locally.
-                if ($user = $DB->get_record('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id, 'auth'=>$this->authtype))) {
+                if ($user = $DB->get_record('user', array('username'=>$username, 'auth'=>$this->authtype))) {
                     return validate_internal_user_password($user, $password);
                 } else {
                     return false;
@@ -102,7 +102,7 @@ class auth_plugin_db extends auth_plugin_base {
                 $rs->Close();
                 $authdb->Close();
                 // User exists externally - check username/password internally.
-                if ($user = $DB->get_record('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id, 'auth'=>$this->authtype))) {
+                if ($user = $DB->get_record('user', array('username'=>$username, 'auth'=>$this->authtype))) {
                     return validate_internal_user_password($user, $password);
                 }
             } else {
@@ -318,9 +318,7 @@ class auth_plugin_db extends auth_plugin_base {
                           FROM {user} u
                          WHERE u.auth=:authtype
                            AND u.deleted=0
-                           AND u.mnethostid=:mnethostid
                            $suspendselect";
-                $params['mnethostid'] = $CFG->mnet_localhost_id;
                 $internalusersrs = $DB->get_recordset_sql($sql, $params);
 
                 $usernamelist = array_flip($userlist);
@@ -333,10 +331,9 @@ class auth_plugin_db extends auth_plugin_base {
             } else {
                 $sql = "SELECT u.id, u.username
                           FROM {user} u
-                         WHERE u.auth=:authtype AND u.deleted=0 AND u.mnethostid=:mnethostid $suspendselect";
+                         WHERE u.auth=:authtype AND u.deleted=0 $suspendselect";
                 $params = array();
                 $params['authtype'] = $this->authtype;
-                $params['mnethostid'] = $CFG->mnet_localhost_id;
                 $removeusers = $DB->get_records_sql($sql, $params);
             }
 
@@ -387,10 +384,9 @@ class auth_plugin_db extends auth_plugin_base {
                 foreach($userlistchunks as $userlistchunk) {
                     list($in_sql, $params) = $DB->get_in_or_equal($userlistchunk, SQL_PARAMS_NAMED, 'u', true);
                     $params['authtype'] = $this->authtype;
-                    $params['mnethostid'] = $CFG->mnet_localhost_id;
                     $sql = "SELECT u.id, u.username
                           FROM {user} u
-                         WHERE u.auth = :authtype AND u.deleted = 0 AND u.mnethostid = :mnethostid AND u.username {$in_sql}";
+                         WHERE u.auth = :authtype AND u.deleted = 0 AND u.username {$in_sql}";
                     $update_users = $update_users + $DB->get_records_sql($sql, $params);
                 }
 
@@ -418,9 +414,9 @@ class auth_plugin_db extends auth_plugin_base {
         }
         $sql = "SELECT u.id, u.username
                   FROM {user} u
-                 WHERE u.auth=:authtype AND u.deleted='0' AND mnethostid=:mnethostid $suspendselect";
+                 WHERE u.auth=:authtype AND u.deleted='0' $suspendselect";
 
-        $users = $DB->get_records_sql($sql, array('authtype'=>$this->authtype, 'mnethostid'=>$CFG->mnet_localhost_id));
+        $users = $DB->get_records_sql($sql, array('authtype'=>$this->authtype));
 
         // Simplify down to usernames.
         $usernames = array();
@@ -440,8 +436,7 @@ class auth_plugin_db extends auth_plugin_base {
             foreach($add_users as $user) {
                 $username = $user;
                 if ($this->config->removeuser == AUTH_REMOVEUSER_SUSPEND) {
-                    if ($olduser = $DB->get_record('user', array('username' => $username, 'deleted' => 0, 'suspended' => 1,
-                            'mnethostid' => $CFG->mnet_localhost_id, 'auth' => $this->authtype))) {
+                    if ($olduser = $DB->get_record('user', array('username' => $username, 'deleted' => 0, 'suspended' => 1, 'auth' => $this->authtype))) {
                         $updateuser = new stdClass();
                         $updateuser->id = $olduser->id;
                         $updateuser->suspended = 0;
@@ -459,11 +454,10 @@ class auth_plugin_db extends auth_plugin_base {
                 $user->username   = $username;
                 $user->confirmed  = 1;
                 $user->auth       = $this->authtype;
-                $user->mnethostid = $CFG->mnet_localhost_id;
                 if (empty($user->lang)) {
                     $user->lang = $CFG->lang;
                 }
-                if ($collision = $DB->get_record_select('user', "username = :username AND mnethostid = :mnethostid AND auth <> :auth", array('username'=>$user->username, 'mnethostid'=>$CFG->mnet_localhost_id, 'auth'=>$this->authtype), 'id,username,auth')) {
+                if ($collision = $DB->get_record_select('user', "username = :username AND auth <> :auth", array('username'=>$user->username, 'auth'=>$this->authtype), 'id,username,auth')) {
                     $trace->output(get_string('auth_dbinsertuserduplicate', 'auth_db', array('username'=>$user->username, 'auth'=>$collision->auth)), 1);
                     continue;
                 }
@@ -571,7 +565,7 @@ class auth_plugin_db extends auth_plugin_base {
         $username = trim(core_text::strtolower($username));
 
         // get the current user record
-        $user = $DB->get_record('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id));
+        $user = $DB->get_record('user', array('username'=>$username));
         if (empty($user)) { // trouble
             error_log("Cannot update non-existent user: $username");
             print_error('auth_dbusernotexist','auth_db',$username);

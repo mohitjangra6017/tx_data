@@ -54,31 +54,6 @@ class anonymizer_final_element extends backup_final_element {
 }
 
 /**
- * Implementation of backup_final_element that provides special handling of mnethosturl
- *
- * This class overwrites the standard set_value() method, in order to decide,
- * based on various config options, what to do with the field.
- *
- * TODO: Finish phpdocs
- */
-class mnethosturl_final_element extends backup_final_element {
-
-    public function set_value($value) {
-        global $CFG;
-
-        $localhostwwwroot = backup_plan_dbops::get_mnet_localhost_wwwroot();
-
-        // If user wwwroot matches mnet local host one or if
-        // there isn't associated wwwroot, skip sending it to file
-        if ($localhostwwwroot == $value || empty($value)) {
-            // Do nothing
-        } else {
-            parent::set_value($value);
-        }
-    }
-}
-
-/**
  * Implementation of {@link backup_final_element} that provides base64 encoding.
  *
  * This final element transparently encodes with base64_encode() contents that

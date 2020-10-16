@@ -465,8 +465,7 @@ class core_cohort_external extends external_api {
                     $warnings[] = $warning;
                     continue;
                 }
-                if (!$userid = $DB->get_field('user', 'id', array_merge($userparam, array('deleted' => 0,
-                    'mnethostid' => $CFG->mnet_localhost_id)))) {
+                if (!$userid = $DB->get_field('user', 'id', array_merge($userparam, array('deleted' => 0)))) {
                     $warning = array();
                     $warning['warningcode'] = '2';
                     $warning['message'] = 'user '.$usertype['type'].'='.$usertype['value'].' not exists';
@@ -574,7 +573,7 @@ class core_cohort_external extends external_api {
                 throw new invalid_parameter_exception('Plugin cohorts cannot be updated!');
             }
 
-            $user = $DB->get_record('user', array('id' => $userid, 'deleted' => 0, 'mnethostid' => $CFG->mnet_localhost_id),
+            $user = $DB->get_record('user', array('id' => $userid, 'deleted' => 0),
                 '*', MUST_EXIST);
 
             // Now security checks.

@@ -44,7 +44,7 @@ class cleanup_task extends \core\task\scheduled_task {
         global $DB, $CFG;
         require_once($CFG->dirroot.'/totara/feedback360/lib.php');
         // Get all deleted users still assigned to a feedback in user_assignment or resp_assignment.
-        $sql = "SELECT DISTINCT u.id, u.username, u.email, u.idnumber, u.picture, u.mnethostid
+        $sql = "SELECT DISTINCT u.id, u.username, u.email, u.idnumber, u.picture
                   FROM {user} u
        LEFT OUTER JOIN {feedback360_user_assignment} fua ON u.id = fua.userid
        LEFT OUTER JOIN {feedback360_resp_assignment} fra ON u.id = fra.userid
@@ -66,7 +66,6 @@ class cleanup_task extends \core\task\scheduled_task {
                         'email' => $user->email,
                         'idnumber' => $user->idnumber,
                         'picture' => $user->picture,
-                        'mnethostid' => $user->mnethostid
                     )
             ));
             \feedback360_event_handler::feedback360_user_deleted($event);

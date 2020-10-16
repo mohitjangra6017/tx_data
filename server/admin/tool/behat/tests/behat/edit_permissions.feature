@@ -19,13 +19,11 @@ Feature: Edit capabilities
     Given I log in as "admin"
     And I set the following system permissions of "Teacher" role:
       | capability | permission |
-      | block/mnet_hosts:myaddinstance | Allow |
       | moodle/site:approvecourse | Inherit |
       | moodle/grade:managesharedforms | Prevent |
       | moodle/course:request | Prohibit |
     When I follow "Edit Teacher role"
-    Then "block/mnet_hosts:myaddinstance" capability has "Allow" permission
-    And "moodle/site:approvecourse" capability has "Not set" permission
+    Then "moodle/site:approvecourse" capability has "Not set" permission
     And "moodle/grade:managesharedforms" capability has "Prevent" permission
     And "moodle/course:request" capability has "Prohibit" permission
 

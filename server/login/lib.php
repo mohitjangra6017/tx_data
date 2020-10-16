@@ -48,7 +48,7 @@ function core_login_process_password_reset_request() {
         if (!empty($data->username)) {
             // Username has been specified - load the user record based on that.
             $username = core_text::strtolower($data->username); // Mimic the login page process.
-            $userparams = array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id, 'deleted' => 0, 'suspended' => 0);
+            $userparams = array('username' => $username, 'deleted' => 0, 'suspended' => 0);
             $user = $DB->get_record('user', $userparams);
         } else {
             // Try to load the user record based on email address.
@@ -57,8 +57,8 @@ function core_login_process_password_reset_request() {
             // 2/ mailbox may be case sensitive, the email domain is case insensitive - let's pretend it is all case-insensitive.
 
             $select = $DB->sql_like('email', ':email', false, true, false, '|') .
-                    " AND mnethostid = :mnethostid AND deleted=0 AND suspended=0";
-            $params = array('email' => $DB->sql_like_escape($data->email, '|'), 'mnethostid' => $CFG->mnet_localhost_id);
+                    " AND deleted=0 AND suspended=0";
+            $params = array('email' => $DB->sql_like_escape($data->email, '|'));
             $user = $DB->get_record_select('user', $select, $params, '*', IGNORE_MULTIPLE);
         }
 

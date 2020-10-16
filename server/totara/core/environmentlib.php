@@ -165,23 +165,22 @@ function totara_core_check_for_ngram(environment_results $result) {
  * @param environment_results $result
  * @return environment_results
  */
-function totara_core_mnet_deprecated_check(environment_results $result) {
-    global $DB, $CFG;
+function totara_core_mnet_removal_check(environment_results $result) {
+    global $DB;
 
-    $result->setInfo(get_string('mnetdeprecated', 'totara_core'));
-
-    if ($DB->get_manager()->table_exists('user')) {
-        $sql = "SELECT id
-                  FROM {user}
-                 WHERE deleted = 0 AND mnethostid <> ?";
-        $mnetusers = $DB->record_exists_sql($sql, [$CFG->mnet_localhost_id]);
-    } else {
-        $mnetusers = false;
+    if (!$DB->get_manager()->table_exists('mnet_application')) {
+        return null;
     }
 
-    if ($mnetusers) {
+    $sql = 'SELECT COUNT(DISTINCT mnethostid)
+              FROM "ttr_user"
+             WHERE deleted = 0';
+    $hostcount = $DB->get_field_sql($sql);
+
+    $result->setInfo(get_string('mnetremoval', 'totara_core'));
+    if ($hostcount > 1) {
         $result->setStatus(false);
-        $result->setFeedbackStr(['mnetdeprecateduserspresent', 'totara_core']);
+        $result->setFeedbackStr(['mnetremovalblocked', 'totara_core']);
     } else {
         $result->setStatus(true);
     }

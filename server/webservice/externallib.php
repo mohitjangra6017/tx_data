@@ -176,11 +176,6 @@ class core_webservice_external extends external_api {
                 );
             }
         }
-        // Special case mnet_dispatcher_mode.
-        $siteinfo['advancedfeatures'][] = array(
-            'name' => 'mnet_dispatcher_mode',
-            'value' => ($CFG->mnet_dispatcher_mode == 'strict') ? 1 : 0
-        );
 
         // User can manage own files.
         $siteinfo['usercanmanageownfiles'] = has_capability('moodle/user:manageownfiles', $context);

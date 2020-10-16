@@ -154,6 +154,11 @@ function totara_core_upgrade_delete_removed_plugins() {
 
     $deleteplugins = array(
         'tool_premigration',
+        'auth_mnet',
+        'block_mnet_hosts',
+        'enrol_mnet',
+        'portfolio_mahara',
+        'mnetservice_enrol',
     );
 
     foreach ($deleteplugins as $deleteplugin) {

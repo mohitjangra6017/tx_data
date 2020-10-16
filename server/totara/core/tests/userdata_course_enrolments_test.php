@@ -549,7 +549,6 @@ class totara_core_userdata_course_enrolments_testcase extends advanced_testcase 
             // ['lti'], - Requires more complex setup to test.
             ['manual'],
             ['meta'],
-            ['mnet'],
             ['paypal'],
             ['self'],
             ['totara_facetoface'],

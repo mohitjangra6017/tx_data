@@ -136,7 +136,6 @@ class core_completion_data_object_testcase extends advanced_testcase {
             'auth',
             'confirmed',
             'policyagreed',
-            'mnethostid',
             'password',
             'skype',
             'phone1',

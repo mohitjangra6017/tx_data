@@ -104,15 +104,7 @@ class core_webservice_externallib_testcase extends externallib_advanced_testcase
         $this->assertEquals(1, $siteinfo['uploadfiles']);
 
         foreach ($siteinfo['advancedfeatures'] as $feature) {
-            if ($feature['name'] == 'mnet_dispatcher_mode') {
-                if ($CFG->mnet_dispatcher_mode == 'off') {
-                    $this->assertEquals(0, $feature['value']);
-                } else {
-                    $this->assertEquals(1, $feature['value']);
-                }
-            } else {
-                $this->assertEquals($CFG->{$feature['name']}, $feature['value']);
-            }
+            $this->assertEquals($CFG->{$feature['name']}, $feature['value']);
         }
 
         $this->assertEquals($userquota, $siteinfo['userquota']);

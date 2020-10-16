@@ -43,7 +43,7 @@ class cleanup_task extends \core\task\scheduled_task {
     public function execute() {
         global $DB;
         // Get all deleted users still assigned to an appraisal in either user_assignment or role_assignment.
-        $sql = "SELECT DISTINCT u.id, u.username, u.email, u.idnumber, u.picture, u.mnethostid
+        $sql = "SELECT DISTINCT u.id, u.username, u.email, u.idnumber, u.picture
                   FROM {user} u
        LEFT OUTER JOIN {appraisal_user_assignment} aua ON u.id = aua.userid
        LEFT OUTER JOIN {appraisal_role_assignment} ara ON u.id = ara.userid
@@ -65,7 +65,6 @@ class cleanup_task extends \core\task\scheduled_task {
                         'email' => $user->email,
                         'idnumber' => $user->idnumber,
                         'picture' => $user->picture,
-                        'mnethostid' => $user->mnethostid
                     )
             ));
             \totara_appraisal_observer::user_deleted($event);

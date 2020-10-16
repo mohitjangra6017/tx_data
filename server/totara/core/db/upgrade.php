@@ -45,11 +45,11 @@ function xmldb_totara_core_upgrade($oldversion) {
 
     // Totara 13.0 release line.
 
-    if ($oldversion < 2020100701) {
-        // Update the version numbers and move this block to the end
-        // if there are more plugins to uninstall.
+    if ($oldversion < 2020101500) {
+        // NOTE: move this to the end of upgrade if new plugins to be removed
+        //       are added to totara_core_upgrade_delete_removed_plugins()
         totara_core_upgrade_delete_removed_plugins();
-        upgrade_plugin_savepoint(true, 2020100701, 'totara', 'core');
+        upgrade_plugin_savepoint(true, 2020101500, 'totara', 'core');
     }
 
     return true;

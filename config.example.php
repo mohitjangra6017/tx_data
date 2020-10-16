@@ -817,11 +817,6 @@ Deprecated settings
 // was deprecated in Totara 13.
 // $CFG->aspellpath = '';
 //
-// Set the lifetime of the Totara networking key pair in days.
-// It should not be necessary to change this.
-// This functionality has been deprecated and will be removed in ta future version of Totara.
-// $CFG->mnetkeylifetime = 28;
-//
 // Export hierarchies in legacy format
 // The export format of hierarchies changed in Totara 12. If you require the original format enabling this setting will
 // ensure your export stays as it was.

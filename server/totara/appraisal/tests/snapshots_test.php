@@ -94,7 +94,6 @@ class appraisal_snapshots_test extends appraisal_testcase {
                 'email' => $learner->email,
                 'idnumber' => $learner->idnumber,
                 'picture' => $learner->picture,
-                'mnethostid' => $learner->mnethostid
             ]
         ]);
         \totara_appraisal_observer::user_deleted($deleteevent);
