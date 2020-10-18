@@ -12,7 +12,7 @@
       <VENDOR name="postgres" version="9.6" />
       <VENDOR name="mssql" version="14.0" />
     </DATABASE>
-    <PHP version="7.2.10" level="required">
+    <PHP version="7.3.4" level="required">
     </PHP>
     <PCREUNICODE level="optional">
       <FEEDBACK>

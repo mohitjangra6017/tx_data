@@ -524,10 +524,10 @@ namespace core\internal {
 
         private static function validate_environment(\core_config $cfg) {
             // Sometimes people use different PHP binary for web and CLI, make 100% sure they have the supported PHP version.
-            if (version_compare(PHP_VERSION, '7.2.10') < 0) {
+            if (version_compare(PHP_VERSION, '7.3.4') < 0) {
                 $phpversion = PHP_VERSION;
                 // Do NOT localise - lang strings would not work here and we CAN NOT move it to later place.
-                echo "Totara 13 or later requires at least PHP 7.2.10 (currently using version $phpversion).\n";
+                echo "Totara 14 or later requires at least PHP 7.3.4 (currently using version $phpversion).\n";
                 echo "Some servers may have multiple PHP versions installed, are you using the correct executable?\n";
                 exit(1);
             }

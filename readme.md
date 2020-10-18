@@ -73,8 +73,8 @@ For information on product licensing please see the [licensing readme](readme_li
         - Not supported: 13 (2016) and lower.
 - PHP
     - Recommended: 7.4.x
-    - Supported: 7.4.x, 7.3.x, 7.2.10+
-    - Not supported: 7.2.9 or lower
+    - Supported: 8.0.x, 7.4.x, 7.3.4+
+    - Not supported: 7.3.3 or lower
 - Required PHP extensions
     - curl
     - ctype

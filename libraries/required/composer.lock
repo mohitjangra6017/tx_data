@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d16f6371ded6771cd21b55f42d6d5df3",
+    "content-hash": "58343f2f84a1214ff0c30d18ad4e23a4",
     "packages": [
         {
             "name": "box/spout",
@@ -252,7 +252,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2.10 <7.5"
+        "php": ">=7.3.4 <8.1"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"
