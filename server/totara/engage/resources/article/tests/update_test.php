@@ -154,7 +154,11 @@ class engage_article_update_testcase extends advanced_testcase {
             'name' => "Bolobala",
             'access' => 'PUBLIC',
             'format' => FORMAT_JSON_EDITOR,
-            'topics' => $topics
+            'topics' => $topics,
+            'content' => json_encode([
+                'type' => 'doc',
+                'content' => [paragraph::create_json_node_from_text('new content')]
+            ]),
         ];
 
         $ec = execution_context::create('ajax', 'engage_article_update_article');
@@ -165,9 +169,9 @@ class engage_article_update_testcase extends advanced_testcase {
 
         $this->assertArrayHasKey('article', $result->data);
         $article = $result->data['article'];
-
         $this->assertEquals('Bolobala', $article['resource']['name']);
         $this->assertEquals('PUBLIC', $article['resource']['access']);
+        $this->assertEquals('new content', format_string($article['content']));
     }
 
     /**
