@@ -45,10 +45,19 @@
  */
 function xmldb_facetoface_upgrade($oldversion) {
     global $CFG, $DB;
+    require_once(__DIR__ . '/upgradelib.php');
 
     $dbman = $DB->get_manager();
 
     // Totara 13.0 release line.
+
+    if ($oldversion < 2020113000) {
+        // Fixed the orphaned records with statuscode 50 as we deprecated "Approved" status.
+        facetoface_upgradelib_approval_to_declined_status();
+
+        // Facetoface savepoint reached.
+        upgrade_mod_savepoint(true, 2020113000, 'facetoface');
+    }
 
     return true;
 }
