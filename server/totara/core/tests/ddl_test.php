@@ -24,6 +24,106 @@
 defined('MOODLE_INTERNAL') || die();
 
 class totara_core_ddl_testcase extends database_driver_testcase {
+    public function test_unique_nullable_index_one_field() {
+        $DB = $this->tdb;
+        $dbman = $DB->get_manager();
+
+        $table = new xmldb_table('test_sessions');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('sid', XMLDB_TYPE_CHAR, '255', null, null, null);
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_index('sid', XMLDB_INDEX_UNIQUE, ['sid']);
+        $dbman->create_table($table);
+
+        $DB->insert_record('test_sessions', ['sid' => 'abc123']);
+        $this->assertSame(1, $DB->count_records('test_sessions'));
+
+        $DB->insert_record('test_sessions', ['sid' => null]);
+        $this->assertSame(2, $DB->count_records('test_sessions'));
+
+        $DB->insert_record('test_sessions', ['sid' => null]);
+        $this->assertSame(3, $DB->count_records('test_sessions'));
+
+        try {
+            $DB->insert_record('test_sessions', ['sid' => 'abc123']);
+            $this->fail('Exception expected when sid non-unique and not null');
+        } catch (moodle_exception $e) {
+            $this->assertInstanceOf(dml_write_exception::class, $e);
+        }
+        $this->assertSame(3, $DB->count_records('test_sessions'));
+
+        $dbman->drop_table($table);
+    }
+
+    public function test_unique_nullable_index_two_fields() {
+        $DB = $this->tdb;
+        $dbman = $DB->get_manager();
+
+        $table = new xmldb_table('test_sessions');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('sid', XMLDB_TYPE_CHAR, '255', null, null, null);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_index('sid-courseid', XMLDB_INDEX_UNIQUE, ['sid', 'courseid']);
+        $dbman->create_table($table);
+
+        $id1 = $DB->insert_record('test_sessions', (object)['sid' => 'abc123', 'courseid' => 1]);
+        $this->assertSame(1, $DB->count_records('test_sessions'));
+
+        $id2 = $DB->insert_record('test_sessions', (object)['sid' => 'abc123', 'courseid' => 2]);
+        $this->assertSame(2, $DB->count_records('test_sessions'));
+
+        $id3 = $DB->insert_record('test_sessions', (object)['sid' => 'def456', 'courseid' => 1]);
+        $this->assertSame(3, $DB->count_records('test_sessions'));
+
+        $id4 = $DB->insert_record('test_sessions', (object)['sid' => 'abc123', 'courseid' => null]);
+        $this->assertSame(4, $DB->count_records('test_sessions'));
+
+        $id5 = $DB->insert_record('test_sessions', (object)['sid' => 'abc123', 'courseid' => null]);
+        $this->assertSame(5, $DB->count_records('test_sessions'));
+
+        $id6 = $DB->insert_record('test_sessions', (object)['sid' => null, 'courseid' => 1]);
+        $this->assertSame(6, $DB->count_records('test_sessions'));
+
+        $id7 = $DB->insert_record('test_sessions', (object)['sid' => null, 'courseid' => 1]);
+        $this->assertSame(7, $DB->count_records('test_sessions'));
+
+        $id8 = $DB->insert_record('test_sessions', (object)['sid' => null, 'courseid' => null]);
+        $this->assertSame(8, $DB->count_records('test_sessions'));
+
+        $id9 = $DB->insert_record('test_sessions', (object)['sid' => null, 'courseid' => null]);
+        $this->assertSame(9, $DB->count_records('test_sessions'));
+
+        try {
+            $DB->insert_record('test_sessions', (object)['sid' => 'abc123', 'courseid' => 1]);
+            $this->fail('Exception expected when sid,courseid non-unique');
+        } catch (moodle_exception $e) {
+            $this->assertInstanceOf(dml_write_exception::class, $e);
+        }
+        $this->assertSame(9, $DB->count_records('test_sessions'));
+
+        $DB->set_field('test_sessions', 'courseid', null, ['id' => $id2]);
+
+        try {
+            $DB->set_field('test_sessions', 'courseid', 1, ['id' => $id2]);
+            $this->fail('Exception expected when sid,courseid non-unique');
+        } catch (moodle_exception $e) {
+            $this->assertInstanceOf(dml_write_exception::class, $e);
+        }
+
+        $DB->set_field('test_sessions', 'sid', null, ['id' => $id2]);
+
+        $DB->set_field('test_sessions', 'courseid', 1, ['id' => $id9]);
+        try {
+            $DB->set_field('test_sessions', 'sid', 'abc123', ['id' => $id9]);
+            $this->fail('Exception expected when sid,courseid non-unique');
+        } catch (moodle_exception $e) {
+            $this->assertInstanceOf(dml_write_exception::class, $e);
+        }
+
+        $dbman->drop_table($table);
+    }
+
     public function test_find_key_name() {
         $DB = $this->tdb;
         $dbman = $DB->get_manager();

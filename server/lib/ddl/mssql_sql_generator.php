@@ -391,21 +391,23 @@ class mssql_sql_generator extends sql_generator {
             return $sqls;
         }
 
-        // NOTE: quiz_report table has a messed up nullable name field, ignore it.
-
-        if ($xmldb_index->getUnique() and count($xmldb_index->getFields()) === 1 and $xmldb_table->getName() !== 'quiz_reports') {
-            $fields = $xmldb_index->getFields();
-            $fieldname = reset($fields);
-            /** @var xmldb_field $field */
-            $field = $xmldb_table->getField($fieldname);
-            if ($field and !$field->getNotNull()) {
+        // Totara: Emulate proper unique NULL indexes in MS SQL Server.
+        if ($xmldb_index->getUnique()) {
+            $ignorenulls = [];
+            foreach ($xmldb_index->getFields() as $fieldname) {
+                $field = $xmldb_table->getField($fieldname);
+                if ($field and !$field->getNotNull()) {
+                    $ignorenulls[] = $this->getEncQuoted($fieldname) . ' IS NOT NULL';
+                }
+            }
+            if ($ignorenulls) {
                 $unique = ' UNIQUE';
                 $suffix = 'uix';
                 $index = 'CREATE' . $unique . ' INDEX ';
                 $index .= $this->getNameForObject($xmldb_table->getName(), implode(', ', $xmldb_index->getFields()), $suffix);
                 $index .= ' ON ' . $this->getTableName($xmldb_table);
                 $index .= ' (' . implode(', ', $this->getEncQuoted($xmldb_index->getFields())) . ')';
-                $index .= ' WHERE '. $this->getEncQuoted($fieldname) . ' IS NOT NULL';
+                $index .= ' WHERE ' . implode(' AND ', $ignorenulls);
                 return array($index);
             }
         }
