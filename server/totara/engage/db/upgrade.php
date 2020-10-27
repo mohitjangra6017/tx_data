@@ -32,7 +32,10 @@ function xmldb_totara_engage_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 13.0 release line.
+    if ($oldversion < 2020102700) {
+        $DB->execute('update {engage_share_recipient} set area = lower(area)');
+        upgrade_plugin_savepoint(true, 2020102700, 'totara', 'engage');
+    }
 
     return true;
 }

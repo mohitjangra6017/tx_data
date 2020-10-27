@@ -23,11 +23,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2020101500;          // The current module version (Date: YYYYMMDDXX).
+$plugin->version = 2020102700;          // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2020101200;         // Requires this Totara version.
 $plugin->component = 'totara_engage';
 
 $plugin->dependencies = [
     'totara_reaction' => 2020101200,
-    'totara_topic'=> 2020101200
+    'totara_topic' => 2020101200
 ];
