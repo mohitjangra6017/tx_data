@@ -296,9 +296,9 @@ class core_persistent_testcase extends advanced_testcase {
         $expected = $p->to_record();
         $this->assertTrue(isset($p->beforecreate));
         $this->assertTrue(isset($p->aftercreate));
-        $this->assertEquals($expected->sortorder, $record->sortorder);
-        $this->assertEquals($expected->idnumber, $record->idnumber);
-        $this->assertEquals($expected->id, $record->id);
+        $this->assertSame((string)$expected->sortorder, $record->sortorder);
+        $this->assertSame($expected->idnumber, $record->idnumber);
+        $this->assertSame($expected->id, $record->id);
         $this->assertTrue($p->is_valid()); // Should always be valid after a create.
     }
 
@@ -317,9 +317,9 @@ class core_persistent_testcase extends advanced_testcase {
         $record = $DB->get_record(core_testable_persistent::TABLE, array('id' => $p->get('id')), '*', MUST_EXIST);
         $this->assertTrue(isset($p->beforeupdate));
         $this->assertTrue(isset($p->afterupdate));
-        $this->assertEquals($id, $record->id);
-        $this->assertEquals(456, $record->sortorder);
-        $this->assertEquals('def', $record->idnumber);
+        $this->assertSame($id, $record->id);
+        $this->assertSame('456', $record->sortorder);
+        $this->assertSame('def', $record->idnumber);
         $this->assertTrue($p->is_valid()); // Should always be valid after an update.
     }
 
@@ -337,9 +337,9 @@ class core_persistent_testcase extends advanced_testcase {
         $this->assertTrue(isset($p->aftercreate));
         $this->assertFalse(isset($p->beforeupdate));
         $this->assertFalse(isset($p->beforeupdate));
-        $this->assertEquals($expected->sortorder, $record->sortorder);
-        $this->assertEquals($expected->idnumber, $record->idnumber);
-        $this->assertEquals($expected->id, $record->id);
+        $this->assertSame($expected->sortorder, $record->sortorder);
+        $this->assertSame($expected->idnumber, $record->idnumber);
+        $this->assertSame($expected->id, $record->id);
         $this->assertTrue($p->is_valid()); // Should always be valid after a save/create.
 
         $p->set('idnumber', 'abcd');
@@ -348,9 +348,9 @@ class core_persistent_testcase extends advanced_testcase {
         $expected = $p->to_record();
         $this->assertTrue(isset($p->beforeupdate));
         $this->assertTrue(isset($p->beforeupdate));
-        $this->assertEquals($expected->sortorder, $record->sortorder);
-        $this->assertEquals($expected->idnumber, $record->idnumber);
-        $this->assertEquals($expected->id, $record->id);
+        $this->assertSame($expected->sortorder, $record->sortorder);
+        $this->assertSame($expected->idnumber, $record->idnumber);
+        $this->assertSame($expected->id, $record->id);
         $this->assertTrue($p->is_valid()); // Should always be valid after a save/update.
     }
 
@@ -382,9 +382,9 @@ class core_persistent_testcase extends advanced_testcase {
 
         $p->delete();
         $this->assertFalse($DB->record_exists_select(core_testable_persistent::TABLE, 'id = ?', array($p->get('id'))));
-        $this->assertEquals(0, $p->get('id'));
-        $this->assertEquals(true, $p->beforedelete);
-        $this->assertEquals(true, $p->afterdelete);
+        $this->assertSame('0', $p->get('id'));
+        $this->assertSame(true, $p->beforedelete);
+        $this->assertSame(true, $p->afterdelete);
     }
 
     public function test_has_property() {
@@ -400,12 +400,12 @@ class core_persistent_testcase extends advanced_testcase {
 
         $p = new core_testable_persistent(0, (object) array('sortorder' => 0, 'idnumber' => 'abc'));
         $p->set('path', $path);
-        $this->assertEquals($path, $p->get('path'));
-        $this->assertEquals($json, $p->to_record()->path);
+        $this->assertSame($path, $p->get('path'));
+        $this->assertSame($json, $p->to_record()->path);
 
         $p->create();
         $record = $DB->get_record(core_testable_persistent::TABLE, array('id' => $p->get('id')), 'id, path', MUST_EXIST);
-        $this->assertEquals($json, $record->path);
+        $this->assertSame($json, $record->path);
     }
 
     public function test_record_exists() {

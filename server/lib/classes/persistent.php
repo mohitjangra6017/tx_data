@@ -54,7 +54,7 @@ abstract class persistent {
      * Create an instance of this class.
      *
      * @param int $id If set, this is the id of an existing record, used to load the data.
-     * @param stdClass $record If set will be passed to {@link self::from_record()}.
+     * @param stdClass|null $record If set will be passed to {@link self::from_record()}.
      */
     public function __construct($id = 0, stdClass $record = null) {
         global $CFG;
@@ -193,6 +193,15 @@ abstract class persistent {
             // If the value is changing, we invalidate the model.
             $this->validated = false;
         }
+
+        // Totara: always cast non-null values to string the same way as DML does it!
+        if ($value !== null) {
+            if (is_bool($value)) {
+                $value = (int)$value;
+            }
+            $value = (string)$value;
+        }
+
         $this->data[$property] = $value;
 
         return $this;
@@ -388,7 +397,7 @@ abstract class persistent {
      * represent what is stored in the database.
      *
      * @param \stdClass $record A DB record.
-     * @return persistent
+     * @return static
      */
     final public function from_record(stdClass $record) {
         $record = (array) $record;
@@ -418,7 +427,7 @@ abstract class persistent {
     /**
      * Load the data from the DB.
      *
-     * @return persistent
+     * @return static
      */
     final public function read() {
         global $DB;
@@ -451,7 +460,7 @@ abstract class persistent {
     /**
      * Insert a record in the DB.
      *
-     * @return persistent
+     * @return static
      */
     final public function create() {
         global $DB, $USER;
@@ -483,6 +492,10 @@ abstract class persistent {
 
         // We ensure that this is flagged as validated.
         $this->validated = true;
+
+        // Totara: Always re-fetch from database to get proper defaults, consistent data types and all missing fields!!!!!!
+        $record = $DB->get_record(static::TABLE, ['id' => $id], '*', MUST_EXIST);
+        $this->from_record($record);
 
         // After create hook.
         $this->after_create();
@@ -799,7 +812,7 @@ abstract class persistent {
      * @param int $skip Limitstart.
      * @param int $limit Number of rows to return.
      *
-     * @return \core\persistent[]
+     * @return static[]
      */
     public static function get_records($filters = array(), $sort = '', $order = 'ASC', $skip = 0, $limit = 0) {
         global $DB;
@@ -823,7 +836,7 @@ abstract class persistent {
      * Load a single record.
      *
      * @param array $filters Filters to apply.
-     * @return false|\core\persistent
+     * @return false|static
      */
     public static function get_record($filters = array()) {
         global $DB;
@@ -841,7 +854,7 @@ abstract class persistent {
      * @param string $fields
      * @param int $limitfrom
      * @param int $limitnum
-     * @return \core\persistent[]
+     * @return static[]
      */
     public static function get_records_select($select, $params = null, $sort = '', $fields = '*', $limitfrom = 0, $limitnum = 0) {
         global $DB;
