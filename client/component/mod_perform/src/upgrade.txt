@@ -2,6 +2,8 @@ This file describes API changes in /client/component/mod_perform,
 information provided here is intended especially for developers.
 
 === 14.0 ===
+* Updated the template structure of ActivityContentPrint.vue to add new icons, add new pieces of information, and improve element spacing and font sizes
+    * Template, SCSS changes & lang string changes
 * Reworked several components to centralise common functionality improving consistency and reducing duplication
     * Added a new wrapper component for all custom elements
         * PerformAdminCustomElement.vue
@@ -15,7 +17,7 @@ information provided here is intended especially for developers.
     * Replaced the following
         * ElementAdminReadOnlyDisplay.vue with PerformAdminCustomElementSummary.vue
     * Updated the template structure of ActivityContent.vue and ActivityContentPrint.vue to drive view only responses off new generic
-      view only response components (ResponseDisplay.vue and HtmlResponseDisplay.vue), removed unused css classes. Also refactored 
+      view only response components (ResponseDisplay.vue and HtmlResponseDisplay.vue), removed unused css classes. Also refactored
       the existing layout approach and standardised the page margins with other Tui pages.
         * Template & SCSS changes
     * Updated the template structure of ActivityContentPrint.vue to add new icons, add new pieces of information, and improve element spacing and font sizes
