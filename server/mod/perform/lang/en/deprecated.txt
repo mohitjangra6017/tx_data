@@ -1,1 +1,2 @@
 instance_count,rb_source_perform_participation_subject_instance
+user_activities_require_manual_participant_selection_text,mod_perform
