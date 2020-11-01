@@ -25,71 +25,42 @@
 require('../../config.php');
 require_once($CFG->libdir . '/authlib.php');
 
-$usersecret = required_param('token', PARAM_RAW);
-$username = required_param('username', PARAM_USERNAME);
-$redirect = optional_param('redirect', '', PARAM_LOCALURL);    // Where to redirect the browser once the user has been confirmed.
+$token = required_param('token', PARAM_RAW);
+$linkid = required_param('linkid', PARAM_INT);
 
 $PAGE->set_url('/auth/oauth2/confirm-account.php');
 $PAGE->set_context(context_system::instance());
 
-$auth = get_auth_plugin('oauth2');
-
-if (!\auth_oauth2\api::is_enabled()) {
-    throw new \moodle_exception('notenabled', 'auth_oauth2');
+if (!is_enabled_auth('oauth2')) {
+    print_error('notenabled', 'auth_oauth2', get_login_url());
+}
+if (!get_config('auth_oauth2', 'allowaccountcreation')) {
+    print_error('loginerror_cannotcreateaccounts', 'auth_oauth2', get_login_url());
 }
 
-$confirmed = $auth->user_confirm($username, $usersecret);
+$confirmed = \auth_oauth2\api::confirm_new_account($linkid, $token);
+if (!$confirmed) {
+    print_error('confirmationinvalid', 'auth_oauth2', get_login_url());
+}
 
-if ($confirmed == AUTH_CONFIRM_ALREADY) {
-    $user = get_complete_user_data('username', $username);
-    $PAGE->navbar->add(get_string("alreadyconfirmed"));
-    $PAGE->set_title(get_string("alreadyconfirmed"));
-    $PAGE->set_heading($COURSE->fullname);
-    echo $OUTPUT->header();
-    echo $OUTPUT->box_start('generalbox centerpara boxwidthnormal boxaligncenter');
-    echo "<p>".get_string("alreadyconfirmed")."</p>\n";
-    echo $OUTPUT->single_button("$CFG->wwwroot/course/", get_string('courses'));
-    echo $OUTPUT->box_end();
-    echo $OUTPUT->footer();
-    exit;
+// We MUST NOT login user here automatically, because the token is ignored if they click the link again.
 
-} else if ($confirmed == AUTH_CONFIRM_OK) {
+$PAGE->navbar->add(get_string("confirmed"));
+$PAGE->set_title(get_string("confirmed"));
+$PAGE->set_heading($COURSE->fullname);
+echo $OUTPUT->header();
+echo $OUTPUT->box_start('generalbox centerpara boxwidthnormal boxaligncenter');
+echo "<h3>".get_string("thanks")."</h3>\n";
+echo "<p>".get_string("confirmed")."</p>\n";
 
-    // The user has confirmed successfully, let's log them in.
-
-    if (!$user = get_complete_user_data('username', $username)) {
-        print_error('cannotfinduser', '', '', s($username));
-    }
-
-    if (!$user->suspended) {
-        complete_user_login($user);
-
-        \core\session\manager::apply_concurrent_login_limit($user->id, session_id());
-
-        // Check where to go, $redirect has a higher preference.
-        if (empty($redirect) and !empty($SESSION->wantsurl) ) {
-            $redirect = $SESSION->wantsurl;
-            unset($SESSION->wantsurl);
-        }
-
-        if (!empty($redirect)) {
-            redirect($redirect);
-        }
-    }
-
-    $PAGE->navbar->add(get_string("confirmed"));
-    $PAGE->set_title(get_string("confirmed"));
-    $PAGE->set_heading($COURSE->fullname);
-    echo $OUTPUT->header();
-    echo $OUTPUT->box_start('generalbox centerpara boxwidthnormal boxaligncenter');
-    echo "<h3>".get_string("thanks").", ". fullname($USER) . "</h3>\n";
-    echo "<p>".get_string("confirmed")."</p>\n";
-    echo $OUTPUT->single_button("$CFG->wwwroot/course/", get_string('courses'));
-    echo $OUTPUT->box_end();
-    echo $OUTPUT->footer();
-    exit;
+if (!isloggedin() || isguestuser()) {
+    // Prevent confusion on next login page access.
+    unset($SESSION->loginerrormsg);
+    $SESSION->wantsurl = $CFG->wwwroot . '/';
+    echo $OUTPUT->single_button(get_login_url(), get_string('login'), 'get');
 } else {
-    \core\notification::error(get_string('confirmationinvalid', 'auth_oauth2'));
+    echo $OUTPUT->single_button(new moodle_url('/login/logout.php', ['sesskey' => sesskey()]), get_string('login'));
 }
 
-redirect("$CFG->wwwroot/");
+echo $OUTPUT->box_end();
+echo $OUTPUT->footer();

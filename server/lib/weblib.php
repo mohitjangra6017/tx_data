@@ -3131,6 +3131,9 @@ function notice ($message, $link='', $course=null) {
 function redirect($url, $message='', $delay=null, $messagetype = \core\output\notification::NOTIFY_INFO) {
     global $OUTPUT, $PAGE, $CFG, $FULLME;
 
+    if (PHPUNIT_TEST) {
+        throw new moodle_exception('redirecterrordetected', 'error', (string)$url);
+    }
     if (CLI_SCRIPT or AJAX_SCRIPT) {
         // This is wrong - developers should not use redirect in these scripts but it should not be very likely.
         throw new moodle_exception('redirecterrordetected', 'error');

@@ -1101,6 +1101,7 @@ $string['template'] = 'Template';
 $string['templates'] = 'Templates';
 $string['thefuture'] = 'The future';
 $string['thepast'] = 'The past';
+$string['timecreated'] = 'Created';
 $string['timemodified'] = 'Modified';
 $string['tile_view'] = 'Tile view';
 $string['toolbarsearch'] = 'Toolbar search box';

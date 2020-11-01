@@ -35,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @group totara_userdata
  */
-class auth_oauth2_userdata_email_testcase extends advanced_testcase {
+final class auth_oauth2_userdata_email_testcase extends advanced_testcase {
 
     /**
      * Test compatible context levels.
@@ -51,7 +51,6 @@ class auth_oauth2_userdata_email_testcase extends advanced_testcase {
     public function test_purge() {
         global $DB;
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         // Create identity provider.
         $issuer = \core\oauth2\api::create_standard_issuer('google');
@@ -62,9 +61,9 @@ class auth_oauth2_userdata_email_testcase extends advanced_testcase {
         $deleteduser = $this->getDataGenerator()->create_user();
 
         // Create corresponding linked logins.
-        oauth2_api::link_login(['username' => $activeuser->username, 'email' => $activeuser->email], $issuer, $activeuser->id, false);
-        oauth2_api::link_login(['username' => $suspendeduser->username, 'email' => $suspendeduser->email], $issuer, $suspendeduser->id, false);
-        oauth2_api::link_login(['username' => $deleteduser->username, 'email' => $deleteduser->email], $issuer, $deleteduser->id, false);
+        oauth2_api::link_login(['username' => $activeuser->username, 'email' => $activeuser->email], $issuer, $activeuser);
+        oauth2_api::link_login(['username' => $suspendeduser->username, 'email' => $suspendeduser->email], $issuer, $suspendeduser);
+        oauth2_api::link_login(['username' => $deleteduser->username, 'email' => $deleteduser->email], $issuer, $deleteduser);
 
         // Set status of suspended and deleted user.
         $suspendeduser = $this->suspend_user_for_testing($suspendeduser);
@@ -83,7 +82,7 @@ class auth_oauth2_userdata_email_testcase extends advanced_testcase {
         // Purge data.
         $result = email::execute_purge($deleteduser, context_system::instance());
         $this->assertEquals(item::RESULT_STATUS_SUCCESS, $result);
-        $this->assertEquals('', $DB->get_field('auth_oauth2_linked_login', 'email', ['userid' => $deleteduser->id]));
+        $this->assertFalse($DB->record_exists('auth_oauth2_linked_login', ['userid' => $deleteduser->id]));
 
         // Email of control users still present.
         $this->assertEquals($activeuser->email, $DB->get_field('auth_oauth2_linked_login', 'email', ['userid' => $activeuser->id]));
@@ -95,7 +94,6 @@ class auth_oauth2_userdata_email_testcase extends advanced_testcase {
      */
     public function test_count() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         // Create identity provider.
         $issuer = \core\oauth2\api::create_standard_issuer('google');
@@ -105,8 +103,8 @@ class auth_oauth2_userdata_email_testcase extends advanced_testcase {
         $deleteduser = $this->getDataGenerator()->create_user();
 
         // Create corresponding linked logins.
-        oauth2_api::link_login(['username' => $activeuser->username, 'email' => $activeuser->email], $issuer, $activeuser->id, false);
-        oauth2_api::link_login(['username' => $deleteduser->username, 'email' => $deleteduser->email], $issuer, $deleteduser->id, false);
+        oauth2_api::link_login(['username' => $activeuser->username, 'email' => $activeuser->email], $issuer, $activeuser);
+        oauth2_api::link_login(['username' => $deleteduser->username, 'email' => $deleteduser->email], $issuer, $deleteduser);
 
         // Flag user as deleted.
         $deleteduser = $this->delete_user_for_testing($deleteduser);
@@ -128,7 +126,6 @@ class auth_oauth2_userdata_email_testcase extends advanced_testcase {
      */
     public function test_export() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         // Create identity provider.
         $issuer = \core\oauth2\api::create_standard_issuer('google');
@@ -138,8 +135,8 @@ class auth_oauth2_userdata_email_testcase extends advanced_testcase {
         $deleteduser = $this->getDataGenerator()->create_user();
 
         // Create corresponding linked logins.
-        oauth2_api::link_login(['username' => $activeuser->username, 'email' => $activeuser->email], $issuer, $activeuser->id, false);
-        oauth2_api::link_login(['username' => $deleteduser->username, 'email' => $deleteduser->email], $issuer, $deleteduser->id, false);
+        oauth2_api::link_login(['username' => $activeuser->username, 'email' => $activeuser->email], $issuer, $activeuser);
+        oauth2_api::link_login(['username' => $deleteduser->username, 'email' => $deleteduser->email], $issuer, $deleteduser);
 
         // Flag user as deleted and purge data.
         $deleteduser = $this->delete_user_for_testing($deleteduser);

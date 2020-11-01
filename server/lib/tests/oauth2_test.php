@@ -244,4 +244,37 @@ class core_oauth2_testcase extends advanced_testcase {
         $this->assertTrue($issuer->is_valid_login_domain('longer.example@sub.example.com'));
     }
 
+    public function test_is_login_enabled() {
+        global $CFG;
+
+        $this->setAdminUser();;
+
+        $facebook = \core\oauth2\api::create_standard_issuer('facebook');
+        $google = \core\oauth2\api::create_standard_issuer('google');
+
+        $this->setUser(null);
+
+        $this->assertSame(true, $facebook->is_authentication_supported());
+        $this->assertSame('1', $facebook->get('enabled'));
+        $this->assertSame('1', $facebook->get('showonloginpage'));
+        $this->assertFalse($facebook->is_login_enabled());
+
+        $CFG->auth = 'manual,oauth2';
+        $this->assertTrue($facebook->is_login_enabled());
+
+        $facebook->set('enabled', '0');
+        $this->assertFalse($facebook->is_login_enabled());
+
+        $facebook->set('enabled', '1');
+        $facebook->set('showonloginpage', '0');
+        $this->assertFalse($facebook->is_login_enabled());
+
+        $facebook->set('showonloginpage', '1');
+        $this->assertTrue($facebook->is_login_enabled());
+
+        $this->assertSame(false, $google->is_authentication_supported()); // We cannot do discovery here.
+        $this->assertSame('1', $google->get('enabled'));
+        $this->assertSame('1', $google->get('showonloginpage'));
+        $this->assertFalse($google->is_login_enabled());
+    }
 }

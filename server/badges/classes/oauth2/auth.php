@@ -28,8 +28,6 @@ namespace core_badges\oauth2;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/authlib.php');
-
 use stdClass;
 
 /**
@@ -39,7 +37,7 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Tung Thai <Tung.ThaiDuc@nashtechglobal.com>
  */
-class auth extends \auth_oauth2\auth {
+class auth {
 
     /**
      * To complete data after login.

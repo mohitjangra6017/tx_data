@@ -54,7 +54,7 @@ final class admin_setting_oauth2_issuer_select extends admin_setting_configselec
         if (is_array($this->choices)) {
             return true;
         }
-        if (api::is_enabled()) {
+        if (is_enabled_auth('oauth2')) {
             $options = $DB->get_records('oauth2_issuer', ['enabled' => 1], 'id', 'id,name');
             foreach ($options as $id => $rec) {
                 $options[$id] = $rec->name;

@@ -24,8 +24,6 @@
 
 // List of observers.
 $observers = [
-    [
-        'eventname'   => '\core\event\user_deleted',
-        'callback'    => '\auth_oauth2\api::user_deleted',
-    ],
+    // No need to listen to user_deleted event any more,
+    // we keep the linked login for deleted users to prevent recreation of new accounts.
 ];

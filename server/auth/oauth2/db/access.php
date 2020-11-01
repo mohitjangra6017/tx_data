@@ -26,12 +26,24 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
 
+    // Manage OWN linked logins, this includes deleting own linked logins
+    // unless it is the last login link of user with oauth2 auth.
     'auth/oauth2:managelinkedlogins' => array(
 
         'captype' => 'write',
         'contextlevel' => CONTEXT_USER,
         'archetypes' => array(
             'user' => CAP_ALLOW
+        )
+    ),
+
+    // Delete any login links, this is intended for administrators only.
+    // Note that for deleted accounts system context is used to permission checks.
+    'auth/oauth2:deletelinkedlogins' => array(
+
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_USER,
+        'archetypes' => array(
         )
     ),
 ];

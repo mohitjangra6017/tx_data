@@ -587,7 +587,9 @@ class manager {
         // this helps prevent session fixation attacks from the same domain.
 
         $sid = session_id();
-        session_regenerate_id(true);
+        if (!PHPUNIT_TEST || $sid !== '') {
+            session_regenerate_id(true);
+        }
         $DB->delete_records('sessions', array('sid'=>$sid));
         self::add_session_record($user->id);
 

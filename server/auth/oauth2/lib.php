@@ -40,21 +40,11 @@ function auth_oauth2_extend_navigation_user_settings(navigation_node $useraccoun
                                                      context_course $coursecontext) {
     global $USER;
 
-    if (\auth_oauth2\api::is_enabled() && !\core\session\manager::is_loggedinas()) {
+    if (is_enabled_auth('oauth2') && !\core\session\manager::is_loggedinas()) {
         if (has_capability('auth/oauth2:managelinkedlogins', $context) && $user->id == $USER->id) {
-
+            // NOTE: it is fine to list linked logins in login-as, we want to prevent modifications only.
             $parent = $useraccount->parent->find('useraccount', navigation_node::TYPE_CONTAINER);
             $parent->add(get_string('linkedlogins', 'auth_oauth2'), new moodle_url('/auth/oauth2/linkedlogins.php'));
         }
     }
-}
-
-/**
- * Callback to remove linked logins for deleted users.
- *
- * @param stdClass $user
- */
-function auth_oauth2_pre_user_delete($user) {
-    global $DB;
-    $DB->delete_records(auth_oauth2\linked_login::TABLE, ['userid' => $user->id]);
 }

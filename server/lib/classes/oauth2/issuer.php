@@ -172,6 +172,20 @@ class issuer extends persistent {
     }
 
     /**
+     * Is the login compatible and enabled for this issuer?
+     *
+     * @since Totara 14.0
+     *
+     * @return bool
+     */
+    public function is_login_enabled(): bool {
+        if (!$this->get('showonloginpage')  || !$this->get('enabled') || !$this->is_authentication_supported() || !is_enabled_auth('oauth2')) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Return true if this issuer looks like it has been configured.
      *
      * @return boolean

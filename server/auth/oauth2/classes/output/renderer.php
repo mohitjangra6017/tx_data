@@ -23,12 +23,12 @@
  */
 namespace auth_oauth2\output;
 
+use core\output\flex_icon;
 use plugin_renderer_base;
 use html_table;
 use html_table_cell;
 use html_table_row;
 use html_writer;
-use auth\oauth2\linked_login;
 use moodle_url;
 
 defined('MOODLE_INTERNAL') || die();
@@ -43,12 +43,10 @@ class renderer extends plugin_renderer_base {
     /**
      * This function will render one beautiful table with all the linked_logins.
      *
-     * @param \auth\oauth2\linked_login[] $linkedlogins - list of all linked logins.
+     * @param \auth_oauth2\linked_login[] $linkedlogins - list of all linked logins.
      * @return string HTML to output.
      */
     public function linked_logins_table($linkedlogins) {
-        global $CFG;
-
         $table = new html_table();
         $table->head  = [
             get_string('issuer', 'auth_oauth2'),
@@ -69,15 +67,21 @@ class renderer extends plugin_renderer_base {
             // Issuer.
             $username = $linkedlogin->get('username');
             $email = $linkedlogin->get('email');
-            $usernamecell = new html_table_cell(s($email) . ', (' . s($username) . ')');
+            if ($email === $username) {
+                // Mail services may use email as username.
+                $usernamecell = new html_table_cell(s($email));
+            } else {
+                $usernamecell = new html_table_cell(s($email) . ' (' . s($username) . ')');
+            }
 
             $links = '';
 
             // Delete.
-            $deleteparams = ['linkedloginid' => $linkedlogin->get('id'), 'action' => 'delete', 'sesskey' => sesskey()];
-            $deleteurl = new moodle_url('/auth/oauth2/linkedlogins.php', $deleteparams);
-            $deletelink = html_writer::link($deleteurl, $this->pix_icon('t/delete', get_string('delete')));
-            $links .= ' ' . $deletelink;
+            if (\auth_oauth2\api::can_delete_linked_login($linkedlogin->get('id'))) {
+                $deleteparams = ['linkedloginid' => $linkedlogin->get('id'), 'action' => 'delete', 'sesskey' => sesskey()];
+                $deleteurl = new moodle_url('/auth/oauth2/linkedlogins.php', $deleteparams);
+                $links .= ' ' . $this->action_icon($deleteurl, new flex_icon('delete', ['alt' => get_string('deletelinkedlogin', 'auth_oauth2')]));
+            }
 
             $editcell = new html_table_cell($links);
 

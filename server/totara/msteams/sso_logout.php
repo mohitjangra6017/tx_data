@@ -25,6 +25,10 @@
 
 require_once(__DIR__ . '/../../config.php');
 
+if (!is_enabled_auth('oauth2')) {
+    throw new \moodle_exception('notenabled', 'auth_oauth2');
+}
+
 if ($USER->id) {
     if ($USER->auth == 'oauth2') {
         require_logout();

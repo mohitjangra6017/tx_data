@@ -26,57 +26,43 @@ require('../../config.php');
 require_once($CFG->libdir . '/authlib.php');
 
 $token = required_param('token', PARAM_RAW);
-$username = required_param('username', PARAM_USERNAME);
-$userid = required_param('userid', PARAM_INT);
-$issuerid = required_param('issuerid', PARAM_INT);
-$redirect = optional_param('redirect', '', PARAM_LOCALURL);    // Where to redirect the browser once the user has been confirmed.
+$linkid = required_param('linkid', PARAM_INT);
 
 $PAGE->set_url('/auth/oauth2/confirm-linkedlogin.php');
 $PAGE->set_context(context_system::instance());
 
-if (!\auth_oauth2\api::is_enabled()) {
-    throw new \moodle_exception('notenabled', 'auth_oauth2');
+if (!is_enabled_auth('oauth2')) {
+    print_error('notenabled', 'auth_oauth2', get_login_url());
+}
+if (!get_config('auth_oauth2', 'allowautolinkingexisting')) {
+    print_error('loginerror_nolinking', 'auth_oauth2', get_login_url());
 }
 
-$confirmed = \auth_oauth2\api::confirm_link_login($userid, $username, $issuerid, $token);
+$user = \auth_oauth2\api::confirm_link_login($linkid, $token);
+if (!$user) {
+    print_error('confirmationinvalid', 'auth_oauth2', get_login_url());
+}
 
-if ($confirmed) {
+// We MUST NOT login user here automatically, because the token is ignored if they click the link again.
 
-    // The user has confirmed successfully, let's log them in.
+$PAGE->navbar->add(get_string("confirmed"));
+$PAGE->set_title(get_string("confirmed"));
+$PAGE->set_heading($COURSE->fullname);
+echo $OUTPUT->header();
+echo $OUTPUT->box_start('generalbox centerpara boxwidthnormal boxaligncenter');
+echo "<h3>".get_string("thanks").", ". fullname($user) . "</h3>\n";
+echo "<p>".get_string("confirmed")."</p>\n";
 
-    if (!$user = get_complete_user_data('id', $userid)) {
-        print_error('cannotfinduser', '', '', $userid);
-    }
-
-    if (!$user->suspended) {
-        complete_user_login($user);
-
-        \core\session\manager::apply_concurrent_login_limit($user->id, session_id());
-
-        // Check where to go, $redirect has a higher preference.
-        if (empty($redirect) and !empty($SESSION->wantsurl) ) {
-            $redirect = $SESSION->wantsurl;
-            unset($SESSION->wantsurl);
-        }
-
-        if (!empty($redirect)) {
-            redirect($redirect);
-        }
-    }
-
-    $PAGE->navbar->add(get_string("confirmed"));
-    $PAGE->set_title(get_string("confirmed"));
-    $PAGE->set_heading($COURSE->fullname);
-    echo $OUTPUT->header();
-    echo $OUTPUT->box_start('generalbox centerpara boxwidthnormal boxaligncenter');
-    echo "<h3>".get_string("thanks").", ". fullname($USER) . "</h3>\n";
-    echo "<p>".get_string("confirmed")."</p>\n";
-    echo $OUTPUT->single_button("$CFG->wwwroot/course/", get_string('courses'));
-    echo $OUTPUT->box_end();
-    echo $OUTPUT->footer();
-    exit;
+if ($USER->id == $user->id) {
+    echo $OUTPUT->single_button(new moodle_url('/'), get_string('continue'), 'get');
+} else if (!isloggedin() || isguestuser()) {
+    // Prevent confusion on next login page access.
+    unset($SESSION->loginerrormsg);
+    $SESSION->wantsurl = $CFG->wwwroot . '/';
+    echo $OUTPUT->single_button(get_login_url(), get_string('login'), 'get');
 } else {
-    \core\notification::error(get_string('confirmationinvalid', 'auth_oauth2'));
+    echo $OUTPUT->single_button(new moodle_url('/login/logout.php', ['sesskey' => sesskey()]), get_string('login'));
 }
 
-redirect("$CFG->wwwroot/");
+echo $OUTPUT->box_end();
+echo $OUTPUT->footer();

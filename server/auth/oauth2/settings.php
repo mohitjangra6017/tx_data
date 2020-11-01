@@ -26,8 +26,8 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
 
-    $warning = $OUTPUT->notification(get_string('createaccountswarning', 'auth_oauth2'), 'warning');
-    $settings->add(new admin_setting_heading('auth_oauth2/pluginname', '', $warning));
+    $settings->add(new admin_setting_configcheckbox('auth_oauth2/allowaccountcreation', new lang_string('allowaccountcreation', 'auth_oauth2'), new lang_string('allowaccountcreation_desc', 'auth_oauth2'), 1));
+    $settings->add(new admin_setting_configcheckbox('auth_oauth2/allowautolinkingexisting', new lang_string('allowautolinkingexisting', 'auth_oauth2'), new lang_string('allowautolinkingexisting_desc', 'auth_oauth2'), 1));
 
     $authplugin = get_auth_plugin('oauth2');
     display_auth_lock_options($settings, $authplugin->authtype, $authplugin->userfields,

@@ -21,7 +21,6 @@
  * @package totara_msteams
  */
 
-use auth_oauth2\auth;
 use totara_msteams\oidcclient;
 use totara_msteams\auth_helper;
 
@@ -29,15 +28,21 @@ require_once(__DIR__ . '/../../config.php');
 
 \totara_core\advanced_feature::require('totara_msteams');
 
-$returnurl = required_param('returnurl', PARAM_LOCALURL);
+$wantsurl = required_param('returnurl', PARAM_LOCALURL);
+if ($wantsurl === '') {
+    $wantsurl = '/';
+}
 
 require_sesskey();
 
+if (!is_enabled_auth('oauth2')) {
+    throw new \moodle_exception('notenabled', 'auth_oauth2');
+}
+
 $issuer = auth_helper::get_oauth2_issuer(true);
-$wantsurl = new moodle_url($returnurl);
 
 // Pass through OAuth2 login.
-$returnparams = ['wantsurl' => $wantsurl->out(false), 'sesskey' => sesskey(), 'id' => $issuer->get('id')];
+$returnparams = ['wantsurl' => $wantsurl, 'sesskey' => sesskey(), 'id' => $issuer->get('id')];
 $returnurl = new moodle_url('/auth/oauth2/login.php', $returnparams);
 
 $client = new oidcclient($issuer, $returnurl, '');
@@ -45,5 +50,5 @@ if (!$client->is_logged_in_oidc()) {
     redirect($client->get_login_url());
 }
 
-$auth = new auth();
-$auth->complete_login($client, $wantsurl);
+$auth = get_auth_plugin('oauth2');
+$auth->complete_login($client, new moodle_url($wantsurl));

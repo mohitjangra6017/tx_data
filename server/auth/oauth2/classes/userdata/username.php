@@ -29,9 +29,11 @@ use totara_userdata\userdata\target_user;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Replicate full proper user delete cleaning of username.
+ * Replicate full proper user delete cleaning of external OAuth 2 issuer usernames.
+ *
+ * NOTE: in some cases the value is the same as email.
  */
-class username extends \totara_userdata\userdata\item {
+final class username extends \totara_userdata\userdata\item {
 
     /**
      * String used for human readable name of this item.
@@ -39,7 +41,7 @@ class username extends \totara_userdata\userdata\item {
      * @return array parameters of get_string($identifier, $component) to get full item name and optionally help.
      */
     public static function get_fullname_string() {
-        return ['userdataitem-user-username', 'core'];
+        return ['userdataitem-issuer-username', 'auth_oauth2'];
     }
 
     /**
@@ -73,12 +75,8 @@ class username extends \totara_userdata\userdata\item {
     protected static function purge(target_user $user, \context $context) {
         global $DB;
 
-        if (preg_match('/^deleted_[a-z0-9]+$/', $user->username)) {
-            $username = $user->username;
-        } else {
-            $username = 'deleted_' . strtolower(random_string(32));
-        }
-        $DB->set_field('auth_oauth2_linked_login', 'username', $username, ['userid' => $user->id]);
+        // It makes no sense remove username because it would break the external link, just delete the whole link instead.
+        $DB->delete_records('auth_oauth2_linked_login', ['userid' => $user->id]);
 
         return self::RESULT_STATUS_SUCCESS;
     }
@@ -102,14 +100,11 @@ class username extends \totara_userdata\userdata\item {
     protected static function export(target_user $user, \context $context) {
         global $DB;
 
-        $export = new export();
-        $export->data['username'] = '';
+        $usernames = $DB->get_fieldset_select('auth_oauth2_linked_login', 'username', 'userid = ?', [$user->id]);
 
-        $username = $DB->get_field('auth_oauth2_linked_login', 'username', ['userid' => $user->id]);
-        $deleted = $user->deleted ?? false;
-        $export->data['username'] = '';
-        if (!$deleted || !preg_match('/^deleted_[a-z0-9]+$/', $username)) {
-            $export->data['username'] = $user->username;
+        $export = new export();
+        if ($usernames) {
+            $export->data['username'] = implode(', ', $usernames);
         }
 
         return $export;
@@ -134,9 +129,6 @@ class username extends \totara_userdata\userdata\item {
     protected static function count(target_user $user, \context $context) {
         global $DB;
 
-        $username = $DB->get_field('auth_oauth2_linked_login', 'username', ['userid' => $user->id]);
-        $deleted = $user->deleted ?? false;
-
-        return intval(!$deleted || !preg_match('/^deleted_[a-z0-9]+$/', $username));
+        return $DB->count_records('auth_oauth2_linked_login', ['userid' => $user->id]);
     }
 }

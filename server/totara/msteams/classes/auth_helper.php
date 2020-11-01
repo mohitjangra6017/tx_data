@@ -41,7 +41,7 @@ final class auth_helper {
      * @throws auth_exception
      */
     private static function get_oauth2_issuer_worker(): issuer {
-        if (!api::is_enabled()) {
+        if (!is_enabled_auth('oauth2')) {
             throw new auth_exception(get_string('error:oauth2_disabled', 'totara_msteams'));
         }
         $issuerid = get_config('totara_msteams', 'oauth2_issuer');
