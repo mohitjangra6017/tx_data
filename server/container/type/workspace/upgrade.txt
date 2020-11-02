@@ -17,6 +17,7 @@ The information here is intended only for developers.
 * Introduced new field "to_be_deleted" in table "workspace", the field indicates the workspace will be deleted later via cron.
 
 --- Update to API ---
+* Function container_workspace\member\member::get_member_id had been deprecated, please use container_workspace\member\member::get_id instead.
 * Added new parameter "$debug_info" into function container_workspace\exception\discussion_exception::on_create
 * Added new parameter "$debug_info" into function container_workspace\exception\discussion_exception::on_update
 * Removed unused class container_workspace\webapi\resolver\query\count_members
