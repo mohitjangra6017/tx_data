@@ -2,6 +2,7 @@ This files describes API changes in /mod/perform/*,
 information provided here is intended especially for developers.
 
 === 14.0 ===
+
 * activity_setting::create() function no longer checks if the current user has permission to manage the activity. The
   check should be performed before calling this function, where applicable.
 * Deprecated the following methods:
@@ -79,4 +80,4 @@ information provided here is intended especially for developers.
 * mod_perform\entities\activity\track_user_assignment has been moved to mod_perform\entity\activity\track_user_assignment
 * mod_perform\entities\activity\track_user_assignment_repository has been moved to mod_perform\entity\activity\track_user_assignment_repository
 * mod_perform\entities\activity\track_user_assignment_via has been moved to mod_perform\entity\activity\track_user_assignment_via
-
+* Deprecated mod_perform\models\activity\element::get_section_element - elements are designed to be reused more than once.
