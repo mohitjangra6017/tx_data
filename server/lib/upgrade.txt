@@ -11,6 +11,7 @@ information provided here is intended especially for developers.
 * core\theme\file\theme_file::clean_draft_file_area() has been renamed to core\theme\file\theme_file::clean_draft_files
   and changed from public to protected.
 * core\theme\file\theme_file::draft_file_exists() has been removed.
+* \coursecat::delete_courses_and_containers() is now publicly accessible.
 
 === 13.0 ===
 

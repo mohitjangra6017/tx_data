@@ -17,22 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
- * @package container_workspace
+ * @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
+ * @package container_perform
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace container_perform\task;
 
-/* NOTE: the following version number must be bumped during each major or minor Totara release. */
+use container_perform\perform;
+use core\task\adhoc_task;
 
-$plugin->version  = 2020110601;                 // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020101200;                 // Requires this Totara version.
-$plugin->component = 'container_workspace';          // To check on upgrade, that module sits in correct place
+/**
+ * Class create_missing_categories
+ * @package container_perform\task
+ */
+final class create_missing_categories extends adhoc_task {
 
-$plugin->dependencies = [
-    'totara_engage' => 2020101200,
-    'editor_weka' => 2020101200,
-    'totara_comment' => 2020101200,
-    'enrol_self' => 2020101200,
-    'enrol_manual' => 2020101200
-];
+    public function execute() {
+        perform::create_categories();
+        if (!PHPUNIT_TEST) {
+            mtrace('Created missing perform container categories');
+        }
+    }
+
+}

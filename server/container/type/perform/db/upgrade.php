@@ -32,7 +32,12 @@ function xmldb_container_perform_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 13.0 release line.
+    if ($oldversion < 2020101201) {
+        // Queue the creation of missing container records for the perform container.
+        \core\task\manager::queue_adhoc_task(new \container_perform\task\create_missing_categories());
+
+        upgrade_plugin_savepoint(true, 2020101201, 'container', 'perform');
+    }
 
     return true;
 }
