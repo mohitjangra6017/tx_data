@@ -82,8 +82,12 @@ final class discussion_formatter extends formatter {
             // Using time_created as base.
             return parent::get_field('time_created');
         } else if ('draft_content' === $field) {
+            // Using the discussion's content as the base value for
+            // field 'draft_content'.
             return parent::get_field('content');
         } else if ('draft_id' === $field) {
+            // Using the discussion's content as base value for
+            // field 'draft_id'.
             return parent::get_field('content');
         }
 
