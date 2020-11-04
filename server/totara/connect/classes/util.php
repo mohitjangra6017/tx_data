@@ -581,6 +581,8 @@ class util {
         global $CFG, $DB;
         require_once("$CFG->libdir/filelib.php");
 
+        unset($user->mnethostid);
+
         if ($user->deleted != 0) {
             // Do not send all info about deleted users, they should not be used any more.
             $user->password = null;

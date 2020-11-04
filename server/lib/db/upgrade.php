@@ -118,12 +118,6 @@ function xmldb_main_upgrade($oldversion) {
         }
 
         $table = new xmldb_table('user');
-        $field = new xmldb_field('mnethostid');
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->drop_field($table, $field);
-        }
-
-        $table = new xmldb_table('user');
         $index = new xmldb_index('username', XMLDB_INDEX_UNIQUE, array('username'));
         if (!$dbman->index_exists($table, $index)) {
             $dbman->add_index($table, $index);
@@ -134,6 +128,21 @@ function xmldb_main_upgrade($oldversion) {
         unset_config('mnet_localhost_id');
 
         upgrade_main_savepoint(true, 2020101500.00);
+    }
+
+    if ($oldversion < 2020110500.00) {
+        // We will keep mnethostid for the sake of basic compatibility with Moodle auth plugins.
+        $table = new xmldb_table('user');
+        $field = new xmldb_field('mnethostid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '1', 'suspended', ['1']);
+        if ($dbman->field_exists($table, $field)) {
+            $DB->set_field('user', 'mnethostid', '1', []);
+            $dbman->change_field_default($table, $field);
+            $dbman->change_field_allowed_values($table, $field);
+        } else {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_main_savepoint(true, 2020110500.00);
     }
 
     return true;

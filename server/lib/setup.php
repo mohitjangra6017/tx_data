@@ -319,6 +319,8 @@ if (!empty($CFG->tenantsenabled)) {
     $CFG->enablereportcaching = '0';
     $CFG->config_php_settings['enablereportcaching'] = $CFG->enablereportcaching;
 }
+$CFG->mnet_localhost_id = '1';
+$CFG->config_php_settings['mnet_localhost_id'] = $CFG->mnet_localhost_id;
 
 if (isset($CFG->debug)) {
     $CFG->debug = (int)$CFG->debug;

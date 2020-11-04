@@ -35,6 +35,7 @@ use core\orm\entity\entity;
  * @property bool $policyagreed
  * @property bool $deleted
  * @property bool $suspended
+ * @property int $mnethostid
  * @property string $username
  * @property string $password
  * @property string $idnumber
