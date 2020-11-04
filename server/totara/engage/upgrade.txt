@@ -1,11 +1,10 @@
 This files describes API changes in /totara/engage,
 information provided here is intended especially for developers.
 
-=== 13.2 ===
-
-* Deprecated $visibility parameter in share_repository::is_recipient
-* Changed area variable type from param_text to param_area in graphql schema.
-
-=== 13.1 ===
+=== 14.0 ===
 
 * Added imgetuicopmonent and image properties to graphQL type totara_engage_card
+* Deprecated $visibility parameter in share_repository::is_recipient
+* Changed area variable type from param_text to param_area in graphql schema.
+* Removed unused class totara_engage\generator\engage_generator
+
