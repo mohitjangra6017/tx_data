@@ -17,3 +17,7 @@ information provided here is intended especially for developers.
 * Adjusted PopoverFrame.vue to include border in positioning
 * Added size prop to Popover.vue to provide a minimum display width
 * Removed overridden focus styles from SearchBox.vue submit button, now uses default IconButton.vue focus styles
+* Updated Input.vue, Button.vue and ButtonIcon.vue to handle prop "autofocus" in JS
+  * Template changes
+* Updated AttachmentNode.vue, AudioBlock.vue, Hashtag.vue, ImageBlock.vue, and VideoBlock.vue to deprecate the attributes computed property
+  * Template changes
