@@ -24,10 +24,10 @@
 namespace mod_perform\task;
 
 use core\task\scheduled_task;
-use mod_perform\entities\activity\activity as activity_entity;
-use mod_perform\entities\activity\subject_instance as subject_instance_entity;
-use mod_perform\entities\activity\track as track_entity;
-use mod_perform\entities\activity\track_user_assignment as track_user_assignment_entity;
+use mod_perform\entity\activity\activity as activity_entity;
+use mod_perform\entity\activity\subject_instance as subject_instance_entity;
+use mod_perform\entity\activity\track as track_entity;
+use mod_perform\entity\activity\track_user_assignment as track_user_assignment_entity;
 use mod_perform\models\activity\details\subject_instance_notification;
 use mod_perform\models\activity\notification as notification_model;
 use mod_perform\models\activity\notification_recipient as notification_recipient_model;
