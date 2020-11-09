@@ -28,10 +28,6 @@
  * @return bool
  *
  */
-
-use mod_perform\entities\activity\element;
-use mod_perform\models\activity\element_identifier;
-
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_perform_upgrade($oldversion) {
@@ -146,6 +142,11 @@ function xmldb_perform_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2020101202, 'perform');
     }
 
+    if ($oldversion < 2020110900) {
+        mod_perform_upgrade_unwrap_response_data();
+
+        upgrade_mod_savepoint(true, 2020110900, 'perform');
+    }
 
     return true;
 }

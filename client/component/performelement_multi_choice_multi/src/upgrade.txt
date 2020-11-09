@@ -1,8 +1,12 @@
 This file describes API changes in /client/component/performelement_multi_choice_multi,
 information provided here is intended especially for developers.
 
-=== 13.2 ===
+=== 14.0 ===
 * Replaced several components to centralise common functionality improving consistency and reducing duplication
     * MultiChoiceMultiElementAdminDisplay.vue replaced with MultiChoiceMultiAdminView.vue
     * MultiChoiceMultiElementAdminForm.vue replaced with MultiChoiceMultiAdminEdit.vue
     * MultiChoiceMultiElementAdminReadOnlyDisplay.vue replaced with MultiChoiceMultiAdminSummary.vue
+* Replaced MultiChoiceMultiElementParticipantForm.vue with CustomRatingScaleParticipantForm.vue and changed validation
+  to use core validation rules where possible
+    * Template & lang string changes
+* Removed MultiChoiceMultiElementParticipantResponse.vue, generic ResponseDisplay.vue component is used instead
