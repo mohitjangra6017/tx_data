@@ -7,7 +7,7 @@ information provided here is intended especially for developers.
         * PerformAdminCustomElement.vue
     * Added a new wrapper component for edit forms of custom elements
         * PerformAdminCustomElementEdit.vue
-    * Removed the following 
+    * Removed the following
         * ElementAdminDisplay.vue
         * ElementAdminForm.vue
         * admin_form/ActionButtons.vue
@@ -31,3 +31,7 @@ information provided here is intended especially for developers.
     * SCSS changes
 * Update template structure of ActivityContentPrint.vue including updating class names to be more consistent with conventions
     * Template, SCSS changes
+* Updated Sections.vue to remove css referenced in another component; ".tui-performUserActivityList__expandedRow-dateSummary" referenced in Activities.vue
+    * SCSS changes
+* Updated Activities.vue to fix print button position and size
+    * Template and SCSS changes
