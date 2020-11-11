@@ -1,7 +1,7 @@
 List of upgrade and API changes in Totara evidence,
 information provided here is intended especially for developers.
 
-=== 13.2 ===
+=== 14.0 ===
 
 * totara_evidence\entities\evidence_field_data has been moved to totara_evidence\entity\evidence_field_data
 * totara_evidence\entities\evidence_field_data_param has been moved to totara_evidence\entity\evidence_field_data_param
