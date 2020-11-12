@@ -3,6 +3,8 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* updated totara_catalog/results_share template removing invalid href attribute on the share button
+
 === 13.0 ===
 
 * added a redirecturl setting to totara_catalog/item_wide for when the details popup is disabled
