@@ -3,6 +3,8 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* editrecipients.html has been removed and should no longer be included anywhere.
+
 === 13.0 ===
 
 Note that more recent update comes to the top.
