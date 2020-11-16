@@ -3,6 +3,10 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+=== 13.3 ===
+* /badges/preferences.php page has been deprecated and should not be used.
+* badges_preferences_form class has been deprecated and should not be used.
+
 === 13.0 ===
 
 * BADGE_BACKPACKAPIURL and BADGE_BACKPACKWEBURL are deprecated and should not be used.
