@@ -86,6 +86,13 @@ abstract class advanced_testcase extends base_testcase {
         if (isset($e)) {
             // cleanup after failed expectation
             self::resetAllData();
+
+            if (is_a($e, \PHPUnit\Framework\Warning::class)) {
+                // Totara: make all the warning(s) fail, instead of keeping the warning. This will
+                // enforce the developer to upgrade their API usage.
+                throw new coding_exception("Test {$this->getName()} has warning: {$e->getMessage()}");
+            }
+
             throw $e;
         }
 
@@ -601,7 +608,7 @@ abstract class advanced_testcase extends base_testcase {
         $rccache->setAccessible(true);
 
         // Normalise data the same way as \core_string_manager_standard::load_component_strings().
-        list($plugintype, $pluginname) = core_component::normalize_component($component);
+        [$plugintype, $pluginname] = core_component::normalize_component($component);
         if ($plugintype === 'core' and is_null($pluginname)) {
             $component = 'core';
         } else {
