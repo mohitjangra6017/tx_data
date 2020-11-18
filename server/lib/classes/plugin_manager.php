@@ -1224,7 +1224,6 @@ class core_plugin_manager {
                 'totara_recently_viewed', 'totara_recommendations',
                 'course_search',
                 'admin_subnav', 'admin_related_pages', 'course_navigation',
-                'totara_competency',
             ),
 
             'booktool' => array(
