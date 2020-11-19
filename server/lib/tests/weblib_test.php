@@ -106,7 +106,7 @@ class core_weblib_testcase extends advanced_testcase {
         // This time we want to apply the filters.
         $options['filter'] = true;
         $filterresult = format_string($rawstring, true, $options);
-        $this->assertRegExp("/$expectedfilter/", $filterresult);
+        $this->assertMatchesRegularExpression("/$expectedfilter/", $filterresult);
 
         filter_set_local_state('censor', $context->id, TEXTFILTER_OFF);
 
@@ -114,7 +114,7 @@ class core_weblib_testcase extends advanced_testcase {
         // the same as the filtered text above even though we've disabled the
         // censor filter in between.
         $cachedresult = format_string($rawstring, true, $options);
-        $this->assertRegExp("/$expectedfilter/", $cachedresult);
+        $this->assertMatchesRegularExpression("/$expectedfilter/", $cachedresult);
     }
 
     public function test_s() {

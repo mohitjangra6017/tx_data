@@ -504,60 +504,6 @@ class block_admin_related_pages_map_testcase extends \advanced_testcase {
         self::assertSame($data, $map->prepare_to_cache());
     }
 
-    public function test_validate_item() {
-        $map = new map();
-        $root = $this->mock_admin_root($map);
-        $method = new \ReflectionMethod(map::class, 'validate_item');
-        $method->setAccessible(true);
-
-        // Normal
-        $root->expects($this->at(0))->method('locate')->willReturn(
-            $this->mock_admin_externalpage()
-        );
-        // Can't access
-        $root->expects($this->at(1))->method('locate')->willReturn(
-            $this->mock_admin_externalpage('test', 'Test', '/test', false)
-        );
-        // Hidden
-        $root->expects($this->at(2))->method('locate')->willReturn(
-            $this->mock_admin_externalpage('test', 'Test', '/test', true, true)
-        );
-        // Invalid page
-        $root->expects($this->at(3))->method('locate')->willReturn(
-            null
-        );
-        // Category
-        $root->expects($this->at(4))->method('locate')->willReturn(
-            $this->mock_admin_category()
-        );
-        // Settings page
-        $root->expects($this->at(5))->method('locate')->willReturn(
-            $this->mock_admin_settings_page()
-        );
-
-        /** @var item $item */
-        $item = $method->invoke($map, new item('test', 'plugginname', 'block_admin_related_pages'));
-        self::assertInstanceOf(item::class, $item);
-        self::assertSame('/test', $item->get_url()->out_as_local_url(false));
-
-        $item = $method->invoke($map, new item('test', 'plugginname', 'block_admin_related_pages'));
-        self::assertNull($item);
-
-        $item = $method->invoke($map, new item('test', 'plugginname', 'block_admin_related_pages'));
-        self::assertNull($item);
-
-        $item = $method->invoke($map, new item('test', 'plugginname', 'block_admin_related_pages'));
-        self::assertNull($item);
-
-        $item = $method->invoke($map, new item('test', 'plugginname', 'block_admin_related_pages'));
-        self::assertInstanceOf(item::class, $item);
-        self::assertSame('/admin/category.php?category=test', $item->get_url()->out_as_local_url(false));
-
-        $item = $method->invoke($map, new item('test', 'plugginname', 'block_admin_related_pages'));
-        self::assertInstanceOf(item::class, $item);
-        self::assertSame('/admin/settings.php?section=test', $item->get_url()->out_as_local_url(false));
-    }
-
     public function test_construct_complex() {
 
         $groups = [

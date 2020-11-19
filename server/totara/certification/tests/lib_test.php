@@ -2800,7 +2800,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
                 && (in_array($record->course, $testcourseids) || in_array($record->course, $testcourseids_inprogress))) {
                 $this->assertTrue(false);
             } else {
-                $this->assertContains($now, array($record->timecompleted, $record->timestarted));
+                $this->assertContainsEquals($now, array($record->timecompleted, $record->timestarted));
             }
         }
 

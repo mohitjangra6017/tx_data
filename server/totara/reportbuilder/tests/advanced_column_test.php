@@ -326,9 +326,9 @@ class totara_reportbuilder_advanced_column_testcase extends advanced_testcase {
                 $i = $usermap[$record->user_id];
                 if ($transform === 'hour') {
                     // We do not know the database timezone, let's just verify it is some two digit number.
-                    $this->assertRegExp('/\d\d/', $record->user_timecreated, $record->user_timecreated,
+                    $this->assertMatchesRegularExpression('/\d\d/', $record->user_timecreated, $record->user_timecreated,
                                             "Unexpected result of transform '$transform' of timecreated for user $i");
-                    $this->assertRegExp('/\d\d/', $record->user_firstaccess, $record->user_firstaccess,
+                    $this->assertMatchesRegularExpression('/\d\d/', $record->user_firstaccess, $record->user_firstaccess,
                                             "Unexpected result of transform '$transform' of firstaccess for user $i");
                 } else {
                     $this->assertSame($results[$record->user_id]['timecreated'], $record->user_timecreated,

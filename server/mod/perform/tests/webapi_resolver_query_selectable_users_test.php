@@ -156,9 +156,9 @@ class mod_perform_webapi_resolver_query_selectable_users_testcase extends advanc
         $this->assertContains($user1->id, $actual_user_ids);
         $this->assertContains($user2->id, $actual_user_ids);
         $this->assertContains(get_admin()->id, $actual_user_ids);
-        $this->assertNotContains($guest_user->id, $actual_user_ids);
-        $this->assertNotContains($deleted_user->id, $actual_user_ids);
-        $this->assertNotContains($suspended_user->id, $actual_user_ids);
+        $this->assertNotContainsEquals($guest_user->id, $actual_user_ids);
+        $this->assertNotContainsEquals($deleted_user->id, $actual_user_ids);
+        $this->assertNotContainsEquals($suspended_user->id, $actual_user_ids);
 
         $selectable_users = $this->get_query_data(['subject_instance_id' => $subject_instance2->id]);
 
@@ -168,9 +168,9 @@ class mod_perform_webapi_resolver_query_selectable_users_testcase extends advanc
         $this->assertContains($user1->id, $actual_user_ids);
         $this->assertContains($user2->id, $actual_user_ids);
         $this->assertContains(get_admin()->id, $actual_user_ids);
-        $this->assertNotContains($guest_user->id, $actual_user_ids);
-        $this->assertNotContains($deleted_user->id, $actual_user_ids);
-        $this->assertNotContains($suspended_user->id, $actual_user_ids);
+        $this->assertNotContainsEquals($guest_user->id, $actual_user_ids);
+        $this->assertNotContainsEquals($deleted_user->id, $actual_user_ids);
+        $this->assertNotContainsEquals($suspended_user->id, $actual_user_ids);
 
         // Now filter the data
         $selectable_users = $this->get_query_data([
@@ -182,8 +182,8 @@ class mod_perform_webapi_resolver_query_selectable_users_testcase extends advanc
 
         $this->assertCount(11, $selectable_users);
         $actual_user_ids = array_column($selectable_users, 'id');
-        $this->assertNotContains($user1->id, $actual_user_ids);
-        $this->assertNotContains(get_admin()->id, $actual_user_ids);
+        $this->assertNotContainsEquals($user1->id, $actual_user_ids);
+        $this->assertNotContainsEquals(get_admin()->id, $actual_user_ids);
 
         $selectable_users = $this->get_query_data([
             'subject_instance_id' => $subject_instance2->id,

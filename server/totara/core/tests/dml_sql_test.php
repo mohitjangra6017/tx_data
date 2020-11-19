@@ -123,14 +123,14 @@ class totara_core_dml_sql_testcase extends advanced_testcase {
         $sql = "SELECT * FROM {course} WHERE id = $1 AND visible = $2";
         $params = [1, true];
         $rawsql = new sql($sql, $params);
-        $this->assertRegExp('/^SELECT \* FROM {course} WHERE id = :uq_param_\d+ AND visible = :uq_param_\d+$/', $rawsql->get_sql());
+        $this->assertMatchesRegularExpression('/^SELECT \* FROM {course} WHERE id = :uq_param_\d+ AND visible = :uq_param_\d+$/', $rawsql->get_sql());
         $this->assertSame($params, array_reverse(array_values($rawsql->get_params())));
         $this->assertDebuggingNotCalled();
 
         $sql = "SELECT * FROM {course} WHERE id = $1 AND visible = $2";
         $params = ['a' => 1, 'b' => true];
         $rawsql = new sql($sql, $params);
-        $this->assertRegExp('/^SELECT \* FROM {course} WHERE id = :uq_param_\d+ AND visible = :uq_param_\d+$/', $rawsql->get_sql());
+        $this->assertMatchesRegularExpression('/^SELECT \* FROM {course} WHERE id = :uq_param_\d+ AND visible = :uq_param_\d+$/', $rawsql->get_sql());
         $this->assertSame(array_values($params), array_reverse(array_values($rawsql->get_params())));
         $this->assertDebuggingNotCalled();
 
@@ -299,7 +299,7 @@ class totara_core_dml_sql_testcase extends advanced_testcase {
         $namedrawsql = $rawsql->to_named_params();
         $sql = $namedrawsql->get_sql();
         $params = $namedrawsql->get_params();
-        $this->assertRegExp('/^SELECT \* FROM {course} WHERE id = :uq_param_\d+ AND visible = :uq_param_\d+$/', $sql);
+        $this->assertMatchesRegularExpression('/^SELECT \* FROM {course} WHERE id = :uq_param_\d+ AND visible = :uq_param_\d+$/', $sql);
         $this->assertSame([1, true], array_values($params));
         preg_match_all('/:(uq_param_\d+)/', $sql, $matches);
         $this->assertSame(1, $params[$matches[1][0]]);
@@ -309,7 +309,7 @@ class totara_core_dml_sql_testcase extends advanced_testcase {
         $namedrawsql = $rawsql->to_named_params('grrr');
         $sql = $namedrawsql->get_sql();
         $params = $namedrawsql->get_params();
-        $this->assertRegExp('/^SELECT \* FROM {course} WHERE id = :uq_grrr_\d+ AND visible = :uq_grrr_\d+$/', $sql);
+        $this->assertMatchesRegularExpression('/^SELECT \* FROM {course} WHERE id = :uq_grrr_\d+ AND visible = :uq_grrr_\d+$/', $sql);
         $this->assertSame([1, true], array_values($params));
         preg_match_all('/:(uq_grrr_\d+)/', $sql, $matches);
         $this->assertSame(1, $params[$matches[1][0]]);

@@ -362,7 +362,7 @@ class totara_competency_assignment_model_create_testcase extends assignment_mode
                     assignment_model::create($competency_id, $user_only_type, $disallowed_type, $user_group_id, $status);
                     $this->fail('Expected fail due to invalid type and user_group_type combination');
                 } catch (assignment_create_exception $e) {
-                    $this->assertRegExp('/Invalid combination of type and user_group_type given/', $e->getMessage());
+                    $this->assertMatchesRegularExpression('/Invalid combination of type and user_group_type given/', $e->getMessage());
                 }
             }
         }

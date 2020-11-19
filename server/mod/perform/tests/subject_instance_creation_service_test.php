@@ -187,7 +187,7 @@ class mod_perform_subject_instance_creation_service_testcase extends advanced_te
         $this->assertCount(2, $created_instances);
 
         // The deleted one was not created
-        $this->assertNotContains($user_assignment->subject_user_id, $created_instances->pluck('subject_user_id'));
+        $this->assertNotContainsEquals($user_assignment->subject_user_id, $created_instances->pluck('subject_user_id'));
     }
 
     public function test_instances_are_only_created_for_active_activities() {

@@ -41,7 +41,7 @@ class core_webapi_formatter_string_field_formatter_testcase extends advanced_tes
         // format_string() should have been applied
         $this->assertEquals($result, $value);
         // Tags are stripped
-        $this->assertNotRegExp("/span class=/", $result);
+        $this->assertDoesNotMatchRegularExpression("/span class=/", $result);
     }
 
     public function test_html_format_without_stripping_tags() {
@@ -58,7 +58,7 @@ class core_webapi_formatter_string_field_formatter_testcase extends advanced_tes
         // format_string() should have been applied
         $this->assertEquals($result, $value);
         // Tags are still there
-        $this->assertRegExp("/span class=/", $result);
+        $this->assertMatchesRegularExpression("/span class=/", $result);
     }
 
     public function test_html_format_with_additional_options() {
@@ -77,7 +77,7 @@ class core_webapi_formatter_string_field_formatter_testcase extends advanced_tes
         // format_string() should have been applied
         $this->assertEquals($result, $value);
         // Tags are not stripped
-        $this->assertRegExp("/span class=/", $result);
+        $this->assertMatchesRegularExpression("/span class=/", $result);
     }
 
     public function test_html_format_with_multi_lang_strings() {

@@ -68,7 +68,7 @@ class report_security_locallib_testcase extends advanced_testcase {
 
         // The swf setting should now be off by default on new installs.
         $enabledmediaplayers = \core\plugininfo\media::get_enabled_plugins();
-        $this->assertNotContains('swf', $enabledmediaplayers);
+        $this->assertNotContainsEquals('swf', $enabledmediaplayers);
 
         $result = report_security_check_mediafilterswf();
         $this->assertEquals(REPORT_SECURITY_OK, $result->status);

@@ -66,22 +66,22 @@ class filter_data_filter_testcase extends advanced_testcase {
 
         // Testing at course level (both site and course).
         $filtered = format_text($html, FORMAT_HTML, array('context' => $coursecontext1));
-        $this->assertRegExp('/title=(\'|")CourseEntry(\'|")/', $filtered);
-        $this->assertRegExp('/title=(\'|")SiteEntry(\'|")/', $filtered);
+        $this->assertMatchesRegularExpression('/title=(\'|")CourseEntry(\'|")/', $filtered);
+        $this->assertMatchesRegularExpression('/title=(\'|")SiteEntry(\'|")/', $filtered);
         // Confirm that this filter is indeed compatible with clean_text.
         $this->assertSame($filtered, clean_text($filtered, FORMAT_HTML));
 
         // Testing at site level (only site).
         $filtered = format_text($html, FORMAT_HTML, array('context' => $sitecontext));
-        $this->assertNotRegExp('/title=(\'|")CourseEntry(\'|")/', $filtered);
-        $this->assertRegExp('/title=(\'|")SiteEntry(\'|")/', $filtered);
+        $this->assertDoesNotMatchRegularExpression('/title=(\'|")CourseEntry(\'|")/', $filtered);
+        $this->assertMatchesRegularExpression('/title=(\'|")SiteEntry(\'|")/', $filtered);
         // Confirm that this filter is indeed compatible with clean_text.
         $this->assertSame($filtered, clean_text($filtered, FORMAT_HTML));
 
         // Changing to another course to test the caches invalidation (only site).
         $filtered = format_text($html, FORMAT_HTML, array('context' => $coursecontext2));
-        $this->assertNotRegExp('/title=(\'|")CourseEntry(\'|")/', $filtered);
-        $this->assertRegExp('/title=(\'|")SiteEntry(\'|")/', $filtered);
+        $this->assertDoesNotMatchRegularExpression('/title=(\'|")CourseEntry(\'|")/', $filtered);
+        $this->assertMatchesRegularExpression('/title=(\'|")SiteEntry(\'|")/', $filtered);
         // Confirm that this filter is indeed compatible with clean_text.
         $this->assertSame($filtered, clean_text($filtered, FORMAT_HTML));
     }

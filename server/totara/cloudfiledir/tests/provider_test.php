@@ -119,7 +119,7 @@ abstract class totara_cloudfiledir_provider_testcase extends advanced_testcase {
 
         $this->assertContains($contenthash1, $contenthashes);
         $this->assertContains($contenthash2, $contenthashes);
-        $this->assertNotContains($contenthash3, $contenthashes);
+        $this->assertNotContainsEquals($contenthash3, $contenthashes);
     }
 
     public function test_clear_test_bucket() {

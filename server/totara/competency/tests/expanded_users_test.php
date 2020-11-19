@@ -228,7 +228,7 @@ class core_expanded_users_testcase extends expanded_users_testcase {
             ->fetch_paginated(0);
 
         foreach ($expanded_users as $user) {
-            $this->assertRegExp("/{$data->user16->firstname}/i", $user['firstname']);
+            $this->assertMatchesRegularExpression("/{$data->user16->firstname}/i", $user['firstname']);
         }
     }
 
@@ -250,10 +250,10 @@ class core_expanded_users_testcase extends expanded_users_testcase {
         $this->assertCount(2, $expanded_users);
         foreach ($expanded_users as $user) {
             if ($user['firstname'] == 'Tomaru') {
-                $this->assertNotRegExp("/{$data->user19->firstname}/", $user['firstname']);
-                $this->assertRegExp("/{$data->user19->firstname}/i", $user['firstname']);
+                $this->assertDoesNotMatchRegularExpression("/{$data->user19->firstname}/", $user['firstname']);
+                $this->assertMatchesRegularExpression("/{$data->user19->firstname}/i", $user['firstname']);
             } else {
-                $this->assertRegExp("/{$data->user19->firstname}/", $user['firstname']);
+                $this->assertMatchesRegularExpression("/{$data->user19->firstname}/", $user['firstname']);
             }
         }
     }

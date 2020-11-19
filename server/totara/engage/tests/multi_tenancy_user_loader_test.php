@@ -80,7 +80,7 @@ class totara_engage_multi_tenancy_user_loader_testcase extends advanced_testcase
         self::assertCount(3, $users);
 
         foreach ($users as $user) {
-            self::assertContains($user->id, [$user_one->id, $user_two->id, $user_three->id]);
+            self::assertContainsEquals($user->id, [$user_one->id, $user_two->id, $user_three->id]);
         }
     }
 
@@ -108,7 +108,7 @@ class totara_engage_multi_tenancy_user_loader_testcase extends advanced_testcase
         self::assertCount(2, $users);
 
         foreach ($users as $user) {
-            self::assertContains($user->id, [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($user->id, [$user_one->id, $user_two->id]);
             self::assertNotEquals($user_three->id, $user->id);
         }
     }
@@ -137,7 +137,7 @@ class totara_engage_multi_tenancy_user_loader_testcase extends advanced_testcase
         self::assertCount(2, $users);
 
         foreach ($users as $user) {
-            self::assertContains($user->id, [$user_one->id, $user_three->id]);
+            self::assertContainsEquals($user->id, [$user_one->id, $user_three->id]);
             self::assertNotEquals($user_two->id, $user->id);
         }
     }
@@ -171,7 +171,7 @@ class totara_engage_multi_tenancy_user_loader_testcase extends advanced_testcase
         self::assertCount(2, $users);
 
         foreach ($users as $user) {
-            self::assertContains($user->id, [$user_one->id, $user_four->id]);
+            self::assertContainsEquals($user->id, [$user_one->id, $user_four->id]);
             self::assertNotEquals($user_two->id, $user->id);
             self::assertNotEquals($user_three->id, $user->id);
         }
@@ -256,7 +256,7 @@ class totara_engage_multi_tenancy_user_loader_testcase extends advanced_testcase
 
         self::assertCount(2, $users);
         foreach ($users as $user) {
-            self::assertContains($user->id, [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($user->id, [$user_one->id, $user_two->id]);
         }
     }
 

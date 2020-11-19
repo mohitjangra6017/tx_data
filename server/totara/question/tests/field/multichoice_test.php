@@ -104,7 +104,7 @@ class question_field_multichoice_test extends totara_question_testcase {
         foreach ($test as $key => $option) {
             $this->assertGreaterThan(0, $key);
             $this->assertContains($option, array('Option1', 'Option2', 'Option3'));
-            $this->assertNotContains($option, $was);
+            $this->assertNotContainsEquals($option, $was);
             $this->assertArrayNotHasKey($key, $was);
             $was[$key] = $option;
         }

@@ -74,7 +74,7 @@ class availability_group_condition_testcase extends advanced_testcase {
         // Check if available (when not available).
         $this->assertFalse($cond->is_available(false, $info, true, $user->id));
         $information = $cond->get_description(false, false, $info);
-        $this->assertRegExp('~You belong to.*G1!~', $information);
+        $this->assertMatchesRegularExpression('~You belong to.*G1!~', $information);
         $this->assertTrue($cond->is_available(true, $info, true, $user->id));
 
         // Add user to groups and refresh cache.
@@ -86,7 +86,7 @@ class availability_group_condition_testcase extends advanced_testcase {
         $this->assertTrue($cond->is_available(false, $info, true, $user->id));
         $this->assertFalse($cond->is_available(true, $info, true, $user->id));
         $information = $cond->get_description(false, true, $info);
-        $this->assertRegExp('~do not belong to.*G1!~', $information);
+        $this->assertMatchesRegularExpression('~do not belong to.*G1!~', $information);
 
         // Check group 2 works also.
         $cond = new condition((object)array('id' => (int)$group2->id));
@@ -97,7 +97,7 @@ class availability_group_condition_testcase extends advanced_testcase {
         $this->assertTrue($cond->is_available(false, $info, true, $user->id));
         $this->assertFalse($cond->is_available(true, $info, true, $user->id));
         $information = $cond->get_description(false, true, $info);
-        $this->assertRegExp('~do not belong to any~', $information);
+        $this->assertMatchesRegularExpression('~do not belong to any~', $information);
 
         // Admin user doesn't belong to a group, but they can access it
         // either way (positive or NOT).
@@ -109,7 +109,7 @@ class availability_group_condition_testcase extends advanced_testcase {
         $cond = new condition((object)array('id' => $group2->id + 1000));
         $this->assertFalse($cond->is_available(false, $info, true, $user->id));
         $information = $cond->get_description(false, false, $info);
-        $this->assertRegExp('~You belong to.*\(Missing group\)~', $information);
+        $this->assertMatchesRegularExpression('~You belong to.*\(Missing group\)~', $information);
     }
 
     /**

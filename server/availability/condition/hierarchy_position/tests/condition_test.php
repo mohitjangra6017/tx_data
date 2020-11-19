@@ -70,7 +70,7 @@ class availability_hierarchy_position_condition_testcase extends advanced_testca
         // Check if available when user is not assigned to a position.
         $this->assertFalse($condition->is_available(false, $info, true, $user->id));
         $information = strip_tags($condition->get_description(false, false, $info));
-        $this->assertRegExp('~You are assigned to the Position: Test Position 1~', $information);
+        $this->assertMatchesRegularExpression('~You are assigned to the Position: Test Position 1~', $information);
         $this->assertTrue($condition->is_available(true, $info, true, $user->id));
 
         // Assign user to position via job assignment.
@@ -83,7 +83,7 @@ class availability_hierarchy_position_condition_testcase extends advanced_testca
         $this->assertTrue($condition->is_available(false, $info, true, $user->id));
         $this->assertFalse($condition->is_available(true, $info, true, $user->id));
         $information = strip_tags($condition->get_description(false, true, $info));
-        $this->assertRegExp('~You are not assigned to Position: Test Position 1~', $information);
+        $this->assertMatchesRegularExpression('~You are not assigned to Position: Test Position 1~', $information);
     }
 
     /**

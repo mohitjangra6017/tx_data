@@ -46,7 +46,7 @@ class totara_mvc_view_testcase extends advanced_testcase {
 
         $output = $view->render();
 
-        $this->assertRegExp('/Hello James!/', $output);
+        $this->assertMatchesRegularExpression('/Hello James!/', $output);
     }
 
     public function test_view_with_set_template() {
@@ -55,7 +55,7 @@ class totara_mvc_view_testcase extends advanced_testcase {
 
         $output = $view->render();
 
-        $this->assertRegExp('/Hello James!/', $output);
+        $this->assertMatchesRegularExpression('/Hello James!/', $output);
     }
 
     public function test_define_title_as_array() {
@@ -100,20 +100,20 @@ class totara_mvc_view_testcase extends advanced_testcase {
 
     public function test_render_string() {
         $view = new view('totara_mvc/test', 'test output');
-        $this->assertRegExp('/test output/', $view->render());
+        $this->assertMatchesRegularExpression('/test output/', $view->render());
     }
 
     public function test_render_nested_views() {
         $view = new view(null, new view(null, new view(null, 'test output')));
-        $this->assertRegExp('/test output/', $view->render());
+        $this->assertMatchesRegularExpression('/test output/', $view->render());
 
         $nested_view = new view('totara_mvc/test', ['name' => 'Cook']);
         $view = new view('totara_mvc/test', ['name' => $nested_view]);
-        $this->assertRegExp('/Hello Hello Cook!!/', $view->render());
+        $this->assertMatchesRegularExpression('/Hello Hello Cook!!/', $view->render());
 
         $nested_view2 =  new view('totara_mvc/test', ['name' => $nested_view]);
         $view = new view('totara_mvc/test', ['name' => $nested_view2]);
-        $this->assertRegExp('/Hello Hello Hello Cook!!!/', $view->render());
+        $this->assertMatchesRegularExpression('/Hello Hello Hello Cook!!!/', $view->render());
     }
 
     public function test_render_recursive_viewable() {
@@ -123,21 +123,21 @@ class totara_mvc_view_testcase extends advanced_testcase {
             }
         };
         $view = new view('totara_mvc/test2', ['name' => $viewable]);
-        $this->assertRegExp('/test output/', $view->render());
+        $this->assertMatchesRegularExpression('/test output/', $view->render());
     }
 
     public function test_render_widget_directly() {
         $button = new single_button(new moodle_url('/'), 'test button', 'get');
         $view = new view(null, $button);
 
-        $this->assertRegExp('/test button/', $view->render());
+        $this->assertMatchesRegularExpression('/test button/', $view->render());
     }
 
     public function test_render_recursive_widget() {
         $data = ['name' => new single_button(new moodle_url('/'), 'test button', 'get')];
         $view = new view('totara_mvc/test2', $data);
 
-        $this->assertRegExp('/test button/', $view->render());
+        $this->assertMatchesRegularExpression('/test button/', $view->render());
     }
 
     public function test_get_core_renderer() {

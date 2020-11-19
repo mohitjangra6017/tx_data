@@ -52,7 +52,7 @@ abstract class totara_cloudfiledir_hook_testcase extends advanced_testcase {
         $contenthash = sha1($content);
         $contentfile = self::get_local_file($contenthash);
         self::purge_local_filedir();
-        $this->assertFileNotExists($contentfile);
+        $this->assertFileDoesNotExist($contentfile);
 
         $this->setCurrentTimeStart();
         get_file_storage()->add_string_to_pool($content);
@@ -78,7 +78,7 @@ abstract class totara_cloudfiledir_hook_testcase extends advanced_testcase {
         $contenthash = sha1($content);
         $contentfile = self::get_local_file($contenthash);
         self::purge_local_filedir();
-        $this->assertFileNotExists($contentfile);
+        $this->assertFileDoesNotExist($contentfile);
 
         get_file_storage()->add_string_to_pool($content);
         $this->assertFalse($provider->is_content_available($contenthash));
@@ -102,7 +102,7 @@ abstract class totara_cloudfiledir_hook_testcase extends advanced_testcase {
         $contenthash = sha1($content);
         $contentfile = self::get_local_file($contenthash);
         self::purge_local_filedir();
-        $this->assertFileNotExists($contentfile);
+        $this->assertFileDoesNotExist($contentfile);
         $syncrecord = $DB->get_record('totara_cloudfiledir_sync', ['contenthash' => $contenthash, 'idnumber' => $config['idnumber']]);
         $this->assertFalse($syncrecord);
 
@@ -125,7 +125,7 @@ abstract class totara_cloudfiledir_hook_testcase extends advanced_testcase {
         $contenthash = sha1($content);
         $contentfile = self::get_local_file($contenthash);
         self::purge_local_filedir();
-        $this->assertFileNotExists($contentfile);
+        $this->assertFileDoesNotExist($contentfile);
 
         get_file_storage()->add_string_to_pool($content);
         $this->assertFalse($provider->is_content_available($contenthash));
@@ -154,7 +154,7 @@ abstract class totara_cloudfiledir_hook_testcase extends advanced_testcase {
         $contenthash = sha1($content);
         $contentfile = self::get_local_file($contenthash);
         self::purge_local_filedir();
-        $this->assertFileNotExists($contentfile);
+        $this->assertFileDoesNotExist($contentfile);
 
         $this->setCurrentTimeStart();
         get_file_storage()->add_string_to_pool($content);
@@ -189,7 +189,7 @@ abstract class totara_cloudfiledir_hook_testcase extends advanced_testcase {
         $contenthash = sha1($content);
         $contentfile = self::get_local_file($contenthash);
         self::purge_local_filedir();
-        $this->assertFileNotExists($contentfile);
+        $this->assertFileDoesNotExist($contentfile);
 
         $this->setCurrentTimeStart();
         get_file_storage()->add_string_to_pool($content);
@@ -350,7 +350,7 @@ abstract class totara_cloudfiledir_hook_testcase extends advanced_testcase {
         $syncrecord = $DB->get_record('totara_cloudfiledir_sync', ['contenthash' => $contenthash, 'idnumber' => $config['idnumber']]);
         $this->assertNull($syncrecord->timedownloaded);
         self::purge_local_filedir();
-        $this->assertFileNotExists($contentfile);
+        $this->assertFileDoesNotExist($contentfile);
         $syncrecord = $DB->get_record('totara_cloudfiledir_sync', ['contenthash' => $contenthash, 'idnumber' => $config['idnumber']]);
         $this->assertNull($syncrecord->timedownloaded);
 
@@ -383,7 +383,7 @@ abstract class totara_cloudfiledir_hook_testcase extends advanced_testcase {
         $syncrecord = $DB->get_record('totara_cloudfiledir_sync', ['contenthash' => $contenthash, 'idnumber' => $config['idnumber']]);
         $this->assertNull($syncrecord->timedownloaded);
         self::purge_local_filedir();
-        $this->assertFileNotExists($contentfile);
+        $this->assertFileDoesNotExist($contentfile);
         $syncrecord = $DB->get_record('totara_cloudfiledir_sync', ['contenthash' => $contenthash, 'idnumber' => $config['idnumber']]);
         $this->assertNull($syncrecord->timedownloaded);
         $DB->delete_records('totara_cloudfiledir_sync', []);
@@ -417,10 +417,10 @@ abstract class totara_cloudfiledir_hook_testcase extends advanced_testcase {
         $syncrecord = $DB->get_record('totara_cloudfiledir_sync', ['contenthash' => $contenthash, 'idnumber' => $config['idnumber']]);
         $this->assertNull($syncrecord->timedownloaded);
         self::purge_local_filedir();
-        $this->assertFileNotExists($contentfile);
+        $this->assertFileDoesNotExist($contentfile);
 
         $this->assertFalse(get_file_storage()->try_content_recovery($contenthash));
-        $this->assertFileNotExists($contentfile);
+        $this->assertFileDoesNotExist($contentfile);
 
         // Enabled Restore and not-active.
 
@@ -445,7 +445,7 @@ abstract class totara_cloudfiledir_hook_testcase extends advanced_testcase {
         $syncrecord = $DB->get_record('totara_cloudfiledir_sync', ['contenthash' => $contenthash, 'idnumber' => $config['idnumber']]);
         $this->assertNull($syncrecord->timedownloaded);
         self::purge_local_filedir();
-        $this->assertFileNotExists($contentfile);
+        $this->assertFileDoesNotExist($contentfile);
 
         $config = [
             'idnumber' => 'external',
@@ -458,7 +458,7 @@ abstract class totara_cloudfiledir_hook_testcase extends advanced_testcase {
         $provider = $this->get_provider($config);
 
         $this->assertFalse(get_file_storage()->try_content_recovery($contenthash));
-        $this->assertFileNotExists($contentfile);
+        $this->assertFileDoesNotExist($contentfile);
     }
 
     /**

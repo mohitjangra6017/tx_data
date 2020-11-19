@@ -76,7 +76,7 @@ class totara_core_advanced_feature_testcase extends advanced_testcase {
             $this->fail('expected hidden check to fail');
         } catch (coding_exception $exception) {
             $this->assertDebuggingCalled($hiding_debug_msg);
-            $this->assertRegExp("/'{$feature}' not supported by Totara feature checking code./", $exception->getMessage());
+            $this->assertMatchesRegularExpression("/'{$feature}' not supported by Totara feature checking code./", $exception->getMessage());
         }
     }
 
@@ -120,14 +120,14 @@ class totara_core_advanced_feature_testcase extends advanced_testcase {
             advanced_feature::is_disabled($feature);
             $this->fail('Feature check should throw an exception!');
         } catch (coding_exception $exception) {
-            $this->assertRegExp("/$expected_msg/", $exception->getMessage());
+            $this->assertMatchesRegularExpression("/$expected_msg/", $exception->getMessage());
         }
 
         try {
             advanced_feature::is_enabled($feature);
             $this->fail('Feature check should throw an exception!');
         } catch (coding_exception $exception) {
-            $this->assertRegExp("/$expected_msg/", $exception->getMessage());
+            $this->assertMatchesRegularExpression("/$expected_msg/", $exception->getMessage());
         }
     }
 

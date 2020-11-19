@@ -148,9 +148,9 @@ class totara_core_userdata_course_enrolments_testcase extends advanced_testcase 
         $this->assertCount(3, $export->data['groups']);
         // The groups array is sorted by groupings, starting with all groups represented by 0.
         // This is as returned by groups_get_user_groups().
-        $this->assertContains($data['group1a']->id, $export->data['groups'][$data['course1']->id][0]);
-        $this->assertContains($data['group2a']->id, $export->data['groups'][$data['course2']->id][0]);
-        $this->assertContains($data['group3a']->id, $export->data['groups'][$data['course3']->id][0]);
+        $this->assertContainsEquals($data['group1a']->id, $export->data['groups'][$data['course1']->id][0]);
+        $this->assertContainsEquals($data['group2a']->id, $export->data['groups'][$data['course2']->id][0]);
+        $this->assertContainsEquals($data['group3a']->id, $export->data['groups'][$data['course3']->id][0]);
     }
 
     public function test_export_multiple_enrolments_system_context() {
@@ -170,11 +170,11 @@ class totara_core_userdata_course_enrolments_testcase extends advanced_testcase 
         // User 3 is a member of groups in 2 courses.
         $this->assertCount(2, $export->data['groups']);
 
-        $this->assertContains($data['group1a']->id, $export->data['groups'][$data['course1']->id][0]);
+        $this->assertContainsEquals($data['group1a']->id, $export->data['groups'][$data['course1']->id][0]);
 
         $this->assertCount(2, $export->data['groups'][$data['course3']->id][0]);
-        $this->assertContains($data['group3a']->id, $export->data['groups'][$data['course3']->id][0]);
-        $this->assertContains($data['group3b']->id, $export->data['groups'][$data['course3']->id][0]);
+        $this->assertContainsEquals($data['group3a']->id, $export->data['groups'][$data['course3']->id][0]);
+        $this->assertContainsEquals($data['group3b']->id, $export->data['groups'][$data['course3']->id][0]);
     }
 
     public function test_count_system_context() {
@@ -277,8 +277,8 @@ class totara_core_userdata_course_enrolments_testcase extends advanced_testcase 
         // The groups array is sorted by groupings, starting with all groups represented by 0.
         // This is as returned by groups_get_user_groups().
         $this->assertArrayNotHasKey($data['course1']->id, $export->data['groups']);
-        $this->assertContains($data['group2a']->id, $export->data['groups'][$data['course2']->id][0]);
-        $this->assertContains($data['group3a']->id, $export->data['groups'][$data['course3']->id][0]);
+        $this->assertContainsEquals($data['group2a']->id, $export->data['groups'][$data['course2']->id][0]);
+        $this->assertContainsEquals($data['group3a']->id, $export->data['groups'][$data['course3']->id][0]);
     }
 
     public function test_export_multiple_enrolments_category_context() {
@@ -301,8 +301,8 @@ class totara_core_userdata_course_enrolments_testcase extends advanced_testcase 
         $this->assertArrayNotHasKey($data['course1']->id, $export->data['groups']);
 
         $this->assertCount(2, $export->data['groups'][$data['course3']->id][0]);
-        $this->assertContains($data['group3a']->id, $export->data['groups'][$data['course3']->id][0]);
-        $this->assertContains($data['group3b']->id, $export->data['groups'][$data['course3']->id][0]);
+        $this->assertContainsEquals($data['group3a']->id, $export->data['groups'][$data['course3']->id][0]);
+        $this->assertContainsEquals($data['group3b']->id, $export->data['groups'][$data['course3']->id][0]);
     }
 
     public function test_count_category_context() {
@@ -414,7 +414,7 @@ class totara_core_userdata_course_enrolments_testcase extends advanced_testcase 
         // This is as returned by groups_get_user_groups().
         $this->assertArrayNotHasKey($data['course1']->id, $export->data['groups']);
         $this->assertArrayNotHasKey($data['course2']->id, $export->data['groups']);
-        $this->assertContains($data['group3a']->id, $export->data['groups'][$data['course3']->id][0]);
+        $this->assertContainsEquals($data['group3a']->id, $export->data['groups'][$data['course3']->id][0]);
     }
 
     public function test_export_multiple_enrolments_course_context() {
@@ -437,8 +437,8 @@ class totara_core_userdata_course_enrolments_testcase extends advanced_testcase 
         $this->assertArrayNotHasKey($data['course1']->id, $export->data['groups']);
 
         $this->assertCount(2, $export->data['groups'][$data['course3']->id][0]);
-        $this->assertContains($data['group3a']->id, $export->data['groups'][$data['course3']->id][0]);
-        $this->assertContains($data['group3b']->id, $export->data['groups'][$data['course3']->id][0]);
+        $this->assertContainsEquals($data['group3a']->id, $export->data['groups'][$data['course3']->id][0]);
+        $this->assertContainsEquals($data['group3b']->id, $export->data['groups'][$data['course3']->id][0]);
     }
 
     public function test_count_course_context() {

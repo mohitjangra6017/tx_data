@@ -21,15 +21,7 @@
  * @package block_comments
  */
 
-namespace block_comments\userdata;
-
-use advanced_testcase;
-use context;
-use context_course;
-use context_coursecat;
-use context_helper;
-use context_system;
-use context_user;
+use block_comments\userdata\comments;
 use totara_userdata\userdata\export;
 use totara_userdata\userdata\item;
 use totara_userdata\userdata\target_user;
@@ -303,48 +295,48 @@ class block_comments_userdata_username_testcase extends advanced_testcase {
         $this->assertCount(6, $result->data);
 
         $commentids = array_column($result->data, 'id');
-        $this->assertContains($fixtures->comment1->id, $commentids);
-        $this->assertContains($fixtures->comment2->id, $commentids);
-        $this->assertContains($fixtures->comment3->id, $commentids);
-        $this->assertContains($fixtures->comment4->id, $commentids);
-        $this->assertContains($fixtures->comment5->id, $commentids);
-        $this->assertContains($fixtures->comment6->id, $commentids);
+        $this->assertContainsEquals($fixtures->comment1->id, $commentids);
+        $this->assertContainsEquals($fixtures->comment2->id, $commentids);
+        $this->assertContainsEquals($fixtures->comment3->id, $commentids);
+        $this->assertContainsEquals($fixtures->comment4->id, $commentids);
+        $this->assertContainsEquals($fixtures->comment5->id, $commentids);
+        $this->assertContainsEquals($fixtures->comment6->id, $commentids);
 
         $result = comments::execute_export($fixtures->user, context_coursecat::instance($fixtures->category1->id));
         $this->assertInstanceOf(export::class, $result);
         $this->assertCount(1, $result->data);
 
         $commentids = array_column($result->data, 'id');
-        $this->assertContains($fixtures->comment4->id, $commentids);
+        $this->assertContainsEquals($fixtures->comment4->id, $commentids);
 
         $result = comments::execute_export($fixtures->user, context_coursecat::instance($fixtures->category2->id));
         $this->assertInstanceOf(export::class, $result);
         $this->assertCount(2, $result->data);
 
         $commentids = array_column($result->data, 'id');
-        $this->assertContains($fixtures->comment5->id, $commentids);
-        $this->assertContains($fixtures->comment6->id, $commentids);
+        $this->assertContainsEquals($fixtures->comment5->id, $commentids);
+        $this->assertContainsEquals($fixtures->comment6->id, $commentids);
 
         $result = comments::execute_export($fixtures->user, context_course::instance($fixtures->course1->id));
         $this->assertInstanceOf(export::class, $result);
         $this->assertCount(1, $result->data);
 
         $commentids = array_column($result->data, 'id');
-        $this->assertContains($fixtures->comment4->id, $commentids);
+        $this->assertContainsEquals($fixtures->comment4->id, $commentids);
 
         $result = comments::execute_export($fixtures->user, context_course::instance($fixtures->course2->id));
         $this->assertInstanceOf(export::class, $result);
         $this->assertCount(1, $result->data);
 
         $commentids = array_column($result->data, 'id');
-        $this->assertContains($fixtures->comment5->id, $commentids);
+        $this->assertContainsEquals($fixtures->comment5->id, $commentids);
 
         $result = comments::execute_export($fixtures->user, context_course::instance($fixtures->course3->id));
         $this->assertInstanceOf(export::class, $result);
         $this->assertCount(1, $result->data);
 
         $commentids = array_column($result->data, 'id');
-        $this->assertContains($fixtures->comment6->id, $commentids);
+        $this->assertContainsEquals($fixtures->comment6->id, $commentids);
     }
 
     /**

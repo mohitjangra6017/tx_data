@@ -124,7 +124,7 @@ class totara_reportbuilder_rb_team_members_embedded_cache_testcase extends repor
         $was = array();
         foreach($result as $r) {
             $this->assertContains($r->id, array($this->users[1]->id, $this->users[3]->id, $this->users[4]->id));
-            $this->assertNotContains($r->$useridalias, $was);
+            $this->assertNotContainsEquals($r->$useridalias, $was);
             $was[] = $r->$useridalias;
         }
 
@@ -133,7 +133,7 @@ class totara_reportbuilder_rb_team_members_embedded_cache_testcase extends repor
         $was = array();
         foreach($result as $r) {
             $this->assertContains($r->id, array($this->users[2]->id, $this->users[5]->id));
-            $this->assertNotContains($r->$useridalias, $was);
+            $this->assertNotContainsEquals($r->$useridalias, $was);
             $was[] = $r->$useridalias;
         }
     }

@@ -63,12 +63,12 @@ class core_webapi_formatter_scalar_array_field_formatter_testcase extends advanc
         $res1 = array_shift($result);
         $expected = format_string($value[0], true, ['context' => $context]);
         $this->assertEquals($res1, $expected);
-        $this->assertNotRegExp("/span class=/", $res1);
+        $this->assertDoesNotMatchRegularExpression("/span class=/", $res1);
 
         $res2 = array_shift($result);
         $expected = format_string($value[1], true, ['context' => $context]);
         $this->assertEquals($res2, $expected);
-        $this->assertNotRegExp("/span class=/", $res2);
+        $this->assertDoesNotMatchRegularExpression("/span class=/", $res2);
     }
 
     public function test_string_array_html_format_without_stripping_tags() {
@@ -86,12 +86,12 @@ class core_webapi_formatter_scalar_array_field_formatter_testcase extends advanc
         $res1 = array_shift($result);
         $expected = format_string($value[0], false, ['context' => $context]);
         $this->assertEquals($res1, $expected);
-        $this->assertRegExp("/span class=/", $res1);
+        $this->assertMatchesRegularExpression("/span class=/", $res1);
 
         $res2 = array_shift($result);
         $expected = format_string($value[1], false, ['context' => $context]);
         $this->assertEquals($res2, $expected);
-        $this->assertRegExp("/span class=/", $res2);
+        $this->assertMatchesRegularExpression("/span class=/", $res2);
     }
 
     public function test_string_array_html_format_with_multi_lang_strings() {
@@ -116,7 +116,7 @@ class core_webapi_formatter_scalar_array_field_formatter_testcase extends advanc
         $expected = ['Spring', 'Summer', 'Autumn', 'Winter'];
         foreach ($result as $season) {
             $this->assertContains($season, $expected);
-            $this->assertNotRegExp("/span lang=/", $season);
+            $this->assertDoesNotMatchRegularExpression("/span lang=/", $season);
         }
     }
 

@@ -301,19 +301,19 @@ class totara_program_userdata_assignment_completion_test extends totara_program_
 
         // Check that the expected programs are there.
         $programids = array_column($completion, 'programid');
-        $this->assertContains($fixtures->program1->id, $programids);
-        $this->assertContains($fixtures->program2->id, $programids);
-        $this->assertContains($fixtures->program3->id, $programids);
+        $this->assertContainsEquals($fixtures->program1->id, $programids);
+        $this->assertContainsEquals($fixtures->program2->id, $programids);
+        $this->assertContainsEquals($fixtures->program3->id, $programids);
 
         $historyprogramids = array_column($history, 'programid');
-        $this->assertContains($fixtures->program1->id, $historyprogramids);
-        $this->assertContains($fixtures->program2->id, $historyprogramids);
-        $this->assertContains($fixtures->program3->id, $historyprogramids);
+        $this->assertContainsEquals($fixtures->program1->id, $historyprogramids);
+        $this->assertContainsEquals($fixtures->program2->id, $historyprogramids);
+        $this->assertContainsEquals($fixtures->program3->id, $historyprogramids);
 
         $programids = array_column($extension, 'programid');
-        $this->assertContains($fixtures->program1->id, $programids);
-        $this->assertContains($fixtures->program2->id, $programids);
-        $this->assertContains($fixtures->program3->id, $programids);
+        $this->assertContainsEquals($fixtures->program1->id, $programids);
+        $this->assertContainsEquals($fixtures->program2->id, $programids);
+        $this->assertContainsEquals($fixtures->program3->id, $programids);
 
         // Make sure history is not the same as completion.
         $completionids = array_column($completion, 'id');
@@ -365,16 +365,16 @@ class totara_program_userdata_assignment_completion_test extends totara_program_
 
         // Check that the expected programs are there.
         $programids = array_column($completion, 'programid');
-        $this->assertContains($fixtures->program1->id, $programids);
-        $this->assertContains($fixtures->program2->id, $programids);
+        $this->assertContainsEquals($fixtures->program1->id, $programids);
+        $this->assertContainsEquals($fixtures->program2->id, $programids);
 
         $historyprogramids = array_column($history, 'programid');
-        $this->assertContains($fixtures->program1->id, $historyprogramids);
-        $this->assertContains($fixtures->program2->id, $historyprogramids);
+        $this->assertContainsEquals($fixtures->program1->id, $historyprogramids);
+        $this->assertContainsEquals($fixtures->program2->id, $historyprogramids);
 
         $programids = array_column($extension, 'programid');
-        $this->assertContains($fixtures->program1->id, $programids);
-        $this->assertContains($fixtures->program2->id, $programids);
+        $this->assertContainsEquals($fixtures->program1->id, $programids);
+        $this->assertContainsEquals($fixtures->program2->id, $programids);
 
         // Make sure history is not the same as completion.
         $completionids = array_column($completion, 'id');
@@ -423,13 +423,13 @@ class totara_program_userdata_assignment_completion_test extends totara_program_
 
         // Check that the expected programs are there.
         $programids = array_column($completion, 'programid');
-        $this->assertContains($fixtures->program2->id, $programids);
+        $this->assertContainsEquals($fixtures->program2->id, $programids);
 
         $historyprogramids = array_column($history, 'programid');
-        $this->assertContains($fixtures->program2->id, $historyprogramids);
+        $this->assertContainsEquals($fixtures->program2->id, $historyprogramids);
 
         $programids = array_column($extension, 'programid');
-        $this->assertContains($fixtures->program2->id, $programids);
+        $this->assertContainsEquals($fixtures->program2->id, $programids);
 
         // Make sure history is not the same as completion.
         $completionids = array_column($completion, 'id');

@@ -3163,7 +3163,7 @@ class core_dml_testcase extends database_driver_testcase {
         $records = $DB->get_records($tablename, ['name' => 'multiple']);
         $this->assertCount(2, $records);
         foreach ($records as $record) {
-            $this->assertContains($record->course, [6, 4]);
+            $this->assertContains($record->course, ['6', '4']);
         }
 
         // Setting all
@@ -3312,7 +3312,7 @@ class core_dml_testcase extends database_driver_testcase {
             $this->fail('Expected coding exception for existence of id in data');
         } catch (Exception $exception) {
             $this->assertInstanceOf(coding_exception::class, $exception);
-            $this->assertRegExp('/id cannot be set, to update a single record use update_record instead./', $exception->getMessage());
+            $this->assertMatchesRegularExpression('/id cannot be set, to update a single record use update_record instead./', $exception->getMessage());
         }
 
         // No existing column used
@@ -3325,7 +3325,7 @@ class core_dml_testcase extends database_driver_testcase {
             $this->fail('Expected coding exception for no data set');
         } catch (Exception $exception) {
             $this->assertInstanceOf(coding_exception::class, $exception);
-            $this->assertRegExp('/no data to set provided./', $exception->getMessage());
+            $this->assertMatchesRegularExpression('/no data to set provided./', $exception->getMessage());
         }
 
         // No data set
@@ -3334,7 +3334,7 @@ class core_dml_testcase extends database_driver_testcase {
             $this->fail('Expected coding exception for no data set');
         } catch (Exception $exception) {
             $this->assertInstanceOf(coding_exception::class, $exception);
-            $this->assertRegExp('/no data to set provided./', $exception->getMessage());
+            $this->assertMatchesRegularExpression('/no data to set provided./', $exception->getMessage());
         }
 
         // Try to set an object
@@ -3347,7 +3347,7 @@ class core_dml_testcase extends database_driver_testcase {
             $this->fail('Expected coding exception for setting an object');
         } catch (Exception $exception) {
             $this->assertInstanceOf(coding_exception::class, $exception);
-            $this->assertRegExp('/Invalid database query parameter value/', $exception->getMessage());
+            $this->assertMatchesRegularExpression('/Invalid database query parameter value/', $exception->getMessage());
         }
     }
 
@@ -5018,7 +5018,7 @@ class core_dml_testcase extends database_driver_testcase {
             $this->assertInstanceOf('coding_exception', $e);
         } catch (Error $error) {
             // PHP 7.1 throws Error even earlier.
-            $this->assertRegExp('/Too few arguments to function/', $error->getMessage());
+            $this->assertMatchesRegularExpression('/Too few arguments to function/', $error->getMessage());
         }
 
         // Cover the function using placeholders in all positions.

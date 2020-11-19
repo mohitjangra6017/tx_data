@@ -58,15 +58,15 @@ class core_webapi_formatter_text_field_formatter_testcase extends advanced_testc
 
         // url should have been replaced
         // Tags should be there
-        $this->assertRegExp("/<span class/", $result);
-        $this->assertRegExp('/'.preg_quote($url, '/').'/', $result);
-        $this->assertNotRegExp("/@@PLUGINFILE@@\\//", $result);
+        $this->assertMatchesRegularExpression("/<span class/", $result);
+        $this->assertMatchesRegularExpression('/'.preg_quote($url, '/').'/', $result);
+        $this->assertDoesNotMatchRegularExpression("/@@PLUGINFILE@@\\//", $result);
 
         // set additional pluginfile url rewrite options
         $formatter->set_pluginfile_url_options($context, 'component', 'filearea', 1, 'file.php', ['reverse' => true]);
         $result = $formatter->format($result);
         $this->assertDebuggingCalled('Before calling format_text(), the content must be processed with file_rewrite_pluginfile_urls()');
-        $this->assertRegExp("/@@PLUGINFILE@@\\//", $result);
+        $this->assertMatchesRegularExpression("/@@PLUGINFILE@@\\//", $result);
     }
 
     public function test_html_format_replace_urls_without_item_and_pluginfile() {
@@ -84,9 +84,9 @@ class core_webapi_formatter_text_field_formatter_testcase extends advanced_testc
 
         // url should have been replaced
         // Tags should be there
-        $this->assertRegExp("/<span class/", $result);
-        $this->assertRegExp('/'.preg_quote($url, '/').'/', $result);
-        $this->assertNotRegExp("/@@PLUGINFILE@@\\//", $result);
+        $this->assertMatchesRegularExpression("/<span class/", $result);
+        $this->assertMatchesRegularExpression('/'.preg_quote($url, '/').'/', $result);
+        $this->assertDoesNotMatchRegularExpression("/@@PLUGINFILE@@\\//", $result);
     }
 
     public function test_html_format_different_text_format() {
@@ -100,7 +100,7 @@ class core_webapi_formatter_text_field_formatter_testcase extends advanced_testc
         $result = $formatter->format($value);
 
         // Should be plain now, special characters are encoded
-        $this->assertRegExp("/&lt;span class=&quot;/", $result);
+        $this->assertMatchesRegularExpression("/&lt;span class=&quot;/", $result);
     }
 
     public function test_html_format_with_additional_options() {
@@ -114,7 +114,7 @@ class core_webapi_formatter_text_field_formatter_testcase extends advanced_testc
         $result = $formatter->format($value);
 
         // We expect the string wrapped in a div as we've passed the option above
-        $this->assertRegExp("/<div class=\"no\-overflow\"><span class=\"/", $result);
+        $this->assertMatchesRegularExpression("/<div class=\"no\-overflow\"><span class=\"/", $result);
     }
 
     public function test_plain_format() {
@@ -214,7 +214,7 @@ class core_webapi_formatter_text_field_formatter_testcase extends advanced_testc
         $value = '<span class="myhtml">test</span>';
 
         $result = $formatter->format($value);
-        $this->assertRegExp("/<span class/", $result);
+        $this->assertMatchesRegularExpression("/<span class/", $result);
 
         $formatter->enable_pluginfile_url_rewrite();
 

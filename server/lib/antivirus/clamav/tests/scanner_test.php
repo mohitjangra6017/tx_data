@@ -51,7 +51,7 @@ class antivirus_clamav_scanner_testcase extends advanced_testcase {
 
         // Test specifying file that does not exist.
         $nonexistingfile = $this->tempfile . '_';
-        $this->assertFileNotExists($nonexistingfile);
+        $this->assertFileDoesNotExist($nonexistingfile);
         // Run mock scanning, we expect SCAN_RESULT_ERROR.
         $this->assertEquals(2, $antivirus->scan_file($nonexistingfile, ''));
         $this->assertDebuggingCalled();

@@ -34,13 +34,13 @@ final class totara_extfiledir_hook_testcase extends advanced_testcase {
         $contenthash = sha1($content);
 
         self::purge_local_filedir();
-        $this->assertFileNotExists(self::get_local_file($contenthash));
+        $this->assertFileDoesNotExist(self::get_local_file($contenthash));
 
         get_file_storage()->add_string_to_pool($content);
         $this->assertFileExists(self::get_local_file($contenthash));
 
         self::purge_local_filedir();
-        $this->assertFileNotExists(self::get_local_file($contenthash));
+        $this->assertFileDoesNotExist(self::get_local_file($contenthash));
     }
 
     public function test_content_adding() {
@@ -89,18 +89,18 @@ final class totara_extfiledir_hook_testcase extends advanced_testcase {
         $extfile4 = $CFG->dataroot . '/extfiledir4/' . store::get_relative_filepath($contenthash);
 
         self::purge_local_filedir();
-        $this->assertFileNotExists($contentfile);
-        $this->assertFileNotExists($extfile1);
-        $this->assertFileNotExists($extfile2);
-        $this->assertFileNotExists($extfile3);
+        $this->assertFileDoesNotExist($contentfile);
+        $this->assertFileDoesNotExist($extfile1);
+        $this->assertFileDoesNotExist($extfile2);
+        $this->assertFileDoesNotExist($extfile3);
         @mkdir(dirname($extfile4), $CFG->directorypermissions, true);
         file_put_contents($extfile4, $content);
 
         get_file_storage()->add_string_to_pool($content);
         $this->assertFileExists($contentfile);
         $this->assertFileExists($extfile1);
-        $this->assertFileNotExists($extfile2);
-        $this->assertFileNotExists($extfile3);
+        $this->assertFileDoesNotExist($extfile2);
+        $this->assertFileDoesNotExist($extfile3);
         $this->assertFileExists($extfile4);
     }
 
@@ -160,16 +160,16 @@ final class totara_extfiledir_hook_testcase extends advanced_testcase {
         file_put_contents($extfile1, $content);
         file_put_contents($extfile2, $content);
         file_put_contents($extfile3, $content);
-        $this->assertFileNotExists($extfile4);
-        $this->assertFileNotExists($trashfile);
+        $this->assertFileDoesNotExist($extfile4);
+        $this->assertFileDoesNotExist($trashfile);
 
         get_file_storage()->deleted_file_cleanup($contenthash);
         $this->assertFileExists($trashfile); // Trash file is kept unless there is a restore option in ext filedir.
-        $this->assertFileNotExists($contentfile);
-        $this->assertFileNotExists($extfile1);
+        $this->assertFileDoesNotExist($contentfile);
+        $this->assertFileDoesNotExist($extfile1);
         $this->assertFileExists($extfile2);
         $this->assertFileExists($extfile3);
-        $this->assertFileNotExists($extfile4);
+        $this->assertFileDoesNotExist($extfile4);
     }
 
     public function test_content_restore() {
@@ -240,26 +240,26 @@ final class totara_extfiledir_hook_testcase extends advanced_testcase {
         file_put_contents($extfile1, $content1);
         file_put_contents($extfile2, $content2);
         file_put_contents($extfile3, $content3);
-        $this->assertFileNotExists($contentfile1);
-        $this->assertFileNotExists($contentfile2);
-        $this->assertFileNotExists($contentfile3);
+        $this->assertFileDoesNotExist($contentfile1);
+        $this->assertFileDoesNotExist($contentfile2);
+        $this->assertFileDoesNotExist($contentfile3);
         remove_dir($CFG->dataroot . '/extfiledir4', true);
-        $this->assertFileNotExists($CFG->dataroot . '/extfiledir4/' . store::get_relative_filepath($contenthash1));
-        $this->assertFileNotExists($CFG->dataroot . '/extfiledir4/' . store::get_relative_filepath($contenthash2));
-        $this->assertFileNotExists($CFG->dataroot . '/extfiledir4/' . store::get_relative_filepath($contenthash3));
+        $this->assertFileDoesNotExist($CFG->dataroot . '/extfiledir4/' . store::get_relative_filepath($contenthash1));
+        $this->assertFileDoesNotExist($CFG->dataroot . '/extfiledir4/' . store::get_relative_filepath($contenthash2));
+        $this->assertFileDoesNotExist($CFG->dataroot . '/extfiledir4/' . store::get_relative_filepath($contenthash3));
 
         $this->assertTrue(get_file_storage()->try_content_recovery($file1));
         $this->assertFileExists($contentfile1);
 
         $this->assertFalse(get_file_storage()->try_content_recovery($file2));
-        $this->assertFileNotExists($contentfile2);
+        $this->assertFileDoesNotExist($contentfile2);
 
         $this->assertFalse(get_file_storage()->try_content_recovery($file3));
-        $this->assertFileNotExists($contentfile3);
+        $this->assertFileDoesNotExist($contentfile3);
 
         $this->assertFileExists($CFG->dataroot . '/extfiledir4/' . store::get_relative_filepath($contenthash1));
-        $this->assertFileNotExists($CFG->dataroot . '/extfiledir4/' . store::get_relative_filepath($contenthash2));
-        $this->assertFileNotExists($CFG->dataroot . '/extfiledir4/' . store::get_relative_filepath($contenthash3));
+        $this->assertFileDoesNotExist($CFG->dataroot . '/extfiledir4/' . store::get_relative_filepath($contenthash2));
+        $this->assertFileDoesNotExist($CFG->dataroot . '/extfiledir4/' . store::get_relative_filepath($contenthash3));
     }
 
     public function test_content_deleting_with_instant_trash_purge() {
@@ -301,12 +301,12 @@ final class totara_extfiledir_hook_testcase extends advanced_testcase {
         file_put_contents($contentfile, $content);
         file_put_contents($extfile1, $content);
         file_put_contents($extfile2, $content);
-        $this->assertFileNotExists($trashfile);
+        $this->assertFileDoesNotExist($trashfile);
 
         get_file_storage()->deleted_file_cleanup($contenthash);
-        $this->assertFileNotExists($trashfile); // This is what we are testing here.
-        $this->assertFileNotExists($contentfile);
-        $this->assertFileNotExists($extfile1);
+        $this->assertFileDoesNotExist($trashfile); // This is what we are testing here.
+        $this->assertFileDoesNotExist($contentfile);
+        $this->assertFileDoesNotExist($extfile1);
         $this->assertFileExists($extfile2);
     }
 

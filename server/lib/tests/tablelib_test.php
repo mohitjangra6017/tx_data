@@ -343,9 +343,9 @@ class core_tablelib_testcase extends basic_testcase {
         $table->define_baseurl('/invalid.php');
 
         $row = $table->get_row_html($data);
-        $this->assertRegExp('/row 0 col 0/', $row);
-        $this->assertRegExp('/<tr class=""/', $row);
-        $this->assertRegExp('/<td class="cell c0"/', $row);
+        $this->assertMatchesRegularExpression('/row 0 col 0/', $row);
+        $this->assertMatchesRegularExpression('/<tr class=""/', $row);
+        $this->assertMatchesRegularExpression('/<td class="cell c0"/', $row);
     }
 
     public function test_persistent_table() {

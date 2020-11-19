@@ -308,7 +308,7 @@ class core_navigationlib_testcase extends advanced_testcase {
 
         $this->node->add_class('testclass');
         $this->assertTrue($this->node->remove_class('testclass'));
-        $this->assertNotContains('testclass', $this->node->classes);
+        $this->assertNotContainsEquals('testclass', $this->node->classes);
     }
 
     public function test_module_extends_navigation() {

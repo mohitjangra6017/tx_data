@@ -99,6 +99,6 @@ class core_antivirus_testcase extends advanced_testcase {
             $this->assertInstanceOf('\core\antivirus\scanner_exception', $e);
         }
         // File expected to be deleted.
-        $this->assertFileNotExists($this->tempfile);
+        $this->assertFileDoesNotExist($this->tempfile);
     }
 }

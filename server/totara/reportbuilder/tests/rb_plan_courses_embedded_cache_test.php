@@ -147,7 +147,7 @@ class totara_reportbuilder_rb_plan_courses_embedded_cache_testcase extends repor
         $was = array();
         foreach($result as $r) {
             $this->assertContains($r->$courseidalias, array($this->course1->id, $this->course3->id));
-            $this->assertNotContains($r->course_courselink, $was);
+            $this->assertNotContainsEquals($r->course_courselink, $was);
             $was[] = $r->course_courselink;
         }
 
@@ -156,7 +156,7 @@ class totara_reportbuilder_rb_plan_courses_embedded_cache_testcase extends repor
         $was = array();
         foreach($result as $r) {
             $this->assertContains($r->$courseidalias, array($this->course2->id, $this->course3->id, $this->course4->id));
-            $this->assertNotContains($r->course_courselink, $was);
+            $this->assertNotContainsEquals($r->course_courselink, $was);
             $was[] = $r->course_courselink;
         }
 
@@ -187,7 +187,7 @@ class totara_reportbuilder_rb_plan_courses_embedded_cache_testcase extends repor
         $this->assertCount(1, $result);
         foreach ($result as $r) {
             $this->assertContains($r->$courseidalias, [$this->course3->id]);
-            $this->assertNotContains($r->$courseidalias, [$this->course1->id, $this->course2->id, $this->course4->id]);
+            $this->assertNotContainsEquals($r->$courseidalias, [$this->course1->id, $this->course2->id, $this->course4->id]);
         }
 
         $params = ['userid' => $this->user1->id, 'rolstatus' => 'completed'];
@@ -195,7 +195,7 @@ class totara_reportbuilder_rb_plan_courses_embedded_cache_testcase extends repor
         $this->assertCount(1, $result);
         foreach ($result as $r) {
             $this->assertContains($r->$courseidalias, [$this->course1->id]);
-            $this->assertNotContains($r->$courseidalias, [$this->course3->id, $this->course2->id, $this->course4->id]);
+            $this->assertNotContainsEquals($r->$courseidalias, [$this->course3->id, $this->course2->id, $this->course4->id]);
         }
 
         $params = ['userid' => $this->user2->id, 'rolstatus' => 'active'];
@@ -203,7 +203,7 @@ class totara_reportbuilder_rb_plan_courses_embedded_cache_testcase extends repor
         $this->assertCount(2, $result);
         foreach ($result as $r) {
             $this->assertContains($r->$courseidalias, [$this->course2->id, $this->course3->id]);
-            $this->assertNotContains($r->$courseidalias, [$this->course1->id, $this->course4->id]);
+            $this->assertNotContainsEquals($r->$courseidalias, [$this->course1->id, $this->course4->id]);
         }
 
         $params = ['userid' => $this->user2->id, 'rolstatus' => 'completed'];
@@ -211,7 +211,7 @@ class totara_reportbuilder_rb_plan_courses_embedded_cache_testcase extends repor
         $this->assertCount(1, $result);
         foreach ($result as $r) {
             $this->assertContains($r->$courseidalias, [$this->course4->id]);
-            $this->assertNotContains($r->$courseidalias, [$this->course1->id, $this->course2->id, $this->course3->id]);
+            $this->assertNotContainsEquals($r->$courseidalias, [$this->course1->id, $this->course2->id, $this->course3->id]);
         }
 
         $params = ['userid' => $this->user3->id, 'rolstatus' => 'active'];

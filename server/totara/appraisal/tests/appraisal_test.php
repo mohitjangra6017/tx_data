@@ -272,19 +272,19 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
         $this->assertContains(appraisal::ROLE_LEARNER, $all);
         $this->assertContains(appraisal::ROLE_MANAGER, $all);
         $this->assertContains(appraisal::ROLE_APPRAISER, $all);
-        $this->assertNotContains(appraisal::ROLE_TEAM_LEAD, $all);
+        $this->assertNotContainsEquals(appraisal::ROLE_TEAM_LEAD, $all);
 
         $canviewothers = $appraisal->get_roles_involved(1);
         $this->assertContains(appraisal::ROLE_LEARNER, $canviewothers);
         $this->assertContains(appraisal::ROLE_MANAGER, $canviewothers);
-        $this->assertNotContains(appraisal::ROLE_APPRAISER, $canviewothers);
-        $this->assertNotContains(appraisal::ROLE_TEAM_LEAD, $canviewothers);
+        $this->assertNotContainsEquals(appraisal::ROLE_APPRAISER, $canviewothers);
+        $this->assertNotContainsEquals(appraisal::ROLE_TEAM_LEAD, $canviewothers);
 
         $cananswer = $appraisal->get_roles_involved(2);
         $this->assertContains(appraisal::ROLE_LEARNER, $cananswer);
-        $this->assertNotContains(appraisal::ROLE_MANAGER, $cananswer);
+        $this->assertNotContainsEquals(appraisal::ROLE_MANAGER, $cananswer);
         $this->assertContains(appraisal::ROLE_APPRAISER, $cananswer);
-        $this->assertNotContains(appraisal::ROLE_TEAM_LEAD, $cananswer);
+        $this->assertNotContainsEquals(appraisal::ROLE_TEAM_LEAD, $cananswer);
     }
 
     public function test_appraisal_get_user_appraisal() {
@@ -311,7 +311,7 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
         $user4appr = appraisal::get_user_appraisals($user4->id, appraisal::ROLE_LEARNER);
 
         $this->assertCount(2, $users1allappr);
-        $this->assertContains($appraisal1->id, array(current($users1allappr)->id, next($users1allappr)->id));
+        $this->assertContainsEquals($appraisal1->id, array(current($users1allappr)->id, next($users1allappr)->id));
         $this->assertCount(1, $users1actappr);
         $this->assertEquals($appraisal2->id, current($users1actappr)->id);
         $this->assertEmpty($users3actappr);

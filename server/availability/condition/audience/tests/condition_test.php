@@ -66,7 +66,7 @@ class availability_audience_condition_testcase extends advanced_testcase {
         // Check if available when user is not part of audience.
         $this->assertFalse($condition->is_available(false, $info, true, $user->id));
         $information = strip_tags($condition->get_description(false, false, $info));
-        $this->assertRegExp('~You are a member of the Audience: Test Audience 1~', $information);
+        $this->assertMatchesRegularExpression('~You are a member of the Audience: Test Audience 1~', $information);
         $this->assertTrue($condition->is_available(true, $info, true, $user->id));
 
         // Add the user to the audience and check availablity again (should be successful).
@@ -74,7 +74,7 @@ class availability_audience_condition_testcase extends advanced_testcase {
         $this->assertTrue($condition->is_available(false, $info, true, $user->id));
         $this->assertFalse($condition->is_available(true, $info, true, $user->id));
         $information = strip_tags($condition->get_description(false, true, $info));
-        $this->assertRegExp('~You are not a member of the Audience: Test Audience 1~', $information);
+        $this->assertMatchesRegularExpression('~You are not a member of the Audience: Test Audience 1~', $information);
     }
 
     /**

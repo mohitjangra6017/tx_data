@@ -34,20 +34,20 @@ class totara_core_requirejs_testcase extends advanced_testcase {
 
         $this->assertSame('1', $CFG->slasharguments);
         $this->assertFileExists("{$CFG->dirroot}/lib/amd/src/first.js"); // Must exist for BC with Moodle.
-        $this->assertFileNotExists("{$CFG->dirroot}/lib/amd/src/bundle.js"); // Must not exist because it would collide with bundle name.
+        $this->assertFileDoesNotExist("{$CFG->dirroot}/lib/amd/src/bundle.js"); // Must not exist because it would collide with bundle name.
 
         $hook_sink = self::redirectHooks();
 
         $config = \core_requirejs::get_config_data(-1);
         $this->assertSame('https://www.example.com/moodle/lib/requirejs.php/-1/', $config['baseUrl']);
-        $this->assertRegExp('|^https://www\.example\.com/moodle/lib/javascript\.php/-1/lib/jquery/jquery-.*\.min$|', $config['paths']['jquery']);
-        $this->assertRegExp('|^https://www\.example\.com/moodle/lib/javascript\.php/-1/lib/jquery/ui-.*/jquery-ui\.min$|', $config['paths']['jqueryui']);
+        $this->assertMatchesRegularExpression('|^https://www\.example\.com/moodle/lib/javascript\.php/-1/lib/jquery/jquery-.*\.min$|', $config['paths']['jquery']);
+        $this->assertMatchesRegularExpression('|^https://www\.example\.com/moodle/lib/javascript\.php/-1/lib/jquery/ui-.*/jquery-ui\.min$|', $config['paths']['jqueryui']);
         $this->assertSame('https://www.example.com/moodle/lib/javascript.php/-1/lib/requirejs/jquery-private', $config['paths']['jqueryprivate']);
         $this->assertSame('jqueryprivate', $config['map']['*']['jquery']);
         $this->assertSame('jquery', $config['map']['jqueryprivate']['jquery']);
         $this->assertIsArray($config['bundles']['core/bundle']);
         foreach($config['bundles']['core/bundle'] as $amd) {
-            $this->assertRegExp('/^[a-z0-9_]+\/[a-z0-9_-]+$/', $amd, 'Invalid AMD module name: ' . $amd);
+            $this->assertMatchesRegularExpression('/^[a-z0-9_]+\/[a-z0-9_-]+$/', $amd, 'Invalid AMD module name: ' . $amd);
             $this->assertStringNotContainsString('-lazy', $amd);
         }
 
@@ -57,14 +57,14 @@ class totara_core_requirejs_testcase extends advanced_testcase {
 
         $config = \core_requirejs::get_config_data(55);
         $this->assertSame('https://www.example.com/moodle/lib/requirejs.php/55/', $config['baseUrl']);
-        $this->assertRegExp('|^https://www\.example\.com/moodle/lib/javascript\.php/55/lib/jquery/jquery-.*\.min$|', $config['paths']['jquery']);
-        $this->assertRegExp('|^https://www\.example\.com/moodle/lib/javascript\.php/55/lib/jquery/ui-.*/jquery-ui\.min$|', $config['paths']['jqueryui']);
+        $this->assertMatchesRegularExpression('|^https://www\.example\.com/moodle/lib/javascript\.php/55/lib/jquery/jquery-.*\.min$|', $config['paths']['jquery']);
+        $this->assertMatchesRegularExpression('|^https://www\.example\.com/moodle/lib/javascript\.php/55/lib/jquery/ui-.*/jquery-ui\.min$|', $config['paths']['jqueryui']);
         $this->assertSame('https://www.example.com/moodle/lib/javascript.php/55/lib/requirejs/jquery-private', $config['paths']['jqueryprivate']);
         $this->assertSame('jqueryprivate', $config['map']['*']['jquery']);
         $this->assertSame('jquery', $config['map']['jqueryprivate']['jquery']);
         $this->assertIsArray($config['bundles']['core/bundle']);
         foreach($config['bundles']['core/bundle'] as $amd) {
-            $this->assertRegExp('/^[a-z0-9_]+\/[a-z0-9_-]+$/', $amd, 'Invalid AMD module name: ' . $amd);
+            $this->assertMatchesRegularExpression('/^[a-z0-9_]+\/[a-z0-9_-]+$/', $amd, 'Invalid AMD module name: ' . $amd);
             $this->assertStringNotContainsString('-lazy', $amd);
         }
 

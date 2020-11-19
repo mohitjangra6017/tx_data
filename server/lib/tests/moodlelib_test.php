@@ -226,7 +226,7 @@ class core_moodlelib_testcase extends advanced_testcase {
             $this->assertInstanceOf('coding_exception', $ex);
         } catch (Error $error) {
             // PHP 7.1 throws Error even earlier.
-            $this->assertRegExp('/Too few arguments to function/', $error->getMessage());
+            $this->assertMatchesRegularExpression('/Too few arguments to function/', $error->getMessage());
         }
         try {
             @optional_param('username');
@@ -235,7 +235,7 @@ class core_moodlelib_testcase extends advanced_testcase {
             $this->assertInstanceOf('coding_exception', $ex);
         } catch (Error $error) {
             // PHP 7.1 throws Error even earlier.
-            $this->assertRegExp('/Too few arguments to function/', $error->getMessage());
+            $this->assertMatchesRegularExpression('/Too few arguments to function/', $error->getMessage());
         }
         try {
             optional_param('', 'default_user', PARAM_RAW);
@@ -278,7 +278,7 @@ class core_moodlelib_testcase extends advanced_testcase {
             $this->assertInstanceOf('coding_exception', $ex);
         } catch (Error $error) {
             // PHP 7.1 throws Error even earlier.
-            $this->assertRegExp('/Too few arguments to function/', $error->getMessage());
+            $this->assertMatchesRegularExpression('/Too few arguments to function/', $error->getMessage());
         }
         try {
             @optional_param_array('username');
@@ -287,7 +287,7 @@ class core_moodlelib_testcase extends advanced_testcase {
             $this->assertInstanceOf('coding_exception', $ex);
         } catch (Error $error) {
             // PHP 7.1 throws Error even earlier.
-            $this->assertRegExp('/Too few arguments to function/', $error->getMessage());
+            $this->assertMatchesRegularExpression('/Too few arguments to function/', $error->getMessage());
         }
         try {
             optional_param_array('', array('a'=>'default_user'), PARAM_RAW);
@@ -341,7 +341,7 @@ class core_moodlelib_testcase extends advanced_testcase {
             $this->assertInstanceOf('coding_exception', $ex);
         } catch (Error $error) {
             // PHP 7.1 throws Error even earlier.
-            $this->assertRegExp('/Too few arguments to function/', $error->getMessage());
+            $this->assertMatchesRegularExpression('/Too few arguments to function/', $error->getMessage());
         }
         try {
             required_param('username', '');
@@ -387,7 +387,7 @@ class core_moodlelib_testcase extends advanced_testcase {
             $this->assertInstanceOf('coding_exception', $ex);
         } catch (Error $error) {
             // PHP 7.1 throws Error.
-            $this->assertRegExp('/Too few arguments to function/', $error->getMessage());
+            $this->assertMatchesRegularExpression('/Too few arguments to function/', $error->getMessage());
         }
         try {
             required_param_array('', PARAM_RAW);
@@ -451,7 +451,7 @@ class core_moodlelib_testcase extends advanced_testcase {
             $this->assertInstanceOf('moodle_exception', $ex);
         } catch (Error $error) {
             // PHP 7.1 throws Error even earlier.
-            $this->assertRegExp('/Too few arguments to function/', $error->getMessage());
+            $this->assertMatchesRegularExpression('/Too few arguments to function/', $error->getMessage());
         }
     }
 
@@ -474,7 +474,7 @@ class core_moodlelib_testcase extends advanced_testcase {
             $this->assertInstanceOf('moodle_exception', $ex);
         } catch (Error $error) {
             // PHP 7.1 throws Error even earlier.
-            $this->assertRegExp('/Too few arguments to function/', $error->getMessage());
+            $this->assertMatchesRegularExpression('/Too few arguments to function/', $error->getMessage());
         }
 
         try {
@@ -1890,7 +1890,7 @@ class core_moodlelib_testcase extends advanced_testcase {
     public function test_get_string_limitation() {
         // This is one of the limitations to the lang_string class. It can't be
         // used as a key.
-        $this->expectException(\PHPUnit\Framework\Error\Warning::class);
+        $this->expectWarning();
         $array = array(get_string('yes', null, null, true) => 'yes');
     }
 
@@ -2034,7 +2034,7 @@ class core_moodlelib_testcase extends advanced_testcase {
         $this->assertEquals(0, $deluser->picture);
         $this->assertSame('', $deluser->idnumber);
         $this->assertSame(md5($user->username), $deluser->email);
-        $this->assertRegExp('/^'.preg_quote($user->email, '/').'\.\d*$/', $deluser->username);
+        $this->assertMatchesRegularExpression('/^'.preg_quote($user->email, '/').'\.\d*$/', $deluser->username);
 
         $this->assertEquals(1, $DB->count_records('user', array('deleted'=>1)));
 
@@ -2399,8 +2399,8 @@ class core_moodlelib_testcase extends advanced_testcase {
             $this->assertFalse(password_is_legacy_hash($hash));
 
             // Check that cost factor in hash is correctly set.
-            $this->assertRegExp('/\$10\$/', $hash);
-            $this->assertRegExp('/\$04\$/', $fasthash);
+            $this->assertMatchesRegularExpression('/\$10\$/', $hash);
+            $this->assertMatchesRegularExpression('/\$04\$/', $fasthash);
         }
     }
 
@@ -3344,21 +3344,21 @@ class core_moodlelib_testcase extends advanced_testcase {
 
         $result = random_string(10);
         $this->assertSame(10, strlen($result));
-        $this->assertRegExp('/^[' . $pool . ']+$/', $result);
+        $this->assertMatchesRegularExpression('/^[' . $pool . ']+$/', $result);
         $this->assertNotSame($result, random_string(10));
 
         $result = random_string(21);
         $this->assertSame(21, strlen($result));
-        $this->assertRegExp('/^[' . $pool . ']+$/', $result);
+        $this->assertMatchesRegularExpression('/^[' . $pool . ']+$/', $result);
         $this->assertNotSame($result, random_string(21));
 
         $result = random_string(666);
         $this->assertSame(666, strlen($result));
-        $this->assertRegExp('/^[' . $pool . ']+$/', $result);
+        $this->assertMatchesRegularExpression('/^[' . $pool . ']+$/', $result);
 
         $result = random_string();
         $this->assertSame(15, strlen($result));
-        $this->assertRegExp('/^[' . $pool . ']+$/', $result);
+        $this->assertMatchesRegularExpression('/^[' . $pool . ']+$/', $result);
 
         $this->assertDebuggingNotCalled();
 
@@ -3379,21 +3379,21 @@ class core_moodlelib_testcase extends advanced_testcase {
 
         $result = complex_random_string(10);
         $this->assertSame(10, strlen($result));
-        $this->assertRegExp('/^[' . $pool . ']+$/', $result);
+        $this->assertMatchesRegularExpression('/^[' . $pool . ']+$/', $result);
         $this->assertNotSame($result, complex_random_string(10));
 
         $result = complex_random_string(21);
         $this->assertSame(21, strlen($result));
-        $this->assertRegExp('/^[' . $pool . ']+$/', $result);
+        $this->assertMatchesRegularExpression('/^[' . $pool . ']+$/', $result);
         $this->assertNotSame($result, complex_random_string(21));
 
         $result = complex_random_string(666);
         $this->assertSame(666, strlen($result));
-        $this->assertRegExp('/^[' . $pool . ']+$/', $result);
+        $this->assertMatchesRegularExpression('/^[' . $pool . ']+$/', $result);
 
         $result = complex_random_string();
         $this->assertEqualsWithDelta(28, strlen($result), 4); // Expected length is 24 - 32.
-        $this->assertRegExp('/^[' . $pool . ']+$/', $result);
+        $this->assertMatchesRegularExpression('/^[' . $pool . ']+$/', $result);
 
         $this->assertDebuggingNotCalled();
 

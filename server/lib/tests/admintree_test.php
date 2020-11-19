@@ -252,15 +252,15 @@ class core_admintree_testcase extends advanced_testcase {
 
         // Check for an invalid path.
         $result = $executable->output_html($CFG->dirroot . '/lib/tests/other/file_does_not_exist');
-        $this->assertRegexp('/class="patherror"/', $result);
+        $this->assertMatchesRegularExpression('/class="patherror"/', $result);
 
         // Check for a directory.
         $result = $executable->output_html($CFG->dirroot);
-        $this->assertRegexp('/class="patherror"/', $result);
+        $this->assertMatchesRegularExpression('/class="patherror"/', $result);
 
         // Check for a file which is not executable.
         $result = $executable->output_html($CFG->dirroot . '/filter/tex/readme_moodle.txt');
-        $this->assertRegexp('/class="patherror"/', $result);
+        $this->assertMatchesRegularExpression('/class="patherror"/', $result);
 
         // Check for an executable file.
         if ($CFG->ostype == 'WINDOWS') {
@@ -269,12 +269,12 @@ class core_admintree_testcase extends advanced_testcase {
             $filetocheck = 'mimetex.darwin';
         }
         $result = $executable->output_html($CFG->dirroot . '/filter/tex/' . $filetocheck);
-        $this->assertRegexp('/class="pathok"/', $result);
+        $this->assertMatchesRegularExpression('/class="pathok"/', $result);
 
         // Check for no file specified.
         $result = $executable->output_html('');
-        $this->assertRegexp('/name="s__test1"/', $result);
-        $this->assertRegexp('/value=""/', $result);
+        $this->assertMatchesRegularExpression('/name="s__test1"/', $result);
+        $this->assertMatchesRegularExpression('/value=""/', $result);
     }
 
     /**

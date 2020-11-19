@@ -82,7 +82,7 @@ class auth_oauth2_userdata_username_testcase extends advanced_testcase {
         // Purge data.
         $result = username::execute_purge($deleteduser, context_system::instance());
         $this->assertEquals(item::RESULT_STATUS_SUCCESS, $result);
-        $this->assertRegExp('/^deleted_[a-z0-9]+$/', $DB->get_field('auth_oauth2_linked_login', 'username', ['userid' => $deleteduser->id]));
+        $this->assertMatchesRegularExpression('/^deleted_[a-z0-9]+$/', $DB->get_field('auth_oauth2_linked_login', 'username', ['userid' => $deleteduser->id]));
 
         // Usernames of control users are present.
         $this->assertNotEquals($activeuser->username, $DB->get_field('auth_oauth2_linked_login', 'username', ['userid' => $activeuser->id]));

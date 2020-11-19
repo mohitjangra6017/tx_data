@@ -97,7 +97,7 @@ class core_orm_query_condition_testcase extends advanced_testcase {
             } catch (Exception $e) {
                 $this->assertInstanceOf(coding_exception::class, $e);
                 $msg = 'Comparing fields supported only with =, !=, <, >, <=, >=.';
-                $this->assertRegExp('/' . preg_quote($msg) . '/', $e->getMessage());
+                $this->assertMatchesRegularExpression('/' . preg_quote($msg) . '/', $e->getMessage());
             }
         }
     }
@@ -340,7 +340,7 @@ class core_orm_query_condition_testcase extends advanced_testcase {
             } catch (Exception $e) {
                 $this->assertInstanceOf(coding_exception::class, $e);
                 $msg = 'Comparing boolean supported only with =, != (<>)';
-                $this->assertRegExp('/' . preg_quote($msg) . '/', $e->getMessage());
+                $this->assertMatchesRegularExpression('/' . preg_quote($msg) . '/', $e->getMessage());
             }
         }
     }
@@ -379,7 +379,7 @@ class core_orm_query_condition_testcase extends advanced_testcase {
             } catch (Exception $e) {
                 $this->assertInstanceOf(coding_exception::class, $e);
                 $msg = 'Comparing NULLs supported only with = or !=.';
-                $this->assertRegExp('/' . preg_quote($msg) . '/', $e->getMessage());
+                $this->assertMatchesRegularExpression('/' . preg_quote($msg) . '/', $e->getMessage());
             }
         }
     }
@@ -464,7 +464,7 @@ class core_orm_query_condition_testcase extends advanced_testcase {
             } catch (Exception $e) {
                 $this->assertInstanceOf(coding_exception::class, $e);
                 $msg = 'Comparing arrays supported only with in, =, !=';
-                $this->assertRegExp('/' . preg_quote($msg) . '/', $e->getMessage());
+                $this->assertMatchesRegularExpression('/' . preg_quote($msg) . '/', $e->getMessage());
             }
         }
     }

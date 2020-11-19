@@ -67,7 +67,7 @@ class totara_competency_assignment_entity_testcase extends advanced_testcase {
 
         $this->assertCount(2, $result);
         $ids = $result->pluck('id');
-        $this->assertNotContains($ass1->id, $ids);
+        $this->assertNotContainsEquals($ass1->id, $ids);
     }
 
     public function test_status_name() {

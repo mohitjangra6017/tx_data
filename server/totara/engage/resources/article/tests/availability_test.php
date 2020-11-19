@@ -114,7 +114,7 @@ class engage_article_availability_testcase extends advanced_testcase {
 
         foreach ($before_delete_result->objects as $record) {
             $article = article::from_instance($record->objectid, article::get_resource_type());
-            self::assertContains($article->get_userid(), [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($article->get_userid(), [$user_one->id, $user_two->id]);
         }
 
         // delete user two and refetch the catalog again.
@@ -176,7 +176,7 @@ class engage_article_availability_testcase extends advanced_testcase {
 
         foreach ($before_suspended_result->objects as $record) {
             $article = article::from_instance($record->objectid, article::get_resource_type());
-            self::assertContains($article->get_userid(), [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($article->get_userid(), [$user_one->id, $user_two->id]);
         }
 
         // Start suspending the user.
@@ -193,7 +193,7 @@ class engage_article_availability_testcase extends advanced_testcase {
 
         foreach ($after_suspended_result->objects as $record) {
             $article = article::from_instance($record->objectid, article::get_resource_type());
-            self::assertContains($article->get_userid(), [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($article->get_userid(), [$user_one->id, $user_two->id]);
         }
     }
 }

@@ -198,7 +198,7 @@ class core_webapi_formatter_testcase extends advanced_testcase {
             $this->fail('Expected exception for non-existent field');
         } catch (Exception $e) {
             $this->assertInstanceOf(coding_exception::class, $e);
-            $this->assertRegExp('/Unknown field test3/', $e->getMessage());
+            $this->assertMatchesRegularExpression('/Unknown field test3/', $e->getMessage());
         }
     }
 

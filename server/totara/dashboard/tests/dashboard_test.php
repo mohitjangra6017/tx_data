@@ -311,19 +311,19 @@ class totara_dashboard_dashboard_testcase extends advanced_testcase {
         $user1dashes = totara_dashboard::get_user_dashboards($user1->id);
         $user1dashesids = array_keys($user1dashes);
         $this->assertCount(1, $user1dashes); // Only My Learning dashboard
-        $this->assertNotContains($dashboard1->get_id(), $user1dashesids);
-        $this->assertNotContains($dashboard2->get_id(), $user1dashesids);
-        $this->assertNotContains($dashboard3->get_id(), $user1dashesids);
-        $this->assertNotContains($dashboard4->get_id(), $user1dashesids);
+        $this->assertNotContainsEquals($dashboard1->get_id(), $user1dashesids);
+        $this->assertNotContainsEquals($dashboard2->get_id(), $user1dashesids);
+        $this->assertNotContainsEquals($dashboard3->get_id(), $user1dashesids);
+        $this->assertNotContainsEquals($dashboard4->get_id(), $user1dashesids);
 
         // Check that user2 assigned to dashboard 2 only.
         $user2dashes = totara_dashboard::get_user_dashboards($user2->id);
         $user2dashesids = array_keys($user2dashes);
         $this->assertCount(2, $user2dashes);
         $this->assertContains($dashboard2->get_id(), $user2dashesids);
-        $this->assertNotContains($dashboard1->get_id(), $user2dashesids);
-        $this->assertNotContains($dashboard3->get_id(), $user2dashesids);
-        $this->assertNotContains($dashboard4->get_id(), $user2dashesids);
+        $this->assertNotContainsEquals($dashboard1->get_id(), $user2dashesids);
+        $this->assertNotContainsEquals($dashboard3->get_id(), $user2dashesids);
+        $this->assertNotContainsEquals($dashboard4->get_id(), $user2dashesids);
 
         // Check that user3 assigned to dashboards 1 and 2.
         $user3dashes = totara_dashboard::get_user_dashboards($user3->id);
@@ -340,8 +340,8 @@ class totara_dashboard_dashboard_testcase extends advanced_testcase {
         $this->assertCount(2, $guestdashes);
         $this->assertContains($dashboard3->get_id(), $guestdashesids);
         $this->assertContains($dashboard4->get_id(), $guestdashesids);
-        $this->assertNotContains($dashboard1->get_id(), $guestdashesids);
-        $this->assertNotContains($dashboard2->get_id(), $guestdashesids);
+        $this->assertNotContainsEquals($dashboard1->get_id(), $guestdashesids);
+        $this->assertNotContainsEquals($dashboard2->get_id(), $guestdashesids);
     }
 
     /**

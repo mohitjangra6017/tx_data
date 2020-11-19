@@ -86,7 +86,7 @@ class totara_core_file_storage_testcase extends advanced_testcase {
         $this->assertTrue($fs->content_exists($contenthash));
         $this->assertFalse($fs->validate_content($contenthash, true));
         $this->assertFalse($fs->content_exists($contenthash));
-        $this->assertFileNotExists($filepath);
+        $this->assertFileDoesNotExist($filepath);
     }
 
     /**

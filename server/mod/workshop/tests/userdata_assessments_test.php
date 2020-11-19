@@ -297,14 +297,14 @@ class mod_workshop_userdata_assessments_testcase extends advanced_testcase {
         // The remaining assessments should always be linked to remaining submissions.
         $remainingsubmissionids = $DB->get_fieldset_select('workshop_submissions', 'id', '1=1');
         foreach ($assessments as $assessment) {
-            $this->assertContains($assessment->submissionid, $remainingsubmissionids);
+            $this->assertContainsEquals($assessment->submissionid, $remainingsubmissionids);
         }
 
         $grades = $DB->get_records('workshop_grades');
         $this->assertCount(16, $grades);
         $assessmentids = array_keys($assessments);
         foreach ($grades as $grade) {
-            $this->assertContains($grade->assessmentid, $assessmentids);
+            $this->assertContainsEquals($grade->assessmentid, $assessmentids);
         }
 
         $this->assertEquals(8, $DB->count_records('workshop_aggregations'));
@@ -370,14 +370,14 @@ class mod_workshop_userdata_assessments_testcase extends advanced_testcase {
         // The remaining assessments should always be linked to remaining submissions.
         $remainingsubmissionids = $DB->get_fieldset_select('workshop_submissions', 'id', '1=1');
         foreach ($assessments as $assessment) {
-            $this->assertContains($assessment->submissionid, $remainingsubmissionids);
+            $this->assertContainsEquals($assessment->submissionid, $remainingsubmissionids);
         }
 
         $grades = $DB->get_records('workshop_grades');
         $this->assertCount(18, $grades);
         $assessmentids = array_keys($assessments);
         foreach ($grades as $grade) {
-            $this->assertContains($grade->assessmentid, $assessmentids);
+            $this->assertContainsEquals($grade->assessmentid, $assessmentids);
         }
 
         $this->assertEquals(9, $DB->count_records('workshop_aggregations'));
@@ -443,14 +443,14 @@ class mod_workshop_userdata_assessments_testcase extends advanced_testcase {
         // The remaining assessments should always be linked to remaining submissions.
         $remainingsubmissionids = $DB->get_fieldset_select('workshop_submissions', 'id', '1=1');
         foreach ($assessments as $assessment) {
-            $this->assertContains($assessment->submissionid, $remainingsubmissionids);
+            $this->assertContainsEquals($assessment->submissionid, $remainingsubmissionids);
         }
 
         $grades = $DB->get_records('workshop_grades');
         $this->assertCount(20, $grades);
         $assessmentids = array_keys($assessments);
         foreach ($grades as $grade) {
-            $this->assertContains($grade->assessmentid, $assessmentids);
+            $this->assertContainsEquals($grade->assessmentid, $assessmentids);
         }
 
         $this->assertEquals(10, $DB->count_records('workshop_aggregations'));
@@ -514,14 +514,14 @@ class mod_workshop_userdata_assessments_testcase extends advanced_testcase {
         // The remaining assessments should always be linked to remaining submissions.
         $remainingsubmissionids = $DB->get_fieldset_select('workshop_submissions', 'id', '1=1');
         foreach ($assessments as $assessment) {
-            $this->assertContains($assessment->submissionid, $remainingsubmissionids);
+            $this->assertContainsEquals($assessment->submissionid, $remainingsubmissionids);
         }
 
         $grades = $DB->get_records('workshop_grades');
         $this->assertCount(22, $grades);
         $assessmentids = array_keys($assessments);
         foreach ($grades as $grade) {
-            $this->assertContains($grade->assessmentid, $assessmentids);
+            $this->assertContainsEquals($grade->assessmentid, $assessmentids);
         }
 
         $this->assertEquals(11, $DB->count_records('workshop_aggregations'));

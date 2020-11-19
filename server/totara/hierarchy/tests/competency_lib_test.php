@@ -117,10 +117,10 @@ class totara_hierarchy_competency_lib_testcase extends advanced_testcase {
         $this->assertCount(4, $all);
         $all_ids = array_keys($all);
 
-        $this->assertContains($scale1_proficient_value->id, $all_ids);
-        $this->assertContains($scale2_a->id, $all_ids);
-        $this->assertContains($scale2_b->id, $all_ids);
-        $this->assertContains($default_proficient_value->id, $all_ids);
+        $this->assertContainsEquals($scale1_proficient_value->id, $all_ids);
+        $this->assertContainsEquals($scale2_a->id, $all_ids);
+        $this->assertContainsEquals($scale2_b->id, $all_ids);
+        $this->assertContainsEquals($default_proficient_value->id, $all_ids);
 
         // Check it still works when there is nothing in these tables.
         $DB->delete_records('comp_scale');

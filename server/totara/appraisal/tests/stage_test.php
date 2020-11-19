@@ -210,7 +210,7 @@ class appraisal_stage_test extends appraisal_testcase {
             }
             $this->assertEquals($appraisal2->id, $test->appraisalid);
             $this->assertNotEmpty($test->id);
-            $this->assertNotContains($test->id, array($stage->id, $stage2->id));
+            $this->assertNotContainsEquals($test->id, array($stage->id, $stage2->id));
         }
     }
 

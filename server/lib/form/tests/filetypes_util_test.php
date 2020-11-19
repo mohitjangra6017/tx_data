@@ -171,8 +171,8 @@ class core_form_filetypes_util_testcase extends advanced_testcase {
         $this->assertSame([], $util->expand(''));
 
         $expanded = $util->expand('document .cdr text/plain');
-        $this->assertNotContains('document', $expanded);
-        $this->assertNotContains('text/plain', $expanded);
+        $this->assertNotContainsEquals('document', $expanded);
+        $this->assertNotContainsEquals('text/plain', $expanded);
         $this->assertContains('.doc', $expanded);
         $this->assertContains('.odt', $expanded);
         $this->assertContains('.txt', $expanded);
@@ -180,14 +180,14 @@ class core_form_filetypes_util_testcase extends advanced_testcase {
 
         $expanded = $util->expand('document .cdr text/plain', true, false);
         $this->assertContains('document', $expanded);
-        $this->assertNotContains('text/plain', $expanded);
+        $this->assertNotContainsEquals('text/plain', $expanded);
         $this->assertContains('.doc', $expanded);
         $this->assertContains('.odt', $expanded);
         $this->assertContains('.txt', $expanded);
         $this->assertContains('.cdr', $expanded);
 
         $expanded = $util->expand('document .cdr text/plain', false, true);
-        $this->assertNotContains('document', $expanded);
+        $this->assertNotContainsEquals('document', $expanded);
         $this->assertContains('text/plain', $expanded);
         $this->assertContains('.doc', $expanded);
         $this->assertContains('.odt', $expanded);
@@ -291,7 +291,7 @@ class core_form_filetypes_util_testcase extends advanced_testcase {
         $typekeys = array_map(function($type) {
             return $type->key;
         }, $types);
-        $this->assertNotContains('.xxx', $typekeys);
+        $this->assertNotContainsEquals('.xxx', $typekeys);
 
         // All these three files are in both "image" and also "web_image"
         // groups. We display both groups.

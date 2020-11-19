@@ -242,7 +242,7 @@ class core_blog_userdata_blog_testcase extends advanced_testcase {
         }
         $this->assertEquals(count($data->activeuserblogs), count($export->data));
         foreach ($data->activeuserblogs as $activeuserblog) {
-            $this->assertContains($activeuserblog->id, $exportedbloguserids);
+            $this->assertContainsEquals($activeuserblog->id, $exportedbloguserids);
         }
 
         // Export deleteduser.
@@ -258,7 +258,7 @@ class core_blog_userdata_blog_testcase extends advanced_testcase {
         }
         $this->assertEquals(count($data->deleteduserblogs), count($export->data));
         foreach ($data->deleteduserblogs as $deleteduserblog) {
-            $this->assertContains($deleteduserblog->id, $exportedbloguserids);
+            $this->assertContainsEquals($deleteduserblog->id, $exportedbloguserids);
         }
     }
 
@@ -301,7 +301,7 @@ class core_blog_userdata_blog_testcase extends advanced_testcase {
                 $this->assertEmpty($exportedblogentry['files']['attachments']);
                 $this->assertEmpty($exportedblogentry['files']['post']);
             } else {
-                $this->assertContains(
+                $this->assertContainsEquals(
                     [
                         'fileid' => $attachmentfile->get_id(),
                         'filename' => $attachmentfile->get_filename(),
@@ -309,7 +309,7 @@ class core_blog_userdata_blog_testcase extends advanced_testcase {
                     ],
                     $exportedblogentry['files']['attachments']
                 );
-                $this->assertContains(
+                $this->assertContainsEquals(
                     [
                         'fileid' => $contentfile->get_id(),
                         'filename' => $contentfile->get_filename(),

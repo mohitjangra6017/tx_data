@@ -155,7 +155,7 @@ class container_workspace_multi_tenancy_user_non_member_loader_testcase extends 
         self::assertCount(2, $before_fetch_users);
 
         foreach ($before_fetch_users as $before_fetch_user) {
-            self::assertContains(
+            self::assertContainsEquals(
                 $before_fetch_user->id,
                 [
                     $this->tenant_one_user_two->id,
@@ -176,7 +176,7 @@ class container_workspace_multi_tenancy_user_non_member_loader_testcase extends 
 
         self::assertCount(2, $after_fetch_users);
         foreach ($after_fetch_users as $after_fetch_user) {
-            self::assertContains(
+            self::assertContainsEquals(
                 $after_fetch_user->id,
                 [
                     $this->tenant_one_user_two->id,
@@ -343,7 +343,7 @@ class container_workspace_multi_tenancy_user_non_member_loader_testcase extends 
 
         self::assertCount(5, $before_fetch_users);
         foreach ($before_fetch_users as $before_fetch_user) {
-            self::assertContains(
+            self::assertContainsEquals(
                 $before_fetch_user->id,
                 [
                     $admin_user->id,
@@ -364,7 +364,7 @@ class container_workspace_multi_tenancy_user_non_member_loader_testcase extends 
 
         self::assertCount(2, $after_fetch_users);
         foreach ($after_fetch_users as $after_fetch_user) {
-            self::assertContains(
+            self::assertContainsEquals(
                 $after_fetch_user->id,
                 [
                     $admin_user->id,

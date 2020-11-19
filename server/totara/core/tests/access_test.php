@@ -425,7 +425,7 @@ class totara_core_access_testcase extends advanced_testcase {
 
                 $this::assertCapabilityNameCorrect($capname, $plugin);
                 foreach (array_keys($data) as $datakey) {
-                    $this->assertContains($datakey, $expecteddatakeys);
+                    $this->assertContainsEquals($datakey, $expecteddatakeys);
                 }
 
                 if (isset($data['archetypes'])) {

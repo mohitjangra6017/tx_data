@@ -767,7 +767,7 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $rb = reportbuilder::create_embedded($this->shortname, $config);
         // should return the correct SQL fragment if a parameter restriction is set
         $restrictions = $rb->get_param_restrictions();
-        $this->assertRegExp('(base.userid\s+=\s+:[a-z0-9]+)', $restrictions[0]);
+        $this->assertMatchesRegularExpression('(base.userid\s+=\s+:[a-z0-9]+)', $restrictions[0]);
 
         $this->resetAfterTest(true);
     }
@@ -806,12 +806,12 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $rb = reportbuilder::create($reportid);
         $restrictions = $rb->get_content_restrictions();
         // should return the appropriate SQL snippet to OR the restrictions if content mode = 1
-        $this->assertRegExp('/\(\s\(auser\.id\s+=\s+:[a-z0-9_]+\)\s+OR\s+\(base\.timemodified\s+>\s+[0-9]+\s+AND\s+base\.timemodified\s+!=\s+0\s+\)\)/', $restrictions[0]);
+        $this->assertMatchesRegularExpression('/\(\s\(auser\.id\s+=\s+:[a-z0-9_]+\)\s+OR\s+\(base\.timemodified\s+>\s+[0-9]+\s+AND\s+base\.timemodified\s+!=\s+0\s+\)\)/', $restrictions[0]);
         $DB->set_field('report_builder', 'contentmode', REPORT_BUILDER_CONTENT_MODE_ALL, array('id' => $reportid));
         $rb = reportbuilder::create($reportid);
         $restrictions = $rb->get_content_restrictions();
         // should return the appropriate SQL snippet to AND the restrictions if content mode = 2
-        $this->assertRegExp('/\(\s\(auser\.id\s+=\s+:[a-z0-9_]+\)\s+AND\s+\(base\.timemodified\s+>\s+[0-9]+\s+AND\s+base\.timemodified\s+!=\s+0\s+\)\)/', $restrictions[0]);
+        $this->assertMatchesRegularExpression('/\(\s\(auser\.id\s+=\s+:[a-z0-9_]+\)\s+AND\s+\(base\.timemodified\s+>\s+[0-9]+\s+AND\s+base\.timemodified\s+!=\s+0\s+\)\)/', $restrictions[0]);
 
         // Test we can actually display this report with these restrictions.
         $rb->display_table(true);
@@ -848,15 +848,15 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $DB->insert_record('report_builder_settings', $todb);
         $rb = reportbuilder::create($reportid);
         // should return the appropriate text description if content mode = 1
-        $this->assertRegExp('/The User is ".*" or The completion date occurred after .*/', current($rb->get_restriction_descriptions('content')));
+        $this->assertMatchesRegularExpression('/The User is ".*" or The completion date occurred after .*/', current($rb->get_restriction_descriptions('content')));
         $DB->set_field('report_builder', 'contentmode', REPORT_BUILDER_CONTENT_MODE_ALL, array('id' => $reportid));
         $rb = reportbuilder::create($reportid);
         // should return the appropriate array of text descriptions if content mode = 2
         $restrictions = $rb->get_restriction_descriptions('content');
         $firstrestriction = current($restrictions);
         $secondrestriction = next($restrictions);
-        $this->assertRegExp('/^The User is ".*"$/', $firstrestriction);
-        $this->assertRegExp('/^The completion date occurred after/', $secondrestriction);
+        $this->assertMatchesRegularExpression('/^The User is ".*"$/', $firstrestriction);
+        $this->assertMatchesRegularExpression('/^The completion date occurred after/', $secondrestriction);
 
         $this->resetAfterTest(true);
     }
@@ -870,9 +870,9 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $this->assertEquals(17, count($columns));
         // the strings should have the correct format
         // can't check exactly because different dbs use different concat format
-        $this->assertRegExp('/auser\.firstname/', current($columns));
-        $this->assertRegExp('/auser\.lastname/', current($columns));
-        $this->assertRegExp('/user_namelink/', current($columns));
+        $this->assertMatchesRegularExpression('/auser\.firstname/', current($columns));
+        $this->assertMatchesRegularExpression('/auser\.lastname/', current($columns));
+        $this->assertMatchesRegularExpression('/user_namelink/', current($columns));
 
         $this->resetAfterTest(true);
     }
@@ -1072,14 +1072,14 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $sql_query_filtered = $rb->build_query(false, true);
         $sql_query_unfiltered = $rb->build_query(false, false);
         // if counting records, the SQL should include the string "count(*)"
-        $this->assertRegExp('/count\(\*\)/i', $sql_count_filtered[0]);
-        $this->assertRegExp('/count\(\*\)/i', $sql_count_unfiltered[0]);
+        $this->assertMatchesRegularExpression('/count\(\*\)/i', $sql_count_filtered[0]);
+        $this->assertMatchesRegularExpression('/count\(\*\)/i', $sql_count_unfiltered[0]);
         // if not counting records, the SQL should not include the string "count(*)"
-        $this->assertNotRegExp('/count\(\*\)/i', $sql_query_filtered[0]);
-        $this->assertNotRegExp('/count\(\*\)/i', $sql_query_unfiltered[0]);
+        $this->assertDoesNotMatchRegularExpression('/count\(\*\)/i', $sql_query_filtered[0]);
+        $this->assertDoesNotMatchRegularExpression('/count\(\*\)/i', $sql_query_unfiltered[0]);
         // if not filtered, the SQL should include the string "where (1=1) " with no other clauses
-        $this->assertRegExp('/where \(\s+1=1\s+\)\s*/i', $sql_count_unfiltered[0]);
-        $this->assertRegExp('/where \(\s+1=1\s+\)\s*/i', $sql_query_unfiltered[0]);
+        $this->assertMatchesRegularExpression('/where \(\s+1=1\s+\)\s*/i', $sql_count_unfiltered[0]);
+        $this->assertMatchesRegularExpression('/where \(\s+1=1\s+\)\s*/i', $sql_query_unfiltered[0]);
         // hard to do further testing as no actual data or tables exist
 
         // delete complex query from session

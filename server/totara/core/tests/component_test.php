@@ -54,7 +54,7 @@ class totara_core_component_testcase extends advanced_testcase {
         foreach ($displayclasses as $displayclass) {
             $this->assertStringContainsString('rb\aggregate\\', $displayclass);
         }
-        $this->assertNotContains('totara_reportbuilder\rb\aggregate\base', $displayclasses);
+        $this->assertNotContainsEquals('totara_reportbuilder\rb\aggregate\base', $displayclasses);
 
         $displayclasses = core_component::get_namespace_classes('rb\aggregate', null, null, false);
         $this->assertIsArray($displayclasses);

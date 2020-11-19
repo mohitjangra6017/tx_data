@@ -108,7 +108,7 @@ class totara_reportbuilder_rb_findprograms_embedded_cache_testcase extends repor
         $was = array();
         foreach ($result as $r) {
              $this->assertStringMatchesFormat('Program level %d', $r->prog_proglinkicon);
-             $this->assertNotContains($r->id, $was);
+             $this->assertNotContainsEquals($r->id, $was);
              $was[] = $r->id;
         }
     }

@@ -102,7 +102,7 @@ class totara_competency_competency_aggregator_users_source_testcase extends \adv
         $this->assertCount(2, $users);
 
         $users = $users->to_array();
-        $this->assertContains(
+        $this->assertContainsEquals(
             [
                 'user_id' => $user1->id,
                 'assignment_id' => $assignment1->id,
@@ -110,7 +110,7 @@ class totara_competency_competency_aggregator_users_source_testcase extends \adv
             ],
             $users
         );
-        $this->assertContains(
+        $this->assertContainsEquals(
             [
                 'user_id' => $user2->id,
                 'assignment_id' => $assignment2->id,
@@ -255,7 +255,7 @@ class totara_competency_competency_aggregator_users_source_testcase extends \adv
         $this->assertCount(2, $users);
 
         $users = $users->to_array();
-        $this->assertContains(
+        $this->assertContainsEquals(
             [
                 'user_id' => $user1->id,
                 'assignment_id' => $assignment1->id,
@@ -263,7 +263,7 @@ class totara_competency_competency_aggregator_users_source_testcase extends \adv
             ],
             $users
         );
-        $this->assertContains(
+        $this->assertContainsEquals(
             [
                 'user_id' => $user2->id,
                 'assignment_id' => $assignment2->id,

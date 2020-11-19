@@ -2006,7 +2006,7 @@ ORDER BY tt1.groupid";
         $params = [2, 1];
         $rawsql = $DB::sql($select, $params);
         $this->assertInstanceOf(sql::class, $rawsql);
-        $this->assertRegExp('/WHERE a = :uq_param_\d+ AND b = :uq_param_\d+/', $rawsql->get_sql());
+        $this->assertMatchesRegularExpression('/WHERE a = :uq_param_\d+ AND b = :uq_param_\d+/', $rawsql->get_sql());
         $this->assertSame([1, 2], array_values($rawsql->get_params()));
 
         // General execute first.
@@ -2649,7 +2649,7 @@ ORDER BY tt1.groupid";
             // This should not be reached
             $this->fail('Expected transaction to be failed.');
         } catch (Exception $e) {
-            $this->assertRegExp('/nested transaction failed/', $e);
+            $this->assertMatchesRegularExpression('/nested transaction failed/', $e);
         }
 
         // The main transaction is still open and can be committed

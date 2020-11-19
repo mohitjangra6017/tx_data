@@ -383,8 +383,8 @@ class core_grouplib_testcase extends advanced_testcase {
         $this->assertSame($group3->name, $data->groups[$group3->id]->name);
 
         // Check we have the expected number of groupings.
-        $this->assertContains($grouping1->id, array_keys($data->groupings));
-        $this->assertContains($grouping2->id, array_keys($data->groupings));
+        $this->assertContainsEquals($grouping1->id, array_keys($data->groupings));
+        $this->assertContainsEquals($grouping2->id, array_keys($data->groupings));
 
         // Test a grouping-id is mapped correctly.
         $this->assertEquals($grouping2->name, $data->groupings[$grouping2->id]->name);
@@ -424,33 +424,33 @@ class core_grouplib_testcase extends advanced_testcase {
         $groups  = groups_get_all_groups($course->id);
         $groupkeys = array_keys($groups);
         $this->assertCount(4, $groups);
-        $this->assertContains($group1->id, $groupkeys);
-        $this->assertContains($group2->id, $groupkeys);
-        $this->assertContains($group3->id, $groupkeys);
-        $this->assertContains($group4->id, $groupkeys);
+        $this->assertContainsEquals($group1->id, $groupkeys);
+        $this->assertContainsEquals($group2->id, $groupkeys);
+        $this->assertContainsEquals($group3->id, $groupkeys);
+        $this->assertContainsEquals($group4->id, $groupkeys);
 
         $groups  = groups_get_all_groups($course->id, null, $grouping1->id);
         $groupkeys = array_keys($groups);
         $this->assertCount(2, $groups);
-        $this->assertContains($group1->id, $groupkeys);
-        $this->assertContains($group2->id, $groupkeys);
-        $this->assertNotContains($group3->id, $groupkeys);
-        $this->assertNotContains($group4->id, $groupkeys);
+        $this->assertContainsEquals($group1->id, $groupkeys);
+        $this->assertContainsEquals($group2->id, $groupkeys);
+        $this->assertNotContainsEquals($group3->id, $groupkeys);
+        $this->assertNotContainsEquals($group4->id, $groupkeys);
 
         $groups  = groups_get_all_groups($course->id, null, $grouping2->id);
         $groupkeys = array_keys($groups);
         $this->assertCount(2, $groups);
-        $this->assertNotContains($group1->id, $groupkeys);
-        $this->assertNotContains($group2->id, $groupkeys);
-        $this->assertContains($group3->id, $groupkeys);
-        $this->assertContains($group4->id, $groupkeys);
+        $this->assertNotContainsEquals($group1->id, $groupkeys);
+        $this->assertNotContainsEquals($group2->id, $groupkeys);
+        $this->assertContainsEquals($group3->id, $groupkeys);
+        $this->assertContainsEquals($group4->id, $groupkeys);
 
         // Test this function using an alternate column for the result index
         $groups  = groups_get_all_groups($course->id, null, $grouping2->id, 'g.name, g.id');
         $groupkeys = array_keys($groups);
         $this->assertCount(2, $groups);
-        $this->assertNotContains($group3->id, $groupkeys);
-        $this->assertContains($group3->name, $groupkeys);
+        $this->assertNotContainsEquals($group3->id, $groupkeys);
+        $this->assertContainsEquals($group3->name, $groupkeys);
         $this->assertEquals($group3->id, $groups[$group3->name]->id);
     }
 

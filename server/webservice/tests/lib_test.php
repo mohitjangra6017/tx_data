@@ -403,7 +403,7 @@ class webservice_test extends advanced_testcase {
         $tokenrecord = $DB->get_record('external_tokens', array());
         // The token should 32 characters long and be alphanumeric.
         $this->assertEquals(32, strlen($tokenrecord->token));
-        $this->assertRegExp('/^[A-Za-z0-9]+$/', $tokenrecord->token);
+        $this->assertMatchesRegularExpression('/^[A-Za-z0-9]+$/', $tokenrecord->token);
         $this->assertEquals(EXTERNAL_TOKEN_PERMANENT, $tokenrecord->tokentype);
         $this->assertEquals($user->id, $tokenrecord->userid);
 

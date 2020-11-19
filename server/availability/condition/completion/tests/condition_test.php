@@ -199,7 +199,7 @@ class availability_completion_condition_testcase extends advanced_testcase {
         $this->assertFalse($cond->is_available(false, $info, true, $user->id));
         $information = $cond->get_description(false, false, $info);
         $information = \core_availability\info::format_info($information, $course);
-        $this->assertRegExp('~Page!.*is marked complete~', $information);
+        $this->assertMatchesRegularExpression('~Page!.*is marked complete~', $information);
         $this->assertTrue($cond->is_available(true, $info, true, $user->id));
 
         // INCOMPLETE state (true).
@@ -209,7 +209,7 @@ class availability_completion_condition_testcase extends advanced_testcase {
         $this->assertFalse($cond->is_available(true, $info, true, $user->id));
         $information = $cond->get_description(false, true, $info);
         $information = \core_availability\info::format_info($information, $course);
-        $this->assertRegExp('~Page!.*is marked complete~', $information);
+        $this->assertMatchesRegularExpression('~Page!.*is marked complete~', $information);
 
         // Mark page complete.
         $completion = new completion_info($course);
@@ -222,7 +222,7 @@ class availability_completion_condition_testcase extends advanced_testcase {
         $this->assertFalse($cond->is_available(true, $info, true, $user->id));
         $information = $cond->get_description(false, true, $info);
         $information = \core_availability\info::format_info($information, $course);
-        $this->assertRegExp('~Page!.*is incomplete~', $information);
+        $this->assertMatchesRegularExpression('~Page!.*is incomplete~', $information);
 
         // INCOMPLETE state (false).
         $cond = new condition((object)array(
@@ -230,7 +230,7 @@ class availability_completion_condition_testcase extends advanced_testcase {
         $this->assertFalse($cond->is_available(false, $info, true, $user->id));
         $information = $cond->get_description(false, false, $info);
         $information = \core_availability\info::format_info($information, $course);
-        $this->assertRegExp('~Page!.*is incomplete~', $information);
+        $this->assertMatchesRegularExpression('~Page!.*is incomplete~', $information);
         $this->assertTrue($cond->is_available(true, $info,
                 true, $user->id));
 
@@ -257,7 +257,7 @@ class availability_completion_condition_testcase extends advanced_testcase {
         $this->assertFalse($cond->is_available(false, $info, true, $user->id));
         $information = $cond->get_description(false, false, $info);
         $information = \core_availability\info::format_info($information, $course);
-        $this->assertRegExp('~Assign!.*is complete and passed~', $information);
+        $this->assertMatchesRegularExpression('~Assign!.*is complete and passed~', $information);
         $this->assertTrue($cond->is_available(true, $info, true, $user->id));
 
         $cond = new condition((object)array(
@@ -265,7 +265,7 @@ class availability_completion_condition_testcase extends advanced_testcase {
         $this->assertFalse($cond->is_available(false, $info, true, $user->id));
         $information = $cond->get_description(false, false, $info);
         $information = \core_availability\info::format_info($information, $course);
-        $this->assertRegExp('~Assign!.*is complete and failed~', $information);
+        $this->assertMatchesRegularExpression('~Assign!.*is complete and failed~', $information);
         $this->assertTrue($cond->is_available(true, $info, true, $user->id));
 
         // Change the grade to be complete and failed.
@@ -286,7 +286,7 @@ class availability_completion_condition_testcase extends advanced_testcase {
         $this->assertFalse($cond->is_available(false, $info, true, $user->id));
         $information = $cond->get_description(false, false, $info);
         $information = \core_availability\info::format_info($information, $course);
-        $this->assertRegExp('~Assign!.*is complete and passed~', $information);
+        $this->assertMatchesRegularExpression('~Assign!.*is complete and passed~', $information);
         $this->assertTrue($cond->is_available(true, $info, true, $user->id));
 
         $cond = new condition((object)array(
@@ -295,7 +295,7 @@ class availability_completion_condition_testcase extends advanced_testcase {
         $this->assertFalse($cond->is_available(true, $info, true, $user->id));
         $information = $cond->get_description(false, true, $info);
         $information = \core_availability\info::format_info($information, $course);
-        $this->assertRegExp('~Assign!.*is not complete and failed~', $information);
+        $this->assertMatchesRegularExpression('~Assign!.*is not complete and failed~', $information);
 
         // Now change it to pass.
         self::set_grade($assignrow, $user->id, 60);
@@ -316,14 +316,14 @@ class availability_completion_condition_testcase extends advanced_testcase {
         $this->assertFalse($cond->is_available(true, $info, true, $user->id));
         $information = $cond->get_description(false, true, $info);
         $information = \core_availability\info::format_info($information, $course);
-        $this->assertRegExp('~Assign!.*is not complete and passed~', $information);
+        $this->assertMatchesRegularExpression('~Assign!.*is not complete and passed~', $information);
 
         $cond = new condition((object)array(
                 'cm' => (int)$assigncm->id, 'e' => COMPLETION_COMPLETE_FAIL));
         $this->assertFalse($cond->is_available(false, $info, true, $user->id));
         $information = $cond->get_description(false, false, $info);
         $information = \core_availability\info::format_info($information, $course);
-        $this->assertRegExp('~Assign!.*is complete and failed~', $information);
+        $this->assertMatchesRegularExpression('~Assign!.*is complete and failed~', $information);
         $this->assertTrue($cond->is_available(true, $info, true, $user->id));
 
         // Simulate deletion of an activity by using an invalid cmid. These
@@ -333,7 +333,7 @@ class availability_completion_condition_testcase extends advanced_testcase {
         $this->assertFalse($cond->is_available(false, $info, true, $user->id));
         $information = $cond->get_description(false, false, $info);
         $information = \core_availability\info::format_info($information, $course);
-        $this->assertRegExp('~(Missing activity).*is marked complete~', $information);
+        $this->assertMatchesRegularExpression('~(Missing activity).*is marked complete~', $information);
         $this->assertFalse($cond->is_available(true, $info, true, $user->id));
         $cond = new condition((object)array(
                 'cm' => ($assigncm->id + 100), 'e' => COMPLETION_INCOMPLETE));

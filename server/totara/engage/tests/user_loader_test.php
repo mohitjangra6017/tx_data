@@ -130,7 +130,7 @@ class totara_engage_user_loader_testcase extends advanced_testcase {
         $users = $result->get_items()->all();
 
         foreach ($users as $user) {
-            self::assertContains($user->id, $user_ids);
+            self::assertContainsEquals($user->id, $user_ids);
         }
     }
 

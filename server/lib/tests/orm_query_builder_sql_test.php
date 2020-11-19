@@ -1184,7 +1184,7 @@ class core_orm_builder_sql_testcase extends orm_query_builder_base {
             $this->fail('Setting alias with disallowed characters should fail.');
         } catch (Exception $exception) {
             $this->assertInstanceOf(coding_exception::class, $exception);
-            $this->assertRegExp('/Table aliases can only be alpha numeric with underscores/', $exception->getMessage());
+            $this->assertMatchesRegularExpression('/Table aliases can only be alpha numeric with underscores/', $exception->getMessage());
         }
 
         $builder = builder::table('test_table');
@@ -1196,7 +1196,7 @@ class core_orm_builder_sql_testcase extends orm_query_builder_base {
             $this->fail('Setting alias with disallowed characters should fail.');
         } catch (Exception $exception) {
             $this->assertInstanceOf(coding_exception::class, $exception);
-            $this->assertRegExp('/Table aliases can only be alpha numeric with underscores/', $exception->getMessage());
+            $this->assertMatchesRegularExpression('/Table aliases can only be alpha numeric with underscores/', $exception->getMessage());
         }
     }
 

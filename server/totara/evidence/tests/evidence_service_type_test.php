@@ -236,7 +236,7 @@ class totara_evidence_service_type_testcase extends totara_evidence_testcase {
         $this->assert_webservice_success($response_two);
         for ($i = 0; $i < $type_count; $i++) {
             if (stripos($expected[$i]['label'], 'hidden') !== false) {
-                $this->assertNotContains($expected[$i], array_values($response_one['data']));
+                $this->assertNotContainsEquals($expected[$i], array_values($response_one['data']));
             } else {
                 $this->assertContains($expected[$i], array_values($response_one['data']));
             }

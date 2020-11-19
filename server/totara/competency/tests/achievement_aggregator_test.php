@@ -220,9 +220,9 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
         $this->assertCount(2, $via_records);
         $achievement_ids = [$achievement1->id, $achievement2->id];
         $via_record1 = array_pop($via_records);
-        $this->assertContains($via_record1->pathway_achievement_id, $achievement_ids);
+        $this->assertContainsEquals($via_record1->pathway_achievement_id, $achievement_ids);
         $via_record2 = array_pop($via_records);
-        $this->assertContains($via_record2->pathway_achievement_id, $achievement_ids);
+        $this->assertContainsEquals($via_record2->pathway_achievement_id, $achievement_ids);
 
         // This should ensure that they we did get a via record for both achievements.
         $this->assertNotEquals($via_record1->pathway_achievement_id, $via_record2->pathway_achievement_id);

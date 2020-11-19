@@ -351,7 +351,7 @@ abstract class totara_criteria_course_achievements_testcase extends advanced_tes
                 $visible_courses[] = $item['course']->fullname;
             }
         }
-        $this->assertNotContains($course_name, $visible_courses);
+        $this->assertNotContainsEquals($course_name, $visible_courses);
     }
 
     protected function create_data() {

@@ -744,7 +744,7 @@ class totara_plan_components_testcase extends advanced_testcase {
         $this->assertStringContainsString('Programs in learning plan "'.$plan->name .'" updated:', $message->fullmessage);
         $this->assertStringContainsString('Some other update info', $message->fullmessage);
         $this->assertStringContainsString($component_program->get_url()->out(true), $message->fullmessagehtml);
-        $this->assertNotContains($message->useridto, array($manager1->id, $manager2->id, $manager3->id));
+        $this->assertNotContainsEquals($message->useridto, array($manager1->id, $manager2->id, $manager3->id));
         $this->assertEquals($learner1->id, $message->useridto);
         $this->assertNotEquals($learner2->id, $message->useridto);
     }
@@ -826,7 +826,7 @@ class totara_plan_components_testcase extends advanced_testcase {
         $this->assertStringContainsString('Programs in learning plan "'.$plan->name .'" declined:', $message->fullmessage);
         $this->assertStringContainsString('The reason given for this decision was: The disapproval reason', $message->fullmessage);
         $this->assertStringContainsString($component_program->get_url()->out(true), $message->fullmessagehtml);
-        $this->assertNotContains($message->useridto, array($manager1->id, $manager2->id, $manager3->id));
+        $this->assertNotContainsEquals($message->useridto, array($manager1->id, $manager2->id, $manager3->id));
         $this->assertEquals($learner1->id, $message->useridto);
         $this->assertNotEquals($learner2->id, $message->useridto);
     }
@@ -901,7 +901,7 @@ class totara_plan_components_testcase extends advanced_testcase {
         $this->assertStringContainsString('Programs in learning plan "'.$plan->name .'" completed:', $message->fullmessage);
         $this->assertStringContainsString('Some completion text', $message->fullmessage);
         $this->assertStringContainsString($component_program->get_url()->out(true), $message->fullmessagehtml);
-        $this->assertNotContains($message->useridto, array($manager1->id, $manager2->id, $manager3->id));
+        $this->assertNotContainsEquals($message->useridto, array($manager1->id, $manager2->id, $manager3->id));
         $this->assertEquals($learner1->id, $message->useridto);
         $this->assertNotEquals($learner2->id, $message->useridto);
     }

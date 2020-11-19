@@ -319,25 +319,25 @@ class core_blog_userdata_external_testcase extends advanced_testcase {
             $exportedposts[$blog['id']] = $blog['posts'];
             $exportedtags[$blog['id']] = $blog['tags'];
         }
-        $this->assertContains($fixtures->blog1->id, $exportedids);
-        $this->assertContains($fixtures->blog2->id, $exportedids);
+        $this->assertContainsEquals($fixtures->blog1->id, $exportedids);
+        $this->assertContainsEquals($fixtures->blog2->id, $exportedids);
 
         // Check if we have expected data for blog 1.
         $this->assertCount(2, $exportedtags[$fixtures->blog1->id]);
-        $this->assertContains('tag1', $exportedtags[$fixtures->blog1->id]);
-        $this->assertContains('tag2', $exportedtags[$fixtures->blog1->id]);
+        $this->assertContainsEquals('tag1', $exportedtags[$fixtures->blog1->id]);
+        $this->assertContainsEquals('tag2', $exportedtags[$fixtures->blog1->id]);
 
         $this->assertCount(1, $exportedposts[$fixtures->blog1->id]);
         $exportedpostids = array_column($exportedposts[$fixtures->blog1->id], 'id');
-        $this->assertContains($fixtures->blogentry1->id, $exportedpostids);
+        $this->assertContainsEquals($fixtures->blogentry1->id, $exportedpostids);
 
         // Check if we have expected data for blog 2.
         $this->assertCount(0, $exportedtags[$fixtures->blog2->id]);
 
         $this->assertCount(2, $exportedposts[$fixtures->blog2->id]);
         $exportedpostids = array_column($exportedposts[$fixtures->blog2->id], 'id');
-        $this->assertContains($fixtures->blogentry2->id, $exportedpostids);
-        $this->assertContains($fixtures->blogentry3->id, $exportedpostids);
+        $this->assertContainsEquals($fixtures->blogentry2->id, $exportedpostids);
+        $this->assertContainsEquals($fixtures->blogentry3->id, $exportedpostids);
     }
 
     /**

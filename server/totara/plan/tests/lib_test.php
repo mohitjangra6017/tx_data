@@ -180,7 +180,7 @@ class totara_plan_lib_testcase extends advanced_testcase {
         $this->shift_completions_to_certified(time());
         $visible_tabs = dp_get_rol_tabs_visible($user->id);
         $this->assertContains('certifications', $visible_tabs);
-        $this->assertNotContains('programs', $visible_tabs);
+        $this->assertNotContainsEquals('programs', $visible_tabs);
     }
 
     /**
@@ -214,6 +214,6 @@ class totara_plan_lib_testcase extends advanced_testcase {
 
         $visible_tabs = dp_get_rol_tabs_visible($user->id);
         $this->assertContains('programs', $visible_tabs);
-        $this->assertNotContains('certifications', $visible_tabs);
+        $this->assertNotContainsEquals('certifications', $visible_tabs);
     }
 }

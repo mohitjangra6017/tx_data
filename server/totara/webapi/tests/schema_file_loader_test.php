@@ -40,7 +40,7 @@ class totara_webapi_schema_file_loader_test extends \advanced_testcase {
         $this->assertArrayHasKey($CFG->dirroot.'/totara/webapi/webapi/status.graphqls', $files);
 
         foreach ($files as $filename => $content) {
-            $this->assertRegExp('/[a-z0-9_-]+\.graphqls$/', $filename);
+            $this->assertMatchesRegularExpression('/[a-z0-9_-]+\.graphqls$/', $filename);
             $this->assertFileExists($filename);
             $this->assertFileIsReadable($filename);
             $this->assertNotEmpty($content);

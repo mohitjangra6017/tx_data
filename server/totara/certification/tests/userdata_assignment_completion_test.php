@@ -321,19 +321,19 @@ class totara_certification_userdata_assignment_completion_test extends totara_pr
 
         // Check that the expected programs are there.
         $certifids = array_column($completion, 'certifid');
-        $this->assertContains($fixtures->cert1->id, $certifids);
-        $this->assertContains($fixtures->cert2->id, $certifids);
-        $this->assertContains($fixtures->cert3->id, $certifids);
+        $this->assertContainsEquals($fixtures->cert1->id, $certifids);
+        $this->assertContainsEquals($fixtures->cert2->id, $certifids);
+        $this->assertContainsEquals($fixtures->cert3->id, $certifids);
 
         $historycertifids = array_column($history, 'certifid');
-        $this->assertContains($fixtures->cert1->id, $historycertifids);
-        $this->assertContains($fixtures->cert2->id, $historycertifids);
-        $this->assertContains($fixtures->cert3->id, $historycertifids);
+        $this->assertContainsEquals($fixtures->cert1->id, $historycertifids);
+        $this->assertContainsEquals($fixtures->cert2->id, $historycertifids);
+        $this->assertContainsEquals($fixtures->cert3->id, $historycertifids);
 
         $programids = array_column($extension, 'programid');
-        $this->assertContains($fixtures->program1->id, $programids);
-        $this->assertContains($fixtures->program2->id, $programids);
-        $this->assertContains($fixtures->program3->id, $programids);
+        $this->assertContainsEquals($fixtures->program1->id, $programids);
+        $this->assertContainsEquals($fixtures->program2->id, $programids);
+        $this->assertContainsEquals($fixtures->program3->id, $programids);
 
         // Make sure history is not the same as completion.
         $completionids = array_column($completion, 'id');
@@ -386,16 +386,16 @@ class totara_certification_userdata_assignment_completion_test extends totara_pr
 
         // Check that the expected programs are there.
         $certifids = array_column($completion, 'certifid');
-        $this->assertContains($fixtures->cert1->id, $certifids);
-        $this->assertContains($fixtures->cert2->id, $certifids);
+        $this->assertContainsEquals($fixtures->cert1->id, $certifids);
+        $this->assertContainsEquals($fixtures->cert2->id, $certifids);
 
         $historycertifids = array_column($history, 'certifid');
-        $this->assertContains($fixtures->cert1->id, $historycertifids);
-        $this->assertContains($fixtures->cert2->id, $historycertifids);
+        $this->assertContainsEquals($fixtures->cert1->id, $historycertifids);
+        $this->assertContainsEquals($fixtures->cert2->id, $historycertifids);
 
         $programids = array_column($extension, 'programid');
-        $this->assertContains($fixtures->program1->id, $programids);
-        $this->assertContains($fixtures->program2->id, $programids);
+        $this->assertContainsEquals($fixtures->program1->id, $programids);
+        $this->assertContainsEquals($fixtures->program2->id, $programids);
 
         // Make sure history is not the same as completion.
         $completionids = array_column($completion, 'id');
@@ -447,13 +447,13 @@ class totara_certification_userdata_assignment_completion_test extends totara_pr
 
         // Check that the expected programs are there.
         $certifids = array_column($completion, 'certifid');
-        $this->assertContains($fixtures->cert2->id, $certifids);
+        $this->assertContainsEquals($fixtures->cert2->id, $certifids);
 
         $historycertifids = array_column($history, 'certifid');
-        $this->assertContains($fixtures->cert2->id, $historycertifids);
+        $this->assertContainsEquals($fixtures->cert2->id, $historycertifids);
 
         $programids = array_column($extension, 'programid');
-        $this->assertContains($fixtures->program2->id, $programids);
+        $this->assertContainsEquals($fixtures->program2->id, $programids);
 
         // Make sure history is not the same as completion.
         $completionids = array_column($completion, 'id');

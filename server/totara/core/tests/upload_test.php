@@ -60,7 +60,7 @@ class totara_core_upload_testcase extends advanced_testcase {
             $this->assertContains($record->filename, ['pokus.txt', '.']);
             $this->assertEquals('totara_core', $record->component);
             $this->assertEquals('test', $record->filearea);
-            $this->assertNotContains($record->filename, $previousnames);
+            $this->assertNotContainsEquals($record->filename, $previousnames);
             $previousnames[] = $record->filename;
         }
     }
@@ -84,7 +84,7 @@ class totara_core_upload_testcase extends advanced_testcase {
             $this->assertEquals('totara_core', $record->component);
             $this->assertEquals('test', $record->filearea);
             $this->assertContains($record->filename, ['hocus.txt', 'pokus.txt', '.']);
-            $this->assertNotContains($record->filename, $previousnames);
+            $this->assertNotContainsEquals($record->filename, $previousnames);
             $previousnames[] = $record->filename;
         }
     }
@@ -117,7 +117,7 @@ class totara_core_upload_testcase extends advanced_testcase {
             $this->assertEquals('user', $other->component);
             $this->assertEquals('draft', $other->filearea);
             $this->assertContainsEquals($other->filename, ['pokus.txt', '.']);
-            $this->assertNotContains($other->filename, $previousnames);
+            $this->assertNotContainsEquals($other->filename, $previousnames);
             $previousnames[] = $other->filename;
         }
         // Confirm that only requested file in draft area removed.
@@ -129,7 +129,7 @@ class totara_core_upload_testcase extends advanced_testcase {
             $this->assertEquals('user', $record->component);
             $this->assertEquals('draft', $record->filearea);
             $this->assertContainsEquals($record->filename, ['hocus.txt', '.']);
-            $this->assertNotContains($record->filename, $previousnames);
+            $this->assertNotContainsEquals($record->filename, $previousnames);
             $previousnames[] = $record->filename;
         }
     }

@@ -816,7 +816,7 @@ class mod_quiz_userdata_attempts_testcase extends advanced_testcase {
                 foreach ($attempt['questions'] as $question) {
                     $this->assertArrayHasKey($key, $question);
                     if (is_array($value) && is_array($question[$key])) {
-                        $this->assertContains($value, $question[$key]);
+                        $this->assertContainsEquals($value, $question[$key]);
                     } else {
                         $this->assertEquals($value, $question[$key]);
                     }

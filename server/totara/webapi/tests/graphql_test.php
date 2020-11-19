@@ -44,7 +44,7 @@ class totara_webapi_graphql_testcase extends advanced_testcase {
         $oeprationcapabilities = graphql::get_role_capabilities($type);
         $this->assertIsArray($oeprationcapabilities);
         foreach ($oeprationcapabilities as $operationname => $capabilities) {
-            $this->assertRegExp('/^[a-z]+_[a-z0-9_]+$/D', $operationname);
+            $this->assertMatchesRegularExpression('/^[a-z]+_[a-z0-9_]+$/D', $operationname);
             $this->assertIsArray($capabilities);
         }
     }

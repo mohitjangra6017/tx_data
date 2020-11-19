@@ -327,7 +327,7 @@ class totara_job_userdata_job_assignments_testcase extends \advanced_testcase {
                 'filename' => $expectedfile->get_filename(),
                 'contenthash' => $expectedfile->get_contenthash()
             ];
-            $this->assertContains($expectedfileinfo, $assignment['files']);
+            $this->assertContainsEquals($expectedfileinfo, $assignment['files']);
         }
 
         $this->assertArrayHasKey($file1->get_id(), $export->files);
@@ -344,7 +344,7 @@ class totara_job_userdata_job_assignments_testcase extends \advanced_testcase {
             'filename' => $file3->get_filename(),
             'contenthash' => $file3->get_contenthash()
         ];
-        $this->assertContains($expectedfileinfo, $assignment['files']);
+        $this->assertContainsEquals($expectedfileinfo, $assignment['files']);
 
         // Check that the export doesn't contain anything.
         job_assignments::execute_purge($data->targetuser, context_system::instance());

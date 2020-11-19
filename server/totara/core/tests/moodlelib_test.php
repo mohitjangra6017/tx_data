@@ -248,7 +248,7 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
         $this->assertEquals(0, $deluser->picture);
         $this->assertSame('', $deluser->idnumber);
         $this->assertSame('', $deluser->email);
-        $this->assertRegExp('/^deleted_[a-z0-9]+$/', $deluser->username);
+        $this->assertMatchesRegularExpression('/^deleted_[a-z0-9]+$/', $deluser->username);
         $this->assertSame(AUTH_PASSWORD_NOT_CACHED, $deluser->password);
         $this->assertFalse($DB->record_exists('context', array('contextlevel' => CONTEXT_USER, 'instanceid' => $user3->id)));
 
@@ -263,7 +263,7 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
         $this->assertEquals(0, $deluser->picture);
         $this->assertSame('', $deluser->idnumber);
         $this->assertSame(md5($user1->username), $deluser->email);
-        $this->assertRegExp('/^' . preg_quote($user1->email, '/') . '\.\d*$/', $deluser->username);
+        $this->assertMatchesRegularExpression('/^' . preg_quote($user1->email, '/') . '\.\d*$/', $deluser->username);
         $this->assertSame($user1->password, $deluser->password);
         $this->assertFalse($DB->record_exists('context', array('contextlevel' => CONTEXT_USER, 'instanceid' => $user1->id)));
 
@@ -831,7 +831,7 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
         $this->assertTrue(is_dir($dir));
         $this->assertTrue(is_writable($dir));
         $this->assertTrue(remove_dir($dir));
-        $this->assertFileNotExists($dir);
+        $this->assertFileDoesNotExist($dir);
         $this->assertFalse(is_dir($dir));
 
         $structure_after = glob($pattern);
@@ -860,7 +860,7 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
         $this->assertTrue(is_dir($dir));
         $this->assertTrue(is_writable($dir));
         $this->assertTrue(remove_dir($dir));
-        $this->assertFileNotExists($dir);
+        $this->assertFileDoesNotExist($dir);
         $this->assertFalse(is_dir($dir));
 
         $structure_after = glob($pattern);
@@ -898,10 +898,10 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
         $this->assertFileExists($file2);
 
         $this->assertTrue(remove_dir($dir));
-        $this->assertFileNotExists($dir);
+        $this->assertFileDoesNotExist($dir);
         $this->assertFalse(is_dir($dir));
-        $this->assertFileNotExists($file1);
-        $this->assertFileNotExists($file2);
+        $this->assertFileDoesNotExist($file1);
+        $this->assertFileDoesNotExist($file2);
 
         $structure_after = glob($pattern);
         // Check that the structure before matches exactly the structure after.
@@ -938,10 +938,10 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
         $this->assertFileExists($file2);
 
         $this->assertTrue(remove_dir($dir));
-        $this->assertFileNotExists($dir);
+        $this->assertFileDoesNotExist($dir);
         $this->assertFalse(is_dir($dir));
-        $this->assertFileNotExists($file1);
-        $this->assertFileNotExists($file2);
+        $this->assertFileDoesNotExist($file1);
+        $this->assertFileDoesNotExist($file2);
 
         $structure_after = glob($pattern);
         // Check that the structure before matches exactly the structure after.
@@ -981,12 +981,12 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
         $this->assertFileExists($file2);
 
         $this->assertTrue(remove_dir($dir1));
-        $this->assertFileNotExists($dir1);
-        $this->assertFileNotExists($dir2);
+        $this->assertFileDoesNotExist($dir1);
+        $this->assertFileDoesNotExist($dir2);
         $this->assertFalse(is_dir($dir1));
         $this->assertFalse(is_dir($dir2));
-        $this->assertFileNotExists($file1);
-        $this->assertFileNotExists($file2);
+        $this->assertFileDoesNotExist($file1);
+        $this->assertFileDoesNotExist($file2);
 
         $structure_after = glob($pattern);
         // Check that the structure before matches exactly the structure after.
@@ -1026,12 +1026,12 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
         $this->assertFileExists($file2);
 
         $this->assertTrue(remove_dir($dir1));
-        $this->assertFileNotExists($dir1);
-        $this->assertFileNotExists($dir2);
+        $this->assertFileDoesNotExist($dir1);
+        $this->assertFileDoesNotExist($dir2);
         $this->assertFalse(is_dir($dir1));
         $this->assertFalse(is_dir($dir2));
-        $this->assertFileNotExists($file1);
-        $this->assertFileNotExists($file2);
+        $this->assertFileDoesNotExist($file1);
+        $this->assertFileDoesNotExist($file2);
 
         $structure_after = glob($pattern);
         // Check that the structure before matches exactly the structure after.
@@ -1063,11 +1063,11 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
 
         $this->assertTrue(remove_dir($dir1, true));
         $this->assertFileExists($dir1);
-        $this->assertFileNotExists($dir2);
+        $this->assertFileDoesNotExist($dir2);
         $this->assertTrue(is_dir($dir1));
         $this->assertFalse(is_dir($dir2));
-        $this->assertFileNotExists($file1);
-        $this->assertFileNotExists($file2);
+        $this->assertFileDoesNotExist($file1);
+        $this->assertFileDoesNotExist($file2);
     }
 
     /**
@@ -1075,7 +1075,7 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
      */
     public function test_remove_dir_with_an_invalid_directory() {
         global $CFG;
-        $this->assertFileNotExists($CFG->tempdir.'/invalid_dir_test');
+        $this->assertFileDoesNotExist($CFG->tempdir.'/invalid_dir_test');
         $this->assertTrue(remove_dir($CFG->tempdir.'/invalid_dir_test'));
         $this->assertTrue(remove_dir($CFG->tempdir.'/invalid_dir_test', true));
     }

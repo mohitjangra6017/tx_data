@@ -79,13 +79,13 @@ class totara_reportbuilder_rb_base_source_testcase extends advanced_testcase {
 
         self::assertIsArray($options);
         foreach ($options as $key => $values) {
-            self::assertRegExp('/^[a-z0-9_]+-[a-z0-9_]+$/', $key);
+            self::assertMatchesRegularExpression('/^[a-z0-9_]+-[a-z0-9_]+$/', $key);
             self::assertIsArray($values);
             self::assertNotEmpty($values, 'There should be at least one option.');
             self::assertEmpty(reset($values), 'The first option should always be empty.');
             self::assertSame(count($values), count(array_unique($values)), 'All options should be unique.');
             while ($value = next($values)) {
-                self::assertRegExp('/^(aggregate_|transform_)/', $value, 'All options should be either aggregate or transform.');
+                self::assertMatchesRegularExpression('/^(aggregate_|transform_)/', $value, 'All options should be either aggregate or transform.');
             }
         }
     }

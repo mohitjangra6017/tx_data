@@ -60,7 +60,7 @@ class totara_reportbuilder_renderer_testcase extends advanced_testcase {
         ob_end_clean();
 
         // Report id for export will ignore parameters, but still should work.
-        $this->assertRegExp('/action=\"[a-z\:\/\.]*course\/find\.php\"/', $out);
+        $this->assertMatchesRegularExpression('/action=\"[a-z\:\/\.]*course\/find\.php\"/', $out);
 
         // Test with instance.
         ob_start();
@@ -68,6 +68,6 @@ class totara_reportbuilder_renderer_testcase extends advanced_testcase {
         $out = ob_get_contents();
         ob_end_clean();
         // Report instance for export must keep parameters.
-        $this->assertRegExp('/action=\"[a-z\:\/\.]*course\/find\.php\?courseid=2\"/', $out);
+        $this->assertMatchesRegularExpression('/action=\"[a-z\:\/\.]*course\/find\.php\?courseid=2\"/', $out);
     }
 }

@@ -119,8 +119,8 @@ class totara_engage_fetch_contributions_testcase extends advanced_testcase {
         /** @var card $item */
         foreach ($before_delete_items as $item) {
             self::assertInstanceOf(card::class, $item);
-            self::assertContains($item->get_userid(), [$user_one->id, $user_two->id]);
-            self::assertContains($item->get_instanceid(), $resource_ids);
+            self::assertContainsEquals($item->get_userid(), [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($item->get_instanceid(), $resource_ids);
         }
 
         // Now delete the second user and fetch shared again, the result should go down to.
@@ -233,8 +233,8 @@ class totara_engage_fetch_contributions_testcase extends advanced_testcase {
         /** @var card $item */
         foreach ($before_suspend_items as $item) {
             self::assertInstanceOf(card::class, $item);
-            self::assertContains($item->get_userid(), [$user_one->id, $user_two->id]);
-            self::assertContains($item->get_instanceid(), $resource_ids);
+            self::assertContainsEquals($item->get_userid(), [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($item->get_instanceid(), $resource_ids);
         }
 
         // Now suspend the second user and fetch shared again, the result should go down to 5.
@@ -252,7 +252,7 @@ class totara_engage_fetch_contributions_testcase extends advanced_testcase {
         /** @var card $item */
         foreach ($after_suspend_items as $item) {
             self::assertInstanceOf(card::class, $item);
-            self::assertContains($item->get_userid(), [$user_two->id, $user_one->id]);
+            self::assertContainsEquals($item->get_userid(), [$user_two->id, $user_one->id]);
         }
     }
 }

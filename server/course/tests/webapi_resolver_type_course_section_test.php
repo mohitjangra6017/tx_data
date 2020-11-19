@@ -333,9 +333,9 @@ class totara_core_webapi_resolver_type_course_section_testcase extends advanced_
             $reason = array_pop($value);
             if ($format == format::FORMAT_RAW) {
                 // Check with regex to handle changing group ids.
-                $this->assertRegExp('/Not available unless: You belong to <strong>group-[0-9]*</strong>/', $reason);
+                $this->assertMatchesRegularExpression('/Not available unless: You belong to <strong>group-[0-9]*</strong>/', $reason);
             } else {
-                $this->assertRegExp('/Not available unless: You belong to group-[0-9]*/', $reason);
+                $this->assertMatchesRegularExpression('/Not available unless: You belong to group-[0-9]*/', $reason);
             }
         }
     }

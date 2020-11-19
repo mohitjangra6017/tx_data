@@ -565,13 +565,13 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
 
         list($new, $keep, $cancel) = feedback360_responder::sort_system_userids($userids_to_sort, $user1feedback1_optional);
 
-        $this->assertNotContains($deleteduser->id, $new);
-        $this->assertNotContains($suspendeduser->id, $new);
-        $this->assertNotContains($guestuser->id, $new);
+        $this->assertNotContainsEquals($deleteduser->id, $new);
+        $this->assertNotContainsEquals($suspendeduser->id, $new);
+        $this->assertNotContainsEquals($guestuser->id, $new);
 
-        $this->assertContains($user1->id, $new);
-        $this->assertContains($newuser1->id, $new);
-        $this->assertContains($newuser2->id, $new);
+        $this->assertContainsEquals($user1->id, $new);
+        $this->assertContainsEquals($newuser1->id, $new);
+        $this->assertContainsEquals($newuser2->id, $new);
         $this->assertEquals(3, count($new));
 
         $this->assertEquals(array(), $keep);
@@ -579,13 +579,13 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
 
         list($new, $keep, $cancel) = feedback360_responder::sort_system_userids($userids_to_sort, $user1feedback2_required);
 
-        $this->assertNotContains($deleteduser->id, $new);
-        $this->assertNotContains($suspendeduser->id, $new);
-        $this->assertNotContains($guestuser->id, $new);
+        $this->assertNotContainsEquals($deleteduser->id, $new);
+        $this->assertNotContainsEquals($suspendeduser->id, $new);
+        $this->assertNotContainsEquals($guestuser->id, $new);
 
-        $this->assertContains($user1->id, $new);
-        $this->assertContains($newuser1->id, $new);
-        $this->assertContains($newuser2->id, $new);
+        $this->assertContainsEquals($user1->id, $new);
+        $this->assertContainsEquals($newuser1->id, $new);
+        $this->assertContainsEquals($newuser2->id, $new);
         $this->assertEquals(3, count($new));
 
         $this->assertEquals(array(), $keep);
@@ -684,30 +684,30 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
 
         list($new, $keep, $cancel) = feedback360_responder::sort_system_userids($userids_to_sort, $feedback1userassignmentid);
 
-        $this->assertContains($newuser1->id, $new);
-        $this->assertContains($newuser2->id, $new);
+        $this->assertContainsEquals($newuser1->id, $new);
+        $this->assertContainsEquals($newuser2->id, $new);
         // As such, we can just check the size of the array is 2 and we'll know it's working,
         // but a few extra assertions below may help if debugging is necessary.
-        $this->assertNotContains($existing1->id, $new);
-        $this->assertNotContains($assignee->id, $new);
-        $this->assertNotContains($suspendeduser->id, $new);
-        $this->assertNotContains($newuser3, $new);
+        $this->assertNotContainsEquals($existing1->id, $new);
+        $this->assertNotContainsEquals($assignee->id, $new);
+        $this->assertNotContainsEquals($suspendeduser->id, $new);
+        $this->assertNotContainsEquals($newuser3->id, $new);
         $this->assertEquals(2, count($new));
 
-        $this->assertContains($existing1->id, $keep);
-        $this->assertContains($suspendeduser->id, $keep);
-        $this->assertNotContains($newuser1->id, $keep);
-        $this->assertNotContains($deleteduser->id, $keep);
-        $this->assertNotContains($existing2->id, $keep);
-        $this->assertNotContains($existing_in_feedback2->id, $keep);
+        $this->assertContainsEquals($existing1->id, $keep);
+        $this->assertContainsEquals($suspendeduser->id, $keep);
+        $this->assertNotContainsEquals($newuser1->id, $keep);
+        $this->assertNotContainsEquals($deleteduser->id, $keep);
+        $this->assertNotContainsEquals($existing2->id, $keep);
+        $this->assertNotContainsEquals($existing_in_feedback2->id, $keep);
         $this->assertEquals(2, count($keep));
 
-        $this->assertContains($existing2->id, $cancel);
-        $this->assertContains($existing3->id, $cancel);
-        $this->assertNotContains($suspendeduser->id, $cancel);
-        $this->assertNotContains($existing1->id, $cancel);
-        $this->assertNotContains($existing_in_feedback2, $cancel);
-        $this->assertNotContains($assignee->id, $cancel);
+        $this->assertContainsEquals($existing2->id, $cancel);
+        $this->assertContainsEquals($existing3->id, $cancel);
+        $this->assertNotContainsEquals($suspendeduser->id, $cancel);
+        $this->assertNotContainsEquals($existing1->id, $cancel);
+        $this->assertNotContainsEquals($existing_in_feedback2->id, $cancel);
+        $this->assertNotContainsEquals($assignee->id, $cancel);
         $this->assertEquals(2, count($cancel));
     }
 
@@ -756,13 +756,13 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
 
         $returned = feedback360_responder::get_system_users_by_assignment($feedback1userassignmentid);
 
-        $this->assertContains($existing1->id, array_keys($returned));
-        $this->assertContains($existing2->id, array_keys($returned));
-        $this->assertContains($deleteduser->id, array_keys($returned));
-        $this->assertNotContains($existing_in_feedback2->id, array_keys($returned));
-        $this->assertNotContains($newuser1->id, array_keys($returned));
-        $this->assertNotContains($newuser2->id, array_keys($returned));
-        $this->assertNotContains($assignee->id, array_keys($returned));
+        $this->assertContainsEquals($existing1->id, array_keys($returned));
+        $this->assertContainsEquals($existing2->id, array_keys($returned));
+        $this->assertContainsEquals($deleteduser->id, array_keys($returned));
+        $this->assertNotContainsEquals($existing_in_feedback2->id, array_keys($returned));
+        $this->assertNotContainsEquals($newuser1->id, array_keys($returned));
+        $this->assertNotContainsEquals($newuser2->id, array_keys($returned));
+        $this->assertNotContainsEquals($assignee->id, array_keys($returned));
         $this->assertEquals(3, count($returned));
 
         // We'll also make sure that the array keys do indeed match their user id.
@@ -858,26 +858,26 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
         $this->assertContains('new2@exameple.com', $new);
         // As such, we can just check the size of the array is 2 and we'll know it's working,
         // but a few extra assertions below may help if debugging is necessary.
-        $this->assertNotContains('existing1@example.com', $new);
-        $this->assertNotContains('existing2@example.com', $new);
-        $this->assertNotContains('existing3@example.com', $new);
-        $this->assertNotContains('existing_in_feedback2@example.com', $new);
+        $this->assertNotContainsEquals('existing1@example.com', $new);
+        $this->assertNotContainsEquals('existing2@example.com', $new);
+        $this->assertNotContainsEquals('existing3@example.com', $new);
+        $this->assertNotContainsEquals('existing_in_feedback2@example.com', $new);
         $this->assertEquals(2, count($new));
 
         $this->assertContains('existing1@example.com', $keep);
-        $this->assertNotContains('new1@example.com', $keep);
-        $this->assertNotContains('new2@exameple.com', $keep);
-        $this->assertNotContains('existing2@example.com', $keep);
-        $this->assertNotContains('existing3@example.com', $keep);
-        $this->assertNotContains('existing_in_feedback2@example.com', $keep);
+        $this->assertNotContainsEquals('new1@example.com', $keep);
+        $this->assertNotContainsEquals('new2@exameple.com', $keep);
+        $this->assertNotContainsEquals('existing2@example.com', $keep);
+        $this->assertNotContainsEquals('existing3@example.com', $keep);
+        $this->assertNotContainsEquals('existing_in_feedback2@example.com', $keep);
         $this->assertEquals(1, count($keep));
 
         $this->assertContains('existing2@example.com', $cancel);
         $this->assertContains('existing3@example.com', $cancel);
-        $this->assertNotContains('existing1@example.com', $cancel);
-        $this->assertNotContains('new1@example.com', $cancel);
-        $this->assertNotContains('new2@exameple.com', $cancel);
-        $this->assertNotContains('existing_in_feedback2@example.com', $cancel);
+        $this->assertNotContainsEquals('existing1@example.com', $cancel);
+        $this->assertNotContainsEquals('new1@example.com', $cancel);
+        $this->assertNotContainsEquals('new2@exameple.com', $cancel);
+        $this->assertNotContainsEquals('existing_in_feedback2@example.com', $cancel);
         $this->assertEquals(2, count($cancel));
     }
 
@@ -932,7 +932,7 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
 
         $this->assertContains('existing1@example.com', $returned);
         $this->assertContains('existing2@example.com', $returned);
-        $this->assertNotContains('existing_in_feedback2@example.com', $returned);
+        $this->assertNotContainsEquals('existing_in_feedback2@example.com', $returned);
         $this->assertEquals(2, count($returned));
 
         // Make sure the keys for the array are ids from the feedback360_resp_assignment.

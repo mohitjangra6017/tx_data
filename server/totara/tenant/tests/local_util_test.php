@@ -733,7 +733,7 @@ class totara_tenant_local_util_testcase extends advanced_testcase {
         $this->assertContains('firstname', $required);
         $this->assertContains('lastname', $required);
         $this->assertContains('password', $required);
-        $this->assertNotContains('middlename', $required);
+        $this->assertNotContainsEquals('middlename', $required);
 
         $required = util::get_csv_required_columns(false);
         $this->assertIsArray($required);
@@ -741,26 +741,26 @@ class totara_tenant_local_util_testcase extends advanced_testcase {
         $this->assertContains('email', $required);
         $this->assertContains('firstname', $required);
         $this->assertContains('lastname', $required);
-        $this->assertNotContains('password', $required);
-        $this->assertNotContains('middlename', $required);
+        $this->assertNotContainsEquals('password', $required);
+        $this->assertNotContainsEquals('middlename', $required);
     }
 
     public function test_get_csv_optional_columns() {
         $optional = util::get_csv_optional_columns(true);
         $this->assertIsArray($optional);
-        $this->assertNotContains('username', $optional);
-        $this->assertNotContains('email', $optional);
-        $this->assertNotContains('firstname', $optional);
-        $this->assertNotContains('lastname', $optional);
-        $this->assertNotContains('password', $optional);
+        $this->assertNotContainsEquals('username', $optional);
+        $this->assertNotContainsEquals('email', $optional);
+        $this->assertNotContainsEquals('firstname', $optional);
+        $this->assertNotContainsEquals('lastname', $optional);
+        $this->assertNotContainsEquals('password', $optional);
         $this->assertContains('middlename', $optional);
 
         $optional = util::get_csv_optional_columns(false);
         $this->assertIsArray($optional);
-        $this->assertNotContains('username', $optional);
-        $this->assertNotContains('email', $optional);
-        $this->assertNotContains('firstname', $optional);
-        $this->assertNotContains('lastname', $optional);
+        $this->assertNotContainsEquals('username', $optional);
+        $this->assertNotContainsEquals('email', $optional);
+        $this->assertNotContainsEquals('firstname', $optional);
+        $this->assertNotContainsEquals('lastname', $optional);
         $this->assertContains('password', $optional);
         $this->assertContains('middlename', $optional);
     }

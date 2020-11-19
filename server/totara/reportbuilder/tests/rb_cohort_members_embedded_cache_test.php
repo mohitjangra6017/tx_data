@@ -137,7 +137,7 @@ class totara_reportbuilder_rb_cohort_members_embedded_cache_testcase extends rep
         $was = array();
         foreach($result as $r) {
             $this->assertContains($r->$useridalias, array($this->users[1]->id, $this->users[4]->id));
-            $this->assertNotContains($r->$useridalias, $was);
+            $this->assertNotContainsEquals($r->$useridalias, $was);
             $was[] = $r->$useridalias;
         }
 
@@ -147,7 +147,7 @@ class totara_reportbuilder_rb_cohort_members_embedded_cache_testcase extends rep
         $cohort2ids =  array($this->users[2]->id, $this->users[3]->id, $this->users[4]->id, $this->users[6]->id);
         foreach($result as $r) {
             $this->assertContains($r->$useridalias, $cohort2ids);
-            $this->assertNotContains($r->$useridalias, $was);
+            $this->assertNotContainsEquals($r->$useridalias, $was);
             $was[] = $r->$useridalias;
         }
 

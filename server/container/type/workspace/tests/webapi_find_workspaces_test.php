@@ -99,8 +99,8 @@ class container_workspace_webapi_find_workspaces_testcase extends advanced_testc
             },
             $user1_fetched_workpsaces
         );
-        $this->assertNotContains($workspace4->get_id(), $user1_fetched_workspace_ids);
-        $this->assertNotContains($workspace6->get_id(), $user1_fetched_workspace_ids);
+        $this->assertNotContainsEquals($workspace4->get_id(), $user1_fetched_workspace_ids);
+        $this->assertNotContainsEquals($workspace6->get_id(), $user1_fetched_workspace_ids);
 
         // Fetching as user 2
         $this->setUser($user2);
@@ -121,8 +121,8 @@ class container_workspace_webapi_find_workspaces_testcase extends advanced_testc
             $user2_fetched_workspaces
         );
 
-        $this->assertNotContains($workspace1->get_id(), $user2_fetched_workspace_ids);
-        $this->assertNotContains($workspace6->get_id(), $user2_fetched_workspace_ids);
+        $this->assertNotContainsEquals($workspace1->get_id(), $user2_fetched_workspace_ids);
+        $this->assertNotContainsEquals($workspace6->get_id(), $user2_fetched_workspace_ids);
     }
 
     /**

@@ -32,7 +32,7 @@ class totara_core_totara_testcase extends advanced_testcase {
 
         $majorversion = totara_major_version();
         $this->assertIsString($majorversion);
-        $this->assertRegExp('/^[0-9]+$/', $majorversion);
+        $this->assertMatchesRegularExpression('/^[0-9]+$/', $majorversion);
 
         $TOTARA = null;
         require("$CFG->dirroot/version.php");

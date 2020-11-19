@@ -178,7 +178,7 @@ class totara_reportbuilder_rb_plan_competencies_embedded_cache_testcase extends 
         $was = array('');
         foreach($result as $r) {
             $this->assertEquals($this->plan2->id, $r->$planidalias);
-            $this->assertNotContains($r->competency_fullname, $was);
+            $this->assertNotContainsEquals($r->competency_fullname, $was);
             $was[] = $r->competency_fullname;
         }
 

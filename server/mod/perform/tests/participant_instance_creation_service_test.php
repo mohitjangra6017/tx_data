@@ -856,7 +856,7 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
             );
             $managers_and_appraisers_list[$activity_id][$participant_id]['count']++;
 
-            $this->assertContains(
+            $this->assertContainsEquals(
                 $created_participant->subject_instance_id,
                 $subject_instance_ids,
                 'unknown subject instance id stored'
@@ -929,7 +929,7 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
         $this->assertEquals(self::EXTERNAL_USER_EMAIL, $participant->email, 'wrong email');
 
         $token = $participant->token;
-        $this->assertNotContains($token, $this->tokens, 'duplicate external user token');
+        $this->assertNotContainsEquals($token, $this->tokens, 'duplicate external user token');
         $this->tokens[] = $token;
     }
 

@@ -96,7 +96,7 @@ class totara_job_dialog_assign_manager_testcase extends advanced_testcase {
             $dialogmanagerid = (int)substr($dialogmanager->id, 3);
             $this->assertNotEquals($guest->id, $dialogmanagerid);
             $this->assertNotEquals($currentuser->id, $dialogmanagerid);
-            $this->assertContains($dialogmanagerid, $expecteduserids);
+            $this->assertContainsEquals($dialogmanagerid, $expecteduserids);
         }
     }
 
@@ -146,7 +146,7 @@ class totara_job_dialog_assign_manager_testcase extends advanced_testcase {
         // Should be 3 as there are 2 job assignments for $manager + the option to create a new one.
         $this->assertEquals(3, count($jobassignments));
         foreach($jobassignments as $jobassignment) {
-            $this->assertContains($jobassignment->name, $expectednames);
+            $this->assertContainsEquals($jobassignment->name, $expectednames);
             $this->assertNotEquals('Other users job', $jobassignment->name);
         }
     }
@@ -203,10 +203,10 @@ class totara_job_dialog_assign_manager_testcase extends advanced_testcase {
         $keys = array_map(function($item) { return rtrim($item, '-'); }, array_keys($items));
         // Count: manager1 2+NEW; manager2 1+NEW; manager3 NEW;
         $this->assertCount(6, $items);
-        $this->assertContains($manager1->id . '-' . $ja11->id, $keys);
-        $this->assertContains($manager1->id . '-' . $ja12->id, $keys);
-        $this->assertContains($manager1->id . '-NEW', $keys);
-        $this->assertContains($manager3->id, $keys); // Managers without jobs don't get NEW appended to the key.
+        $this->assertContainsEquals($manager1->id . '-' . $ja11->id, $keys);
+        $this->assertContainsEquals($manager1->id . '-' . $ja12->id, $keys);
+        $this->assertContainsEquals($manager1->id . '-NEW', $keys);
+        $this->assertContainsEquals($manager3->id, $keys); // Managers without jobs don't get NEW appended to the key.
 
         set_config('totara_job_allowmultiplejobs', 0);
         $dialog = new totara_job_dialog_assign_manager($currentuser->id); // New dialog object to update config setting.
@@ -215,10 +215,10 @@ class totara_job_dialog_assign_manager_testcase extends advanced_testcase {
         $keys = array_map(function($item) { return rtrim($item, '-'); }, array_keys($items));
         // Count: manager1 2; manager2 1; manager3 NEW;
         $this->assertCount(4, $items);
-        $this->assertContains($manager1->id . '-' . $ja11->id, $keys);
-        $this->assertContains($manager1->id . '-' . $ja12->id, $keys);
-        $this->assertNotContains($manager1->id . '-NEW', $keys); // Can't create any more job assignments.
-        $this->assertContains($manager3->id, $keys); // Managers without jobs don't get NEW appended to the key.
+        $this->assertContainsEquals($manager1->id . '-' . $ja11->id, $keys);
+        $this->assertContainsEquals($manager1->id . '-' . $ja12->id, $keys);
+        $this->assertNotContainsEquals($manager1->id . '-NEW', $keys); // Can't create any more job assignments.
+        $this->assertContainsEquals($manager3->id, $keys); // Managers without jobs don't get NEW appended to the key.
     }
 
     public function test_get_managers_from_db() {
@@ -238,7 +238,7 @@ class totara_job_dialog_assign_manager_testcase extends advanced_testcase {
         foreach($allmanagers as $manager) {
             $this->assertNotEquals($guest->id, $manager->id);
             $this->assertNotEquals($currentuser->id, $manager->id);
-            $this->assertContains($manager->id, $expecteduserids);
+            $this->assertContainsEquals($manager->id, $expecteduserids);
             // Check sensitive fields are not being returned.
             $this->assertFalse(isset($manager->password));
         }

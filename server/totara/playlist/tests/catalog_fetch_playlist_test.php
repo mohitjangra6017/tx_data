@@ -78,10 +78,10 @@ class totara_playlist_catalog_fetch_playlist_testcase extends advanced_testcase 
         self::assertCount(10, $before_delete_result->objects);
 
         foreach ($before_delete_result->objects as $record) {
-            self::assertContains($record->objectid, $playlists);
+            self::assertContainsEquals($record->objectid, $playlists);
 
             $playlist = playlist::from_id($record->objectid);
-            self::assertContains($playlist->get_userid(), [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($playlist->get_userid(), [$user_one->id, $user_two->id]);
         }
 
         // Start deleting the user one to see if the catalog for playlist is fetching correctly.
@@ -98,7 +98,7 @@ class totara_playlist_catalog_fetch_playlist_testcase extends advanced_testcase 
         self::assertCount(5, $after_delete_result->objects);
 
         foreach ($after_delete_result->objects as $record) {
-            self::assertContains($record->objectid, $playlists);
+            self::assertContainsEquals($record->objectid, $playlists);
 
             $playlist = playlist::from_id($record->objectid);
 
@@ -150,10 +150,10 @@ class totara_playlist_catalog_fetch_playlist_testcase extends advanced_testcase 
         self::assertCount(10, $before_suspend_result->objects);
 
         foreach ($before_suspend_result->objects as $record) {
-            self::assertContains($record->objectid, $playlists);
+            self::assertContainsEquals($record->objectid, $playlists);
 
             $playlist = playlist::from_id($record->objectid);
-            self::assertContains($playlist->get_userid(), [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($playlist->get_userid(), [$user_one->id, $user_two->id]);
         }
 
         // Start suspending the user.
@@ -169,10 +169,10 @@ class totara_playlist_catalog_fetch_playlist_testcase extends advanced_testcase 
         self::assertCount(10, $after_suspend_result->objects);
 
         foreach ($after_suspend_result->objects as $record) {
-            self::assertContains($record->objectid, $playlists);
+            self::assertContainsEquals($record->objectid, $playlists);
 
             $playlist = playlist::from_id($record->objectid);
-            self::assertContains($playlist->get_userid(), [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($playlist->get_userid(), [$user_one->id, $user_two->id]);
         }
     }
 }

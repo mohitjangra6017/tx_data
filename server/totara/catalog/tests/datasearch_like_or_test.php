@@ -128,7 +128,7 @@ class totara_catalog_datasearch_like_or_testcase extends advanced_testcase {
         $comparisons = [];
         foreach ($params as $key => $value) {
             $comparisons[] = $DB->sql_like('is_like_or', ':' . $key);
-            $this->assertContains($value, $data);
+            $this->assertContainsEquals($value, $data);
         }
         $expectedwhere = "(" . implode(" OR ", $comparisons) . ")";
         $this->assertEquals($expectedwhere, $where);

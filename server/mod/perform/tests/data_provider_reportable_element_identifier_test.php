@@ -43,7 +43,7 @@ class mod_perform_data_provider_reportable_element_identifier_testcase extends a
         );
 
         //check non assignable identifiers not listed
-        $this->assertNotContains($data->identifier3, [$identifiers->first(), $identifiers->last()]);
+        $this->assertNotContainsEquals($data->identifier3, [$identifiers->first(), $identifiers->last()]);
     }
 
     private function create_test_data(): stdClass {

@@ -76,8 +76,8 @@ class container_workspace_load_workspaces_testcase extends advanced_testcase {
         $this->assertCount(3, $workspaces);
 
         $workspace_ids = array_column($workspaces, 'id');
-        $this->assertContains($workspace1->get_id(), $workspace_ids);
-        $this->assertContains($workspace2->get_id(), $workspace_ids);
-        $this->assertContains($workspace3->get_id(), $workspace_ids);
+        $this->assertContainsEquals($workspace1->get_id(), $workspace_ids);
+        $this->assertContainsEquals($workspace2->get_id(), $workspace_ids);
+        $this->assertContainsEquals($workspace3->get_id(), $workspace_ids);
     }
 }

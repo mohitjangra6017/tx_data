@@ -88,7 +88,7 @@ class mod_perform_participant_section_creation_service_testcase extends advanced
         // Asserts the 2 participant sections are created for the manager_appraiser section.
         $this->assertCount(2, $manager_appraiser_user_participant_section);
         // Assert the subject_user participant is not assigned to the manager_appraiser section.
-        $this->assertNotContains(
+        $this->assertNotContainsEquals(
             $subject_user_participant_instance->id,
             $manager_appraiser_user_participant_section->pluck('participant_instance_id')
         );
@@ -139,7 +139,7 @@ class mod_perform_participant_section_creation_service_testcase extends advanced
         }
 
         foreach ($created_participant_sections as $participant_section) {
-            $this->assertContains(
+            $this->assertContainsEquals(
                 $participant_section->participant_instance_id,
                 $participant_instance_ids
             );
@@ -170,7 +170,7 @@ class mod_perform_participant_section_creation_service_testcase extends advanced
         $expected_participant_sections_created = 0;
 
         foreach ($participant_instance_dto_collection as $participant_instance_dto) {
-            $this->assertContains(
+            $this->assertContainsEquals(
                 $participant_instance_dto->id,
                 $created_participant_sections->pluck('participant_instance_id')
             );

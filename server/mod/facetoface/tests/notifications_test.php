@@ -423,7 +423,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
         ];
 
         // Checking that iCal contains custom description.
-        $this->assertRegExp('/.*iCal description must have this text.*/',
+        $this->assertMatchesRegularExpression('/.*iCal description must have this text.*/',
             implode('', $icals['original'][0]->description), $errors['description_not_found']);
 
         // Checking that dates match for both events.

@@ -105,13 +105,13 @@ class totara_competency_expanded_users_service_testcase extends expanded_users_t
         $this->assertArrayHasKey('items', $result);
         $this->assertCount(2, $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user17),
             'user_id' => (int) $data->user17->id,
             'user_group_names' => [[ 'user_group_name' => 'Individual' ]]
         ], $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user18),
             'user_id' => (int) $data->user18->id,
             'user_group_names' => [[ 'user_group_name' => 'Individual' ]]
@@ -145,19 +145,19 @@ class totara_competency_expanded_users_service_testcase extends expanded_users_t
         $this->assertArrayHasKey('items', $result);
         $this->assertCount(3, $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user6),
             'user_id' => (int) $data->user6->id,
             'user_group_names' => [[ 'user_group_name' => $data->pos1->fullname ]]
         ], $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user7),
             'user_id' => (int) $data->user7->id,
             'user_group_names' => [[ 'user_group_name' => $data->pos1->fullname ]]
         ], $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user8),
             'user_id' => (int) $data->user8->id,
             'user_group_names' => [[ 'user_group_name' => $data->pos1->fullname ]]
@@ -210,25 +210,25 @@ class totara_competency_expanded_users_service_testcase extends expanded_users_t
         $this->assertArrayHasKey('items', $result);
         $this->assertCount(5, $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user6),
             'user_id' => (int) $data->user6->id,
             'user_group_names' => [[ 'user_group_name' => $data->pos1->fullname ]]
         ], $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user7),
             'user_id' => (int) $data->user7->id,
             'user_group_names' => [[ 'user_group_name' => $data->pos1->fullname ]]
         ], $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user8),
             'user_id' => (int) $data->user8->id,
             'user_group_names' => [[ 'user_group_name' => $data->pos1->fullname ]]
         ], $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user17),
             'user_id' => (int) $data->user17->id,
             'user_group_names' => [[ 'user_group_name' => 'Individual' ]]
@@ -241,7 +241,7 @@ class totara_competency_expanded_users_service_testcase extends expanded_users_t
         ];
         sort($expected_user_groups);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user16),
             'user_id' => (int) $data->user16->id,
             'user_group_names' => array_map(function ($item) {
@@ -291,19 +291,19 @@ class totara_competency_expanded_users_service_testcase extends expanded_users_t
 
         // Expected positions
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user6),
             'user_id' => (int) $data->user6->id,
             'user_group_names' => [[ 'user_group_name' => $data->pos1->fullname ]]
         ], $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user7),
             'user_id' => (int) $data->user7->id,
             'user_group_names' => [[ 'user_group_name' => $data->pos1->fullname ]]
         ], $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user8),
             'user_id' => (int) $data->user8->id,
             'user_group_names' => [[ 'user_group_name' => $data->pos1->fullname ]]
@@ -311,13 +311,13 @@ class totara_competency_expanded_users_service_testcase extends expanded_users_t
 
         // Expected individuals
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user17),
             'user_id' => (int) $data->user17->id,
             'user_group_names' => [[ 'user_group_name' => 'Individual' ]]
         ], $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user18),
             'user_id' => (int) $data->user18->id,
             'user_group_names' => [[ 'user_group_name' => 'Individual' ]]
@@ -325,19 +325,19 @@ class totara_competency_expanded_users_service_testcase extends expanded_users_t
 
         // Expected cohorts
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user1),
             'user_id' => (int) $data->user1->id,
             'user_group_names' => [[ 'user_group_name' => $data->cohort1->name ]]
         ], $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user2),
             'user_id' => (int) $data->user2->id,
             'user_group_names' => [[ 'user_group_name' => $data->cohort1->name ]]
         ], $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user3),
             'user_id' => (int) $data->user3->id,
             'user_group_names' => [[ 'user_group_name' => $data->cohort1->name ]]
@@ -345,13 +345,13 @@ class totara_competency_expanded_users_service_testcase extends expanded_users_t
 
         // Expected organisations
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user14),
             'user_id' => (int) $data->user14->id,
             'user_group_names' => [[ 'user_group_name' => $data->org2->fullname ]]
         ], $result['items']);
 
-        $this->assertContains([
+        $this->assertContainsEquals([
             'full_name' => $this->get_full_name($data->user15),
             'user_id' => (int) $data->user15->id,
             'user_group_names' => [[ 'user_group_name' => $data->org2->fullname ]]

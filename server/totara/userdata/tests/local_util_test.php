@@ -35,7 +35,7 @@ class totara_userdata_local_util_testcase extends advanced_testcase {
         $classes = util::get_item_classes();
         foreach ($classes as $i => $classname) {
             $this->assertIsInt($i);
-            $this->assertRegExp('/^[a-z0-9_]+\\\\userdata\\\\[a-z0-9_]+$/', $classname);
+            $this->assertMatchesRegularExpression('/^[a-z0-9_]+\\\\userdata\\\\[a-z0-9_]+$/', $classname);
         }
     }
 

@@ -106,7 +106,7 @@ class container_workspace_editor_weka_search_users_testcase extends advanced_tes
         self::assertCount(2, $users);
 
         foreach ($users as $user) {
-            self::assertContains($user->id, [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($user->id, [$user_one->id, $user_two->id]);
             self::assertNotEquals($user_three->id, $user->id);
         }
     }

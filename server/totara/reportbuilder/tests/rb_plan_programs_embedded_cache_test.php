@@ -165,8 +165,8 @@ class totara_reportbuilder_rb_plan_programs_embedded_cache_testcase extends repo
         $this->assertCount(2, $result);
         $was = array();
         foreach($result as $r) {
-            $this->assertContains($r->$programidalias, array($this->program1->id, $this->program3->id));
-            $this->assertNotContains($r->program_proglinkicon, $was);
+            $this->assertContainsEquals($r->$programidalias, array($this->program1->id, $this->program3->id));
+            $this->assertNotContainsEquals($r->program_proglinkicon, $was);
             $was[] = $r->program_proglinkicon;
         }
 
@@ -174,8 +174,8 @@ class totara_reportbuilder_rb_plan_programs_embedded_cache_testcase extends repo
         $this->assertCount(3, $result);
         $was = array();
         foreach($result as $r) {
-            $this->assertContains($r->$programidalias, array($this->program2->id, $this->program3->id, $this->program4->id));
-            $this->assertNotContains($r->program_proglinkicon, $was);
+            $this->assertContainsEquals($r->$programidalias, array($this->program2->id, $this->program3->id, $this->program4->id));
+            $this->assertNotContainsEquals($r->program_proglinkicon, $was);
             $was[] = $r->program_proglinkicon;
         }
 

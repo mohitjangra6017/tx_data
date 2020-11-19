@@ -56,7 +56,7 @@ class container_workspace_fetch_deleted_suspended_members_testcase extends advan
         $before_delete_members = $before_delete_result->get_items()->all();
 
         foreach ($before_delete_members as $member) {
-            self::assertContains($member->get_user_id(), [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($member->get_user_id(), [$user_one->id, $user_two->id]);
         }
 
         // Delete user two and fetch the list of mebmer again.
@@ -103,7 +103,7 @@ class container_workspace_fetch_deleted_suspended_members_testcase extends advan
 
         /** @var member $member */
         foreach ($before_suspend_members as $member) {
-            self::assertContains($member->get_user_id(), [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($member->get_user_id(), [$user_one->id, $user_two->id]);
         }
 
         // Suspend the second user to see if the loader still fetching this user.
@@ -117,7 +117,7 @@ class container_workspace_fetch_deleted_suspended_members_testcase extends advan
 
         /** @var member $member */
         foreach ($after_suspend_members as $member) {
-            self::assertContains($member->get_user_id(), [$user_one->id, $user_two->id]);
+            self::assertContainsEquals($member->get_user_id(), [$user_one->id, $user_two->id]);
         }
     }
 }

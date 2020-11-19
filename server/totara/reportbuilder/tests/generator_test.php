@@ -220,7 +220,7 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
         $this->assertGreaterThan(0, $record->id);
         $this->assertEquals($report->id, $record->reportid);
         $this->assertEquals($user->id, $record->userid);
-        $this->assertRegExp("/Saved \d/", $record->name);
+        $this->assertMatchesRegularExpression("/Saved \d/", $record->name);
 
         $filterfvalues = unserialize($record->search);
         $this->assertNotEmpty($filterfvalues);
@@ -376,7 +376,7 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
         $this->assertEquals($record, $added);
         $this->assertGreaterThan(0, $record->id);
         $this->assertEquals($scheduled->id, $record->scheduleid);
-        $this->assertRegExp('/.*\@example\.com/', $record->email);
+        $this->assertMatchesRegularExpression('/.*\@example\.com/', $record->email);
 
         // Custom.
         $addedcustom = $reportgenerator->add_scheduled_email($scheduled, 'test@example.org');

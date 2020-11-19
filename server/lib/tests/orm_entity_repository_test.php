@@ -140,7 +140,7 @@ class core_orm_repository_testcase extends orm_entity_testcase {
                 $this->fail('Expected method to be blacklisted');
             } catch (Exception $exception) {
                 $this->assertInstanceOf(coding_exception::class, $exception);
-                $this->assertRegExp("/Called method '{$blacklisted_method}\(\)' not allowed for forwarding to the builder./", $exception->getMessage());
+                $this->assertMatchesRegularExpression("/Called method '{$blacklisted_method}\(\)' not allowed for forwarding to the builder./", $exception->getMessage());
             }
         }
     }

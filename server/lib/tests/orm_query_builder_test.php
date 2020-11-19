@@ -223,7 +223,7 @@ class core_orm_builder_testcase extends orm_query_builder_base {
         $this->assertInstanceOf(lazy_collection::class, $records);
 
         foreach ($records as $record) {
-            $this->assertContains((array)$record, $created_records);
+            $this->assertContainsEquals((array)$record, $created_records);
         }
     }
 
@@ -254,7 +254,7 @@ class core_orm_builder_testcase extends orm_query_builder_base {
         $queries = $builder->get_last_executed_queries();
         $query = array_shift($queries);
         $this->assertIsArray($query);
-        $this->assertRegExp('/SELECT .* FROM .* WHERE 1 = 1/', $query['sql']);
+        $this->assertMatchesRegularExpression('/SELECT .* FROM .* WHERE 1 = 1/', $query['sql']);
         $this->assertEquals([], $query['params']);
         $this->assertEmpty($query['offset']);
         $this->assertEmpty($query['limit']);
@@ -270,7 +270,7 @@ class core_orm_builder_testcase extends orm_query_builder_base {
         $queries = $builder->get_last_executed_queries();
         $query = array_shift($queries);
         $this->assertIsArray($query);
-        $this->assertRegExp('/SELECT .* FROM .* WHERE .*id IN \(.*\) ORDER BY .* DESC/', $query['sql']);
+        $this->assertMatchesRegularExpression('/SELECT .* FROM .* WHERE .*id IN \(.*\) ORDER BY .* DESC/', $query['sql']);
         $this->assertEquals([1, 2, 3, 4], array_values($query['params']));
         $this->assertEquals(3, $query['offset']);
         $this->assertEquals(12, $query['limit']);

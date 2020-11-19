@@ -98,21 +98,21 @@ class media_videojs_testcase extends advanced_testcase {
         $this->assertTrue($manager->can_embed_url($url, $embedoptions));
         $content = $manager->embed_url($url, 'Test & file', 0, 0, $embedoptions);
 
-        $this->assertRegExp('~mediaplugin_videojs~', $content);
-        $this->assertRegExp('~</video>~', $content);
-        $this->assertRegExp('~title="Test &amp; file"~', $content);
-        $this->assertRegExp('~style="max-width:' . $CFG->media_default_width . 'px;~', $content);
+        $this->assertMatchesRegularExpression('~mediaplugin_videojs~', $content);
+        $this->assertMatchesRegularExpression('~</video>~', $content);
+        $this->assertMatchesRegularExpression('~title="Test &amp; file"~', $content);
+        $this->assertMatchesRegularExpression('~style="max-width:' . $CFG->media_default_width . 'px;~', $content);
 
         // Repeat sending the specific size to the manager.
         $content = $manager->embed_url($url, 'New file', 123, 50, $embedoptions);
-        $this->assertRegExp('~style="max-width:123px;~', $content);
+        $this->assertMatchesRegularExpression('~style="max-width:123px;~', $content);
 
         // Repeat without sending the size and with unchecked setting to limit the video size.
         set_config('limitsize', false, 'media_videojs');
 
         $manager = core_media_manager::instance();
         $content = $manager->embed_url($url, 'Test & file', 0, 0, $embedoptions);
-        $this->assertNotRegExp('~style="max-width:~', $content);
+        $this->assertDoesNotMatchRegularExpression('~style="max-width:~', $content);
     }
 
     /**
@@ -126,11 +126,11 @@ class media_videojs_testcase extends advanced_testcase {
         $text = html_writer::link($url, 'Watch this one');
         $content = format_text($text, FORMAT_HTML);
 
-        $this->assertRegExp('~mediaplugin_videojs~', $content);
-        $this->assertRegExp('~</video>~', $content);
-        $this->assertRegExp('~title="Watch this one"~', $content);
-        $this->assertNotRegExp('~<track\b~i', $content);
-        $this->assertRegExp('~style="max-width:' . $CFG->media_default_width . 'px;~', $content);
+        $this->assertMatchesRegularExpression('~mediaplugin_videojs~', $content);
+        $this->assertMatchesRegularExpression('~</video>~', $content);
+        $this->assertMatchesRegularExpression('~title="Watch this one"~', $content);
+        $this->assertDoesNotMatchRegularExpression('~<track\b~i', $content);
+        $this->assertMatchesRegularExpression('~style="max-width:' . $CFG->media_default_width . 'px;~', $content);
     }
 
     /**
@@ -147,18 +147,18 @@ class media_videojs_testcase extends advanced_testcase {
         $manager = core_media_manager::instance();
         $content = $manager->embed_alternatives($urls, '', 0, 0, []);
 
-        $this->assertRegExp('~mediaplugin_videojs~', $content);
-        $this->assertRegExp('~</video>~', $content);
+        $this->assertMatchesRegularExpression('~mediaplugin_videojs~', $content);
+        $this->assertMatchesRegularExpression('~</video>~', $content);
         // Title is taken from the name of the first supported file.
-        $this->assertRegExp('~title="2"~', $content);
+        $this->assertMatchesRegularExpression('~title="2"~', $content);
         // Only supported files are in <source>'s.
-        $this->assertNotRegExp('~<source src="http://example.org/1.rv"~', $content);
-        $this->assertRegExp('~<source src="http://example.org/2.webm"~', $content);
-        $this->assertRegExp('~<source src="http://example.org/3.ogv"~', $content);
+        $this->assertDoesNotMatchRegularExpression('~<source src="http://example.org/1.rv"~', $content);
+        $this->assertMatchesRegularExpression('~<source src="http://example.org/2.webm"~', $content);
+        $this->assertMatchesRegularExpression('~<source src="http://example.org/3.ogv"~', $content);
         // Links to all files are included.
-        $this->assertRegExp('~<a class="mediafallbacklink" href="http://example.org/1.rv">1.rv</a>~', $content);
-        $this->assertRegExp('~<a class="mediafallbacklink" href="http://example.org/2.webm">2.webm</a>~', $content);
-        $this->assertRegExp('~<a class="mediafallbacklink" href="http://example.org/3.ogv">3.ogv</a>~', $content);
+        $this->assertMatchesRegularExpression('~<a class="mediafallbacklink" href="http://example.org/1.rv">1.rv</a>~', $content);
+        $this->assertMatchesRegularExpression('~<a class="mediafallbacklink" href="http://example.org/2.webm">2.webm</a>~', $content);
+        $this->assertMatchesRegularExpression('~<a class="mediafallbacklink" href="http://example.org/3.ogv">3.ogv</a>~', $content);
     }
 
     /**
@@ -170,10 +170,10 @@ class media_videojs_testcase extends advanced_testcase {
         $text = html_writer::link($url, 'Apply one player only');
         $content = format_text($text, FORMAT_HTML);
 
-        $this->assertRegExp('~mediaplugin_videojs~', $content);
+        $this->assertMatchesRegularExpression('~mediaplugin_videojs~', $content);
         $this->assertEquals(1, substr_count($content, '</video>'));
-        $this->assertNotRegExp('~mediaplugin_html5video~', $content);
-        $this->assertRegExp('~<a class="mediafallbacklink" href="http://example.org/some_filename.webm">Apply one player only</a>~', $content);
+        $this->assertDoesNotMatchRegularExpression('~mediaplugin_html5video~', $content);
+        $this->assertMatchesRegularExpression('~<a class="mediafallbacklink" href="http://example.org/some_filename.webm">Apply one player only</a>~', $content);
     }
 
     /**
@@ -189,25 +189,25 @@ class media_videojs_testcase extends advanced_testcase {
             '<track src="'.$trackurl.'">Unsupported text</video>';
         $content = format_text($text, FORMAT_HTML);
 
-        $this->assertRegExp('~mediaplugin_videojs~', $content);
-        $this->assertRegExp('~</video>~', $content);
-        $this->assertRegExp('~title="some_filename.mp4"~', $content);
-        $this->assertRegExp('~style="max-width:' . $CFG->media_default_width . 'px;~', $content);
+        $this->assertMatchesRegularExpression('~mediaplugin_videojs~', $content);
+        $this->assertMatchesRegularExpression('~</video>~', $content);
+        $this->assertMatchesRegularExpression('~title="some_filename.mp4"~', $content);
+        $this->assertMatchesRegularExpression('~style="max-width:' . $CFG->media_default_width . 'px;~', $content);
         // Unsupported text and tracks are preserved.
-        $this->assertRegExp('~Unsupported text~', $content);
-        $this->assertRegExp('~<track\b~i', $content);
+        $this->assertMatchesRegularExpression('~Unsupported text~', $content);
+        $this->assertMatchesRegularExpression('~<track\b~i', $content);
         // Invalid sources are removed.
-        $this->assertNotRegExp('~somethinginvalid~i', $content);
+        $this->assertDoesNotMatchRegularExpression('~somethinginvalid~i', $content);
 
         // Video with dimensions and source specified as src attribute without <source> tag.
         $text = '<video controls="true" width="123" height="35" src="'.$url.'">Unsupported text</video>';
         $content = format_text($text, FORMAT_HTML);
-        $this->assertRegExp('~mediaplugin_videojs~', $content);
-        $this->assertRegExp('~</video>~', $content);
-        $this->assertRegExp('~<source\b~', $content);
-        $this->assertRegExp('~style="max-width:123px;~', $content);
-        $this->assertNotRegExp('~width="~', $content);
-        $this->assertNotRegExp('~height="~', $content);
+        $this->assertMatchesRegularExpression('~mediaplugin_videojs~', $content);
+        $this->assertMatchesRegularExpression('~</video>~', $content);
+        $this->assertMatchesRegularExpression('~<source\b~', $content);
+        $this->assertMatchesRegularExpression('~style="max-width:123px;~', $content);
+        $this->assertDoesNotMatchRegularExpression('~width="~', $content);
+        $this->assertDoesNotMatchRegularExpression('~height="~', $content);
 
         // Audio tag.
         $url = new moodle_url('http://example.org/some_filename.mp3');
@@ -216,16 +216,16 @@ class media_videojs_testcase extends advanced_testcase {
             '<track src="'.$trackurl.'">Unsupported text</audio>';
         $content = format_text($text, FORMAT_HTML);
 
-        $this->assertRegExp('~mediaplugin_videojs~', $content);
-        $this->assertNotRegExp('~</video>~', $content);
-        $this->assertRegExp('~</audio>~', $content);
-        $this->assertRegExp('~title="some_filename.mp3"~', $content);
-        $this->assertRegExp('~style="max-width:' . $CFG->media_default_width . 'px;~', $content);
+        $this->assertMatchesRegularExpression('~mediaplugin_videojs~', $content);
+        $this->assertDoesNotMatchRegularExpression('~</video>~', $content);
+        $this->assertMatchesRegularExpression('~</audio>~', $content);
+        $this->assertMatchesRegularExpression('~title="some_filename.mp3"~', $content);
+        $this->assertMatchesRegularExpression('~style="max-width:' . $CFG->media_default_width . 'px;~', $content);
         // Unsupported text and tracks are preserved.
-        $this->assertRegExp('~Unsupported text~', $content);
-        $this->assertRegExp('~<track\b~i', $content);
+        $this->assertMatchesRegularExpression('~Unsupported text~', $content);
+        $this->assertMatchesRegularExpression('~<track\b~i', $content);
         // Invalid sources are removed.
-        $this->assertNotRegExp('~somethinginvalid~i', $content);
+        $this->assertDoesNotMatchRegularExpression('~somethinginvalid~i', $content);
     }
 
     protected function youtube_plugin_engaged($t) {

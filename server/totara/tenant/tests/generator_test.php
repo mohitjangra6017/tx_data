@@ -64,17 +64,17 @@ class totara_tenant_generator_testcase extends advanced_testcase {
         $coursecat = $DB->get_record('course_categories', ['id' => $tenant->categoryid], '*', MUST_EXIST);
         $audience = $DB->get_record('cohort', ['id' => $tenant->cohortid], '*', MUST_EXIST);
         $this->assertTrue($DB->record_exists('tenant', ['id' => $tenant->id]));
-        $this->assertRegExp('/^Tenant \d+$/', $tenant->name);
-        $this->assertRegExp('/^tenantidnumber\d+$/', $tenant->idnumber);
+        $this->assertMatchesRegularExpression('/^Tenant \d+$/', $tenant->name);
+        $this->assertMatchesRegularExpression('/^tenantidnumber\d+$/', $tenant->idnumber);
         $this->assertSame('', $tenant->description);
         $this->assertSame(FORMAT_HTML, $tenant->descriptionformat);
         $this->assertSame('0', $tenant->suspended);
         $this->assertTimeCurrent($tenant->timecreated);
         $this->assertSame($USER->id, $tenant->usercreated);
-        $this->assertRegExp('/^Tenant \d+ category$/', $coursecat->name);
+        $this->assertMatchesRegularExpression('/^Tenant \d+ category$/', $coursecat->name);
         $this->assertSame('', $coursecat->description);
         $this->assertSame($tenant->idnumber, $coursecat->idnumber);
-        $this->assertRegExp('/^Tenant \d+ audience/', $audience->name);
+        $this->assertMatchesRegularExpression('/^Tenant \d+ audience/', $audience->name);
         $this->assertSame('', $audience->description);
         $this->assertSame($audience->idnumber, $audience->idnumber);
 

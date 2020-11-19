@@ -170,14 +170,14 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $_GET['sesskey'] = sesskey();
         $one = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         unset($_GET['globalrestrictionids']);
         unset($_GET['sesskey']);
         $one = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         // Make sure CSRF is not possible.
@@ -207,24 +207,24 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $_GET['sesskey'] = sesskey();
         $both = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(2, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr2->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr2->id, $both->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id, $this->restr2->id), $SESSION->rb_global_restriction);
 
         unset($_GET['globalrestrictionids']);
         unset($_GET['sesskey']);
         $both = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(2, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr2->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr2->id, $both->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id, $this->restr2->id), $SESSION->rb_global_restriction);
 
         // Deal with deleted instances in session.
         $SESSION->rb_global_restriction[] = -1;
         $both = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(2, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr2->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr2->id, $both->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id, $this->restr2->id), $SESSION->rb_global_restriction);
 
         // Try to create instance with allowed for all restrictions.
@@ -234,16 +234,16 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $_GET['sesskey'] = sesskey();
         $both = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(2, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $both->get_current_restriction_ids());
-        $this->assertContains($this->restrallusers->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restrallusers->id, $both->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id, $this->restrallusers->id), $SESSION->rb_global_restriction);
 
         unset($_GET['globalrestrictionids']);
         unset($_GET['sesskey']);
         $both = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(2, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $both->get_current_restriction_ids());
-        $this->assertContains($this->restrallusers->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restrallusers->id, $both->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id, $this->restrallusers->id), $SESSION->rb_global_restriction);
 
         // Try restriction that gives access to all records.
@@ -268,14 +268,14 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $_GET['sesskey'] = sesskey();
         $one = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         unset($_GET['globalrestrictionids']);
         unset($_GET['sesskey']);
         $one = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         // First should be assigned to user with restriction as default.
@@ -285,7 +285,7 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         unset($_GET['sesskey']);
         $one = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         // Try to create instance with inactive allowed restriction, first active should be returned.
@@ -295,14 +295,14 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $_GET['sesskey'] = sesskey();
         $one = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         unset($_GET['globalrestrictionids']);
         unset($_GET['sesskey']);
         $one = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         // Nothing should not be assigned to user with no restrictions automatically.
@@ -325,7 +325,7 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $SESSION->rb_global_restriction = array($this->restrallusers->id);
         $one = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         // Disable report restriction.
@@ -362,14 +362,14 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $_GET['sesskey'] = sesskey();
         $one = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         unset($_GET['globalrestrictionids']);
         unset($_GET['sesskey']);
         $one = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         // Make sure CSRF is not possible.
@@ -399,24 +399,24 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $_GET['sesskey'] = sesskey();
         $both = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(2, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr2->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr2->id, $both->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id, $this->restr2->id), $SESSION->rb_global_restriction);
 
         unset($_GET['globalrestrictionids']);
         unset($_GET['sesskey']);
         $both = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(2, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr2->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr2->id, $both->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id, $this->restr2->id), $SESSION->rb_global_restriction);
 
         // Deal with deleted instances in session.
         $SESSION->rb_global_restriction[] = -1;
         $both = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(2, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr2->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr2->id, $both->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id, $this->restr2->id), $SESSION->rb_global_restriction);
 
         // Try to create instance with allowed for all restrictions.
@@ -426,16 +426,16 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $_GET['sesskey'] = sesskey();
         $both = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(2, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $both->get_current_restriction_ids());
-        $this->assertContains($this->restrallusers->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restrallusers->id, $both->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id, $this->restrallusers->id), $SESSION->rb_global_restriction);
 
         unset($_GET['globalrestrictionids']);
         unset($_GET['sesskey']);
         $both = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(2, $both->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $both->get_current_restriction_ids());
-        $this->assertContains($this->restrallusers->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $both->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restrallusers->id, $both->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id, $this->restrallusers->id), $SESSION->rb_global_restriction);
 
         // Try restriction that gives access to all records.
@@ -460,14 +460,14 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $_GET['sesskey'] = sesskey();
         $other = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $other->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $other->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $other->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         unset($_GET['globalrestrictionids']);
         unset($_GET['sesskey']);
         $other = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $other->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $other->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $other->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         // First should be assigned to user with restriction as default.
@@ -477,7 +477,7 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         unset($_GET['sesskey']);
         $one = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         // Try to create instance with inactive allowed restriction, first should be selected instead.
@@ -487,14 +487,14 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $_GET['sesskey'] = sesskey();
         $other = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $other->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $other->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $other->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         unset($_GET['globalrestrictionids']);
         unset($_GET['sesskey']);
         $other = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $other->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $other->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $other->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         // Nothing should not be assigned to user with no restrictions automatically.
@@ -517,7 +517,7 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $SESSION->rb_global_restriction = array($this->restrallusers->id);
         $one = rb_global_restriction_set::create_from_page_parameters($this->reportrecord);
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
         $this->assertEquals(array($this->restr1->id), $SESSION->rb_global_restriction);
 
         // Disable report restriction.
@@ -547,7 +547,7 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
 
         $one = rb_global_restriction_set::create_from_ids($this->reportrecord, array($this->restr1->id, -1));
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
 
         $null = rb_global_restriction_set::create_from_ids($this->reportrecord, null);
         $this->assertNull($null);
@@ -564,11 +564,11 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $whole = rb_global_restriction_set::create_from_ids($this->reportrecord, array($this->restr1->id, $this->restr2->id, $this->restrallusers->id,
             $this->restroff->id, $this->restrnotassign->id));
         $this->assertCount(5, $whole->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $whole->get_current_restriction_ids());
-        $this->assertContains($this->restr2->id, $whole->get_current_restriction_ids());
-        $this->assertContains($this->restrallusers->id, $whole->get_current_restriction_ids());
-        $this->assertContains($this->restroff->id, $whole->get_current_restriction_ids());
-        $this->assertContains($this->restrnotassign->id, $whole->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $whole->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr2->id, $whole->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restrallusers->id, $whole->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restroff->id, $whole->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restrnotassign->id, $whole->get_current_restriction_ids());
 
         // Disable report restriction.
         $this->reportrecord->globalrestriction = 0;
@@ -591,7 +591,7 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
 
         $one = rb_global_restriction_set::create_from_ids($this->reportrecord, array($this->restr1->id, -1));
         $this->assertCount(1, $one->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $one->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $one->get_current_restriction_ids());
 
         $none = rb_global_restriction_set::create_from_ids($this->reportrecord, array());
         $this->assertCount(0, $none->get_current_restriction_ids());
@@ -605,11 +605,11 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $whole = rb_global_restriction_set::create_from_ids($this->reportrecord, array($this->restr1->id, $this->restr2->id, $this->restrallusers->id,
             $this->restroff->id, $this->restrnotassign->id));
         $this->assertCount(5, $whole->get_current_restriction_ids());
-        $this->assertContains($this->restr1->id, $whole->get_current_restriction_ids());
-        $this->assertContains($this->restr2->id, $whole->get_current_restriction_ids());
-        $this->assertContains($this->restrallusers->id, $whole->get_current_restriction_ids());
-        $this->assertContains($this->restroff->id, $whole->get_current_restriction_ids());
-        $this->assertContains($this->restrnotassign->id, $whole->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr1->id, $whole->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restr2->id, $whole->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restrallusers->id, $whole->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restroff->id, $whole->get_current_restriction_ids());
+        $this->assertContainsEquals($this->restrnotassign->id, $whole->get_current_restriction_ids());
 
         // Disable report restriction.
         $this->reportrecord->globalrestriction = 0;
@@ -654,8 +654,8 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
         $restrsids = array_map(function($el) {
             return $el->id;
         }, $restrs);
-        $this->assertContains($this->restr1->id, $restrsids);
-        $this->assertContains($this->restr2->id, $restrsids);
-        $this->assertContains($this->restrallusers->id, $restrsids);
+        $this->assertContainsEquals($this->restr1->id, $restrsids);
+        $this->assertContainsEquals($this->restr2->id, $restrsids);
+        $this->assertContainsEquals($this->restrallusers->id, $restrsids);
     }
 }

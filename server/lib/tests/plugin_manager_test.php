@@ -94,7 +94,7 @@ class core_plugin_manager_testcase extends advanced_testcase {
         foreach ($types as $type => $fulldir) {
             $installed = core_plugin_manager::instance()->get_installed_plugins($type);
             foreach ($installed as $plugin => $version) {
-                $this->assertRegExp('/^[a-z]+[a-z0-9_]*$/', $plugin);
+                $this->assertMatchesRegularExpression('/^[a-z]+[a-z0-9_]*$/', $plugin);
                 $this->assertTrue(is_numeric($version), 'All plugins should have a version, plugin '.$type.'_'.$plugin.' does not have version info.');
             }
         }
@@ -106,7 +106,7 @@ class core_plugin_manager_testcase extends advanced_testcase {
             $enabled = core_plugin_manager::instance()->get_enabled_plugins($type);
             if (is_array($enabled)) {
                 foreach ($enabled as $key => $val) {
-                    $this->assertRegExp('/^[a-z]+[a-z0-9_]*$/', $key);
+                    $this->assertMatchesRegularExpression('/^[a-z]+[a-z0-9_]*$/', $key);
                     $this->assertSame($key, $val);
                 }
             } else {
@@ -121,7 +121,7 @@ class core_plugin_manager_testcase extends advanced_testcase {
             $present = core_plugin_manager::instance()->get_present_plugins($type);
             if (is_array($present)) {
                 foreach ($present as $plugin => $version) {
-                    $this->assertRegExp('/^[a-z]+[a-z0-9_]*$/', $plugin, 'All plugins are supposed to have version.php file.');
+                    $this->assertMatchesRegularExpression('/^[a-z]+[a-z0-9_]*$/', $plugin, 'All plugins are supposed to have version.php file.');
                     $this->assertIsObject($version);
                     $this->assertTrue(is_numeric($version->version), 'All plugins should have a version, plugin '.$type.'_'.$plugin.' does not have version info.');
                 }
@@ -253,8 +253,8 @@ class core_plugin_manager_testcase extends advanced_testcase {
         $this->assertFileExists("$CFG->dirroot/mod/assign", 'assign module is not present');
         $this->assertFileExists("$CFG->dirroot/mod/forum", 'forum module is not present');
         $this->assertFileExists("$CFG->dirroot/$CFG->admin/tool/phpunit", 'phpunit tool is not present');
-        $this->assertFileNotExists("$CFG->dirroot/mod/xxxxxxx");
-        $this->assertFileNotExists("$CFG->dirroot/enrol/autorize");
+        $this->assertFileDoesNotExist("$CFG->dirroot/mod/xxxxxxx");
+        $this->assertFileDoesNotExist("$CFG->dirroot/enrol/autorize");
 
         // Ready for upgrade.
         $assignversion = get_config('mod_assign', 'version');

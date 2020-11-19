@@ -150,7 +150,7 @@ class totara_reportbuilder_rb_cohort_admin_embedded_cache_testcase extends repor
         $was = array();
         foreach ($result as $r) {
             $this->assertContains($r->cohort_namelink, array($this->cohort1->name, $this->cohort2->name, $this->cohort3->name));
-            $this->assertNotContains($r->cohort_namelink, $was);
+            $this->assertNotContainsEquals($r->cohort_namelink, $was);
             $was[] = $r->cohort_namelink;
 
             switch ($r->id) {

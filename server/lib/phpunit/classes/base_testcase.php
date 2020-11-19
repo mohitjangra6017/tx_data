@@ -60,7 +60,8 @@ abstract class base_testcase extends \PHPUnit\Framework\TestCase {
      * @deprecated 3.0
      */
     public static function assertTag($matcher, $actual, $message = '', $ishtml = true) {
-        $dom = \PHPUnit\Util\XML::load($actual, $ishtml);
+        $loader = new \PHPUnit\Util\Xml\Loader();
+        $dom = $loader->load($actual, $ishtml);
         $tags = self::findNodes($dom, $matcher, $ishtml);
         $matched = count($tags) > 0 && $tags[0] instanceof DOMNode;
         self::assertTrue($matched, $message);
@@ -78,7 +79,8 @@ abstract class base_testcase extends \PHPUnit\Framework\TestCase {
      * @deprecated 3.0
      */
     public static function assertNotTag($matcher, $actual, $message = '', $ishtml = true) {
-        $dom = \PHPUnit\Util\XML::load($actual, $ishtml);
+        $loader = new \PHPUnit\Util\Xml\Loader();
+        $dom = $loader->load($actual, $ishtml);
         $tags = self::findNodes($dom, $matcher, $ishtml);
         $matched = isset($tags[0]) && $tags[0] instanceof DOMNode; // Totara: count is slow and cannot be used on false!
         self::assertFalse($matched, $message);
@@ -133,6 +135,7 @@ abstract class base_testcase extends \PHPUnit\Framework\TestCase {
      *
      * @param string|totara_core\path $expected
      * @param string|totara_core\path $actual
+     * @param string $message
      * @return void
      */
     public static function assertSamePath($expected, $actual, string $message = ''): void {
@@ -182,6 +185,7 @@ abstract class base_testcase extends \PHPUnit\Framework\TestCase {
                     $failure = new SebastianBergmann\Comparator\ComparisonFailure($path, $other, "'{$path}'", "'{$other}'");
                     $this->fail($other, $description, $failure);
                 }
+                return null;
             }
 
             /**

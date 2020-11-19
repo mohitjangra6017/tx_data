@@ -97,8 +97,8 @@ class mod_assign_lib_testcase extends advanced_testcase {
         $courses = $DB->get_records('course', array('id' => $course->id));
         assign_print_overview($courses, $overview);
         $this->assertEquals(1, count($overview));
-        $this->assertRegExp('/.*Open Assignment.*/', $overview[$course->id]['assign']); // No valid submission.
-        $this->assertNotRegExp('/.*First Assignment.*/', $overview[$course->id]['assign']); // Has valid submission.
+        $this->assertMatchesRegularExpression('/.*Open Assignment.*/', $overview[$course->id]['assign']); // No valid submission.
+        $this->assertDoesNotMatchRegularExpression('/.*First Assignment.*/', $overview[$course->id]['assign']); // Has valid submission.
 
         // And now submit the submission.
         $opensubmission->status = ASSIGN_SUBMISSION_STATUS_SUBMITTED;
@@ -113,16 +113,16 @@ class mod_assign_lib_testcase extends advanced_testcase {
         assign_print_overview($courses, $overview);
         $this->assertEquals(1, count($overview));
         // Submissions without a grade.
-        $this->assertRegExp('/.*Open Assignment.*/', $overview[$course->id]['assign']);
-        $this->assertNotRegExp('/.*Assignment with submissions.*/', $overview[$course->id]['assign']);
+        $this->assertMatchesRegularExpression('/.*Open Assignment.*/', $overview[$course->id]['assign']);
+        $this->assertDoesNotMatchRegularExpression('/.*Assignment with submissions.*/', $overview[$course->id]['assign']);
 
         $this->setUser($teacher);
         $overview = array();
         assign_print_overview($courses, $overview);
         $this->assertEquals(1, count($overview));
         // Submissions without a grade.
-        $this->assertRegExp('/.*Open Assignment.*/', $overview[$course->id]['assign']);
-        $this->assertNotRegExp('/.*Assignment with submissions.*/', $overview[$course->id]['assign']);
+        $this->assertMatchesRegularExpression('/.*Open Assignment.*/', $overview[$course->id]['assign']);
+        $this->assertDoesNotMatchRegularExpression('/.*Assignment with submissions.*/', $overview[$course->id]['assign']);
 
         // Let us grade a submission.
         $this->setUser($teacher);
@@ -239,7 +239,7 @@ class mod_assign_lib_testcase extends advanced_testcase {
 
         $result = assign_user_outline($course, $student, $assign->get_course_module(), $assign->get_instance());
 
-        $this->assertRegExp('/50.5/', $result->info);
+        $this->assertMatchesRegularExpression('/50.5/', $result->info);
     }
 
     /**

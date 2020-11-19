@@ -412,7 +412,7 @@ class core_component_testcase extends advanced_testcase {
 
         // Any plugin without subtypes is ok here.
         $this->assertFileExists("$CFG->dirroot/mod/choice");
-        $this->assertFileNotExists("$CFG->dirroot/mod/choice/db/subplugins.php");
+        $this->assertFileDoesNotExist("$CFG->dirroot/mod/choice/db/subplugins.php");
 
         $this->assertNull(core_component::get_subplugins('mod_choice'));
 

@@ -63,7 +63,7 @@ class core_user_userdata_username_testcase extends advanced_testcase {
         $result = username::execute_purge($deleteduser, context_system::instance());
         $this->assertEquals(item::RESULT_STATUS_SUCCESS, $result);
 
-        $this->assertRegExp('/^deleted_[a-z0-9]+$/', $DB->get_field('user', 'username', ['id' => $deleteduser->id]));
+        $this->assertMatchesRegularExpression('/^deleted_[a-z0-9]+$/', $DB->get_field('user', 'username', ['id' => $deleteduser->id]));
         // Usernames of control users are untouched.
         $this->assertEquals($activeuser->username, $DB->get_field('user', 'username', ['id' => $activeuser->id]));
         $this->assertEquals($suspendeduser->username, $DB->get_field('user', 'username', ['id' => $suspendeduser->id]));

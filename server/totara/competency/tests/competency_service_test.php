@@ -715,7 +715,7 @@ class totara_competency_competency_service_testcase extends advanced_testcase {
 
         //assert first competency is not in list
         $comp_ids = array_column($result['items'],'id');
-        $this->assertNotContains($first_comp_id,$comp_ids);
+        $this->assertNotContainsEquals($first_comp_id,$comp_ids);
     }
 
     public function test_it_loads_individual_competency() {
@@ -730,7 +730,7 @@ class totara_competency_competency_service_testcase extends advanced_testcase {
 
         $this->assert_webservice_success($res);
         $this->assertEquals($comp[2]->id, $result['id']);
-        $this->assertRegExp("/{$comp[2]->description}/", $result['description']);
+        $this->assertMatchesRegularExpression("/{$comp[2]->description}/", $result['description']);
         $this->assertEquals($comp[2]->frameworkid, $result['frameworkid']);
         $this->assertArrayNotHasKey('crumbtrail', $result);
         $this->assertArrayNotHasKey('assigned_user_groups', $result);
@@ -748,7 +748,7 @@ class totara_competency_competency_service_testcase extends advanced_testcase {
 
         $this->assert_webservice_success($res);
         $this->assertEquals($comp[2]->id, $result['id']);
-        $this->assertRegExp("/{$comp[2]->description}/", $result['description']);
+        $this->assertMatchesRegularExpression("/{$comp[2]->description}/", $result['description']);
         $this->assertEquals($comp[2]->frameworkid, $result['frameworkid']);
 
         $this->assertArrayHasKey('crumbtrail', $result);
@@ -783,7 +783,7 @@ class totara_competency_competency_service_testcase extends advanced_testcase {
 
         $this->assert_webservice_success($res);
         $this->assertEquals($comp[2]->id, $result['id']);
-        $this->assertRegExp("/{$comp[2]->description}/", $result['description']);
+        $this->assertMatchesRegularExpression("/{$comp[2]->description}/", $result['description']);
         $this->assertEquals($comp[2]->frameworkid, $result['frameworkid']);
 
         $this->assertArrayNotHasKey('crumbtrail', $result);

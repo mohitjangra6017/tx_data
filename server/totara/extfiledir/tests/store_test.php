@@ -249,7 +249,7 @@ final class totara_extfiledir_store_testcase extends advanced_testcase {
         $relativepath = $store::get_relative_filepath($contenthash);
         $resultfile = $store->get_filedir() . '/' . $relativepath;
 
-        $this->assertFileNotExists($resultfile);
+        $this->assertFileDoesNotExist($resultfile);
         $success = $store->write_content($contenthash, $filewriter);
         $this->assertTrue($success);
         $this->assertFileExists($resultfile);
@@ -265,19 +265,19 @@ final class totara_extfiledir_store_testcase extends advanced_testcase {
         $store = store::get_stores()['external2'];
         $relativepath = $store::get_relative_filepath($contenthash);
         $resultfile = $store->get_filedir() . '/' . $relativepath;
-        $this->assertFileNotExists($resultfile);
+        $this->assertFileDoesNotExist($resultfile);
         $success = $store->write_content($contenthash, $filewriter);
         $this->assertFalse($success);
-        $this->assertFileNotExists($resultfile);
+        $this->assertFileDoesNotExist($resultfile);
 
         // Respect store disabling setting.
         $store = store::get_stores()['external3'];
         $relativepath = $store::get_relative_filepath($contenthash);
         $resultfile = $store->get_filedir() . '/' . $relativepath;
-        $this->assertFileNotExists($resultfile);
+        $this->assertFileDoesNotExist($resultfile);
         $success = $store->write_content($contenthash, $filewriter);
         $this->assertFalse($success);
-        $this->assertFileNotExists($resultfile);
+        $this->assertFileDoesNotExist($resultfile);
 
         ini_set('error_log', $oldlog);
         $this->assertSame('', file_get_contents($logfile));
@@ -313,7 +313,7 @@ final class totara_extfiledir_store_testcase extends advanced_testcase {
 
         // Regular store.
         $store = store::get_stores()['external1'];
-        $this->assertFileNotExists($resultfile);
+        $this->assertFileDoesNotExist($resultfile);
         $success = $store->read_content($contenthash, $filereader);
         $this->assertTrue($success);
         $this->assertFileExists($resultfile);
@@ -322,14 +322,14 @@ final class totara_extfiledir_store_testcase extends advanced_testcase {
         @unlink($resultfile);
         $success = $store->read_content(sha1('test'), $filereader);
         $this->assertFalse($success);
-        $this->assertFileNotExists($resultfile);
+        $this->assertFileDoesNotExist($resultfile);
 
         // Respect store disabling setting.
         @unlink($resultfile);
         $store = store::get_stores()['external2'];
         $success = $store->read_content($contenthash, $filereader);
         $this->assertFalse($success);
-        $this->assertFileNotExists($resultfile);
+        $this->assertFileDoesNotExist($resultfile);
     }
 
     public function test_is_content_available() {
@@ -408,7 +408,7 @@ final class totara_extfiledir_store_testcase extends advanced_testcase {
 
         $store = store::get_stores()['external1'];
         $this->assertTrue($store->delete_content($contenthash));
-        $this->assertFileNotExists($contentfile1);
+        $this->assertFileDoesNotExist($contentfile1);
 
         $store = store::get_stores()['external2'];
         $this->assertFalse($store->delete_content($contenthash));

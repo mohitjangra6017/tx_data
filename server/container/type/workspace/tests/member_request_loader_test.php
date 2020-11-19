@@ -70,7 +70,7 @@ class container_workspace_member_request_loader_testcase extends advanced_testca
             $this->assertFalse($member_request->is_declined());
             $this->assertFalse($member_request->is_accepted());
 
-            $this->assertContains($member_request->get_user_id(), $user_ids);
+            $this->assertContainsEquals($member_request->get_user_id(), $user_ids);
         }
     }
 
@@ -114,7 +114,7 @@ class container_workspace_member_request_loader_testcase extends advanced_testca
             $this->assertFalse($member_request->is_declined());
             $this->assertTrue($member_request->is_accepted());
 
-            $this->assertContains($member_request->get_user_id(), $user_ids);
+            $this->assertContainsEquals($member_request->get_user_id(), $user_ids);
         }
     }
 
@@ -158,7 +158,7 @@ class container_workspace_member_request_loader_testcase extends advanced_testca
             $this->assertTrue($member_request->is_declined());
             $this->assertFalse($member_request->is_accepted());
 
-            $this->assertContains($member_request->get_user_id(), $user_ids);
+            $this->assertContainsEquals($member_request->get_user_id(), $user_ids);
         }
     }
 
@@ -200,7 +200,7 @@ class container_workspace_member_request_loader_testcase extends advanced_testca
             $this->assertFalse($member_request->is_declined());
             $this->assertTrue($member_request->is_cancelled());
 
-            $this->assertContains($member_request->get_user_id(), $user_ids);
+            $this->assertContainsEquals($member_request->get_user_id(), $user_ids);
         }
     }
 

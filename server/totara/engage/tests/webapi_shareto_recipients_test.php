@@ -57,9 +57,9 @@ class totara_engage_webapi_shareto_recipients_testcase extends advanced_testcase
             $result
         );
 
-        $this->assertContains($user1->id, $ids);
-        $this->assertContains($user2->id, $ids);
-        $this->assertContains($user3->id, $ids);
+        $this->assertContainsEquals($user1->id, $ids);
+        $this->assertContainsEquals($user2->id, $ids);
+        $this->assertContainsEquals($user3->id, $ids);
     }
 
     /**

@@ -126,7 +126,7 @@ class container_workspace_webapi_non_member_users_testcase extends advanced_test
         $this->assertCount(1, $result->data['users']);
         foreach ($result->data['users'] as $user) {
             $this->assertContains($user['fullname'], ['Stranger Stranger']);
-            $this->assertNotContains($user['fullname'], ['Another Another', 'Admin User']);
+            $this->assertNotContainsEquals($user['fullname'], ['Another Another', 'Admin User']);
         }
     }
 

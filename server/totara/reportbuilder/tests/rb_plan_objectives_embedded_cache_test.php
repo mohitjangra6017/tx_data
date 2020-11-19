@@ -158,7 +158,7 @@ class totara_reportbuilder_rb_plan_objectives_embedded_cache_testcase extends re
         $was = array('');
         foreach($result as $r) {
             $this->assertContains($r->$objectiveidalias, array($this->objectives[0]->id, $this->objectives[1]->id));
-            $this->assertNotContains($r->objective_fullnamelink, $was);
+            $this->assertNotContainsEquals($r->objective_fullnamelink, $was);
             $was[] = $r->objective_fullnamelink;
         }
 
@@ -169,7 +169,7 @@ class totara_reportbuilder_rb_plan_objectives_embedded_cache_testcase extends re
         foreach($result as $r) {
             $this->assertContains($r->$objectiveidalias, array($this->objectives[2]->id,
                 $this->objectives[3]->id, $this->objectives[4]->id, $this->objectives[5]->id));
-            $this->assertNotContains($r->objective_fullnamelink, $was);
+            $this->assertNotContainsEquals($r->objective_fullnamelink, $was);
             $was[] = $r->objective_fullnamelink;
         }
 

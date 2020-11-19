@@ -67,16 +67,16 @@ class totara_mvc_report_controller_view_testcase extends advanced_testcase {
             $output
         );
         // Assert that he have the header section
-        $this->assertRegExp('/[0-9]+ records? shown/', $output);
-        $this->assertRegExp('/\<h2.*\>This is the report title\<\/h2\>/', $output);
+        $this->assertMatchesRegularExpression('/[0-9]+ records? shown/', $output);
+        $this->assertMatchesRegularExpression('/\<h2.*\>This is the report title\<\/h2\>/', $output);
         // Assert that we have the filter part
-        $this->assertRegExp('/Search by/', $output);
+        $this->assertMatchesRegularExpression('/Search by/', $output);
         // Assert that we have the export part
-        $this->assertRegExp('/Export as/', $output);
+        $this->assertMatchesRegularExpression('/Export as/', $output);
         // Assert that we have a column header
-        $this->assertRegExp('/Report Name/', $output);
+        $this->assertMatchesRegularExpression('/Report Name/', $output);
         // Assert that we have a row in the list
-        $this->assertRegExp('/\<td.*\><a href\=\".*\".*\>Manage embedded reports\<\/a\>/', $output);
+        $this->assertMatchesRegularExpression('/\<td.*\><a href\=\".*\".*\>Manage embedded reports\<\/a\>/', $output);
         // Assert that we have a button to show / hide columns
         $this->assertStringContainsString('Show/Hide Columns', $output);
         // Assert that we have debug information showing up

@@ -75,12 +75,12 @@ class mod_perform_data_provider_selectable_users_testcase extends advanced_testc
         $this->assertCount(13, $selectable_users);
         $actual_user_ids = $selectable_users->pluck('id');
 
-        $this->assertContains($user1->id, $actual_user_ids);
-        $this->assertContains($user2->id, $actual_user_ids);
-        $this->assertContains(get_admin()->id, $actual_user_ids);
-        $this->assertNotContains($guest_user->id, $actual_user_ids);
-        $this->assertNotContains($deleted_user->id, $actual_user_ids);
-        $this->assertNotContains($suspended_user->id, $actual_user_ids);
+        $this->assertContainsEquals($user1->id, $actual_user_ids);
+        $this->assertContainsEquals($user2->id, $actual_user_ids);
+        $this->assertContainsEquals(get_admin()->id, $actual_user_ids);
+        $this->assertNotContainsEquals($guest_user->id, $actual_user_ids);
+        $this->assertNotContainsEquals($deleted_user->id, $actual_user_ids);
+        $this->assertNotContainsEquals($suspended_user->id, $actual_user_ids);
 
         $subject_instance2 = $this->get_subject_instance($activity2);
 
@@ -90,12 +90,12 @@ class mod_perform_data_provider_selectable_users_testcase extends advanced_testc
         $this->assertCount(13, $selectable_users);
         $actual_user_ids = $selectable_users->pluck('id');
 
-        $this->assertContains($user1->id, $actual_user_ids);
-        $this->assertContains($user2->id, $actual_user_ids);
-        $this->assertContains(get_admin()->id, $actual_user_ids);
-        $this->assertNotContains($guest_user->id, $actual_user_ids);
-        $this->assertNotContains($deleted_user->id, $actual_user_ids);
-        $this->assertNotContains($suspended_user->id, $actual_user_ids);
+        $this->assertContainsEquals($user1->id, $actual_user_ids);
+        $this->assertContainsEquals($user2->id, $actual_user_ids);
+        $this->assertContainsEquals(get_admin()->id, $actual_user_ids);
+        $this->assertNotContainsEquals($guest_user->id, $actual_user_ids);
+        $this->assertNotContainsEquals($deleted_user->id, $actual_user_ids);
+        $this->assertNotContainsEquals($suspended_user->id, $actual_user_ids);
 
         // Now filter the data
         $provider = new selectable_users($subject_instance1);
@@ -105,8 +105,8 @@ class mod_perform_data_provider_selectable_users_testcase extends advanced_testc
 
         $this->assertCount(11, $selectable_users);
         $actual_user_ids = $selectable_users->pluck('id');
-        $this->assertNotContains($user1->id, $actual_user_ids);
-        $this->assertNotContains(get_admin()->id, $actual_user_ids);
+        $this->assertNotContainsEquals($user1->id, $actual_user_ids);
+        $this->assertNotContainsEquals(get_admin()->id, $actual_user_ids);
 
         $provider = new selectable_users($subject_instance1);
         $selectable_users = $provider
@@ -126,7 +126,7 @@ class mod_perform_data_provider_selectable_users_testcase extends advanced_testc
         $this->assertCount(1, $selectable_users);
         $actual_user_ids = $selectable_users->pluck('id');
         // The result is ordered by fullname, so user2 should come before user1
-        $this->assertContains($user2->id, $actual_user_ids);
+        $this->assertContainsEquals($user2->id, $actual_user_ids);
 
         // Test combination of filters
         $provider = new selectable_users($subject_instance1);

@@ -194,7 +194,7 @@ class mod_perform_webapi_resolver_query_participant_section_external_participant
         );
 
         $section_element_ids = array_column($section_element_responses, 'section_element_id');
-        $this->assertContains($section_element->id, $section_element_ids);
+        $this->assertContainsEquals($section_element->id, $section_element_ids);
 
         $expected = [
             'section_element_id' => $section_element->id,
@@ -236,8 +236,8 @@ class mod_perform_webapi_resolver_query_participant_section_external_participant
             ],
             'visible_to' => [],
         ];
-        $this->assertContains($expected, $section_element_responses);
-        $this->assertContains($static_section_element->id, $section_element_ids);
+        $this->assertContainsEquals($expected, $section_element_responses);
+        $this->assertContainsEquals($static_section_element->id, $section_element_ids);
 
         $this->assertEquals($this->create_static_section_element_response($static_section_element->id), $section_element_responses[1]);
         $this->assertEquals((int)$section_element->id, (int)$section_element_responses[0]['section_element_id']);

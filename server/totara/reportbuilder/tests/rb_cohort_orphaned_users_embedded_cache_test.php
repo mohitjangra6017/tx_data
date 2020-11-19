@@ -135,8 +135,8 @@ class totara_reportbuilder_rb_cohort_orphaned_users_embedded_cache_testcase exte
         $this->assertCount(4, $result);
         $was = array();
         foreach($result as $r) {
-            $this->assertContains($r->$useridalias, array(2, $this->users[0]->id, $this->users[5]->id, $this->users[7]->id));
-            $this->assertNotContains($r->$useridalias, $was);
+            $this->assertContainsEquals($r->$useridalias, array(2, $this->users[0]->id, $this->users[5]->id, $this->users[7]->id));
+            $this->assertNotContainsEquals($r->$useridalias, $was);
             $was[] = $r->$useridalias;
         }
     }

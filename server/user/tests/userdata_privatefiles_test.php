@@ -234,7 +234,7 @@ class core_user_userdata_privatefiles_testcase extends advanced_testcase {
      */
     private function assert_contains_file(stored_file $file, export $export) {
         $this->assertArrayHasKey($file->get_filepath(), $export->data);
-        $this->assertContains(
+        $this->assertContainsEquals(
             [
                 'fileid' => $file->get_id(),
                 'filename' => $file->get_filename(),
@@ -249,7 +249,7 @@ class core_user_userdata_privatefiles_testcase extends advanced_testcase {
             $this->assertInstanceOf(stored_file::class, $exportedfile);
             $exportedfileids[] = $exportedfile->get_id();
         }
-        $this->assertContains($file->get_id(), $exportedfileids);
+        $this->assertContainsEquals($file->get_id(), $exportedfileids);
     }
 
 }

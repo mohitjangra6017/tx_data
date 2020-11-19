@@ -69,7 +69,7 @@ class availability_hierarchy_organisation_condition_testcase extends advanced_te
         // Check if available when user is not assigned to an organisation.
         $this->assertFalse($condition->is_available(false, $info, true, $user->id));
         $information = strip_tags($condition->get_description(false, false, $info));
-        $this->assertRegExp('~You are assigned to the Organisation: Test Organisation 1~', $information);
+        $this->assertMatchesRegularExpression('~You are assigned to the Organisation: Test Organisation 1~', $information);
         $this->assertTrue($condition->is_available(true, $info, true, $user->id));
 
         // Assign user to organisation via job assignment.
@@ -82,7 +82,7 @@ class availability_hierarchy_organisation_condition_testcase extends advanced_te
         $this->assertTrue($condition->is_available(false, $info, true, $user->id));
         $this->assertFalse($condition->is_available(true, $info, true, $user->id));
         $information = strip_tags($condition->get_description(false, true, $info));
-        $this->assertRegExp('~You are not assigned to Organisation: Test Organisation 1~', $information);
+        $this->assertMatchesRegularExpression('~You are not assigned to Organisation: Test Organisation 1~', $information);
     }
 
     /**

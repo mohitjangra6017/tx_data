@@ -345,7 +345,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         self::assertNotEmpty($CFG->forceloginforprofiles);
         $CFG->coursecontact = '';
         $role_editingtrainer = $DB->get_field('role', 'id', ['shortname' => 'editingteacher'], MUST_EXIST);
-        self::assertNotContains($role_editingtrainer, explode(',', $CFG->coursecontact));
+        self::assertNotContainsEquals($role_editingtrainer, explode(',', $CFG->coursecontact));
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -376,7 +376,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         self::assertNotEmpty($CFG->forceloginforprofiles);
         $CFG->coursecontact = '';
         $role_editingtrainer = $DB->get_field('role', 'id', ['shortname' => 'editingteacher'], MUST_EXIST);
-        self::assertNotContains($role_editingtrainer, explode(',', $CFG->coursecontact));
+        self::assertNotContainsEquals($role_editingtrainer, explode(',', $CFG->coursecontact));
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -408,7 +408,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         self::assertNotEmpty($CFG->forceloginforprofiles);
         $CFG->coursecontact = '';
         $role_editingtrainer = $DB->get_field('role', 'id', ['shortname' => 'editingteacher'], MUST_EXIST);
-        self::assertNotContains($role_editingtrainer, explode(',', $CFG->coursecontact));
+        self::assertNotContainsEquals($role_editingtrainer, explode(',', $CFG->coursecontact));
 
         $course = $this->getDataGenerator()->create_course();
         $user1 = $this->getDataGenerator()->create_user();
@@ -453,7 +453,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         self::assertNotEmpty($CFG->forceloginforprofiles);
         $CFG->coursecontact = '';
         $role_editingtrainer = $DB->get_field('role', 'id', ['shortname' => 'editingteacher'], MUST_EXIST);
-        self::assertNotContains($role_editingtrainer, explode(',', $CFG->coursecontact));
+        self::assertNotContainsEquals($role_editingtrainer, explode(',', $CFG->coursecontact));
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -497,7 +497,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         self::assertNotEmpty($CFG->forceloginforprofiles);
         $CFG->coursecontact = '';
         $role_editingtrainer = $DB->get_field('role', 'id', ['shortname' => 'editingteacher'], MUST_EXIST);
-        self::assertNotContains($role_editingtrainer, explode(',', $CFG->coursecontact));
+        self::assertNotContainsEquals($role_editingtrainer, explode(',', $CFG->coursecontact));
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -615,7 +615,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         self::assertNotEmpty($CFG->forceloginforprofiles);
         $CFG->coursecontact = '';
         $role_editingtrainer = $DB->get_field('role', 'id', ['shortname' => 'editingteacher'], MUST_EXIST);
-        self::assertNotContains($role_editingtrainer, explode(',', $CFG->coursecontact));
+        self::assertNotContainsEquals($role_editingtrainer, explode(',', $CFG->coursecontact));
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -1926,7 +1926,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         self::assertNotEmpty($CFG->forceloginforprofiles);
         $CFG->coursecontact = '';
         $role_editingtrainer = $DB->get_field('role', 'id', ['shortname' => 'editingteacher'], MUST_EXIST);
-        self::assertNotContains($role_editingtrainer, explode(',', $CFG->coursecontact));
+        self::assertNotContainsEquals($role_editingtrainer, explode(',', $CFG->coursecontact));
 
         $user1 = $this->getDataGenerator()->create_user(['maildisplay' => 0]);
         $user2 = $this->getDataGenerator()->create_user(['maildisplay' => 0]);
