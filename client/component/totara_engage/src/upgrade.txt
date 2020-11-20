@@ -3,6 +3,9 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* Update InlineEditing.vue to pass through prop "focusButton" to tui ButtonIcon.vue
+  * Template changes
+* Added optional prop "focusButton" to component InlineEditing.vue
 * Added new optional prop "fromLibrary" for component BaseContent.vue
 * Added new optional prop "redirection" for component NavigationPanel.vue
 * Added new optional prop "redirection" for component EngageSection.vue
