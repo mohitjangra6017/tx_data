@@ -3,6 +3,8 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+  * core_course\management_renderer::course_search_form converted fieldset to div
+  
 === 13.0 ===
 
  * core_course_renderer::course_section_cm_name_title now adds activity type name as the title of the acitivity icon
