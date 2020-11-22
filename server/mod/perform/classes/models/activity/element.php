@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of Totara Learn
  *
  * Copyright (C) 2020 onwards Totara Learning Solutions LTD
@@ -24,6 +24,8 @@
 namespace mod_perform\models\activity;
 
 use coding_exception;
+use context;
+use context_helper;
 use core\orm\entity\model;
 use mod_perform\entity\activity\element as element_entity;
 use mod_perform\entity\activity\section_element as section_element_entity;
@@ -40,7 +42,7 @@ use mod_perform\entity\activity\section_element as section_element_entity;
  * @property-read int $identifier_id used to match elements that share the same identifier
  * @property-read string $data specific configuration data for this type of element
  * @property-read bool $is_required used to check response required or optional
- * @property-read \context $context
+ * @property-read context $context
  * @property-read element_plugin $element_plugin
  * @property-read bool $is_respondable
  * @property-read string element_$identifier
@@ -56,7 +58,6 @@ class element extends model {
         'plugin_name',
         'title',
         'identifier_id',
-        'data',
         'is_required',
         'element_section',
     ];
@@ -66,6 +67,7 @@ class element extends model {
         'element_plugin',
         'is_respondable',
         'identifier',
+        'data',
         'element_identifier',
     ];
 
@@ -82,7 +84,7 @@ class element extends model {
     }
 
     /**
-     * @param \context $context
+     * @param context $context
      * @param string $plugin_name
      * @param string $title
      * @param string $identifier
@@ -92,7 +94,7 @@ class element extends model {
      * @return static
      */
     public static function create(
-        \context $context,
+        context $context,
         string $plugin_name,
         string $title,
         string $identifier = '',
@@ -135,10 +137,10 @@ class element extends model {
     /**
      * Get the context that this element belongs to
      *
-     * @return \context
+     * @return context
      */
-    public function get_context(): \context {
-        return \context_helper::instance_by_id($this->entity->context_id);
+    public function get_context(): context {
+        return context_helper::instance_by_id($this->entity->context_id);
     }
 
     /**
@@ -164,14 +166,28 @@ class element extends model {
     public function get_element_identifier(): element_identifier {
         return element_identifier::load_by_entity($this->entity->element_identifier);
     }
+
+    /**
+     * Get the element data
+     *
+     * @return string|null
+     */
+    public function get_data(): ?string {
+        $element_plugin = element_plugin::load_by_plugin($this->plugin_name);
+
+        return method_exists($element_plugin, 'process_data')
+            ? $element_plugin->process_data($this->entity->data)
+            : $this->entity->data;
+    }
+
     /**
      * Update the context for this element
      *
      * An element is "owned" by the context it belongs to. Setting a new context effectively "moves" the element.
      *
-     * @param \context $context
+     * @param context $context
      */
-    public function update_context(\context $context) {
+    public function update_context(context $context) {
         $this->entity->context_id = $context->id;
         $this->entity->save();
     }

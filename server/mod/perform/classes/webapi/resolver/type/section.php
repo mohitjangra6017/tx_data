@@ -23,6 +23,7 @@
 
 namespace mod_perform\webapi\resolver\type;
 
+use coding_exception;
 use core\format;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
@@ -44,7 +45,7 @@ class section implements type_resolver {
      */
     public static function resolve(string $field, $section, array $args, execution_context $ec) {
         if (!$section instanceof section_model) {
-            throw new \coding_exception('Expected section model');
+            throw new coding_exception('Expected section model');
         }
 
         $format = $args['format'] ?? format::FORMAT_HTML;

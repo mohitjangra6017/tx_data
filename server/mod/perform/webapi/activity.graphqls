@@ -569,6 +569,13 @@ input mod_perform_activity_page_input {
 }
 
 """
+Input type for activities list.
+"""
+input mod_perform_activities_input {
+  sort_by: String
+}
+
+"""
 Filters input for paginated activity list.
 """
 input mod_perform_activity_filters_input {
@@ -590,7 +597,9 @@ extend type Query {
   """
   A list of all performance activities that the current user can administer
   """
-  mod_perform_activities: [mod_perform_activity!]!
+  mod_perform_activities(
+    query_options: mod_perform_activities_input
+  ): [mod_perform_activity!]!
 
   """
   A paginated list of performance activities that the current user can administer

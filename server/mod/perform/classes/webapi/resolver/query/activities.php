@@ -28,7 +28,7 @@ use core\webapi\middleware\require_advanced_feature;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
-use mod_perform\data_providers\activity;
+use mod_perform\data_providers\activity\activity as activity_data_provider;
 use mod_perform\util;
 
 class activities implements query_resolver, has_middleware {
@@ -40,8 +40,14 @@ class activities implements query_resolver, has_middleware {
         $ec->set_relevant_context($context);
 
         require_capability('mod/perform:view_manage_activities', $context);
+        $activity_provider = new activity_data_provider();
 
-        return (new activity\activity())->fetch()->get();
+        if (!empty($args['query_options']['sort_by'])) {
+            activity_data_provider::validate_sort_by($args['query_options']['sort_by']);
+            $activity_provider->sort_by($args['query_options']['sort_by']);
+        }
+
+        return $activity_provider->fetch()->get();
     }
 
     /**

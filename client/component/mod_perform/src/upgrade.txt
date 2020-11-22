@@ -4,6 +4,15 @@ information provided here is intended especially for developers.
 === 14.0 ===
 * Updated the template structure of ActivityContentPrint.vue to add new icons, add new pieces of information, and improve element spacing and font sizes
     * Template, SCSS changes & lang string changes
+* Updated Activities.vue page for filtering and pagination.
+    * Template
+* HtmlResponseDisplay.vue now supports rendering Weka HTML responses
+* Updated Activities.vue page for filtering and pagination.
+    * Template
+* HtmlResponseDisplay.vue now supports rendering Weka HTML responses
+* Added new property validation-mode to PerformAdminCustomElementEdit.vue.
+
+=== 13.2 ===
 * Reworked several components to centralise common functionality improving consistency and reducing duplication
     * Added a new wrapper component for all custom elements
         * PerformAdminCustomElement.vue

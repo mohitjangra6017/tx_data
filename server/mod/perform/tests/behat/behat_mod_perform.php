@@ -1640,11 +1640,14 @@ class behat_mod_perform extends behat_base {
             case 'Static content':
                 $this->fill_static_content_admin_form_settings();
                 break;
+            case 'Response redisplay':
+                $this->fill_redisplay_admin_form_settings();
+                break;
             default:
                 $this->fill_element_admin_form_settings($element_setting_container);
         }
 
-        if ($required && $title !== 'Static content') {
+        if ($required && !in_array($title, ['Static content', 'Response redisplay'], true)) {
             $response_required_input = $element_setting_container->find('css', self::ADMIN_FORM_RESPONSE_REQUIRED);
             $response_required_input->getParent()->find('css', 'label')->click();
         }
@@ -1703,6 +1706,21 @@ class behat_mod_perform extends behat_base {
 
     private function fill_static_content_admin_form_settings(): void {
         $this->execute('behat_weka::i_set_the_weka_editor_with_css_to', [self::ADMIN_FORM_STATIC_CONTENT_WEKA, 'static content']);
+    }
+
+    private function fill_redisplay_admin_form_settings(): void {
+        $table_node = new TableNode([
+            ['rawTitle', 'Previous response'],
+            ['activityId', 'One of every element (Current activity)'],
+        ]);
+
+        $this->execute('behat_forms::i_set_the_following_fields_to_these_values', ['data' => $table_node]);
+        $this->execute('behat_general::i_wait_for_pending_js');
+
+        $table_node = new TableNode([
+            ['sectionElementId', 'Text: Long response (Text: Long response)'],
+        ]);
+        $this->execute('behat_forms::i_set_the_following_fields_to_these_values', ['data' => $table_node]);
     }
 
     /**

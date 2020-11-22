@@ -86,7 +86,7 @@ class section_content extends perform_controller {
         $props = [
             'activity-context-id' => (int) $section->activity->context_id,
             'section-id' => (string) $this->get_section_id_param(),
-            'activity-id' => (string) $section->activity_id,
+            'activity-id' => (int) $section->activity_id,
             'activity-state' => [
                 'code' => $activity_state::get_code(),
                 'name' => $activity_state::get_name(),

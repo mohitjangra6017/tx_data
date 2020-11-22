@@ -23,6 +23,7 @@
 
 namespace mod_perform\data_providers\activity;
 
+use coding_exception;
 use core\collection;
 use core\orm\entity\repository;
 use core\orm\query\builder;
@@ -47,7 +48,19 @@ class activity extends provider {
 
     use cursor_paginator_trait;
 
-    public const DEFAULT_SORTING = 'creation_date';
+    public const SORT_BY_CREATION_DATE = 'creation_date';
+
+    /**
+     * @deprecated Use `self::SORT_BY_CREATION_DATE` instead
+     */
+    public const DEFAULT_SORTING = self::SORT_BY_CREATION_DATE;
+
+    public const SORT_BY_NAME = 'name';
+
+    public const SORTING_OPTIONS = [
+        self::SORT_BY_CREATION_DATE,
+        self::SORT_BY_NAME,
+    ];
 
     /**
      * @inheritDoc
@@ -93,6 +106,18 @@ class activity extends provider {
     protected function process_fetched_items(): collection {
         return $this->items
             ->map_to(activity_model::class);
+    }
+
+    /**
+     * Validate sort_by value.
+     *
+     * @param $sort_by
+     * @return void
+     */
+    public static function validate_sort_by($sort_by): void {
+        if (!in_array($sort_by, self::SORTING_OPTIONS, true)) {
+            throw new coding_exception("Invalid sorting with $sort_by");
+        }
     }
 
     /**

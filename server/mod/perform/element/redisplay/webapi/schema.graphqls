@@ -1,0 +1,22 @@
+extend type Query {
+  """
+  Source activity respondable question elements
+  """
+  performelement_redisplay_source_activity_question_elements(
+    input: source_activity_question_elements_input!
+  ): performelement_redisplay_source_activity_question_elements_result!
+}
+
+"""
+Input type for source activity question elements.
+"""
+input source_activity_question_elements_input {
+  activity_id: param_integer!
+}
+
+"""
+Result for source activity question elements.
+"""
+type performelement_redisplay_source_activity_question_elements_result {
+  sections: [mod_perform_section!]!
+}

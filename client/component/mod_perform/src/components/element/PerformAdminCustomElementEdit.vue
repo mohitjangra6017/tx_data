@@ -17,9 +17,10 @@
 -->
 <template>
   <Uniform
+    ref="form"
     :initial-values="initialValues"
     :vertical="true"
-    validation-mode="submit"
+    :validation-mode="validationMode"
     input-width="full"
     @change="onChange"
     @submit="handleSubmit"
@@ -108,6 +109,10 @@ export default {
   props: {
     initialValues: Object,
     settings: Object,
+    validationMode: {
+      type: String,
+      default: 'submit',
+    },
   },
 
   mounted() {
@@ -136,6 +141,17 @@ export default {
 
     cancel() {
       this.$emit('cancel');
+    },
+
+    /**
+     * Set value of field at path.
+     *
+     * @public
+     * @param {(string|number|array)} path
+     * @param value
+     */
+    update(path, value) {
+      this.$refs.form.update(path, value);
     },
   },
 };

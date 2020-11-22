@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of Totara Learn
  *
  * Copyright (C) 2020 onwards Totara Learning Solutions LTD
@@ -17,46 +17,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Nathan Lewis <nathan.lewis@totaralearning.com>
- * @package mod_perform
+ * @author Kunle Odusan <kunle.odusan@totaralearning.com>
  */
 
-namespace mod_perform\webapi\resolver\query;
+namespace performelement_redisplay\webapi\resolver\query;
 
-use core\webapi\execution_context;
+use core\webapi\execution_context as execution_context;
 use core\webapi\middleware\require_advanced_feature;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
-use mod_perform\entity\activity\section;
-use mod_perform\models\activity\section as section_model;
+use mod_perform\data_providers\activity\sections as sections_provider;
 use mod_perform\webapi\middleware\require_activity;
 use mod_perform\webapi\middleware\require_manage_capability;
 
-class section_admin implements query_resolver, has_middleware {
+class source_activity_question_elements implements query_resolver, has_middleware {
+
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public static function resolve(array $args, execution_context $ec) {
-        $section_id = (int)$args['section_id'] ?? 0;
-        if (!$section_id) {
-            throw new \invalid_parameter_exception('invalid section id');
-        }
-
-        return section::repository()
-            ->where('id', $section_id)
-            ->with('section_elements.element.element_identifier')
-            ->get()
-            ->map_to(section_model::class)
-            ->first();
+        return [
+            'sections' => (new sections_provider())->get_sections_with_respondable_section_elements($args['input']['activity_id']),
+        ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public static function get_middleware(): array {
         return [
             new require_advanced_feature('performance_activities'),
-            require_activity::by_section_id('section_id', true),
+            require_activity::by_activity_id('input.activity_id', true),
             require_manage_capability::class
         ];
     }

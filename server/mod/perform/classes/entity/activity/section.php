@@ -28,6 +28,7 @@ use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
 use core\orm\entity\relations\has_many;
 use core\orm\entity\relations\has_many_through;
+use mod_perform\models\activity\element_plugin;
 use totara_core\entity\relationship;
 
 /**
@@ -72,7 +73,23 @@ class section extends entity {
      * @return has_many
      */
     public function section_elements(): has_many {
-        return $this->has_many(section_element::class, 'section_id');
+        return $this->has_many(section_element::class, 'section_id')
+            ->order_by('sort_order');
+    }
+
+    /**
+     * A section's collection of respondable section elements.
+     *
+     * @return has_many
+     */
+    public function respondable_section_elements(): has_many {
+        $respondable_plugins = element_plugin::get_element_plugins(true, false);
+
+        return $this->has_many(section_element::class, 'section_id')
+            ->as('se')
+            ->join([element::TABLE, 'e'], 'element_id', 'e.id')
+            ->where_in('e.plugin_name', array_keys($respondable_plugins))
+            ->order_by('se.sort_order');
     }
 
     /**

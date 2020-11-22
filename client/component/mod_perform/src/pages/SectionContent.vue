@@ -87,6 +87,7 @@
                   :section-component="getSectionComponent(sectionElement)"
                   :section-element="sectionElement"
                   :section-id="sectionId"
+                  :activity-id="activityId"
                   :activity-context-id="activityContextId"
                   @update="update(sectionElement, $event, index)"
                   @edit="edit(sectionElement)"
@@ -112,6 +113,7 @@
             v-if="elementPlugins.length"
             :key="sectionElement.id"
             :activity-state="activityState"
+            :activity-id="activityId"
             :is-multi-section-active="isMultiSectionActive"
             :section-component="getSectionComponent(sectionElement)"
             :section-element="sectionElement"
@@ -243,7 +245,7 @@ export default {
       required: true,
     },
     activityId: {
-      type: String,
+      type: Number,
       required: true,
     },
     sectionId: {

@@ -127,6 +127,7 @@
         :settings="sectionComponent.settings"
         :title="sectionElement.element.title"
         :activity-context-id="activityContextId"
+        :current-activity-id="activityId"
         @display="$emit('display', sectionElement)"
         @display-read="$emit('display-read', sectionElement)"
         @update="$emit('update', $event)"
@@ -175,6 +176,7 @@ export default {
 
   props: {
     activityState: Object,
+    activityId: Number,
     draggable: Boolean,
     dragging: Boolean,
     errors: Object,

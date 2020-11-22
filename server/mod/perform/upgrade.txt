@@ -84,3 +84,6 @@ information provided here is intended especially for developers.
 * mod_perform\entities\activity\track_user_assignment_repository has been moved to mod_perform\entity\activity\track_user_assignment_repository
 * mod_perform\entities\activity\track_user_assignment_via has been moved to mod_perform\entity\activity\track_user_assignment_via
 * Deprecated mod_perform\models\activity\element::get_section_element - elements are designed to be reused more than once.
+* Added graphql input type mod_perform_activities_input for mod_perform_activities graphql query.
+    * New input mod_perform_activities_input has a sort_by field that can be used to change the order of activities.
+* Deprecated mod_perform\data_providers\activity\activity::DEFAULT_SORTING use mod_perform\data_providers\activity\activity::SORT_BY_CREATION_DATE instead.

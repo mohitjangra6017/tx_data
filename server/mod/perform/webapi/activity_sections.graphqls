@@ -43,9 +43,13 @@ type mod_perform_section {
   """
   sort_order: Int!
   """
-  List of section_elements within this section
+  List of section elements within this section
   """
   section_elements: [mod_perform_section_element!]!
+  """
+  List of respondable section elements within this section
+  """
+  respondable_section_elements: [mod_perform_section_element!]!
   """
   List of relationships involved in this section, and the abilities those relationships have within the section
   """

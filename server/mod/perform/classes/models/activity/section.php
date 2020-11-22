@@ -27,9 +27,7 @@ use coding_exception;
 use core\orm\collection;
 use core\orm\entity\model;
 use core\orm\query\builder;
-use mod_perform\entity\activity\element as element_entity;
 use mod_perform\entity\activity\section as section_entity;
-use mod_perform\entity\activity\section_element as section_element_entity;
 use mod_perform\models\response\participant_section;
 use  mod_perform\models\activity\element as model_element;
 use stdClass;
@@ -65,6 +63,7 @@ class section extends model {
         'activity',
         'display_title',
         'section_elements',
+        'respondable_section_elements',
         'section_relationships',
         'participant_sections',
         'section_elements_summary',
@@ -196,6 +195,10 @@ class section extends model {
      * @return collection|section_element[]
      */
     public function get_respondable_section_elements(): collection {
+        if ($this->entity->relation_loaded('respondable_section_elements')) {
+            return $this->entity->respondable_section_elements->map_to(section_element::class);
+        }
+
         return $this->get_section_elements()->filter(function (section_element $section_element) {
             return $section_element->element->get_is_respondable();
         });

@@ -47,6 +47,27 @@ class mod_perform_webapi_resolver_query_activities_testcase extends advanced_tes
         $this->assertEqualsCanonicalizing($names, $activities);
     }
 
+    public function test_get_activities_sorted_by_name() {
+        $names = ['Mid year performance', 'End year performance', 'The Final Lap'];
+        $this->create_test_data($names);
+
+        /** @var collection|mod_perform\models\activity\activity[] $activities */
+        $result = $this->resolve_graphql_query(
+            self::QUERY,
+            [
+                'query_options' => [
+                    'sort_by' => 'name'
+                ]
+            ]
+        );
+        $activities = $result->pluck('name');
+
+        $this->assertCount(count($names), $activities);
+        $this->assertEquals($names[1], $activities[0]);
+        $this->assertEquals($names[0], $activities[1]);
+        $this->assertEquals($names[2], $activities[2]);
+    }
+
     public function test_user_needs_view_manage_activities_capability() {
         global $DB;
 
