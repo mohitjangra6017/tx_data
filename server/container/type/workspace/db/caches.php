@@ -17,22 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author Nathan Lewis <nathan.lewis@totaralearning.com>
  * @package container_workspace
  */
-
 defined('MOODLE_INTERNAL') || die();
 
-/* NOTE: the following version number must be bumped during each major or minor Totara release. */
-
-$plugin->version  = 2020113000;                 // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020101200;                 // Requires this Totara version.
-$plugin->component = 'container_workspace';          // To check on upgrade, that module sits in correct place
-
-$plugin->dependencies = [
-    'totara_engage' => 2020101200,
-    'editor_weka' => 2020101200,
-    'totara_comment' => 2020101200,
-    'enrol_self' => 2020101200,
-    'enrol_manual' => 2020101200
+$definitions = [
+    'draft_id' => [
+        'mode' => cache_store::MODE_REQUEST,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'staticacceleration' => true,
+        'staticaccelerationsize' => 50,
+        'canuselocalstore' => true
+    ]
 ];
