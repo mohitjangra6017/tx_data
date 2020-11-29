@@ -3,5 +3,13 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* Updates in Weka.vue:
+  * Deprecated optional prop "instanceId"
+  * Deprecated optional prop "component"
+  * Deprecated optional prop "area"
+  * Added new optional prop "compact"
+  * Added new optional prop "usageIdentifier"
+  * Added new optional prop "variantName"
+  * Data attribute "toolbarEnabled" had been deprecated in favour of prop "compact"
 * Added new optional prop "instanceId" for component User.vue
 * Added new optional prop "contextId" for component Weka.vue
