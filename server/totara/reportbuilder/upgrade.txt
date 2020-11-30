@@ -3,6 +3,7 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* rb_filter_text::setupForm() now receives a new optional parameter 'hiddenoperator' which allows change an array of comparison operators
 * template_helper::get_template_groups() now by default excludes groups which only contain templates belonging
   to sources that are disabled or non-selectable. Groups containing only non-selectable sources can be included
   by specifying the new optional parameter includenonselectable.
