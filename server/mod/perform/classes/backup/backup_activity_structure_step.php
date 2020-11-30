@@ -139,6 +139,17 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
             ]
         );
 
+        $redisplay_relationships = new backup_nested_element('element_redisplay_relationships');
+        $redisplay_relationship = new backup_nested_element(
+            'element_redisplay_relationship',
+            ['id'],
+            [
+                'source_activity_id',
+                'source_section_element_id',
+                'redisplay_element_id',
+            ]
+        );
+
         $element_responses = new backup_nested_element('element_responses');
         $element_response = new backup_nested_element(
             'element_response',
@@ -382,6 +393,9 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
         $perform->add_child($element_identifiers);
         $element_identifiers->add_child($element_identifier);
 
+        $perform->add_child($redisplay_relationships);
+        $element->add_child($redisplay_relationship);
+
         $perform->add_child($sections);
         $sections->add_child($section);
         $section->add_child($section_elements);
@@ -442,6 +456,11 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
                JOIN {perform_section} ps ON pse.section_id = ps.id
               WHERE ps.activity_id = :activity_id",
             ['activity_id' => backup::VAR_PARENTID]
+        );
+
+        $redisplay_relationship->set_source_table(
+            'perform_element_redisplay_relationship',
+            ['redisplay_element_id' => backup::VAR_PARENTID]
         );
 
         $perform->annotate_ids('perform_type', 'type_id');

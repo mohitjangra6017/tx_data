@@ -64,7 +64,7 @@
       <DropdownItem v-if="activity.can_clone" @click="cloneActivity">
         {{ $str('activity_action_clone', 'mod_perform') }}
       </DropdownItem>
-      <DropdownItem @click="showDeleteModal">
+      <DropdownItem @click="canDeleteActivity">
         {{ $str('activity_action_delete', 'mod_perform') }}
       </DropdownItem>
     </Dropdown>
@@ -99,6 +99,14 @@
       </template>
       <p>{{ $str('modal_delete_confirmation_line', 'mod_perform') }}</p>
     </ConfirmationModal>
+
+    <ActivityDeletionModal
+      :title="modalTitle"
+      :description="modalDescription"
+      :activity-sections="modalData"
+      :open="canNotDeleteModalOpen"
+      @close="closeCanNotDeleteModal"
+    />
   </div>
 </template>
 
@@ -109,6 +117,7 @@ import ConfirmationModal from 'tui/components/modal/ConfirmationModal';
 import Dropdown from 'tui/components/dropdown/Dropdown';
 import DropdownItem from 'tui/components/dropdown/DropdownItem';
 import MoreButton from 'tui/components/buttons/MoreIcon';
+import ActivityDeletionModal from 'mod_perform/components/manage_activity/content/DeletionValidationModal';
 import TasksIcon from 'tui/components/icons/Tasks';
 import { notify } from 'tui/notifications';
 import { ACTIVITY_STATUS_DRAFT } from 'mod_perform/constants';
@@ -116,6 +125,7 @@ import { ACTIVITY_STATUS_DRAFT } from 'mod_perform/constants';
 // Queries
 import activateCloneMutation from 'mod_perform/graphql/clone_activity';
 import activateDeleteMutation from 'mod_perform/graphql/delete_activity';
+import activityDeletionValidationQuery from 'mod_perform/graphql/activity_deletion_validation';
 
 export default {
   components: {
@@ -125,6 +135,7 @@ export default {
     Dropdown,
     DropdownItem,
     MoreButton,
+    ActivityDeletionModal,
     TasksIcon,
   },
 
@@ -139,6 +150,10 @@ export default {
     return {
       deleteModalOpen: false,
       deleting: false,
+      canNotDeleteModalOpen: false,
+      modalTitle: null,
+      modalDescription: null,
+      modalData: [],
     };
   },
 
@@ -249,6 +264,31 @@ export default {
     },
 
     /**
+     * Check if activity has any element that is referenced by redisplay elements,
+     * show can not delete modal if there is, otherwise show delete modal
+     */
+    async canDeleteActivity() {
+      const {
+        data: { validation_info: result },
+      } = await this.$apollo.query({
+        query: activityDeletionValidationQuery,
+        variables: {
+          input: { activity_id: this.activity.id },
+        },
+        fetchPolicy: 'no-cache',
+      });
+
+      if (result.can_delete) {
+        this.showDeleteModal();
+      } else {
+        this.modalTitle = result.title;
+        this.modalDescription = result.reason.description;
+        this.modalData = result.reason.data;
+        this.showCanNotDeleteModal();
+      }
+    },
+
+    /**
      * Display the modal for confirming the deletion of the activity.
      */
     showDeleteModal() {
@@ -284,12 +324,29 @@ export default {
         type: 'error',
       });
     },
+
+    /**
+     * Display can not delete modal
+     */
+    showCanNotDeleteModal() {
+      this.canNotDeleteModalOpen = true;
+    },
+
+    /**
+     * Hide can not delete modal
+     */
+    closeCanNotDeleteModal() {
+      this.canNotDeleteModalOpen = false;
+    },
   },
 };
 </script>
 
 <lang-strings>
   {
+    "core": [
+      "delete"
+    ],
     "mod_perform": [
       "activity_action_activate",
       "activity_action_clone",
@@ -306,9 +363,6 @@ export default {
       "toast_error_generic_update",
       "toast_success_activity_deleted",
       "toast_success_draft_activity_deleted"
-    ],
-    "core": [
-      "delete"
     ]
   }
 </lang-strings>

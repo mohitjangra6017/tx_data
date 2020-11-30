@@ -28,6 +28,8 @@ use core\orm\collection;
 use core\orm\entity\model;
 use core\orm\query\builder;
 use mod_perform\entity\activity\section as section_entity;
+use mod_perform\hook\dto\pre_deleted_dto;
+use mod_perform\hook\pre_section_deleted;
 use mod_perform\models\response\participant_section;
 use  mod_perform\models\activity\element as model_element;
 use stdClass;
@@ -471,9 +473,25 @@ class section extends model {
 
     /**
      * Delete the section
+     *
+     * @throws coding_exception
      */
     public function delete(): void {
         global $DB;
+
+        // check if section can be deleted
+        $hook = new pre_section_deleted($this->get_id());
+        $hook->execute();
+
+        /**
+         * @var pre_deleted_dto[]
+         */
+        $reasons = $hook->get_reasons();
+
+        if (!empty($reasons)) {
+            throw new coding_exception(array_shift($reasons)->get_description());
+        }
+
         $section_relationships = $this->get_section_relationships();
         $participant_sections = $this->get_participant_sections();
 

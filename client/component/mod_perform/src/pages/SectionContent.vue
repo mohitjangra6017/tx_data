@@ -140,6 +140,14 @@
         <p>{{ $str('modal_element_delete_message', 'mod_perform') }}</p>
       </ConfirmationModal>
 
+      <ElementDeletionModal
+        :title="modalTitle"
+        :description="modalDescription"
+        :activity-sections="modalData"
+        :open="canNotDeleteModalOpen"
+        @close="closeCanNotDeleteModal"
+      />
+
       <ModalPresenter :open="moveModalOpen" @request-close="closeMoveModal">
         <Modal size="normal" :aria-labelledby="moveModalId">
           <ModalContent
@@ -207,12 +215,14 @@ import ModalContent from 'tui/components/modal/ModalContent';
 import ModalPresenter from 'tui/components/modal/ModalPresenter';
 import PageBackLink from 'tui/components/layouts/PageBackLink';
 import PerformAdminCustomElement from 'mod_perform/components/element/PerformAdminCustomElement';
+import ElementDeletionModal from 'mod_perform/components/manage_activity/content/DeletionValidationModal';
 
 import moveElementToSectionMutation from 'mod_perform/graphql/move_element_to_section';
 import performElementPluginsQuery from 'mod_perform/graphql/element_plugins';
 import sectionDetailQuery from 'mod_perform/graphql/section_admin';
 import sectionsQuery from 'mod_perform/graphql/sections';
 import updateSectionElementMutation from 'mod_perform/graphql/update_section_elements';
+import elementDeletionValidationQuery from 'mod_perform/graphql/element_deletion_validation';
 
 import { ACTIVITY_STATUS_DRAFT } from 'mod_perform/constants';
 import { notify } from 'tui/notifications';
@@ -236,6 +246,7 @@ export default {
     ModalPresenter,
     PageBackLink,
     PerformAdminCustomElement,
+    ElementDeletionModal,
     Uniform,
   },
 
@@ -291,6 +302,10 @@ export default {
       elementToMove: null,
       type: null,
       moveToSectionId: null,
+      canNotDeleteModalOpen: false,
+      modalTitle: null,
+      modalDescription: null,
+      modalData: [],
     };
   },
 
@@ -558,11 +573,28 @@ export default {
      * @param {Object} sectionElement
      * @param {Number} index
      */
-    tryDelete(sectionElement, index) {
+    async tryDelete(sectionElement, index) {
       if (sectionElement.element.id) {
-        this.deleteModalOpen = true;
-        this.elementToDelete = sectionElement;
-        this.elementToDelete.index = index;
+        const {
+          data: { validation_info: result },
+        } = await this.$apollo.query({
+          query: elementDeletionValidationQuery,
+          variables: {
+            input: { section_element_id: sectionElement.id },
+          },
+          fetchPolicy: 'no-cache',
+        });
+
+        if (result.can_delete) {
+          this.deleteModalOpen = true;
+          this.elementToDelete = sectionElement;
+          this.elementToDelete.index = index;
+        } else {
+          this.modalTitle = result.title;
+          this.modalDescription = result.reason.description;
+          this.modalData = result.reason.data;
+          this.showCanNotDeleteModal();
+        }
       } else {
         this.remove(sectionElement);
       }
@@ -907,6 +939,20 @@ export default {
      */
     normaliseIdentifierForElements(identifier) {
       return identifier === null ? '' : identifier;
+    },
+
+    /**
+     * Show can not delete modal
+     */
+    showCanNotDeleteModal() {
+      this.canNotDeleteModalOpen = true;
+    },
+
+    /**
+     * Hide can not delete modal
+     */
+    closeCanNotDeleteModal() {
+      this.canNotDeleteModalOpen = false;
     },
   },
 };

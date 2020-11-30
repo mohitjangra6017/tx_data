@@ -240,7 +240,28 @@ function mod_perform_upgrade_long_text_responses_to_weka_format() {
 function mod_perform_upgrade_element_responses_to_include_timestamps() {
     global $DB;
 
-    $DB->execute("
+    if ($DB instanceof sqlsrv_native_moodle_database) {
+        $DB->execute("
+            UPDATE er 
+            SET er.updated_at = ps.updated_at
+            FROM {perform_element_response} er
+                JOIN {perform_participant_section} ps ON ps.participant_instance_id = er.participant_instance_id
+                JOIN {perform_section_element} pse ON pse.section_id = ps.section_id
+                WHERE pse.id = er.section_element_id AND ps.participant_instance_id = er.participant_instance_id
+                AND er.updated_at IS NULL
+        ");
+
+        $DB->execute("
+            UPDATE er 
+            SET er.created_at = ps.updated_at
+            FROM {perform_element_response} er
+                JOIN {perform_participant_section} ps ON ps.participant_instance_id = er.participant_instance_id
+                JOIN {perform_section_element} pse ON pse.section_id = ps.section_id
+                WHERE pse.id = er.section_element_id AND ps.participant_instance_id = er.participant_instance_id
+                AND er.created_at IS NULL
+        ");
+    } else {
+        $DB->execute("
             UPDATE {perform_element_response} er
             SET updated_at = (
                 SELECT ps.updated_at 
@@ -251,7 +272,7 @@ function mod_perform_upgrade_element_responses_to_include_timestamps() {
             WHERE updated_at IS NULL
     ");
 
-    $DB->execute("
+        $DB->execute("
             UPDATE {perform_element_response} er
             SET created_at = (
                 SELECT ps.updated_at 
@@ -261,5 +282,6 @@ function mod_perform_upgrade_element_responses_to_include_timestamps() {
             )
             WHERE created_at IS NULL
     ");
+    }
 }
 

@@ -26,6 +26,7 @@ namespace mod_perform\backup;
 
 defined('MOODLE_INTERNAL') || die();
 
+use mod_perform\models\activity\element;
 use mod_perform\models\activity\helpers\element_cloning;
 use restore_path_element;
 use mod_perform\models\activity\activity;
@@ -275,6 +276,14 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         $data->element_id = $this->get_mappingid('perform_element', $data->element_id);
 
         $new_item_id = $DB->insert_record('perform_section_element', $data);
+
+        $element = element::load_by_id($data->element_id);
+        $helper = $element->get_element_plugin()->get_clone_helper();
+
+        if ($helper) {
+            $helper->restore($new_item_id, $data, $element);
+        }
+
         $this->set_mapping('perform_section_element', $old_id, $new_item_id);
     }
 

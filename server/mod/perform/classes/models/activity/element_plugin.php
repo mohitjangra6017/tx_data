@@ -24,6 +24,7 @@
 namespace mod_perform\models\activity;
 
 use mod_perform\entity\activity\element as element_entity;
+use mod_perform\models\activity\helpers\element_clone_helper;
 use mod_perform\models\response\section_element_response;
 
 /**
@@ -283,6 +284,15 @@ abstract class element_plugin {
      */
     public function get_is_respondable(): bool {
         return $this instanceof respondable_element_plugin;
+    }
+
+    /**
+     * Get clone helper
+     *
+     * @return element_clone_helper|null
+     */
+    public function get_clone_helper(): ?element_clone_helper {
+        return null;
     }
 
     /**

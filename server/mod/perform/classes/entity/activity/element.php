@@ -25,6 +25,8 @@ namespace mod_perform\entity\activity;
 
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
+use core\orm\entity\relations\has_one;
+use performelement_redisplay\entity\element_redisplay_relationship;
 
 /**
  * Section element entity
@@ -38,6 +40,7 @@ use core\orm\entity\relations\belongs_to;
  * @property string $data configuration data specific to this type of element
  * @property bool $is_required used to check response required or optional
  * @property-read element_identifier $element_identifier
+ * @property-read element_redisplay_relationship $element_redisplay_relationship
  *
  * @method static element_repository repository()
  *
@@ -76,5 +79,14 @@ class element extends entity {
      */
     public function section_element(): belongs_to {
         return $this->belongs_to(section_element::class, 'id', 'element_id');
+    }
+
+    /**
+     * get the element redisplay relationship
+     *
+     * @return has_one
+     */
+    public function element_redisplay_relationship(): has_one {
+        return $this->has_one(element_redisplay_relationship::class, 'redisplay_element_id', 'element_id');
     }
 }

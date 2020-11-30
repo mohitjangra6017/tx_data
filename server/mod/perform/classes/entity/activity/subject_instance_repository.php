@@ -73,6 +73,7 @@ class subject_instance_repository extends repository {
             ->where('subject_user_id', $user_id)
             ->where('created_at', '<', $date)
             ->order_by('created_at', 'DESC')
+            ->order_by('id', 'DESC')
             ->get();
     }
 

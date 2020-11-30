@@ -43,6 +43,8 @@ use mod_perform\entity\activity\track as track_entity;
 use mod_perform\entity\activity\track_assignment;
 use mod_perform\event\activity_created;
 use mod_perform\event\activity_deleted;
+use mod_perform\hook\dto\pre_deleted_dto;
+use mod_perform\hook\pre_activity_deleted;
 use mod_perform\models\activity\helpers\activity_clone;
 use mod_perform\models\activity\helpers\activity_deletion;
 use mod_perform\models\activity\helpers\activity_multisection_toggler;
@@ -618,9 +620,24 @@ class activity extends model {
      * Will only delete elements that are not used by any other perform activities.
      *
      * An activity_deleted event will be triggered on successful deletions.
+     *
+     * @throws coding_exception
      * @see activity_deleted
      */
     public function delete(): void {
+        // check if perform activity can be deleted
+        $hook = new pre_activity_deleted($this->id);
+        $hook->execute();
+
+        /**
+         * @var pre_deleted_dto[]
+         */
+        $reasons = $hook->get_reasons();
+
+        if (!empty($reasons)) {
+            throw new coding_exception(array_shift($reasons)->get_description());
+        }
+
         (new activity_deletion($this))->delete();
     }
 

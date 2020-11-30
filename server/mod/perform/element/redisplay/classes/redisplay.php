@@ -118,14 +118,15 @@ class redisplay extends element_plugin {
     /**
      * @inheritDoc
      */
-    public function get_participant_print_component(): string {
-        return $this->get_participant_form_component();
+    public function get_clone_helper(): ?element_clone_helper {
+        return new redisplay_element_clone();
     }
 
     /**
      * @inheritDoc
      */
-    public function get_clone_helper(): ?element_clone_helper {
-        return new redisplay_element_clone();
+    public function get_participant_print_component(): string {
+        return $this->get_participant_form_component();
     }
+
 }

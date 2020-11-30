@@ -450,6 +450,23 @@ type mod_perform_section_participants {
 }
 
 """
+Information for can not delete check
+"""
+type mod_perform_deletion_check {
+  can_delete: Boolean!
+  title(format: core_format = PLAIN): String!
+  reason: mod_perform_can_not_delete_reason!
+}
+
+"""
+The reason for can not delete an activity, section or section element
+"""
+type mod_perform_can_not_delete_reason {
+  description(format: core_format = PLAIN): String
+  data: [String!]
+}
+
+"""
 A list of possible states that a performance activity can be in
 """
 enum mod_perform_activity_state_enums {
@@ -685,6 +702,27 @@ extend type Query {
   A list of all legacy appraisal/feedback360 activities the current user is participating in that are about another user.
   """
   mod_perform_other_historic_activities: [mod_perform_other_historic_activity!]!
+
+  """
+  This returns section list which is referencing elements in a specific activity
+  """
+  mod_perform_activity_deletion_validation(
+    input: mod_perform_activity_deletion_validation_input!
+  ): mod_perform_deletion_check
+
+  """
+  This returns section list which is referencing elements in a specific section
+  """
+  mod_perform_section_deletion_validation(
+    input: mod_perform_section_deletion_validation_input!
+  ): mod_perform_deletion_check
+
+  """
+  This returns section list which is referencing a specific section element
+  """
+  mod_perform_element_deletion_validation(
+    input: mod_perform_section_element_deletion_validation_input!
+  ): mod_perform_deletion_check
 }
 
 """
@@ -730,6 +768,27 @@ Input type for cloning an activity
 """
 input mod_perform_clone_activity_input {
   activity_id: core_id!
+}
+
+"""
+Input type for activity deleting validation
+"""
+input mod_perform_activity_deletion_validation_input {
+  activity_id: core_id!
+}
+
+"""
+Input type for section deleting validation
+"""
+input mod_perform_section_deletion_validation_input {
+  section_id: core_id!
+}
+
+"""
+Input type for section element deleting validation
+"""
+input mod_perform_section_element_deletion_validation_input {
+  section_element_id: core_id!
 }
 
 """

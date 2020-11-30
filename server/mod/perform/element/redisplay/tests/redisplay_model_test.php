@@ -103,10 +103,6 @@ class performelement_redisplay_element_relationship_model_testcase extends redis
         $this->assert_activity_sections_data($data, $sections);
     }
 
-    public function test_participant_section_can_access_section_element_id() {
-
-    }
-
     /**
      * Assert returns activity sections with correct order
      *

@@ -39,7 +39,8 @@ class mod_perform_element_responses_upgrade_testcase extends advanced_testcase {
             'activity_id' => $activity->id, 'subject_username' => $user->username, 'subject_is_participating' => true,
         ]);
         $generator->create_responses($subject_instance);
-        participant_section::repository()->update(['updated_at' => time()]);
+        $time = time();
+        participant_section::repository()->update(['updated_at' => $time]);
         element_response::repository()->update([
             'created_at' => null,
             'updated_at' => null,
@@ -49,12 +50,9 @@ class mod_perform_element_responses_upgrade_testcase extends advanced_testcase {
 
         $element_responses = element_response::repository()->get();
 
-        /** @var \core\collection $participant_instances*/
-        $participant_sections = participant_section::repository()->get()->key_by('participant_instance_id')->all(true);
-
         foreach ($element_responses as $element_response) {
-            $this->assertEquals($element_response->created_at, $participant_sections[$element_response->participant_instance_id]->created_at);
-            $this->assertEquals($element_response->updated_at, $participant_sections[$element_response->participant_instance_id]->created_at);
+            $this->assertEquals($element_response->created_at, $time);
+            $this->assertEquals($element_response->updated_at, $time);
         }
     }
 

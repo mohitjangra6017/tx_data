@@ -26,6 +26,7 @@ namespace mod_perform\models\activity;
 use coding_exception;
 use core\orm\entity\model;
 use mod_perform\entity\activity\section_element as section_element_entity;
+use mod_perform\hook\pre_section_element_deleted;
 
 /**
  * Class section_element
@@ -126,6 +127,15 @@ class section_element extends model {
      * This does not automatically delete the element.
      */
     public function delete(): void {
+        // check if section element can be deleted
+        $hook = new pre_section_element_deleted($this->get_id());
+        $hook->execute();
+
+        $reasons = $hook->get_reasons();
+        if (!empty($reasons)) {
+            throw new coding_exception(array_shift($reasons)->get_description());
+        }
+
         $this->entity->delete();
     }
 

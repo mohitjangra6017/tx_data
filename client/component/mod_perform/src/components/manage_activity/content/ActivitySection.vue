@@ -57,7 +57,7 @@
               >
                 {{ $str('section_action_add_below', 'mod_perform') }}
               </DropdownItem>
-              <DropdownItem v-if="canDelete" @click="showDeleteModal">
+              <DropdownItem v-if="canDelete" @click="canDeleteSection">
                 {{ $str('section_action_delete', 'mod_perform') }}
               </DropdownItem>
             </Dropdown>
@@ -226,10 +226,19 @@
         <p>{{ $str('modal_section_delete_message', 'mod_perform') }}</p>
       </template>
     </ConfirmationModal>
+
+    <SectionDeletionModal
+      :title="modalTitle"
+      :description="modalDescription"
+      :activity-sections="modalData"
+      :open="canNotDeleteModalOpen"
+      @close="closeCanNotDeleteModal"
+    />
   </Component>
 </template>
 
 <script>
+import ActionLink from 'tui/components/links/ActionLink';
 import ActivitySectionElementSummary from 'mod_perform/components/manage_activity/content/ActivitySectionElementSummary';
 import ActivitySectionRelationship from 'mod_perform/components/manage_activity/content/ActivitySectionRelationship';
 import Button from 'tui/components/buttons/Button';
@@ -245,9 +254,14 @@ import GridItem from 'tui/components/grid/GridItem';
 import InputText from 'tui/components/form/InputText';
 import MoreButton from 'tui/components/buttons/MoreIcon';
 import ParticipantsPopover from 'mod_perform/components/manage_activity/content/ParticipantsPopover';
+import SectionDeletionModal from 'mod_perform/components/manage_activity/content/DeletionValidationModal';
+
+// Queries
+import sectionDeletionValidationQuery from 'mod_perform/graphql/section_deletion_validation';
 import UpdateSectionSettingsMutation from 'mod_perform/graphql/update_section_settings';
+
+// Constants
 import { ACTIVITY_STATUS_DRAFT } from 'mod_perform/constants';
-import ActionLink from 'tui/components/links/ActionLink';
 
 /**
  * Reflects the maximum length of the field in the database.
@@ -271,6 +285,7 @@ export default {
     GridItem,
     InputText,
     MoreButton,
+    SectionDeletionModal,
     ParticipantsPopover,
   },
 
@@ -329,6 +344,10 @@ export default {
       TITLE_INPUT_MAX_LENGTH,
       deleteSectionModalOpen: false,
       deleting: false,
+      canNotDeleteModalOpen: false,
+      modalTitle: null,
+      modalDescription: null,
+      modalData: [],
     };
   },
 
@@ -639,6 +658,31 @@ export default {
     },
 
     /**
+     * Check if section has any element that is referenced by redisplay elements,
+     * show can not delete modal if there is, otherwise show delete modal
+     */
+    async canDeleteSection() {
+      const {
+        data: { validation_info: result },
+      } = await this.$apollo.query({
+        query: sectionDeletionValidationQuery,
+        variables: {
+          input: { section_id: this.section.id },
+        },
+        fetchPolicy: 'no-cache',
+      });
+
+      if (result.can_delete) {
+        this.showDeleteModal();
+      } else {
+        this.modalTitle = result.title;
+        this.modalDescription = result.reason.description;
+        this.modalData = result.reason.data;
+        this.showCanNotDeleteModal();
+      }
+    },
+
+    /**
      * Display the modal for confirming the deletion of the section.
      */
     showDeleteModal() {
@@ -681,6 +725,20 @@ export default {
      */
     focusTitleInput() {
       this.$refs.titleInput.$el.focus();
+    },
+
+    /**
+     * Show can not delete modal
+     */
+    showCanNotDeleteModal() {
+      this.canNotDeleteModalOpen = true;
+    },
+
+    /**
+     * Hide can not delete modal
+     */
+    closeCanNotDeleteModal() {
+      this.canNotDeleteModalOpen = false;
     },
   },
 };

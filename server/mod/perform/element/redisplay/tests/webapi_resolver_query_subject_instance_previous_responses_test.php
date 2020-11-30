@@ -44,6 +44,10 @@ use mod_perform\user_groups\grouping;
 use totara_job\job_assignment;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group perform
+ * @group perform_element
+ */
 class performelement_redisplay_webapi_resolver_query_subject_instance_previous_responses_testcase extends advanced_testcase {
 
     use webapi_phpunit_helper;

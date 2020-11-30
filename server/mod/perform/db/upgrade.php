@@ -167,7 +167,7 @@ function xmldb_perform_upgrade($oldversion) {
 
             mod_perform_upgrade_element_responses_to_include_timestamps();
 
-            $created_at_field = new xmldb_field('created_at', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'response_data');
+            $created_at_field = new xmldb_field('created_at', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'response_data');
             $dbman->change_field_notnull($table, $created_at_field);
         }
 

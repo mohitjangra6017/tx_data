@@ -20,11 +20,18 @@
  * @author Kunle Odusan <kunle.odusan@totaralearning.com>
  */
 
+$string['activity_name_with_section_name'] = '{$a->activity_name} : {$a->section_name}';
 $string['activity_name_with_status'] = '{$a->activity_name} ({$a->activity_status})';
 $string['anonymous_responses'] = 'Anonymous responses';
 $string['current_activity'] = 'Current activity';
 $string['instruction_text'] = 'Instruction text';
 $string['name'] = 'Response redisplay';
+$string['modal_can_not_delete_activity_message'] = "This activity cannot be deleted, because it contains questions that are being referenced in a response redisplay element in:";
+$string['modal_can_not_delete_activity_title'] = "Cannot delete activity";
+$string['modal_can_not_delete_element_message'] = "This question cannot be deleted, because it is being referenced in a response redisplay element in:";
+$string['modal_can_not_delete_element_title'] = "Cannot delete question element";
+$string['modal_can_not_delete_section_message'] = "This section cannot be deleted, because it contains questions that are being referenced in a response redisplay element in:";
+$string['modal_can_not_delete_section_title'] = "Cannot delete section";
 $string['no_responding_relationships'] = '{No responding relationships added yet}';
 $string['no_available_questions'] = 'No available questions to select';
 $string['pluginname'] = 'Redisplay element';
