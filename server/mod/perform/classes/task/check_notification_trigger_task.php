@@ -65,9 +65,9 @@ class check_notification_trigger_task extends scheduled_task {
             }
         }
 
-        $clock = factory::create_clock();
-
         $page = 1;
+        $processed_notifications = [];
+
         do {
             $paginator = subject_instance_entity::repository()
                 ->as('si')
@@ -109,11 +109,16 @@ class check_notification_trigger_task extends scheduled_task {
                     $dealer = factory::create_dealer_on_participant_instances($subject_instance->participant_instances->all());
                     $dealer->dispatch($class_key);
 
-                    $notification->set_last_run_at($clock->get_time());
+                    $processed_notifications[$notification->id] = $notification;
                 }
             }
 
             $page++;
         } while ($paginator->get_next() !== null);
+
+        $now = factory::create_clock()->get_time();
+        foreach ($processed_notifications as $notification) {
+            $notification->set_last_run_at($now);
+        }
     }
 }
