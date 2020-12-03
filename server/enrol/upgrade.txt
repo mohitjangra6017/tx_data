@@ -4,6 +4,7 @@ information provided here is intended especially for developers.
 === 14.0 ===
 
 * MNET functionality was removed in Totara 14.0
+* Added "user_full_name" parameter of type string to core_enrol_renderer::user_roles_and_actions
 
 === 13.0 ===
 
