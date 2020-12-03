@@ -7,6 +7,7 @@ information provided here is intended especially for developers.
 * template_helper::get_template_groups() now by default excludes groups which only contain templates belonging
   to sources that are disabled or non-selectable. Groups containing only non-selectable sources can be included
   by specifying the new optional parameter includenonselectable.
+* totara_reportbuilder/chartjs had been modified, adding resizer auto initalization code
 
 === 13.1 ===
 
