@@ -149,5 +149,11 @@ function xmldb_perform_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2020110900, 'perform');
     }
 
+    if ($oldversion < 2020121500) {
+        mod_perform_upgrade_long_text_responses_to_weka_format();
+
+        upgrade_mod_savepoint(true, 2020121500, 'perform');
+    }
+
     return true;
 }

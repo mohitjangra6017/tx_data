@@ -10,3 +10,6 @@ information provided here is intended especially for developers.
   to use core validation rules where possible
     * Template & lang string changes
 * Removed LongTextElementParticipantResponse.vue, generic HtmlResponseDisplay.vue component is used instead
+* LongTextParticipantForm.vue and LongTextAdminView.vue have been refactored to use the Weka editor,
+  and now longer use a textarea element
+* LongTextParticipantPrint.vue now supports rendering Weka HTML responses
