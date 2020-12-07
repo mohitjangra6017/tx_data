@@ -606,6 +606,10 @@ class phpunit_util extends testing_util {
         </testsuite>';
         $data = file_get_contents($path_xml_dist);
 
+        // fix link to schema and other hardcoded paths
+        $data = str_replace('xsi:noNamespaceSchemaLocation="../../server/', 'xsi:noNamespaceSchemaLocation="file:' . $CFG->srcroot . '/server/', $data);
+        $data = str_replace('../../server/', $CFG->srcroot . '/server/', $data);
+
         $suites = '';
         $subsystems = core_component::get_core_subsystems();
         ksort($subsystems);
@@ -618,8 +622,7 @@ class phpunit_util extends testing_util {
             if (!file_exists("$directory/tests/")) {
                 continue;
             }
-            $dir = '../../' . substr($directory, strlen($CFG->srcroot)+1);
-            $dir .= '/tests';
+            $dir = "$directory/tests/";
 
             $suite = str_replace('@component@', $subsystem, $template);
             $suite = str_replace('@dir@', $dir, $suite);
@@ -639,8 +642,7 @@ class phpunit_util extends testing_util {
                 if (!file_exists("$fullplug/tests/")) {
                     continue;
                 }
-                $dir = '../../' . substr($fullplug, strlen($CFG->srcroot)+1);
-                $dir .= '/tests';
+                $dir = "$fullplug/tests/";
                 $component = $type.'_'.$plug;
 
                 $suite = str_replace('@component@', $component, $template);
@@ -662,9 +664,6 @@ class phpunit_util extends testing_util {
         } else {
             phpunit_bootstrap_error(PHPUNIT_EXITCODE_CONFIGERROR, "Unable to write phpunit.xml file, srcroot directory is read only");
         }
-
-        $result = file_put_contents($CFG->dataroot . '/phpunit/webrunner.xml', $data);
-        testing_fix_file_permissions("$CFG->dataroot/phpunit/webrunner.xml");
 
         return (bool)$result;
     }

@@ -167,7 +167,7 @@ abstract class base_testcase extends \PHPUnit\Framework\TestCase {
             /**
              * {@inheritdoc}
              */
-            public function evaluate($other, string $description = '', bool $returnResult = false) {
+            public function evaluate($other, string $description = '', bool $returnResult = false): ?bool {
                 $success = $this->path->equals($other);
                 if ($returnResult) {
                     return $success;

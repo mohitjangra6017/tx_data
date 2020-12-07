@@ -37,5 +37,5 @@ array_unshift($_SERVER['argv'], $first);
 
 require_once(TOOL_PHPUNIT_DIR_VENDOR . '/autoload.php');
 
-$app = new \ParaTest\Console\ParaTestApplication();
-$app->run();
+chdir(__DIR__ . '/../../../../../test/phpunit');
+\ParaTest\Console\Commands\ParaTestCommand::applicationFactory(getcwd())->run();

@@ -77,8 +77,8 @@ array_walk($define_if_not, function ($value, $define) {
 
 $phpunitversion = \PHPUnit\Runner\Version::id();
 if ($phpunitversion === '@package_version@') {
-    // library checked out from git, let's hope dev knows that 8.5.x is required
-} else if (!version_compare($phpunitversion, '8.5.0', '>=') || version_compare($phpunitversion, '9.0', '>')) {
+    // library checked out from git, let's hope dev knows that 9.x is required
+} else if (!version_compare($phpunitversion, '9.5.0', '>=') || version_compare($phpunitversion, '10.0', '>')) {
     phpunit_bootstrap_error(PHPUNIT_EXITCODE_PHPUNITWRONG, $phpunitversion);
 }
 unset($phpunitversion);

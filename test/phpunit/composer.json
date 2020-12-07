@@ -5,8 +5,8 @@
   "type": "library",
   "homepage": "https://www.totaralearning.com",
   "require-dev": {
-    "phpunit/phpunit": "8.5.*",
-    "brianium/paratest": "3.*"
+    "phpunit/phpunit": "9.5.*",
+    "brianium/paratest": "6.1.*"
   },
   "require": {
     "php": ">=7.3.4 <8.1",
