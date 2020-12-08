@@ -145,5 +145,20 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2020110500.00);
     }
 
+    if ($oldversion < 2020120800.00) {
+        // Make sure Learner role assignments in programs are not reported as unsupported.
+        $role = $DB->get_record('role', ['shortname' => 'student']);
+        if ($role) {
+            if (!$DB->record_exists('role_context_levels', ['roleid' => $role->id, 'contextlevel' => CONTEXT_PROGRAM])) {
+                $record = new stdClass();
+                $record->roleid = $role->id;
+                $record->contextlevel = CONTEXT_PROGRAM;
+                $DB->insert_record('role_context_levels', $record);
+            }
+        }
+        // Savepoint reached.
+        upgrade_main_savepoint(true, 2020120800.00);
+    }
+
     return true;
 }
