@@ -21,3 +21,7 @@ information provided here is intended especially for developers.
   * Template changes
 * Updated AttachmentNode.vue, AudioBlock.vue, Hashtag.vue, ImageBlock.vue, and VideoBlock.vue to deprecate the attributes computed property
   * Template changes
+* Updated Input.vue, Button.vue and ButtonIcon.vue to handle prop "autofocus" in JS
+  * Template changes
+* Updated Button.vue and ButtonIcon.vue to support a loading indicator prop
+  * Template & CSS changes
