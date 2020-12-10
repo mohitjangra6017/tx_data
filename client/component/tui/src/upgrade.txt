@@ -25,4 +25,4 @@ information provided here is intended especially for developers.
   * Template changes
 * Updated Button.vue and ButtonIcon.vue to support a loading indicator prop
   * Template & CSS changes
-* Updated Adder.vue component to support a loading indicator prop for add button
+* Updated Adder.vue component to support a loading indicator prop for add button and amend button position styles
