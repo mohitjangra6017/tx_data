@@ -23,3 +23,4 @@ information provided here is intended especially for developers.
 * Added new optional prop "contextId" for component Weka.vue
 * Updated AudioBlock.vue to move NodeBar.vue inside tui AudioBlock.vue slot
   * Template changes
+* Added new addAltButton for component ImageBlock.vue
