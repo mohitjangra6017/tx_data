@@ -56,7 +56,7 @@ namespace {
                 $text = "Can not find PHPUnit library, to install use: php composer.phar install";
                 break;
             case PHPUNIT_EXITCODE_PHPUNITWRONG:
-                $text = 'Totara requires PHPUnit 9.4.x, ' . $text . ' is not compatible';
+                $text = 'Totara requires PHPUnit 9, ' . $text . ' is not compatible';
                 break;
             case PHPUNIT_EXITCODE_PHPUNITEXTMISSING:
                 $text = 'Totara can not find required PHPUnit extension ' . $text;
