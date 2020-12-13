@@ -26,3 +26,5 @@ information provided here is intended especially for developers.
 * Updated Button.vue and ButtonIcon.vue to support a loading indicator prop
   * Template & CSS changes
 * Updated Adder.vue component to support a loading indicator prop for add button and amend button position styles
+* Updated AudioBlock.vue to display transcript button and expose a slot
+  * Template changes
