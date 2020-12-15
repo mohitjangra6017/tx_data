@@ -14,3 +14,4 @@ information provided here is intended especially for developers.
   * Template changes
 * Adjusted PopoverFrame.vue to include border in positioning
 * Added size prop to Popover.vue to provide a minimum display width
+* Removed overridden focus styles from SearchBox.vue submit button, now uses default IconButton.vue focus styles
