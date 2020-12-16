@@ -65,5 +65,19 @@ function xmldb_lti_upgrade($oldversion) {
 
     // Totara 13.0 release line.
 
+    if ($oldversion < 2020121600) {
+
+        // Changing type of field instructorcustomparameters on table lti to text.
+        $table = new xmldb_table('lti');
+        $field = new xmldb_field('instructorcustomparameters', XMLDB_TYPE_TEXT, null, null, null, null, null,
+            'instructorchoiceallowsetting');
+
+        // Launch change of type for field value.
+        $dbman->change_field_type($table, $field);
+
+        // Lti savepoint reached.
+        upgrade_mod_savepoint(true, 2020121600, 'lti');
+    }
+
     return true;
 }
