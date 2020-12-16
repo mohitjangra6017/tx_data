@@ -41,3 +41,4 @@ information provided here is intended especially for developers.
 * pathway_manual\entities\rating has been moved to pathway_manual\entity\rating
 * pathway_manual\entities\role has been moved to pathway_manual\entity\role
 * Added new method is_enabled() to \totara_competency\pathway so pathway plugins can define if they can be added to competencies.
+* Changed the return type of the field "numericscore" in the "totara_competency_scale_value" GraphQL type schema to Float.
