@@ -32,7 +32,24 @@ function xmldb_ml_recommender_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 13.0 release line.
+    if ($oldversion < 2020121100) {
+        // Add field to indicate whether a particular recommendation has been seen by user.
+        $table_name = 'ml_recommender_users';
+        if ($dbman->table_exists($table_name)) {
+            $table = new xmldb_table($table_name);
+            $field = new xmldb_field('seen', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, "0", 'score');
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
+
+            $index = new xmldb_index('user_seen_score_idx', XMLDB_INDEX_NOTUNIQUE, ['user_id', 'seen', 'score']);
+            if (!$dbman->index_exists($table, $index)) {
+                $dbman->add_index($table, $index);
+            }
+        }
+
+        upgrade_plugin_savepoint(true, 2020121100, 'ml', 'recommender');
+    }
 
     return true;
 }
