@@ -3128,7 +3128,7 @@ class core_accesslib_testcase extends advanced_testcase {
         context_helper::preload_course($SITE->id);
         $numfrontpagemodules = $DB->count_records('course_modules', array('course' => $SITE->id));
         // Totara: counting [course_navigation, course_summary, calendar_month, 2 * online_users] blocks + page itself.
-        $this->assertEquals(5 + $numfrontpagemodules, context_inspection::test_context_cache_size()); // Depends on number of default blocks.
+        $this->assertEquals(6 + $numfrontpagemodules, context_inspection::test_context_cache_size()); // Depends on number of default blocks.
 
         // Test assign_capability(), unassign_capability() functions.
 

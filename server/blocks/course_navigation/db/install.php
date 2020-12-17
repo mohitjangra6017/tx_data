@@ -29,25 +29,4 @@ defined('MOODLE_INTERNAL') || die();
 function xmldb_block_course_navigation_install() {
     global $DB;
 
-    // Check if we are installing during the navigation migration.
-    if (get_config('block_course_navigation', 'navigation_migration')) {
-        unset_config('navigation_migration', 'block_course_navigation');
-
-        if (!class_exists('moodle_page')) {
-            // We need to be able to use moodle_page.
-            return;
-        }
-
-        if (!$courses = $DB->get_records('course')) {
-            // We don't have any courses yet.
-            return;
-        }
-
-        // Add an instance of this block to each course page.
-        foreach ($courses as $course) {
-            $page = new moodle_page();
-            $page->set_course($course);
-            $page->blocks->add_blocks(['side-pre' => ['course_navigation']], '*', null, true, -10);
-        }
-    }
 }

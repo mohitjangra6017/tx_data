@@ -2671,6 +2671,7 @@ function blocks_add_default_course_blocks($course) {
     $page->set_course($course);
     if ($course->id == SITEID) {
         $pagetypepattern = 'site-index';
+        $page->blocks->add_blocks(array(BLOCK_POS_LEFT => array('course_navigation')), '*', null, true, -10);
     } else {
         $pagetypepattern = 'course-view-*';
         $page->blocks->add_blocks(array(BLOCK_POS_LEFT => array('course_navigation')), '*', null, true, -10);
