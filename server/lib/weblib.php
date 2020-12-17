@@ -3300,6 +3300,7 @@ function redirect($url, $message='', $delay=null, $messagetype = \core\output\no
  * @return string The obfuscated email address
  */
 function obfuscate_email($email) {
+    $email = core_text::entities_to_utf8($email);
     $i = 0;
     $length = strlen($email);
     $obfuscated = '';
@@ -3311,6 +3312,7 @@ function obfuscate_email($email) {
         }
         $i++;
     }
+    $obfuscated = clean_string($obfuscated);
     return $obfuscated;
 }
 
@@ -3322,6 +3324,7 @@ function obfuscate_email($email) {
  * @return string The obfuscated text
  */
 function obfuscate_text($plaintext) {
+    $plaintext = core_text::entities_to_utf8($plaintext);
     $i=0;
     $length = core_text::strlen($plaintext);
     $obfuscated='';
@@ -3341,6 +3344,7 @@ function obfuscate_text($plaintext) {
         }
         $i++;
     }
+    $obfuscated = clean_string($obfuscated);
     return $obfuscated;
 }
 
