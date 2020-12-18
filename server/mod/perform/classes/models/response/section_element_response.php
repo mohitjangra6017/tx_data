@@ -34,6 +34,7 @@ use mod_perform\entity\activity\participant_instance as participant_instance_ent
 use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\entity\activity\section_element as section_element_entity;
 use mod_perform\entity\activity\section_relationship;
+use mod_perform\hook\element_response_visibility;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\participant_instance;
 use mod_perform\models\activity\participant_source;
@@ -379,9 +380,9 @@ class section_element_response extends model implements section_element_response
             return true;
         }
 
-        // TODO: Add hook to allow redisplay responses to be loaded
-
-        return false;
+        $hook = element_response_visibility::for_viewing_user($response, $viewing_user_id);
+        $hook->execute();
+        return $hook->get_can_view();
     }
 
     /**
@@ -431,9 +432,9 @@ class section_element_response extends model implements section_element_response
             return true;
         }
 
-        // TODO: Add hook to allow redisplay responses to be loaded
-
-        return false;
+        $hook = element_response_visibility::for_viewing_participant($response, $viewing_participant_instance);
+        $hook->execute();
+        return $hook->get_can_view();
     }
 
 }
