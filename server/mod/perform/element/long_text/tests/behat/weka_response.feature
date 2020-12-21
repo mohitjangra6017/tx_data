@@ -66,6 +66,8 @@ Feature: Long text responses support the Weka editor
     And I upload embedded media to the weka editor using the file "mod/perform/element/long_text/tests/behat/fixtures/blue.png"
     And I move the cursor to the end of the weka editor
     And I upload attachment to the weka editor using the file "mod/perform/element/long_text/tests/behat/fixtures/green.png"
+    # This is to make sure that the files are all uploaded correctly
+    And I wait for the next second
 
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
@@ -90,10 +92,10 @@ Feature: Long text responses support the Weka editor
       | subject | fullname      | email                            |
       | john    | Mark Metcalfe | mark.metcalfe@totaralearning.com |
     When I navigate to the external participants form for user "Mark Metcalfe"
+    And I activate the weka editor with css ".tui-performElementResponse"
     Then I should not see "Embedded media" in the ".tui-performElementResponse" "css_element"
     And I should not see "Attachments" in the ".tui-performElementResponse" "css_element"
-    When I activate the weka editor with css ".tui-performElementResponse"
-    And I type "My response!" in the weka editor
+    When I type "My response!" in the weka editor
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
 
