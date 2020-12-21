@@ -236,3 +236,30 @@ function mod_perform_upgrade_long_text_responses_to_weka_format() {
 
     $transaction->allow_commit();
 }
+
+function mod_perform_upgrade_element_responses_to_include_timestamps() {
+    global $DB;
+
+    $DB->execute("
+            UPDATE {perform_element_response} er
+            SET updated_at = (
+                SELECT ps.updated_at 
+                FROM {perform_participant_section} ps
+                JOIN {perform_section_element} pse ON ps.section_id = pse.section_id
+                WHERE pse.id = er.section_element_id AND ps.participant_instance_id = er.participant_instance_id
+            )
+            WHERE updated_at IS NULL
+    ");
+
+    $DB->execute("
+            UPDATE {perform_element_response} er
+            SET created_at = (
+                SELECT ps.updated_at 
+                FROM {perform_participant_section} ps
+                JOIN {perform_section_element} pse ON ps.section_id = pse.section_id
+                WHERE pse.id = er.section_element_id AND ps.participant_instance_id = er.participant_instance_id
+            )
+            WHERE created_at IS NULL
+    ");
+}
+

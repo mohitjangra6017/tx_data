@@ -147,6 +147,8 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
                 'section_element_id',
                 'participant_instance_id',
                 'response_data',
+                'created_at',
+                'updated_at',
             ]
         );
 

@@ -286,6 +286,8 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
 
         $data->section_element_id = $this->get_mappingid('perform_section_element', $data->section_element_id);
         $data->participant_instance_id = $this->get_mappingid('perform_participant_instance', $data->participant_instance_id);
+        $data->created_at = $this->apply_date_offset($data->created_at);
+        $data->updated_at = $this->apply_date_offset($data->updated_at);
 
         $new_item_id = $DB->insert_record('perform_element_response', $data);
         $this->set_mapping('perform_element_response', $old_id, $new_item_id);

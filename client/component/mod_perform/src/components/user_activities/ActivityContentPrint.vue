@@ -292,6 +292,7 @@ export default {
                 title: sectionElementResponse.element.title,
                 data: JSON.parse(sectionElementResponse.element.data),
                 is_required: sectionElementResponse.element.is_required,
+                participantSectionId: sectionResponse.id,
               },
               sort_order: sectionElementResponse.sort_order,
               is_respondable: sectionElementResponse.element.is_respondable,

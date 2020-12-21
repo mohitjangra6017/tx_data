@@ -30,6 +30,9 @@ use mod_perform\data_providers\activity\sections as sections_provider;
 use mod_perform\webapi\middleware\require_activity;
 use mod_perform\webapi\middleware\require_manage_capability;
 
+/**
+ * Get respondable section elements of activity.
+ */
 class source_activity_question_elements implements query_resolver, has_middleware {
 
     /**

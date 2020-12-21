@@ -46,7 +46,6 @@ use mod_perform\state\subject_instance\subject_instance_manual_status;
 use mod_perform\state\subject_instance\subject_instance_progress;
 use stdClass;
 use totara_core\relationship\relationship;
-use totara_job\entity\job_assignment as job_assignment_entity;
 use totara_job\job_assignment;
 
 /**
@@ -212,6 +211,20 @@ class subject_instance extends model {
      */
     public function get_participant_instances(): collection {
         return $this->entity->participant_instances->map_to(participant_instance::class);
+    }
+
+    /**
+     * Get participant instances with the relationships.
+     *
+     * @param array|int[] $relationship_ids
+     * @return participant_instance[]|collection
+     */
+    public function get_participant_instances_with_relationships(array $relationship_ids): collection {
+        return $this->get_participant_instances()->filter(
+            function (participant_instance $participant_instance) use ($relationship_ids) {
+                return in_array($participant_instance->core_relationship_id, $relationship_ids);
+            }
+        );
     }
 
     /**

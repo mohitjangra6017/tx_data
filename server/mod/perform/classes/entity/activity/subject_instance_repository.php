@@ -23,9 +23,10 @@
 
 namespace mod_perform\entity\activity;
 
+use context;
+use core\collection;
 use core\orm\entity\repository;
 use core\orm\query\builder;
-use core\orm\query\field;
 
 class subject_instance_repository extends repository {
 
@@ -57,12 +58,31 @@ class subject_instance_repository extends repository {
     }
 
     /**
+     * Get subject instances of an activity for a user before a specified date.
+     *
+     * @param int $user_id
+     * @param int $activity_id
+     * @param string $date
+     * @return collection
+     */
+    public function get_user_subject_instances_for_activity_before_date(int $user_id, int $activity_id, string $date): collection {
+        return $this
+            ->join([track_user_assignment::TABLE, 'tua'], 'track_user_assignment_id', 'tua.id')
+            ->join([track::TABLE, 't'], 'tua.track_id', 't.id')
+            ->where('t.activity_id', $activity_id)
+            ->where('subject_user_id', $user_id)
+            ->where('created_at', '<', $date)
+            ->order_by('created_at', 'DESC')
+            ->get();
+    }
+
+    /**
      * Filter to subject instances at or below a specified context.
      *
-     * @param \context $context
+     * @param context $context
      * @return $this
      */
-    public function filter_by_context(\context $context): self {
+    public function filter_by_context(context $context): self {
         // No need for restrictions for system context.
         if (get_class($context) == 'context_system') {
             return $this;

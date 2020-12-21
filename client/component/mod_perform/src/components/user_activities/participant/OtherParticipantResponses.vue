@@ -95,7 +95,7 @@
   </div>
 </template>
 <script>
-import ElementParticipantResponse from '../../element/ElementParticipantResponse';
+import ElementParticipantResponse from 'mod_perform/components/element/ElementParticipantResponse';
 import ParticipantUserHeader from 'mod_perform/components/user_activities/participant/ParticipantUserHeader';
 import WarningIcon from 'tui/components/icons/Warning';
 import { FormRow } from 'tui/components/uniform';
@@ -118,6 +118,7 @@ export default {
       type: Boolean,
       required: true,
     },
+    anonymousLabel: String,
   },
 
   computed: {
@@ -136,6 +137,9 @@ export default {
       });
     },
     anonymousGroupLabel() {
+      if (this.anonymousLabel) {
+        return this.anonymousLabel;
+      }
       if (this.viewOnly) {
         return this.$str('responses', 'mod_perform');
       }

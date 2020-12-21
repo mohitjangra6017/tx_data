@@ -24,8 +24,12 @@ namespace performelement_redisplay\data_provider;
 
 use coding_exception;
 use mod_perform\entity\activity\section_element;
+use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\models\activity\section_element as section_element_model;
 
+/**
+ * Data provider class that adds extra information into the redisplay JSON data.
+*/
 class redisplay_data {
 
     /**
@@ -50,14 +54,24 @@ class redisplay_data {
             throw new coding_exception('section element does not exist');
         }
         $section_element = section_element_model::load_by_entity($section_element_entity);
+        $activity = $section_element->section->activity;
+        $element = $section_element->element;
 
-        $redisplay_settings['activityId'] = $section_element->section->activity->id;
-        $redisplay_settings['activityName'] = $section_element->section->activity->name;
-        $redisplay_settings['activityStatus'] = $section_element->section->activity->get_state_details()::get_display_name();
-        $redisplay_settings['elementTitle'] = $section_element->element->title;
-        $redisplay_settings['elementPluginName'] = $section_element->element->get_element_plugin()->get_name();
+        $redisplay_settings['activityId'] = $activity->id;
+        $redisplay_settings['activityName'] = $activity->name;
+        $redisplay_settings['activityStatus'] = $activity->get_state_details()::get_display_name();
+        $redisplay_settings['elementTitle'] = $element->title;
 
-        $relationships = $section_element->section->activity->anonymous_responses
+        /** @var respondable_element_plugin $element_plugin*/
+        $element_plugin = $element->get_element_plugin();
+
+        if (!$element_plugin->get_is_respondable()) {
+            throw new coding_exception('section element must be respondable');
+        }
+        $redisplay_settings['elementPluginName'] = $element_plugin->get_name();
+        $redisplay_settings['elementPluginDisplayComponent'] = $element_plugin->get_participant_response_component();
+
+        $relationships = $activity->anonymous_responses
             ? $this->get_anonymous_relationship_string()
             : $this->get_relationships($section_element->section->get_answering_section_relationships());
         $redisplay_settings['relationships'] = $relationships;

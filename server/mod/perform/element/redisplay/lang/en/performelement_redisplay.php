@@ -21,13 +21,18 @@
  */
 
 $string['activity_name_with_status'] = '{$a->activity_name} ({$a->activity_status})';
+$string['anonymous_responses'] = 'Anonymous responses';
 $string['current_activity'] = 'Current activity';
 $string['instruction_text'] = 'Instruction text';
 $string['name'] = 'Response redisplay';
 $string['no_responding_relationships'] = '{No responding relationships added yet}';
 $string['no_available_questions'] = 'No available questions to select';
 $string['pluginname'] = 'Redisplay element';
-$string['redisplayed_element_admin_preview'] = 'Response redisplay from "{$a->activity_name}" ({date source subject instance created}) – responses last updated {date last modified}.';
+$string['redisplayed_element_admin_preview'] = 'Response redisplay from "{$a->activity_name} ({date source subject instance created})" – responses last updated {date last modified}.';
+$string['redisplayed_summary'] = 'Response redisplay from "{$a->activity_name} ({$a->date_created})" – responses last updated {$a->date_updated}.';
+$string['redisplay_no_subject_instance_for_same_activity'] = 'Response redisplay to the following question cannot be shown, because there is no previous participation associated with the activity "{$a}".';
+$string['redisplay_no_subject_instance_for_another_activity'] = 'Response redisplay cannot be shown, because there is no participation associated with the activity "{$a}".';
+$string['redisplay_no_participants'] = 'Response redisplay cannot be shown, because there is no participation associated with the activity "{$a->activity_name} ({$a->subject_instance_date})".';
 $string['responses_from_anonymous_relationships'] = '{Anonymous responses}';
 $string['responses_from_relationships'] = '{Responses from: {$a->relationships}}';
 $string['select_activity'] = 'Select activity...';

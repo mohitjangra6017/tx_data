@@ -169,6 +169,7 @@
                 </h3>
 
                 <div class="tui-participantContent__sectionItem-content">
+                  <!-- Respondable elements -->
                   <ElementParticipantForm
                     v-if="
                       sectionElement.is_respondable &&
@@ -207,6 +208,8 @@
                       />
                     </template>
                   </ElementParticipantForm>
+
+                  <!-- Non respondable elements -->
                   <div
                     v-else-if="!sectionElement.is_respondable"
                     class="tui-participantContent__staticElement"
@@ -222,6 +225,7 @@
                       :is-external-participant="isExternalParticipant"
                     />
                   </div>
+
                   <OtherParticipantResponses
                     v-show="showOtherResponse"
                     :view-only="viewOnlyReportMode"
@@ -806,6 +810,8 @@ export default {
               identifier: item.element.identifier,
               data: JSON.parse(item.element.data),
               is_required: item.element.is_required,
+              participantSectionId: result.id ? result.id : null,
+              token: this.token,
               responseData: null,
             },
             sort_order: item.sort_order,

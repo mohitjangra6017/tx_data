@@ -155,5 +155,24 @@ function xmldb_perform_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2020121500, 'perform');
     }
 
+    if ($oldversion < 2020122100) {
+        $table = new xmldb_table('perform_element_response');
+        $created_at_field = new xmldb_field('created_at', XMLDB_TYPE_INTEGER, '10', null, false, null, null, 'response_data');
+        $updated_at_field = new xmldb_field('updated_at', XMLDB_TYPE_INTEGER, '10', null, false, null, null, 'created_at');
+
+        // Conditionally launch add field created_at and update_d.
+        if (!$dbman->field_exists($table, $created_at_field) && !$dbman->field_exists($table, $updated_at_field)) {
+            $dbman->add_field($table, $created_at_field);
+            $dbman->add_field($table, $updated_at_field);
+
+            mod_perform_upgrade_element_responses_to_include_timestamps();
+
+            $created_at_field = new xmldb_field('created_at', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'response_data');
+            $dbman->change_field_notnull($table, $created_at_field);
+        }
+
+        upgrade_mod_savepoint(true, 2020122100, 'perform');
+    }
+
     return true;
 }
