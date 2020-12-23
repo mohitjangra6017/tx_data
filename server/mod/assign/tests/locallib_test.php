@@ -1612,8 +1612,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_cron_message_includes_courseid() {
-        $this->resetAfterTest();
-
         // First run cron so there are no messages waiting to be sent (from other tests).
         cron_setup_user();
         assign::cron();
@@ -1643,8 +1641,16 @@ class mod_assign_locallib_testcase extends advanced_testcase {
         assign::cron();
 
         $events = $sink->get_events();
+
+        // Two notifications are sent, one to student and one to teacher. This generates
+        // four events:
+        // core\event\notification_sent
+        // core\event\notification_viewed
+        // core\event\notification_sent
+        // core\event\notification_viewed.
         $event = reset($events);
-        $this->assertInstanceOf('\core\event\message_sent', $event);
+
+        $this->assertInstanceOf('\core\event\notification_sent', $event);
         $this->assertEquals($assign->get_course()->id, $event->other['courseid']);
         $sink->close();
     }

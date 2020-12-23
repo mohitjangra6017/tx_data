@@ -971,8 +971,13 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
             ['userid' => $users['user1']->id, 'idnumber' => 'dev1', 'managerjaid' => $manager1job1->id, 'totarasync' => 1]);
 
         $tenjune2050 = totara_date_parse_from_format('d/m/Y', '10/06/2050');
-        \totara_job\job_assignment::create(
-            ['userid' => $users['user3']->id, 'idnumber' => 'dev2', 'tempmanagerjaid' => $manager1job1->id, 'tempmanagerexpirydate' => $tenjune2050, 'totarasync' => 1]);
+        \totara_job\job_assignment::create([
+            'userid' => $users['user3']->id,
+            'idnumber' => 'dev2',
+            'tempmanagerjaid' => $manager1job1->id,
+            'tempmanagerexpirydate' => $tenjune2050,
+            'totarasync' => 1
+        ]);
 
         $entry = new stdClass();
         $entry->idnumber = 'dev1';
