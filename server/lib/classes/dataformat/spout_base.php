@@ -51,7 +51,15 @@ abstract class spout_base extends \core\dataformat\base {
      * Output file headers to initialise the download of the file.
      */
     public function send_http_headers() {
-        $this->writer = \Box\Spout\Writer\WriterFactory::create($this->spouttype);
+        if ($this->spouttype === 'csv') {
+            $this->writer = \Box\Spout\Writer\Common\Creator\WriterEntityFactory::createCSVWriter();
+        } else if ($this->spouttype === 'xlsx') {
+            $this->writer = \Box\Spout\Writer\Common\Creator\WriterEntityFactory::createXLSXWriter();
+        } else if ($this->spouttype === 'ods') {
+            $this->writer = \Box\Spout\Writer\Common\Creator\WriterEntityFactory::createODSWriter();
+        } else {
+            throw new \coding_exception('Invalid spout writer type: ' . $this->spouttype);
+        }
         if (method_exists($this->writer, 'setTempFolder')) {
             $this->writer->setTempFolder(make_request_directory());
         }
@@ -79,7 +87,7 @@ abstract class spout_base extends \core\dataformat\base {
      * @param array $columns
      */
     public function start_sheet($columns) {
-        if ($this->sheettitle && $this->writer instanceof \Box\Spout\Writer\AbstractMultiSheetsWriter) {
+        if ($this->sheettitle && $this->writer instanceof \Box\Spout\Writer\WriterAbstract) {
             if ($this->renamecurrentsheet) {
                 $sheet = $this->writer->getCurrentSheet();
                 $this->renamecurrentsheet = false;
@@ -88,7 +96,8 @@ abstract class spout_base extends \core\dataformat\base {
             }
             $sheet->setName($this->sheettitle);
         }
-        $this->writer->addRow(array_values((array)$columns));
+        $row = \Box\Spout\Writer\Common\Creator\WriterEntityFactory::createRowFromArray(array_values((array)$columns));
+        $this->writer->addRow($row);
     }
 
     /**
@@ -98,7 +107,8 @@ abstract class spout_base extends \core\dataformat\base {
      * @param int $rownum
      */
     public function write_record($record, $rownum) {
-        $this->writer->addRow(array_values((array)$record));
+        $row = \Box\Spout\Writer\Common\Creator\WriterEntityFactory::createRowFromArray(array_values((array)$record));
+        $this->writer->addRow($row);
     }
 
     /**
