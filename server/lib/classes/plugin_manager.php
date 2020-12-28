@@ -1358,7 +1358,7 @@ class core_plugin_manager {
             ),
 
             'virtualmeeting' => array(
-                'msteams'
+                'msteams', 'zoom'
             ),
 
             'message' => array(
