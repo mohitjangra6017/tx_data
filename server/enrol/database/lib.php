@@ -888,10 +888,16 @@ class enrol_database_plugin extends enrol_plugin {
         require_once($CFG->libdir.'/adodb/adodb.inc.php');
 
         // Connect to the external database (forcing new connection).
+        /** @var ADOConnection $extdb */
         $extdb = ADONewConnection($this->get_config('dbtype'));
         if ($this->get_config('debugdb')) {
             $extdb->debug = true;
             ob_start(); // Start output buffer to allow later use of the page headers.
+        }
+
+        if ($this->get_config('dbtype') === 'mssqlnative') {
+            // Totara: always use UTF-8 for MS SQL server.
+            $extdb->setConnectionParameter('CharacterSet', 'UTF-8');
         }
 
         // The dbtype my contain the new connection URL, so make sure we are not connected yet.

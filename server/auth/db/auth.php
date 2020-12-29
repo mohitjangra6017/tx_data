@@ -163,10 +163,15 @@ class auth_plugin_db extends auth_plugin_base {
         }
 
         // Connect to the external database (forcing new connection).
+        /** @var ADOConnection $authdb */
         $authdb = ADONewConnection($this->config->type);
         if (!empty($this->config->debugauthdb)) {
             $authdb->debug = true;
             ob_start(); //Start output buffer to allow later use of the page headers.
+        }
+        if ($this->config->type === 'mssqlnative') {
+            // Totara: always use UTF-8 for MS SQL server.
+            $authdb->setConnectionParameter('CharacterSet', 'UTF-8');
         }
         $authdb->Connect($this->config->host, $this->config->user, $this->config->pass, $this->config->name, true);
         $authdb->SetFetchMode(ADODB_FETCH_ASSOC);

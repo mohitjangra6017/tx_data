@@ -24,6 +24,6 @@ Our changes:
  * MDL-52286 Added muting errors in ADORecordSet::__destruct().
    Check if fixed upstream during the next upgrade and remove this note.
  * TL-14768 Added fix in ADODB_mssqlnative::_connect() to ensure that host and port are separated by ,
- * TL-22839 Added UTF-8 encoding to SQL server connect in \ADODB_mssqlnative::_connect()
+ * TL-29157 temporary PHP 8.0 fixes in ADODB_oci8po
 
 skodak, iarenaza, moodler, stronk7, abgreeve, lameze, rianar
