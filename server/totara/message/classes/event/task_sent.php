@@ -27,6 +27,9 @@ namespace totara_message\event;
 
 use core_user;
 use context_system;
+use core\event\base;
+use stdClass;
+use coding_exception;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -35,7 +38,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @package totara_message
  */
-class task_sent extends \core\event\base {
+class task_sent extends base {
 
     /**
      * @var bool
@@ -56,7 +59,7 @@ class task_sent extends \core\event\base {
      *
      * @return string
      */
-    public static function get_name() {
+    public static function get_name(): string {
         return get_string('eventtasksent', 'totara_message');
     }
 
@@ -65,9 +68,9 @@ class task_sent extends \core\event\base {
      *
      * @return string
      */
-    public function get_description() {
+    public function get_description(): string {
 
-        if (\core_user::is_real_user($this->userid)) {
+        if (core_user::is_real_user($this->userid)) {
             $description  = "The user with id '{$this->userid}' sent a task of the type '{$this->other['msgtype']}'";
             $description .= " to the user with id '{$this->relateduserid}'.";
 
@@ -83,36 +86,62 @@ class task_sent extends \core\event\base {
     /**
      * Create an event instance from given message data.
      *
-     * @param \stdClass $metadata Object as returned by tm_insert_metadata().
-     * @return \totara_message\event\task_sent
+     * @param stdClass $event_data Object as returned by tm_insert_metadata().
+     * @param int      $message_id
+     *
+     * @return task_sent
      */
-    public static function create_from_message_data(\stdClass $eventdata, $messageid) {
+    public static function create_from_message_data(stdClass $event_data, int $message_id): task_sent {
         global $DB;
 
-        $message = $DB->get_record('message', array('id' => $messageid));
-        $metadata = $DB->get_record('message_metadata', array('messageid' => $messageid));
+        if (!empty($event_data->notification)) {
+            $table_name = 'notifications';
+        } else {
+            $table_name = 'messages';
+        }
 
-        if (!isset($eventdata->msgtype)) {
-            $eventdata->msgtype = TOTARA_MSG_TYPE_UNKNOWN;
+        $message = $DB->get_record($table_name, ['id' => $message_id]);
+        $metadata = $DB->get_record('message_metadata', ['messageid' => $message_id]);
+
+        $message_type = TOTARA_MSG_TYPE_UNKNOWN;
+        if (isset($event_data->msgtype)) {
+            $message_type = $event_data->msgtype;
         }
 
         self::$preventcreatecall = false;
-        $event = self::create(
-            array(
-                'objectid'      => $metadata->id,
-                'context'       => context_system::instance(),
-                'userid'        => $message->useridfrom,
-                'relateduserid' => $message->useridto,
-                'other'         => array(
-                    'messageid'    => $messageid,
-                    'msgtype'      => $eventdata->msgtype,
-                ),
-            )
-        );
+        $data = [
+            'objectid' => $metadata->id,
+            'context' => context_system::instance(),
+            'userid' => $message->useridfrom,
+            // We are defaulting the related user's id to the same as user sender.
+            // However down the line, we are getting the related user from either
+            // the event data or the message table
+            'relateduserid' => $message->useridfrom,
+            'other' => [
+                'messageid' => $message_id,
+                'table_name' => $table_name,
+                'msgtype' => $message_type,
+            ],
+        ];
+
+        if (isset($message->useridto)) {
+            $data['relateduserid'] = $message->useridto;
+        } else if (isset($event_data->userto)) {
+            if (is_object($event_data->userto)) {
+                $data['relateduserid'] = $event_data->userto->id;
+            } else {
+                $data['relateduserid'] = $event_data->userto;
+            }
+        } else {
+            debugging('Unable to find out the related user id from message or event data', DEBUG_DEVELOPER);
+        }
+
+        /** @var task_sent $event */
+        $event = self::create($data);
         self::$preventcreatecall = true;
 
         $event->add_record_snapshot('message_metadata', $metadata);
-        $event->add_record_snapshot('message', $message);
+        $event->add_record_snapshot($table_name, $message);
 
         return $event;
     }
@@ -127,7 +156,7 @@ class task_sent extends \core\event\base {
         parent::validate_data();
 
         if (self::$preventcreatecall) {
-            throw new \coding_exception('Cannot call create() directly, use create_from_message_data() instead.');
+            throw new coding_exception('Cannot call create() directly, use create_from_message_data() instead.');
         }
     }
 }

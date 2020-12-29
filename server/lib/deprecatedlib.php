@@ -6134,3 +6134,86 @@ function message_get_contacts($user1=null, $user2=null) {
 
     return array($onlinecontacts, $offlinecontacts, $strangers);
 }
+
+/**
+ * Mark a single message as read
+ *
+ * @param stdClass $message An object with an object property ie $message->id which is an id in the message table
+ * @param int $timeread the timestamp for when the message should be marked read. Usually time().
+ * @param bool $messageworkingempty Is the message_working table already confirmed empty for this message?
+ * @return int the ID of the message in the messags table
+ * @deprecated since Moodle 3.5
+ */
+function message_mark_message_read($message, $timeread, $messageworkingempty=false) {
+    debugging('message_mark_message_read() is deprecated, please use \core_message\api::mark_message_as_read()
+        or \core_message\api::mark_notification_as_read().', DEBUG_DEVELOPER);
+
+    if (!empty($message->notification)) {
+        \core_message\api::mark_notification_as_read($message, $timeread);
+    } else {
+        \core_message\api::mark_message_as_read($message->useridto, $message, $timeread);
+    }
+
+    return $message->id;
+}
+
+/**
+ * Moves messages from a particular user from the message table (unread messages) to message_read
+ * This is typically only used when a user is deleted
+ *
+ * @param object $userid User id
+ * @return boolean success
+ * @deprecated since Moodle 3.5
+ */
+function message_move_userfrom_unread2read($userid) {
+    debugging('message_move_userfrom_unread2read() is deprecated and is no longer used.', DEBUG_DEVELOPER);
+
+    global $DB;
+
+    // Move all unread messages from message table to message_read.
+    if ($messages = $DB->get_records_select('message', 'useridfrom = ?', array($userid), 'timecreated')) {
+        foreach ($messages as $message) {
+            message_mark_message_read($message, 0); // Set timeread to 0 as the message was never read.
+        }
+    }
+    return true;
+}
+
+/**
+ * Checks if a user can delete a message.
+ *
+ * @param stdClass $message the message to delete
+ * @param string $userid the user id of who we want to delete the message for (this may be done by the admin
+ *  but will still seem as if it was by the user)
+ * @return bool Returns true if a user can delete the message, false otherwise.
+ * @deprecated since Moodle 3.5
+ */
+function message_can_delete_message($message, $userid) {
+    debugging(
+        'message_can_delete_message() is deprecated, please use \core_message\api::can_delete_message() instead.',
+        DEBUG_DEVELOPER
+    );
+
+    return \core_message\api::can_delete_message($userid, $message->id);
+}
+
+
+/**
+ * Deletes a message.
+ *
+ * This function does not verify any permissions.
+ *
+ * @param stdClass $message the message to delete
+ * @param string $userid the user id of who we want to delete the message for (this may be done by the admin
+ *  but will still seem as if it was by the user)
+ * @return bool
+ * @deprecated since Moodle 3.5
+ */
+function message_delete_message($message, $userid) {
+    debugging(
+        'message_delete_message() is deprecated, please use \core_message\api::delete_message() instead.',
+        DEBUG_DEVELOPER
+    );
+
+    return \core_message\api::delete_message($userid, $message->id);
+}

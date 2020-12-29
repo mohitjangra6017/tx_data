@@ -429,8 +429,9 @@ class container_workspace_bulk_add_workspace_members_adhoc_task_testcase extends
         }
 
         $events = $events_sink->get_events();
-        // Two events for enrolling the user and one for the actual task
-        $this->assertCount(3, $events);
+        // Two events for enrolling the user, one for the actual task and one for notification
+        // is viewed by the user who is in charge
+        $this->assertCount(4, $events);
         $events = array_filter($events, function (base $event) {
             return $event instanceof audience_added;
         });
@@ -507,7 +508,8 @@ class container_workspace_bulk_add_workspace_members_adhoc_task_testcase extends
         }
 
         $events = $events_sink->get_events();
-        // Two events for enrolling the user and one for the actual task
+        // Two events for enrolling the user, one for the actual task
+        // and two events for the notifications that are viewed by the workspace owner.
         $this->assertCount(3, $events);
         $events = array_filter($events, function (base $event) {
             return $event instanceof audience_added;

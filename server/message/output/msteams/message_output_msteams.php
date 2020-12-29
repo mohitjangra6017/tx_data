@@ -40,17 +40,53 @@ class message_output_msteams extends message_output {
      */
     function send_message($eventdata) {
         global $DB;
+        $is_test = (defined('PHPUNIT_TEST') && PHPUNIT_TEST);
+
+        if (!empty($eventdata->notification)) {
+            $table_name = 'notifications';
+        } else {
+            $table_name = 'messages';
+        }
+
+        $message_record = $DB->get_record($table_name, ['id' => $eventdata->savedmessageid]);
+        if (!property_exists($message_record, 'useridto')) {
+            if (!property_exists($eventdata, 'userto')) {
+                if ($is_test) {
+                    // Throw a debugging message here, because we would want the phpunit tests to fail.
+                    debugging(
+                        'handle_notification_sent - cannot resolve the target user to sent the notification to',
+                        DEBUG_DEVELOPER
+                    );
+                } else {
+                    mtrace(
+                        'ERROR: handle_notification_sent - cannot resolve the target user to sent the notification to'
+                    );
+                }
+
+                return true;
+            }
+
+            $message_record->useridto = is_object($eventdata->userto) ? $eventdata->userto->id : $eventdata->userto;
+        }
 
         // Get message details.
-        $message = $DB->get_record('message', ['id' => $eventdata->savedmessageid]);
-        if (!$message) {
+        if (!$message_record) {
             // notification cannot be found, exit.
-            mtrace('ERROR: handle_notification_sent - notification cannot be found');
+            if ($is_test) {
+                // Throw a debugging here, because we would want the test to fail.
+                debugging(
+                    'handle_notification_sent - notification cannot be found',
+                    DEBUG_DEVELOPER
+                );
+            } else {
+                mtrace('ERROR: handle_notification_sent - notification cannot be found');
+            }
+
             return true;
         }
 
         $adhocktask = new send_user_message_adhoc_task();
-        $adhocktask->set_custom_data(serialize($message));
+        $adhocktask->set_custom_data(serialize($message_record));
         $adhocktask->set_component('message_msteams');
         \core\task\manager::queue_adhoc_task($adhocktask);
         return true;

@@ -41,12 +41,26 @@ class message_popup_webapi_resolver_mutation_mark_messages_read_testcase extends
     use message_popup_test_helper;
 
     /**
+     * @var phpunit_message_sink|null
+     */
+    private $messagesink;
+
+    /**
      * Test set up.
      *
      * This is executed before running any test in this file.
+     *
+     * @return void
      */
-    public function setUp(): void {
+    protected function setUp(): void {
         $this->messagesink = $this->redirectMessages();
+    }
+
+    /**
+     * @return void
+     */
+    protected function tearDown(): void {
+        $this->messagesink = null;
     }
 
     /**
@@ -54,7 +68,7 @@ class message_popup_webapi_resolver_mutation_mark_messages_read_testcase extends
      *
      * @return array
      */
-    private function create_messages() {
+    private function create_messages(): array {
         $sender = $this->getDataGenerator()->create_user(array('firstname' => 'Test1', 'lastname' => 'User1'));
         $recipient = $this->getDataGenerator()->create_user(array('firstname' => 'Test2', 'lastname' => 'User2'));
 
@@ -74,7 +88,7 @@ class message_popup_webapi_resolver_mutation_mark_messages_read_testcase extends
      * @param $message_ids array of generated message ids
      * @return array $input
      */
-    private function standard_input(array $msgs, $message_ids) {
+    private function standard_input(array $msgs, array $message_ids): array {
         $input = ['input' => ['message_ids' => []]];
         foreach ($msgs as $msgno) {
             if (!empty($message_ids[$msgno - 1])) {
@@ -155,15 +169,25 @@ class message_popup_webapi_resolver_mutation_mark_messages_read_testcase extends
         $message_ids[] = $this->send_fake_unread_popup_notification($sender, $recipient2, 'Message 2', 2);
         $message_ids[] = $this->send_fake_unread_popup_notification($sender, $recipient1, 'Message 3', 3);
 
-        $this->assertEquals(3, $DB->count_records('message', ['useridfrom' => $sender->id]));
-        $this->assertEquals(0, $DB->count_records('message_read', ['useridfrom' => $sender->id]));
+        // 3 unread notifications from the sender
+        $this->assertEquals(
+            3,
+            $DB->count_records(
+                'notifications',
+                [
+                    'useridfrom' => $sender->id,
+                    'timeread' => null
+                ]
+            )
+        );
 
         $this->setUser($recipient1);
+
         try {
             $input = $this->standard_input(array_keys($message_ids), $message_ids);
             $this->resolve_graphql_mutation('message_popup_mark_messages_read', $input);
             $this->fail('invalid_parameter_exception expected');
-        } catch (\invalid_parameter_exception $ex) {
+        } catch (invalid_parameter_exception $ex) {
             $this->assertStringContainsString("Invalid messageid, you don't have permissions to mark this message as read", $ex->getMessage());
         }
         try {
@@ -171,13 +195,21 @@ class message_popup_webapi_resolver_mutation_mark_messages_read_testcase extends
             $input = $this->standard_input(array_keys($message_ids), $message_ids);
             $this->resolve_graphql_mutation('message_popup_mark_messages_read', $input);
             $this->fail('invalid_parameter_exception expected');
-        } catch (\invalid_parameter_exception $ex) {
+        } catch (invalid_parameter_exception $ex) {
             $this->assertStringContainsString("Invalid messageid, the message doesn't exist", $ex->getMessage());
         }
 
         // Make sure no messages are marked as read
-        $this->assertEquals(3, $DB->count_records('message', ['useridfrom' => $sender->id]));
-        $this->assertEquals(0, $DB->count_records('message_read', ['useridfrom' => $sender->id]));
+        $this->assertEquals(
+            3,
+            $DB->count_records(
+                'notifications',
+                [
+                    'useridfrom' => $sender->id,
+                    'timeread' => null
+                ]
+            )
+        );
     }
 
     /**

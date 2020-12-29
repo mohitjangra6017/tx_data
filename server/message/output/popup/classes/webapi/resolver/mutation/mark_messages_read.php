@@ -27,9 +27,8 @@ use core\webapi\execution_context;
 use core\webapi\middleware\require_authenticated_user;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
-
-global $CFG;
-require_once($CFG->dirroot . '/message/lib.php');
+use core_message\api;
+use invalid_parameter_exception;
 
 class mark_messages_read implements mutation_resolver, has_middleware {
     /**
@@ -41,32 +40,30 @@ class mark_messages_read implements mutation_resolver, has_middleware {
         global $USER, $DB;
         $message_ids = $args['input']['message_ids'];
         if (empty($message_ids)) {
-            throw new \invalid_parameter_exception('empty message id list');
+            throw new invalid_parameter_exception('empty message id list');
         }
 
         // Following logic from message\externallib::mark_message_read()
         $timeread = time();
 
         [$sql, $params] = $DB->get_in_or_equal($message_ids);
-        $messages = $DB->get_records_select('message', 'id ' . $sql, $params, 'id', '*');
-        $message_read_ids = [];
+        $messages = $DB->get_records_select('notifications', 'id ' . $sql, $params, 'id', '*');
         foreach ($message_ids as $message_id) {
             if (!isset($messages[$message_id])) {
-                throw new \invalid_parameter_exception('Invalid messageid, the message doesn\'t exist');
+                throw new invalid_parameter_exception('Invalid messageid, the message doesn\'t exist');
             }
             $message = $messages[$message_id];
             if ($message->useridto != $USER->id) {
-                throw new \invalid_parameter_exception('Invalid messageid, you don\'t have permissions to mark this message as read');
+                throw new invalid_parameter_exception('Invalid messageid, you don\'t have permissions to mark this message as read');
             }
         }
 
         foreach ($message_ids as $message_id) {
             $message = $messages[$message_id];
-            // This returns an updated message id, because the message has changed tables.
-            $message_read_ids[] = message_mark_message_read($message, $timeread);
+            api::mark_notification_as_read($message, $timeread);
         }
 
-        return ['read_message_ids' => $message_read_ids];
+        return ['read_message_ids' => $message_ids];
     }
 
     /**

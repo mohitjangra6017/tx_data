@@ -193,10 +193,11 @@ class auth_approved_request_testcase extends advanced_testcase {
         // We expect the following:
         //  - 1 email to the user who just registered.
         //  - 1 notification to the approver.
-        //  - 1 event to be fired.
+        //  - 2 events to be fired. One for request being added, and the
+        //    other one is for notification being viewed straight away after sent.
         $this->assertSame(1, $emailsink->count());
         $this->assertSame(1, $messagesink->count());
-        $this->assertSame(1, $eventsink->count());
+        $this->assertSame(2, $eventsink->count());
 
         $emails = $emailsink->get_messages();
         $email = reset($emails);
@@ -218,6 +219,8 @@ class auth_approved_request_testcase extends advanced_testcase {
         $this->assertSame($noreplyuser->email, $message->fromemail);
 
         $events = $eventsink->get_events();
+
+        // First event is about the request added.
         $event = reset($events);
         $this->assertInstanceOf('\auth_approved\event\request_added', $event);
         $this->assertSame('auth_approved', $event->component);
@@ -230,6 +233,14 @@ class auth_approved_request_testcase extends advanced_testcase {
         $this->assertStringContainsString('registered for system access', $event->get_description());
         $this->assertSame(get_string('eventrequestadded', 'auth_approved'), $event::get_name());
         $this->assertStringContainsString('/auth/approved/index.php', (string)$event->get_url());
+
+        // Second event is about the notification viewed by the approver
+        $event = next($events);
+        $this->assertInstanceOf('\core\event\notification_viewed', $event);
+        $this->assertSame('core', $event->component);
+        $this->assertSame('viewed', $event->action);
+        $this->assertSame(CONTEXT_USER, $event->contextlevel);
+        $this->assertSame(context_user::instance($approver->id)->id, $event->contextid);
 
         $emailsink->close();
         $messagesink->close();
@@ -346,7 +357,10 @@ class auth_approved_request_testcase extends advanced_testcase {
         $this->assertNull($result[2]);
 
         $this->assertSame(1, $emailsink->count());
-        $this->assertSame(1, $eventsink->count());
+
+        // 1 event for request confirmed and the second
+        // one is for the notification viewed.
+        $this->assertSame(2, $eventsink->count());
         $this->assertSame(1, $messagesink->count());
 
         $emails = $emailsink->get_messages();
@@ -360,6 +374,8 @@ class auth_approved_request_testcase extends advanced_testcase {
         $this->assertStringNotContainsString('monkey', $emailbody);
 
         $events = $eventsink->get_events();
+
+        // First event is the request confirmed
         $event = reset($events);
         $this->assertInstanceOf('\auth_approved\event\request_confirmed', $event);
         $this->assertSame('auth_approved', $event->component);
@@ -370,6 +386,14 @@ class auth_approved_request_testcase extends advanced_testcase {
         $this->assertSame($request->email, $event->other['email']);
         $this->assertSame($request->username, $event->other['username']);
         $this->assertStringNotContainsString('monkey', json_encode($event)); // Confirm the event does not contain the password!
+
+        // Second event is the notification viewed by the approver
+        $event = next($events);
+        $this->assertInstanceOf('\core\event\notification_viewed', $event);
+        $this->assertSame('core', $event->component);
+        $this->assertSame('viewed', $event->action);
+        $this->assertSame(CONTEXT_USER, $event->contextlevel);
+        $this->assertSame(context_user::instance($approver->id)->id, $event->contextid);
 
         $messages = $messagesink->get_messages();
         $message = reset($messages);
@@ -473,7 +497,10 @@ class auth_approved_request_testcase extends advanced_testcase {
         $this->assertSame('Thank you for confirming your account request, you can now log in using your requested username: ' . $request->username, $result[1]);
         $this->assertInstanceOf('single_button', $result[2]);
         $this->assertSame(get_login_url(), $result[2]->url->out(false));
-        $this->assertSame(3, $eventsink->count());
+
+        // 3 events from the auth_approved functionalities and one event
+        // from the notification being viewed via phpunit.
+        $this->assertSame(4, $eventsink->count());
         $this->assertSame(1, $messagesink->count());
         $this->assertSame(1, $emailsink->count());
 
@@ -526,6 +553,16 @@ class auth_approved_request_testcase extends advanced_testcase {
         $this->assertSame(get_string('eventrequestapproved', 'auth_approved'), $event::get_name());
         $this->assertStringContainsString('/auth/approved/index.php', (string)$event->get_url());
 
+        // Now the notification viewed event.
+        $event = next($events);
+        $this->assertInstanceOf('\core\event\notification_viewed', $event);
+        $this->assertSame('core', $event->component);
+        $this->assertSame('viewed', $event->action);
+        $this->assertSame(get_string('eventnotificationviewed', 'message'), $event::get_name());
+        $this->assertSame(CONTEXT_USER, $event->contextlevel);
+        // The current actor that is receiving the notification
+        $this->assertEquals(context_user::instance($approver->id)->id, $event->contextid);
+
         // Verify approver notification.
         $messages = $messagesink->get_messages();
         $message = reset($messages);
@@ -572,7 +609,9 @@ class auth_approved_request_testcase extends advanced_testcase {
         $this->assertSame(get_login_url(), $result[2]->url->out(false));
 
         $this->assertSame(1, $emailsink->count());
-        $this->assertSame(3, $eventsink->count());
+
+        // 3 events from auth_approved and one event from core notification.
+        $this->assertSame(4, $eventsink->count());
         $this->assertSame(1, $messagesink->count());
 
         $emails = $emailsink->get_messages();
@@ -623,6 +662,13 @@ class auth_approved_request_testcase extends advanced_testcase {
         $this->assertSame($request->email, $event->other['email']);
         $this->assertSame($request->username, $event->other['username']);
         $this->assertStringNotContainsString('monkey', json_encode($event)); // Confirm the event does not contain the password!
+
+        // Notification viewed by the approver
+        $event = next($events);
+        $this->assertInstanceOf('\core\event\notification_viewed', $event);
+        $this->assertSame('core', $event->component);
+        $this->assertSame(CONTEXT_USER, $event->contextlevel);
+        $this->assertSame(context_user::instance($approver->id)->id, $event->contextid);
 
         // Verify approver notification.
         $messages = $messagesink->get_messages();
@@ -1144,7 +1190,7 @@ class auth_approved_request_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        list($frameworks, $hierarchies) = $this->hierarchy_data('pos', 10);
+        [$frameworks, $hierarchies] = $this->hierarchy_data('pos', 10);
         $delimiter = 3;
         $excludedframeworks = array_slice($frameworks, $delimiter);
         $excludedpositions = array_slice($hierarchies, $delimiter);
@@ -1181,7 +1227,7 @@ class auth_approved_request_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        list($frameworks, $hierarchies) = $this->hierarchy_data('org', 10);
+        [$frameworks, $hierarchies] = $this->hierarchy_data('org', 10);
         $delimiter = 5;
         $excludedframeworks = array_slice($frameworks, $delimiter);
         $excludedorganisations = array_slice($hierarchies, $delimiter);
@@ -1218,7 +1264,7 @@ class auth_approved_request_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        list($frameworks, $hierarchies) = $this->hierarchy_data('org', 10);
+        [$frameworks, $hierarchies] = $this->hierarchy_data('org', 10);
         $delimiter = 5;
         $excludedorgframeworks = array_slice($frameworks, $delimiter);
         $excludedorganisations = array_slice($hierarchies, $delimiter);
@@ -1226,7 +1272,7 @@ class auth_approved_request_testcase extends advanced_testcase {
         $includedorgframeworks = array_slice($frameworks, 0, $delimiter);
         $includedorg = implode(',', $includedorgframeworks);
 
-        list($frameworks, $hierarchies) = $this->hierarchy_data('pos', 6);
+        [$frameworks, $hierarchies] = $this->hierarchy_data('pos', 6);
         $delimiter = 2;
         $excludedposframeworks = array_slice($frameworks, $delimiter);
         $excludedpositions = array_slice($hierarchies, $delimiter);

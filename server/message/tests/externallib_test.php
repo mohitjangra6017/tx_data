@@ -874,7 +874,8 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
             $notificationid = core_message_external::mark_notification_read(1337, time());
             $this->fail('Exception expected due invalid notificationid.');
         } catch (dml_missing_record_exception $e) {
-            $this->assertEquals('invalidrecord', $e->errorcode);
+            // Totara: we do not expose our database table anymore
+            $this->assertEquals('invalidrecordunknown', $e->errorcode);
         }
 
         // A notification to a different user.

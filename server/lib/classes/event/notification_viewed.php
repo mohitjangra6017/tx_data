@@ -21,8 +21,13 @@
  * @copyright  2018 Mark Nelson <markn@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace core\event;
+
+use coding_exception;
+use core_user;
+use context_user;
+use context_system;
+use moodle_url;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -41,23 +46,25 @@ class notification_viewed extends base {
      * @param int $userfromid
      * @param int $usertoid
      * @param int $notificationid
+     *
      * @return notification_viewed
      */
-    public static function create_from_ids($userfromid, $usertoid, $notificationid) {
+    public static function create_from_ids(int $userfromid, int $usertoid, int $notificationid): notification_viewed {
         // We may be sending a notification from the 'noreply' address, which means we are not actually sending a
         // notification from a valid user. In this case, we will set the userid to 0.
         // Check if the userid is valid.
-        if (!\core_user::is_real_user($userfromid)) {
+        if (!core_user::is_real_user($userfromid)) {
             $userfromid = 0;
         }
 
         // Get the context for the user who received the notification.
-        $context = \context_user::instance($usertoid, IGNORE_MISSING);
+        $context = context_user::instance($usertoid, IGNORE_MISSING);
         // If the user no longer exists the context value will be false, in this case use the system context.
         if ($context === false) {
-            $context = \context_system::instance();
+            $context = context_system::instance();
         }
 
+        /** @var notification_viewed $event */
         $event = self::create(
             [
                 'objectid' => $notificationid,
@@ -72,8 +79,9 @@ class notification_viewed extends base {
 
     /**
      * Init method.
+     * @return void
      */
-    protected function init() {
+    protected function init(): void {
         $this->data['objecttable'] = 'notifications';
         $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_OTHER;
@@ -84,17 +92,17 @@ class notification_viewed extends base {
      *
      * @return string
      */
-    public static function get_name() {
+    public static function get_name(): string {
         return get_string('eventnotificationviewed', 'message');
     }
 
     /**
      * Returns relevant URL.
      *
-     * @return \moodle_url
+     * @return moodle_url
      */
-    public function get_url() {
-        return new \moodle_url('/message/output/popup/notifications.php', array('notificationid' => $this->objectid));
+    public function get_url(): moodle_url {
+        return new moodle_url('/message/output/popup/notifications.php', array('notificationid' => $this->objectid));
     }
 
     /**
@@ -102,25 +110,28 @@ class notification_viewed extends base {
      *
      * @return string
      */
-    public function get_description() {
+    public function get_description(): string {
         return "The user with id '$this->userid' read a notification from the user with id '$this->relateduserid'.";
     }
 
     /**
      * Custom validation.
      *
-     * @throws \coding_exception
+     * @throws coding_exception
      * @return void
      */
-    protected function validate_data() {
+    protected function validate_data(): void {
         parent::validate_data();
 
         if (!isset($this->relateduserid)) {
-            throw new \coding_exception('The \'relateduserid\' must be set.');
+            throw new coding_exception('The \'relateduserid\' must be set.');
         }
     }
 
-    public static function get_objectid_mapping() {
+    /**
+     * @return array
+     */
+    public static function get_objectid_mapping(): array {
         return array('db' => 'notifications', 'restore' => base::NOT_MAPPED);
     }
 }
