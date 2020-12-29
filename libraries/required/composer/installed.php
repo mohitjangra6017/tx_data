@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '3a4b13ee666ea489c54503cfc5b7abfb5e260dce',
+    'reference' => '3708259af3c7b182db7f0a9374d28e0788241d51',
     'name' => 'totara/totara_require',
   ),
   'versions' => 
@@ -38,6 +38,15 @@
       ),
       'reference' => 'c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3',
     ),
+    'simplepie/simplepie' => 
+    array (
+      'pretty_version' => '1.5.6',
+      'version' => '1.5.6.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1c68e14ca3ac84346b6e6fe3c5eedf725d0f92c6',
+    ),
     'totara/totara_require' => 
     array (
       'pretty_version' => 'dev-TL-28276/14',
@@ -45,7 +54,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '3a4b13ee666ea489c54503cfc5b7abfb5e260dce',
+      'reference' => '3708259af3c7b182db7f0a9374d28e0788241d51',
     ),
     'webonyx/graphql-php' => 
     array (
