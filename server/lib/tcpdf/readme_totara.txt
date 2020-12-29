@@ -13,5 +13,6 @@ A new version of the library is being developed. See https://github.com/tecnickc
 Extra patches:
 
 * TL-10313: support for inline SVG images in TCPDF::openHTMLTagHandler()
+* TL-29101: use upstream patches for PHP 8.0 compatibility - https://github.com/tecnickcom/TCPDF/commit/89f9e5f616a8d89417ccc2c50ef67bc78a00235c
 
 Petr Skoda
