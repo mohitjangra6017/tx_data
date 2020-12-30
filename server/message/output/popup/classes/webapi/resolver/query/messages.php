@@ -28,21 +28,26 @@ use core\webapi\middleware\require_authenticated_user;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
 use message_popup\api;
+use stdClass;
 
 final class messages implements query_resolver, has_middleware {
 
-    public static function resolve(array $args, execution_context $ec) {
+    /**
+     * @param array             $args
+     * @param execution_context $ec
+     * @return stdClass[]
+     */
+    public static function resolve(array $args, execution_context $ec): array {
         global $USER;
-
-        $messages = api::get_popup_notifications($USER->id, 'DESC', 30, 0);
-
-        return $messages;
+        return api::get_popup_notifications($USER->id, 'DESC', 30);
     }
 
+    /**
+     * @return array
+     */
     public static function get_middleware(): array {
         return [
             require_authenticated_user::class
         ];
     }
-
 }

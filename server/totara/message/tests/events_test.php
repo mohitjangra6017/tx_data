@@ -154,19 +154,20 @@ class totara_message_events_testcase extends advanced_testcase {
         $this->assertEventContextNotUsed($event);
 
         $metadata  = $DB->get_record('message_metadata', array('id' => $eventdata['objectid']));
-        $message   = $DB->get_record('message', array('id' => $eventdata['other']['messageid']));
+        $message   = $DB->get_record('notifications', array('id' => $eventdata['other']['messageid']));
 
         $this->assertSame($event->get_context(), context_system::instance());
 
         $this->assertSame($eventdata['crud'], 'c');
         $this->assertSame($eventdata['edulevel'], core\event\base::LEVEL_OTHER);
         $this->assertSame($eventdata['objecttable'], 'message_metadata');
-        $this->assertSame($eventdata['objectid'], $metadata->id);
-        $this->assertSame($eventdata['userid'], $this->userfrom->id);
-        $this->assertSame($eventdata['relateduserid'], $this->userto->id);
-        $this->assertSame($eventdata['other']['messageid'], $messageid);
+
+        $this->assertEquals($eventdata['objectid'], $metadata->id);
+        $this->assertEquals($eventdata['userid'], $this->userfrom->id);
+        $this->assertEquals($eventdata['relateduserid'], $this->userto->id);
+        $this->assertEquals($eventdata['other']['messageid'], $messageid);
 
         $this->assertEquals($metadata, $event->get_record_snapshot('message_metadata', $metadata->id));
-        $this->assertEquals($message, $event->get_record_snapshot('message', $messageid));
+        $this->assertEquals($message, $event->get_record_snapshot('notifications', $messageid));
     }
 }

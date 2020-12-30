@@ -36,5 +36,26 @@ function xmldb_message_popup_upgrade($oldversion) {
 
     // Totara 13.0 release line.
 
+    if ($oldversion < 2020123100) {
+        // Define table message_popup_notifications to be created.
+        $table = new xmldb_table('message_popup_notifications');
+
+        // Adding fields to table message_popup_notifications.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('notificationid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+
+        // Adding keys to table message_popup_notifications.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('notificationid', XMLDB_KEY_FOREIGN, ['notificationid'], 'notifications', ['id']);
+
+        // Conditionally launch create table for message_popup_notifications.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Popup savepoint reached.
+        upgrade_plugin_savepoint(true, 2020123100, 'message', 'popup');
+    }
+
     return true;
 }

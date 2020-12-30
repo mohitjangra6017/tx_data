@@ -26,6 +26,9 @@ namespace core_message;
 
 defined('MOODLE_INTERNAL') || die();
 
+use core\event\notification_viewed;
+use stdClass;
+
 global $CFG;
 require_once($CFG->dirroot . '/lib/messagelib.php');
 
@@ -126,7 +129,7 @@ class api {
         global $DB;
 
         // Get all the users in the course.
-        list($esql, $params) = get_enrolled_sql(\context_course::instance($courseid), '', 0, true);
+        [$esql, $params] = get_enrolled_sql(\context_course::instance($courseid), '', 0, true);
         $sql = "SELECT u.*, mc.blocked
                   FROM {user} u
                   JOIN ($esql) je
@@ -422,7 +425,7 @@ class api {
         }, array_values($messages));
 
         // Ok, let's get the other members in the conversations.
-        list($useridsql, $usersparams) = $DB->get_in_or_equal($otheruserids);
+        [$useridsql, $usersparams] = $DB->get_in_or_equal($otheruserids);
         $userfields = \user_picture::fields('u', array('lastaccess'));
         $userssql = "SELECT $userfields
                        FROM {user} u
@@ -1281,10 +1284,12 @@ class api {
     /**
      * Mark a single notification as read.
      *
-     * @param \stdClass $notification The notification
+     * @param stdClass $notification The notification
      * @param int|null $timeread The time the message was marked as read, if null will default to time()
+     *
+     * @return void
      */
-    public static function mark_notification_as_read($notification, $timeread = null) {
+    public static function mark_notification_as_read(stdClass $notification, $timeread = null): void {
         global $DB;
 
         if (is_null($timeread)) {
@@ -1297,9 +1302,8 @@ class api {
             $updatenotification->timeread = $timeread;
 
             $DB->update_record('notifications', $updatenotification);
-
             // Trigger event for reading a notification.
-            \core\event\notification_viewed::create_from_ids(
+            notification_viewed::create_from_ids(
                 $notification->useridfrom,
                 $notification->useridto,
                 $notification->id

@@ -126,15 +126,40 @@ echo html_writer::start_tag('form', array('id' => 'totara_messages', 'name' => '
         'action' => new moodle_url('/totara/message/action.php'),  'method' => 'post'));
 echo $reporthtml;
 if ($countfiltered > 0) {
-    totara_message_action_button('dismiss');
-    totara_message_action_button('accept');
-    totara_message_action_button('reject');
+    totara_message_action_button('dismiss', 'totara_task');
+    totara_message_action_button('accept', 'totara_task');
+    totara_message_action_button('reject', 'totara_task');
 
     $out = $output->box_start('generalbox', 'totara_message_actions');
-    $out .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'returnto', 'value' => $FULLME));
-    $dismisslink = html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'dismiss', 'id' => 'totara-dismiss',
-            'disabled' => 'true', 'value' => get_string('dismiss', 'totara_message'))) .
-            html_writer::tag('noscript', get_string('noscript', 'totara_message'));
+    $out .= html_writer::empty_tag(
+        'input',
+        [
+            'type' => 'hidden',
+            'name' => 'returnto',
+            'value' => $FULLME
+        ]
+    );
+
+    $out .= html_writer::empty_tag(
+        'input',
+        [
+            'type' => 'hidden',
+            'name' => 'processor_type',
+            'value' => 'totara_task'
+        ]
+    );
+
+    $dismisslink = html_writer::empty_tag(
+        'input',
+        [
+            'type' => 'submit',
+            'name' => 'dismiss',
+            'id' => 'totara-dismiss',
+            'disabled' => 'true',
+            'value' => get_string('dismiss', 'totara_message')
+        ]
+    ) . html_writer::tag('noscript', get_string('noscript', 'totara_message'));
+
     $out .= get_string('withselected', 'totara_message');
     $out .= $dismisslink;
     $out .= $output->box_end();

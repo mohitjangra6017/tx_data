@@ -91,7 +91,7 @@ class rb_content_option {
      *
      * @param string $classname Name of the content restriction class
      * @param string $title Human readable description of the field
-     * @param array $fields Database fields to apply the restriction to
+     * @param array|string $fields Database fields to apply the restriction to
      * @param mixed $joins {@link rb_join::$name} required to access
      *             {@link rb_content_option::$field}
      */

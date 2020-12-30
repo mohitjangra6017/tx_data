@@ -24,11 +24,13 @@
  */
 namespace totara_message\event;
 
+use core\entity\notification;
 use core_user;
 use context_system;
 use core\event\base;
 use stdClass;
 use coding_exception;
+use totara_message\entity\message_metadata;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -85,23 +87,28 @@ class alert_sent extends base {
     /**
      * Create an event instance from given message data.
      *
-     * @param stdClass $event_data Object as returned by tm_insert_metadata().
+     * @param stdClass $event_data      Object as returned by tm_insert_metadata().
      * @param int      $message_id
+     * @param int|null $processor_id
      *
      * @return alert_sent
      */
-    public static function create_from_message_data(stdClass $event_data, int $message_id): alert_sent {
+    public static function create_from_message_data(stdClass $event_data, int $message_id, ?int $processor_id = null): alert_sent {
         global $DB;
 
-        if (!empty($event_data->notification)) {
-            // The message is a notification, hence we are going to fetch from the notification table.
-            $table_name = 'notifications';
-        } else {
-            $table_name = 'messages';
+        if (empty($processor_id)) {
+            // This is mainly for alert sent. I have no ideas, why this event is sitting
+            // in here (partly a core API for totara_alert and totara_task). But for now,
+            // we will assume the totara_alert processor by default
+            $processor_id = $DB->get_field('message_processors', 'id', ['name' => 'totara_alert']);
         }
 
-        $message = $DB->get_record($table_name, ['id' => $message_id]);
-        $metadata = $DB->get_record('message_metadata', ['messageid' => $message_id]);
+        $message = $DB->get_record(notification::TABLE, ['id' => $message_id]);
+        $metadata = message_metadata::repository()->find_message_metadata_from_notification_id(
+            $message_id,
+            $processor_id,
+            true
+        );
 
         $message_type = TOTARA_MSG_TYPE_UNKNOWN;
         if (isset($event_data->msgtype)) {
@@ -119,7 +126,7 @@ class alert_sent extends base {
             'relateduserid' => $message->useridfrom,
             'other' => [
                 'messageid' => $message_id,
-                'table_name' => $table_name,
+                'processorid' => $processor_id,
                 'msgtype' => $message_type
             ]
         ];
@@ -140,8 +147,8 @@ class alert_sent extends base {
         $event = self::create($data);
         self::$preventcreatecall = true;
 
-        $event->add_record_snapshot('message_metadata', $metadata);
-        $event->add_record_snapshot($table_name, $message);
+        $event->add_record_snapshot('message_metadata', $metadata->get_record());
+        $event->add_record_snapshot(notification::TABLE, $message);
 
         return $event;
     }

@@ -22,7 +22,7 @@
  */
 
 use core\collection;
-use core\event\message_sent;
+use core\event\notification_sent;
 use core\task\manager;
 use mod_perform\constants;
 use mod_perform\entity\activity\activity as activity_entity;
@@ -713,7 +713,7 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
             return $event instanceof participant_instance_manually_added;
         });
         $events_message = array_filter($events, function ($event) {
-            return $event instanceof message_sent;
+            return $event instanceof notification_sent;
         });
         $this->assertCount(count($relationships), $events_message);
 

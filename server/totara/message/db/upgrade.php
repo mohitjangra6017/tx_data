@@ -27,11 +27,73 @@
  */
 
 function xmldb_totara_message_upgrade($oldversion) {
-    global $CFG, $DB;
+    global $DB;
 
     $dbman = $DB->get_manager();
 
     // Totara 13.0 release line.
+
+    if ($oldversion < 2021010500) {
+        // Adding notification's id field and indexes to the table.
+        $table = new xmldb_table('message_metadata');
+
+        // Adding notification's id field
+        $notification_id_field = new xmldb_field(
+            'notificationid',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            null,
+            null,
+            null,
+            null,
+            'messagereadid'
+        );
+
+        $notification_id_field->setComment("The table notification's id");
+
+        if (!$dbman->field_exists($table, $notification_id_field)) {
+            $dbman->add_field($table, $notification_id_field);
+        }
+
+        // Adding time read field
+        $time_read_field = new xmldb_field('timeread', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'notificationid');
+        $time_read_field->setComment("The time read where this message notification is set to be dismissed");
+
+        if (!$dbman->field_exists($table, $time_read_field)) {
+            $dbman->add_field($table, $time_read_field);
+        }
+
+        // Add index for notification's id field.
+        $notification_index = new xmldb_index('unique_notification_id', XMLDB_INDEX_UNIQUE, ['notificationid', 'processorid']);
+        if (!$dbman->index_exists($table, $notification_index)) {
+            $dbman->add_index($table, $notification_index);
+        }
+
+        upgrade_plugin_savepoint(true, 2021010500, 'totara', 'message');
+    }
+
+    if ($oldversion < 2021010501) {
+        $table = new xmldb_table('message_metadata');
+
+        // Define index message (not unique) to be dropped form message_metadata.
+        $message_index = new xmldb_index('message', XMLDB_INDEX_NOTUNIQUE, array('messageid'));
+
+        // Conditionally launch drop index message.
+        if ($dbman->index_exists($table, $message_index)) {
+            $dbman->drop_index($table, $message_index);
+        }
+
+        // Define index messageread (not unique) to be dropped form message_metadata.
+        $message_read_index = new xmldb_index('messageread', XMLDB_INDEX_NOTUNIQUE, array('messagereadid'));
+
+        // Conditionally launch drop index messageread.
+        if ($dbman->index_exists($table, $message_read_index)) {
+            $dbman->drop_index($table, $message_read_index);
+        }
+
+        // Message savepoint reached.
+        upgrade_plugin_savepoint(true, 2021010501, 'totara', 'message');
+    }
 
     return true;
 }

@@ -30,15 +30,19 @@ use core\webapi\resolver\has_middleware;
 use message_popup\api;
 
 final class unread_count implements query_resolver, has_middleware {
-
-    public static function resolve($args, execution_context $ec) {
+    /**
+     * @param array             $args
+     * @param execution_context $ec
+     * @return int
+     */
+    public static function resolve($args, execution_context $ec): int {
         global $USER;
-
-        $message_count = api::count_unread_popup_notifications($USER->id);
-
-        return $message_count;
+        return api::count_unread_popup_notifications($USER->id);
     }
 
+    /**
+     * @return array
+     */
     public static function get_middleware(): array {
         return [
             require_authenticated_user::class

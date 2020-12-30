@@ -122,6 +122,3 @@ abstract class message_output {
         return false;
     }
 }
-
-
-

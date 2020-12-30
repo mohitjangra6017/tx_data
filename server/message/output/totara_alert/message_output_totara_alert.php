@@ -28,10 +28,37 @@
  * Alert message processor - stores the message to be shown using the totara alert notification system
  */
 
-require_once($CFG->dirroot.'/message/output/lib.php');
-require_once($CFG->dirroot.'/totara/message/messagelib.php');
+global $CFG;
+require_once($CFG->dirroot . '/message/output/lib.php');
+require_once($CFG->dirroot . '/totara/message/messagelib.php');
 
-class message_output_totara_alert extends message_output{
+use totara_message\event\alert_sent;
+
+class message_output_totara_alert extends message_output {
+    /**
+     * Hold onto the alert processor id because the file "/server/admin/cron.php" can send
+     * a lot of messages at once
+     *
+     * @var int|null
+     */
+    private static $processor_id = null;
+
+    /**
+     * @return int
+     */
+    public static function get_processor_id(): int {
+        global $DB;
+        if (empty(static::$processor_id)) {
+            static::$processor_id = $DB->get_field(
+                'message_processors',
+                'id',
+                ['name' => 'totara_alert'],
+                MUST_EXIST
+            );
+        }
+
+        return static::$processor_id;
+    }
 
     /**
      * Process the alert message.
@@ -39,51 +66,53 @@ class message_output_totara_alert extends message_output{
      * @return true if ok, false if error
      */
     public function send_message($eventdata) {
-        global $DB;
-
-        //hold onto the alert processor id because /admin/cron.php sends a lot of messages at once
-        static $processorid = null;
-
-        //prevent users from getting alert alerts of messages to themselves (happens with forum alerts)
-        if (empty($processorid)) {
-            $processor = $DB->get_record('message_processors', array('name' => 'totara_alert'), '*', MUST_EXIST);
-            $processorid = $processor->id;
-        }
-        $procmessage = new stdClass();
-        $procmessage->unreadmessageid = $eventdata->savedmessageid;
-        $procmessage->processorid     = $processorid;
-
-        //save this message for later delivery
-        $workid = $DB->insert_record('message_working', $procmessage);
+        // Prevent users from getting alert alerts of messages to themselves (happens with forum alerts)
+        $processor_id = static::get_processor_id();
 
         // save the metadata
-        $messageid = tm_insert_metadata($eventdata, $processorid);
+        $messageid = tm_insert_metadata($eventdata, $processor_id);
 
         if (!empty($messageid)) {
-            \totara_message\event\alert_sent::create_from_message_data($eventdata, $messageid)->trigger();
+            $event = alert_sent::create_from_message_data($eventdata, $messageid, $processor_id);
+            $event->trigger();
         }
 
         return true;
     }
 
     /**
-     * @param  object $user the user object, defaults to $USER.
+     * @param object $user the user object, defaults to $USER.
+     *
      * @return bool has the user made all the necessary settings
-     * in their profile to allow this plugin to be used.
+     *                     in their profile to allow this plugin to be used.
      */
     public function is_user_configured($user = null) {
         return true;
     }
 
+    /**
+     * @param array $preferences
+     * @return null|string
+     */
     function config_form($preferences) {
         return null;
     }
 
+    /**
+     * @param stdClass $form
+     * @param array    $preferences
+     * @return bool
+     */
     public function process_form($form, &$preferences) {
         return true;
     }
+
+    /**
+     * @param array $preferences
+     * @param int   $userid
+     * @return bool
+     */
     public function load_data(&$preferences, $userid) {
-        global $USER;
         return true;
     }
 }

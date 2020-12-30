@@ -331,4 +331,41 @@ class helper {
         sort($ids);
         return implode('_', $ids);
     }
+
+    /**
+     * Checks if legacy messages exist for a given user.
+     *
+     * @param int $userid
+     * @return bool
+     */
+    public static function legacy_messages_exist($userid) {
+        global $DB;
+
+        $sql = "SELECT id
+                  FROM {message} m
+                 WHERE useridfrom = ?
+                    OR useridto = ?";
+        $messageexists = $DB->record_exists_sql($sql, [$userid, $userid]);
+
+        $sql = "SELECT id
+                  FROM {message_read} m
+                 WHERE useridfrom = ?
+                    OR useridto = ?";
+        $messagereadexists = $DB->record_exists_sql($sql, [$userid, $userid]);
+
+        return $messageexists || $messagereadexists;
+    }
+
+    /**
+     * A helper function to concat the preference name base on the component value
+     * and the name value.
+     *
+     * @param string $component
+     * @param string $name
+     *
+     * @return string
+     */
+    public static function get_preference_base(string $component, string $name): string {
+        return "{$component}_{$name}";
+    }
 }

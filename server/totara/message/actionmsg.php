@@ -27,6 +27,8 @@
  */
 
 require_once(__DIR__ . '/../../config.php');
+global $CFG, $DB, $PAGE, $USER;
+
 require_once($CFG->dirroot.'/message/lib.php');
 require_once($CFG->dirroot.'/totara/message/lib.php');
 require_once($CFG->dirroot.'/totara/core/lib.php');
@@ -43,6 +45,8 @@ $PAGE->set_context(context_system::instance());
 $dismiss = optional_param('dismiss', NULL, PARAM_RAW);
 $accept = optional_param('accept', NULL, PARAM_RAW);
 $reject = optional_param('reject', NULL, PARAM_RAW);
+$processor_type = optional_param('processor_type', 'totara_task', PARAM_AREA);
+
 $msgids = explode(',', optional_param('msgids', '', PARAM_SEQUENCE));
 
 // hunt for Message Ids in the POST parameters
@@ -60,7 +64,7 @@ $ids = array();
 foreach ($msgids as $msgid) {
     // check message ownership
     if ($msgid) {
-        $message = $DB->get_record('message', array('id' => $msgid));
+        $message = $DB->get_record('notifications', array('id' => $msgid));
         if (!$message || $message->useridto != $USER->id || !confirm_sesskey()) {
             print_error('notyours', 'totara_message', $msgid);
         }
@@ -91,8 +95,16 @@ $tab->head  = array(get_string('type', 'block_totara_alerts'),
 
 $tab->attributes['class'] = 'fullwidth invisiblepadded';
 $tab->data  = array();
+
+$processor_id = $DB->get_field('message_processors', 'id', ['name' => $processor_type], MUST_EXIST);
 foreach ($ids as $msgid => $msg) {
-    $metadata = $DB->get_record('message_metadata', array('messageid' => $msgid));
+    $metadata = $DB->get_record(
+        'message_metadata',
+        [
+            'notificationid' => $msgid,
+            'processorid' => $processor_id
+        ]
+    );
 
     // cannot run reject on message with no onreject
     if ($reject && (!isset($metadata->onreject) || !$metadata->onreject)) {

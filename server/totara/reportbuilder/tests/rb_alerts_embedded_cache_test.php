@@ -114,6 +114,8 @@ class totara_reportbuilder_rb_alerts_embedded_cache_testcase extends reportcache
         $DB->execute('DELETE FROM {message_metadata} WHERE 1=1');
         $DB->execute('DELETE FROM {message_read} WHERE 1=1');
         $DB->execute('DELETE FROM {message} WHERE 1=1');
+        $DB->execute('DELETE FROM {notifications}');
+        $DB->execute('DELETE FROM {messages}');
         reportbuilder_purge_all_cache(true);
     }
 

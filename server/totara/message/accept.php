@@ -29,6 +29,8 @@
 require_once(__DIR__ . '/../../config.php');
 require_once('lib.php');
 
+global $CFG, $DB, $USER, $PAGE;
+
 require_login();
 $PAGE->set_context(context_system::instance());
 
@@ -39,16 +41,17 @@ if (isguestuser()) {
 /// Script parameters
 $msgid = required_param('id', PARAM_INT);
 $reasonfordecision = optional_param('reasonfordecision', '', PARAM_TEXT);
-$returnto = optional_param('returnto', NULL, PARAM_LOCALURL);
+$returnto = optional_param('returnto', null, PARAM_LOCALURL);
+$processor_type = optional_param('processor_type', null, PARAM_AREA);
 
 // check message ownership
-$message = $DB->get_record('message', array('id' => $msgid));
+$message = $DB->get_record('notifications', array('id' => $msgid));
 if (!$message || $message->useridto != $USER->id || !confirm_sesskey()) {
     print_error('notyours', 'totara_message', null, $msgid);
 }
 
 // onaccept the message and then return
-tm_message_task_accept($msgid, $reasonfordecision);
+tm_message_task_accept($msgid, $reasonfordecision, $processor_type);
 
 if ($returnto) {
     redirect($returnto);

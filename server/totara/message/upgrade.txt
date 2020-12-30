@@ -3,6 +3,26 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* Changed the structure of table 'message_metadata':
+    * Added two new fields:
+        * notificationid - which is referencing to the id column new table 'notifications'.
+        * timeread - which is for finding out whether the message metadata record had been read by accordingly user.
+    * The field 'messageid' and 'messagereadid' of table will no longer be populated by the plugin's APIs.
+      However these fields are still be kept for the migration. The migration of removing the values of these columns
+      will happen when the notification migration task is running.
+    * Added new unique index for fields "notificationid" and "processorid".
+    * For every different processor, the message metadata record will be created accordingly.
+* Function "totara_message_eventdata()" is now requiring the third parameter to present, please update all calls.
+* Added new second optional parameter to function "totara_message_dismiss_action()".
+* Added new fourth optional parameter to function "totara_message_alert_popup()".
+* Added new second optional parameter to function "totara_message_action_button()".
+* Added new second optional parameter to function "tm_message_dismiss()".
+* Added new third optional parameter to function "tm_message_task_accept()"
+* Added new third optional parameter to function "tm_message_task_reject()"
+* Changes in function "tm_message_mark_message_read()":
+    * Added new fourth optional parameter.
+    * Deprecated the third parameter of the function, please update all calls.
+
 === 13.0 ===
 
 === 12.0 ===

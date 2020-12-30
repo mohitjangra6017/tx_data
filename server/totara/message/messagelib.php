@@ -30,10 +30,15 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_message\api;
+use totara_message\entity\message_metadata;
+use totara_message\helper;
+
+global $CFG;
 require_once($CFG->dirroot . '/message/lib.php');
 require_once($CFG->dirroot . '/totara/message/lib.php');
 require_once($CFG->dirroot . '/totara/core/lib.php');
-require_once($CFG->libdir  . '/eventslib.php');
+require_once($CFG->libdir . '/eventslib.php');
 
 // message status constants
 define('TOTARA_MSG_STATUS_UNDECIDED', 0);
@@ -66,7 +71,7 @@ define('TOTARA_MSG_EMAIL_MANUAL', 2);
 
 // message type shortnames
 global $TOTARA_MESSAGE_TYPES;
-$TOTARA_MESSAGE_TYPES = array(
+$TOTARA_MESSAGE_TYPES = [
     TOTARA_MSG_TYPE_UNKNOWN => 'unknown',
     TOTARA_MSG_TYPE_COURSE => 'course',
     TOTARA_MSG_TYPE_PROGRAM => 'program',
@@ -79,12 +84,14 @@ $TOTARA_MESSAGE_TYPES = array(
     TOTARA_MSG_TYPE_SURVEY => 'survey',
     TOTARA_MSG_TYPE_SCORM => 'scorm',
     TOTARA_MSG_TYPE_LINK => 'link',
-);
+];
 
 // list of supported categories
 global $TOTARA_MESSAGE_CATEGORIES;
-$TOTARA_MESSAGE_CATEGORIES = array_merge(array_keys($TOTARA_MESSAGE_TYPES),
-        array('facetoface', 'learningplan', 'objective', 'resource'));
+$TOTARA_MESSAGE_CATEGORIES = array_merge(
+    array_keys($TOTARA_MESSAGE_TYPES),
+    ['facetoface', 'learningplan', 'objective', 'resource']
+);
 
 // message urgency constants
 define('TOTARA_MSG_URGENCY_LOW', -4);
@@ -106,16 +113,17 @@ define('TOTARA_MSG_URGENCY_URGENT', 4);
  *  fullmessageformat  - the format if the full message (FORMAT_MOODLE, FORMAT_HTML, ..)
  *  fullmessagehtml  - the full version (the message processor will choose with one to use)
  *  smallmessage - the small version of the message
- *  contexturl - if this is a alert then you can specify a url to view the event. For example the forum post the user is being notified of.
- *  contexturlname - the display text for contexturl
- *  msgstatus - int Message Status see TOTARA_MSG_STATUS* constants
- *  msgtype - int Message Type see TOTARA_MSG_TYPE* constants
+ *  contexturl - if this is a alert then you can specify a url to view the event. For example the forum post the user
+ *  is being notified of. contexturlname - the display text for contexturl msgstatus - int Message Status see
+ *  TOTARA_MSG_STATUS* constants msgtype - int Message Type see TOTARA_MSG_TYPE* constants
  *
- * @param object $eventdata information about the message (modulename, userfrom, userto, ...)
- * @return boolean success
+ * @param stdClass|object $eventdata information about the message (modulename, userfrom, userto, ...)
+ *
+ * @return bool|int         Returning false, if the function is having problem to send message/notification. Otherwise,
+ *                          the notification/message's id.
  */
 function tm_message_send($eventdata) {
-    global $CFG, $DB, $USER;
+    global $CFG, $DB;
 
     if (empty($CFG->messaging)) {
         // Messaging currently disabled
@@ -125,17 +133,17 @@ function tm_message_send($eventdata) {
     // Use the correct userfrom based on more general settings.
     $eventdata->userfrom = totara_get_user_from($eventdata->userfrom);
     if (empty($eventdata->userfrom)) {
-        $eventdata->userfrom      = $eventdata->userto;
+        $eventdata->userfrom = $eventdata->userto;
     }
 
     if (is_int($eventdata->userto)) {
         debugging('tm_message_send() userto is a user ID when it should be a user object', DEBUG_DEVELOPER);
-        $eventdata->userto = $DB->get_record('user', array('id' => $eventdata->userto), '*', MUST_EXIST);
+        $eventdata->userto = $DB->get_record('user', ['id' => $eventdata->userto], '*', MUST_EXIST);
     }
 
     if (is_int($eventdata->userfrom)) {
         debugging('tm_message_send() userfrom is a user ID when it should be a user object', DEBUG_DEVELOPER);
-        $eventdata->userfrom = $DB->get_record('user', array('id' => $eventdata->userfrom), '*', MUST_EXIST);
+        $eventdata->userfrom = $DB->get_record('user', ['id' => $eventdata->userfrom], '*', MUST_EXIST);
     }
 
     // must have msgtype, urgency and msgstatus
@@ -155,8 +163,7 @@ function tm_message_send($eventdata) {
     // map alert to notification
     if (!empty($eventdata->alert)) {
         $eventdata->notification = $eventdata->alert;
-    }
-    else if (empty($eventdata->notification)) {
+    } else if (empty($eventdata->notification)) {
         $eventdata->notification = 0;
     }
 
@@ -194,7 +201,7 @@ function tm_message_send($eventdata) {
 
     // Find out what processors are defined currently
     // When a user doesn't have settings none gets return, if he doesn't want contact "" gets returned
-    $preferencename = 'message_provider_'.$eventdata->component.'_'.$eventdata->name.'_'.$userstate;
+    $preferencename = 'message_provider_' . $eventdata->component . '_' . $eventdata->name . '_' . $userstate;
 
     $processor = get_user_preferences($preferencename, null, $eventdata->userto->id);
     if (empty($processor)) { //this user never had a preference, save default
@@ -209,7 +216,7 @@ function tm_message_send($eventdata) {
     $eventdata->savedmessageid = message_send($eventdata);
 
     if (!$eventdata->savedmessageid || $eventdata->savedmessageid == 0) {
-        debugging('Error inserting message: '.var_export($eventdata, TRUE), DEBUG_DEVELOPER);
+        debugging('Error inserting message: ' . var_export($eventdata, true), DEBUG_DEVELOPER);
         return false;
     }
 
@@ -219,16 +226,22 @@ function tm_message_send($eventdata) {
 /**
  * Create the message metadata structure, which contains workflow information
  *
- * @param object $eventdata
- * @param int $processorid
- * @return $messageid
+ * @param stdClass|object $eventdata
+ * @param int             $processorid
+ *
+ * @return int  The message id
  */
-function tm_insert_metadata($eventdata, $processorid) {
+function tm_insert_metadata($eventdata, int $processorid): int {
     global $DB;
 
     // check if metadata record already exists (from other message provider alert/task)
-    if ($DB->record_exists('message_metadata', array('messageid' => $eventdata->savedmessageid))) {
-      return $eventdata->savedmessageid;
+    $parameters = [
+        'notificationid' => $eventdata->savedmessageid,
+        'processorid' => $processorid,
+    ];
+
+    if ($DB->record_exists('message_metadata', $parameters)) {
+        return $eventdata->savedmessageid;
     }
 
     // add the metadata record
@@ -241,21 +254,20 @@ function tm_insert_metadata($eventdata, $processorid) {
 
     if (isset($eventdata->icon)) {
         $eventdata->icon = clean_param($eventdata->icon, PARAM_FILE);
-    }
-    else {
+    } else {
         $eventdata->icon = 'default';
     }
 
     $metadata = new stdClass();
-    $metadata->messageid        = $eventdata->savedmessageid;
-    $metadata->msgtype          = $eventdata->msgtype;
-    $metadata->msgstatus        = $eventdata->msgstatus;
-    $metadata->urgency          = $eventdata->urgency;
-    $metadata->processorid      = $processorid;
-    $metadata->icon             = $eventdata->icon;
-    $metadata->onaccept         = $eventdata->onaccept;
-    $metadata->onreject         = $eventdata->onreject;
-    $metadata->oninfo           = $eventdata->oninfo;
+    $metadata->notificationid = $eventdata->savedmessageid;
+    $metadata->msgtype = $eventdata->msgtype;
+    $metadata->msgstatus = $eventdata->msgstatus;
+    $metadata->urgency = $eventdata->urgency;
+    $metadata->processorid = $processorid;
+    $metadata->icon = $eventdata->icon;
+    $metadata->onaccept = $eventdata->onaccept;
+    $metadata->onreject = $eventdata->onreject;
+    $metadata->oninfo = $eventdata->oninfo;
     $DB->insert_record('message_metadata', $metadata);
     return $eventdata->savedmessageid;
 }
@@ -271,8 +283,10 @@ function tm_insert_metadata($eventdata, $processorid) {
  *  msgstatus
  *  urgency
  *
- * @param object $eventdata information about the message (userfrom, userto, ...)
- * @return boolean success
+ * @param stdClass|object $eventdata information about the message (userfrom, userto, ...)
+ *
+ * @return bool|int Returning false, if the function is having trouble sending the alert,
+ *                  otherwise the saved message/notification's id.
  */
 function tm_alert_send($eventdata) {
     global $CFG;
@@ -292,22 +306,22 @@ function tm_alert_send($eventdata) {
     (!isset($eventdata->urgency)) && $eventdata->urgency = TOTARA_MSG_URGENCY_NORMAL;
     (!isset($eventdata->sendemail)) && $eventdata->sendemail = TOTARA_MSG_EMAIL_YES;
 
-    $eventdata->component         = 'totara_message';
-    $eventdata->name              = 'alert';
+    $eventdata->component = 'totara_message';
+    $eventdata->name = 'alert';
 
     if (empty($eventdata->subject)) {
-        $eventdata->subject       = '';
+        $eventdata->subject = '';
     }
     if (empty($eventdata->fullmessageformat)) {
         $eventdata->fullmessageformat = FORMAT_PLAIN;
     }
     if (empty($eventdata->fullmessagehtml)) {
-        $eventdata->fullmessagehtml   = nl2br($eventdata->fullmessage);
+        $eventdata->fullmessagehtml = nl2br($eventdata->fullmessage);
     }
     $eventdata->notification = 1;
 
     if (empty($eventdata->contexturl)) {
-        $eventdata->contexturl     = '';
+        $eventdata->contexturl = '';
         $eventdata->contexturlname = '';
     } else {
         $contexturl = $eventdata->contexturl;
@@ -329,23 +343,31 @@ function tm_alert_send($eventdata) {
 
     //--------------------------------
 
-    // Manually send the email using email_to_user(). This is necessary in cases where there is an attachment (which cannot be handled by the messaging system)
+    // Manually send the email using email_to_user(). This is necessary in cases where there is an
+    // attachment (which cannot be handled by the messaging system)
     // We still should observe their messaging email preferences.
 
     // We can't handle attachments when logged on
     $alertemailpref = get_user_preferences('message_provider_totara_message_alert_loggedoff', null, $eventdata->userto->id);
     if ($result && strpos($alertemailpref, 'email') !== false && $eventdata->sendemail == TOTARA_MSG_EMAIL_MANUAL) {
-
         $string_manager = get_string_manager();
 
         // Send alert email
         if (empty($eventdata->subject)) {
-            $eventdata->subject = strlen($eventdata->fullmessage) > 80 ? substr($eventdata->fullmessage, 0, 78).'...' : $eventdata->fullmessage;
+            $eventdata->subject = strlen($eventdata->fullmessage) > 80 ?
+                substr($eventdata->fullmessage, 0, 78) . '...' : $eventdata->fullmessage;
         }
 
-        // Add footer to email in the recipient language explaining how to change email preferences. However, this is only for system users.
+        // Add footer to email in the recipient language explaining how to change email preferences.
+        // However, this is only for system users.
         if (core_user::is_real_user($eventdata->userto->id)) {
-            $footer = $string_manager->get_string('alertfooter2', 'totara_message', $CFG->wwwroot."/message/edit.php", $eventdata->userto->lang);
+            $footer = $string_manager->get_string(
+                'alertfooter2',
+                'totara_message',
+                $CFG->wwwroot . "/message/edit.php",
+                $eventdata->userto->lang
+            );
+
             $eventdata->fullmessagehtml .= html_writer::empty_tag('br') . html_writer::empty_tag('br') . $footer;
         }
 
@@ -393,8 +415,10 @@ function tm_alert_send($eventdata) {
  *  userto object the message recipient
  *  fullmessage
  *
- * @param object $task information about the message (userfrom, userto, ...)
- * @return boolean success
+ * @param stdClass|object $eventdata information about the message (userfrom, userto, ...)
+ *
+ * @return bool|int Returning false if the function is having trouble sending the task.
+ *                  Otherwise a saved message/notification's id.
  */
 function tm_task_send($eventdata) {
     global $CFG;
@@ -416,31 +440,30 @@ function tm_task_send($eventdata) {
     (!isset($eventdata->onaccept)) && $eventdata->onaccept = null;
     (!isset($eventdata->onreject)) && $eventdata->onreject = null;
 
-    $eventdata->component         = 'totara_message';
-    $eventdata->name              = 'task';
+    $eventdata->component = 'totara_message';
+    $eventdata->name = 'task';
 
     if (!isset($eventdata->subject)) {
-        $eventdata->subject       = '';
+        $eventdata->subject = '';
     }
     if (empty($eventdata->fullmessageformat)) {
         $eventdata->fullmessageformat = FORMAT_HTML;
     }
     if (empty($eventdata->fullmessagehtml)) {
-        $eventdata->fullmessagehtml   = nl2br($eventdata->fullmessage);
+        $eventdata->fullmessagehtml = nl2br($eventdata->fullmessage);
     }
     $eventdata->notification = 1;
 
     if (!isset($eventdata->contexturl)) {
-        $eventdata->contexturl     = '';
+        $eventdata->contexturl = '';
         $eventdata->contexturlname = '';
     }
     if (!empty($eventdata->contexturl)) {
-        $eventdata->fullmessagehtml .= html_writer::empty_tag('br').html_writer::empty_tag('br').get_string('viewdetailshere', 'totara_message', $eventdata->contexturl);
+        $eventdata->fullmessagehtml .= html_writer::empty_tag('br') . html_writer::empty_tag('br');
+        $eventdata->fullmessagehtml .= get_string('viewdetailshere', 'totara_message', $eventdata->contexturl);
     }
 
-    $result = tm_message_send($eventdata);
-
-    return $result;
+    return tm_message_send($eventdata);
 }
 
 /**
@@ -471,8 +494,10 @@ function tm_task_send($eventdata) {
  *          $event->accepttext = get_string('approveplantext', 'totara_plan');
  *
  *
- * @param object $task information about the message (userfrom, userto, ...)
- * @return boolean success
+ * @param stdClass|object $eventdata information about the message (userfrom, userto, ...)
+ *
+ * @return bool|int Returning false, if the function is having trouble sending the workflow.
+ *                  Otherwise the message/notification's id is returned.
  */
 function tm_workflow_send($eventdata) {
     global $CFG;
@@ -491,17 +516,17 @@ function tm_workflow_send($eventdata) {
     (!isset($eventdata->msgstatus)) && $eventdata->msgstatus = TOTARA_MSG_STATUS_UNDECIDED;
     (!isset($eventdata->urgency)) && $eventdata->urgency = TOTARA_MSG_URGENCY_NORMAL;
 
-    $eventdata->component         = 'totara_message';
-    $eventdata->name              = 'task';
+    $eventdata->component = 'totara_message';
+    $eventdata->name = 'task';
 
     if (!isset($eventdata->subject)) {
-        $eventdata->subject       = '';
+        $eventdata->subject = '';
     }
     if (empty($eventdata->fullmessageformat)) {
         $eventdata->fullmessageformat = FORMAT_PLAIN;
     }
     if (empty($eventdata->fullmessagehtml)) {
-        $eventdata->fullmessagehtml   = nl2br($eventdata->fullmessage);
+        $eventdata->fullmessagehtml = nl2br($eventdata->fullmessage);
     }
     $eventdata->notification = 1;
 
@@ -536,70 +561,100 @@ function tm_workflow_send($eventdata) {
     }
 
     if ($eventdata->contexturl) {
-        $eventdata->fullmessagehtml .= html_writer::empty_tag('br').html_writer::empty_tag('br').get_string('viewdetailshere', 'totara_message', $eventdata->contexturl);
+        $eventdata->fullmessagehtml .= html_writer::empty_tag('br') . html_writer::empty_tag('br');
+        $eventdata->fullmessagehtml .= get_string('viewdetailshere', 'totara_message', $eventdata->contexturl);
+
     }
 
-    $result = tm_message_send($eventdata);
-
-    return $result;
+    return tm_message_send($eventdata);
 }
 
 /**
- * Dismiss a message - this will move a message from message_working to message_read
+ * Dismiss a message - this will move a notification to a read notification
  * without doing any of the workflow processing in message_metadata
  *
- * @param int $id message id
+ * @param int         $id             Notification's id or message's id.
+ * @param string|null $processor_type If the $processor_type is not provided, then all the message metadata related
+ *                                    to the message's id will be dismissed.
  * @return boolean success
  */
-function tm_message_dismiss($id) {
+function tm_message_dismiss(int $id, ?string $processor_type = null): bool {
     global $DB;
 
-    $message = $DB->get_record('message', array('id' => $id));
-    if ($message) {
-        $result = tm_message_mark_message_read($message, time());
-        return $result;
+    $notification = $DB->get_record('notifications', ['id' => $id]);
+    if ($notification) {
+        $processor_id = null;
+        if (!empty($processor_type)) {
+            $processor_id = $DB->get_field('message_processors', 'id', ['name' => $processor_type], MUST_EXIST);
+        }
+
+        // We are marking the notification record as notification. So that the function
+        // is able to tell mark the notification as read.
+        $notification->notification = 1;
+        tm_message_mark_message_read($notification, time(), null, $processor_id);
+        return true;
     }
-    else {
-        return false;
-    }
+
+    return false;
 }
 
 /**
  * accept a task - this will invoke the task onaccept action
  * saved against this message
  *
- * @param int $id message id
- * @param string $reasonfordecision Reason for granting the request
+ * @param int         $id                message id or the notification's id.
+ * @param string      $reasonfordecision Reason for granting the request
+ * @param string|null $processor_type
+ *
  * @return boolean success
  */
-function tm_message_task_accept($id, $reasonfordecision) {
+function tm_message_task_accept(int $id, string $reasonfordecision, ?string $processor_type = null): bool {
     global $DB;
 
-    $message = $DB->get_record('message', array('id' => $id));
-    if ($message) {
-        // get the event data
-        $eventdata = totara_message_eventdata($id, 'onaccept');
-        if (!empty($reasonfordecision)) {
-            $eventdata->data['reasonfordecision'] = $reasonfordecision;
-        }
-        // grab the onaccept handler
-        if (isset($eventdata->action)) {
-            $plugin = tm_message_workflow_object($eventdata->action);
-            if (!$plugin) {
-                return false;
-            }
-
-            // run the onaccept phase
-            $result = $plugin->onaccept($eventdata->data, $message);
-        }
-
-        // finally - dismiss this message as it has now been processed
-        $result = tm_message_mark_message_read($message, time());
-        return $result;
-    }
-    else {
+    $notification_record = $DB->get_record('notifications', ['id' => $id]);
+    if (!$notification_record) {
         return false;
     }
+
+    if (empty($processor_type)) {
+        // This is for the totara_task only, so it is safe to assume that we are going to approve the
+        // message_metadata record for totara_task message.
+        $processor_type = 'totara_task';
+    }
+
+    $processor_id = $DB->get_field('message_processors', 'id', ['name' => $processor_type]);
+    $repository = message_metadata::repository();
+
+    $metadata = $repository->find_message_metadata_from_notification_id($id, $processor_id);
+    if (!$metadata) {
+        return false;
+    }
+
+    $event_data = totara_message_eventdata($id, 'onaccept', $metadata->get_record());
+
+    if (!empty($reasonfordecision)) {
+        $event_data->data['reasonfordecision'] = $reasonfordecision;
+    }
+
+    // Default result.
+    $result = false;
+
+    // Grep the onaccept handler
+    if (isset($event_data->action)) {
+        /** @var totara_message_workflow_plugin_base|bool $plugin */
+        $plugin = tm_message_workflow_object($event_data->action);
+
+        if (!$plugin) {
+            return false;
+        }
+
+        // Run the onaccept phase
+        $result = $plugin->onaccept($event_data->data, $notification_record);
+    }
+
+    // Finally - dismiss this message as it has now been processed
+    tm_message_mark_message_read($notification_record, time(), $processor_id);
+    return $result;
 }
 
 /**
@@ -608,10 +663,13 @@ function tm_message_task_accept($id, $reasonfordecision) {
  * @param int $id message id
  * @return boolean success
  */
-function tm_message_task_link($id) {
+function tm_message_task_link(int $id): bool {
     global $DB;
 
-    $message = $DB->get_record('message', array('id' => $id));
+    // Note from TL-29085 - this function seems to not be used elsewhere, so i had left
+    // it out from modification/tweaking to make it compatible with the new behaviour from MOODLE.
+
+    $message = $DB->get_record('notifications', ['id' => $id]);
     if ($message) {
         // get the event data
         $eventdata = totara_message_eventdata($id, 'oninfo');
@@ -630,8 +688,7 @@ function tm_message_task_link($id) {
         // finally - dismiss this message as it has now been processed
         $result = tm_message_mark_message_read($message, time());
         return $result;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -641,38 +698,53 @@ function tm_message_task_link($id) {
  * reject a task - this will invoke the task onreject action
  * saved against this message
  *
- * @param int $id message id
- * @param string $reasonfordecision Reason for rejecting the request
+ * @param int    $id                Notification's id.
+ * @param string $reasonfordecision Reason for rejecting the request.
+ * @param string $processor_type    We default to totara task, because this should be for the totara_task only,
+ *                                  so it is safe to assume that we are going to approve the message_metadata
+ *                                  record for totara_task message.
+ *
  * @return boolean success
  */
-function tm_message_task_reject($id, $reasonfordecision) {
+function tm_message_task_reject(int $id, string $reasonfordecision,
+                                string $processor_type = 'totara_task'): bool {
     global $DB;
 
-    $message = $DB->get_record('message', array('id' => $id));
-    if ($message) {
-        // Get the event data.
-        $eventdata = totara_message_eventdata($id, 'onreject');
-        if (!empty($reasonfordecision)) {
-            $eventdata->data['reasonfordecision'] = $reasonfordecision;
-        }
-        // grab the onaccept handler
-        if (isset($eventdata->action)) {
-            $plugin = tm_message_workflow_object($eventdata->action);
-            if (!$plugin) {
-                return false;
-            }
-
-            // run the onreject phase
-            $result = $plugin->onreject($eventdata->data, $message);
-        }
-
-        // finally - dismiss this message as it has now been processed
-        $result = tm_message_mark_message_read($message, time());
-        return $result;
-    }
-    else {
+    $notification_record = $DB->get_record('notifications', ['id' => $id]);
+    if (!$notification_record) {
         return false;
     }
+
+    $processor_id = $DB->get_field('message_processors', 'id', ['name' => $processor_type], MUST_EXIST);
+    $repository = message_metadata::repository();
+
+    $metadata = $repository->find_message_metadata_from_notification_id($id, $processor_id);
+    if (!$metadata) {
+        return false;
+    }
+
+    $event_data = totara_message_eventdata($id, 'onreject', $metadata->get_record());
+    if (!empty($reasonfordecision)) {
+        $event_data->data['reasonfordecision'] = $reasonfordecision;
+    }
+
+    $result = false;
+
+    // Grab the onreject handler
+    if (isset($eventdata->action)) {
+        /** @var totara_message_workflow_plugin_base|bool $plugin */
+        $plugin = tm_message_workflow_object($eventdata->action);
+        if (!$plugin) {
+            return false;
+        }
+
+        // Run the onreject phase
+        $result = $plugin->onreject($event_data->data, $notification_record);
+    }
+
+    // Finally - dismiss this message as it has now been processed
+    tm_message_mark_message_read($notification_record, time(), null, $processor_id);
+    return $result;
 }
 
 
@@ -680,27 +752,25 @@ function tm_message_task_reject($id, $reasonfordecision) {
  * instantiate workflow object
  *
  * @param string $action workflow object action name
- * @return object
+ * @return totara_message_workflow_plugin_base|bool
  */
-function tm_message_workflow_object($action) {
+function tm_message_workflow_object(string $action) {
     global $CFG;
 
-    require_once($CFG->dirroot.'/totara/message/workflow/lib.php');
-    $file = $CFG->dirroot.'/totara/message/workflow/plugins/'.$action.'/workflow_'.$action.'.php';
+    require_once($CFG->dirroot . '/totara/message/workflow/lib.php');
+    $file = $CFG->dirroot . '/totara/message/workflow/plugins/' . $action . '/workflow_' . $action . '.php';
     if (!file_exists($file)) {
-        debugging('tm_message_task_accept() plugin does not exist: '.$action, DEBUG_DEVELOPER);
+        debugging('tm_message_task_accept() plugin does not exist: ' . $action, DEBUG_DEVELOPER);
         return false;
     }
     require_once($file);
 
     // create the object
-    $ctlclass = 'totara_message_workflow_'.$action;
+    $ctlclass = 'totara_message_workflow_' . $action;
     if (class_exists($ctlclass)) {
-        $plugin = new $ctlclass();
-        return $plugin;
-    }
-    else {
-        debugging('tm_message_task_accept() plugin class does not exist: '.$ctlclass, DEBUG_DEVELOPER);
+        return new $ctlclass();
+    } else {
+        debugging('tm_message_task_accept() plugin class does not exist: ' . $ctlclass, DEBUG_DEVELOPER);
         return false;
     }
 }
@@ -708,104 +778,118 @@ function tm_message_workflow_object($action) {
 /**
  * get the current list of messages by type - alert/task
  *
- * @param string $type - message type
- * @param string $order_by - order by clause
- * @param object $userto user table record for user required
- * @param bool $limit Apply the block limit
+ * @param string        $type     The processor type, of which we are proccessing message for.
+ * @param string        $order_by Order by clause
+ * @param stdClass|null $user_to  User table record for user required
+ * @param bool          $limit    Apply the block limit
+ *
  * @return array of messages
  */
-function tm_messages_get($type, $order_by=false, $userto=false, $limit=true) {
-        global $USER, $DB;
+function tm_messages_get(string $type, $order_by = null, $user_to = null, bool $limit = true): array {
+    global $USER, $DB;
 
-        // select only particular type
-        $processor = $DB->get_record('message_processors', array('name' => $type));
-        if (empty($processor)) {
-            return false;
-        }
+    if (is_bool($order_by)) {
+        // Preventing boolean to be passed thru from second parameter - $orderby ($order_by)
+        debugging(
+            "The second parameter of function 'tm_message_get()' does not accept boolean anymore, " .
+            "please either provide a string or empty string",
+            DEBUG_DEVELOPER
+        );
+    }
 
-        // sort out for which user
-        if ($userto) {
-            $userid = $userto->id;
-        }
-        else {
-            $userid = $USER->id;
-        }
+    if (is_bool($user_to)) {
+        // Preventing boolean to be pass thru from third parameter - $userto ($user_to).
+        debugging(
+            "The third parameter of function 'tm_message_get()' does not accept boolean anymore, " .
+            "please either use NULL or an instance of stdClass that is fetched from database",
+            DEBUG_DEVELOPER
+        );
+    }
 
-        // do we sort?
-        if ($order_by) {
-            $order_by = ' ORDER BY '.$order_by;
-        }
-        else {
-            $order_by = ' ';
-        }
+    // select only particular type
+    $processor = $DB->get_record('message_processors', ['name' => $type]);
+    if (empty($processor)) {
+        return [];
+    }
 
-        // do we apply a limit?
-        if ($limit) {
-            $limit = TOTARA_MSG_ALERT_LIMIT;
-        }
+    // sort out for which user.
+    $user_id = !empty($user_to) ? $user_to->id : $USER->id;
 
-        // hunt for messages
-        $msgs = $DB->get_records_sql('SELECT
-            m.id, m.useridfrom,
-            m.subject,
-            m.fullmessage,
-            m.timecreated,
-            d.msgstatus,
-            d.msgtype,
-            d.urgency,
-            d.icon,
-            m.contexturl,
-            m.contexturlname
-            FROM ({message} m INNER JOIN  {message_working} w ON m.id = w.unreadmessageid) INNER JOIN {message_metadata} d ON (d.messageid = m.id)
-            WHERE m.useridto = ? AND w.processorid = ?' .$order_by,
-            array($userid, $processor->id), 0, $limit);
+    // do we sort?
+    $order_by = !empty($order_by) ? " ORDER BY {$order_by}" : ' ';
 
-        return $msgs;
+    // do we apply a limit?
+    if ($limit) {
+        $limit = TOTARA_MSG_ALERT_LIMIT;
+    }
+
+    // Hunt for messages
+    $sql = "
+        SELECT 
+            n.id,
+            n.useridfrom, 
+            n.subject,
+            n.fullmessage,
+            n.timecreated,
+            mm.msgstatus,
+            mm.msgtype,
+            mm.urgency,
+            mm.icon,
+            n.contexturl,
+            n.contexturlname
+        FROM \"ttr_notifications\" n
+        INNER JOIN \"ttr_message_metadata\" mm ON n.id = mm.notificationid
+        WHERE n.useridto = ? AND mm.processorid = ?
+        AND mm.timeread IS NULL            
+        {$order_by}    
+    ";
+
+    return $DB->get_records_sql($sql, [$user_id, $processor->id], 0, $limit);
 }
 
 /**
  * get the current count of messages by type - alert/task
  *
- * @param string $type - message type
- * @param object $userto user table record for user required
+ * @param string   $type    Processor type for the message
+ * @param stdClass $user_to user table record for user required
+ *
  * @return int count of messages
  */
-function tm_messages_count($type, $userto=false) {
-        global $USER, $DB;
+function tm_messages_count(string $type, $user_to = null): int {
+    global $USER, $DB;
 
-        // select only particular type
-        $processor = $DB->get_record('message_processors', array('name' => $type));
-        if (empty($processor)) {
-            return false;
-        }
+    if (is_bool($user_to)) {
+        // Preventing parameter $user_to to accept boolean.
+        debugging(
+            "The second parameter of function 'tm_message_count' does not accept boolean anymore, " .
+            "please either provide NULL or an instance of stdClass fetched from database",
+            DEBUG_DEVELOPER
+        );
+    }
 
-        // sort out for which user
-        if ($userto) {
-            $userid = $userto->id;
-        }
-        else {
-            $userid = $USER->id;
-        }
+    // select only particular type
+    $processor = $DB->get_record('message_processors', ['name' => $type]);
+    if (empty($processor)) {
+        return false;
+    }
 
-        $where = 'm.useridto = ? AND w.processorid = ?';
-        $params = array($userid, $processor->id);
+    // sort out for which user
+    $user_id = !empty($user_to) ? $user_to->id : $USER->id;
 
-        // hunt for messages
-        $msgs = $DB->get_records_sql('SELECT m.id AS count
-            FROM ({message} m
-            INNER JOIN {message_working} w ON m.id = w.unreadmessageid)
-            INNER JOIN {message_metadata} d ON (d.messageid = m.id)
-            WHERE ' . $where,
-            array($userid, $processor->id));
-        return count($msgs);
+    $sql = '
+        SELECT COUNT(n.id) FROM "ttr_notifications" n
+        INNER JOIN "ttr_message_metadata" d ON (d.notificationid = n.id)
+        WHERE n.useridto = ? AND d.processorid = ?
+    ';
+
+    return $DB->count_records_sql($sql, [$user_id, $processor->id]);
 }
 
 /**
- * Set the default config values for totara ouput types on install
- *
- * @param string $output
+ * Set the default config values for totara ouput types on install.
+ * @return void
  */
-function tm_set_preference_defaults() {
+function tm_set_preference_defaults(): void {
     set_config('totara_task_provider_totara_message_task_permitted', 'permitted', 'message');
     set_config('totara_alert_provider_totara_message_alert_permitted', 'permitted', 'message');
     set_config('totara_alert_provider_totara_message_task_permitted', 'disallowed', 'message');
@@ -823,12 +907,15 @@ function tm_set_preference_defaults() {
     set_config('jabber_provider_totara_message_alert_permitted', 'permitted', 'message');
 }
 
-/// $messagearray is an array of objects
-/// $field is a valid property of object
-/// $value is the value $field should equal to be counted
-/// if $field is empty then return count of the whole array
-/// if $field is non-existent then return 0;
-function tm_message_count_messages($messagearray, $field='', $value='') {
+/**
+ * @param array  $messagearray An array of objects
+ * @param string $field        Is a valid property of object. If $field is empty then return
+ *                             the count of the whole array. If $field is non-existent then return 0;
+ * @param string $value
+ *
+ * @return int
+ */
+function tm_message_count_messages(array $messagearray, string $field = '', string $value = '') {
     if (!is_array($messagearray)) {
         return 0;
     }
@@ -845,13 +932,11 @@ function tm_message_count_messages($messagearray, $field='', $value='') {
 
 /**
  * Returns the count of unread messages for user. Either from a specific user or from all users.
- * @global <type> $USER
- * @global <type> $DB
  * @param object $user1 the first user. Defaults to $USER
  * @param object $user2 the second user. If null this function will count all of user 1's unread messages.
  * @return int the count of $user1's unread messages
  */
-function tm_message_count_unread_messages($user1=null, $user2=null) {
+function tm_message_count_unread_messages($user1 = null, $user2 = null) {
     global $USER, $DB;
 
     if (empty($user1)) {
@@ -859,63 +944,89 @@ function tm_message_count_unread_messages($user1=null, $user2=null) {
     }
 
     if (!empty($user2)) {
-        return $DB->count_records_select('message', "useridto = ? AND useridfrom = ?",
-                        array($user1->id, $user2->id), "COUNT('id')");
-    }
-    else {
-        return $DB->count_records_select('message', "useridto = ?",
-                        array($user1->id), "COUNT('id')");
+        return $DB->count_records_select(
+            'message',
+            "useridto = ? AND useridfrom = ?",
+            [$user1->id, $user2->id], "COUNT('id')"
+        );
+    } else {
+        return $DB->count_records_select(
+            'message',
+            "useridto = ?",
+            [$user1->id],
+            "COUNT('id')"
+        );
     }
 }
 
 /**
  * marks ALL messages being sent from $fromuserid to $touserid as read
- * @param int $touserid the id of the message recipient
- * @param int $fromuserid the id of the message sender
+ * @param int $to_user_id   the id of the message recipient
+ * @param int $from_user_id the id of the message sender
  * @return void
  */
-function tm_message_mark_messages_read($touserid, $fromuserid) {
+function tm_message_mark_messages_read(int $to_user_id, int $from_user_id): void {
     global $DB;
 
-    $sql = 'SELECT m.* FROM {message} m WHERE m.useridto=:useridto AND m.useridfrom=:useridfrom';
-    $messages = $DB->get_recordset_sql($sql, array('useridto' => $touserid, 'useridfrom' => $fromuserid));
+    $sql = '
+        SELECT n.*, mm.processorid FROM "ttr_notifications" n 
+        INNER JOIN "ttr_message_metadata" mm ON n.id = mm.notificationid
+        WHERE n.useridto = :user_id_to 
+        AND n.useridfrom = :user_id_from
+    ';
+
+    $messages = $DB->get_recordset_sql(
+        $sql,
+        [
+            'user_id_to' => $to_user_id,
+            'user_id_from' => $from_user_id,
+        ]
+    );
 
     foreach ($messages as $message) {
-        tm_message_mark_message_read($message, time());
+        $message->notification = 1;
+        tm_message_mark_message_read($message, time(), $message->processorid);
     }
+
     $messages->close();
 }
 
 /**
  * Mark a single message as read
- * @param message an object with an object property ie $message->id which is an id in the message table
- * @param int $timeread the timestamp for when the message should be marked read. Usually time().
- * @param bool $messageworkingempty Is the message_working table already confirmed empty for this message?
+ * @param stdClass  $message                  An object with an object property ie $message->id which is an id in the
+ *                                            message table
+ * @param int       $timeread                 The timestamp for when the message should be marked read. Usually time().
+ * @param bool|null $messageworkingempty      Deprecated since Totara 14.0
+ * @param int|null  $processor_id             Whether it is a record id of  a totara_task or totara_alert.
+ *                                            By default, we are marking all the records to be read.
  * @return void
  */
-function tm_message_mark_message_read($message, $timeread, $messageworkingempty=false) {
-    global $DB;
+function tm_message_mark_message_read(stdClass $message, int $timeread, ?bool $messageworkingempty = null,
+                                      ?int $processor_id = null): void {
+    if (null !== $messageworkingempty) {
+        debugging(
+            "The third parameter '\$messageworkingempty' of function tm_message_mark_message_read() " .
+            "had been deprecated. Please update all calls",
+            DEBUG_DEVELOPER
+        );
+    }
 
-    $message->timeread = $timeread;
-    $messageid = $message->id;
-    $messagereadid = message_mark_message_read($message, $timeread, $messageworkingempty);
-
-    // modify the metadata record to point to the read message instead
-    $metadataid = $DB->get_field('message_metadata', 'id', array('messageid' => $messageid));
-    if ($metadataid) {
-        $todb = new stdClass();
-        $todb->id = $metadataid;
-        $todb->messageid = null; // remove message id
-        $todb->messagereadid = $messagereadid; // add the read id
-        $DB->update_record('message_metadata', $todb);
+    if (!empty($message->notification)) {
+        // For totara message, it is more about notifications rather than a peer-to-peers message.
+        helper::mark_message_metadata_read($message->id, $timeread, $processor_id);
+        api::mark_notification_as_read($message, $timeread);
+    } else {
+        api::mark_message_as_read($message->useridto, $message, $timeread);
     }
 }
 
 /**
  * Set default message preferences.
- * @param $user - User to set message preferences
+ *
+ * @param stdClass $user - User to set message preferences
+ * @return bool
  */
-function tm_message_set_default_message_preferences($user) {
+function tm_message_set_default_message_preferences(stdClass $user): bool {
     global $DB;
 
     $defaultonlineprocessor = 'email';
@@ -925,20 +1036,19 @@ function tm_message_set_default_message_preferences($user) {
     //look for the pre-2.0 preference if it exists
     $oldpreference = get_user_preferences('message_showmessagewindow', -1, $user->id);
     //if they elected to see popups or the preference didnt exist
-    $usepopups = (intval($oldpreference)==1 || intval($oldpreference)==-1);
+    $usepopups = (intval($oldpreference) == 1 || intval($oldpreference) == -1);
 
     if ($usepopups) {
         $defaultonlineprocessor = 'popup';
     }
 
     $providers = $DB->get_records('message_providers');
-    $preferences = array();
+    $preferences = [];
     if (!$providers) {
-        $providers = array();
+        $providers = [];
     }
 
     foreach ($providers as $providerid => $provider) {
-
         //force some specific defaults for some types of message
         if ($provider->name == 'instantmessage') {
             //if old popup preference was set to 1 or is missing use popups for IMs
@@ -946,26 +1056,22 @@ function tm_message_set_default_message_preferences($user) {
                 $onlineprocessortouse = 'popup';
                 $offlineprocessortouse = 'email,popup';
             }
-        }
-        else if ($provider->name == 'posts') {
+        } else if ($provider->name == 'posts') {
             //forum posts
             $offlineprocessortouse = $onlineprocessortouse = 'email';
-        }
-        else if ($provider->name == 'alert') {
+        } else if ($provider->name == 'alert') {
             //totara alert
             $offlineprocessortouse = $onlineprocessortouse = 'totara_alert,email';
-        }
-        else if ($provider->name == 'task') {
+        } else if ($provider->name == 'task') {
             //totara task
             $offlineprocessortouse = $onlineprocessortouse = 'totara_task,email';
-        }
-        else {
+        } else {
             $onlineprocessortouse = $defaultonlineprocessor;
             $offlineprocessortouse = $defaultofflineprocessor;
         }
 
-        $preferences['message_provider_'.$provider->component.'_'.$provider->name.'_loggedin'] = $onlineprocessortouse;
-        $preferences['message_provider_'.$provider->component.'_'.$provider->name.'_loggedoff'] = $offlineprocessortouse;
+        $preferences['message_provider_' . $provider->component . '_' . $provider->name . '_loggedin'] = $onlineprocessortouse;
+        $preferences['message_provider_' . $provider->component . '_' . $provider->name . '_loggedoff'] = $offlineprocessortouse;
     }
 
     return set_user_preferences($preferences, $user->id);

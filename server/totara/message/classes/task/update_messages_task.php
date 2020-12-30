@@ -21,8 +21,9 @@
  * @author Valerii Kuznetsov <valerii.kuznetsov@totaralms.com>
  * @package totara_message
  */
-
 namespace totara_message\task;
+
+use core\task\scheduled_task;
 
 /**
  * Dismiss alerts and tasks after 30 days automatically.
@@ -30,7 +31,7 @@ namespace totara_message\task;
  * The class name of this task is not correct, but we should keep
  * it for backwards compatibility on existing sites.
  */
-class update_messages_task extends \core\task\scheduled_task {
+class update_messages_task extends scheduled_task {
     // Age for expiring undismissed alerts - days.
     const TOTARA_MSG_CRON_DISMISS_ALERTS = 30;
 
@@ -59,7 +60,7 @@ class update_messages_task extends \core\task\scheduled_task {
         $msgs = $this->tm_messages_get_by_time('totara_alert', $time);
         $deleted = array();
         foreach ($msgs as $msg) {
-            tm_message_dismiss($msg->id);
+            tm_message_dismiss($msg->id, 'totara_alert');
             // Store message ids for bulk delete.
             if (!in_array($msg->id, $deleted)) {
                 $deleted[] = $msg->id;
@@ -70,7 +71,7 @@ class update_messages_task extends \core\task\scheduled_task {
         $time = time() - (self::TOTARA_MSG_CRON_DISMISS_TASKS * (24 * 60 * 60));
         $msgs = $this->tm_messages_get_by_time('totara_task', $time);
         foreach ($msgs as $msg) {
-            tm_message_dismiss($msg->id);
+            tm_message_dismiss($msg->id, 'totara_task');
             // Store message ids for bulk delete.
             if (!in_array($msg->id, $deleted)) {
                 $deleted[] = $msg->id;
@@ -96,11 +97,16 @@ class update_messages_task extends \core\task\scheduled_task {
             return false;
         }
 
-        // Hunt for messages.
-        $msgs = $DB->get_records_sql("SELECT m.id
-                                      FROM ({message} m INNER JOIN  {message_working} w ON m.id = w.unreadmessageid)
-                                      WHERE w.processorid = ? AND m.timecreated < ?", array($processor->id, $time_created));
-        return $msgs;
+        $sql = '
+            SELECT n.id FROM "ttr_notifications" n
+            INNER JOIN "ttr_message_metadata" mm ON n.id = mm.notificationid
+            WHERE mm.timeread IS NULL
+            AND mm.processorid = ?
+            AND n.timecreated < ?
+        ';
+
+        // Hunt for notifications.
+        return $DB->get_records_sql($sql, [$processor->id, $time_created]);
     }
 }
 

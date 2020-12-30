@@ -28,6 +28,8 @@
  */
 
 require_once(__DIR__ . '/../../config.php');
+global $DB, $CFG, $PAGE, $USER;
+
 require_once($CFG->dirroot.'/message/lib.php');
 require_once($CFG->dirroot.'/totara/message/lib.php');
 require_once($CFG->dirroot.'/totara/core/lib.php');
@@ -40,7 +42,11 @@ if (isguestuser()) {
 }
 
 $id = required_param('id', PARAM_INT);
-$msg = $DB->get_record('message', array('id' => $id));
+
+// Whether it is a totara_task or totara_alert. By default, we default to totara_task.
+$processor_type = optional_param('processor_type', 'totara_task', PARAM_AREA);
+$msg = $DB->get_record('notifications', array('id' => $id));
+
 if (!$msg || $msg->useridto != $USER->id || !confirm_sesskey()) {
     print_error('notyours', 'totara_message', $id);
 }
@@ -48,7 +54,13 @@ if (!$msg || $msg->useridto != $USER->id || !confirm_sesskey()) {
 $canbook = false;
 $isfacetoface = false;
 $isprogextensionallowed = true;
-$metadata = $DB->get_record('message_metadata', array('messageid' => $id));
+$metadata = $DB->get_record(
+    'message_metadata',
+    [
+        'notificationid' => $id,
+        'processorid' => $DB->get_field('message_processors', 'id', ['name' => $processor_type], MUST_EXIST)
+    ]
+);
 
 $eventdata = totara_message_eventdata($id, 'onaccept', $metadata);
 if ($eventdata && isset($eventdata->action)) {

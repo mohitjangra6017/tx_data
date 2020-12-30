@@ -24,33 +24,45 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot.'/totara/message/messagelib.php');
 
 class block_totara_tasks extends block_base {
-    function init() {
+    /**
+     * @return void
+     */
+    public function init() {
         $this->title = get_string('pluginname', 'block_totara_tasks');
     }
 
-    // Only one instance of this block is required.
-    function instance_allow_multiple() {
+    /**
+     *  Only one instance of this block is required.
+     * @return false
+     */
+    public function instance_allow_multiple() {
       return false;
     }
 
-    // Label and button values can be set in admin.
-    function has_config() {
+    /**
+     * Label and button values can be set in admin.
+     * @return bool
+     */
+    public function has_config() {
       return true;
     }
 
-    function get_content() {
+    /**
+     * @return stdClass|null
+     */
+    public function get_content() {
         global $CFG, $FULLME, $DB, $OUTPUT, $PAGE;
 
         // Cache block contents
-        if ($this->content !== NULL) {
-        return $this->content;
+        if ($this->content !== null) {
+            return $this->content;
         }
 
         $this->content = new stdClass();
         // initialise jquery and confirm requirements
+        require_once($CFG->dirroot.'/totara/message/messagelib.php');
         require_once($CFG->dirroot.'/totara/reportbuilder/lib.php');
         require_once($CFG->dirroot.'/totara/core/js/lib/setup.php');
 
@@ -60,8 +72,8 @@ class block_totara_tasks extends block_base {
         $PAGE->requires->js_init_call('M.totara_message.init');
 
         // Just get the tasks for this user.
-        $total = tm_messages_count('totara_task', false);
-        $this->msgs = tm_messages_get('totara_task', 'timecreated DESC ', false, true);
+        $total = tm_messages_count('totara_task');
+        $this->msgs = tm_messages_get('totara_task', 'timecreated DESC ');
         $count = is_array($this->msgs) ? count($this->msgs) : 0;
 
         $this->title = get_string('tasks', 'block_totara_tasks');
@@ -75,9 +87,12 @@ class block_totara_tasks extends block_base {
             $output .= html_writer::tag('p', get_string('showingxofx', 'block_totara_tasks', array('count' => $count, 'total' => $total)));
             $tasks = array();
 
+            $processor_id = $DB->get_field('message_processors', 'id', ['name' => 'totara_task']);
+
             foreach ($this->msgs as $msg) {
                 $task = '';
-                $msgmeta = $DB->get_record('message_metadata', array('messageid' => $msg->id));
+
+                $msgmeta = $DB->get_record('message_metadata', ['notificationid' => $msg->id, 'processorid' => $processor_id], '*', MUST_EXIST);
                 $msgacceptdata = totara_message_eventdata($msg->id, 'onaccept', $msgmeta);
                 $msgrejectdata = totara_message_eventdata($msg->id, 'onreject', $msgmeta);
                 $msginfodata = totara_message_eventdata($msg->id, 'oninfo', $msgmeta);
@@ -116,7 +131,7 @@ class block_totara_tasks extends block_base {
                     $btn = new stdClass();
                     $btn->text = !empty($msgacceptdata->acceptbutton) ?
                         $msgacceptdata->acceptbutton : get_string('onaccept', 'block_totara_tasks');
-                    $btn->action = "{$CFG->wwwroot}/totara/message/accept.php?id={$msg->id}";
+                    $btn->action = "{$CFG->wwwroot}/totara/message/accept.php?id={$msg->id}&processor_type=totara_task";
                     $btn->redirect = !empty($msgacceptdata->data['redirect']) ?
                         $msgacceptdata->data['redirect'] : $FULLME;
                     $detailbuttons[] = $btn;
@@ -126,7 +141,7 @@ class block_totara_tasks extends block_base {
                     $btn = new stdClass();
                     $btn->text = !empty($msgrejectdata->rejectbutton) ?
                         $msgrejectdata->rejectbutton : get_string('onreject', 'block_totara_tasks');
-                    $btn->action = "{$CFG->wwwroot}/totara/message/reject.php?id={$msg->id}";
+                    $btn->action = "{$CFG->wwwroot}/totara/message/reject.php?id={$msg->id}&processor_type=totara_task";
                     $btn->redirect = !empty($msgrejectdata->data['redirect']) ?
                         $msgrejectdata->data['redirect'] : $FULLME;
                     $detailbuttons[] = $btn;
@@ -136,13 +151,13 @@ class block_totara_tasks extends block_base {
                     $btn = new stdClass();
                     $btn->text = !empty($msginfodata->infobutton) ?
                         $msginfodata->infobutton : get_string('oninfo', 'block_totara_tasks');
-                    $btn->action = "{$CFG->wwwroot}/totara/message/link.php?id={$msg->id}";
+                    $btn->action = "{$CFG->wwwroot}/totara/message/link.php?id={$msg->id}&processor_type=totara_task";
                     $btn->redirect = $msginfodata->data['redirect'];
                     $detailbuttons[] = $btn;
                 }
                 $moreinfotext = get_string('clickformoreinfo', 'block_totara_tasks');
                 $icon = $OUTPUT->pix_icon('i/info', $moreinfotext, 'moodle', array('class'=>'msgicon', 'title' => $moreinfotext, 'alt' => $moreinfotext));
-                $detailjs = totara_message_alert_popup($msg->id, $detailbuttons, 'detailtask');
+                $detailjs = totara_message_alert_popup($msg->id, $detailbuttons, 'detailtask', 'totara_task');
                 $url = new moodle_url($msglink);
                 $attributes = array('href' => $url, 'id' => 'detailtask'.$msg->id.'-dialog', 'class' => 'information');
                 $task .= html_writer::tag('a', $icon, $attributes) . $detailjs;

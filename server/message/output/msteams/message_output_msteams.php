@@ -22,9 +22,8 @@
  */
 
 use message_msteams\task\send_user_message_adhoc_task;
-use totara_msteams\bot\message\card\card_factory;
-use totara_msteams\bot\message\card\user_message_card;
 
+global $CFG;
 require_once($CFG->dirroot.'/message/output/lib.php');
 
 /**
@@ -38,7 +37,7 @@ class message_output_msteams extends message_output {
      * @param stdClass $eventdata the event data submitted by the message sender plus $eventdata->savedmessageid
      * @return true if ok, false if error
      */
-    function send_message($eventdata) {
+    public function send_message($eventdata) {
         global $DB;
         $is_test = (defined('PHPUNIT_TEST') && PHPUNIT_TEST);
 
@@ -54,12 +53,12 @@ class message_output_msteams extends message_output {
                 if ($is_test) {
                     // Throw a debugging message here, because we would want the phpunit tests to fail.
                     debugging(
-                        'handle_notification_sent - cannot resolve the target user to sent the notification to',
+                        'handle_notification_sent - cannot resolve the target user to send the notification to',
                         DEBUG_DEVELOPER
                     );
                 } else {
                     mtrace(
-                        'ERROR: handle_notification_sent - cannot resolve the target user to sent the notification to'
+                        'ERROR: handle_notification_sent - cannot resolve the target user to send the notification to'
                     );
                 }
 
@@ -97,8 +96,7 @@ class message_output_msteams extends message_output {
      *
      * @param array $preferences An array of user preferences
      */
-    function config_form($preferences) {
-
+    public function config_form($preferences) {
     }
 
     /**
@@ -107,8 +105,7 @@ class message_output_msteams extends message_output {
      * @param stdClass $form preferences form class
      * @param array $preferences preferences array
      */
-    function process_form($form, &$preferences) {
-
+    public function process_form($form, &$preferences) {
     }
 
     /**
@@ -117,15 +114,14 @@ class message_output_msteams extends message_output {
      * @param array $preferences preferences array
      * @param int $userid the user id
      */
-    function load_data(&$preferences, $userid) {
-
+    public function load_data(&$preferences, $userid) {
     }
 
     /**
      * Tests whether the Microsoft Teams settings have been configured
      * @return boolean true if Microsoft Teams is configured
      */
-    function is_system_configured() {
+    public function is_system_configured() {
         return \totara_core\advanced_feature::is_enabled('totara_msteams');
     }
 
@@ -135,7 +131,7 @@ class message_output_msteams extends message_output {
      * @return bool has the user made all the necessary settings
      * in their profile to allow this plugin to be used.
      */
-    function is_user_configured($user = null) {
+    public function is_user_configured($user = null) {
         return true;
     }
 }

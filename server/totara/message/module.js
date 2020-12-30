@@ -57,8 +57,9 @@ M.totara_message = M.totara_message || {
      * @param string    clean local URL
      * @param string    session key
      * @param string    JSON string containing extra buttons for the dialog
+     * @param string    Type, whether it is a totara_task or a totara_alert.
      */
-    create_dialog: function( Y, id, selector, clean_fullme, sesskey, extrabuttonjson ){
+    create_dialog: function( Y, id, selector, clean_fullme, sesskey, extrabuttonjson, processor_type){
         // dismiss dialog
         (function() {
             var url = M.cfg.wwwroot+'/totara/message/';
@@ -95,7 +96,7 @@ M.totara_message = M.totara_message || {
                     width: dialogueWidth,
                     height: 400
                 },
-                url+'dismissmsg.php?id='+id+'&sesskey='+sesskey,
+                url+'dismissmsg.php?id='+id+'&sesskey='+sesskey+'&processor_type='+processor_type,
                 handler
             );
             // Set this dialog to not bind links
@@ -111,15 +112,16 @@ M.totara_message = M.totara_message || {
      * @param string    action string for button
      * @param string    clean local URL
      * @param string    session key
+     * @param string    Type, whether it is going to be totara_task or totara_alert
      */
-    create_action_dialog: function( Y, action, action_str, clean_fullme, sesskey ){
+    create_action_dialog: function( Y, action, action_str, clean_fullme, sesskey, processor_type){
         // dismiss dialog
         (function() {
             var url = M.cfg.wwwroot+'/totara/message/';
             var handler = new totaraDialog_handler_confirm();
             var name = action+'msg';
             var buttonsObj = {};
-            buttonsObj[action_str] = function() { handler._confirm(M.cfg.wwwroot+'/totara/message/action.php?'+action+'='+action+'&sesskey='+sesskey, clean_fullme) };
+            buttonsObj[action_str] = function() { handler._confirm(M.cfg.wwwroot+'/totara/message/action.php?'+action+'='+action+'&sesskey='+sesskey+'&processor_type='+processor_type, clean_fullme) };
             buttonsObj[M.util.get_string('cancel', 'moodle')] = function() { handler._cancel() };
 
             totaraDialogs[name] = new totaraDialog(
@@ -131,7 +133,7 @@ M.totara_message = M.totara_message || {
                     width: 600,
                     height: 400
                 },
-                url+'actionmsg.php?'+action+'='+action+'&sesskey='+sesskey,
+                url+'actionmsg.php?'+action+'='+action+'&sesskey='+sesskey+'&processor_type='+processor_type,
                 handler
             );
             // overload the load function so that we add the message ids

@@ -93,7 +93,7 @@ class block_totara_alerts_renderer extends plugin_renderer_base {
 
         $moreinfotext = get_string('clickformoreinfo', 'block_totara_alerts');
         $icon = $this->pix_icon('i/info', $moreinfotext, 'moodle', array('class'=>'informationicon', 'title' => $moreinfotext, 'alt' => $moreinfotext));
-        $detailjs = totara_message_alert_popup($alert->id, null, 'detailalert');
+        $detailjs = totara_message_alert_popup($alert->id, null, 'detailalert', 'totara_alert');
         $url = new moodle_url($msglink);
         $attributes = array('href' => $url, 'id' => "detailalert{$alert->id}-dialog", 'class' => 'information');
         $output .= html_writer::tag('a', $icon, $attributes) . $detailjs;

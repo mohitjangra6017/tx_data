@@ -29,6 +29,7 @@
 require_once(__DIR__ . '/../../config.php');
 require_once('lib.php');
 
+global $DB, $PAGE, $USER, $CFG;
 require_login();
 $PAGE->set_context(context_system::instance());
 
@@ -38,32 +39,36 @@ if (isguestuser() || !confirm_sesskey()) {
 
 /// Script parameters
 $returnto = optional_param('returnto', $CFG->wwwroot, PARAM_LOCALURL);
-$dismiss = optional_param('dismiss', NULL, PARAM_RAW);
-$accept = optional_param('accept', NULL, PARAM_RAW);
-$reject = optional_param('reject', NULL, PARAM_RAW);
+$dismiss = optional_param('dismiss', null, PARAM_RAW);
+$accept = optional_param('accept', null, PARAM_RAW);
+$reject = optional_param('reject', null, PARAM_RAW);
+$processor_type = optional_param('processor_type', 'totara_task', PARAM_AREA);
+
 $msgids = explode(',', optional_param('msgids', array(), PARAM_RAW));
 
 // hunt for Message Ids in the POST parameters
 foreach ($_POST as $parm => $value) {
     if (preg_match('/^totara\_message\_(\d+)$/', $parm)) {
-        $msgid = optional_param($parm, NULL, PARAM_INT);
+        $msgid = optional_param($parm, null, PARAM_INT);
         if ($msgid) {
-            $msgids[]=$msgid;
+            $msgids[] = $msgid;
         }
     }
 }
 
 // validate each of the messages
 $ids = array();
+$processor_id = $DB->get_field('message_processors', 'id', ['name' => $processor_type], MUST_EXIST);
+
 foreach ($msgids as $msgid) {
     // check message ownership
     if ($msgid) {
-        $message = $DB->get_record('message', array('id' => $msgid));
+        $message = $DB->get_record('notifications', ['id' => $msgid]);
         if (!$message || $message->useridto != $USER->id) {
             print_error('notyours', 'totara_message', $msgid);
         }
 
-        $metadata = $DB->get_record('message_metadata', array('messageid' => $msgid));
+        $metadata = $DB->get_record('message_metadata', ['notificationid' => $msgid, 'processorid' => $processor_id]);
 
         // cannot run reject on message with no onreject
         if ($reject && (!isset($metadata->onreject) || !$metadata->onreject)) {
@@ -86,22 +91,19 @@ foreach ($msgids as $msgid) {
 
 // process the action
 foreach ($ids as $msgid => $message) {
-
     if ($dismiss) {
         // dismiss the message and then return
-        tm_message_dismiss($msgid);
-    }
-    else if ($accept) {
+        tm_message_dismiss($msgid, $processor_type);
+    } else if ($accept) {
         // onaccept the message and then return
-        tm_message_task_accept($msgid);
-    }
-    else if ($reject) {
+        tm_message_task_accept($msgid, '', $processor_type);
+    } else if ($reject) {
         // onreject the message and then return
-        tm_message_task_reject($msgid);
+        tm_message_task_reject($msgid, '', $processor_type);
     }
 }
 
 // send them home
-if(!is_ajax_request($_SERVER)) {
+if (!is_ajax_request($_SERVER)) {
     redirect($returnto);
 }

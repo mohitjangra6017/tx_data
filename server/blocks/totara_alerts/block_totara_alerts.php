@@ -26,25 +26,37 @@
 defined('MOODLE_INTERNAL') || die();
 
 class block_totara_alerts extends block_base {
-    function init() {
+    /**
+     * @return void
+     */
+    public function init() {
         $this->title = get_string('pluginname', 'block_totara_alerts');
     }
 
-    // Only one instance of this block is required.
+    /**
+     * Only one instance of this block is required.
+     * @return bool
+     */
     function instance_allow_multiple() {
       return false;
     }
 
-    // Label and button values can be set in admin.
-    function has_config() {
+    /**
+     * Label and button values can be set in admin.
+     * @return bool
+     */
+    public function has_config() {
       return true;
     }
 
-    function get_content() {
+    /**
+     * @return stdClass|null
+     */
+    public function get_content() {
         global $CFG, $PAGE;
 
         // Cache block contents.
-        if ($this->content !== NULL) {
+        if ($this->content !== null) {
             return $this->content;
         }
 
@@ -61,14 +73,15 @@ class block_totara_alerts extends block_base {
         $PAGE->requires->js_init_call('M.totara_message.init');
 
         // Just get the alerts for this user.
-        $total = tm_messages_count('totara_alert', false);
-        $this->msgs = tm_messages_get('totara_alert', 'timecreated DESC ', false, true);
+        $total = tm_messages_count('totara_alert');
+        $this->msgs = tm_messages_get('totara_alert', 'timecreated DESC ');
         $this->title = get_string('alerts', 'block_totara_alerts');
 
         if (empty($this->instance)) {
             return $this->content;
         }
 
+        /** @var block_totara_alerts_renderer $renderer */
         $renderer = $this->page->get_renderer('block_totara_alerts');
         $this->content->text = $renderer->display_alerts($this->msgs, $total, $this->config);
 

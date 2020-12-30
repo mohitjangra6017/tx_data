@@ -4922,6 +4922,16 @@ function complete_user_login($user) {
     );
     $event->trigger();
 
+    // Queue migrating the messaging data, if we need to.
+    if (!get_user_preferences('core_message_migrate_data', false, $USER->id)) {
+        // Check if there are any legacy messages to migrate.
+        if (\core_message\helper::legacy_messages_exist($USER->id)) {
+            \core_message\task\migrate_message_data::queue_task($USER->id);
+        } else {
+            set_user_preference('core_message_migrate_data', true, $USER->id);
+        }
+    }
+
     if (isguestuser()) {
         // No need to continue when user is THE guest.
         return $USER;

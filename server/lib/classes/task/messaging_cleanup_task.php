@@ -23,18 +23,49 @@
  */
 namespace core\task;
 
+use coding_exception;
+use core\entity\notification;
+use core_message\hook\purge_check_notification_hook;
+
 /**
  * Simple task to delete old messaging records.
  */
 class messaging_cleanup_task extends scheduled_task {
+    /**
+     * This property is to help us having unit tests easier.
+     * @var int|null
+     */
+    private $time_now = null;
 
     /**
      * Get a descriptive name for this task (shown to admins).
      *
      * @return string
      */
-    public function get_name() {
+    public function get_name(): string {
         return get_string('taskmessagingcleanup', 'admin');
+    }
+
+    /**
+     * @param int $time_now
+     */
+    public function phpunit_set_time_now(int $time_now) {
+        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
+            throw new coding_exception("The set time now should only be done in the phpunit environment");
+        }
+
+        $this->time_now = $time_now;
+    }
+
+    /**
+     * @return int
+     */
+    protected function get_time_now(): int {
+        if (isset($this->time_now)) {
+            return $this->time_now;
+        }
+
+        return time();
     }
 
     /**
@@ -44,15 +75,31 @@ class messaging_cleanup_task extends scheduled_task {
     public function execute() {
         global $CFG, $DB;
 
-        $timenow = time();
-
-        // Cleanup messaging.
-        if (!empty($CFG->messagingdeletereadnotificationsdelay)) {
-            $notificationdeletetime = $timenow - $CFG->messagingdeletereadnotificationsdelay;
-            $params = array('notificationdeletetime' => $notificationdeletetime);
-            $DB->delete_records_select('notifications', 'timeread < :notificationdeletetime', $params);
+        if (empty($CFG->messagingdeletereadnotificationsdelay)) {
+            return;
         }
 
-    }
+        // Cleanup messaging.
+        $time_now = $this->get_time_now();
+        $notification_delete_time = $time_now - $CFG->messagingdeletereadnotificationsdelay;
 
+        $notification_records = $DB->get_records_select(
+            notification::TABLE,
+            'timeread < :notification_delete_time',
+            ['notification_delete_time' => $notification_delete_time]
+        );
+
+        foreach ($notification_records as $record) {
+            $notification = new notification($record);
+
+            $hook = new purge_check_notification_hook($notification);
+            $hook->execute();
+
+            if ($hook->is_skip_purge()) {
+                continue;
+            }
+
+            $notification->delete();
+        }
+    }
 }

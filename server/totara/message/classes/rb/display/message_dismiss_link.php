@@ -51,7 +51,7 @@ class message_dismiss_link extends base {
             return '';
         }
 
-        $out = totara_message_dismiss_action($value);
+        $out = totara_message_dismiss_action($value, $extrafields->processor_name ?? null);
         $label = get_string('selectdesc', 'rb_source_totaramessages', $extrafields->msgsubject);
         $out .= \html_writer::checkbox('totara_message_' . $value, $value, false, '', [
             'id' => 'totara_msgcbox_' . $value,

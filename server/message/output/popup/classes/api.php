@@ -26,6 +26,12 @@ namespace message_popup;
 
 defined('MOODLE_INTERNAL') || die();
 
+use core\orm\query\builder;
+use core\orm\query\order;
+use stdClass;
+use moodle_exception;
+use core_user;
+
 /**
  * Class used to return information to display for the message popup.
  *
@@ -40,56 +46,72 @@ class api {
      * @param string $sort the column name to order by including optionally direction
      * @param int $limit limit the number of result returned
      * @param int $offset offset the result set by this amount
-     * @return array notification records
-     * @throws \moodle_exception
+     * @return stdClass[] notification records
+     *
      * @since 3.2
      */
-    public static function get_popup_notifications($useridto = 0, $sort = 'DESC', $limit = 0, $offset = 0) {
-        global $DB, $USER;
+    public static function get_popup_notifications($useridto = 0, $sort = 'DESC', $limit = 0, $offset = 0): array {
+        global $USER;
 
         $sort = strtoupper($sort);
         if ($sort != 'DESC' && $sort != 'ASC') {
-            throw new \moodle_exception('invalid parameter: sort: must be "DESC" or "ASC"');
+            throw new moodle_exception('invalid parameter: sort: must be "DESC" or "ASC"');
         }
+
+        $sort = 'DESC' === $sort ? order::DIRECTION_DESC : order::DIRECTION_ASC;
 
         if (empty($useridto)) {
             $useridto = $USER->id;
         }
 
-        $params = [
-            'useridto1' => $useridto,
-            'useridto2' => $useridto,
-        ];
-
         // Is notification enabled ?
         if ($useridto == $USER->id) {
             $disabled = $USER->emailstop;
         } else {
-            $user = \core_user::get_user($useridto, "emailstop", MUST_EXIST);
+            $user = core_user::get_user($useridto, "emailstop", MUST_EXIST);
             $disabled = $user->emailstop;
         }
         if ($disabled) {
             // Notifications are disabled.
-            return array();
+            return [];
         }
 
-        $sql = "SELECT n.id, n.useridfrom, n.useridto,
-                       n.subject, n.fullmessage, n.fullmessageformat,
-                       n.fullmessagehtml, n.smallmessage, n.contexturl,
-                       n.contexturlname, n.timecreated, n.component,
-                       n.eventtype, n.timeread
-                  FROM {notifications} n
-                 WHERE n.useridto = :useridto1
-              ORDER BY timecreated $sort, timeread $sort, id $sort";
+        $builder = builder::table('notifications', 'n');
+        $builder->select([
+            'n.id',
+            'n.useridfrom',
+            'n.useridto',
+            'n.subject',
+            'n.fullmessage',
+            'n.fullmessageformat',
+            'n.fullmessagehtml',
+            'n.smallmessage',
+            'n.contexturl',
+            'n.contexturlname',
+            'n.timecreated',
+            'n.component',
+            'n.eventtype',
+            'n.timeread'
+        ]);
 
-        $notifications = [];
-        $records = $DB->get_recordset_sql($sql, $params, $offset, $limit);
-        foreach ($records as $record) {
-            $notifications[] = (object) $record;
-        }
-        $records->close();
+        // Only filtering those notifications that appear in the popup only.
+        // Note that this can be a bit outdated if the cron has not yet run. It should be happening
+        // prior to the migration. Because sometimes, the notifications after this patch are created
+        // would sit in the table notifications already, but not yet those older notifications.
+        $builder->join(['message_popup_notifications', 'mpn'], 'n.id', 'mpn.notificationid');
+        $builder->where('n.useridto', $useridto);
 
-        return $notifications;
+        $builder->order_by('n.timecreated', $sort);
+        $builder->order_by('n.timeread', $sort);
+        $builder->order_by('n.id', $sort);
+
+        $builder->offset($offset);
+        $builder->limit($limit);
+
+        $builder->results_as_objects();
+
+        $collection = $builder->fetch_recordset();
+        return $collection->to_array();
     }
 
     /**
@@ -99,7 +121,7 @@ class api {
      * @return int count of the unread notifications
      * @since 3.2
      */
-    public static function count_unread_popup_notifications($useridto = 0) {
+    public static function count_unread_popup_notifications(int $useridto = 0): int {
         global $USER, $DB;
 
         if (empty($useridto)) {
@@ -110,19 +132,19 @@ class api {
         if ($useridto == $USER->id) {
             $disabled = $USER->emailstop;
         } else {
-            $user = \core_user::get_user($useridto, "emailstop", MUST_EXIST);
+            $user = core_user::get_user($useridto, "emailstop", MUST_EXIST);
             $disabled = $user->emailstop;
         }
         if ($disabled) {
             return 0;
         }
 
-        return $DB->count_records_sql(
-            "SELECT count(id)
-               FROM {notifications}
-              WHERE useridto = ?
-                AND timeread is NULL",
-            [$useridto]
-        );
+        $sql = '
+            SELECT COUNT(mpn.id) FROM "ttr_message_popup_notifications" mpn
+            INNER JOIN "ttr_notifications" n ON mpn.notificationid = n.id
+            WHERE n.timeread IS NULL AND n.useridto = ?
+        ';
+
+        return $DB->count_records_sql($sql, [$useridto]);
     }
 }

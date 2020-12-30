@@ -302,17 +302,13 @@ class totara_reportbuilder_column_testcase extends reportcache_advanced_testcase
         'id' => 1, 'userid' => 2, 'timestamp' => 0, 'eventtype' => 1, 'data' => 1, 'data2' => 1,
     );
 
-    protected $message_working_data = array(
-        'id' => 1, 'unreadmessageid' => 1, 'processorid' => 1,
-    );
-
     protected $message_data = array(
         'id' => 1, 'useridfrom' => 1, 'useridto' => 2, 'subject' => 'subject', 'fullmessage' => 'message', 'fullmessageformat' => 1,
-        'fullmessagehtml' => 'message', 'smallmessage' => 'msg', 'notification' => 1, 'contexturl' => '', 'contexturlname' => '', 'timecreated' => 0,
+        'fullmessagehtml' => 'message', 'smallmessage' => 'msg', 'contexturl' => '', 'contexturlname' => '', 'timecreated' => 1, 'timeread' => null
     );
 
     protected $message_metadata_data = array(
-        'id' => 1, 'messageid' => 1, 'msgtype' => 1, 'msgstatus' => 1, 'processorid' => 1, 'urgency' => 1,
+        'id' => 1, 'notificationid' => 1, 'msgtype' => 1, 'msgstatus' => 1, 'processorid' => 1, 'urgency' => 1,
         'roleid' => 1, 'onaccept' => '', 'onreject' => '', 'icon' => 'competency-regular',
     );
 
@@ -652,7 +648,6 @@ class totara_reportbuilder_column_testcase extends reportcache_advanced_testcase
         $this->course_info_field_data = null;
         $this->course_info_data_data = null;
         $this->block_totara_stats_data = null;
-        $this->message_working_data = null;
         $this->message_data = null;
         $this->message_metadata_data = null;
         $this->dp_plan_data = null;
@@ -783,8 +778,7 @@ class totara_reportbuilder_column_testcase extends reportcache_advanced_testcase
             'course_info_data' => array($this->course_info_data_data),
             'course_modules' => array(array('id' => 1, 'course' => 1, 'module' => self::get_facetoface_module_id(), 'instance' => 1)), // Module id depends on installed plugins.
             'block_totara_stats' => array($this->block_totara_stats_data),
-            'message' => array($this->message_data),
-            'message_working' => array($this->message_working_data),
+            'notifications' => array($this->message_data),
             'message_metadata' => array($this->message_metadata_data),
             'dp_plan' => array($this->dp_plan_data),
             'dp_plan_competency_assign' => array($this->dp_plan_competency_assign_data),

@@ -22,6 +22,6 @@
  * @subpackage message
  */
 
-$plugin->version  = 2020101200;       // The current module version (Date: YYYYMMDDXX).
+$plugin->version  = 2021010501;       // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2020101200;       // Requires this Totara version.
 $plugin->component = 'totara_message';   // To check on upgrade, that module sits in correct place

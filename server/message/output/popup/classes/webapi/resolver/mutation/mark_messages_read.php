@@ -23,6 +23,8 @@
 
 namespace message_popup\webapi\resolver\mutation;
 
+use core\entity\notification;
+use core\orm\query\builder;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_authenticated_user;
 use core\webapi\mutation_resolver;
@@ -34,10 +36,12 @@ class mark_messages_read implements mutation_resolver, has_middleware {
     /**
      * This updates a list of messages as being read.
      *
-     * {@inheritdoc}
+     * @param array             $args
+     * @param execution_context $ec
+     * @return array
      */
-    public static function resolve(array $args, execution_context $ec) {
-        global $USER, $DB;
+    public static function resolve(array $args, execution_context $ec): array {
+        global $USER;
         $message_ids = $args['input']['message_ids'];
         if (empty($message_ids)) {
             throw new invalid_parameter_exception('empty message id list');
@@ -45,25 +49,42 @@ class mark_messages_read implements mutation_resolver, has_middleware {
 
         // Following logic from message\externallib::mark_message_read()
         $timeread = time();
+        $notifications = static::get_notifications($message_ids);
 
-        [$sql, $params] = $DB->get_in_or_equal($message_ids);
-        $messages = $DB->get_records_select('notifications', 'id ' . $sql, $params, 'id', '*');
+        // We are doing the logic check first before any database write happening.
         foreach ($message_ids as $message_id) {
-            if (!isset($messages[$message_id])) {
+            if (!isset($notifications[$message_id])) {
                 throw new invalid_parameter_exception('Invalid messageid, the message doesn\'t exist');
             }
-            $message = $messages[$message_id];
-            if ($message->useridto != $USER->id) {
-                throw new invalid_parameter_exception('Invalid messageid, you don\'t have permissions to mark this message as read');
+
+            $notification = $notifications[$message_id];
+
+            if ($notification->useridto != $USER->id) {
+                throw new invalid_parameter_exception(
+                    'Invalid messageid, you don\'t have permissions to mark this message as read'
+                );
             }
         }
 
+        // Validation is over, we should be able to move on to update the records.
         foreach ($message_ids as $message_id) {
-            $message = $messages[$message_id];
-            api::mark_notification_as_read($message, $timeread);
+            $notification = $notifications[$message_id];
+            api::mark_notification_as_read($notification->get_record(), $timeread);
         }
 
         return ['read_message_ids' => $message_ids];
+    }
+
+    /**
+     * @param int[] $message_ids
+     * @return notification[]
+     */
+    private static function get_notifications(array $message_ids): array {
+        $builder = builder::table(notification::TABLE);
+        $builder->where_in('id', $message_ids);
+        $builder->map_to(notification::class);
+
+        return $builder->fetch();
     }
 
     /**

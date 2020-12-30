@@ -23,19 +23,21 @@ information provided here is intended especially for developers.
   read, and not notifications. A new external function 'core_message_mark_notification_read' was
   added to mark notifications as read.
 * Deprecated the following functions.
+  - message_move_userfrom_unread2read
   - message_get_blocked_users
   - message_get_contacts
+  - message_mark_message_read
+  - message_can_delete_message
+  - message_delete_message
   - \core_message\api::mark_all_read_for_user
-  - message_get_recent_conversations
   Please see their declaration in lib/deprecatedlib.php to view their alternatives (if applicable).
 * Final deprecation of the following functions.
   - message_get_recent_notifications
   - message_search
   - message_get_history
+  - message_get_recent_conversations
 * Added new events for when a notification is sent and viewed.
-* Removed the database tables 'message_popup' and 'message_working'. The 'message_working' table was introduced when
-  the messaging system was first introduced in Moodle, so, a long time ago. It served no real purpose. The
-  'message_popup' table is also no longer necessary now we have a separate table for notifications.
+* Replaced the usage of the table 'message_popup' to a new table 'message_popup_notifications'.
 
 === 13.0 ===
 

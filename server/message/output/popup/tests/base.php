@@ -24,6 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_message\api;
+
+
 trait message_popup_test_helper {
     /**
      * Send a fake unread popup notification.
@@ -38,21 +41,29 @@ trait message_popup_test_helper {
      * @param int $timecreated time the message was created.
      * @return int the id of the message
      */
-    protected function send_fake_unread_popup_notification($userfrom, $userto, $message = 'Hello world!', $timecreated = 0) {
+    protected function send_fake_unread_popup_notification(stdClass $userfrom, stdClass $userto,
+                                                           string $message = 'Hello world!', int $timecreated = 0): int {
         global $DB;
 
-        $record = new stdClass();
-        $record->useridfrom = $userfrom->id;
-        $record->useridto = $userto->id;
-        $record->notification = 1;
-        $record->subject = 'No subject';
-        $record->fullmessage = $message;
-        $record->fullmessagehtml = $message;
-        $record->smallmessage = $message;
-        $record->timecreated = $timecreated ? $timecreated : time();
-        $record->contexturl = 'https://www.totaralearning.com/';
+        $notification_record = new stdClass();
+        $notification_record->useridfrom = $userfrom->id;
+        $notification_record->useridto = $userto->id;
+        $notification_record->notification = 1;
+        $notification_record->subject = 'No subject';
+        $notification_record->fullmessage = $message;
+        $notification_record->fullmessagehtml = $message;
+        $notification_record->smallmessage = $message;
+        $notification_record->timecreated = $timecreated ? $timecreated : time();
+        $notification_record->contexturl = 'https://www.totaralearning.com/';
 
-        return $DB->insert_record('notifications', $record);
+        $notification_id = $DB->insert_record('notifications', $notification_record);
+
+        // Insert a record of notification popup.
+        $popup_record = new stdClass();
+        $popup_record->notificationid = $notification_id;
+        $DB->insert_record('message_popup_notifications', $popup_record);
+
+        return $notification_id;
     }
 
     /**
@@ -69,27 +80,31 @@ trait message_popup_test_helper {
      * @param int $timeread the the message was read
      * @return int the id of the message
      */
-    protected function send_fake_read_popup_notification($userfrom, $userto, $message = 'Hello world!',
-                                                         $timecreated = 0, $timeread = 0) {
+    protected function send_fake_read_popup_notification(stdClass $userfrom, stdClass $userto, string $message = 'Hello world!',
+                                                         int $timecreated = 0, int $timeread = 0): int {
         global $DB;
 
-        $record = new stdClass();
-        $record->useridfrom = $userfrom->id;
-        $record->useridto = $userto->id;
-        $record->notification = 1;
-        $record->subject = 'No subject';
-        $record->fullmessage = $message;
-        $record->fullmessagehtml = $message;
-        $record->smallmessage = $message;
-        $record->timecreated = $timecreated ? $timecreated : time();
-        $record->timeread = $timeread ? $timeread : time();
-        $record->contexturl = 'https://www.totaralearning.com/';
+        $notification_record = new stdClass();
+        $notification_record->useridfrom = $userfrom->id;
+        $notification_record->useridto = $userto->id;
+        $notification_record->notification = 1;
+        $notification_record->subject = 'No subject';
+        $notification_record->fullmessage = $message;
+        $notification_record->fullmessagehtml = $message;
+        $notification_record->smallmessage = $message;
+        $notification_record->timecreated = $timecreated ? $timecreated : time();
+        $notification_record->timeread = $timeread ? $timeread : time();
+        $notification_record->contexturl = 'https://www.totaralearning.com/';
 
-        $record->id = $DB->insert_record('notifications', $record);
+        $notification_record->id = $DB->insert_record('notifications', $notification_record);
+
+        $popup_record = new stdClass();
+        $popup_record->notificationid = $notification_record->id;
+        $DB->insert_record('message_popup_notifications', $popup_record);
 
         // Mark it as read.
-        \core_message\api::mark_notification_as_read($record);
+        api::mark_notification_as_read($notification_record);
 
-        return $record->id;
+        return $notification_record->id;
     }
 }

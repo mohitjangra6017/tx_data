@@ -20,16 +20,23 @@
  * @author Petr Skoda <petr.skoda@totaralearning.com>
  * @package totara_message
  */
-
 defined('MOODLE_INTERNAL') || die();
 
+use totara_message\task\update_messages_task;
+
 class totara_message_update_messages_testcase extends advanced_testcase {
+    /**
+     * @return void
+     */
     public function test_name_present() {
-        $task = new \totara_message\task\update_messages_task();
-        $task->get_name();
+        $task = new update_messages_task();
+        self::assertNotEmpty($task->get_name());
     }
 
-    public function test_execute() {
+    /**
+     * @return void
+     */
+    public function test_execute(): void {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/totara/message/lib.php');
 
@@ -67,7 +74,7 @@ class totara_message_update_messages_testcase extends advanced_testcase {
         tm_task_send(clone($event));
         tm_task_send(clone($event));
 
-        $messages = $DB->get_records('message', array(), 'id ASC', '*');
+        $messages = $DB->get_records('notifications', ['timeread' => null], 'id ASC');
         $this->assertCount(6, $messages);
         $messages = array_values($messages);
 
@@ -75,36 +82,64 @@ class totara_message_update_messages_testcase extends advanced_testcase {
         tm_message_dismiss($messages[5]->id);
 
         $this->assertSame(6, $DB->count_records('message_metadata'));
-        $this->assertSame(4, $DB->count_records('message'));
-        $this->assertSame(2, $DB->count_records('message_read'));
+        $this->assertSame(4, $DB->count_records('notifications', ['timeread' => null]));
 
-        $task = new \totara_message\task\update_messages_task();
+        $this->assertSame(2, $DB->count_records_select('notifications', 'timeread IS NOT NULL'));
+
+        // Nothing should be updated, because the time created of these notifications
+        // are not yet exceeding 30 days.
+        $task = new update_messages_task();
         $task->execute();
 
         $this->assertSame(6, $DB->count_records('message_metadata'));
-        $this->assertSame(4, $DB->count_records('message'));
-        $this->assertSame(2, $DB->count_records('message_read'));
+        $this->assertSame(4, $DB->count_records('notifications', ['timeread' => null]));
+        $this->assertSame(2, $DB->count_records_select('notifications', "timeread IS NOT NULL"));
 
-        $messages[0]->timecreated = $messages[0]->timecreated - (24*60*60*\totara_message\task\update_messages_task::TOTARA_MSG_CRON_DISMISS_ALERTS) - 3600;
-        $DB->update_record('message', $messages[0]);
+        // Update the time created of the messages
+        $messages[0]->timecreated = $messages[0]->timecreated - (24*60*60*update_messages_task::TOTARA_MSG_CRON_DISMISS_ALERTS) - 3600;
+        $DB->update_record('notifications', $messages[0]);
 
-        $messages[3]->timecreated = $messages[3]->timecreated - (24*60*60*\totara_message\task\update_messages_task::TOTARA_MSG_CRON_DISMISS_TASKS) - 3600;
-        $DB->update_record('message', $messages[3]);
+        $messages[3]->timecreated = $messages[3]->timecreated - (24*60*60*update_messages_task::TOTARA_MSG_CRON_DISMISS_TASKS) - 3600;
+        $DB->update_record('notifications', $messages[3]);
 
-        $messages = $DB->get_records('message', array(), 'id ASC', '*');
-        $messages = array_values($messages);
+        $updated_notifications = [$messages[0]->id, $messages[3]->id];
 
-        $task = new \totara_message\task\update_messages_task();
+        $unread_notfications = $DB->get_records('notifications', ['timeread' => null], 'id ASC');
+        $unread_notfications = array_values($unread_notfications);
+
+        // There should be 4 at this point.
+        $this->assertCount(4, $unread_notfications);
+
+        $task = new update_messages_task();
         $task->execute();
 
         $this->assertSame(6, $DB->count_records('message_metadata'));
-        $this->assertSame(2, $DB->count_records('message'));
-        $this->assertSame(4, $DB->count_records('message_read'));
+        $this->assertSame(2, $DB->count_records('notifications', ['timeread' => null]));
+        $this->assertSame(4, $DB->count_records_select('notifications', 'timeread IS NOT NULL'));
 
-        $newmessages = $DB->get_records('message', array(), 'id ASC', '*');
-        $newmessages = array_values($newmessages);
+        $new_unread_notifications = $DB->get_records('notifications', ['timeread' => null], 'id ASC');
+        $new_unread_notifications = array_values($new_unread_notifications);
 
-        $this->assertEquals($messages[1], $newmessages[0]);
-        $this->assertEquals($messages[3], $newmessages[1]);
+        self::assertNotEmpty($new_unread_notifications);
+        self::assertCount(2, $new_unread_notifications);
+
+        // Check that the new unread messages should not contains any of updated messages.
+        foreach ($new_unread_notifications as $new_unread_notification) {
+            self::assertNotContainsEquals($new_unread_notification->id, $updated_notifications);
+        }
+
+        // Check that the unrread_notifications and the new_unread_notifications are having the same record.
+        $unread_notfications = array_filter(
+            $unread_notfications,
+            function (stdClass $notification) use ($updated_notifications): bool {
+                return !in_array($notification->id, $updated_notifications);
+            }
+        );
+
+        $unread_notfications = array_values($unread_notfications);
+        self::assertEquals($unread_notfications, $new_unread_notifications);
+
+        self::assertEquals($unread_notfications[0], $new_unread_notifications[0]);
+        self::assertEquals($unread_notfications[1], $new_unread_notifications[1]);
     }
 }

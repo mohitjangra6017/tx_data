@@ -71,7 +71,7 @@ class totara_competency_notify_users_of_proficiency_change_test extends advanced
         }
 
         notify_users_of_proficiency_change::send_notification($hook);
-        $messages_to_users = builder::table('message')->get()->pluck('useridto');
+        $messages_to_users = builder::table('notifications')->get()->pluck('useridto');
         $this->assertEqualsCanonicalizing($messages_to_users, $this->user_ids);
     }
 
@@ -98,7 +98,7 @@ class totara_competency_notify_users_of_proficiency_change_test extends advanced
         }
 
         $hook->execute();
-        $messages_to_users = builder::table('message')->get()->pluck('useridto');
+        $messages_to_users = builder::table('notifications')->get()->pluck('useridto');
         $this->assertEqualsCanonicalizing($messages_to_users, $this->user_ids);
     }
 

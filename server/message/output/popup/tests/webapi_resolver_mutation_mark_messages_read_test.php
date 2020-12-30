@@ -184,15 +184,28 @@ class message_popup_webapi_resolver_mutation_mark_messages_read_testcase extends
         $this->setUser($recipient1);
 
         try {
-            $input = $this->standard_input(array_keys($message_ids), $message_ids);
+            $input = $this->standard_input([1, 2, 3], $message_ids);
             $this->resolve_graphql_mutation('message_popup_mark_messages_read', $input);
             $this->fail('invalid_parameter_exception expected');
         } catch (invalid_parameter_exception $ex) {
             $this->assertStringContainsString("Invalid messageid, you don't have permissions to mark this message as read", $ex->getMessage());
         }
+
+        // Make sure that no messages are marked as read.
+        $this->assertEquals(
+            3,
+            $DB->count_records(
+                'notifications',
+                [
+                    'useridfrom' => $sender->id,
+                    'timeread' => null
+                ]
+            )
+        );
+
         try {
             $message_ids[1] = -42;
-            $input = $this->standard_input(array_keys($message_ids), $message_ids);
+            $input = $this->standard_input([1, 2, 3], $message_ids);
             $this->resolve_graphql_mutation('message_popup_mark_messages_read', $input);
             $this->fail('invalid_parameter_exception expected');
         } catch (invalid_parameter_exception $ex) {

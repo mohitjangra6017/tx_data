@@ -17,29 +17,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Chris Snyder <chris.snyder@totaralearning.com>
+ * @author  Chris Snyder <chris.snyder@totaralearning.com>
  * @package message_popup
  */
 
 namespace message_popup\webapi\resolver\type;
 
+use coding_exception;
+use context_user;
 use core\format;
 use core\webapi\execution_context;
-use message_popup\webapi\formatter\message_formatter;
 use core\webapi\type_resolver;
+use message_popup\webapi\formatter\message_formatter;
+use stdClass;
 
 class message implements type_resolver {
+    /**
+     * @param string            $field
+     * @param stdClass          $popup_message
+     * @param array             $args
+     * @param execution_context $ec
+     * @return array|mixed|string|null
+     */
     public static function resolve(string $field, $popup_message, array $args, execution_context $ec) {
         global $USER;
 
         // Note: There's no good way of checking popup_message object since it returns a db object.
-        if (!$popup_message instanceof \stdClass) {
-            throw new \coding_exception('Only popup_message objects are accepted: ' . gettype($popup_message));
+        if (!$popup_message instanceof stdClass) {
+            throw new coding_exception('Only popup_message objects are accepted: ' . gettype($popup_message));
         }
 
-        if (!$user_context = \context_user::instance($USER->id, IGNORE_MISSING)) {
+        if (!$user_context = context_user::instance($USER->id, IGNORE_MISSING)) {
             // If there is no matching context we have a bad object, ignore missing so we can do our own error.
-            throw new \coding_exception('Only valid user objects are accepted');
+            throw new coding_exception('Only valid user objects are accepted');
         }
 
         $format = $args['format'] ?? format::FORMAT_HTML;
@@ -53,20 +63,15 @@ class message implements type_resolver {
                 case FORMAT_MOODLE:
                 case FORMAT_HTML:
                     return 'HTML';
-                    break;
                 case FORMAT_PLAIN:
                     return 'PLAIN';
-                    break;
                 case FORMAT_MARKDOWN:
                     return 'MARKDOWN';
-                    break;
                 case FORMAT_JSON_EDITOR:
                     return 'JSON_EDITOR';
-                    break;
                 default:
                     // Note: There is also FORMAT_WIKI but it has been deprecated since 2005.
-                    throw new \coding_exception("Unrecognised fullmessageformat '{$popup_message->fullmessageformat}'" );
-                    break;
+                    throw new coding_exception("Unrecognised fullmessageformat '{$popup_message->fullmessageformat}'");
             }
         }
 
@@ -75,12 +80,16 @@ class message implements type_resolver {
         }
 
         $formatter = new message_formatter($popup_message, $user_context);
-        $formatted = $formatter->format($field, $format);
-
-        return $formatted;
+        return $formatter->format($field, $format);
     }
 
-    public static function authorize(string $field, ?string $format, \context_user $context) {
+    /**
+     * @param string       $field
+     * @param string|null  $format
+     * @param context_user $context
+     * @return bool
+     */
+    public static function authorize(string $field, ?string $format, context_user $context): bool {
         // Permission to see RAW formatted string fields
         if (in_array($field, ['fullmessagehtml']) && $format == format::FORMAT_RAW) {
             // Note: this probably isn't the ideal capability, but there isn't a simple manage one like progs/certs.
