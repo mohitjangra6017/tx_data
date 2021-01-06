@@ -9,12 +9,26 @@
     <repository>https://github.com/box/spout</repository>
   </library>
   <library>
+    <location>required/dompdf/dompdf</location>
+    <name>dompdf</name>
+    <license>LGPL</license>
+    <version>1.0.1</version>
+    <licenseversion>2.1</licenseversion>
+  </library>
+  <library>
     <location>required/ezyang/htmlpurifier</location>
     <name>HTML Purifier</name>
     <license>LGPL</license>
     <version>4.13.0</version>
     <licenseversion>2.1+</licenseversion>
     <repository>https://repo.or.cz/w/htmlpurifier.git</repository>
+  </library>
+  <library>
+    <location>required/sabberworm/php-css-parser</location>
+    <name>PHP-CSS-Parser</name>
+    <license>MIT</license>
+    <version>8.3.1</version>
+    <repository>https://github.com/sabberworm/PHP-CSS-Parser</repository>
   </library>
   <library>
     <location>required/phpmailer/phpmailer</location>

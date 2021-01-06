@@ -48,7 +48,6 @@ lib/amd/src/loglevel.js
 lib/mustache/
 lib/amd/src/mustache.js
 lib/graphlib.php
-lib/php-css-parser/
 lib/rtlcss/
 lib/scssphp/
 lib/amd/src/chartjs-lazy.js
