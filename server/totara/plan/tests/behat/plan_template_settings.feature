@@ -19,7 +19,7 @@ Feature: Test plan teamplate settings
       | Name             | template 1 |
       | id_enddate_month | December   |
       | id_enddate_day   | 31         |
-      | id_enddate_year  | 2020       |
+      | id_enddate_year  | ## + 1 year ## Y ## |
     And I press "Save changes"
     And I switch to "Workflow" tab
     And I click on "Custom workflow" "radio"
