@@ -8,3 +8,8 @@ sabberworm/php-css-parser
 dompdf/dompdf
 
 * dompdf-security.patch
+
+phpoffice/phpspreadsheet
+
+* phpspreadsheet-temp.patch
+* use /lib/tests/other/spreadsheettestpage.php for testing

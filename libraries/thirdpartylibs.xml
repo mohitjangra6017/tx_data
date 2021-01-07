@@ -39,6 +39,14 @@
     <repository>https://github.com/PHPMailer/PHPMailer</repository>
   </library>
   <library>
+    <location>required/phpoffice/phpspreadsheet</location>
+    <name>PhpSpreadsheet</name>
+    <license>MIT</license>
+    <version>1.16.0</version>
+    <licenseversion></licenseversion>
+    <repository>https://github.com/PHPOffice/PhpSpreadsheet</repository>
+  </library>
+  <library>
     <location>required/simplepie/simplepie</location>
     <name>SimplePie</name>
     <license>BSD</license>

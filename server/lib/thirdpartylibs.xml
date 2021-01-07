@@ -32,14 +32,6 @@
     <repository>https://github.com/oyejorge/less.php</repository>
   </library>
   <library>
-    <location>phpspreadsheet</location>
-    <name>PhpSpreadsheet</name>
-    <license>MIT</license>
-    <version>1.12.0</version>
-    <licenseversion></licenseversion>
-    <repository>https://github.com/PHPOffice/PhpSpreadsheet</repository>
-  </library>
-  <library>
     <location>google</location>
     <name>Google APIs Client Library</name>
     <license>Apache</license>
