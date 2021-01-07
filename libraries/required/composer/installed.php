@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'efb0c7108cb3b45b2336ddb6803afce3ea203d04',
+    'reference' => 'fb5f9b9314d9834e9ae9354bb391a7065b56d4c8',
     'name' => 'totara/totara_require',
   ),
   'versions' => 
@@ -94,12 +94,12 @@
     ),
     'phpmailer/phpmailer' => 
     array (
-      'pretty_version' => 'v6.1.6',
-      'version' => '6.1.6.0',
+      'pretty_version' => 'v6.2.0',
+      'version' => '6.2.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3',
+      'reference' => 'e38888a75c070304ca5514197d4847a59a5c853f',
     ),
     'phpoffice/phpspreadsheet' => 
     array (
@@ -180,7 +180,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'efb0c7108cb3b45b2336ddb6803afce3ea203d04',
+      'reference' => 'fb5f9b9314d9834e9ae9354bb391a7065b56d4c8',
     ),
     'webonyx/graphql-php' => 
     array (
