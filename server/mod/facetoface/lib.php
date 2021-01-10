@@ -512,6 +512,10 @@ function facetoface_cm_info_view(cm_info $coursemodule) {
     if (!has_capability('mod/facetoface:view', $contextmodule)) {
         return null; // Not allowed to view this activity.
     }
+    /** @var \mod_facetoface_renderer $f2frenderer */
+    $f2frenderer = $PAGE->get_renderer('mod_facetoface');
+    $f2frenderer->setcontext($contextmodule);
+
     // Can see "view all sessions" link even if activity is hidden/currently unavailable.
     $iseditor = has_any_capability(array('mod/facetoface:viewattendees', 'mod/facetoface:editevents',
                                         'mod/facetoface:addattendees', 'mod/facetoface:addattendees',
@@ -524,13 +528,7 @@ function facetoface_cm_info_view(cm_info $coursemodule) {
     $strviewallsessions = get_string('viewallsessions', 'facetoface');
     $sessions_url = new moodle_url('/mod/facetoface/view.php', array('f' => $facetoface->id));
     $htmlviewallsessions = html_writer::link($sessions_url, s($strviewallsessions), array('class' => 'f2fsessionlinks f2fviewallsessions', 'title' => $strviewallsessions));
-
-    $interest = \mod_facetoface\interest::from_seminar($seminar);
-    $alreadydeclaredinterest = $interest->is_user_declared();
-    $declareinterest_enable = $alreadydeclaredinterest || $interest->can_user_declare();
-    $declareinterest_label = $alreadydeclaredinterest ? get_string('declareinterestwithdraw', 'facetoface') : get_string('declareinterest', 'facetoface');
-    $declareinterest_url = new moodle_url('/mod/facetoface/interest.php', array('f' => $facetoface->id));
-    $declareinterest_link = html_writer::link($declareinterest_url, s($declareinterest_label), array('class' => 'f2fsessionlinks f2fviewallsessions', 'title' => $declareinterest_label));
+    $declareinterest = ($coursemodule->visible && $coursemodule->available) ? $f2frenderer->declare_interest($seminar, true, ['class' => 'declare_interest']) : '';
 
     $intro = '';
     if ($coursemodule->showdescription) {
@@ -632,9 +630,6 @@ function facetoface_cm_info_view(cm_info $coursemodule) {
             $reserveinfo = reservations::can_reserve_or_allocate($seminar, $sessions, $contextmodule);
         }
 
-        /** @var \mod_facetoface_renderer $f2frenderer */
-        $f2frenderer = $PAGE->get_renderer('mod_facetoface');
-        $f2frenderer->setcontext($contextmodule);
         $option = new mod_facetoface\dashboard\render_session_option();
         $config = new mod_facetoface\dashboard\render_session_list_config($seminar, $contextmodule, $option);
         $config->reserveinfo = $reserveinfo;
@@ -644,10 +639,7 @@ function facetoface_cm_info_view(cm_info $coursemodule) {
 
         // Add "view all sessions" row to table.
         $output .= $htmlviewallsessions;
-
-        if ($declareinterest_enable) {
-            $output .= $declareinterest_link;
-        }
+        $output .= $declareinterest;
         $output = html_writer::tag('div', $output, ['class' => 'no-overflow']);
     } else {
         // If user does not have signed-up, then start querying the list of seminar_events, and displaying it on screen.
@@ -692,20 +684,18 @@ function facetoface_cm_info_view(cm_info $coursemodule) {
                 $output .= $f2frenderer->render_session_list_table($displaysessions, $config);
 
                 $output .= ($iseditor || ($coursemodule->visible && $coursemodule->available)) ? $htmlviewallsessions : $strviewallsessions;
-                if (($iseditor || ($coursemodule->visible && $coursemodule->available)) && $declareinterest_enable) {
-                    $output .= $declareinterest_link;
-                }
+                $output .= $declareinterest;
                 $output = html_writer::tag('div', $output, ['class' => 'no-overflow']);
             } else {
                 // Show only name if session display is set to zero.
                 $output = html_writer::tag('span', $htmlviewallsessions, array('class' => 'f2fsessionnotice f2factivityname'));
+                $output .= $declareinterest;
             }
         } else if (has_capability('mod/facetoface:viewemptyactivities', $contextmodule)) {
             $output = html_writer::tag('span', $htmlviewallsessions, array('class' => 'f2fsessionnotice f2factivityname'));
+            $output .= $declareinterest;
         } else {
-            // Nothing to display to this user.
-            $coursemodule->set_content('');
-            return;
+            $output .= $declareinterest;
         }
     }
 

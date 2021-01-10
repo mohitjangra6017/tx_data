@@ -28,10 +28,11 @@
 require_once($CFG->dirroot . '/mod/facetoface/lib.php');
 
 use mod_facetoface\{
+    seminar,
+    seminar_list,
     seminar_event,
     signup,
     signup_helper,
-    seminar,
     signup_list,
     attendees_helper
 };
@@ -43,6 +44,7 @@ use mod_facetoface\signup\state\{
     requestedrole,
     waitlisted
 };
+use core\orm\query\builder;
 
 class enrol_totara_facetoface_plugin extends enrol_plugin {
 
@@ -480,6 +482,7 @@ class enrol_totara_facetoface_plugin extends enrol_plugin {
 
         require_once($CFG->dirroot . '/enrol/totara_facetoface/signup_form.php');
 
+        $output = '';
         $enrolstatus = $this->can_self_enrol($instance);
 
         // Don't show enrolment instance form, if user can't enrol using it.
@@ -499,32 +502,12 @@ class enrol_totara_facetoface_plugin extends enrol_plugin {
 
                 ob_start();
                 $form->display();
-                $output = $OUTPUT->box(ob_get_clean());
+                $output .= $OUTPUT->box(ob_get_clean());
             } else {
-                $output = $this->render_facetoface_sessions($instance);
+                $output .= $this->render_facetoface_sessions($instance);
             }
-
-            return $output;
         }
-
-        // This is a hack, unfortunately can_self_enrol returns error strings, an in this case it returns a string wrapped
-        // in rich HTML content.
-        if (strpos($enrolstatus, get_string('cannotenrolalreadyrequested', 'enrol_totara_facetoface')) !== false) {
-            $output = html_writer::start_tag('p');
-            $output .= $enrolstatus;
-            $output .= html_writer::end_tag('p');
-
-            $islink = strpos($enrolstatus, '/enrol/totara_facetoface/withdraw.php');
-            if ($islink === false) {
-                $url = new moodle_url('/enrol/totara_facetoface/withdraw.php', array('eid' => $instance->id));
-                $output .= html_writer::start_tag('p');
-                $output .= html_writer::link($url, get_string('withdrawpending', 'enrol_totara_facetoface'),
-                        array('class' => 'btn btn-default'));
-                $output .= html_writer::end_tag('p');
-            }
-
-            return $output;
-        }
+        return $output;
     }
 
     /**
@@ -534,7 +517,7 @@ class enrol_totara_facetoface_plugin extends enrol_plugin {
      * @return string table with rendered enrollable facetoface sessions
      */
     protected function render_facetoface_sessions(stdClass $instance) {
-        global $CFG, $PAGE;
+        global $CFG, $PAGE, $USER, $DB;
 
         /** @var mod_facetoface_renderer $f2frenderer */
         $f2frenderer = $PAGE->get_renderer('mod_facetoface');
@@ -554,6 +537,7 @@ class enrol_totara_facetoface_plugin extends enrol_plugin {
         $enrolmentsoncoursepage = empty($customtext2) ? 0 : (int)$customtext2['enrolmentsoncoursepage'];
 
         $output = '';
+        $facetofaceids = [];
         foreach ($f2fsessionarrays as $id => $f2fsessionarray) {
             if (!empty($f2fsessionarray)) {
                 $seminar = new \mod_facetoface\seminar($id);
@@ -575,6 +559,10 @@ class enrol_totara_facetoface_plugin extends enrol_plugin {
                 $f2fsessionarray = array_slice($f2fsessionarray, 0, $display, true);
                 $output .= html_writer::tag('h4', format_string($seminar->get_name()));
                 $f2frenderer->setcontext($contextmodule);
+                if ($cm->showdescription && $seminar->get_intro()) {
+                    $facetoface = (object)['intro' => $seminar->get_intro(), 'introformat' => $seminar->get_introformat()];
+                    $output .= format_module_intro('facetoface', $facetoface, $cm->id);
+                }
                 $option = new \mod_facetoface\dashboard\render_session_option();
                 $config = new \mod_facetoface\dashboard\render_session_list_config($seminar, $contextmodule, $option);
                 $config->reserveinfo = $reserveinfo;
@@ -583,7 +571,29 @@ class enrol_totara_facetoface_plugin extends enrol_plugin {
                 $output .= html_writer::start_div('no-overflow');
                 $output .= $f2frenderer->render_session_list_table($f2fsessionarray, $config);
                 $output .= html_writer::end_div();
+                $output .= $f2frenderer->declare_interest($seminar, true, ['class' => 'enrol_facetoface_declare_interest']);
+                $facetofaceids[$seminar->get_id()] = $seminar->get_id();
             }
+        }
+
+        // Lets try the seminars without sessions but with declare interest.
+        $seminars = $this->get_seminars_with_interests($instance->courseid, $facetofaceids);
+        if (!$seminars->is_empty()) {
+            $output .= $this->render_seminars_with_interests($seminars);
+        }
+
+        // If I already have a pending request, cannot ask again.
+        if (builder::table('enrol_totara_f2f_pending')
+                ->where('enrolid', $instance->id)
+                ->where('userid', $USER->id)
+                ->exists()) {
+            $link = html_writer::link(
+                new moodle_url('/enrol/totara_facetoface/withdraw.php', ['eid' => $instance->id]),
+                get_string('withdrawpending', 'enrol_totara_facetoface'),
+                ['class' => 'btn btn-default']
+            );
+            $output .= html_writer::tag('p', get_string('cannotenrolalreadyrequested', 'enrol_totara_facetoface'));
+            $output .= html_writer::tag('p', $link);
         }
 
         return $output;
@@ -711,31 +721,6 @@ class enrol_totara_facetoface_plugin extends enrol_plugin {
                 return markdown_to_html(get_string('cohortnonmemberinfo', 'enrol_totara_facetoface', $a));
             }
         }
-
-        // Face-to-face-related condition checks.
-
-        // Get sessions.
-        $sessions = $this->get_enrolable_sessions($instance->courseid);
-        if (empty($sessions)) {
-            if ($this->sessions_require_manager()) {
-                return get_string('cannotenrol', 'enrol_totara_facetoface');
-            }
-            return get_string('cannotenrolnosessions', 'enrol_totara_facetoface');
-        }
-
-        // If I already have a pending request, cannot ask again.
-        if ($DB->record_exists('enrol_totara_f2f_pending', array('enrolid' => $instance->id, 'userid' => $USER->id))) {
-            $url = new moodle_url('/enrol/totara_facetoface/withdraw.php', array('eid' => $instance->id));
-
-            $output = html_writer::start_tag('p');
-            $output .= get_string('cannotenrolalreadyrequested', 'enrol_totara_facetoface');
-            $output .= html_writer::end_tag('p');
-            $output .= html_writer::start_tag('p');
-            $output .= html_writer::link($url, get_string('withdrawpending', 'enrol_totara_facetoface'), array('class' => 'btn btn-default'));
-            $output .= html_writer::end_tag('p');
-            return $output;
-        }
-
         return true;
     }
 
@@ -1067,7 +1052,60 @@ class enrol_totara_facetoface_plugin extends enrol_plugin {
         role_assign($roleid, $userid, $contextid, '', 0);
     }
 
-    /*
+    /**
+     * Get a list of seminars with declare interest enabled.
+     * @param int $courseid
+     * @param array $facetofaceids
+     * @return seminar_list
+     */
+    public function get_seminars_with_interests(int $courseid, array $facetofaceids = []): seminar_list {
+        $cachekey = 'cf' . $courseid;
+        if (!empty($this->sessions[$cachekey])) {
+            return $this->sessions[$cachekey];
+        }
+        $this->sessions[$cachekey] = seminar_list::get_distinct_seminars_from_course($courseid, $facetofaceids);
+        return $this->sessions[$cachekey];
+    }
+
+    /**
+     * Render a list of seminars with declare interest enabled.
+     * @param seminar_list $seminars
+     * @return string
+     */
+    public function render_seminars_with_interests(seminar_list $seminars): string {
+        global $PAGE, $CFG;
+
+        /** @var mod_facetoface_renderer $f2frenderer */
+        $f2frenderer = $PAGE->get_renderer('mod_facetoface');
+
+        $output = '';
+        /** @var \mod_facetoface\seminar $seminar */
+        foreach ($seminars as $seminar) {
+            $cm = $seminar->get_coursemodule();
+            // If the restricted access is enabled and the activity is not available we just skipping it.
+            if ($CFG->enableavailability && !get_fast_modinfo($cm->course)->get_cm($cm->id)->available) {
+                continue;
+            }
+            $interest = $f2frenderer->declare_interest($seminar, true, ['class' => 'enrol_facetoface_declare_interest']);
+            if (empty($interest)) {
+                continue;
+            }
+
+            $output .= html_writer::tag('h4', format_string($seminar->get_name()));
+            $contextmodule = context_module::instance($cm->id);
+            $f2frenderer->setcontext($contextmodule);
+
+            if ($cm->showdescription && $seminar->get_intro()) {
+                $facetoface = (object)['intro' => $seminar->get_intro(), 'introformat' => $seminar->get_introformat()];
+                $output .= format_module_intro('facetoface', $facetoface, $cm->id);
+            }
+
+            $output .= $interest;
+        }
+        return $output;
+    }
+
+    /**
      * Get list of enrolable sessions in the course of a given instance.
      * @param object $instance
      * @return array
@@ -1081,8 +1119,12 @@ class enrol_totara_facetoface_plugin extends enrol_plugin {
         }
 
         // Check the plugin is enable for the course, otherwise return empty array.
-        $enrolmentparams = array('courseid' => $courseid,
-            'enrol' => 'totara_facetoface', 'status' => ENROL_INSTANCE_ENABLED, 'customint6' => 1);
+        $enrolmentparams = array(
+            'courseid' => $courseid,
+            'enrol' => 'totara_facetoface',
+            'status' => ENROL_INSTANCE_ENABLED,
+            'customint6' => 1
+        );
         if ($courseid !== null && !$DB->record_exists('enrol', $enrolmentparams)) {
             return array();
         }

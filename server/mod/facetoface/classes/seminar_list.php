@@ -58,4 +58,24 @@ final class seminar_list implements \Iterator {
     public function add(seminar $item): void {
         $this->items[$item->get_id()] = $item;
     }
+
+    /**
+     * Get distinct seminars for current course, if seminar id exists in $seminars param, remove it.
+     * @param int $courseid
+     * @param array $seminars, seminar ids
+     * @return seminar_list
+     */
+    public static function get_distinct_seminars_from_course(int $courseid, array $seminars = []): seminar_list {
+        $seminar_list = new static(['course' => $courseid]);
+        if (empty($seminars)) {
+            return $seminar_list;
+        }
+        $list = clone $seminar_list;
+        foreach ($list as $seminar) {
+            if (isset($seminars[$seminar->get_id()])) {
+                $seminar_list->remove($seminar->get_id());
+            }
+        }
+        return $seminar_list;
+    }
 }

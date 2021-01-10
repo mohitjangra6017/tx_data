@@ -972,10 +972,14 @@ class mod_facetoface_renderer extends plugin_renderer_base {
      * Declare or withdraw interest html output button.
      *
      * @param \mod_facetoface\seminar $seminar
+     * @param bool $return return the result or output
+     * @param array $options associative array {disabled, title, etc.}
+     * @return string
      */
-    public function declare_interest(\mod_facetoface\seminar $seminar) : void {
+    public function declare_interest(\mod_facetoface\seminar $seminar, bool $return = false, array $options = []): string {
         global $OUTPUT;
 
+        $html = '';
         $interest = \mod_facetoface\interest::from_seminar($seminar);
         if ($interest->is_user_declared() || $interest->can_user_declare()) {
             if ($interest->is_user_declared()) {
@@ -984,7 +988,12 @@ class mod_facetoface_renderer extends plugin_renderer_base {
                 $strbutton = get_string('declareinterest', 'mod_facetoface');
             }
             $url = new moodle_url('/mod/facetoface/interest.php', array('f' => $seminar->get_id()));
-            echo $OUTPUT->single_button($url, $strbutton, 'get');
+            $html = $OUTPUT->single_button($url, $strbutton, 'get', $options);
+        }
+        if ($return) {
+            return $html;
+        } else {
+            echo $html;
         }
     }
 
@@ -1236,6 +1245,8 @@ class mod_facetoface_renderer extends plugin_renderer_base {
             ->set_class('eventinfofooter')
             ->add_commandlink('goback', $option->get_backurl(), get_string('viewallsessions', 'mod_facetoface'));
         $data['footeraction'] = $builder->build()->get_template_data();
+
+        $data['declareinterest'] = $this->declare_interest($seminar, true, ['class' => 'enrol_facetoface_declare_interest']);
 
         return $this->render(new seminarevent_information($data));
     }

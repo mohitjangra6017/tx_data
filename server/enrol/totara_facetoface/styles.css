@@ -37,3 +37,12 @@
 .room {
     display: block;
 }
+
+div.enrol_facetoface_declare_interest {
+    margin-left: 0;
+    margin-top: 12px;
+}
+
+div.enrol_facetoface_declare_interest input[type=submit] {
+    margin-left: 0;
+}

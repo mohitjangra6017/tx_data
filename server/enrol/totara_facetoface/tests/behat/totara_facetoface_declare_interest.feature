@@ -1,11 +1,14 @@
-@javascript @mod @mod_facetoface @totara
-Feature: Manager approval and declare of interest
+@javascript @mod @mod_facetoface @totara @enrol_totara_facetoface
+Feature: Declare of interest with Seminar direct enrolment
   In order to control seminar attendance
-  As a manager
+  As a admin
   I need to authorise seminar signups
 
   Background:
-    Given I am on a totara site
+    Given I log in as "admin"
+    And I navigate to "Manage enrol plugins" node in "Site administration > Plugins > Enrolments"
+    And I click on "Enable" "link" in the "Seminar direct enrolment" "table_row"
+
     And the following "users" exist:
       | username | firstname | lastname | email               |
       | teacher1 | Terry1    | Teacher1 | teacher1@moodle.com |
@@ -14,32 +17,31 @@ Feature: Manager approval and declare of interest
     And the following "courses" exist:
       | fullname | shortname | category |
       | Course 1 | C1        | 0        |
-    And the following "course enrolments" exist:
-      | user     | course | role           |
-      | teacher1 | C1     | editingteacher |
-      | student1 | C1     | student        |
-      | student2 | C1     | student        |
-
-  Scenario: Student cannot declare interest where not enabled
-    When I log in as "teacher1"
+    And I click on "Courses" in the totara menu
+    And I follow "Course 1"
+    Then I navigate to "Enrolment methods" node in "Course administration > Users"
+    And I set the field "Add method" to "Seminar direct enrolment"
+    And I press "Add method"
+    And I click on "Disable" "link" in the "Manual enrolments" "table_row"
     And I am on "Course 1" course homepage with editing mode on
     And I add a "Seminar" to section "1" and I fill the form with:
       | Name              | Test seminar name        |
       | Description       | Test seminar description |
     And I log out
-    And I log in as "student1"
+
+  Scenario: Student cannot declare interest where not enabled
+    When I log in as "student1"
     And I am on "Course 1" course homepage
     And "Declare interest" "button" should not exist
+    And I log out
 
   Scenario: Student can declare and withdraw interest where enabled
-    When I log in as "teacher1"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "Seminar" to section "1" and I fill the form with:
-      | Name                       | Test declareinterestfullybooked |
-      | Description                | Test seminar description        |
-      | Manager Approval           | 1                               |
-      | Users can declare interest | Always                          |
-    And I click on "View all events" "link" in the "declareinterestfullybooked" activity
+    When I log in as "admin"
+    And I am on "Test seminar name" seminar homepage
+    And I navigate to "Edit settings" node in "Seminar administration"
+    And I set the following fields to these values:
+      | Users can declare interest | Always |
+    And I click on "Save and display" "button"
     And I follow "Add event"
     And I press "Save changes"
     And I log out
@@ -55,20 +57,21 @@ Feature: Manager approval and declare of interest
     And I press "Withdraw interest"
     And I press "Confirm"
     And "Declare interest" "button" should exist
+    And I log out
 
-  Scenario: Student cannot declare interest until all sessions are fully booked if setting enabled.
-    When I log in as "teacher1"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "Seminar" to section "1" and I fill the form with:
-      | Name                        | Test declareinterestfullybooked                     |
-      | Description                 | Test seminar description                            |
-      | Users can declare interest  | When no upcoming events are available for booking |
-    And I click on "View all events" "link" in the "declareinterestfullybooked" activity
+  Scenario: Student can declare interest even all sessions are fully booked if setting enabled.
+    When I log in as "admin"
+    And I am on "Test seminar name" seminar homepage
+    And I navigate to "Edit settings" node in "Seminar administration"
+    And I set the following fields to these values:
+      | Users can declare interest | When no upcoming events are available for booking |
+    And I click on "Save and display" "button"
     And I follow "Add event"
     And I set the following fields to these values:
-      | capacity           | 1    |
+      | capacity | 1 |
     And I press "Save changes"
     And I log out
+
     And I log in as "student1"
     And I am on "Course 1" course homepage
     And "Declare interest" "button" should not exist
@@ -76,24 +79,26 @@ Feature: Manager approval and declare of interest
     And I press "Sign-up"
     And I should see "Your request was accepted"
     And I log out
+
     And I log in as "student2"
     And I am on "Course 1" course homepage
     And "Declare interest" "button" should exist
+    And I log out
 
   Scenario: Student cannot declare interest if overbooking is enabled.
-    When I log in as "teacher1"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "Seminar" to section "1" and I fill the form with:
-      | Name                       | Test declareinterestfullybooked                     |
-      | Description                | Test seminar description                            |
+    When I log in as "admin"
+    And I am on "Test seminar name" seminar homepage
+    And I navigate to "Edit settings" node in "Seminar administration"
+    And I set the following fields to these values:
       | Users can declare interest | When no upcoming events are available for booking |
-    And I click on "View all events" "link" in the "declareinterestfullybooked" activity
+    And I click on "Save and display" "button"
     And I follow "Add event"
     And I set the following fields to these values:
-      | Enable waitlist    | Yes  |
-      | capacity           | 1    |
+      | Enable waitlist | Yes |
+      | capacity        | 1   |
     And I press "Save changes"
     And I log out
+
     And I log in as "student1"
     And I am on "Course 1" course homepage
     And "Declare interest" "button" should not exist
@@ -101,18 +106,19 @@ Feature: Manager approval and declare of interest
     And I press "Sign-up"
     And I should see "Your request was accepted"
     And I log out
+
     And I log in as "student2"
     And I am on "Course 1" course homepage
     And "Declare interest" "button" should not exist
+    And I log out
 
-  Scenario: Staff can view who has expressed interest
-    When I log in as "teacher1"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "Seminar" to section "1" and I fill the form with:
-      | Name                       | Test f2f 1                      |
-      | Description                | Test seminar description        |
-      | Users can declare interest | Always                          |
-    And I click on "View all events" "link" in the "Test f2f 1" activity
+  Scenario: View report who has expressed interest
+    When I log in as "admin"
+    And I am on "Test seminar name" seminar homepage
+    And I navigate to "Edit settings" node in "Seminar administration"
+    And I set the following fields to these values:
+      | Users can declare interest | Always |
+    And I click on "Save and display" "button"
     And I follow "Add event"
     And I click on "Edit session" "link"
     And I set the following fields to these values:
@@ -128,7 +134,7 @@ Feature: Manager approval and declare of interest
       | timefinish[minute] | 00   |
     And I click on "OK" "button" in the "Select date" "totaradialogue"
     And I press "Save changes"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Seminar" to section "1" and I fill the form with:
       | Name                       | Test f2f 2                      |
       | Description                | Test seminar description        |
@@ -150,27 +156,30 @@ Feature: Manager approval and declare of interest
     And I click on "OK" "button" in the "Select date" "totaradialogue"
     And I press "Save changes"
     And I log out
+
     And I log in as "student1"
     And I am on "Course 1" course homepage
-    And I click on "Declare interest" "button" in the "Test f2f 1" activity
+    And I click on "Declare interest" "button" in the "//*[@id='region-main']/div/div[3]/form/div" "xpath_element"
     And I set the following fields to these values:
       | Reason for interest: | Test reason 1 |
     And I press "Confirm"
-    And I click on "Declare interest" "button" in the "Test f2f 2" activity
+    And I click on "Declare interest" "button" in the "//*[@id='region-main']/div/div[5]/form/div" "xpath_element"
     And I set the following fields to these values:
       | Reason for interest: | Test reason 2 |
     And I press "Confirm"
     And I log out
+
     And I log in as "student2"
     And I am on "Course 1" course homepage
-    And I click on "Declare interest" "button" in the "Test f2f 1" activity
+    And I click on "Declare interest" "button" in the "//*[@id='region-main']/div/div[3]/form/div" "xpath_element"
     And I set the following fields to these values:
       | Reason for interest: | Test reason 3 |
     And I press "Confirm"
     And I log out
-    And I log in as "teacher1"
+
+    And I log in as "admin"
     And I am on "Course 1" course homepage
-    And I follow "Test f2f 1"
+    And I follow "Test seminar name"
     And I follow "Declared interest report"
     And I should see "Test reason 1"
     And I should not see "Test reason 2"
@@ -181,16 +190,15 @@ Feature: Manager approval and declare of interest
     And I should not see "Test reason 1"
     And I should see "Test reason 2"
     And I should not see "Test reason 3"
+    And I log out
 
-  Scenario: Student can declare interest when past sessions are not full and no upcoming sessions
-    When I log in as "teacher1"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "Seminar" to section "1" and I fill the form with:
-      | Name                       | Test declareinterestnotfullybookedpast              |
-      | Description                | Test seminar description                            |
-      | Manager Approval           | 1                                                   |
+  Scenario: Student can declare interest when past sessions are
+    When I log in as "admin"
+    And I am on "Test seminar name" seminar homepage
+    And I navigate to "Edit settings" node in "Seminar administration"
+    And I set the following fields to these values:
       | Users can declare interest | When no upcoming events are available for booking |
-    And I click on "View all events" "link" in the "declareinterestnotfullybookedpast" activity
+    And I click on "Save and display" "button"
     And I follow "Add event"
     And I click on "Edit session" "link"
     And I fill seminar session with relative date in form data:
@@ -208,11 +216,8 @@ Feature: Manager approval and declare of interest
     And I click on "OK" "button" in the "Select date" "totaradialogue"
     And I press "Save changes"
     And I log out
+
     And I log in as "student1"
     And I am on "Course 1" course homepage
     And "Declare interest" "button" should exist
-    And I press "Declare interest"
-    And I set the following fields to these values:
-      | Reason for interest: | Test reason |
-    And I press "Confirm"
-    And "Withdraw interest" "button" should exist
+    And I log out

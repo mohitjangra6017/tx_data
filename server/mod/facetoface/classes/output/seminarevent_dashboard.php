@@ -150,10 +150,7 @@ final class seminarevent_dashboard implements templatable {
         }
 
         if ($output instanceof mod_facetoface_renderer) {
-            ob_start();
-            $output->declare_interest($this->seminar);
-            $data['declareinterest'] = ob_get_contents();
-            ob_end_clean();
+            $data['declareinterest'] = $output->declare_interest($this->seminar, true);
         }
 
         $data['tables'] = array_map(function (seminarevent_dashboard_sessions $template) {

@@ -47,16 +47,9 @@ $PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_cm($cm);
 
-require_login($course, true, $cm);
-require_capability('mod/facetoface:view', $context);
-
-$title = $course->shortname . ': ' . format_string($seminar->get_name());
-
-$PAGE->set_title($title);
-$PAGE->set_heading($course->fullname);
+require_login();
 
 $mform = new \mod_facetoface\form\interest(null, array('f' => $seminar->get_id(), 'declare' => $declare));
-
 if ($mform->is_cancelled()) {
     redirect($redirecturl);
 } else if ($data = $mform->get_data()) {
@@ -72,14 +65,10 @@ if ($mform->is_cancelled()) {
     redirect($redirecturl);
 }
 
-$pagetitle = format_string($seminar->get_name());
-
-echo $OUTPUT->header();
-
 if (empty($cm->visible) and !has_capability('mod/facetoface:viewemptyactivities', $context)) {
     notice(get_string('activityiscurrentlyhidden'));
 }
-echo $OUTPUT->box_start();
+
 if ($declare) {
     $title = get_string('declareinterestin', 'mod_facetoface', $seminar->get_name());
     $question = get_string('declareinterestinconfirm', 'mod_facetoface', $seminar->get_name());
@@ -87,6 +76,11 @@ if ($declare) {
     $title = get_string('declareinterestwithdrawfrom', 'mod_facetoface', $seminar->get_name());
     $question = get_string('declareinterestwithdrawfromconfirm', 'mod_facetoface', $seminar->get_name());
 }
+$PAGE->set_title($title);
+$PAGE->set_heading($course->fullname);
+
+echo $OUTPUT->header();
+echo $OUTPUT->box_start();
 echo $OUTPUT->heading($title, 2);
 
 if ($seminar->get_intro()) {
