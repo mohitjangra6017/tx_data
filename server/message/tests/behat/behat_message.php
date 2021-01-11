@@ -155,11 +155,13 @@ class behat_message extends behat_base {
         \behat_hooks::set_step_readonly(true);
         global $DB;
 
-        $sql = "SELECT m.id
-                  FROM {message} m
-                  JOIN {user} u ON u.id = m.useridto
-                 WHERE m.subject = :subject
-                   AND u.username = :username";
+        $sql = '
+            SELECT n.id
+            FROM "ttr_notifications" n
+            INNER JOIN "ttr_user" u ON n.useridto = u.id
+            WHERE n.subject = :subject
+            AND u.username = :username
+        ';
 
         $params = array(
             'subject' => $messagesubject,
@@ -183,12 +185,14 @@ class behat_message extends behat_base {
         \behat_hooks::set_step_readonly(true);
         global $DB;
 
-        $sql = "SELECT m.id
-                  FROM {message} m
-                  JOIN {user} u ON u.id = m.useridto
-                 WHERE m.subject = :subject
-                   AND " . $DB->sql_like('m.fullmessage', ':contains', false, true, true) . "
-                   AND u.username = :username";
+        $sql = "
+            SELECT n.id
+            FROM \"ttr_notifications\" n
+            INNER JOIN \"ttr_user\" u ON n.useridto = u.id
+            WHERE n.subject = :subject
+            AND {$DB->sql_like('n.fullmessage', ':contains', false, true, true)}
+            AND u.username = :username
+        ";
 
         $params = array(
             'subject' => $messagesubject,
@@ -213,12 +217,14 @@ class behat_message extends behat_base {
         \behat_hooks::set_step_readonly(true);
         global $DB;
 
-        $sql = "SELECT m.id
-                  FROM {message} m
-                  JOIN {user} u ON u.id = m.useridto
-                 WHERE m.subject = :subject
-                   AND " . $DB->sql_like('m.fullmessage', ':contains', false) . "
-                   AND u.username = :username";
+        $sql = "
+            SELECT n.id
+            FROM \"ttr_notifications\" n
+            INNER JOIN \"ttr_user\" u ON n.useridto = u.id
+            WHERE n.subject = :subject
+            AND {$DB->sql_like('n.fullmessage', ':contains', false)}
+            AND u.username = :username
+        ";
 
         $params = array(
             'subject' => $messagesubject,
@@ -243,12 +249,14 @@ class behat_message extends behat_base {
         \behat_hooks::set_step_readonly(true);
         global $DB;
 
-        $sql = "SELECT m.id
-                  FROM {message} m
-                  JOIN {user} u ON u.id = m.useridto
-                 WHERE m.subject = :subject
-                   AND " . $DB->sql_like('m.fullmessage', ':contains') . "
-                   AND u.username = :username";
+        $sql = "
+            SELECT n.id
+            FROM \"ttr_notifications\" n
+            INNER JOIN \"ttr_user\" u ON u.id = n.useridto
+            WHERE n.subject = :subject
+            AND {$DB->sql_like('n.fullmessage', ':contains')}
+            AND u.username = :username
+        ";
 
         $params = array(
             'subject' => $messagesubject,
