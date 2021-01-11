@@ -113,4 +113,10 @@ class tenant_customizable_theme_settings extends base {
     public function get_theme_config(): ?theme_config {
         return $this->theme_config;
     }
+
+    // KINEO CCM START - GLOTOT-1122
+    public function set_theme_config(\theme_config $theme_config)
+    {
+        $this->theme_config = $theme_config;
+    }
 }
