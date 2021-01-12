@@ -41,6 +41,9 @@ final class seminar_list implements \Iterator {
     public function __construct(array $conditions = null, string $sort = 'timecreated') {
         global $DB;
 
+        if ($conditions === null) {
+            debugging('Passing null to the first parameter is deprecated. Please pass an empty array i.e. [] or array() if you really want it to return all records.', DEBUG_DEVELOPER);
+        }
         $seminars = $DB->get_records('facetoface', $conditions, $sort, '*');
         foreach ($seminars as $seminar) {
             $item = new seminar();

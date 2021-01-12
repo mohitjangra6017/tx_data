@@ -51,7 +51,7 @@ final class facilitator_list  implements \Iterator {
     public static function get_available($timestart, $timefinish, seminar_event $seminarevent): facilitator_list {
         global $DB, $USER;
 
-        $list = new facilitator_list();
+        $list = new facilitator_list(); // Create an empty list.
 
         $params = array();
         $params['timestart'] = (int)$timestart;

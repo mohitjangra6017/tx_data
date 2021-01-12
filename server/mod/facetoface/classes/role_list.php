@@ -41,6 +41,9 @@ final class role_list implements \Iterator {
     public function __construct(array $conditions = null, string $sort = 'roleid') {
         global $DB;
 
+        if ($conditions === null) {
+            debugging('Passing null to the first parameter is deprecated. Please pass an empty array i.e. [] or array() if you really want it.', DEBUG_DEVELOPER);
+        }
         $sessionroles = $DB->get_records('facetoface_session_roles', $conditions, $sort, '*');
         foreach ($sessionroles as $sessionrole) {
             $role = new role();

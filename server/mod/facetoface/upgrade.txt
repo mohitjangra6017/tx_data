@@ -3,6 +3,8 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* Creating one of the following list classes with no parameters is deprecated. If it is absolutely necessary, please pass an empty string/array to its condition parameter:
+  interest_list, role_list, room_list, seminar_list, signup_list, signup_status_list
 * mod_facetoface/seminarresource_card template has been updated, adding a copy button to copy the virtual meeting link
 * room_helper::can_update_virtualmeeting() has been deprecated; please use room_virtualmeeting::can_manage() instead
 * mod_facetoface_renderer::get_session_room_details_html() has been updated to show join now button for virtual meetings

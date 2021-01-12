@@ -83,7 +83,7 @@ final class seminar_session_list implements \Iterator, \Countable {
      * @return seminar_session_list
      */
     public static function from_records(array $sessionrecords, bool $strict = true): seminar_session_list {
-        $list = new seminar_session_list();
+        $list = new seminar_session_list(); // Create an empty list.
         foreach ($sessionrecords as $sessionrecord) {
             $session = new seminar_session();
             $list->add($session->from_record($sessionrecord, $strict));

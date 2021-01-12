@@ -47,6 +47,9 @@ final class signup_list implements \Iterator, \Countable {
     public static function from_conditions(array $conditions = null, string $sort = ''): signup_list {
         global $DB;
 
+        if ($conditions === null) {
+            debugging('Passing null to the first parameter is deprecated. Please pass an empty array i.e. [] or array() if you really want it to return all records.', DEBUG_DEVELOPER);
+        }
         $list = new static();
         $signupitems = $DB->get_records('facetoface_signups', $conditions, $sort, '*');
         foreach ($signupitems as $signupitem) {

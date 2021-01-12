@@ -1288,7 +1288,7 @@ final class seminar_event implements seminar_iterator_item {
      */
     public function facilitator_sessions_only(int $facilitatorid): void {
         $all_sessions = $this->get_sessions(true);
-        $facilitator_sessions = new seminar_session_list();
+        $facilitator_sessions = new seminar_session_list(); // Create an empty list.
         foreach ($all_sessions as $id => $date) {
             $facilitators = facilitator_list::from_session($id);
             if ($facilitators->count()) {

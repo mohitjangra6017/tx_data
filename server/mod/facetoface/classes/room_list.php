@@ -39,10 +39,13 @@ final class room_list implements \Iterator, \Countable {
      * @param array  $params    Either the variables to go with the sql, or the parameters for the get_records call
      * @param string $sort      an order to sort the results in.
      */
-    public function __construct(string $sql = '', array $params = [], string $sort = '') {
+    public function __construct(string $sql = null, array $params = [], string $sort = '') {
         global $DB;
 
         if (empty($sql)) {
+            if ($sql === null) {
+                debugging('Creating an instance without the first parameter is deprecated. Please pass an empty string "" if you really want it to return all records.', DEBUG_DEVELOPER);
+            }
             // Get all of the rooms, restricted by any params handed through.
             // Note: in this case the params MUST match a record in the facetoface_room table
             $roomsdata = $DB->get_records('facetoface_room', $params, $sort, '*');

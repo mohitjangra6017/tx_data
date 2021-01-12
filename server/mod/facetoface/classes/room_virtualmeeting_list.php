@@ -28,8 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Class room_virtualmeeting_list represents virtual meeting rooms
  */
-class room_virtualmeeting_list implements \Iterator, \Countable
-{
+class room_virtualmeeting_list implements \Iterator, \Countable {
 
     use traits\seminar_iterator;
 
@@ -41,11 +40,13 @@ class room_virtualmeeting_list implements \Iterator, \Countable
      * @param bool $roomid_key
      * @param string $sort an order to sort the results in.
      */
-    public function __construct(string $sql = '', array $params = [], bool $roomid_key = false, string $sort = '')
-    {
+    public function __construct(string $sql = null, array $params = [], bool $roomid_key = false, string $sort = '') {
         global $DB;
 
         if (empty($sql)) {
+            if ($sql === null) {
+                debugging('Creating an instance without the first parameter is deprecated. Please pass an empty string "" if you really want it to return all records.', DEBUG_DEVELOPER);
+            }
             $data = $DB->get_records('facetoface_room_virtualmeeting', $params, $sort, '*');
         } else {
             if (!empty($sort)) {
@@ -66,8 +67,7 @@ class room_virtualmeeting_list implements \Iterator, \Countable
      * @param room_virtualmeeting $item
      * @param bool $roomid_key
      */
-    public function add(room_virtualmeeting $item, bool $roomid_key = false): void
-    {
+    public function add(room_virtualmeeting $item, bool $roomid_key = false): void {
         if ($roomid_key) {
             $this->items[$item->get_roomid()] = $item;
         } else {

@@ -73,7 +73,7 @@ class mod_facetoface_roomlib_testcase extends advanced_testcase {
         $customroom = $this->facetoface_generator->add_custom_room(array());
         customfield_load_data($customroom, 'facetofaceroom', 'facetoface_room');
 
-        $rooms = new \mod_facetoface\room_list();
+        $rooms = new \mod_facetoface\room_list(''); // Create a list containing all rooms.
         $this->assertCount(2, $rooms);
 
         $room = new \mod_facetoface\room($sitewideroom->id);
@@ -571,7 +571,7 @@ class mod_facetoface_roomlib_testcase extends advanced_testcase {
             'name' => 'Custom room 5',
             'allowconflicts' => 1
         ));
-        $allrooms = new \mod_facetoface\room_list();
+        $allrooms = new \mod_facetoface\room_list(''); // Create a list containing all rooms.
 
         $course = $this->getDataGenerator()->create_course();
         $facetoface1 = $this->facetoface_generator->create_instance(array('course' => $course->id));

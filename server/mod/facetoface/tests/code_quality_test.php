@@ -67,10 +67,15 @@ use mod_facetoface\calendar;
 
 // Asset / Facilitator / Room classes
 use mod_facetoface\asset;
+use mod_facetoface\asset_list;
+use mod_facetoface\bulk_list;
 use mod_facetoface\facilitator;
 use mod_facetoface\facilitator_user;
 use mod_facetoface\facilitator_list;
 use mod_facetoface\room;
+use mod_facetoface\seminar_event_list;
+use mod_facetoface\seminar_session_list;
+use mod_facetoface\signup_list;
 
 // Renderer class - mod_facetoface_renderer
 require_once(__DIR__ . '/../renderer.php');
@@ -156,5 +161,45 @@ class mod_facetoface_code_quality_testcase extends totara_core_code_quality_test
         // Load all xxx_helper and xxx_list classes
         self::add_matching_classes($tested_classes, '/^mod_facetoface\\\\[^\\\\]+(_helper|_list)$/', 'classes');
         return $tested_classes;
+    }
+
+    /**
+     * Make sure the list classes prevent devs from calling its constructor with no parameters.
+     */
+    public function test_deprecated_list_constructor(): void {
+        $blacklist = [
+            bulk_list::class,
+            filter_list::class,
+        ];
+        $whitelist = [
+            asset_list::class,
+            facilitator_list::class,
+            seminar_event_list::class,
+            seminar_session_list::class,
+            signup_list::class,
+        ];
+        $debugging_expected = function ($class) {
+            $debugging = $this->getDebuggingMessages();
+            $this->resetDebugging();
+            $this->assertCount(1, $debugging, "debugging expected: {$class}");
+            $this->assertEquals(DEBUG_DEVELOPER, $debugging[0]->level, "debugging level expected: {$class}");
+            $this->assertTrue(!!preg_match('/(Creating an instance without|Passing null to) the first parameter is deprecated/', $debugging[0]->message), "debugging message expected: {$class}");
+        };
+        $classes = core_component::get_component_classes_in_namespace('mod_facetoface');
+        // Check constructors.
+        foreach ($classes as $class => $x) {
+            if (!preg_match('/^mod_facetoface\\\\[^\\\\]+_list$/', $class) || in_array($class, $blacklist)) {
+                continue;
+            }
+            new $class();
+            if (in_array($class, $whitelist)) {
+                $this->assertDebuggingNotCalled();
+            } else {
+                $debugging_expected($class);
+            }
+        }
+        // Check factory methods too.
+        signup_list::from_conditions();
+        $debugging_expected(signup_list::class);
     }
 }
