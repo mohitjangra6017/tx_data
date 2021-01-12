@@ -23,8 +23,9 @@
  */
 
 require_once(__DIR__ . '/../../../config.php');
-
 require_login(null, false);
+
+global $CFG, $DB, $USER;
 
 if (isguestuser()) {
     redirect($CFG->wwwroot);

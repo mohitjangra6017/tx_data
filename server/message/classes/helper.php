@@ -347,13 +347,17 @@ class helper {
                     OR useridto = ?";
         $messageexists = $DB->record_exists_sql($sql, [$userid, $userid]);
 
+        if ($messageexists) {
+            // Skip the need of fetching second query.
+            return true;
+        }
+
         $sql = "SELECT id
                   FROM {message_read} m
                  WHERE useridfrom = ?
                     OR useridto = ?";
-        $messagereadexists = $DB->record_exists_sql($sql, [$userid, $userid]);
 
-        return $messageexists || $messagereadexists;
+        return $DB->record_exists_sql($sql, [$userid, $userid]);
     }
 
     /**
