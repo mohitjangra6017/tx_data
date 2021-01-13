@@ -237,9 +237,11 @@ Feature: User sees virtual meeting status
     And I navigate to "Edit settings" node in "Seminar administration"
     And I set the field "Name" to "Virtual seminar failure"
     And I press "Save and display"
-    And I log out
-
     And I run all adhoc tasks
+    And I click on the seminar event action "Edit event" in row "#1"
+    # Confirm the failure has the right CSS class
+    And I should see "Virtual Room Uno" in the "#roomlist0 .mod_facetoface-room_failure_creation" "css_element"
+    And I log out
 
     Given I log in as "host"
     When I am on "Virtual seminar failure" seminar homepage
@@ -259,9 +261,11 @@ Feature: User sees virtual meeting status
     And I navigate to "Edit settings" node in "Seminar administration"
     And I set the field "Name" to "Virtual seminar success"
     And I press "Save and display"
-    And I log out
-
     And I run all adhoc tasks
+    And I click on the seminar event action "Edit event" in row "#1"
+    # Confirm the failure has the right CSS class
+    And I should see "Virtual Room Uno" in the "#roomlist0 .mod_facetoface-room_available" "css_element"
+    And I log out
 
     Given I log in as "host"
     When I am on "Virtual seminar success" seminar homepage

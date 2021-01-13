@@ -27,6 +27,16 @@ define(['jquery', 'core/config', 'core/str', 'core/templates', 'core/notificatio
     var rootURL = cfg.wwwroot + '/mod/facetoface/';
     var pageConfig = null;
 
+    // Virtual room statuss
+    var STATUS_LEGACY = null;
+    var STATUS_UNAVAILABLE = 0;
+    var STATUS_AVAILABLE = 1;
+    var STATUS_PENDING_UPDATE = -2;
+    var STATUS_PENDING_DELETION = -3;
+    var STATUS_FAILURE_CREATION = -4;
+    var STATUS_FAILURE_UPDATE = -5;
+    var STATUS_FAILURE_DELETION = -6;
+
     M.util.js_pending('mod_facetoface-events__dialogues_inited');
     var TotaraDialogsInited = new Promise(function(resolve) {
         if (window.dialogsInited) {
@@ -182,8 +192,10 @@ define(['jquery', 'core/config', 'core/str', 'core/templates', 'core/notificatio
                 }).then(function(results) {
                     var resource = results[0];
                     var resourceElement = document.createElement('li');
+                    var name = '<span class="mod_facetoface-resource-title">' + resource.name + '</span>';
+
                     that.getLiAttributes(resource, resourceElement);
-                    resourceElement.innerHTML = resource.name + results[1] + results[2];
+                    resourceElement.innerHTML = name + results[1] + results[2];
 
                     return resourceElement;
                 });
@@ -452,8 +464,8 @@ define(['jquery', 'core/config', 'core/str', 'core/templates', 'core/notificatio
 
                 list.appendChild(loading);
 
-                var ResourcePromises = items.map(function(facilitatorid) {
-                    return that.generateElement(facilitatorid);
+                var ResourcePromises = items.map(function(resourceId) {
+                    return that.generateElement(resourceId);
                 });
 
                 Promise.all(ResourcePromises).then(function(data) {
@@ -611,12 +623,89 @@ define(['jquery', 'core/config', 'core/str', 'core/templates', 'core/notificatio
      * @param {Number|String} offset The session number that is being looked at
      */
     Rooms.prototype.resourcesUpdated = function(offset) {
+        /** @type {NodeList} */
         var roomnames = document.querySelectorAll('#roomlist' + offset + ' .roomname');
         var dateLink = document.getElementById('show-selectdate' + offset + '-dialog');
+        var sessiondateid = document.querySelector('[name="sessiondateid[' + offset + ']').value;
         var row = dateLink.closest('tr');
         var canManage = true;
         var virtualCount = 0;
         var lossyUpdate = false;
+        var that = this;
+
+        roomnames.forEach(function(roomname) {
+            that.getResource(roomname.getAttribute('data-id')).then(function(room) {
+                // Find the element that matches this record
+                room.virtualroom_status.filter(function(status) {
+                    return sessiondateid == status.sessionsdateid;
+                }).forEach(function(status) {
+                    // Add any additional information required based on the state
+                    // Strikethroug is done on the CSS class
+                    switch (status.status) {
+                        case STATUS_LEGACY:
+                            // shouldn't be hit, but here for completeness
+                            roomname.classList.add('mod_facetoface-room_legacy');
+                            break;
+
+                        case STATUS_UNAVAILABLE:
+                            roomname.classList.add('mod_facetoface-room_unavailable');
+                            strLib.get_string('virtual_meeting_failed', 'mod_facetoface')
+                                .then(function(string) {
+                                    roomname.setAttribute('title', string);
+                                    roomname.setAttribute('aria-label', string);
+                                });
+                            /** @type {HTMLElement} */
+                            var editIcon = roomname.querySelector('[data-action="editresource"]');
+                            if (editIcon) {
+                                editIcon.innerHTML = '';
+                                templatesLib.renderIcon('lock').then(function(icon) {
+                                    editIcon.outerHTML = icon;
+                                });
+                            }
+                            break;
+
+                        case STATUS_AVAILABLE:
+                            roomname.classList.add('mod_facetoface-room_available');
+                            break;
+
+                        case STATUS_PENDING_UPDATE:
+                            roomname.classList.add('mod_facetoface-room_pending_update');
+                            break;
+
+                        case STATUS_PENDING_DELETION:
+                            roomname.classList.add('mod_facetoface-room_pending_deletion');
+                            break;
+
+                        case STATUS_FAILURE_CREATION:
+                            roomname.classList.add('mod_facetoface-room_failure_creation');
+                            strLib.get_string('virtual_meeting_failed', 'mod_facetoface')
+                                .then(function(string) {
+                                    roomname.setAttribute('title', string);
+                                    roomname.setAttribute('aria-label', string);
+                                });
+                            break;
+
+                        case STATUS_FAILURE_UPDATE:
+                            roomname.classList.add('mod_facetoface-room_failure_update');
+                            strLib.get_string('virtual_meeting_failed', 'mod_facetoface')
+                                .then(function(string) {
+                                    roomname.setAttribute('title', string);
+                                    roomname.setAttribute('aria-label', string);
+                                });
+                            break;
+
+                        case STATUS_FAILURE_DELETION:
+                            roomname.classList.add('mod_facetoface-room_failure_deletion');
+                            strLib.get_string('virtual_meeting_failed', 'mod_facetoface')
+                                .then(function(string) {
+                                    roomname.setAttribute('title', string);
+                                    roomname.setAttribute('aria-label', string);
+                                });
+                            break;
+                    }
+                });
+            });
+        });
 
         roomnames.forEach(function (name) {
             if (name.getAttribute('data-can-manage') === 'false') {

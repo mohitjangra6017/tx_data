@@ -199,7 +199,21 @@ body.path-mod-facetoface div#fgroup_id_recipients input[id*="id_booked_type"] {
     .mod_facetoface-date-other-virtual-room & {
         display: inline;
     }
+}
+
+.mod_facetoface-room_legacy,
+.mod_facetoface-room_pending_deletion {
+  display: none;
+}
+
+.mod_facetoface-resource-title {
+  .mod_facetoface-room_unavailable &,
+  .mod_facetoface-room_failure_creation &,
+  .mod_facetoface-room_failure_update &,
+  .mod_facetoface-room_failure_deletion & {
+    text-decoration: line-through;
   }
+}
   
 .mod_facetoface-assetlist,
 .mod_facetoface-roomlist,

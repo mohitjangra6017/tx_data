@@ -2680,6 +2680,7 @@ $string['virtual_meeting_not_owner'] = 'You are not the owner of the {$a} virtua
 $string['virtual_meeting_service_provider'] = 'Service provider account';
 $string['virtual_meeting_service_provider_help'] = 'Once you connect your service provider account and save this virtual room, the session will appear as a scheduled meeting under your authorised service provider account.';
 $string['virtual_meetings'] = 'Virtual meetings';
+$string['virtual_meeting_failed'] = 'Failed to sync with virtual meeting provider. Please try again.';
 $string['virtualroom_card_willopen'] = 'Virtual room will open 15 minutes before next session';
 $string['virtualroom_card_unavailable'] = 'Virtual room is unavailable';
 $string['virtualroom_card_preparing'] = 'Updating virtual room';
