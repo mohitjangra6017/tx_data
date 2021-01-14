@@ -21,9 +21,6 @@
  * @package core
  */
 
-use \totara_webapi\graphql;
-use core\webapi\execution_context;
-
 class core_compatibility_testcase extends advanced_testcase {
     public function test_str_contains() {
         $this->assertTrue(str_contains('abc def XYZ', ''));

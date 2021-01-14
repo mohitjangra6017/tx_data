@@ -37,7 +37,7 @@ if (!function_exists('str_contains')) {
      * @param string $haystack
      * @param string $needle
      * @return bool
-     * @since Totara 14.0
+     * @since Totara 13.4
      */
     function str_contains(string $haystack, string $needle): bool {
         return ($needle === '' || strpos($haystack, $needle) !== false);
@@ -52,7 +52,7 @@ if (!function_exists('str_starts_with')) {
      * @param string $haystack
      * @param string $needle
      * @return bool
-     * @since Totara 14.0
+     * @since Totara 13.4
      */
     function str_starts_with(string $haystack, string $needle): bool {
         return ($needle === '' || substr($haystack, 0, strlen($needle) === $needle));
@@ -67,7 +67,7 @@ if (!function_exists('str_ends_with')) {
      * @param string $haystack
      * @param string $needle
      * @return bool
-     * @since Totara 14.0
+     * @since Totara 13.4
      */
     function str_ends_with(string $haystack, string $needle): bool {
         return ($needle === '' || substr($haystack, -strlen($needle) === $needle));
