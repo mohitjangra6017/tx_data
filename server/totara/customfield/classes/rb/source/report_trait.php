@@ -97,7 +97,7 @@ trait report_trait {
                 $joindata['custom_position'] = ['jointable' => 'position', 'cf_prefix' => 'pos_type', 'joinfield' => 'positionid'];
                 break;
             case '{comp}':
-                $joindata['custom_competency'] = ['jointable' => 'competency', 'cf_prefix' => 'comp_type', 'joinfield' => 'competencyid'];
+                $joindata['custom_competency'] = ['jointable' => 'base', 'cf_prefix' => 'comp_type', 'joinfield' => 'competencyid'];
                 break;
             case '{goal}':
                 $joindata['custom_goal'] = ['jointable' => 'base', 'cf_prefix' => 'goal_type', 'joinfield' => 'goalid'];
