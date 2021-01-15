@@ -153,6 +153,7 @@ function totara_core_upgrade_delete_removed_plugins() {
     // NOTE: this should match \core_plugin_manager::is_deleted_standard_plugin() data.
 
     $deleteplugins = array(
+        'media_swf',
         'tool_premigration',
         'auth_mnet',
         'block_mnet_hosts',

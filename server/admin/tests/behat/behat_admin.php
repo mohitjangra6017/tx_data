@@ -180,7 +180,6 @@ class behat_admin extends behat_base {
 
         set_config('disableconsistentcleaning', '1');
         // Add missing deprecated settings to prevent behat interruptions.
-        set_config('allowobjectembed', 0);
         set_config('enabletrusttext', 0);
     }
 }

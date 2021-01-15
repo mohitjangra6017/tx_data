@@ -1139,6 +1139,7 @@ class core_plugin_manager {
     public static function is_deleted_standard_plugin($type, $name) {
         // TOTARA: Inlcude only plugins removed after Totara 14 branching.
         $plugins = array(
+            'media_swf',
             'tool_premigration',
             'auth_mnet',
             'block_mnet_hosts',
@@ -1353,7 +1354,7 @@ class core_plugin_manager {
             ),
 
             'media' => array(
-                'html5audio', 'html5video', 'swf', 'videojs', 'vimeo', 'youtube'
+                'html5audio', 'html5video', 'videojs', 'vimeo', 'youtube'
             ),
 
             'virtualmeeting' => array(

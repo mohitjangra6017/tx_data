@@ -1997,9 +1997,8 @@ function purify_html($text, $options = array()) {
     }
 
     $allowid = empty($options['allowid']) ? 0 : 1;
-    $allowobjectembed = empty($CFG->allowobjectembed) ? 0 : 1;
 
-    $type = 'type_'.$allowid.'_'.$allowobjectembed;
+    $type = 'type_'.$allowid;
 
     if (!array_key_exists($type, $caches)) {
         $caches[$type] = cache::make('core', 'htmlpurifier', array('type' => $type));
@@ -2007,7 +2006,7 @@ function purify_html($text, $options = array()) {
     $cache = $caches[$type];
 
     // Add revision number and all options to the text key so that it is compatible with local cluster node caches.
-    $key = "|$version|$allowobjectembed|$allowid|$text";
+    $key = "|$version|$allowid|$text";
     $filteredtext = $cache->get($key);
 
     if ($filteredtext === true) {
@@ -2046,12 +2045,6 @@ function purify_html($text, $options = array()) {
             'xmpp'=>true,
         ));
         $config->set('Attr.AllowedFrameTargets', array('_blank'));
-
-        if ($allowobjectembed) {
-            $config->set('HTML.SafeObject', true);
-            $config->set('Output.FlashCompat', true);
-            $config->set('HTML.SafeEmbed', true);
-        }
 
         if ($allowid) {
             $config->set('Attr.EnableID', true);

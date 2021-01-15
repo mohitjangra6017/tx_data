@@ -89,7 +89,7 @@ class filter_mediaplugin extends moodle_text_filter {
         // Check if the user is trusted to embed content.
         // This is given if the text allows XSS, if the site has allowed anyone to embed objects, or if the user holds the embedobject
         // capability at the given context.
-        $this->trusted = !empty($options['allowxss']) || !empty($CFG->allowobjectembed);
+        $this->trusted = !empty($options['allowxss']);
 
         // Regex to find media extensions in an <a> tag.
         $embedmarkers = core_media_manager::instance()->get_embeddable_markers();

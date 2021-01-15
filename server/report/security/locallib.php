@@ -45,8 +45,6 @@ function report_security_get_issue_list() {
         'report_security_check_displayerrors',
         'report_security_check_nodemodules',
         'report_security_check_noauth',
-        'report_security_check_embed',
-        'report_security_check_mediafilterswf',
         'report_security_check_openprofiles',
         'report_security_check_google',
         'report_security_check_passwordpolicy',
@@ -81,7 +79,6 @@ function report_security_get_issue_list() {
     $result = array_flip($result);
     if (empty($CFG->disableconsistentcleaning)) {
         unset($result['report_security_check_riskxss']);
-        unset($result['report_security_check_embed']);
         if (get_config('resource', 'allowxss')) {
             unset($result['report_security_check_resourcesallowpdfembedding']);
         }
@@ -203,72 +200,6 @@ function report_security_check_usernameenumeration($detailed = false) {
 
     if ($detailed) {
         $result->details = get_string('check_usernameenumeration_details', 'report_security');
-    }
-
-    return $result;
-}
-
-/**
- * Verifies sloppy embedding - this should have been removed long ago!!
- * @param bool $detailed
- * @return object result
- */
-function report_security_check_embed($detailed=false) {
-    global $CFG;
-
-    $result = new stdClass();
-    $result->issue   = 'report_security_check_embed';
-    $result->name    = get_string('check_embed_name', 'report_security');
-    $result->info    = null;
-    $result->details = null;
-    $result->status  = null;
-    $result->link    = "<a href=\"$CFG->wwwroot/$CFG->admin/settings.php?section=sitepolicies\">".get_string('sitepolicies', 'admin').'</a>';
-
-    if (!empty($CFG->allowobjectembed)) {
-        $result->status = REPORT_SECURITY_CRITICAL;
-        $result->info   = get_string('check_embed_error', 'report_security');
-    } else {
-        $result->status = REPORT_SECURITY_OK;
-        $result->info   = get_string('check_embed_ok', 'report_security');
-    }
-
-    if ($detailed) {
-        $result->details = get_string('check_embed_details', 'report_security');
-    }
-
-    return $result;
-}
-
-/**
- * Verifies sloppy swf embedding - this should have been removed long ago!!
- * @param bool $detailed
- * @return object result
- */
-function report_security_check_mediafilterswf($detailed=false) {
-    global $CFG;
-
-    $result = new stdClass();
-    $result->issue   = 'report_security_check_mediafilterswf';
-    $result->name    = get_string('check_mediafilterswf_name', 'report_security');
-    $result->info    = null;
-    $result->details = null;
-    $result->status  = null;
-    $result->link    = "<a href=\"$CFG->wwwroot/$CFG->admin/settings.php?section=managemediaplayers\">" .
-        get_string('managemediaplayers', 'media') . '</a>';
-
-    $activefilters = filter_get_globally_enabled();
-
-    $enabledmediaplayers = \core\plugininfo\media::get_enabled_plugins();
-    if (array_search('mediaplugin', $activefilters) !== false and array_key_exists('swf', $enabledmediaplayers)) {
-        $result->status = REPORT_SECURITY_WARNING;
-        $result->info   = get_string('check_mediafilterswf_warning', 'report_security');
-    } else {
-        $result->status = REPORT_SECURITY_OK;
-        $result->info   = get_string('check_mediafilterswf_ok', 'report_security');
-    }
-
-    if ($detailed) {
-        $result->details = get_string('check_mediafilterswf_trusteddetails', 'report_security');
     }
 
     return $result;

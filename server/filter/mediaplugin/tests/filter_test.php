@@ -41,7 +41,7 @@ class filter_mediaplugin_testcase extends advanced_testcase {
         $context = \context_system::instance();
 
         // we need to enable the plugins somehow and the flash fallback.
-        \core\plugininfo\media::set_enabled_plugins('vimeo,youtube,videojs,html5video,swf,html5audio');
+        \core\plugininfo\media::set_enabled_plugins('vimeo,youtube,videojs,html5video,html5audio');
         set_config('useflash', true, 'media_videojs');
 
         $filterplugin = new filter_mediaplugin($context, array());
@@ -140,68 +140,6 @@ class filter_mediaplugin_testcase extends advanced_testcase {
         // Testing for cases where: to be filtered content has 6+ text afterwards.
         $filter = $filterplugin->filter($paddedurl);
         $this->assertEquals($validpaddedurl, $filter, $msg);
-    }
-
-    /**
-     * Tests that the permissions for allowing embedding of objects are working.
-     *
-     * Objects are allowed if:
-     *   1. $CFG->allowobjectembed is set to true.
-     *   2. The allowxss object was passed to format_text
-     */
-    public function test_embedobject_permission_checks() {
-        global $CFG;
-        $this->resetAfterTest(true);
-
-        // Make sure this is turned off.
-        $CFG->allowobjectembed = false;
-
-        // we need to enable the plugins somehow and the flash fallback.
-        \core\plugininfo\media::set_enabled_plugins('swf');
-
-        $context = \context_system::instance();
-        // Create a normal user.
-        $user = $this->getDataGenerator()->create_user();
-        $this->setUser($user);
-
-        $url = new moodle_url('http://example.org/some_filename.swf');
-        $text = html_writer::link($url, 'Watch this one');
-
-        // Change to the normal user without the cap.
-        $this->setUser($user);
-
-        // Test that a normal user will NOT see the formatted text.
-        $formattedtext = format_text($text, FORMAT_HTML, ['context' => $context]);
-        $this->assertNotContainsObject($formattedtext, $url);
-        $this->assertEquals($text, $formattedtext);
-
-        // Test that a normal user will see the formatted text when allowxss set to true.
-        $formattedtext = format_text($text, FORMAT_HTML, ['context' => $context, 'allowxss' => true]);
-        $this->assertContainsObject($formattedtext, $url);
-        $this->assertNotEquals($text, $formattedtext);
-
-        // Test that a normal user will see the formatted text when $CFG->allowobjectembed set to true.
-        $CFG->allowobjectembed = true;
-        $formattedtext = format_text($text, FORMAT_HTML, ['context' => $context]);
-        $this->assertContainsObject($formattedtext, $url);
-        $this->assertNotEquals($text, $formattedtext);
-
-        // Test that a normal user will see the formatted text when allowxss set to true and $CFG->allowobjectembed set to true.
-        $formattedtext = format_text($text, FORMAT_HTML, ['context' => $context, 'allowxss' => true]);
-        $this->assertContainsObject($formattedtext, $url);
-        $this->assertNotEquals($text, $formattedtext);
-    }
-
-    private function assertContainsObject($text, $url) {
-        $this->assertStringContainsString('<span class="mediaplugin mediaplugin_swf">', $text);
-        $this->assertStringContainsString('<object classid="clsid:', $text);
-        $this->assertStringContainsString('<param name="movie" value="'.htmlentities($url).'" />', $text);
-    }
-
-    private function assertNotContainsObject($text, $url) {
-        $this->assertStringNotContainsString('<span class="mediaplugin mediaplugin_swf">', $text);
-        $this->assertStringNotContainsString('<object classid="clsid:', $text);
-        $this->assertStringNotContainsString('<param name="movie" value="'.htmlentities($url).'" />', $text);
     }
 
     /**
