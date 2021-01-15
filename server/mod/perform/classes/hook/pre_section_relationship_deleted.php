@@ -17,36 +17,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Marco Song <marco.song@totaralearning.com>
+ * @author Kunle Odusan <kunle.odusan@totaralearning.com>
  * @package mod_perform
  */
 
 namespace mod_perform\hook;
 
+use mod_perform\models\activity\section_relationship;
 use totara_core\hook\base;
 
 /**
- * Hook for activity deletion
+ * Hook for section relationship deletion
  *
  * @package mod_perform\hook
  */
-class pre_activity_deleted extends base {
+class pre_section_relationship_deleted extends base {
 
     use pre_delete_helper;
 
-    /** @var int $activity_id */
-    private $activity_id;
+    /** @var section_relationship $section_relationship */
+    private $section_relationship;
 
-    public function __construct(int $activity_id) {
-        $this->activity_id = $activity_id;
+    public function __construct(section_relationship $section_relationship) {
+        $this->section_relationship = $section_relationship;
     }
 
     /**
-     * Get current activity id
+     * Get current section id
      *
-     * @return int
+     * @return section_relationship
      */
-    public function get_activity_id(): int {
-        return $this->activity_id;
+    public function get_section_relationship(): section_relationship {
+        return $this->section_relationship;
     }
 }

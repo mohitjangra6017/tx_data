@@ -15,38 +15,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Marco Song <marco.song@totaralearning.com>
- * @package mod_perform
+ * @author Kunle Odusan <kunle.odusan@totaralearning.com>
  */
 
-namespace mod_perform\hook;
+use mod_perform\hook\pre_section_relationship_deleted;
+use performelement_linked_review\watcher\section_relationship_deletion_check;
 
-use totara_core\hook\base;
-
-/**
- * Hook for activity deletion
- *
- * @package mod_perform\hook
- */
-class pre_activity_deleted extends base {
-
-    use pre_delete_helper;
-
-    /** @var int $activity_id */
-    private $activity_id;
-
-    public function __construct(int $activity_id) {
-        $this->activity_id = $activity_id;
-    }
-
-    /**
-     * Get current activity id
-     *
-     * @return int
-     */
-    public function get_activity_id(): int {
-        return $this->activity_id;
-    }
-}
+$watchers = [
+    [
+        'hookname' => pre_section_relationship_deleted::class,
+        'callback' => [section_relationship_deletion_check::class, 'can_delete'],
+    ]
+];

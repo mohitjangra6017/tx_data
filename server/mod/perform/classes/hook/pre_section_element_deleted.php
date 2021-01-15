@@ -23,9 +23,6 @@
 
 namespace mod_perform\hook;
 
-use coding_exception;
-use core\orm\collection;
-use mod_perform\hook\dto\pre_deleted_dto;
 use totara_core\hook\base;
 
 /**
@@ -35,14 +32,10 @@ use totara_core\hook\base;
  */
 class pre_section_element_deleted extends base {
 
+    use pre_delete_helper;
+
     /** @var int $section_element_id */
     private $section_element_id;
-
-    /** @var collection $reasons */
-    private $reasons = [];
-
-    /** @var bool $can_delete */
-    private $can_delete = true;
 
     public function __construct(int $section_element_id) {
         $this->section_element_id = $section_element_id;
@@ -53,39 +46,7 @@ class pre_section_element_deleted extends base {
      *
      * @return int
      */
-    public function get_section_element_id() {
+    public function get_section_element_id(): int {
         return $this->section_element_id;
-    }
-
-    /**
-     * Add can not delete reason
-     *
-     * @param string $key
-     * @param string $description
-     * @param array $data
-     */
-    public function add_reason(string $key, string $description, array $data) {
-        if ($this->can_delete) {
-            $this->can_delete = false;
-        }
-        $this->reasons[$key] = new pre_deleted_dto($description, $data);
-    }
-
-    /**
-     * Get can not delete reason
-     *
-     * @return array
-     */
-    public function get_reasons(): array {
-        return $this->reasons;
-    }
-
-    /**
-     * If a section element can be deleted
-     *
-     * @return bool
-     */
-    public function can_delete() {
-        return $this->can_delete;
     }
 }

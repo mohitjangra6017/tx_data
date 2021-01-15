@@ -45,12 +45,13 @@ class activity_deletion_validation implements query_resolver, has_middleware {
         $data = null;
 
         if (!empty($hook->get_reasons())) {
-            $description = $hook->get_reasons()['is_referenced_by_redisplay_element']->get_description();
-            $data = $hook->get_reasons()['is_referenced_by_redisplay_element']->get_data();
+            $first_reason = $hook->get_first_reason();
+            $description = $first_reason->get_description();
+            $data = $first_reason->get_data();
         }
 
         return [
-            'title' => get_string('modal_can_not_delete_activity_title', 'performelement_redisplay'),
+            'title' => get_string('modal_can_not_delete_activity_title', 'mod_perform'),
             'can_delete' => $hook->can_delete(),
             'reason' => [
                 "description" => $description,

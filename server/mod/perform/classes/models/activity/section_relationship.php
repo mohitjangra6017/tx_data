@@ -23,10 +23,12 @@
 
 namespace mod_perform\models\activity;
 
+use coding_exception;
 use core\orm\entity\model;
 use core\orm\query\builder;
 use mod_perform\constants;
 use mod_perform\entity\activity\section_relationship as section_relationship_entity;
+use mod_perform\hook\pre_section_relationship_deleted;
 use totara_core\relationship\relationship as core_relationship_model;
 
 /**
@@ -147,6 +149,13 @@ class section_relationship extends model {
             ->all();
 
         foreach ($section_relationship_entities as $section_relationship_entity) {
+            $hook = new pre_section_relationship_deleted(section_relationship::load_by_entity($section_relationship_entity));
+            $hook->execute();
+            $reasons = $hook->get_reasons();
+
+            if (!empty($reasons)) {
+                throw new coding_exception($hook->get_first_reason()->get_description());
+            }
             $section_relationship_entity->delete();
         }
 

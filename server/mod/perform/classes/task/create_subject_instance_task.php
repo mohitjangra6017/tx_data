@@ -28,7 +28,7 @@ use core\task\scheduled_task;
 use mod_perform\task\service\subject_instance_creation;
 
 /**
- * Update competency user assignment table
+ * Create subject instance task.
  */
 class create_subject_instance_task extends scheduled_task {
 
