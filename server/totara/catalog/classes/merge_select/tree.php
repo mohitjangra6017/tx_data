@@ -60,7 +60,7 @@ class tree extends merge_select {
      * @param string $title
      * @param callable|null $optionsloader as described above
      */
-    public function __construct(string $key, string $title = '', callable $optionsloader) {
+    public function __construct(string $key, string $title, callable $optionsloader) {
         parent::__construct($key, $title);
 
         $this->optionsloader = $optionsloader;

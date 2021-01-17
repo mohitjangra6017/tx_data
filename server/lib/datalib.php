@@ -729,7 +729,7 @@ function get_courses($categoryid="all", $sort="c.sortorder ASC", $fields="c.*") 
  * @return array Array of courses
  */
 function get_courses_page($categoryid="all", $sort="c.sortorder ASC", $fields="c.*",
-                          &$totalcount, $limitfrom="", $limitnum="") {
+                          &$totalcount=null, $limitfrom="", $limitnum="") {
     global $USER, $CFG, $DB;
 
     $params = array();

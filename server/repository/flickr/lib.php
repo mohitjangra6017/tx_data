@@ -255,7 +255,10 @@ class repository_flickr extends repository {
         }
 
         // Filter file listing to display specific types only.
-        $ret['list'] = array_filter($ret['list'], array($this, 'filter'));
+        foreach ($ret['list'] as $k => $v) {
+            // Totara: Argument must be passed by reference!
+            $this->filter($ret['list'][$k]);
+        }
 
         return $ret;
     }

@@ -234,7 +234,7 @@ abstract class provider {
     /**
      * Load and cache filters
      */
-    final private function load_filters(): void {
+    private function load_filters(): void {
         $filters = [];
 
         $currentclass = static::class;
@@ -252,7 +252,7 @@ abstract class provider {
     /**
      * Load and cache features
      */
-    final private function load_features(): void {
+    private function load_features(): void {
         if (!is_null($this->features)) {
             return;
         }
@@ -274,7 +274,7 @@ abstract class provider {
     /**
      * Load and cache data holders
      */
-    final private function load_dataholders(): void {
+    private function load_dataholders(): void {
         $this->dataholders = [
             formatter::TYPE_PLACEHOLDER_TITLE     => [],
             formatter::TYPE_PLACEHOLDER_TEXT      => [],
@@ -313,7 +313,7 @@ abstract class provider {
      *
      * @param dataholder $dataholder
      */
-    final private function add_dataholder(dataholder $dataholder) {
+    private function add_dataholder(dataholder $dataholder) {
         foreach ($dataholder->datajoins as $joinalias => $joinstring) {
             if (substr($joinalias, 0, strlen($dataholder->key)) != $dataholder->key) {
                 throw new \coding_exception('Dataholder datajoin alias not prefixed with dataprovider key: ' . $dataholder->key);

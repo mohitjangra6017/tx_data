@@ -278,7 +278,7 @@ function facetoface_delete_room($id) {
  * @return stdClass[] rooms
  * @deprecated since Totara 12
  */
-function facetoface_get_available_rooms($timestart, $timefinish, $fields='fr.*', $sessionid, $facetofaceid) {
+function facetoface_get_available_rooms($timestart, $timefinish, $fields, $sessionid, $facetofaceid) {
     global $DB, $USER;
 
      debugging('facetoface_get_available_rooms has been deprecated. Use \mod_facetoface\room_list::get_available() instead.', DEBUG_DEVELOPER);

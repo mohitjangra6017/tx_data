@@ -53,7 +53,7 @@ $capabilities = array(
     ),
 
     'tool/monitor:managetool' => array(
-        'riskbitmask' => RISK_XSS, RISK_CONFIG,
+        'riskbitmask' => RISK_XSS | RISK_CONFIG,
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(

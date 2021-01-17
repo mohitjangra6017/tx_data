@@ -141,7 +141,11 @@ class repository_coursefiles extends repository {
         } else {
             $list = array();
         }
-        $ret['list'] = array_filter($list, array($this, 'filter'));
+        $ret['list'] = $list;
+        foreach ($ret['list'] as $k => $v) {
+            // Totara: Argument must be passed by reference!
+            $this->filter($ret['list'][$k]);
+        }
         return $ret;
     }
 

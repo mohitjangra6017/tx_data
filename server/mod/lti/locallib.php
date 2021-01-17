@@ -4174,7 +4174,11 @@ function lti_load_cartridge($url, $map, $propertiesmap = array()) {
 
     // TODO MDL-46023 Replace this code with a call to the new library.
     $origerrors = libxml_use_internal_errors(true);
-    $origentity = libxml_disable_entity_loader(true);
+    if (\LIBXML_VERSION < 20900) {
+        $origentity = libxml_disable_entity_loader(true);
+    } else {
+        $origentity = null;
+    }
     libxml_clear_errors();
 
     $document = new DOMDocument();
@@ -4186,7 +4190,9 @@ function lti_load_cartridge($url, $map, $propertiesmap = array()) {
 
     libxml_clear_errors();
     libxml_use_internal_errors($origerrors);
-    libxml_disable_entity_loader($origentity);
+    if ($origentity !== null) {
+        libxml_disable_entity_loader($origentity);
+    }
 
     if (count($errors) > 0) {
         $message = 'Failed to load cartridge.';

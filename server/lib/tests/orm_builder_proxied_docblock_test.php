@@ -159,11 +159,11 @@ class core_orm_builder_proxied_docblock_testcase extends orm_entity_testcase {
         if ($parameter->getType()) {
             $doc .= $parameter->getType()->allowsNull() ? '?' : '';
 
-            if ($parameter->getClass()) {
+            // NOTE: PHP 8.0 deprecated the getClass().
+            if (!$parameter->getType()->isBuiltin()) {
+                $class = $parameter->getType()->getName();
                 // We need to prepend class with \
-                $class = $parameter->getClass()->getName();
-
-                if ($class[0] != '\\') {
+                if ($class[0] !== '\\') {
                     $class = "\\${class}";
                 }
 

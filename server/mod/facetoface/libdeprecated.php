@@ -1882,7 +1882,7 @@ function facetoface_can_user_signup($session, $userid, $time = 0) {
  *
  * @deprecated since Totara 12.0
  */
-function facetoface_download_attendance($facetofacename, $facetofaceid, $unused = null, $format) {
+function facetoface_download_attendance($facetofacename, $facetofaceid, $unused, $format) {
     global $CFG, $DB;
 
     debugging('facetoface_download_attendance() function has been deprecated, please use attendees/export.php',
@@ -5683,7 +5683,7 @@ function facetoface_session_dates_check($olddates, $newdates) {
  * @returns integer Index of the last row written
  * @deprecated since Totara 13.0
  */
-function facetoface_write_activity_attendance(&$worksheet, $coursecontext, $startingrow, $facetofaceid, $unused = null,
+function facetoface_write_activity_attendance(&$worksheet, $coursecontext, $startingrow, $facetofaceid, $unused,
                                               $coursename, $activityname, $dateformat) {
     global $CFG, $DB;
 

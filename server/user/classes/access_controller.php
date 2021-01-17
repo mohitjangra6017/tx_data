@@ -874,7 +874,7 @@ class access_controller {
             if (empty($CFG->hiddenuserfields)) {
                 $fields = [];
             } else {
-                $fields = array_flip(explode(',', $CFG->hiddenuserfields));
+                $fields = explode(',', $CFG->hiddenuserfields);
             }
             // These maps exist because the hidden field name does not match the field on the user record.
             $maps = [
@@ -882,7 +882,7 @@ class access_controller {
                 'skypeid' => 'skype',
             ];
             foreach ($maps as $key => $value) {
-                if (in_array($key, $fields)) {
+                if (in_array($key, $fields, true)) {
                     $fields[] = $value;
                 }
             }

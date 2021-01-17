@@ -5252,7 +5252,7 @@ function print_log($course, $user=0, $date=0, $order="l.time ASC", $page=0, $per
  *
  * @deprecated since 3.2
  */
-function print_log_csv($course, $user, $date, $order='l.time DESC', $modname,
+function print_log_csv($course, $user, $date, $order, $modname,
                         $modid, $modaction, $groupid) {
     debugging(__FUNCTION__ . '() is deprecated. Please use the report_log framework instead.', DEBUG_DEVELOPER);
 
@@ -5340,7 +5340,7 @@ function print_log_csv($course, $user, $date, $order='l.time DESC', $modname,
  *
  * @deprecated since 3.2
  */
-function print_log_xls($course, $user, $date, $order='l.time DESC', $modname,
+function print_log_xls($course, $user, $date, $order, $modname,
                         $modid, $modaction, $groupid) {
     debugging(__FUNCTION__ . '() is deprecated. Please use the report_log framework instead.', DEBUG_DEVELOPER);
 
@@ -5460,7 +5460,7 @@ function print_log_xls($course, $user, $date, $order='l.time DESC', $modname,
  *
  * @deprecated since 3.2
  */
-function print_log_ods($course, $user, $date, $order='l.time DESC', $modname,
+function print_log_ods($course, $user, $date, $order, $modname,
                         $modid, $modaction, $groupid) {
     debugging(__FUNCTION__ . '() is deprecated. Please use the report_log framework instead.', DEBUG_DEVELOPER);
 
@@ -5746,7 +5746,7 @@ function get_logs_userday($userid, $courseid, $daystart) {
  * @param int $totalcount Passed in by reference.
  * @return array
  */
-function get_logs($select, array $params=null, $order='l.time DESC', $limitfrom='', $limitnum='', &$totalcount) {
+function get_logs($select, array $params=null, $order='l.time DESC', $limitfrom='', $limitnum='', &$totalcount=null) {
     global $DB;
 
     debugging(__FUNCTION__ . '() is deprecated. Please use the report_log framework instead.', DEBUG_DEVELOPER);

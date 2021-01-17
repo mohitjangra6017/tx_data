@@ -121,7 +121,7 @@ function totara_core_xml_external_entities_check(environment_results $result) {
     }
 
     $dom = new DOMDocument();
-    $dom->load($CFG->dirroot . "/totara/core/tests/fixtures/extentities.xml");
+    @$dom->load($CFG->dirroot . "/totara/core/tests/fixtures/extentities.xml");
 
     if (totara_core_xml_external_entities_check_searchdom($dom, 'filetext')) {
         $result->setInfo(get_string('xmllibraryentitycheckerror', 'admin'));

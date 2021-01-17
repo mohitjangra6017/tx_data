@@ -1237,7 +1237,7 @@ function dp_record_status_picker($pagename, $status, $userid=null) {
  * @return string HTML to display the menu
  */
 
-function dp_record_status_menu($pagename, $status, $userid=null, $role) {
+function dp_record_status_menu($pagename, $status, $userid, $role) {
     global $OUTPUT;
 
     if ($role == 'manager') {
@@ -1260,13 +1260,13 @@ function dp_record_status_menu($pagename, $status, $userid=null, $role) {
 
 /**
  * Display a link to the evidence bank.
- * @param null $userid
+ * @param int $userid
  * @param $role
  * @return string
  * @throws coding_exception
  * @throws moodle_exception
  */
-function dp_evidence_menu($userid=null, $role) {
+function dp_evidence_menu($userid, $role) {
     global $OUTPUT;
 
     if ($role == 'manager') {

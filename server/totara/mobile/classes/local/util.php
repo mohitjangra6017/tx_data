@@ -243,10 +243,10 @@ final class util {
      * @param string $errstr
      * @param string $errfile
      * @param int $errline
-     * @param array $errcontext
+     * @param array|null $errcontext (not used in PHP 8.0)
      * @return bool false means use default error handler
      */
-    public static function error_handler($errno, $errstr, $errfile, $errline, $errcontext) {
+    public static function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null) {
         if ($errno == 4096) {
             // Fatal catchable error.
             throw new \coding_exception('PHP catchable fatal error', $errstr);

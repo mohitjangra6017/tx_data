@@ -332,8 +332,8 @@ final class seminar_session_list implements \Iterator, \Countable {
      */
     public function sort(string $field, string $order = seminar_session_list::SORT_ASC): seminar_session_list {
         $function = 'get_' . $field;
-        if (!is_callable(['\mod_facetoface\seminar_session', $function])) {
-            throw new \coding_exception("Function get_$function does not exist in seminar_session");
+        if (!method_exists(\mod_facetoface\seminar_session::class, $function)) {
+            throw new \coding_exception("Function $function does not exist in seminar_session");
         }
 
         // Used uasort, because we need to maintain the index of $items (sessions id).

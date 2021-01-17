@@ -1539,7 +1539,7 @@ abstract class dp_base_component {
      * @param string $componentname
      * @return string
      */
-    function display_duedate_as_form($duedate, $name, $inputclass='', $itemid, $componentname) {
+    function display_duedate_as_form($duedate, $name, $inputclass, $itemid, $componentname) {
         global $CFG;
         $duedatestr = !empty($duedate) ? userdate($duedate, get_string('datepickerlongyearphpuserdate', 'totara_core'), 99, false) : '';
         $label = html_writer::label(get_string('duedatefor', 'totara_plan', format_string($componentname)), $name, true, array('class' => 'sr-only'));
@@ -1642,7 +1642,7 @@ abstract class dp_base_component {
      * @param string $componentname
      * @return string
      */
-    function display_priority_picker($name, $priorityid, $itemid, $priorityvalues, $prioritydefaultid, $priorityrequired=false, $componentname) {
+    function display_priority_picker($name, $priorityid, $itemid, $priorityvalues, $prioritydefaultid, $priorityrequired, $componentname) {
 
         if (!$priorityvalues) {
             return '';

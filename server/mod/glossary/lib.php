@@ -1795,7 +1795,7 @@ function glossary_print_categories_menu($cm, $glossary, $hook, $category) {
             echo get_string("entrieswithoutcategory","glossary");
             $selected = GLOSSARY_SHOW_NOT_CATEGORISED;
 
-        } elseif ( $hook == GLOSSARY_SHOW_ALL_CATEGORIES ) {
+        } elseif ( $hook == GLOSSARY_SHOW_ALL_CATEGORIES || $hook === '') {
 
             echo get_string("allcategories","glossary");
             $selected = GLOSSARY_SHOW_ALL_CATEGORIES;
@@ -2316,7 +2316,7 @@ function glossary_end_tag($tag,$level=0,$endline=true) {
  * @param string $content
  * @return string
  */
-function glossary_full_tag($tag,$level=0,$endline=true,$content) {
+function glossary_full_tag($tag,$level,$endline,$content) {
         global $CFG;
 
         $st = glossary_start_tag($tag,$level,$endline);

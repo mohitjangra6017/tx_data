@@ -186,7 +186,7 @@ class utils {
         $timeallowances[self::TIME_SELECTOR_WEEKS] = get_string('weeks', 'totara_program');
         $timeallowances[self::TIME_SELECTOR_MONTHS] = get_string('months', 'totara_program');
         $timeallowances[self::TIME_SELECTOR_YEARS] = get_string('years', 'totara_program');
-        if ($periodvalue == '') {
+        if ($periodvalue == '' || $periodvalue == 0) {
             $periodvalue = '' . self::TIME_SELECTOR_DAYS;
         }
 

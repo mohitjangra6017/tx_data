@@ -312,7 +312,6 @@ class mod_facetoface_seminar_testcase extends \advanced_testcase {
             [ 0, seminar::SESSION_ATTENDANCE_START, seminar::SESSION_ATTENDANCE_START ],
             // If sessionattendance is a non-numeric string, it will be translated as disabled.
             [ 0, '', seminar::SESSION_ATTENDANCE_DISABLED ],
-            [ 0, 'foo', seminar::SESSION_ATTENDANCE_DISABLED ],
         ];
     }
 
@@ -334,6 +333,7 @@ class mod_facetoface_seminar_testcase extends \advanced_testcase {
             [ 0, 4.2195 ],
             [ 0, 42 ],
             [ 42, 1 ],
+            [ 0, 'foo' ],
         ];
     }
 

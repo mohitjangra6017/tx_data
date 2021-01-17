@@ -1096,7 +1096,8 @@ function question_category_options($contexts, $top = false, $currentcat = 0,
     $defaultids = $DB->get_fieldset_sql($defaultsql);
     foreach ($categories as $category) {
         $catid = explode(',', $category->id);
-        if ($category->parent == 0 && in_array($catid[0], $defaultids)) {
+        list($p, $c) = explode(',', $category->parent); // PHP 8.0 does not cast strings to numbers any more.
+        if ($p == 0 && in_array($catid[0], $defaultids)) {
             $category->name = get_string('defaultfor', 'question', trim($category->name));
         }
     }

@@ -654,7 +654,12 @@ class qformat_xml extends qformat_default {
                 $qo->answer = '*';
             }
             $qo->feedback[]  = $obj->feedback;
-            $qo->tolerance[] = $this->getpath($answer, array('#', 'tolerance', 0, '#'), 0);
+            // NOTE: we cannot abuse '' here anymore due to PHP 8.0 type strictness
+            $tolerance = $this->getpath($answer, array('#', 'tolerance', 0, '#'), 0);
+            if ($tolerance === '') {
+                $tolerance = '0';
+            }
+            $qo->tolerance[] = $tolerance;
 
             // Fraction as a tag is deprecated.
             $fraction = $this->getpath($answer, array('@', 'fraction'), 0) / 100;

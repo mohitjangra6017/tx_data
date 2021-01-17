@@ -421,7 +421,7 @@ abstract class advanced_testcase extends base_testcase {
     }
 
     /**
-     * Assert that an event is not using event->contxet.
+     * Assert that an event is not using event->context.
      * While restoring context might not be valid and it should not be used by event url
      * or description methods.
      *
@@ -432,7 +432,7 @@ abstract class advanced_testcase extends base_testcase {
     public function assertEventContextNotUsed(\core\event\base $event, $message = '') {
         // Save current event->context and set it to false.
         $eventcontext = phpunit_event_mock::testable_get_event_context($event);
-        phpunit_event_mock::testable_set_event_context($event, false);
+        phpunit_event_mock::testable_set_event_context($event, null);
         if ($message === '') {
             $message = 'Event should not use context property of event in any method.';
         }

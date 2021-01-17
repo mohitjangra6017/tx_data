@@ -121,7 +121,10 @@ class repository_filesystem extends repository {
         }
 
         $list['path'] = $this->build_breadcrumb($fullpath);
-        $list['list'] = array_filter($list['list'], array($this, 'filter'));
+        foreach ($list['list'] as $k => $v) {
+            // Totara: Argument must be passed by reference!
+            $this->filter($list['list'][$k]);
+        }
 
         return $list;
     }
@@ -238,12 +241,17 @@ class repository_filesystem extends repository {
         }
 
         $list = array();
-        $list['list'] = array_filter($results, array($this, 'filter'));
+        $list['list'] = $results;
         $list['dynload'] = true;
         $list['nologin'] = true;
         $list['page'] = $page;
         $list['pages'] = $pages;
         $list['path'] = $this->build_breadcrumb($searchpath);
+
+        foreach ($list['list'] as $k => $v) {
+            // Totara: Argument must be passed by reference!
+            $this->filter($list['list'][$k]);
+        }
 
         return $list;
     }

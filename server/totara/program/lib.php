@@ -591,7 +591,7 @@ function prog_get_category_breadcrumbs($categoryid, $viewtype = 'program') {
  */
 function prog_get_programs_page($categoryid="all", $sort="sortorder ASC",
                           $fields="p.id,p.sortorder,p.shortname,p.fullname,p.summary,p.visible",
-                          &$totalcount, $limitfrom="", $limitnum="", $type = 'program') {
+                          &$totalcount=null, $limitfrom="", $limitnum="", $type = 'program') {
     global $DB;
 
     $params = array();
@@ -973,7 +973,7 @@ function prog_can_enter_course($user, $course) {
  * @param string $type Are we looking for programs or certifications
  * @return object {@link $COURSE} records
  */
-function prog_get_programs_search($searchterms, $sort='fullname ASC', $page=0, $recordsperpage=50, &$totalcount, $type = 'program') {
+function prog_get_programs_search($searchterms, $sort='fullname ASC', $page=0, $recordsperpage=50, &$totalcount=null, $type = 'program') {
     global $DB;
 
     $REGEXP    = $DB->sql_regex(true);

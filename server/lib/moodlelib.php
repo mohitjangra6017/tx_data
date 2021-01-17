@@ -10614,15 +10614,6 @@ class lang_string {
     }
 
     /**
-     * Magic __set_state method used for var_export
-     *
-     * @return string
-     */
-    public function __set_state() {
-        return $this->get_string();
-    }
-
-    /**
      * Prepares the lang_string for sleep and stores only the forcedstring and
      * string properties... the string cannot be regenerated so we need to ensure
      * it is generated for this.

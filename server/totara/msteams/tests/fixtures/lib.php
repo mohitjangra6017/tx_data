@@ -645,7 +645,9 @@ abstract class botfw_jwks_base_testcase extends advanced_testcase {
 
     public function tearDown(): void {
         foreach ($this->resources ?? [] as $resource) {
-            openssl_pkey_free($resource);
+            if (version_compare(PHP_VERSION, '8.0', '<')) {
+                openssl_pkey_free($resource);
+            }
         }
         $this->resources = null;
         $this->privatekeys = null;

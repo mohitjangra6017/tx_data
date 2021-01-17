@@ -1890,8 +1890,12 @@ class core_moodlelib_testcase extends advanced_testcase {
     public function test_get_string_limitation() {
         // This is one of the limitations to the lang_string class. It can't be
         // used as a key.
-        $this->expectWarning();
-        $array = array(get_string('yes', null, null, true) => 'yes');
+        try {
+            $array = array(get_string('yes', null, null, true) => 'yes');
+            $this->fail('Expected warning or error');
+        } catch (Throwable $ex) {
+            $this->assertTrue(true);
+        }
     }
 
     /**

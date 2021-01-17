@@ -238,7 +238,9 @@ if (defined('COMPONENT_CLASSLOADER')) {
 core_date::store_default_php_timezone();
 
 // Add PHP compatibility lib files
-require_once($CFG->libdir . '/compatibility/php72lib.php'); // PHP 7.2
+if (PHP_VERSION_ID < 80000) {
+    require_once($CFG->libdir . '/compatibility/php74lib.php'); // PHP 7.4
+}
 
 // Load up standard libraries
 require_once($CFG->libdir .'/filterlib.php');       // Functions for filtering test as it is output

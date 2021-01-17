@@ -104,8 +104,11 @@ class repository_skydrive extends repository {
 
         $fileslist = $this->skydrive->get_file_list($path);
         // Filter list for accepted types. Hopefully this will be done by core some day.
-        $fileslist = array_filter($fileslist, array($this, 'filter'));
         $ret['list'] = $fileslist;
+        foreach ($ret['list'] as $k => $v) {
+            // Totara: Argument must be passed by reference!
+            $this->filter($ret['list'][$k]);
+        }
 
         // Generate path bar, always start with the plugin name.
         $ret['path']   = array();

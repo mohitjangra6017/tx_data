@@ -322,6 +322,10 @@ class qtype_numerical_answer extends question_answer {
 
     public function __construct($id, $answer, $fraction, $feedback, $feedbackformat, $tolerance) {
         parent::__construct($id, $answer, $fraction, $feedback, $feedbackformat);
+        if ($tolerance === '') {
+            // NOTE: we cannot abuse '' here anymore due to PHP 8.0 type strictness
+            $tolerance = 0;
+        }
         $this->tolerance = abs($tolerance);
     }
 

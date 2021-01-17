@@ -268,7 +268,10 @@ class repository_boxnet extends repository {
         core_collator::ksort($folders, core_collator::SORT_NATURAL);
         core_collator::ksort($files, core_collator::SORT_NATURAL);
         $ret['list'] = array_merge($folders, $files);
-        $ret['list'] = array_filter($ret['list'], array($this, 'filter'));
+        foreach ($ret['list'] as $k => $v) {
+            // Totara: Argument must be passed by reference!
+            $this->filter($ret['list'][$k]);
+        }
 
         return $ret;
     }

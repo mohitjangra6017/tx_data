@@ -1307,7 +1307,6 @@ $string['warningcurrentsetting'] = 'Invalid current value: {$a}';
 $string['warningiconvbuggy'] = 'Your version of the iconv library does not support the //IGNORE modifier. You should install the mbstring extension which can be used instead for cleaning strings containing invalid UTF-8 characters.';
 $string['webproxy'] = 'Web proxy';
 $string['webproxyinfo'] = 'Fill in following options if your Totara server can not access internet directly. Internet access is required for download of environment data, language packs, RSS feeds, timezones, etc.<br /><em>PHP cURL extension is highly recommended.</em>';
-$string['xmlrpcrecommended'] = 'The XMLRPC extension is needed for hub communication, and is useful for web services and Totara networking';
 $string['xmlstrictheaders'] = 'XML strict headers';
 $string['xmllibraryentitycheckerror'] = 'An XML library loaded an external entity by default. This represents a security risk. Consider upgrading versions of PHP and/or libxml to resolve this.';
 $string['yuicomboloading'] = 'YUI combo loading';

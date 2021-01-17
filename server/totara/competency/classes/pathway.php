@@ -249,7 +249,7 @@ abstract class pathway {
      * Archive the pathway
      * @return $this
      */
-    final private function archive(): pathway {
+    private function archive(): pathway {
         if (empty($this->get_id())) {
             return $this;
         }

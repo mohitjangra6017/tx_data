@@ -55,7 +55,7 @@ class mod_facetoface_waitlist_event_testcase extends advanced_testcase {
      * @param stdClass $course Course to enrol users to
      * @return stdClass[]
      */
-    private function create_users(int $numberofusers=2, stdClass $course): array {
+    private function create_users(int $numberofusers, stdClass $course): array {
         $generator = $this->getDataGenerator();
         $users = array();
 

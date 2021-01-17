@@ -238,7 +238,7 @@ function totara_message_dismiss_action(int $id, ?string $processor_type = null):
  * @param string|null     $processor_type Whether it is a totara_task or totara_alert, by default we will set it to
  *                                        totara_alert.
  */
-function totara_message_alert_popup(int $id, ?array $extrabuttons = [], string $messagetype, ?string $processor_type = null) {
+function totara_message_alert_popup(int $id, ?array $extrabuttons, string $messagetype, ?string $processor_type = null) {
     global $CFG, $FULLME, $PAGE, $DB;
     if (empty($processor_type)) {
         $processor_type = 'totara_alert';

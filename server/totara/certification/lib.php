@@ -1099,7 +1099,7 @@ function get_certification_path_field($formdata, $field, $fieldvalue) {
  *
  * @uses $DB, $USER
  * @param array $searchterms Words to search for in an array
- * @param string $sort Sort sql
+ * @param string $sort Sort sql such as 'fullname ASC'
  * @param int $page The results page to return
  * @param int $recordsperpage Number of search results per page
  * @param int $totalcount Passed in by reference. Total count so we can calculate number of pages
@@ -1109,8 +1109,7 @@ function get_certification_path_field($formdata, $field, $fieldvalue) {
  */
 // TODO: Fix this function to work in Moodle 2 way
 // See lib/datalib.php -> get_courses_search for example.
-function certif_get_certifications_search($searchterms, $sort='fullname ASC', $page=0, $recordsperpage=50, &$totalcount,
-                                                                                                $whereclause, $whereparams) {
+function certif_get_certifications_search($searchterms, $sort, $page, $recordsperpage, &$totalcount, $whereclause, $whereparams) {
     global $DB, $USER;
 
     $regexp    = $DB->sql_regex(true);
@@ -1260,7 +1259,7 @@ function certif_get_certifications_search($searchterms, $sort='fullname ASC', $p
  */
 function certif_get_certifications_page($categoryid="all", $sort="sortorder ASC",
                           $fields="p.id as pid,p.sortorder,p.shortname,p.fullname,p.summary,p.visible",
-                          &$totalcount, $limitfrom="", $limitnum="") {
+                          &$totalcount=null, $limitfrom="", $limitnum="") {
 
     global $DB;
 

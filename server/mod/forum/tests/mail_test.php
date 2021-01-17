@@ -1167,10 +1167,8 @@ class mod_forum_mail_testcase extends advanced_testcase {
                 if (!is_array($foundexpectation['contents'])) { // Accept both string and array.
                     $foundexpectation['contents'] = array($foundexpectation['contents']);
                 }
-                // Totara: replace the OS-native line break string with '\n'.
-                if (PHP_EOL !== "\n") {
-                    $mail->body = str_replace(PHP_EOL, "\n", $mail->body);
-                }
+                // Totara: standardise line breaks, note there are some changes in latest PHPMailer
+                $mail->body = str_replace("\r\n", "\n", $mail->body);
                 foreach ($foundexpectation['contents'] as $content) {
                     if (strpos($content, '~') !== 0) {
                         $this->assertMatchesRegularExpression('#' . $content . '#m', $mail->body);

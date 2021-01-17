@@ -28,7 +28,7 @@ class customfield_define_base {
      * Prints out the form snippet for creating or editing a custom field
      * @param   object   instance of the moodleform class
      */
-    function define_form(&$form, $typeid=0, $tableprefix) {
+    function define_form(&$form, $typeid, $tableprefix) {
         $form->addElement('header', '_commonsettings', get_string('commonsettings', 'totara_customfield'));
         $this->define_form_common($form, $typeid, $tableprefix);
 
@@ -41,7 +41,7 @@ class customfield_define_base {
      * editing a custom field common to all data types
      * @param   object   instance of the moodleform class
      */
-    function define_form_common(&$form, $typeid=0, $tableprefix) {
+    function define_form_common(&$form, $typeid, $tableprefix) {
         global $TEXTAREA_OPTIONS;
         $strrequired = get_string('customfieldrequired', 'totara_customfield');
 

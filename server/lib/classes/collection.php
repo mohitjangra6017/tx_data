@@ -361,7 +361,7 @@ class collection implements Iterator, JsonSerializable, Countable {
         $output = [];
 
         foreach ($this->items as $item) {
-            if (method_exists($item, 'to_array')) {
+            if (is_object($item) && method_exists($item, 'to_array')) {
                 $output[] = $item->to_array();
             } else {
                 $output[] = is_object($item) ? (array) $item : $item;

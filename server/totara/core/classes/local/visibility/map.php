@@ -137,7 +137,7 @@ abstract class map {
      *
      * @return \xmldb_table
      */
-    final private function get_temp_table_definition(): \xmldb_table {
+    private function get_temp_table_definition(): \xmldb_table {
         $table = new \xmldb_table($this->get_temp_table_name());
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field($this->get_instance_field_name(), XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
@@ -151,7 +151,7 @@ abstract class map {
      *
      * @return string
      */
-    final private function get_temp_table_name(): string {
+    private function get_temp_table_name(): string {
         return $this->get_map_table_name() . '_temp';
     }
 
@@ -160,7 +160,7 @@ abstract class map {
      *
      * @return bool|\xmldb_table
      */
-    final private function create_temp_table() {
+    private function create_temp_table() {
         global $DB;
         $manager = $DB->get_manager();
         $table = $this->get_temp_table_definition();
@@ -177,7 +177,7 @@ abstract class map {
      *
      * @param \xmldb_table $table
      */
-    final private function drop_temp_table(\xmldb_table $table) {
+    private function drop_temp_table(\xmldb_table $table) {
         global $DB;
         $manager = $DB->get_manager();
         if ($manager->table_exists($table)) {
@@ -191,7 +191,7 @@ abstract class map {
      * @param int|null $instanceid
      * @param int|null $roleid
      */
-    final private function delete_from_map(int $instanceid = null, int $roleid = null) {
+    private function delete_from_map(int $instanceid = null, int $roleid = null) {
         global $DB;
 
         if (is_null($instanceid) && is_null($roleid)) {
@@ -211,7 +211,7 @@ abstract class map {
     /**
      * Replaces the map table contents with the contents in the temp table.
      */
-    final private function replace_map_contents() {
+    private function replace_map_contents() {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
         $this->delete_from_map();
@@ -224,7 +224,7 @@ abstract class map {
     /**
      * Copies the contents of the temp table to the map table.
      */
-    final private function copy_map_contents() {
+    private function copy_map_contents() {
         global $DB;
         $field = $this->get_instance_field_name();
         $table_map = $this->get_map_table_name();
@@ -242,7 +242,7 @@ abstract class map {
      * @param int|null $instanceid
      * @param int|null $roleid
      */
-    final private function calculate_map(int $instanceid = null, int $roleid = null) {
+    private function calculate_map(int $instanceid = null, int $roleid = null) {
         global $DB;
         $table = $this->get_temp_table_name();
         $field = $this->get_instance_field_name();

@@ -73,6 +73,6 @@ trait purge_trait {
      *
      * @param int $user_id
      */
-    abstract protected function purge_files(int $user_id): void;
+    abstract protected static function purge_files(int $user_id): void;
 
 }

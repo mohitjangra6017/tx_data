@@ -40,11 +40,20 @@ defined('MOODLE_INTERNAL') || die();
  *
  * ---- For any of the libraries... ----
  *
+ * NOTE: libxml_disable_entity_loader() is deprecated since PHP 8.0
+ *       and it does not need to be used since libxml 2.9.0
+ *
  * - It's safest to use the following code before loading XML:
- * $default = libxml_disable_entity_loader(false);
+ * if (\LIBXML_VERSION < 20900) {
+ *     $default = libxml_disable_entity_loader(false);
+ * } else {
+ *     $default = null;
+ * }
  *
  * - And then the following once you have finished completely with the XML:
- * libxml_disable_entity_loader($default);
+ * if ($default !== null) {
+ *     libxml_disable_entity_loader($default);
+ * }
  *
  * - libxml_disable_entity_loader(false) disables external entities, in fact seemingly any external file access
  * by the XML libraries whatsoever. This is known to have issues with not being thread-safe.
@@ -155,12 +164,17 @@ class totara_core_xml_testcase extends advanced_testcase {
     public function setUp(): void {
         parent::setUp();
 
-        $this->defaultloadersetting = libxml_disable_entity_loader(false);
+        if (LIBXML_VERSION < 20900) {
+            // Prevents deprecated warnings in PHP 8.0
+            $this->defaultloadersetting = libxml_disable_entity_loader(false);
+        }
     }
 
     public function tearDown(): void {
-        libxml_disable_entity_loader($this->defaultloadersetting);
-        $this->defaultloadersetting = null;
+        if (LIBXML_VERSION < 20900) {
+            libxml_disable_entity_loader($this->defaultloadersetting);
+            $this->defaultloadersetting = null;
+        }
         parent::tearDown();
     }
 
@@ -222,6 +236,10 @@ class totara_core_xml_testcase extends advanced_testcase {
         // To validate our tests below, this shows that xml nodes were loaded.
         $this->assertGreaterThan(0, $dom->childNodes->length);
 
+        if (LIBXML_VERSION >= 20900) {
+            return;
+        }
+
         // Run the above again with the entity loader disabled. The load() method simply doesn't work.
         libxml_disable_entity_loader(true);
 
@@ -270,6 +288,10 @@ class totara_core_xml_testcase extends advanced_testcase {
         $this->assertTrue($this->searchDOMDocument($dom, 'filetext'));
         // To validate our tests below, this shows that xml nodes were loaded.
         $this->assertGreaterThan(0, $dom->childNodes->length);
+
+        if (LIBXML_VERSION >= 20900) {
+            return;
+        }
 
         // Run the above again with the entity loader disabled.
         // loadXML() only fails when the XML contains an external entity.
@@ -327,6 +349,10 @@ class totara_core_xml_testcase extends advanced_testcase {
         $this->assertFalse($this->searchDOMDocument($dom, 'filetext'));
         $this->assertEquals(2, $dom->childNodes->length); // The other nodes were loaded.
 
+        if (LIBXML_VERSION >= 20900) {
+            return;
+        }
+
         // Run the above again with the entity loader disabled.
         // The loadHTML() method will complain about an incorrect DOCTYPE declaration.
         libxml_disable_entity_loader(true);
@@ -381,6 +407,10 @@ class totara_core_xml_testcase extends advanced_testcase {
         @$dom->loadHTMLFile($CFG->dirroot . "/totara/core/tests/fixtures/extentities.html");
         $this->assertFalse($this->searchDOMDocument($dom, 'filetext'));
         $this->assertEquals(2, $dom->childNodes->length); // The other nodes were loaded.
+
+        if (LIBXML_VERSION >= 20900) {
+            return;
+        }
 
         // Run the above again with the entity loader disabled. The loadHTMLFile() method simply doesn't work.
         libxml_disable_entity_loader(true);
@@ -577,7 +607,9 @@ class totara_core_xml_testcase extends advanced_testcase {
      */
     public function test_domdocument_entity_loader_html() {
 
-        libxml_disable_entity_loader(true);
+        if (LIBXML_VERSION < 20900) {
+            libxml_disable_entity_loader(true);
+        }
 
         $html = "<html><head></head><body><p>Text containing &gt; &lt; &quot;</p></body></html>";
 
@@ -631,6 +663,10 @@ class totara_core_xml_testcase extends advanced_testcase {
         // The outcome should be the same as the similar case above using $dom->load()
         $this->assertFalse($this->searchDOMDocument($dom, 'filetext'));
         $this->assertEquals(2, $dom->childNodes->length);
+
+        if (LIBXML_VERSION >= 20900) {
+            return;
+        }
 
         libxml_disable_entity_loader(true);
 
@@ -703,6 +739,10 @@ class totara_core_xml_testcase extends advanced_testcase {
         $xml = simplexml_load_file($CFG->dirroot . "/totara/core/tests/fixtures/noentities.xml");
         $this->assertNotEmpty($xml);
 
+        if (LIBXML_VERSION >= 20900) {
+            return;
+        }
+
         // Loading files simply won't work after this, entities or not.
         libxml_disable_entity_loader(true);
 
@@ -743,6 +783,10 @@ class totara_core_xml_testcase extends advanced_testcase {
         $dom = new DOMDocument();
         $dom->load($CFG->dirroot . "/totara/core/tests/fixtures/extentities.xml", LIBXML_NOENT);
 
+        if (LIBXML_VERSION >= 20900) {
+            return;
+        }
+
         libxml_disable_entity_loader(true);
         $xml = simplexml_import_dom($dom);
         $this->assertTrue($this->searchSimpleXML($xml, 'filetext'));
@@ -772,6 +816,10 @@ class totara_core_xml_testcase extends advanced_testcase {
 
         $xml = simplexml_load_string($noentities);
         $this->assertNotEmpty($xml);
+
+        if (LIBXML_VERSION >= 20900) {
+            return;
+        }
 
         // The load string function itself will continue to work.
         libxml_disable_entity_loader(true);
@@ -829,6 +877,10 @@ class totara_core_xml_testcase extends advanced_testcase {
         $this->assertNotEmpty($xml);
         $this->assertFalse($this->searchSimpleXML($xml, 'filetext'));
         $this->assertTrue($this->searchSimpleXML($xml, 'normaltext'));
+
+        if (LIBXML_VERSION >= 20900) {
+            return;
+        }
 
         libxml_disable_entity_loader(true);
 
@@ -899,6 +951,10 @@ class totara_core_xml_testcase extends advanced_testcase {
         $this->assertTrue($outcome);
         $this->assertTrue($this->searchXMLReader($xml, 'filetext'));
 
+        if (LIBXML_VERSION >= 20900) {
+            return;
+        }
+
         libxml_disable_entity_loader(true);
 
         $xml = new XMLReader();
@@ -934,6 +990,10 @@ class totara_core_xml_testcase extends advanced_testcase {
         $outcome = $xml->XML($extentities, null, LIBXML_NOENT);
         $this->assertTrue($outcome);
         $this->assertTrue($this->searchXMLReader($xml, 'filetext'));
+
+        if (LIBXML_VERSION >= 20900) {
+            return;
+        }
 
         libxml_disable_entity_loader(true);
 
@@ -1005,6 +1065,10 @@ class totara_core_xml_testcase extends advanced_testcase {
         $xml->close();
         $xml->XML($falsedtd);
         $this->assertTrue(@$this->searchXMLReader($xml, 'normaltext'));
+
+        if (LIBXML_VERSION >= 20900) {
+            return;
+        }
 
         libxml_disable_entity_loader(true);
 

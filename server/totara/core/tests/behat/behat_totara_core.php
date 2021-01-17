@@ -587,6 +587,18 @@ class behat_totara_core extends behat_base {
     }
 
     /**
+     * Skip tests if PHP extension is not available.
+     *
+     * @Given /^I skip the scenario if PHP extension "([^"]*)" is not available$/
+     */
+    public function i_skip_the_scenario_if_php_extension_not_available($extension) {
+        \behat_hooks::set_step_readonly(false);
+        if (!extension_loaded($extension)) {
+            throw new \Moodle\BehatExtension\Exception\SkippedException("THIS SCENARIO IS SKIPPED BECAUSE PHP EXTENSION $extension IS NOT AVAILABLE");
+        }
+    }
+
+    /**
      * Am I on the right page? This is intended to be used
      * instead of 'I should see "Course 1"' when on course page.
      *

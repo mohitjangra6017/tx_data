@@ -52,7 +52,7 @@ class organisation extends hierarchy {
      * @param $page string Unique identifier for page
      * @return void
      */
-    function hierarchy_page_setup($page = '', $item) {
+    function hierarchy_page_setup($page, $item) {
         global $CFG, $PAGE;
 
         if ($page !== 'item/view') {

@@ -1225,7 +1225,7 @@ class prog_learner_followup_message extends prog_eventbased_message {
  */
 class prog_extension_request_message extends prog_noneventbased_message {
 
-    public function __construct($programid, $userid, $messageob=null, $uniqueid=null, $data) {
+    public function __construct($programid, $userid, $messageob, $uniqueid, $data) {
         global $CFG;
 
         parent::__construct($programid, $messageob, $uniqueid);

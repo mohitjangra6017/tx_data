@@ -1290,10 +1290,10 @@ final class seminar implements seminar_iterator_item {
      * @return integer the up-to-date $sessionattendance
      */
     public static function fix_up_session_attendance_time_with(int $eventattendance, $sessionattendance): int {
-        if ($sessionattendance == 0) {  // 0 or false
+        if ($sessionattendance === 0 || $sessionattendance === '0' || $sessionattendance === false || $sessionattendance === '') {
             return self::SESSION_ATTENDANCE_DISABLED;
         }
-        if ($sessionattendance == 1) {  // 1 or true
+        if ($sessionattendance === 1 || $sessionattendance === '1' || $sessionattendance === true) {
             switch ($eventattendance) {
                 case self::EVENT_ATTENDANCE_LAST_SESSION_END:
                     return self::SESSION_ATTENDANCE_END;
@@ -1307,7 +1307,7 @@ final class seminar implements seminar_iterator_item {
                     return self::SESSION_ATTENDANCE_DISABLED;
             }
         }
-        if (!in_array($sessionattendance, self::SESSION_ATTENDANCE_VALID_VALUES)) {
+        if (!is_numeric($sessionattendance) || !in_array($sessionattendance, self::SESSION_ATTENDANCE_VALID_VALUES)) {
             debugging("The session attendance time {$sessionattendance} is not valid.", DEBUG_DEVELOPER);
             return self::SESSION_ATTENDANCE_DISABLED;
         }

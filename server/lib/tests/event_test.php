@@ -909,14 +909,22 @@ class core_event_testcase extends advanced_testcase {
     }
 
     public function test_context_not_used() {
-        $this->expectNotice();
-
         $event = \core_tests\event\context_used_in_event::create(array('other' => array('sample' => 1, 'xx' => 10)));
-        $this->assertEventContextNotUsed($event);
+        try {
+            $this->assertEventContextNotUsed($event);
+            $this->fail('coding_exception expected');
+        } catch (moodle_exception $ex) {
+            $this->assertInstanceOf(coding_exception::class, $ex);
+        }
 
-        $eventcontext = phpunit_event_mock::testable_get_event_context($event);
-        phpunit_event_mock::testable_set_event_context($event, null);
-        $this->assertEventContextNotUsed($event);
+        try {
+            $eventcontext = phpunit_event_mock::testable_get_event_context($event);
+            phpunit_event_mock::testable_set_event_context($event, null);
+            $this->assertEventContextNotUsed($event);
+            $this->fail('coding_exception expected');
+        } catch (moodle_exception $ex) {
+            $this->assertInstanceOf(coding_exception::class, $ex);
+        }
     }
 
     /**

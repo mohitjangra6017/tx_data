@@ -96,7 +96,7 @@ final class purge {
         }
 
         // Move 'User' to the top of the list.
-        uksort($classes, function($a, $b) { return $b === 'core_user'; });
+        uksort($classes, function($a, $b) { return (int)($b === 'core_user'); });
 
         // Sort user data items within components using sortorder defined in items.
         foreach ($classes as $maincomponent => $items) {

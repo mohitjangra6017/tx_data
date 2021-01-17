@@ -1231,6 +1231,10 @@ function report_security_check_xxe_risk($detailed = false) {
         // This environment is vulnerable.
         $result->status = REPORT_SECURITY_CRITICAL;
         $result->info = get_string('check_xxe_risk_critical', 'report_security');
+    } else if (LIBXML_VERSION < 20900) {
+        // Ancient libxml library, they should really have at least 2.9.0 now that we require PHP 7.3
+        $result->status = REPORT_SECURITY_CRITICAL;
+        $result->info = get_string('check_xxe_risk_critical', 'report_security');
     } else {
         $result->status = REPORT_SECURITY_OK;
         $result->info = get_string('check_xxe_risk_ok', 'report_security');

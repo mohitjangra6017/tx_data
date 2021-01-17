@@ -313,7 +313,7 @@ class rb_global_restriction {
      * @param int $count Total records of global report restrictions
      * @return array of ordered all global report restrictions
      */
-    public static function get_all($offset = 0, $limit = 0, &$count) {
+    public static function get_all($offset, $limit, &$count) {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/totara/reportbuilder/lib/assign/lib.php');
 

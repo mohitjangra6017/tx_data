@@ -730,7 +730,10 @@ class repository_dropbox extends repository {
             }
         }
 
-        $fileslist = array_filter($fileslist, array($this, 'filter'));
+        foreach ($fileslist as $k => $v) {
+            // Totara: Argument must be passed by reference!
+            $this->filter($fileslist[$k]);
+        }
 
         return array_merge($dirslist, array_values($fileslist));
     }

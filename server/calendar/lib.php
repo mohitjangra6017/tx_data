@@ -527,7 +527,7 @@ function calendar_get_mini($courses, $groups, $users, $calmonth = false, $calyea
  * @param string $popupcontent content for the popup window/layout.
  * @return string eventid for the calendar_tooltip popup window/layout.
  */
-function calendar_get_popup($today = false, $timestart, $popupcontent = '') {
+function calendar_get_popup($today, $timestart, $popupcontent = '') {
     global $PAGE;
 
     $popupcaption = '';

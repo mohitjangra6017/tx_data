@@ -276,8 +276,55 @@ function testing_update_composer_dependencies(string $framework = '') {
         exit($code);
     }
 
+    if ($framework === 'behat') {
+        testing_behat_patch_vendor();
+    }
+
     // Return to our original location.
     chdir($cwd);
+}
+
+/**
+ * Performs all the very ugly hackery in /behat/vendor/
+ * because behat is pretty much unmaintained project
+ */
+function testing_behat_patch_vendor() {
+    // PHP 8.0 hacks:
+
+    $file = __DIR__ . '/../../../test/behat/vendor/behat/behat/src/Behat/Testwork/Argument/MixedArgumentOrganiser.php';
+    if (file_exists($file)) {
+        $contents = file_get_contents($file);
+        $newcontents = preg_replace('|([^@])(\$parameter->getClass\(\))|', '$1@$2', $contents);
+        if ($newcontents !== $contents) {
+            file_put_contents($file, $newcontents);
+        }
+    }
+
+    $file = __DIR__ . '/../../../test/behat/vendor/behat/mink-extension/src/Behat/MinkExtension/ServiceContainer/Driver/GoutteFactory.php';
+    if (file_exists($file)) {
+        $contents = file_get_contents($file);
+        $newcontents = preg_replace('|([^@])(\$refl->getClass\(\))|', '$1@$2', $contents);
+        if ($newcontents !== $contents) {
+            file_put_contents($file, $newcontents);
+        }
+    }
+
+    // Mixing of named and positional arguments in call_user_func_array() does not work any more,
+    // we would get "Fatal error: Cannot use positional argument after named argument".
+    $file = __DIR__ . '/../../../test/behat/vendor/behat/behat/src/Behat/Testwork/Call/Handler/RuntimeCallHandler.php';
+    if (file_exists($file)) {
+        $contents = file_get_contents($file);
+        $search = <<<'EOT'
+$return = call_user_func_array($callable, $arguments);
+EOT;
+        $replace = <<<'EOT'
+$return = call_user_func_array($callable, array_values($arguments));
+EOT;
+        $newcontents = str_replace($search, $replace, $contents);
+        if ($newcontents !== $contents) {
+            file_put_contents($file, $newcontents);
+        }
+    }
 }
 
 /**

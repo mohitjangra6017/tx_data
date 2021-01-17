@@ -117,11 +117,17 @@ function imscp_parse_structure($imscp, $context) {
  */
 function imscp_parse_manifestfile($manifestfilecontents, $imscp, $context) {
     $doc = new DOMDocument();
-    $oldentities = libxml_disable_entity_loader(true);
+    if (\LIBXML_VERSION < 20900) {
+        $oldentities = libxml_disable_entity_loader(true);
+    } else {
+        $oldentities = null;
+    }
     if (!$doc->loadXML($manifestfilecontents, LIBXML_NONET)) {
         return null;
     }
-    libxml_disable_entity_loader($oldentities);
+    if ($oldentities !== null) {
+        libxml_disable_entity_loader($oldentities);
+    }
 
     // We put this fake URL as base in order to detect path changes caused by xml:base attributes.
     $doc->documentURI = 'http://grrr/';
@@ -221,11 +227,20 @@ function imscp_recursive_href($manifestfilename, $imscp, $context) {
     }
 
     $doc = new DOMDocument();
-    $oldentities = libxml_disable_entity_loader(true);
+    if (\LIBXML_VERSION < 20900) {
+        $oldentities = libxml_disable_entity_loader(true);
+    } else {
+        $oldentities = null;
+    }
     if (!$doc->loadXML($manifestfile->get_content(), LIBXML_NONET)) {
+        if ($oldentities !== null) {
+            libxml_disable_entity_loader($oldentities);
+        }
         return null;
     }
-    libxml_disable_entity_loader($oldentities);
+    if ($oldentities !== null) {
+        libxml_disable_entity_loader($oldentities);
+    }
 
     $xmlresources = $doc->getElementsByTagName('resource');
     foreach ($xmlresources as $res) {

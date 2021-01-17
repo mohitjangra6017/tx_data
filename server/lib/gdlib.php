@@ -234,7 +234,13 @@ function process_new_icon($context, $component, $filearea, $itemid, $originalfil
     $icon = array('contextid'=>$context->id, 'component'=>$component, 'filearea'=>$filearea, 'itemid'=>$itemid, 'filepath'=>'/');
 
     ob_start();
-    if (!$imagefnc($im1, NULL, $quality, $filters)) {
+    if ($filters === null) {
+        if (!$imagefnc($im1, NULL, $quality)) {
+            // keep old icons
+            ob_end_clean();
+            return false;
+        }
+    } else if (!$imagefnc($im1, NULL, $quality, $filters)) {
         // keep old icons
         ob_end_clean();
         return false;
@@ -246,7 +252,13 @@ function process_new_icon($context, $component, $filearea, $itemid, $originalfil
     $file1 = $fs->create_file_from_string($icon, $data);
 
     ob_start();
-    if (!$imagefnc($im2, NULL, $quality, $filters)) {
+    if ($filters === null) {
+        if (!$imagefnc($im2, NULL, $quality)) {
+            ob_end_clean();
+            $fs->delete_area_files($context->id, $component, $filearea, $itemid);
+            return false;
+        }
+    } else if (!$imagefnc($im2, NULL, $quality, $filters)) {
         ob_end_clean();
         $fs->delete_area_files($context->id, $component, $filearea, $itemid);
         return false;
@@ -257,7 +269,13 @@ function process_new_icon($context, $component, $filearea, $itemid, $originalfil
     $fs->create_file_from_string($icon, $data);
 
     ob_start();
-    if (!$imagefnc($im3, NULL, $quality, $filters)) {
+    if ($filters === null) {
+        if (!$imagefnc($im3, NULL, $quality)) {
+            ob_end_clean();
+            $fs->delete_area_files($context->id, $component, $filearea, $itemid);
+            return false;
+        }
+    } else if (!$imagefnc($im3, NULL, $quality, $filters)) {
         ob_end_clean();
         $fs->delete_area_files($context->id, $component, $filearea, $itemid);
         return false;

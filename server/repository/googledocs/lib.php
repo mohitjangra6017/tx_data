@@ -407,7 +407,10 @@ class repository_googledocs extends repository {
         }
 
         // Filter and order the results.
-        $files = array_filter($files, array($this, 'filter'));
+        foreach ($files as $k => $v) {
+            // Totara: Argument must be passed by reference!
+            $this->filter($files[$k]);
+        }
         core_collator::ksort($files, core_collator::SORT_NATURAL);
         core_collator::ksort($folders, core_collator::SORT_NATURAL);
         return array_merge(array_values($folders), array_values($files));

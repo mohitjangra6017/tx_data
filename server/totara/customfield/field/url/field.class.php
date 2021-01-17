@@ -44,7 +44,7 @@ class customfield_url extends customfield_base {
      * @param string $tableprefix
      * @param bool $addsuffix
      */
-    public function __construct($fieldid=0, $itemid=0, $prefix, $tableprefix, $addsuffix = false, $suffix = '') {
+    public function __construct($fieldid, $itemid, $prefix, $tableprefix, $addsuffix = false, $suffix = '') {
         // First call parent constructor.
         parent::__construct($fieldid, $itemid, $prefix, $tableprefix, $addsuffix, $suffix);
 

@@ -151,7 +151,11 @@ class repository_recent extends repository {
         } catch (Exception $e) {
             throw new repository_exception('emptyfilelist', 'repository_recent');
         }
-        $ret['list'] = array_filter($list, array($this, 'filter'));
+        $ret['list'] = $list;
+        foreach ($ret['list'] as $k => $v) {
+            // Totara: Argument must be passed by reference!
+            $this->filter($ret['list'][$k]);
+        }
         return $ret;
     }
 

@@ -5,6 +5,26 @@
   "type": "metapackage",
   "homepage": "https://www.totaralearning.com",
   "require": {
-    "php": ">=7.3.4 <8.1"
+    "php": ">=7.3.4 <8.1",
+    "ext-ctype": "*",
+    "ext-curl": "*",
+    "ext-date": "*",
+    "ext-dom": "*",
+    "ext-fileinfo": "*",
+    "ext-gd": "*",
+    "ext-hash": "*",
+    "ext-iconv": "*",
+    "ext-intl": "*",
+    "ext-json": "*",
+    "ext-libxml": "*",
+    "ext-mbstring": "*",
+    "ext-pcre": "*",
+    "ext-session": "*",
+    "ext-SimpleXML": "*",
+    "ext-SPL": "*",
+    "ext-xml": "*",
+    "ext-xmlreader": "*",
+    "ext-zip": "*",
+    "ext-zlib": "*"
   }
 }

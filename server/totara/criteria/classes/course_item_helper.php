@@ -297,7 +297,7 @@ class course_item_helper {
      * @param string|null $plugin_type Used for criteria filtering if provided
      * @return collection
      */
-    private static function get_criteria_from_course(int $course_id, bool $with_items = false, ?string $plugin_type): collection {
+    private static function get_criteria_from_course(int $course_id, bool $with_items, ?string $plugin_type): collection {
         return criterion_entity::repository()
             ->as('c')
             ->from_item_ids('course', $course_id)

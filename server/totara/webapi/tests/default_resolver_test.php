@@ -82,15 +82,6 @@ class totara_webapi_default_resolver_test extends advanced_testcase {
         $this->resolve_graphql_query('totara_webapi_test_middleware_query_resolver_with_invalid_middleware');
     }
 
-    public function test_query_resolver_with_broken_middleware() {
-        global $CFG;
-        require_once $CFG->dirroot.'/totara/webapi/tests/fixtures/resolver/query/test_middleware_query_resolver_with_broken_middleware.php';
-
-        $this->expectExceptionMessage('Return value of totara_webapi\webapi\resolver\middleware\test_request_2_broken::handle() must be an instance of core\webapi\resolver\result');
-
-        $this->resolve_graphql_query('totara_webapi_test_middleware_query_resolver_with_broken_middleware');
-    }
-
     public function test_query_resolver_with_middleware_group() {
         global $CFG;
         require_once $CFG->dirroot.'/totara/webapi/tests/fixtures/resolver/query/test_middleware_query_resolver_with_group.php';

@@ -271,14 +271,23 @@ class context_used_in_event extends \core\event\base {
     }
 
     public function get_url() {
+        if (!$this->context) {
+            throw new \coding_exception('grrr');
+        }
         return new \moodle_url('/somepath/somefile.php', array('id' => $this->context->instanceid));
     }
 
     protected function get_legacy_eventdata() {
+        if (!$this->context) {
+            throw new \coding_exception('grrr');
+        }
         return array($this->data['courseid'], $this->context->instanceid);
     }
 
     protected function get_legacy_logdata() {
+        if (!$this->context) {
+            throw new \coding_exception('grrr');
+        }
         return array($this->data['courseid'], 'core_unittest', 'view', 'unittest.php?id=' . $this->context->instanceid);
     }
 }

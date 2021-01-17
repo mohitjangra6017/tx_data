@@ -37,8 +37,8 @@ class totara_reportbuilder_template_helper_testcase extends advanced_testcase {
         $templates = template_helper::get_templates();
 
         $found = false;
-        foreach ($templates as $classname => $template) {
-            if ($classname == 'totara_certification\rb\template\learner_certification_completion') {
+        foreach ($templates as $classname) {
+            if ($classname === 'totara_certification\rb\template\learner_certification_completion') {
                 $found = true;
                 break;
             }
@@ -51,8 +51,8 @@ class totara_reportbuilder_template_helper_testcase extends advanced_testcase {
         $templates = template_helper::get_templates();
 
         $found = false;
-        foreach ($templates as $classname => $template) {
-            if ($classname == 'totara_certification\rb\template\learner_certification_completion') {
+        foreach ($templates as $classname) {
+            if ($classname === 'totara_certification\rb\template\learner_certification_completion') {
                 $found = true;
                 break;
             }

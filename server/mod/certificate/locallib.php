@@ -386,14 +386,14 @@ function certificate_get_issue($course, $user, $certificate, $cm) {
  * Returns a list of issued certificates - sorted for report.
  *
  * @param int $certificateid
- * @param string $sort the sort order
+ * @param string $sort the sort order, such as "ci.timecreated ASC"
  * @param bool $groupmode are we in group mode ?
  * @param stdClass $cm the course module
  * @param int $page offset
  * @param int $perpage total per page
  * @return stdClass the users
  */
-function certificate_get_issues($certificateid, $sort="ci.timecreated ASC", $groupmode, $cm, $page = 0, $perpage = 0) {
+function certificate_get_issues($certificateid, $sort, $groupmode, $cm, $page = 0, $perpage = 0) {
     global $CFG, $DB;
 
     // get all users that can manage this certificate to exclude them from the report.
@@ -1045,13 +1045,13 @@ function certificate_get_code($certificate, $certrecord) {
  * @param int $x horizontal position
  * @param int $y vertical position
  * @param char $align L=left, C=center, R=right
- * @param string $font any available font in font directory
+ * @param string $font any available font in font directory, such as 'freeserif'
  * @param char $style ''=normal, B=bold, I=italic, U=underline
  * @param int $size font size in points
  * @param string $text the text to print
  * @param int $width horizontal dimension of text block
  */
-function certificate_print_text($pdf, $x, $y, $align, $font='freeserif', $style, $size = 10, $text, $width = 0) {
+function certificate_print_text($pdf, $x, $y, $align, $font, $style, $size, $text, $width = 0) {
 
     // Totara feature.
     $language = current_language();

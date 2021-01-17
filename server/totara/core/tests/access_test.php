@@ -425,7 +425,7 @@ class totara_core_access_testcase extends advanced_testcase {
 
                 $this::assertCapabilityNameCorrect($capname, $plugin);
                 foreach (array_keys($data) as $datakey) {
-                    $this->assertContainsEquals($datakey, $expecteddatakeys);
+                    $this->assertContainsEquals($datakey, $expecteddatakeys, "invalid capability definition '$capname' in file $file");
                 }
 
                 if (isset($data['archetypes'])) {

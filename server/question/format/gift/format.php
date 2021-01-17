@@ -542,7 +542,7 @@ class qformat_gift extends qformat_default {
                     list($notused, $question->feedback[$key]) = $this->commentparser(
                             $wrongfeedback, $question->questiontextformat);
                     $question->answer[$key] = '*';
-                    $question->tolerance[$key] = '';
+                    $question->tolerance[$key] = '0'; // NOTE: we cannot abuse '' here anymore due to PHP 8.0 type strictness
                 }
 
                 return $question;

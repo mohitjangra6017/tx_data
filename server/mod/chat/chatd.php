@@ -114,7 +114,7 @@ class ChatDaemon {
         }
     }
 
-    public function error_handler ($errno, $errmsg, $filename, $linenum, $vars) {
+    public function error_handler ($errno, $errmsg, $filename, $linenum, $vars = null) {
         // Checks if an error needs to be suppressed due to @.
         if (error_reporting() != 0) {
             $this->trace($errmsg.' on line '.$linenum, $errno);
@@ -1005,7 +1005,7 @@ while (true) {
                         if (!preg_match('/beep=([^&]*)[& ]/', $data, $info)) {
                             $daemon->trace('Beep sidekick did not contain a valid userid', E_USER_WARNING);
                             $daemon->dismiss_ufo($handle, true, 'Request with malformed data; connection closed');
-                            continue;
+                            continue 2;
                         } else {
                             $customdata = array('beep' => intval($info[1]));
                         }
@@ -1015,7 +1015,7 @@ while (true) {
                         if (!preg_match('/chat_message=([^&]*)[& ]chat_msgidnr=([^&]*)[& ]/', $data, $info)) {
                             $daemon->trace('Message sidekick did not contain a valid message', E_USER_WARNING);
                             $daemon->dismiss_ufo($handle, true, 'Request with malformed data; connection closed');
-                            continue;
+                            continue 2;
                         } else {
                             $customdata = array('message' => $info[1], 'index' => $info[2]);
                         }
@@ -1023,7 +1023,7 @@ while (true) {
                     default:
                         $daemon->trace('UFO with '.$handle.': Request with unknown type; connection closed', E_USER_WARNING);
                         $daemon->dismiss_ufo($handle, true, 'Request with unknown type; connection closed');
-                        continue;
+                        continue 2;
                     break;
                 }
 

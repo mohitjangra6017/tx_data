@@ -53,7 +53,7 @@ class customfield_base {
      * @param boolean $addsuffix If the custom field should have a suffix added.
      * @param string $suffix the suffix to be added after the item id when loading data
      */
-    function __construct($fieldid=0, &$item, $prefix, $tableprefix, $addsuffix = false, $suffix = '') {
+    function __construct($fieldid, &$item, $prefix, $tableprefix, $addsuffix = false, $suffix = '') {
         $this->set_fieldid($fieldid);
         $this->set_itemid($item->id);
         $this->set_addsuffix($addsuffix);
@@ -516,7 +516,7 @@ function customfield_load_data(&$item, $prefix, $tableprefix, $addsuffix = false
 function customfield_definition(&$mform,
                                 $item,
                                 $prefix,
-                                $typeid = 0,
+                                $typeid,
                                 $tableprefix,
                                 $disableheader = false,
                                 $addsuffix = false,
@@ -556,7 +556,7 @@ function customfield_definition(&$mform,
     }
 }
 
-function customfield_definition_after_data(&$mform, $item, $prefix, $typeid = 0, $tableprefix) {
+function customfield_definition_after_data(&$mform, $item, $prefix, $typeid, $tableprefix) {
 
     $params = array();
     if ($typeid != 0) {

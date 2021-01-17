@@ -220,7 +220,7 @@ function facetoface_delete_asset($id) {
  *
  * @deprecated since Totara 12
  */
-function facetoface_get_available_assets($timestart, $timefinish, $fields='fa.*', $sessionid, $facetofaceid) {
+function facetoface_get_available_assets($timestart, $timefinish, $fields, $sessionid, $facetofaceid) {
     global $DB, $USER;
 
     debugging('facetoface_get_available_assets has been deprecated. Use \mod_facetoface\asset_list::get_available() instead.', DEBUG_DEVELOPER);

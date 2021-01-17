@@ -312,7 +312,10 @@ class repository_flickr_public extends repository {
             return $ret;
         }
         $ret = $this->build_list($photos, $page, $ret);
-        $ret['list'] = array_filter($ret['list'], array($this, 'filter'));
+        foreach ($ret['list'] as $k => $v) {
+            // Totara: Argument must be passed by reference!
+            $this->filter($ret['list'][$k]);
+        }
         return $ret;
     }
 
@@ -339,7 +342,7 @@ class repository_flickr_public extends repository {
      * @param int $page
      * @return array
      */
-    private function build_list($photos, $page = 1, &$ret) {
+    private function build_list($photos, $page, &$ret) {
         if (!empty($this->nsid)) {
             $photos_url = $this->flickr->urls_getUserPhotos($this->nsid);
             $ret['manage'] = $photos_url;

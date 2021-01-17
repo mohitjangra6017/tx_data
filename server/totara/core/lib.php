@@ -737,6 +737,9 @@ function totara_get_user_from($fromuser = null) {
 function totara_get_sender_from_user_by_id($useridfrom) {
     global $DB;
 
+    // NOTE: PHP 8.0 does not cast '' to integers automatically any more
+    $useridfrom = (int)$useridfrom;
+
     // Get the user that sent the message.
     switch ($useridfrom) {
         case 0:

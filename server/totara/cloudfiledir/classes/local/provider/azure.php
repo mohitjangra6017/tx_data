@@ -158,7 +158,7 @@ final class azure extends base {
 
         try {
             $client->createBlockBlob($this->bucket, $this->get_object_name($contenthash), $handle);
-            @fclose($handle);
+            // Azure client closes the handle automatically.
             return true;
         } catch (ServiceException $ex) {
             @fclose($handle);
