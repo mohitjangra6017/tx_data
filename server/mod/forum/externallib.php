@@ -351,7 +351,6 @@ class mod_forum_external extends external_api {
                                 'subject' => new external_value(PARAM_TEXT, 'The post subject'),
                                 'message' => new external_value(PARAM_RAW, 'The post message'),
                                 'messageformat' => new external_format_value('message'),
-                                'messagetrust' => new external_value(PARAM_INT, 'Can we trust?'),
                                 'messageinlinefiles' => new external_files('post message inline files', VALUE_OPTIONAL),
                                 'attachment' => new external_value(PARAM_RAW, 'Has attachments?'),
                                 'attachments' => new external_files('attachments', VALUE_OPTIONAL),
@@ -591,7 +590,6 @@ class mod_forum_external extends external_api {
                                 'subject' => new external_value(PARAM_TEXT, 'The post subject'),
                                 'message' => new external_value(PARAM_RAW, 'The post message'),
                                 'messageformat' => new external_format_value('message'),
-                                'messagetrust' => new external_value(PARAM_INT, 'Can we trust?'),
                                 'messageinlinefiles' => new external_files('post message inline files', VALUE_OPTIONAL),
                                 'attachment' => new external_value(PARAM_RAW, 'Has attachments?'),
                                 'attachments' => new external_files('attachments', VALUE_OPTIONAL),
@@ -865,7 +863,6 @@ class mod_forum_external extends external_api {
         $post->subject = $params['subject'];
         $post->message = $params['message'];
         $post->messageformat = FORMAT_HTML;   // Force formatting for now.
-        $post->messagetrust = trusttext_trusted($context);
         $post->itemid = $options['inlineattachmentsid'];
         $post->attachments = $options['attachmentsid'];
         $post->deleted = 0;
@@ -1053,7 +1050,6 @@ class mod_forum_external extends external_api {
         $discussion->forum = $forum->id;
         $discussion->message = $params['message'];
         $discussion->messageformat = FORMAT_HTML;   // Force formatting for now.
-        $discussion->messagetrust = trusttext_trusted($context);
         $discussion->itemid = $options['inlineattachmentsid'];
         $discussion->groupid = $groupid;
         $discussion->mailnow = 0;

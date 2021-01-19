@@ -305,11 +305,6 @@ if (PHPUNIT_TEST and !PHPUNIT_UTIL) {
 initialise_cfg($useconfigcache);
 unset($useconfigcache);
 
-// Totara: disable the old trusttext system and object embedding completely
-//         unless the site has explicitly chosen to completely ignore security.
-if (empty($CFG->disableconsistentcleaning)) {
-    $CFG->enabletrusttext = '0';
-}
 if (!empty($CFG->tenantsenabled)) {
     // Totara: force-disable incompatible features and subsystems
     $CFG->enablereportcaching = '0';

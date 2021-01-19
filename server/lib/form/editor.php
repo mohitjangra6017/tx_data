@@ -57,7 +57,7 @@ class MoodleQuickForm_editor extends HTML_QuickForm_element implements templatab
 
     /** @var array options provided to initalize filepicker */
     protected $_options = array('subdirs' => 0, 'maxbytes' => 0, 'maxfiles' => 0, 'changeformat' => 0,
-            'areamaxbytes' => FILE_AREA_MAX_BYTES_UNLIMITED, 'context' => null, 'noclean' => 0, 'trusttext' => 0, 'allowxss' => 0,
+            'areamaxbytes' => FILE_AREA_MAX_BYTES_UNLIMITED, 'context' => null, 'noclean' => 0, 'allowxss' => 0,
             'return_types' => 7, 'enable_filemanagement' => true, 'autosave' => null, 'allowjsonconversion' => false); // Totara: allow disabling of autosave, yay! and JSON.
     // $_options['return_types'] = FILE_INTERNAL | FILE_EXTERNAL | FILE_REFERENCE
 
@@ -93,7 +93,6 @@ class MoodleQuickForm_editor extends HTML_QuickForm_element implements templatab
                 $this->_options['context'] = context_system::instance();
             }
         }
-        $this->_options['trusted'] = trusttext_trusted($this->_options['context']);
         parent::__construct($elementName, $elementLabel, $attributes);
 
         // Note: for some reason the code using this setting does not like bools.

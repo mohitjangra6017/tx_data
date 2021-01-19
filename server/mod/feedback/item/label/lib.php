@@ -27,8 +27,7 @@ class feedback_item_label extends feedback_item_base {
      * Constructor
      */
     public function __construct() {
-        $this->presentationoptions = array('maxfiles' => EDITOR_UNLIMITED_FILES,
-                                           'trusttext'=>true);
+        $this->presentationoptions = array('maxfiles' => EDITOR_UNLIMITED_FILES);
 
     }
 
@@ -156,7 +155,7 @@ class feedback_item_label extends feedback_item_base {
                                                $filearea,
                                                $item->id);
 
-        $formatoptions = array('overflowdiv'=>true, 'trusted'=>$CFG->enabletrusttext);
+        $formatoptions = array('overflowdiv'=>true);
         echo format_text($output, FORMAT_HTML, $formatoptions);
     }
 

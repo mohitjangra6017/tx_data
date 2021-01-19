@@ -292,7 +292,6 @@ foreach ($posts as $post) {
     $missing_terms = "";
 
     $options = new stdClass();
-    $options->trusted = $post->messagetrust;
     $post->message = highlight($strippedsearch,
                     format_text($post->message, $post->messageformat, $options, $course->id),
                     0, '<fgw9sdpq4>', '</fgw9sdpq4>');

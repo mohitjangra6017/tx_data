@@ -786,7 +786,7 @@ class page_wiki_editcomment extends page_wiki {
         if ($this->format == 'html') {
             $com = new stdClass();
             $com->action = 'add';
-            $com->commentoptions = array('trusttext' => true, 'maxfiles' => 0);
+            $com->commentoptions = array('maxfiles' => 0);
             $this->form->set_data($com);
             $this->form->display();
         } else {
@@ -802,7 +802,7 @@ class page_wiki_editcomment extends page_wiki {
         if ($this->format == 'html') {
             $com->action = 'edit';
             $com->entrycomment_editor['text'] = $com->content;
-            $com->commentoptions = array('trusttext' => true, 'maxfiles' => 0);
+            $com->commentoptions = array('maxfiles' => 0);
 
             $this->form->set_data($com);
             $this->form->display();

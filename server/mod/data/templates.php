@@ -195,7 +195,6 @@ foreach ($formats as $fid) {
     $formats[$fid] = $strformats[$fid];
 }
 $options = array();
-$options['trusttext'] = false;
 $options['forcehttps'] = false;
 $options['subdirs'] = false;
 $options['maxfiles'] = 0;

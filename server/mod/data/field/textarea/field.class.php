@@ -44,7 +44,6 @@ class data_field_textarea extends data_field_base {
             $this->field->param5 = 0;
         }
         $options = array();
-        $options['trusttext'] = false;
         $options['forcehttps'] = false;
         $options['subdirs'] = false;
         $options['maxfiles'] = -1;

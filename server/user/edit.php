@@ -152,7 +152,6 @@ profile_load_data($user);
 $editoroptions = array(
     'maxfiles'   => EDITOR_UNLIMITED_FILES,
     'maxbytes'   => $CFG->maxbytes,
-    'trusttext'  => false,
     'forcehttps' => false,
     'context'    => $personalcontext
 );

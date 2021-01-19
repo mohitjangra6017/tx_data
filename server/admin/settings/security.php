@@ -43,13 +43,8 @@ if ($hassiteconfig) { // speedup for non-admins, add all caps used on this page
     $temp->add(new admin_setting_configtext('userquota', new lang_string('userquota', 'admin'),
                 new lang_string('configuserquota', 'admin', $params), $defaultuserquota, PARAM_INT, 30));
 
-    // Totara: setting to enable the old noclean and trusttext operation.
+    // Totara: setting to enable the old noclean operation.
     $temp->add(new admin_setting_configcheckbox('disableconsistentcleaning', new lang_string('disableconsistentcleaning', 'admin'), new lang_string('disableconsistentcleaning_help', 'admin'), 0));
-
-    if (!empty($CFG->disableconsistentcleaning)) {
-        // Only show the trusttext setting IF enable_legacy_noclean_trusttext has been turned on.
-        $temp->add(new admin_setting_configcheckbox('enabletrusttext', new lang_string('enabletrusttext', 'admin'), new lang_string('configenabletrusttext', 'admin'), 0));
-    }
 
     $temp->add(new admin_setting_configselect('maxeditingtime', new lang_string('maxeditingtime','admin'), new lang_string('configmaxeditingtime','admin'), 1800,
                  array(60 => new lang_string('numminutes', '', 1),

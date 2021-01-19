@@ -59,16 +59,6 @@ abstract class core_role_capability_table_base {
         $this->context = $context;
         $this->capabilities = $context->get_capabilities();
         $this->id = $id;
-
-        if (empty($CFG->disableconsistentcleaning)) {
-            // Remove the trust capability when trusttest feature is not available.
-            foreach ($this->capabilities as $capability) {
-                if ($capability->name === 'moodle/site:trustcontent') {
-                    unset($this->capabilities[$capability->id]);
-                    break;
-                }
-            }
-        }
     }
 
     /**

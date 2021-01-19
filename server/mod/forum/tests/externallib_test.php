@@ -292,7 +292,6 @@ class mod_forum_external_testcase extends externallib_advanced_testcase {
             'message' => file_rewrite_pluginfile_urls($discussion1reply2->message, 'pluginfile.php',
                     $forum1context->id, 'mod_forum', 'post', $discussion1reply2->id),
             'messageformat' => 1,   // This value is usually changed by external_format_text() function.
-            'messagetrust' => $discussion1reply2->messagetrust,
             'attachment' => $discussion1reply2->attachment,
             'totalscore' => $discussion1reply2->totalscore,
             'mailnow' => $discussion1reply2->mailnow,
@@ -316,7 +315,6 @@ class mod_forum_external_testcase extends externallib_advanced_testcase {
             'message' => file_rewrite_pluginfile_urls($discussion1reply1->message, 'pluginfile.php',
                     $forum1context->id, 'mod_forum', 'post', $discussion1reply1->id),
             'messageformat' => 1,   // This value is usually changed by external_format_text() function.
-            'messagetrust' => $discussion1reply1->messagetrust,
             'attachment' => $discussion1reply1->attachment,
             'messageinlinefiles' => array(
                 array(
@@ -653,7 +651,6 @@ class mod_forum_external_testcase extends externallib_advanced_testcase {
                 'subject' => $post1->subject,
                 'message' => $post1->message,
                 'messageformat' => $post1->messageformat,
-                'messagetrust' => $post1->messagetrust,
                 'attachment' => $post1->attachment,
                 'totalscore' => $post1->totalscore,
                 'mailnow' => $post1->mailnow,

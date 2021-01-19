@@ -956,7 +956,6 @@ function glossary_print_entry_default ($entry, $glossary, $cm) {
 
     $options = new stdClass();
     $options->para = false;
-    $options->trusted = $entry->definitiontrust;
     $options->context = $context;
     $options->overflowdiv = true;
     $definition = format_text($definition, $entry->definitionformat, $options);
@@ -1003,7 +1002,6 @@ function glossary_print_entry_definition($entry, $glossary, $cm) {
 
     $options = new stdClass();
     $options->para = false;
-    $options->trusted = $entry->definitiontrust;
     $options->context = $context;
     $options->overflowdiv = true;
 
@@ -3935,7 +3933,7 @@ function glossary_get_editor_and_attachment_options($course, $context, $entry) {
     $maxfiles = 99;                // TODO: add some setting.
     $maxbytes = $course->maxbytes; // TODO: add some setting.
 
-    $definitionoptions = array('trusttext' => true, 'maxfiles' => $maxfiles, 'maxbytes' => $maxbytes, 'context' => $context,
+    $definitionoptions = array('maxfiles' => $maxfiles, 'maxbytes' => $maxbytes, 'context' => $context,
         'subdirs' => file_area_contains_subdirs($context, 'mod_glossary', 'entry', $entry->id));
     $attachmentoptions = array('subdirs' => false, 'maxfiles' => $maxfiles, 'maxbytes' => $maxbytes);
     return array($definitionoptions, $attachmentoptions);
@@ -3979,7 +3977,6 @@ function glossary_edit_entry($entry, $course, $cm, $glossary, $context) {
     $entry->concept          = trim($entry->concept);
     $entry->definition       = '';          // Updated later.
     $entry->definitionformat = FORMAT_HTML; // Updated later.
-    $entry->definitiontrust  = 0;           // Updated later.
     $entry->timemodified     = $timenow;
     $entry->approved         = 0;
     $entry->usedynalink      = isset($entry->usedynalink) ? $entry->usedynalink : 0;

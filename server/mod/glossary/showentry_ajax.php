@@ -69,7 +69,6 @@ if ($entries) {
 
         $options = new stdClass();
         $options->para = false;
-        $options->trusted = $entry->definitiontrust;
         $options->context = $context;
         $entries[$key]->definition = format_text($definition, $entry->definitionformat, $options);
 

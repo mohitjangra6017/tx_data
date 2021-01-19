@@ -100,7 +100,6 @@ $returnurl = $gpr->get_return_url('index.php?id='.$courseid);
 $editoroptions = array(
     'maxfiles'  => EDITOR_UNLIMITED_FILES,
     'maxbytes'  => $CFG->maxbytes,
-    'trusttext' => false,
     'noclean'   => true,
     'context'   => $systemcontext
 );

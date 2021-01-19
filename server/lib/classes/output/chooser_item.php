@@ -93,7 +93,6 @@ class chooser_item implements renderable, templatable {
         $data->icon = $icon;
 
         $options = new stdClass();
-        $options->trusted = false;
         $options->noclean = false;
         $options->smiley = false;
         $options->filter = false;

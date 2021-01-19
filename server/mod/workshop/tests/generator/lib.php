@@ -123,7 +123,6 @@ class mod_workshop_generator extends testing_module_generator {
             'title' => 'Generated submission',
             'content' => 'Generated content',
             'contentformat' => FORMAT_MARKDOWN,
-            'contenttrust' => 0,
         );
 
         $id = $DB->insert_record('workshop_submissions', $record);

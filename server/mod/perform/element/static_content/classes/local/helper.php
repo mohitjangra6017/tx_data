@@ -36,7 +36,6 @@ final class helper {
             'maxfiles' => -1,
             'changeformat' => 1,
             'context' => $context,
-            'trusttext' => 0,
             'overflowdiv' => 1
         ];
 

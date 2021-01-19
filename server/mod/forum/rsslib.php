@@ -181,7 +181,7 @@ function forum_rss_feed_discussions_sql($forum, $cm, $newsince=0) {
     $params = array_merge($params, $groupparams);
 
     $forumsort = "d.timemodified DESC";
-    $postdata = "p.id AS postid, p.subject, p.created as postcreated, p.modified, p.discussion, p.userid, p.message as postmessage, p.messageformat AS postformat, p.messagetrust AS posttrust";
+    $postdata = "p.id AS postid, p.subject, p.created as postcreated, p.modified, p.discussion, p.userid, p.message as postmessage, p.messageformat AS postformat";
     $userpicturefields = user_picture::fields('u', null, 'userid');
 
     $sql = "SELECT $postdata, d.id as discussionid, d.name as discussionname, d.timemodified, d.usermodified, d.groupid,
@@ -237,7 +237,6 @@ function forum_rss_feed_posts_sql($forum, $cm, $newsince=0) {
                  p.message AS postmessage,
                  p.created AS postcreated,
                  p.messageformat AS postformat,
-                 p.messagetrust AS posttrust,
                  p.parent as postparent
             FROM {forum_discussions} d,
                {forum_posts} p,
@@ -370,7 +369,6 @@ function forum_rss_feed_contents($forum, $sql, $params, $context) {
                 $item->author = fullname($rec);
                 $message = file_rewrite_pluginfile_urls($rec->postmessage, 'pluginfile.php', $context->id,
                         'mod_forum', 'post', $rec->postid);
-                $formatoptions->trusted = $rec->posttrust;
             }
 
             if ($isdiscussion) {
@@ -379,7 +377,6 @@ function forum_rss_feed_contents($forum, $sql, $params, $context) {
                 $item->link = $CFG->wwwroot."/mod/forum/discuss.php?d=".$rec->discussionid."&parent=".$rec->postid;
             }
 
-            $formatoptions->trusted = $rec->posttrust;
             $item->description = format_text($message, $rec->postformat, $formatoptions, $forum->course);
 
             //TODO: MDL-31129 implement post attachment handling

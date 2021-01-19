@@ -105,7 +105,7 @@ class workshop_comments_strategy implements workshop_strategy {
     public function __construct(workshop $workshop) {
         $this->workshop         = $workshop;
         $this->dimensions       = $this->load_fields();
-        $this->descriptionopts  = array('trusttext' => true, 'subdirs' => false, 'maxfiles' => -1);
+        $this->descriptionopts  = array('subdirs' => false, 'maxfiles' => -1);
     }
 
     /**

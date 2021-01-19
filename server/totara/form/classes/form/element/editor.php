@@ -509,8 +509,6 @@ class editor extends element {
         }
 
         $options->noclean = (int)(bool)$attributes['noclean'];
-        $options->trusttext = 0;
-        $options->trusted = false;
         $options->allowxss = (int)(bool)$attributes['allowxss'];
 
         $options->return_types = (int)$attributes['return_types'];

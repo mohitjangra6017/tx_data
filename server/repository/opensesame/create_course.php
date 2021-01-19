@@ -39,7 +39,7 @@ if (!$opensesame->is_enabled()) {
 
 $package = $DB->get_record('repository_opensesame_pkgs', array('id' => $pkgid), '*', MUST_EXIST);
 
-$editoroptions = array('maxfiles' => EDITOR_UNLIMITED_FILES, 'maxbytes' => $CFG->maxbytes, 'trusttext' => false, 'noclean' => true);
+$editoroptions = array('maxfiles' => EDITOR_UNLIMITED_FILES, 'maxbytes' => $CFG->maxbytes, 'noclean' => true);
 $mform = new repository_opensesame_form_create_course(null, array('package' => $package, 'editoroptions' => $editoroptions));
 
 if ($mform->is_cancelled()) {

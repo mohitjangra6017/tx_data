@@ -117,7 +117,7 @@ class block_glossary_random extends block_base {
                     break;
             }
 
-            if ($entry = $DB->get_records_sql("SELECT id, concept, definition, definitionformat, definitiontrust
+            if ($entry = $DB->get_records_sql("SELECT id, concept, definition, definitionformat
                                                  FROM {glossary_entries}
                                                 WHERE glossaryid = ? AND approved = 1
                                              ORDER BY $orderby", array($this->config->glossary), $limitfrom, $limitnum)) {
@@ -131,7 +131,6 @@ class block_glossary_random extends block_base {
                 }
 
                 $options = new stdClass();
-                $options->trusted = $entry->definitiontrust;
                 $options->overflowdiv = true;
                 $entry->definition = file_rewrite_pluginfile_urls($entry->definition, 'pluginfile.php', $glossaryctx->id, 'mod_glossary', 'entry', $entry->id);
                 $text .= format_text($entry->definition, $entry->definitionformat, $options);

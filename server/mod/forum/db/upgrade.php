@@ -49,5 +49,20 @@ function xmldb_forum_upgrade($oldversion) {
 
     // Totara 13.0 release line.
 
+    if ($oldversion < 2021011900) {
+
+        // Define field messagetrust to be dropped from forum_posts.
+        $table = new xmldb_table('forum_posts');
+        $field = new xmldb_field('messagetrust');
+
+        // Conditionally launch drop field messagetrust.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Forum savepoint reached.
+        upgrade_mod_savepoint(true, 2021011900, 'forum');
+    }
+
     return true;
 }

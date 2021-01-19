@@ -16,7 +16,7 @@ class mod_wiki_comments_form extends moodleform {
         // visible elements
         $mform->addElement('editor', 'entrycomment_editor', get_string('comment', 'glossary'), null, $commentoptions);
         $mform->addRule('entrycomment_editor', get_string('required'), 'required', null, 'client');
-        $mform->setType('entrycomment_editor', PARAM_RAW); // processed by trust text or cleaned before the display
+        $mform->setType('entrycomment_editor', PARAM_RAW); // cleaned before the display
 
         // hidden optional params
         $mform->addElement('hidden', 'id', '');

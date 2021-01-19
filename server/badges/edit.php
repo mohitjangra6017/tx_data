@@ -80,7 +80,6 @@ $editoroptions = array(
         'changeformat' => 0,
         'context' => $context,
         'noclean' => false,
-        'trusttext' => false
         );
 $badge = file_prepare_standard_editor($badge, 'message', $editoroptions, $context);
 

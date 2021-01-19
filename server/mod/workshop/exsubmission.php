@@ -146,7 +146,6 @@ if ($edit and $canmanage) {
         $formdata->title              = trim($formdata->title);
         $formdata->content            = '';          // updated later
         $formdata->contentformat      = FORMAT_HTML; // updated later
-        $formdata->contenttrust       = 0;           // updated later
         if (is_null($example->id)) {
             $example->id = $formdata->id = $DB->insert_record('workshop_submissions', $formdata);
         } else {

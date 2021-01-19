@@ -45,7 +45,6 @@ class tool_messageinbound_edit_handler_form extends moodleform {
 
         // Set up the options for formatting text for descriptions, etc.
         $formatoptions = new stdClass();
-        $formatoptions->trusted = false;
         $formatoptions->noclean = false;
         $formatoptions->smiley = false;
         $formatoptions->filter = false;

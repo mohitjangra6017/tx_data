@@ -65,7 +65,6 @@ class tool_messageinbound_renderer extends plugin_renderer_base {
 
         // Options for description formatting.
         $descriptionoptions = new stdClass();
-        $descriptionoptions->trusted = false;
         $descriptionoptions->noclean = false;
         $descriptionoptions->smiley = false;
         $descriptionoptions->filter = false;

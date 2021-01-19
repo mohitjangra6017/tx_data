@@ -114,7 +114,6 @@ class core_course_editcategory_form extends moodleform {
         return array(
             'maxfiles'  => EDITOR_UNLIMITED_FILES,
             'maxbytes'  => $CFG->maxbytes,
-            'trusttext' => true,
             'context'   => $context,
             'subdirs'   => file_area_contains_subdirs($context, 'coursecat', 'description', $itemid),
         );

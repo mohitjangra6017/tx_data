@@ -777,8 +777,7 @@ function feedback_reset_course_form($course) {
  * @return array the options
  */
 function feedback_get_editor_options() {
-    return array('maxfiles' => EDITOR_UNLIMITED_FILES,
-                'trusttext'=>true);
+    return array('maxfiles' => EDITOR_UNLIMITED_FILES);
 }
 
 /**

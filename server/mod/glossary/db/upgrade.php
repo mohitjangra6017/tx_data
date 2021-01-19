@@ -28,5 +28,20 @@ function xmldb_glossary_upgrade($oldversion) {
 
     // Totara 13.0 release line.
 
+    if ($oldversion < 2021011900) {
+
+        // Define field definitiontrust to be dropped from glossary_entries.
+        $table = new xmldb_table('glossary_entries');
+        $field = new xmldb_field('definitiontrust');
+
+        // Conditionally launch drop field definitiontrust.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Glossary savepoint reached.
+        upgrade_mod_savepoint(true, 2021011900, 'glossary');
+    }
+
     return true;
 }

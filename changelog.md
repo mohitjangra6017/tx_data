@@ -418,8 +418,6 @@ Security issues
       'off' by default.
     * Text in the affected areas will be now be sanitised, both when it is
       displayed, and when it is loaded into an editor.
-    * The trusttext system will be forced off by default and be disabled unless the
-      new setting is turned on.
     * SVG images will be served with more appropriate content-disposition headers.
 
     The consequence of this change is that by default no user will be able to use

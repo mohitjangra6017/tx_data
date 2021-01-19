@@ -107,7 +107,6 @@ class question_longtext extends question_base{
             $name = $this->get_prefix_db();
             $value['text'] = $data->$name;
             $value['format'] = FORMAT_HTML;
-            $value['trust'] = isset($data->{$name.'trust'}) ? $data->{$name.'trust'} : 0;
         }
 
         $this->value = $value;

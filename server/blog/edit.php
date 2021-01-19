@@ -190,7 +190,7 @@ if (!empty($entry->id)) {
     }
 }
 
-$summaryoptions = array('maxfiles' => 99, 'maxbytes' => $CFG->maxbytes, 'trusttext' => true, 'context' => $sitecontext,
+$summaryoptions = array('maxfiles' => 99, 'maxbytes' => $CFG->maxbytes, 'context' => $sitecontext,
     'subdirs' => file_area_contains_subdirs($sitecontext, 'blog', 'post', $entry->id));
 $attachmentoptions = array('subdirs' => false, 'maxfiles' => 99, 'maxbytes' => $CFG->maxbytes);
 

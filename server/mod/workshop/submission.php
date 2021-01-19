@@ -199,7 +199,6 @@ if ($edit) {
         $formdata->title              = trim($formdata->title);
         $formdata->content            = '';          // updated later
         $formdata->contentformat      = FORMAT_HTML; // updated later
-        $formdata->contenttrust       = 0;           // updated later
         $formdata->late               = 0x0;         // bit mask
         if (!empty($workshop->submissionend) and ($workshop->submissionend < time())) {
             $formdata->late = $formdata->late | 0x1;

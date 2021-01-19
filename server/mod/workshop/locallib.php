@@ -252,7 +252,7 @@ class workshop {
      */
     public static function instruction_editors_options(stdclass $context) {
         return array('subdirs' => 1, 'maxbytes' => 0, 'maxfiles' => -1,
-                     'changeformat' => 1, 'context' => $context, 'noclean' => 1, 'trusttext' => 0);
+                     'changeformat' => 1, 'context' => $context, 'noclean' => 1);
     }
 
     /**
@@ -2506,7 +2506,6 @@ class workshop {
         require_once($CFG->dirroot.'/repository/lib.php');
 
         return array(
-            'trusttext' => true,
             'subdirs' => false,
             'maxfiles' => $this->nattachments,
             'maxbytes' => $this->maxbytes,
@@ -3597,8 +3596,6 @@ class workshop_submission extends workshop_submission_summary implements rendera
     public $content;
     /** @var int */
     public $contentformat;
-    /** @var bool */
-    public $contenttrust;
     /** @var array */
     public $attachment;
 
@@ -3607,7 +3604,7 @@ class workshop_submission extends workshop_submission_summary implements rendera
      * of instances of this class
      */
     protected $fields = array(
-        'id', 'title', 'timecreated', 'timemodified', 'content', 'contentformat', 'contenttrust',
+        'id', 'title', 'timecreated', 'timemodified', 'content', 'contentformat',
         'attachment', 'authorid', 'authorfirstname', 'authorlastname', 'authorfirstnamephonetic', 'authorlastnamephonetic',
         'authormiddlename', 'authoralternatename', 'authorpicture', 'authorimagealt', 'authoremail');
 }
@@ -3666,8 +3663,6 @@ class workshop_example_submission extends workshop_example_submission_summary im
     public $content;
     /** @var int */
     public $contentformat;
-    /** @var bool */
-    public $contenttrust;
     /** @var array */
     public $attachment;
 
@@ -3675,7 +3670,7 @@ class workshop_example_submission extends workshop_example_submission_summary im
      * @var array of columns from workshop_submissions that are assigned as properties
      * of instances of this class
      */
-    protected $fields = array('id', 'title', 'content', 'contentformat', 'contenttrust', 'attachment');
+    protected $fields = array('id', 'title', 'content', 'contentformat', 'attachment');
 }
 
 

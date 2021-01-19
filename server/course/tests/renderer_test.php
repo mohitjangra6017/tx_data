@@ -64,7 +64,6 @@ class core_course_renderer_testcase extends advanced_testcase {
         self::assertSame($intro_raw, $forum->intro);
         self::assertSame(FORMAT_MOODLE, $forum->introformat);
         self::assertSame('0', $CFG->disableconsistentcleaning);
-        self::assertSame('0', $CFG->enabletrusttext);
 
         $renderer = self::get_renderer();
         $expected = '<div class="contentafterlink"><div class="no-overflow"><div class="no-overflow">%s</div></div></div>';
@@ -75,13 +74,6 @@ class core_course_renderer_testcase extends advanced_testcase {
         self::assertSame(sprintf($expected, $intro_cleaned), $renderer->course_section_cm_text($cminfo, []));
 
         $CFG->disableconsistentcleaning = 1;
-
-        rebuild_course_cache($course->id, true);
-        $modinfo = get_fast_modinfo($course->id, $USER->id);
-        $cminfo = $modinfo->get_cm($forum->cmid);
-        self::assertSame(sprintf($expected, $intro_raw), $renderer->course_section_cm_text($cminfo, []));
-
-        $CFG->enabletrusttext = 1;
 
         rebuild_course_cache($course->id, true);
         $modinfo = get_fast_modinfo($course->id, $USER->id);

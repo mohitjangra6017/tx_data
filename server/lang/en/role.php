@@ -419,7 +419,6 @@ $string['site:manageblocks'] = 'Manage blocks on a page';
 $string['site:readallmessages'] = 'Read all messages on site';
 $string['site:restore'] = 'Restore courses';
 $string['site:sendmessage'] = 'Send messages to any user';
-$string['site:trustcontent'] = 'Trust submitted content';
 $string['site:uploadusers'] = 'Upload new users from file';
 $string['site:viewfullnames'] = 'Always see full names of users';
 $string['site:viewparticipants'] = 'View participants';

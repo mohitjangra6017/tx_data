@@ -77,8 +77,7 @@ class atto_texteditor extends texteditor {
             return false;
         } else {
             $noclean = (!empty($options['noclean']));
-            $trusted = (!empty($options['trusttext']) && !empty($options['trusted']));
-            if (($noclean || $trusted) and !empty($CFG->disableconsistentcleaning)) {
+            if ($noclean and !empty($CFG->disableconsistentcleaning)) {
                 // No clean is true, and consisten cleaning has been disabled, legacy mode active! Don't clean.
                 return false;
             }

@@ -128,9 +128,6 @@ function file_area_contains_subdirs(context $context, $component, $filearea, $it
  */
 function file_prepare_standard_editor($data, $field, array $options, $context=null, $component=null, $filearea=null, $itemid=null) {
     $options = (array)$options;
-    if (!isset($options['trusttext'])) {
-        $options['trusttext'] = false;
-    }
     if (!isset($options['forcehttps'])) {
         $options['forcehttps'] = false;
     }
@@ -184,16 +181,8 @@ function file_prepare_standard_editor($data, $field, array $options, $context=nu
             // TODO: TL-27568 Enable debugging message in order to notify developers about need to track content formats.
             // debugging('JSON editor content passed to file_prepare_standard_editor() as format ' . $data->{$field.'format'}, DEBUG_DEVELOPER);
         }
-        if ($options['trusttext']) {
-            // noclean ignored if trusttext enabled
-            if (!isset($data->{$field.'trust'})) {
-                $data->{$field.'trust'} = 0;
-            }
-            $data = trusttext_pre_edit($data, $field, $context);
-        } else {
-            if (!$options['noclean']) {
-                $data->{$field} = clean_text($data->{$field}, $data->{$field.'format'});
-            }
+        if (!$options['noclean']) {
+            $data->{$field} = clean_text($data->{$field}, $data->{$field.'format'});
         }
         $contextid = $context->id;
     }
@@ -223,7 +212,7 @@ function file_prepare_standard_editor($data, $field, array $options, $context=nu
  * @category files
  * @param stdClass $data raw data submitted by the form
  * @param string $field name of the database field containing the html with embedded media files
- * @param array $options editor options (trusttext, subdirs, maxfiles, maxbytes etc.)
+ * @param array $options editor options (subdirs, maxfiles, maxbytes etc.)
  * @param stdClass $context context, required for existing data
  * @param string $component file component
  * @param string $filearea file area name
@@ -232,9 +221,6 @@ function file_prepare_standard_editor($data, $field, array $options, $context=nu
  */
 function file_postupdate_standard_editor($data, $field, array $options, $context, $component=null, $filearea=null, $itemid=null) {
     $options = (array)$options;
-    if (!isset($options['trusttext'])) {
-        $options['trusttext'] = false;
-    }
     if (!isset($options['forcehttps'])) {
         $options['forcehttps'] = false;
     }
@@ -246,12 +232,6 @@ function file_postupdate_standard_editor($data, $field, array $options, $context
     }
     if (!isset($options['maxbytes'])) {
         $options['maxbytes'] = 0; // unlimited
-    }
-
-    if ($options['trusttext']) {
-        $data->{$field.'trust'} = trusttext_trusted($context);
-    } else {
-        $data->{$field.'trust'} = 0;
     }
 
     // Totara: make sure that the field "{$field}_editor" does not give us any error.

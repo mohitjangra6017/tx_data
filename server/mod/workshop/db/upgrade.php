@@ -41,5 +41,19 @@ function xmldb_workshop_upgrade($oldversion) {
 
     // Totara 13.0 release line.
 
+    if ($oldversion < 2021011900) {
+
+        // Define field contenttrust to be dropped from workshop_submissions.
+        $table = new xmldb_table('workshop_submissions');
+        $field = new xmldb_field('contenttrust');
+
+        // Conditionally launch drop field contenttrust.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Workshop savepoint reached.
+        upgrade_mod_savepoint(true, 2021011900, 'workshop');
+    }
     return true;
 }

@@ -146,7 +146,6 @@ if (!empty($forum)) {      // User is starting a new discussion in a forum
     $post->userid        = $USER->id;
     $post->message       = '';
     $post->messageformat = editors_get_preferred_format();
-    $post->messagetrust  = 0;
 
     if (isset($groupid)) {
         $post->groupid = $groupid;
@@ -288,8 +287,6 @@ if (!empty($forum)) {      // User is starting a new discussion in a forum
     $post->course = $course->id;
     $post->forum  = $forum->id;
     $post->groupid = ($discussion->groupid == -1) ? 0 : $discussion->groupid;
-
-    $post = trusttext_pre_edit($post, 'message', $modcontext);
 
     // Unsetting this will allow the correct return URL to be calculated later.
     unset($SESSION->fromdiscussion);
@@ -716,7 +713,6 @@ if ($mform_post->is_cancelled()) {
     $fromform->messageformat = $fromform->message['format'];
     $fromform->message       = $fromform->message['text'];
     // WARNING: the $fromform->message array has been overwritten, do not use it anymore!
-    $fromform->messagetrust  = trusttext_trusted($modcontext);
 
     if ($fromform->edit) {           // Updating a post
         unset($fromform->groupid);

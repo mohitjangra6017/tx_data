@@ -82,7 +82,7 @@ if ($deletesection) {
 }
 
 // Totara: Allow JSON conversion.
-$editoroptions = array('context' => $context, 'maxfiles' => EDITOR_UNLIMITED_FILES, 'maxbytes' => $CFG->maxbytes, 'trusttext' => false, 'noclean' => true, 'allowjsonconversion' => true);
+$editoroptions = array('context' => $context, 'maxfiles' => EDITOR_UNLIMITED_FILES, 'maxbytes' => $CFG->maxbytes, 'noclean' => true, 'allowjsonconversion' => true);
 
 $courseformat = course_get_format($course);
 $defaultsectionname = $courseformat->get_default_section_name($section);

@@ -69,7 +69,7 @@ class backup_workshop_activity_structure_step extends backup_activity_structure_
         $examplesubmissions = new backup_nested_element('examplesubmissions');
         $examplesubmission  = new backup_nested_element('examplesubmission', array('id'), array(
             'timecreated', 'timemodified', 'title', 'content', 'contentformat',
-            'contenttrust', 'attachment'));
+            'attachment'));
 
         // reference assessment of the example submission
         $referenceassessment  = new backup_nested_element('referenceassessment', array('id'), array(
@@ -98,7 +98,7 @@ class backup_workshop_activity_structure_step extends backup_activity_structure_
         $submissions = new backup_nested_element('submissions');
         $submission  = new backup_nested_element('submission', array('id'), array(
             'authorid', 'timecreated', 'timemodified', 'title', 'content',
-            'contentformat', 'contenttrust', 'attachment', 'grade',
+            'contentformat', 'attachment', 'grade',
             'gradeover', 'gradeoverby', 'feedbackauthor',
             'feedbackauthorformat', 'timegraded', 'published', 'late'));
 

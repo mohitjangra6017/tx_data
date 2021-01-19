@@ -91,7 +91,6 @@ $errorstring = '';
 $editoroptions = array(
     'maxfiles'  => EDITOR_UNLIMITED_FILES,
     'maxbytes'  => $CFG->maxbytes,
-    'trusttext' => false,
     'context'   => $systemcontext,
     'subdirs'   => file_area_contains_subdirs($systemcontext, 'tag', 'description', $tag->id),
 );

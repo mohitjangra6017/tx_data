@@ -2112,8 +2112,7 @@ class calendar_event {
             'subdirs'=>false,
             'forcehttps'=>false,
             'maxfiles'=>-1,
-            'maxbytes'=>null,
-            'trusttext'=>false);
+            'maxbytes'=>null);
 
     /** @var object The context to use with the description editor */
     protected $editorcontext = null;

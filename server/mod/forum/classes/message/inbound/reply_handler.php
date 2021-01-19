@@ -169,9 +169,6 @@ class reply_handler extends \core\message\inbound\handler {
         $addpost->message = $message;
         $addpost->messageformat = $format;
 
-        // We don't trust text coming from e-mail.
-        $addpost->messagetrust = false;
-
         // Find all attachments. If format is plain text, treat inline attachments as regular ones.
         $attachments = !empty($messagedata->attachments['attachment']) ? $messagedata->attachments['attachment'] : [];
         $inlineattachments = [];

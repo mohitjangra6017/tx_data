@@ -37,5 +37,20 @@ function xmldb_workshopform_numerrors_upgrade($oldversion) {
 
     // Totara 13.0 release line.
 
+    if ($oldversion < 2021011900) {
+
+        // Define field descriptiontrust to be dropped from workshopform_numerrors.
+        $table = new xmldb_table('workshopform_numerrors');
+        $field = new xmldb_field('descriptiontrust');
+
+        // Conditionally launch drop field descriptiontrust.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Numerrors savepoint reached.
+        upgrade_plugin_savepoint(true, 2021011900, 'workshopform', 'numerrors');
+    }
+
     return true;
 }

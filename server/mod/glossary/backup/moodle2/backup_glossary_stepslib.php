@@ -49,7 +49,7 @@ class backup_glossary_activity_structure_step extends backup_activity_structure_
 
         $entry = new backup_nested_element('entry', array('id'), array(
             'userid', 'concept', 'definition', 'definitionformat',
-            'definitiontrust', 'attachment', 'timecreated', 'timemodified',
+            'attachment', 'timecreated', 'timemodified',
             'teacherentry', 'sourceglossaryid', 'usedynalink', 'casesensitive',
             'fullmatch', 'approved'));
 

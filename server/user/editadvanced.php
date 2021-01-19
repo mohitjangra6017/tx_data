@@ -137,7 +137,6 @@ if ($user->id !== -1) {
     $editoroptions = array(
         'maxfiles'   => EDITOR_UNLIMITED_FILES,
         'maxbytes'   => $CFG->maxbytes,
-        'trusttext'  => false,
         'forcehttps' => false,
         'context'    => $usercontext
     );
@@ -149,7 +148,6 @@ if ($user->id !== -1) {
     $editoroptions = array(
         'maxfiles' => 0,
         'maxbytes' => 0,
-        'trusttext' => false,
         'forcehttps' => false,
         'context' => $coursecontext
     );

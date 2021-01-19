@@ -194,10 +194,6 @@ class mod_forum_generator extends testing_module_generator {
             $record['messageformat'] = editors_get_preferred_format();
         }
 
-        if (!isset($record['messagetrust'])) {
-            $record['messagetrust'] = "";
-        }
-
         if (!isset($record['assessed'])) {
             $record['assessed'] = '1';
         }
@@ -318,10 +314,6 @@ class mod_forum_generator extends testing_module_generator {
 
         if (!isset($record['messageformat'])) {
             $record['messageformat'] = 0;
-        }
-
-        if (!isset($record['messagetrust'])) {
-            $record['messagetrust'] = 0;
         }
 
         if (!isset($record['attachment'])) {

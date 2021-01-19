@@ -171,7 +171,7 @@ class behat_admin extends behat_base {
     }
 
     /**
-     * Force legacy trusttext and noclean support to be on by default.
+     * Force legacy noclean support to be on by default.
      *
      * @Given /^I force legacy trusttext and noclean on$/
      */
@@ -179,7 +179,5 @@ class behat_admin extends behat_base {
         \behat_hooks::set_step_readonly(false);
 
         set_config('disableconsistentcleaning', '1');
-        // Add missing deprecated settings to prevent behat interruptions.
-        set_config('enabletrusttext', 0);
     }
 }

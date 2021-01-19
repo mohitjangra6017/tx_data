@@ -28,6 +28,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2020101200;
+$plugin->version  = 2021011900;
 $plugin->requires = 2020101200;  // Requires this Totara version.
 $plugin->component = 'workshopform_numerrors';

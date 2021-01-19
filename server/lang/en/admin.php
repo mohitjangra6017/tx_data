@@ -205,7 +205,6 @@ $string['configenablerssfeedsdisabled'] = 'It is not available because RSS feeds
 $string['configenablerssfeedsdisabled2'] = 'RSS feeds are currently disabled at site level. They may be enabled in Configure features in Site administration.';
 $string['configenablesafebrowserintegration'] = 'This adds the choice \'Require Safe Exam Browser\' to the \'Browser security\' field on the quiz settings form. See http://www.safeexambrowser.org/ for more information.';
 $string['configenablestats'] = 'Enable statistics to see graphs and statistics about each of your courses or on a sitewide bases. Note: Totara\'s cronjob will process the loags and gather statistics. This can take a significant amount of time if your site is heavily used.';
-$string['configenabletrusttext'] = 'By default Totara will always thoroughly clean text that comes from users to remove any possible bad scripts, media etc that could be a security risk.  The Trusted Content system is a way of giving particular users that you trust the ability to include these advanced features in their content without interference.  To enable this system, you need to first enable this setting, and then grant the Trusted Content permission to a specific Totara role.  Texts created or uploaded by such users will be marked as trusted and will not be cleaned before display.';
 $string['configenablewebservices'] = 'Enable other systems to log in to this Totara and perform operations.  For extra security this feature should be disabled unless you are really using it.';
 $string['configenablewsdocumentation'] = 'Enable auto-generation of web services documentation. A user can access to his own documentation on his security keys page {$a}. It displays the documentation for the enabled protocols only.';
 $string['configengagesettings'] = 'Engage settings';
@@ -493,9 +492,7 @@ $string['enablestats'] = 'Enable statistics';
 $string['disableconsistentcleaning'] = 'Disable consistent cleaning';
 $string['disableconsistentcleaning_help'] = 'Prior to Totara 13 some areas of the product, such as course summaries and activity introductions, were not properly sanitised before being displayed to the user.
 Turning this setting on will return Totara to this behaviour, allowing privileged users to use advanced HTML in areas such as the above, re-introducing security risks at the same time.
-It will also re-introduce the trusttext setting, and capability.
 We strongly recommend it is left off, and only turned on if you have upgraded and have content that relies upon this functionality, and are happy to accept the security risks.';
-$string['enabletrusttext'] = 'Enable trusted content';
 $string['enablewebservices'] = 'Enable legacy web services';
 $string['enablewsdocumentation'] = 'Web services documentation';
 $string['enrolinstancedefaults'] = 'Enrolment instance defaults';

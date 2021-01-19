@@ -118,7 +118,6 @@ class mod_glossary_generator extends testing_module_generator {
             'concept' => 'Glossary entry '.$this->entrycount,
             'definition' => 'Definition of glossary entry '.$this->entrycount,
             'definitionformat' => FORMAT_MOODLE,
-            'definitiontrust' => 0,
             'usedynalink' => $CFG->glossary_linkentries,
             'casesensitive' => $CFG->glossary_casesensitive,
             'fullmatch' => $CFG->glossary_fullmatch

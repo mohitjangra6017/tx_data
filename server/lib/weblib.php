@@ -1244,8 +1244,6 @@ function format_text_menu() {
  *                      @example allowrole = ['tag' = 'span', 'role' => true]
  *
  * Deprecated options:
- *      trusted     :   If set to true, and trusttext is enabled, and totara_core_legacy_noclean_trusttext_enabled() returns true
- *                      then the given text will not be passed through clean_text to remove XSS nasties.
  *      noclean     :   If set to true, and totara_core_legacy_noclean_trusttext_enabled() returns true then the given text will
  *                      not be passed through clean_text to remove XSS nasties.
  * </pre>
@@ -1269,15 +1267,6 @@ function format_text($text, $format = FORMAT_MOODLE, $options = null, $courseidd
     // Detach object, we can not modify it.
     $options = (array)$options;
 
-    if (!isset($options['trusted'])) {
-        $options['trusted'] = false;
-    }
-    if (!isset($options['noclean'])) {
-        if ($options['trusted'] and trusttext_active()) {
-            // No cleaning if text trusted and noclean not specified.
-            $options['noclean'] = true;
-        }
-    }
     if (!isset($options['nocache'])) {
         $options['nocache'] = false;
     }
@@ -1320,7 +1309,6 @@ function format_text($text, $format = FORMAT_MOODLE, $options = null, $courseidd
     // Totara: legacy options to prevent cleaning. We don't use these any more.
     // If you absolutely require clean_text to be avoided then you can use the allowxss option.
     // We STRONGLY recommend you do not use that option.
-    $options['trusted'] = false;
     $options['noclean'] = false;
 
     // Calculate best context.
@@ -1765,72 +1753,6 @@ function strip_pluginfile_content($source) {
     $stripped = preg_replace($pattern, '', $source);
     // Use purify html to rebalence potentially mismatched tags and generally cleanup.
     return purify_html($stripped);
-}
-
-/**
- * Legacy function, used for cleaning of old forum and glossary text only.
- *
- * @param string $text text that may contain legacy TRUSTTEXT marker
- * @return string text without legacy TRUSTTEXT marker
- */
-function trusttext_strip($text) {
-    if (!is_string($text)) {
-        // This avoids the potential for an endless loop below.
-        throw new coding_exception('trusttext_strip parameter must be a string');
-    }
-    while (true) { // Removing nested TRUSTTEXT.
-        $orig = $text;
-        $text = str_replace('#####TRUSTTEXT#####', '', $text);
-        if (strcmp($orig, $text) === 0) {
-            return $text;
-        }
-    }
-}
-
-/**
- * Must be called before editing of all texts with trust flag. Removes all XSS nasties from texts stored in database if needed.
- *
- * @param stdClass $object data object with xxx, xxxformat and xxxtrust fields
- * @param string $field name of text field
- * @param context $context active context
- * @return stdClass updated $object
- */
-function trusttext_pre_edit($object, $field, $context) {
-    $trustfield  = $field.'trust';
-    $formatfield = $field.'format';
-
-    if (!$object->$trustfield or !trusttext_trusted($context)) {
-        $object->$field = clean_text($object->$field, $object->$formatfield);
-    }
-
-    return $object;
-}
-
-/**
- * Is current user trusted to enter no dangerous XSS in this context?
- *
- * Please note the user must be in fact trusted everywhere on this server!!
- *
- * @param context $context
- * @return bool true if user trusted
- */
-function trusttext_trusted($context) {
-    return (trusttext_active() and has_capability('moodle/site:trustcontent', $context));
-}
-
-/**
- * Is trusttext feature active?
- *
- * @return bool
- */
-function trusttext_active() {
-    global $CFG;
-
-    if (empty($CFG->disableconsistentcleaning)) {
-        return false;
-    }
-
-    return !empty($CFG->enabletrusttext);
 }
 
 /**
@@ -3998,7 +3920,6 @@ function get_formatted_help_string($identifier, $component, $ajax = false, $a = 
 
     if ($sm->string_exists($identifier . '_help', $component)) {
         $options = new stdClass();
-        $options->trusted = false;
         $options->noclean = false;
         $options->smiley = false;
         $options->filter = false;

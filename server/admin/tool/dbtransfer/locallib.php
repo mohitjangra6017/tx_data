@@ -168,7 +168,6 @@ function tool_dbtransfer_create_maintenance_file() {
     core_shutdown_manager::register_function('tool_dbtransfer_maintenance_callback');
 
     $options = new stdClass();
-    $options->trusted = false;
     $options->noclean = false;
     $options->smiley = false;
     $options->filter = false;

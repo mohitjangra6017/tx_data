@@ -112,9 +112,9 @@ class workshop_rubric_strategy implements workshop_strategy {
         $this->workshop         = $workshop;
         $this->dimensions       = $this->load_fields();
         $this->config           = $this->load_config();
-        $this->descriptionopts  = array('trusttext' => true, 'subdirs' => false, 'maxfiles' => -1);
+        $this->descriptionopts  = array('subdirs' => false, 'maxfiles' => -1);
         //one day the definitions may become proper wysiwyg fields - not used yet
-        $this->definitionopts   = array('trusttext' => true, 'subdirs' => false, 'maxfiles' => -1);
+        $this->definitionopts   = array('subdirs' => false, 'maxfiles' => -1);
     }
 
     /**

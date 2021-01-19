@@ -83,7 +83,7 @@ navigation_node::override_active_url(new moodle_url('/group/index.php', array('i
 $returnurl = $CFG->wwwroot.'/group/index.php?id='.$course->id.'&group='.$id;
 
 // Prepare the description editor: We do support files for group descriptions
-$editoroptions = array('maxfiles'=>EDITOR_UNLIMITED_FILES, 'maxbytes'=>$course->maxbytes, 'trust'=>false, 'context'=>$context, 'noclean'=>true);
+$editoroptions = array('maxfiles'=>EDITOR_UNLIMITED_FILES, 'maxbytes'=>$course->maxbytes, 'context'=>$context, 'noclean'=>true);
 if (!empty($group->id)) {
     $editoroptions['subdirs'] = file_area_contains_subdirs($context, 'group', 'description', $group->id);
     $group = file_prepare_standard_editor($group, 'description', $editoroptions, $context, 'group', 'description', $group->id);

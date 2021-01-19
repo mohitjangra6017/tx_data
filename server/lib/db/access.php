@@ -514,18 +514,6 @@ $capabilities = array(
         )
     ),
 
-    'moodle/site:trustcontent' => array(
-
-        'riskbitmask' => RISK_XSS,
-
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    ),
-
     'moodle/site:uploadusers' => array(
 
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL,

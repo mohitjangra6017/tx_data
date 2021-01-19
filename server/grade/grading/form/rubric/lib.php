@@ -490,7 +490,6 @@ class gradingform_rubric_controller extends gradingform_controller {
 
         $formatoptions = array(
             'noclean' => false,
-            'trusted' => false,
             'filter' => true,
             'context' => $context
         );

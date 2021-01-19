@@ -90,7 +90,6 @@ class mod_glossary_external extends external_api {
             'concept' => new external_value(PARAM_RAW, 'The concept'),
             'definition' => new external_value(PARAM_RAW, 'The definition'),
             'definitionformat' => new external_format_value('definition'),
-            'definitiontrust' => new external_value(PARAM_BOOL, 'The definition trust flag'),
             'definitioninlinefiles' => new external_files('entry definition inline files', VALUE_OPTIONAL),
             'attachment' => new external_value(PARAM_BOOL, 'Whether or not the entry has attachments'),
             'attachments' => new external_files('attachments', VALUE_OPTIONAL),

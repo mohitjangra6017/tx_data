@@ -31,7 +31,6 @@
         <concept>dog</concept>
         <definition>&lt;p&gt;Traditional enemies of cats&lt;/p&gt;</definition>
         <definitionformat>1</definitionformat>
-        <definitiontrust>0</definitiontrust>
         <attachment></attachment>
         <timecreated>1275638279</timecreated>
         <timemodified>1275638279</timemodified>
@@ -61,7 +60,6 @@
         <concept>cat</concept>
         <definition>&lt;p&gt;traditional enemies of dogs&lt;/p&gt;</definition>
         <definitionformat>1</definitionformat>
-        <definitiontrust>0</definitiontrust>
         <attachment></attachment>
         <timecreated>1275638304</timecreated>
         <timemodified>1275638304</timemodified>

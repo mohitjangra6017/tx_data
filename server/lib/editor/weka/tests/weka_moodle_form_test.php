@@ -209,7 +209,6 @@ class core_form_weka_editor_testcase extends advanced_testcase {
         $editoroptions = [
             'maxfiles' => EDITOR_UNLIMITED_FILES,
             'maxbytes' => 1024,
-            'trusttext' => false,
             'noclean' => false
         ];
 

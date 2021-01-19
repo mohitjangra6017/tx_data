@@ -109,7 +109,6 @@ function forum_add_instance($forum, $mform = null) {
         $discussion->assessed      = $forum->assessed;
         $discussion->message       = $forum->intro;
         $discussion->messageformat = $forum->introformat;
-        $discussion->messagetrust  = trusttext_trusted(context_course::instance($forum->course));
         $discussion->mailnow       = false;
         $discussion->groupid       = -1;
 
@@ -199,7 +198,6 @@ function forum_update_instance($forum, $mform) {
             $discussion->assessed        = $forum->assessed;
             $discussion->message         = $forum->intro;
             $discussion->messageformat   = $forum->introformat;
-            $discussion->messagetrust    = true;
             $discussion->mailnow         = false;
             $discussion->groupid         = -1;
 
@@ -222,7 +220,6 @@ function forum_update_instance($forum, $mform) {
         $post->subject       = $forum->name;
         $post->message       = $forum->intro;
         $post->messageformat = $forum->introformat;
-        $post->messagetrust  = trusttext_trusted($modcontext);
         $post->modified      = $forum->timemodified;
         $post->userid        = $USER->id;    // MDL-18599, so that current teacher can take ownership of activities.
 
@@ -3404,7 +3401,6 @@ function forum_print_post($post, $discussion, $forum, &$cm, $course, $ownpost=fa
 
     $options = new stdClass;
     $options->para    = false;
-    $options->trusted = $post->messagetrust;
     $options->context = $modcontext;
     if ($shortenpost) {
         // Prepare shortened version by filtering the text then shortening it.
@@ -4451,7 +4447,6 @@ function forum_update_post($newpost, $mform, $unused = null) {
         'subject',
         'message',
         'messageformat',
-        'messagetrust',
         'timestart',
         'timeend',
         'pinned',
@@ -4530,7 +4525,6 @@ function forum_add_discussion($discussion, $mform=null, $unused=null, $userid=nu
     $post->subject       = $discussion->name;
     $post->message       = $discussion->message;
     $post->messageformat = $discussion->messageformat;
-    $post->messagetrust  = $discussion->messagetrust;
     $post->attachments   = isset($discussion->attachments) ? $discussion->attachments : null;
     $post->forum         = $forum->id;     // speedup
     $post->course        = $forum->course; // speedup

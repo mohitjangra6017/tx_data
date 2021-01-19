@@ -104,12 +104,6 @@
           <MODIFIERID>0</MODIFIERID>
         </CAPABILITY>
         <CAPABILITY>
-          <NAME>moodle/site:trustcontent</NAME>
-          <PERMISSION>1</PERMISSION>
-          <TIMEMODIFIED>1311692104</TIMEMODIFIED>
-          <MODIFIERID>0</MODIFIERID>
-        </CAPABILITY>
-        <CAPABILITY>
           <NAME>moodle/site:restore</NAME>
           <PERMISSION>1</PERMISSION>
           <TIMEMODIFIED>1311692103</TIMEMODIFIED>

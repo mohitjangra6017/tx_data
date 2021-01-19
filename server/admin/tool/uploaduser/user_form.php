@@ -287,7 +287,7 @@ class admin_uploaduser_form2 extends moodleform {
         $mform->setDefault('lang', $templateuser->lang);
         $mform->setAdvanced('lang');
 
-        $editoroptions = array('maxfiles'=>0, 'maxbytes'=>0, 'trusttext'=>false, 'forcehttps'=>false);
+        $editoroptions = array('maxfiles'=>0, 'maxbytes'=>0, 'forcehttps'=>false);
         $mform->addElement('editor', 'description', get_string('userdescription'), null, $editoroptions);
         $mform->setType('description', PARAM_CLEANHTML);
         $mform->addHelpButton('description', 'userdescription');

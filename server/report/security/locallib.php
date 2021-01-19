@@ -1309,7 +1309,7 @@ function report_security_check_preventexecpath($detailed = false) {
 }
 
 /**
- * Verifies the status of the legacy noclean and trusttext handling for format_text.
+ * Verifies the status of the legacy noclean handling for format_text.
  *
  * @since Totara 13.0
  * @param bool $detailed If set to true explain the consequences of the state.

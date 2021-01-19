@@ -109,7 +109,7 @@ class workshop_numerrors_strategy implements workshop_strategy {
         $this->workshop         = $workshop;
         $this->dimensions       = $this->load_fields();
         $this->mappings         = $this->load_mappings();
-        $this->descriptionopts  = array('trusttext' => true, 'subdirs' => false, 'maxfiles' => -1);
+        $this->descriptionopts  = array('subdirs' => false, 'maxfiles' => -1);
     }
 
     /**

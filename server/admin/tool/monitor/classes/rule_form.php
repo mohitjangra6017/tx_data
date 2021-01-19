@@ -83,7 +83,6 @@ class rule_form extends \moodleform {
             'changeformat' => 0,
             'context' => $context,
             'noclean' => 0,
-            'trusttext' => 0
         );
 
         // Name field.

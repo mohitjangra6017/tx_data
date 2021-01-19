@@ -174,7 +174,7 @@ class backup_structure_testcase extends advanced_testcase {
             array(
                 'discussion', 'parent', 'userid', 'created',
                 'modified', 'mailed', 'subject', 'message',
-                'messageformat', 'messagetrust', 'attachment', 'totalscore',
+                'messageformat', 'attachment', 'totalscore',
                 'mailnow')
         );
         $ratings = new backup_nested_element('ratings');

@@ -893,8 +893,7 @@ function external_format_string($str, $contextid, $striplinks = true, $options =
  *
  * <pre>
  * Options are the same that in {@link format_text()} with some changes in defaults to provide backwards compatibility:
- *      trusted     :   If true the string won't be cleaned. Default false.
- *      noclean     :   If true the string won't be cleaned only if trusted is also true. Default false.
+ *      noclean     :   If true the string won't be cleaned. Default false.
  *      nocache     :   If true the string will not be cached and will be formatted every call. Default false.
  *      filter      :   Can be set to false to force filters off, else observes {@link external_settings}.
  *      para        :   If true then the returned string will be wrapped in div tags. Default (different from format_text) false.

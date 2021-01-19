@@ -397,7 +397,6 @@ class glossary_entry_portfolio_caller extends portfolio_module_caller_base {
         $entry = clone $entry;
         $context = context_module::instance($cm->id);
         $options = portfolio_format_text_options();
-        $options->trusted = $entry->definitiontrust;
         $options->context = $context;
 
         $output = '<table class="glossarypost dictionary" cellspacing="0" role="presentation">' . "\n";

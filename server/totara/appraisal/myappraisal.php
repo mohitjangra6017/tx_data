@@ -156,7 +156,6 @@ if ($action == 'pages') {
                                 'subdirs' => 0,
                                 'maxfiles' => EDITOR_UNLIMITED_FILES,
                                 'maxbytes' => get_max_upload_file_size(),
-                                'trusttext' => false,
                                 'context' => $systemcontext,
                                 'collapsed' => true
                             );

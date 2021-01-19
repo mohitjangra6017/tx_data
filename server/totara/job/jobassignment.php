@@ -149,7 +149,7 @@ $submittedappraiserid = optional_param('appraiserid', null, PARAM_INT);
 $submittedtempmanagerid = optional_param('tempmanagerid', null, PARAM_INT);
 $submittedtempmanagerjaid = optional_param('tempmanagerjaid', null, PARAM_INT);
 
-$editoroptions = array('subdirs' => true, 'maxfiles' => EDITOR_UNLIMITED_FILES, 'maxbytes' => $CFG->maxbytes, 'trusttext' => false, 'context' => $personalcontext);
+$editoroptions = array('subdirs' => true, 'maxfiles' => EDITOR_UNLIMITED_FILES, 'maxbytes' => $CFG->maxbytes, 'context' => $personalcontext);
 
 $form = new job_assignment_form($currenturl, compact('jobassignment', 'canedit',
         'editoroptions', 'canedittempmanager', 'submitted', 'submittedpositionid', 'submittedorganisationid',

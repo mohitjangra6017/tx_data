@@ -82,7 +82,6 @@
             $items = array();
 
             $formatoptions = new stdClass();
-            $formatoptions->trusttext = true;
 
             foreach ($recs as $rec) {
                 $item = new stdClass();
@@ -150,7 +149,6 @@
                       e.concept AS entryconcept,
                       e.definition AS entrydefinition,
                       e.definitionformat AS entryformat,
-                      e.definitiontrust AS entrytrust,
                       e.timecreated AS entrytimecreated,
                       u.id AS userid,
                       $allnamefields
@@ -165,7 +163,6 @@
                       e.concept AS entryconcept,
                       e.definition AS entrydefinition,
                       e.definitionformat AS entryformat,
-                      e.definitiontrust AS entrytrust,
                       e.timecreated AS entrytimecreated,
                       u.id AS userid
                  FROM {glossary_entries} e,
