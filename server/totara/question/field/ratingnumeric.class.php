@@ -164,7 +164,12 @@ class question_ratingnumeric extends question_base{
         $errors = parent::edit_validate($fromform);
 
         if (isset($fromform[$this->get_prefix_form()])) {
-            if ($fromform[$this->get_prefix_form()] < $this->get_min() || $fromform[$this->get_prefix_form()] > $this->get_max()) {
+            $value = $fromform[$this->get_prefix_form()];
+            if ($value === '') {
+                // PHP 8.0 does not cast '' to number any more in comparison.
+                $value = 0;
+            }
+            if ($value < $this->get_min() || $value > $this->get_max()) {
                 $errors[$this->get_prefix_form()] = get_string('valueoutsiderange', 'totara_question');
             }
         } else if ($this->required) {
