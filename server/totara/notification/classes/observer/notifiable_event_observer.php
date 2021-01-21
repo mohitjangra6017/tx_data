@@ -30,11 +30,6 @@ use totara_core\event\notifiable_event;
  */
 final class notifiable_event_observer {
     /**
-     * @var notifiable_event
-     */
-    private static $event;
-
-    /**
      * notification_observer constructor.
      */
     private function __construct() {
@@ -44,37 +39,6 @@ final class notifiable_event_observer {
      * @param notifiable_event $event
      */
     public static function watch_notifiable_event(notifiable_event $event): void {
-        if (!$event instanceof notifiable_event) {
-            debugging('The Instance is not from notifiable_event');
-        }
-
-        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
-            self::set_event($event);
-        }
-
         // TODO put data into queue.
-    }
-
-    /**
-     * @return notifiable_event
-     */
-    public static function get_event(): notifiable_event {
-        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
-            return self::$event;
-        }
-
-        throw new coding_exception('get_event() is only used in PHPUNIT test');
-    }
-
-    /**
-     * @param notifiable_event $event
-     */
-    private static function set_event(notifiable_event $event) {
-        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
-            self::$event = $event;
-            return;
-        }
-
-        throw new coding_exception('set_event() is only used in PHPUNIT test');
     }
 }

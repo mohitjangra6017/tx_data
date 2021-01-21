@@ -22,24 +22,25 @@
  */
 
 use totara_comment\comment_helper;
-use totara_comment\event\comment_created;
-use totara_comment\resolver_factory;
-use totara_notification\observer\notifiable_event_observer;
-
-defined('MOODLE_INTERNAL') || die();
+use totara_core\event\notifiable_event;
 
 class totara_notification_notifiable_event_testcase extends advanced_testcase {
 
     public function test_notifiable_event(): void {
         $generator = $this->getDataGenerator();
-
         $actor = $generator->create_user();
-        $user = $generator->create_user();
+
+        /** @var totara_comment_generator $comment_generator */
+        $comment_generator = $generator->get_plugin_generator('totara_comment');
+
+        $context_user = context_user::instance($actor->id);
+        $comment_generator->add_context_for_default_resolver($context_user);
 
         // Mock comment event.
-        $this->setUser($user);
+        $this->setUser($actor);
+        $event_sink = phpunit_util::start_event_redirection();
 
-        $comment = comment_helper::create_comment(
+        comment_helper::create_comment(
             'totara_comment',
             'comment_view',
             42,
@@ -49,14 +50,16 @@ class totara_notification_notifiable_event_testcase extends advanced_testcase {
             $actor->id
         );
 
-        $resolver = resolver_factory::create_resolver('totara_comment');
-        $context_id = $resolver->get_context_id(42, 'comment_view');
-        $context = context::instance_by_id($context_id);
+        $events = $event_sink->get_events();
+        self::assertCount(1, $events);
 
-        (comment_created::from_comment($comment, $context))->trigger();
+        // First event
+        $event = reset($events);
+        self::assertInstanceOf(notifiable_event::class, $event);
 
-        $event = notifiable_event_observer::get_event();
-        self::assertNotEmpty($event);
-        self::assertNotNull($event);
+        $event_context = $event->get_context();
+
+        self::assertEquals($context_user->id, $event_context->id);
+        self::assertEquals(CONTEXT_USER, $event_context->contextlevel);
     }
 }
