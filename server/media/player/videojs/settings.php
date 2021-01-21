@@ -36,10 +36,6 @@ if ($ADMIN->fulltree) {
         new lang_string('configaudioextensions', 'media_videojs'),
         'html_audio'));
 
-    $settings->add(new admin_setting_configcheckbox('media_videojs/useflash',
-        new lang_string('useflash', 'media_videojs'),
-        new lang_string('configuseflash', 'media_videojs'), 0));
-
     $settings->add(new admin_setting_configcheckbox('media_videojs/youtube',
         new lang_string('youtube', 'media_videojs'),
         new lang_string('configyoutube', 'media_videojs'), 1));

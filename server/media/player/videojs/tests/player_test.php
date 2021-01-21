@@ -64,8 +64,6 @@ class media_videojs_testcase extends advanced_testcase {
         $nativeextensions = array_merge(file_get_typegroup('extension', 'html_video'),
             file_get_typegroup('extension', 'html_audio'));
 
-        set_config('useflash', 0, 'media_videojs');
-
         // Make sure that the list of extensions from the setting is filtered to HTML5 natively supported extensions.
         $player = new media_videojs_plugin();
         $this->assertNotEmpty($player->get_supported_extensions());
@@ -238,7 +236,6 @@ class media_videojs_testcase extends advanced_testcase {
      */
     public function test_youtube() {
         set_config('youtube', 1, 'media_videojs');
-        set_config('useflash', 0, 'media_videojs');
 
         $manager = core_media_manager::instance();
 

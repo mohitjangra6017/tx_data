@@ -72,10 +72,7 @@ class media_videojs_plugin extends core_media_player_native {
             $hasposter = self::get_attribute($text, 'poster') !== null;
         }
 
-        // Currently Flash in VideoJS does not support responsive layout. If Flash is enabled try to guess
-        // if HTML5 player will be engaged for the user and then set it to responsive.
-        $responsive = (get_config('media_videojs', 'useflash') && !$this->youtube) ? null : true;
-        $flashtech = false;
+        // Totara: Only HTML5 players are supported.
 
         // Build list of source tags.
         foreach ($urls as $url) {
@@ -90,12 +87,6 @@ class media_videojs_plugin extends core_media_player_native {
             if ($isaudio === null) {
                 $isaudio = in_array('.' . $extension, file_get_typegroup('extension', 'audio'));
             }
-            if ($responsive === null) {
-                $responsive = core_useragent::supports_html5($extension);
-            }
-            if (!core_useragent::supports_html5($extension) && get_config('media_videojs', 'useflash')) {
-                $flashtech = true;
-            }
         }
         $sources = implode("\n", $sources);
 
@@ -108,8 +99,6 @@ class media_videojs_plugin extends core_media_player_native {
             $datasetup[] = '"sources": [{"type": "video/youtube", "src":"' . $urls[0] . '"}]';
             $sources = ''; // Do not specify <source> tags - it may confuse browser.
             $isaudio = false; // Just in case.
-        } else if ($flashtech) {
-            $datasetup[] = '"techOrder": ["flash", "html5"]';
         }
 
         // Add a language.
@@ -118,9 +107,7 @@ class media_videojs_plugin extends core_media_player_native {
         }
 
         // Set responsive option.
-        if ($responsive) {
-            $datasetup[] = '"fluid": true';
-        }
+        $datasetup[] = '"fluid": true';
 
         if ($isaudio && !$hastracks) {
             // We don't need a full screen toggle for the audios (except when tracks are present).
@@ -146,12 +133,6 @@ class media_videojs_plugin extends core_media_player_native {
             'id' => 'id_videojs_' . uniqid() . '_' . $playercounter++,
             'class' => get_config('media_videojs', $isaudio ? 'audiocssclass' : 'videocssclass')
         ];
-
-        if (!$responsive) {
-            // Note we ignore limitsize setting if not responsive.
-            parent::pick_video_size($width, $height);
-            $attributes += ['width' => $width] + ($height ? ['height' => $height] : []);
-        }
 
         if (core_useragent::is_ios(10)) {
             // Hides native controls and plays videos inline instead of fullscreen,
@@ -185,11 +166,9 @@ class media_videojs_plugin extends core_media_player_native {
         // Limit the width of the video if width is specified.
         // We do not do it in the width attributes of the video because it does not work well
         // together with responsive behavior.
-        if ($responsive) {
-            self::pick_video_size($width, $height);
-            if ($width) {
-                $text = html_writer::div($text, null, ['style' => 'max-width:' . $width . 'px;']);
-            }
+        self::pick_video_size($width, $height);
+        if ($width) {
+            $text = html_writer::div($text, null, ['style' => 'max-width:' . $width . 'px;']);
         }
 
         return html_writer::div($text, 'mediaplugin mediaplugin_videojs');
@@ -217,8 +196,8 @@ class media_videojs_plugin extends core_media_player_native {
                 strtolower(trim(get_config('media_videojs', 'videoextensions') . ',' .
                 get_config('media_videojs', 'audioextensions'))));
             $this->extensions = file_get_typegroup('extension', $filetypes);
-            if ($this->extensions && !get_config('media_videojs', 'useflash')) {
-                // If Flash is disabled only return extensions natively supported by browsers.
+            if ($this->extensions) {
+                // Only return extensions natively supported by browsers.
                 $nativeextensions = array_merge(file_get_typegroup('extension', 'html_video'),
                     file_get_typegroup('extension', 'html_audio'));
                 $this->extensions = array_intersect($this->extensions, $nativeextensions);
@@ -241,18 +220,7 @@ class media_videojs_plugin extends core_media_player_native {
             }
         }
 
-        if (!get_config('media_videojs', 'useflash')) {
-            return parent::list_supported_urls($urls, $options);
-        }
-        // If Flash fallback is enabled we can not check if/when browser supports flash.
-        $extensions = $this->get_supported_extensions();
-        foreach ($urls as $url) {
-            $ext = core_media_manager::instance()->get_extension($url);
-            if (in_array('.' . $ext, $extensions)) {
-                $result[] = $url;
-            }
-        }
-        return $result;
+        return parent::list_supported_urls($urls, $options);
     }
 
     /**
@@ -349,9 +317,7 @@ class media_videojs_plugin extends core_media_player_native {
         // Load dynamic loader. It will scan page for videojs media and load necessary modules.
         // Loader will be loaded on absolutely every page, however the videojs will only be loaded
         // when video is present on the page or added later to it in AJAX.
-        $path = new moodle_url('/media/player/videojs/videojs/video-js.swf');
-        $contents = 'videojs.options.flash.swf = "' . $path . '";' . "\n";
-        $contents .= $this->find_language(current_language());
+        $contents = $this->find_language(current_language());
         $page->requires->js_amd_inline(<<<EOT
 require(["media_videojs/loader"], function(loader) {
     loader.setUp(function(videojs) {
