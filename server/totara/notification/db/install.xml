@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="totara/notification/db" VERSION="20210220" COMMENT="XMLDB file for all the tables in plugin totara_notification"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="notification_queue" COMMENT="A table to queue all the notifications to be sending out to the output">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="event_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The notifiable event name"/>
+        <FIELD NAME="message" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="context_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="recipient_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="scheduled_time" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="event_name" TYPE="unique" FIELDS="event_name"/>
+        <KEY NAME="context_id" TYPE="unique" FIELDS="context_id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
