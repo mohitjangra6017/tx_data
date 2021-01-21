@@ -1485,7 +1485,7 @@ function is_major_upgrade_required() {
     global $CFG;
 
     // Totara: modify when major change happens in main upgrade file.
-    $lastmajordbchanges = 2017111309.00;
+    $lastmajordbchanges = 2021012200.00;
 
     // Totara: bump up the following version to match /totara/core/version.php
     //         if your upgrade step prevents users from logging in before upgrade.
