@@ -4,6 +4,19 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
+    <TABLE NAME="notifiable_event_queue" COMMENT="Notifiable event queue variables">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="class_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="It describes the event that occurred, as provided/required by the notifiable_event class"/>
+        <FIELD NAME="data" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The data is metadata. It contents the metadata of the notifiable_event"/>
+        <FIELD NAME="context_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="name" TYPE="unique" FIELDS="name"/>
+        <KEY NAME="context_id" TYPE="unique" FIELDS="context_id"/>
+      </KEYS>
+    </TABLE>
     <TABLE NAME="notification_queue" COMMENT="A table to queue all the notifications to be sending out to the output">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
