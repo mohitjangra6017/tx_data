@@ -24,28 +24,28 @@
 namespace totara_competency\webapi\resolver\query;
 
 use core\collection;
+use core\entity\user;
 use core\webapi\middleware\require_advanced_feature;
 use performelement_linked_review\webapi\resolver\query\content_items;
+use totara_competency\data_providers\assignments;
+use totara_competency\entity\assignment as assignment_entity;
+use totara_competency\models\assignment as assignment_model;
 
 class perform_linked_competencies extends content_items {
 
-    /**
-     * @inheritDoc
-     */
-    protected static function query_content(array $content_ids): array {
-        // TODO: Return competency assignment progress models, not just IDs
-        return collection::new($content_ids)
-            ->map(static function (int $id) {
-                return (object) [
-                    'id' => $id,
+    protected static function query_content(int $user_id, array $content_ids): array {
+        return assignments::for($user_id)
+            ->set_filters(['ids' => $content_ids])
+            ->fetch()
+            ->get()
+            ->map(static function (assignment_entity $assignment) {
+                return [
+                    'progress' => assignment_model::load_by_entity($assignment)
                 ];
             })
             ->all();
     }
 
-    /**
-     * @inheritDoc
-     */
     public static function get_middleware(): array {
         return array_merge(parent::get_middleware(), [
             new require_advanced_feature('competency_assignment'),

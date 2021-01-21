@@ -220,6 +220,13 @@ input totara_competency_activity_log_filters {
   assignment_id: core_id
 }
 
+"""
+Result wrapper for perform linked competencies
+"""
+type totara_competency_perform_linked_competencies_result {
+  progress: totara_competency_profile_assignment_progress!
+}
+
 extend type Query {
   """
   Activity log entries for a single user/competency pair, optionally filtered.
@@ -266,12 +273,5 @@ extend type Query {
   totara_competency_perform_linked_competencies(
     participant_instance_id: core_id!
     section_element_id: core_id!
-  ): [totara_competency_assignment_id]!
-}
-
-"""
-TEMPORARY - TODO: REMOVE BEFORE MERGING INTO INTEGRATION!
-"""
-type totara_competency_assignment_id {
-  id: core_id!
+  ): [totara_competency_perform_linked_competencies_result]!
 }

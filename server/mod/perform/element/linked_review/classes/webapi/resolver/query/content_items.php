@@ -30,7 +30,9 @@ use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
 use mod_perform\entity\activity\element;
+use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\section_element;
+use mod_perform\entity\activity\subject_instance;
 use mod_perform\webapi\middleware\require_activity;
 use performelement_linked_review\entity\linked_review_content;
 
@@ -53,6 +55,12 @@ abstract class content_items implements query_resolver, has_middleware {
         }
 
         // TODO: Need to check permissions.
+        $subject_user_id = subject_instance::repository()
+            ->select('subject_user_id')
+            ->join([participant_instance::TABLE, 'pi'], 'id', 'subject_instance_id')
+            ->where('pi.id', $participant_instance_id)
+            ->one()
+            ->subject_user_id;
 
         $content_ids = linked_review_content::repository()
             ->select('content_id')
@@ -65,16 +73,17 @@ abstract class content_items implements query_resolver, has_middleware {
             return [];
         }
 
-        return static::query_content($content_ids);
+        return static::query_content($subject_user_id, $content_ids);
     }
 
     /**
      * Fetch the linked content with the specified IDs.
      *
+     * @param int $user_id
      * @param int[] $content_ids
      * @return array
      */
-    abstract protected static function query_content(array $content_ids): array;
+    abstract protected static function query_content(int $user_id, array $content_ids): array;
 
     /**
      * {@inheritdoc}
