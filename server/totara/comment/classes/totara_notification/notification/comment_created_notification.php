@@ -20,40 +20,38 @@
  * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_notification
  */
-namespace totara_notification\notification;
+namespace totara_comment\totara_notification\notification;
 
-/**
- * Factory class to create the customized notification based on the component.
- */
-final class notification_factory {
+use coding_exception;
+use totara_comment\event\comment_created;
+use totara_notification\notification\built_in_notification;
+
+final class comment_created_notification extends built_in_notification {
     /**
-     * notification_factory constructor.
+     * @return string
      */
-    private function __construct() {
+    public static function get_event_class_name(): string {
+        return comment_created::class;
     }
 
     /**
-     * @param string $component
-     * @return array
+     * @return string
      */
-    public static function create_notifications_by_component(string $component): array {
-        $classes = \core_component::get_namespace_classes(
-            'totara_notification',
-            notification::class,
-            $component
-        );
+    public static function get_title(): string {
+        return get_string('comment_created', 'totara_comment');
+    }
 
-        $list = [];
-        if (empty($classes)) {
-            debugging(`{$component} has not have customized notfication.`);
-            return $list;
-        }
+    /**
+     * @return string
+     */
+    public static function get_recipient_name(): string {
+        throw new coding_exception("Todo - implement me");
+    }
 
-        foreach ($classes as $class) {
-            // Todo add strict initialization for each class
-            $list[] = new $class();
-        }
-
-        return $list;
+    /**
+     * @return mixed|void
+     */
+    public static function get_schedule() {
+        throw new coding_exception("Todo - implement me");
     }
 }

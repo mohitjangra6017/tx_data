@@ -1482,7 +1482,7 @@ class core_plugin_manager {
                 'gap', 'job', 'completioneditor', 'userdata', 'catalog', 'workflow', 'contentmarketplace',
                 'tenant', 'webapi', 'evidence', 'mvc', 'cloudfiledir', 'extfiledir', 'samples', 'mobile',
                 'competency', 'criteria', 'msteams', 'reaction', 'comment', 'engage', 'playlist',
-                'reportedcontent', 'topic',
+                'reportedcontent', 'topic', 'notification'
             ),
 
             'tabexport' => array(

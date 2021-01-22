@@ -22,8 +22,9 @@
  */
 namespace totara_notification\observer;
 
-use coding_exception;
-use totara_core\event\notifiable_event;
+use core\event\base;
+use totara_notification\event\notifiable_event;
+use totara_notification\entity\notifiable_event_queue;
 
 /**
  * Event observer for notifiable event interface.
@@ -36,9 +37,15 @@ final class notifiable_event_observer {
     }
 
     /**
-     * @param notifiable_event $event
+     * @param notifiable_event|base $event
+     * @return void
      */
     public static function watch_notifiable_event(notifiable_event $event): void {
-        // TODO put data into queue.
+        $queue = new notifiable_event_queue();
+        $queue->event_name = get_class($event);
+        $queue->set_decoded_event_data($event->get_notification_event_data());
+        $queue->context_id = $event->get_context()->id;
+
+        $queue->save();
     }
 }

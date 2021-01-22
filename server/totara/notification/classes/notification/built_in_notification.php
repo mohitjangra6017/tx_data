@@ -1,0 +1,59 @@
+<?php
+/**
+ * This file is part of Totara Learn
+ *
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @package totara_notification
+ */
+namespace totara_notification\notification;
+
+/**
+ * A static class that define the built-in configuration for the notification(s), which are belonging
+ * to the notifiable event. Many to one relationship.
+ * This class is for developer to define the default notification setting out of the box.
+ */
+abstract class built_in_notification {
+    /**
+     * Returning the event name which this notification is belonging to.
+     * It is a one-to-many relationship, meaning that one event can produce multiple
+     * notifications (like the children of this one).
+     *
+     * @return string
+     */
+    abstract public static function get_event_class_name(): string;
+
+    /**
+     * Returning the notification's title.
+     * @return string
+     */
+    abstract public static function get_title(): string;
+
+    /**
+     * Returning the recipient's name. Please make sure that the recipient's name
+     * is matched with whatever the notifiable event's resolver can resolve.
+     *
+     * @return string
+     */
+    abstract public static function get_recipient_name(): string;
+
+    /**
+     * Just for now.
+     * @return mixed
+     */
+    abstract public static function get_schedule();
+}

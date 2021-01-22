@@ -23,6 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// Totara: we need to require interface for class core\event\base to work.
+require_once(__DIR__ . '/../../classes/event/abstraction/context_aware.php');
 require_once(__DIR__ . '/../../classes/event/base.php');
 
 /**

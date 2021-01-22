@@ -20,12 +20,14 @@
  * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_notification
  */
-
 use totara_comment\comment_helper;
-use totara_core\event\notifiable_event;
+use totara_notification\event\notifiable_event;
+use core\event\base;
 
 class totara_notification_notifiable_event_testcase extends advanced_testcase {
-
+    /**
+     * @return void
+     */
     public function test_notifiable_event(): void {
         $generator = $this->getDataGenerator();
         $actor = $generator->create_user();
@@ -40,7 +42,7 @@ class totara_notification_notifiable_event_testcase extends advanced_testcase {
         $this->setUser($actor);
         $event_sink = phpunit_util::start_event_redirection();
 
-        comment_helper::create_comment(
+        $comment = comment_helper::create_comment(
             'totara_comment',
             'comment_view',
             42,
@@ -54,8 +56,14 @@ class totara_notification_notifiable_event_testcase extends advanced_testcase {
         self::assertCount(1, $events);
 
         // First event
+        /** @var notifiable_event|base $event */
         $event = reset($events);
+
         self::assertInstanceOf(notifiable_event::class, $event);
+        self::assertEquals(
+            ['comment_id' => $comment->get_id()],
+            $event->get_notification_event_data()
+        );
 
         $event_context = $event->get_context();
 

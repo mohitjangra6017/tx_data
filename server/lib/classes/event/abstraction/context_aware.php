@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2020 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,16 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Kian Nguyen <kian.nguyen@totaralearning.com>
- * @package totara_notification
+ * @package core
  */
-defined('MOODLE_INTERNAL') || die();
+namespace core\event\abstraction;
 
-use totara_notification\observer\notifiable_event_observer;
-use totara_comment\event\comment_created;
+use context;
 
-$observers = [
-    [
-        'eventname' => comment_created::class,
-        'callback' => [notifiable_event_observer::class, 'watch_notifiable_event']
-    ]
-];
+interface context_aware {
+    /**
+     * Returning the context of an event.
+     * @return context
+     */
+    public function get_context();
+}

@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2020 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,12 @@
  * @author Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
-defined('MOODLE_INTERNAL') || die();
+namespace totara_notification\repository;
 
-use totara_notification\observer\notifiable_event_observer;
-use totara_comment\event\comment_created;
+use core\orm\entity\repository;
 
-$observers = [
-    [
-        'eventname' => comment_created::class,
-        'callback' => [notifiable_event_observer::class, 'watch_notifiable_event']
-    ]
-];
+/**
+ * Repository for table "ttr_notifiable_event_queue"
+ */
+class notifiable_event_queue_repository extends repository {
+}

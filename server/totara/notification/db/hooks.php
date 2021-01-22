@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2020 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,12 +22,13 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-use totara_notification\observer\notifiable_event_observer;
-use totara_comment\event\comment_created;
+use core\hook\phpunit_reset;
+use totara_notification\watcher\phpunit_reset_watcher;
 
-$observers = [
+$watchers = [
     [
-        'eventname' => comment_created::class,
-        'callback' => [notifiable_event_observer::class, 'watch_notifiable_event']
+        /** @see phpunit_reset_watcher::watch_phpunit_reset() */
+        'hookname' => phpunit_reset::class,
+        'callback' => [phpunit_reset_watcher::class, 'watch_phpunit_reset']
     ]
 ];

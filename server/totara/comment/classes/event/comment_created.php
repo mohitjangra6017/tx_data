@@ -26,7 +26,7 @@ use core\event\base;
 use core_ml\event\interaction_event;
 use totara_comment\comment;
 use totara_comment\entity\comment as entity;
-use totara_core\event\notifiable_event;
+use totara_notification\event\notifiable_event;
 
 /**
  * Class comment_created
@@ -72,7 +72,7 @@ final class comment_created extends base implements interaction_event, notifiabl
         }
 
         /** @var comment_created $event */
-        $event = static::create($data);
+        $event = self::create($data);
         return $event;
     }
 
@@ -127,4 +127,40 @@ final class comment_created extends base implements interaction_event, notifiabl
         return $this->other['instanceid'];
     }
 
+    /**
+     * @return array
+     */
+    public function get_notification_event_data(): array {
+        return [
+            'comment_id' => $this->objectid,
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public static function get_notification_title(): string {
+        return get_string('notification_comment_created', 'totara_comment');
+    }
+
+    /**
+     * @return array
+     */
+    public static function get_notification_available_recipients(): array {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public static function get_notification_available_schedules(): array {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public static function get_notification_default_delivery_channels(): array {
+        return [];
+    }
 }

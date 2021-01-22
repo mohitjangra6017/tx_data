@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2020 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
- * @package totara_core
+ * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @package totara_notification
  */
-namespace totara_core\event;
+defined('MOODLE_INTERNAL') || die();
 
-interface notifiable_event {
-}
+use totara_notification\task\process_event_queue_task;
+
+$tasks = [
+    [
+        'classname' => process_event_queue_task::class,
+        'blocking' => 0,
+        'minute' => '*',
+        'hour' => ' *',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*'
+    ]
+];

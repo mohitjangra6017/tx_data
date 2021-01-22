@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2020 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,12 +22,5 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-use totara_notification\observer\notifiable_event_observer;
-use totara_comment\event\comment_created;
-
-$observers = [
-    [
-        'eventname' => comment_created::class,
-        'callback' => [notifiable_event_observer::class, 'watch_notifiable_event']
-    ]
-];
+$string['process_event_queue_task'] = 'Queue event scheduled task';
+$string['pluginname'] = 'Centralised notification';
