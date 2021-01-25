@@ -74,7 +74,7 @@ class rb_source_competency extends rb_base_source {
                 'scale_assignments',
                 'LEFT',
                 '{comp_scale_assignments}',
-                'base.frameworkid = scale_assignments.id',
+                'base.frameworkid = scale_assignments.frameworkid',
                 REPORT_BUILDER_RELATION_MANY_TO_ONE
             ),
             new rb_join(
