@@ -51,8 +51,8 @@ class behat_mod_perform extends behat_base {
     public const PERFORM_ELEMENT_VALIDATION_ERROR_LOCATOR = '.tui-formFieldError';
     public const PERFORM_ELEMENT_LOCATOR = '.tui-participantContent__sectionItem';
     public const PERFORM_ELEMENT_PRINT_LOCATOR = '.tui-participantContentPrint__sectionItem';
-    public const PERFORM_ELEMENT_QUESTION_TEXT_LOCATOR = '.tui-participantContent__sectionItem-contentHeader';
-    public const PERFORM_ELEMENT_QUESTION_TEXT_PRINT_LOCATOR = '.tui-participantContentPrint__sectionItem-contentHeader';
+    public const PERFORM_ELEMENT_QUESTION_TEXT_LOCATOR = '.tui-performElementParticipantHeader__title';
+    public const PERFORM_ELEMENT_QUESTION_TEXT_PRINT_LOCATOR = '.tui-performElementParticipantHeader__title';
     public const PERFORM_ELEMENT_QUESTION_OPTIONAL_LOCATOR = '.tui-performRequiredOptionalIndicator--optional';
     public const PERFORM_ELEMENT_QUESTION_REQUIRED_LOCATOR = '.tui-performRequiredOptionalIndicator--required';
     public const SHORT_TEXT_RESPONSE_LOCATOR = 'input';
@@ -65,7 +65,7 @@ class behat_mod_perform extends behat_base {
     public const NUMERIC_RATING_SCALE_NUMBER_RESPONSE_LOCATOR = 'input[type=number]';
     public const PERFORM_ELEMENT_OTHER_RESPONSE_CONTAINER_LOCATOR = '.tui-otherParticipantResponses';
     public const PERFORM_ELEMENT_OTHER_RESPONSE_RELATION_LOCATOR = '.tui-otherParticipantResponses .tui-formLabel';
-    public const TUI_OTHER_PARTICIPANT_RESPONSES_ANONYMOUS_RESPONSE_PARTICIPANT_LOCATOR = '.tui-otherParticipantResponses__anonymousResponse-participant';
+    public const TUI_OTHER_PARTICIPANT_RESPONSES_ANONYMOUS_RESPONSE_PARTICIPANT_LOCATOR = '.tui-otherParticipantResponses__response-participant';
     public const PARTICIPANT_FORM_RESPONSE_DISPLAY_LOCATOR = '.tui-participantFormResponseDisplay';
     public const PARTICIPANT_FORM_HTML_VIEW_ONLY_RESPONSE_LOCATOR = '.tui-participantFormHtmlResponseDisplay';
     public const PERFORM_ACTIVITY_PRINT_SECTION_LOCATOR = '.tui-participantContentPrint__section';
@@ -101,7 +101,7 @@ class behat_mod_perform extends behat_base {
     public const FORM_BUILDER_ADD_ELEMENT_BUTTONS = '.tui-dropdownButton';
     public const FORM_BUILDER_RAW_TITLE_NAME = 'rawTitle';
     public const TUI_NOTEPAD_LINES = '.tui-notepadLines';
-    public const TUI_PARTICIPANT_CONTENT_PRINT_PRINTED_TODO = '.tui-participantContentPrint__printedTodo';
+    public const TUI_PARTICIPANT_CONTENT_PRINT_PRINTED_TODO = '.tui-performElementParticipantHeader__printedTodo';
 
     /**
      * Navigate to the specified page and wait for JS.
@@ -1643,6 +1643,9 @@ class behat_mod_perform extends behat_base {
             case 'Response redisplay':
                 $this->fill_redisplay_admin_form_settings();
                 break;
+            case 'Linked Review (TBD)':
+                $this->fill_linked_review_admin_form_settings($element_setting_container);
+                break;
             default:
                 $this->fill_element_admin_form_settings($element_setting_container);
         }
@@ -1672,6 +1675,18 @@ class behat_mod_perform extends behat_base {
                 $input->setValue($i + 1);
             }
         }
+    }
+
+    private function fill_linked_review_admin_form_settings(NodeElement $settings_container): void {
+        $table_node = new TableNode([
+            ['content_type', 'Competencies']
+        ]);
+
+        $selection_relationships = $settings_container->find('css', 'input[name="selection_relationships"]');
+        $selection_relationships->getParent()->find('css', 'label')->click();
+
+        $this->execute('behat_forms::i_set_the_following_fields_to_these_values', ['data' => $table_node]);
+        $this->execute('behat_general::i_wait_for_pending_js');
     }
 
     private function fill_multi_choice_multi_admin_form_settings(NodeElement $settings_container, bool $required): void {

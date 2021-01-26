@@ -18,7 +18,7 @@
 <template>
   <div class="tui-numericRatingScaleParticipantPrint">
     <Range
-      :value="data"
+      :value="formattedResponse"
       :no-thumb="!hasBeenAnswered"
       :default-value="element.data.defaultValue"
       :show-labels="false"
@@ -50,11 +50,7 @@ export default {
     NotepadLines,
   },
   props: {
-    data: [String, Number],
-    responseLines: {
-      type: Array,
-      required: true,
-    },
+    data: Array,
     element: {
       type: Object,
       required: true,
@@ -93,8 +89,8 @@ export default {
      * @return {string|null}
      */
     formattedResponse() {
-      if (this.responseLines.length > 0) {
-        return this.responseLines[0];
+      if (this.data.length > 0) {
+        return this.data[0];
       }
 
       return null;

@@ -366,6 +366,7 @@ $string['settings_unassign_behaviour_keep'] = 'Archive always (regardless of whe
 $string['settings_unassign_behaviour_keep_not_null'] = 'Archive ONLY IF user has achieved a rating in the competency (otherwise delete)';
 $string['settings_unassignment_header'] = 'Automatic user unassignment behaviour';
 $string['settings_unassignment_text'] = 'Configuration for determining the consequences of a user being unassigned from a competency due to them losing membership of an assigned audience, being removed from an assigned position or organisation, or their assigned audience, position or organisation being deleted.';
+$string['show_manual_rating'] = 'Show manual rating';
 $string['single_value_paths'] = 'Criteria-based paths';
 $string['single_value_proficient_mark'] = 'Proficient';
 $string['single_value_proficient_mark_help'] = 'Proficient values marked with';

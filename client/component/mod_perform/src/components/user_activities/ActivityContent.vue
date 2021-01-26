@@ -156,83 +156,31 @@
                 :key="sectionElement.id"
                 class="tui-participantContent__sectionItem"
               >
-                <h3
+                <ResponseHeader
                   v-if="sectionElement.element.title"
                   :id="$id('title')"
-                  class="tui-participantContent__sectionItem-contentHeader"
-                >
-                  {{ sectionElement.element.title }}
-
-                  <RequiredOptionalIndicator
-                    v-if="sectionElement.is_respondable"
-                    :is-required="sectionElement.element.is_required"
-                  />
-                </h3>
+                  :is-respondable="sectionElement.is_respondable"
+                  :required="sectionElement.element.is_required"
+                  :title="sectionElement.element.title"
+                />
 
                 <div class="tui-participantContent__sectionItem-content">
-                  <!-- Respondable elements -->
-                  <ElementParticipantForm
-                    v-if="
-                      sectionElement.is_respondable &&
-                        participantCanAnswer &&
-                        !viewOnlyReportMode
-                    "
-                    :accessible-label="sectionElement.element.title"
-                    :required="sectionElement.element.is_required"
-                    :aria-describedby="checkboxGroupId"
+                  <component
+                    :is="sectionElement.formComponent"
                     :active-section-is-closed="activeSectionIsClosed"
-                  >
-                    <template v-slot:content="{ labelId }">
-                      <component
-                        :is="sectionElement.responseDisplayComponent"
-                        v-if="activeSectionIsClosed"
-                        :element="sectionElement.element"
-                        :data="sectionElement.response_data"
-                        :response-lines="
-                          sectionElement.response_data_formatted_lines
-                        "
-                        :aria-labelledby="labelId"
-                        :label-id="checkboxGroupId"
-                      />
-                      <component
-                        :is="sectionElement.formComponent"
-                        v-else
-                        :is-draft="isDraft"
-                        :element="sectionElement.element"
-                        :path="['sectionElements', sectionElement.id]"
-                        :error="errors && errors[sectionElement.id]"
-                        :aria-labelledby="labelId"
-                        :label-id="checkboxGroupId"
-                        :section-element-id="sectionElement.id"
-                        :participant-section-id="participantSectionId"
-                        :participant-instance-id="participantInstanceId"
-                        :is-external-participant="isExternalParticipant"
-                      />
-                    </template>
-                  </ElementParticipantForm>
-
-                  <!-- Non respondable elements -->
-                  <div
-                    v-else-if="!sectionElement.is_respondable"
-                    class="tui-participantContent__staticElement"
-                  >
-                    <component
-                      :is="sectionElement.formComponent"
-                      :is-draft="isDraft"
-                      :element="sectionElement.element"
-                      :path="['sectionElements', sectionElement.id]"
-                      :error="errors && errors[sectionElement.id]"
-                      :section-element-id="sectionElement.id"
-                      :participant-instance-id="participantInstanceId"
-                      :is-external-participant="isExternalParticipant"
-                    />
-                  </div>
-
-                  <OtherParticipantResponses
-                    v-show="showOtherResponse"
-                    :view-only="viewOnlyReportMode"
-                    :section-element="sectionElement"
                     :anonymous-responses="activity.anonymous_responses"
+                    :element="sectionElement.element"
+                    :element-components="sectionElement.element.type"
+                    :error="errors && errors[sectionElement.id]"
+                    :group-id="checkboxGroupId"
+                    :is-draft="isDraft"
+                    :is-external-participant="isExternalParticipant"
+                    :participant-can-answer="participantCanAnswer"
+                    :participant-instance-id="participantInstanceId"
+                    :path="['sectionElements', sectionElement.id]"
+                    :section-element="sectionElement"
+                    :show-other-response="showOtherResponse"
+                    :view-only="viewOnlyReportMode"
                   />
                 </div>
               </div>
@@ -342,16 +290,14 @@ import ButtonGroup from 'tui/components/buttons/ButtonGroup';
 import ButtonSubmit from 'tui/components/buttons/Submit';
 import Collapsible from 'tui/components/collapsible/Collapsible';
 import ConfirmationModal from 'tui/components/modal/ConfirmationModal';
-import ElementParticipantForm from 'mod_perform/components/element/ElementParticipantForm';
 import FormRow from 'tui/components/form/FormRow';
 import Layout from 'tui/components/layouts/LayoutOneColumn';
 import LayoutSidePanel from 'mod_perform/components/user_activities/layout/LayoutOneColumnSidePanelActivities';
 import Loader from 'tui/components/loading/Loader';
-import OtherParticipantResponses from 'mod_perform/components/user_activities/participant/OtherParticipantResponses';
 import PageBackLink from 'tui/components/layouts/PageBackLink';
 import PageHeading from 'tui/components/layouts/PageHeading';
 import ParticipantUserHeader from 'mod_perform/components/user_activities/participant/ParticipantUserHeader';
-import RequiredOptionalIndicator from 'mod_perform/components/user_activities/RequiredOptionalIndicator';
+import ResponseHeader from 'mod_perform/components/element/ElementParticipantResponseHeader';
 import ResponsesAreVisibleToDescription from 'mod_perform/components/user_activities/participant/ResponsesAreVisibleToDescription';
 import ResponseRelationshipSelector from 'mod_perform/components/user_activities/ResponseRelationshipSelector';
 import SidePanelNav from 'tui/components/sidepanel/SidePanelNav';
@@ -373,22 +319,20 @@ const PARTICIPANT_SECTION_STATUS_COMPLETE = 'COMPLETE';
 export default {
   components: {
     ActionLink,
-    RequiredOptionalIndicator,
     Button,
     ButtonCancel,
     ButtonGroup,
     ButtonSubmit,
     Collapsible,
     ConfirmationModal,
-    ElementParticipantForm,
     FormRow,
     Layout,
     LayoutSidePanel,
     Loader,
-    OtherParticipantResponses,
     PageBackLink,
     PageHeading,
     ParticipantUserHeader,
+    ResponseHeader,
     ResponsesAreVisibleToDescription,
     ResponseRelationshipSelector,
     SidePanelNav,
@@ -792,12 +736,16 @@ export default {
         };
 
         this.sectionElements = result.section_element_responses.map(item => {
-          let responseDisplayComponent = null;
-          if (item.element.is_respondable) {
-            responseDisplayComponent = tui.asyncComponent(
-              item.element.element_plugin.participant_response_component
-            );
-          }
+          let childElements = item.element.children.map(child => {
+            return {
+              data: JSON.parse(child.data),
+              element_plugin: child.element_plugin,
+              id: child.id,
+              is_required: child.is_required,
+              is_respondable: child.is_respondable,
+              title: child.title,
+            };
+          });
 
           return {
             id: item.section_element_id,
@@ -805,14 +753,13 @@ export default {
             formComponent: tui.asyncComponent(
               item.element.element_plugin.participant_form_component
             ),
-            responseDisplayComponent,
             element: {
               type: item.element.element_plugin,
               title: item.element.title,
               identifier: item.element.identifier,
               data: JSON.parse(item.element.data),
               is_required: item.element.is_required,
-              children: item.element.children,
+              children: childElements,
               parent_element: item.element.parent_element,
               participantSectionId: result.id ? result.id : null,
               token: this.token,
@@ -1410,10 +1357,6 @@ export default {
       & > * + * {
         margin-top: var(--gap-8);
       }
-    }
-    &-contentHeader {
-      margin: 0;
-      @include tui-font-heading-x-small();
     }
   }
 }

@@ -47,10 +47,13 @@
             <ElementParticipantResponse>
               <template v-slot:content>
                 <component
-                  :is="sectionElement.responseDisplayComponent"
+                  :is="
+                    getComponent(
+                      sectionElement.element.type.participant_response_component
+                    )
+                  "
                   :element="sectionElement.element"
-                  :data="response.response_data"
-                  :response-lines="response.response_data_formatted_lines"
+                  :data="response.response_data_formatted_lines"
                 />
               </template>
             </ElementParticipantResponse>
@@ -72,19 +75,22 @@
         :key="index"
         :label="anonymousGroupLabel"
       >
-        <div class="tui-otherParticipantResponses__anonymousResponse">
+        <div class="tui-otherParticipantResponses__response">
           <div
             v-for="(response, responseIndex) in group.responses"
             :key="responseIndex"
-            class="tui-otherParticipantResponses__anonymousResponse-participant"
+            class="tui-otherParticipantResponses__response-participant"
           >
             <ElementParticipantResponse>
               <template v-slot:content>
                 <component
-                  :is="sectionElement.responseDisplayComponent"
+                  :is="
+                    getComponent(
+                      sectionElement.element.type.participant_response_component
+                    )
+                  "
                   :element="sectionElement.element"
-                  :data="response.response_data"
-                  :response-lines="response.response_data_formatted_lines"
+                  :data="response.response_data_formatted_lines"
                 />
               </template>
             </ElementParticipantResponse>
@@ -109,16 +115,16 @@ export default {
   },
 
   props: {
-    viewOnly: Boolean,
-    sectionElement: {
-      type: Object,
-      required: true,
-    },
+    anonymousLabel: String,
     anonymousResponses: {
       type: Boolean,
       required: true,
     },
-    anonymousLabel: String,
+    sectionElement: {
+      type: Object,
+      required: true,
+    },
+    viewOnly: Boolean,
   },
 
   computed: {
@@ -136,6 +142,7 @@ export default {
         return Object.assign({}, group, { responses });
       });
     },
+
     anonymousGroupLabel() {
       if (this.anonymousLabel) {
         return this.anonymousLabel;
@@ -147,7 +154,18 @@ export default {
       return this.$str('response_other', 'mod_perform');
     },
   },
+
   methods: {
+    /**
+     * Get dynamic component
+     *
+     * @param {String} componentPath Vue component path
+     * @return {function}
+     */
+    getComponent(componentPath) {
+      return tui.asyncComponent(componentPath);
+    },
+
     /**
      * Check question has other responses
      *

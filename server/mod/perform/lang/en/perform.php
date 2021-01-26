@@ -522,6 +522,7 @@ $string['section_action_delete'] = 'Delete';
 $string['section_action_add_above'] = 'Add section above';
 $string['section_action_add_below'] = 'Add section below';
 $string['section_add_element'] = 'Add element';
+$string['section_add_child_element'] = 'Add child element';
 $string['section_delete_element'] = 'Delete';
 $string['section_dropdown_menu'] = 'Section dropdown menu';
 $string['section_dropdown_other_elements'] = 'Other elements';

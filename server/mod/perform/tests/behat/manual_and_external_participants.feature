@@ -269,7 +269,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     And "Login" "button" should not exist
     And I should see perform activity relationship to user "External respondent" as an "external" participant
     And I should see perform "short text" question "Question 1" is unanswered
-    When I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "External participant was here"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
@@ -325,7 +325,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     And the "Appraiser (In progress)" radio button is selected
     When I click on "Continue" "button"
     Then I should see perform activity relationship to user "Appraiser"
-    When I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "Appraiser was here"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
@@ -337,7 +337,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     When I click on the "Peer (In progress)" tui radio
     And I click on "Continue" "button"
     Then I should see perform activity relationship to user "Peer"
-    When I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "Peer was here"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
@@ -350,7 +350,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     And I should not see "There are no activities assigned to you yet"
     When I click on "Act1" "link"
     Then I should see perform activity relationship to user "yourself"
-    When I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "Subject was here"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
@@ -364,7 +364,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     And I should not see "You have not been added as a participant in someone else's activity yet"
     When I click on "Act1" "link"
     Then I should see perform activity relationship to user "Mentor"
-    When I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "Mentor was here"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
@@ -383,7 +383,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     And the "Manager (Complete)" radio button is selected
     When I click on "Continue" "button"
     Then I should see perform activity relationship to user "Manager"
-    When I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "Manager was here"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
@@ -393,7 +393,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     And I click on the "Reviewer (In progress)" tui radio
     And I click on "Continue" "button"
     Then I should see perform activity relationship to user "Reviewer"
-    When I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "Reviewer was here"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
@@ -404,7 +404,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     When I navigate to the external participants form for user "Mark Metcalfe"
     Then I should see perform activity relationship to user "External respondent" as an "external" participant
     And I should see perform "short text" question "Question 1" is unanswered
-    When I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "External participant 1 was here"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
@@ -418,7 +418,7 @@ Feature: Allow users to select manual (internal and external) participants for a
     # Make sure the navigate back link is not displayed for external participants
     And I should not see "Performance activities"
     And I should see perform "short text" question "Question 1" is unanswered
-    When I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    When I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "External participant 2 was here"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal

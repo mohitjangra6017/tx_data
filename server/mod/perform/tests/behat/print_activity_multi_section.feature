@@ -57,7 +57,7 @@ Feature: Print view of a multi-section user activity
     And I navigate to the outstanding perform activities list page
     # Add responses as the subject.
     And I click on "Multi section activity" "link"
-    And I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    And I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 1" with "John answer 1"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
@@ -98,7 +98,7 @@ Feature: Print view of a multi-section user activity
     And I click on "Activities about others" "link"
     And I click on "Multi section activity" "link"
     And I click on "Next section" "button"
-    And I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    And I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 3" with "Manager answer 3"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
@@ -133,7 +133,7 @@ Feature: Print view of a multi-section user activity
     When I click on the "Manager (Not started)" tui radio
     And I click on "Continue" "button"
     And I click on "Next section" "button"
-    And I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    And I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Question 3" with "Manager-Appraiser answer 3"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal

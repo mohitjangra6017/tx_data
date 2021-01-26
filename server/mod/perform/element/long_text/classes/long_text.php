@@ -118,7 +118,12 @@ class long_text extends respondable_element_plugin implements element_response_h
      */
     public function format_response_lines(?string $encoded_response_data, ?string $encoded_element_data): array {
         // The response is displayed as HTML instead of individual lines, so nothing is returned here.
-        return [];
+        $data = $this->decode_response($encoded_response_data, $encoded_element_data);
+        $result = $data === null
+            ? ''
+            : $data;
+
+        return [$result];
     }
 
     /**

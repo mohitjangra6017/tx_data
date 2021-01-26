@@ -21,8 +21,8 @@
       <template v-slot:trigger="{ toggle, isOpen }">
         <ButtonIcon
           :aria-expanded="isOpen ? 'true' : 'false'"
-          :aria-label="$str('section_add_element', 'mod_perform')"
-          :text="$str('section_add_element', 'mod_perform')"
+          :aria-label="btnString"
+          :text="btnString"
           :styleclass="{ small: true }"
           :caret="true"
           @click.prevent="toggle"
@@ -76,13 +76,24 @@ export default {
     DropdownButton,
     DropdownGroup,
   },
+
   props: {
     elementPlugins: {
       type: Array,
       required: true,
     },
+    forChildElements: Boolean,
   },
+
   computed: {
+    btnString: function() {
+      if (this.forChildElements) {
+        return this.$str('section_add_child_element', 'mod_perform');
+      }
+
+      return this.$str('section_add_element', 'mod_perform');
+    },
+
     questionElement: function() {
       return this.elementPlugins.filter(function(plugin) {
         if (plugin.group === '1') {
@@ -98,6 +109,7 @@ export default {
       });
     },
   },
+
   methods: {
     addElementPlugin(plugin) {
       this.$emit('add-element-item', plugin);
@@ -111,6 +123,7 @@ export default {
     "mod_perform": [
       "section_element_questions",
       "section_add_element",
+      "section_add_child_element",
       "section_dropdown_other_elements",
       "section_dropdown_question_elements"
     ]

@@ -17,51 +17,63 @@
 -->
 
 <template>
-  <FormScope :path="path" :process="process">
-    <div class="tui-elementEditNumericRatingScaleParticipantForm">
-      <FieldGroup :aria-labelledby="ariaLabelledby">
-        <FormRange
-          name="response"
-          :default-value="element.data.defaultValue"
-          :show-labels="false"
-          :min="min"
-          :max="max"
-          :validations="validations"
-        />
-      </FieldGroup>
-      <FieldGroup
-        class="tui-elementEditNumericRatingScaleParticipantForm__input"
-        :aria-labelledby="ariaLabelledby"
-      >
-        <FormNumber name="response" :min="min" :max="max" char-length="5" />
-      </FieldGroup>
-    </div>
-  </FormScope>
+  <!-- Handle the different view switching (read only / print / form),
+  populate form content if editable and display others responses -->
+  <ElementParticipantFormContent
+    v-bind="$attrs"
+    :element="element"
+    :is-draft="isDraft"
+  >
+    <template v-slot:content="{ labelId }">
+      <FormScope :path="path" :process="process">
+        <div class="tui-elementEditNumericRatingScaleParticipantForm">
+          <FieldGroup :aria-labelledby="labelId">
+            <FormRange
+              name="response"
+              :default-value="element.data.defaultValue"
+              :show-labels="false"
+              :min="min"
+              :max="max"
+              :validations="validations"
+            />
+          </FieldGroup>
+          <FieldGroup
+            class="tui-elementEditNumericRatingScaleParticipantForm__input"
+            :aria-labelledby="labelId"
+          >
+            <FormNumber name="response" :min="min" :max="max" char-length="5" />
+          </FieldGroup>
+        </div>
+      </FormScope>
+    </template>
+  </ElementParticipantFormContent>
 </template>
 
 <script>
+import ElementParticipantFormContent from 'mod_perform/components/element/ElementParticipantFormContent';
+import FieldGroup from 'tui/components/form/FieldGroup';
 import FormScope from 'tui/components/reform/FormScope';
 import { FormRange, FormNumber } from 'tui/components/uniform';
 import { v as validation } from 'tui/validation';
-import FieldGroup from 'tui/components/form/FieldGroup';
 
 export default {
   components: {
+    ElementParticipantFormContent,
+    FieldGroup,
     FormScope,
     FormRange,
     FormNumber,
-    FieldGroup,
   },
+
   props: {
-    path: [String, Array],
-    error: String,
+    element: Object,
     isDraft: Boolean,
-    element: {
-      type: Object,
-      required: true,
+    path: {
+      type: [String, Array],
+      default: '',
     },
-    ariaLabelledby: String,
   },
+
   computed: {
     /**
      * The minimum value that can be selected.
@@ -80,6 +92,7 @@ export default {
       return parseInt(this.element.data.highValue, 10);
     },
   },
+
   methods: {
     /**
      * An array of validation rules for the element.

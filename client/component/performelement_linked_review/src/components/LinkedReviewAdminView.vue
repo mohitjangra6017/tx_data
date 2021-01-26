@@ -24,6 +24,7 @@
 
     <div class="tui-linkedReviewAdminView__questions">
       <PerformAdminChildElements
+        v-if="!reportPreview"
         :activity-context-id="activityContextId"
         :activity-id="activityId"
         :activity-state="activityState"
@@ -57,6 +58,7 @@ export default {
     data: Object,
     elementId: [Number, String],
     elementPlugins: Array,
+    reportPreview: Boolean,
     sectionElement: Object,
     sectionId: Number,
   },
@@ -67,6 +69,9 @@ export default {
      *
      */
     respondableElementPlugins() {
+      if (this.reportPreview) {
+        return null;
+      }
       return this.elementPlugins.filter(
         elementPlugin =>
           elementPlugin.plugin_config.is_respondable &&
@@ -76,6 +81,11 @@ export default {
   },
 
   methods: {
+    /**
+     * Get type specific content for preview
+     *
+     * @return {function}
+     */
     getTypeComponent() {
       if (!this.sectionElement.element.data.components) {
         return null;

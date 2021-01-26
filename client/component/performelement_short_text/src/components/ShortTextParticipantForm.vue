@@ -16,30 +16,47 @@
   @module performelement_short_text
 -->
 <template>
-  <FormScope :path="path" :process="process">
-    <FormText :disabled="disabled" name="response" :validations="validations" />
-  </FormScope>
+  <!-- Handle the different view switching (read only / print / form),
+  populate form content if editable and display others responses -->
+  <ElementParticipantFormContent
+    v-bind="$attrs"
+    :element="element"
+    :is-draft="isDraft"
+  >
+    <template v-slot:content>
+      <FormScope :path="path" :process="process">
+        <FormText
+          :disabled="disabled"
+          name="response"
+          :validations="validations"
+        />
+      </FormScope>
+    </template>
+  </ElementParticipantFormContent>
 </template>
 
 <script>
+import ElementParticipantFormContent from 'mod_perform/components/element/ElementParticipantFormContent';
 import { FormScope, FormText } from 'tui/components/uniform';
 import { v as validation } from 'tui/validation';
 
 export default {
   components: {
+    ElementParticipantFormContent,
     FormScope,
     FormText,
   },
+
   props: {
     disabled: Boolean,
+    element: Object,
+    isDraft: Boolean,
     path: {
       type: [String, Array],
       default: '',
     },
-    error: String,
-    isDraft: Boolean,
-    element: Object,
   },
+
   computed: {
     /**
      * An array of validation rules for the element.
@@ -61,6 +78,7 @@ export default {
       return rules;
     },
   },
+
   methods: {
     /**
      * Process the form values.

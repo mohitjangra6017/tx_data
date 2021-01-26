@@ -6,6 +6,9 @@ information provided here is intended especially for developers.
     * CustomRatingScaleElementAdminDisplay.vue replaced with CustomRatingScaleAdminView.vue
     * CustomRatingScaleElementAdminForm.vue replaced with CustomRatingScaleAdminEdit.vue
     * CustomRatingScaleElementAdminReadOnlyDisplay.vue replaced with CustomRatingScaleAdminSummary.vue
-* Replaced CustomRatingScaleElementParticipantForm.vue with CustomRatingScaleParticipantForm.vue and changed validation to use core validation rules
-    * Template & lang string changes
 * Removed CustomRatingScaleElementParticipantResponse.vue, generic ResponseDisplay.vue component is used instead
+* Replaced CustomRatingScaleElementParticipantForm.vue with CustomRatingScaleParticipantForm.vue
+* Updated CustomRatingScaleParticipantForm.vue to have more control of it's display and to handle switching
+  between difference states using a generic helper component ElementParticipantFormContent.
+    * Changed validation to use core validation rules where possible
+    * Changes to template (wrapping the formScope with helper component), SCSS & lang strings

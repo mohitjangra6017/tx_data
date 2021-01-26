@@ -18,10 +18,9 @@
 <template>
   <div class="tui-longTextParticipantPrint">
     <div
-      v-if="hasBeenAnswered"
+      v-if="responseData && responseData.length > 0"
       ref="content"
-      class="tui-longTextParticipantPrint__wekaContent"
-      v-html="data"
+      v-html="responseData"
     />
     <NotepadLines v-else :lines="6" />
   </div>
@@ -35,16 +34,20 @@ export default {
     NotepadLines,
   },
   props: {
-    data: String,
+    data: Array,
   },
   computed: {
     /**
-     * Has this question been answered.
+     * Parse the stringified response markup
      *
-     * @return {boolean}
+     * @return {HTML}
      */
-    hasBeenAnswered() {
-      return this.data && this.data.length > 0;
+    responseData() {
+      if (!this.data || !this.data[0]) {
+        return '';
+      }
+
+      return JSON.parse(this.data[0]);
     },
   },
 

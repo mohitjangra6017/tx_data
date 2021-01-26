@@ -79,9 +79,13 @@ export default {
   },
 
   props: {
+    participantInstanceId: {
+      type: [String, Number],
+      required: true,
+    },
+    sectionElementId: String,
     selectedContent: {
       type: Array,
-      required: false,
     },
   },
 
@@ -109,8 +113,8 @@ export default {
         variables: {
           input: {
             content_ids: this.selectedContent.map(content => content.id),
-            section_element_id: this.$parent.$parent.sectionElementId,
-            participant_instance_id: this.$parent.$parent.participantInstanceId,
+            participant_instance_id: this.participantInstanceId,
+            section_element_id: this.sectionElementId,
           },
         },
         refetchAll: false, // Don't refetch all the data again
@@ -138,7 +142,7 @@ export default {
     },
 
     /**
-     * Delete a content from list
+     * Delete content from list
      */
     deleteContent(event) {
       this.$emit('delete-content', event);

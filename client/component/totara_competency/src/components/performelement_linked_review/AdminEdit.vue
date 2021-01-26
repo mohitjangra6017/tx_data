@@ -19,6 +19,7 @@
 <template>
   <FormRow>
     <FormCheckbox name="show_rating">
+      {{ $str('show_manual_rating', 'totara_competency') }}
       Show manual ratings
     </FormCheckbox>
   </FormRow>
@@ -40,7 +41,7 @@ export default {
 <lang-strings>
 {
   "totara_competency": [
-    "show_rating"
+    "show_manual_rating"
   ]
 }
 </lang-strings>

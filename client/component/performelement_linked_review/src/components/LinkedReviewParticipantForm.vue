@@ -18,133 +18,102 @@
 -->
 
 <template>
-  <div>
-    <Loader :loading="loading" />
+  <Loader v-if="$apollo.loading" :loading="$apollo.loading" />
+  <div v-else class="tui-linkedReviewParticipantForm">
+    <!-- User selects what content they want to review -->
+    <component
+      :is="getComponent(element.data.components.participant_picker)"
+      v-if="selectedContent.length === 0"
+      :participant-instance-id="participantInstanceId"
+      :section-element-id="sectionElement.id"
+      :settings="contentSettings"
+      @update="refetch"
+    />
 
-    <div v-if="!loading">
-      <!-- User selects what content they want to review -->
-      <component
-        :is="component(element.data.components.participant_picker)"
-        v-if="selectedContent.length === 0"
-        :settings="contentSettings"
-        @update="refetch"
-      />
+    <!-- Respondable card for each group of questions -->
+    <Card v-for="(item, index) in selectedContent" v-else :key="item.id">
+      <div class="tui-linkedReviewParticipantForm__group">
+        <!-- Display of review content -->
+        <component
+          :is="getComponent(element.data.components.participant_content)"
+          :content="item"
+          :settings="contentSettings"
+        />
 
-      <!-- Actual way of responding to content -->
-      <div
-        v-for="(item, index) in selectedContent"
-        v-else
-        :key="item.id"
-        class="tui-performLinkedReview__questionsGroup"
-      >
-        <Separator v-if="index > 0" />
-
-        <div class="tui-performLinkedReview__questionsGroup-content">
-          <component
-            :is="component(element.data.components.participant_content)"
-            :content="item"
-            :settings="contentSettings"
-          />
-        </div>
-
-        <!-- Display response elements -->
+        <!-- Display for each respondable question within the group -->
         <div
-          v-for="childElement in element.children"
+          v-for="(childElement, elementIndex) in element.children"
           :key="item.id + '-' + childElement.id"
-          class="tui-performLinkedReview__questionsGroup-response"
+          class="tui-linkedReviewParticipantForm__groupQuestion"
         >
-          <h3
+          <ResponseHeader
             v-if="childElement.title"
             :id="$id('title')"
-            class="tui-participantContent__sectionItem-contentHeader"
-          >
-            {{ childElement.title }}
-            <RequiredOptionalIndicator
-              v-if="childElement.is_respondable"
-              :is-required="childElement.is_required"
-            />
-          </h3>
-          <component
-            :is="
-              component(childElement.element_plugin.participant_form_component)
+            :has-printed-to-do-icon="
+              hasPrintedToDoIcon && childElement.is_respondable
             "
-            :path="path.concat([item.id + '-' + childElement.id])"
-            :element="childElement"
-            :section-element-id="sectionElementId"
-            :participant-instance-id="participantInstanceId"
-            :is-external-participant="isExternalParticipant"
-            class="tui-performLinkedReview__questionsGroup-response-element"
+            :is-respondable="childElement.is_respondable"
+            :required="childElement.is_required"
+            :title="childElement.title"
           />
+
+          <div class="tui-linkedReviewParticipantForm__groupQuestion-content">
+            <!-- Load child component here -->
+            <component
+              :is="
+                getComponent(
+                  childElement.element_plugin.participant_form_component
+                )
+              "
+              v-bind="$attrs"
+              :element="childElement"
+              :element-components="childElement.element_plugin"
+              :participant-instance-id="participantInstanceId"
+              :path="[
+                'sectionElements',
+                sectionElement.id + '-' + index + '-' + elementIndex,
+              ]"
+              :section-element="sectionElement"
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </Card>
   </div>
 </template>
 
 <script>
-import { FormField, FormScope } from 'tui/components/uniform';
-import { v as validation } from 'tui/validation';
+import Card from 'tui/components/card/Card';
 import Loader from 'tui/components/loading/Loader';
-import RequiredOptionalIndicator from 'mod_perform/components/user_activities/RequiredOptionalIndicator';
-import Separator from 'tui/components/decor/Separator';
+import ResponseHeader from 'mod_perform/components/element/ElementParticipantResponseHeader';
 
 export default {
   components: {
-    FormField,
-    FormScope,
+    Card,
     Loader,
-    RequiredOptionalIndicator,
-    Separator,
+    ResponseHeader,
   },
 
   props: {
-    disabled: Boolean,
-    path: {
-      type: [String, Array],
-      default: '',
-    },
-    error: String,
-    isDraft: Boolean,
     element: Object,
-    isExternalParticipant: Boolean,
-    sectionElementId: {
-      type: [String, Number],
-      required: true,
-    },
+    hasPrintedToDoIcon: Boolean,
     participantInstanceId: {
       type: [String, Number],
       required: true,
     },
+    path: {
+      type: [String, Array],
+      default: '',
+    },
+    sectionElement: Object,
   },
 
   data() {
     return {
-      selectedContent: [],
       contentSettings: this.element.data.content_type_settings,
-      loading: true,
+      groupId: this.$id('label'),
+      selectedContent: [],
     };
-  },
-
-  computed: {
-    /**
-     * An array of validation rules for the element.
-     * The rules returned depend on if we are saving as draft or if a response is required or not.
-     *
-     * @return {(function|object)[]}
-     */
-    validations() {
-      const rules = [validation.maxLength(1024)];
-
-      if (this.isDraft) {
-        return rules;
-      }
-
-      if (this.element && this.element.is_required) {
-        return [validation.required(), ...rules];
-      }
-
-      return rules;
-    },
   },
 
   /**
@@ -159,11 +128,10 @@ export default {
           variables() {
             return {
               participant_instance_id: this.participantInstanceId,
-              section_element_id: this.sectionElementId,
+              section_element_id: this.sectionElement.id,
             };
           },
           update(data) {
-            this.loading = false;
             return data.items;
           },
         });
@@ -172,22 +140,13 @@ export default {
 
   methods: {
     /**
-     * @param {String} componentPath Vue component path
-     * @return {Function}
-     */
-    component(componentPath) {
-      return tui.asyncComponent(componentPath);
-    },
-
-    /**
-     * Process the form values.
+     * Get dynamic component
      *
-     * @param {Object} value
-     * @return {Object|null}
+     * @param {String} componentPath Vue component path
+     * @return {function}
      */
-    process(value) {
-      // TODO: Do something a bit smarter here.
-      return value;
+    getComponent(componentPath) {
+      return tui.asyncComponent(componentPath);
     },
 
     /**
@@ -202,19 +161,24 @@ export default {
 </script>
 
 <style lang="scss">
-.tui-performLinkedReview {
-  &__questionsGroup {
+.tui-linkedReviewParticipantForm {
+  & > * + * {
+    margin-top: var(--gap-4);
+  }
+
+  &__group {
+    width: 100%;
+    padding: var(--gap-4);
+  }
+
+  &__groupQuestion {
+    margin-top: var(--gap-12);
+
     &-content {
-      padding: var(--gap-4);
-      border: var(--border-width-thin) solid var(--card-border-color);
-      border-radius: var(--card-border-radius);
-    }
+      margin-top: var(--gap-8);
 
-    &-response {
-      margin-top: var(--gap-4);
-
-      &-element {
-        margin-top: var(--gap-2);
+      & > * + * {
+        margin-top: var(--gap-8);
       }
     }
   }

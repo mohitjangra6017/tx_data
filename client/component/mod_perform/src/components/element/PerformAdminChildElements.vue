@@ -76,6 +76,7 @@
 
     <ContentAddElementButton
       :element-plugins="addableElementPlugins"
+      :for-child-elements="true"
       @add-element-item="addElement"
     />
   </div>

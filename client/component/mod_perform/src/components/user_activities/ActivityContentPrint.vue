@@ -82,76 +82,43 @@
               :key="elementResponse.id"
               class="tui-participantContentPrint__sectionItem"
             >
-              <PrintedTodoIcon
-                v-if="showPrintedTodo(sectionResponse, elementResponse)"
-                class="tui-participantContentPrint__printedTodo"
-              />
-              <h3
+              <ResponseHeader
                 v-if="elementResponse.element.title"
                 :id="$id('title')"
-                class="tui-participantContentPrint__sectionItem-contentHeader"
-              >
-                {{ elementResponse.element.title }}
-              </h3>
-
-              <RequiredOptionalIndicator
-                v-if="elementResponse.is_respondable"
-                :is-required="elementResponse.element.is_required"
+                :has-printed-to-do-icon="
+                  showPrintedTodo(sectionResponse, elementResponse)
+                "
+                :is-respondable="elementResponse.is_respondable"
+                :required="elementResponse.element.is_required"
+                :title="elementResponse.element.title"
               />
 
               <div class="tui-participantContentPrint__sectionItem-content">
-                <ElementParticipantForm
-                  v-if="
-                    elementResponse.is_respondable && sectionResponse.can_answer
+                <component
+                  :is="elementResponse.formComponent"
+                  class="tui-participantContentPrint__element"
+                  :active-section-is-closed="
+                    sectionResponse.availability_status === 'CLOSED'
                   "
+                  :anonymous-responses="activity.anonymous_responses"
+                  :element="elementResponse.element"
+                  :element-components="elementResponse.element.type"
                   :from-print="
                     elementResponse.is_respondable && sectionResponse.can_answer
                   "
-                >
-                  <template v-slot:content>
-                    <component
-                      :is="elementResponse.responseDisplayComponent"
-                      v-if="sectionResponse.availability_status === 'CLOSED'"
-                      class="tui-participantContentPrint__element tui-participantContentPrint__element--readOnly"
-                      :element="elementResponse.element"
-                      :data="elementResponse.response_data"
-                      :response-lines="
-                        elementResponse.response_data_formatted_lines
-                      "
-                      :section-element-id="elementResponse.id"
-                      :participant-instance-id="participantInstanceId"
-                    />
-                    <component
-                      :is="elementResponse.printComponent"
-                      v-else
-                      class="tui-participantContentPrint__element"
-                      :element="elementResponse.element"
-                      :path="['sectionElements', elementResponse.id]"
-                      :data="elementResponse.response_data"
-                      :response-lines="
-                        elementResponse.response_data_formatted_lines
-                      "
-                      :section-element-id="elementResponse.id"
-                      :participant-instance-id="participantInstanceId"
-                    />
-                  </template>
-                </ElementParticipantForm>
-                <OtherParticipantResponses
-                  :view-only="false"
-                  :section-element="elementResponse"
-                  :anonymous-responses="activity.anonymous_responses"
-                  class="tui-participantContentPrint__otherParticipantResponses"
-                />
-                <component
-                  :is="elementResponse.printComponent"
-                  v-if="!elementResponse.is_respondable"
-                  class="tui-participantContentPrint__element"
-                  :element="elementResponse.element"
-                  :path="['sectionElements', elementResponse.id]"
-                  :data="elementResponse.response_data"
-                  :response-lines="
-                    elementResponse.response_data_formatted_lines
+                  group-id=""
+                  :has-printed-to-do-icon="
+                    showPrintedTodo(sectionResponse, elementResponse)
                   "
+                  :is-draft="isDraft"
+                  :participant-can-answer="
+                    elementResponse.is_respondable && sectionResponse.can_answer
+                  "
+                  :participant-instance-id="participantInstanceId"
+                  :path="['sectionElements', elementResponse.id]"
+                  :section-element="elementResponse"
+                  :show-other-response="true"
+                  :view-only="false"
                 />
               </div>
             </div>
@@ -175,11 +142,10 @@ import { uniqueId } from 'tui/util';
 import { RELATIONSHIP_SUBJECT } from 'mod_perform/constants';
 // Components
 import Button from 'tui/components/buttons/Button';
-import ElementParticipantForm from 'mod_perform/components/element/ElementParticipantForm';
 import Loader from 'tui/components/loading/Loader';
-import OtherParticipantResponses from 'mod_perform/components/user_activities/participant/OtherParticipantResponses';
 import ParticipantGeneralInformation from 'mod_perform/components/user_activities/participant/ParticipantGeneralInformation';
 import RequiredOptionalIndicator from 'mod_perform/components/user_activities/RequiredOptionalIndicator';
+import ResponseHeader from 'mod_perform/components/element/ElementParticipantResponseHeader';
 import { Uniform } from 'tui/components/uniform';
 import PrintedTodoIcon from 'tui/components/icons/PrintedTodo';
 // graphQL
@@ -189,10 +155,9 @@ export default {
   components: {
     RequiredOptionalIndicator,
     Button,
-    ElementParticipantForm,
     Loader,
-    OtherParticipantResponses,
     ParticipantGeneralInformation,
+    ResponseHeader,
     Uniform,
     PrintedTodoIcon,
   },
@@ -276,18 +241,29 @@ export default {
           sectionResponse.id
         ] = sectionResponse.section_element_responses.map(
           sectionElementResponse => {
+            // Parse child data
+            let childElements = sectionElementResponse.element.children.map(
+              child => {
+                return {
+                  data: JSON.parse(child.data),
+                  element_plugin: child.element_plugin,
+                  id: child.id,
+                  is_required: child.is_required,
+                  is_respondable: child.is_respondable,
+                  title: child.title,
+                };
+              }
+            );
+
             return {
               id: sectionElementResponse.section_element_id,
               clientId: uniqueId(),
-              printComponent: tui.asyncComponent(
+              formComponent: tui.asyncComponent(
                 sectionElementResponse.element.element_plugin
-                  .participant_print_component
-              ),
-              responseDisplayComponent: tui.asyncComponent(
-                sectionElementResponse.element.element_plugin
-                  .participant_response_component
+                  .participant_form_component
               ),
               element: {
+                children: childElements,
                 type: sectionElementResponse.element.element_plugin,
                 title: sectionElementResponse.element.title,
                 data: JSON.parse(sectionElementResponse.element.data),
@@ -469,10 +445,11 @@ export default {
         return false;
       }
 
-      return (
-        elementResponse.is_respondable &&
-        elementResponse.response_data_formatted_lines.length === 0
-      );
+      let responseValue = elementResponse.response_data_formatted_lines[0];
+      let noResponseValue =
+        responseValue === undefined || responseValue.length === 0;
+
+      return elementResponse.is_respondable && noResponseValue;
     },
   },
 };
@@ -592,10 +569,6 @@ export default {
 
   &__element {
     pointer-events: none;
-
-    &--readOnly {
-      padding-top: var(--gap-1);
-    }
   }
 
   &__sectionItems {
@@ -610,17 +583,6 @@ export default {
         margin-top: var(--gap-4);
       }
     }
-
-    &-contentHeader {
-      @include tui-font-heading-x-small;
-      display: inline;
-      margin-top: 0;
-      margin-left: 0;
-    }
-  }
-
-  &__otherParticipantResponses {
-    margin-top: var(--gap-8);
   }
 
   &__actionButtons {

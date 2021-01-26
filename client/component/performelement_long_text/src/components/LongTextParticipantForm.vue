@@ -18,37 +18,50 @@
 -->
 
 <template>
-  <FormScope v-if="loaded" :path="path" :process="process">
-    <FormField
-      v-slot="{ value: formValue, update: formUpdate }"
-      name="response"
-      :validations="validations"
-      :char-length="50"
-      :error="error"
-    >
-      <WekaWrapper
-        v-slot="{ value, update }"
-        :value="formValue"
-        @update="formUpdate"
-      >
-        <Weka
-          :value="value"
-          :usage-identifier="{
-            component: 'performelement_long_text',
-            area: 'response',
-            instanceId: sectionElementId,
-          }"
-          variant="description"
-          :file-item-id="draftFileId"
-          :is-logged-in="!isExternalParticipant"
-          @input="update"
-        />
-      </WekaWrapper>
-    </FormField>
-  </FormScope>
+  <!-- Handle the different view switching (read only / print / form),
+  populate form content if editable and display others responses -->
+  <ElementParticipantFormContent
+    v-bind="$attrs"
+    :element="element"
+    :error="error"
+    :is-draft="isDraft"
+    :section-element="sectionElement"
+  >
+    <template v-slot:content>
+      <FormScope v-if="loaded" :path="path" :process="process">
+        <FormField
+          v-slot="{ value: formValue, update: formUpdate }"
+          name="response"
+          :validations="validations"
+          :char-length="50"
+          :error="error"
+        >
+          <WekaWrapper
+            v-slot="{ value, update }"
+            :value="formValue"
+            @update="formUpdate"
+          >
+            <Weka
+              :value="value"
+              :usage-identifier="{
+                component: 'performelement_long_text',
+                area: 'response',
+                instanceId: sectionElement.id,
+              }"
+              variant="description"
+              :file-item-id="draftFileId"
+              :is-logged-in="!isExternalParticipant"
+              @input="update"
+            />
+          </WekaWrapper>
+        </FormField>
+      </FormScope>
+    </template>
+  </ElementParticipantFormContent>
 </template>
 
 <script>
+import ElementParticipantFormContent from 'mod_perform/components/element/ElementParticipantFormContent';
 import { FormField } from 'tui/components/uniform';
 import FormScope from 'tui/components/reform/FormScope';
 import Weka from 'editor_weka/components/Weka';
@@ -59,28 +72,27 @@ import prepareDraftArea from 'performelement_long_text/graphql/prepare_draft_are
 
 export default {
   components: {
+    ElementParticipantFormContent,
     FormField,
     FormScope,
     Weka,
     WekaWrapper,
   },
+
   props: {
-    path: {
-      type: [String, Array],
-      default: '',
-    },
+    element: Object,
     error: String,
     isDraft: Boolean,
-    element: Object,
     isExternalParticipant: Boolean,
-    sectionElementId: {
-      type: [String, Number],
-      required: true,
-    },
     participantInstanceId: {
       type: [String, Number],
       required: true,
     },
+    path: {
+      type: [String, Array],
+      default: '',
+    },
+    sectionElement: Object,
   },
 
   data() {
@@ -131,7 +143,7 @@ export default {
       } = await this.$apollo.mutate({
         mutation: prepareDraftArea,
         variables: {
-          section_element_id: this.sectionElementId,
+          section_element_id: this.sectionElement.id,
           participant_instance_id: this.participantInstanceId,
         },
       });

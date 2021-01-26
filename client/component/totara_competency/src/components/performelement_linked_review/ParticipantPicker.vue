@@ -19,7 +19,9 @@
 
 <template>
   <SelectContent
+    :participant-instance-id="participantInstanceId"
     :selected-content="selectedContent"
+    :section-element-id="sectionElementId"
     @delete-content="deleteContent"
     @update="$emit('update')"
   >
@@ -64,6 +66,11 @@ export default {
   },
 
   props: {
+    participantInstanceId: {
+      type: [String, Number],
+      required: true,
+    },
+    sectionElementId: String,
     settings: Object,
   },
 

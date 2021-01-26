@@ -16,42 +16,58 @@
   @module performelement_multi_choice_single
 -->
 <template>
-  <FormScope :path="path" :process="process">
-    <FormRadioGroup
-      class="tui-multiChoiceSingleParticipantForm"
-      :validations="validations"
-      name="response"
-    >
-      <Radio
-        v-for="item in element.data.options"
-        :key="item.name"
-        :value="item.name"
-      >
-        {{ item.value }}
-      </Radio>
-    </FormRadioGroup>
-  </FormScope>
+  <!-- Handle the different view switching (read only / print / form),
+  populate form content if editable and display others responses -->
+  <ElementParticipantFormContent
+    v-bind="$attrs"
+    :element="element"
+    :is-draft="isDraft"
+    :from-print="false"
+  >
+    <template v-slot:content>
+      <FormScope :path="path" :process="process">
+        <FormRadioGroup
+          class="tui-multiChoiceSingleParticipantForm"
+          :validations="validations"
+          name="response"
+        >
+          <Radio
+            v-for="item in element.data.options"
+            :key="item.name"
+            :value="item.name"
+          >
+            {{ item.value }}
+          </Radio>
+        </FormRadioGroup>
+      </FormScope>
+    </template>
+  </ElementParticipantFormContent>
 </template>
 
 <script>
+import ElementParticipantFormContent from 'mod_perform/components/element/ElementParticipantFormContent';
+import FormRadioGroup from 'tui/components/uniform/FormRadioGroup';
 import FormScope from 'tui/components/reform/FormScope';
 import Radio from 'tui/components/form/Radio';
-import FormRadioGroup from 'tui/components/uniform/FormRadioGroup';
 import { v as validation } from 'tui/validation';
 
 export default {
   components: {
+    ElementParticipantFormContent,
+    FormRadioGroup,
     FormScope,
     Radio,
-    FormRadioGroup,
   },
 
   props: {
-    path: [String, Array],
-    error: String,
-    isDraft: Boolean,
     element: Object,
+    isDraft: Boolean,
+    path: {
+      type: [String, Array],
+      default: '',
+    },
   },
+
   computed: {
     /**
      * An array of validation rules for the element.
@@ -67,6 +83,7 @@ export default {
       return [];
     },
   },
+
   methods: {
     /**
      * Process the form values.

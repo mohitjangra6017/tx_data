@@ -16,47 +16,63 @@
   @module performelement_multi_choice_multi
 -->
 <template>
-  <FormScope :path="path" :process="process">
-    <div class="tui-multiChoiceMultiParticipantForm">
-      <FormRowDetails :id="labelId">
-        <span v-for="(settingString, i) in settingStrings" :key="i">
-          {{ settingString }} <br v-if="i < settingString.length" />
-        </span>
-      </FormRowDetails>
-      <FormCheckboxGroup :validations="validations" name="response">
-        <Checkbox
-          v-for="item in element.data.options"
-          :key="item.name"
-          :value="item.name"
-        >
-          {{ item.value }}
-        </Checkbox>
-      </FormCheckboxGroup>
-    </div>
-  </FormScope>
+  <!-- Handle the different view switching (read only / print / form),
+  populate form content if editable and display others responses -->
+  <ElementParticipantFormContent
+    v-bind="$attrs"
+    :element="element"
+    :is-draft="isDraft"
+    :from-print="false"
+  >
+    <template v-slot:content="{ labelId }">
+      <FormScope :path="path" :process="process">
+        <div class="tui-multiChoiceMultiParticipantForm">
+          <FormRowDetails :id="labelId">
+            <span v-for="(settingString, i) in settingStrings" :key="i">
+              {{ settingString }} <br v-if="i < settingString.length" />
+            </span>
+          </FormRowDetails>
+          <FormCheckboxGroup :validations="validations" name="response">
+            <Checkbox
+              v-for="item in element.data.options"
+              :key="item.name"
+              :value="item.name"
+            >
+              {{ item.value }}
+            </Checkbox>
+          </FormCheckboxGroup>
+        </div>
+      </FormScope>
+    </template>
+  </ElementParticipantFormContent>
 </template>
 
 <script>
-import FormScope from 'tui/components/reform/FormScope';
-import FormCheckboxGroup from 'tui/components/uniform/FormCheckboxGroup';
 import Checkbox from 'tui/components/form/Checkbox';
+import ElementParticipantFormContent from 'mod_perform/components/element/ElementParticipantFormContent';
+import FormCheckboxGroup from 'tui/components/uniform/FormCheckboxGroup';
 import FormRowDetails from 'tui/components/form/FormRowDetails';
+import FormScope from 'tui/components/reform/FormScope';
 import { v as validation } from 'tui/validation';
 
 export default {
   components: {
     Checkbox,
-    FormScope,
+    ElementParticipantFormContent,
     FormCheckboxGroup,
     FormRowDetails,
+    FormScope,
   },
+
   props: {
-    path: [String, Array],
-    error: String,
-    isDraft: Boolean,
     element: Object,
-    labelId: String,
+    isDraft: Boolean,
+    path: {
+      type: [String, Array],
+      default: '',
+    },
   },
+
   computed: {
     /**
      * The min selection restriction (if set).
@@ -72,6 +88,7 @@ export default {
 
       return parseInt(value, 10);
     },
+
     /**
      * The max selection restriction (if set).
      *
@@ -86,6 +103,7 @@ export default {
 
       return parseInt(value, 10);
     },
+
     /**
      * The restriction setting explanations to be displayed above the element.
      *
@@ -134,6 +152,7 @@ export default {
 
       return strings;
     },
+
     /**
      * An array of validation rules for the element.
      * The rules returned depend on if we are saving as draft or if a response is required or not.
@@ -158,6 +177,7 @@ export default {
       return rules;
     },
   },
+
   methods: {
     /**
      * Validation run for enforcing the an exact selection count rule (if configured).
@@ -197,6 +217,7 @@ export default {
 
       return null;
     },
+
     /**
      * Validation run for enforcing the min selection count rule (if configured).
      *
@@ -229,6 +250,7 @@ export default {
 
       return null;
     },
+
     /**
      * Validation run for enforcing the max selection count rule (if configured).
      *
@@ -256,6 +278,7 @@ export default {
 
       return null;
     },
+
     /**
      * Process the form values.
      *
@@ -272,6 +295,7 @@ export default {
   },
 };
 </script>
+
 <lang-strings>
 {
   "performelement_multi_choice_multi": [

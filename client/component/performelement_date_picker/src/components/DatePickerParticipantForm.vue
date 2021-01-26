@@ -16,38 +16,52 @@
   @module performelement_date_picker
 -->
 <template>
-  <FormScope :path="path" :process="process">
-    <FieldGroup :aria-labelledby="ariaLabelledby">
-      <FormDateSelector
-        name="response"
-        :years-midrange="midrangeYear"
-        :years-before-midrange="midrangeYearBefore"
-        :years-after-midrange="midrangeYearAfter"
-        :validations="validations"
-      />
-    </FieldGroup>
-  </FormScope>
+  <!-- Handle the different view switching (read only / print / form),
+  populate form content if editable and display others responses -->
+  <ElementParticipantFormContent
+    v-bind="$attrs"
+    :element="element"
+    :is-draft="isDraft"
+  >
+    <template v-slot:content="{ labelId }">
+      <FormScope :path="path" :process="process">
+        <FieldGroup :aria-labelledby="labelId">
+          <FormDateSelector
+            name="response"
+            :years-midrange="midrangeYear"
+            :years-before-midrange="midrangeYearBefore"
+            :years-after-midrange="midrangeYearAfter"
+            :validations="validations"
+          />
+        </FieldGroup>
+      </FormScope>
+    </template>
+  </ElementParticipantFormContent>
 </template>
 
 <script>
+import ElementParticipantFormContent from 'mod_perform/components/element/ElementParticipantFormContent';
 import { FormDateSelector, FormScope } from 'tui/components/uniform';
 import FieldGroup from 'tui/components/form/FieldGroup';
 import { v as validation } from 'tui/validation';
 
 export default {
   components: {
+    ElementParticipantFormContent,
     FormScope,
     FormDateSelector,
     FieldGroup,
   },
 
   props: {
-    path: [String, Array],
     element: Object,
     isDraft: Boolean,
-    error: String,
-    ariaLabelledby: String,
+    path: {
+      type: [String, Array],
+      default: '',
+    },
   },
+
   data() {
     return {
       midrangeYear: 2000,
@@ -55,6 +69,7 @@ export default {
       midrangeYearAfter: 50,
     };
   },
+
   computed: {
     /**
      * An array of validation rules for the element.
@@ -78,12 +93,13 @@ export default {
       return rules;
     },
   },
+
   methods: {
     /**
      * Validation method, that requires the entire date to be filled in.
      *
      * @param value
-     * @return {*}
+     * @return {string}
      */
     fullDateRequired(value) {
       // Specifically we must test for undefined, null means not filled at all.
@@ -107,6 +123,7 @@ export default {
   },
 };
 </script>
+
 <lang-strings>
   {
     "performelement_date_picker": [

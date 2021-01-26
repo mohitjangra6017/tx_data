@@ -87,7 +87,7 @@ Feature: Print view of a single-section user activity
     # Add a response as the subject.
     When I navigate to the outstanding perform activities list page
     And I click on "Single section activity" "link"
-    And I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    And I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Short text question" with "David short text answer one"
     And I answer "long text" question "Long text question" with "David long text answer one"
     And I answer "date picker" question "Date picker question" with "1 January 2020"
@@ -212,7 +212,7 @@ Feature: Print view of a single-section user activity
     When I log in as "john"
     And I navigate to the outstanding perform activities list page
     And I click on "Single section activity" "link"
-    And I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    And I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
     And I answer "short text" question "Short text question" with "John answer one"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal

@@ -17,7 +17,11 @@
 -->
 <template>
   <div class="tui-participantFormHtmlResponseDisplay">
-    <div v-if="data && data.length > 0" ref="content" v-html="data" />
+    <div
+      v-if="responseData && responseData.length > 0"
+      ref="content"
+      v-html="responseData"
+    />
     <NoResponseSubmitted v-else />
   </div>
 </template>
@@ -28,7 +32,22 @@ import NoResponseSubmitted from 'mod_perform/components/element/participant_form
 export default {
   components: { NoResponseSubmitted },
   props: {
-    data: String,
+    data: Array,
+  },
+
+  computed: {
+    /**
+     * Parse the stringified response markup
+     *
+     * @return {HTML}
+     */
+    responseData() {
+      if (!this.data || !this.data[0]) {
+        return '';
+      }
+
+      return JSON.parse(this.data[0]);
+    },
   },
 
   mounted() {

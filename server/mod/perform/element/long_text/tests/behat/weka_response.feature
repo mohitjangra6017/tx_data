@@ -43,8 +43,8 @@ Feature: Long text responses support the Weka editor
     When I log in as "john"
     And I navigate to the outstanding perform activities list page
     And I click on "activity1" "link"
-    And I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
-    And I activate the weka editor with css ".tui-performElementResponse"
+    And I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
+    And I activate the weka editor with css ".tui-performElementParticipantFormContent"
     And I type "123" in the weka editor
     And I click on "Save as draft" "button"
     And I press backspace in the weka editor
@@ -60,9 +60,9 @@ Feature: Long text responses support the Weka editor
     When I log in as "john"
     And I navigate to the outstanding perform activities list page
     And I click on "activity1" "link"
-    And I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
+    And I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
 
-    And I activate the weka editor with css ".tui-performElementResponse"
+    And I activate the weka editor with css ".tui-performElementParticipantFormContent"
     And I upload embedded media to the weka editor using the file "mod/perform/element/long_text/tests/behat/fixtures/blue.png"
     And I move the cursor to the end of the weka editor
     And I upload attachment to the weka editor using the file "mod/perform/element/long_text/tests/behat/fixtures/green.png"
@@ -92,9 +92,9 @@ Feature: Long text responses support the Weka editor
       | subject | fullname      | email                            |
       | john    | Mark Metcalfe | mark.metcalfe@totaralearning.com |
     When I navigate to the external participants form for user "Mark Metcalfe"
-    And I activate the weka editor with css ".tui-performElementResponse"
-    Then I should not see "Embedded media" in the ".tui-performElementResponse" "css_element"
-    And I should not see "Attachments" in the ".tui-performElementResponse" "css_element"
+    And I activate the weka editor with css ".tui-performElementParticipantFormContent"
+    Then I should not see "Embedded media" in the ".tui-performElementParticipantFormContent" "css_element"
+    And I should not see "Attachments" in the ".tui-performElementParticipantFormContent" "css_element"
     When I type "My response!" in the weka editor
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
@@ -103,8 +103,8 @@ Feature: Long text responses support the Weka editor
     When I log in as "john"
     And I navigate to the outstanding perform activities list page
     And I click on "activity1" "link"
-    And I wait until ".tui-performElementResponse .tui-formField" "css_element" exists
-    And I activate the weka editor with css ".tui-performElementResponse"
+    And I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
+    And I activate the weka editor with css ".tui-performElementParticipantFormContent"
     And I type "\n\n\n        \n\n       \n\n       " in the weka editor
     And I click on "Submit" "button"
     # The weka front end isn't able to check if the content is only whitespace at the moment,

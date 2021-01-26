@@ -17,7 +17,7 @@
 -->
 <template>
   <div class="tui-linkedReviewParticipantPrint">
-    <div v-if="hasBeenAnswered">{{ responseLines[0] }}</div>
+    <div v-if="hasBeenAnswered">{{ data[0] }}</div>
     <NotepadLines v-else :lines="6" />
   </div>
 </template>
@@ -30,7 +30,7 @@ export default {
     NotepadLines,
   },
   props: {
-    responseLines: {
+    data: {
       type: Array,
       required: true,
     },
@@ -42,7 +42,7 @@ export default {
      * @return {boolean}
      */
     hasBeenAnswered() {
-      return this.responseLines.length > 0;
+      return this.data.length > 0;
     },
   },
 };
