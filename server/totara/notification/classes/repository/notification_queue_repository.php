@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author Alvin Smith <alvin.smith@totaralearning.com>
  * @package totara_notification
  */
-defined('MOODLE_INTERNAL') || die();
+namespace totara_notification\repository;
 
-$string['process_event_queue_task'] = 'Queue event scheduled task';
-$string['process_notification_queue_task'] = 'Queue notification scheduled task';
-$string['pluginname'] = 'Centralised notification';
+use core\orm\entity\repository;
+
+/**
+ * Repository for table "ttr_notification_queue"
+ */
+class notification_queue_repository extends repository {
+}

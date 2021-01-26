@@ -24,6 +24,7 @@ namespace totara_notification\entity;
 
 use coding_exception;
 use core\orm\entity\entity;
+use totara_notification\repository\notification_queue_repository;
 
 /**
  * An entity class that represent for table "ttr_notification_queue"
@@ -34,6 +35,8 @@ use core\orm\entity\entity;
  * @property int    $context_id
  * @property int    $time_created
  * @property int    $scheduled_time
+ *
+ * @method static notification_queue_repository repository()
  */
 class notification_queue extends entity {
     /**
@@ -72,5 +75,12 @@ class notification_queue extends entity {
     public function set_decoded_event_data(array $decoded_data): void {
         $json_data = json_encode($decoded_data, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
         $this->set_attribute('event_data', $json_data);
+    }
+
+    /**
+     * @return string
+     */
+    public static function repository_class_name(): string {
+        return notification_queue_repository::class;
     }
 }

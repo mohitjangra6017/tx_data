@@ -25,6 +25,7 @@ namespace totara_notification\task;
 use core\orm\query\builder;
 use core\task\scheduled_task;
 use totara_notification\entity\notifiable_event_queue;
+use totara_notification\entity\notification_queue;
 use totara_notification\local\helper;
 
 class process_event_queue_task extends scheduled_task {
@@ -52,6 +53,16 @@ class process_event_queue_task extends scheduled_task {
 
             $transaction = builder::get_db()->start_delegated_transaction();
             // This is where we are going to do all the look up on the notification either the built in or the custom ones
+
+            $entity = new notification_queue();
+
+            // Or use set_decoded_event_data instead
+            $entity->event_data = $queue->event_data;
+            $entity->context_id = $queue->context_id;
+            $entity->time_created = $queue->time_created;
+            $entity->notification_name = $this->get_name();
+
+            $entity->save();
 
             // Removing the event queue, to make sure that we will not process this again.
             $queue->delete();
