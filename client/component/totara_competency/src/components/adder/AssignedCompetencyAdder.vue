@@ -211,11 +211,10 @@ export default {
      * load all system competencies (if the current user has the capability
      * to see them)
      */
-    contextId: {
-      type: Number,
-    },
+    contextId: Number,
     // Display loading spinner on Add button
     showLoadingBtn: Boolean,
+    userId: Number,
   },
 
   data() {
@@ -265,10 +264,11 @@ export default {
       },
       variables() {
         return {
-          query: {
+          input: {
             filters: {
               search: this.filters.search,
             },
+            user_id: this.userId,
           },
         };
       },
@@ -295,10 +295,11 @@ export default {
       },
       variables() {
         return {
-          query: {
+          input: {
             filters: {
               ids: [],
             },
+            user_id: this.userId,
           },
         };
       },
@@ -325,11 +326,12 @@ export default {
 
       this.$apollo.queries.competencies.fetchMore({
         variables: {
-          query: {
+          input: {
             cursor: this.nextPage,
             filters: {
               search: this.filters.search,
             },
+            user_id: this.userId,
           },
         },
 
@@ -379,11 +381,12 @@ export default {
 
       try {
         await this.$apollo.queries.selectedCompetencies.refetch({
-          query: {
+          input: {
             filters: {
               ids: selection,
             },
             result_size: numberOfItems,
+            user_id: this.userId,
           },
         });
       } catch (error) {

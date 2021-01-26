@@ -181,6 +181,7 @@
                     :section-element="sectionElement"
                     :show-other-response="showOtherResponse"
                     :view-only="viewOnlyReportMode"
+                    :subject-user="subjectUser"
                   />
                 </div>
               </div>

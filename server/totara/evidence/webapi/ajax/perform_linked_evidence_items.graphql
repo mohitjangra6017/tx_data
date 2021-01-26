@@ -1,0 +1,11 @@
+query totara_evidence_perform_linked_evidence_items(
+  $participant_instance_id: core_id!
+  $section_element_id: core_id!
+) {
+  items: totara_evidence_perform_linked_evidence_items(
+    participant_instance_id: $participant_instance_id
+    section_element_id: $section_element_id
+  ) {
+    id
+  }
+}

@@ -1,20 +1,23 @@
 <!--
-  This file is part of Totara Enterprise Extensions.
+  This file is part of Totara Learn
 
   Copyright (C) 2021 onwards Totara Learning Solutions LTD
 
-  Totara Enterprise Extensions is provided only to Totara
-  Learning Solutions LTD's customers and partners, pursuant to
-  the terms and conditions of a separate agreement with Totara
-  Learning Solutions LTD or its affiliate.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 3 of the License, or
+  (at your option) any later version.
 
-  If you do not have an agreement with Totara Learning Solutions
-  LTD, you may not access, use, modify, or distribute this software.
-  Please contact [licensing@totaralearning.com] for more information.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-  @author Kevin Hottinger <kevin.hottinger@totaralearning.com>
-  @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
-  @module totara_competency
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+  @author Marco Song <marco.song@totaralearning.com>
+  @package totara_evidence
 -->
 
 <template>
@@ -27,20 +30,21 @@
   >
     <template v-slot:content-picker>
       <Button
-        :text="$str('add_competencies', 'totara_competency')"
+        :text="$str('add_evidence', 'totara_evidence')"
         @click="adderOpen"
       />
 
-      <AssignedCompetencyAdder
+      <EvidenceAdder
         :open="showAdder"
         :existing-items="selectedIds"
+        :user-id="userId"
         @added="adderUpdate"
         @cancel="adderClose"
       />
     </template>
 
     <template v-slot:content-title="{ content }">
-      {{ content.competency.display_name }}
+      {{ content.name }}
     </template>
 
     <template v-slot:content-detail="{ content }">
@@ -48,20 +52,20 @@
     </template>
 
     <template v-slot:confirm="{ confirm }">
-      <Button text="confirm competencies" @click="confirm" />
+      <Button text="confirm evidences" @click="confirm" />
     </template>
   </SelectContent>
 </template>
 
 <script>
-import AssignedCompetencyAdder from 'totara_competency/components/adder/AssignedCompetencyAdder';
 import Button from 'tui/components/buttons/Button';
+import EvidenceAdder from 'totara_evidence/components/adder/EvidenceAdder';
 import SelectContent from 'performelement_linked_review/components/SelectContent';
 
 export default {
   components: {
-    AssignedCompetencyAdder,
     Button,
+    EvidenceAdder,
     SelectContent,
   },
 
@@ -71,7 +75,7 @@ export default {
       required: true,
     },
     sectionElementId: String,
-    settings: Object,
+    userId: Number,
   },
 
   data() {
@@ -108,9 +112,9 @@ export default {
 </script>
 
 <lang-strings>
-{
-  "totara_competency": [
-    "add_competencies"
-  ]
-}
+  {
+    "totara_evidence": [
+      "add_evidence"
+    ]
+  }
 </lang-strings>

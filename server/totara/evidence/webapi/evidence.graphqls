@@ -1,0 +1,86 @@
+"""
+Filters input for the user evidence item adder query.
+"""
+input totara_evidence_user_evidence_item_filters {
+  search: String
+  type_id: core_id
+  ids: [core_id]
+}
+
+"""
+Input for the user evidence items query.
+"""
+input totara_evidence_user_evidence_items_input {
+  filters: totara_evidence_user_evidence_item_filters
+  user_id: core_id
+  result_size: Int
+  cursor: String
+}
+
+"""
+Result for the user evidence items query.
+"""
+type totara_evidence_user_evidence_items_result implements core_pageable_result {
+  items: [totara_evidence_evidence_item]
+  total: Int!
+  next_cursor: String!
+}
+
+"""
+Represents the evidence item
+"""
+type totara_evidence_evidence_item {
+  """
+  The id of the evidence item
+  """
+  id: core_id!,
+  """
+  The name of the evidence item
+  """
+  name(format: core_format = PLAIN): String
+  """
+  The evidence type that the evidence item associated with
+  """
+  type: totara_evidence_evidence_type
+}
+
+"""
+Represents the evidence type
+"""
+type totara_evidence_evidence_type {
+  """
+  The id of the evidence type
+  """
+  id: core_id!,
+  """
+  The name of the evidence type
+  """
+  name(format: core_format = PLAIN): String
+}
+
+"""
+this is a temporary solution until we tackle TL-29504
+"""
+type totara_evidence_evidence_id {
+  """
+  The id of the evidence type
+  """
+  id: core_id
+}
+
+extend type Query {
+  """
+  Query to return a paginated set of evidence that belongs to a user
+  """
+  totara_evidence_user_evidence_items(
+    input: totara_evidence_user_evidence_items_input
+  ): totara_evidence_user_evidence_items_result!
+
+  """
+  Get the evidence that have been linked to a performance activity.
+  """
+  totara_evidence_perform_linked_evidence_items(
+    participant_instance_id: core_id!
+    section_element_id: core_id!
+  ): [totara_evidence_evidence_id]!
+}

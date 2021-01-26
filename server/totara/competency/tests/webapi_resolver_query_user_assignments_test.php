@@ -22,10 +22,12 @@
  */
 
 use core\collection;
+use core\orm\query\builder;
 use core\testing\component_generator;
 use totara_competency\models\assignment;
 use totara_competency\task\expand_assignments_task;
 use totara_competency\testing\generator as competency_generator;
+use totara_competency\user_groups;
 use totara_core\advanced_feature;
 use totara_core\feature_not_available_exception;
 use totara_webapi\phpunit\webapi_phpunit_helper;
@@ -52,6 +54,193 @@ class totara_competency_webapi_resolver_query_user_assignments_testcase extends 
     }
 
     public function test_pagination_with_filters(): void {
+        [$created_assignments, $user1, $user2] = $this->create_test_data();
+
+        self::setUser($user1);
+
+        // Test without filters applied
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user1->id));
+        // Default sorting is alphabetical by competency name, with older competencies first.
+        // Only the first 2 results is loaded.
+        $this->assertEquals(
+            [
+                'Cleaning',
+                'Nursing assistant',
+            ],
+            $this->get_competency_names_from_assignments($result['items'])
+        );
+        // Next page of results.
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user1->id, $result['next_cursor']));
+        $this->assertEquals(
+            ['Planning, organising and flexibility (behavioral)'],
+            $this->get_competency_names_from_assignments($result['items'])
+        );
+
+        // As the other user
+        self::setUser($user2);
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user2->id));
+        $this->assertEquals(
+            [
+                'Confidence and self-control (behavioral)',
+                'Integrity (behavioral)',
+            ],
+            $this->get_competency_names_from_assignments($result['items'])
+        );
+        // Next page of results.
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user2->id, $result['next_cursor']));
+        $this->assertEquals(
+            ['Serving the Customer'],
+            $this->get_competency_names_from_assignments($result['items'])
+        );
+
+        // Apply the search filter
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user2->id, null, null, [
+            'search' => 'Behavior',
+        ]));
+        $this->assertEquals(
+            [
+                'Confidence and self-control (behavioral)',
+                'Integrity (behavioral)',
+            ],
+            $this->get_competency_names_from_assignments($result['items'])
+        );
+
+        // Apply the IDs filter
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user2->id, null, null, [
+            'ids' => [$created_assignments->last()->id],
+        ]));
+        $this->assertEquals(
+            ['Confidence and self-control (behavioral)'],
+            $this->get_competency_names_from_assignments($result['items'])
+        );
+        // Empty IDs filter array should mean no results are returned.
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user2->id, null, null, [
+            'ids' => [],
+        ]));
+        $this->assertEquals([], $this->get_competency_names_from_assignments($result['items']));
+    }
+
+    public function test_no_assignments() {
+        $user = self::getDataGenerator()->create_user();
+        $this->setUser($user);
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user->id));
+        $this->assertCount(0, $result['items']);
+    }
+
+    public function test_feature_disabled() {
+        advanced_feature::disable('competency_assignment');
+        $user = self::getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $this->expectException(feature_not_available_exception::class);
+        $this->expectExceptionMessage('Feature competency_assignment is not available.');
+
+        $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user->id));
+    }
+
+    public function test_require_login() {
+        $this->expectException(require_login_exception::class);
+        $this->resolve_graphql_query(self::QUERY, $this->get_query_options());
+    }
+
+    public function test_no_input() {
+        [$created_assignments, $user1, $user2] = $this->create_test_data();
+
+        self::setUser($user1);
+
+        // Test without filters applied
+        $result = $this->resolve_graphql_query(self::QUERY, []);
+
+        $this->assertCount(3, $result['items']);
+        $this->assertEquals(
+            [
+                'Cleaning',
+                'Nursing assistant',
+                'Planning, organising and flexibility (behavioral)'
+            ],
+            $this->get_competency_names_from_assignments($result['items'])
+        );
+    }
+
+    public function test_no_user_id() {
+        [$created_assignments, $user1, $user2] = $this->create_test_data();
+
+        self::setUser($user1);
+
+        // Test without filters applied
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null));
+
+        $this->assertCount(2, $result['items']);
+        $this->assertEquals(
+            [
+                'Cleaning',
+                'Nursing assistant',
+            ],
+            $this->get_competency_names_from_assignments($result['items'])
+        );
+    }
+
+    public function test_require_view_own_capability() {
+        [$created_assignments, $user1, $user2] = $this->create_test_data();
+
+        self::setUser($user1);
+
+        $role_id = builder::table('role')->where('shortname', 'user')->value('id');
+
+        unassign_capability('totara/competency:view_own_profile', $role_id);
+
+        $this->expectException(moodle_exception::class);
+        $this->expectExceptionMessageMatches('/View own competency profile/');
+
+        $this->resolve_graphql_query(self::QUERY, []);
+    }
+
+    public function test_require_view_other_capability() {
+        [$created_assignments, $user1, $user2] = $this->create_test_data();
+
+        self::setUser($user1);
+
+        $role_id = builder::table('role')->where('shortname', 'user')->value('id');
+
+        unassign_capability('totara/competency:view_other_profile', $role_id);
+
+        $this->expectException(moodle_exception::class);
+        $this->expectExceptionMessageMatches('/View profile of other users/');
+
+        $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user2->id));
+    }
+
+    /**
+     * @param assignment[] $assignments
+     * @return string[]
+     */
+    private function get_competency_names_from_assignments(array $assignments): array {
+        return collection::new($assignments)
+            ->map(function (assignment $assignment) {
+                return $assignment->get_competency()->fullname;
+            })
+            ->to_array();
+    }
+
+    private function get_query_options($user_id = null, $cursor = null, $limit = 2, $filters = null): array {
+        $options = [
+            'input' => [
+                'limit' => $limit,
+                'cursor' => $cursor,
+                'user_id' => $user_id,
+            ]
+        ];
+        if (isset($filters)) {
+            $options['input']['filters'] = $filters;
+        }
+        return $options;
+    }
+
+    /**
+     * @return array
+     * @throws coding_exception
+     */
+    private function create_test_data() {
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
 
@@ -93,123 +282,7 @@ class totara_competency_webapi_resolver_query_user_assignments_testcase extends 
                 'user_id' => $user2->id,
             ],
         ];
-        $created_assignments = $this->create_test_data($competency_assignments);
 
-        self::setUser($user1);
-
-        // Test without filters applied
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options());
-        // Default sorting is alphabetical by competency name, with older competencies first.
-        // Only the first 2 results is loaded.
-        $this->assertEquals(
-            [
-                'Cleaning',
-                'Nursing assistant',
-            ],
-            $this->get_competency_names_from_assignments($result['items'])
-        );
-        // Next page of results.
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($result['next_cursor']));
-        $this->assertEquals(
-            ['Planning, organising and flexibility (behavioral)'],
-            $this->get_competency_names_from_assignments($result['items'])
-        );
-
-        // As the other user
-        self::setUser($user2);
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options());
-        $this->assertEquals(
-            [
-                'Confidence and self-control (behavioral)',
-                'Integrity (behavioral)',
-            ],
-            $this->get_competency_names_from_assignments($result['items'])
-        );
-        // Next page of results.
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($result['next_cursor']));
-        $this->assertEquals(
-            ['Serving the Customer'],
-            $this->get_competency_names_from_assignments($result['items'])
-        );
-
-        // Apply the search filter
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, null, [
-            'search' => 'Behavior',
-        ]));
-        $this->assertEquals(
-            [
-                'Confidence and self-control (behavioral)',
-                'Integrity (behavioral)',
-            ],
-            $this->get_competency_names_from_assignments($result['items'])
-        );
-
-        // Apply the IDs filter
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, null, [
-            'ids' => [$created_assignments->last()->id],
-        ]));
-        $this->assertEquals(
-            ['Confidence and self-control (behavioral)'],
-            $this->get_competency_names_from_assignments($result['items'])
-        );
-        // Empty IDs filter array should mean no results are returned.
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, null, [
-            'ids' => [],
-        ]));
-        $this->assertEquals([], $this->get_competency_names_from_assignments($result['items']));
-    }
-
-    public function test_no_assignments() {
-        self::setAdminUser();
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options());
-        $this->assertCount(0, $result['items']);
-    }
-
-    public function test_feature_disabled() {
-        advanced_feature::disable('competency_assignment');
-        self::setAdminUser();
-
-        $this->expectException(feature_not_available_exception::class);
-        $this->expectExceptionMessage('Feature competency_assignment is not available.');
-
-        $this->resolve_graphql_query(self::QUERY, $this->get_query_options());
-    }
-
-    public function test_require_login() {
-        $this->expectException(require_login_exception::class);
-        $this->resolve_graphql_query(self::QUERY, $this->get_query_options());
-    }
-
-    /**
-     * @param assignment[] $assignments
-     * @return string[]
-     */
-    private function get_competency_names_from_assignments(array $assignments): array {
-        return collection::new($assignments)
-            ->map(function (assignment $assignment) {
-                return $assignment->get_competency()->fullname;
-            })
-            ->to_array();
-    }
-
-    private function get_query_options($cursor = null, $limit = 2, $filters = null): array {
-        $options = [
-            'query' => [
-                'limit' => $limit,
-                'cursor' => $cursor,
-            ]
-        ];
-        if (isset($filters)) {
-            $options['query']['filters'] = $filters;
-        }
-        return $options;
-    }
-
-    /**
-     * @param array $competency_assignments
-     * @return \totara_competency\entity\assignment[]|object[]|collection
-     */
-    private function create_test_data(array $competency_assignments): collection {
         $assignments = [];
 
         foreach ($competency_assignments as $competency_assignment) {
@@ -220,7 +293,7 @@ class totara_competency_webapi_resolver_query_user_assignments_testcase extends 
             );
 
             if (isset($competency_assignment['user_id'])) {
-                $competency_assignment['user_group_type'] = \totara_competency\user_groups::USER;
+                $competency_assignment['user_group_type'] = user_groups::USER;
                 $competency_assignment['user_group_id'] = $competency_assignment['user_id'];
                 unset($competency_assignment['user_id']);
             }
@@ -233,7 +306,9 @@ class totara_competency_webapi_resolver_query_user_assignments_testcase extends 
 
         (new expand_assignments_task())->execute();
 
-        return collection::new($assignments);
+        $created_assignments = collection::new($assignments);
+
+        return [$created_assignments, $user1, $user2];
     }
 
     /**

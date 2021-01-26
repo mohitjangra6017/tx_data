@@ -1,7 +1,7 @@
 query totara_competency_user_assignments(
-  $query: totara_competency_user_assignments_input!
+  $input: totara_competency_user_assignments_input!
 ) {
-  totara_competency_user_assignments(query: $query) {
+  totara_competency_user_assignments(input: $input) {
     items {
       id
       competency {

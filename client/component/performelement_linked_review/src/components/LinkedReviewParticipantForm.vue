@@ -27,6 +27,7 @@
       :participant-instance-id="participantInstanceId"
       :section-element-id="sectionElement.id"
       :settings="contentSettings"
+      :user-id="subjectUser.id"
       @update="refetch"
     />
 
@@ -106,6 +107,10 @@ export default {
       default: '',
     },
     sectionElement: Object,
+    subjectUser: {
+      required: true,
+      type: Object,
+    },
   },
 
   data() {

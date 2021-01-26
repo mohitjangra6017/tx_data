@@ -17,51 +17,58 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
- * @package totara_competency
+ * @author Marco Song <marco.song@totaralearning.com>
+ * @package mod_perform
  */
 
-namespace totara_competency\performelement_linked_review;
+namespace totara_evidence\performelement_linked_review;
 
 use performelement_linked_review\content_type;
-use totara_competency\entity\assignment;
 use totara_core\advanced_feature;
+use totara_evidence\entity\evidence_item;
 
-class competency_assignment implements content_type {
+class evidence implements content_type {
 
     /**
      * @inheritDoc
      */
     public static function get_identifier(): string {
-        return 'totara_competency';
+        return 'totara_evidence';
     }
 
     /**
      * @inheritDoc
      */
     public static function get_display_name(): string {
-        return get_string('pluginname', 'totara_competency');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function get_table_name(): string {
-        return assignment::TABLE;
+        return get_string('pluginname', 'totara_evidence');
     }
 
     /**
      * @inheritDoc
      */
     public static function is_enabled(): bool {
-        return advanced_feature::is_enabled('competency_assignment');
+        return advanced_feature::is_enabled('evidence');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_table_name(): string {
+        return evidence_item::TABLE;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_admin_view_component(): string {
+        return 'totara_evidence/components/performelement_linked_review/AdminView';
     }
 
     /**
      * @inheritDoc
      */
     public static function get_admin_settings_component(): ?string {
-        return 'totara_competency/components/performelement_linked_review/AdminEdit';
+        return null;
     }
 
     /**
@@ -69,30 +76,20 @@ class competency_assignment implements content_type {
      */
     public static function get_available_settings(): array {
         // TODO: This is a placeholder, we need to work out what settings we actually want in the future.
-        return [
-            'show_rating' => true,
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function get_content_picker_component(): string {
-        return 'totara_competency/components/performelement_linked_review/ParticipantContentPicker';
+        return [];
     }
 
     /**
      * @inheritDoc
      */
     public static function get_participant_content_component(): string {
-        return 'totara_competency/components/performelement_linked_review/ParticipantContent';
+        return 'totara_evidence/components/performelement_linked_review/ParticipantContent';
     }
 
     /**
      * @inheritDoc
-    */
-    public static function get_admin_view_component(): string {
-        return 'totara_competency/components/performelement_linked_review/AdminView';
+     */
+    public static function get_content_picker_component(): string {
+        return 'totara_evidence/components/performelement_linked_review/ParticipantContentPicker';
     }
-
 }

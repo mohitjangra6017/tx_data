@@ -15,30 +15,26 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
- * @package totara_competency
+ * @author Marco Song <marco.song@totaralearning.com>
+ * @package totara_evidence
  */
 
-namespace totara_competency\webapi\resolver\query;
+namespace totara_evidence\webapi\resolver\query;
 
-use coding_exception;
-use context_user;
 use core\entity\user;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_advanced_feature;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
-use moodle_exception;
-use totara_competency\data_providers\assignments;
-use totara_competency\entity\assignment as assignment_entity;
-use totara_competency\helpers\capability_helper;
-use totara_competency\models\assignment as assignment_model;
+use totara_evidence\data_providers\evidence as evidence_provider;
+use totara_evidence\entity\evidence_item as evidence_entity;
+use totara_evidence\models\evidence_item as evidence_model;
+use totara_evidence\models\helpers\evidence_item_capability_helper;
 
-class user_assignments implements query_resolver, has_middleware {
-
+class user_evidence_items implements query_resolver, has_middleware {
     /**
      * @inheritDoc
      */
@@ -46,13 +42,16 @@ class user_assignments implements query_resolver, has_middleware {
         // Set current user as default if there is no user_id provided
         $user_id = $args['input']['user_id'] ?? user::logged_in()->id;
 
-        self::require_view_capability($user_id, $ec);
+        // Check capability
+        evidence_item_capability_helper::for_user($user_id)->can_view_list(true);
 
-        return assignments::for($user_id)
-            ->set_filters($args['input']['filters'] ?? [])
+        $args['input']['filters']['user_id'] = $user_id;
+
+        return (new evidence_provider())
+            ->add_filters($args['input']['filters'])
             ->fetch_paginated($args['input']['cursor'] ?? null, $args['input']['limit'] ?? null)
-            ->transform(static function (assignment_entity $assignment) {
-                return assignment_model::load_by_entity($assignment);
+            ->transform(static function (evidence_entity $evidence) {
+                return evidence_model::load_by_entity($evidence);
             })
             ->get();
     }
@@ -63,23 +62,7 @@ class user_assignments implements query_resolver, has_middleware {
     public static function get_middleware(): array {
         return [
             new require_login(),
-            new require_advanced_feature('competency_assignment'),
+            new require_advanced_feature('evidence'),
         ];
     }
-
-    /**
-     * Require view capability
-     *
-     * @param int $user_id
-     * @param execution_context $ec
-     * @throws coding_exception
-     * @throws moodle_exception
-     */
-    private static function require_view_capability(int $user_id, execution_context $ec) {
-        $context = context_user::instance($user_id);
-        $ec->set_relevant_context($context);
-
-        capability_helper::require_can_view_profile($user_id, $context);
-    }
-
 }

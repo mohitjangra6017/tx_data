@@ -1,0 +1,16 @@
+query totara_evidence_user_evidence_items(
+  $input: totara_evidence_user_evidence_items_input!
+) {
+  totara_evidence_user_evidence_items(input: $input) {
+    items {
+      id
+      name
+      type {
+        id
+        name
+      }
+    }
+    total
+    next_cursor
+  }
+}

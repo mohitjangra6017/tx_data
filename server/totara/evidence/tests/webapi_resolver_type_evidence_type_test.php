@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,42 +15,37 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Murali Nair <murali.nair@totaralearning.com>
- * @package mod_perform
- * @category test
+ * @author Marco Song <marco.song@totaralearning.com>
+ * @package totara_evidence
  */
 
-use mod_perform\models\activity\activity_type as activity_type_model;
+use totara_evidence\entity\evidence_type as evidence_type_entity;
+use totara_evidence\models\evidence_type as evidence_type_model;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-/**
- * @coversDefaultClass \mod_perform\webapi\resolver\type\activity_type
- *
- * @group perform
- */
-class mod_perform_webapi_type_activity_type_testcase extends advanced_testcase {
+global $CFG;
+require_once($CFG->dirroot . '/totara/evidence/tests/evidence_testcase.php');
 
+class webapi_type_evidence_type_testcase extends totara_evidence_testcase {
     use webapi_phpunit_helper;
 
-    private const TYPE = 'mod_perform_activity_type';
+    private const TYPE = 'totara_evidence_evidence_type';
 
-    /**
-     * @covers ::resolve
-     */
     public function test_invalid_input(): void {
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessageMatches("/activity_type/");
+        $this->expectExceptionMessageMatches("/evidence type/");
 
         $this->resolve_graphql_type(self::TYPE, 'id', new stdClass());
     }
 
-    /**
-     * @covers ::resolve
-     */
     public function test_invalid_field(): void {
-        $type = activity_type_model::load_by_name('feedback');
+        /** @var evidence_type_entity $course_type_entity */
+        $course_type_entity = evidence_type_entity::repository()
+            ->where('idnumber', 'coursecompletionimport')->one();
+        $type = evidence_type_model::load_by_entity($course_type_entity);
+
         $field = 'unknown';
 
         $this->expectException(moodle_exception::class);
@@ -59,21 +54,19 @@ class mod_perform_webapi_type_activity_type_testcase extends advanced_testcase {
         $this->resolve_graphql_type(self::TYPE, $field, $type);
     }
 
-    /**
-     * @covers ::resolve
-     */
-    public function test_resolve(): void {
-        // Note: cannot use dataproviders here because PHPUnit runs these before
-        // everything else. Incredibly, if a dataprovider in a random testsuite
-        // creates database records or sends messages, etc, those will also be
-        // visible to _all_ tests. In other words, with dataproviders, current
-        // and yet unborn tests do not start in a clean state!
-        $type = activity_type_model::load_by_name('appraisal');
+    public function test_resolve() {
+        self::setAdminUser();
+
+        $expected_name = get_string('system_type_name:completion_course', 'totara_evidence');
+
+        /** @var evidence_type_entity $course_type_entity */
+        $course_type_entity = evidence_type_entity::repository()
+            ->where('idnumber', 'coursecompletionimport')->one();
+        $type = evidence_type_model::load_by_entity($course_type_entity);
 
         $testcases = [
             'id' => ['id', null, $type->id],
-            'name' => ['name', null, $type->name],
-            'display_name' => ['display_name', null, $type->display_name]
+            'name' => ['name', null, $expected_name],
         ];
 
         foreach ($testcases as $id => $testcase) {
