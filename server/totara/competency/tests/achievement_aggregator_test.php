@@ -23,6 +23,7 @@
  */
 
 use aggregation_test_aggregation\test_aggregation;
+use core\collection;
 use hierarchy_competency\event\scale_min_proficient_value_updated;
 use pathway_test_pathway\test_pathway_evaluator;
 use totara_competency\achievement_configuration;
@@ -33,7 +34,9 @@ use totara_competency\entity\achievement_via;
 use totara_competency\entity\assignment;
 use totara_competency\entity\competency;
 use totara_competency\entity\competency_achievement;
+use totara_competency\entity\competency_framework;
 use totara_competency\entity\pathway_achievement;
+use totara_competency\entity\scale;
 use totara_competency\entity\scale_value;
 use totara_competency\expand_task;
 use totara_competency\hook\competency_achievement_updated_bulk;
@@ -43,6 +46,7 @@ use totara_competency\overall_aggregation;
 use totara_competency\pathway;
 use totara_competency\pathway_evaluator_user_source;
 use totara_competency\user_groups;
+use totara_job\job_assignment;
 
 /**
  * Class totara_competency_achievement_aggregator_testcase
@@ -1061,4 +1065,227 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
         $this->assertEquals($assignment1->id, $assignment2->id);
     }
 
+    public function test_aggregation_with_custom_min_proficiency_per_assignment() {
+        global $DB;
+
+        \totara_core\advanced_feature::enable('competency_assignment');
+
+        /** @var totara_competency_generator $competency_generator */
+        $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        /** @var totara_competency_assignment_generator $assignment_generator */
+        $assignment_generator = new totara_competency_assignment_generator($competency_generator);
+
+        /** @var scale $scale */
+        $scale = $competency_generator->create_scale(
+            'comp',
+            'Test scale',
+            [
+                1 => ['name' => 'Arrived', 'proficient' => 1, 'sortorder' => 1, 'default' => 0],
+                2 => ['name' => 'Almost there', 'proficient' => 1, 'sortorder' => 2, 'default' => 0],
+                3 => ['name' => 'Getting there', 'proficient' => 0, 'sortorder' => 3, 'default' => 0],
+                4 => ['name' => 'Learning', 'proficient' => 0, 'sortorder' => 4, 'default' => 0],
+                5 => ['name' => 'No clue', 'proficient' => 0, 'sortorder' => 5, 'default' => 1],
+            ]
+        );
+
+        /** @var collection $scale_values */
+        $scale_values = $scale->sorted_values_high_to_low->key_by('sortorder');
+        $highest_scale_value = $scale_values->first();
+        $default_min_proficient_scale_value = $scale->min_proficient_value;
+        $lowest_scale_value = $scale_values->last();
+
+        /** @var competency_framework $framework */
+        $framework = $competency_generator->create_framework($scale, 'Test framework');
+        /** @var competency $competency */
+        $competency = $competency_generator->create_competency('Test competency', $framework);
+        $pathway = $competency_generator->create_test_pathway($competency);
+
+        $position = $assignment_generator->create_position(['frameworkid' => $framework->id]);
+        $user = $this->getDataGenerator()->create_user();
+        job_assignment::create([
+            'userid' => $user->id,
+            'idnumber' => 'JobPosition',
+            'positionid' => $position->id,
+        ]);
+
+        $user_asg = $assignment_generator->create_user_assignment($competency->id, $user->id);
+        $pos_asg = $assignment_generator->create_position_assignment($competency->id, $position->id, ['minproficiencyid' => $highest_scale_value->id]);
+
+        (new expand_task($DB))->expand_all();
+
+        $achievement_configuration = new achievement_configuration($competency);
+        $achievement_configuration->set_aggregation_type('test_aggregation');
+
+        // Tests - Can't use dataprovider as these tests depends on output of previous test to validate archiving as well
+        $to_test = [
+            // None proficient
+            1 => [
+                'rating' => $lowest_scale_value,
+                'expected_achievements' => [
+                    [
+                        'assignment_id' => $user_asg->id,
+                        'scale_value_id' => $lowest_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'assignment_id' => $pos_asg->id,
+                        'scale_value_id' => $lowest_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                ],
+                'expected_hook_data' => [
+                    'scale_value' => $lowest_scale_value,
+                    'is_proficient' => 0,
+                    'proficiency_changed' => 0,
+                ],
+            ],
+            // Some proficient
+            2 => [
+                'rating' => $default_min_proficient_scale_value,
+                'expected_achievements' => [
+                    [
+                        'assignment_id' => $user_asg->id,
+                        'scale_value_id' => $lowest_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $pos_asg->id,
+                        'scale_value_id' => $lowest_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $user_asg->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'assignment_id' => $pos_asg->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                ],
+                'expected_hook_data' => [
+                    'scale_value' => $default_min_proficient_scale_value,
+                    'is_proficient' => 1,
+                    'proficiency_changed' => 1,
+                ],
+            ],
+            // All proficient
+            3 => [
+                'rating' => $highest_scale_value,
+                'expected_achievements' => [
+                    [
+                        'assignment_id' => $user_asg->id,
+                        'scale_value_id' => $lowest_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $pos_asg->id,
+                        'scale_value_id' => $lowest_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $user_asg->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $pos_asg->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $user_asg->id,
+                        'scale_value_id' => $highest_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'assignment_id' => $pos_asg->id,
+                        'scale_value_id' => $highest_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                ],
+                'expected_hook_data' => [
+                    'scale_value' => $highest_scale_value,
+                    'is_proficient' => 1,
+                    'proficiency_changed' => 1,
+                ],
+            ],
+        ];
+
+        $sink = $this->redirectHooks();
+        foreach ($to_test as $test_nr => $test_data) {
+            $pathway->set_test_aggregate_current_value($test_data['rating']);
+            $this->aggregate_pathway($pathway, $user);
+
+            $aggregator = $this->get_competency_aggregator_for_pathway_and_user($pathway, $user);
+            $aggregator->aggregate();
+            $hooks = $sink->get_hooks();
+
+            $expected_achievements = array_map(function ($a) use ($competency, $user) {
+                return array_merge($a, ['competency_id' => $competency->id, 'user_id' => $user->id]);
+            }, $test_data['expected_achievements']);
+            $this->verify_competency_achievements($expected_achievements);
+
+            $this->assertCount(1, $hooks);
+            $hook = reset($hooks);
+            $this->assertInstanceOf(competency_achievement_updated_bulk::class, $hook);
+            $new_scale_value = $test_data['expected_hook_data']['scale_value'];
+            $expected = [
+                $user->id => [
+                    'new_scale_value' => [
+                        'id' => $new_scale_value->id,
+                        'name' => $new_scale_value->name,
+                    ],
+                    'is_proficient' => $test_data['expected_hook_data']['is_proficient'],
+                    'proficiency_changed' => $test_data['expected_hook_data']['proficiency_changed'],
+                ]
+            ];
+            $this->assertEqualsCanonicalizing($expected, $hook->get_user_ids_proficiency_data());
+            $sink->clear();
+        }
+
+        $sink->close();
+    }
+
+    /**
+     * @param array $expected
+     */
+    private function verify_competency_achievements(array $expected): void {
+        $achievements = competency_achievement::repository()->get();
+        $this->assertCount(count($expected), $achievements);
+        $achievements = $achievements->to_array();
+
+        foreach ($expected as $e_idx => $expected_achievement) {
+            foreach ($achievements as $a_idx => $actual_achievement) {
+                $fnd = true;
+                foreach ($expected_achievement as $attribute => $value) {
+                    if ($actual_achievement[$attribute] != $value) {
+                        $fnd = false;
+                        break;
+                    }
+                }
+
+                if ($fnd) {
+                    unset($expected[$e_idx]);
+                    unset($achievements[$a_idx]);
+                    break;
+                }
+            }
+        }
+
+        $this->assertEmpty($expected);
+    }
 }

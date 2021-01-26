@@ -59,7 +59,7 @@ class manual_evaluator_user_source extends pathway_evaluator_user_source {
 
         $competency_id = $pathway->get_competency()->id;
 
-        // Using 2 queries for clarify. Might consider joining them in future if it is more performant
+        // Using 2 queries for clarity. Might consider joining them in future if it is more performant
         // First query - Mark all users with one or more rating since the last achievement aggregation
         // or who has a rating without an achievement record yet>
         $sql = "

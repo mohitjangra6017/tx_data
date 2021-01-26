@@ -190,7 +190,8 @@ class assignment_generator {
             'created_at' => time(),
             'updated_at' => time(),
             'archived_at' => null,
-            'expand' => 1
+            'expand' => 1,
+            'minproficiencyid' => null,
         ], $attributes);
 
         return (object) array_merge(['id' => $this->db()->insert_record('totara_competency_assignments', (object) $attributes)], $attributes);

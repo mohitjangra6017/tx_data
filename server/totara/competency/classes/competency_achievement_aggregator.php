@@ -27,6 +27,7 @@ use core\orm\query\builder;
 use stdClass;
 use totara_competency\entity\achievement_via;
 use totara_competency\entity\assignment;
+use totara_competency\entity\competency;
 use totara_competency\entity\competency_achievement;
 use totara_competency\hook\competency_achievement_updated_bulk;
 use totara_core\advanced_feature;
@@ -90,7 +91,9 @@ final class competency_achievement_aggregator {
      * @param int|null $aggregation_time
      */
     public function aggregate(?int $aggregation_time = null) {
+        /** @var competency $competency */
         $competency = $this->get_achievement_configuration()->get_competency();
+        $scale_values = $competency->scale->values;
 
         if (is_null($aggregation_time)) {
             $aggregation_time = time();
@@ -103,8 +106,14 @@ final class competency_achievement_aggregator {
         $this->user_id_source->mark_newly_assigned_users($competency->id);
         $user_assignment_records = $this->user_id_source->get_users_to_reaggregate($competency->id);
 
-        builder::get_db()->transaction(function () use ($competency, $aggregation_time, $user_assignment_records) {
+        builder::get_db()->transaction(function () use ($competency, $aggregation_time, $user_assignment_records, $scale_values) {
             $hook = new competency_achievement_updated_bulk($competency);
+
+            // A user can have multiple assignments to a competency. Some of these may have custom proficiency settings resulting
+            // in the user being considered proficient in one assignment but not all.
+            // However, the competency_achievement_updated_bulk hook is NOT assignment aware. If a user is considered proficient
+            // via ANY assignment, the hook will indicate that the user is marked as proficient
+            $hook_data = [];
 
             foreach ($user_assignment_records as $user_assignment_record) {
                 $user_id = $user_assignment_record->user_id;
@@ -120,8 +129,16 @@ final class competency_achievement_aggregator {
                 ];
                 if ($user_achievement['scale_value']) {
                     $scale_value_data['id'] = (int)$user_achievement['scale_value']->id;
-                    $scale_value_data['is_proficient'] = (int)$user_achievement['scale_value']->proficient;
                     $scale_value_data['name'] = $user_achievement['scale_value']->name;
+
+                    // The aggregated scale value is the default value.
+                    // Proficiency may differ per assignment
+                    if ($user_assignment_record->assignment->minproficiencyid !== null) {
+                        $min_proficient_scale_value = $scale_values->find('id', $user_assignment_record->assignment->minproficiencyid);
+                        $scale_value_data['is_proficient'] = (int) $user_achievement['scale_value']->sortorder <= $min_proficient_scale_value->sortorder;
+                    } else {
+                        $scale_value_data['is_proficient'] = (int) $user_achievement['scale_value']->proficient;
+                    }
                 }
 
                 // If the scale value changed or the proficiency value then we supersede the old record and create a new one
@@ -148,15 +165,20 @@ final class competency_achievement_aggregator {
                         $this->create_achievements_via_records($user_achievement['achieved_via'], $new_comp_achievement);
                     }
                     $proficiency_changed = isset($previous_comp_achievement) && (int)$previous_comp_achievement->proficient !== $scale_value_data['is_proficient'];
-                    $hook_data = [
-                        'is_proficient' => $scale_value_data['is_proficient'],
-                        'new_scale_value' => [
-                            'id' => $scale_value_data['id'],
-                            'name' => $scale_value_data['name'],
-                        ],
-                        'proficiency_changed' => $proficiency_changed,
-                    ];
-                    $hook->add_user_id($user_id, $hook_data);
+
+                    if (!isset($hook_data[$user_id])) {
+                        $hook_data[$user_id] = [
+                            'is_proficient' => $scale_value_data['is_proficient'],
+                            'new_scale_value' => [
+                                'id' => $scale_value_data['id'],
+                                'name' => $scale_value_data['name'],
+                            ],
+                            'proficiency_changed' => $proficiency_changed,
+                        ];
+                    } else {
+                        $hook_data[$user_id]['is_proficient'] = (int)($hook_data[$user_id]['is_proficient'] || $scale_value_data['is_proficient']);
+                        $hook_data[$user_id]['proficiency_changed'] = (int)($hook_data[$user_id]['proficiency_changed'] || $proficiency_changed);
+                    }
                 } else {
                     // No change.
                     $previous_comp_achievement->last_aggregated = $aggregation_time;
@@ -164,7 +186,10 @@ final class competency_achievement_aggregator {
                 }
             }
 
-            if (!empty($hook->get_user_ids())) {
+            if (!empty($hook_data)) {
+                foreach($hook_data as $user_id => $hook_data) {
+                    $hook->add_user_id($user_id, $hook_data);
+                }
                 $hook->execute();
             }
         });
@@ -209,7 +234,7 @@ final class competency_achievement_aggregator {
         $new_comp_achievement = new competency_achievement();
         $new_comp_achievement->competency_id = $data['competency_id'];
         $new_comp_achievement->user_id = $data['user_id'];
-        $new_comp_achievement->assignment_id = $data['user_assignment_record']->assignment_id;
+        $new_comp_achievement->assignment_id = $data['user_assignment_record']->assignment->id;
         $new_comp_achievement->scale_value_id = $data['scale_value_id'];
         $new_comp_achievement->proficient = $data['is_proficient'];
         $new_comp_achievement->status = competency_achievement::ACTIVE_ASSIGNMENT;
@@ -235,7 +260,7 @@ final class competency_achievement_aggregator {
             return;
         }
 
-        if ($user_assignment_record->assignment_id === null) {
+        if ($user_assignment_record->assignment->id === null) {
             $assignment = new assignment();
             $assignment->type = assignment::TYPE_LEGACY;
             $assignment->user_group_type = user_groups::USER;
@@ -247,7 +272,7 @@ final class competency_achievement_aggregator {
             $assignment->archived_at = time();
             $assignment->save();
 
-            $user_assignment_record->assignment_id = $assignment->id;
+            $user_assignment_record->assignment = $assignment;
         }
     }
 

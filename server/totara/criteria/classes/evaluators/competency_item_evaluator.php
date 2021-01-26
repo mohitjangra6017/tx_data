@@ -35,8 +35,8 @@ class competency_item_evaluator extends item_evaluator {
 
         /******************************************************************************************
          * NOTE: We do NOT take assignments into consideration!!!
-         *       Proficiency in child competencies is considered "outside" of an assignment,
-         *       i.e. proficiency via any assignment is considered a valid fulfillment of criteria
+         *       This was re-considered in TL-29309 - decision was to keep it as is
+         *       i.e. proficiency via ANY assignment is considered a valid fulfillment of criteria
          ******************************************************************************************/
         $criterion_id = $criterion->get_id();
 
@@ -60,9 +60,9 @@ class competency_item_evaluator extends item_evaluator {
                AND EXISTS (
                   SELECT tca.id
                     FROM {totara_competency_achievement} tca
-                   WHERE tca.status = :achievementstatus 
+                   WHERE tca.status = :achievementstatus
                       AND tca.proficient = :isproficient
-                      AND tca.competency_id = tci.item_id 
+                      AND tca.competency_id = tci.item_id
                       AND tca.user_id = tcir.user_id
                )
                ";
@@ -82,7 +82,7 @@ class competency_item_evaluator extends item_evaluator {
             // Now update item_records with the correct proficient value
             $update_sql =
                 "UPDATE {totara_criteria_item_record}
-                   SET criterion_met = :newmet, 
+                   SET criterion_met = :newmet,
                        timeevaluated = :now
                  WHERE id {$user_sql}";
 
@@ -133,7 +133,7 @@ class competency_item_evaluator extends item_evaluator {
                 // Now update item_records with the correct proficient value
                 $update_sql =
                     "UPDATE {totara_criteria_item_record}
-                       SET criterion_met = :newmet, 
+                       SET criterion_met = :newmet,
                            timeevaluated = :now
                      WHERE id {$user_sql}";
 

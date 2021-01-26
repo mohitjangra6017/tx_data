@@ -167,11 +167,12 @@ class competency_aggregator_user_source {
 
         // First we get all user assignments for the competency where we have users
         // in the queue table who are marked as having changes
-        $assignment_users = builder::table(competency_assignment_user::TABLE)
+        $assignment_users = competency_assignment_user::repository()
             ->select(['id', 'user_id', 'assignment_id'])
             ->where('competency_id', $competency_id)
             ->where('user_id', 'in', $subquery)
-            ->fetch();
+            ->with('assignment')
+            ->get();
 
         // First we get all user assignments for the competency where we have users
         // in the queue table who are marked as having changes
@@ -205,7 +206,7 @@ class competency_aggregator_user_source {
 
             $result->append((object) [
                 'user_id' => $assignment_user->user_id,
-                'assignment_id' => $assignment_user->assignment_id,
+                'assignment' => $assignment_user->assignment,
                 'achievement' => $achievement
             ]);
         }
@@ -242,7 +243,7 @@ class competency_aggregator_user_source {
                         AND cc.timecompleted > 0
                         AND (c.id = q.{$competency_id_column} OR c.parentid = q.{$competency_id_column})
                         AND cc.userid = q.{$user_id_column}
-                )            
+                )
             ";
         }
 
@@ -269,13 +270,13 @@ class competency_aggregator_user_source {
 
         // Find assignments of all users that were marked as having changes
         $sql = "
-            SELECT q.{$user_id_column} as user_id, tca.id as assignment_id
-            FROM {{$table_name}} q 
-            LEFT JOIN {totara_competency_assignments} tca 
-                ON q.{$user_id_column} = tca.user_group_id 
+            SELECT q.{$user_id_column} as user_id, tca.id, tca.minproficiencyid
+            FROM {{$table_name}} q
+            LEFT JOIN {totara_competency_assignments} tca
+                ON q.{$user_id_column} = tca.user_group_id
                     AND q.{$competency_id_column} = tca.competency_id
-                    AND tca.type = :assignment_type  
-                    AND tca.user_group_type = :user_group_type  
+                    AND tca.type = :assignment_type
+                    AND tca.user_group_type = :user_group_type
             WHERE {$q_cond}
                 AND (
                     {$exists_sql}
@@ -306,7 +307,7 @@ class competency_aggregator_user_source {
 
             return (object) [
                 'user_id' => $assignment->user_id,
-                'assignment_id' => $assignment->assignment_id,
+                'assignment' => $assignment,
                 'achievement' => $achievement
             ];
         });
@@ -356,7 +357,7 @@ class competency_aggregator_user_source {
                         ON tcau.assignment_id = tca.assignment_id
                             AND tcau.user_id = tca.user_id
                             AND tca.status = :status
-                    WHERE tca.id IS NULL 
+                    WHERE tca.id IS NULL
                         AND tcau.competency_id = :competency_id
             )
             {$temp_wh}

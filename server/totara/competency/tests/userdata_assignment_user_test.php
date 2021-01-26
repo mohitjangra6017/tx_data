@@ -250,7 +250,8 @@ class totara_competency_userdata_assignment_user_testcase extends advanced_testc
                     'competency_name',
                     'competency_description',
                     'status_name',
-                    'expand'
+                    'expand',
+                    'minproficiencyid',
                 ], $user_name_fields),
                 array_keys($item)
             );

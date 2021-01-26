@@ -789,7 +789,7 @@ class competency extends hierarchy {
             "SELECT csv.*
                    FROM {comp_scale_values} csv
                    JOIN {comp_scale} cs ON cs.id = csv.scaleid
-                   JOIN {comp_scale_values} csvmin ON cs.minproficiencyid = csvmin.id 
+                   JOIN {comp_scale_values} csvmin ON cs.minproficiencyid = csvmin.id
                   WHERE csv.sortorder <= csvmin.sortorder"
         );
     }
@@ -811,7 +811,7 @@ class competency extends hierarchy {
             "SELECT csv.id
                    FROM {comp_scale_values} csv
                    JOIN {comp_scale} cs ON cs.id = csv.scaleid
-                   JOIN {comp_scale_values} csvmin ON cs.minproficiencyid = csvmin.id 
+                   JOIN {comp_scale_values} csvmin ON cs.minproficiencyid = csvmin.id
                   WHERE csv.sortorder <= csvmin.sortorder
                     AND csv.id = ?
             ",
@@ -1181,7 +1181,7 @@ class competency extends hierarchy {
         } else {
             $fields = array_merge($fields, [
                 'assignavailability' =>
-                    "CASE 
+                    "CASE
                         WHEN assign_availability_self.availability IS NULL AND assign_availability_other.availability IS NULL
                             THEN 'none'
                         WHEN assign_availability_self.availability IS NOT NULL AND assign_availability_other.availability IS NOT NULL

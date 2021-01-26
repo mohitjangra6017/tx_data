@@ -196,7 +196,7 @@ class item_evaluator_user_source {
             // result is a union of users that were updated via any criteria
             $sql = "
                 UPDATE {{$temp_table_name}}
-                   SET {$temp_set_sql} 
+                   SET {$temp_set_sql}
                  WHERE {$temp_wh}
                        {$temp_user_id_column} {$user_ids_sql}
             ";

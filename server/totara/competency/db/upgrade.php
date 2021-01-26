@@ -35,5 +35,26 @@ function xmldb_totara_competency_upgrade($oldversion) {
 
     // Totara 13.0 release line.
 
+    if ($oldversion < 2021012600) {
+        // Define field minproficiencyid to be added to totara_competency_assignments.
+        $table = new xmldb_table('totara_competency_assignments');
+        $field = new xmldb_field('minproficiencyid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'expand');
+
+        // Conditionally launch add field minproficiencyid.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define key compscal_min_fk (foreign) to be added to totara_competency_assignments.
+        $table = new xmldb_table('totara_competency_assignments');
+        $key = new xmldb_key('compscal_min_fk', XMLDB_KEY_FOREIGN, array('minproficiencyid'), 'comp_scale_values', array('id'));
+
+        // Launch add key compscal_min_fk.
+        $dbman->add_key($table, $key);
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2021012600, 'totara', 'competency');
+    }
+
     return true;
 }

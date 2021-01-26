@@ -286,6 +286,7 @@ class assignment {
             $assignment->archived_at = null;
             // Only active assignments should be expanded
             $assignment->expand = ($status == assignment_entity::STATUS_ACTIVE);
+            $assignment->minproficiencyid = null;
             $assignment->save();
 
             assignment_created::create_from_assignment($assignment)->trigger();
