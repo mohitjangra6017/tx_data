@@ -22,6 +22,7 @@
  * @subpackage hierarchy
  */
 
+use core\notification;
 use hierarchy_competency\event\competency_updated;
 use totara_core\advanced_feature;
 use totara_hierarchy\event\hierarchy_created;

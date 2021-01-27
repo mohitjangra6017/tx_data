@@ -30,6 +30,7 @@ use core\orm\entity\relations\has_one;
 use core\orm\entity\relations\has_one_through;
 use core\orm\query\builder;
 use totara_competency\user_groups;
+use totara_core\advanced_feature;
 use totara_hierarchy\entity\hierarchy_item;
 
 // Currently only required to re-use the constants
@@ -189,6 +190,34 @@ class competency extends hierarchy_item {
     }
 
     /**
+     * Get the short achievement pathway warning message,
+     * if there are any potential problems.
+     *
+     * @return string|null
+     */
+    public function get_pathway_warning_message_short(): ?string {
+        if ($this->pathways_need_review()) {
+            return get_string('achievement_paths_need_review', 'totara_competency');
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the long achievement pathway warning message,
+     * if there are any potential problems.
+     *
+     * @return string|null
+     */
+    public function get_pathway_warning_message_long(): ?string {
+        if ($this->pathways_need_review()) {
+            return get_string('achievement_paths_need_review_long', 'totara_competency');
+        }
+
+        return null;
+    }
+
+    /**
      * Get assignment availability types
      *
      * @return array Of assignment availability types
@@ -296,6 +325,24 @@ class competency extends hierarchy_item {
         }
 
         return $fields_to_display;
+    }
+
+    private function pathways_need_review(): bool {
+        if (advanced_feature::is_disabled('competency_assignment')) {
+            return false;
+        }
+
+        if (count($this->active_pathways) === 0) {
+            return true;
+        }
+
+        foreach ($this->active_pathways as $pathway) {
+            if (!$pathway->valid) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

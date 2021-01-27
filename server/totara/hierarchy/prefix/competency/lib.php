@@ -1298,6 +1298,120 @@ class competency extends hierarchy {
     }
 
     /**
+     * @inheritDoc
+     */
+    public function get_framework($id = 0, $showhidden = false, $noframeworkok = false) {
+        global $DB;
+
+        $framework = parent::get_framework($id, $showhidden, $noframeworkok);
+
+        if (!$framework || advanced_feature::is_disabled('competency_assignment')) {
+            return $framework;
+        }
+
+        $sql = "select \n";
+        $sql .= $this->get_expected_valid_pathway_count_field(':framework_id1') . ",\n";
+        $sql .= $this->get_actual_valid_pathway_count_field(':framework_id2') . "\n";
+
+        // We use $framework->id over $id, because $id = 0 will get the first framework in the table, not one with id 0;
+        $counts = $DB->get_record_sql($sql, ['framework_id1' => $framework->id, 'framework_id2' => $framework->id], IGNORE_MULTIPLE);
+
+        if ($counts->expected_valid_pathway_count !== $counts->actual_valid_pathway_count) {
+            $framework->warning_message = get_string('achievement_paths_need_review_framework_long', 'totara_competency');
+        } else {
+            $framework->warning_message = null;
+        }
+
+        return $framework;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_frameworks($extra_data = [], $showhidden = false, $fields = 'f.*'): array {
+        if (advanced_feature::is_disabled('competency_assignment')) {
+            return parent::get_frameworks($extra_data, $showhidden, $fields);
+        }
+
+        $fields .= ",\n";
+        $fields .= $this->get_expected_valid_pathway_count_field('f.id') . ",\n";
+        $fields .= $this->get_actual_valid_pathway_count_field('f.id') . "\n";
+
+        $frameworks = parent::get_frameworks($extra_data, $showhidden, $fields);
+
+        return array_map(function (object $framework): object {
+            if ($framework->expected_valid_pathway_count !== $framework->actual_valid_pathway_count) {
+                $framework->warning_message = get_string('achievement_paths_need_review_framework', 'totara_competency');
+            } else {
+                $framework->warning_message = null;
+            }
+
+            return $framework;
+        }, $frameworks);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_item_select_fields(): string {
+        if (advanced_feature::is_disabled('competency_assignment')) {
+            return parent::get_item_select_fields();
+        }
+
+        $fields = parent::get_item_select_fields() . ",\n";
+        $fields .= "(
+                    SELECT count(*)
+                    FROM {totara_competency_pathway} pathway
+                    WHERE competency_id = hier.id and pathway.status = 0 and valid = 1
+                    ) valid_pathway_count,\n";
+        $fields .= "(
+                    SELECT count(*)
+                    FROM {totara_competency_pathway} pathway
+                    WHERE competency_id = hier.id and pathway.status = 0
+                    ) total_pathway_count\n";
+
+        return $fields;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function add_warnings(array $hierarchy_items): array {
+        if (advanced_feature::is_disabled('competency_assignment')) {
+            return $hierarchy_items;
+        }
+
+        return array_map(function (stdClass $item): stdClass {
+            if ($item->total_pathway_count <= 0
+                || $item->valid_pathway_count < $item->total_pathway_count) {
+                $item->warning_message = get_string('achievement_paths_need_review', 'totara_competency');
+            } else {
+                $item->warning_message = null;
+            }
+
+            return $item;
+        }, $hierarchy_items);
+    }
+
+    private function get_expected_valid_pathway_count_field(string $where_value): string {
+        return "(
+                    SELECT count(*)
+                    FROM {comp} comp
+                    LEFT JOIN {totara_competency_pathway} pathway ON competency_id = comp.id and pathway.status = 0
+                    WHERE comp.frameworkid = {$where_value}
+                ) AS expected_valid_pathway_count";
+    }
+
+    private function get_actual_valid_pathway_count_field(string $where_value): string {
+       return "(
+                   SELECT count(*)
+                   FROM {comp} comp
+                   INNER JOIN {totara_competency_pathway} pathway ON competency_id = comp.id and pathway.status = 0 and valid = 1
+                   WHERE comp.frameworkid = {$where_value}
+               ) AS actual_valid_pathway_count";
+    }
+
+    /**
      * Save (create/update) assignment availability data for a competency
      *
      * @param int $comp_id

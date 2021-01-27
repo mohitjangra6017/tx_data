@@ -8,7 +8,7 @@ Feature: Upload competencies via HR Import using CSV file
     And the following "competency" frameworks exist:
       | fullname               | idnumber |
       | Competency Framework 1 | compfw1  |
-      | Competency Framework 2 | compfw2  |
+      | Single item competency framework | compfw2  |
 
     And the following hierarchy types exist:
       | hierarchy  | idnumber | fullname        |
@@ -50,12 +50,12 @@ Feature: Upload competencies via HR Import using CSV file
 
     When I navigate to "Manage competencies" node in "Site administration > Competencies"
     Then I should see "2" in the "Competency Framework 1" "table_row"
-    And I should see "1" in the "Competency Framework 2" "table_row"
+    And I should see "1" in the "Single item competency framework" "table_row"
 
     When I follow "Competency Framework 1"
     And I follow "Competency 2"
     Then I should see "Other text"
     And I navigate to "Manage competencies" node in "Site administration > Competencies"
-    When I follow "Competency Framework 2"
+    When I follow "Single item competency framework"
     And I follow "Competency 3"
     Then I should see "So much text"

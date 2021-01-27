@@ -688,4 +688,14 @@ class assignment {
         return $this->entity->expand;
     }
 
+    /**
+     * Get the achievement pathway warning message,
+     * if there are any potential problems.
+     *
+     * @return string|null
+     */
+    public function get_pathway_warning_message(): ?string {
+        return $this->get_competency()->get_pathway_warning_message_short();
+    }
+
 }

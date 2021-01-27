@@ -57,7 +57,10 @@
           >
             <div v-for="(item, itemIdx) in criterion.items" :key="itemIdx">
               {{ item.description }}
-              <span v-if="item.error">
+              <span
+                v-if="item.error"
+                class="tui-competencySummaryAchievementCriteria__warning"
+              >
                 <WarningIcon :size="200" />
                 {{ item.error }}
               </span>
@@ -120,6 +123,10 @@ export default {
     &-items {
       margin-top: var(--gap-1);
     }
+  }
+
+  &__warning {
+    color: var(--color-prompt-warning);
   }
 }
 </style>

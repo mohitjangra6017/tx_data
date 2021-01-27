@@ -107,6 +107,7 @@ class competency_controller extends admin_controller {
         competency_viewed::create_from_instance((object)$this->competency->to_array())->trigger();
 
         return new tui_view('totara_competency/pages/CompetencySummary', [
+            'achievement-path-warning-message' => $this->competency->get_pathway_warning_message_long(),
             'competency-id' => $this->competency->id,
             'competency-name' => format_string($this->competency->display_name),
             'framework-id' => $this->framework->id,

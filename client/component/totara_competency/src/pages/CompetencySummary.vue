@@ -18,9 +18,16 @@
 
 <template>
   <div class="tui-competencySummary">
-    <a :href="backLinkUrl">
-      {{ $str('back_to', 'totara_competency', frameworkName) }}
-    </a>
+    <div class="tui-competencySummary__header">
+      <NotificationBanner
+        v-if="achievementPathWarningMessage"
+        type="warning"
+        :message="achievementPathWarningMessage"
+      />
+      <a :href="backLinkUrl" class="tui-competencySummary__header-backLink">
+        {{ $str('back_to', 'totara_competency', frameworkName) }}
+      </a>
+    </div>
 
     <div class="tui-competencySummary__content">
       <PageHeading
@@ -46,6 +53,7 @@
 import AchievementConfiguration from 'totara_competency/components/summary/AchievementConfiguration';
 import General from 'totara_competency/components/summary/CompetencySummaryGeneral';
 import LinkedCourses from 'totara_competency/components/summary/LinkedCourses';
+import NotificationBanner from 'tui/components/notifications/NotificationBanner';
 import PageHeading from 'tui/components/layouts/PageHeading';
 
 export default {
@@ -53,10 +61,15 @@ export default {
     AchievementConfiguration,
     General,
     LinkedCourses,
+    NotificationBanner,
     PageHeading,
   },
 
   props: {
+    achievementPathWarningMessage: {
+      type: String,
+      required: true,
+    },
     competencyId: {
       type: Number,
       required: true,
@@ -107,6 +120,16 @@ export default {
 
   & > * + * {
     margin-top: var(--gap-2);
+  }
+
+  &__header {
+    & > * + * {
+      margin-top: var(--gap-8);
+    }
+
+    &-backLink {
+      display: inline-block;
+    }
   }
 
   &__content {

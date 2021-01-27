@@ -2,22 +2,23 @@
 Feature: Manage Competency achievement paths
 
   Background:
-    Given I skip the scenario until issue "TL-26571" lands
     Given I am on a totara site
     And a competency scale called "ggb" exists with the following values:
-      | name    | description          | idnumber       | proficient | default | sortorder |
-      | Great   | Is great at doing it | great          | 1          | 0       | 1         |
-      | Good    | Is ok at doing it    | good           | 0          | 0       | 2         |
-      | Bad     | Has no idea          | bad            | 0          | 1       | 3         |
+      | name  | description          | idnumber | proficient | default | sortorder |
+      | Great | Is great at doing it | great    | 1          | 0       | 1         |
+      | Good  | Is ok at doing it    | good     | 0          | 0       | 2         |
+      | Bad   | Has no idea          | bad      | 0          | 1       | 3         |
     And the following "competency" frameworks exist:
-      | fullname             | idnumber | description                    | scale  |
-      | Competency Framework | fw1      | Framework for Competencies     | ggb    |
+      | fullname                         | idnumber    | description                | scale |
+      | Competency Framework             | fw1         | Framework for Competencies | ggb   |
+      | Single item competency framework | single_item | Framework for Competencies | ggb   |
     And the following "competency" hierarchy exists:
-      | framework | fullname   | idnumber | description       | parent |
-      | fw1       | Parent     | parent   | Parent competency |        |
-      | fw1       | Child1     | child1   | First child       | parent |
-      | fw1       | Child2     | child2   | Second child      | parent |
-      | fw1       | Another    | another  | Some other        |        |
+      | framework   | fullname           | idnumber           | description                   | parent |
+      | fw1         | Parent             | parent             | Parent competency             |        |
+      | fw1         | Child1             | child1             | First child                   | parent |
+      | fw1         | Child2             | child2             | Second child                  | parent |
+      | fw1         | Another            | another            | Some other                    |        |
+      | single_item | Single item parent | Single item parent | Single item parent competency |        |
     And the following "courses" exist:
       | fullname    | shortname | enablecompletion |
       | Course 1    | course1   | 1                |
@@ -111,4 +112,88 @@ Feature: Manage Competency achievement paths
       | Good  |
       | Bad   |
 
+  Scenario: Achievement path warnings are shown if achievement paths need attention
+    # Top level manage competencies page (all frameworks).
+    When I log in as "admin"
+    And I navigate to "Manage competencies" node in "Site administration > Competencies"
+    Then I should see "Competency Framework" in the "#frameworkstable" "css_element"
+    And I should see "Some achievement paths need review" in the "#frameworkstable .lastrow" "css_element"
+
+    # Manage competencies page (single framework).
+    When I click on "Single item competency framework" "link"
+    Then I should see "Single item parent" in the ".hierarchy-index" "css_element"
+    And I should see "Some of these competencies have achievement paths which need to be reviewed." in the ".alert-warning" "css_element"
+    And I should see "Competencies cannot be rated without a valid achievement path." in the ".alert-warning" "css_element"
+    And I should see "Achievement paths need review" in the ".hierarchy-index" "css_element"
+
+    # Manage assignments page.
+    When I click on "Manage competency assignments" "link"
+    Then I should see "No items to display"
+
+    # Create assignments page.
+    When I click on "Create assignments" "link_or_button"
+    Then I should see "Single item parent" in the "[data-tw-list-row=5]" "css_element"
+    And I should see "Achievement paths need review" in the "[data-tw-list-row=5]" "css_element"
+
+    # Assign a competency to the admin user.
+    When I click on ".tw-list__cell_select_label" "css_element"
+    And I click on "Assign" "link_or_button"
+    # Click on the expand icon of Add user groups.
+    And I click on "Expand" "link" in the ".tw-assignCompSave__assign_selector" "css_element"
+    And I click on "Individual users" "link"
+    And I click on ".tw-list__cell_select_label" "css_element"
+    And I click on "Save changes" "button" in the ".modal-container.show" "css_element"
+    And I click on "Create assignments" "button"
+    And I click on "Yes" "button"
+    Then I should see "Single item parent" in the "[data-tw-list-row=5]" "css_element"
+    And I should see "Achievement paths need review" in the "[data-tw-list-row=5]" "css_element"
+
+    # View only competency summary page.
+    When I click on "Dashboard" "link"
+    And I navigate to "Manage competencies" node in "Site administration > Competencies"
+    And I click on "Single item competency framework" "link"
+    And I click on "Single item parent" "link"
+    Then I should see "No achievement paths added" in the ".tui-competencySummaryAchievementConfiguration" "css_element"
+    And I should see "The achievement paths for this competency need review." in the ".tui-notificationBanner--warning" "css_element"
+    And I should see "Competencies cannot be rated without a valid achievement path." in the ".tui-notificationBanner--warning" "css_element"
+
+    # Add a valid achievement path.
+    When I click on "Edit" "link" in the ".tui-competencySummaryAchievementConfiguration" "css_element"
+    And I add a "manual" pathway
+    And I wait for pending js
+    Then I should see "manual" pathway
+
+    When I click on "Add raters" "button" in "manual" pathway
+    And I toggle the legacy adder list entry "Manager" in "Select raters"
+    And I save my legacy selections and close the "Select raters" adder
+
+    When I click on "Apply changes" "button"
+    Then I should see "Changes applied successfully"
+    And I should not see "No achievement paths added"
+
+    # View only competency summary page.
+    When I click on "Back to Competency page" "link"
+    Then I should not see "The achievement paths for this competency need review."
+    Then I should not see "Competencies cannot be rated without a valid achievement path."
+    And I should not see "No achievement paths added"
+
+    # Manage competencies page (single framework).
+    When I click on "Back to Single item competency framework" "link"
+    Then I should see "Single item parent" in the ".hierarchy-index" "css_element"
+    And I should not see "Some of these competencies have achievement paths which need to be reviewed."
+    And I should not see "Achievement paths need review" in the ".hierarchy-index" "css_element"
+
+    # Top level manage competencies page (all frameworks).
+    When I click on "Back to all competency frameworks" "link"
+    Then I should not see "Some achievement paths need review" in the "#frameworkstable .lastrow" "css_element"
+
+    # Manage assignments page.
+    When I click on "Manage competency assignments" "link"
+    Then I should see "Single item parent" in the "[data-tw-list-row=5]" "css_element"
+    And I should not see "Achievement paths need review" in the "[data-tw-list-row=5]" "css_element"
+
+    # Create assignments page.
+    When I click on "Create assignments" "link_or_button"
+    Then I should see "Single item parent" in the "[data-tw-list-row=5]" "css_element"
+    And I should not see "Achievement paths need review" in the "[data-tw-list-row=5]" "css_element"
 

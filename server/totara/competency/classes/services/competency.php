@@ -128,6 +128,7 @@ class competency extends external_api {
             ->when(!empty($filters['excluded_competency_id']), function (competency_repository $repository) use ($filters) {
                 $repository->where('id', '!=', $filters['excluded_competency_id']);
             })
+            ->with('active_pathways')
             ->with_assignments_count()
             ->with_children_count()
             ->set_filters($filters)
@@ -230,6 +231,7 @@ class competency extends external_api {
         $PAGE->set_context($context);
 
         $string_formatter = new string_field_formatter(format::FORMAT_HTML, $context);
+        $plain_string_formatter = new string_field_formatter(format::FORMAT_PLAIN, $context);
         $text_formatter = (new text_field_formatter(format::FORMAT_HTML, $context))
             ->set_pluginfile_url_options($context, 'totara_hierarchy', 'comp', $competency->id);
 
@@ -239,7 +241,8 @@ class competency extends external_api {
             'description' => $text_formatter->format($competency->description),
             'display_name' => $string_formatter->format($competency->display_name),
             'parentid' => $competency->parentid,
-            'frameworkid' => $competency->frameworkid
+            'frameworkid' => $competency->frameworkid,
+            'pathway_warning_message' => $plain_string_formatter->format($competency->get_pathway_warning_message_short()),
         ];
 
         if ($with_user_groups) {

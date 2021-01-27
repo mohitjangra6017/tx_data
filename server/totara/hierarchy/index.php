@@ -23,6 +23,8 @@
  * @subpackage totara_hierarchy
  */
 
+use core\notification;
+
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once($CFG->libdir.'/totaratablelib.php');
@@ -125,6 +127,10 @@ if ($canmanage) {
 
 $PAGE->navbar->add(format_string($framework->fullname));
 echo $OUTPUT->header();
+
+if (!empty($framework->warning_message)) {
+    notification::add($framework->warning_message, notification::WARNING);
+}
 
 $table = new totara_table($prefix.'-framework-index-'.$frameworkid);
 $table->define_baseurl(new moodle_url('/totara/hierarchy/index.php', array('prefix' => $prefix, 'frameworkid' => $frameworkid)));
@@ -249,12 +255,17 @@ if ($searchactive || !$displaymode) {
     }
 }
 
+$fields = $hierarchy->get_item_select_fields();
+
 // Get the base set of columns.
-$sql = "SELECT hier.*
+$sql = "SELECT {$fields}
              {$from}
              {$where}
              {$orderby}";
-$records = $DB->get_recordset_sql($sql, $params, $table->get_page_start(), $table->get_page_size());
+
+$records = $DB->get_records_sql($sql, $params, $table->get_page_start(), $table->get_page_size());
+$records = $hierarchy->add_warnings($records);
+
 
 echo $OUTPUT->container($OUTPUT->action_link(
     new moodle_url('/totara/hierarchy/framework/index.php', array('prefix' => $prefix)), '&laquo; ' .
@@ -339,6 +350,8 @@ if ($matchcount > 0) {
             $showdepth = !$searchactive;
 
             $include_custom_fields = !$displaymode;
+
+            // Name column.
             $row[] = $hierarchy->display_hierarchy_item($record, $include_custom_fields,
                     $showdepth, $cfields, $types);
             if ($extrafields) {
@@ -358,7 +371,7 @@ if ($matchcount > 0) {
 }
 $table->finish_html();
 
-$records->close();
+
 foreach ($customfieldrss as $customfieldrs) {
     $customfieldrs->close();
 }

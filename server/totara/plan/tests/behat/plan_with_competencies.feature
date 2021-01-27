@@ -20,7 +20,7 @@ Feature: Learner creates learning plan with competencies.
     And the following "competency" frameworks exist:
       | fullname               | idnumber | description           |
       | Competency Framework 1 | CF1      | Framework description |
-      | Competency Framework 2 | CF2      | Framework description |
+      | Single item competency framework | CF2      | Framework description |
     And the following "competency" hierarchy exists:
       | framework | fullname     | idnumber | description            |
       | CF1       | Competency 1 | C1       | Competency description |
@@ -46,7 +46,7 @@ Feature: Learner creates learning plan with competencies.
     And I press "Add competencies"
     And I follow "Competency 1"
     And I follow "Competency 2"
-    And I set the field "menu" to "Competency Framework 2"
+    And I set the field "menu" to "Single item competency framework"
     And I follow "Competency 3"
 
     # Check the selected competency appear in the plan.
@@ -154,7 +154,7 @@ Feature: Learner creates learning plan with competencies.
     And I press "Add Competency"
     And I follow "Competency 1"
     And I follow "Competency 2"
-    And I set the field "menu" to "Competency Framework 2"
+    And I set the field "menu" to "Single item competency framework"
     And I follow "Competency 3"
     And I click on "Save" "button" in the "Link competencies" "totaradialogue"
     Then the following should exist in the "list-linkedcompetencies" table:

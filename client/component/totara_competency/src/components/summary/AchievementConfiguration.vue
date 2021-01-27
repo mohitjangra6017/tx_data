@@ -79,7 +79,7 @@
       v-else-if="!$apollo.loading"
       class="tui-competencySummaryAchievementConfiguration__noPaths"
     >
-      {{ $str('no_paths', 'totara_competency') }}
+      <WarningIcon /> {{ $str('no_paths', 'totara_competency') }}
     </div>
   </div>
 </template>
@@ -93,6 +93,7 @@ import Grid from 'tui/components/grid/Grid';
 import GridItem from 'tui/components/grid/GridItem';
 import OrBox from 'tui/components/decor/OrBox';
 import Separator from 'tui/components/decor/Separator';
+import WarningIcon from 'tui/components/icons/Warning';
 
 // Queries
 import achievementConfigurationQuery from 'totara_competency/graphql/achievement_criteria';
@@ -106,6 +107,7 @@ export default {
     GridItem,
     OrBox,
     Separator,
+    WarningIcon,
   },
 
   props: {
@@ -251,8 +253,7 @@ export default {
   }
 
   &__noPaths {
-    padding: var(--font-size-8);
-    font-style: italic;
+    color: var(--color-prompt-warning);
   }
 
   &__pathGroup {

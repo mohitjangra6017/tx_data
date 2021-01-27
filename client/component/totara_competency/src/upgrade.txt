@@ -1,5 +1,11 @@
 This file describes API changes in /client/component/totara_competency,
 information provided here is intended especially for developers.
 
-=== 13.4 ===
+=== 14.0 ===
 * Extended the page templates CompetencyDetail.vue and CompetencyProfile.vue to have a conditional NotificationBanner warning.
+* Change the presentation of the no pathway warning in AchievementConfiguration.vue
+    * Template & SCSS changes
+* Change the presentation of pathway warnings in AchievementConfigurationCriteria.vue
+    * Template & SCSS changes
+* Add a warning notification banner if there are achievement pathway warnings in CompetencySummary.vue
+    * Template, SCSS changes & lang string changes

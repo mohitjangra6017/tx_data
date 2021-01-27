@@ -95,7 +95,17 @@ function(ListBase, HierarchyEvents) {
                         key: 'assigned_user_groups',
                     },
                     size: 'sm'
-                }
+                },
+                {
+                    columnTemplate: {
+                        template: 'totara_competency/warning_message',
+                    },
+                    dataPath: 'pathway_warning_message',
+                    headerString: {
+                        component: 'totara_competency',
+                        key: 'header_pathway_warning_message',
+                    },
+                },
             ],
             extraRowData: [
                 {

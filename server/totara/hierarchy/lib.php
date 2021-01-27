@@ -305,10 +305,9 @@ class hierarchy {
      * @return array
      * @uses $CFG when extra_data specified
      */
-    function get_frameworks($extra_data=array(), $showhidden=false) {
+    public function get_frameworks($extra_data = [], $showhidden = false, $fields = 'f.*') {
         global $DB;
 
-        $fields = 'f.*';
         $table = "{{$this->shortprefix}_framework} f ";
         $where = '';
         $wherejoin = 'WHERE';
@@ -1537,6 +1536,12 @@ class hierarchy {
         }
         if ($include_custom_fields) {
             $out .= html_writer::empty_tag('br');
+
+            if (!empty($record->warning_message)) {
+                $out .= $this->write_inline_warning_message($record->warning_message);
+                $out .= html_writer::empty_tag('br');
+            }
+
             // Print description if available.
             if ($record->description) {
                 $record->description = file_rewrite_pluginfile_urls($record->description, 'pluginfile.php', context_system::instance()->id, 'totara_hierarchy', $this->shortprefix, $record->id);
@@ -3890,6 +3895,32 @@ class hierarchy {
         }
 
         return $items_to_add;
+    }
+
+    /**
+     * Get the base item select fields.
+     *
+     * @return string
+     */
+    public function get_item_select_fields(): string {
+        return 'hier.*';
+    }
+
+    /**
+     * Add any warning messages to hierarchy items.
+     *
+     * @param iterable $hierarchy_items
+     * @return stdClass[]
+     */
+    public function add_warnings(array $hierarchy_items): array {
+        return $hierarchy_items;
+    }
+
+    public function write_inline_warning_message(string $warning_message): string {
+        global $OUTPUT;
+
+        $warning_icon = $OUTPUT->flex_icon('warning', ['alt' => get_string('warning')]);
+        return html_writer::tag('span', $warning_icon .  ' ' . $warning_message, ['class' => 'text-warning']);
     }
 
     /**

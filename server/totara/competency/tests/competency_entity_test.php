@@ -25,8 +25,11 @@ use core\orm\entity\relations\has_many_through;
 use core\orm\query\builder;
 use totara_competency\entity\assignment;
 use totara_competency\entity\competency;
+use totara_competency\entity\pathway as pathway_entity;
 use totara_competency\entity\competency_framework;
 use totara_competency\entity\scale;
+use totara_competency\pathway;
+use totara_core\advanced_feature;
 
 /**
  * @group totara_competency
@@ -40,7 +43,7 @@ class totara_competency_competency_entity_testcase extends \advanced_testcase {
      *        - [assignment name => assignment] for that competency
      *        - a [customfield type, customfield title, customfield value] tuple
      */
-    public function create_data() {
+    public function create_data(): array {
         self::setAdminUser();
 
         $generator = $this->generator();
@@ -119,12 +122,12 @@ class totara_competency_competency_entity_testcase extends \advanced_testcase {
         ];
     }
 
-    public function test_competency_entity() {
+    public function test_competency_entity(): void {
         [$competency, ] = $this->create_data();
         $this->assertEqualsCanonicalizing($competency->to_array(), competency::repository()->find($competency->id)->to_array());
     }
 
-    public function test_it_has_related_scale() {
+    public function test_it_has_related_scale(): void {
         [$competency, ] = $this->create_data();
 
         $competency_id = (int) $competency->id;
@@ -181,7 +184,7 @@ class totara_competency_competency_entity_testcase extends \advanced_testcase {
         $this->assertEqualsCanonicalizing($customfield, $actual_customfield, 'wrong customfield');
     }
 
-    public function test_it_can_preload_assigned_user_groups() {
+    public function test_it_can_preload_assigned_user_groups(): void {
         [, $assignments] = $this->create_data();
         $competencies = competency::repository()->get();
         $this->assertEquals(1, $competencies->count(), 'wrong retrieval count');
@@ -192,12 +195,61 @@ class totara_competency_competency_entity_testcase extends \advanced_testcase {
     }
 
     /**
+     * @param array $pathway_is_valid_list
+     * @param string|null $expected_short
+     * @param string|null $expected_long
+     * @dataProvider get_pathway_warning_message_provider
+     */
+    public function test_get_pathway_warning_message(
+        array $pathway_is_valid_list,
+        ?string $expected_short,
+        ?string $expected_long
+    ): void {
+        $competency = $this->generator()->create_competency();
+
+        foreach ($pathway_is_valid_list as $pathway_is_valid) {
+            $pathway = $this->get_pathway_entity();
+            $pathway->competency_id = $competency->id;
+            $pathway->valid = $pathway_is_valid;
+            $pathway->save();
+        }
+
+        // Add a valid and invalid achievement pathway, these should not have any effect on the below assertion.
+        foreach ([true, false] as $pathway_is_valid) {
+            $pathway = $this->get_pathway_entity();
+            $pathway->competency_id = $competency->id;
+            $pathway->valid = $pathway_is_valid;
+            $pathway->status = pathway::PATHWAY_STATUS_ARCHIVED;
+            $pathway->save();
+        }
+
+        $this->assertEquals($expected_short, $competency->get_pathway_warning_message_short());
+        $this->assertEquals($expected_long, $competency->get_pathway_warning_message_long());
+
+        advanced_feature::disable('competency_assignment');
+        $this->assertNull($competency->get_pathway_warning_message_short());
+        $this->assertNull($competency->get_pathway_warning_message_long());
+    }
+
+    public function get_pathway_warning_message_provider(): array {
+        $generic_warning_message = get_string('achievement_paths_need_review', 'totara_competency');
+        $generic_warning_message_long = get_string('achievement_paths_need_review_long', 'totara_competency');
+
+        return [
+            'No achievement paths' => [[], $generic_warning_message, $generic_warning_message_long],
+            'No valid achievement paths' => [[false, false, false], $generic_warning_message, $generic_warning_message_long],
+            'Some valid achievement paths' => [[false, true, false, true], $generic_warning_message, $generic_warning_message_long],
+            'All valid achievement paths' => [[true, true, true], null, null],
+        ];
+    }
+
+    /**
      * Get competency data generator
      *
      * @return totara_competency_generator
      * @throws coding_exception
      */
-    public function generator() {
+    public function generator(): \totara_competency_generator {
         return $this->getDataGenerator()->get_plugin_generator('totara_competency');
     }
 
@@ -207,7 +259,19 @@ class totara_competency_competency_entity_testcase extends \advanced_testcase {
      * @return totara_hierarchy_generator
      * @throws coding_exception
      */
-    public function hierarchy_generator() {
+    public function hierarchy_generator(): \totara_hierarchy_generator {
         return $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
+    }
+
+    private function get_pathway_entity(): pathway_entity {
+        $pathway = new pathway_entity();
+        $pathway->sortorder = 0;
+        $pathway->path_type = 0;
+        $pathway->path_instance_id = 0;
+        $pathway->status = pathway::PATHWAY_STATUS_ACTIVE;
+        $pathway->pathway_modified = time();
+        $pathway->valid = true;
+
+        return $pathway;
     }
 }

@@ -102,6 +102,7 @@ class assignment extends \external_api {
 
         $repository = entity\assignment::repository()
             ->select('*')
+            ->with('competency.active_pathways')
             ->with_names()
             ->set_filters($filters);
 
@@ -450,7 +451,11 @@ class assignment extends \external_api {
     protected static function prepare_assignment_response(models\assignment $assignment): array {
         global $PAGE;
         // As we use format_string make sure we have the page context set
-        $PAGE->set_context(context_system::instance());
+        $context = context_system::instance();
+
+        $PAGE->set_context($context);
+        $string_formatter = new string_field_formatter(format::FORMAT_HTML, $context);
+        $plain_string_formatter = new string_field_formatter(format::FORMAT_PLAIN, $context);
 
         $response = [
             'id' => $assignment->get_field('id'),
@@ -463,9 +468,9 @@ class assignment extends \external_api {
             'user_group_id' => $assignment->get_field('user_group_id'),
         ];
 
-        $formatter = new string_field_formatter(format::FORMAT_HTML, context_system::instance());
-        $response['competency_name'] = $formatter->format($assignment->get_competency()->display_name);
-        $response['user_group_name'] = $formatter->format($assignment->get_user_group_name());
+        $response['competency_name'] = $string_formatter->format($assignment->get_competency()->display_name);
+        $response['user_group_name'] = $string_formatter->format($assignment->get_user_group_name());
+        $response['pathway_warning_message'] = $plain_string_formatter->format($assignment->get_pathway_warning_message());
 
         return $response;
     }

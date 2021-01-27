@@ -27,6 +27,9 @@
  * PhpUnit tests for hierarchy/lib.php
  */
 
+use core\orm\query\builder;
+use totara_competency\entity\pathway as pathway_entity;
+use totara_competency\pathway;
 use totara_core\advanced_feature;
 
 if (!defined('MOODLE_INTERNAL')) {
@@ -45,7 +48,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
     // test data for database
     private $frame1, $frame2;
     private $type1, $type2, $type3;
-    private $comp1, $comp2, $comp3, $comp4, $comp5;
+    private $comp1, $comp2, $comp3, $comp4, $comp5, $frame1_comps, $frame2_comps;
     private $type_field_data, $type_data_data, $competency_data, $template_data, $template_assignment_data, $org_pos_data;
     private $relations_data, $scale_assignments_data, $plan_competency_assign_data, $plan_course_assign_data, $events_handlers_data;
 
@@ -55,6 +58,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->frame1 = $this->frame2 = null;
         $this->type1 = $this->type2 = $this->type3 = null;
         $this->comp1 = $this->comp2 = $this->comp3 = $this->comp4 = $this->comp5 = null;
+        $this->frame1_comps = $this->frame2_comps = null;
         $this->type_field_data = null;
         $this->type_data_data = null;
         $this->competency_data = null;
@@ -74,6 +78,8 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         global $DB;
         parent::setup();
 
+        advanced_feature::enable('competency_assignment');
+
         $admin = get_admin();
         $userid = $admin->id;
 
@@ -90,6 +96,10 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->frame1->usermodified = $userid;
         $this->frame1->hidecustomfields = 1;
         $this->frame1->id = $DB->insert_record('comp_framework', $this->frame1);
+        // Virtual fields.
+        $this->frame1->expected_valid_pathway_count = '4';
+        $this->frame1->actual_valid_pathway_count = '0';
+        $this->frame1->warning_message = get_string('achievement_paths_need_review_framework', 'totara_competency');
 
         $this->frame2 = new stdClass();
         $this->frame2->fullname = 'Framework 2';
@@ -103,6 +113,10 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->frame2->usermodified = $userid;
         $this->frame2->hidecustomfields = 1;
         $this->frame2->id = $DB->insert_record('comp_framework', $this->frame2);
+        // Virtual fields.
+        $this->frame2->expected_valid_pathway_count = '1';
+        $this->frame2->actual_valid_pathway_count = '0';
+        $this->frame2->warning_message = get_string('achievement_paths_need_review_framework', 'totara_competency');
 
         // create the competency object
         $this->competency = new competency();
@@ -210,6 +224,9 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $newcomp->typeid = 0;
         $newcomp->assignavailability = [competency::ASSIGNMENT_CREATE_SELF, competency::ASSIGNMENT_CREATE_OTHER];
         $this->comp5 = $this->competency->add_hierarchy_item($newcomp, 0, $this->frame1->id, false, true, false);
+
+        $this->frame1_comps = [$this->comp1, $this->comp2, $this->comp4, $this->comp5];
+        $this->frame2_comps = [$this->comp3];
 
         //set up a hierarchy custom type field
         $this->type_field_data = new stdClass();
@@ -332,24 +349,51 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->events_handlers_data->id = $DB->insert_record('events_handlers', $this->events_handlers_data);
     }
 
-    function test_hierarchy_get_framework() {
+    public function test_hierarchy_get_framework(): void {
         global $DB;
         $competency = $this->competency;
 
         // specifying id should get that framework
+        // Fix the virtual fields.
+        $this->frame2->warning_message = get_string('achievement_paths_need_review_framework_long', 'totara_competency');
+        unset($this->frame2->expected_valid_pathway_count, $this->frame2->actual_valid_pathway_count);
+
         $this->assertEquals($this->frame2, $competency->get_framework($this->frame2->id));
+
+        // Adding an invalid achievement path to comp3/framework two, will not remove the warning.
+        $pathway = $this->get_pathway_entity();
+        $pathway->valid = false;
+        $pathway->competency_id = $this->comp3->id;
+        $pathway->save();
+        $this->assertEquals($this->frame2, $competency->get_framework($this->frame2->id));
+
+        // Making the pathway valid, should remove the warning.
+        $pathway->valid = true;
+        $pathway->save();
+        $this->frame2->warning_message = null;
+        $this->assertEquals($this->frame2, $competency->get_framework($this->frame2->id));
+
+        // Fix the virtual fields.
+        $this->frame1->warning_message = get_string('achievement_paths_need_review_framework_long', 'totara_competency');
+        unset($this->frame1->expected_valid_pathway_count, $this->frame1->actual_valid_pathway_count);
+
         // not specifying id should get first framework (by sort order)
         // the framework returned should contain all the necessary fields
         $this->assertEquals($this->frame1, $competency->get_framework());
+
+        // There should be no warning when competency_assignment is not enabled.
+        advanced_feature::disable('competency_assignment');
+        unset($this->frame1->warning_message);
+        $this->assertEquals($this->frame1, $competency->get_framework());
+
         // clear all frameworks
         $DB->delete_records('comp_framework');
+
         // if no frameworks exist should return false
         $this->assertFalse((bool)$competency->get_framework(0, false, true));
-
-        $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_type_by_id() {
+    public function test_hierarchy_get_type_by_id(): void {
         $competency = $this->competency;
 
         // the type returned should contain all the necessary fields
@@ -361,7 +405,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_frameworks() {
+    public function test_hierarchy_get_frameworks_all_missing_achievement_paths(): void {
         global $DB;
         $competency = $this->competency;
 
@@ -371,14 +415,272 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertEquals(2, count($competency->get_frameworks()));
         // each array element should contain a framework
         $this->assertEquals($this->frame1, current($competency->get_frameworks()));
+
+        // There should be no warning when competency_assignment is not enabled.
+        advanced_feature::disable('competency_assignment');
+        unset(
+            $this->frame1->expected_valid_pathway_count,
+            $this->frame1->actual_valid_pathway_count,
+            $this->frame1->warning_message
+        );
+
+        $this->assertEquals($this->frame1, current($competency->get_frameworks()));
+
         // clear out the framework
         $DB->delete_records('comp_framework');
         // if no frameworks exist should return false
         $this->assertFalse((bool)$competency->get_frameworks());
-        $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_types() {
+    public function test_hierarchy_get_frameworks_no_competencies(): void {
+        global $DB;
+        $competency = $this->competency;
+
+        $DB->delete_records('comp_framework');
+
+        $framework = new stdClass();
+        $framework->fullname = 'Framework 1';
+        $framework->shortname = 'FW1';
+        $framework->description = 'Description 1';
+        $framework->sortorder = 1;
+        $framework->idnumber = 'ID1';
+        $framework->visible = 1;
+        $framework->timecreated = 1265963591;
+        $framework->timemodified = 1265963591;
+        $framework->usermodified = 2;
+        $framework->hidecustomfields = 1;
+        $framework->id = $DB->insert_record('comp_framework', $framework);
+        // Virtual fields.
+        $framework->expected_valid_pathway_count = '0'; // We expect 0 valid pathways because there is no competencies at all.
+        $framework->actual_valid_pathway_count = '0';
+        $framework->warning_message = null;
+
+        // should return an array of frameworks
+        $this->assertTrue((bool)is_array($competency->get_frameworks()));
+        // the array should include all frameworks
+        $this->assertCount(1, $competency->get_frameworks());
+        // each array element should contain a framework
+        $this->assertEquals($framework, current($competency->get_frameworks()));
+    }
+
+    public function test_hierarchy_get_frameworks_all_valid_achievement_paths(): void {
+        $competency = $this->competency;
+
+        foreach ([$this->frame1_comps, $this->frame2_comps] as $comp_list) {
+            foreach ($comp_list as $comp) {
+                $valid_pathway = $this->get_pathway_entity();
+                $valid_pathway->competency_id = $comp->id;
+                $valid_pathway->valid = true;
+                $valid_pathway->save();
+            }
+        }
+
+        // Correct the virtual fields.
+        $this->frame1->expected_valid_pathway_count = count($this->frame1_comps);
+        $this->frame1->actual_valid_pathway_count = count($this->frame1_comps);
+        $this->frame1->warning_message = null;
+
+        $this->frame2->expected_valid_pathway_count = count($this->frame2_comps);
+        $this->frame2->actual_valid_pathway_count = count($this->frame2_comps);
+        $this->frame2->warning_message = null;
+
+        // should return an array of frameworks
+        $this->assertTrue((bool)is_array($competency->get_frameworks()));
+        // the array should include all frameworks
+        $this->assertCount(2, $competency->get_frameworks());
+        // each array element should contain a framework
+        $frameworks = $competency->get_frameworks();
+        $this->assertEquals($this->frame1, reset($frameworks));
+        $this->assertEquals($this->frame2, end($frameworks));
+    }
+
+    public function test_hierarchy_get_frameworks_all_invalid_achievement_paths(): void {
+        $competency = $this->competency;
+
+        foreach ([$this->frame1_comps, $this->frame2_comps] as $comp_list) {
+            foreach ($comp_list as $comp) {
+                $invalid_pathway = $this->get_pathway_entity();
+                $invalid_pathway->competency_id = $comp->id;
+                $invalid_pathway->valid = false;
+                $invalid_pathway->save();
+            }
+        }
+
+        // Correct the virtual fields.
+        $this->frame1->expected_valid_pathway_count = count($this->frame1_comps);
+        $this->frame1->actual_valid_pathway_count = '0';
+
+        $this->frame2->expected_valid_pathway_count = count($this->frame2_comps);
+        $this->frame2->actual_valid_pathway_count = '0';
+
+        // should return an array of frameworks
+        $this->assertTrue((bool)is_array($competency->get_frameworks()));
+        // the array should include all frameworks
+        $this->assertCount(2, $competency->get_frameworks());
+        // each array element should contain a framework
+        $frameworks = $competency->get_frameworks();
+        $this->assertEquals($this->frame1, reset($frameworks));
+        $this->assertEquals($this->frame2, end($frameworks));
+    }
+
+    public function test_hierarchy_get_frameworks_mixed_achievement_path_setups(): void {
+        $competency = $this->competency;
+        // Framework 1/comp1 will have no achievement path at all.
+        // Expected +1, Actual +0  = 1 & 0
+
+        // Framework 1/comp2 will have two valid paths.
+        // Expected +2, Actual +2  = 3 & 2
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp2->id;
+        $pathway->valid = true;
+        $pathway->save();
+
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp2->id;
+        $pathway->valid = true;
+        $pathway->save();
+
+        // Framework 1/comp4 will have one valid one invalid path.
+        // Expected +2, Actual +1  = 5 & 4
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp4->id;
+        $pathway->valid = true;
+        $pathway->save();
+
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp4->id;
+        $pathway->valid = false;
+        $pathway->save();
+
+        // Framework 1/comp5 will only have two invalid paths.
+        // Expected +2, Actual +0  = 7 & 4
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp5->id;
+        $pathway->valid = false;
+        $pathway->save();
+
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp5->id;
+        $pathway->valid = false;
+        $pathway->save();
+
+        // Correct the virtual fields.
+        $this->frame1->expected_valid_pathway_count = '7';
+        $this->frame1->actual_valid_pathway_count = '3';
+        $this->frame1->warning_message = get_string('achievement_paths_need_review_framework', 'totara_competency');
+
+        // Framework 2/comp3 will have one valid and one invalid path, but both are archived.
+        // So there will be one pathway expected (for the single competency), and no actual.
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp3->id;
+        $pathway->status = pathway::PATHWAY_STATUS_ARCHIVED;
+        $pathway->valid = true;
+        $pathway->save();
+
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp3->id;
+        $pathway->status = pathway::PATHWAY_STATUS_ARCHIVED;
+        $pathway->valid = false;
+        $pathway->save();
+
+        $this->frame2->expected_valid_pathway_count = '1';
+        $this->frame2->actual_valid_pathway_count = '0';
+        $this->frame2->warning_message = get_string('achievement_paths_need_review_framework', 'totara_competency');;
+
+        // should return an array of frameworks
+        $this->assertTrue((bool)is_array($competency->get_frameworks()));
+        // the array should include all frameworks
+        $this->assertCount(2, $competency->get_frameworks());
+        // each array element should contain a framework
+        $frameworks = $competency->get_frameworks();
+        $this->assertEquals($this->frame1, reset($frameworks));
+        $this->assertEquals($this->frame2, end($frameworks));
+    }
+
+    public function test_individual_competency_warnings(): void {
+        // comp1: No achievement paths at all.
+        // comp2: Mix of valid and invalid achievement paths.
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp2->id;
+        $pathway->valid = true;
+        $pathway->save();
+
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp2->id;
+        $pathway->valid = false;
+        $pathway->save();
+
+        // comp3: Multiple valid and invalid achievement paths.
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp3->id;
+        $pathway->valid = false;
+        $pathway->save();
+
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp3->id;
+        $pathway->valid = false;
+        $pathway->save();
+
+        // comp4: Multiple valid achievement paths.
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp4->id;
+        $pathway->valid = true;
+        $pathway->save();
+
+        $pathway = $this->get_pathway_entity();
+        $pathway->competency_id = $this->comp4->id;
+        $pathway->valid = true;
+        $pathway->save();
+
+        // comp5: No achievement paths at all.
+        $fields = $this->competency->get_item_select_fields();
+        $this->assertNotEquals('hier.*', 'fields');
+
+        $competency_records = builder::table('comp', 'hier')
+            ->select_raw($fields)
+            ->order_by('id')
+            ->get()
+            ->all();
+
+        $competency_records = $this->competency->add_warnings($competency_records);
+        $this->assertCount(5, $competency_records);
+
+        $comp4_found = false;
+        foreach ($competency_records as $i => $competency_record) {
+            if ((int) $competency_record->id === (int) $this->comp4->id) {
+                $comp4_found = true;
+                $this->assertNull($competency_record->warning_message);
+            } else {
+                $this->assertEquals(
+                    get_string('achievement_paths_need_review', 'totara_competency'),
+                    $competency_record->warning_message
+                );
+            }
+        }
+
+        if (!$comp4_found) {
+            $this->fail('Expected to find comp4');
+        }
+
+        advanced_feature::disable('competency_assignment');
+        $fields = $this->competency->get_item_select_fields();
+        $this->assertEquals('hier.*', $fields);
+
+        $competency_records = builder::table('comp', 'hier')
+            ->select_raw($fields)
+            ->order_by('id')
+            ->get()
+            ->all();
+
+        $competency_records = $this->competency->add_warnings($competency_records);
+        $this->assertCount(5, $competency_records);
+
+        foreach ($competency_records as $i => $competency_record) {
+            $this->assertFalse(isset($competency_record->warning_message));
+        }
+    }
+
+    public function test_hierarchy_get_types(): void {
         global $DB;
         $competency = $this->competency;
         $type1 = $this->type1;
@@ -395,7 +697,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_custom_fields() {
+    public function test_hierarchy_get_custom_fields(): void {
         $competency = $this->competency;
         $customfields = $competency->get_custom_fields($this->comp2->id);
 
@@ -422,7 +724,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_item() {
+    public function test_hierarchy_get_item(): void {
         $competency = $this->competency;
 
         // the item returned should contain all the necessary fields
@@ -434,7 +736,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_items() {
+    public function test_hierarchy_get_items(): void {
         global $DB;
         $competency = $this->competency;
 
@@ -451,7 +753,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_items_by_parent() {
+    public function test_hierarchy_get_items_by_parent(): void {
         global $DB;
         $competency = $this->competency;
 
@@ -471,7 +773,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_all_root_items() {
+    public function test_hierarchy_get_all_root_items(): void {
         global $DB;
         $competency = $this->competency;
         $nofwid = $this->nofwid;
@@ -490,7 +792,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_item_descendants() {
+    public function test_hierarchy_get_item_descendants(): void {
         $competency = $this->competency;
         $nofwid = $this->nofwid;
 
@@ -515,7 +817,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_hierarchy_item_adjacent_peer() {
+    public function test_hierarchy_get_hierarchy_item_adjacent_peer(): void {
         // if an adjacent peer exists, should return its id
         $this->assertEquals($this->comp4->id, $this->competency->get_hierarchy_item_adjacent_peer($this->comp2, HIERARCHY_ITEM_BELOW));
         // should return false if no adjacent peer exists in the direction specified
@@ -526,7 +828,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_make_hierarchy_list() {
+    public function test_hierarchy_make_hierarchy_list(): void {
         global $DB;
         $competency = $this->competency;
 
@@ -553,7 +855,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_item_lineage() {
+    public function test_hierarchy_get_item_lineage(): void {
         $competency = $this->competency;
         $nofwid = $this->nofwid;
 
@@ -587,7 +889,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
     // display_add_item_button()
     // display_add_type_button()
 
-    function test_hierarchy_hide_item() {
+    public function test_hierarchy_hide_item(): void {
         global $DB;
         $competency = $this->competency;
         $competency->hide_item($this->comp1->id);
@@ -602,7 +904,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_hide_framework() {
+    public function test_hierarchy_hide_framework(): void {
         global $DB;
         $competency = $this->competency;
         $competency->hide_framework($this->frame1->id);
@@ -617,13 +919,13 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_framework_sortorder_offset() {
+    public function test_hierarchy_framework_sortorder_offset(): void {
         $competency = $this->competency;
         $this->assertEquals(1002, $competency->get_framework_sortorder_offset());
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_move_framework() {
+    public function test_hierarchy_move_framework(): void {
         global $DB;
         $competency = $this->competency;
         $f1_before =  $DB->get_field('comp_framework', 'sortorder', array('id' => $this->frame1->id));
@@ -640,7 +942,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_delete_hierarchy_item() {
+    public function test_hierarchy_delete_hierarchy_item(): void {
         global $DB;
         $competency = $this->competency;
         // function should return true
@@ -656,7 +958,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_delete_framework() {
+    public function test_hierarchy_delete_framework(): void {
         global $DB;
         $competency = $this->competency;
         // function should return null
@@ -670,7 +972,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_delete_type() {
+    public function test_hierarchy_delete_type(): void {
         global $DB;
         $competency = $this->competency;
 
@@ -686,7 +988,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_delete_type_metadata() {
+    public function test_hierarchy_delete_type_metadata(): void {
         global $DB;
         $competency = $this->competency;
 
@@ -698,7 +1000,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_item_data() {
+    public function test_hierarchy_get_item_data(): void {
         $competency = $this->competency;
 
         // should return an array of info
@@ -715,7 +1017,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_max_depth() {
+    public function test_hierarchy_get_max_depth(): void {
         $competency = $this->competency;
         $nofwid = $this->nofwid;
         $nofwid->frameworkid = 999;
@@ -726,7 +1028,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_hierarchy_get_all_parents() {
+    public function test_hierarchy_get_all_parents(): void {
         global $DB;
 
         // should return an array containing all items that have children
@@ -744,13 +1046,13 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_get_short_prefix(){
+    public function test_get_short_prefix(): void {
         $shortprefix = hierarchy::get_short_prefix('competency');
         $this->assertEquals('comp', $shortprefix);
         $this->resetAfterTest(true);
     }
 
-    function test_reorder_hierarchy_item() {
+    public function test_reorder_hierarchy_item(): void {
         global $DB;
         $competency = $this->competency;
 
@@ -762,7 +1064,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_get_extra_fields() {
+    public function test_get_extra_fields(): void {
         global $CFG;
         require_once($CFG->dirroot . '/totara/hierarchy/prefix/organisation/lib.php');
 
@@ -778,7 +1080,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
     }
 
 
-    function test_update_hierarchy_item() {
+    public function test_update_hierarchy_item(): void {
         $updatedcomp2 = clone($this->comp2);
         $updatedcomp2->fullname = 'UPDATED2';
 
@@ -788,7 +1090,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_move_hierarchy_item() {
+    public function test_move_hierarchy_item(): void {
         $this->assertEquals($this->comp1->id, $this->competency->get_item($this->comp4->id)->parentid);
         $this->assertTrue((bool)$this->competency->move_hierarchy_item($this->comp4, $this->comp4->frameworkid, $this->comp5->id));
         $this->assertEquals($this->comp5->id, $this->competency->get_item($this->comp4->id)->parentid);
@@ -796,7 +1098,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_get_unclassified_items() {
+    public function test_get_unclassified_items(): void {
         $competency = $this->competency;
         $unclassified = $competency->get_unclassified_items();
 
@@ -807,7 +1109,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_get_item_stats() {
+    public function test_get_item_stats(): void {
         $info = $this->competency->get_item_stats($this->comp1->id);
         $this->assertEquals('Competency 1', $info['itemname']);
         $this->assertEquals(2, $info['children']);
@@ -821,7 +1123,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    public function test_get_related_data() {
+    public function test_get_related_data(): void {
         $info = $this->competency->get_related_data($this->comp1->id);
         $this->assertEquals('Competency 1', $info['name']);
         $this->assertEquals(2, $info['children']);
@@ -833,7 +1135,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    public function test_get_all_related_data() {
+    public function test_get_all_related_data(): void {
         $info = $this->competency->get_all_related_data([
             $this->comp1->id,
             $this->comp2->id,
@@ -846,7 +1148,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    public function test_get_framework_related_data() {
+    public function test_get_framework_related_data(): void {
         $info = $this->competency->get_framework_related_data($this->comp1->frameworkid);
 
         $this->assertEquals(4, $info['children']);
@@ -860,14 +1162,14 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_get_items_excluding_children() {
+    public function test_get_items_excluding_children(): void {
         $excluded = $this->competency->get_items_excluding_children(array($this->comp1->id, $this->comp2->id, $this->comp3->id, $this->comp4->id, $this->comp5->id));
         $this->assertEquals(array($this->comp1->id, $this->comp3->id, $this->comp5->id), $excluded);
 
         $this->resetAfterTest(true);
     }
 
-    function test_is_child_of() {
+    public function test_is_child_of(): void {
         $this->assertTrue((bool)$this->competency->is_child_of($this->comp2, $this->comp1->id));
         $this->assertTrue((bool)$this->competency->is_child_of($this->comp4, array($this->comp1->id, $this->comp3->id, $this->comp5->id)));
         $this->assertFalse((bool)$this->competency->is_child_of($this->comp2, array($this->comp3->id, $this->comp2->id, $this->comp4->id, $this->comp5->id, 6)));
@@ -877,7 +1179,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    function test_get_parent_list() {
+    public function test_get_parent_list(): void {
         $competency = $this->competency;
 
         $inctop = $competency->get_parent_list($competency->get_items(), array(), true);
@@ -904,7 +1206,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
     }
 
-    private function verify_export_files_equal($exp_filename, $act_filename, $ignore = []) {
+    private function verify_export_files_equal($exp_filename, $act_filename, $ignore = []): void {
 
         $exp_file = file($exp_filename, FILE_IGNORE_NEW_LINES);
         $this->assertNotFalse($exp_file);
@@ -950,7 +1252,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertSame($exp_line, $act_line);
     }
 
-    public function test_export_data() {
+    public function test_export_data(): void {
         advanced_feature::disable('competency_assignment');
 
         global $CFG;
@@ -964,9 +1266,7 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         unlink($CFG->dataroot . '/b.bb');
     }
 
-    public function test_export_data_with_assignments() {
-        advanced_feature::enable('competency_assignment');
-
+    public function test_export_data_with_assignments(): void {
         global $CFG;
 
         $this->competency->export_data('csv', false, $CFG->dataroot . '/a.aa');
@@ -976,6 +1276,18 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->competency->export_data('csv', true, $CFG->dataroot . '/b.bb');
         $this->verify_export_files_equal($CFG->dirroot . '/totara/hierarchy/tests/fixtures/export_comp_hierarchy_all_assignments.csv', $CFG->dataroot . '/b.bb', ['timemodified']);
         unlink($CFG->dataroot . '/b.bb');
+    }
+
+    private function get_pathway_entity(): pathway_entity {
+        $pathway = new pathway_entity();
+        $pathway->sortorder = 0;
+        $pathway->path_type = 0;
+        $pathway->path_instance_id = 0;
+        $pathway->status = pathway::PATHWAY_STATUS_ACTIVE;
+        $pathway->pathway_modified = time();
+        $pathway->valid = true;
+
+        return $pathway;
     }
 
     /* TODO

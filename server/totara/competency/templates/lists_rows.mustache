@@ -113,9 +113,9 @@ data-tw-list-row="{{id}}" data-tw-list-extraData="{{extra_data}}">
         {{#expandable}}{{#expand_trigger}}{{!
       }}<a href="#" role="button" class="tw-list__row_trigger" data-tw-list-expandTrigger="">{{!
       }}{{/expand_trigger}}{{/expandable}}
-            {{#label}}<span class="tw-list__cell_label">{{label}}</span>{{/label}}
-            {{#column_template}}{{> &&column_template }}{{/column_template}}
-            {{^column_template}}{{value}}{{/column_template}}
+        {{#label}}<span class="tw-list__cell_label">{{label}}</span>{{/label}}
+        {{#column_template}}{{> &&column_template }}{{/column_template}}
+        {{^column_template}}{{value}}{{/column_template}}
         {{#expandable}}{{#expand_trigger}}{{!
       }}</a>{{!
       }}{{/expand_trigger}}{{/expandable}}

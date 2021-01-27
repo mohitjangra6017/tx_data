@@ -103,7 +103,7 @@ if ($canupdateframeworks) {
 ///
 
 // Get frameworks for this page.
-$frameworks = $hierarchy->get_frameworks(array('item_count' => 1), true);
+$frameworks = $hierarchy->get_frameworks(['item_count' => 1], true);
 
 ///
 /// Generate / display page
@@ -145,10 +145,18 @@ if ($frameworks) {
         $link_params = array('prefix' => $prefix, 'frameworkid' => $framework->id);
         $link_url = new moodle_url('/totara/hierarchy/index.php', $link_params);
         if ($canviewframeworks) {
-            $row[] = $OUTPUT->action_link($link_url, format_string($framework->fullname), null, array('class' => $cssclass));
+            $name_column = $OUTPUT->action_link($link_url, format_string($framework->fullname), null, array('class' => $cssclass));
         } else {
-            $row[] = format_string($framework->fullname);
+            $name_column = format_string($framework->fullname);
         }
+
+        if (!empty($framework->warning_message)) {
+            $name_column .= html_writer::empty_tag('br');
+            $name_column .= $hierarchy->write_inline_warning_message($framework->warning_message);
+        }
+
+        $row[] = $name_column;
+
         if (!empty($CFG->showhierarchyshortnames)) {
             $row[] = format_string($framework->shortname);
         }
