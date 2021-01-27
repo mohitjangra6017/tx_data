@@ -653,7 +653,7 @@ function tm_message_task_accept(int $id, string $reasonfordecision, ?string $pro
     }
 
     // Finally - dismiss this message as it has now been processed
-    tm_message_mark_message_read($notification_record, time(), $processor_id);
+    tm_message_mark_message_read($notification_record, time(), null, $processor_id);
     return $result;
 }
 
@@ -985,7 +985,7 @@ function tm_message_mark_messages_read(int $to_user_id, int $from_user_id): void
 
     foreach ($messages as $message) {
         $message->notification = 1;
-        tm_message_mark_message_read($message, time(), $message->processorid);
+        tm_message_mark_message_read($message, time(), null, $message->processorid);
     }
 
     $messages->close();
