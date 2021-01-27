@@ -27,6 +27,7 @@ use core_ml\event\interaction_event;
 use totara_comment\comment;
 use totara_comment\entity\comment as entity;
 use totara_notification\event\notifiable_event;
+use totara_notification\factory\built_in_notification_factory;
 
 /**
  * Class comment_created
@@ -162,5 +163,19 @@ final class comment_created extends base implements interaction_event, notifiabl
      */
     public static function get_notification_default_delivery_channels(): array {
         return [];
+    }
+
+    /**
+     * @return array
+     */
+    public static function get_notification_configurations(): array {
+        $notification_configs = built_in_notification_factory::get_notification_classes_of_notifiable_event(comment_created::class);
+
+        $ret = [];
+        foreach ($notification_configs as $notification_config) {
+            $ret[] = new $notification_config;
+        }
+
+        return $ret;
     }
 }

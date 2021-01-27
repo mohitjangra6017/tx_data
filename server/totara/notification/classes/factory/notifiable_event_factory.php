@@ -105,4 +105,13 @@ class notifiable_event_factory {
 
         return $return_classes;
     }
+
+    /**
+     * Returning a list of notifiable events grouped by component.
+     *
+     * @return string[]
+     */
+    public static function get_notifiable_events_group_by_component(): array {
+        return self::get_map();
+    }
 }

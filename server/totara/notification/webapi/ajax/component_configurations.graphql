@@ -1,0 +1,15 @@
+query totara_notification_component_configurations($context_id: param_integer) {
+  configurations: totara_notification_component_configurations(
+    context_id: $context_id
+  ) {
+    component
+    notifiable_event_configurations {
+      event_key
+      title
+      notification_configurations {
+        title
+        recipient
+      }
+    }
+  }
+}
