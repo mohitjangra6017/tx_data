@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@
  * @author Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+
+use totara_notification\factory\notifiable_event_factory;
 use totara_notification\local\helper;
 use totara_notification\resolver\notifiable_event_resolver;
 
@@ -51,10 +53,36 @@ class totara_notification_local_helper_testcase extends advanced_testcase {
      */
     public function test_get_resolver_from_invalid_event(): void {
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage('Cannot get the event notifiable resolver');
+        $this->expectExceptionMessage('Event class name is an invalid notifiable event');
 
         $context = context_system::instance();
         helper::get_resolver_from_notifiable_event('hello_world', $context->id, []);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_get_resolver_with_trailing_slash(): void {
+        $events = notifiable_event_factory::get_notifiable_events();
+        $events = array_map(
+            function (string $event_class_name): string {
+                return "\\{$event_class_name}";
+            },
+            $events
+        );
+
+        $context = context_system::instance();
+
+        foreach ($events as $event) {
+            self::assertEquals(0, stripos($event, '\\'));
+            $resolver = helper::get_resolver_from_notifiable_event(
+                $event,
+                $context->id,
+                []
+            );
+
+            self::assertInstanceOf(notifiable_event_resolver::class, $resolver);
+        }
     }
 
     /**

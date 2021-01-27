@@ -26,6 +26,7 @@ use totara_comment\comment;
 use totara_comment\resolver;
 use totara_engage\access\access_manager;
 use engage_article\totara_engage\resource\article;
+use coding_exception;
 
 /**
  * Comment resolver for engage_article
@@ -124,5 +125,20 @@ final class comment_resolver extends resolver {
         $article = article::from_resource_id($instance_id);
 
         return access_manager::can_access($article, $actor_id);
+    }
+
+    /**
+     * @param string $area
+     * @param int    $instance_id
+     *
+     * @return int|null
+     */
+    public function get_owner_id_from_instance(string $area, int $instance_id): ?int {
+        if (!$this->is_valid_area($area)) {
+            throw new coding_exception("Not supported area by component '{$this->component}'");
+        }
+
+        $article = article::from_resource_id($instance_id);
+        return $article->get_userid();
     }
 }

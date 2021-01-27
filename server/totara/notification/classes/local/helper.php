@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ class helper {
                                                               int $context_id, array $event_data): notifiable_event_resolver {
         global $CFG;
         if (!helper::is_valid_notifiable_event($event_class_name)) {
-            throw new coding_exception("Cannot get the event notifiable resolver");
+            throw new coding_exception("Event class name is an invalid notifiable event");
         }
 
         $event_class_name = ltrim($event_class_name, '\\');
@@ -88,7 +88,7 @@ class helper {
         $resolver_name = end($parts);
 
         $resolver_classname = "{$component}\\totara_notification\\resolver\\{$resolver_name}";
-        if (!class_exists($resolver_name)) {
+        if (!class_exists($resolver_classname)) {
             throw new coding_exception(
                 "Cannot find the resolver for notifiable event '{$event_class_name}'"
             );

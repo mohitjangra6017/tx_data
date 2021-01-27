@@ -20,63 +20,61 @@
  * @author Alvin Smith <alvin.smith@totaralearning.com>
  * @package totara_notification
  */
-
 namespace totara_notification\task;
 
 use core\task\scheduled_task;
-use totara_notification\entity\notification_queue;
+use null_progress_trace;
+use progress_trace;
+use text_progress_trace;
+use totara_notification\manager\notification_queue_manager;
 
-
+/**
+ * A cron task to process the queue of notifications.
+ */
 class process_notification_queue_task extends scheduled_task {
-    public function get_name() {
+    /**
+     * The current time now, where we are checking the notifications whether there are due notifications or not.
+     * Note that this can be set with with data generator in PHPUNIT via reflection.
+     *
+     * @var int
+     */
+    private $due_time;
+
+    /**
+     * @var progress_trace
+     */
+    private $trace;
+
+    /**
+     * process_notification_queue_task constructor.
+     */
+    public function __construct() {
+        $is_test = defined('PHPUNIT_TEST') && PHPUNIT_TEST;
+
+        $this->due_time = time();
+        $this->trace = $is_test ? new null_progress_trace() : new text_progress_trace();
+    }
+
+    /**
+     * @param progress_trace $trace
+     * @return void
+     */
+    public function set_trace(progress_trace $trace): void {
+        $this->trace = $trace;
+    }
+
+    /**
+     * @return string
+     */
+    public function get_name(): string {
         return get_string('process_notification_queue_task', 'totara_notification');
     }
+
     /**
      * @return void
      */
     public function execute() {
-        $repository = notification_queue::repository();
-        $all_queues = $repository->get_lazy();
-
-        /** @var notification_queue $queue */
-        foreach ($all_queues as $queue) {
-            $this->send($queue);
-        }
-
-        $all_queues->close();
+        $manager = new notification_queue_manager($this->trace);
+        $manager->dispatch_queues($this->due_time);
     }
-
-    public function send(notification_queue $queue): bool {
-        try {
-            $event = $queue->get_decoded_event_data();
-        } catch (\coding_exception $e) {
-            return false;
-        }
-
-        $message = new \stdClass();
-        // TODO
-        $message->component = get_class($queue);
-        $message->name = $queue->notification_name;
-        $message->useridfrom = $event->user_id;
-        $message->useridto = $event->relateduserid;
-        $message->userto = $event->relateduserid;
-        $message->userfrom = $event->user_id;
-        $message->subject = $event->subject;
-        $message->fullmessage = $event->fullmessage;
-        $message->smallmessage = $event->smallmessage;
-        $message->fullmessagehtml = $event->fullmessagehtml;
-        $message->notification = $event->notification;;
-        $message->contexturl = '';
-        $message->contexturlname = $event->contexturlname;
-
-        global $CFG;
-        require_once($CFG->dirroot . '/message/lib.php');
-
-        $processors = get_message_processors();
-        $processors['email']->send_message($message);
-        $processors['popup']->send_message($message);
-
-        return true;
-    }
-
 }

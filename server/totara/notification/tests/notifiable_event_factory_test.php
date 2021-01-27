@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
  * @author Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
-
 use totara_notification\event\notifiable_event;
 use totara_notification\factory\notifiable_event_factory;
 
@@ -39,11 +38,16 @@ class totara_notification_notifiable_event_factory_testcase extends advanced_tes
      * @return void
      */
     public function test_get_events_from_component(): void {
-        global $CFG;
-        require_once("{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event.php");
+        $generator = self::getDataGenerator();
 
-        notifiable_event_factory::phpunit_add_notifiable_event_class(
-            'totara_notification',
+        /** @var totara_notification_generator $notification_generator */
+        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator->include_mock_notifiable_event();
+
+        // Before adding mock to the component.
+        self::assertCount(0, notifiable_event_factory::get_notifiable_events('totara_notification'));
+
+        $notification_generator->add_mock_notifiable_event_for_component(
             totara_notification_mock_notifiable_event::class
         );
 
@@ -52,17 +56,5 @@ class totara_notification_notifiable_event_factory_testcase extends advanced_tes
 
         $first_event = reset($event_classes);
         self::assertEquals(totara_notification_mock_notifiable_event::class, $first_event);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_phpunit_add_invalid_event(): void {
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage(
-            "Expecting the event class to implement interface totara_notification\\event\\notifiable_event"
-        );
-
-        notifiable_event_factory::phpunit_add_notifiable_event_class('core', 'martin_Garrix');
     }
 }

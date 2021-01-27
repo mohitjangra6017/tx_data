@@ -22,6 +22,7 @@
  */
 namespace totara_comment;
 
+use coding_exception;
 use totara_comment\pagination\cursor;
 
 /**
@@ -176,5 +177,21 @@ abstract class resolver {
      */
     public function can_see_replies(int $instance_id, string $area, int $actor_id): bool {
         return $this->can_see_comments($instance_id, $area, $actor_id);
+    }
+
+    /**
+     * Returns the owner's id of the instance given $area and $instance_id.
+     * Note that if the instance does not have owner, return NULL instead.
+     *
+     * @param string $area
+     * @param int    $instance_id
+     *
+     * @return int|null
+     */
+    public function get_owner_id_from_instance(string $area, int $instance_id): ?int {
+        throw new coding_exception(
+            "Please extend the function '\\totara_comment\\resolver\\get_owner_id_from_instance' " .
+            "to help resolve the owner's id of instance"
+        );
     }
 }

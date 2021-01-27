@@ -25,12 +25,15 @@ namespace totara_notification\event;
 use core\event\abstraction\context_aware;
 
 /**
- * An interface to provide all the metadata that allow users to create a custom notification,
- * nor edit a custom
+ * An interface to help us integrating the centralised notification system's event with the
+ * current system's event.
+ *
+ * It provides all the available metadata (options) for a system admin to create a custom notification
+ * for this very specific event or edit a built-in notification that come out-of-box.
  */
 interface notifiable_event extends context_aware {
     /**
-     * Returning the title for this notifiable event, which should be used
+     * Returns the title for this notifiable event, which should be used
      * within the tree table of available notifiable events.
      *
      * @return string
@@ -38,21 +41,21 @@ interface notifiable_event extends context_aware {
     public static function get_notification_title(): string;
 
     /**
-     * Returning an array of available recipients (metadata) for this event (concrete class).
+     * Returns an array of available recipients (metadata) for this event (concrete class).
      *
      * @return array
      */
     public static function get_notification_available_recipients(): array;
 
     /**
-     * Returning an array of available timing for this event (concrete class).
+     * Returns an array of available timing for this event (concrete class).
      *
      * @return array
      */
     public static function get_notification_available_schedules(): array;
 
     /**
-     * Return the default deliviry channels that defined for the event by developers.
+     * Returns the default delivery channels that defined for the event by developers.
      * However, note that admin can override this default delivery channels.
      *
      * @return array
@@ -60,7 +63,7 @@ interface notifiable_event extends context_aware {
     public static function get_notification_default_delivery_channels(): array;
 
     /**
-     * Returning a hash-map of data attributes that the event should be using to feed to all the
+     * Returns a hash-map of data attributes that the event should be using to feed to all the
      * notifications, that can be produced by this event.
      *
      * @return array

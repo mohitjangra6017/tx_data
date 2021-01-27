@@ -42,14 +42,12 @@ class totara_notification_built_in_notification_factory_testcase extends advance
      * @return void
      */
     public function test_get_notiication_of_an_event_name(): void {
-        global $CFG;
-        require_once("{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_built_in_notification.php");
-        require_once("{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event.php");
+        $generator = self::getDataGenerator();
 
-        built_in_notification_factory::phpunit_add_notification_class(
-            'totara_notification',
-            totara_notification_mock_built_in_notification::class
-        );
+        /** @var totara_notification_generator $notification_generator */
+        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator->include_mock_notifiable_event();
+        $notification_generator->add_mock_built_in_notification_for_component();
 
         $result = built_in_notification_factory::get_notification_classes_of_notifiable_event(
             totara_notification_mock_notifiable_event::class

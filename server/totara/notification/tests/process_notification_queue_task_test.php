@@ -1,0 +1,188 @@
+<?php
+/**
+ * This file is part of Totara Learn
+ *
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @package totara_notification
+ */
+use totara_notification\entity\notification_queue;
+use totara_notification\manager\notification_queue_manager;
+use totara_notification\task\process_notification_queue_task;
+
+/**
+ * This tes is indirectly cover {@see notification_queue_manager}
+ */
+class totara_notification_process_notification_queue_task_testcase extends advanced_testcase {
+    /**
+     * @return void
+     */
+    protected function setUp(): void {
+        $generator = self::getDataGenerator();
+
+        /** @var totara_notification_generator $notification_generator */
+        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator->include_mock_built_in_notification();
+
+        $notification_generator->add_mock_built_in_notification_for_component();
+    }
+
+    /**
+     * @return void
+     */
+    public function test_sending_message_with_mock(): void {
+        global $DB;
+
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+
+        /** @var totara_notification_generator $notification_generator */
+        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
+
+        // Mock the body and subject.
+        $notification_generator->add_string_subject_to_mock_built_in_notification('Bomba');
+        $notification_generator->add_string_body_to_mock_built_in_notification('Kian');
+
+        $context_user = context_user::instance($user_one->id);
+
+        // Adding queue to process.
+        $queue = new notification_queue();
+        $queue->context_id = $context_user->id;
+        $queue->scheduled_time = 15;
+        $queue->notification_name = totara_notification_mock_built_in_notification::class;
+        $queue->event_data = json_encode(['message' => 'my_name']);
+        $queue->save();
+
+        self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
+
+        // Start the message redirection.
+        $sink = phpunit_util::start_message_redirection();
+        self::assertEquals(0, $sink->count());
+        self::assertEmpty($sink->get_messages());
+
+        $task = new process_notification_queue_task();
+        $notification_generator->set_due_time_of_process_notification_task($task, 50);
+        $task->execute();
+
+        // Message is sent, the queue should be cleared now.
+        self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
+        self::assertEquals(1, $sink->count());
+
+        $messages = $sink->get_messages();
+        self::assertCount(1, $messages);
+
+        $first_message = reset($messages);
+        self::assertIsObject($first_message);
+        self::assertObjectHasAttribute('fullmessage', $first_message);
+        self::assertEquals('Kian', $first_message->fullmessage);
+
+        self::assertObjectHasAttribute('subject', $first_message);
+        self::assertEquals('Bomba', $first_message->subject);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_sending_message_out_with_invalid_notification(): void {
+        global $DB;
+
+        // Adding queue to process.
+        $queue = new notification_queue();
+        $queue->context_id = context_system::instance()->id;
+        $queue->scheduled_time = 15;
+        $queue->notification_name = 'message_juliet_notification';
+        $queue->event_data = json_encode(['message' => 'my_name']);
+        $queue->save();
+
+        self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
+
+        /** @var totara_notification_generator $generator */
+        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $trace = $generator->get_test_progress_trace();
+
+        // Start the message redirection.
+        $sink = phpunit_util::start_message_redirection();
+        self::assertEquals(0, $sink->count());
+        self::assertEmpty($sink->get_messages());
+
+        $task = new process_notification_queue_task();
+        $task->set_trace($trace);
+        $task->execute();
+
+        // Message should not be sent due to invalid notification name, as it was skipped.
+        self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
+        self::assertEquals(0, $sink->count());
+        self::assertEmpty($sink->get_messages());
+
+        $messages = $trace->get_messages();
+        self::assertNotEmpty($messages);
+        self::assertCount(2, $messages);
+
+        $first_message = reset($messages);
+        self::assertEquals(
+            "The built-in notification does not exist in the system 'message_juliet_notification'",
+            $first_message
+        );
+
+        $second_message = end($messages);
+        self::assertEquals(
+            "Cannot dispatch the queue at id '{$queue->id}'",
+            $second_message
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_sending_message_with_mock_and_not_yet_due_time(): void {
+        global $DB;
+
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+
+        $context_user = context_user::instance($user_one->id);
+
+        // Adding queue to process.
+        $queue = new notification_queue();
+        $queue->context_id = $context_user->id;
+        $queue->scheduled_time = 10;
+        $queue->notification_name = totara_notification_mock_built_in_notification::class;
+        $queue->event_data = json_encode(['message' => 'my_name']);
+        $queue->save();
+
+        self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
+
+        // Start the message redirection.
+        $sink = phpunit_util::start_message_redirection();
+        self::assertEquals(0, $sink->count());
+        self::assertEmpty($sink->get_messages());
+
+        /** @var totara_notification_generator $notification_generator */
+        $notification_generator = $generator->get_plugin_generator('totara_notification');
+
+        $task = new process_notification_queue_task();
+        $notification_generator->set_due_time_of_process_notification_task($task, 5);
+
+        $task->execute();
+
+        // Message should not be sent, because there are no queues that due.
+        self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
+        self::assertEquals(0, $sink->count());
+        self::assertEmpty($sink->get_messages());
+    }
+}

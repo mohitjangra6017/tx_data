@@ -21,7 +21,4 @@
  * @package totara_notification
  */
 defined('MOODLE_INTERNAL') || die();
-
-$string['process_event_queue_task'] = 'Queue event scheduled task';
-$string['process_notification_queue_task'] = 'Queue notification scheduled task';
-$string['pluginname'] = 'Centralised notification';
+require_once('totara_notification_generator.php');

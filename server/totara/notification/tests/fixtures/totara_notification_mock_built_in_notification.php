@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,10 +20,19 @@
  * @author Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
-
 use totara_notification\notification\built_in_notification;
 
 class totara_notification_mock_built_in_notification extends built_in_notification {
+    /**
+     * @var lang_string|null
+     */
+    private static $body;
+
+    /**
+     * @var lang_string|null
+     */
+    private static $subject;
+
     /**
      * @return string
      */
@@ -49,13 +58,59 @@ class totara_notification_mock_built_in_notification extends built_in_notificati
      * @return string
      */
     public static function get_recipient_name(): string {
-        throw new coding_exception("Todo - implement me");
+        return 'martin_garrix';
     }
 
     /**
-     * @return mixed|void
+     * @return lang_string
      */
-    public static function get_schedule() {
-        throw new coding_exception("Todo - implement me");
+    public static function get_default_body(): lang_string {
+        if (isset(self::$body)) {
+            return self::$body;
+        }
+
+        // I could not be bothered to create a new lang_string.
+        return new lang_string('pluginname', 'totara_notification');
+    }
+
+    /**
+     * @return lang_string
+     */
+    public static function get_default_subject(): lang_string {
+        if (isset(self::$subject)) {
+            return self::$subject;
+        }
+
+        // I could not be bothered to create a new lang_string.
+        return new lang_string('pluginname', 'totara_notification');
+    }
+
+    /**
+     * @param lang_string $mock_body
+     * @return void
+     */
+    public static function set_default_body(lang_string $mock_body): void {
+        self::$body = $mock_body;
+    }
+
+    /**
+     * @param lang_string $mock_subject
+     * @return void
+     */
+    public static function set_default_subject(lang_string $mock_subject): void {
+        self::$subject = $mock_subject;
+    }
+
+    /**
+     * @return void
+     */
+    public static function clear(): void {
+        if (isset(self::$body)) {
+            self::$body = null;
+        }
+
+        if (isset(self::$subject)) {
+            self::$subject = null;
+        }
     }
 }

@@ -55,3 +55,5 @@ $string['error:update'] = "Cannot update a comment";
 $string['error:reportcomment'] = "Cannot report the comment";
 $string['error:reportreply'] = "Cannot report the reply";
 $string['error:softdelete'] = "Cannot delete a comment";
+
+$string['notification_comment_created_body'] = 'A new comment created on your item';

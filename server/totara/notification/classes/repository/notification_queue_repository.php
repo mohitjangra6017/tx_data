@@ -23,9 +23,26 @@
 namespace totara_notification\repository;
 
 use core\orm\entity\repository;
+use core\orm\lazy_collection;
 
 /**
  * Repository for table "ttr_notification_queue"
  */
 class notification_queue_repository extends repository {
+    /**
+     * Returns a list of notification queues that are less than the $current_time.
+     * If $current_time is passed as either NULL or 0 then it would use the
+     * {@see time()} from PHP.
+     *
+     * @param int|null $current_time
+     * @return lazy_collection
+     */
+    public function get_due_notification_queues(?int $current_time = null): lazy_collection {
+        if (empty($current_time)) {
+            $current_time = time();
+        }
+
+        $this->builder->where('scheduled_time', '<=', $current_time);
+        return $this->builder->get_lazy();
+    }
 }

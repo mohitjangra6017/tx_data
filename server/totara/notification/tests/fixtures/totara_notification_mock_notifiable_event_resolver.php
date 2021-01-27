@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,4 +23,43 @@
 use totara_notification\resolver\notifiable_event_resolver;
 
 class totara_notification_mock_notifiable_event_resolver extends notifiable_event_resolver {
+    /**
+     * @var Closure|null
+     */
+    private static $recipient_ids_resolver;
+
+    /**
+     * @param callable $recipient_ids_resolver
+     * @return void
+     */
+    public static function set_recipient_ids_resolver(callable $recipient_ids_resolver): void {
+        if (!isset(self::$recipient_ids_resolver)) {
+            // PHP-7.4 compatible - do not ask.
+            self::$recipient_ids_resolver = null;
+        }
+
+        self::$recipient_ids_resolver = Closure::fromCallable($recipient_ids_resolver);
+    }
+
+    /**
+     * @return void
+     */
+    public static function clear_callbacks(): void {
+        if (isset(self::$recipient_ids_resolver)) {
+            self::$recipient_ids_resolver = null;
+        }
+    }
+
+    /**
+     * @param string $recipient_name
+     * @return array
+     */
+    public function get_recipient_ids(string $recipient_name): array {
+        if (!isset(self::$recipient_ids_resolver)) {
+            return [];
+        }
+
+        // Let the native php handle the miss-matched type returned from callback - i'm tired.
+        return self::$recipient_ids_resolver->__invoke();
+    }
 }

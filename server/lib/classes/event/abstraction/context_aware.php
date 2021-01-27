@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,11 @@ namespace core\event\abstraction;
 
 use context;
 
+/**
+ * A core abstraction interface which is mainly used for event.
+ *
+ * @since Totara 14.0
+ */
 interface context_aware {
     /**
      * Returning the context of an event.

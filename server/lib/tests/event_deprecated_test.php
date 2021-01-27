@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use mod_unittests\event\course_module_instances_list_viewed;
+
 /**
  * Class core_event_instances_list_viewed_testcase
  *
@@ -36,10 +38,22 @@ class core_event_deprecated_testcase extends advanced_testcase {
      * Test event properties and methods.
      */
     public function test_deprecated_course_module_instances_list_viewed_events() {
+        global $USER;
+
+        $this->setAdminUser();
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
 
         // Make sure the abstract class course_module_instances_list_viewed generates a debugging notice.
         require_once(__DIR__.'/fixtures/event_mod_badfixtures.php');
-        $this->assertDebuggingCalled(null, DEBUG_DEVELOPER);
 
+        course_module_instances_list_viewed::create([
+            'objectid' => $course->id,
+            'context' => context_course::instance($course->id),
+            'userid' => $USER->id,
+            'courseid' => $course->id
+        ]);
+
+        $this->assertDebuggingCalled(null, DEBUG_DEVELOPER);
     }
 }

@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,10 +23,20 @@
 defined('MOODLE_INTERNAL') || die();
 
 use totara_notification\task\process_event_queue_task;
+use totara_notification\task\process_notification_queue_task;
 
 $tasks = [
     [
         'classname' => process_event_queue_task::class,
+        'blocking' => 1,
+        'minute' => '*',
+        'hour' => ' *',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*'
+    ],
+    [
+        'classname' => process_notification_queue_task::class,
         'blocking' => 0,
         'minute' => '*',
         'hour' => ' *',

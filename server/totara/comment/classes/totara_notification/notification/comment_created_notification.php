@@ -23,6 +23,7 @@
 namespace totara_comment\totara_notification\notification;
 
 use coding_exception;
+use lang_string;
 use totara_comment\event\comment_created;
 use totara_notification\notification\built_in_notification;
 
@@ -45,13 +46,20 @@ final class comment_created_notification extends built_in_notification {
      * @return string
      */
     public static function get_recipient_name(): string {
-        throw new coding_exception("Todo - implement me");
+        return 'owner';
     }
 
     /**
-     * @return mixed|void
+     * @return lang_string
      */
-    public static function get_schedule() {
-        throw new coding_exception("Todo - implement me");
+    public static function get_default_body(): lang_string {
+        return new lang_string('notification_comment_created_body', 'totara_comment');
+    }
+
+    /**
+     * @return lang_string
+     */
+    public static function get_default_subject(): lang_string {
+        return new lang_string('comment_created', 'totara_comment');
     }
 }

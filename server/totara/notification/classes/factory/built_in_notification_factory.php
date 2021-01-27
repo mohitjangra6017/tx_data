@@ -104,7 +104,7 @@ final class built_in_notification_factory {
     public static function get_notification_classes(?string $component = null): array {
         $map = self::get_map();
         if (!empty($component)) {
-            return isset($map[$component]) ? $map[$component] : [];
+            return $map[$component] ?? [];
         }
 
         $return_classes = [];
@@ -142,59 +142,5 @@ final class built_in_notification_factory {
         }
 
         return $result;
-    }
-
-    /**
-     * @return void
-     */
-    public static function phpunit_reset_map(): void {
-        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
-            debugging(
-                "Please do not call the function 'totara_notification\\factory\\notification_factory::phpunit_reset_map' " .
-                "outside of phpunit test environment",
-                DEBUG_DEVELOPER
-            );
-
-            return;
-        }
-
-        self::$built_in_notification_classes = [];
-    }
-
-    /**
-     * @param string $component
-     * @param string $notification_class
-     *
-     * @return void
-     */
-    public static function phpunit_add_notification_class(string $component, string $notification_class): void {
-        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
-            debugging(
-                "Please do not call the function ".
-                "'totara_notification\\factory\\notification_factory::phpunit_add_notification_class' " .
-                "outside of phpunit test environment",
-                DEBUG_DEVELOPER
-            );
-
-            return;
-        }
-
-        if (!class_exists($notification_class)) {
-            throw new coding_exception("The added notification class does not exist in the system");
-        }
-
-        if (!is_subclass_of($notification_class, built_in_notification::class)) {
-            throw new coding_exception(
-                "Only able to add a child of " . built_in_notification::class
-            );
-        }
-
-        // Build the map first.
-        self::get_map();
-        if (!isset(self::$built_in_notification_classes[$component])) {
-            self::$built_in_notification_classes[$component] =  [];
-        }
-
-        self::$built_in_notification_classes[$component][] = $notification_class;
     }
 }

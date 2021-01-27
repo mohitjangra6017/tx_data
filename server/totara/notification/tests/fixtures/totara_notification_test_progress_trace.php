@@ -20,48 +20,32 @@
  * @author Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
-namespace totara_notification\task;
 
-use core\task\scheduled_task;
-use null_progress_trace;
-use progress_trace;
-use text_progress_trace;
-use totara_notification\manager\event_queue_manager;
-
-class process_event_queue_task extends scheduled_task {
+class totara_notification_test_progress_trace extends progress_trace {
     /**
-     * @var progress_trace
+     * @var array
      */
-    private $trace;
+    private $messages;
 
     /**
-     * process_event_queue_task constructor.
+     * totara_notification_test_progress_trace constructor.
      */
     public function __construct() {
-        $is_test = defined('PHPUNIT_TEST') && PHPUNIT_TEST;
-        $this->trace = $is_test ? new null_progress_trace() : new text_progress_trace();
+        $this->messages = [];
     }
 
     /**
-     * @param progress_trace $trace
-     * @return void
+     * @param string $message
+     * @param int    $depth
      */
-    public function set_trace(progress_trace $trace): void {
-        $this->trace = $trace;
+    public function output($message, $depth = 0) {
+        $this->messages[] = $message;
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function get_name(): string {
-        return get_string('process_event_queue_task', 'totara_notification');
-    }
-
-    /**
-     * @return void
-     */
-    public function execute() {
-        $manager = new event_queue_manager($this->trace);
-        $manager->process_queues();
+    public function get_messages(): array {
+        return $this->messages;
     }
 }

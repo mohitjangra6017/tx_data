@@ -22,6 +22,8 @@
  */
 namespace totara_notification\notification;
 
+use lang_string;
+
 /**
  * A static class that define the built-in configuration for the notification(s), which are belonging
  * to the notifiable event. Many to one relationship.
@@ -39,6 +41,12 @@ abstract class built_in_notification {
 
     /**
      * Returning the notification's title.
+     * Note this does not use any lang_string because we don't need to do sort
+     * of placeholders for the title of the built in notification.
+     *
+     * Please do not use placeholders with title. It has to be a static data, and must
+     * come from the language pack.
+     *
      * @return string
      */
     abstract public static function get_title(): string;
@@ -52,8 +60,12 @@ abstract class built_in_notification {
     abstract public static function get_recipient_name(): string;
 
     /**
-     * Just for now.
-     * @return mixed
+     * @return lang_string
      */
-    abstract public static function get_schedule();
+    abstract public static function get_default_body(): lang_string;
+
+    /**
+     * @return lang_string
+     */
+    abstract public static function get_default_subject(): lang_string;
 }

@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="notifiable_event_queue" COMMENT="Notifiable event queue variables">
+    <TABLE NAME="notifiable_event_queue" COMMENT="A table to queue the events from system which is used to queue the notifications">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="event_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="It describes the event that occurred, as provided/required by the notifiable_event class"/>
@@ -14,27 +14,27 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="context_id_key" TYPE="foreign" FIELDS="context_id" REFTABLE="context" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="event_name_index" UNIQUE="false" FIELDS="event_name"/>
-        <INDEX NAME="context_id_index" UNIQUE="false" FIELDS="context_id"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="notification_queue" COMMENT="A table to queue all the notifications to be sending out to the output">
+    <TABLE NAME="notification_queue" COMMENT="A table to queue all the notifications to be sending out to the outputs">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="notification_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The built in notification class name"/>
         <FIELD NAME="event_data" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="A json string encoded of data. It contents the data of the notifiable_event"/>
         <FIELD NAME="context_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="time_created" TYPE="int" LENGTH="10" SEQUENCE="false" NOTNULL="true"/>
+        <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="scheduled_time" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="context_id_key" TYPE="foreign" FIELDS="context_id" REFTABLE="context" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="notification_name_index" UNIQUE="false" FIELDS="notification_name"/>
-        <INDEX NAME="context_id_index" UNIQUE="false" FIELDS="context_id"/>
       </INDEXES>
     </TABLE>
   </TABLES>
