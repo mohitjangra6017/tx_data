@@ -20,26 +20,7 @@
  * @author Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
-namespace totara_notification\watcher;
+use totara_notification\resolver\notifiable_event_resolver;
 
-use core\hook\phpunit_reset;
-use totara_notification\factory\built_in_notification_factory;
-use totara_notification\factory\notifiable_event_factory;
-
-class phpunit_reset_watcher {
-    /**
-     * phpunit_reset_watcher constructor.
-     * Prevent this class from instantiation.
-     */
-    private function __construct() {
-    }
-
-    /**
-     * @param phpunit_reset $hook
-     * @return void
-     */
-    public static function watch_phpunit_reset(phpunit_reset $hook): void {
-        built_in_notification_factory::phpunit_reset_map();
-        notifiable_event_factory::phpunit_reset_map();
-    }
+class totara_notification_mock_notifiable_event_resolver extends notifiable_event_resolver {
 }

@@ -22,8 +22,10 @@
  */
 namespace totara_notification\factory;
 
+use coding_exception;
 use core_component;
 use totara_notification\event\notifiable_event;
+use totara_notification\local\helper;
 
 class notifiable_event_factory {
     /**
@@ -49,6 +51,13 @@ class notifiable_event_factory {
         }
 
         if (empty(self::$event_classes)) {
+            // Add core sub system first.
+            $core_event_classes = core_component::get_namespace_classes('event', notifiable_event::class, 'core');
+            if (!empty($core_event_classes)) {
+                self::$event_classes['core'] = $core_event_classes;
+            }
+
+            // Populate the plugins.
             $plugin_types = core_component::get_plugin_types();
             $plugin_types = array_keys($plugin_types);
 
@@ -76,6 +85,56 @@ class notifiable_event_factory {
         }
 
         return self::$event_classes;
+    }
+
+    /**
+     * @return void
+     */
+    public static function phpunit_reset_map(): void {
+        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
+            debugging(
+                "Please do not call the function 'totara_notification\\factory\\notifiable_event_factory::phpunit_reset_map' " .
+                "outside of phpunit test environment",
+                DEBUG_DEVELOPER
+            );
+
+            return;
+        }
+
+        self::$event_classes = [];
+    }
+
+    /**
+     * @param string $component
+     * @param string $class_name
+     *
+     * @return void
+     */
+    public static function phpunit_add_notifiable_event_class(string $component, string $class_name): void {
+        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
+            debugging(
+                "Please do not call the function " .
+                "'totara_notification\\factory\\notifiable_event_factory::phpunit_add_notifiable_event_class' " .
+                "outside of phpunit test environment",
+                DEBUG_DEVELOPER
+            );
+
+            return;
+        }
+
+        if (!helper::is_valid_notifiable_event($class_name)) {
+            throw new coding_exception(
+                "Expecting the event class to implement interface " . notifiable_event::class
+            );
+        }
+
+        // Construct the map.
+        self::get_map();
+        if (!isset(self::$event_classes[$component])) {
+            self::$event_classes[$component] = [];
+        }
+
+        self::$event_classes[$component][] = $class_name;
     }
 
     /**

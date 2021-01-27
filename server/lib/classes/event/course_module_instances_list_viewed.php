@@ -27,9 +27,6 @@
 namespace core\event;
 defined('MOODLE_INTERNAL') || die();
 
-debugging('core\\event\\course_module_instances_list_viewed has been deperecated. Please use
-        core\\event\\course_module_instance_list_viewed instead', DEBUG_DEVELOPER);
-
 /**
  * This class has been deprecated, please use \core\event\course_module_instance_list_viewed.
  *
@@ -38,8 +35,25 @@ debugging('core\\event\\course_module_instances_list_viewed has been deperecated
  * @since      Moodle 2.6
  * @copyright  2013 Frédéric Massart
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @deprecated
  */
 abstract class course_module_instances_list_viewed extends course_module_instance_list_viewed {
+    /**
+     * @return void
+     */
+    protected function init() {
+        // Totara moved the debugging message from the top of the file to the construction function,
+        // to prevent the debugging on including process.
+        debugging(
+            'core\\event\\course_module_instances_list_viewed has been deperecated. ' .
+            'Please use core\\event\\course_module_instance_list_viewed instead',
+            DEBUG_DEVELOPER
+        );
+
+        parent::init();
+    }
+
     /**
      * This event has been deprected.
      *

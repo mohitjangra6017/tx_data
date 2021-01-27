@@ -25,6 +25,7 @@ namespace totara_notification\local;
 use coding_exception;
 use totara_notification\event\notifiable_event;
 use totara_notification\resolver\notifiable_event_resolver;
+use totara_notification_mock_notifiable_event_resolver;
 
 class helper {
     /**
@@ -39,9 +40,13 @@ class helper {
      * @return bool
      */
     public static function is_valid_notifiable_event(string $event_class_name): bool {
+        if (!class_exists($event_class_name)) {
+            return false;
+        }
+
         $interfaces = class_implements($event_class_name);
 
-        if (false === $interfaces) {
+        if (!is_array($interfaces)) {
             // More likely the event class name does not exist in the system.
             return false;
         }
@@ -58,8 +63,23 @@ class helper {
      */
     public static function get_resolver_from_notifiable_event(string $event_class_name,
                                                               int $context_id, array $event_data): notifiable_event_resolver {
+        global $CFG;
         if (!helper::is_valid_notifiable_event($event_class_name)) {
             throw new coding_exception("Cannot get the event notifiable resolver");
+        }
+
+        $event_class_name = ltrim($event_class_name, '\\');
+
+        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
+            // We are in test environment. Check that if the event class name is equal
+            // to the mock event notifiable event or not.
+            if ('totara_notification_mock_notifiable_event' === $event_class_name) {
+                require_once(
+                    "{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event_resolver.php"
+                );
+
+                return new totara_notification_mock_notifiable_event_resolver($context_id, $event_data);
+            }
         }
 
         $parts = explode("\\", $event_class_name);

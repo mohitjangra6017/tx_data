@@ -56,6 +56,18 @@ final class built_in_notification_factory {
         }
 
         if (empty(self::$built_in_notification_classes)) {
+            // Adding core subsystem first.
+            $core_notification_classes = core_component::get_namespace_classes(
+                'totara_notification\\notification',
+                built_in_notification::class,
+                'core'
+            );
+
+            if (!empty($core_notification_classes)) {
+                self::$built_in_notification_classes['core'] = $core_notification_classes;
+            }
+
+            // Then add the plugins.
             $plugin_types = core_component::get_plugin_types();
             $plugin_types = array_keys($plugin_types);
 
@@ -109,11 +121,7 @@ final class built_in_notification_factory {
      * @return string[]
      */
     public static function get_notification_classes_of_notifiable_event(string $event_classname): array {
-        if (!class_exists($event_classname)) {
-            throw new coding_exception(
-                'The argument event class name does not exist in the system'
-            );
-        } else if (!helper::is_valid_notifiable_event($event_classname)) {
+        if (!helper::is_valid_notifiable_event($event_classname)) {
             throw new coding_exception(
                 "Expecting the argument event class name to implement interface " . notifiable_event::class
             );

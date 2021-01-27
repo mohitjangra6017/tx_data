@@ -27,8 +27,6 @@ namespace mod_lesson\event;
 
 defined('MOODLE_INTERNAL') || die();
 
-debugging('mod_lesson\event\highscores_viewed has been deprecated. Since the functionality no longer resides in the lesson module.',
-        DEBUG_DEVELOPER);
 /**
  * The mod_lesson highscores viewed class.
  *
@@ -36,6 +34,8 @@ debugging('mod_lesson\event\highscores_viewed has been deprecated. Since the fun
  * @since      Moodle 2.7
  * @copyright  2013 Mark Nelson <markn@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
+ *
+ * @deprecated
  */
 class highscores_viewed extends \core\event\base {
 
@@ -43,6 +43,14 @@ class highscores_viewed extends \core\event\base {
      * Set basic properties for the event.
      */
     protected function init() {
+        // Totara moved the debugging message from the top of the file to the construction function,
+        // to prevent the debugging on including process.
+        debugging(
+            'mod_lesson\event\highscores_viewed has been deprecated. ' .
+            'Since the functionality no longer resides in the lesson module.',
+            DEBUG_DEVELOPER
+        );
+
         $this->data['objecttable'] = 'lesson';
         $this->data['crud'] = 'r';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;

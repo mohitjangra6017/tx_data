@@ -79,7 +79,7 @@ class totara_notification_built_in_notification_factory_testcase extends advance
     public function test_get_notification_of_an_non_existed_event_name(): void {
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage(
-            "The argument event class name does not exist in the system"
+            "Expecting the argument event class name to implement interface totara_notification\\event\\notifiable_event"
         );
 
         built_in_notification_factory::get_notification_classes_of_notifiable_event('martin_garrix_classname');

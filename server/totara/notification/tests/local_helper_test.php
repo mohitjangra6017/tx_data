@@ -21,8 +21,17 @@
  * @package totara_notification
  */
 use totara_notification\local\helper;
+use totara_notification\resolver\notifiable_event_resolver;
 
 class totara_notification_local_helper_testcase extends advanced_testcase {
+    /**
+     * @return void
+     */
+    protected function setUp(): void {
+        global $CFG;
+        require_once("{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event.php");
+    }
+
     /**
      * @return void
      */
@@ -34,9 +43,6 @@ class totara_notification_local_helper_testcase extends advanced_testcase {
      * @return void
      */
     public function test_check_valid_notifiable_event_with_existing_class(): void {
-        global $CFG;
-        require_once("{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event.php");
-
         self::assertTrue(helper::is_valid_notifiable_event(totara_notification_mock_notifiable_event::class));
     }
 
@@ -49,5 +55,20 @@ class totara_notification_local_helper_testcase extends advanced_testcase {
 
         $context = context_system::instance();
         helper::get_resolver_from_notifiable_event('hello_world', $context->id, []);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_phpunit_get_resolver_from_valid_event(): void {
+        $context = context_system::instance();
+
+        $resolver = helper::get_resolver_from_notifiable_event(
+            totara_notification_mock_notifiable_event::class,
+            $context->id,
+            ['user_data' => false]
+        );
+
+        self::assertInstanceOf(notifiable_event_resolver::class, $resolver);
     }
 }

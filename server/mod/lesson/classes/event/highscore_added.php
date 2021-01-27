@@ -27,8 +27,6 @@ namespace mod_lesson\event;
 
 defined('MOODLE_INTERNAL') || die();
 
-debugging('mod_lesson\event\highscore_added has been deprecated. Since the functionality no longer resides in the lesson module.',
-        DEBUG_DEVELOPER);
 /**
  * The mod_lesson highscore added event class.
  *
@@ -43,6 +41,8 @@ debugging('mod_lesson\event\highscore_added has been deprecated. Since the funct
  * @since      Moodle 2.7
  * @copyright  2013 Mark Nelson <markn@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
+ *
+ * @deprecated
  */
 
 class highscore_added extends \core\event\base {
@@ -51,6 +51,14 @@ class highscore_added extends \core\event\base {
      * Set basic properties for the event.
      */
     protected function init() {
+        // Totara moved the debugging message from the top of the file to the construction function,
+        // to prevent the debugging on including process.
+        debugging(
+            'mod_lesson\event\highscore_added has been deprecated. ' .
+            'Since the functionality no longer resides in the lesson module.',
+            DEBUG_DEVELOPER
+        );
+
         $this->data['objecttable'] = 'lesson_high_scores';
         $this->data['crud'] = 'c';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;

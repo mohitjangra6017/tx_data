@@ -28,9 +28,6 @@ namespace core\event;
 
 defined('MOODLE_INTERNAL') || die();
 
-debugging('core\event\content_viewed has been deprecated. Please extend base event or other relevant abstract class.',
-        DEBUG_DEVELOPER);
-
 /**
  * Class content_viewed.
  *
@@ -47,6 +44,8 @@ debugging('core\event\content_viewed has been deprecated. Please extend base eve
  * @copyright  2013 Ankit Agarwal
  * @deprecated since Moodle 2.7
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @deprecated
  */
 abstract class content_viewed extends base {
 
@@ -58,6 +57,14 @@ abstract class content_viewed extends base {
      */
     protected function init() {
         global $PAGE;
+
+        // Totara moved the debugging message from the top of the file to the construction function,
+        // to prevent the debugging on including process.
+        debugging(
+            'core\event\content_viewed has been deprecated. ' .
+            'Please extend base event or other relevant abstract class.',
+            DEBUG_DEVELOPER
+        );
 
         $this->data['crud'] = 'r';
         $this->data['edulevel'] = self::LEVEL_OTHER;
