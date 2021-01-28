@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 use totara_notification\entity\notification_queue;
+use totara_notification\loader\notification_preference_loader;
 
 class totara_notification_notification_queue_repository_testcase extends advanced_testcase {
     /**
@@ -31,7 +32,7 @@ class totara_notification_notification_queue_repository_testcase extends advance
 
         $queue = new notification_queue();
         $queue->context_id = context_system::instance()->id;
-        $queue->notification_name = 'martin_garrix';
+        $queue->notification_preference_id = 42;
         $queue->set_decoded_event_data([]);
         $queue->scheduled_time = 15;
         $queue->save();
@@ -58,7 +59,7 @@ class totara_notification_notification_queue_repository_testcase extends advance
 
         $queue = new notification_queue();
         $queue->context_id = context_system::instance()->id;
-        $queue->notification_name = 'martin_garrix';
+        $queue->notification_preference_id = 42;
         $queue->set_decoded_event_data([]);
         $queue->scheduled_time = 15;
         $queue->save();
@@ -87,11 +88,15 @@ class totara_notification_notification_queue_repository_testcase extends advance
      * @return void
      */
     public function test_get_queues_with_mixed_records(): void {
+        /** @var totara_notification_generator $generator */
+        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $system_built_in = $generator->add_mock_built_in_notification_for_component();
+
         $context_system = context_system::instance();
 
         $due_queue = new notification_queue();
         $due_queue->context_id = $context_system->id;
-        $due_queue->notification_name = 'anima_garrix';
+        $due_queue->notification_preference_id = $system_built_in->get_id();
         $due_queue->scheduled_time = 15;
 
         $due_queue->set_decoded_event_data([]);
@@ -99,7 +104,7 @@ class totara_notification_notification_queue_repository_testcase extends advance
 
         $non_due_queue = new notification_queue();
         $non_due_queue->context_id = $context_system->id;
-        $non_due_queue->notification_name = 'martin_garrix';
+        $non_due_queue->notification_preference_id = $system_built_in->get_id();
         $non_due_queue->scheduled_time = 21;
 
         $non_due_queue->set_decoded_event_data([]);

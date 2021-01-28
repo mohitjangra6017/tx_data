@@ -1,0 +1,19 @@
+query totara_notification_notification_preference($id: param_integer!) {
+  notification_preference: totara_notification_notification_preference(
+    id: $id
+  ) {
+    __typename
+    id
+    title
+    exist_in_context
+    overridden_body
+    overridden_subject
+    subject
+    body
+    body_format
+    event_class_name
+    event_name
+    is_custom
+    parent_id
+  }
+}

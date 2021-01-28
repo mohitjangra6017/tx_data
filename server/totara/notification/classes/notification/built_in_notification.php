@@ -68,4 +68,19 @@ abstract class built_in_notification {
      * @return lang_string
      */
     abstract public static function get_default_subject(): lang_string;
+
+    /**
+     * The function should only return the following values:
+     * + @see FORMAT_MOODLE
+     * + @see FORMAT_HTML
+     * + @see FORMAT_PLAIN
+     * + @see FORMAT_MARKDOWN
+     * + @see FORMAT_JSON_EDITOR
+     *
+     * We default to FORMAT_MOODLE, because this format will work well with the language pack.
+     * @return int
+     */
+    public static function get_default_body_format(): int {
+        return FORMAT_MOODLE;
+    }
 }

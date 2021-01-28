@@ -23,6 +23,7 @@
 use totara_notification\entity\notifiable_event_queue;
 use totara_notification\entity\notification_queue;
 use totara_notification\manager\event_queue_manager;
+use totara_notification\model\notification_preference;
 use totara_notification\task\process_event_queue_task;
 
 /**
@@ -89,7 +90,13 @@ class totara_notification_process_event_task_testcase extends advanced_testcase 
         self::assertEquals(json_encode($data), $notification_queue->event_data);
         self::assertEquals($data, $notification_queue->get_decoded_event_data());
         self::assertEquals($context_system->id, $notification_queue->context_id);
-        self::assertEquals(totara_notification_mock_built_in_notification::class, $notification_queue->notification_name);
+
+        $notification_preference = notification_preference::from_id($notification_queue->notification_preference_id);
+        self::assertEquals(
+            totara_notification_mock_built_in_notification::class,
+            $notification_preference->get_notification_class_name()
+        );
+
         self::assertLessThan(time(), $notification_queue->scheduled_time);
     }
 

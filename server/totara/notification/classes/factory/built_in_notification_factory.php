@@ -102,6 +102,8 @@ final class built_in_notification_factory {
      * @return string[]
      */
     public static function get_notification_classes(?string $component = null): array {
+        // Note: for this function, please do not include any sort of global $USER or $PAGE
+        // because it is being used in the upgrade step and installation code as well.
         $map = self::get_map();
         if (!empty($component)) {
             return $map[$component] ?? [];

@@ -20,8 +20,10 @@
  * @author Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+use totara_notification\entity\notification_preference;
 use totara_notification\entity\notification_queue;
 use totara_notification\manager\notification_queue_manager;
+use totara_notification\loader\notification_preference_loader;
 use totara_notification\task\process_notification_queue_task;
 
 /**
@@ -59,13 +61,17 @@ class totara_notification_process_notification_queue_task_testcase extends advan
         $notification_generator->add_string_body_to_mock_built_in_notification('Kian');
 
         $context_user = context_user::instance($user_one->id);
+        $repository = notification_preference::repository();
 
         // Adding queue to process.
         $queue = new notification_queue();
         $queue->context_id = $context_user->id;
         $queue->scheduled_time = 15;
-        $queue->notification_name = totara_notification_mock_built_in_notification::class;
         $queue->event_data = json_encode(['message' => 'my_name']);
+
+        // Fetching preference out of the notification's name.
+        $preference = $repository->find_in_system_context(totara_notification_mock_built_in_notification::class);
+        $queue->notification_preference_id = $preference->id;
         $queue->save();
 
         self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
@@ -105,7 +111,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
         $queue = new notification_queue();
         $queue->context_id = context_system::instance()->id;
         $queue->scheduled_time = 15;
-        $queue->notification_name = 'message_juliet_notification';
+        $queue->notification_preference_id = 42;
         $queue->event_data = json_encode(['message' => 'my_name']);
         $queue->save();
 
@@ -135,7 +141,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
 
         $first_message = reset($messages);
         self::assertEquals(
-            "The built-in notification does not exist in the system 'message_juliet_notification'",
+            "There is no notification preference record exist at id '42'",
             $first_message
         );
 
@@ -156,12 +162,14 @@ class totara_notification_process_notification_queue_task_testcase extends advan
         $user_one = $generator->create_user();
 
         $context_user = context_user::instance($user_one->id);
+        $repository = notification_preference::repository();
+        $preference = $repository->find_in_system_context(totara_notification_mock_built_in_notification::class);
 
         // Adding queue to process.
         $queue = new notification_queue();
         $queue->context_id = $context_user->id;
         $queue->scheduled_time = 10;
-        $queue->notification_name = totara_notification_mock_built_in_notification::class;
+        $queue->notification_preference_id = $preference->id;
         $queue->event_data = json_encode(['message' => 'my_name']);
         $queue->save();
 
@@ -184,5 +192,69 @@ class totara_notification_process_notification_queue_task_testcase extends advan
         self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
         self::assertEquals(0, $sink->count());
         self::assertEmpty($sink->get_messages());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_sending_message_with_valid_and_invalid_notification_queues(): void {
+        global $DB;
+
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+
+        $context_user = context_user::instance($user_one->id);
+        $preference = notification_preference_loader::get_built_in(totara_notification_mock_built_in_notification::class);
+
+        /** @var totara_notification_generator $notification_generator */
+        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
+
+        // Create a valid queue
+        $valid_queue = new notification_queue();
+        $valid_queue->context_id = $context_user->id;
+        $valid_queue->scheduled_time = 10;
+        $valid_queue->notification_preference_id = $preference->get_id();
+        $valid_queue->event_data = json_encode(['message' => 'bolobala']);
+        $valid_queue->save();
+
+        // Create an invalid queue
+        $invalid_queue = new notification_queue();
+        $invalid_queue->context_id = $context_user->id;
+        $invalid_queue->scheduled_time = 10;
+        $invalid_queue->notification_preference_id = 42;
+        $invalid_queue->event_data = json_encode(['message' => 'this is an invalid queue']);
+        $invalid_queue->save();
+
+        self::assertEquals(2, $DB->count_records(notification_queue::TABLE));
+        $sink = $this->redirectMessages();
+
+        self::assertEquals(0, $sink->count());
+        $trace = $notification_generator->get_test_progress_trace();
+
+        // Start the task that help to sending out the messages.
+        $task = new process_notification_queue_task();
+        $task->set_trace($trace);
+
+        $notification_generator->set_due_time_of_process_notification_task($task, 15);
+        $task->execute();
+
+        // The sending message will yield debugging message, because there is
+        // one invalid queue in the table.
+        $error_messages = $trace->get_messages();
+        self::assertCount(2, $error_messages);
+
+        $first_message = reset($error_messages);
+        self::assertEquals(
+            "There is no notification preference record exist at id '42'",
+            $first_message
+        );
+
+        // There should only be one message sending out to the user.
+        self::assertEquals(1, $sink->count());
+
+        // The invalid notification at this point should NOT be removed from the queue.
+        // Which means that there should be zero records within the table.
+        self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
     }
 }

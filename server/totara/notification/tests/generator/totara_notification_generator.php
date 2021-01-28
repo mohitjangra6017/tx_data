@@ -17,15 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
-
+use totara_notification\builder\notification_preference_builder;
 use totara_notification\event\notifiable_event;
 use totara_notification\factory\built_in_notification_factory;
-use totara_notification\notification\built_in_notification;
 use totara_notification\factory\notifiable_event_factory;
 use totara_notification\local\helper;
+use totara_notification\model\notification_preference;
+use totara_notification\entity\notification_preference as entity;
+use totara_notification\notification\built_in_notification;
 use totara_notification\task\process_notification_queue_task;
 
 class totara_notification_generator extends component_generator_base {
@@ -49,10 +51,10 @@ class totara_notification_generator extends component_generator_base {
      * @param string      $component
      * @param string|null $notification_class_name
      *
-     * @return void
+     * @return notification_preference
      */
     public function add_mock_built_in_notification_for_component(?string $notification_class_name = null,
-                                                                 string $component = 'totara_notification'): void {
+                                                             string $component = 'totara_notification'): notification_preference {
         if (empty($notification_class_name)) {
             $this->include_mock_built_in_notification();
             $notification_class_name = totara_notification_mock_built_in_notification::class;
@@ -73,15 +75,12 @@ class totara_notification_generator extends component_generator_base {
             $map[$component] = [];
         }
 
-        if (!class_exists($notification_class_name)) {
-            throw new coding_exception("The added notification class does not exist in the system");
-        }
-
-        if (!is_subclass_of($notification_class_name, built_in_notification::class)) {
+        if (!helper::is_valid_built_in_notification($notification_class_name)) {
             throw new coding_exception(
                 "Only able to add a child of " . built_in_notification::class
             );
         }
+
         $map[$component][] = $notification_class_name;
 
         /** @see built_in_notification_factory::$built_in_notification_classes */
@@ -90,11 +89,124 @@ class totara_notification_generator extends component_generator_base {
         $property->setValue($map);
 
         $property->setAccessible(false);
+
+        /**
+         * @see built_in_notification::get_event_class_name()
+         * @var string $event_name
+         */
+        $event_name = call_user_func([$notification_class_name, 'get_event_class_name']);
+
+        return $this->create_notification_preference(
+            $event_name,
+            context_system::instance()->id,
+            ['notification_class_name' => $notification_class_name]
+        );
+    }
+
+    /**
+     * The array $data should contain the keys as follow:
+     * + notification_class_name: String
+     * + ancestor_id: Int
+     * + body: String
+     * + body_format: Int
+     * + subject: String
+     *
+     * @param array    $data
+     * @param int|null $context_id
+     * @param string   $event_name
+     *
+     * @return notification_preference
+     */
+    public function create_notification_preference(string $event_name, ?int $context_id = null,
+                                                   array $data = []): notification_preference {
+        $context_id = $context_id ?? context_system::instance()->id;
+        $builder = new notification_preference_builder($event_name, $context_id);
+
+        if (!empty($data['notification_name'])) {
+            // Temporary to fix any tests that still preference to the old code.
+            throw new coding_exception("This does not work like that");
+        }
+
+        $notification_class_name = $data['notification_class_name'] ?? null;
+        if (!empty($notification_class_name)) {
+            // Check that if the notification preference does exist.
+            $repository = entity::repository();
+            $entity = $repository->find_built_in(
+                $notification_class_name,
+                $context_id
+            );
+
+            if (null !== $entity) {
+                // The record is already existing in the system, we will just return the current record.
+                // If developer want to tweak/update the values of certain fields, they can use the builder's API to do so.
+                return notification_preference::from_entity($entity);
+            }
+        }
+
+        if (empty($data['notification_class_name']) && empty($data['ancestor_id'])) {
+            // We are only giving the default value if the notification_class_name or the ancestor is not
+            // appearing in the $data parameter.
+            $data['body'] = $data['body'] ?? 'This is a body';
+            $data['title'] = $data['title'] ?? 'This is title';
+            $data['body_format'] = $data['body_format'] ?? FORMAT_MOODLE;
+            $data['subject'] = $data['subject'] ?? 'This is a subject';
+        }
+
+        $builder->set_notification_class_name($data['notification_class_name'] ?? null);
+        $builder->set_ancestor_id($data['ancestor_id'] ?? null);
+        $builder->set_body($data['body'] ?? null);
+        $builder->set_body_format($data['body_format'] ?? null);
+        $builder->set_subject($data['subject'] ?? null);
+        $builder->set_title($data['title'] ?? null);
+
+        return $builder->save();
+    }
+
+    /**
+     * A helper function to create an overridden notification at lower context.
+     * The parameter array $overridden_data should be similar to the one from
+     * {@see totara_notification_generator::create_notification_preference()}.
+     *
+     * Note that we context's id of overridden must not but the same as the preference that
+     * we are trying to override from.
+     *
+     * The attribute 'title' from $overridden_data will be ignored from this function.
+     *
+     * @param notification_preference $preference
+     * @param int                     $context_id
+     * @param array                   $overridden_data
+     * @return notification_preference
+     */
+    public function create_overridden_notification_preference(notification_preference $preference, int $context_id,
+                                                              array $overridden_data = []): notification_preference {
+        $current_context_id = $preference->get_context_id();
+        if ($current_context_id === $context_id) {
+            throw new coding_exception("Cannot create an overridden notification preference at the same context level");
+        }
+
+        $record_data = [
+            'notification_class_name' => $preference->get_notification_class_name(),
+            'ancestor_id' => $preference->get_ancestor_id(),
+            'body' => $overridden_data['body'] ?? null,
+            'subject' => $overridden_data['subject'] ?? null,
+            'body_format' => $overridden_data['body_format'] ?? null,
+        ];
+
+        if (!$preference->has_parent()) {
+            // The preference that we are trying to override is sitting at top.
+            $record_data['ancestor_id'] = $preference->get_id();
+        }
+
+        return $this->create_notification_preference(
+            $preference->get_event_class_name(),
+            $context_id,
+            $record_data
+        );
     }
 
     /**
      * @param string|null $event_name
-     * @param string $component
+     * @param string      $component
      *
      * @return void
      */
@@ -220,6 +332,8 @@ class totara_notification_generator extends component_generator_base {
     }
 
     /**
+     * Adding the list of recipient ids to the mock notifiable event resolver.
+     *
      * @param array $recipient_ids
      * @return void
      */
@@ -234,7 +348,7 @@ class totara_notification_generator extends component_generator_base {
 
     /**
      * @param process_notification_queue_task $task
-     * @param int $due_time
+     * @param int                             $due_time
      *
      * @return void
      */

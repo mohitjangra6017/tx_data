@@ -23,7 +23,9 @@
 namespace totara_notification\local;
 
 use coding_exception;
+use core_component;
 use totara_notification\event\notifiable_event;
+use totara_notification\notification\built_in_notification;
 use totara_notification\resolver\notifiable_event_resolver;
 use totara_notification_mock_notifiable_event_resolver;
 
@@ -52,6 +54,55 @@ class helper {
         }
 
         return in_array(notifiable_event::class, $interfaces);
+    }
+
+    /**
+     * @param string $event_class_name
+     * @return string
+     */
+    public static function get_component_of_event_class_name(string $event_class_name): string {
+        $event_class_name = ltrim($event_class_name, '\\');
+        if (!self::is_valid_notifiable_event($event_class_name)) {
+            throw new coding_exception('The event class name is not a notifiable event');
+        }
+
+        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
+            $mock_class = 'totara_notification_mock_notifiable_event';
+            if (class_exists($mock_class) && $mock_class === $event_class_name) {
+                return 'totara_notification';
+            }
+        }
+
+        $parts = explode('\\', $event_class_name);
+        $component = reset($parts);
+
+        $component = clean_param($component, PARAM_COMPONENT);
+        $component_directory = null;
+
+        if (!empty($component)) {
+            // If it is a valid component within the system, its directory must had been
+            // exist, and should be a valid dir path. Otherwise, its directory will not appear
+            // from the result.
+            $component_directory = core_component::get_component_directory($component);
+        }
+
+        if (empty($component) || empty($component_directory)) {
+            throw new coding_exception("Cannot find the component from the event class name");
+        }
+
+        return $component;
+    }
+
+    /**
+     * @param string $built_in_notification_class_name
+     * @return bool
+     */
+    public static function is_valid_built_in_notification(string $built_in_notification_class_name): bool {
+        if (!class_exists($built_in_notification_class_name)) {
+            return false;
+        }
+
+        return is_subclass_of($built_in_notification_class_name, built_in_notification::class);
     }
 
     /**
@@ -99,5 +150,20 @@ class helper {
          * {@see notifiable_event_resolver::__construct()}
          */
         return new $resolver_classname($context_id, $event_data);
+    }
+
+    /**
+     * We are invoking the function {@see notifiable_event::get_notification_title()} to get
+     * the human readable name
+     *
+     * @param string $event_class_name
+     * @return string
+     */
+    public static function get_human_readable_event_name(string $event_class_name): string {
+        if (!self::is_valid_notifiable_event($event_class_name)) {
+            throw new coding_exception("Event class name is an invalid notifiable event");
+        }
+
+        return call_user_func([$event_class_name, 'get_notification_title']);
     }
 }

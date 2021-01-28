@@ -23,7 +23,7 @@
 use totara_notification\entity\notification_queue;
 use totara_notification\manager\notification_queue_manager;
 
-class totara_notifiaction_notification_queue_manager_testcaase extends advanced_testcase {
+class totara_notification_notification_queue_manager_testcaase extends advanced_testcase {
     /**
      * @return void
      */
@@ -50,21 +50,33 @@ class totara_notifiaction_notification_queue_manager_testcaase extends advanced_
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
+        $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
+
         // Create a valid queue.
         $valid_queue = new notification_queue();
         $valid_queue->set_decoded_event_data(['message' => 'This is message']);
-        $valid_queue->notification_name = totara_notification_mock_built_in_notification::class;
+        $valid_queue->notification_preference_id = $system_built_in->get_id();
         $valid_queue->scheduled_time = 10;
         $valid_queue->context_id = $context_user->id;
         $valid_queue->save();
 
-        // Create an invalid queue.
+
+
+        // Create an invalid queue. To create an invalid record, we need to first
+        // create the preference then delete it.
+        $custom_preference = $notification_generator->create_notification_preference(
+            totara_notification_mock_notifiable_event::class,
+            $context_user->id
+        );
+
         $invalid_queue = new notification_queue();
         $invalid_queue->set_decoded_event_data(['message' => 'This is invalid message']);
-        $invalid_queue->notification_name = 'martin_garrix_boom';
+        $invalid_queue->notification_preference_id = $custom_preference->get_id();
         $invalid_queue->scheduled_time = 10;
         $invalid_queue->context_id = $context_user->id;
         $invalid_queue->save();
+
+        $custom_preference->delete();
 
         $trace = $notification_generator->get_test_progress_trace();
         $manager = new notification_queue_manager($trace);
@@ -110,7 +122,7 @@ class totara_notifiaction_notification_queue_manager_testcaase extends advanced_
 
         $first_message = reset($error_messages);
         self::assertEquals(
-            "The built-in notification does not exist in the system 'martin_garrix_boom'",
+            "There is no notification preference record exist at id '{$invalid_queue->notification_preference_id}'",
             $first_message
         );
 

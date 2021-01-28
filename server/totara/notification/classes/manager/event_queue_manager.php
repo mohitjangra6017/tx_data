@@ -28,7 +28,7 @@ use null_progress_trace;
 use progress_trace;
 use totara_notification\entity\notifiable_event_queue;
 use totara_notification\entity\notification_queue;
-use totara_notification\factory\built_in_notification_factory;
+use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\helper;
 
 class event_queue_manager {
@@ -66,23 +66,21 @@ class event_queue_manager {
                     continue;
                 }
 
-                // This is where we are going to do all the look up on the notification either the built in or the custom ones.
-                $notification_classes = built_in_notification_factory::get_notification_classes_of_notifiable_event(
+                $preferences = notification_preference_loader::get_notification_preferences(
+                    $queue->context_id,
                     $queue->event_name
                 );
 
-                foreach ($notification_classes as $notification_class) {
+                foreach ($preferences as $notification_preference) {
                     // Note: this is where we are checking whether the notification's preference
                     // is set to be disabled or not, so that we can queue up the resource. Furthermore,
                     // it is also worth to check any sort of legitimate of the target record/item. -
                     // this is sort of message for the next ver.
                     $notification_queue = new notification_queue();
-                    $notification_queue->notification_name = $notification_class;
-                    $notification_queue->event_data = $queue->event_data;
+                    $notification_queue->notification_preference_id = $notification_preference->get_id();
                     $notification_queue->context_id = $queue->context_id;
-
-                    // Use now for the time being. Eventually, it will be resolved by the resolver.
-                    $notification_queue->scheduled_time = time();
+                    $notification_queue->event_data = $queue->event_data;
+                    $notification_queue->scheduled_time = 0;
                     $notification_queue->save();
                 }
 

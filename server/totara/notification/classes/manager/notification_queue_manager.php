@@ -26,12 +26,13 @@ use coding_exception;
 use core\entity\notification;
 use core\orm\query\builder;
 use core_user;
-use lang_string;
 use null_progress_trace;
 use phpunit_util;
 use progress_trace;
 use stdClass;
 use totara_notification\entity\notification_queue;
+use totara_notification\entity\notification_preference as preference_entity;
+use totara_notification\model\notification_preference;
 use totara_notification\local\helper;
 
 class notification_queue_manager {
@@ -90,10 +91,10 @@ class notification_queue_manager {
      * @return bool
      */
     private function is_dispatchable(notification_queue $queue): bool {
-        $notification_name = $queue->notification_name;
-        if (!class_exists($notification_name)) {
+        global $DB;
+        if (!$DB->record_exists(preference_entity::TABLE, ['id' => $queue->notification_preference_id])) {
             $this->trace->output(
-                "The built-in notification does not exist in the system '{$notification_name}'"
+                "There is no notification preference record exist at id '{$queue->notification_preference_id}'"
             );
 
             return false;
@@ -125,50 +126,22 @@ class notification_queue_manager {
      */
     private function dispatch(notification_queue $queue): void {
         global $CFG;
-
         require_once("{$CFG->dirroot}/message/lib.php");
-        $notification_name = $queue->notification_name;
 
-        /**
-         * We are invoking {@see built_in_notification::get_event_class_name()} to help us find out
-         * the notifiable event name.
-         * @var string $notifiable_event_name
-         */
-        $notifiable_event_name = call_user_func([$notification_name, 'get_event_class_name']);
+        $preference = notification_preference::from_id($queue->notification_preference_id);
         $event_data = $queue->get_decoded_event_data();
 
         $resolver = helper::get_resolver_from_notifiable_event(
-            $notifiable_event_name,
+            $preference->get_event_class_name(),
             $queue->context_id,
             $event_data
         );
 
-        /**
-         * We are invoking {@see built_in_notification::get_recipient_name()} to help us
-         * finding out the recipient name of specific event that we want to send to.
-         * @var string $recipient_name
-         */
-        $recipient_name = call_user_func([$notification_name, 'get_recipient_name']);
+        $recipient_name = $preference->get_recipient();
         $recipient_ids = $resolver->get_recipient_ids($recipient_name);
 
-        if (empty($recipient_ids)) {
-            debugging(
-                "No recipients were returned for notification '{$notification_name}'",
-                DEBUG_DEVELOPER
-            );
-
-            return;
-        }
-
-        /**
-         * We are invoking {@see built_in_notification::get_default_body()} and
-         * {@see built_in_notification::get_default_subject()} to help
-         * us finding out the notification's content that we are sending out to the recipient
-         * @var lang_string $body_notification
-         * @var lang_string $subject_notification
-         */
-        $body_notification = call_user_func([$notification_name, 'get_default_body']);
-        $subject_notification = call_user_func([$notification_name, 'get_default_subject']);
+        $body_notification = $preference->get_body();
+        $subject_notification = $preference->get_subject();
 
         $processors = get_message_processors(true, (defined('PHPUNIT_TEST') && PHPUNIT_TEST));
 
@@ -186,8 +159,8 @@ class notification_queue_manager {
             // Note: subject and fullmessage are hardcoded to notification for now, however it should
             // be up to the notification preferences, then fallback to the default built-in notification
             // if none provided from preferences, instead.
-            $message->subject = $subject_notification->out();
-            $message->fullmessage = $body_notification->out();
+            $message->subject = $subject_notification;
+            $message->fullmessage = $body_notification;
 
             // Note: we are hardcoded to FORMAT_MOODLE for now, however, it should be up
             // to the notification preferences.

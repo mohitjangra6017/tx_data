@@ -41,7 +41,7 @@ class totara_notification_built_in_notification_factory_testcase extends advance
     /**
      * @return void
      */
-    public function test_get_notiication_of_an_event_name(): void {
+    public function test_get_notification_of_an_event_name(): void {
         $generator = self::getDataGenerator();
 
         /** @var totara_notification_generator $notification_generator */

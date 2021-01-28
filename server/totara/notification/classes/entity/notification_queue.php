@@ -30,11 +30,11 @@ use totara_notification\repository\notification_queue_repository;
  * An entity class that represent for table "ttr_notification_queue"
  *
  * @property int    $id
- * @property string $notification_name
  * @property string $event_data         A json encoded string of data to help building a notification.
  * @property int    $context_id
  * @property int    $time_created
  * @property int    $scheduled_time
+ * @property int    $notification_preference_id
  *
  * @method static notification_queue_repository repository()
  */

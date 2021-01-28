@@ -99,4 +99,62 @@ class totara_notification_local_helper_testcase extends advanced_testcase {
 
         self::assertInstanceOf(notifiable_event_resolver::class, $resolver);
     }
+
+    /**
+     * @return void
+     */
+    public function test_check_built_in_notification(): void {
+        /** @var totara_notification_generator $generator */
+        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator->include_mock_built_in_notification();
+
+        self::assertFalse(helper::is_valid_built_in_notification('boom'));
+        self::assertTrue(
+            helper::is_valid_built_in_notification(
+                totara_notification_mock_built_in_notification::class
+            )
+        );
+
+        self::assertTrue(
+            helper::is_valid_built_in_notification(
+                '\\totara_notification_mock_built_in_notification'
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_get_invalid_component_name_from_event_name(): void {
+        global $CFG;
+        require_once("{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_invalid_notifiable_event.php");
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("Cannot find the component from the event class name");
+
+        helper::get_component_of_event_class_name(totara_notification_invalid_notifiable_event::class);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_get_component_name_from_invalid_event_name(): void {
+        global $CFG;
+        require_once("{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_invalid_notifiable_event.php");
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("The event class name is not a notifiable event");
+
+        helper::get_component_of_event_class_name('anima_martin_garrix');
+    }
+
+    /**
+     * @return void
+     */
+    public function test_get_component_from_mock_with_trailing(): void {
+        self::assertEquals(
+            'totara_notification',
+            helper::get_component_of_event_class_name('\\totara_notification_mock_notifiable_event')
+        );
+    }
 }
