@@ -1109,8 +1109,20 @@ select.menuf2f-select {
       border: 0;
     }
     &__copy {
-      padding-top: var(--gap-2);
-      display: block;
+      line-height: 2;
+    }
+    &__copy-link {
+      @include force-link-style();
+      color: var(--link-color);
+      display: inline-flex;
+      align-items: center;
+      &:focus,
+      &:hover {
+        color: var(--link-color-hover);
+        > .mod_facetoface__resource-card__copy-link-text {
+          text-decoration: underline;
+        }
+      }
     }
     &--simple {
       text-align: center;
@@ -1125,8 +1137,12 @@ select.menuf2f-select {
       background: var(--color-neutral-2);
     }
 
-    &__button {
+    &__buttons {
       text-align: center;
+    }
+
+    &__button {
+        margin: var(--gap-1);
     }
   }
 }

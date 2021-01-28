@@ -1095,10 +1095,22 @@ select.menuf2f-select {
         &__copy-container {
             .sr-only;
         }
-
         &__copy {
-            padding-top: @mod_facetoface-spacing-small;
-            display: block;
+            line-height: 2;
+        }
+        &__copy-link {
+            .force-link-style();
+            color: @link-color;
+            display: inline-flex;
+            align-items: center;
+
+            &:focus,
+            &:hover {
+                color: @link-hover-color;
+                > .mod_facetoface__resource-card__copy-link-text {
+                    text-decoration: underline;
+                }
+            }
         }
         &--simple {
             text-align: center;
@@ -1113,8 +1125,12 @@ select.menuf2f-select {
             background: mix(@bg, @bg-default);
         }
 
-        &__button {
+        &__buttons {
             text-align: center;
+        }
+
+        &__button {
+            margin: @totara_style-spacing_x_small;
         }
     }
 }

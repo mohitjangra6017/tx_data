@@ -30,7 +30,7 @@ define([], function() {
         // Initialise base class.
         this.element = element;
         this.copyBox = element.querySelector('.mod_facetoface__resource-card__copy-container');
-        this.copyLink = element.querySelector('.mod_facetoface__resource-card__copy');
+        this.copyLink = element.querySelector('.mod_facetoface__resource-card__copy-link');
     }
 
     SeminarResourceCard.prototype = {
