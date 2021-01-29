@@ -353,18 +353,16 @@ class mod_facetoface_generator extends testing_module_generator {
      * Join virtual room and virtual meeting.
      *
      * @param integer $roomid
-     * @param integer $sessionid
+     * @param integer $sessionsdateid
      * @param integer $virtualmeetingid
      * @return stdClass
      */
-    public function create_room_dates_virtualmeeting(int $roomid, int $sessionid, int $virtualmeetingid) {
+    public function create_room_dates_virtualmeeting(int $roomid, int $sessionsdateid, int $virtualmeetingid) {
         global $DB;
-
-        $room_date = $DB->get_record('facetoface_room_dates', ['roomid' => $roomid, 'sessionsdateid' => $sessionid], '*', MUST_EXIST);
 
         $frdvm = new stdClass();
         $frdvm->roomid = $roomid;
-        $frdvm->roomdateid = $room_date->id;
+        $frdvm->sessionsdateid = $sessionsdateid;
         $frdvm->virtualmeetingid = $virtualmeetingid;
         $id = $DB->insert_record('facetoface_room_dates_virtualmeeting', $frdvm);
         return $DB->get_record('facetoface_room_dates_virtualmeeting', ['id' => $id], '*', MUST_EXIST);

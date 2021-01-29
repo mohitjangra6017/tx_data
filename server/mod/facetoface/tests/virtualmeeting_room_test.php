@@ -21,14 +21,24 @@
  * @package mod_facetoface
  */
 
+use core\entity\user;
+use core\orm\query\builder;
+use mod_facetoface\room;
 use mod_facetoface\room_virtualmeeting;
 use mod_facetoface\room_dates_virtualmeeting;
 use mod_facetoface\room_virtualmeeting_list;
+use mod_facetoface\seminar;
+use mod_facetoface\seminar_event;
+use mod_facetoface\seminar_session;
+use totara_core\entity\virtual_meeting as virtual_meeting_entity;
+use totara_core\http\clients\simple_mock_client;
+use totara_core\virtualmeeting\virtual_meeting as virtual_meeting_model;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Test vitualmeeting rooms classes
+ * @covers mod_facetoface\room_virtualmeeting
+ * @covers mod_facetoface\room_dates_virtualmeeting
  */
 class mod_facetoface_virtualmeeting_room_testcase extends advanced_testcase {
 
@@ -96,77 +106,57 @@ class mod_facetoface_virtualmeeting_room_testcase extends advanced_testcase {
     }
 
     public function test_room_dates_virtualmeeting() {
-        global $DB;
+        $this->setAdminUser();
+        $course = $this->getDataGenerator()->create_course();
+        $seminar = new seminar();
+        $seminar->set_course($course->id)->save();
+        $seminarevent = new seminar_event();
+        $seminarevent->set_facetoface($seminar->get_id())->save();
 
-        // Test with fake data
-        $room_dates_virtualmeeting = new room_dates_virtualmeeting();
-        $this->assertEquals(0, $room_dates_virtualmeeting->get_id());
-        $this->assertEquals(0, $room_dates_virtualmeeting->get_roomdateid());
-        $this->assertEquals(0, $room_dates_virtualmeeting->get_virtualmeetingid());
+        // Add virtualmeeting #1
+        [$roomdateid1, $roomdatevmid1, $virtualmeetingid1] = $this->add_session_with_virtualmeeting($seminarevent, new DateTime('tomorrow 6am'), new DateTime('tomorrow 9am'));
 
-        // Set it up and save it
-        $room_dates_virtualmeeting->set_roomdateid(42);
-        $room_dates_virtualmeeting->set_virtualmeetingid(64);
-        $room_dates_virtualmeeting->save();
-        $this->assertNotEquals(0, $room_dates_virtualmeeting->get_id());
-        $this->assertEquals(42, $room_dates_virtualmeeting->get_roomdateid());
-        $this->assertEquals(64, $room_dates_virtualmeeting->get_virtualmeetingid());
-        $rd_id = $room_dates_virtualmeeting->get_id();
-        unset($room_dates_virtualmeeting);
+        // Add virtualmeeting #2
+        [$roomdateid2, $roomdatevmid2, $virtualmeetingid2] = $this->add_session_with_virtualmeeting($seminarevent, new DateTime('tomorrow 12pm'), new DateTime('tomorrow 3pm'));
 
-        // Load it again
-        $room_dates_virtualmeeting = new room_dates_virtualmeeting($rd_id);
-        $this->assertEquals($rd_id, $room_dates_virtualmeeting->get_id());
-        $this->assertEquals(42, $room_dates_virtualmeeting->get_roomdateid());
-        $this->assertEquals(64, $room_dates_virtualmeeting->get_virtualmeetingid());
-        unset($room_virtualmeeting);
+        // Add virtualmeeting #3
+        [$roomdateid3, $roomdatevmid3, $virtualmeetingid3] = $this->add_session_with_virtualmeeting($seminarevent, new DateTime('tomorrow 6pm'), new DateTime('tomorrow 9pm'));
 
-        // Add another one
-        $room_dates_virtualmeeting = new room_dates_virtualmeeting();
-        $room_dates_virtualmeeting->set_roomdateid(48);
-        $room_dates_virtualmeeting->set_virtualmeetingid(68);
-        $room_dates_virtualmeeting->save();
-        unset($room_virtualmeeting);
+        $this->assertEquals(3, builder::table('facetoface_room_dates')->count());
+        $this->assertEquals(3, builder::table(room_dates_virtualmeeting::DBTABLE)->count());
 
-        $room_dates_virtualmeetings = $DB->get_records('facetoface_room_dates_virtualmeeting');
-        $this->assertCount(2, $room_dates_virtualmeetings);
+        // Delete by roomdateid1
+        room_dates_virtualmeeting::delete_by_roomdateid($roomdateid1);
+        $this->assertEqualsCanonicalizing([$roomdatevmid2, $roomdatevmid3], array_keys(builder::table(room_dates_virtualmeeting::DBTABLE)->fetch()));
 
-        // Delete by roomdateid
-        room_dates_virtualmeeting::delete_by_roomdateid(42);
-        $room_dates_virtualmeetings = $DB->get_records('facetoface_room_dates_virtualmeeting');
-        $this->assertCount(1, $room_dates_virtualmeetings);
+        // Delete by virtualmeetingid1
+        room_dates_virtualmeeting::delete_by_virtualmeetingid($virtualmeetingid1);
+        $this->assertEquals(2, builder::table(room_dates_virtualmeeting::DBTABLE)->count());
 
-        // Delete by virtualmeetingid
-        room_dates_virtualmeeting::delete_by_virtualmeetingid(68);
-        $room_dates_virtualmeetings = $DB->get_records('facetoface_room_dates_virtualmeeting');
-        $this->assertCount(0, $room_dates_virtualmeetings);
+        // Delete by virtualmeetingid2
+        room_dates_virtualmeeting::delete_by_virtualmeetingid($virtualmeetingid2);
+        $this->assertEquals($roomdatevmid3, builder::table(room_dates_virtualmeeting::DBTABLE)->one(true)->id);
 
         // Delete method
-        $room_dates_virtualmeeting = new room_dates_virtualmeeting();
-        $room_dates_virtualmeeting->set_roomdateid(52);
-        $room_dates_virtualmeeting->set_virtualmeetingid(72);
-        $room_dates_virtualmeeting->save();
-        $this->assertNotEquals(0, $room_dates_virtualmeeting->get_id());
-        $room_dates_virtualmeetings = $DB->get_records('facetoface_room_dates_virtualmeeting');
-        $this->assertCount(1, $room_dates_virtualmeetings);
+        $room_dates_virtualmeeting = new room_dates_virtualmeeting($roomdatevmid3);
         $room_dates_virtualmeeting->delete();
-        $room_dates_virtualmeetings = $DB->get_records('facetoface_room_dates_virtualmeeting');
-        $this->assertCount(0, $room_dates_virtualmeetings);
+        $this->assertFalse(builder::table(room_dates_virtualmeeting::DBTABLE)->exists());
+        $this->assertEquals(3, virtual_meeting_entity::repository()->count());
     }
 
-
     public function test_room_virtualmeeting_list() {
-        global $DB;
-
         $user1 = $this->getDataGenerator()->create_user(['username' => 'alice']);
         $this->setUser($user1);
         /** @var mod_facetoface_generator */
         $seminar_generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $virtual_room1 = $seminar_generator->add_virtualmeeting_room(['name' => 'virtual one']);
         $virtual_room2 = $seminar_generator->add_virtualmeeting_room(['name' => 'virtual two']);
+        $virtual_room3 = $seminar_generator->add_virtualmeeting_room(['name' => 'virtual three']);
         $custom_room = $seminar_generator->add_custom_room(['name' => 'custom']);
         $sitewide_room = $seminar_generator->add_site_wide_room(['name' => 'sitewide']);
 
+        $virtualmeeting_list = new room_virtualmeeting_list(''); // Get all records
+        $this->assertCount(3, $virtualmeeting_list);
         $virtualmeeting_list = room_virtualmeeting_list::from_roomids([$sitewide_room->id, $virtual_room1->id, $virtual_room2->id, $custom_room->id]);
         $this->assertCount(2, $virtualmeeting_list);
         foreach($virtualmeeting_list as $virtualmeeting_room) {
@@ -250,5 +240,39 @@ class mod_facetoface_virtualmeeting_room_testcase extends advanced_testcase {
         $this->assertTrue(room_virtualmeeting::is_virtual_meeting(''), '(empty)');
         $this->assertTrue(room_virtualmeeting::is_virtual_meeting('poc_app'), 'poc_app');
         $this->assertTrue(room_virtualmeeting::is_virtual_meeting('he_who_must_not_be_named'), 'he_who_must_not_be_named');
+    }
+
+    /**
+     * @param seminar_event $seminarevent
+     * @param DateTime $timestart
+     * @param DateTime $timefinish
+     * @return array of [roomdate_id, roomdate_virtualmeeting_id, virtualmeeting_id]
+     */
+    private function add_session_with_virtualmeeting(seminar_event $seminarevent, DateTime $timestart, DateTime $timefinish): array {
+        /** @var mod_facetoface_generator */
+        $seminar_generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
+
+        // Set it up and save it
+        $seminarsession = new seminar_session();
+        $seminarsession->set_sessionid($seminarevent->get_id())->set_timestart($timestart->getTimestamp())->set_timefinish($timefinish->getTimestamp())->set_sessiontimezone('99')->save();
+        $room = (new room())->from_record($seminar_generator->add_virtualmeeting_room([], ['plugin' => 'poc_app']));
+        $virtualmeeting = virtual_meeting_model::create('poc_app', user::logged_in(), 'Test virtual meeting', $timestart, $timefinish, new simple_mock_client());
+        $room_dates_virtualmeeting = new room_dates_virtualmeeting();
+        $room_dates_virtualmeeting->set_roomid($room->get_id());
+        $room_dates_virtualmeeting->set_sessionsdateid($seminarsession->get_id());
+        $room_dates_virtualmeeting->set_virtualmeetingid($virtualmeeting->get_id());
+        $room_dates_virtualmeeting->save();
+        $this->assertNotEquals(0, $room_dates_virtualmeeting->get_id());
+
+        // Load it again
+        $rd_id = $room_dates_virtualmeeting->get_id();
+        $room_dates_virtualmeeting = new room_dates_virtualmeeting($rd_id);
+        $this->assertEquals($rd_id, $room_dates_virtualmeeting->get_id());
+        $this->assertEquals($room->get_id(), $room_dates_virtualmeeting->get_roomid());
+        $this->assertEquals($seminarsession->get_id(), $room_dates_virtualmeeting->get_sessionsdateid());
+        $this->assertEquals($virtualmeeting->get_id(), $room_dates_virtualmeeting->get_virtualmeetingid());
+
+        $roomdateid = builder::table('facetoface_room_dates')->insert(['sessionsdateid' => $seminarsession->get_id(), 'roomid' => $room->get_id()]);
+        return [$roomdateid, $room_dates_virtualmeeting->get_id(), $virtualmeeting->get_id()];
     }
 }

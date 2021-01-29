@@ -786,9 +786,7 @@ class facetoface_notification extends data_object {
         }
 
         // Get all the users who need to receive the under capacity warning.
-        $modcontext = \context_module::instance($cm->id);
-
-        $recipients = \mod_facetoface\room_virtualmeeting::get_virtualmeeting_creators_in_all_sessions($seminarevent->get_id());
+        $recipients = $seminarevent->get_virtualmeeting_creators_in_all_sessions();
         $notificationparams = array(
             "facetofaceid" => $seminar->get_id(),
             "type" => MDL_F2F_NOTIFICATION_AUTO,

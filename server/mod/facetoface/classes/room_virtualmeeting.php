@@ -40,6 +40,9 @@ class room_virtualmeeting implements seminar_iterator_item {
     const VIRTUAL_MEETING_NONE = '@none';
     const VIRTUAL_MEETING_INTERNAL = '@internal';
 
+    const STATUS_LEGACY = null;
+    const STATUS_CONFIRMED = 0;
+
     /**
      * @var int {facetoface_room_virtualmeeting}.id
      */
@@ -235,19 +238,35 @@ class room_virtualmeeting implements seminar_iterator_item {
     }
 
     /**
+     * @return integer|null
+     */
+    public function get_status(): ?int {
+        return $this->status;
+    }
+
+    /**
+     * @param integer $status
+     * @return room_virtualmeeting
+     */
+    public function set_status(int $status): room_virtualmeeting {
+        $this->status = $status;
+        return $this;
+    }
+
+    /**
      * Get room_virtualmeeting instance by room id
      * @param room $room
      * @return room_virtualmeeting
      */
     public static function get_virtual_meeting(room $room): room_virtualmeeting {
 
-        $records = builder::table('facetoface_room_virtualmeeting', 'frvm')
+        $record = builder::table('facetoface_room_virtualmeeting', 'frvm')
             ->join(['facetoface_room', 'fr'], 'roomid', 'id')
             ->where('frvm.roomid', $room->get_id())
-            ->fetch();
+            ->one(false);
         $virtual_meeting = new room_virtualmeeting();
-        if ($records) {
-            return $virtual_meeting->from_record(array_shift($records));
+        if ($record !== null) {
+            return $virtual_meeting->from_record($record);
         }
         return $virtual_meeting;
     }
@@ -256,19 +275,14 @@ class room_virtualmeeting implements seminar_iterator_item {
      * Take users who created or edited room with virtualmeeting
      * @param int $eventid
      * @return collection
+     * @deprecated since Totara 13.5
      */
     public static function get_virtualmeeting_creators_in_all_sessions(int $eventid): collection {
+        debugging(__METHOD__ . '() has been deprecated. Please use seminar_event::get_virtualmeeting_creators_in_all_sessions() instead.', DEBUG_DEVELOPER);
 
-        $users = builder::table('user', 'u')
-            ->join(['facetoface_room_virtualmeeting', 'frvm'], 'u.id', '=', 'frvm.userid')
-            ->join(['facetoface_room_dates', 'frd'], 'frvm.roomid', '=', 'frd.roomid')
-            ->join(['facetoface_sessions_dates', 'sd'], 'frd.sessionsdateid', '=', 'sd.id')
-            ->where('u.deleted', 0)
-            ->where('u.suspended', 0)
-            ->where('sd.sessionid', $eventid)
-            ->select_raw('distinct u.id, u.*')
-            ->get();
+        $event = new seminar_event($eventid);
+        $users = $event->get_virtualmeeting_creators_in_all_sessions();
 
-        return $users;
+        return new collection($users);
     }
 }

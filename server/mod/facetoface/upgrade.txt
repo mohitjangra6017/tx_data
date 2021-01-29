@@ -3,6 +3,8 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* room_virtualmeeting::get_virtualmeeting_creators_in_all_sessions() has been deprecated; please use seminar_event::get_virtualmeeting_creators_in_all_sessions() instead
+* mod_facetoface_renderer::get_session_room_details_html() has been updated to catch up with the database changes
 * The button and multibutton fields have been removed from seminarresource_card.mustache; please update the template if modified
 * The card field in seminarresource_information.mustache now requires template and context; please update the template if modified
 * Any contents specific to virtual rooms have been removed from seminarresource_card.mustache; please use virtualroom_card.mustache instead

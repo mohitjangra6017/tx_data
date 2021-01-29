@@ -24,6 +24,7 @@
 namespace mod_facetoface;
 
 use context_module;
+use core\orm\query\builder;
 use mod_facetoface\attendance\attendance_helper;
 use mod_facetoface\signup\condition\event_taking_attendance;
 use mod_facetoface\event\session_cancelled;
@@ -1299,5 +1300,26 @@ final class seminar_event implements seminar_iterator_item {
             }
         }
         $this->sessions = $facilitator_sessions;
+    }
+
+    /**
+     * Take users who created or edited room with virtualmeeting
+     *
+     * @return stdClass[]
+     */
+    public function get_virtualmeeting_creators_in_all_sessions(): array {
+        if (!$this->exists()) {
+            return [];
+        }
+        return builder::table('user', 'u')
+            ->join([room_virtualmeeting::DBTABLE, 'frvm'], 'frvm.userid', 'u.id')
+            ->join([room::DBTABLE, 'fr'], 'frvm.roomid', 'fr.id')
+            ->join([room_dates_virtualmeeting::DBTABLE, 'frdvm'], 'frdvm.roomid', 'fr.id')
+            ->join([seminar_session::DBTABLE, 'sd'], 'frdvm.sessionsdateid', 'sd.id')
+            ->where('u.deleted', 0)
+            ->where('u.suspended', 0)
+            ->where('sd.sessionid', $this->id)
+            ->select_raw('distinct u.id, u.*')
+            ->fetch();
     }
 }

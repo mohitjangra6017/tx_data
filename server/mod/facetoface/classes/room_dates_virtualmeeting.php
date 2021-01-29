@@ -34,6 +34,15 @@ class room_dates_virtualmeeting implements seminar_iterator_item {
 
     use crud_mapper;
 
+    const STATUS_LEGACY = null;
+    const STATUS_UNAVAILABLE = 0;
+    const STATUS_AVAILABLE = 1;
+    const STATUS_PENDING_UPDATE = -2;
+    const STATUS_PENDING_DELETION = -3;
+    const STATUS_FAILURE_CREATION = -4;
+    const STATUS_FAILURE_UPDATE = -5;
+    const STATUS_FAILURE_DELETION = -6;
+
     /**
      * @var int {facetoface_room_dates_virtualmeeting}.id
      */
@@ -43,13 +52,17 @@ class room_dates_virtualmeeting implements seminar_iterator_item {
      */
     private $status = null;
     /**
-     * @var int {facetoface_room_dates_virtualmeeting}.roomdateid
+     * @var int {facetoface_room_dates_virtualmeeting}.sessionsdateid
      */
-    private $roomdateid = 0;
+    private $sessionsdateid = 0;
     /**
-     * @var int {facetoface_room_dates_virtualmeeting}.virtualmeetingid
+     * @var int {facetoface_room_dates_virtualmeeting}.roomid
      */
-    private $virtualmeetingid = 0;
+    private $roomid = 0;
+    /**
+     * @var int|null {facetoface_room_dates_virtualmeeting}.virtualmeetingid
+     */
+    private $virtualmeetingid = null;
     /**
      * @var string facetoface_room_virtualmeeting table name
      */
@@ -105,8 +118,28 @@ class room_dates_virtualmeeting implements seminar_iterator_item {
      * @param int $roomdateid
      */
     public static function delete_by_roomdateid(int $roomdateid): void {
-        global $DB;
-        $DB->delete_records(self::DBTABLE, ['roomdateid' => $roomdateid]);
+        $roomdate = builder::table('facetoface_room_dates')
+            ->where('id', $roomdateid)
+            ->one();
+        if ($roomdate) {
+            builder::table(self::DBTABLE)
+                ->where('sessionsdateid', $roomdate->sessionsdateid)
+                ->where('roomid', $roomdate->roomid)
+                ->delete();
+        }
+        // TODO: see if this single builder works or not
+        // builder::table(self::DBTABLE, 'frdvm')
+        //     ->where('id', 'in', function(builder $builder) use ($roomdateid) {
+        //         $builder->join(
+        //             ['facetoface_room_dates', 'frd'],
+        //             function (builder $joining) use ($roomdateid) {
+        //                 $joining->where_field('frd.roomid', 'frdvm.roomid')
+        //                     ->where_field('frd.sessionsdateid', 'frdvm.sessionsdateid')
+        //                     ->where('frd.id', $roomdateid);
+        //             })
+        //             ->select('frdvm.id');
+        //     })
+        //     ->delete();
     }
 
     /**
@@ -134,11 +167,10 @@ class room_dates_virtualmeeting implements seminar_iterator_item {
             $roomorid = $roomorid->get_id();
         }
         return builder::table(self::DBTABLE, $alias)
-            ->join(['facetoface_room_dates', 'frd'], "{$alias}.roomdateid", 'frd.id')
-            ->join([seminar_session::DBTABLE, 'fsd'], 'frd.sessionsdateid', 'fsd.id')
-            ->join([room::DBTABLE, 'fr'], 'frd.roomid', 'fr.id')
-            ->where('fr.id', $roomorid)
-            ->where('fsd.id', $sessionorid);
+            ->join([seminar_session::DBTABLE, 'fsd'], "{$alias}.sessionsdateid", 'fsd.id')
+            ->join([room::DBTABLE, 'fr'], "{$alias}.roomid", 'fr.id')
+            ->where('fsd.id', $sessionorid)
+            ->where('fr.id', $roomorid);
     }
 
     /**
@@ -151,6 +183,9 @@ class room_dates_virtualmeeting implements seminar_iterator_item {
      */
     public static function load_by_session_room($sessionorid, $roomorid, bool $nullifnotavailable = false): ?self {
         $builder = self::get_builder_by_session_room($sessionorid, $roomorid, 'vm');
+        if ($nullifnotavailable) {
+            $builder->where('vm.status', self::STATUS_AVAILABLE);
+        }
         $record = $builder->one();
         if (!$record && $nullifnotavailable) {
             return null;
@@ -181,32 +216,64 @@ class room_dates_virtualmeeting implements seminar_iterator_item {
     /**
      * @return int
      */
-    public function get_roomdateid(): int {
-        return (int)$this->roomdateid;
+    public function get_sessionsdateid(): int {
+        return $this->sessionsdateid;
     }
 
     /**
-     * @param int $roomdateid
+     * @param int $sessionsdateid
      * @return room_dates_virtualmeeting
      */
-    public function set_roomdateid(int $roomdateid): room_dates_virtualmeeting {
-        $this->roomdateid = $roomdateid;
+    public function set_sessionsdateid(int $sessionsdateid): room_dates_virtualmeeting {
+        $this->sessionsdateid = $sessionsdateid;
         return $this;
     }
 
     /**
      * @return int
      */
-    public function get_virtualmeetingid(): int {
-        return (string)$this->virtualmeetingid;
+    public function get_roomid(): int {
+        return $this->roomid;
     }
 
     /**
-     * @param int $virtualmeetingid
+     * @param int $roomid
      * @return room_dates_virtualmeeting
      */
-    public function set_virtualmeetingid(int $virtualmeetingid): room_dates_virtualmeeting {
+    public function set_roomid(int $roomid): room_dates_virtualmeeting {
+        $this->roomid = $roomid;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function get_virtualmeetingid(): ?int {
+        return $this->virtualmeetingid;
+    }
+
+    /**
+     * @param int|null $virtualmeetingid
+     * @return room_dates_virtualmeeting
+     */
+    public function set_virtualmeetingid(?int $virtualmeetingid): room_dates_virtualmeeting {
         $this->virtualmeetingid = $virtualmeetingid;
+        return $this;
+    }
+
+    /**
+     * @return integer|null
+     */
+    public function get_status(): ?int {
+        return $this->status;
+    }
+
+    /**
+     * @param integer $status
+     * @return room_virtualmeeting
+     */
+    public function set_status(int $status): room_dates_virtualmeeting {
+        $this->status = $status;
         return $this;
     }
 

@@ -338,12 +338,11 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
      * @param integer|null $status
      * @return room
      */
-    private function add_virtualmeeting(string $name, seminar_session $session, ?int $status = 1): room {
+    private function add_virtualmeeting(string $name, seminar_session $session, ?int $status = room_dates_virtualmeeting::STATUS_AVAILABLE): room {
         $room = new room($this->f2fgen->add_virtualmeeting_room(['name' => $name], ['userid' => $this->site_admin->id, 'plugin' => 'poc_app'])->id);
         $client = new simple_mock_client();
         $vm = virtual_meeting_model::create('poc_app', $this->site_admin->id, "<POC: $name>", DateTime::createFromFormat('U', $session->get_timestart()), DateTime::createFromFormat('U', $session->get_timefinish()), $client);
-        $roomdateid = builder::table('facetoface_room_dates')->insert(['roomid' => $room->get_id(), 'sessionsdateid' => $session->get_id()]);
-        (new room_dates_virtualmeeting())->set_roomdateid($roomdateid)->set_virtualmeetingid($vm->id)->save();
+        (new room_dates_virtualmeeting())->set_roomid($room->get_id())->set_sessionsdateid($session->get_id())->set_virtualmeetingid($vm->id)->set_status($status)->save();
         return $room;
     }
 

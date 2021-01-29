@@ -119,5 +119,85 @@ function xmldb_facetoface_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2021011800, 'facetoface');
     }
 
+    if ($oldversion < 2021012300) {
+
+        // ==== facetoface_room_dates_virtualmeeting ====
+        //   1. Add field sessionsdateid
+        //   2. Add foreign key sessionsdateid
+        //   3. Add field roomid
+        //   4. Add foreign key roomid
+        //   5. Database migration roomdateid to sessionsdateid, roomid
+        //   6. Drop foreign key roomdateid
+        //   7. Drop field roomdateid
+        //   8. Drop foreign key virtualmeetingid
+        //   9. Change nullable virtualmeetingid
+        //  10. Restore foreign key virtualmeetingid
+        //  11. Add unique index sessionsdateid, roomid
+
+        $table = new xmldb_table('facetoface_room_dates_virtualmeeting');
+        // 1. Launch add field sessionsdateid.
+        $field = new xmldb_field('sessionsdateid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'status');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // 2. Launch add key roomdatevm_sess_fk.
+        $key = new xmldb_key('roomdatevm_sess_fk', XMLDB_KEY_FOREIGN, array('sessionsdateid'), 'facetoface_sessions_dates', array('id'));
+        if (!$dbman->key_exists($table, $key)) {
+            $dbman->add_key($table, $key);
+        }
+        // 3. Launch add field roomid.
+        $field = new xmldb_field('roomid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'sessionsdateid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // 4. Launch add key roomdatevm_room_fk.
+        $key = new xmldb_key('roomdatevm_room_fk', XMLDB_KEY_FOREIGN, array('roomid'), 'facetoface_room', array('id'));
+        if (!$dbman->key_exists($table, $key)) {
+            $dbman->add_key($table, $key);
+        }
+
+        // 5. Database migration from the previous versions.
+        $records = $DB->get_records_sql(
+            'SELECT frdvm.id, frd.roomid, frd.sessionsdateid
+               FROM {facetoface_room_dates_virtualmeeting} frdvm
+               JOIN {facetoface_room_dates} frd ON frdvm.roomdateid = frd.id'
+        );
+        foreach ($records as $record) {
+            $DB->update_record('facetoface_room_dates_virtualmeeting', $record);
+        }
+
+        // 6. Launch drop key roomdatevm_date_fk.
+        $key = new xmldb_key('roomdatevm_date_fk', XMLDB_KEY_FOREIGN, array('roomdateid'), 'facetoface_room_dates', array('id'));
+        if ($dbman->key_exists($table, $key)) {
+            $dbman->drop_key($table, $key);
+        }
+        // 7. Launch drop field roomdateid.
+        $field = new xmldb_field('roomdateid');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // 8. Launch drop key roomdatevm_meet_fk.
+        $key = new xmldb_key('roomdatevm_meet_fk', XMLDB_KEY_FOREIGN, array('virtualmeetingid'), 'virtualmeeting', array('id'));
+        if ($dbman->key_exists($table, $key)) {
+            $dbman->drop_key($table, $key);
+        }
+
+        // 9. Launch change of nullability for field virtualmeetingid.
+        $field = new xmldb_field('virtualmeetingid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'roomdateid');
+        $dbman->change_field_notnull($table, $field);
+
+        // 10. Launch add key roomdatevm_meet_fk.
+        $key = new xmldb_key('roomdatevm_meet_fk', XMLDB_KEY_FOREIGN, array('virtualmeetingid'), 'virtualmeeting', array('id'));
+        $dbman->add_key($table, $key);
+
+        // 11. Launch add index roomdatevm_sessdatemeet_ix.
+        $index = new xmldb_index('roomdatevm_sessmeet_ix', XMLDB_INDEX_UNIQUE, array('sessionsdateid', 'roomid'));
+        $dbman->add_index($table, $index);
+
+        // Facetoface savepoint reached.
+        upgrade_mod_savepoint(true, 2021012300, 'facetoface');
+    }
+
     return true;
 }

@@ -27,6 +27,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2021011800;       // The current module version (Date: YYYYMMDDXX).
+$plugin->version  = 2021012300;       // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2020101200;       // Requires this Totara version.
 $plugin->component = 'mod_facetoface';

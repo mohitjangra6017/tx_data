@@ -3204,20 +3204,16 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
     }
 
     function test_facetoface_send_notification_virtual_meeting_creation_failure() {
-        global $DB;
-        $this->init_sample_data();
-
         $teacher1 = $this->getDataGenerator()->create_user();
+        $teacher2 = $this->getDataGenerator()->create_user();
         $student1 = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
 
-        $teacherrole = $DB->get_record('role', array('shortname' => 'editingteacher'));
-        $studentrole = $DB->get_record('role', array('shortname' => 'student'));
+        $this->getDataGenerator()->enrol_user($teacher1->id, $course1->id, 'editingteacher');
+        $this->getDataGenerator()->enrol_user($teacher2->id, $course1->id, 'editingteacher');
+        $this->getDataGenerator()->enrol_user($student1->id, $course1->id, 'student');
 
-        $this->getDataGenerator()->enrol_user($teacher1->id, $course1->id, $teacherrole->id);
-        $this->getDataGenerator()->enrol_user($student1->id, $course1->id, $studentrole->id);
-
-
+        /** @var mod_facetoface_generator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $facetofacedata = array(
@@ -3226,32 +3222,42 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
         );
         $facetoface1 = $facetofacegenerator->create_instance($facetofacedata);
 
-        // Session that starts in 24hrs time.
-        // This session should trigger a mincapacity warning now as cutoff is 24:01 hrs before start time.
-        $sessiondate = new stdClass();
-        $sessiondate->timestart = time() + DAYSECS;
-        $sessiondate->timefinish = time() + DAYSECS + 60;
-        $sessiondate->sessiontimezone = 'Pacific/Auckland';
+        // add events, sessions and virtual rooms.
+        $event1 = new seminar_event();
+        $event1->set_facetoface($facetoface1->id)->save();
+        $event2 = new seminar_event();
+        $event2->set_facetoface($facetoface1->id)->save();
 
-        $sessiondate2 = new stdClass();
-        $sessiondate2->timestart = time() + (DAYSECS * 2);
-        $sessiondate2->timefinish = time() + (DAYSECS * 2) + 60;
-        $sessiondate2->sessiontimezone = 'Pacific/Auckland';
+        $time = time();
+        $session11 = new seminar_session();
+        $session11->set_sessionid($event1->get_id())->set_timestart($time + DAYSECS)->set_timefinish($time + DAYSECS + 60)->set_sessiontimezone('Pacific/Auckland')->save();
+        $session12 = new seminar_session();
+        $session12->set_sessionid($event1->get_id())->set_timestart($time + (DAYSECS * 2))->set_timefinish($time + (DAYSECS * 2) + 60)->set_sessiontimezone('Pacific/Auckland')->save();
+        $session21 = new seminar_session();
+        $session21->set_sessionid($event2->get_id())->set_timestart($time + (DAYSECS * 3))->set_timefinish($time + (DAYSECS * 3) + 60)->set_sessiontimezone('Pacific/Auckland')->save();
+        $session22 = new seminar_session();
+        $session22->set_sessionid($event2->get_id())->set_timestart($time + (DAYSECS * 4))->set_timefinish($time + (DAYSECS * 4) + 60)->set_sessiontimezone('Pacific/Auckland')->save();
 
-        $sessiondata = array(
-            'facetoface' => $facetoface1->id,
-            'capacity' => 3,
-            'allowoverbook' => 1,
-            'sessiondates' => array($sessiondate, $sessiondate2),
-        );
-        $id = $facetofacegenerator->add_session($sessiondata);
+        $room11 = new mod_facetoface\room($facetofacegenerator->add_virtualmeeting_room([], ['userid' => $teacher1->id])->id);
+        $roomdate11 = new mod_facetoface\room_dates_virtualmeeting();
+        $roomdate11->set_sessionsdateid($session11->get_id())->set_roomid($room11->get_id())->set_virtualmeetingid(null)->save();
+        $room21 = new mod_facetoface\room($facetofacegenerator->add_virtualmeeting_room([], ['userid' => $teacher1->id])->id);
+        $roomdate21 = new mod_facetoface\room_dates_virtualmeeting();
+        $roomdate21->set_sessionsdateid($session22->get_id())->set_roomid($room21->get_id())->set_virtualmeetingid(null)->save();
+        $room22 = new mod_facetoface\room($facetofacegenerator->add_virtualmeeting_room([], ['userid' => $teacher2->id])->id);
+        $roomdate22 = new mod_facetoface\room_dates_virtualmeeting();
+        $roomdate22->set_sessionsdateid($session22->get_id())->set_roomid($room22->get_id())->set_virtualmeetingid(null)->save();
+
+        $this->assertEqualsCanonicalizing([$teacher1->id], array_keys($event1->get_virtualmeeting_creators_in_all_sessions()));
+        $this->assertEqualsCanonicalizing([$teacher1->id, $teacher2->id], array_keys($event2->get_virtualmeeting_creators_in_all_sessions()));
+
+        $sessiondata = mod_facetoface\seminar_event_helper::get_sessiondata($event1, null);
 
         $sink = $this->redirectMessages();
         $notification = new \facetoface_notification((array) $sessiondata, false);
-        $notification->send_notification_virtual_meeting_creation_failure(new seminar_event($id));
+        $notification->send_notification_virtual_meeting_creation_failure($event1);
         $this->executeAdhocTasks();
         $messages = $sink->get_messages();
-        $this->markTestIncomplete("TODO: TL-28891");
 
         // Only the teacher should get a message.
         $this->assertCount(1, $messages, 'The test suit was expecting one message to be sent out regarding seminar event being under minimum booking.');
