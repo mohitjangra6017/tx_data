@@ -19,6 +19,7 @@ Feature: XMLRPC web service access
       | enablewebservices | 1 |
     And I navigate to "Manage protocols" node in "Site administration > Plugins > Web services"
     And I "Enable" the "SOAP protocol" web service protocol
+    And I "Enable" the "XML-RPC protocol" web service protocol
 
     # This WS stuff is crazy, this should never allow admin to authenticate, anyway.
     And I navigate to "Manage authentication" node in "Site administration > Plugins > Authentication"
