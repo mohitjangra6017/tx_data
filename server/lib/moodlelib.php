@@ -29,6 +29,7 @@
  */
 
 use core\performance_statistics\collector;
+use core\theme\settings as theme_settings;
 use totara_core\advanced_feature;
 
 defined('MOODLE_INTERNAL') || die();
@@ -6432,8 +6433,19 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
         $context['tousername'] = $user->username;
     }
 
+    $theme_settings = new theme_settings($PAGE->theme, $user->tenantid ?? 0);
+
     if (!empty($user->mailformat) && $user->mailformat == 1) {
         // Only process html templates if the user preferences allow html email.
+
+        // If either header or footer has a value then both apply even if one is empty.
+        $html_header = $theme_settings->get_property('email', 'formemail_field_notificationshtmlheader');
+        $html_footer = $theme_settings->get_property('email', 'formemail_field_notificationshtmlfooter');
+        if ((is_array($html_header) && !empty($html_header['value']))
+            || (is_array($html_footer) && !empty($html_footer['value']))) {
+            $context['header'] = is_array($html_header) && !empty($html_header['value']) ? $html_header['value'] : '&nbsp;';
+            $context['footer'] = is_array($html_header) && !empty($html_footer['value']) ? $html_footer['value'] : '&nbsp;';
+        }
 
         if ($messagehtml) {
             // If html has been given then pass it through the template.
@@ -6462,15 +6474,16 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
         $mail->MessageID = generate_email_messageid();
     }
 
+    $text_footer = $theme_settings->get_property('email', 'formemail_field_notificationstextfooter') ?? ['value' => ''];
     if ($messagehtml && !empty($user->mailformat) && $user->mailformat == 1) {
         // Don't ever send HTML to users who don't want it.
         $mail->isHTML(true);
         $mail->Encoding = 'quoted-printable';
         $mail->Body    =  $messagehtml;
-        $mail->AltBody =  "\n$messagetext\n";
+        $mail->AltBody =  "\n$messagetext\n{$text_footer['value']}\n";
     } else {
         $mail->IsHTML(false);
-        $mail->Body =  "\n$messagetext\n";
+        $mail->Body =  "\n$messagetext\n{$text_footer['value']}\n";
     }
 
     if ($attachment && $attachname) {

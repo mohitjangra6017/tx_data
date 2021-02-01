@@ -18,6 +18,7 @@
 
 import theme from 'tui/theme';
 import { config } from 'tui/config';
+import { EditorContent } from 'tui/editor';
 
 export default {
   /**
@@ -112,6 +113,33 @@ export default {
     });
 
     return resolvedFormData;
+  },
+
+  /**
+   * Convert Editor fields' value property to EditorContent instances.
+   *
+   * @param {object} formFields
+   * @param {object} editorFields Array of fields that are classified as Editor instances.
+   *
+   * @return {array}
+   */
+  resolveEditorContentFields(formFields, editorFields) {
+    let resolvedFormFields = {};
+    Object.keys(formFields).forEach(function(field) {
+      if (
+        Object.keys(editorFields).find(editorField => editorField === field)
+      ) {
+        resolvedFormFields[field] = Object.assign({}, formFields[field], {
+          value: new EditorContent({
+            format: editorFields[field].format,
+            content: formFields[field].value,
+          }),
+        });
+      } else {
+        resolvedFormFields[field] = formFields[field];
+      }
+    });
+    return resolvedFormFields;
   },
 
   /**

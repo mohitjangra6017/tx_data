@@ -154,7 +154,7 @@ class core_theme_settings_testcase extends advanced_testcase {
         $this->assertArrayHasKey('categories', $result->data['core_get_theme_settings']);
         $categories = $result->data['core_get_theme_settings']['categories'];
         $this->assertIsArray($categories);
-        $this->assertEquals(2, sizeof($categories));
+        $this->assertEquals(3, sizeof($categories));
         $this->validate_default_categories($categories);
     }
 
@@ -244,7 +244,7 @@ class core_theme_settings_testcase extends advanced_testcase {
         $this->assertArrayHasKey('categories', $result->data['core_update_theme_settings']);
         $categories = $result->data['core_update_theme_settings']['categories'];
         $this->assertIsArray($categories);
-        $this->assertCount(3, $categories);
+        $this->assertCount(4, $categories);
         $this->validate_default_categories($categories);
 
         // Check colours.
@@ -274,7 +274,7 @@ class core_theme_settings_testcase extends advanced_testcase {
         $this->assertIsArray($output);
         $this->assertArrayHasKey('categories', $output);
         $this->assertIsArray($output['categories']);
-        $this->assertEquals(2, sizeof($output['categories']));
+        $this->assertEquals(3, sizeof($output['categories']));
         $this->validate_default_categories($output['categories']);
     }
 
@@ -1088,7 +1088,7 @@ class core_theme_settings_testcase extends advanced_testcase {
 
         // Exclude default file categories.
         $categories = $ventura_settings->get_categories(false, false);
-        $this->assertEmpty($categories);
+        $this->assertCount(1, $categories);
     }
 
     public function test_tenant_theme_hooks_default() {
@@ -1204,6 +1204,158 @@ class core_theme_settings_testcase extends advanced_testcase {
         $SESSION->themetenantid = $tenant2->id;
         $SESSION->themetenantidnumber = $tenant2->idnumber;
         self::assertEquals(0, helper::get_prelogin_tenantid());
+    }
+
+    public function test_email_to_user() {
+        $theme_config = \theme_config::load('ventura');
+        $theme_settings = new settings($theme_config, 0);
+
+        $categories = [
+            [
+                'name' => 'email',
+                'properties' => [
+                    [
+                        'name' => 'formemail_field_notificationshtmlheader',
+                        'type' => 'html',
+                        'value' => '<div>This is the header</div>',
+                    ],
+                    [
+                        'name' => 'formemail_field_notificationshtmlfooter',
+                        'type' => 'html',
+                        'value' => '<div>This is the footer</div>',
+                    ],
+                    [
+                        'name' => 'formemail_field_notificationstextfooter',
+                        'type' => 'text',
+                        'value' => 'This is the plain-text footer',
+                    ],
+                ],
+            ]
+        ];
+        $theme_settings->update_categories($categories);
+
+        $user1 = $this->getDataGenerator()->create_user(array('mailformat' => 1, 'maildisplay' => 0));
+        $user2 = $this->getDataGenerator()->create_user(array('mailformat' => 0, 'maildisplay' => 0));
+
+        $subject = 'subject';
+        $messagetext = 'message text';
+
+        // Test HTML mail format.
+        $sink = $this->redirectEmails();
+        email_to_user($user1, $user2, $subject, $messagetext);
+        $result = $sink->get_messages();
+        $sink->close();
+        $this->assertCount(1, $result);
+        $body = quoted_printable_decode($result[0]->body);
+
+        $this->assertStringContainsString('<div>This is the header</div>', $body);
+        $this->assertStringContainsString('<div>This is the footer</div>', $body);
+        $this->assertStringContainsString("\nmessage text\nThis is the plain-text footer\n", $body);
+
+        // Test plain-text mail format.
+        $sink = $this->redirectEmails();
+        email_to_user($user2, $user1, $subject, $messagetext);
+        $result = $sink->get_messages();
+        $sink->close();
+        $body = quoted_printable_decode($result[0]->body);
+
+        $this->assertCount(1, $result);
+        $this->assertStringNotContainsString('<div>This is the header</div>', $body);
+        $this->assertStringNotContainsString('<div>This is the footer</div>', $body);
+        $this->assertStringContainsString("\nmessage text\nThis is the plain-text footer\n", $body);
+
+        // Confirm that both header and footer is used if either one of them is not empty.
+        $test_categories = $categories;
+        $test_categories[0]['properties'][0]['value'] = '';
+        $theme_settings::set_adhoc_categories($test_categories);
+        $sink = $this->redirectEmails();
+        email_to_user($user1, $user2, $subject, $messagetext);
+        $result = $sink->get_messages();
+        $sink->close();
+        $body = quoted_printable_decode($result[0]->body);
+
+        $this->assertCount(1, $result);
+        $this->assertStringContainsString('<tr><td colspan="3">&nbsp;</td></tr>', $body);
+        $this->assertStringContainsString('<div>This is the footer</div>', $body);
+        $this->assertStringContainsString("\nmessage text\nThis is the plain-text footer\n", $body);
+
+        $test_categories = $categories;
+        $test_categories[0]['properties'][1]['value'] = '';
+        $theme_settings::set_adhoc_categories($test_categories);
+        $sink = $this->redirectEmails();
+        email_to_user($user1, $user2, $subject, $messagetext);
+        $result = $sink->get_messages();
+        $sink->close();
+        $body = quoted_printable_decode($result[0]->body);
+
+        $this->assertCount(1, $result);
+        $this->assertStringContainsString('<div>This is the header</div>', $body);
+        $this->assertStringContainsString('<tr><td colspan="3">&nbsp;</td></tr>', $body);
+        $this->assertStringContainsString("\nmessage text\nThis is the plain-text footer\n", $body);
+
+        // Confirm that neither header nor footer is NOT used when both of them are empty.
+        $test_categories = $categories;
+        $test_categories[0]['properties'][0]['value'] = '';
+        $test_categories[0]['properties'][1]['value'] = '';
+        $theme_settings::set_adhoc_categories($test_categories);
+        $sink = $this->redirectEmails();
+        email_to_user($user1, $user2, $subject, $messagetext);
+        $result = $sink->get_messages();
+        $sink->close();
+        $body = quoted_printable_decode($result[0]->body);
+
+        $this->assertCount(1, $result);
+        $this->assertStringNotContainsString('<div>This is the header</div>', $body);
+        $this->assertStringNotContainsString('<div>This is the footer</div>', $body);
+        $this->assertStringContainsString("\nmessage text\nThis is the plain-text footer\n", $body);
+    }
+
+    /**
+     * Test default properties via the web api.
+     */
+    public function test_webapi_theme_settings_send_email_notification() {
+        $generator = $this->getDataGenerator();
+        $user_one = $generator->create_user();
+        $this->setUser($user_one);
+
+        // Test user that does not have permission.
+        $result = $this->execute_graphql_operation(
+            'core_theme_settings_send_email_notification', [
+                'html_header' => '<div>test html header</div>',
+                'html_footer' => '<div>test html footer</div>',
+                'text_footer' => 'test text footer',
+            ]
+        );
+        $this->assertNotEmpty($result->errors);
+        $this->assertEquals(
+            'Sorry, but you do not currently have permissions to do that (Manage theme settings)',
+            $result->errors[0]->message
+        );
+
+        // Assign capability to manage theme settings.
+        $this->assign_themesettings_capability();
+
+        $sink = $this->redirectEmails();
+
+        // Test with capability.
+        $result = $this->execute_graphql_operation(
+            'core_theme_settings_send_email_notification', [
+                'html_header' => '<div>test html header</div>',
+                'html_footer' => '<div>test html footer</div>',
+                'text_footer' => 'test text footer',
+            ]
+        );
+        $this->assertEmpty($result->errors);
+        $this->assertNotEmpty($result->data);
+
+        // Confirm that the operation was successful.
+        $this->assertArrayHasKey('core_theme_settings_send_email_notification', $result->data);
+        $this->assertTrue($result->data['core_theme_settings_send_email_notification']);
+
+        // Confirm that we sent 2 emails.
+        $result = $sink->get_messages();
+        $sink->close();
+        $this->assertCount(2, $result);
     }
 
     private function skip_if_build_not_present() {

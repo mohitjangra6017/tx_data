@@ -46,6 +46,9 @@ final class settings {
     /** @var tenant_customizable_theme_settings_hook */
     private $tenant_settings_hook;
 
+    /** @var array */
+    protected static $adhoc_categories = [];
+
     /**
      * settings constructor.
      *
@@ -101,7 +104,19 @@ final class settings {
             }
         }
 
+        // If any adhoc categories are set then that takes precedence over all the rest.
+        if (!empty(settings::$adhoc_categories)) {
+            $this->merge_categories($categories, settings::$adhoc_categories);
+        }
+
         return $categories;
+    }
+
+    /**
+     * @param array $categories
+     */
+    public static function set_adhoc_categories(array $categories): void {
+        settings::$adhoc_categories = $categories;
     }
 
     /**
@@ -151,7 +166,9 @@ final class settings {
      * @return array
      */
     private function get_default_categories(bool $include_files): array {
-        $categories = [];
+        $categories = [
+            $this->get_default_email_category(),
+        ];
 
         if ($include_files) {
             $instances = $this->get_file_instances();
@@ -163,6 +180,31 @@ final class settings {
         }
 
         return $categories;
+    }
+
+    /**
+     * @return array
+     *
+     */
+    private function get_default_email_category(): array {
+        global $PAGE;
+        $renderer = $PAGE->get_renderer('core');
+
+        return [
+            'name' => 'email',
+            'properties' => [
+                [
+                    'name' => 'formemail_field_notificationshtmlheader',
+                    'type' => 'html',
+                    'value' => $renderer->render_from_template('core/email_header_html', []),
+                ],
+                [
+                    'name' => 'formemail_field_notificationshtmlfooter',
+                    'type' => 'html',
+                    'value' => $renderer->render_from_template('core/email_footer_html', []),
+                ],
+            ],
+        ];
     }
 
     /**
@@ -213,6 +255,19 @@ final class settings {
     }
 
     /**
+     * Some properties needs to be cleaned before we can save them to the database.
+     *
+     * @param array $properties
+     * @return array
+     */
+    public function clean_properties(array $properties): array {
+        foreach ($properties as &$property) {
+            $property['value'] = clean_text($property['value']);
+        }
+        return $properties;
+    }
+
+    /**
      * @param array $files
      */
     public function validate_files(array $files): void {
@@ -246,7 +301,7 @@ final class settings {
                 // Update category if found.
                 foreach ($cats as &$cat) {
                     if ($cat['name'] === $category['name']) {
-                        $cat['properties'] = $category['properties'];
+                        $cat['properties'] = $this->clean_properties($category['properties']);
                         continue 2;
                     }
                 }
@@ -339,6 +394,7 @@ final class settings {
      *
      * @param string $category
      * @param string $property
+     * @param array|null $categories
      *
      * @return array|null
      */

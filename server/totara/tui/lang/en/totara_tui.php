@@ -64,6 +64,7 @@ $string['tabbrand'] = 'Brand';
 $string['tabcolours'] = 'Colours';
 $string['tabimages'] = 'Images';
 $string['tabcustom'] = 'Custom';
+$string['tabemail'] = 'Email';
 
 $string['form_details_default'] = 'Default:';
 $string['defaultimage'] = '{$a} default image';
@@ -126,6 +127,17 @@ $string['formcustom_label_customfooter'] = 'Custom footer';
 $string['formcustom_details_customfooter'] = 'The text entered here will be visible in the footer for this Theme.';
 $string['formcustom_label_customcss'] = 'Custom CSS';
 $string['formcustom_details_customcss'] = 'Warning: Any CSS you enter here will be added after all other styles on every page.';
+
+// Theme settings - Email tab.
+$string['formemail_group_notifications'] = 'Notifications';
+$string['formemail_details_notificationshtmlheader'] = 'Add custom HTML (for example, social media links and icons) in HTML email notifications.';
+$string['formemail_details_notificationshtmlfooter'] = 'Add custom HTML (for example, social media links and icons) in HTML email notifications.';
+$string['formemail_details_notificationstextfooter'] = 'Add information (for example, contact details and legal disclaimers) in plain-text email notifications.';
+$string['formemail_label_notificationshtmlheader'] = 'HTML header';
+$string['formemail_label_notificationshtmlfooter'] = 'HTML footer';
+$string['formemail_label_notificationstextfooter'] = 'Plain-text footer';
+$string['settings_email_send_error'] = 'Error sending notification email';
+$string['settings_email_send_success'] = 'Successfully sent email notification. Please check your email inbox.';
 
 // Theme settings - Tenants page.
 $string['branding'] = 'Branding';

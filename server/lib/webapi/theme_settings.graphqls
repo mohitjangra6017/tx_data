@@ -16,6 +16,7 @@ enum core_theme_property_type {
   image
   text
   value
+  html
 }
 
 """
@@ -119,4 +120,13 @@ extend type Mutation {
     categories: [core_theme_category_input!]!
     files: [core_theme_file_input!]!
   ): core_theme_settings_result!
+
+  """
+  Send test notification email.
+  """
+  core_theme_settings_send_email_notification(
+    html_header: String!
+    html_footer: String!
+    text_footer: String!
+  ): Boolean
 }

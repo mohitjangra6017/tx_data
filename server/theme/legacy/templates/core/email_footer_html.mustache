@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template core/email_html
+    @template core/email_footer_html
 
     Template for all HTML emails. Note that it may wrap content formatted
     elsewhere in another a module template.
@@ -27,51 +27,12 @@
       http://www.emailology.org/#1
 
     Context variables required for this template:
-    * sitefullname
-    * siteshortname
-    * sitewwwroot
-    * subject
-    * to
-    * toname
-    * touserid
-    * tousername
-    * from
-    * fromname
-    * replyto
-    * replytoname
-    * header (optional)
-    * body
-    * footer (optional)
+    * none
 
-    Example context (json):
-    {
-        "header": "Email header"
-        "body": "Email body"
-        "footer": "Email footer"
-    }
 }}
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  {{#header}}
-    <tr><td colspan="3">{{{header}}}</td></tr>
-  {{/header}}
-  {{^header}}
-    {{> core/email_header_html }}
-  {{/header}}
-
-  <tr>
-    <td width="10%">&nbsp;</td>
-    <td valign="top">
-      <br /><br />
-        {{{body}}}
-      <br />
-    </td>
-    <td width="10%">&nbsp;</td>
-  </tr>
-
-  {{#footer}}
-    <tr><td colspan="3">{{{footer}}}</td></tr>
-  {{/footer}}
-  {{^footer}}
-    {{> core/email_footer_html }}
-  {{/footer}}
-</table>
+<tr>
+    <td colspan="3" style="background-color: #36a5a6; line-height: 5px; font-size: 5px;">&nbsp;</td>
+</tr>
+<tr>
+    <td colspan="3" style="background-color: #3d444b; line-height: 25px; font-size: 25px;">&nbsp;</td>
+</tr>

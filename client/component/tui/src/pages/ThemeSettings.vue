@@ -140,6 +140,24 @@
                 @submit="submit"
               />
             </Tab>
+            <Tab
+              v-if="canEditCategory('notifications')"
+              :id="'themesettings-tab-4'"
+              :name="$str('tabemail', 'totara_tui')"
+              :always-render="true"
+            >
+              <SettingsFormEmail
+                :saved-form-field-data="embeddedFormData.formFieldData.email"
+                :is-saving="isSaving"
+                :context-id="embeddedFormData.contextId"
+                :selected-tenant-id="selectedTenantId"
+                :customizable-tenant-settings="
+                  customizableTenantCategorySettings('email')
+                "
+                @mounted="setInitialTenantCategoryValues"
+                @submit="submit"
+              />
+            </Tab>
           </Tabs>
         </div>
       </Loader>
@@ -158,6 +176,7 @@ import SettingsFormBrand from 'tui/components/theme_settings/SettingsFormBrand';
 import SettingsFormColours from 'tui/components/theme_settings/SettingsFormColours';
 import SettingsFormImages from 'tui/components/theme_settings/SettingsFormImages';
 import SettingsFormCustom from 'tui/components/theme_settings/SettingsFormCustom';
+import SettingsFormEmail from 'tui/components/theme_settings/SettingsFormEmail';
 import tuiQueryThemesWithVariables from 'totara_tui/graphql/themes_with_variables';
 import tuiQueryThemeSettings from 'core/graphql/get_theme_settings';
 import tuiUpdateThemeSettings from 'core/graphql/update_theme_settings';
@@ -178,6 +197,7 @@ export default {
     SettingsFormColours,
     SettingsFormImages,
     SettingsFormCustom,
+    SettingsFormEmail,
   },
 
   props: {
@@ -613,7 +633,8 @@ export default {
     "tabbrand",
     "tabcolours",
     "tabimages",
-    "tabcustom"
+    "tabcustom",
+    "tabemail"
   ],
   "totara_core": [
     "edittheme",

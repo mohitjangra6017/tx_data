@@ -1,0 +1,11 @@
+mutation core_theme_settings_send_email_notification(
+  $html_header: String!
+  $html_footer: String!
+  $text_footer: String!
+) {
+  core_theme_settings_send_email_notification(
+    html_header: $html_header
+    html_footer: $html_footer
+    text_footer: $text_footer
+  )
+}
