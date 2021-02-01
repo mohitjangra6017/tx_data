@@ -63,6 +63,47 @@ Feature: Add - Remove manager reservations in Seminar
     And I press "Save changes"
     And I log out
 
+  Scenario: Ensure the 'Reservation deadline' form field valdates correctly
+    Given I log in as "manager"
+    And I am on "Course 1" course homepage
+    And I click on "Test Seminar name" "link"
+
+    When I follow "Edit settings"
+    And I set the following fields to these values:
+      | Allow manager reservations | Yes |
+      | Maximum reservations       | 2   |
+      | Reservation deadline       | 2   |
+    And I press "Save and display"
+    Then I should see "Test Seminar name"
+    And I should not see "Updating Seminar in Topic 1"
+    And I should not see "The reservation deadline must be greater than the cancellation days"
+
+    When I follow "Edit settings"
+    And I set the following fields to these values:
+      | Automatically cancel reservations | Yes |
+      | Reservation cancellation days     | 2   |
+      | Reservation deadline              | 1   |
+    And I press "Save and display"
+    Then I should see "The reservation deadline must be greater than the cancellation days"
+
+    When I follow "Edit settings"
+    And I set the following fields to these values:
+      | Automatically cancel reservations | Yes |
+      | Reservation cancellation days     | 2   |
+      | Reservation deadline              | 2   |
+    And I press "Save and display"
+    Then I should see "The reservation deadline must be greater than the cancellation days"
+
+    When I follow "Edit settings"
+    And I set the following fields to these values:
+      | Automatically cancel reservations | Yes |
+      | Reservation cancellation days     | 2   |
+      | Reservation deadline              | 3   |
+    And I press "Save and display"
+    Then I should see "Test Seminar name"
+    And I should not see "Updating Seminar in Topic 1"
+    And I should not see "The reservation deadline must be greater than the cancellation days"
+
   Scenario: Add and then remove users from Seminar using manager allocations
     Given I log in as "manager"
     And I am on "Course 1" course homepage

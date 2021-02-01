@@ -374,8 +374,6 @@ class mod_facetoface_mod_form extends moodleform_mod {
         $mform->setDefault('reservedays', $conf->reservedays);
         $mform->addHelpButton('reservedays', 'reservedays', 'mod_facetoface');
         $mform->disabledIf('reservedays', 'managerreserve', 'eq', 0);
-        $mform->addRule(array('reservedays', 'reservecanceldays'), get_string('reservegtcancel', 'mod_facetoface'),
-                        'compare', 'gt', 'server');
 
         // Calendar options.
         $mform->addElement('header', 'calendaroptions', get_string('calendaroptions', 'facetoface'));
@@ -802,6 +800,11 @@ class mod_facetoface_mod_form extends moodleform_mod {
             if (!empty($suberrors)) {
                 $errors['approvaloptions'] = html_writer::tag('ul', implode("\n", $suberrors));
             }
+        }
+
+        // If reservedays set, ensure the reservation deadline is greater than the cancellation days.
+        if (!empty($data['reservecancel']) && $data['reservedays'] <= $data['reservecanceldays']) {
+            $errors['reservedays'] = get_string('reservegtcancel', 'mod_facetoface');
         }
 
         return $errors;

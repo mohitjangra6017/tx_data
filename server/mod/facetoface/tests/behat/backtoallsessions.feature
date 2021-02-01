@@ -260,7 +260,7 @@ Feature: Return to previous page after actions in seminar
     And I set the following fields to these values:
       | Allow manager reservations | Yes |
       | Maximum reservations       | 2   |
-      | Reservation deadline       | 0   |
+      | Reservation deadline       | 2   |
     And I press "<savebutton>"
 
     And I click on "Go to event" "link" in the "Upcoming" "table_row"

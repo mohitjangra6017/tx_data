@@ -1516,7 +1516,8 @@ class HTML_QuickForm extends HTML_Common {
                 }
                 // If element is not required and is empty, we shouldn't validate it
                 if (!$this->isElementRequired($target)) {
-                    if (!isset($submitValue) || '' == $submitValue) {
+                    // Totara: Need to ensure '0' values are also validated as for example may be used for minimum or maximum required value.
+                    if (!isset($submitValue) || '' === $submitValue) {
                         continue 2;
                     // Fix for bug #3501: we shouldn't validate not uploaded files, either.
                     // Unfortunately, we can't just use $element->isUploadedFile() since
