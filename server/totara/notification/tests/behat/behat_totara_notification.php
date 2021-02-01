@@ -17,17 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_notification
  */
-defined('MOODLE_INTERNAL') || die();
 
-$string['disable_all'] = 'Disable all notifications';
-$string['disable_all_helptext'] = 'Disable all notifications, including forced and custom notifications.';
-$string['events_and_notifications'] = 'Events and notifications';
-$string['helpfor'] = 'Help for {$a}';
-$string['messaging_and_notification'] = 'Messaging and notifications';
-$string['notifications'] = "Notifications";
-$string['pluginname'] = 'Centralised notification';
-$string['process_event_queue_task'] = 'Queue event scheduled task';
-$string['process_notification_queue_task'] = 'Queue notification scheduled task';
+/**
+ * Behat steps to generate notification related data.
+ */
+class behat_totara_notification extends behat_base {
+    /**
+     * Goes to the notifications view page.
+     *
+     * @Given I view notifications page
+     * @param $name
+     */
+    public function i_view_notifications_page() {
+        \behat_hooks::set_step_readonly(false);
+
+        // Go directly to URL, we are testing functionality of page, not how to get there.
+        $url = new moodle_url("/totara/notification/notifications.php");
+        $this->getSession()->visit($this->locate_path($url->out_as_local_url(false)));
+        $this->wait_for_pending_js();
+    }
+
+}

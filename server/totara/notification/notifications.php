@@ -17,17 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_notification
  */
-defined('MOODLE_INTERNAL') || die();
 
-$string['disable_all'] = 'Disable all notifications';
-$string['disable_all_helptext'] = 'Disable all notifications, including forced and custom notifications.';
-$string['events_and_notifications'] = 'Events and notifications';
-$string['helpfor'] = 'Help for {$a}';
-$string['messaging_and_notification'] = 'Messaging and notifications';
-$string['notifications'] = "Notifications";
-$string['pluginname'] = 'Centralised notification';
-$string['process_event_queue_task'] = 'Queue event scheduled task';
-$string['process_notification_queue_task'] = 'Queue notification scheduled task';
+use totara_tui\output\component;
+
+global $CFG, $OUTPUT, $PAGE;
+
+require_once(__DIR__ . '/../../config.php');
+require_once($CFG->libdir.'/adminlib.php');
+
+require_login();
+admin_externalpage_setup('notifications_setup', '', null, '', ['pagelayout' => 'noblocks']);
+
+$PAGE->set_url(new moodle_url('/totara/notification/notifications.php'));
+$tui = new component('totara_notification/pages/NotificationPage', ['title' => get_string('notifications', 'totara_notification')]);
+$tui->register($PAGE);
+
+echo $OUTPUT->header();
+echo $OUTPUT->render($tui);
+echo $OUTPUT->footer();

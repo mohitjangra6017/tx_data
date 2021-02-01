@@ -17,17 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_notification
  */
-defined('MOODLE_INTERNAL') || die();
 
-$string['disable_all'] = 'Disable all notifications';
-$string['disable_all_helptext'] = 'Disable all notifications, including forced and custom notifications.';
-$string['events_and_notifications'] = 'Events and notifications';
-$string['helpfor'] = 'Help for {$a}';
-$string['messaging_and_notification'] = 'Messaging and notifications';
-$string['notifications'] = "Notifications";
-$string['pluginname'] = 'Centralised notification';
-$string['process_event_queue_task'] = 'Queue event scheduled task';
-$string['process_notification_queue_task'] = 'Queue notification scheduled task';
+defined('MOODLE_INTERNAL') || die;
+
+$ADMIN->add('root', new admin_category('totara_notification', new lang_string('messaging_and_notification', 'totara_notification')));
+$ADMIN->add(
+    'totara_notification',
+    new admin_externalpage(
+        'notifications_setup',
+        new lang_string('notifications', 'totara_notification'),
+        new moodle_url('/totara/notification/notifications.php'),
+        ['moodle/site:config']
+    )
+);
