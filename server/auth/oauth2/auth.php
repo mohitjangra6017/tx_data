@@ -300,7 +300,7 @@ final class auth_plugin_oauth2 extends auth_plugin_base {
      * @return void Either redirects or throws an exception
      */
     public function complete_login(\core\oauth2\client $client, $redirecturl) {
-        global $SESSION, $DB;
+        global $SESSION, $DB, $USER, $CFG;
 
         if (!is_enabled_auth('oauth2')) {
             throw new \moodle_exception('notenabled', 'auth_oauth2');
@@ -519,6 +519,12 @@ final class auth_plugin_oauth2 extends auth_plugin_base {
 
         // No URL means validation of PARAM_LOCALURL failed in calling code, in that case go to homepage.
         $redirecturl = ($redirecturl === '') ? new moodle_url('/') : $redirecturl;
+
+        if (user_not_fully_set_up($USER, true)) {
+            unset($SESSION->wantsurl);
+            $redirecturl = $CFG->wwwroot . '/user/edit.php?returnurl=' . urlencode($redirecturl);
+        }
+
         redirect($redirecturl);
     }
 

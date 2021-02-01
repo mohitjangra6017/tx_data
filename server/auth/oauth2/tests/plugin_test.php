@@ -209,7 +209,7 @@ final class auth_oauth2_plugin_testcase extends advanced_testcase {
 
         $this->setUser(null);
         $client = new oauth2_test_client($issuer1);
-        $userinfo1 = ['username' => 'user1', 'email' => 'user1@example.com'];
+        $userinfo1 = ['username' => 'user1', 'email' => 'user1@example.com', 'firstname' => 'Some', 'lastname' => 'User'];
         $client->set_fake_userinfo($userinfo1);
         $sink = $this->redirectEmails();
         try {
@@ -291,7 +291,7 @@ final class auth_oauth2_plugin_testcase extends advanced_testcase {
 
         $this->setUser(null);
         $client = new oauth2_test_client($issuer1);
-        $userinfo1 = ['username' => 'user1', 'email' => 'user1@example.com'];
+        $userinfo1 = ['username' => 'user1', 'email' => 'user1@example.com', 'firstname' => 'Some', 'lastname' => 'User'];
         $client->set_fake_userinfo($userinfo1);
         $sink = $this->redirectEmails();
         try {
