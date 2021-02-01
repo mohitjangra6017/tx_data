@@ -399,6 +399,15 @@ final class virtual_meeting extends model {
     }
 
     /**
+     * Return true if at least one plugin is available.
+     *
+     * @return boolean
+     */
+    public static function is_any_plugin_available(): bool {
+        return !empty(virtualmeeting_plugininfo::get_available_plugins());
+    }
+
+    /**
      * Get all the plugin information in a serialisable format.
      *
      * @param client|null $client

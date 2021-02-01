@@ -147,3 +147,63 @@ function facetoface_upgradelib_clear_room_url() {
     }
     $trans->allow_commit();
 }
+
+function facetoface_upgradelib_upgrade_existing_virtual_meetings() {
+    global $DB;
+
+    $DB->set_field_select('facetoface_room_virtualmeeting', 'status', 0, 'status IS NULL'); // STATUS_CONFIRMED
+    $DB->set_field_select('facetoface_room_dates_virtualmeeting', 'status', -3, 'status IS NULL AND sessionsdateid IS NULL AND roomid IS NULL'); // STATUS_PENDING_DELETION
+
+    $rooms = $DB->get_records_sql(
+        "SELECT fr.id
+           FROM {facetoface_room} fr
+     INNER JOIN {facetoface_room_virtualmeeting} frvm ON frvm.roomid = fr.id"
+    );
+    foreach ($rooms as $room) {
+        $room_dates = $DB->get_records_sql(
+            "SELECT frd.*, frdvm.id AS roomdatevirtualmeetingid, frdvm.virtualmeetingid
+               FROM {facetoface_room_dates} frd
+          LEFT JOIN {facetoface_room_dates_virtualmeeting} frdvm
+                 ON frdvm.sessionsdateid = frd.sessionsdateid AND frdvm.roomid = frd.roomid
+         INNER JOIN {facetoface_room} fr ON fr.id = frd.roomid
+         INNER JOIN {facetoface_sessions_dates} fsd ON fsd.id = frd.sessionsdateid
+              WHERE fr.id = :roomid
+                AND frdvm.status IS NULL
+           ORDER BY frd.id ASC",
+            ['roomid' => $room->id],
+        );
+
+        // Process
+        foreach ($room_dates as $room_date) {
+            // Create? or Update?
+            if (empty($room_date->roomdatevirtualmeetingid)) {
+                $DB->insert_record(
+                    'facetoface_room_dates_virtualmeeting',
+                    [
+                        'sessionsdateid' => $room_date->sessionsdateid,
+                        'roomid' => $room_date->roomid,
+                        'status' => -2, // STATUS_PENDING_UPDATE
+                        'virtualmeetingid' => null,
+                    ],
+                    false
+                );
+            } else {
+                if (empty($room_date->virtualmeetingid)) {
+                    $DB->set_field(
+                        'facetoface_room_dates_virtualmeeting',
+                        'status',
+                        -2, // STATUS_PENDING_UPDATE
+                        ['id' => $room_date->roomdatevirtualmeetingid]
+                    );
+                } else {
+                    $DB->set_field(
+                        'facetoface_room_dates_virtualmeeting',
+                        'status',
+                        1, // STATUS_AVAILABLE
+                        ['id' => $room_date->roomdatevirtualmeetingid]
+                    );
+                }
+            }
+        }
+    }
+}

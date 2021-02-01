@@ -47,7 +47,10 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
     private $generator;
 
     /** @var ReflectionMethod */
-    private $method;
+    private $method_card;
+
+    /** @var ReflectionMethod */
+    private $method_banner;
 
     /** @var stdClass */
     private $site_admin;
@@ -95,8 +98,10 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
         parent::setUp();
 
         $this->generator = new room_content('reallydontcare', '/');
-        $this->method = new ReflectionMethod($this->generator, 'render_card');
-        $this->method->setAccessible(true);
+        $this->method_card = new ReflectionMethod($this->generator, 'render_card');
+        $this->method_card->setAccessible(true);
+        $this->method_banner = new ReflectionMethod($this->generator, 'render_banner');
+        $this->method_banner->setAccessible(true);
 
         $this->site_admin = core_user::get_user(2, '*', MUST_EXIST);
         $this->site_trainer = $this->getDataGenerator()->create_user(['username' => 'site_trainer']);
@@ -136,7 +141,7 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
                 ]
             ])
         );
-        $event_near= new seminar_event(
+        $event_near = new seminar_event(
             $f2fgen->add_session([
                 'facetoface' => $f2f_present->id,
                 'sessiondates' => [
@@ -209,7 +214,8 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
 
     public function tearDown(): void {
         $this->generator = null;
-        $this->method = null;
+        $this->method_card = null;
+        $this->method_banner = null;
         $this->site_admin = null;
         $this->site_trainer = null;
         $this->site_manager = null;
@@ -249,16 +255,16 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
     }
 
     /**
-     * Cut down template data.
+     * Cut down card template data.
      *
      * @param array $input
      * @return array
      */
-    private static function sanitise_template(array $input): array {
+    private static function sanitise_card(array $input): array {
         global $CFG;
         $output = [];
         foreach ($input as $key => $value) {
-            if (!in_array($key, ['heading', 'subtitle', 'simple', 'inactive', 'has_buttons', 'buttons', 'detailsection', 'copy', 'preview', 'button', 'multibutton'])) {
+            if (!in_array($key, ['heading', 'subtitle', 'simple', 'inactive', 'has_buttons', 'buttons', 'detailsection', 'instruction', 'copy', 'preview', 'button', 'multibutton'])) {
                 continue;
             }
             if ($key == 'heading') {
@@ -292,7 +298,24 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
     }
 
     /**
-     * Get template data as if visited from the manage page.
+     * Cut down banner template data.
+     *
+     * @param array $input
+     * @return array
+     */
+    private static function sanitise_banner(array $input): array {
+        $output = [];
+        foreach ($input as $key => $value) {
+            if (!in_array($key, ['message', 'extraclasses'])) {
+                continue;
+            }
+            $output[$key] = $value;
+        }
+        return $output;
+    }
+
+    /**
+     * Get card template data as if visited from the manage page.
      *
      * @param room $room
      * @param stdClass $user
@@ -302,16 +325,16 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
         $this->setUser();
         $context = context_system::instance();
         $renderer = $this->create_f2f_renderer($context);
-        $template = $this->method->invoke($this->generator, null, $room, $user, $renderer);
+        $template = $this->method_card->invoke($this->generator, null, $room, $user, $renderer);
         if ($template !== null) {
-            return self::sanitise_template($template->get_template_data());
+            return self::sanitise_card($template->get_template_data());
         } else {
             return null;
         }
     }
 
     /**
-     * Get template data as if visited from the seminar event dashboard.
+     * Get card template data as if visited from the seminar event dashboard.
      *
      * @param seminar_session $session
      * @param room $room
@@ -322,9 +345,48 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
         $this->setUser();
         $context = context_module::instance($session->get_seminar_event()->get_seminar()->get_coursemodule()->id);
         $renderer = $this->create_f2f_renderer($context);
-        $template = $this->method->invoke($this->generator, $session, $room, $user, $renderer);
+        $template = $this->method_card->invoke($this->generator, $session, $room, $user, $renderer);
         if ($template !== null) {
-            return self::sanitise_template($template->get_template_data());
+            return self::sanitise_card($template->get_template_data());
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get banner template data as if visited from the manage page.
+     *
+     * @param room $room
+     * @param stdClass $user
+     * @return array|null
+     */
+    private function visit_banner_from_manage(room $room, stdClass $user): ?array {
+        $this->setUser();
+        $context = context_system::instance();
+        $renderer = $this->create_f2f_renderer($context);
+        $template = $this->method_banner->invoke($this->generator, null, $room, $user, $renderer);
+        if ($template !== null) {
+            return self::sanitise_banner($template->export_for_template($renderer));
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get banner template data as if visited from the seminar event dashboard.
+     *
+     * @param seminar_session $session
+     * @param room $room
+     * @param stdClass $user
+     * @return array|null
+     */
+    private function visit_banner_from_dashboard(seminar_session $session, room $room, stdClass $user): ?array {
+        $this->setUser();
+        $context = context_module::instance($session->get_seminar_event()->get_seminar()->get_coursemodule()->id);
+        $renderer = $this->create_f2f_renderer($context);
+        $template = $this->method_banner->invoke($this->generator, $session, $room, $user, $renderer);
+        if ($template !== null) {
+            return self::sanitise_banner($template->export_for_template($renderer));
         } else {
             return null;
         }
@@ -336,13 +398,18 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
      * @param string $name
      * @param seminar_session $session
      * @param integer|null $status
+     * @param integer|null $userid
      * @return room
      */
-    private function add_virtualmeeting(string $name, seminar_session $session, ?int $status = room_dates_virtualmeeting::STATUS_AVAILABLE): room {
-        $room = new room($this->f2fgen->add_virtualmeeting_room(['name' => $name], ['userid' => $this->site_admin->id, 'plugin' => 'poc_app'])->id);
+    private function add_virtualmeeting(string $name, seminar_session $session, ?int $status = room_dates_virtualmeeting::STATUS_AVAILABLE, ?int $userid = null): room {
+        $room = new room($this->f2fgen->add_virtualmeeting_room(['name' => $name], ['userid' => $userid ?? $this->site_admin->id, 'plugin' => 'poc_app'])->id);
         $client = new simple_mock_client();
         $vm = virtual_meeting_model::create('poc_app', $this->site_admin->id, "<POC: $name>", DateTime::createFromFormat('U', $session->get_timestart()), DateTime::createFromFormat('U', $session->get_timefinish()), $client);
-        (new room_dates_virtualmeeting())->set_roomid($room->get_id())->set_sessionsdateid($session->get_id())->set_virtualmeetingid($vm->id)->set_status($status)->save();
+        $roomdate_vm = (new room_dates_virtualmeeting())->set_roomid($room->get_id())->set_sessionsdateid($session->get_id())->set_virtualmeetingid($vm->id);
+        if ($status !== null) {
+            $roomdate_vm->set_status($status);
+        }
+        $roomdate_vm->save();
         return $room;
     }
 
@@ -411,7 +478,7 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
     }
 
     public function test_render_card_of_physical_room() {
-        $room = new room($this->f2fgen->add_custom_room(['name' => 'Physical class room'])->id);
+        $room = (new room())->from_record($this->f2fgen->add_custom_room(['name' => 'Physical class room']));
         $this->assertNull($this->visit_card_from_manage($room, $this->site_admin));
         $this->assertNull($this->visit_card_from_manage($room, $this->site_trainer));
         $this->assertNull($this->visit_card_from_manage($room, $this->site_manager));
@@ -514,7 +581,7 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
             ],
         ];
 
-        $room = new room($this->f2fgen->add_custom_room(['name' => 'Virtual class room', 'url' => 'https://example.com?q=kia+ora#koutou'])->id);
+        $room = (new room())->from_record($this->f2fgen->add_custom_room(['name' => 'Virtual class room', 'url' => 'https://example.com?q=kia+ora#koutou']));
         $this->assertEquals($available, $this->visit_card_from_manage($room, $this->site_admin));
         $this->assertEquals($available, $this->visit_card_from_manage($room, $this->site_trainer));
         $this->assertEquals($available, $this->visit_card_from_manage($room, $this->site_manager));
@@ -1151,5 +1218,222 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
         $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($session, $room, $this->learner));
         $this->assertEquals($unavailable, $this->visit_card_from_dashboard($session, $room, $this->waiter));
         $this->assertEquals($unavailable, $this->visit_card_from_dashboard($session, $room, $this->pariah));
+    }
+
+    public function test_render_card_based_on_virtual_meeting_status() {
+        $available = [
+            'heading' => 'Virtual room: PoC App',
+            'simple' => true,
+            'inactive' => false,
+            'has_buttons' => true,
+            'buttons' => [
+                [
+                    'text' => 'Go to room',
+                    'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                    'style' => 'primary',
+                    'hint' => "Go to 'Virtual meeting room'",
+                ],
+            ],
+            'copy' => [
+                'text' => 'Copy room link',
+                'icon' => [
+                    'template' => 'core/flex_icon',
+                ],
+                'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+            ],
+        ];
+        $waitable = [
+            'heading' => "Preparing virtual room\u{2026}",
+            'simple' => true,
+            'inactive' => true,
+            'instruction' => 'Please wait.',
+        ];
+        $unavailable = [
+            'heading' => 'Virtual room is unavailable',
+            'simple' => true,
+            'inactive' => true,
+        ];
+        $unwaitable = [
+            'heading' => 'Virtual room is no longer available',
+            'simple' => true,
+            'inactive' => true,
+        ];
+        $joinable = [
+            'heading' => 'Virtual room: PoC App',
+            'simple' => false,
+            'inactive' => false,
+            'has_buttons' => true,
+            'buttons' => [
+                [
+                    'text' => 'Join now',
+                    'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                    'style' => 'primary',
+                    'hint' => "Join 'Virtual meeting room' now",
+                ],
+            ],
+            'detailsection' => [
+                'details' => [
+                    [
+                        'label' => 'Seminar',
+                    ],
+                    [
+                        'label' => 'Session time',
+                    ],
+                ]
+            ],
+            'copy' => [
+                'text' => 'Copy room link',
+                'icon' => [
+                    'template' => 'core/flex_icon',
+                ],
+                'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+            ],
+        ];
+
+        poc_factory::toggle_info('poc_app', provider::INFO_HOST_URL, false);
+        poc_factory::toggle_info('poc_app', provider::INFO_PREVIEW, false);
+
+        $room_available = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_AVAILABLE);
+        $room_unavailable = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_UNAVAILABLE);
+        $room_legacy = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_LEGACY);
+        $room_updating = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_PENDING_UPDATE);
+        $room_deleting = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_PENDING_DELETION);
+        $room_cannot_create = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_FAILURE_CREATION);
+        $room_cannot_update = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_FAILURE_UPDATE);
+        $room_cannot_delete = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_FAILURE_DELETION);
+
+        $this->assertEquals($available, $this->visit_card_from_dashboard($this->session_present, $room_available, $this->site_admin));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_unavailable, $this->site_admin));
+        $this->assertEquals($waitable, $this->visit_card_from_dashboard($this->session_present, $room_legacy, $this->site_admin));
+        $this->assertEquals($waitable, $this->visit_card_from_dashboard($this->session_present, $room_updating, $this->site_admin));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_deleting, $this->site_admin));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_create, $this->site_admin));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_update, $this->site_admin));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_delete, $this->site_admin));
+
+        $this->assertEquals($available, $this->visit_card_from_dashboard($this->session_present, $room_available, $this->site_manager));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_unavailable, $this->site_manager));
+        $this->assertEquals($waitable, $this->visit_card_from_dashboard($this->session_present, $room_legacy, $this->site_manager));
+        $this->assertEquals($waitable, $this->visit_card_from_dashboard($this->session_present, $room_updating, $this->site_manager));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_deleting, $this->site_manager));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_create, $this->site_manager));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_update, $this->site_manager));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_delete, $this->site_manager));
+
+        $this->assertEquals($available, $this->visit_card_from_dashboard($this->session_present, $room_available, $this->site_trainer));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_unavailable, $this->site_trainer));
+        $this->assertEquals($waitable, $this->visit_card_from_dashboard($this->session_present, $room_legacy, $this->site_trainer));
+        $this->assertEquals($waitable, $this->visit_card_from_dashboard($this->session_present, $room_updating, $this->site_trainer));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_deleting, $this->site_trainer));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_create, $this->site_trainer));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_update, $this->site_trainer));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_delete, $this->site_trainer));
+
+        $this->assertEquals($available, $this->visit_card_from_dashboard($this->session_present, $room_available, $this->course_manager));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_unavailable, $this->course_manager));
+        $this->assertEquals($waitable, $this->visit_card_from_dashboard($this->session_present, $room_legacy, $this->course_manager));
+        $this->assertEquals($waitable, $this->visit_card_from_dashboard($this->session_present, $room_updating, $this->course_manager));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_deleting, $this->course_manager));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_create, $this->course_manager));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_update, $this->course_manager));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_delete, $this->course_manager));
+
+        $this->assertEquals($available, $this->visit_card_from_dashboard($this->session_present, $room_available, $this->course_trainer));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_unavailable, $this->course_trainer));
+        $this->assertEquals($waitable, $this->visit_card_from_dashboard($this->session_present, $room_legacy, $this->course_trainer));
+        $this->assertEquals($waitable, $this->visit_card_from_dashboard($this->session_present, $room_updating, $this->course_trainer));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_deleting, $this->course_trainer));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_create, $this->course_trainer));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_update, $this->course_trainer));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_delete, $this->course_trainer));
+
+        $this->assertEquals($available, $this->visit_card_from_dashboard($this->session_present, $room_available, $this->facilitator));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_unavailable, $this->facilitator));
+        $this->assertEquals($waitable, $this->visit_card_from_dashboard($this->session_present, $room_legacy, $this->facilitator));
+        $this->assertEquals($waitable, $this->visit_card_from_dashboard($this->session_present, $room_updating, $this->facilitator));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_deleting, $this->facilitator));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_create, $this->facilitator));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_update, $this->facilitator));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_delete, $this->facilitator));
+
+        $this->assertEquals($joinable, $this->visit_card_from_dashboard($this->session_present, $room_available, $this->learner));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_unavailable, $this->learner));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_legacy, $this->learner));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_updating, $this->learner));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_deleting, $this->learner));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_create, $this->learner));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_update, $this->learner));
+        $this->assertEquals($unwaitable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_delete, $this->learner));
+
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_available, $this->waiter));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_unavailable, $this->waiter));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_legacy, $this->waiter));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_updating, $this->waiter));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_deleting, $this->waiter));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_create, $this->waiter));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_update, $this->waiter));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_delete, $this->waiter));
+
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_available, $this->pariah));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_unavailable, $this->pariah));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_legacy, $this->pariah));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_updating, $this->pariah));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_deleting, $this->pariah));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_create, $this->pariah));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_update, $this->pariah));
+        $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_delete, $this->pariah));
+    }
+
+    public function test_render_banner_based_on_virtual_meeting_status() {
+        $retryable = [
+            'message' => 'Action failed. <a class="action">Click to retry</a>',
+            'extraclasses' => 'mod_facetoface__resource-card__notification',
+        ];
+
+        $men_in_black = $this->getDataGenerator()->create_user();
+        $room_sitewide = (new room())->from_record($this->f2fgen->add_site_wide_room(['name' => 'Virtual class room']));
+        $room_custom = (new room())->from_record($this->f2fgen->add_custom_room(['name' => 'Virtual class room', 'url' => 'https://example.com?q=kia+ora#koutou']));
+        $room_available = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_AVAILABLE, $men_in_black->id);
+        $room_unavailable = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_UNAVAILABLE, $men_in_black->id);
+        $room_legacy = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_LEGACY, $men_in_black->id);
+        $room_updating = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_PENDING_UPDATE, $men_in_black->id);
+        $room_deleting = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_PENDING_DELETION, $men_in_black->id);
+        $room_cannot_create = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_FAILURE_CREATION, $men_in_black->id);
+        $room_cannot_update = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_FAILURE_UPDATE, $men_in_black->id);
+        $room_cannot_delete = $this->add_virtualmeeting('Virtual meeting room', $this->session_present, room_dates_virtualmeeting::STATUS_FAILURE_DELETION, $men_in_black->id);
+
+        $users = [$this->site_admin, $this->site_trainer, $this->site_manager, $this->course_trainer, $this->course_manager, $this->facilitator, $this->learner, $this->waiter, $this->pariah];
+        foreach ($users as $user) {
+            $this->assertNull($this->visit_banner_from_manage($room_sitewide, $user));
+            $this->assertNull($this->visit_banner_from_manage($room_custom, $user));
+            $this->assertNull($this->visit_banner_from_manage($room_available, $user));
+            $this->assertNull($this->visit_banner_from_manage($room_unavailable, $user));
+            $this->assertNull($this->visit_banner_from_manage($room_legacy, $user));
+            $this->assertNull($this->visit_banner_from_manage($room_updating, $user));
+            $this->assertNull($this->visit_banner_from_manage($room_deleting, $user));
+            $this->assertNull($this->visit_banner_from_manage($room_cannot_create, $user));
+            $this->assertNull($this->visit_banner_from_manage($room_cannot_update, $user));
+            $this->assertNull($this->visit_banner_from_manage($room_cannot_delete, $user));
+
+            $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_available, $user));
+            $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_unavailable, $user));
+            $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_legacy, $user));
+            $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_updating, $user));
+            $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_deleting, $user));
+            $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_cannot_create, $user));
+            $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_cannot_update, $user));
+            $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_cannot_delete, $user));
+        }
+
+        $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_sitewide, $men_in_black));
+        $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_custom, $men_in_black));
+        $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_available, $men_in_black));
+        $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_unavailable, $men_in_black));
+        $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_legacy, $men_in_black));
+        $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_updating, $men_in_black));
+        $this->assertNull($this->visit_banner_from_dashboard($this->session_present, $room_deleting, $men_in_black));
+        $this->assertEquals($retryable, $this->visit_banner_from_dashboard($this->session_present, $room_cannot_create, $men_in_black));
+        $this->assertEquals($retryable, $this->visit_banner_from_dashboard($this->session_present, $room_cannot_update, $men_in_black));
+        $this->assertEquals($retryable, $this->visit_banner_from_dashboard($this->session_present, $room_cannot_delete, $men_in_black));
     }
 }

@@ -1144,6 +1144,10 @@ select.menuf2f-select {
     &__button {
         margin: var(--gap-1);
     }
+
+    &__instruction {
+      font-size: var(--font-size-14);
+    }
   }
 }
 

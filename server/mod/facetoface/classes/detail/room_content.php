@@ -29,23 +29,21 @@ use stdClass;
 use context;
 use context_system;
 use core\entity\user;
-use core\orm\query\builder;
+use core\output\notification;
 use mod_facetoface\output\helper\virtualroom_card_factory;
-use mod_facetoface\output\seminarevent_detail_section;
 use mod_facetoface\output\seminarresource_card;
-use mod_facetoface\output\session_time;
+use mod_facetoface\output\virtualroom_card;
 use moodle_url;
 use mod_facetoface_renderer;
 use rb_facetoface_summary_room_embedded;
 use mod_facetoface\room;
 use mod_facetoface\room_dates_virtualmeeting;
 use mod_facetoface\room_helper;
+use mod_facetoface\room_virtualmeeting;
 use mod_facetoface\seminar_attachment_item;
 use mod_facetoface\seminar_session;
 use mod_facetoface\signup;
 use mod_facetoface\signup_helper;
-use totara_core\entity\virtual_meeting as virtual_meeting_entity;
-use totara_core\virtualmeeting\exception\meeting_exception;
 use totara_core\virtualmeeting\virtual_meeting as virtual_meeting_model;
 
 /**
@@ -106,12 +104,9 @@ class room_content extends content_generator {
     /**
      * Serve a virtual meeting card when coming from the manage page.
      *
-     * @param room $room unused
-     * @param user $user unused
-     * @param context $context unused
      * @return seminarresource_card|null always returns null; no card is served
      */
-    private function virtual_meeting_card_data_from_manage(room $room, user $user, context $context): ?seminarresource_card {
+    private function virtual_meeting_card_data_from_manage(): ?seminarresource_card {
         return virtualroom_card_factory::none();
     }
 
@@ -137,17 +132,20 @@ class room_content extends content_generator {
      * @param seminar_session $session
      * @param room $room
      * @param user $user
-     * @param context $context
+     * @param boolean $capable
      * @return seminarresource_card
      */
-    private function virtual_meeting_card_data_from_event(seminar_session $session, room $room, user $user, context $context): seminarresource_card {
+    private function virtual_meeting_card_data_from_event(seminar_session $session, room $room, user $user, bool $capable): seminarresource_card {
         $room_vm = room_dates_virtualmeeting::load_by_session_room($session, $room);
+        if ($room_vm && $room_vm->get_status() !== room_dates_virtualmeeting::STATUS_AVAILABLE) {
+            return $this->virtual_meeting_card_unavailable($session, $user, $room_vm, $capable);
+        }
         $model = $room_vm->get_virtualmeeting();
         if ($model === null) {
             return virtualroom_card_factory::unavailable();
         }
         $room_url = $model->get_join_url(false);
-        return $this->virtual_x_card_data_from_event($session, $room, $user, $context, $room_url, $model);
+        return $this->virtual_x_card_data_from_event($session, $room, $user, $capable, $room_url, $room_vm, $model);
     }
 
     /**
@@ -156,12 +154,12 @@ class room_content extends content_generator {
      * @param seminar_session $session
      * @param room $room
      * @param user $user
-     * @param context $context
+     * @param boolean $capable
      * @return seminarresource_card
      */
-    private function virtual_room_card_data_from_event(seminar_session $session, room $room, user $user, context $context): seminarresource_card {
+    private function virtual_room_card_data_from_event(seminar_session $session, room $room, user $user, bool $capable): seminarresource_card {
         $room_url = $room->get_url();
-        return $this->virtual_x_card_data_from_event($session, $room, $user, $context, $room_url, null);
+        return $this->virtual_x_card_data_from_event($session, $room, $user, $capable, $room_url, null, null);
     }
 
     /**
@@ -170,21 +168,81 @@ class room_content extends content_generator {
      * @param seminar_session $session
      * @param room $room
      * @param user $user
-     * @param context $context
+     * @param boolean $capable
      * @param string $room_url
+     * @param room_dates_virtualmeeting|null $room_vm
      * @param virtual_meeting_model|null $model model instance for a virtual meeting, null for a virtual room
      * @return seminarresource_card
      */
-    private function virtual_x_card_data_from_event(seminar_session $session, room $room, user $user, context $context, string $room_url, ?virtual_meeting_model $model): seminarresource_card {
+    private function virtual_x_card_data_from_event(seminar_session $session, room $room, user $user, bool $capable, string $room_url, ?room_dates_virtualmeeting $room_vm, ?virtual_meeting_model $model): seminarresource_card {
         if (empty($room_url)) {
             return virtualroom_card_factory::unavailable();
         }
-        $capable = self::can_manage_custom_rooms($user, $context) || room_helper::has_access_at_any_time($session, $user->id);
         if ($capable) {
-            return $this->virtual_x_card_superuser_data_from_event($session, $room, $user, $room_url, $model);
+            return $this->virtual_x_card_data_from_event_for_superuser($session, $room, $user, $room_url, $model);
         } else {
-            return $this->virtual_x_card_learner_data_from_event($session, $room, $user, $room_url, $model);
+            return $this->virtual_x_card_data_from_event_for_learner($session, $room, $user, $room_url, $model);
         }
+    }
+
+    /**
+     * Serve a virtual meeting card with unavailable status when coming from the event page.
+     *
+     * @param seminar_session $session
+     * @param user $user
+     * @param room_dates_virtualmeeting $roomdate_vm
+     * @param boolean $capable
+     * @return seminarresource_card
+     */
+    private function virtual_meeting_card_unavailable(seminar_session $session, user $user, room_dates_virtualmeeting $roomdate_vm, bool $capable): seminarresource_card {
+        if ($capable) {
+            return $this->virtual_meeting_card_unavailable_for_superuser($roomdate_vm);
+        } else {
+            return $this->virtual_meeting_card_unavailable_for_learner($session, $user, $roomdate_vm);
+        }
+    }
+
+    /**
+     * Serve a virtual meeting card with unavailable status when coming from the event page.
+     *
+     * @param room_dates_virtualmeeting $roomdate_vm
+     * @return seminarresource_card
+     */
+    private function virtual_meeting_card_unavailable_for_superuser(room_dates_virtualmeeting $roomdate_vm): seminarresource_card {
+        $status = $roomdate_vm->get_status();
+        $statuses_update = [null, room_dates_virtualmeeting::STATUS_PENDING_UPDATE];
+        $statuses_deletion = [room_dates_virtualmeeting::STATUS_UNAVAILABLE, room_dates_virtualmeeting::STATUS_PENDING_DELETION, room_dates_virtualmeeting::STATUS_FAILURE_DELETION];
+        $builder = virtualroom_card::builder('x');
+        if (in_array($status, $statuses_deletion, true)) {
+            $builder->heading(get_string('virtualroom_card_over', 'mod_facetoface'));
+        } else if (in_array($status, $statuses_update, true)) {
+            $builder->heading(get_string('virtualroom_card_preparing', 'mod_facetoface'));
+            $builder->instruction(get_string('virtualroom_card_wait', 'mod_facetoface'));
+        } else {
+            $builder->heading(get_string('virtualroom_card_unavailable', 'mod_facetoface'));
+        }
+        return $builder->build();
+    }
+
+    /**
+     * Serve a virtual meeting card with unavailable status when coming from the event page.
+     *
+     * @param seminar_session $session
+     * @param user $user
+     * @param room_dates_virtualmeeting $roomdate_vm
+     * @return seminarresource_card
+     */
+    private function virtual_meeting_card_unavailable_for_learner(seminar_session $session, user $user, room_dates_virtualmeeting $roomdate_vm): seminarresource_card {
+        $status = $roomdate_vm->get_status();
+        $statuses_deletion = [room_dates_virtualmeeting::STATUS_UNAVAILABLE, room_dates_virtualmeeting::STATUS_PENDING_DELETION, room_dates_virtualmeeting::STATUS_FAILURE_DELETION];
+        $signup = signup::create($user->id, $session->get_seminar_event());
+        $builder = virtualroom_card::builder('x');
+        if (signup_helper::is_booked($signup, false) && in_array($status, $statuses_deletion, true)) {
+            $builder->heading(get_string('virtualroom_card_over', 'mod_facetoface'));
+        } else {
+            $builder->heading(get_string('virtualroom_card_unavailable', 'mod_facetoface'));
+        }
+        return $builder->build();
     }
 
     /**
@@ -197,7 +255,7 @@ class room_content extends content_generator {
      * @param virtual_meeting_model|null $model model instance for a virtual meeting, null for a virtual room
      * @return seminarresource_card
      */
-    private function virtual_x_card_superuser_data_from_event(seminar_session $session, room $room, user $user, string $room_url, ?virtual_meeting_model $model): seminarresource_card {
+    private function virtual_x_card_data_from_event_for_superuser(seminar_session $session, room $room, user $user, string $room_url, ?virtual_meeting_model $model): seminarresource_card {
         if ($model && $user->id == $model->userid) {
             $host_url = $model->get_host_url(false);
             if ($host_url) {
@@ -217,7 +275,7 @@ class room_content extends content_generator {
      * @param virtual_meeting_model|null $model model instance for a virtual meeting, null for a virtual room
      * @return seminarresource_card
      */
-    private function virtual_x_card_learner_data_from_event(seminar_session $session, room $room, user $user, string $room_url, ?virtual_meeting_model $model): seminarresource_card {
+    private function virtual_x_card_data_from_event_for_learner(seminar_session $session, room $room, user $user, string $room_url, ?virtual_meeting_model $model): seminarresource_card {
         $signup = signup::create($user->id, $session->get_seminar_event());
         if (signup_helper::is_booked($signup, false)) {
             if ($session->is_over() || $signup->get_seminar_event()->get_cancelledstatus()) {
@@ -240,18 +298,38 @@ class room_content extends content_generator {
         $user = new user($user, false);
         $context = $renderer->getcontext();
         if ($session !== null) {
+            $capable = self::can_manage_custom_rooms($user, $context) || room_helper::has_access_at_any_time($session, $user->id);
             if ($item->is_virtual_meeting()) {
-                return $this->virtual_meeting_card_data_from_event($session, $item, $user, $context);
+                return $this->virtual_meeting_card_data_from_event($session, $item, $user, $capable);
             } else {
-                return $this->virtual_room_card_data_from_event($session, $item, $user, $context);
+                return $this->virtual_room_card_data_from_event($session, $item, $user, $capable);
             }
         } else {
             if ($item->is_virtual_meeting()) {
-                return $this->virtual_meeting_card_data_from_manage($item, $user, $context);
+                return $this->virtual_meeting_card_data_from_manage();
             } else {
                 return $this->virtual_room_card_data_from_manage($item, $user, $context);
             }
         }
+    }
+
+    protected function render_banner(?seminar_session $session, seminar_attachment_item $item, stdClass $user, mod_facetoface_renderer $renderer): ?notification {
+        /** @var room $item */
+        if ($session === null) {
+            return null;
+        }
+        $room_vm = room_virtualmeeting::get_virtual_meeting($item);
+        if (!$room_vm->exists() || $room_vm->get_userid() != $user->id) {
+            return null;
+        }
+        $roomdate_vm = room_dates_virtualmeeting::load_by_session_room($session, $item);
+        $failure_statuses = [room_dates_virtualmeeting::STATUS_FAILURE_CREATION, room_dates_virtualmeeting::STATUS_FAILURE_UPDATE, room_dates_virtualmeeting::STATUS_FAILURE_DELETION];
+        if (!in_array($roomdate_vm->get_status(), $failure_statuses, true)) {
+            return null;
+        }
+        $notification = new notification(get_string('virtualroom_banner_retry', 'mod_facetoface'), notification::NOTIFY_WARNING);
+        $notification->set_extra_classes(['mod_facetoface__resource-card__notification']);
+        return $notification;
     }
 
     protected function get_manage_button(bool $frommanage): string {

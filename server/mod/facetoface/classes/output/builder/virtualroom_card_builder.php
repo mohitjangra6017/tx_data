@@ -47,6 +47,9 @@ class virtualroom_card_builder {
     private $details = null;
 
     /** @var string */
+    private $instruction = '';
+
+    /** @var string */
     private $preview = '';
 
     /** @var array */
@@ -66,6 +69,15 @@ class virtualroom_card_builder {
             throw new coding_exception('heading text must be provided');
         }
         $this->heading = $heading;
+    }
+
+    /**
+     * @param string $heading heading text
+     * @return self
+     */
+    public function heading(string $heading): self {
+        $this->heading = $heading;
+        return $this;
     }
 
     /**
@@ -140,11 +152,20 @@ class virtualroom_card_builder {
     }
 
     /**
-     * @param string $content preview content in html
+     * @param string $instruction instruction contents
      * @return self
      */
-    public function preview(string $content): self {
-        $this->preview = $content;
+    public function instruction(string $instruction): self {
+        $this->instruction = $instruction;
+        return $this;
+    }
+
+    /**
+     * @param string $preview preview content in html
+     * @return self
+     */
+    public function preview(string $preview): self {
+        $this->preview = $preview;
         return $this;
     }
 
@@ -163,6 +184,9 @@ class virtualroom_card_builder {
         }
         if ($this->details !== null) {
             $data['detailsection'] = $this->details->get_template_data();
+        }
+        if ($this->instruction !== '') {
+            $data['instruction'] = $this->instruction;
         }
         if ($this->preview !== '') {
             $data['preview'] = $this->preview;

@@ -72,10 +72,15 @@ use mod_facetoface\bulk_list;
 use mod_facetoface\facilitator;
 use mod_facetoface\facilitator_user;
 use mod_facetoface\facilitator_list;
+use mod_facetoface\output\helper\virtualroom_card_factory;
 use mod_facetoface\room;
+use mod_facetoface\room_dates_virtualmeeting;
+use mod_facetoface\room_virtualmeeting;
 use mod_facetoface\seminar_event_list;
 use mod_facetoface\seminar_session_list;
 use mod_facetoface\signup_list;
+use mod_facetoface\task\manage_virtualmeetings_adhoc_task;
+use mod_facetoface\watcher\virtualmeeting_watcher;
 
 // Renderer class - mod_facetoface_renderer
 require_once(__DIR__ . '/../renderer.php');
@@ -99,6 +104,8 @@ class mod_facetoface_code_quality_testcase extends totara_core_code_quality_test
         signup::class,
         signup_status::class,
         session_status::class,
+        room_virtualmeeting::class,
+        room_dates_virtualmeeting::class,
 
         transition::class,
         event_attendee::class,
@@ -125,6 +132,10 @@ class mod_facetoface_code_quality_testcase extends totara_core_code_quality_test
         facilitator_user::class,
         facilitator_list::class,
         room::class,
+
+        virtualroom_card_factory::class,
+        virtualmeeting_watcher::class,
+        manage_virtualmeetings_adhoc_task::class,
     ];
 
     /**

@@ -759,30 +759,25 @@ class facetoface_notification extends data_object {
      * @param $session
      */
     public function send_notification_virtual_meeting_creation_failure(seminar_event $seminarevent) {
-        global $DB, $CFG;
-
-        $facetoface = $DB->get_record('facetoface', array('id' => $seminarevent->get_facetoface()));
-        $seminar = new \mod_facetoface\seminar();
-        $seminar->map_instance($facetoface);
-        $cm = $seminar->get_coursemodule();
+        $seminar = $seminarevent->get_seminar();
 
         // Workaround to build the seminar_event record, that has mintimestart, maxtimefinish and
         // sessiondates properties
         $sessions = [];
-        $session = $seminarevent->to_record();
-        $session->mintimestart = $seminarevent->get_mintimestart();
-        $session->maxtimefinish = $seminarevent->get_maxtimefinish();
-        $session->sessiondates = array_values($seminarevent->get_sessions()->to_records());
-        $session->cntdates = count($session->sessiondates);
+        $session = seminar_event_helper::get_sessiondata($seminarevent, null);
+        // Why does the seminar notification use a slightly different format??
+        $session->sessiondates = array_values($session->sessiondates);
         $sessions[$session->id] = $session;
 
         if (CLI_SCRIPT && !PHPUNIT_TEST) {
+            // @codeCoverageIgnoreStart
             $info = new \stdClass();
             $info->name = format_string($seminar->get_name());
             mtrace(
                 "Virtual meeting creation in facetoface '{$info->name}' in course {$seminar->get_course()} failed" .
                 " - emailing room creator."
             );
+            // @codeCoverageIgnoreEnd
         }
 
         // Get all the users who need to receive the under capacity warning.
@@ -796,7 +791,7 @@ class facetoface_notification extends data_object {
         // And send them the notification.
         foreach ($recipients as $recipient) {
             $notice = new facetoface_notification($notificationparams);
-            $notice->set_facetoface($facetoface);
+            $notice->set_facetoface($seminar->get_properties());
             $notice->_sessions = $sessions;
             $notice->set_newevent($recipient, $session->id);
             $notice->send_to_user($recipient, $session->id);

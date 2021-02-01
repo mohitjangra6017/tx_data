@@ -29,6 +29,7 @@
     Context variables required for this template:
     * heading: heading text
     * subtitle: sub heading text
+    * instruction: instruction text
     * simple: simple card or not
     * inactive: grayed out or not
     * detailsection: template data of seminarevent_detail_section, available only if simple is false
@@ -43,7 +44,8 @@
     Example content (json):
     {
         "heading": "Virtual meeting",
-        "subtitle": "Please come back later",
+        "subtitle": "We are still working on it",
+        "instruction": "Please come back later",
         "simple": false,
         "inactive": false,
         "detailsection": {
@@ -75,6 +77,7 @@
     <div class="mod_facetoface__eventinfo__sidebar__panel mod_facetoface__resource-card{{#simple}} mod_facetoface__resource-card--simple{{/simple}}{{#inactive}} mod_facetoface__resource-card--inactive{{/inactive}}">
         {{#heading}}<h3>{{.}}</h3>{{/heading}}
         {{#subtitle}}<h4>{{.}}</h4>{{/subtitle}}
+        {{#instruction}}<p class="mod_facetoface__resource-card__instruction">{{{.}}}</p>{{/instruction}}
         {{^simple}}{{#detailsection}}{{> mod_facetoface/seminarevent_detail_section }}{{/detailsection}}{{/simple}}
         {{#has_buttons}}
             <div class="mod_facetoface__resource-card__buttons">

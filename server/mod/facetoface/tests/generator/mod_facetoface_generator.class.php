@@ -27,6 +27,7 @@
  *
  */
 
+use core\plugininfo\virtualmeeting;
 use totara_job\job_assignment;
 use mod_facetoface\seminar;
 use mod_facetoface\signup;
@@ -34,6 +35,7 @@ use mod_facetoface\signup_helper;
 use mod_facetoface\seminar_event;
 use mod_facetoface\seminar_event_helper;
 use mod_facetoface\calendar;
+use mod_facetoface\room_virtualmeeting;
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
@@ -327,6 +329,10 @@ class mod_facetoface_generator extends testing_module_generator {
     public function add_virtualmeeting_room($record, $options = array()): stdClass {
         global $DB, $USER;
 
+        if (!virtualmeeting::is_poc_available()) {
+            throw new coding_exception('add_virtualmeeting_room() is available only if poc plugins are available.');
+        }
+
         // Insert a room.
         $record = (object)$record;
         $record->custom = 1;
@@ -341,31 +347,16 @@ class mod_facetoface_generator extends testing_module_generator {
         if (empty($options['plugin'])) {
             $options['plugin'] = 'poc_app';
         }
+        if (!array_key_exists('status', $options)) {
+            $options['status'] = room_virtualmeeting::STATUS_CONFIRMED;
+        }
         $frvm->userid = $options['userid'];
         $frvm->plugin = $options['plugin'];
         $frvm->roomid = $room->id;
+        $frvm->status = $options['status'];
         $DB->insert_record('facetoface_room_virtualmeeting', $frvm);
 
         return $room;
-    }
-
-    /**
-     * Join virtual room and virtual meeting.
-     *
-     * @param integer $roomid
-     * @param integer $sessionsdateid
-     * @param integer $virtualmeetingid
-     * @return stdClass
-     */
-    public function create_room_dates_virtualmeeting(int $roomid, int $sessionsdateid, int $virtualmeetingid) {
-        global $DB;
-
-        $frdvm = new stdClass();
-        $frdvm->roomid = $roomid;
-        $frdvm->sessionsdateid = $sessionsdateid;
-        $frdvm->virtualmeetingid = $virtualmeetingid;
-        $id = $DB->insert_record('facetoface_room_dates_virtualmeeting', $frdvm);
-        return $DB->get_record('facetoface_room_dates_virtualmeeting', ['id' => $id], '*', MUST_EXIST);
     }
 
     /**

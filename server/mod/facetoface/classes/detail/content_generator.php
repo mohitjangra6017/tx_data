@@ -29,6 +29,7 @@ use stdClass;
 use context;
 use context_module;
 use context_system;
+use core\output\notification;
 use moodle_exception;
 use moodle_url;
 use rb_config;
@@ -219,6 +220,17 @@ abstract class content_generator {
     abstract protected function render_card(?seminar_session $session, seminar_attachment_item $item, stdClass $user, mod_facetoface_renderer $renderer): ?seminarresource_card;
 
     /**
+     * Render a notification banner.
+     *
+     * @param seminar_session|null $session the current seminar session or null if nothing applicable
+     * @param seminar_attachment_item $item an item returned by load()
+     * @param stdClass $user
+     * @param mod_facetoface_renderer $renderer
+     * @return notification|null
+     */
+    abstract protected function render_banner(?seminar_session $session, seminar_attachment_item $item, stdClass $user, mod_facetoface_renderer $renderer): ?notification;
+
+    /**
      * Get the label of the 'Manage (thing)' button.
      *
      * @param boolean $frommanage true if a user comes from the manage page, otherwise false
@@ -249,6 +261,15 @@ abstract class content_generator {
      * @return moodle_url|null URL or null to disable a button
      */
     abstract protected function get_edit_url(seminar_attachment_item $item): ?moodle_url;
+
+    /**
+     * Get the page URL.
+     *
+     * @return moodle_url
+     */
+    public function get_page_url(): moodle_url {
+        return clone $this->baseurl;
+    }
 
     /**
      * Set up $PAGE and render the entire content of the web page.
@@ -352,6 +373,13 @@ abstract class content_generator {
             $data['card'] = [
                 'template' => $card->get_template_name(),
                 'context' => $card->get_template_data(),
+            ];
+        }
+        $banner = $this->render_banner($session, $item, $USER, $renderer);
+        if ($banner !== null) {
+            $data['banner'] = [
+                'template' => $banner->get_template_name(),
+                'context' => $banner->export_for_template($renderer),
             ];
         }
 

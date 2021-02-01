@@ -51,6 +51,16 @@ $watchers = [
         'priority' => 100,
     ],
     [
+        'hookname' => sessions_are_being_updated::class,
+        'callback' => virtualmeeting_watcher::class . '::sessions_updated',
+        'priority' => 99,
+    ],
+    [
+        'hookname' => event_is_being_cancelled::class,
+        'callback' => virtualmeeting_watcher::class . '::event_cancelled',
+        'priority' => 99,
+    ],
+    [
         'hookname' => resources_are_being_updated::class,
         'callback' => virtualmeeting_watcher::class . '::resources_updated',
         'priority' => 99,

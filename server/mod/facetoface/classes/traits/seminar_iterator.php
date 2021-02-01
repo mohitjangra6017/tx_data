@@ -155,4 +155,19 @@ trait seminar_iterator {
         }
         return null;
     }
+
+    /**
+     * Get items as an array.
+     *
+     * @param boolean $use_keys
+     * @return seminar_iterator_item[]
+     */
+    public function to_array(bool $use_keys = true): array {
+        $items = $this->items;
+        if (!$use_keys) {
+            $items = array_values($items);
+        }
+        reset($items);
+        return $items;
+    }
 }

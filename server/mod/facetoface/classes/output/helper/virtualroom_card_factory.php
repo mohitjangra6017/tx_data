@@ -37,7 +37,7 @@ final class virtualroom_card_factory {
     /**
      * No card.
      *
-     * @return null
+     * @return card|null
      */
     public static function none(): ?card {
         return null;

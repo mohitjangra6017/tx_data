@@ -22,6 +22,9 @@
  */
 
 use mod_facetoface\detail\room_content;
+use mod_facetoface\room_dates_virtualmeeting;
+use mod_facetoface\room_helper;
+use mod_facetoface\room_virtualmeeting;
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->dirroot . '/mod/facetoface/lib.php');
@@ -30,4 +33,17 @@ require_once($CFG->dirroot . '/mod/facetoface/rb_sources/rb_facetoface_summary_r
 require_login(0, false);
 
 $content = new room_content('roomid', '/mod/facetoface/reports/rooms.php');
+
+if ($formdata = data_submitted()) {
+    if (!empty($formdata->action)) {
+        require_sesskey();
+        $roomid = required_param('roomid', PARAM_INT);
+        $sdid = required_param('sdid', PARAM_INT);
+        if (room_helper::retry_virtual_meeting($sdid, $roomid, $USER->id)) {
+            \core\notification::info(get_string('virtualroom_banner_retried', 'mod_facetoface'));
+        }
+    }
+    redirect($content->get_page_url());
+}
+
 $content->display();

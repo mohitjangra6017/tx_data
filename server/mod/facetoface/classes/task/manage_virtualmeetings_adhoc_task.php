@@ -26,21 +26,24 @@ namespace mod_facetoface\task;
 defined('MOODLE_INTERNAL') || die();
 
 use coding_exception;
-use DateTime;
 use core\entity\user;
+use core\orm\query\builder;
 use core\plugininfo\virtualmeeting as virtualmeeting_plugininfo;
 use core\task\adhoc_task;
+use DateTime;
 use totara_core\http\exception\request_exception;
 use totara_core\virtualmeeting\exception\auth_exception;
-use totara_core\virtualmeeting\virtual_meeting as virtualmeeting_model;
 use \facetoface_notification;
 use mod_facetoface\room;
-use mod_facetoface\room_list;
 use mod_facetoface\room_virtualmeeting;
 use mod_facetoface\room_dates_virtualmeeting;
 use mod_facetoface\seminar;
 use mod_facetoface\seminar_event;
 use mod_facetoface\seminar_session;
+use stdClass;
+use Throwable;
+use totara_core\virtualmeeting\exception\meeting_exception;
+use totara_core\virtualmeeting\virtual_meeting as virtualmeeting_model;
 
 /**
  * This class manages the creation, update, and deletion of virtualmeetings associated with seminar rooms.
@@ -48,18 +51,29 @@ use mod_facetoface\seminar_session;
 class manage_virtualmeetings_adhoc_task extends adhoc_task {
 
     /**
-     * Create adhoc task for managing virutalmeeting rooms in a seminar event
+     * Create ad-hoc task for managing virtualmeeting rooms in a seminar event
      * @param int $seminar_event_id
+     * @param int $user_id
      * @return manage_virtualmeetings_adhoc_task
      */
-    public static function create_from_seminar_event_id(int $seminar_event_id): manage_virtualmeetings_adhoc_task {
+    public static function create_from_seminar_event_id(int $seminar_event_id, int $user_id = 0): manage_virtualmeetings_adhoc_task {
         global $USER;
         if (empty($seminar_event_id)) {
             throw new coding_exception('No seminar event id set.');
         }
+        if (empty($user_id)) {
+            if (empty($USER->id)) {
+                $message = 'No user id set.';
+                if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
+                    $message .= ' Be sure to call setUser() before adding a seminar session or an ad-hoc task.';
+                }
+                throw new coding_exception($message);
+            }
+            $user_id = $USER->id;
+        }
         $task = new self();
         $task->set_component('mod_facetoface');
-        $task->set_custom_data(['seminar_event_id' => $seminar_event_id, 'user_id' => $USER->id]);
+        $task->set_custom_data(['seminar_event_id' => $seminar_event_id, 'user_id' => $user_id]);
 
         return $task;
     }
@@ -73,6 +87,9 @@ class manage_virtualmeetings_adhoc_task extends adhoc_task {
         if (empty($custom_data->seminar_event_id)) {
             throw new coding_exception('No seminar event id set.');
         }
+        if (empty($custom_data->user_id)) {
+            throw new coding_exception('No user id set. Perhaps a left over task from a previous version.');
+        }
 
         // Load seminarevent and seminar activity
         try {
@@ -81,72 +98,57 @@ class manage_virtualmeetings_adhoc_task extends adhoc_task {
             // This seminar event has been deleted, leave everything for the cleanup task.
             return;
         }
-        $seminar = new seminar($seminarevent->get_facetoface());
 
         // Track failures
         $failures = [];
 
-        // Get the list of virtualmeeting rooms in this event.
-        $virtualmeeting_rooms = $this->virtualmeeting_rooms_in_seminarevent($custom_data->seminar_event_id);
+        // Get the list of pending virtualmeeting rooms in this event.
+        $records = builder::table(room_dates_virtualmeeting::DBTABLE, 'frdvm')
+            ->join([seminar_session::DBTABLE, 'fsd'], 'frdvm.sessionsdateid', 'fsd.id')
+            ->join([seminar_event::DBTABLE, 'fs'], 'fsd.sessionid', 'fs.id')
+            ->join([room::DBTABLE, 'fr'], 'frdvm.roomid', 'fr.id')
+            ->join([room_virtualmeeting::DBTABLE, 'frvm'], 'fr.id', 'frvm.roomid')
+            ->join([user::TABLE, 'u'], 'frvm.userid', 'u.id')
+            ->where('frdvm.status', [room_dates_virtualmeeting::STATUS_PENDING_UPDATE, room_dates_virtualmeeting::STATUS_PENDING_DELETION])
+            ->where('fs.id', $custom_data->seminar_event_id)
+            ->where('u.id', $custom_data->user_id)
+            ->where('u.deleted', 0)
+            ->where('u.suspended', 0)
+            ->order_by('status')
+            ->order_by('id')
+            ->select(['frdvm.*', 'frvm.userid as user_id'])
+            ->get();
 
-        // Ignore virtualmeeting rooms where plugin is not available
-        foreach ($virtualmeeting_rooms as $room) {
-            if (empty($custom_data->user_id)) {
-                $failures[] = 'No user id set. Perhaps a left over task from a previous version.';
-                break;
-            }
-            $room_virtualmeeting = room_virtualmeeting::from_roomid($room->get_id());
-            if ($custom_data->user_id != $room_virtualmeeting->get_userid()) {
-                continue;
-            }
-            // Set operative $user
-            $user = new user($room_virtualmeeting->get_userid());
+        // Process
+        foreach ($records as $record) {
+            $user = new user((int)$record->user_id);
+            unset($record->user_id);
+            $roomdate_vm = (new room_dates_virtualmeeting())->from_record($record);
+            $status = $roomdate_vm->get_status();
+            $plugin = '';
+
             try {
-                // Use of an unavailable or not-configured plugin IS a failure.
-                $plugininfo = virtualmeeting_plugininfo::load($room_virtualmeeting->get_plugin());
-                if (!$plugininfo->is_available()) {
-                    throw new \Exception("virtualmeeting plugin is not configured.");
-                }
-                // Create virtualmeetings for sessions that do not have matching room_dates_virtualmeeting records
-                $room_dates = $this->room_dates_with_virtualmeetings($room, $custom_data->seminar_event_id);
-
-                // Process
-                foreach ($room_dates as $room_date) {
-                    $session = new seminar_session($room_date->sessionsdateid);
-                    // Create? or Update?
-                    if (empty($room_date->roomdatevirtualmeetingid)) {
-                        $meeting = virtualmeeting_model::create(
-                            $room_virtualmeeting->get_plugin(),
-                            $user,
-                            $seminar->get_name(),
-                            DateTime::createFromFormat('U', $session->get_timestart()),
-                            DateTime::createFromFormat('U', $session->get_timefinish())
-                        );
-                        $room_dates_virtualmeeting = new room_dates_virtualmeeting();
-                        $room_dates_virtualmeeting->set_roomdateid($room_date->id);
-                        $room_dates_virtualmeeting->set_virtualmeetingid($meeting->get_id());
-                        $room_dates_virtualmeeting->save();
+                if ($status === room_dates_virtualmeeting::STATUS_PENDING_DELETION) {
+                    $plugin = '(deleting)'; // no plugin info
+                    // TODO: handle deletion in TL-29046
+                    // self::delete_virtualmeeting($roomdate_vm, $user);
+                } else {
+                    $room_vm = room_virtualmeeting::from_roomid($roomdate_vm->get_roomid());
+                    $plugin = $room_vm->get_plugin();
+                    $session = new seminar_session($roomdate_vm->get_sessionsdateid());
+                    $room = new room($roomdate_vm->get_roomid());
+                    if ($roomdate_vm->get_virtualmeetingid()) {
+                        self::update_virtualmeeting($session, $room, $room_vm, $roomdate_vm, $user);
                     } else {
-                        $meeting = virtualmeeting_model::load_by_id($room_date->virtualmeetingid);
-                        // Still same user?
-                        if ($meeting->userid != $user->id) {
-                            throw new auth_exception("Unable to use a virtualmeeting room which does not belong to you.");
-                        }
-                        // Still same plugin?
-                        if ($meeting->plugin == $room_virtualmeeting->get_plugin()) {
-                            $meeting->update($seminar->get_name(), DateTime::createFromFormat('U', $session->get_timestart()), DateTime::createFromFormat('U', $session->get_timefinish()));
-                        } else {
-                            // Different plugin, create a new virtualmeeting
-                            throw new \Exception("Cannot switch a virtualmeeting plugin.");
-                        }
+                        self::create_virtualmeeting($session, $room, $room_vm, $roomdate_vm, $user);
                     }
                 }
             } catch (auth_exception $e) {
-                $failures[] = "Room {$room->get_name()} {$room_virtualmeeting->get_plugin()} authorisation problem: {$e->getMessage()}";
+                $failures[] = "Room {$room->get_name()} {$plugin} authorisation problem: {$e->getMessage()}";
             } catch (request_exception $e) {
-                $failures[] = "Room {$room->get_name()} {$room_virtualmeeting->get_plugin()} request failed: {$e->getMessage()}";
+                $failures[] = "Room {$room->get_name()} {$plugin} request failed: {$e->getMessage()}";
             } catch (\Exception $e) {
-                $failures[] = "Room {$room->get_name()} {$room_virtualmeeting->get_plugin()} error: {$e->getMessage()}";
+                $failures[] = "Room {$room->get_name()} {$plugin} error: {$e->getMessage()}";
             }
         }
 
@@ -154,40 +156,162 @@ class manage_virtualmeetings_adhoc_task extends adhoc_task {
         if (!empty($failures)) {
             // Write the exact failures to the debugging log
             if (!defined('BEHAT_SITE_RUNNING') && (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST)) {
+                // @codeCoverageIgnoreStart
+                $seminar = new seminar($seminarevent->get_facetoface());
                 $failure_report = "Virtual room creation failures in seminar {$seminar->get_name()} event {$seminarevent->get_id()}:\n";
                 $failure_report .= implode("\n", $failures);
                 debugging($failure_report, DEBUG_DEVELOPER);
+               // @codeCoverageIgnoreEnd
             }
-            $session = ['facetoface' => $seminar->get_id()];
-            $notification = new facetoface_notification($session, false);
+            $sessiondata = ['facetoface' => $seminarevent->get_facetoface()];
+            $notification = new facetoface_notification($sessiondata, false);
             $notification->send_notification_virtual_meeting_creation_failure($seminarevent);
         }
     }
 
-    private function virtualmeeting_rooms_in_seminarevent(int $seminar_event_id): room_list {
-        $sql = "SELECT DISTINCT fr.*
-                  FROM {facetoface_room} fr
-            INNER JOIN {facetoface_room_virtualmeeting} frvm ON frvm.roomid = fr.id
-            INNER JOIN {facetoface_room_dates} frd ON frd.roomid = fr.id
-            INNER JOIN {facetoface_sessions_dates} fsd ON fsd.id = frd.sessionsdateid
-                 WHERE fsd.sessionid = :seminareventid AND fr.custom = 1
-              ORDER BY fr.name ASC, fr.id ASC";
-
-        return new room_list($sql, ['seminareventid' => $seminar_event_id]);
+    /**
+     * @param seminar_session $session
+     * @param room_virtualmeeting $room_vm
+     * @return stdClass comprising plugin, name, timestart, timefinish
+     */
+    private static function get_blue_prints(seminar_session $session, room_virtualmeeting $room_vm): stdClass {
+        $return = new stdClass();
+        $return->plugin = $room_vm->get_plugin();
+        $return->name = $session->get_seminar_event()->get_seminar()->get_name();
+        $return->timestart = DateTime::createFromFormat('U', $session->get_timestart());
+        $return->timefinish = DateTime::createFromFormat('U', $session->get_timefinish());
+        return $return;
     }
 
-    private function room_dates_with_virtualmeetings(room $room, int $seminar_event_id): array {
-        global $DB;
+    /**
+     * @param seminar_session $session
+     * @param room $room
+     * @param room_virtualmeeting $room_vm
+     * @param room_dates_virtualmeeting $roomdate_vm
+     */
+    private static function validate_parameters(seminar_session $session, room $room, room_virtualmeeting $room_vm, room_dates_virtualmeeting $roomdate_vm): void {
+        // Use of an unavailable or not-configured plugin IS a failure.
+        $plugininfo = virtualmeeting_plugininfo::load($room_vm->get_plugin());
+        if (!$plugininfo->is_available()) {
+            throw new meeting_exception("virtualmeeting plugin is not configured.");
+        }
+    }
 
-        $sql = "SELECT frd.*, frdvm.id AS roomdatevirtualmeetingid, frdvm.virtualmeetingid
-                  FROM {facetoface_room_dates} frd
-             LEFT JOIN {facetoface_room_dates_virtualmeeting} frdvm ON frdvm.roomdateid = frd.id
-            INNER JOIN {facetoface_room} fr ON fr.id = frd.roomid
-            INNER JOIN {facetoface_sessions_dates} fsd ON fsd.id = frd.sessionsdateid
-                 WHERE fsd.sessionid = :seminareventid AND fr.id = :roomid
-              ORDER BY frd.id ASC";
-        $params = ['seminareventid' => $seminar_event_id, 'roomid' => $room->get_id()];
+    /**
+     * @param user $user
+     * @throws auth_exception
+     */
+    private static function validate_user_status(user $user): void {
+        if ($user->exists() && !$user->suspended && !$user->deleted) {
+            return;
+        }
+        throw new auth_exception('User is not active');
+    }
 
-        return $DB->get_records_sql($sql, $params);
+    /**
+     * Create a virtual meeting.
+     *
+     * @param seminar_session $session
+     * @param room $room
+     * @param room_virtualmeeting $room_vm
+     * @param room_dates_virtualmeeting $roomdate_vm
+     * @param user $user
+     * @return true
+     */
+    private static function create_virtualmeeting(seminar_session $session, room $room, room_virtualmeeting $room_vm, room_dates_virtualmeeting $roomdate_vm, user $user): bool {
+        self::validate_parameters($session, $room, $room_vm, $roomdate_vm);
+        try {
+            self::validate_user_status($user);
+            $data = self::get_blue_prints($session, $room_vm);
+            $meeting = virtualmeeting_model::create($data->plugin, $user, $data->name, $data->timestart, $data->timefinish);
+            // Let's see if the virtual room has a valid URL before updating the state.
+            $meeting->get_join_url(true);
+
+            $roomdate_vm->set_virtualmeetingid($meeting->get_id());
+            $roomdate_vm->set_status(room_dates_virtualmeeting::STATUS_AVAILABLE);
+            $roomdate_vm->save();
+            return true;
+        } catch (Throwable $ex) {
+            $roomdate_vm->set_status(room_dates_virtualmeeting::STATUS_FAILURE_CREATION);
+            $roomdate_vm->save();
+            throw $ex;
+        }
+    }
+
+    /**
+     * Update a virtual meeting.
+     *
+     * @param seminar_session $session
+     * @param room $room
+     * @param room_virtualmeeting $room_vm
+     * @param room_dates_virtualmeeting $roomdate_vm
+     * @param user $user
+     * @return true
+     */
+    private static function update_virtualmeeting(seminar_session $session, room $room, room_virtualmeeting $room_vm, room_dates_virtualmeeting $roomdate_vm, user $user): bool {
+        self::validate_parameters($session, $room, $room_vm, $roomdate_vm);
+        $meeting = $roomdate_vm->get_virtualmeeting();
+        if ($meeting === null) {
+            // Shouldn't be here.
+            return self::create_virtualmeeting($session, $room, $room_vm, $roomdate_vm, $user);
+        }
+        // Still same user?
+        if ($meeting->userid != $user->id) {
+            throw new coding_exception("Unable to use a virtualmeeting room which does not belong to you.");
+        }
+        try {
+            self::validate_user_status($user);
+            $data = self::get_blue_prints($session, $room_vm);
+            // Still same plugin?
+            if ($meeting->plugin == $data->plugin) {
+                $meeting->update($data->name, $data->timestart, $data->timefinish);
+                // Let's see if the virtual room has a valid URL before updating the state.
+                $meeting->get_join_url(true);
+                $roomdate_vm->set_status(room_dates_virtualmeeting::STATUS_AVAILABLE);
+                $roomdate_vm->save();
+                return true;
+            }
+            // Different plugin, blow up
+            throw new coding_exception('Unable to switch to a different virtualmeeting provider');
+        } catch (Throwable $ex) {
+            $roomdate_vm->set_status(room_dates_virtualmeeting::STATUS_FAILURE_UPDATE);
+            $roomdate_vm->save();
+            throw $ex;
+        }
+    }
+
+    /**
+     * Delete a virtual meeting.
+     *
+     * @param room_dates_virtualmeeting $roomdate_vm
+     * @param user|null $user
+     * @return true
+     */
+    private static function delete_virtualmeeting(room_dates_virtualmeeting $roomdate_vm, ?user $user): bool {
+        $meeting = $roomdate_vm->get_virtualmeeting();
+        if ($meeting === null) {
+            $roomdate_vm->set_status(room_dates_virtualmeeting::STATUS_UNAVAILABLE);
+            $roomdate_vm->save();
+            // Silently return to fix up the double-delete problem.
+            return true;
+        }
+        if ($user === null) {
+            $user = new user($meeting->userid);
+        }
+        // Still same user?
+        if ($meeting->userid != $user->id) {
+            throw new coding_exception("Unable to delete a virtualmeeting room which does not belong to you.");
+        }
+        try {
+            self::validate_user_status($user);
+            $meeting->delete();
+            $roomdate_vm->set_status(room_dates_virtualmeeting::STATUS_UNAVAILABLE);
+            $roomdate_vm->save();
+            return true;
+        } catch (Throwable $ex) {
+            $roomdate_vm->set_status(room_dates_virtualmeeting::STATUS_FAILURE_DELETION);
+            $roomdate_vm->save();
+            throw $ex;
+        }
     }
 }

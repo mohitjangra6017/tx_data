@@ -133,6 +133,8 @@ function xmldb_facetoface_upgrade($oldversion) {
         //   9. Change nullable virtualmeetingid
         //  10. Restore foreign key virtualmeetingid
         //  11. Add unique index sessionsdateid, roomid
+        // ==== finalise ====
+        //  12. Fix up the status field of existing virtual meetings.
 
         $table = new xmldb_table('facetoface_room_dates_virtualmeeting');
         // 1. Launch add field sessionsdateid.
@@ -194,6 +196,9 @@ function xmldb_facetoface_upgrade($oldversion) {
         // 11. Launch add index roomdatevm_sessdatemeet_ix.
         $index = new xmldb_index('roomdatevm_sessmeet_ix', XMLDB_INDEX_UNIQUE, array('sessionsdateid', 'roomid'));
         $dbman->add_index($table, $index);
+
+        // 12. Fix up the status field of existing virtual meetings.
+        facetoface_upgradelib_upgrade_existing_virtual_meetings();
 
         // Facetoface savepoint reached.
         upgrade_mod_savepoint(true, 2021012300, 'facetoface');

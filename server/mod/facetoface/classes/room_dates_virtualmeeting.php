@@ -30,6 +30,9 @@ use totara_core\virtualmeeting\virtual_meeting as virtual_meeting_model;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Class room_dates_virtualmeeting represents Seminar per-session virtual meeting room
+ */
 class room_dates_virtualmeeting implements seminar_iterator_item {
 
     use crud_mapper;
@@ -90,7 +93,7 @@ class room_dates_virtualmeeting implements seminar_iterator_item {
     /**
      * Create/update {facetoface_room_dates_virtualmeeting}.record
      */
-    public function save() {
+    public function save(): void {
         $this->crud_save();
     }
 
@@ -127,19 +130,6 @@ class room_dates_virtualmeeting implements seminar_iterator_item {
                 ->where('roomid', $roomdate->roomid)
                 ->delete();
         }
-        // TODO: see if this single builder works or not
-        // builder::table(self::DBTABLE, 'frdvm')
-        //     ->where('id', 'in', function(builder $builder) use ($roomdateid) {
-        //         $builder->join(
-        //             ['facetoface_room_dates', 'frd'],
-        //             function (builder $joining) use ($roomdateid) {
-        //                 $joining->where_field('frd.roomid', 'frdvm.roomid')
-        //                     ->where_field('frd.sessionsdateid', 'frdvm.sessionsdateid')
-        //                     ->where('frd.id', $roomdateid);
-        //             })
-        //             ->select('frdvm.id');
-        //     })
-        //     ->delete();
     }
 
     /**
@@ -182,7 +172,7 @@ class room_dates_virtualmeeting implements seminar_iterator_item {
      * @return self|null
      */
     public static function load_by_session_room($sessionorid, $roomorid, bool $nullifnotavailable = false): ?self {
-        $builder = self::get_builder_by_session_room($sessionorid, $roomorid, 'vm');
+        $builder = self::get_builder_by_session_room($sessionorid, $roomorid, 'vm')->select('vm.*');
         if ($nullifnotavailable) {
             $builder->where('vm.status', self::STATUS_AVAILABLE);
         }
@@ -275,6 +265,15 @@ class room_dates_virtualmeeting implements seminar_iterator_item {
     public function set_status(int $status): room_dates_virtualmeeting {
         $this->status = $status;
         return $this;
+    }
+
+    /**
+     * Map properties to data object.
+     *
+     * @return \stdClass
+     */
+    public function to_record(): \stdClass {
+        return $this->unmap_object();
     }
 
     /**

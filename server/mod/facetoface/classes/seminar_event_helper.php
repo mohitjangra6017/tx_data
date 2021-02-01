@@ -53,6 +53,8 @@ final class seminar_event_helper {
     public static function merge_sessions(seminar_event $seminarevent, array $dates): void {
         global $DB;
 
+        self::validate_ids($dates);
+
         // Refresh list of current sessions from the database for merging, then clear it again.  This ensures that
         // all other singleton instances down the line will get the updated list when get_sessions() is called.
         $sessionstobedeleted = $seminarevent->get_sessions(true);
@@ -155,6 +157,24 @@ final class seminar_event_helper {
             room_helper::sync($date->id, array_unique($date->roomids));
             asset_helper::sync($date->id, array_unique($date->assetids));
             facilitator_helper::sync($date->id, array_unique($date->facilitatorids));
+        }
+    }
+
+    /**
+     * @param array $dates
+     */
+    private static function validate_ids(array $dates): void {
+        $validate = function ($what, $i, $ids) {
+            foreach ($ids as $j => $id) {
+                if (!is_number($id)) {
+                    debugging("the {$what}ids array contains a non-number value at #{$j} of date #{$i}.", DEBUG_DEVELOPER);
+                }
+            }
+        };
+        foreach ($dates as $i => $date) {
+            $validate('room', $i, (isset($date->roomids) && is_array($date->roomids)) ? $date->roomids : []);
+            $validate('asset', $i, (isset($date->assetids) && is_array($date->assetids)) ? $date->assetids : []);
+            $validate('facilitator', $i, (isset($date->facilitatorids) && is_array($date->facilitatorids)) ? $date->facilitatorids : []);
         }
     }
 

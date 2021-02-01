@@ -30,6 +30,9 @@ use core_user;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Class room_virtualmeeting represents Seminar virtual meeting room
+ */
 class room_virtualmeeting implements seminar_iterator_item {
 
     use crud_mapper;
@@ -42,6 +45,7 @@ class room_virtualmeeting implements seminar_iterator_item {
 
     const STATUS_LEGACY = null;
     const STATUS_CONFIRMED = 0;
+    const STATUS_PENDING = -1;
 
     /**
      * @var int {facetoface_room_virtualmeeting}.id
@@ -94,7 +98,7 @@ class room_virtualmeeting implements seminar_iterator_item {
     /**
      * Create/update {facetoface_room_virtualmeeting}.record
      */
-    public function save() {
+    public function save(): void {
         $this->crud_save();
     }
 
@@ -266,7 +270,7 @@ class room_virtualmeeting implements seminar_iterator_item {
             ->one(false);
         $virtual_meeting = new room_virtualmeeting();
         if ($record !== null) {
-            return $virtual_meeting->from_record($record);
+            $virtual_meeting->from_record($record);
         }
         return $virtual_meeting;
     }

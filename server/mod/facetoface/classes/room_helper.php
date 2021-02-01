@@ -24,10 +24,10 @@
 namespace mod_facetoface;
 
 use coding_exception;
-use context_course;
 use context_module;
-use core\orm\collection;
 use core\orm\query\builder;
+use core\task\manager as task_manager;
+use mod_facetoface\task\manage_virtualmeetings_adhoc_task;
 
 /**
  * Additional room functionality.
@@ -49,37 +49,37 @@ final class room_helper {
      *      - string {facetoface_room}.url
      *      - int {facetoface_room}.allowconflicts
      *      - string {facetoface_room}.description
-     *      - bool {facetoface_room}.custom (optional)
+     *      - bool {facetoface_room}.notcustom
      *      - int {facetoface_room}.hidden
      * @return room
      */
     public static function save(\stdClass $data): room {
-        global $TEXTAREA_OPTIONS, $USER;
-
-        $data->custom = $data->notcustom ? 0 : 1;
+        $is_sitewide = !empty($data->notcustom);
 
         if ($data->id) {
             $room = new room($data->id);
+            if ($is_sitewide) {
+                $room->publish();
+            }
         } else {
-            if (isset($data->custom) && $data->custom == 1) {
-                $room = room::create_custom_room();
-            } else {
+            if ($is_sitewide) {
                 $room = new room();
+            } else {
+                $room = room::create_custom_room();
             }
         }
         $room->set_name($data->name);
         $room->set_allowconflicts($data->allowconflicts);
         $room->set_capacity($data->roomcapacity);
+
         if (room_virtualmeeting::VIRTUAL_MEETING_INTERNAL != $data->plugin) {
             // Clear the value if the update is changing the value
             // from 'internal' plugin to 'none/zoom/msteams'
-            $data->url = '';
+            $room->set_url('');
         } else if (!filter_var($data->url, FILTER_VALIDATE_URL)) {
             throw new coding_exception('the url is not in a valid format');
-        }
-        $room->set_url($data->url);
-        if (empty($data->custom)) {
-            $room->publish();
+        } else {
+            $room->set_url($data->url);
         }
 
         // We need to make sure the room exists before formatting the customfields and description.
@@ -88,6 +88,25 @@ final class room_helper {
         }
 
         // Export data to store in customfields and description.
+        self::save_custom_fields_and_description($room, $data);
+
+        // Set room virtual meeting record.
+        self::create_or_update_virtual_meeting($room, $data, $is_sitewide);
+
+        // Return new/updated room.
+        return $room;
+    }
+
+    /**
+     * Helper function for room_helper::save().
+     *
+     * @param room $room
+     * @param \stdClass $data
+     */
+    private static function save_custom_fields_and_description(room $room, \stdClass $data): void {
+        global $TEXTAREA_OPTIONS;
+
+        $data = clone $data;
         $data->id = $room->get_id();
         customfield_save_data($data, 'facetofaceroom', 'facetoface_room');
 
@@ -103,39 +122,42 @@ final class room_helper {
         );
         $room->set_description($data->description);
         $room->save();
+    }
 
-        // Set room virtual meeting record.
-        if (!empty($data->plugin)) {
-            if (empty($data->custom) && room_virtualmeeting::is_virtual_meeting($data->plugin)) {
-                throw new coding_exception("you cannot create a site-wide virtual meeting!");
-            }
+    /**
+     * Helper function for room_helper::save().
+     *
+     * @param room $room
+     * @param \stdClass $data
+     * @param boolean $is_sitewide
+     */
+    private static function create_or_update_virtual_meeting(room $room, \stdClass $data, bool $is_sitewide): void {
+        global $USER;
 
-            /** @var room_virtualmeeting $virtual_meeting */
-            $virtual_meeting = room_virtualmeeting::get_virtual_meeting($room);
-            // Lets check if this room a new or an update.
-            if ($data->id) {
-                // Nobody can update or delete another user's virtual meeting room
-                if ($virtual_meeting->exists() && !$virtual_meeting->can_manage()) {
-                    throw new coding_exception("you cannot update or delete virtual meeting!");
-                }
-                // This is the update.
-                // Once a virtualmeeting provider is created and saved, an indeterminate state is created which is difficult
-                // to resolve in real time if a manager changed a mind, so we disable it in meantime
-                if ($virtual_meeting->exists() && !room_virtualmeeting::is_virtual_meeting($data->plugin)) {
-                    $data->plugin = $virtual_meeting->get_plugin();
-                }
-            }
-
-            if (room_virtualmeeting::is_virtual_meeting($data->plugin)) {
-                $virtual_meeting->set_plugin($data->plugin)
-                    ->set_roomid($room->get_id())
-                    ->set_userid($USER->id)
-                    ->save();
-            }
+        // Physical room
+        if (empty($data->plugin) || !room_virtualmeeting::is_virtual_meeting($data->plugin)) {
+            return;
+        }
+        if ($is_sitewide) {
+            throw new coding_exception("you cannot create a site-wide virtual meeting!");
         }
 
-        // Return new/updated room.
-        return $room;
+        $virtual_meeting = room_virtualmeeting::get_virtual_meeting($room);
+        // Lets check if this room a new or an update.
+        if ($virtual_meeting->exists()) {
+            // Nobody can update or delete another user's virtual meeting room
+            if (!$virtual_meeting->can_manage($USER->id)) {
+                throw new coding_exception("you cannot update or delete another user's virtual meeting!");
+            }
+            $virtual_meeting->set_status(room_virtualmeeting::STATUS_PENDING)->save();
+            return;
+        }
+
+        $virtual_meeting->set_plugin($data->plugin)
+            ->set_roomid($room->get_id())
+            ->set_userid($USER->id)
+            ->set_status(room_virtualmeeting::STATUS_PENDING)
+            ->save();
     }
 
     /**
@@ -300,5 +322,41 @@ final class room_helper {
             ->where('fa.hidden', 0)
             ->where('sd.id', $session->get_id())
             ->exists();
+    }
+
+    /**
+     * @param integer $sessionid
+     * @param integer $roomid
+     * @param integer $userid
+     * @return boolean
+     * @internal called from mod/facetoface/reports/rooms.php
+     */
+    public static function retry_virtual_meeting(int $sessionid, int $roomid, int $userid): bool {
+        if (!$sessionid || !$roomid || !$userid) {
+            return false;
+        }
+        $seminarsession = new seminar_session($sessionid);
+        $retried = false;
+        $room_vm = room_virtualmeeting::from_roomid($roomid);
+        $roomdate_vm = room_dates_virtualmeeting::load_by_session_room($sessionid, $roomid);
+        if ($room_vm->exists() && $room_vm->get_userid() == $userid && $roomdate_vm->exists()) {
+            switch ($roomdate_vm->get_status()) {
+                case room_dates_virtualmeeting::STATUS_FAILURE_CREATION:
+                case room_dates_virtualmeeting::STATUS_FAILURE_UPDATE:
+                    $roomdate_vm->set_status(room_dates_virtualmeeting::STATUS_PENDING_UPDATE);
+                    $retried = true;
+                    break;
+                case room_dates_virtualmeeting::STATUS_FAILURE_DELETION:
+                    $roomdate_vm->set_status(room_dates_virtualmeeting::STATUS_PENDING_DELETION);
+                    $retried = true;
+                    break;
+            }
+        }
+        if ($retried) {
+            $roomdate_vm->save();
+            $task = manage_virtualmeetings_adhoc_task::create_from_seminar_event_id($seminarsession->get_sessionid());
+            task_manager::queue_adhoc_task($task);
+        }
+        return $retried;
     }
 }

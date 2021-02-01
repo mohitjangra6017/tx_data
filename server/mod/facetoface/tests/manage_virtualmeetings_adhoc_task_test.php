@@ -19,327 +19,242 @@
  *
  * @author Chris Snyder <chris.snyder@totaralearning.com>
  * @package mod_facetoface
+ * @category test
  */
 
+use core\orm\query\builder;
+use mod_facetoface\room_dates_virtualmeeting;
+use mod_facetoface\room_helper;
+use mod_facetoface\room_virtualmeeting;
 use totara_core\virtualmeeting\virtual_meeting as virtualmeeting_model;
-use mod_facetoface\seminar_event;
-use mod_facetoface\seminar_session;
+use mod_facetoface\seminar_event_helper;
+use mod_facetoface\task\manage_virtualmeetings_adhoc_task as adhoc_task;
+use totara_core\virtualmeeting\poc\poc_factory;
 
 defined('MOODLE_INTERNAL') || die();
+require_once(__DIR__ . '/virtualmeeting_testcase.php');
 
 /**
  * Test the manage_virtualmeetings_adhoc_task task.
- * @coversDefaultClass mod_facetoface\task\manage_virtualmeetings_adhoc_task
+ * @covers mod_facetoface\task\manage_virtualmeetings_adhoc_task
  */
-class mod_facetoface_manage_virtualmeetings_adhoc_task_testcase extends advanced_testcase {
-
-    private $user1;
-    private $user2;
-    private $event1;
-    private $sitewide_room;
-    private $custom_room;
-    private $virtual_room1;
-    private $virtual_room2;
-    private $session1start;
-    private $virtualmeeting1;
-    private $virtualmeeting2;
-
-    public function setUp(): void {
-        // TODO: FIXME: BUG: TOTARA: WARN: DANGER: FIX THIS TEST CASE!!!!
-        $this->markTestIncomplete('Fix this test case!!');
-        $this->fail_in_totara_14(); // must be removed as soon as problems are solved in 14.
-
-        $this->user1 = $this->getDataGenerator()->create_user(['username' => 'bob']);
-        $this->user2 = $this->getDataGenerator()->create_user(['username' => 'ann']);
-        $course = $this->getDataGenerator()->create_course();
-
-        $this->setUser($this->user1);
-        $seminar_generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
-        $f2f = $seminar_generator->create_instance([
-            'name' => 'Test seminar',
-            'course' => $course->id
-        ]);
-        $this->sitewide_room = $seminar_generator->add_site_wide_room(['name' => 'just a room']);
-        $this->custom_room = $seminar_generator->add_custom_room(['name' => 'room with url', 'url' => 'https://example.com']);
-        $this->virtual_room1 = $seminar_generator->add_virtualmeeting_room(['name' => 'vroom1']);
-        $this->virtual_room2 = $seminar_generator->add_virtualmeeting_room(['name' => 'vroom2']);
-        $session1start = time() + 3600;
-        $session1finish = time() + 5400;
-        $session2start = time() + 7200;
-        $session2finish = time() + 9000;
-        $this->event1 = $seminar_generator->add_session([
-            'facetoface' => $f2f->id,
-            'sessiondates' => [
-                [
-                    'timestart' => $session1start,
-                    'timefinish' => $session1finish,
-                    'sessiontimezone' => 'Pacific/Auckland',
-                    'roomids' => [$this->virtual_room1->id]
-                ],
-                [
-                    'timestart' => $session2start,
-                    'timefinish' => $session2finish,
-                    'sessiontimezone' => 'Pacific/Auckland',
-                    'roomids' => [$this->virtual_room2->id]
-                ],
-            ],
-        ]);
-        // Create virtualmeeting instances up front
-        $this->virtualmeeting1 = virtualmeeting_model::create(
-            'poc_app',
-            $this->user1,
-            'Test seminar',
-            DateTime::createFromFormat('U', $session1start),
-            DateTime::createFromFormat('U', $session1finish)
-        );
-        $this->virtualmeeting2 = virtualmeeting_model::create(
-            'poc_app',
-            $this->user1,
-            'Test seminar',
-            DateTime::createFromFormat('U', $session2start),
-            DateTime::createFromFormat('U', $session2finish)
-        );
-        $seminar_event = new seminar_event($this->event1);
-        $sessions = $seminar_event->get_sessions();
-        foreach($sessions as $session) {
-            if ($session->get_timestart() == $session1start) {
-                $seminar_generator->create_room_dates_virtualmeeting($this->virtual_room1->id, $session->get_id(), $this->virtualmeeting1->get_id());
-            } else {
-                $seminar_generator->create_room_dates_virtualmeeting($this->virtual_room2->id, $session->get_id(), $this->virtualmeeting2->get_id());
-            }
+class mod_facetoface_manage_virtualmeetings_adhoc_task_testcase extends mod_facetoface_virtualmeeting_testcase {
+    public function test_create_from_seminar_event_id() {
+        try {
+            adhoc_task::create_from_seminar_event_id($this->event1->get_id(), 0);
+            $this->fail('coding_exception expected');
+        } catch (coding_exception $ex) {
+            $this->assertStringContainsString('No user id set.', $ex->getMessage());
         }
-        // Keep track of session1
-        $this->session1start = $session1start;
+
+        try {
+            adhoc_task::create_from_seminar_event_id(0, $this->user1->id);
+            $this->fail('coding_exception expected');
+        } catch (coding_exception $ex) {
+            $this->assertStringContainsString('No seminar event id set.', $ex->getMessage());
+        }
+
+        $task = adhoc_task::create_from_seminar_event_id($this->event1->get_id(), $this->user1->id);
+        $this->assertEquals(['seminar_event_id' => $this->event1->get_id(), 'user_id' => $this->user1->id], (array)$task->get_custom_data());
+
+        $this->setUser($this->user2->id);
+        $task = adhoc_task::create_from_seminar_event_id($this->event1->get_id());
+        $this->assertEquals(['seminar_event_id' => $this->event1->get_id(), 'user_id' => $this->user2->id], (array)$task->get_custom_data());
     }
 
-    public function tearDown(): void {
-        $this->user1 = null;
-        $this->user2 = null;
-        $this->event1 = null;
-        $this->sitewide_room = null;
-        $this->custom_room = null;
-        $this->virtual_room1 = null;
-        $this->virtual_room2 = null;
-        $this->virtualmeeting1 = null;
-        $this->virtualmeeting2 = null;
-        $this->session1start = null;
-        parent::tearDown();
-    }
-
-    /**
-     * @covers ::execute
-     */
     public function test_execute_no_changes() {
         // call execute() with no changes
         // ensure nothing happens
         $url1 = $this->virtualmeeting1->get_join_url();
         $url2 = $this->virtualmeeting2->get_join_url();
-        $task = \mod_facetoface\task\manage_virtualmeetings_adhoc_task::create_from_seminar_event_id($this->event1);
-        $task->execute();
-        $this->nothing_happened_in_totara_14($url1, $url2);
+
+        $this->run_adhoc_task($this->event1, $this->user1->id);
+        $this->nothing_happened($url1, $url2);
+
+        $this->run_adhoc_task($this->event1, $this->user2->id);
+        $this->nothing_happened($url1, $url2);
     }
 
-    private function nothing_happened_in_totara_14($url1, $url2) {
-        global $DB;
-        // There should be two each of virtualmeetings, room_virtualmeetings, and room_dates_virtualmeetings.
-        $virtualmeetings = $DB->count_records('virtualmeeting');
-        $this->assertEquals(2, $virtualmeetings);
-        $room_virtualmeetings = $DB->count_records('facetoface_room_virtualmeeting');
-        $this->assertEquals(2, $room_virtualmeetings);
-        $room_date_virtualmeetings = $DB->count_records('facetoface_room_dates_virtualmeeting');
-        $this->assertEquals(2, $room_date_virtualmeetings);
-        $vm1 = \totara_core\virtualmeeting\virtual_meeting::load_by_id($this->virtualmeeting1->get_id());
-        $vm2 = \totara_core\virtualmeeting\virtual_meeting::load_by_id($this->virtualmeeting2->get_id());
-        $this->assert_url_in_totara_13($url1, $vm1->get_join_url());
-        $this->assert_url_in_totara_13($url2, $vm2->get_join_url());
-    }
-
-    /**
-     * @deprecated Totara 14
-     */
-    private function assert_url_in_totara_13($expected, $url) {
-        $this->fail_in_totara_14();
-        // URLs don't actually match because virtual rooms are always updated in 13.
-        $expected = new moodle_url($expected);
-        $expected->param('age', 1 + (int)$expected->param('age'));
-        $expected = $expected->out(false);
-        $this->assertEquals($expected, $url);
-    }
-
-    /**
-     * @deprecated Totara 14
-     */
-    private function fail_in_totara_14() {
-        global $CFG;
-        require($CFG->dirroot.'/version.php');
-        // Make sure we fix problems before 14 hits beta.
-        if ((int)$TOTARA->version >= 14 && $maturity >= MATURITY_BETA) {
-            $this->fail();
-        }
-    }
-
-    /**
-     * @covers ::execute
-     */
     public function test_execute_changed_resources_but_unchanged_rooms() {
         // add assets/facilitators to session #1
         // call execute()
         // ensure nothing happens
-        global $DB;
+        $this->setUser($this->user1);
 
         $url1 = $this->virtualmeeting1->get_join_url();
         $url2 = $this->virtualmeeting2->get_join_url();
 
-        $seminar_generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
-        $asset = $seminar_generator->add_custom_asset(['name' => 'an asset']);
-        $facilitator = $seminar_generator->add_custom_facilitator(['name' => 'a facilitator']);
-        $seminar_event = new seminar_event($this->event1);
-        $sessions = $seminar_event->get_sessions();
-        foreach($sessions as $session) {
-            $DB->insert_record('facetoface_asset_dates', ['assetid' => $asset->id, 'sessionsdateid' => $session->get_id()]);
-            $DB->insert_record('facetoface_facilitator_dates', ['facilitatorid' => $facilitator->id, 'sessionsdateid' => $session->get_id()]);
-        }
+        $asset = $this->semgen->add_custom_asset(['name' => 'an asset']);
+        $facilitator = $this->semgen->add_custom_facilitator(['name' => 'a facilitator']);
+        $rooms = [
+            $this->session1->get_id() => [$this->virtual_room1->get_id()],
+            $this->session2->get_id() => [$this->virtual_room2->get_id()],
+        ];
+        $assets = [
+            $this->session1->get_id() => [$asset->id],
+            $this->session2->get_id() => [],
+        ];
+        $facilitators = [
+            $this->session1->get_id() => [],
+            $this->session2->get_id() => [$facilitator->id],
+        ];
+        $this->event_save_changes($this->event1, $rooms, $assets, $facilitators);
 
-        $task = \mod_facetoface\task\manage_virtualmeetings_adhoc_task::create_from_seminar_event_id($this->event1);
-        $task->execute();
-        $this->nothing_happened_in_totara_14($url1, $url2);
+        $this->run_adhoc_task($this->event1);
+        $this->nothing_happened($url1, $url2);
     }
 
-    /**
-     * @covers ::execute
-     */
-    public function test_execute_add_a_different_room() {
-        // add / remove a room from session1
+    public function test_execute_add_a_custom_room() {
+        // add a custom room to session #1
         // call execute()
         // ensure nothing happens
-        global $DB;
+        $this->setUser($this->user1);
 
         $url1 = $this->virtualmeeting1->get_join_url();
         $url2 = $this->virtualmeeting2->get_join_url();
 
-        $seminar_event = new seminar_event($this->event1);
-        $sessions = $seminar_event->get_sessions();
-        foreach($sessions as $session) {
-            $DB->insert_record('facetoface_room_dates', ['roomid' => $this->custom_room->id, 'sessionsdateid' => $session->get_id()]);
-        }
+        $rooms = [
+            $this->session1->get_id() => [$this->virtual_room1->get_id(), $this->custom_room->get_id()],
+            $this->session2->get_id() => [$this->virtual_room2->get_id()],
+        ];
+        $this->event_save_changes($this->event1, $rooms);
 
-        $task = \mod_facetoface\task\manage_virtualmeetings_adhoc_task::create_from_seminar_event_id($this->event1);
-        $task->execute();
-        $this->nothing_happened_in_totara_14($url1, $url2);
+        $this->run_adhoc_task($this->event1);
+        $this->nothing_happened($url1, $url2);
     }
 
-    /**
-     * @covers ::execute
-     */
+    public function test_execute_remove_a_custom_room() {
+        // remove a custom room from session1
+        // call execute()
+        // ensure nothing happens
+        $this->setUser($this->user1);
+
+        $url1 = $this->virtualmeeting1->get_join_url();
+        $url2 = $this->virtualmeeting2->get_join_url();
+
+        // Add a custom room to session #1 without disturbing the watcher.
+        room_helper::sync($this->session1->get_id(), [$this->virtual_room1->get_id(), $this->custom_room->get_id()]);
+        $this->run_adhoc_task($this->event1);
+        $this->nothing_happened($url1, $url2);
+        $this->assertEquals(2, $this->count_session_room_dates($this->session1));
+        $this->assertEquals(1, $this->count_session_room_dates($this->session2));
+
+        // Then simulate save changes.
+        $rooms = [
+            $this->session1->get_id() => [$this->virtual_room1->get_id()],
+            $this->session2->get_id() => [$this->virtual_room2->get_id()],
+        ];
+        $this->event_save_changes($this->event1, $rooms);
+
+        $this->run_adhoc_task($this->event1);
+        $this->nothing_happened($url1, $url2);
+    }
+
     public function test_execute_add_virtual_room_to_session() {
         // add vroom2 to session #1
         // call execute()
         // ensure virtualmeeting record is created for vroom2 on session #1
-        global $DB;
+        $this->setUser($this->user1);
 
         $url1 = $this->virtualmeeting1->get_join_url();
         $url2 = $this->virtualmeeting2->get_join_url();
 
-        $seminar_event = new seminar_event($this->event1);
-        $sessions = $seminar_event->get_sessions();
-        foreach($sessions as $session) {
-            if ($session->get_timestart() == $this->session1start) {
-                $DB->insert_record('facetoface_room_dates', ['roomid' => $this->virtual_room2->id, 'sessionsdateid' => $session->get_id()]);
-            }
-        }
+        $rooms = [
+            $this->session1->get_id() => [$this->virtual_room1->get_id(), $this->virtual_room2->get_id()],
+            $this->session2->get_id() => [$this->virtual_room2->get_id()],
+        ];
+        $this->event_save_changes($this->event1, $rooms);
+        $this->run_adhoc_task($this->event1);
 
-        $task = \mod_facetoface\task\manage_virtualmeetings_adhoc_task::create_from_seminar_event_id($this->event1);
-        $task->execute();
-
-        $virtualmeetings = $DB->count_records('virtualmeeting');
+        $virtualmeetings = $this->count_virtualmeeting();
         $this->assertEquals(3, $virtualmeetings);
-        $room_virtualmeetings = $DB->count_records('facetoface_room_virtualmeeting');
+        $room_virtualmeetings = $this->count_room_virtualmeeting();
         $this->assertEquals(2, $room_virtualmeetings);
-        $room_date_virtualmeetings = $DB->count_records('facetoface_room_dates_virtualmeeting');
+        $room_date_virtualmeetings = $this->count_room_dates_virtualmeeting();
         $this->assertEquals(3, $room_date_virtualmeetings);
-        $vm1 = \totara_core\virtualmeeting\virtual_meeting::load_by_id($this->virtualmeeting1->get_id());
-        $vm2 = \totara_core\virtualmeeting\virtual_meeting::load_by_id($this->virtualmeeting2->get_id());
-        $this->assert_url_in_totara_13($url1, $vm1->get_join_url());
-        $this->assert_url_in_totara_13($url2, $vm2->get_join_url());
+        $room_dates = $this->count_session_room_dates($this->session1);
+        $this->assertEquals(2, $room_dates);
+        $room_dates = $this->count_session_room_dates($this->session2);
+        $this->assertEquals(1, $room_dates);
+
+        // Ensure the existing virtualmeetings are preserved.
+        $vm1 = virtualmeeting_model::load_by_id($this->virtualmeeting1->get_id());
+        $vm2 = virtualmeeting_model::load_by_id($this->virtualmeeting2->get_id());
+        $this->assertEquals($url1, $vm1->get_join_url());
+        $this->assertEquals($url2, $vm2->get_join_url());
     }
 
-    /**
-     * @covers ::execute
-     */
     public function test_execute_update_time_of_session() {
         // change date/time of session #1
         // call execute()
         // ensure virtualmeeting record is updated for vroom1 on session #1
-        global $DB;
+        $this->setUser($this->user1);
 
         $url1 = $this->virtualmeeting1->get_join_url();
         $url2 = $this->virtualmeeting2->get_join_url();
 
-        $seminar_event = new seminar_event($this->event1);
-        $sessions = $seminar_event->get_sessions();
-        foreach($sessions as $session) {
-            if ($session->get_timestart() == $this->session1start) {
-                $timefinish = $session->get_timefinish();
-                $session->set_timefinish($timefinish - 600);
-                $session->save();
-            }
-        }
+        builder::table(room_virtualmeeting::DBTABLE)->update(['status' => room_virtualmeeting::STATUS_CONFIRMED]);
+        builder::table(room_dates_virtualmeeting::DBTABLE)->update(['status' => room_dates_virtualmeeting::STATUS_AVAILABLE]);
 
-        $task = \mod_facetoface\task\manage_virtualmeetings_adhoc_task::create_from_seminar_event_id($this->event1);
-        $task->execute();
+        $date1 = $this->session1->to_record();
+        $date1->roomids = [$this->virtual_room1->get_id()];
+        $date1->timestart -= 600;
+        $date1->timefinish += 600;
+        $date2 = $this->session2->to_record();
+        $date2->roomids = [$this->virtual_room2->get_id()];
+        seminar_event_helper::merge_sessions($this->event1, [$date1, $date2]);
 
-        $virtualmeetings = $DB->count_records('virtualmeeting');
+        $this->run_adhoc_task($this->event1);
+
+        $virtualmeetings = $this->count_virtualmeeting();
         $this->assertEquals(2, $virtualmeetings);
-        $room_virtualmeetings = $DB->count_records('facetoface_room_virtualmeeting');
+        $room_virtualmeetings = $this->count_room_virtualmeeting();
         $this->assertEquals(2, $room_virtualmeetings);
-        $room_date_virtualmeetings = $DB->count_records('facetoface_room_dates_virtualmeeting');
+        $room_date_virtualmeetings = $this->count_room_dates_virtualmeeting();
         $this->assertEquals(2, $room_date_virtualmeetings);
-        $vm1 = \totara_core\virtualmeeting\virtual_meeting::load_by_id($this->virtualmeeting1->get_id());
-        $vm2 = \totara_core\virtualmeeting\virtual_meeting::load_by_id($this->virtualmeeting2->get_id());
-        $this->assertNotEquals($url1, $vm1->get_join_url());
-        $this->assert_url_in_totara_13($url2, $vm2->get_join_url());
+        $vm1 = virtualmeeting_model::load_by_id($this->virtualmeeting1->get_id());
+        $vm2 = virtualmeeting_model::load_by_id($this->virtualmeeting2->get_id());
+        $this->assert_aged_url($url1, $vm1->get_join_url(), 1, -600, 600);
+        $this->assertEquals($url2, $vm2->get_join_url());
     }
 
     public function test_execute_update_foreign_room() {
         // add a session with a new virtual room as user2
         // call execute()
         // ensure vroom1 and vroom2 are not affected
-        global $DB;
+        $this->setUser($this->user2);
+
         $url1 = $this->virtualmeeting1->get_join_url();
         $url2 = $this->virtualmeeting2->get_join_url();
 
-        $this->setUser($this->user2);
+        $virtual_room3 = $this->add_virtualmeeting_room(['name' => 'vroom3']);
 
-        $seminar_event = new seminar_event($this->event1);
-        $session = new seminar_session();
-        $session->set_sessionid($seminar_event->get_id())
-            ->set_timestart(time() + 10800)
-            ->set_timefinish(time() + 12600)
-            ->set_sessiontimezone('Pacific/Auckland')
-            ->save();
-        /** @var mod_facetoface_generator */
-        $seminar_generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
-        $virtual_room3 = $seminar_generator->add_virtualmeeting_room(['name' => 'vroom3']);
-        $DB->insert_record('facetoface_room_dates', ['roomid' => $virtual_room3->id, 'sessionsdateid' => $session->get_id()]);
+        $date1 = $this->session1->to_record();
+        $date1->roomids = [$this->virtual_room1->get_id()];
+        $date2 = $this->session2->to_record();
+        $date2->roomids = [$this->virtual_room2->get_id()];
+        $date3 = (object)[
+            'timestart' => time() + 10800,
+            'timefinish' => time() + 12600,
+            'sessiontimezone' => 'Pacific/Auckland',
+            'roomids' => [$virtual_room3->get_id()],
+        ];
+        seminar_event_helper::merge_sessions($this->event1, [$date1, $date2, $date3]);
 
-        $task = \mod_facetoface\task\manage_virtualmeetings_adhoc_task::create_from_seminar_event_id($this->event1);
-        $task->execute();
+        $this->run_adhoc_task($this->event1);
 
-        $virtualmeetings = $DB->count_records('virtualmeeting');
+        $virtualmeetings = $this->count_virtualmeeting();
         $this->assertEquals(3, $virtualmeetings);
-        $room_virtualmeetings = $DB->count_records('facetoface_room_virtualmeeting');
+        $room_virtualmeetings = $this->count_room_virtualmeeting();
         $this->assertEquals(3, $room_virtualmeetings);
-        $room_date_virtualmeetings = $DB->count_records('facetoface_room_dates_virtualmeeting');
+        $room_date_virtualmeetings = $this->count_room_dates_virtualmeeting();
         $this->assertEquals(3, $room_date_virtualmeetings);
-        $vm1 = \totara_core\virtualmeeting\virtual_meeting::load_by_id($this->virtualmeeting1->get_id());
-        $vm2 = \totara_core\virtualmeeting\virtual_meeting::load_by_id($this->virtualmeeting2->get_id());
+        $vm1 = virtualmeeting_model::load_by_id($this->virtualmeeting1->get_id());
+        $vm2 = virtualmeeting_model::load_by_id($this->virtualmeeting2->get_id());
         $this->assertEquals($url1, $vm1->get_join_url());
         $this->assertEquals($url2, $vm2->get_join_url());
     }
 
-    /**
-     * @covers ::execute
-     */
     public function test_execute_deleted_room() {
         // delete vroom1 from session #1
         // call execute()
@@ -351,9 +266,6 @@ class mod_facetoface_manage_virtualmeetings_adhoc_task_testcase extends advanced
         $DB->delete_records('facetoface_room_dates', ['roomid' => $this->virtual_room1->id]);
     }
 
-    /**
-     * @covers ::execute
-     */
     public function test_execute_deleted_session() {
         // delete session #1
         // call execute()
@@ -363,9 +275,6 @@ class mod_facetoface_manage_virtualmeetings_adhoc_task_testcase extends advanced
         $this->markTestSkipped();
     }
 
-    /**
-     * @covers ::execute
-     */
     public function test_execute_deleted_event() {
         // delete session #1
         // call execute()
@@ -375,21 +284,134 @@ class mod_facetoface_manage_virtualmeetings_adhoc_task_testcase extends advanced
         $this->markTestSkipped();
     }
 
+    public function test_execute_failure_creation_by_service() {
+        $this->setUser($this->user1);
+        $sink = $this->redirectMessages();
+
+        $url1 = $this->virtualmeeting1->get_join_url();
+        $url2 = $this->virtualmeeting2->get_join_url();
+
+        $virtual_room3 = $this->add_virtualmeeting_room(['name' => 'vroom3']);
+        $seminar = $this->add_seminar(['name' => 'me failure', 'course' => $this->course->id]);
+        $newevent = $this->add_seminar_event([
+            'facetoface' => $seminar->get_id(),
+            'sessiondates' => [
+                [
+                    'timestart' => time() + 10800,
+                    'timefinish' => time() + 12600,
+                    'sessiontimezone' => 'Pacific/Auckland',
+                    'roomids' => [$virtual_room3->get_id()],
+                ],
+            ],
+        ]);
+
+        $this->run_adhoc_task($newevent);
+        // Kick out notification.
+        $this->execute_adhoc_tasks();
+
+        $messages = $sink->get_messages();
+        $this->assertCount(1, $messages);
+        $this->assertEquals('Virtual meeting creation failure', $messages[0]->subject);
+        $this->assertEquals($this->user1->id, $messages[0]->useridto);
+        $this->assertStringContainsString('Seminar: me failure', $messages[0]->smallmessage);
+
+        // Ensure the existing virtualmeetings are preserved.
+        $vm1 = virtualmeeting_model::load_by_id($this->virtualmeeting1->get_id());
+        $vm2 = virtualmeeting_model::load_by_id($this->virtualmeeting2->get_id());
+        $this->assertEquals($url1, $vm1->get_join_url());
+        $this->assertEquals($url2, $vm2->get_join_url());
+    }
+
+    public function data_user_field(): array {
+        return [['suspended'], ['deleted']];
+    }
+
+    public function test_execute_failure_update_by_service() {
+        $this->setUser($this->user1);
+        $sink = $this->redirectMessages();
+
+        $url1 = $this->virtualmeeting1->get_join_url();
+        $url2 = $this->virtualmeeting2->get_join_url();
+
+        builder::table(room_dates_virtualmeeting::DBTABLE)
+            ->where('virtualmeetingid', $this->virtualmeeting1->id)
+            ->update(['status' => room_dates_virtualmeeting::STATUS_PENDING_UPDATE]);
+        builder::table('facetoface')
+            ->where('id', $this->event1->get_facetoface())
+            ->update(['name' => 'Test failing seminar']);
+
+        $this->run_adhoc_task($this->event1);
+        // Kick out notification.
+        $this->execute_adhoc_tasks();
+
+        $messages = $sink->get_messages();
+        $this->assertCount(1, $messages);
+        $this->assertEquals('Virtual meeting creation failure', $messages[0]->subject);
+        $this->assertEquals($this->user1->id, $messages[0]->useridto);
+        $this->assertStringContainsString('Seminar: Test failing seminar', $messages[0]->smallmessage);
+
+        // Ensure the existing virtualmeetings are preserved.
+        $vm1 = virtualmeeting_model::load_by_id($this->virtualmeeting1->get_id());
+        $vm2 = virtualmeeting_model::load_by_id($this->virtualmeeting2->get_id());
+        $this->assertEquals($url1, $vm1->get_join_url());
+        $this->assertEquals($url2, $vm2->get_join_url());
+    }
+
+    public function test_execute_failure_update_by_bogus_plugin() {
+        $this->setUser($this->user1);
+        $sink = $this->redirectMessages();
+
+        $url1 = $this->virtualmeeting1->get_join_url();
+        $url2 = $this->virtualmeeting2->get_join_url();
+
+        builder::table(room_dates_virtualmeeting::DBTABLE)
+            ->where('virtualmeetingid', $this->virtualmeeting1->id)
+            ->update(['status' => room_dates_virtualmeeting::STATUS_PENDING_UPDATE]);
+        builder::table('facetoface')
+            ->where('id', $this->event1->get_facetoface())
+            ->update(['name' => 'Test failing seminar']);
+        builder::table('virtualmeeting')->where('id', $this->virtualmeeting1->id)->update(['plugin' => 'poc_user']);
+
+        $this->run_adhoc_task($this->event1);
+        // Kick out notification.
+        $this->execute_adhoc_tasks();
+
+        $messages = $sink->get_messages();
+        $this->assertCount(1, $messages);
+        $this->assertEquals('Virtual meeting creation failure', $messages[0]->subject);
+        $this->assertEquals($this->user1->id, $messages[0]->useridto);
+        $this->assertStringContainsString('Seminar: Test failing seminar', $messages[0]->smallmessage);
+
+        // Ensure the existing virtualmeetings are preserved.
+        $vm1 = virtualmeeting_model::load_by_id($this->virtualmeeting1->get_id());
+        $vm2 = virtualmeeting_model::load_by_id($this->virtualmeeting2->get_id());
+        $this->assertEquals($url1, $vm1->get_join_url());
+        $this->assertEquals($url2, $vm2->get_join_url());
+    }
+
     /**
-     * @covers ::execute
+     * @covers mod_facetoface\task\manage_virtualmeetings_adhoc_task
+     * @covers facetoface_notification::send_notification_virtual_meeting_creation_failure
      */
     public function test_execute_unavailable_plugin() {
         // call execute()
         // ensure adhoc task fails with 'plugin is not configured'
-        set_config('virtualmeeting_poc_app_enabled', '0', 'totara_core');
+        $this->setUser($this->user1);
         $sink = $this->redirectMessages();
 
-        $task = \mod_facetoface\task\manage_virtualmeetings_adhoc_task::create_from_seminar_event_id($this->event1);
-        $task->execute();
+        poc_factory::toggle('poc_app', false);
+        builder::table(room_dates_virtualmeeting::DBTABLE)
+            ->where('virtualmeetingid', $this->virtualmeeting1->id)
+            ->update(['status' => room_dates_virtualmeeting::STATUS_PENDING_UPDATE]);
 
+        $this->run_adhoc_task($this->event1);
+        // Kick out notification.
         $this->executeAdhocTasks();
+
         $messages = $sink->get_messages();
+        $this->assertCount(1, $messages);
         $this->assertEquals('Virtual meeting creation failure', $messages[0]->subject);
         $this->assertEquals($this->user1->id, $messages[0]->useridto);
+        $this->assertStringContainsString('Seminar: Test seminar', $messages[0]->smallmessage);
     }
 }

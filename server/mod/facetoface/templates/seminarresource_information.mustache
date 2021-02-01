@@ -28,12 +28,15 @@
 
     Context variables required for this template:
     * headeraction: template data of seminarevent_actionbar
+    * banner: template
+    * banner.template: template name
+    * banner.context: template data
     * heading: heading text
-    * card: template data of seminarresource_card
+    * card: template
     * card.template: template name
     * card.context: template data
     * details: resource details html
-    * report: reportbulder data
+    * report: reportbuilder data
     * report.header: heading text
     * report.debughtml: debug html
     * report.description: description
@@ -46,6 +49,9 @@
     Example content (json):
     * not yet provided :)
 }}
+
+<div data-core-autoinitialise="true" data-core-autoinitialise-amd="mod_facetoface/seminarresource_information">
+{{#banner}}{{#context}}{{> &&template }}{{/context}}{{/banner}}
 
 {{#headeraction}}{{> mod_facetoface/seminarevent_actionbar }}{{/headeraction}}
 
@@ -69,3 +75,4 @@
 {{/report}}
 
 {{#footeraction}}{{> mod_facetoface/seminarevent_actionbar }}{{/footeraction}}
+</div>

@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 use stdClass;
 use context;
 use context_system;
+use core\output\notification;
 use moodle_url;
 use mod_facetoface_renderer;
 use rb_facetoface_summary_asset_embedded;
@@ -80,6 +81,10 @@ class asset_content extends content_generator {
     }
 
     protected function render_card(?seminar_session $session, seminar_attachment_item $item, stdClass $user, mod_facetoface_renderer $renderer): ?seminarresource_card {
+        return null;
+    }
+
+    protected function render_banner(?seminar_session $session, seminar_attachment_item $item, stdClass $user, mod_facetoface_renderer $renderer): ?notification {
         return null;
     }
 

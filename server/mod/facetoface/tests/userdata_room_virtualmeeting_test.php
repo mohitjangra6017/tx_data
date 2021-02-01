@@ -21,104 +21,29 @@
 * @package mod_facetoface
 */
 
-use mod_facetoface\seminar_event;
 use mod_facetoface\userdata\room_virtualmeeting;
 use totara_userdata\userdata\item;
 use totara_userdata\userdata\target_user;
-use totara_core\virtualmeeting\virtual_meeting as virtualmeeting_model;
 
 defined('MOODLE_INTERNAL') || die();
+require_once(__DIR__ . '/virtualmeeting_testcase.php');
 
-class mod_facetoface_userdata_room_virtualmeeting_testcase extends advanced_testcase {
+class mod_facetoface_userdata_room_virtualmeeting_testcase extends mod_facetoface_virtualmeeting_testcase {
+    /** @var target_user */
+    private $targetuser1;
 
-    private $user1;
-    private $user2;
-    private $f2f;
-    private $event1;
-    private $sitewide_room;
-    private $custom_room;
-    private $virtual_room1;
-    private $virtual_room2;
-    private $session1start;
-    private $virtualmeeting1;
-    private $virtualmeeting2;
+    /** @var target_user */
+    private $targetuser2;
 
     public function setUp(): void {
-        $this->user1 = $this->getDataGenerator()->create_user(['username' => 'bob']);
-        $this->user2 = $this->getDataGenerator()->create_user(['username' => 'ann']);
-        $course = $this->getDataGenerator()->create_course();
-
-        $this->setUser($this->user1);
-        $seminar_generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
-        $this->f2f = $seminar_generator->create_instance([
-            'name' => 'Test seminar',
-            'course' => $course->id
-        ]);
-        $this->sitewide_room = $seminar_generator->add_site_wide_room(['name' => 'just a room']);
-        $this->custom_room = $seminar_generator->add_custom_room(['name' => 'room with url', 'url' => 'https://example.com']);
-        $this->virtual_room1 = $seminar_generator->add_virtualmeeting_room(['name' => 'vroom1']);
-        $this->virtual_room2 = $seminar_generator->add_virtualmeeting_room(['name' => 'vroom2']);
-        $session1start = time() + 3600;
-        $session1finish = time() + 5400;
-        $session2start = time() + 7200;
-        $session2finish = time() + 9000;
-        $this->event1 = $seminar_generator->add_session([
-            'facetoface' => $this->f2f->id,
-            'sessiondates' => [
-                [
-                    'timestart' => $session1start,
-                    'timefinish' => $session1finish,
-                    'sessiontimezone' => 'Pacific/Auckland',
-                    'roomids' => [$this->virtual_room1->id]
-                ],
-                [
-                    'timestart' => $session2start,
-                    'timefinish' => $session2finish,
-                    'sessiontimezone' => 'Pacific/Auckland',
-                    'roomids' => [$this->virtual_room2->id]
-                ],
-            ],
-        ]);
-        // Create virtualmeeting instances up front
-        $this->virtualmeeting1 = virtualmeeting_model::create(
-            'poc_app',
-            $this->user1,
-            'Test seminar',
-            DateTime::createFromFormat('U', $session1start),
-            DateTime::createFromFormat('U', $session1finish)
-        );
-        $this->virtualmeeting2 = virtualmeeting_model::create(
-            'poc_app',
-            $this->user1,
-            'Test seminar',
-            DateTime::createFromFormat('U', $session2start),
-            DateTime::createFromFormat('U', $session2finish)
-        );
-        $seminar_event = new seminar_event($this->event1);
-        $sessions = $seminar_event->get_sessions();
-        foreach($sessions as $session) {
-            if ($session->get_timestart() == $session1start) {
-                $seminar_generator->create_room_dates_virtualmeeting($this->virtual_room1->id, $session->get_id(), $this->virtualmeeting1->get_id());
-            } else {
-                $seminar_generator->create_room_dates_virtualmeeting($this->virtual_room2->id, $session->get_id(), $this->virtualmeeting2->get_id());
-            }
-        }
-        // Keep track of session1
-        $this->session1start = $session1start;
+        parent::setUp();
+        $this->targetuser1 = new target_user($this->user1->get_record());
+        $this->targetuser2 = new target_user($this->user2->get_record());
     }
 
     public function tearDown(): void {
-        $this->user1 = null;
-        $this->user2 = null;
-        $this->f2f = null;
-        $this->event1 = null;
-        $this->sitewide_room = null;
-        $this->custom_room = null;
-        $this->virtual_room1 = null;
-        $this->virtual_room2 = null;
-        $this->virtualmeeting1 = null;
-        $this->virtualmeeting2 = null;
-        $this->session1start = null;
+        $this->targetuser1 = null;
+        $this->targetuser2 = null;
         parent::tearDown();
     }
 
@@ -126,92 +51,86 @@ class mod_facetoface_userdata_room_virtualmeeting_testcase extends advanced_test
      * Test count.
      */
     public function test_count() {
-        $targetuser1 = new target_user($this->user1);
-        $targetuser2 = new target_user($this->user2);
-
         // System context
-        $this->assertEquals(2, room_virtualmeeting::execute_count($targetuser1, context_system::instance()));
-        $this->assertEquals(0, room_virtualmeeting::execute_count($targetuser2, context_system::instance()));
+        $this->assertEquals(2, room_virtualmeeting::execute_count($this->targetuser1, context_system::instance()));
+        $this->assertEquals(0, room_virtualmeeting::execute_count($this->targetuser2, context_system::instance()));
 
         // Module context
-        $coursemodule = get_coursemodule_from_instance('facetoface', $this->f2f->id);
+        $coursemodule = $this->event1->get_seminar()->get_coursemodule();
         $modulecontext = context_module::instance($coursemodule->id);
-        $this->assertEquals(2, room_virtualmeeting::execute_count($targetuser1, $modulecontext));
-        $this->assertEquals(0, room_virtualmeeting::execute_count($targetuser2, $modulecontext));
+        $this->assertEquals(2, room_virtualmeeting::execute_count($this->targetuser1, $modulecontext));
+        $this->assertEquals(0, room_virtualmeeting::execute_count($this->targetuser2, $modulecontext));
 
         // Course context
-        $coursemodule = get_coursemodule_from_instance('facetoface', $this->f2f->id);
+        $coursemodule = $this->event1->get_seminar()->get_coursemodule();
         $coursecontext = context_course::instance($coursemodule->course);
-        $this->assertEquals(2, room_virtualmeeting::execute_count($targetuser1, $coursecontext));
-        $this->assertEquals(0, room_virtualmeeting::execute_count($targetuser2, $coursecontext));
+        $this->assertEquals(2, room_virtualmeeting::execute_count($this->targetuser1, $coursecontext));
+        $this->assertEquals(0, room_virtualmeeting::execute_count($this->targetuser2, $coursecontext));
 
         // Course category context
-        $coursemodule = get_coursemodule_from_instance('facetoface', $this->f2f->id);
+        $coursemodule = $this->event1->get_seminar()->get_coursemodule();
         $course = get_course($coursemodule->course);
         $coursecatcontext = context_coursecat::instance($course->category);
-        $this->assertEquals(2, room_virtualmeeting::execute_count($targetuser1, $coursecatcontext));
-        $this->assertEquals(0, room_virtualmeeting::execute_count($targetuser2, $coursecatcontext));
+        $this->assertEquals(2, room_virtualmeeting::execute_count($this->targetuser1, $coursecatcontext));
+        $this->assertEquals(0, room_virtualmeeting::execute_count($this->targetuser2, $coursecatcontext));
     }
 
     /**
      * Test export.
      */
     public function test_export() {
-        $targetuser1 = new target_user($this->user1);
-        $targetuser2 = new target_user($this->user2);
-
         // System content.
-        $export = room_virtualmeeting::execute_export($targetuser1, context_system::instance());
+        $export = room_virtualmeeting::execute_export($this->targetuser1, context_system::instance());
         $data = $export->data;
         $this->assertCount(2, $data);
 
         $record = array_shift($data);
-        $this->assertEquals($targetuser1->id, $record->userid);
+        $this->assertEquals($this->targetuser1->id, $record->userid);
         $this->assertEquals('vroom1', $record->name);
         $this->assertEquals('poc_app', $record->plugin);
         $this->assertNotEmpty($record->description);
 
         // Module context
-        $coursemodule = get_coursemodule_from_instance('facetoface', $this->f2f->id);
+        $coursemodule = $this->event1->get_seminar()->get_coursemodule();
         $modulecontext = context_module::instance($coursemodule->id);
-        $export = room_virtualmeeting::execute_export($targetuser1, $modulecontext);
+        $export = room_virtualmeeting::execute_export($this->targetuser1, $modulecontext);
         $data = $export->data;
         $this->assertCount(2, $data);
 
         $record = array_shift($data);
-        $this->assertEquals($targetuser1->id, $record->userid);
+        $this->assertEquals($this->targetuser1->id, $record->userid);
         $this->assertEquals('vroom1', $record->name);
         $this->assertEquals('poc_app', $record->plugin);
         $this->assertNotEmpty($record->description);
 
         // Course context
-        $coursemodule = get_coursemodule_from_instance('facetoface', $this->f2f->id);
+        $coursemodule = $this->event1->get_seminar()->get_coursemodule();
         $coursecontext = context_course::instance($coursemodule->course);
-        $export = room_virtualmeeting::execute_export($targetuser1, $coursecontext);
+        $export = room_virtualmeeting::execute_export($this->targetuser1, $coursecontext);
         $data = $export->data;
         $this->assertCount(2, $data);
 
         $record = array_shift($data);
-        $this->assertEquals($targetuser1->id, $record->userid);
+        $this->assertEquals($this->targetuser1->id, $record->userid);
         $this->assertEquals('vroom1', $record->name);
         $this->assertEquals('poc_app', $record->plugin);
         $this->assertNotEmpty($record->description);
 
         // Course category context
-        $coursemodule = get_coursemodule_from_instance('facetoface', $this->f2f->id);
+        $coursemodule = $this->event1->get_seminar()->get_coursemodule();
         $course = get_course($coursemodule->course);
         $coursecatcontext = context_coursecat::instance($course->category);
-        $export = room_virtualmeeting::execute_export($targetuser1, $coursecatcontext);
+        $export = room_virtualmeeting::execute_export($this->targetuser1, $coursecatcontext);
         $data = $export->data;
         $this->assertCount(2, $data);
 
         $record = array_shift($data);
-        $this->assertEquals($targetuser1->id, $record->userid);
+        $this->assertEquals($this->targetuser1->id, $record->userid);
         $this->assertEquals('vroom1', $record->name);
         $this->assertEquals('poc_app', $record->plugin);
         $this->assertNotEmpty($record->description);
 
-        $export = room_virtualmeeting::execute_export($targetuser2, context_system::instance());
+        $export = room_virtualmeeting::execute_export($this->targetuser2, context_system::instance());
         $data = $export->data;
         $this->assertEmpty($data);
     }
@@ -219,82 +138,74 @@ class mod_facetoface_userdata_room_virtualmeeting_testcase extends advanced_test
     public function test_purge_context_system() {
         global $DB;
 
-        $targetuser2 = new target_user($this->user2);
-        $status = room_virtualmeeting::execute_purge($targetuser2, context_system::instance());
+        $status = room_virtualmeeting::execute_purge($this->targetuser2, context_system::instance());
 
         $this->assertEquals(item::RESULT_STATUS_SUCCESS, $status);
-        $this->assertCount(2, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
-        $this->assertCount(0, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
+        $this->assertEquals(2, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
+        $this->assertEquals(0, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
 
-        $targetuser1 = new target_user($this->user1);
-        $status = room_virtualmeeting::execute_purge($targetuser1, context_system::instance());
+        $status = room_virtualmeeting::execute_purge($this->targetuser1, context_system::instance());
 
         $this->assertEquals(item::RESULT_STATUS_SUCCESS, $status);
-        $this->assertCount(0, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
-        $this->assertCount(0, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
+        $this->assertEquals(0, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
+        $this->assertEquals(0, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
     }
 
     public function test_purge_context_module() {
         global $DB;
 
-        $coursemodule = get_coursemodule_from_instance('facetoface', $this->f2f->id);
+        $coursemodule = $this->event1->get_seminar()->get_coursemodule();
         $modulecontext = context_module::instance($coursemodule->id);
 
-        $targetuser2 = new target_user($this->user2);
-        $status = room_virtualmeeting::execute_purge($targetuser2, $modulecontext);
+        $status = room_virtualmeeting::execute_purge($this->targetuser2, $modulecontext);
 
         $this->assertEquals(item::RESULT_STATUS_SUCCESS, $status);
-        $this->assertCount(2, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
-        $this->assertCount(0, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
+        $this->assertEquals(2, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
+        $this->assertEquals(0, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
 
-        $targetuser1 = new target_user($this->user1);
-        $status = room_virtualmeeting::execute_purge($targetuser1, $modulecontext);
+        $status = room_virtualmeeting::execute_purge($this->targetuser1, $modulecontext);
 
         $this->assertEquals(item::RESULT_STATUS_SUCCESS, $status);
-        $this->assertCount(0, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
-        $this->assertCount(0, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
+        $this->assertEquals(0, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
+        $this->assertEquals(0, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
     }
 
     public function test_purge_context_course() {
         global $DB;
 
-        $coursemodule = get_coursemodule_from_instance('facetoface', $this->f2f->id);
+        $coursemodule = $this->event1->get_seminar()->get_coursemodule();
         $coursecontext = context_course::instance($coursemodule->course);
 
-        $targetuser2 = new target_user($this->user2);
-        $status = room_virtualmeeting::execute_purge($targetuser2, $coursecontext);
+        $status = room_virtualmeeting::execute_purge($this->targetuser2, $coursecontext);
 
         $this->assertEquals(item::RESULT_STATUS_SUCCESS, $status);
-        $this->assertCount(2, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
-        $this->assertCount(0, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
+        $this->assertEquals(2, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
+        $this->assertEquals(0, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
 
-        $targetuser1 = new target_user($this->user1);
-        $status = room_virtualmeeting::execute_purge($targetuser1, $coursecontext);
+        $status = room_virtualmeeting::execute_purge($this->targetuser1, $coursecontext);
 
         $this->assertEquals(item::RESULT_STATUS_SUCCESS, $status);
-        $this->assertCount(0, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
-        $this->assertCount(0, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
+        $this->assertEquals(0, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
+        $this->assertEquals(0, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
     }
 
     public function test_purge_context_course_category() {
         global $DB;
 
-        $coursemodule = get_coursemodule_from_instance('facetoface', $this->f2f->id);
+        $coursemodule = $this->event1->get_seminar()->get_coursemodule();
         $course = get_course($coursemodule->course);
         $coursecatcontext = context_coursecat::instance($course->category);
 
-        $targetuser2 = new target_user($this->user2);
-        $status = room_virtualmeeting::execute_purge($targetuser2, $coursecatcontext);
+        $status = room_virtualmeeting::execute_purge($this->targetuser2, $coursecatcontext);
 
         $this->assertEquals(item::RESULT_STATUS_SUCCESS, $status);
-        $this->assertCount(2, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
-        $this->assertCount(0, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
+        $this->assertEquals(2, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
+        $this->assertEquals(0, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
 
-        $targetuser1 = new target_user($this->user1);
-        $status = room_virtualmeeting::execute_purge($targetuser1, $coursecatcontext);
+        $status = room_virtualmeeting::execute_purge($this->targetuser1, $coursecatcontext);
 
         $this->assertEquals(item::RESULT_STATUS_SUCCESS, $status);
-        $this->assertCount(0, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
-        $this->assertCount(0, $DB->get_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
+        $this->assertEquals(0, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user1->id]));
+        $this->assertEquals(0, $DB->count_records('facetoface_room_virtualmeeting', ['userid' => $this->user2->id]));
     }
 }
