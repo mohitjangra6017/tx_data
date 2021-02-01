@@ -84,7 +84,18 @@ class user extends item {
      */
     public function get_properties(): array {
         return [
-
+            'description' => function () {
+                return "Test user description " . App::faker()->bs;
+            },
+            'descriptionformat' => FORMAT_MOODLE,
+            'country' => function () {
+                $countries = ['AZ', 'NZ', 'AU', 'CA', 'CZ', 'US'];
+                return  $countries[array_rand($countries)];
+            },
+            'city' => function () {
+                $cities = ['Wellington', 'Christchurch', 'Auckland', 'Dunedin', 'Lower Hutt'];
+                return  $cities[array_rand($cities)];
+            }
         ];
     }
 

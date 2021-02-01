@@ -171,6 +171,11 @@ class performance_testing extends App {
     protected $public_workspaces = [];
 
     /**
+     * @var array
+     */
+    protected $badges = [];
+
+    /**
      * Enable / disable function calls here to control which data is generated
      * when you run this script.
      */
@@ -179,17 +184,22 @@ class performance_testing extends App {
         // Cached data is not used at the moment so disabled by default for now.
         Cache::disable();
 
-        $this->create_users()
+        $this
+            ->create_users()
             ->create_organisations()
             ->create_positions()
+            ->add_aspirational_positions()
+            ->add_interests()
             ->create_audiences()
+            ->create_badges()
+            ->add_badges()
             ->add_audience_members()
             ->create_job_assignments_for_user()
-            ->perform_act_create_activities()
+            // ->perform_act_create_activities()
             // ->perform_act_expand_track_user_assignments()   // Use with care as will have considerable performance impact on generation
             // ->perform_act_generate_instances()              // Use with care as will have considerable performance impact on generation
-            // ->create_scales()
-            // ->create_competencies()
+            ->create_scales()
+            ->create_competencies()
             // ->perform_comp_create_organisation_assignments()
             // ->perform_comp_create_position_assignments()
             // ->perform_comp_create_audience_assignments()
@@ -239,6 +249,7 @@ class performance_testing extends App {
             'positions' => [3, 3],
             'competencies' => [3, 3],
             'competency_assignments' => 100,
+            'badges' => 5,
             'job_assignments_for_user' => 2,
             'enrolments' => 100,
             'courses_per_criterion' => 5,
@@ -311,6 +322,7 @@ class performance_testing extends App {
             'positions' => [4, 4],
             'competencies' => [4, 4],
             'competency_assignments' => 100,
+            'badges' => 10,
             'job_assignments_for_user' => 1,
             'enrolments' => 100,
             'courses_per_criterion' => 5,
@@ -383,6 +395,7 @@ class performance_testing extends App {
             'positions' => [4, 4],
             'competencies' => [4, 4],
             'competency_assignments' => 80,
+            'badges' => 20,
             'job_assignments_for_user' => 1,
             'enrolments' => 80,
             'courses_per_criterion' => 5,
@@ -455,6 +468,7 @@ class performance_testing extends App {
             'positions' => [4, 4],
             'competencies' => [4, 4],
             'competency_assignments' => 100,
+            'badges' => 50,
             'job_assignments_for_user' => 2,
             'enrolments' => 100,
             'courses_per_criterion' => 5,
@@ -527,6 +541,7 @@ class performance_testing extends App {
             'positions' => [5, 5],
             'competencies' => [5, 5],
             'competency_assignments' => 70,
+            'badges' => 100,
             'job_assignments_for_user' => 2,
             'enrolments' => 70,
             'courses_per_criterion' => 5,
@@ -599,6 +614,7 @@ class performance_testing extends App {
             'positions' => [5, 5],
             'competencies' => [5, 5],
             'competency_assignments' => 70,
+            'badges' => 1000,
             'job_assignments_for_user' => 4,
             'enrolments' => 70,
             'courses_per_criterion' => 5,
@@ -671,6 +687,7 @@ class performance_testing extends App {
             'positions' => [5, 5],
             'competencies' => [6, 5],
             'competency_assignments' => 70,
+            'badges' => 10000,
             'job_assignments_for_user' => 5,
             'enrolments' => 70,
             'courses_per_criterion' => 5,
@@ -821,6 +838,62 @@ class performance_testing extends App {
         return $this;
     }
 
+    public function add_aspirational_positions() {
+        global $CFG;
+        require_once($CFG->dirroot . '/totara/gap/lib.php');
+
+        $this->output('Creating aspirational positions...');
+
+        if (empty($this->users)) {
+            throw new Exception('You must create users first');
+        }
+
+        if (empty($this->positions)) {
+            throw new Exception('You must create audiences first');
+        }
+
+        builder::get_db()->transaction(function () {
+            foreach ($this->users as $userid) {
+                $pos = $this->positions[array_rand($this->positions)];
+                totara_gap_assign_aspirational_position($userid, $pos->get_data()->id);
+            }
+        });
+
+        return $this;
+    }
+
+    public function add_interests() {
+        global $CFG;
+        require_once($CFG->dirroot . '/tag/classes/tag.php');
+
+        $this->output('Adding user interests...');
+
+        if (empty($this->users)) {
+            throw new Exception('You must create users first');
+        }
+
+        builder::get_db()->transaction(function () {
+            $interests = ['swimming', 'hunting', 'fishing', 'macrame', 'biking', 'trailing', 'riding', 'programming', 'other'];
+            $count = count($this->users) / 10;
+            $done = 0;
+            $doneactual = 0;
+            foreach ($this->users as $userid) {
+                $doneactual++;
+                if ($doneactual % 10 == 0) {
+                    self::show_progress($done, $count);
+                }
+                if (rand(0, 1)) {
+                    continue;
+                }
+                shuffle($interests);
+                $userinterest = array_slice($interests, 0, rand(1, 3));
+                \core_tag_tag::set_item_tags('core', 'user', $userid, \context_user::instance($userid), $userinterest);
+            }
+        });
+
+        return $this;
+    }
+
     public function create_audiences() {
         $this->output('Creating audiences...');
 
@@ -947,6 +1020,69 @@ class performance_testing extends App {
                     $this->competency_hierarchy->get_items()
                 )
             )->load('scale');
+        });
+
+        return $this;
+    }
+
+    public function create_badges() {
+        global $CFG;
+        require_once($CFG->dirroot . '/lib/badgeslib.php');
+
+        $this->output('Creating badges...');
+        /**
+         * @var \core_badges_generator $generator
+         */
+        $generator =  App::generator()->get_plugin_generator('core_badges');
+
+        builder::get_db()->transaction(function () use ($generator) {
+            $count = $this->get_item_size('badges');
+            $admin = get_admin();
+            for ($i = 0; $i < $count; $i++) {
+                $id = $generator->create_badge($admin->id, ['name' => 'Badge ' . $i]);
+                $generator->add_manual_badge_criteria($id);
+                $this->badges[$id] = $id;
+            }
+        });
+
+        return $this;
+    }
+
+    public function add_badges() {
+        global $CFG;
+        require_once($CFG->dirroot . '/lib/phpunit/classes/message_sink.php');
+
+        $this->output('Awarding badges...');
+
+        if (empty($this->users)) {
+            throw new Exception('You must create users first');
+        }
+
+        if (empty($this->badges)) {
+            throw new Exception('You must create badges first');
+        }
+
+        builder::get_db()->transaction(function () {
+            $count = count($this->users) / 10;
+            $done = 0;
+            $doneactual = 0;
+            foreach ($this->users as $user) {
+                $doneactual++;
+                if ($doneactual % 10 == 0) {
+                    self::show_progress($done, $count);
+                }
+                if (rand(0, 1)) {
+                    continue;
+                }
+                // 1 to 3 badges for user
+                $badges = $this->badges;
+                shuffle($badges);
+                $userbadges = array_slice($badges, 0, rand(1, 3));
+                foreach ($userbadges as $badgeid) {
+                    $badge = new \badge($badgeid);
+                    $badge->issue($user, true);
+                }
+            }
         });
 
         return $this;
