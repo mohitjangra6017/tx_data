@@ -1805,13 +1805,18 @@ require(['core/autoinitialise'], function(ai) {
         // Totara: add IE11 Polyfill, includes a polyfill for events, promises & fetch to allow us to use native es6 JS
         if (core_useragent::is_ie()) {
             if ($CFG->debugdeveloper) {
-                $output .= html_writer::script('', $this->js_fix_url('/lib/javascript_polyfill/src/es6-promise.auto.js'));
+                $output .= html_writer::script('', $this->js_fix_url('/lib/javascript_polyfill/src/es6_dom_features.bundle.js'));
                 $output .= html_writer::script('', $this->js_fix_url('/lib/javascript_polyfill/src/fetch.js'));
-                $output .= html_writer::script('', $this->js_fix_url('/lib/javascript_polyfill/src/other_ie11.js'));
             } else {
-                $output .= html_writer::script('', $this->js_fix_url('/lib/javascript_polyfill/build/es6-promise.auto.min.js'));
+                $output .= html_writer::script('', $this->js_fix_url('/lib/javascript_polyfill/build/es6_dom_features.bundle.min.js'));
                 $output .= html_writer::script('', $this->js_fix_url('/lib/javascript_polyfill/build/fetch.min.js'));
-                $output .= html_writer::script('', $this->js_fix_url('/lib/javascript_polyfill/build/other_ie11.min.js'));
+            }
+        } else {
+            // include polyfills for other browsers
+            if ($CFG->debugdeveloper) {
+                $output .= html_writer::script('', $this->js_fix_url('/lib/javascript_polyfill/src/esnext_features.bundle.js'));
+            } else {
+                $output .= html_writer::script('', $this->js_fix_url('/lib/javascript_polyfill/build/esnext_features.bundle.min.js'));
             }
         }
 
