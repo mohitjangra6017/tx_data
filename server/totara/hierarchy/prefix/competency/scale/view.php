@@ -24,6 +24,7 @@
 
 use hierarchy_competency\event\scale_min_proficient_value_updated;
 use totara_competency\models\scale;
+use totara_core\advanced_feature;
 
 require_once(__DIR__ . '/../../../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
@@ -301,8 +302,13 @@ if ($values) {
             $OUTPUT->help_icon('plandefaultvalue', 'totara_hierarchy');
         $table->align[] = 'center';
 
-        $table->head[] = get_string('competencyscaleminprofvalue', 'totara_hierarchy').' '.
-            $OUTPUT->help_icon('competencyscaleminprofvalue', 'totara_hierarchy');
+        if (advanced_feature::is_enabled('competency_assignment')) {
+            $table->head[] = get_string('competencyscaleminprofvaluewithassignments', 'totara_hierarchy') .
+                ' ' . $OUTPUT->help_icon('competencyscaleminprofvaluewithassignments', 'totara_hierarchy');
+        } else {
+            $table->head[] = get_string('competencyscaleminprofvalue', 'totara_hierarchy') .
+                ' ' . $OUTPUT->help_icon('competencyscaleminprofvalue', 'totara_hierarchy');
+        }
         $table->align[] = 'center';
 
         $table->head[] = get_string('competencyscaleprofcolumn', 'totara_hierarchy').' '.
