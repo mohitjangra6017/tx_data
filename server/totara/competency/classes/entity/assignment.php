@@ -46,7 +46,7 @@ use core\entity\user;
  * @property int $updated_at Updated at timestamp
  * @property int $archived_at Archived at timestamp
  * @property bool $expand Flag whether to expand assignment on next expand task run
- * @property int|null $minproficiencyid Custom minimum proficiency value for the assignment
+ * @property int|null $minproficiencyid Minimum proficiency override value for the assignment
  *
  * @property-read string $status_name Textual representation of status int
  * @property-read competency_achievement $current_achievement Current achievement

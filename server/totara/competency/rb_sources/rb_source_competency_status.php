@@ -117,6 +117,7 @@ class rb_source_competency_status extends rb_base_source {
                 'scale_values.id = base.scale_value_id',
                 REPORT_BUILDER_RELATION_ONE_TO_ONE
             ),
+            // This is the default minimum proficiency level. The name is not very helpful.
             new rb_join(
                 'scale_values_2',
                 'LEFT',
@@ -124,6 +125,15 @@ class rb_source_competency_status extends rb_base_source {
                 'scale_values_2.id = scale.minproficiencyid',
                 REPORT_BUILDER_RELATION_ONE_TO_ONE,
                 'scale'
+            ),
+            // This is the minimum proficiency override, which overrides the default if specified.
+            new rb_join(
+                'scale_values_proficiency_override',
+                'LEFT',
+                '{comp_scale_values}',
+                'scale_values_proficiency_override.id = assignment.minproficiencyid',
+                REPORT_BUILDER_RELATION_ONE_TO_ONE,
+                'assignment'
             ),
             new rb_join(
                 'assignment',
@@ -281,13 +291,14 @@ class rb_source_competency_status extends rb_base_source {
                     'dbdatatype' => 'timestamp'
                 ]
             ),
+            // This is the minimum proficiency level. The type/value is a bit misleading.
             new rb_column_option(
                 'competency',
                 'name',
                 get_string('scale_values_name', 'rb_source_competency_status'),
-                'scale_values_2.name',
+                'COALESCE(scale_values_proficiency_override.name, scale_values_2.name)',
                 [
-                    'joins' => ['scale', 'scale_values_2', 'scale_assignments', 'competency'],
+                    'joins' => ['scale', 'scale_values_2', 'scale_values_proficiency_override', 'scale_assignments', 'competency'],
                     'displayfunc' => 'format_string',
                     'dbdatatype' => 'text'
                 ]

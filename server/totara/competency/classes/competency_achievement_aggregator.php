@@ -109,7 +109,7 @@ final class competency_achievement_aggregator {
         builder::get_db()->transaction(function () use ($competency, $aggregation_time, $user_assignment_records, $scale_values) {
             $hook = new competency_achievement_updated_bulk($competency);
 
-            // A user can have multiple assignments to a competency. Some of these may have custom proficiency settings resulting
+            // A user can have multiple assignments to a competency. Some of these may have proficiency override settings resulting
             // in the user being considered proficient in one assignment but not all.
             // However, the competency_achievement_updated_bulk hook is NOT assignment aware. If a user is considered proficient
             // via ANY assignment, the hook will indicate that the user is marked as proficient
