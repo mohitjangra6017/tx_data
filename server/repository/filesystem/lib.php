@@ -123,7 +123,11 @@ class repository_filesystem extends repository {
         $list['path'] = $this->build_breadcrumb($fullpath);
         foreach ($list['list'] as $k => $v) {
             // Totara: Argument must be passed by reference!
-            $this->filter($list['list'][$k]);
+            if ($this->filter($v)) {
+                $list['list'][$k] = $v;
+            } else {
+                unset($list['list'][$k]);
+            }
         }
 
         return $list;
@@ -250,7 +254,11 @@ class repository_filesystem extends repository {
 
         foreach ($list['list'] as $k => $v) {
             // Totara: Argument must be passed by reference!
-            $this->filter($list['list'][$k]);
+            if ($this->filter($v)) {
+                $list['list'][$k] = $v;
+            } else {
+                unset($list['list'][$k]);
+            }
         }
 
         return $list;

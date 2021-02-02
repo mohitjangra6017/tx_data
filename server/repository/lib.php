@@ -2140,7 +2140,11 @@ abstract class repository implements cacheable_object {
             if (!empty($value['children'])) {
                 foreach ($value['children'] as $k => $v) {
                     // Totara: Argument must be passed by reference!
-                    $this->filter($value['children'][$k]);
+                    if ($this->filter($v)) {
+                        $value['children'][$k] = $v;
+                    } else {
+                        unset($value['children'][$k]);
+                    }
                 }
             }
             return true; // always return directories

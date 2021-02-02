@@ -107,7 +107,11 @@ class repository_skydrive extends repository {
         $ret['list'] = $fileslist;
         foreach ($ret['list'] as $k => $v) {
             // Totara: Argument must be passed by reference!
-            $this->filter($ret['list'][$k]);
+            if ($this->filter($v)) {
+                $ret['list'][$k] = $v;
+            } else {
+                unset($ret['list'][$k]);
+            }
         }
 
         // Generate path bar, always start with the plugin name.

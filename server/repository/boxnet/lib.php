@@ -270,7 +270,11 @@ class repository_boxnet extends repository {
         $ret['list'] = array_merge($folders, $files);
         foreach ($ret['list'] as $k => $v) {
             // Totara: Argument must be passed by reference!
-            $this->filter($ret['list'][$k]);
+            if ($this->filter($v)) {
+                $ret['list'][$k] = $v;
+            } else {
+                unset($ret['list'][$k]);
+            }
         }
 
         return $ret;
