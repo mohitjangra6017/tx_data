@@ -2,6 +2,7 @@ This files describes API changes in /media/ plugins,
 information provided here is intended especially for developers.
 
 === 14.0 ===
+* All Adobe Flash related code was moved.
 
 === 13.0 ===
 * Deprecated media_swf.

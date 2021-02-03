@@ -66,7 +66,7 @@ final class core_media_manager {
      * Option: Enable players which are only suitable for use when we trust the
      * user who embedded the content.
      *
-     * At present, this option enables the SWF player.
+     * This option used to enable SWF player.
      *
      * To enable, set value to true.
      */
