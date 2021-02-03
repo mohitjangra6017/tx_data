@@ -18,20 +18,45 @@ Please contact [licensing@totaralearning.com] for more information.
 
 
 conf = {
-    # Minimum number of users and items in interactions set for whom to run the recommendation engine in a tenant
-    'min_data': {
-        'min_users': 10,
-        'min_items': 10
+    # Minimum number of users and items in interactions set for whom to run the
+    # recommendation engine in a tenant
+    "min_data": {"min_users": 10, "min_items": 10},
+    # The L2 penalty on user and item features when features are being used in the model
+    "user_alpha": 1e-6,
+    "item_alpha": 1e-6,
+    # The columns in the users and items datasets that need to be expanded horizontally
+    # and are currently in the form `property_1|property_2|...|property_n`
+    "spread_hor": {
+        "users": (
+            "lang",
+            "country",
+            "interests",
+            "asp_position",
+            "positions",
+            "organisations",
+            "badges",
+        )
     },
-    # The L2 penalty on item features when item features are being used in the model
-    'item_alpha': 1e-6
+    # The columns in the users and items datasets that are in the key-value pairs form
+    # and need expansion into horizontal format or multiple columns
+    "expand_dict": {"users": ("competencies_scale",)},
+    # The columns that will be concatenated for text processing. These are usually the
+    # columns with free text
+    "concat": {
+        "users": (
+            "city",
+            "description",
+        )
+    },
 }
 
 
 class Config:
     """
-    This is a conceptual representation of accessing the configuration elements from the conf object
+    This is a conceptual representation of accessing the configuration elements from the
+    conf object
     """
+
     def __init__(self):
         """
         The constructor method
@@ -40,8 +65,9 @@ class Config:
 
     def get_property(self, property_name):
         """
-        This method accesses and returns the called item of the `conf` dictionary. The method returns `None` when the
-            provided key does not match with any key of the `conf` dictionary
+        This method accesses and returns the called item of the `conf` dictionary. The
+        method returns `None` when the
+        provided key does not match with any key of the `conf` dictionary
         :param property_name: A key from the keys of the `conf` dictionary
         :type property_name: str
         :return: An item from the `conf` dictionary whose key was used as input

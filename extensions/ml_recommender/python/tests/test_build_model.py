@@ -18,6 +18,7 @@ Please contact [licensing@totaralearning.com] for more information.
 
 import unittest
 from unittest.mock import patch
+
 from subroutines.build_model import BuildModel
 
 
@@ -25,26 +26,29 @@ class TestBuildModel(unittest.TestCase):
     """
     The test object to test units of the class `BuildModel`
     """
+
     def setUp(self):
         """
         Hook method for setting up the fixture before exercising it
         """
         self.interactions = 50
         self.weights = 40
-        self.item_features = 30
+        self.user_features = ["user_feature1", "user_feature2", "user_feature3"]
+        self.item_features = ["item_feature1", "item_feature2", "item_feature3"]
         self.num_threads = 6
         self.item_alpha = 1e-6
-        self.hyperparams = {'epochs': 10, 'no_components': 10}
+        self.hyperparams = {"epochs": 10, "no_components": 10}
         self.model = BuildModel(
             interactions=self.interactions,
             weights=self.weights,
+            user_features=self.user_features,
             item_features=self.item_features,
             num_threads=self.num_threads,
             item_alpha=self.item_alpha,
-            optimized_hyperparams=self.hyperparams
+            optimized_hyperparams=self.hyperparams,
         )
 
-    @patch('subroutines.build_model.LightFM.fit')
+    @patch("subroutines.build_model.LightFM.fit")
     def test_build_model(self, mock_model_fit):
         """
         This method tests if the class method `LightFM.fit` has been called correctly
@@ -53,15 +57,18 @@ class TestBuildModel(unittest.TestCase):
         mock_model_fit.assert_called_once_with(
             interactions=self.interactions,
             sample_weight=self.weights,
-            user_features=None,
+            user_features=self.user_features,
             item_features=self.item_features,
-            epochs=self.hyperparams['epochs'],
-            num_threads=self.num_threads
+            epochs=self.hyperparams["epochs"],
+            num_threads=self.num_threads,
         )
 
     def test_components(self):
         """
-        This method tests if the class `LightFM` has been instantiated with the correct size of
-        lateral dimensions
+        This method tests if the class `LightFM` has been instantiated with the correct
+        size of lateral dimensions
         """
-        self.assertEqual(self.model.optimized_hyperparams['no_components'], self.hyperparams['no_components'])
+        self.assertEqual(
+            self.model.optimized_hyperparams["no_components"],
+            self.hyperparams["no_components"],
+        )
