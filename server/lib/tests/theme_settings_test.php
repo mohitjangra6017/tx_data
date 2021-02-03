@@ -1247,6 +1247,7 @@ class core_theme_settings_testcase extends advanced_testcase {
         $sink->close();
         $this->assertCount(1, $result);
         $body = quoted_printable_decode($result[0]->body);
+        $body = preg_replace("#\r\n#", "\n", $body);
 
         $this->assertStringContainsString('<div>This is the header</div>', $body);
         $this->assertStringContainsString('<div>This is the footer</div>', $body);
@@ -1258,6 +1259,7 @@ class core_theme_settings_testcase extends advanced_testcase {
         $result = $sink->get_messages();
         $sink->close();
         $body = quoted_printable_decode($result[0]->body);
+        $body = preg_replace("#\r\n#", "\n", $body);
 
         $this->assertCount(1, $result);
         $this->assertStringNotContainsString('<div>This is the header</div>', $body);
@@ -1273,6 +1275,7 @@ class core_theme_settings_testcase extends advanced_testcase {
         $result = $sink->get_messages();
         $sink->close();
         $body = quoted_printable_decode($result[0]->body);
+        $body = preg_replace("#\r\n#", "\n", $body);
 
         $this->assertCount(1, $result);
         $this->assertStringContainsString('<tr><td colspan="3">&nbsp;</td></tr>', $body);
@@ -1287,6 +1290,7 @@ class core_theme_settings_testcase extends advanced_testcase {
         $result = $sink->get_messages();
         $sink->close();
         $body = quoted_printable_decode($result[0]->body);
+        $body = preg_replace("#\r\n#", "\n", $body);
 
         $this->assertCount(1, $result);
         $this->assertStringContainsString('<div>This is the header</div>', $body);
@@ -1303,6 +1307,7 @@ class core_theme_settings_testcase extends advanced_testcase {
         $result = $sink->get_messages();
         $sink->close();
         $body = quoted_printable_decode($result[0]->body);
+        $body = preg_replace("#\r\n#", "\n", $body);
 
         $this->assertCount(1, $result);
         $this->assertStringNotContainsString('<div>This is the header</div>', $body);
