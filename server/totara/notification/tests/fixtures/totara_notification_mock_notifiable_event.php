@@ -85,11 +85,4 @@ class totara_notification_mock_notifiable_event implements notifiable_event {
     public function get_context() {
         return context::instance_by_id($this->context_id);
     }
-
-    /**
-     * @return array
-     */
-    public static function get_notification_configurations(): array {
-        return [];
-    }
 }

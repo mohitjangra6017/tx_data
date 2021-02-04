@@ -69,11 +69,4 @@ interface notifiable_event extends context_aware {
      * @return array
      */
     public function get_notification_event_data(): array;
-
-    /**
-     * Returning build-in-notification configurations and custom notification configurations for notifiable_event.
-     *
-     * @return array
-     */
-    public static function get_notification_configurations(): array;
 }
