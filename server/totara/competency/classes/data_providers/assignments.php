@@ -31,6 +31,7 @@ use core\pagination\cursor;
 use totara_competency\entity\assignment;
 use totara_competency\entity\assignment_repository;
 use totara_competency\entity\competency;
+use totara_competency\entity\competency_achievement;
 use totara_competency\entity\competency_assignment_user;
 use totara_competency\user_groups;
 
@@ -325,6 +326,22 @@ class assignments extends user_data_provider {
      */
     protected function filter_by_ids(assignment_repository $repository, array $assignment_ids): void {
         $repository->where_in('id', $assignment_ids);
+    }
+
+    /**
+     * Filter by proficient value
+     *
+     * @param assignment_repository $repository
+     * @param $value
+     */
+    protected function filter_by_proficient(assignment_repository $repository, $value) {
+        $repository->join([competency_achievement::TABLE, 'current_achievement'], function (builder $builder) use ($repository) {
+            $builder->where_field(new field('competency_id', $repository->get_builder()), 'current_achievement.competency_id')
+                ->where_field(new field('id', $repository->get_builder()), 'current_achievement.assignment_id')
+                ->where('current_achievement.status', competency_achievement::ACTIVE_ASSIGNMENT)
+                ->where('current_achievement.user_id', $this->get_user()->id);
+        })
+            ->where('current_achievement.proficient', intval($value));
     }
 
 }

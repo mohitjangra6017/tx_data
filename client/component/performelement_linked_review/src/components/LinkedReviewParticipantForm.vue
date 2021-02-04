@@ -27,7 +27,7 @@
       :participant-instance-id="participantInstanceId"
       :section-element-id="sectionElement.id"
       :settings="contentSettings"
-      :user-id="subjectUser.id"
+      :user-id="userId"
       @update="refetch"
     />
 
@@ -119,6 +119,12 @@ export default {
       groupId: this.$id('label'),
       selectedContent: [],
     };
+  },
+
+  computed: {
+    userId() {
+      return parseInt(this.subjectUser.id);
+    }
   },
 
   /**

@@ -25,7 +25,7 @@
     :show-load-more="nextPage"
     :show-loading-btn="showLoadingBtn"
     @added="closeWithData($event)"
-    @cancel="$emit('cancel')"
+    @cancel="closeModal()"
     @load-more="loadMoreItems()"
     @selected-tab-active="updateSelectedItems($event)"
   >
@@ -35,6 +35,25 @@
         :title="$str('filter_competencies', 'totara_competency')"
       >
         <template v-slot:filters-left="{ stacked }">
+          <SelectFilter
+            v-model="reasonAssignedFilter"
+            :label="$str('header_assignment_reasons', 'totara_competency')"
+            :show-label="true"
+            :options="reasonAssignedFilterOptions"
+            :stacked="stacked"
+            @input="setReasonAssignedValues"
+          />
+
+          <SelectFilter
+            v-model="proficiencyFilter"
+            :label="$str('proficiency_status', 'totara_competency')"
+            :show-label="true"
+            :options="proficientOptions"
+            :stacked="stacked"
+          />
+        </template>
+
+        <template v-slot:filters-right="{ stacked }">
           <SearchFilter
             v-model="searchDebounce"
             :label="
@@ -60,20 +79,23 @@
         @input="update($event)"
       >
         <template v-slot:header-row>
-          <HeaderCell size="9" valign="center">
+          <HeaderCell size="4" valign="center">
             {{ $str('header_competency', 'totara_competency') }}
           </HeaderCell>
-          <HeaderCell size="3" align="center" valign="center">
+          <HeaderCell size="3" valign="center">
+            {{ $str('reason_assigned', 'totara_competency') }}
+          </HeaderCell>
+          <HeaderCell size="2" align="center" valign="center">
             {{ $str('proficient', 'totara_competency') }}
           </HeaderCell>
-          <HeaderCell size="4" valign="center">
+          <HeaderCell size="3" valign="center">
             {{ $str('achievement_level', 'totara_competency') }}
           </HeaderCell>
         </template>
 
         <template v-slot:row="{ row }">
           <Cell
-            size="9"
+            size="4"
             :column-header="$str('header_competency', 'totara_competency')"
             valign="center"
           >
@@ -82,6 +104,14 @@
 
           <Cell
             size="3"
+            :column-header="$str('reason_assigned', 'totara_competency')"
+            valign="center"
+          >
+            {{ row.reason_assigned }}
+          </Cell>
+
+          <Cell
+            size="2"
             :column-header="$str('proficient', 'totara_competency')"
             align="center"
             valign="center"
@@ -97,7 +127,7 @@
           </Cell>
 
           <Cell
-            size="4"
+            size="3"
             :column-header="$str('achievement_level', 'totara_competency')"
             valign="center"
           >
@@ -120,13 +150,16 @@
         @input="update($event)"
       >
         <template v-slot:header-row>
-          <HeaderCell size="9" valign="center">
+          <HeaderCell size="4" valign="center">
             {{ $str('header_competency', 'totara_competency') }}
           </HeaderCell>
-          <HeaderCell size="3" align="center" valign="center">
+          <HeaderCell size="3" valign="center">
+            {{ $str('reason_assigned', 'totara_competency') }}
+          </HeaderCell>
+          <HeaderCell size="2" align="center" valign="center">
             {{ $str('proficient', 'totara_competency') }}
           </HeaderCell>
-          <HeaderCell size="4" valign="center">
+          <HeaderCell size="3" valign="center">
             {{ $str('achievement_level', 'totara_competency') }}
           </HeaderCell>
         </template>
@@ -138,6 +171,14 @@
             valign="center"
           >
             {{ row.competency.display_name }}
+          </Cell>
+
+          <Cell
+            size="9"
+            :column-header="$str('reason_assigned', 'totara_competency')"
+            valign="center"
+          >
+            {{ row.reason_assigned }}
           </Cell>
 
           <Cell
@@ -177,6 +218,7 @@ import CheckIcon from 'tui/components/icons/CheckSuccess';
 import FilterBar from 'tui/components/filters/FilterBar';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
 import SearchFilter from 'tui/components/filters/SearchFilter';
+import SelectFilter from 'tui/components/filters/SelectFilter';
 import SelectTable from 'tui/components/datatable/SelectTable';
 // Queries
 import competenciesQuery from 'totara_competency/graphql/user_assignments';
@@ -190,6 +232,7 @@ export default {
     FilterBar,
     HeaderCell,
     SearchFilter,
+    SelectFilter,
     SelectTable,
   },
 
@@ -227,6 +270,19 @@ export default {
       nextPage: false,
       skipQueries: true,
       searchDebounce: '',
+      reasonAssignedFilter: null,
+      reasonAssignedFilterOptions: [
+        { id: null, label: this.$str('all', 'totara_competency') },
+      ],
+      proficiencyFilter: null,
+      proficientOptions: [
+        { id: null, label: this.$str('all', 'totara_competency') },
+        { id: true, label: this.$str('proficient', 'totara_competency') },
+        { id: false, label: this.$str('not_proficient', 'totara_competency') },
+      ],
+      typeValue: null,
+      userGroupIdValue: null,
+      userGroupNameValue: null,
     };
   },
 
@@ -267,6 +323,10 @@ export default {
           input: {
             filters: {
               search: this.filters.search,
+              type: this.typeValue,
+              user_group_id: this.userGroupIdValue,
+              user_group_type: this.userGroupNameValue,
+              proficient: this.proficiencyFilter,
             },
             user_id: this.userId,
           },
@@ -280,6 +340,16 @@ export default {
         this.nextPage = competencies.next_cursor
           ? competencies.next_cursor
           : false;
+
+        let filterOptions = competencies.filters.map(option => ({
+          id: option,
+          label: option.name,
+        }));
+
+        let first_option = [{ id: null, label: this.$str('all', 'totara_competency') }];
+
+        this.reasonAssignedFilterOptions = [...first_option, ...filterOptions];
+
         return competencies;
       },
     });
@@ -330,6 +400,10 @@ export default {
             cursor: this.nextPage,
             filters: {
               search: this.filters.search,
+              type: this.typeValue,
+              user_group_id: this.userGroupIdValue,
+              user_group_type: this.userGroupNameValue,
+              proficient: this.proficiencyFilter,
             },
             user_id: this.userId,
           },
@@ -372,6 +446,31 @@ export default {
     },
 
     /**
+     * Close adder without saving
+     */
+    closeModal() {
+      this.reasonAssignedFilter = null;
+      this.setReasonAssignedValues(null);
+      this.proficiencyFilter = null;
+      this.$emit('cancel');
+    },
+
+    /**
+     * ...
+     */
+    setReasonAssignedValues(value) {
+      if (!value) {
+        this.typeValue = null;
+        this.userGroupIdValue = null;
+        this.userGroupNameValue = null;
+      } else {
+        this.typeValue = value.type;
+        this.userGroupIdValue = value.user_group_id;
+        this.userGroupNameValue = value.user_group_type;
+      }
+    },
+
+    /**
      * Update the selected items data
      *
      * @param {Array} selection
@@ -408,21 +507,26 @@ export default {
 </script>
 
 <lang-strings>
-{
-  "core": [
-    "no",
-    "yes"
-  ],
-  "totara_core": [
-    "search"
-  ],
-  "totara_competency": [
-    "achievement_level",
-    "filter_competencies",
-    "filter_competencies_search_label",
-    "header_competency",
-    "proficient",
-    "select_competencies"
-  ]
-}
+  {
+    "core": [
+      "no",
+      "yes"
+    ],
+    "totara_core": [
+      "search"
+    ],
+    "totara_competency": [
+      "achievement_level",
+      "all",
+      "filter_competencies",
+      "filter_competencies_search_label",
+      "header_assignment_reasons",
+      "header_competency",
+      "not_proficient",
+      "proficiency_status",
+      "proficient",
+      "reason_assigned",
+      "select_competencies"
+    ]
+  }
 </lang-strings>

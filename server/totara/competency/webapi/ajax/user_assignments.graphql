@@ -11,6 +11,15 @@ query totara_competency_user_assignments(
         name
         proficient
       }
+      reason_assigned
+    }
+    filters {
+      name
+      status_name
+      status
+      type
+      user_group_id
+      user_group_type
     }
     total
     next_cursor

@@ -268,18 +268,11 @@ input totara_competency_self_assigned_competencies_filter {
 }
 
 """
-Filters input for the user assignments adder query.
-"""
-input totara_competency_user_assignments_filters {
-  search: String
-  ids: [core_id]
-}
-
-"""
 Input for the user assignments query.
 """
 input totara_competency_user_assignments_input {
-  filters: totara_competency_user_assignments_filters
+  user_id: core_id
+  filters: totara_competency_profile_assignment_filters
   result_size: Int
   cursor: String
   user_id: core_id
@@ -290,6 +283,10 @@ Result for the user assignments query.
 """
 type totara_competency_user_assignments_result implements core_pageable_result {
   items: [totara_competency_profile_assignment_progress!]
+  """
+  Optional set of filters to restrict the items returned
+  """
+  filters: [totara_competency_profile_assignment_filter_option!]
   total: Int!
   next_cursor: String!
 }

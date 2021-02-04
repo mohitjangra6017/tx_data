@@ -25,7 +25,7 @@
         {{ $str('header_competency', 'totara_competency') }}
       </HeaderCell>
       <HeaderCell size="2">
-        {{ $str('header_reason_assigned', 'totara_competency') }}
+        {{ $str('header_assignment_reasons', 'totara_competency') }}
       </HeaderCell>
       <HeaderCell size="2">
         {{ $str('header_archived_date', 'totara_competency') }}
@@ -48,7 +48,7 @@
 
       <Cell
         size="2"
-        :column-header="$str('header_reason_assigned', 'totara_competency')"
+        :column-header="$str('header_assignment_reasons', 'totara_competency')"
       >
         {{ row.assignment && row.assignment.progress_name }}
       </Cell>
@@ -154,7 +154,7 @@ export default {
   ],
   "totara_competency": [
     "header_competency",
-    "header_reason_assigned",
+    "header_assignment_reasons",
     "header_archived_date",
     "proficient",
     "achievement_level"

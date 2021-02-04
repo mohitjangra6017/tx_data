@@ -102,6 +102,10 @@ type totara_competency_profile_assignment_progress {
   The minimum required proficiency for this competency
   """
   min_value: totara_competency_profile_scale_value_progress!
+  """
+  The reason why assignment is assigned
+  """
+  reason_assigned: String
 }
 
 """
@@ -200,6 +204,10 @@ input totara_competency_profile_assignment_filters {
   Text string to search with LIKE against competency fullname and description
   """
   search: String
+  """
+  An array of competency ids for querying the selected competenies
+  """
+  ids: [core_id!]
 }
 
 """

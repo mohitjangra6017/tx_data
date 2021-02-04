@@ -36,6 +36,7 @@ use totara_competency\data_providers\assignments;
 use totara_competency\entity\assignment as assignment_entity;
 use totara_competency\helpers\capability_helper;
 use totara_competency\models\assignment as assignment_model;
+use totara_competency\models\profile\filter;
 
 class user_assignments implements query_resolver, has_middleware {
 
@@ -48,13 +49,26 @@ class user_assignments implements query_resolver, has_middleware {
 
         self::require_view_capability($user_id, $ec);
 
-        return assignments::for($user_id)
-            ->set_filters($args['input']['filters'] ?? [])
+        $status_filter = ['status' => assignment_entity::STATUS_ACTIVE];
+        $query_filters = array_merge($status_filter, $args['input']['filters']);
+
+        // Get competency assignments
+        $result = assignments::for($user_id)
+            ->set_filters($query_filters)
             ->fetch_paginated($args['input']['cursor'] ?? null, $args['input']['limit'] ?? null)
             ->transform(static function (assignment_entity $assignment) {
                 return assignment_model::load_by_entity($assignment);
             })
             ->get();
+
+        // Get assignment filter list
+        $assignments = assignments::for($user_id)
+            ->set_filters($status_filter)
+            ->fetch();
+
+        $result['filters'] = filter::build_from_assignments_provider($assignments);
+
+        return $result;
     }
 
     /**

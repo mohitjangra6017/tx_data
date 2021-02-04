@@ -341,6 +341,7 @@ $string['progress_name_by_user'] = '{$a->progress_name} by {$a->user_fullname_ro
 $string['rate_others_competencies'] = 'Rate others\' competencies';
 $string['rating_none'] = 'None';
 $string['rating_scale'] = 'Rating scale';
+$string['reason_assigned'] = 'Reason assigned';
 $string['remove_linked_course'] = 'Remove linked course';
 $string['removed_linked_course'] = 'Removed linked course';
 $string['save_activate_assignments'] = 'Activate assignments on creation';
