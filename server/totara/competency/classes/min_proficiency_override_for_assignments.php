@@ -30,6 +30,7 @@ use totara_competency\entity\assignment;
 use totara_competency\entity\competency;
 use totara_competency\entity\competency_framework;
 use totara_competency\entity\scale_value;
+use totara_competency\event\assignment_min_proficiency_override_updated;
 use totara_competency\models\assignment as assignment_model;
 
 /**
@@ -115,11 +116,30 @@ class min_proficiency_override_for_assignments {
     }
 
     private function update_override_values(): collection {
-        return assignment::repository()->where_in('id', $this->assignment_ids)
-            ->update(['minproficiencyid' => $this->scale_value_id])
-            ->order_by('id')
-            ->get()
-            ->map_to([assignment_model::class, 'load_by_entity']);
+        /** @var collection $updated */
+        $updated = null;
+
+        builder::get_db()->transaction(function () use(&$updated) {
+            /** @var collection|assignment_model[] $updated */
+            $updated = assignment::repository()->where_in('id', $this->assignment_ids)
+                ->update(['minproficiencyid' => $this->scale_value_id])
+                ->order_by('id')
+                ->get()
+                ->map_to([assignment_model::class, 'load_by_entity']);
+
+            // Queue all assigned users for re-aggregation
+            $queue = new aggregation_users_table();
+            $competency_ids = array_unique($updated->pluck('competency_id'));
+            foreach ($competency_ids as $competency_id) {
+                $queue->queue_all_assigned_users_for_aggregation($competency_id, 1);
+            }
+
+            foreach ($updated as $assignment) {
+                assignment_min_proficiency_override_updated::create_from_assignment($assignment->get_entity())->trigger();
+            }
+        });
+
+        return $updated;
     }
 
     /**

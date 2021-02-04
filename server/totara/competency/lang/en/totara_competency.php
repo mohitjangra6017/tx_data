@@ -237,6 +237,7 @@ $string['event_assignment_activated'] = 'Competency assignment activated';
 $string['event_assignment_archived'] = 'Competency assignment archived';
 $string['event_assignment_created'] = 'Competency assignment created';
 $string['event_assignment_deleted'] = 'Competency assignment deleted';
+$string['event_assignment_min_proficiency_override_updated'] = 'Competency assignment minimum proficiency override updated';
 $string['event_assignment_user_archived'] = 'User competency assignment archived';
 $string['event_assignment_user_assigned'] = 'User competency assignment assigned';
 $string['event_assignment_user_unassigned'] = 'User competency assignment unassigned';

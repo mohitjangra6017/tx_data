@@ -135,9 +135,9 @@ final class competency_achievement_aggregator {
                     // Proficiency may differ per assignment
                     if ($user_assignment_record->assignment->minproficiencyid !== null) {
                         $min_proficient_scale_value = $scale_values->find('id', $user_assignment_record->assignment->minproficiencyid);
-                        $scale_value_data['is_proficient'] = (int) $user_achievement['scale_value']->sortorder <= $min_proficient_scale_value->sortorder;
+                        $scale_value_data['is_proficient'] = (int)($user_achievement['scale_value']->sortorder <= $min_proficient_scale_value->sortorder);
                     } else {
-                        $scale_value_data['is_proficient'] = (int) $user_achievement['scale_value']->proficient;
+                        $scale_value_data['is_proficient'] = (int)($user_achievement['scale_value']->proficient);
                     }
                 }
 

@@ -23,8 +23,12 @@
  * @subpackage test
  */
 
+use core\orm\query\builder;
+use totara_competency\aggregation_users_table;
 use totara_competency\entity\assignment as assignment_entity;
 use totara_competency\entity\scale_value;
+use totara_competency\event\assignment_min_proficiency_override_updated;
+use totara_competency\expand_task;
 use totara_competency\min_proficiency_override_for_assignments;
 use totara_competency\models\assignment;
 
@@ -48,6 +52,8 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
 
         $original_min_scale_value = $assignment_entity->competency->scale->min_proficient_value;
 
+        $sink = $this->redirectEvents();
+
         $updated_assignments = (new min_proficiency_override_for_assignments(
             $new_min_scale_value->id,
             [$assignment_entity->id]
@@ -60,6 +66,8 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
         self::assertTrue($updated_assignment->has_default_proficiency_value_override());
         self::assertEquals($updated_assignment->get_min_value()->id, $new_min_scale_value->id);
 
+        $this->verify_events($sink, $updated_assignments->pluck('id'));
+        $sink->clear();
 
         $updated_assignments = (new min_proficiency_override_for_assignments(
             null,
@@ -72,6 +80,9 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
         self::assertEquals($updated_assignment->get_id(), $assignment_entity->id);
         self::assertFalse($updated_assignment->has_default_proficiency_value_override());
         self::assertEquals($updated_assignment->get_min_value()->id, $original_min_scale_value->id);
+
+        $this->verify_events($sink, $updated_assignments->pluck('id'));
+        $sink->close();
     }
 
     public function test_set_and_unset_multi_assignments_same_competency(): void {
@@ -91,6 +102,8 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
 
         $original_min_scale_value = $assignment_entity1->competency->scale->min_proficient_value;
 
+        $sink = $this->redirectEvents();
+
         $updated_assignments = (new min_proficiency_override_for_assignments(
             $new_min_scale_value->id,
             [$assignment_entity1->id, $assignment_entity2->id]
@@ -109,6 +122,8 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
         self::assertTrue($updated_assignment2->has_default_proficiency_value_override());
         self::assertEquals($updated_assignment2->get_min_value()->id, $new_min_scale_value->id);
 
+        $this->verify_events($sink, $updated_assignments->pluck('id'));
+        $sink->clear();
 
         $updated_assignments = (new min_proficiency_override_for_assignments(
             null,
@@ -133,7 +148,7 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
         $assignment1 = $this->generator()->assignment_generator()->create_self_assignment();
         $assignment_entity1 = new assignment_entity($assignment1->id);
 
-        // One and two share the same competency.
+        // One and two share the same framework, different competencies.
         $assignment2 = $this->generator()->assignment_generator()->create_self_assignment();
         $assignment_entity2 = new assignment_entity($assignment2->id);
 
@@ -148,6 +163,8 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
         });
 
         $original_min_scale_value = $assignment_entity1->competency->scale->min_proficient_value;
+
+        $sink = $this->redirectEvents();
 
         $updated_assignments = (new min_proficiency_override_for_assignments(
             $new_min_scale_value->id,
@@ -167,6 +184,8 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
         self::assertTrue($updated_assignment2->has_default_proficiency_value_override());
         self::assertEquals($updated_assignment2->get_min_value()->id, $new_min_scale_value->id);
 
+        $this->verify_events($sink, $updated_assignments->pluck('id'));
+        $sink->clear();
 
         $updated_assignments = (new min_proficiency_override_for_assignments(
             null,
@@ -185,6 +204,9 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
         self::assertEquals($updated_assignment2->get_id(), $assignment_entity2->id);
         self::assertFalse($updated_assignment2->has_default_proficiency_value_override());
         self::assertEquals($updated_assignment2->get_min_value()->id, $original_min_scale_value->id);
+
+        $this->verify_events($sink, $updated_assignments->pluck('id'));
+        $sink->close();
     }
 
     public function test_non_existent_assignments(): void {
@@ -224,7 +246,90 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
         ))->process();
     }
 
+    public function test_assigned_users_are_queued_for_re_aggregation(): void {
+        $user = $this->getDataGenerator()->create_user();
+        $fw = $this->generator()->create_framework();
+        $competency1 = $this->generator()->create_competency('Comp1', $fw);
+        $competency2 = $this->generator()->create_competency('Comp2', $fw);
+
+        // One and two share the same competency.
+        $assignment1 = $this->generator()->assignment_generator()->create_self_assignment($competency1->id, $user->id);
+        $assignment2 = $this->generator()->assignment_generator()->create_self_assignment($competency1->id, $user->id);
+
+        // Three - different competency, same framework.
+        $assignment3 = $this->generator()->assignment_generator()->create_self_assignment($competency2->id, $user->id);
+
+        /** @var scale_value $new_min_scale_value */
+        $new_min_scale_value = $competency1->scale->values->find(function (scale_value $scale_value) {
+            return $scale_value->id !== $scale_value->scale->minproficiencyid;
+        });
+
+        (new expand_task(builder::get_db()))->expand_all();
+        $this->redirectEvents();
+
+        // Set new custom min proficiency for two and three
+        (new min_proficiency_override_for_assignments(
+            $new_min_scale_value->id,
+            [$assignment2->id, $assignment3->id]
+        ))->process();
+
+        $this->verify_and_clear_queued_for_aggregation([
+            ['competency_id' => $competency1->id, 'user_id' => $user->id],
+            ['competency_id' => $competency2->id, 'user_id' => $user->id],
+        ]);
+
+        // Unset custom min proficiency for three
+        (new min_proficiency_override_for_assignments(
+            null,
+            [$assignment3->id]
+        ))->process();
+
+        $this->verify_and_clear_queued_for_aggregation([
+            ['competency_id' => $competency2->id, 'user_id' => $user->id],
+        ]);
+    }
+
     protected function generator(): totara_competency_generator {
         return $this->getDataGenerator()->get_plugin_generator('totara_competency');
+    }
+
+    /**
+     * @param phpunit_event_sink $sink
+     * @param int[] $expected_assignment_ids
+     */
+    private function verify_events(phpunit_event_sink $sink, array $expected_assignment_ids): void {
+        $events = $sink->get_events();
+
+        self::assertCount(count($expected_assignment_ids), $events);
+
+        foreach ($events as $event) {
+            self::assertInstanceOf(assignment_min_proficiency_override_updated::class, $event);
+            $idx = array_search($event->objectid, $expected_assignment_ids);
+            if ($idx !== false) {
+                unset($expected_assignment_ids[$idx]);
+            }
+        }
+        self::assertEmpty($expected_assignment_ids);
+    }
+
+    private function verify_and_clear_queued_for_aggregation(array $expected_queued): void {
+        /** @var bulder $builder */
+        $builder = $builder = builder::table((new aggregation_users_table())->get_table_name());
+        $actual_queued = $builder->get();
+
+        self::assertCount(count($expected_queued), $actual_queued);
+
+        foreach ($actual_queued as $actual) {
+            foreach ($expected_queued as $idx => $expected) {
+                if ($expected['competency_id'] == $actual->competency_id && $expected['user_id'] == $actual->user_id) {
+                    unset($expected_queued[$idx]);
+                    break;
+                }
+            }
+        }
+
+        self::assertEmpty($expected_queued);
+
+        $builder->delete();
     }
 }

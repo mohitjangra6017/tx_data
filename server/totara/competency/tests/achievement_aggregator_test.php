@@ -25,6 +25,7 @@
 use aggregation_test_aggregation\test_aggregation;
 use core\collection;
 use hierarchy_competency\event\scale_min_proficient_value_updated;
+use pathway_manual\models\roles\manager;
 use pathway_test_pathway\test_pathway_evaluator;
 use totara_competency\achievement_configuration;
 use totara_competency\aggregation_users_table;
@@ -41,10 +42,12 @@ use totara_competency\entity\scale_value;
 use totara_competency\expand_task;
 use totara_competency\hook\competency_achievement_updated_bulk;
 use totara_competency\linked_courses;
+use totara_competency\min_proficiency_override_for_assignments;
 use totara_competency\models\assignment_actions;
 use totara_competency\overall_aggregation;
 use totara_competency\pathway;
 use totara_competency\pathway_evaluator_user_source;
+use totara_competency\task\competency_aggregation_queue;
 use totara_competency\user_groups;
 use totara_job\job_assignment;
 
@@ -1065,7 +1068,10 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
         $this->assertEquals($assignment1->id, $assignment2->id);
     }
 
-    public function test_aggregation_with_custom_min_proficiency_per_assignment() {
+    /**
+     * Verify that totara_competency_achievement.proficient is set correctly and achievement records are archived correctly
+     */
+    public function test_aggregation_with_min_proficiency_override_per_assignment(): void {
         global $DB;
 
         \totara_core\advanced_feature::enable('competency_assignment');
@@ -1092,6 +1098,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
         $scale_values = $scale->sorted_values_high_to_low->key_by('sortorder');
         $highest_scale_value = $scale_values->first();
         $default_min_proficient_scale_value = $scale->min_proficient_value;
+        $highest_non_proficient_scale_value = $scale_values->filter('name', 'Getting there')->first();
         $lowest_scale_value = $scale_values->last();
 
         /** @var competency_framework $framework */
@@ -1101,15 +1108,18 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
         $pathway = $competency_generator->create_test_pathway($competency);
 
         $position = $assignment_generator->create_position(['frameworkid' => $framework->id]);
+        $organisation = $assignment_generator->create_organisation(['frameworkid' => $framework->id]);
         $user = $this->getDataGenerator()->create_user();
         job_assignment::create([
             'userid' => $user->id,
             'idnumber' => 'JobPosition',
             'positionid' => $position->id,
+            'organisationid' => $organisation->id,
         ]);
 
         $user_asg = $assignment_generator->create_user_assignment($competency->id, $user->id);
         $pos_asg = $assignment_generator->create_position_assignment($competency->id, $position->id, ['minproficiencyid' => $highest_scale_value->id]);
+        $org_asg = $assignment_generator->create_organisation_assignment($competency->id, $organisation->id, ['minproficiencyid' => $highest_non_proficient_scale_value->id]);
 
         (new expand_task($DB))->expand_all();
 
@@ -1118,7 +1128,6 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
 
         // Tests - Can't use dataprovider as these tests depends on output of previous test to validate archiving as well
         $to_test = [
-            // None proficient
             1 => [
                 'rating' => $lowest_scale_value,
                 'expected_achievements' => [
@@ -1134,6 +1143,12 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
                         'proficient' => 0,
                         'status' => competency_achievement::ACTIVE_ASSIGNMENT,
                     ],
+                    [
+                        'assignment_id' => $org_asg->id,
+                        'scale_value_id' => $lowest_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
                 ],
                 'expected_hook_data' => [
                     'scale_value' => $lowest_scale_value,
@@ -1141,8 +1156,53 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
                     'proficiency_changed' => 0,
                 ],
             ],
-            // Some proficient
             2 => [
+                'rating' => $highest_non_proficient_scale_value,
+                'expected_achievements' => [
+                    [
+                        'assignment_id' => $user_asg->id,
+                        'scale_value_id' => $lowest_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $pos_asg->id,
+                        'scale_value_id' => $lowest_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $org_asg->id,
+                        'scale_value_id' => $lowest_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $user_asg->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'assignment_id' => $pos_asg->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'assignment_id' => $org_asg->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                ],
+                'expected_hook_data' => [
+                    'scale_value' => $highest_non_proficient_scale_value,
+                    'is_proficient' => 1,
+                    'proficiency_changed' => 1,
+                ],
+            ],
+            3 => [
                 'rating' => $default_min_proficient_scale_value,
                 'expected_achievements' => [
                     [
@@ -1158,6 +1218,30 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
                         'status' => competency_achievement::SUPERSEDED,
                     ],
                     [
+                        'assignment_id' => $org_asg->id,
+                        'scale_value_id' => $lowest_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $user_asg->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $pos_asg->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $org_asg->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
                         'assignment_id' => $user_asg->id,
                         'scale_value_id' => $default_min_proficient_scale_value->id,
                         'proficient' => 1,
@@ -1169,6 +1253,12 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
                         'proficient' => 0,
                         'status' => competency_achievement::ACTIVE_ASSIGNMENT,
                     ],
+                    [
+                        'assignment_id' => $org_asg->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
                 ],
                 'expected_hook_data' => [
                     'scale_value' => $default_min_proficient_scale_value,
@@ -1176,8 +1266,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
                     'proficiency_changed' => 1,
                 ],
             ],
-            // All proficient
-            3 => [
+            4 => [
                 'rating' => $highest_scale_value,
                 'expected_achievements' => [
                     [
@@ -1193,6 +1282,30 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
                         'status' => competency_achievement::SUPERSEDED,
                     ],
                     [
+                        'assignment_id' => $org_asg->id,
+                        'scale_value_id' => $lowest_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $user_asg->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $pos_asg->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'assignment_id' => $org_asg->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
                         'assignment_id' => $user_asg->id,
                         'scale_value_id' => $default_min_proficient_scale_value->id,
                         'proficient' => 1,
@@ -1205,6 +1318,12 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
                         'status' => competency_achievement::SUPERSEDED,
                     ],
                     [
+                        'assignment_id' => $org_asg->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
                         'assignment_id' => $user_asg->id,
                         'scale_value_id' => $highest_scale_value->id,
                         'proficient' => 1,
@@ -1212,6 +1331,12 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
                     ],
                     [
                         'assignment_id' => $pos_asg->id,
+                        'scale_value_id' => $highest_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'assignment_id' => $org_asg->id,
                         'scale_value_id' => $highest_scale_value->id,
                         'proficient' => 1,
                         'status' => competency_achievement::ACTIVE_ASSIGNMENT,
@@ -1258,6 +1383,328 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
         }
 
         $sink->close();
+    }
+
+    /**
+     * Verify that overall aggregation is done when a user's rating stays the same but min proficiency override changes
+     */
+    public function test_overall_aggregation_with_changes_in_min_proficiency_override_per_assignment(): void {
+        global $DB;
+
+        \totara_core\advanced_feature::enable('competency_assignment');
+
+        /** @var totara_competency_generator $competency_generator */
+        $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        /** @var totara_competency_assignment_generator $assignment_generator */
+        $assignment_generator = new totara_competency_assignment_generator($competency_generator);
+
+        /** @var scale $scale */
+        $scale = $competency_generator->create_scale(
+            'comp',
+            'Test scale',
+            [
+                1 => ['name' => 'Arrived', 'proficient' => 1, 'sortorder' => 1, 'default' => 0],
+                2 => ['name' => 'Almost there', 'proficient' => 1, 'sortorder' => 2, 'default' => 0],
+                3 => ['name' => 'Getting there', 'proficient' => 0, 'sortorder' => 3, 'default' => 0],
+                4 => ['name' => 'Learning', 'proficient' => 0, 'sortorder' => 4, 'default' => 0],
+                5 => ['name' => 'No clue', 'proficient' => 0, 'sortorder' => 5, 'default' => 1],
+            ]
+        );
+
+        /** @var collection $scale_values */
+        $scale_values = $scale->sorted_values_high_to_low->key_by('sortorder');
+        $highest_scale_value = $scale_values->first();
+        $default_min_proficient_scale_value = $scale->min_proficient_value;
+        $highest_non_proficient_scale_value = $scale_values->filter('name', 'Getting there')->first();
+        $lowest_scale_value = $scale_values->last();
+
+        /** @var competency_framework $framework */
+        $framework = $competency_generator->create_framework($scale, 'Test framework');
+        $position = $assignment_generator->create_position(['frameworkid' => $framework->id]);
+        $organisation = $assignment_generator->create_organisation(['frameworkid' => $framework->id]);
+        $user = $this->getDataGenerator()->create_user();
+        $manager_user = $this->getDataGenerator()->create_user();
+        job_assignment::create([
+            'userid' => $user->id,
+            'idnumber' => 'JobPosition',
+            'positionid' => $position->id,
+            'organisationid' => $organisation->id,
+        ]);
+
+        // As we are using the
+        /** @var competency $competency1 */
+        $competency1 = $competency_generator->create_competency('Test competency 1', $framework);
+        $pathway1 = $competency_generator->create_manual($competency1, [manager::class]);
+
+        /** @var competency $competency2 */
+        $competency2 = $competency_generator->create_competency('Test competency 2', $framework);
+        $pathway2 = $competency_generator->create_manual($competency2, [manager::class]);
+
+
+        // Multiple assignments. All using the default min proficiency for now
+        $user_asg1 = $assignment_generator->create_user_assignment($competency1->id, $user->id);
+        $pos_asg1 = $assignment_generator->create_position_assignment($competency1->id, $position->id);
+
+        $user_asg2 = $assignment_generator->create_user_assignment($competency2->id, $user->id);
+        $org_asg2 = $assignment_generator->create_organisation_assignment($competency2->id, $organisation->id);
+
+        (new expand_task($DB))->expand_all();
+
+        // Add ratings
+        $competency_generator->create_manual_rating(
+            $pathway1,
+            $user->id,
+            $manager_user->id,
+            manager::class,
+            $default_min_proficient_scale_value->id
+        );
+
+        $competency_generator->create_manual_rating(
+            $pathway2,
+            $user->id,
+            $manager_user->id,
+            manager::class,
+            $highest_non_proficient_scale_value->id
+        );
+
+        $to_test = [
+            1 => [
+                'min_proficiency_overrides' => [],
+                'expected_achievements' => [
+                    [
+                        'competency_id' => $competency1->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $user_asg1->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'competency_id' => $competency1->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $pos_asg1->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'competency_id' => $competency2->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $user_asg2->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'competency_id' => $competency2->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $org_asg2->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                ],
+            ],
+            2 => [
+                'min_proficiency_overrides' => [
+                    [
+                        'scale_value_id' => $highest_scale_value->id,
+                        'assignment_ids' => [$user_asg1->id],
+                    ],
+                    [
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'assignment_ids' => [$pos_asg1->id],
+                    ],
+                ],
+                'expected_achievements' => [
+                    [
+                        'competency_id' => $competency1->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $user_asg1->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'competency_id' => $competency1->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $user_asg1->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'competency_id' => $competency1->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $pos_asg1->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'competency_id' => $competency2->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $user_asg2->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'competency_id' => $competency2->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $org_asg2->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                ],
+            ],
+            3 => [
+                'min_proficiency_overrides' => [
+                    [
+                        'scale_value_id' => $highest_scale_value->id,
+                        'assignment_ids' => [$user_asg2->id],
+                    ],
+                    [
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'assignment_ids' => [$org_asg2->id],
+                    ],
+                ],
+                'expected_achievements' => [
+                    [
+                        'competency_id' => $competency1->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $user_asg1->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'competency_id' => $competency1->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $user_asg1->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'competency_id' => $competency1->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $pos_asg1->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'competency_id' => $competency2->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $user_asg2->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'competency_id' => $competency2->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $org_asg2->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'competency_id' => $competency2->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $org_asg2->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                ],
+            ],
+            4 => [
+                'min_proficiency_overrides' => [
+                    [
+                        'scale_value_id' => null,
+                        'assignment_ids' => [$user_asg1->id, $pos_asg1->id, $user_asg2->id, $org_asg2->id],
+                    ],
+                ],
+                'expected_achievements' => [
+                    [
+                        'competency_id' => $competency1->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $user_asg1->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'competency_id' => $competency1->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $user_asg1->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'competency_id' => $competency1->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $user_asg1->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'competency_id' => $competency1->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $pos_asg1->id,
+                        'scale_value_id' => $default_min_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'competency_id' => $competency2->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $user_asg2->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                    [
+                        'competency_id' => $competency2->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $org_asg2->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'competency_id' => $competency2->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $org_asg2->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 1,
+                        'status' => competency_achievement::SUPERSEDED,
+                    ],
+                    [
+                        'competency_id' => $competency2->id,
+                        'user_id' => $user->id,
+                        'assignment_id' => $org_asg2->id,
+                        'scale_value_id' => $highest_non_proficient_scale_value->id,
+                        'proficient' => 0,
+                        'status' => competency_achievement::ACTIVE_ASSIGNMENT,
+                    ],
+                ],
+            ],
+        ];
+
+        foreach ($to_test as $test_nr => $test_data) {
+            foreach ($test_data['min_proficiency_overrides'] as $to_override) {
+                (new min_proficiency_override_for_assignments($to_override['scale_value_id'], $to_override['assignment_ids']))->process();
+            }
+
+            (new competency_aggregation_queue())->execute();
+            $this->verify_competency_achievements($test_data['expected_achievements']);
+        }
     }
 
     /**
