@@ -127,7 +127,9 @@ class proficiency_value {
         if ($assignment->current_achievement && $assignment->current_achievement->value) {
             $value->id = $assignment->current_achievement->value->id;
             $value->name = $assignment->current_achievement->value->name;
-            $value->proficient = boolval($assignment->current_achievement->value->proficient);
+            // Get the proficient flag from the achievement directly, not from the scale_value, because it can
+            // be overridden per assignment.
+            $value->proficient = (bool)$assignment->current_achievement->proficient;
             $value->percentage = static::calculate_scale_value_percentage(
                 $assignment->current_achievement->value,
                 $assignment->competency->scale

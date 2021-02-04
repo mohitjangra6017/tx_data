@@ -25,9 +25,12 @@
 use core\entity\user as user_entity;
 use totara_competency\entity\assignment as assignment_entity;
 use totara_competency\entity\competency as competency_entity;
+use totara_competency\entity\competency_achievement;
 use totara_competency\entity\competency_assignment_user;
+use totara_competency\entity\scale;
 use totara_competency\expand_task;
 use totara_competency\models\assignment as assignment_model;
+use totara_competency\models\profile\proficiency_value;
 use totara_competency\models\user_group\user;
 use totara_competency\user_groups;
 
@@ -211,6 +214,68 @@ class totara_competency_assignment_model_testcase extends assignment_model_base_
             $assignment_entity->competency->scale->defaultid,
             $assignment_model->get_min_value()->id
         );
+    }
+
+    public function test_get_my_value(): void {
+        $data = $this->create_data();
+
+        self::setUser($data->user1->id);
+
+        $assignment = $this->create_active_user_assignment($data->comp1->id, $data->user1->id);
+
+        // Framework is created with the default scale.
+        /** @var scale $scale */
+        $scale = scale::repository()
+            ->with(['min_proficient_value', 'values'])
+            ->one();
+        $competent = $scale->min_proficient_value;
+        $not_competent = $scale->values->first();
+
+        $achievement = new competency_achievement([
+            'competency_id' => $assignment->competency_id,
+            'user_id' => $data->user1->id,
+            'assignment_id' => $assignment->id,
+            'scale_value_id' => $competent->id,
+            'proficient' => 1,
+            'status' => 0,
+            'time_created' => time(),
+            'time_status' => time(),
+            'time_proficient' => time(),
+            'time_scale_value' => time(),
+            'last_aggregated' => time(),
+        ]);
+        $achievement->save();
+
+        /** @var assignment_entity $assignment_entity */
+        $assignment_entity = assignment_entity::repository()
+            ->with('current_achievement')
+            ->where('id', $assignment->get_id())
+            ->one();
+        $assignment_model = assignment_model::load_by_entity($assignment_entity);
+        $my_value = $assignment_model->get_my_value();
+
+        self::assertInstanceOf(proficiency_value::class, $my_value);
+        self::assertEquals('Competent', $my_value->name);
+        self::assertTrue($my_value->proficient);
+        self::assertEquals(100.0, $my_value->percentage);
+
+        // Set the achievement to "not proficient". That should be reflected in the proficiency_value returned.
+        $achievement->proficient = 0;
+        $achievement->update();
+
+        // Re-fetch entity.
+        /** @var assignment_entity $assignment_entity */
+        $assignment_entity = assignment_entity::repository()
+            ->with('current_achievement')
+            ->where('id', $assignment->get_id())
+            ->one();
+        $assignment_model = assignment_model::load_by_entity($assignment_entity);
+        $my_value = $assignment_model->get_my_value();
+
+        self::assertInstanceOf(proficiency_value::class, $my_value);
+        self::assertEquals('Competent', $my_value->name);
+        self::assertFalse($my_value->proficient);
+        self::assertEquals(100.0, $my_value->percentage);
     }
 
 }

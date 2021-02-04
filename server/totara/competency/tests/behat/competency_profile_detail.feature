@@ -95,6 +95,22 @@ Feature: Competency profile detail page - an overview of their progress (or lack
     When I select "Self-assigned" from the "select_assignment" singleselect
     Then I should see "No value achieved" in the ".tui-competencyDetailAssignment__level-text" "css_element"
 
+  Scenario: Scale display observes minimum proficiency value overrides on assignment basis
+    Given the following "assignments" exist in "totara_competency" plugin:
+      | competency | user_group_type | user_group   | type  | min_proficiency_override |
+      | comp       | user            | user         | self  | barely                   |
+    And I run the scheduled task "totara_competency\task\expand_assignments_task"
+
+    When I log in as "user"
+    And I navigate to the competency profile details page for the "Typing slow" competency
+    And I select "Directly assigned by Admin User (Admin)" from the "select_assignment" singleselect
+    # Proficient scale values have the __target class
+    Then ".tui-progressTrackerItem__target" "css_element" should not exist in the ".tui-progressTrackerItems .tui-progressTrackerItem:nth-child(2)" "css_element"
+    And ".tui-progressTrackerItem__target" "css_element" should exist in the ".tui-progressTrackerItems .tui-progressTrackerItem:nth-child(3)" "css_element"
+
+    When I select "Self-assigned" from the "select_assignment" singleselect
+    Then ".tui-progressTrackerItem__target" "css_element" should exist in the ".tui-progressTrackerItems .tui-progressTrackerItem:nth-child(2)" "css_element"
+
   Scenario: I can navigate directly to the details page of a competency not assigned to me
     When I log in as "admin"
     And I navigate to the competency profile details page for the "Typing slow" competency

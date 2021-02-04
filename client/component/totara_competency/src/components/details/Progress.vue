@@ -72,6 +72,9 @@ export default {
     myValue: {
       type: [Number, String],
     },
+    minValue: {
+      type: [Number, String],
+    },
     competencyId: {
       required: true,
       type: Number,
@@ -107,6 +110,9 @@ export default {
      * @return {Int}
      */
     minProficientValueId() {
+      if (this.minValue) {
+        return this.minValue;
+      }
       if (!this.scale.values) return null;
       return this.scale.values.find(({ proficient }) => proficient).id;
     },

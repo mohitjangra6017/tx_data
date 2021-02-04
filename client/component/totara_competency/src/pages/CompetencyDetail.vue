@@ -92,6 +92,7 @@
             <Progress
               :competency-id="competencyId"
               :my-value="selectedAssignmentProficiencyValue"
+              :min-value="selectedAssignmentMinProficiencyValue"
             />
 
             <!-- Scale achievement details -->
@@ -285,6 +286,18 @@ export default {
     },
 
     /**
+     * Return selected assignment minimum proficiency value data
+     *
+     * @return {Object}
+     */
+    selectedAssignmentMinProficiency() {
+      if (this.selectedAssignment && this.selectedAssignment.min_value) {
+        return this.selectedAssignment.min_value;
+      }
+      return {};
+    },
+
+    /**
      * Return selected assignment proficiency value ID
      *
      * @return {Int}
@@ -295,6 +308,21 @@ export default {
         this.selectedAssignmentProficiency.id
       ) {
         return this.selectedAssignmentProficiency.id;
+      }
+      return NaN;
+    },
+
+    /**
+     * Return selected assignment minimum proficiency value ID
+     *
+     * @return {Int}
+     */
+    selectedAssignmentMinProficiencyValue() {
+      if (
+        this.selectedAssignmentMinProficiency &&
+        this.selectedAssignmentMinProficiency.id
+      ) {
+        return this.selectedAssignmentMinProficiency.id;
       }
       return NaN;
     },

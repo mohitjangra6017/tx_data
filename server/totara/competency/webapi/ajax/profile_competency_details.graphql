@@ -29,6 +29,9 @@ query totara_competency_profile_competency_details(
         percentage
         proficient
       }
+      min_value {
+        id
+      }
     }
   }
 }
