@@ -195,4 +195,136 @@ final class loader {
         $user = (object) $user;
         return discussion::from_entity($entity, $user);
     }
+
+    /**
+     * @param query $query
+     * @return offset_cursor_paginator
+     */
+    public static function search_discussion_content(query $query): offset_cursor_paginator {
+        global $CFG;
+
+        require_once("{$CFG->dirroot}/totara/core/searchlib.php");
+        
+        $discussion_area = discussion::AREA;
+        $comment_area = comment::COMMENT_AREA;
+        $reply_area = comment::REPLY_AREA;
+        
+        $workspace_id = $query->get_workspace_id();
+        $search_term = $query->get_search_term();
+        if (empty($search_term)) {
+            throw new \coding_exception(
+                "Searching content without a search term is not allowed for performance reasons"
+            );
+        }
+
+        $keywords = totara_search_parse_keywords($search_term);
+
+        $ws_user_fields_sql = get_all_user_name_fields(true, 'u', null, 'user_');
+        [$ws_search_sql, $ws_search_params] = totara_search_get_keyword_where_clause(
+            $keywords,
+            ['wd.content_text'],
+            SQL_PARAMS_NAMED
+        );
+
+        $db = builder::get_db();
+        $uid_sql = $db->sql_concat("'{$discussion_area}_'", 'wd.id');
+        $ws_builder = builder::table(workspace_discussion::TABLE, 'wd')
+            ->join(['user', 'u'], 'wd.user_id', 'u.id')
+            ->select_raw("{$uid_sql} AS id, wd.id AS instance_id, '{$discussion_area}' AS instance_type")
+            ->add_select([
+                "wd.course_id AS workspace_id",
+                "wd.id AS discussion_id",
+                "wd.user_id AS user_id",
+                "wd.content AS content",
+                "wd.content_format AS content_format",
+                "wd.content_text AS content_text",
+                "wd.time_created AS time_created",
+                "u.id AS user_id",
+                "u.email AS user_email",
+                "u.picture AS user_picture",
+                "u.imagealt AS user_image_alt",
+            ])
+            ->add_select_raw('NULL AS parent_id')
+            ->add_select_raw($ws_user_fields_sql)
+            ->where('wd.course_id', $workspace_id)
+            ->where_raw($ws_search_sql, $ws_search_params);
+        
+        $tc_user_fields_sql = get_all_user_name_fields(true, 'tcu', null, 'cuser_');
+        [$tc_search_sql, $tc_search_params] = totara_search_get_keyword_where_clause(
+            $keywords,
+            ['tc.contenttext'],
+            SQL_PARAMS_NAMED
+        );
+
+        $comment_uid_sql = $db->sql_concat("'{$comment_area}_'", 'tc.id');
+        $reply_uid_sql = $db->sql_concat("'{$reply_area}_'", 'tc.id');
+        
+        $tc_builder = builder::table(comment::get_entity_table(), 'tc')
+            ->join([workspace_discussion::TABLE, 'tcw'], 'tc.instanceid', 'tcw.id')
+            ->join(['user', 'tcu'], 'tc.userid', 'tcu.id')
+            ->select_raw("CASE WHEN tc.parentid IS NULL THEN {$comment_uid_sql} ELSE {$reply_uid_sql} END AS id")
+            ->add_select_raw("tc.id AS instance_id, CASE WHEN tc.parentid IS NULL THEN '{$comment_area}' ELSE '{$reply_area}' END AS instance_type")
+            ->add_select([
+                "tcw.course_id AS workspace_id",
+                "tcw.id AS discussion_id",
+                "tc.userid AS user_id",
+                "tc.content AS content",
+                "tc.format AS content_format",
+                "tc.contenttext AS content_text",
+                "tc.timecreated AS time_created",
+                "tcu.id AS user_id",
+                "tcu.email AS user_email",
+                "tcu.picture AS user_picture",
+                "tcu.imagealt AS user_image_alt",
+                "tc.parentid AS parent_id",
+            ])
+            ->add_select_raw($tc_user_fields_sql)
+            ->where('tc.component', workspace::get_type())
+            ->where('tc.area', discussion::AREA)
+            ->where('tcw.course_id', $workspace_id)
+            ->where_raw($tc_search_sql, $tc_search_params);
+
+        $builder = $ws_builder
+            ->union_all($tc_builder)
+            ->results_as_arrays()
+            ->map_to([static::class, 'create_search_result']);
+
+        $cursor = $query->get_cursor();
+        return new offset_cursor_paginator($builder, $cursor);
+    }
+
+    /**
+     * This function should only be used for the builder to build search results
+     *
+     * @param array $record
+     * @return object
+     *
+     * @internal
+     */
+    public static function create_search_result(array $record): object {
+        // Map the user record and remove fromthe resulting object
+        $user = [];
+        $user_fields = get_all_user_name_fields(false, 'u', 'user_');
+
+        // Adding user fields for email and id.
+        $user_fields['email'] = 'user_email';
+        $user_fields['id'] = 'user_id';
+        $user_fields['picture'] = 'user_picture';
+        $user_fields['imagealt'] = 'user_image_alt';
+
+        foreach ($user_fields as $field => $sql_field) {
+            if (!array_key_exists($sql_field, $record)) {
+                debugging("The array record does not have field '{$sql_field}'", DEBUG_DEVELOPER);
+                continue;
+            }
+
+            $user[$field] = $record[$sql_field];
+            unset($record[$sql_field]);
+        }
+
+        $record['owner'] = (object) $user;
+        return (object)$record;
+    }
+
+    
 }

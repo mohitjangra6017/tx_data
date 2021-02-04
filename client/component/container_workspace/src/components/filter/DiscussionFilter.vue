@@ -18,15 +18,17 @@
 <template>
   <div class="tui-workspaceDiscussionFilter">
     <div class="tui-workspaceDiscussionFilter__search">
-      <SearchFilter
+      <SearchBox
         v-model="innerSearchTerm"
-        :label="$str('search_discussions', 'container_workspace')"
-        drop-label
+        :aria-label="$str('search_discussions', 'container_workspace')"
         :placeholder="$str('search_discussions', 'container_workspace')"
         class="tui-workspaceDiscussionFilter__search-box"
+        @submit="submitSearch"
+        @clear="clearSearch"
       />
 
       <a
+        v-if="showSort"
         :href="
           $url('/container/type/workspace/workspace_files.php', {
             id: workspaceId,
@@ -40,7 +42,7 @@
 
     <slot name="pinned-discussions" />
 
-    <div class="tui-workspaceDiscussionFilter__sortBox">
+    <div v-if="showSort" class="tui-workspaceDiscussionFilter__sortBox">
       <SelectFilter
         v-model="innerSort"
         :label="$str('sortby', 'core')"
@@ -52,7 +54,7 @@
 </template>
 
 <script>
-import SearchFilter from 'tui/components/filters/SearchFilter';
+import SearchBox from 'tui/components/form/SearchBox';
 import SelectFilter from 'tui/components/filters/SelectFilter';
 
 // GraphQL queries
@@ -60,16 +62,13 @@ import getDiscussionOptions from 'container_workspace/graphql/discussion_filter_
 
 export default {
   components: {
-    SearchFilter,
+    SearchBox,
     SelectFilter,
   },
 
   props: {
     searchTerm: String,
-    sort: {
-      type: String,
-      required: true,
-    },
+    sort: String,
 
     workspaceId: {
       type: [Number, String],
@@ -80,6 +79,9 @@ export default {
   apollo: {
     sortOptions: {
       query: getDiscussionOptions,
+      skip() {
+        return !this.showSort;
+      },
       update({ sorts }) {
         return Array.prototype.map.call(sorts, ({ value, label }) => {
           return {
@@ -99,6 +101,12 @@ export default {
     };
   },
 
+  computed: {
+    showSort() {
+      return !this.innerSearchTerm;
+    },
+  },
+
   watch: {
     /**
      *
@@ -110,10 +118,6 @@ export default {
       }
     },
 
-    innerSearchTerm() {
-      this.$emit('update-search-term', this.innerSearchTerm);
-    },
-
     /**
      *
      * @param {String} value
@@ -122,6 +126,17 @@ export default {
       if (value !== this.sort) {
         this.$emit('update-sort', value);
       }
+    },
+  },
+
+  methods: {
+    submitSearch() {
+      this.$emit('update-search-term', this.innerSearchTerm);
+    },
+
+    clearSearch() {
+      this.innerSearchTerm = '';
+      this.submitSearch();
     },
   },
 };

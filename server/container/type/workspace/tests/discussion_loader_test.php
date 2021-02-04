@@ -29,6 +29,7 @@ use container_workspace\loader\discussion\loader as discussion_loader;
 use container_workspace\discussion\discussion;
 use container_workspace\member\member;
 use totara_comment\comment_helper;
+use totara_comment\comment;
 use container_workspace\workspace;
 use container_workspace\query\discussion\sort as discussion_sort;
 
@@ -37,6 +38,7 @@ class container_workspace_discussion_loader_testcase extends advanced_testcase {
      * @return void
      */
     public function test_finding_discussions_with_like(): void {
+        /** @var \core\testing\generator $generator */
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
@@ -97,6 +99,7 @@ class container_workspace_discussion_loader_testcase extends advanced_testcase {
      * @return void
      */
     public function test_finding_discussion_with_like_from_comment(): void {
+        /** @var \core\testing\generator $generator */
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
@@ -179,6 +182,7 @@ class container_workspace_discussion_loader_testcase extends advanced_testcase {
      * @return void
      */
     public function test_fetching_discussions_with_recent_update_sort_order(): void {
+        /** @var \core\testing\generator $generator */
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
@@ -236,5 +240,257 @@ class container_workspace_discussion_loader_testcase extends advanced_testcase {
         // Discussion two should be at the bottom - since discussion one was added with the comment.
         $second_after_result_discussion = end($after_result_discussions);
         self::assertEquals($discussion_two->get_id(), $second_after_result_discussion->get_id());
+    }
+
+
+    /**
+     * Data provider for test_search_conternt
+     */
+    public function data_provider_test_search_content() {
+        return [
+            [
+                'discussions' => [
+                    [
+                        'with_term' => false,
+                    ],
+                ],
+            ],
+            [
+                'discussions' => [
+                    [
+                        'with_term' => true,
+                    ],
+                ],
+            ],
+            [
+                'discussions' => [
+                    [
+                        'with_term' => false,
+                        'comments' => [
+                            [
+                                'with_term' => true,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'discussions' => [
+                    [
+                        'with_term' => false,
+                        'comments' => [
+                            [
+                                'with_term' => false,
+                                'replies' => [
+                                    [
+                                        'with_term' => true,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'discussions' => [
+                    [
+                        'with_term' => true,
+                        'comments' => [
+                            [
+                                'with_term' => true,
+                                'replies' => [
+                                    [
+                                        'with_term' => true,
+                                    ],
+                                    [
+                                        'with_term' => false,
+                                    ],
+                                ],
+                            ],
+                            [
+                                'with_term' => false,
+                                'replies' => [
+                                    [
+                                        'with_term' => true,
+                                    ],
+                                    [
+                                        'with_term' => false,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        'with_term' => false,
+                        'comments' => [
+                            [
+                                'with_term' => true,
+                                'replies' => [
+                                    [
+                                        'with_term' => true,
+                                    ],
+                                    [
+                                        'with_term' => false,
+                                    ],
+                                ],
+                            ],
+                            [
+                                'with_term' => false,
+                                'replies' => [
+                                    [
+                                        'with_term' => true,
+                                    ],
+                                    [
+                                        'with_term' => false,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @return void
+     * @dataProvider data_provider_test_search_content
+     */
+    public function test_search_content(array $discussions): void {
+        /** @var \core\testing\generator $generator */
+        $generator = $this->getDataGenerator();
+        $user1 = $generator->create_user();
+        $user2 = $generator->create_user();
+        $user3 = $generator->create_user();
+
+        $this->setUser($user1);
+
+        /** @var \container_workspace\testing\generator $workspace_generator */
+        $workspace_generator = $generator->get_plugin_generator('container_workspace');
+        /** @var \totara_comment\testing\generator $comment_generator */
+        $comment_generator = $generator->get_plugin_generator('totara_comment');
+
+        $workspace = $workspace_generator->create_workspace();
+
+        member::join_workspace($workspace, $user2->id);
+        member::join_workspace($workspace, $user3->id);
+
+        $search_term = 'SearchTerm';
+        $expected = [];
+
+        foreach ($discussions as $d_cnt => $discussion_to_add) {
+            $text = "Discussion {$d_cnt}";
+            if ($discussion_to_add['with_term']) {
+                $text .= " containing {$search_term}";
+            }
+
+            $discussion = discussion_helper::create_discussion(
+                $workspace,
+                $text,
+                null,
+                FORMAT_PLAIN,
+                $user1->id
+            );
+
+            if ($discussion_to_add['with_term']) {
+                $expected[] = [
+                    'workspace_id' => $workspace->get_id(),
+                    'discussion_id' => $discussion->get_id(),
+                    'instance_type' => discussion::AREA,
+                    'instance_id' => $discussion->get_id(),
+                    'content' => $text,
+                ];
+            }
+
+            if (!isset($discussion_to_add['comments'])) {
+                continue;
+            }
+
+            foreach ($discussion_to_add['comments'] as $c_cnt => $comment_to_add) {
+                $text = "Comment {$d_cnt} - {$c_cnt}";
+                if ($comment_to_add['with_term']) {
+                    $text .= " containing {$search_term}";
+                }
+
+                $comment = $comment_generator->create_comment(
+                    $discussion->get_id(),
+                    workspace::get_type(),
+                    discussion::AREA,
+                    $text,
+                    FORMAT_PLAIN,
+                    $user2->id
+                );
+
+                if ($comment_to_add['with_term']) {
+                    $expected[] = [
+                        'workspace_id' => $workspace->get_id(),
+                        'discussion_id' => $discussion->get_id(),
+                        'instance_type' => comment::COMMENT_AREA,
+                        'instance_id' => $comment->get_id(),
+                        'content' => $text,
+                    ];
+                }
+
+                if (!isset($comment_to_add['replies'])) {
+                    continue;
+                }
+
+                foreach ($comment_to_add['replies'] as $r_cnt => $reply_to_add) {
+                    $text = "Reply {$d_cnt} - {$c_cnt} - {$r_cnt}";
+                    if ($reply_to_add['with_term']) {
+                        $text .= " containing {$search_term}";
+                    }
+
+                    $reply = $comment_generator->create_reply(
+                        $comment->get_id(),
+                        $text,
+                        FORMAT_PLAIN,
+                        $user3->id
+                    );
+                    
+                    if ($reply_to_add['with_term']) {
+                        $expected[] = [
+                            'workspace_id' => $workspace->get_id(),
+                            'discussion_id' => $discussion->get_id(),
+                            'instance_type' => comment::REPLY_AREA,
+                            'instance_id' => $reply->get_id(),
+                            'content' => $text,
+                        ];
+                    }
+                }
+            }
+        }
+
+        $query = new discussion_query($workspace->get_id());
+        $query->set_search_term(strtolower($search_term));
+
+        $paginator = discussion_loader::search_discussion_content($query);
+        $total = $paginator->get_total();
+        $items = $paginator->get_items()->to_array();
+        $this->verify_search_results($expected, $items);
+    }
+    
+    /**
+     * @param array $expected
+     * @param array $items
+     */
+    private function verify_search_results(array $expected, array $actual): void {
+        $this->assertSame(count($expected), count($actual));
+        foreach ($expected as $idx => $expected_result) {
+            foreach ($actual as $actual_result) {
+                // Ids returned from db are strings
+                if ($expected_result['workspace_id'] == $actual_result['workspace_id']
+                    && $expected_result['discussion_id'] == $actual_result['discussion_id']
+                    && $expected_result['instance_id'] == $actual_result['instance_id']
+                    && $expected_result['instance_type'] == $actual_result['instance_type']
+                    && $expected_result['content'] == $actual_result['content_text']
+                ) {
+                    unset($expected[$idx]);
+                    break;
+                }
+            }
+        }
+        
+        $this->assertEmpty($expected);
     }
 }

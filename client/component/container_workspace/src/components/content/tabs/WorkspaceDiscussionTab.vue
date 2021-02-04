@@ -13,6 +13,7 @@
   Please contact [licensing@totaralearning.com] for more information.
 
   @author Kian Nguyen <kian.nguyen@totaralearning.com>
+  @author Riana Rossouw <riana.rossouw@totaralearning.com>
   @module container_workspace
 -->
 
@@ -42,109 +43,169 @@
     />
 
     <div
-      v-if="
-        !$apollo.loading && page.cursor.total === 0 && searchTerm.length !== 0
-      "
+      v-if="!$apollo.loading && search.cursor.total === 0 && hasSearch"
       class="tui-workspaceDiscussionTab__message"
     >
       {{ $str('no_discussion_result', 'container_workspace') }}
     </div>
-    <!-- Using the discussion's id so that we can make sure the state is being reset after ward. -->
-    <VirtualScroll
-      data-key="id"
-      :data-list="page.discussions"
-      :aria-label="$str('discussions_list', 'container_workspace')"
-      :is-loading="$apollo.loading"
-      :page-mode="true"
-      @scrollbottom="onScrollToBottom"
-    >
-      <template v-slot:item="{ item, posInSet, setSize }">
-        <DiscussionCard
-          :creator-fullname="item.owner.fullname"
-          :creator-image-alt="item.owner.profileimagealt || item.owner.fullname"
-          :creator-image-src="item.owner.profileimageurl"
-          :creator-id="item.owner.id"
-          :discussion-content="item.content"
-          :time-description="item.time_description"
-          :total-comments="item.total_comments"
-          :total-reactions="item.total_reactions"
-          :discussion-id="item.id"
-          :first-comment-cursor="item.comment_cursor"
-          :reacted="item.discussion_interactor.reacted"
-          :update-able="item.discussion_interactor.can_update"
-          :delete-able="item.discussion_interactor.can_delete"
-          :comment-able="item.discussion_interactor.can_comment"
-          :react-able="item.discussion_interactor.can_react"
-          :report-able="item.discussion_interactor.can_report"
-          :removed="item.discussion_interactor.removed"
-          :edited="item.edited"
-          :aria-posinset="posInSet"
-          :aria-setsize="setSize"
-          :aria-labelledby="$id(`item-${item.id}`)"
-          :label-id="$id(`item-${item.id}`)"
-          :workspace-context-id="item.workspace_context_id"
-          class="tui-workspaceDiscussionTab__card"
-          @update-discussion-react-status="updateDiscussionReactStatus"
-          @update-discussion="updateDiscussion"
-          @add-new-comment="addNewComment"
-          @delete-discussion="deleteDiscussion"
+
+    <div v-if="hasSearch">
+      <VirtualScroll
+        data-key="id"
+        :data-list="search.results"
+        :aria-label="$str('search_contents', 'container_workspace')"
+        :is-loading="$apollo.loading"
+        :page-mode="true"
+        class="tui-workspaceDiscussionTab__resultList"
+        @scrollbottom="onScrollToBottom"
+      >
+        <template v-slot:item="{ item, posInSet, setSize }">
+          <DiscussionContentResultCard
+            :id="item.id"
+            :creator-fullname="item.owner.fullname"
+            :creator-image-alt="
+              item.owner.profileimagealt || item.owner.fullname
+            "
+            :creator-image-src="item.owner.profileimageurl"
+            :creator-id="item.owner.id"
+            :discussion-content="item.content"
+            :time-description="item.time_description"
+            :discussion-id="item.discussion_id"
+            :aria-labelledby="$id(`item-${item.id}`)"
+            :label-id="$id(`item-${item.id}`)"
+            :workspace-context-id="item.workspace_context_id"
+            class="tui-workspaceDiscussionTab__resultCard"
+          />
+        </template>
+        <template v-slot:footer>
+          <PageLoader :fullpage="false" :loading="$apollo.loading" />
+        </template>
+      </VirtualScroll>
+
+      <div
+        v-if="loadMoreSearchResultsVisibility"
+        class="tui-workspaceDiscussionTab__loadMoreContainer"
+      >
+        <div class="tui-workspaceDiscussionTab__viewedDiscussions">
+          {{
+            $str('vieweditems', 'container_workspace', search.results.length)
+          }}
+          {{
+            $str(
+              'total_search_results',
+              'container_workspace',
+              search.cursor.total
+            )
+          }}
+        </div>
+        <Button
+          class="tui-workspaceDiscussionTab__loadMore"
+          :text="$str('loadmore', 'container_workspace')"
+          @click="loadMoreSearchResults"
         />
-      </template>
-      <template v-slot:footer>
-        <PageLoader :fullpage="false" :loading="$apollo.loading" />
-      </template>
-    </VirtualScroll>
-    <div
-      v-if="loadMoreVisibility"
-      class="tui-workspaceDiscussionTab__loadMoreContainer"
-    >
-      <div class="tui-workspaceDiscussionTab__viewedDiscussions">
-        {{
-          $str('vieweditems', 'container_workspace', page.discussions.length)
-        }}
-        {{
-          $str('total_discussions', 'container_workspace', page.cursor.total)
-        }}
       </div>
-      <Button
-        class="tui-workspaceDiscussionTab__loadMore"
-        :text="$str('loadmore', 'container_workspace')"
-        @click="loadMore"
-      />
+    </div>
+
+    <div v-else>
+      <!-- Using the discussion's id so that we can make sure the state is being reset after ward. -->
+      <VirtualScroll
+        data-key="id"
+        :data-list="page.discussions"
+        :aria-label="$str('discussions_list', 'container_workspace')"
+        :is-loading="$apollo.loading"
+        :page-mode="true"
+        @scrollbottom="onScrollToBottom"
+      >
+        <template v-slot:item="{ item, posInSet, setSize }">
+          <DiscussionCard
+            :creator-fullname="item.owner.fullname"
+            :creator-image-alt="
+              item.owner.profileimagealt || item.owner.fullname
+            "
+            :creator-image-src="item.owner.profileimageurl"
+            :creator-id="item.owner.id"
+            :discussion-content="item.content"
+            :time-description="item.time_description"
+            :total-comments="item.total_comments"
+            :total-reactions="item.total_reactions"
+            :discussion-id="item.id"
+            :first-comment-cursor="item.comment_cursor"
+            :reacted="item.discussion_interactor.reacted"
+            :update-able="item.discussion_interactor.can_update"
+            :delete-able="item.discussion_interactor.can_delete"
+            :comment-able="item.discussion_interactor.can_comment"
+            :react-able="item.discussion_interactor.can_react"
+            :report-able="item.discussion_interactor.can_report"
+            :removed="item.discussion_interactor.removed"
+            :edited="item.edited"
+            :aria-posinset="posInSet"
+            :aria-setsize="setSize"
+            :aria-labelledby="$id(`item-${item.id}`)"
+            :label-id="$id(`item-${item.id}`)"
+            :workspace-context-id="item.workspace_context_id"
+            class="tui-workspaceDiscussionTab__card"
+            @update-discussion-react-status="updateDiscussionReactStatus"
+            @update-discussion="updateDiscussion"
+            @add-new-comment="addNewComment"
+            @delete-discussion="deleteDiscussion"
+          />
+        </template>
+        <template v-slot:footer>
+          <PageLoader :fullpage="false" :loading="$apollo.loading" />
+        </template>
+      </VirtualScroll>
+
+      <div
+        v-if="loadMoreSearchResultsVisibility"
+        class="tui-workspaceDiscussionTab__loadMoreContainer"
+      >
+        <div class="tui-workspaceDiscussionTab__viewedDiscussions">
+          {{
+            $str('vieweditems', 'container_workspace', page.discussions.length)
+          }}
+          {{
+            $str('total_discussions', 'container_workspace', page.cursor.total)
+          }}
+        </div>
+        <Button
+          class="tui-workspaceDiscussionTab__loadMore"
+          :text="$str('loadmore', 'container_workspace')"
+          @click="loadMoreDiscussions"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Separator from 'tui/components/decor/Separator';
-import DiscussionCard from 'container_workspace/components/card/DiscussionWithCommentCard';
-import DiscussionFilter from 'container_workspace/components/filter/DiscussionFilter';
 import apolloClient from 'tui/apollo_client';
+import Button from 'tui/components/buttons/Button';
+import DiscussionCard from 'container_workspace/components/card/DiscussionWithCommentCard';
+import DiscussionContentResultCard from 'container_workspace/components/card/DiscussionContentResultCard';
+import DiscussionFilter from 'container_workspace/components/filter/DiscussionFilter';
 import { notify } from 'tui/notifications';
+import PageLoader from 'tui/components/loading/Loader';
 import PostDiscussionForm from 'container_workspace/components/form/PostDiscussionForm';
+import Separator from 'tui/components/decor/Separator';
+import VirtualScroll from 'tui/components/virtualscroll/VirtualScroll';
 
 // GraphQL
+import getDiscussions from 'container_workspace/graphql/get_discussions';
 import getWorkspaceInteractor from 'container_workspace/graphql/workspace_interactor';
 import postDiscussion from 'container_workspace/graphql/post_discussion';
-import getDiscussions from 'container_workspace/graphql/get_discussions';
-import VirtualScroll from 'tui/components/virtualscroll/VirtualScroll';
-import Button from 'tui/components/buttons/Button';
-import PageLoader from 'tui/components/loading/Loader';
-
-import VirtualScrollMixin from 'container_workspace/mixins/virtual_scroll_mixin';
+import searchContent from 'container_workspace/graphql/search_discussion_content';
 
 export default {
   components: {
-    Separator,
-    PostDiscussionForm,
-    DiscussionCard,
-    DiscussionFilter,
-    VirtualScroll,
     Button,
+    DiscussionCard,
+    DiscussionContentResultCard,
+    DiscussionFilter,
     PageLoader,
+    PostDiscussionForm,
+    Separator,
+    VirtualScroll,
   },
-
-  mixins: [VirtualScrollMixin],
 
   props: {
     workspaceId: {
@@ -181,6 +242,7 @@ export default {
         };
       },
     },
+
     /**
      * Fetching the none-pinned discussions within this workspace.
      */
@@ -191,7 +253,6 @@ export default {
         return {
           workspace_id: this.workspaceId,
           sort: this.sort,
-          search_term: this.searchTerm,
         };
       },
 
@@ -202,12 +263,42 @@ export default {
         };
       },
     },
+
+    /**
+     * Searching discussion content
+     */
+    search: {
+      query: searchContent,
+      fetchPolicy: 'network-only',
+      skip() {
+        return !this.searchTerm;
+      },
+      variables() {
+        return {
+          workspace_id: this.workspaceId,
+          search_term: this.searchTerm,
+        };
+      },
+
+      update({ cursor, results }) {
+        // We want to have a unique id for labels. Using row index
+        let updatedResults = results.map((result, idx) => {
+          return Object.assign({}, result, { id: idx });
+        });
+
+        return {
+          cursor: cursor,
+          results: updatedResults,
+        };
+      },
+    },
   },
 
   data() {
     return {
       interactor: {},
       submitting: false,
+
       /**
        * This is for the page's discussions.
        */
@@ -218,8 +309,18 @@ export default {
         },
         discussions: [],
       },
+
+      search: {
+        cursor: {
+          total: 0,
+          next: null,
+        },
+        results: [],
+      },
+
       sort: this.selectedSort,
       searchTerm: '',
+      isLoadMoreVisible: false,
     };
   },
 
@@ -249,21 +350,38 @@ export default {
      * @return {{
      *   workspace_id: Number,
      *   sort: String,
-     *   search_term: String
      * }}
      */
     discussionQueryVariables() {
       return {
         workspace_id: this.workspaceId,
         sort: this.sort,
+      };
+    },
+
+    /**
+     * @return {{
+     *   workspace_id: Number,
+     *   search_term: String
+     * }}
+     */
+    searchQueryVariables() {
+      return {
+        workspace_id: this.workspaceId,
         search_term: this.searchTerm,
       };
     },
 
-    loadMoreVisibility() {
-      return (
-        this.isLoadMoreVisible && this.page.cursor.next && !this.$apollo.loading
-      );
+    loadMoreDiscussionsVisibility() {
+      return !this.$apollo.loading && !this.hasSearch && this.page.cursor.next;
+    },
+
+    loadMoreSearchResultsVisibility() {
+      return !this.$apollo.loading && this.hasSearch && this.search.cursor.next;
+    },
+
+    hasSearch() {
+      return !!this.searchTerm;
     },
   },
 
@@ -313,31 +431,8 @@ export default {
           },
 
           update: (proxy, { data: { discussion } }) => {
-            const variables = {
-              workspace_id: this.workspaceId,
-              sort: this.sort,
-              search_term: this.searchTerm,
-            };
-
-            let { cursor, discussions } = proxy.readQuery({
-              query: getDiscussions,
-              variables: variables,
-            });
-
-            cursor = Object.assign({}, cursor);
-            cursor.total += 1;
-
-            proxy.writeQuery({
-              query: getDiscussions,
-              variables: variables,
-              data: {
-                cursor: cursor,
-                discussions: Array.prototype.concat.call(
-                  [discussion],
-                  discussions
-                ),
-              },
-            });
+            this.updatePageCache(proxy, discussion);
+            this.updateSearchCache(proxy, discussion);
           },
         });
 
@@ -349,6 +444,74 @@ export default {
         });
       } finally {
         this.submitting = false;
+      }
+    },
+
+    /**
+     * @param {InMemoryCache} proxy
+     * @param {Object} discussion
+     */
+    updatePageCache(proxy, discussion) {
+      const variables = this.discussionQueryVariables;
+
+      let { cursor, discussions } = proxy.readQuery({
+        query: getDiscussions,
+        variables: variables,
+      });
+
+      cursor = Object.assign({}, cursor);
+      cursor.total += 1;
+
+      proxy.writeQuery({
+        query: getDiscussions,
+        variables: variables,
+        data: {
+          cursor: cursor,
+          discussions: Array.prototype.concat.call([discussion], discussions),
+        },
+      });
+    },
+
+    /**
+     * @param {InMemoryCache} proxy
+     * @param {Object} discussion
+     */
+    updateSearchCache(proxy, discussion) {
+      if (!this.hasSearch) {
+        return;
+      }
+
+      let regex = new RegExp(this.searchTerm, 'i');
+      if (regex.test(discussion.content)) {
+        const variables = this.searchQueryVariables;
+
+        let { cursor, results } = proxy.readQuery({
+          query: searchContent,
+          variables: variables,
+        });
+
+        cursor = Object.assign({}, cursor);
+        cursor.total += 1;
+        const newResult = {
+          id: results.length + 1,
+          workspace_id: discussion.workspace_id,
+          discussion_id: discussion.id,
+          instance_type: 'DISCUSSION',
+          instance_id: discussion.id,
+          content: discussion.content,
+          owner: Object.assign({}, discussion.owner),
+          time_description: discussion.time_description,
+          __typename: 'container_workspace_discussion_search_result',
+        };
+
+        proxy.writeQuery({
+          query: searchContent,
+          variables: variables,
+          data: {
+            cursor: cursor,
+            results: Array.prototype.concat.call([newResult], results),
+          },
+        });
       }
     },
 
@@ -441,7 +604,28 @@ export default {
       });
     },
 
+    async onScrollToBottom() {
+      if (this.isLoadMoreVisible) {
+        return;
+      }
+      await this.loadMoreItems();
+      this.isLoadMoreVisible = true;
+    },
+
+    async loadMore() {
+      await this.loadMoreItems();
+      this.isLoadMoreVisible = false;
+    },
+
     async loadMoreItems() {
+      if (this.hasSearch) {
+        await this.loadMoreSearchResults();
+      } else {
+        await this.loadMoreDiscussions();
+      }
+    },
+
+    async loadMoreDiscussions() {
       if (!this.page.cursor.next) {
         return;
       }
@@ -450,7 +634,6 @@ export default {
           cursor: this.page.cursor.next,
           workspace_id: this.workspaceId,
           sort: this.sort,
-          search_term: this.searchTerm,
         },
         updateQuery: (previousResult, { fetchMoreResult }) => {
           const oldData = previousResult;
@@ -460,6 +643,34 @@ export default {
           return {
             cursor: newData.cursor,
             discussions: newList,
+          };
+        },
+      });
+    },
+
+    async loadMoreSearchResults() {
+      if (!this.search.cursor.next) {
+        return;
+      }
+      this.$apollo.queries.search.fetchMore({
+        variables: {
+          cursor: this.search.cursor.next,
+          workspace_id: this.workspaceId,
+          search_term: this.searchTerm,
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          const oldData = previousResult;
+          const newData = fetchMoreResult;
+          const newList = oldData.results.concat(newData.results);
+
+          // We want to have a unique id for labels. Using row index
+          let updatedResults = newList.map((result, idx) => {
+            return Object.assign({}, result, { id: idx });
+          });
+
+          return {
+            cursor: newData.cursor,
+            results: updatedResults,
           };
         },
       });
@@ -485,12 +696,14 @@ export default {
 <lang-strings>
   {
     "container_workspace": [
+      "discussions_list",
       "error:create_discussion",
       "loadmore",
+      "no_discussion_result",
+      "search_contents",
       "total_discussions",
-      "vieweditems",
-      "discussions_list",
-      "no_discussion_result"
+      "total_search_results",
+      "vieweditems"
     ]
   }
 </lang-strings>
@@ -528,6 +741,17 @@ export default {
 
   &__message {
     @include tui-font-body();
+  }
+
+  .tui-actionLink {
+    max-height: 1em;
+  }
+
+  .tui-workspaceDiscussionTab__resultList {
+    margin-bottom: var(--gap-8);
+  }
+  .tui-workspaceDiscussionTab__resultCard {
+    margin-top: -1px;
   }
 }
 </style>

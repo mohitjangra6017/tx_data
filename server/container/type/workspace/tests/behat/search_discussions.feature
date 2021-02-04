@@ -32,6 +32,7 @@ Feature: User search discussions
     And I should see "This is the discussion 1"
     And I should see "The second discussion"
     When I set the field "Search discussions" to "SECOND"
+    And I click on "Search discussions" "button"
     Then I should not see "This is the discussion 1"
     And I should see "The second discussion"
 
@@ -70,11 +71,15 @@ Feature: User search discussions
     And I should see "This is the discussion 1"
     And I should see "The second discussion"
     When I set the field "Search discussions" to "COMMENT"
+    And I click on "Search discussions" "button"
     Then I should not see "This is the discussion 1"
-    And I should see "The second discussion"
+    And I should not see "The second discussion"
+    And I should see "Discussion one comment"
     When I set the field "Search discussions" to "reply"
+    And I click on "Search discussions" "button"
     Then I should not see "This is the discussion 1"
-    And I should see "The second discussion"
+    And I should not see "The second discussion"
+    And I should see "Discussion one reply"
 
   @javascript
   Scenario: Search for the discussion with no result
@@ -91,6 +96,7 @@ Feature: User search discussions
     When I click on "Post" "button"
     Then I should see "The second discussion"
     When I set the field "Search discussions" to "test"
+    And I click on "Search discussions" "button"
     Then I should see "No results found." in the ".tui-workspaceDiscussionTab__message" "css_element"
     When I click on "Clear this search term" "button"
     Then I should see "The first discussion"
