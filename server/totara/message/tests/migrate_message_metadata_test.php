@@ -88,7 +88,7 @@ class totara_message_migrate_message_metadata_testcase extends advanced_testcase
 
         // Start migrating the message for user's two.
         migrate_message_data::queue_task($user_two->id);
-        $this->execute_adhoc_tasks();
+        $this->executeAdhocTasks();
 
         $message_metadata->refresh();
         self::assertNull($message_metadata->messageid);
@@ -148,7 +148,7 @@ class totara_message_migrate_message_metadata_testcase extends advanced_testcase
         self::assertNull($message_metadata->timeread);
 
         migrate_message_data::queue_task($user_one->id);
-        $this->execute_adhoc_tasks();
+        $this->executeAdhocTasks();
 
         $message_metadata->refresh();
 

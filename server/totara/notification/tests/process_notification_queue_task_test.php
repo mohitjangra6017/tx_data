@@ -71,7 +71,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
         self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
 
         // Start the message redirection.
-        $sink = phpunit_util::start_message_redirection();
+        $sink = $this->redirectMessages();
         self::assertEquals(0, $sink->count());
         self::assertEmpty($sink->get_messages());
 
@@ -116,7 +116,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
         $trace = $generator->get_test_progress_trace();
 
         // Start the message redirection.
-        $sink = phpunit_util::start_message_redirection();
+        $sink = $this->redirectMessages();
         self::assertEquals(0, $sink->count());
         self::assertEmpty($sink->get_messages());
 
@@ -168,7 +168,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
         self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
 
         // Start the message redirection.
-        $sink = phpunit_util::start_message_redirection();
+        $sink = $this->redirectMessages();
         self::assertEquals(0, $sink->count());
         self::assertEmpty($sink->get_messages());
 

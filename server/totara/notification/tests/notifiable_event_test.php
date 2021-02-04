@@ -40,7 +40,7 @@ class totara_notification_notifiable_event_testcase extends advanced_testcase {
 
         // Mock comment event.
         $this->setUser($actor);
-        $event_sink = phpunit_util::start_event_redirection();
+        $event_sink = $this->redirectEvents();
 
         $comment = comment_helper::create_comment(
             'totara_comment',

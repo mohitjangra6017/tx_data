@@ -71,7 +71,7 @@ class totara_notification_integration_testcase extends advanced_testcase {
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 
         // Start the sink and making sure that no messages are sent yet.
-        $sink = phpunit_util::start_message_redirection();
+        $sink = $this->redirectMessages();
         self::assertEquals(0, $sink->count());
         self::assertEmpty($sink->get_messages());
 

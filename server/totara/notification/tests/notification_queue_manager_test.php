@@ -72,7 +72,7 @@ class totara_notifiaction_notification_queue_manager_testcaase extends advanced_
         // 2 records at this point.
         self::assertEquals(2, $DB->count_records(notification_queue::TABLE));
 
-        $sink = phpunit_util::start_message_redirection();
+        $sink = $this->redirectMessages();
         self::assertEquals(0, $sink->count());
         self::assertEmpty($sink->get_messages());
 
