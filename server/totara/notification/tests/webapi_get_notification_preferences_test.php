@@ -17,15 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+
 use totara_notification\factory\notifiable_event_factory;
 use totara_notification\loader\notification_preference_loader;
-use totara_notification\webapi\resolver\query\notification_preferences;
-use totara_webapi\phpunit\webapi_phpunit_helper;
-use totara_notification_mock_built_in_notification as mock_built_in;
 use totara_notification\model\notification_preference as model;
+use totara_notification\testing\generator;
+use totara_notification\webapi\resolver\query\notification_preferences;
+use totara_notification_mock_built_in_notification as mock_built_in;
+use totara_webapi\phpunit\webapi_phpunit_helper;
 
 class totara_notification_webapi_get_notification_preferences_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
@@ -34,7 +36,7 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
      * @return void
      */
     protected function setUp(): void {
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->add_mock_built_in_notification_for_component();
     }
@@ -47,7 +49,7 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
         $course = $generator->create_course();
         $context_course = context_course::instance($course->id);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_notification = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -59,7 +61,7 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
             $this->get_graphql_name(notification_preferences::class),
             [
                 'context_id' => $context_course->id,
-                'at_context_only' => true
+                'at_context_only' => true,
             ]
         );
 
@@ -86,7 +88,7 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
 
         $first_event = reset($all_events);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_one_notification = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -107,7 +109,7 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
             [
                 'context_id' => $context_course->id,
                 'event_class_name' => $first_event,
-                'at_context_only' => true
+                'at_context_only' => true,
             ]
         );
 
@@ -134,7 +136,7 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
 
         $first_event = reset($all_events);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_one_notification = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -186,7 +188,7 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
         $first_event = reset($all_events);
         $system_built_in = notification_preference_loader::get_built_in(mock_built_in::class);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
@@ -206,7 +208,7 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
             $this->get_graphql_name(notification_preferences::class),
             [
                 'context_id' => $context_course->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class
+                'event_class_name' => totara_notification_mock_notifiable_event::class,
             ]
         );
 

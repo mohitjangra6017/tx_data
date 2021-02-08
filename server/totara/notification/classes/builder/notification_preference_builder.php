@@ -241,7 +241,7 @@ class notification_preference_builder {
                 $required_fields = ['body', 'body_format', 'subject', 'title'];
 
                 foreach ($required_fields as $required_field) {
-                    if (!isset($record_data[$required_field])) {
+                    if (!isset($record_data[$required_field]) || '' === $record_data[$required_field]) {
                         throw new coding_exception("The record data does not have required field '{$required_field}'");
                     }
                 }

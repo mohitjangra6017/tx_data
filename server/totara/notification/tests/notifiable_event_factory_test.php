@@ -17,11 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+
 use totara_notification\event\notifiable_event;
 use totara_notification\factory\notifiable_event_factory;
+use totara_notification\testing\generator;
 
 class totara_notification_notifiable_event_factory_testcase extends advanced_testcase {
     /**
@@ -40,7 +42,7 @@ class totara_notification_notifiable_event_factory_testcase extends advanced_tes
     public function test_get_events_from_component(): void {
         $generator = self::getDataGenerator();
 
-        /** @var \totara_notification\testing\generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_notifiable_event();
 

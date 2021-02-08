@@ -17,15 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\loader\notification_preference_loader;
+use totara_notification\model\notification_preference as model;
+use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\mutation\update_notification_preference;
 use totara_webapi\phpunit\webapi_phpunit_helper;
-use totara_notification\model\notification_preference as model;
 
 class totara_notification_webapi_update_notification_preference_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
@@ -36,7 +37,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_notifiable_event();
         $notification_generator->add_mock_built_in_notification_for_component();
@@ -61,7 +62,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
             [
                 'id' => $system_built_in->get_id(),
                 'body' => 'Newly updated body',
-                'subject' => 'Newly updated subject'
+                'subject' => 'Newly updated subject',
             ]
         );
 
@@ -91,7 +92,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
             $this->get_graphql_name(update_notification_preference::class),
             [
                 'id' => $system_built_in->get_id(),
-                'title' => 'Kaboom martin garrix'
+                'title' => 'Kaboom martin garrix',
             ]
         );
     }
@@ -102,7 +103,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
     public function test_update_notification_preference_of_non_overridden_custom_with_title(): void {
         $this->setAdminUser();
 
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $custom_notification = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -111,7 +112,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
                 'title' => 'This is custom title',
                 'body' => 'This is custom body',
                 'subject' => 'This is custom subject',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
             ]
         );
 
@@ -148,7 +149,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_custom = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -157,7 +158,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
                 'title' => 'This is custom title',
                 'body' => 'This is custom body',
                 'subject' => 'This is custom subject',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
             ]
         );
 
@@ -167,7 +168,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
             context_course::instance($course->id)->id,
             [
                 'body' => 'course body',
-                'subject' => 'course subject'
+                'subject' => 'course subject',
             ]
         );
 
@@ -195,7 +196,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
     public function test_update_notification_preference_of_non_overridden_custom_with_reset_title(): void {
         $this->setAdminUser();
 
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $custom_notification = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -204,7 +205,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
                 'title' => 'This is custom title',
                 'body' => 'This is custom body',
                 'subject' => 'This is custom subject',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
             ]
         );
 
@@ -225,7 +226,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
      * @return void
      */
     public function test_reset_notification_preference_body_with_empty_string(): void {
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->add_string_body_to_mock_built_in_notification('This is built-in body');
 
@@ -250,7 +251,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
             $this->get_graphql_name(update_notification_preference::class),
             [
                 'id' => $system_built_in->get_id(),
-                'body' => null
+                'body' => null,
             ]
         );
 
@@ -264,7 +265,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
      * @return void
      */
     public function test_reset_notification_preference_subject_with_empty_string(): void {
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->add_string_subject_to_mock_built_in_notification('This is built-in subject');
 
@@ -289,7 +290,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
             $this->get_graphql_name(update_notification_preference::class),
             [
                 'id' => $system_built_in->get_id(),
-                'subject' => null
+                'subject' => null,
             ]
         );
 
@@ -316,7 +317,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
             $this->get_graphql_name(update_notification_preference::class),
             [
                 'id' => $system_built_in->get_id(),
-                'body_format' => 42
+                'body_format' => 42,
             ]
         );
     }
@@ -327,16 +328,16 @@ class totara_notification_webapi_update_notification_preference_testcase extends
     public function test_update_notification_preference_without_providing_fields(): void {
         $this->setAdminUser();
 
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification = $generator->create_notification_preference(
-            totara_notification_mock_built_in_notification::class,
+            totara_notification_mock_notifiable_event::class,
             context_system::instance()->id,
             [
                 'body' => 'Custom body',
                 'body_format' => FORMAT_MOODLE,
                 'subject' => 'Custom subject',
-                'title' => 'Custom title'
+                'title' => 'Custom title',
             ]
         );
 
@@ -348,7 +349,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
             $this->get_graphql_name(update_notification_preference::class),
             [
                 'id' => $notification->get_id(),
-                'body' => 'updated body'
+                'body' => 'updated body',
             ]
         );
 

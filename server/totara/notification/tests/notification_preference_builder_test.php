@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 
 use core\orm\query\exceptions\record_not_found_exception;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_preference;
-use totara_notification\loader\notification_preference_loader;
+use totara_notification\testing\generator;
 
 class totara_notification_notification_preference_builder_testcase extends advanced_testcase {
     /**
@@ -33,7 +33,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_notifiable_event();
         $notification_generator->include_mock_built_in_notification();
@@ -175,7 +175,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
      * @return void
      */
     public function test_update_notification(): void {
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $first_custom = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -184,7 +184,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'body' => 'First body',
                 'subject' => 'First subject',
                 'body_format' => FORMAT_PLAIN,
-                'title' => 'First title'
+                'title' => 'First title',
             ]
         );
 
@@ -221,7 +221,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
      * @return void
      */
     public function test_set_ancestor_id_of_updating_builder(): void {
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $custom = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -230,7 +230,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'body' => 'body',
                 'subject' => 'subject',
                 'body_format' => FORMAT_PLAIN,
-                'title' => 'title'
+                'title' => 'title',
             ]
         );
 
@@ -248,7 +248,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     public function test_reset_title_of_custom_notification_that_does_not_have_parent(): void {
         global $DB;
 
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification_preference = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -257,7 +257,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'body' => 'This is body',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
-                'title' => 'This is title'
+                'title' => 'This is title',
             ]
         );
 
@@ -281,7 +281,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     public function test_reset_body_of_custom_notification_that_does_not_have_parent(): void {
         global $DB;
 
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification_preference = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -290,7 +290,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'body' => 'This is body',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
-                'title' => 'This is title'
+                'title' => 'This is title',
             ]
         );
 
@@ -314,7 +314,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     public function test_reset_body_format_of_custom_notification_that_does_not_have_parent(): void {
         global $DB;
 
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification_preference = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -323,7 +323,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'body' => 'This is body',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
-                'title' => 'This is title'
+                'title' => 'This is title',
             ]
         );
 
@@ -347,7 +347,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     public function test_reset_subject_of_custom_notification_that_does_not_have_parent(): void {
         global $DB;
 
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification_preference = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -356,7 +356,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'body' => 'This is body',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
-                'title' => 'This is title'
+                'title' => 'This is title',
             ]
         );
 
@@ -381,7 +381,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
      * @return void
      */
     public function test_override_built_in_notification_with_fields(): void {
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $system_built_in = $generator->add_mock_built_in_notification_for_component();
 
@@ -414,7 +414,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $context_other_cat = context_coursecat::instance($other_category->id);
         $context_course = context_course::instance($misc_course->id);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_category = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -437,6 +437,67 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $this->expectExceptionMessage(
             "The context path of ancestor does not appear in the context path of the overridden preference"
         );
+
+        $builder->save();
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_of_custom_notification_with_empty_required_field_body(): void {
+        $builder = new notification_preference_builder(
+            totara_notification_mock_notifiable_event::class,
+            context_system::instance()->id
+        );
+
+        $builder->set_body('');
+        $builder->set_title('title');
+        $builder->set_body_format(FORMAT_PLAIN);
+        $builder->set_subject('subject');
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("The record data does not have required field 'body'");
+
+        $builder->save();
+    }
+
+
+    /**
+     * @return void
+     */
+    public function test_create_of_custom_notification_with_empty_required_field_title(): void {
+        $builder = new notification_preference_builder(
+            totara_notification_mock_notifiable_event::class,
+            context_system::instance()->id
+        );
+
+        $builder->set_title('');
+        $builder->set_body('body');
+        $builder->set_body_format(FORMAT_PLAIN);
+        $builder->set_subject('subject');
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("The record data does not have required field 'title'");
+
+        $builder->save();
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_of_custom_notification_with_empty_required_field_subject(): void {
+        $builder = new notification_preference_builder(
+            totara_notification_mock_notifiable_event::class,
+            context_system::instance()->id
+        );
+
+        $builder->set_subject('');
+        $builder->set_title('title');
+        $builder->set_body('body');
+        $builder->set_body_format(FORMAT_PLAIN);
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("The record data does not have required field 'subject'");
 
         $builder->save();
     }

@@ -17,14 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+
 use totara_notification\entity\notifiable_event_queue;
 use totara_notification\entity\notification_queue;
 use totara_notification\manager\event_queue_manager;
 use totara_notification\model\notification_preference;
 use totara_notification\task\process_event_queue_task;
+use totara_notification\testing\generator;
 
 /**
  * This test is indirectly cover {@see event_queue_manager}
@@ -36,7 +38,7 @@ class totara_notification_process_event_task_testcase extends advanced_testcase 
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var \totara_notification\testing\generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_notifiable_event();
     }
@@ -51,7 +53,7 @@ class totara_notification_process_event_task_testcase extends advanced_testcase 
 
         $generator = self::getDataGenerator();
 
-        /** @var \totara_notification\testing\generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_built_in_notification_for_component();
 
@@ -149,7 +151,7 @@ class totara_notification_process_event_task_testcase extends advanced_testcase 
         self::assertEquals(1, $DB->count_records(notifiable_event_queue::TABLE));
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 
-        /** @var \totara_notification\testing\generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $trace = $generator->get_test_progress_trace();
 

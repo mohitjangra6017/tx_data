@@ -17,15 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 
+use totara_notification\entity\notification_preference as entity;
 use totara_notification\loader\notification_preference_loader;
+use totara_notification\model\notification_preference as model;
+use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\mutation\create_notification_preference;
 use totara_webapi\phpunit\webapi_phpunit_helper;
-use totara_notification\entity\notification_preference as entity;
-use totara_notification\model\notification_preference as model;
 
 class totara_notification_webapi_create_notification_preference_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
@@ -36,7 +37,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_notifiable_event();
         $notification_generator->add_mock_built_in_notification_for_component();
@@ -64,7 +65,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'ancestor_id' => $system_built_in->get_id(),
                 'context_id' => context_course::instance($course->id)->id,
                 'event_class_name' => totara_notification_mock_notifiable_event::class,
-                'body' => 'This is overridden body'
+                'body' => 'This is overridden body',
             ]
         );
 
@@ -108,7 +109,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'ancestor_id' => $system_built_in->get_id(),
                 'context_id' => context_course::instance($course->id)->id,
                 'event_class_name' => totara_notification_mock_notifiable_event::class,
-                'body' => 'This is overridden body'
+                'body' => 'This is overridden body',
             ]
         );
 
@@ -146,7 +147,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'event_class_name' => totara_notification_mock_notifiable_event::class,
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'This is title',
-                'subject' => 'This is subject'
+                'subject' => 'This is subject',
             ]
         );
     }
@@ -170,7 +171,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'event_class_name' => totara_notification_mock_notifiable_event::class,
                 'body' => 'This is body',
                 'title' => 'This is title',
-                'subject' => 'This is subject'
+                'subject' => 'This is subject',
             ]
         );
     }
@@ -194,7 +195,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'event_class_name' => totara_notification_mock_notifiable_event::class,
                 'body' => 'This is body',
                 'title' => 'This is title',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
             ]
         );
     }
@@ -218,7 +219,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'event_class_name' => totara_notification_mock_notifiable_event::class,
                 'body' => 'This is body',
                 'subject' => 'This is subject',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
             ]
         );
     }
@@ -242,7 +243,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'body' => 'This is body',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_HTML,
-                'title' => 'This is title'
+                'title' => 'This is title',
             ]
         );
 
@@ -288,7 +289,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 entity::TABLE,
                 [
                     'context_id' => $context_category->id,
-                    'event_class_name' => totara_notification_mock_notifiable_event::class
+                    'event_class_name' => totara_notification_mock_notifiable_event::class,
                 ]
             )
         );
@@ -300,7 +301,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 [
                     'context_id' => $context_category->id,
                     'event_class_name' => totara_notification_mock_notifiable_event::class,
-                    'ancestor_id' => $system_built_in->get_id()
+                    'ancestor_id' => $system_built_in->get_id(),
                 ]
             );
 
@@ -330,7 +331,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 entity::TABLE,
                 [
                     'context_id' => $context_system->id,
-                    'notification_class_name' => totara_notification_mock_built_in_notification::class
+                    'notification_class_name' => totara_notification_mock_built_in_notification::class,
                 ]
             )
         );
@@ -341,7 +342,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 [
                     'context_id' => $context_system->id,
                     'event_class_name' => totara_notification_mock_notifiable_event::class,
-                    'ancestor_id' => 42
+                    'ancestor_id' => 42,
                 ]
             );
             $this->fail("Expecting an exception to be thrown");
@@ -374,7 +375,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'context_id' => context_course::instance($course->id)->id,
                 'event_class_name' => '\\totara_notification_mock_notifiable_event',
                 'ancestor_id' => $system_built_in->get_id(),
-                'body' => 'Overridden body'
+                'body' => 'Overridden body',
             ]
         );
 
@@ -407,7 +408,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
             $this->get_graphql_name(create_notification_preference::class),
             [
                 'event_class_name' => 'hello_world',
-                'context_id' => $context->id
+                'context_id' => $context->id,
             ]
         );
     }
@@ -426,7 +427,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
             [
                 'event_class_name' => totara_notification_mock_notifiable_event::class,
                 'context_id' => context_system::instance()->id,
-                'body_format' => 42
+                'body_format' => 42,
             ]
         );
     }
@@ -445,7 +446,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $context_other_cat = context_coursecat::instance($other_category->id);
         $context_course = context_course::instance($misc_course->id);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_category = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -467,7 +468,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'body' => 'This is new body',
                 'subject' => 'This is new subject',
                 'title' => 'This is title',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
             ]
         );
     }
@@ -479,7 +480,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_custom = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
@@ -510,7 +511,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'subject' => 'New Subject',
                 'body' => 'New body',
                 'event_class_name' => totara_notification_mock_notifiable_event::class,
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
             ]
         );
     }

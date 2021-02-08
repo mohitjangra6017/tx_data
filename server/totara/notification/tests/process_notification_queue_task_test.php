@@ -17,14 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+
 use totara_notification\entity\notification_preference;
 use totara_notification\entity\notification_queue;
-use totara_notification\manager\notification_queue_manager;
 use totara_notification\loader\notification_preference_loader;
+use totara_notification\manager\notification_queue_manager;
 use totara_notification\task\process_notification_queue_task;
+use totara_notification\testing\generator;
 
 /**
  * This tes is indirectly cover {@see notification_queue_manager}
@@ -36,7 +38,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var \totara_notification\testing\generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_built_in_notification();
 
@@ -52,7 +54,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
         $generator = self::getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var \totara_notification\testing\generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
@@ -180,7 +182,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
         self::assertEquals(0, $sink->count());
         self::assertEmpty($sink->get_messages());
 
-        /** @var \totara_notification\testing\generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
 
         $task = new process_notification_queue_task();
@@ -206,7 +208,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
         $context_user = context_user::instance($user_one->id);
         $preference = notification_preference_loader::get_built_in(totara_notification_mock_built_in_notification::class);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 

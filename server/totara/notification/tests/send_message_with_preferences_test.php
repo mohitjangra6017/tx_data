@@ -17,16 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 
+use totara_notification\entity\notifiable_event_queue;
+use totara_notification\entity\notification_queue;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\observer\notifiable_event_observer;
 use totara_notification\task\process_event_queue_task;
-use totara_notification\entity\notifiable_event_queue;
-use totara_notification\entity\notification_queue;
 use totara_notification\task\process_notification_queue_task;
+use totara_notification\testing\generator;
 
 class totara_notification_send_message_with_preferences_testcase extends advanced_testcase {
     /**
@@ -35,7 +36,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_built_in_notification_for_component();
     }
@@ -50,7 +51,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
         $course = $generator->create_course();
         $receiver = $generator->create_user();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$receiver->id]);
 
@@ -102,7 +103,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
 
         $context_course = context_course::instance($course->id);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$receiver->id]);
 
@@ -115,7 +116,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
             $context_course->id,
             [
                 'body' => 'Course body',
-                'subject' => 'Course subject'
+                'subject' => 'Course subject',
             ]
         );
 
@@ -166,7 +167,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
         $context_course = context_course::instance($course->id);
         $context_category = context_coursecat::instance($course->category);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$receiver->id]);
 
@@ -232,7 +233,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
         $context_category = context_coursecat::instance($course->category);
         $context_course = context_course::instance($course->id);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
@@ -244,7 +245,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
                 'body' => 'Custom category body',
                 'subject' => 'Custom category subject',
                 'title' => 'Custom category title',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
             ]
         );
 
@@ -307,7 +308,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
                 $message->fullmessage,
                 [
                     'Built in category body',
-                    'Custom category body'
+                    'Custom category body',
                 ]
             );
 
@@ -315,7 +316,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
                 $message->subject,
                 [
                     'Built in course subject',
-                    'Custom category subject'
+                    'Custom category subject',
                 ]
             );
         }

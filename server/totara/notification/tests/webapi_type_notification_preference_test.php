@@ -17,12 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
-use totara_webapi\phpunit\webapi_phpunit_helper;
+
 use totara_notification\model\notification_preference as model;
+use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\type\notification_preference;
+use totara_webapi\phpunit\webapi_phpunit_helper;
 
 class totara_notification_webapi_type_notification_preference_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
@@ -43,7 +45,7 @@ class totara_notification_webapi_type_notification_preference_testcase extends a
      * @return void
      */
     protected function setUp(): void {
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->include_mock_notifiable_event();
         $this->system_built_in = $generator->add_mock_built_in_notification_for_component();

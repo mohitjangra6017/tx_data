@@ -24,6 +24,7 @@
 use container_course\course;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\loader\notification_preference_loader;
+use totara_notification\testing\generator;
 
 class totara_notification_overridden_preference_testcase extends advanced_testcase {
     /**
@@ -32,7 +33,7 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
     public function test_get_inherit_of_system(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_built_in_notification_for_component();
 
@@ -68,7 +69,7 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
         global $DB;
         $generator = self::getDataGenerator();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_notifiable_event();
 
@@ -127,7 +128,7 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
     public function test_overridden_from_built_in_with_three_level(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
 

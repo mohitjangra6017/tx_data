@@ -22,21 +22,22 @@
  */
 
 use totara_notification\builder\notification_preference_builder;
+use totara_notification\entity\notification_preference;
 use totara_notification\entity\notification_queue;
 use totara_notification\event\notifiable_event;
 use totara_notification\manager\event_queue_manager;
 use totara_notification\manager\notification_queue_manager;
 use totara_notification\observer\notifiable_event_observer;
+use totara_notification\testing\generator;
 use totara_notification_mock_built_in_notification as mock_built_in;
 use totara_notification_mock_notifiable_event as mock_event;
-use totara_notification\entity\notification_preference;
 
 class totara_notification_sending_notification_scenario_testcase extends advanced_testcase {
     /**
      * @return void
      */
     protected function setUp(): void {
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->include_mock_notifiable_event();
     }
@@ -63,7 +64,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $user_one = $generator->create_user();
         $course = $generator->create_course();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
 
@@ -114,7 +115,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $user_one = $generator->create_user();
         $course = $generator->create_course();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
@@ -173,7 +174,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $user_one = $generator->create_user();
         $course = $generator->create_course();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
@@ -239,7 +240,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $user_one = $generator->create_user();
         $course = $generator->create_course();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
         $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
@@ -313,7 +314,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $course = $generator->create_course();
         $context_course = context_course::instance($course->id);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
 
@@ -371,7 +372,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $user_one = $generator->create_user();
         $course = $generator->create_course();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
         $system_custom = $notification_generator->create_notification_preference(
@@ -447,7 +448,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $context_category = context_coursecat::instance($course->category);
         $context_course = context_course::instance($course->id);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
@@ -539,7 +540,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $context_course_one = context_course::instance($course_one->id);
         $context_course_two = context_course::instance($course_two->id);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
@@ -550,7 +551,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
                 'subject' => 'Course one subject',
                 'body' => 'Course one body',
                 'title' => 'Course one title',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
             ]
         );
 
@@ -561,7 +562,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
                 'subject' => 'Course two subject',
                 'body' => 'Course two body',
                 'title' => 'Course two title',
-                'body_format' => FORMAT_HTML
+                'body_format' => FORMAT_HTML,
             ]
         );
 
@@ -625,7 +626,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $context_course_one = context_course::instance($course_one->id);
         $context_course_two = context_course::instance($course_two->id);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
@@ -636,7 +637,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
                 'subject' => 'Course one subject',
                 'body' => 'Course one body',
                 'title' => 'Course one title',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
             ]
         );
 
@@ -672,7 +673,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $context_course_one = context_course::instance($course_one->id);
         $context_course_two = context_course::instance($course_two->id);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
@@ -682,7 +683,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
             $context_course_one->id,
             [
                 'body' => 'Course one body',
-                'subject' => 'Course one subject'
+                'subject' => 'Course one subject',
             ]
         );
 

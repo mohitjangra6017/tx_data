@@ -17,12 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author  Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_notification
  */
-use totara_comment\comment_helper;
-use totara_notification\event\notifiable_event;
+
 use core\event\base;
+use totara_comment\comment_helper;
+use totara_comment\testing\generator as comment_generator;
+use totara_notification\event\notifiable_event;
 
 class totara_notification_notifiable_event_testcase extends advanced_testcase {
     /**
@@ -32,7 +34,7 @@ class totara_notification_notifiable_event_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $actor = $generator->create_user();
 
-        /** @var \totara_comment\testing\generator $comment_generator */
+        /** @var comment_generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
 
         $context_user = context_user::instance($actor->id);

@@ -17,11 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+
 use totara_notification\entity\notification_queue;
 use totara_notification\manager\notification_queue_manager;
+use totara_notification\testing\generator;
 
 class totara_notification_notification_queue_manager_testcaase extends advanced_testcase {
     /**
@@ -30,7 +32,7 @@ class totara_notification_notification_queue_manager_testcaase extends advanced_
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var \totara_notification\testing\generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_built_in_notification_for_component();
     }
@@ -46,7 +48,7 @@ class totara_notification_notification_queue_manager_testcaase extends advanced_
 
         $context_user = context_user::instance($user_one->id);
 
-        /** @var \totara_notification\testing\generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
@@ -59,7 +61,6 @@ class totara_notification_notification_queue_manager_testcaase extends advanced_
         $valid_queue->scheduled_time = 10;
         $valid_queue->context_id = $context_user->id;
         $valid_queue->save();
-
 
 
         // Create an invalid queue. To create an invalid record, we need to first

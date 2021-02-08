@@ -228,7 +228,7 @@ class notification_preference {
     private function get_property_from_built_in_notification(string $attribute_name) {
         if (empty($this->entity->notification_class_name)) {
             debugging(
-                "The notification preference does not have a value for built-in notification " .
+                "The notification preference with id '{$this->entity->id}' does not have a value for built-in notification " .
                 "'{$this->entity->notification_class_name}' to get default attribute '{$attribute_name}'",
                 DEBUG_DEVELOPER
             );

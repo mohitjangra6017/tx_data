@@ -17,17 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 
 use container_course\course;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\model\notification_preference;
+use totara_notification\testing\generator;
 
 class totara_notification_notification_preference_loader_testcase extends advanced_testcase {
+    /**
+     * @return void
+     */
     protected function setUp(): void {
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->add_mock_built_in_notification_for_component();
 
@@ -41,7 +45,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $mock_preference = notification_preference_loader::get_built_in(
             totara_notification_mock_built_in_notification::class
@@ -54,7 +58,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
             $context_category->id,
             [
                 'title' => 'Kaboom',
-                'subject' => 'dada-di-da'
+                'subject' => 'dada-di-da',
             ]
         );
 
@@ -73,7 +77,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
                 'title' => 'kaboom',
                 'subject' => 'my name',
                 'body' => 'body',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
             ]
         );
 
@@ -91,7 +95,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
                 $preference->get_id(),
                 [
                     $custom_preference->get_id(),
-                    $course_preference->get_id()
+                    $course_preference->get_id(),
                 ]
             );
 
@@ -109,7 +113,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
 
         $course = course::from_record($course_record);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
 
         // Create a custom notification at the top level.
@@ -120,7 +124,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
                 'body' => 'data',
                 'subject' => 'body',
                 'title' => 'title',
-                'body_format' => FORMAT_JSON_EDITOR
+                'body_format' => FORMAT_JSON_EDITOR,
             ]
         );
 
@@ -132,7 +136,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
                 'body' => 'daa',
                 'subject' => 'ioko',
                 'title' => 'category title',
-                'body_format' => FORMAT_HTML
+                'body_format' => FORMAT_HTML,
             ]
         );
 
@@ -141,7 +145,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
             $system_custom,
             $course->get_context()->id,
             [
-                'body' => 'override body kjo!'
+                'body' => 'override body kjo!',
             ]
         );
 
@@ -163,7 +167,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
                 [
                     $mock_preference->get_id(),
                     $category_custom->get_id(),
-                    $override_course->get_id()
+                    $override_course->get_id(),
                 ]
             );
 
@@ -186,7 +190,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         $context_course = $course->get_context();
         $context_category = $context_course->get_parent_context();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_built_in = notification_preference_loader::get_built_in(totara_notification_mock_built_in_notification::class);
 
@@ -232,7 +236,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_custom = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,

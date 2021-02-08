@@ -17,11 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+
 use totara_notification\entity\notification_queue;
-use totara_notification\loader\notification_preference_loader;
+use totara_notification\testing\generator;
 
 class totara_notification_notification_queue_repository_testcase extends advanced_testcase {
     /**
@@ -88,7 +89,7 @@ class totara_notification_notification_queue_repository_testcase extends advance
      * @return void
      */
     public function test_get_queues_with_mixed_records(): void {
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $system_built_in = $generator->add_mock_built_in_notification_for_component();
 

@@ -25,6 +25,7 @@ use core\orm\query\exceptions\record_not_found_exception;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use totara_notification\model\notification_preference as model;
 use totara_notification\webapi\resolver\query\notification_preference;
+use totara_notification\testing\generator;
 
 class totara_notification_webapi_get_notification_preference_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
@@ -35,7 +36,7 @@ class totara_notification_webapi_get_notification_preference_testcase extends ad
     public function test_get_notification_preference(): void {
         $this->setAdminUser();
 
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $preference = $generator->add_mock_built_in_notification_for_component();
 
@@ -71,7 +72,7 @@ class totara_notification_webapi_get_notification_preference_testcase extends ad
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
 
