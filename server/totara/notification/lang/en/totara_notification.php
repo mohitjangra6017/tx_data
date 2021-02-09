@@ -22,6 +22,11 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+$string['create_notification'] = 'Create notification';
+$string['create_notification_modal_title'] = '{$a}: Create notification';
+$string['enabled'] = 'Enabled';
+$string['delivery_channels'] = 'Delivery channels';
+$string['disable'] = 'Disable notification';
 $string['disable_all'] = 'Disable all notifications';
 $string['disable_all_helptext'] = 'Disable all notifications, including forced and custom notifications.';
 $string['events_and_notifications'] = 'Events and notifications';
@@ -34,3 +39,6 @@ $string['notification_title_label'] = 'Name';
 $string['pluginname'] = 'Centralised notification';
 $string['process_event_queue_task'] = 'Queue event scheduled task';
 $string['process_notification_queue_task'] = 'Queue notification scheduled task';
+$string['recipient'] = 'Recipient';
+$string['required'] = 'Required';
+$string['schedule'] = 'Schedule';

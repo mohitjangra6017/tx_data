@@ -25,6 +25,18 @@
           <HeaderCell valign="center">
             {{ $str('events_and_notifications', 'totara_notification') }}
           </HeaderCell>
+          <HeaderCell valign="center">
+            {{ $str('recipient', 'totara_notification') }}
+          </HeaderCell>
+          <HeaderCell valign="center">
+            {{ $str('schedule', 'totara_notification') }}
+          </HeaderCell>
+          <HeaderCell valign="center">
+            {{ $str('delivery_channels', 'totara_notification') }}
+          </HeaderCell>
+          <HeaderCell valign="center">
+            {{ $str('enabled', 'totara_notification') }}
+          </HeaderCell>
         </template>
 
         <template v-slot:row="{ row, expand, expandState }">
@@ -56,6 +68,39 @@
                 <Cell>
                   {{ row.title }}
                 </Cell>
+                <Cell>
+                  'replace me with recipient'
+                </Cell>
+                <Cell>
+                  'replace me with schedule'
+                </Cell>
+                <Cell>
+                  'replace me with delivery channels'
+                </Cell>
+                <Cell>
+                  <div class="tui-notificationTable__action">
+                    <ToggleSwitch
+                      :toggle-first="true"
+                      :aria-label="$str('disable', 'totara_notification')"
+                    />
+                    <Dropdown :actions="defaultActions" :title="row.title">
+                      <template v-slot:icon>
+                        <ButtonIcon
+                          :aria-label="
+                            $str('create_notification', 'totara_notification')
+                          "
+                          :styleclass="{
+                            small: true,
+                            transparentNoPadding: true,
+                          }"
+                          @click="openModal(row.title)"
+                        >
+                          <AddIcon size="300" />
+                        </ButtonIcon>
+                      </template>
+                    </Dropdown>
+                  </div>
+                </Cell>
               </template>
               <template v-else>
                 <Cell>
@@ -83,6 +128,13 @@
         </template>
       </Table>
     </template>
+    <ModalPresenter :open="modalOpen" @request-close="modalOpen = false">
+      <NotificationModal :title="getModalTitle">
+        <template v-slot:form>
+          <CreateNotificationForm @cancel="modalOpen = $event" />
+        </template>
+      </NotificationModal>
+    </ModalPresenter>
     <Loader :loading="$apollo.loading" />
   </div>
 </template>
@@ -93,6 +145,13 @@ import ExpandCell from 'tui/components/datatable/ExpandCell';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
 import Table from 'tui/components/datatable/Table';
 import Loader from 'tui/components/loading/Loader';
+import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
+import Dropdown from 'totara_notification/components/dropdown/NotificationDropdown';
+import ButtonIcon from 'tui/components/buttons/ButtonIcon';
+import AddIcon from 'tui/components/icons/Add';
+import ModalPresenter from 'tui/components/modal/ModalPresenter';
+import NotificationModal from 'totara_notification/components/modal/NotificationModal';
+import CreateNotificationForm from 'totara_notification/components/form/NotificationCreationForm';
 
 // GraphQL queries
 import getComponentConfigurations from 'totara_notification/graphql/component_configurations';
@@ -104,6 +163,13 @@ export default {
     Table,
     ExpandCell,
     Loader,
+    ToggleSwitch,
+    Dropdown,
+    ButtonIcon,
+    AddIcon,
+    ModalPresenter,
+    NotificationModal,
+    CreateNotificationForm,
   },
 
   apollo: {
@@ -112,12 +178,58 @@ export default {
       fetchPolicy: 'network-only',
     },
   },
+
+  data() {
+    return {
+      modalOpen: false,
+      modalTitle: '',
+    };
+  },
+
+  computed: {
+    getModalTitle() {
+      return this.$str(
+        'create_notification_modal_title',
+        'totara_notification',
+        this.modalTitle
+      );
+    },
+    defaultActions() {
+      return [
+        {
+          label: this.$str('create_notification', 'totara_notification'),
+          action: this.openModal,
+        },
+      ];
+    },
+  },
+  methods: {
+    openModal(title) {
+      this.modalOpen = true;
+      this.modalTitle = title;
+    },
+  },
 };
 </script>
 <lang-strings>
   {
     "totara_notification": [
-      "events_and_notifications"
+      "create_notification",
+      "create_notification_modal_title",
+      "events_and_notifications",
+      "recipient",
+      "schedule",
+      "delivery_channels",
+      "disable",
+      "enabled"
     ]
   }
 </lang-strings>
+<style lang="scss">
+.tui-notificationTable {
+  &__action {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+</style>
