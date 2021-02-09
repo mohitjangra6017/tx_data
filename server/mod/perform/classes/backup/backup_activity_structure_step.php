@@ -393,9 +393,6 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
         $perform->add_child($element_identifiers);
         $element_identifiers->add_child($element_identifier);
 
-        $perform->add_child($redisplay_relationships);
-        $element->add_child($redisplay_relationship);
-
         $perform->add_child($sections);
         $sections->add_child($section);
         $section->add_child($section_elements);
@@ -403,6 +400,9 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
 
         $section->add_child($section_relationships);
         $section_relationships->add_child($section_relationship);
+
+        $perform->add_child($redisplay_relationships);
+        $redisplay_relationships->add_child($redisplay_relationship);
 
         $perform->add_child($tracks);
         $tracks->add_child($track);
@@ -458,9 +458,13 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
             ['activity_id' => backup::VAR_PARENTID]
         );
 
-        $redisplay_relationship->set_source_table(
-            'perform_element_redisplay_relationship',
-            ['redisplay_element_id' => backup::VAR_PARENTID]
+        $redisplay_relationship->set_source_sql(
+            "SELECT err.*
+               FROM {perform_element_redisplay_relationship} err
+               JOIN {perform_section_element} pse ON pse.element_id = err.redisplay_element_id
+               JOIN {perform_section} ps ON pse.section_id = ps.id
+              WHERE ps.activity_id = :activity_id",
+            ['activity_id' => backup::VAR_PARENTID]
         );
 
         $perform->annotate_ids('perform_type', 'type_id');
