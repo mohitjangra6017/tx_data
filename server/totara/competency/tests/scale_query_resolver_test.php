@@ -28,6 +28,9 @@ use totara_core\feature_not_available_exception;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 abstract class scale_query_resolver_test extends advanced_testcase {
+
+    protected const ID_ARG_EXCEPTION_MESSAGE = '/Please provide either scale id OR competency id/';
+
     /**
      * Return query name
      * @return string
@@ -62,7 +65,7 @@ abstract class scale_query_resolver_test extends advanced_testcase {
         $args = [];
 
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessageMatches('/Please provide either scale id OR competency id/');
+        $this->expectExceptionMessageMatches(static::ID_ARG_EXCEPTION_MESSAGE);
         $this->resolve_graphql_query($this->get_query_name(), $args);
     }
 
@@ -77,7 +80,7 @@ abstract class scale_query_resolver_test extends advanced_testcase {
         ];
 
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessageMatches('/Please provide either scale id OR competency id/');
+        $this->expectExceptionMessageMatches(static::ID_ARG_EXCEPTION_MESSAGE);
         $this->resolve_graphql_query($this->get_query_name(), $args);
     }
 

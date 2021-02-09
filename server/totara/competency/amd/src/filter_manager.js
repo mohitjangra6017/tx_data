@@ -139,6 +139,16 @@ define([], function() {
     };
 
     /**
+     * Set the value of the primary tree
+     *
+     */
+    FilterManager.prototype.setPrimaryTreeValue = function(value) {
+        if (this.primaryTree) {
+            this.primaryTree.querySelector('[data-tw-selectorgroup]').setAttribute('data-tw-selector-manualset', value);
+        }
+    };
+
+    /**
      * Toggle primary search class
      *
      * @param {string} toggleClass

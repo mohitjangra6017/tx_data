@@ -28,6 +28,7 @@ use core\orm\entity\model;
 use core\orm\entity\repository;
 use totara_competency\entity\competency;
 use totara_competency\entity\competency_achievement;
+use totara_competency\entity\competency_scale_assignment;
 use totara_competency\entity\scale as scale_entity;
 use totara_competency\entity\scale_assignment;
 use totara_core\advanced_feature;
@@ -117,6 +118,32 @@ class scale extends model {
      */
     public static function find_by_competency_id(int $id, bool $with_values = true): ?self {
         return static::find_by_competency_ids([$id], $with_values)->first();
+    }
+
+    /**
+     * Load the scale a particular framework uses.
+     *
+     * Note, the underlying db structure allows one framework to many scales,
+     * but the application only allows selecting one scale per framework.
+     *
+     * @param int $framework_id
+     * @return static|null
+     */
+    public static function find_by_framework_id(int $framework_id): ?self {
+        $scale_entity = scale_entity::repository()
+            ->as('cs')
+            ->select('cs.*')
+            ->join([competency_scale_assignment::TABLE, 'csa'], 'cs.id', 'csa.scaleid')
+            ->where('csa.frameworkid', $framework_id)
+            ->order_by('id')
+            ->with('values')
+            ->first();
+
+        if ($scale_entity === null) {
+            return null;
+        }
+
+         return static::load_by_entity($scale_entity);
     }
 
     /**

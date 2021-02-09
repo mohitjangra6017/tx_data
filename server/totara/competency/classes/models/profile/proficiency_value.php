@@ -25,6 +25,7 @@ namespace totara_competency\models\profile;
 
 use coding_exception;
 use totara_competency\entity\assignment;
+use totara_competency\models\assignment as assignment_model;
 use totara_competency\entity\scale;
 use totara_competency\entity\scale_value;
 
@@ -32,6 +33,12 @@ use totara_competency\entity\scale_value;
  * Class proficiency value model
  *
  * This model represents a relative proficiency value
+ *
+ * @property int $id
+ * @property string name
+ * @property bool proficient
+ * @property int percentage
+ * @property int scale_id
  */
 class proficiency_value {
 
@@ -107,7 +114,7 @@ class proficiency_value {
      * @param assignment $assignment
      * @return proficiency_value
      */
-    public static function my_value(assignment $assignment) {
+    public static function my_value(assignment $assignment): proficiency_value {
         $value = new static($assignment);
 
         if (!$assignment->relation_loaded('current_achievement')) {
@@ -141,15 +148,22 @@ class proficiency_value {
      * @param assignment $assignment
      * @return proficiency_value
      */
-    public static function min_value(assignment $assignment) {
+    public static function min_value(assignment $assignment): proficiency_value {
         $value = new static($assignment);
 
-        $value->id = $assignment->competency->scale->min_proficient_value->id;
-        $value->name = $assignment->competency->scale->min_proficient_value->name;
-        $value->scale_id = $assignment->competency->scale->id;
+        $assignment_model = assignment_model::load_by_entity($assignment);
+        if ($assignment_model->has_default_proficiency_value_override()) {
+            $value_entity =  $assignment->min_proficient_value_override;
+        } else {
+            $value_entity = $assignment->competency->scale->min_proficient_value;
+        }
+
+        $value->id = $value_entity->id;
+        $value->name = $value_entity->name;
+        $value->scale_id = $value_entity->scaleid;
         $value->proficient = true; // This is a min proficient value, so always proficient :)
         $value->percentage = static::calculate_scale_value_percentage(
-            $assignment->competency->scale->min_proficient_value,
+            $value_entity,
             $assignment->competency->scale
         );
 

@@ -364,13 +364,17 @@ extend type Query {
   """
   totara_competency_scale(
     """
-    ID of scale to return. If provided competency_id should be left blank
+    ID of scale to return. If provided competency_id/framework_id should be left blank
     """
     id: core_id
     """
-    ID of a competency whose scale to return. If provided id should be left blank
+    ID of a competency whose scale to return. If provided id/framework_id should be left blank
     """
     competency_id: core_id
+    """
+    ID of a framework whose scale to return. If provided id/competency_id should be left blank
+    """
+    framework_id: core_id
   ): totara_competency_scale!
 
   """

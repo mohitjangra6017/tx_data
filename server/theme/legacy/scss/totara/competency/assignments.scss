@@ -26,6 +26,10 @@
     @include tui-font-heading-page-title;
   }
 
+  &__titleHelpIcon {
+    padding-left: var(--gap-2);
+  }
+
   &__archiveActionModal {
     &_confirm {
       display: flex;
@@ -69,6 +73,13 @@
     &_title {
       @include tui-font-heading-medium();
       margin: var(--gap-1) var(--gap-1) var(--gap-4) 0;
+    }
+  }
+
+  &__editProficiencyValueModal {
+    &_label {
+      @include tui-font-body-small();
+      display: block;
     }
   }
 }

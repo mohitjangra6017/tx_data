@@ -23,6 +23,7 @@
 
 namespace totara_competency\webapi\resolver\query;
 
+use coding_exception;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_advanced_feature;
 use core\webapi\middleware\require_login;
@@ -30,6 +31,7 @@ use core\webapi\middleware\require_system_capability;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
 use totara_competency\models\scale as scale_model;
+use core\entity\user;
 
 /**
  * Query to return a single competency scale.
@@ -43,23 +45,23 @@ class scale implements query_resolver, has_middleware {
      * @param execution_context $ec
      * @return scale_model
      */
-    public static function resolve(array $args, execution_context $ec) {
-        global $USER;
+    public static function resolve(array $args, execution_context $ec): scale_model {
         if (!$ec->has_relevant_context()) {
-            $ec->set_relevant_context(\context_user::instance($USER->id));
+            $ec->set_relevant_context(\context_user::instance(user::logged_in()->id));
         }
 
-        if (!isset($args['id']) && !isset($args['competency_id']) || isset($args['id']) && isset($args['competency_id'])) {
-            throw new \coding_exception('Please provide either scale id OR competency id');
-        }
+        $possible_id_args = ['id', 'competency_id', 'framework_id'];
+        self::enforce_single_id_arg($args, $possible_id_args);
 
         if (isset($args['id'])) {
-            $model = scale_model::load_by_id_with_values($args['id']);
-        } else {
-            $model = scale_model::find_by_competency_id($args['competency_id']);
+            return scale_model::load_by_id_with_values($args['id']);
         }
 
-        return $model;
+        if (isset($args['competency_id'])) {
+            return scale_model::find_by_competency_id($args['competency_id']);
+        }
+
+        return scale_model::find_by_framework_id($args['framework_id']);
     }
 
     /**
@@ -71,6 +73,28 @@ class scale implements query_resolver, has_middleware {
             new require_advanced_feature('competencies'),
             new require_system_capability('totara/hierarchy:viewcompetency')
         ];
+    }
+
+    /**
+     * @param array $args
+     * @param string[] $possible_id_args
+     */
+    private static function enforce_single_id_arg(array $args, array $possible_id_args): void {
+        $id_arg_count = 0;
+
+        foreach ($possible_id_args as $possible_id_arg) {
+            if (isset($args[$possible_id_arg])) {
+                $id_arg_count++;
+            }
+        }
+
+        if ($id_arg_count !== 1) {
+            $possible_id_args = array_map(function (string $possible_arg) {
+               return "\"{$possible_arg}\"";
+            }, $possible_id_args);
+
+            throw new coding_exception('Please provide ' . implode(' OR ', $possible_id_args));
+        }
     }
 
 }

@@ -25,6 +25,7 @@ namespace totara_competency\entity;
 
 
 use core\orm\entity\entity;
+use core\orm\entity\relations\belongs_to;
 
 /**
  * Resource competency_scale
@@ -39,6 +40,7 @@ use core\orm\entity\entity;
  * @property int $timemodified Time modified
  * @property int $usermodified User modified
  * @property int $proficient Whether this value is counted as proficient
+ * @property-read scale $scale The parent scale
  */
 class scale_value extends entity {
 
@@ -47,5 +49,12 @@ class scale_value extends entity {
     public const UPDATED_TIMESTAMP = 'timemodified';
 
     public const SET_UPDATED_WHEN_CREATED = true;
+
+    /**
+     * @return belongs_to
+     */
+    public function scale(): belongs_to {
+        return $this->belongs_to(scale::class, 'scaleid');
+    }
 
 }

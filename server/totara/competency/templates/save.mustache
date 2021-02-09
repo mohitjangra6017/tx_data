@@ -67,9 +67,11 @@
     data-basket-users-count="{{basket_users_count}}"
     data-manage-assignments-url="{{index_url}}">
 
-    <a href="{{index_url}}" class="tw-assignCompSave__backLink" data-tw-assignCompSave-backBtn="">
-        {{#str}}assignment_back_to_assignments, totara_competency{{/str}}
-    </a>
+    <div class="tw-assignCompSave__backLink">
+        <a href="{{index_url}}" data-tw-assignCompSave-backBtn="">
+            {{#str}}assignment_back_to_assignments, totara_competency{{/str}}
+        </a>
+    </div>
 
     <h2 class="tw-assignCompSave__title">{{title}}</h2>
 

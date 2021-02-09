@@ -86,11 +86,20 @@
         {{/hasToggleSelection}}
 
         {{#actionBtn}}
+        {{#save_url}}
         <a href="{{save_url}}" class="tw-selectionBasket__btn tw-selectionBasket__btn_small tw-selectionBasket__btn_prim
         {{^count}}tw-selectionBasket__btn_disabled{{/count}}" data-tw-selectionBasket-customAction="{{action}}"
         data-tw-selectionBasket-countReq="">
             {{label}}{{^label}}{{#str}}next, core{{/str}}{{/label}}
         </a>
+        {{/save_url}}
+        {{^save_url}}
+        <button class="tw-selectionBasket__btn tw-selectionBasket__btn_small tw-selectionBasket__btn_prim
+        {{^count}}tw-selectionBasket__btn_disabled{{/count}}" data-tw-selectionBasket-customAction="{{action}}"
+        data-tw-selectionBasket-countReq="">
+            {{label}}{{^label}}{{#str}}next, core{{/str}}{{/label}}
+        </button>
+        {{/save_url}}
         {{/actionBtn}}
 
         {{#hasActionBtnList}}

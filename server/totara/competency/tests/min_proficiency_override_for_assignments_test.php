@@ -1,0 +1,230 @@
+<?php
+
+/*
+ * This file is part of Totara Learn
+ *
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author Jaron Steenson <jaron.steenson@totaralearning.com>
+ * @package totara_competency
+ * @subpackage test
+ */
+
+use totara_competency\entity\assignment as assignment_entity;
+use totara_competency\entity\scale_value;
+use totara_competency\min_proficiency_override_for_assignments;
+use totara_competency\models\assignment;
+
+/**
+ * Class totara_competency_model_scale_testcase
+ *
+ * @coversDefaultClass \totara_competency\models\scale
+ *
+ * @group totara_competency
+ */
+class totara_competency_min_proficiency_override_for_assignments_testcase extends advanced_testcase {
+
+    public function test_set_and_unset_single_assignment(): void {
+        $assignment = $this->generator()->assignment_generator()->create_self_assignment();
+        $assignment_entity = new assignment_entity($assignment->id);
+
+        /** @var scale_value $new_min_scale_value */
+        $new_min_scale_value = $assignment_entity->competency->scale->values->find(function (scale_value $scale_value) {
+            return $scale_value->id !== $scale_value->scale->minproficiencyid;
+        });
+
+        $original_min_scale_value = $assignment_entity->competency->scale->min_proficient_value;
+
+        $updated_assignments = (new min_proficiency_override_for_assignments(
+            $new_min_scale_value->id,
+            [$assignment_entity->id]
+        ))->process();
+
+        /** @var assignment $updated_assignment */
+        $updated_assignment = $updated_assignments->first();
+
+        self::assertEquals($updated_assignment->get_id(), $assignment_entity->id);
+        self::assertTrue($updated_assignment->has_default_proficiency_value_override());
+        self::assertEquals($updated_assignment->get_min_value()->id, $new_min_scale_value->id);
+
+
+        $updated_assignments = (new min_proficiency_override_for_assignments(
+            null,
+            [$assignment_entity->id]
+        ))->process();
+
+        /** @var assignment $updated_assignment */
+        $updated_assignment = $updated_assignments->first();
+
+        self::assertEquals($updated_assignment->get_id(), $assignment_entity->id);
+        self::assertFalse($updated_assignment->has_default_proficiency_value_override());
+        self::assertEquals($updated_assignment->get_min_value()->id, $original_min_scale_value->id);
+    }
+
+    public function test_set_and_unset_multi_assignments_same_competency(): void {
+        $assignment1 = $this->generator()->assignment_generator()->create_self_assignment();
+        $assignment_entity1 = new assignment_entity($assignment1->id);
+
+        // One and two share the same competency.
+        $assignment2 = $this->generator()->assignment_generator()->create_self_assignment();
+        $assignment_entity2 = new assignment_entity($assignment2->id);
+        $assignment_entity2->competency_id = $assignment1->competency_id;
+        $assignment_entity2->save();
+
+        /** @var scale_value $new_min_scale_value */
+        $new_min_scale_value = $assignment_entity1->competency->scale->values->find(function (scale_value $scale_value) {
+            return $scale_value->id !== $scale_value->scale->minproficiencyid;
+        });
+
+        $original_min_scale_value = $assignment_entity1->competency->scale->min_proficient_value;
+
+        $updated_assignments = (new min_proficiency_override_for_assignments(
+            $new_min_scale_value->id,
+            [$assignment_entity1->id, $assignment_entity2->id]
+        ))->process();
+
+        /** @var assignment $updated_assignment1 */
+        $updated_assignment1 = $updated_assignments->first();
+        /** @var assignment $updated_assignment2 */
+        $updated_assignment2 = $updated_assignments->last();
+
+        self::assertEquals($updated_assignment1->get_id(), $assignment_entity1->id);
+        self::assertTrue($updated_assignment1->has_default_proficiency_value_override());
+        self::assertEquals($updated_assignment1->get_min_value()->id, $new_min_scale_value->id);
+
+        self::assertEquals($updated_assignment2->get_id(), $assignment_entity2->id);
+        self::assertTrue($updated_assignment2->has_default_proficiency_value_override());
+        self::assertEquals($updated_assignment2->get_min_value()->id, $new_min_scale_value->id);
+
+
+        $updated_assignments = (new min_proficiency_override_for_assignments(
+            null,
+            [$assignment_entity1->id, $assignment_entity2->id]
+        ))->process();
+
+        /** @var assignment $updated_assignment1 */
+        $updated_assignment1 = $updated_assignments->first();
+        /** @var assignment $updated_assignment2 */
+        $updated_assignment2 = $updated_assignments->last();
+
+        self::assertEquals($updated_assignment1->get_id(), $assignment_entity1->id);
+        self::assertFalse($updated_assignment1->has_default_proficiency_value_override());
+        self::assertEquals($updated_assignment1->get_min_value()->id, $original_min_scale_value->id);
+
+        self::assertEquals($updated_assignment2->get_id(), $assignment_entity2->id);
+        self::assertFalse($updated_assignment2->has_default_proficiency_value_override());
+        self::assertEquals($updated_assignment2->get_min_value()->id, $original_min_scale_value->id);
+    }
+
+    public function test_set_and_unset_multi_assignments_different_competency(): void {
+        $assignment1 = $this->generator()->assignment_generator()->create_self_assignment();
+        $assignment_entity1 = new assignment_entity($assignment1->id);
+
+        // One and two share the same competency.
+        $assignment2 = $this->generator()->assignment_generator()->create_self_assignment();
+        $assignment_entity2 = new assignment_entity($assignment2->id);
+
+        self::assertNotEquals($assignment_entity2->competency_id, $assignment1->competency_id);
+
+        $assignment_entity2->competency->frameworkid = $assignment_entity1->competency->frameworkid;
+        $assignment_entity2->competency->save();
+
+        /** @var scale_value $new_min_scale_value */
+        $new_min_scale_value = $assignment_entity1->competency->scale->values->find(function (scale_value $scale_value) {
+            return $scale_value->id !== $scale_value->scale->minproficiencyid;
+        });
+
+        $original_min_scale_value = $assignment_entity1->competency->scale->min_proficient_value;
+
+        $updated_assignments = (new min_proficiency_override_for_assignments(
+            $new_min_scale_value->id,
+            [$assignment_entity1->id, $assignment_entity2->id]
+        ))->process();
+
+        /** @var assignment $updated_assignment1 */
+        $updated_assignment1 = $updated_assignments->first();
+        /** @var assignment $updated_assignment2 */
+        $updated_assignment2 = $updated_assignments->last();
+
+        self::assertEquals($updated_assignment1->get_id(), $assignment_entity1->id);
+        self::assertTrue($updated_assignment1->has_default_proficiency_value_override());
+        self::assertEquals($updated_assignment1->get_min_value()->id, $new_min_scale_value->id);
+
+        self::assertEquals($updated_assignment2->get_id(), $assignment_entity2->id);
+        self::assertTrue($updated_assignment2->has_default_proficiency_value_override());
+        self::assertEquals($updated_assignment2->get_min_value()->id, $new_min_scale_value->id);
+
+
+        $updated_assignments = (new min_proficiency_override_for_assignments(
+            null,
+            [$assignment_entity1->id, $assignment_entity2->id]
+        ))->process();
+
+        /** @var assignment $updated_assignment1 */
+        $updated_assignment1 = $updated_assignments->first();
+        /** @var assignment $updated_assignment2 */
+        $updated_assignment2 = $updated_assignments->last();
+
+        self::assertEquals($updated_assignment1->get_id(), $assignment_entity1->id);
+        self::assertFalse($updated_assignment1->has_default_proficiency_value_override());
+        self::assertEquals($updated_assignment1->get_min_value()->id, $original_min_scale_value->id);
+
+        self::assertEquals($updated_assignment2->get_id(), $assignment_entity2->id);
+        self::assertFalse($updated_assignment2->has_default_proficiency_value_override());
+        self::assertEquals($updated_assignment2->get_min_value()->id, $original_min_scale_value->id);
+    }
+
+    public function test_non_existent_assignments(): void {
+        $assignment1 = $this->generator()->assignment_generator()->create_self_assignment();
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage('Assignments with ids (-100, -200) do not exist');
+
+        (new min_proficiency_override_for_assignments(
+            null,
+            [$assignment1->id, -100, -200]
+        ))->process();
+    }
+
+    public function test_scale_value_does_not_exist(): void {
+        $assignment1 = $this->generator()->assignment_generator()->create_self_assignment();
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage(min_proficiency_override_for_assignments::SCALE_VALUE_DOES_NOT_EXIST);
+
+        (new min_proficiency_override_for_assignments(
+            -100,
+            [$assignment1->id]
+        ))->process();
+    }
+
+    public function test_scale_value_does_not_belong_to_a_framework(): void {
+        $assignment1 = $this->generator()->assignment_generator()->create_self_assignment();
+        $scale = $this->generator()->create_scale('No framework');
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage(min_proficiency_override_for_assignments::COMPETENCIES_DO_NOT_BELONG_TO_OVERRIDE_FRAMEWORK);
+
+        (new min_proficiency_override_for_assignments(
+            $scale->minproficiencyid,
+            [$assignment1->id]
+        ))->process();
+    }
+
+    protected function generator(): totara_competency_generator {
+        return $this->getDataGenerator()->get_plugin_generator('totara_competency');
+    }
+}

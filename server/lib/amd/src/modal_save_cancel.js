@@ -59,6 +59,20 @@ define(['jquery', 'core/notification', 'core/custom_interaction_events', 'core/m
     };
 
     /**
+     * Disable the save button.
+     */
+    ModalSaveCancel.prototype.disableSave = function() {
+        this.getFooter().find(SELECTORS.SAVE_BUTTON).prop('disabled', true);
+    };
+
+    /**
+     * Enable the save button.
+     */
+    ModalSaveCancel.prototype.enableSave = function() {
+        this.getFooter().find(SELECTORS.SAVE_BUTTON).prop('disabled', false);
+    };
+
+    /**
      * Set up all of the event handling for the modal.
      *
      * @method registerEventListeners

@@ -44,7 +44,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
      * @covers ::load_by_ids
      * @covers ::__construct
      */
-    public function test_it_loads_scales_using_ids() {
+    public function test_it_loads_scales_using_ids(): void {
         $data = $this->create_data();
 
         $expected = $data['scales'];
@@ -75,7 +75,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
      * @covers ::find_by_competency_ids
      * @covers ::sanitize_ids
      */
-    public function test_it_loads_scales_using_competency_ids() {
+    public function test_it_loads_scales_using_competency_ids(): void {
         $data = $this->create_data();
 
         $expected = $data['scales'];
@@ -114,7 +114,19 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
         $this->assert_scale_is_good(new collection([scale::find_by_competency_id($comps->item(2)->id, true)]), true);
     }
 
-    public function test_if_scale_is_assigned() {
+    public function test_load_by_framework_id(): void {
+        $data = $this->create_data();
+
+        /** @var competency $comp1 */
+        $comp1 = $data['competencies']->item(0); // Scale 1
+
+        $scale = scale::find_by_framework_id($comp1->frameworkid);
+
+        $this->assertNotNull($scale);
+        $this->assertEquals('Scale 1', $scale->name);
+    }
+
+    public function test_if_scale_is_assigned(): void {
         $generator = $this->generator();
 
         $scale = $generator->create_scale('comp', ['name' => 'Scale 1']);
@@ -129,7 +141,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
         $this->assertTrue($scale_model->is_assigned());
     }
 
-    public function test_if_scale_is_used() {
+    public function test_if_scale_is_used(): void {
         $generator = $this->generator();
 
         $user = $this->getDataGenerator()->create_user();
@@ -170,7 +182,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
         $this->assertTrue($scale_model->is_in_use());
     }
 
-    public function test_if_scale_is_used_in_learning_plan() {
+    public function test_if_scale_is_used_in_learning_plan(): void {
         $generator = $this->generator();
 
         $user = $this->getDataGenerator()->create_user();
@@ -205,7 +217,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
         $this->assertFalse($scale_model->is_in_use());
     }
 
-    public function test_if_scale_is_used_with_learning_plan_disabled() {
+    public function test_if_scale_is_used_with_learning_plan_disabled(): void {
         advanced_feature::disable('learningplans');
 
         $generator = $this->generator();
@@ -244,7 +256,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
      * @param collection $scales Collection of scale models
      * @param bool $with_values Check whether it should have values loaded or not
      */
-    protected function assert_scale_is_good(collection $scales, bool $with_values = false) {
+    protected function assert_scale_is_good(collection $scales, bool $with_values = false): void {
         $scales->map(function (scale $scale) use ($with_values) {
             $this->assertInstanceOf(scale::class, $scale);
 
@@ -280,7 +292,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
      *
      * @return array
      */
-    protected function create_data() {
+    protected function create_data(): array {
         // Let's create 3 scales
         $scales = new collection();
 
@@ -316,7 +328,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
     /**
      * @return \totara_hierarchy\testing\generator
      */
-    protected function generator() {
+    protected function generator(): \totara_hierarchy_generator {
         return $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
     }
 }

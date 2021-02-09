@@ -297,6 +297,15 @@ extend type Query {
   ): totara_competency_self_assigned_competencies_result!
 }
 
+input totara_competency_assignment_min_proficiency_override_input {
+  assignment_ids: [core_id!]!
+  scale_value_id: core_id
+}
+
+type totara_competency_assignment_min_proficiency_override_result {
+  assignments: [totara_competency_assignment!]!
+}
+
 extend type Mutation {
   """
   Creates new assignments for the user
@@ -312,4 +321,12 @@ extend type Mutation {
   totara_competency_archive_user_assignment(
     assignment_id: core_id!
   ): totara_competency_archive_user_assignment_result
+
+  """
+  Update or unset the minimum proficiency value override for one or many competency assignments.
+  A null scale_value_id unsets the override.
+  """
+  totara_competency_update_min_proficiency_override_for_assignments(
+    input: totara_competency_assignment_min_proficiency_override_input
+  ): totara_competency_assignment_min_proficiency_override_result
 }

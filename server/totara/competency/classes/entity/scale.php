@@ -39,8 +39,8 @@ use core\orm\entity\relations\has_many;
  * @property int $defaultid Default id
  * @property int $minproficiencyid
  *
- * @property_read scale_value $default_value
- * @property_read scale_value $min_proficient_value
+ * @property-read scale_value $default_value
+ * @property-read scale_value $min_proficient_value
  * @property-read collection|scale_value[] $values Values for this scale, sorted from lowest to highest value
  * @property-read collection|scale_value[] $sorted_values_high_to_low Values for this scale, sorted from highest value to lowest
  */

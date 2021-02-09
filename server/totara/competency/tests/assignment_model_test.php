@@ -172,4 +172,45 @@ class totara_competency_assignment_model_testcase extends assignment_model_base_
         $this->assertTrue($assignment->is_archived());
     }
 
+    public function test_min_proficiency_value_overrides(): void {
+        $data = $this->create_data();
+
+        $this->setUser($data->user1->id);
+
+        $assignment = $this->create_active_user_assignment($data->comp1->id, $data->user1->id);
+
+        /** @var assignment_entity $assignment_entity */
+        $assignment_entity = assignment_entity::repository()->find($assignment->get_id());
+        $assignment_model = assignment_model::load_by_entity($assignment_entity);
+
+        $this->assertFalse($assignment_model->has_default_proficiency_value_override());
+        $this->assertEquals(
+            $assignment_entity->competency->scale->minproficiencyid,
+            $assignment_model->get_min_value()->id
+        );
+
+
+        $assignment_entity->minproficiencyid = $assignment_entity->competency->scale->minproficiencyid;
+        $assignment_entity->save();
+        $assignment_model = assignment_model::load_by_id($assignment_entity->id);
+
+        // Even if the override is set to the scale min, there is still an override present.
+        $this->assertTrue($assignment_model->has_default_proficiency_value_override());
+        $this->assertEquals(
+            $assignment_entity->competency->scale->minproficiencyid,
+            $assignment_model->get_min_value()->id
+        );
+
+
+        $assignment_entity->minproficiencyid = $assignment_entity->competency->scale->defaultid;
+        $assignment_entity->save();
+        $assignment_model = assignment_model::load_by_id($assignment_entity->id);
+
+        $this->assertTrue($assignment_model->has_default_proficiency_value_override());
+        $this->assertEquals(
+            $assignment_entity->competency->scale->defaultid,
+            $assignment_model->get_min_value()->id
+        );
+    }
+
 }

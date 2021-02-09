@@ -54,6 +54,8 @@ class assignment extends formatter {
             'reason_assigned' => string_field_formatter::class,
             'assigner' => null,
             'can_archive' => null,
+            'min_proficiency_value' => null,
+            'has_default_proficiency_value_override' => null,
         ];
     }
 

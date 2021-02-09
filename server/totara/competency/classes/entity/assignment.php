@@ -46,7 +46,7 @@ use core\entity\user;
  * @property int $updated_at Updated at timestamp
  * @property int $archived_at Archived at timestamp
  * @property bool $expand Flag whether to expand assignment on next expand task run
- * @property int $minproficiencyid Custom minimum proficiency value for the assignment
+ * @property int|null $minproficiencyid Custom minimum proficiency value for the assignment
  *
  * @property-read string $status_name Textual representation of status int
  * @property-read competency_achievement $current_achievement Current achievement
@@ -56,6 +56,7 @@ use core\entity\user;
  * @property-read user $assigner
  * @property-read collection $assignment_users
  * @property-read competency_assignment_user $assignment_user
+ * @property-read scale_value $min_proficient_value_override
  *
  * @method static assignment_repository repository()
  *
@@ -183,6 +184,16 @@ class assignment extends entity {
     public function assigner(): belongs_to {
         return $this->belongs_to(user::class, 'created_by');
     }
+
+    /**
+     * The min proficient scale value override (if one is set).
+     *
+     * @return has_one
+     */
+    public function min_proficient_value_override(): has_one {
+        return $this->has_one(scale_value::class, 'id', 'minproficiencyid');
+    }
+
 
     /**
      * Get status attribute

@@ -471,6 +471,13 @@ class assignment extends \external_api {
         $response['competency_name'] = $string_formatter->format($assignment->get_competency()->display_name);
         $response['user_group_name'] = $string_formatter->format($assignment->get_user_group_name());
         $response['pathway_warning_message'] = $plain_string_formatter->format($assignment->get_pathway_warning_message());
+        $response['min_proficiency_value_name'] = $plain_string_formatter->format($assignment->get_min_value()->name);
+
+        $response['has_default_proficiency_value_override_yes_no'] = '';
+        if ($assignment->has_default_proficiency_value_override()) {
+            $yes_short = get_string('yes_short', 'totara_competency');
+            $response['has_default_proficiency_value_override_yes_no'] = $plain_string_formatter->format($yes_short);
+        }
 
         return $response;
     }

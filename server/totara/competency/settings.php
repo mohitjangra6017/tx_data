@@ -23,6 +23,7 @@
 
 use totara_competency\admin_setting_continuous_tracking;
 use totara_competency\admin_setting_unassign_behaviour;
+use totara_competency\controllers\assignment\edit_proficiency_value;
 use totara_core\advanced_feature;
 
 defined('MOODLE_INTERNAL') || die;
@@ -65,6 +66,16 @@ $ADMIN->add(
         get_string('title_create', 'totara_competency'),
         "{$CFG->wwwroot}/totara/competency/assignments/create.php",
         "totara/competency:manage_assignments",
+        !advanced_feature::is_enabled('competency_assignment')
+    )
+);
+$ADMIN->add(
+    'competencies',
+    new admin_externalpage(
+        edit_proficiency_value::ADMIN_EXTERNAL_PAGE_NAME,
+        get_string('edit_proficiency_value_by_assignment', 'totara_competency'),
+        "{$CFG->wwwroot}/totara/competency/assignments/edit_proficiency_value.php",
+        'totara/competency:manage_assignments',
         !advanced_feature::is_enabled('competency_assignment')
     )
 );

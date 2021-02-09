@@ -62,31 +62,31 @@ abstract class filters {
         );
     }
 
+
     /**
-     * @param string $all_frameworks_string
+     * @param string|null $all_frameworks_string if null is supplied there is no all option
      * @return array
      */
-    protected static function get_competency_frameworks_options(string $all_frameworks_string): array {
-        $options = [
-            (object)[
+    protected static function get_competency_frameworks_options(?string $all_frameworks_string): array {
+        $options = competency_framework::repository()
+            ->filter_by_visible()
+            ->order_by('sortorder')
+            ->get()
+            ->map(function (competency_framework $framework) {
+                return (object)[
+                    'name' => format_string($framework->fullname),
+                    'key' => $framework->id,
+                ];
+            })->all(false);
+
+        if ($all_frameworks_string !== null) {
+            array_unshift($options, (object)[
                 'name' => $all_frameworks_string,
                 'key' => '',
-                'default' => true
-            ],
-        ];
-
-        $frameworks = competency_framework::repository()
-            ->filter_by_visible()
-            ->order_by('sortorder', 'asc')
-            ->get();
-
-        foreach ($frameworks as $framework) {
-            $option = (object)[
-                'name' => format_string($framework->fullname),
-                'key' => $framework->id
-            ];
-            array_push($options, $option);
+            ]);
         }
+
+        $options[0]->default = true;
 
         return $options;
     }

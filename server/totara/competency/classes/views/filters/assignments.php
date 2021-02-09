@@ -24,6 +24,7 @@
 namespace totara_competency\views\filters;
 
 use totara_competency\entity\assignment;
+use totara_core\output\select_region_panel;
 use totara_core\output\select_search_text;
 use totara_core\output\select_tree;
 
@@ -34,6 +35,23 @@ class assignments extends filters {
             self::create_search_filter(),
             self::create_assignment_type_filter(),
             self::create_framework_filter()
+        ];
+    }
+
+    public static function create_region_panel_for_edit_proficiency_value(): select_region_panel {
+        return select_region_panel::create(
+            get_string('filter', 'totara_competency'),
+            static::create_region_panel_filters_for_edit_proficiency_value(),
+            true,
+            true,
+            true
+        );
+    }
+
+    public static function create_region_panel_filters_for_edit_proficiency_value(): array {
+        return [
+            self::create_search_filter(),
+            self::create_assignment_type_filter(),
         ];
     }
 
@@ -83,6 +101,17 @@ class assignments extends filters {
             get_string('filter_framework', 'totara_competency'),
             true,
             self::get_competency_frameworks_options(get_string('filter_framework_all', 'totara_competency')),
+            null,
+            true
+        );
+    }
+
+    public static function create_framework_filter_for_edit_proficiency(): select_tree {
+        return select_tree::create(
+            'framework',
+            get_string('filter_select_competency_framework', 'totara_competency'),
+            false,
+            self::get_competency_frameworks_options(null), // Excludes "All frameworks" option.
             null,
             true
         );

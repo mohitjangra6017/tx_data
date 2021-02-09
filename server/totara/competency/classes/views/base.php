@@ -34,6 +34,7 @@ abstract class base extends view {
     protected function prepare_output($output) {
         $output = [
             'create_btn_url' => new moodle_url('/totara/competency/assignments/create.php'),
+            'edit_proficiency_value_btn_url' => new moodle_url('/totara/competency/assignments/edit_proficiency_value.php'),
             'index_url' => new moodle_url('/totara/competency/assignments/index.php'),
             'save_url' => new moodle_url('/totara/competency/assignments/save.php'),
             'report_btn_url' => 'users.php',

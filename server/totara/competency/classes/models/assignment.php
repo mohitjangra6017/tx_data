@@ -35,6 +35,7 @@ use totara_competency\assignment_create_exception;
 use totara_competency\entity\assignment as assignment_entity;
 use totara_competency\entity\competency;
 use totara_competency\entity\competency_assignment_user;
+use totara_competency\entity\scale_value;
 use totara_competency\event\assignment_activated;
 use totara_competency\event\assignment_archived;
 use totara_competency\event\assignment_created;
@@ -284,6 +285,7 @@ class assignment {
             $assignment->created_at = time();
             $assignment->updated_at = time();
             $assignment->archived_at = null;
+            $assignment->minproficiencyid = null;
             // Only active assignments should be expanded
             $assignment->expand = ($status == assignment_entity::STATUS_ACTIVE);
             $assignment->minproficiencyid = null;
@@ -422,6 +424,13 @@ class assignment {
         return proficiency_value::my_value($this->entity);
     }
 
+    /**
+     * Get the minimum proficiency scale value.
+     * Will return the value set at the scale level if no specific override has been set.
+     * If an override has been set that scale value will be returned.
+     *
+     * @return proficiency_value
+     */
     public function get_min_value(): proficiency_value {
         return proficiency_value::min_value($this->entity);
     }
@@ -572,8 +581,12 @@ class assignment {
 
             case 'assigner':
                 return (object)$this->get_assigner()->to_array();
+
             case 'can_archive':
                 return $this->can_archive(user::logged_in()->id);
+
+            case 'has_default_proficiency_value_override':
+                return $this->has_default_proficiency_value_override();
 
             case 'assigned_at':
                 if ($this->entity->relation_loaded('assignment_user')) {
@@ -621,6 +634,8 @@ class assignment {
             'assigned_at',
             'assigner',
             'can_archive',
+            'min_proficiency_value',
+            'has_default_proficiency_value_override',
         ];
 
         return in_array($field, $extra_fields) || isset($this->entity->{$field});
@@ -697,6 +712,13 @@ class assignment {
      */
     public function get_pathway_warning_message(): ?string {
         return $this->get_competency()->get_pathway_warning_message_short();
+    }
+
+    /**
+     * @return bool
+     */
+    public function has_default_proficiency_value_override(): bool {
+        return $this->entity->minproficiencyid !== null;
     }
 
 }

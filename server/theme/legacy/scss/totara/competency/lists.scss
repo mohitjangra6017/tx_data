@@ -397,6 +397,11 @@
         flex-basis: 25%;
         flex-grow: 0;
       }
+
+      &--xs {
+        flex-basis: 15%;
+        flex-grow: 0;
+      }
     }
 
     &__expanded {

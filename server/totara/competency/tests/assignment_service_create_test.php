@@ -290,31 +290,28 @@ class totara_competency_assignment_service_create_testcase extends advanced_test
         $user = $this->getDataGenerator()->create_user();
         $cohort = $this->getDataGenerator()->create_cohort();
 
-        $fw = new competency_framework([
-            'sortorder' => 1,
-            'visible' => true,
-            'hidecustomfields' => false,
-            'usermodified' => 2,
-
-            'fullname' => 'Competency framework',
-        ]);
-
-        $fw->save();
-
-        $fw2 = new competency_framework([
-            'sortorder' => 2,
-            'visible' => false,
-            'hidecustomfields' => false,
-            'usermodified' => 2,
-
-            'fullname' => 'Competency framework',
-        ]);
-
-        $fw2->save();
-
-        $competency = new competency(
+        /** @var totara_competency_generator $competency_generator */
+        $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        $fw = $competency_generator->create_framework(null, 'Competency framework', '',
             [
-                'frameworkid' => $fw->id,
+                'sortorder' => 1,
+                'visible' => true,
+                'hidecustomfields' => false,
+                'usermodified' => 2,
+            ]
+        );
+
+        $fw2 = $competency_generator->create_framework(null, 'Competency framework 2', '',
+            [
+                'sortorder' => 2,
+                'visible' => false,
+                'hidecustomfields' => false,
+                'usermodified' => 2,
+            ]
+        );
+
+        $competency = $competency_generator->create_competency(null, $fw,
+            [
                 'parentid' => 0,
                 'visible' => 1,
                 'aggregationmethod' => 0,
@@ -326,12 +323,8 @@ class totara_competency_assignment_service_create_testcase extends advanced_test
             ]
         );
 
-        $competency->save();
-
-
-        $competency2 = new competency(
+        $competency2 = $competency_generator->create_competency(null, $fw2,
             [
-                'frameworkid' => $fw2->id,
                 'parentid' => 0,
                 'visible' => 1,
                 'aggregationmethod' => 0,
@@ -343,11 +336,8 @@ class totara_competency_assignment_service_create_testcase extends advanced_test
             ]
         );
 
-        $competency2->save();
-
-        $competency3 = new competency(
+        $competency3 = $competency_generator->create_competency(null, $fw,
             [
-                'frameworkid' => $fw->id,
                 'parentid' => 0,
                 'visible' => 0,
                 'aggregationmethod' => 0,
@@ -358,9 +348,6 @@ class totara_competency_assignment_service_create_testcase extends advanced_test
                 'usermodified' => user::logged_in()->id,
             ]
         );
-
-        $competency3->save();
-
 
         $basket = new session_basket('comp_basket');
         $basket->add([$competency->id]);

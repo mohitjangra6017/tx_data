@@ -231,6 +231,32 @@ class totara_competency_assignment_index_service_testcase extends advanced_testc
         $this->assertEquals(count($ass), $result['total']);
     }
 
+    public function test_min_proficiency_value_overrides(): void {
+        $this->generate_data();
+
+        // Only types
+        $parameters = [
+            'filters' => ['assignment_type' => [entity\assignment::TYPE_SELF]],
+            'page' => 0,
+            'order' => '',
+            'direction' => ''
+        ];
+
+        $res = $this->call_webservice_api('totara_competency_assignment_index', $parameters);
+        $assignment_result = $res['data']['items'][0];
+
+        $this->assertEquals('Competent', $assignment_result['min_proficiency_value_name']);
+        $this->assertEquals('', $assignment_result['has_default_proficiency_value_override_yes_no']);
+
+        $this->update_min_proficiency_override($assignment_result['id'], 'Not competent');
+
+        $res = $this->call_webservice_api('totara_competency_assignment_index', $parameters);
+        $assignment_result = $res['data']['items'][0];
+
+        $this->assertEquals('Not competent', $assignment_result['min_proficiency_value_name']);
+        $this->assertEquals('Y', $assignment_result['has_default_proficiency_value_override_yes_no']);
+    }
+
     protected function assert_result_contains_ids(array $expected_ids, array $actual_result) {
         $actual_item_ids = array_map(
             function ($item) {
@@ -313,5 +339,16 @@ class totara_competency_assignment_index_service_testcase extends advanced_testc
      */
     protected function generator() {
         return \totara_competency\testing\generator::instance();
+    }
+
+    private function update_min_proficiency_override(int $assignment_id, string $value_name): void {
+        /** @var entity\assignment $assignment */
+        $assignment = entity\assignment::repository()->find($assignment_id);
+
+        /** @var entity\scale_value $not_competent */
+        $not_competent = $assignment->competency->scale->values->find('name', $value_name, true);
+
+        $assignment->minproficiencyid = $not_competent->id;
+        $assignment->save();
     }
 }

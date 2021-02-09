@@ -42,9 +42,12 @@
     data-core-autoinitialise="true"
     data-core-autoinitialise-amd="totara_competency/create_assignments">
 
-    <a href="{{index_url}}" class="tw-assignComp__backLink">
+    <div class="tw-assignComp__backLink">
+      <a href="{{index_url}}">
         {{#str}}assignment_back_to_assignments, totara_competency{{/str}}
-    </a>
+      </a>
+    </div>
+
     <h2 class="tw-assignComp__title">{{title}}</h2>
     {{> totara_competency/basket_list}}
 </div>
