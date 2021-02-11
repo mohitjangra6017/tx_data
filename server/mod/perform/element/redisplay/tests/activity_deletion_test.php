@@ -21,6 +21,7 @@
  * @package mod_perform
  */
 
+use mod_perform\entity\activity\activity as activity_entity;
 use mod_perform\models\activity\activity;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
@@ -42,6 +43,14 @@ class activity_deletion_testcase extends redisplay_testcase {
         $this->expectExceptionMessageMatches("/This activity cannot be deleted/");
 
         activity::load_by_id($data->activity1->id)->delete();
+    }
+
+    public function test_delete_watcher_redisplay_same_activity(): void {
+        $data = $this->create_test_data_referencing_same_section();
+
+        // Deleting activity should not be blocked.
+        activity::load_by_id($data->activity1->id)->delete();
+        self::assertNull(activity_entity::repository()->find($data->activity1->id));
     }
 
     public function test_query_validation_successful() {
@@ -66,5 +75,18 @@ class activity_deletion_testcase extends redisplay_testcase {
 
         $first_section = $result_data[1];
         $this->assertEquals('activity3 : section3', $first_section);
+    }
+
+    public function test_query_validation_redisplay_same_activity(): void {
+        $data = $this->create_test_data_referencing_same_section();
+
+        $args = ['input' => ['activity_id' => $data->activity1->id]];
+        $result = $this->resolve_graphql_query(self::QUERY, $args);
+
+        self::assertEquals("Cannot delete activity", $result['title']);
+        self::assertTrue($result['can_delete']);
+
+        self::assertNull($result['reason']['description']);
+        self::assertNull($result['reason']['data']);
     }
 }

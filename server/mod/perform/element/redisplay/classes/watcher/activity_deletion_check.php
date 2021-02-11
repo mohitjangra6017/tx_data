@@ -25,6 +25,7 @@ namespace performelement_redisplay\watcher;
 
 use coding_exception;
 use mod_perform\hook\pre_activity_deleted;
+use mod_perform\models\activity\section;
 use performelement_redisplay\models\element_redisplay_relationship;
 
 /**
@@ -35,22 +36,25 @@ use performelement_redisplay\models\element_redisplay_relationship;
 class activity_deletion_check extends deletion_check_base {
 
     /**
-     * Activity only can be deleted if it is not referenced by any redisplay element
+     * Activity only can be deleted if it is not referenced by any redisplay element of a different activity.
      *
      * @param pre_activity_deleted $hook
      * @throws coding_exception
      */
     public static function can_delete(pre_activity_deleted $hook) {
         $activity_id = $hook->get_activity_id();
-        $sections = element_redisplay_relationship::get_sections_by_source_activity_id($activity_id);
+        $sections_from_other_activities = element_redisplay_relationship::get_sections_by_source_activity_id($activity_id)
+            ->filter(function (section $section) use ($activity_id) {
+                return (int)$section->activity_id !== $activity_id;
+            });
 
-        $can_delete = $sections->count() < 1;
+        $can_delete = $sections_from_other_activities->count() < 1;
 
         if (!$can_delete) {
             $hook->add_reason(
                 'is_referenced_by_redisplay_element',
                 get_string('modal_can_not_delete_activity_message', 'performelement_redisplay'),
-                self::get_data($sections)
+                self::get_data($sections_from_other_activities)
             );
         }
     }

@@ -28,7 +28,8 @@ use performelement_redisplay\models\element_redisplay_relationship;
  * @group perform_element
  */
 abstract class redisplay_testcase extends advanced_testcase {
-    protected function create_test_data() {
+
+    protected function create_test_data(): stdClass {
         $this->setAdminUser();
 
         $data = new stdClass();
@@ -70,6 +71,42 @@ abstract class redisplay_testcase extends advanced_testcase {
         );
         $data->element_redisplay_relationship3 = element_redisplay_relationship::create(
             $data->activity1->id, $data->section_element1->id, $data->element3->id
+        );
+
+        return $data;
+    }
+
+    /**
+     * Create a redisplay element that references an element in the same activity.
+     *
+     * @return stdClass
+     */
+    protected function create_test_data_referencing_same_section(): stdClass {
+        self::setAdminUser();
+
+        $data = new stdClass();
+
+        /** @var mod_perform_generator $perform_generator */
+        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+
+        /*
+         * activity1                    [SOURCE ACTIVITY]
+         * ** section1                  [SOURCE SECTION]
+         *    ** element1(short-text)   [SOURCE SECTION ELEMENT]
+         *    ** element2(redisplay) --> element1
+         */
+        $data->activity1 = $perform_generator->create_activity_in_container(['activity_name' => 'activity1']);
+
+        $data->section1 = $perform_generator->create_section($data->activity1, ['title' => 'section1']);
+
+        $data->element1 = $perform_generator->create_element();
+        $data->element2 = $perform_generator->create_element(['plugin_name' => 'redisplay']);
+
+        $data->section_element1 = $perform_generator->create_section_element($data->section1, $data->element1);
+        $data->section_element2 = $perform_generator->create_section_element($data->section1, $data->element2);
+
+        $data->element_redisplay_relationship = element_redisplay_relationship::create(
+            $data->activity1->id, $data->section_element1->id, $data->element2->id
         );
 
         return $data;

@@ -31,11 +31,11 @@ require_once(__DIR__ . '/redisplay_test.php');
  * @group perform_element
  */
 class section_deletion_testcase extends redisplay_testcase {
-    const QUERY = "mod_perform_element_deletion_validation";
+    const QUERY = "mod_perform_section_deletion_validation";
 
     use webapi_phpunit_helper;
 
-    public function test_delete_watcher() {
+    public function test_delete_watcher(): void {
         $data = $this->create_test_data();
 
         $this->expectException(coding_exception::class);
@@ -44,27 +44,52 @@ class section_deletion_testcase extends redisplay_testcase {
         section::load_by_id($data->section1->id)->delete();
     }
 
-    public function test_query_validation_successful() {
+    public function test_delete_watcher_redisplay_same_section(): void {
+        $data = $this->create_test_data_referencing_same_section();
+
+        // Deleting the section should not be blocked.
+        section::load_by_id($data->section1->id)->delete();
+        self::assertNull(\core_container\entity\section::repository()->find($data->section1->id));
+    }
+
+    public function test_query_validation_successful(): void {
         $data = $this->create_test_data();
 
-        $args = ['input' => ['section_element_id' => $data->section_element1->id]];
+        $args = ['input' => ['section_id' => $data->section1->id]];
         $result = $this->resolve_graphql_query(self::QUERY, $args);
 
-        $this->assertEquals("Cannot delete question element", $result['title']);
-        $this->assertFalse($result['can_delete']);
+        self::assertEquals("Cannot delete section", $result['title']);
+        self::assertFalse($result['can_delete']);
 
         $description = $result['reason']['description'];
         $result_data = $result['reason']['data'];
 
-        $this->assertEquals('This question cannot be deleted, because it is being referenced in a response redisplay element in:', $description);
+        self::assertEquals(
+            'This section cannot be deleted, because it contains questions that are being referenced '
+            . 'in a response redisplay element in:',
+            $description
+        );
 
         // // check data with correct order
-        $this->assertCount(2, $result_data);
+        self::assertCount(2, $result_data);
 
         $first_section = $result_data[0];
-        $this->assertEquals('activity2 : section2', $first_section);
+        self::assertEquals('activity2 : section2', $first_section);
 
         $first_section = $result_data[1];
-        $this->assertEquals('activity3 : section3', $first_section);
+        self::assertEquals('activity3 : section3', $first_section);
+    }
+
+    public function test_query_validation_redisplay_same_section(): void {
+        $data = $this->create_test_data_referencing_same_section();
+
+        $args = ['input' => ['section_id' => $data->section1->id]];
+        $result = $this->resolve_graphql_query(self::QUERY, $args);
+
+        self::assertEquals("Cannot delete section", $result['title']);
+        self::assertTrue($result['can_delete']);
+
+        self::assertNull($result['reason']['description']);
+        self::assertNull($result['reason']['data']);
     }
 }

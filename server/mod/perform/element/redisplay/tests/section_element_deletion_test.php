@@ -31,7 +31,7 @@ require_once(__DIR__ . '/redisplay_test.php');
  * @group perform_element
  */
 class section_element_deletion_testcase extends redisplay_testcase {
-    const QUERY = "mod_perform_section_deletion_validation";
+    const QUERY = "mod_perform_element_deletion_validation";
 
     use webapi_phpunit_helper;
 
@@ -48,16 +48,16 @@ class section_element_deletion_testcase extends redisplay_testcase {
     public function test_query_validation_successful() {
         $data = $this->create_test_data();
 
-        $args = ['input' => ['section_id' => $data->section1->id]];
+        $args = ['input' => ['section_element_id' => $data->section_element1->id]];
         $result = $this->resolve_graphql_query(self::QUERY, $args);
 
-        $this->assertEquals("Cannot delete section", $result['title']);
+        $this->assertEquals("Cannot delete question element", $result['title']);
         $this->assertFalse($result['can_delete']);
 
         $description = $result['reason']['description'];
         $result_data = $result['reason']['data'];
 
-        $this->assertEquals('This section cannot be deleted, because it contains questions that are being referenced in a response redisplay element in:', $description);
+        $this->assertEquals('This question cannot be deleted, because it is being referenced in a response redisplay element in:', $description);
 
         // // check data with correct order
         $this->assertCount(2, $result_data);

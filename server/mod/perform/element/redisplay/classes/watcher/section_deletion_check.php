@@ -25,6 +25,7 @@ namespace performelement_redisplay\watcher;
 
 use coding_exception;
 use mod_perform\hook\pre_section_deleted;
+use mod_perform\models\activity\section;
 use performelement_redisplay\models\element_redisplay_relationship;
 
 /**
@@ -35,22 +36,25 @@ use performelement_redisplay\models\element_redisplay_relationship;
 class section_deletion_check extends deletion_check_base {
 
     /**
-     * Section only can be deleted if it is not referenced by any redisplay element
+     * Section only can be deleted if it is not referenced by any redisplay element of a different section.
      *
      * @param pre_section_deleted $hook
      * @throws coding_exception
      */
     public static function can_delete(pre_section_deleted $hook) {
         $section_id = $hook->get_section_id();
-        $sections = element_redisplay_relationship::get_sections_by_source_section_id($section_id);
+        $other_sections = element_redisplay_relationship::get_sections_by_source_section_id($section_id)
+            ->filter(function (section $section) use ($section_id) {
+                return $section->get_id() !== $section_id;
+            });
 
-        $can_delete = $sections->count() < 1;
+        $can_delete = $other_sections->count() < 1;
 
         if (!$can_delete) {
             $hook->add_reason(
                 'is_referenced_by_redisplay_element',
                 get_string('modal_can_not_delete_section_message', 'performelement_redisplay'),
-                self::get_data($sections)
+                self::get_data($other_sections)
             );
         }
     }
