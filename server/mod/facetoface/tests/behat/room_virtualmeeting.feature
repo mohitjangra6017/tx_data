@@ -95,15 +95,15 @@ Feature: User sees a seminar virtual room meeting
     And I press "Save changes"
 
     When I click on "Party night" "link" in the "Pacific/Auckland" "table_row"
-    Then I should see "Preparing virtual room…"
+    Then I should see "Updating virtual room"
     And I press the "back" button in the browser
 
     When I click on "Live music" "link" in the "Europe/Prague" "table_row"
-    Then I should see "Preparing virtual room…"
+    Then I should see "Updating virtual room"
     And I press the "back" button in the browser
 
     When I click on "Party night" "link" in the "America/Toronto" "table_row"
-    Then I should see "Preparing virtual room…"
+    Then I should see "Updating virtual room"
     And I press the "back" button in the browser
 
     Given I run all adhoc tasks
@@ -168,7 +168,7 @@ Feature: User sees a seminar virtual room meeting
     And I press "Save changes"
     And I click on the seminar event action "Event details" in row "Australia/Perth"
     And I follow "Party night"
-    Then I should see "Preparing virtual room…"
+    Then I should see "Updating virtual room"
     And I run all adhoc tasks
     And I reload the page
     Then I should see "Join as attendee"
@@ -279,7 +279,7 @@ Feature: User sees a seminar virtual room meeting
     And I should see "Future Sailor"
     And I click on "Future Sailor" "link"
     And I should not see "join room"
-    And I should see "Preparing virtual room…"
+    And I should see "Updating virtual room"
 
     Given I run all adhoc tasks
 

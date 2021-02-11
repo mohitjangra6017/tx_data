@@ -2682,11 +2682,11 @@ $string['virtual_meeting_service_provider_help'] = 'Once you connect your servic
 $string['virtual_meetings'] = 'Virtual meetings';
 $string['virtualroom_card_willopen'] = 'Virtual room will open 15 minutes before next session';
 $string['virtualroom_card_unavailable'] = 'Virtual room is unavailable';
-$string['virtualroom_card_preparing'] = 'Preparing virtual room…';
+$string['virtualroom_card_preparing'] = 'Updating virtual room';
 $string['virtualroom_card_over'] = 'Virtual room is no longer available';
-$string['virtualroom_card_wait'] = 'Please wait.';
-$string['virtualroom_banner_retry'] = 'Action failed. <a class="action">Click to retry</a>';
-$string['virtualroom_banner_retried'] = 'Retried. Please come back in a minute or two.';
+$string['virtualroom_card_wait'] = 'Please wait…';
+$string['virtualroom_banner_retry'] = 'Failed to update the virtual room. <a class="action">Please click to try again.</a>';
+$string['virtualroom_banner_retried'] = 'Re-attempting to update the room. Please wait a few minutes and then refresh the page.';
 $string['virtualroom_creator'] = 'Virtual room creator';
 $string['virtualroom_heading'] = 'Virtual room';
 $string['virtualroom_headingx'] = 'Virtual room: {$a}';

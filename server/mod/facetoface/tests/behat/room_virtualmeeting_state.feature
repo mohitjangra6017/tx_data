@@ -59,19 +59,19 @@ Feature: User sees virtual meeting status
     Given I log in as "host"
     When I am on "Virtual seminar" seminar homepage
     And I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
-    Then I should see "Preparing virtual room…"
+    Then I should see "Updating virtual room"
     And I press the "back" button in the browser
     And I click on "Virtual Room Dos" "link" in the "Troll" "table_row"
-    Then I should see "Preparing virtual room…"
+    Then I should see "Updating virtual room"
     And I log out
 
     Given I log in as "trainer"
     When I am on "Virtual seminar" seminar homepage
     And I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
-    Then I should see "Preparing virtual room…"
+    Then I should see "Updating virtual room"
     And I press the "back" button in the browser
     And I click on "Virtual Room Dos" "link" in the "Troll" "table_row"
-    Then I should see "Preparing virtual room…"
+    Then I should see "Updating virtual room"
     And I log out
 
     Given I log in as "learner"
@@ -101,22 +101,22 @@ Feature: User sees virtual meeting status
 
     When I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
     Then "Host meeting" "link" should exist
-    But I should not see "Preparing virtual room…"
+    But I should not see "Updating virtual room"
     And I press the "back" button in the browser
     And I click on "Virtual Room Dos" "link" in the "Troll" "table_row"
     Then "Host meeting" "link" should exist
-    But I should not see "Preparing virtual room…"
+    But I should not see "Updating virtual room"
     And I log out
 
     Given I log in as "trainer"
     When I am on "Virtual seminar" seminar homepage
     And I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
     Then "Go to room" "link" should exist
-    But I should not see "Preparing virtual room…"
+    But I should not see "Updating virtual room"
     And I press the "back" button in the browser
     And I click on "Virtual Room Dos" "link" in the "Troll" "table_row"
     Then "Go to room" "link" should exist
-    But I should not see "Preparing virtual room…"
+    But I should not see "Updating virtual room"
     And I log out
 
     Given I log in as "learner"
@@ -159,13 +159,13 @@ Feature: User sees virtual meeting status
     But "Join now" "link" should exist in the "Troll" "table_row"
 
     And I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
-    Then I should see "Preparing virtual room…"
+    Then I should see "Updating virtual room"
     And I log out
 
     Given I log in as "trainer"
     When I am on "Virtual seminar" seminar homepage
     And I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
-    Then I should see "Preparing virtual room…"
+    Then I should see "Updating virtual room"
     And I log out
 
     Given I log in as "learner"
@@ -186,14 +186,14 @@ Feature: User sees virtual meeting status
     When I am on "Virtual seminar" seminar homepage
     And I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
     Then "Host meeting" "link" should exist
-    But I should not see "Preparing virtual room…"
+    But I should not see "Updating virtual room"
     And I log out
 
     Given I log in as "trainer"
     When I am on "Virtual seminar" seminar homepage
     And I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
     Then "Go to room" "link" should exist
-    But I should not see "Preparing virtual room…"
+    But I should not see "Updating virtual room"
     And I log out
 
     Given I log in as "learner"
@@ -245,8 +245,8 @@ Feature: User sees virtual meeting status
     When I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
     Then I should see "Virtual room is unavailable"
     But "Host meeting" "link" should not exist
-    And I click on "Click to retry" "link"
-    Then I should see "Retried. Please come back in a minute or two."
+    And I click on "Please click to try again" "link"
+    Then I should see "Re-attempting to update the room"
     And I log out
 
     Given I log in as "admin"
@@ -264,7 +264,7 @@ Feature: User sees virtual meeting status
 
     When I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
     Then "Host meeting" "link" should exist
-    But I should not see "Preparing virtual room…"
+    But I should not see "Updating virtual room"
     And I log out
 
   Scenario: mod_facetoface_virtualmeeting_205: See the virtual room card before/after ad-hoc task fails to update meetings
@@ -301,8 +301,8 @@ Feature: User sees virtual meeting status
     When I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
     Then I should see "Virtual room is unavailable"
     But "Host meeting" "link" should not exist
-    And I click on "Click to retry" "link"
-    Then I should see "Retried. Please come back in a minute or two."
+    And I click on "Please click to try again" "link"
+    Then I should see "Re-attempting to update the room"
     And I log out
 
     Given I log in as "admin"
@@ -320,7 +320,7 @@ Feature: User sees virtual meeting status
 
     When I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
     Then "Host meeting" "link" should exist
-    But I should not see "Preparing virtual room…"
+    But I should not see "Updating virtual room"
     And I log out
 
   Scenario: mod_facetoface_virtualmeeting_206: See the virtual room card before/after ad-hoc task fails to delete meetings
@@ -369,8 +369,8 @@ Feature: User sees virtual meeting status
     And I press "Save changes"
 
     And I click on "Virtual Room Dos" "link" in the "Christmas" "table_row"
-    Then I should see "Preparing virtual room…"
+    Then I should see "Updating virtual room"
 
     And I run all adhoc tasks
     Then "Host meeting" "link" should exist
-    But I should not see "Preparing virtual room…"
+    But I should not see "Updating virtual room"

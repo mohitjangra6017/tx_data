@@ -1243,10 +1243,10 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
             ],
         ];
         $waitable = [
-            'heading' => "Preparing virtual room\u{2026}",
+            'heading' => 'Updating virtual room',
             'simple' => true,
             'inactive' => true,
-            'instruction' => 'Please wait.',
+            'instruction' => "Please wait\u{2026}",
         ];
         $unavailable = [
             'heading' => 'Virtual room is unavailable',
@@ -1386,7 +1386,7 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
 
     public function test_render_banner_based_on_virtual_meeting_status() {
         $retryable = [
-            'message' => 'Action failed. <a class="action">Click to retry</a>',
+            'message' => 'Failed to update the virtual room. <a class="action">Please click to try again.</a>',
             'extraclasses' => 'mod_facetoface__resource-card__notification',
         ];
 
