@@ -28,6 +28,8 @@ require_once($CFG->dirroot . '/mod/facetoface/lib.php');
 
 use mod_facetoface\room;
 use mod_facetoface\room_virtualmeeting;
+use mod_facetoface\room_dates_virtualmeeting;
+use mod_facetoface\seminar;
 
 $facetofaceid = required_param('facetofaceid', PARAM_INT);
 $itemseq = required_param('itemids', PARAM_SEQUENCE);
@@ -37,7 +39,7 @@ if (empty($itemids) || empty($itemids[0])) {
     exit();
 }
 
-$seminar = new \mod_facetoface\seminar($facetofaceid);
+$seminar = new seminar($facetofaceid);
 $cm = $seminar->get_coursemodule();
 $context = $seminar->get_contextmodule($cm->id);
 
@@ -52,6 +54,15 @@ $rooms = array();
 foreach($itemids as $itemid) {
     $room = new room($itemid);
     $virtual_meeting = room_virtualmeeting::get_virtual_meeting($room);
+    $virtual_meeting_data = [];
+    $room_dates_virtual_meetings = room_dates_virtualmeeting::load_all_by_room($room);
+    foreach ($room_dates_virtual_meetings as $i => $room_dates_virtualmeeting) {
+        /** @var room_dates_virtualmeeting $room_dates_virtualmeeting */
+        $virtual_meeting_data[] = (object)[
+            'sessionsdateid' => $room_dates_virtualmeeting->get_sessionsdateid(),
+            'status' => $room_dates_virtualmeeting->get_status()
+        ];
+    }
     $res = (object)[
         'id' => $room->get_id(),
         'name' => $room->get_name(),
@@ -62,6 +73,7 @@ foreach($itemids as $itemid) {
         'can_manage' => $virtual_meeting->can_manage(),
         'virtualmeeting' => $virtual_meeting->exists(),
         'virtualroom' => $virtual_meeting->exists() || !empty($room->get_url()),
+        'virtualroom_status' => $virtual_meeting_data
     ];
     $rooms[] = $res;
 }

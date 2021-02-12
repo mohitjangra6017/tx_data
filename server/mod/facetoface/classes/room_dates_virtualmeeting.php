@@ -188,6 +188,34 @@ class room_dates_virtualmeeting implements seminar_iterator_item {
     }
 
     /**
+     * Load all room_dates_virtualmeeting instances by room.
+     * @param room $room
+     * @return array
+     */
+    public static function load_all_by_room(room $room): array {
+        $builder = builder::table(self::DBTABLE, 'frdv')
+            ->select(['frdv.*'])
+            ->join([room::DBTABLE, 'fr'], 'frdv.roomid', 'fr.id')
+            ->join(['facetoface_room_dates', 'frd'], function($joining) {
+                $joining
+                    ->where_field('frd.roomid', 'fr.id')
+                    ->where_field('frd.sessionsdateid', 'frdv.sessionsdateid');
+            })
+            ->join([seminar_session::DBTABLE, 'fsd'], 'fsd.id', 'frd.sessionsdateid')
+            ->where('fr.id', $room->get_id());
+        $records = $builder->fetch();
+        $room_dates_virtual_meetings = [];
+        if (!$records) {
+            return $room_dates_virtual_meetings;
+        }
+        foreach ($records as $record) {
+            $inst = (new self())->from_record((object)$record);
+            $room_dates_virtual_meetings[$inst->get_id()] = $inst;
+        }
+        return $room_dates_virtual_meetings;
+    }
+
+    /**
      * Check whether the virtual meeting instance exists yet or not.
      * If the virtual meeting has been saved into the database the $id field should be non-zero
      * @return bool - true if the virtual meeting has an $id, false if it hasn't

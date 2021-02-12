@@ -24,6 +24,7 @@
 use core\entity\user;
 use core\orm\query\builder;
 use mod_facetoface\room;
+use mod_facetoface\room_list;
 use mod_facetoface\room_virtualmeeting;
 use mod_facetoface\room_dates_virtualmeeting;
 use mod_facetoface\room_virtualmeeting_list;
@@ -33,6 +34,7 @@ use mod_facetoface\seminar_session;
 use totara_core\entity\virtual_meeting as virtual_meeting_entity;
 use totara_core\http\clients\simple_mock_client;
 use totara_core\virtualmeeting\virtual_meeting as virtual_meeting_model;
+use mod_facetoface\task\manage_virtualmeetings_adhoc_task as adhoc_task;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -240,6 +242,66 @@ class mod_facetoface_virtualmeeting_room_testcase extends advanced_testcase {
         $this->assertTrue(room_virtualmeeting::is_virtual_meeting(''), '(empty)');
         $this->assertTrue(room_virtualmeeting::is_virtual_meeting('poc_app'), 'poc_app');
         $this->assertTrue(room_virtualmeeting::is_virtual_meeting('he_who_must_not_be_named'), 'he_who_must_not_be_named');
+    }
+
+    /**
+     * test room_dates_virtualmeeting::load_all_by_room()
+     */
+    public function test_load_all_by_room() {
+        $this->setAdminUser();
+        $course = $this->getDataGenerator()->create_course();
+        $seminar = new seminar();
+        $seminar->set_course($course->id)->save();
+        $seminarevent = new seminar_event();
+        $seminarevent->set_facetoface($seminar->get_id())->save();
+
+        [$roomdateid1, $roomdatevmid1, $virtualmeetingid1] = $this->add_session_with_virtualmeeting($seminarevent, new DateTime('tomorrow 6am'), new DateTime('tomorrow 9am'));
+        [$roomdateid2, $roomdatevmid2, $virtualmeetingid2] = $this->add_session_with_virtualmeeting($seminarevent, new DateTime('tomorrow 12pm'), new DateTime('tomorrow 3pm'));
+        [$roomdateid3, $roomdatevmid3, $virtualmeetingid3] = $this->add_session_with_virtualmeeting($seminarevent, new DateTime('tomorrow 6pm'), new DateTime('tomorrow 9pm'));
+
+        $this->assertEquals(3, builder::table('facetoface_room_dates')->count());
+        $this->assertEquals(3, builder::table(room_dates_virtualmeeting::DBTABLE)->count());
+
+        $task = adhoc_task::create_from_seminar_event_id($seminarevent->get_id());
+        $task->execute();
+
+        $this->assertEquals(3, builder::table(room_dates_virtualmeeting::DBTABLE)->count());
+
+        $roomdatevmids = [$roomdatevmid1, $roomdatevmid2, $roomdatevmid3];
+        $virtualmeetingids = [$virtualmeetingid1, $virtualmeetingid2, $virtualmeetingid3];
+        $rooms = room_list::get_event_rooms($seminarevent->get_id());
+        foreach ($rooms as $room) {
+            $room_dates_virtual_meetings = room_dates_virtualmeeting::load_all_by_room($room);
+            foreach ($room_dates_virtual_meetings as $i => $room_dates_virtualmeeting) {
+                $this->assertTrue(in_array($i, $roomdatevmids));
+                /** @var room_dates_virtualmeeting $room_dates_virtualmeeting */
+                $this->assertTrue($room_dates_virtualmeeting->exists());
+                $this->assertTrue(in_array($room_dates_virtualmeeting->get_id(), $roomdatevmids));
+                $this->assertTrue(in_array($room_dates_virtualmeeting->get_virtualmeetingid(), $virtualmeetingids));
+                $this->assertNotEmpty($room_dates_virtualmeeting->get_sessionsdateid());
+                // No way to get a proper status, maybe someday in the future.
+                $this->assertNull($room_dates_virtualmeeting->get_status());
+            }
+        }
+
+        $seminar_generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
+        $room4 = (new room())->from_record($seminar_generator->add_custom_room(['name' => 'custom']));
+        $seminarsession = new seminar_session();
+        $timestart = new DateTime('tomorrow 10am');
+        $timefinish = new DateTime('tomorrow 11am');
+        $seminarsession->set_sessionid($seminarevent->get_id())->set_timestart($timestart->getTimestamp())->set_timefinish($timefinish->getTimestamp())->set_sessiontimezone('99')->save();
+        $roomdateid = builder::table('facetoface_room_dates')->insert(['sessionsdateid' => $seminarsession->get_id(), 'roomid' => $room4->get_id()]);
+        $room_dates_virtual_meetings = room_dates_virtualmeeting::load_all_by_room($room4);
+        $this->assertEmpty($room_dates_virtual_meetings);
+
+        $room5 = (new room())->from_record($seminar_generator->add_site_wide_room(['name' => 'sitewide']));
+        $seminarsession = new seminar_session();
+        $timestart = new DateTime('tomorrow 4pm');
+        $timefinish = new DateTime('tomorrow 5pm');
+        $seminarsession->set_sessionid($seminarevent->get_id())->set_timestart($timestart->getTimestamp())->set_timefinish($timefinish->getTimestamp())->set_sessiontimezone('99')->save();
+        $roomdateid = builder::table('facetoface_room_dates')->insert(['sessionsdateid' => $seminarsession->get_id(), 'roomid' => $room5->get_id()]);
+        $room_dates_virtual_meetings = room_dates_virtualmeeting::load_all_by_room($room5);
+        $this->assertEmpty($room_dates_virtual_meetings);
     }
 
     /**
