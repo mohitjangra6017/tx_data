@@ -29,6 +29,7 @@ use core\orm\query\builder;
 use totara_competency\entity\assignment;
 use totara_competency\entity\competency;
 use totara_competency\entity\competency_framework;
+use totara_competency\entity\configuration_change;
 use totara_competency\entity\scale_value;
 use totara_competency\event\assignment_min_proficiency_override_updated;
 use totara_competency\models\assignment as assignment_model;
@@ -135,6 +136,8 @@ class min_proficiency_override_for_assignments {
             }
 
             foreach ($updated as $assignment) {
+                // Log the configuration change for this assignment and trigger the event for interested other components
+                configuration_change::min_proficiency_override($assignment, $this->scale_value_id);
                 assignment_min_proficiency_override_updated::create_from_assignment($assignment->get_entity())->trigger();
             }
         });

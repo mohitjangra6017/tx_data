@@ -21,10 +21,14 @@
  * @package totara_competency
  */
 
+use core\orm\collection;
 use totara_competency\entity\competency_assignment_user_log;
 use totara_competency\aggregation_users_table;
 use totara_competency\competency_aggregator_user_source;
 use totara_competency\data_providers;
+use totara_competency\entity\competency_framework;
+use totara_competency\entity\scale;
+use totara_competency\min_proficiency_override_for_assignments;
 use totara_competency\models\assignment_actions;
 use totara_competency\expand_task;
 use totara_competency\entity\assignment;
@@ -38,6 +42,7 @@ use totara_competency\entity\competency;
 use totara_competency\competency_achievement_aggregator;
 use totara_competency\base_achievement_detail;
 use totara_competency\pathway_evaluator_user_source;
+use totara_job\job_assignment;
 
 /**
  * @group totara_competency
@@ -597,4 +602,120 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
         $this->assertEquals('Criteria met: . Achieved \'Great\' rating.', $activity_log_data[3]->get_description());
     }
 
+    /**
+     * Test log entries for multiple assignments with some having proficiency_override
+     */
+    public function test_proficiency_override(): void {
+        global $DB;
+        \totara_core\advanced_feature::enable('competency_assignment');
+
+        /** @var totara_competency_generator $competency_generator */
+        $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        /** @var totara_competency_assignment_generator $assignment_generator */
+        $assignment_generator = new totara_competency_assignment_generator($competency_generator);
+
+        /** @var scale $scale */
+        $scale = $competency_generator->create_scale(
+            'comp',
+            'Test scale',
+            [
+                1 => ['name' => 'Arrived', 'proficient' => 1, 'sortorder' => 1, 'default' => 0],
+                2 => ['name' => 'Almost there', 'proficient' => 1, 'sortorder' => 2, 'default' => 0],
+                3 => ['name' => 'Getting there', 'proficient' => 0, 'sortorder' => 3, 'default' => 0],
+                4 => ['name' => 'Learning', 'proficient' => 0, 'sortorder' => 4, 'default' => 0],
+                5 => ['name' => 'No clue', 'proficient' => 0, 'sortorder' => 5, 'default' => 1],
+            ]
+        );
+
+        /** @var collection $scale_values */
+        $scale_values = $scale->sorted_values_high_to_low->key_by('sortorder');
+        $highest_scale_value = $scale_values->first();
+
+        /** @var competency_framework $framework */
+        $framework = $competency_generator->create_framework($scale, 'Test framework');
+        $position = $assignment_generator->create_position(['frameworkid' => $framework->id]);
+        $user = $this->getDataGenerator()->create_user();
+        job_assignment::create([
+            'userid' => $user->id,
+            'idnumber' => 'JobPosition',
+            'positionid' => $position->id,
+        ]);
+
+        $user2 = $this->getDataGenerator()->create_user();
+
+        /** @var competency $competency1 */
+        $competency1 = $competency_generator->create_competency('Test competency 1', $framework);
+
+        // Multiple assignments. All using the default min proficiency for now
+        $user_asg1 = $assignment_generator->create_user_assignment($competency1->id, $user->id);
+        $pos_asg1 = $assignment_generator->create_position_assignment($competency1->id, $position->id);
+        $user_asg2 = $assignment_generator->create_user_assignment($competency1->id, $user2->id);
+        (new expand_task($DB))->expand_all();
+
+        // Order is important - must be in this order
+        $expected = [
+            'Assigned: Test Position 1 (Position)',
+            'Competency active: Achievement tracking started',
+            'Assigned: Admin User (Admin)',
+        ];
+        $activity_log_data = data_providers\activity_log::create($user->id, $competency1->id)->fetch();
+        $this->verify_activity_log_entries($expected, $activity_log_data);
+
+        // The activity log only include configuration changes that happened since the first assignment - so waiting for a tick
+        $this->waitForSecond();
+
+        // Change min proficiency for an assignment
+        (new min_proficiency_override_for_assignments($highest_scale_value->id, [$pos_asg1->id, $user_asg1->id, $user_asg2->id]))->process();
+
+        array_unshift($expected,
+            "Minimum required proficiency value for assignment set to 'Arrived'",
+            "Minimum required proficiency value for assignment set to 'Arrived'",
+        );
+        $activity_log_data = data_providers\activity_log::create($user->id, $competency1->id)->fetch();
+        $this->verify_activity_log_entries($expected, $activity_log_data);
+
+        // Ensuring this next override is later than the first
+        $this->waitForSecond();
+
+        // Reset min proficiency to default
+        (new min_proficiency_override_for_assignments(null, [$pos_asg1->id]))->process();
+
+        array_unshift($expected, 'Minimum required proficiency value for assignment removed');
+        $activity_log_data = data_providers\activity_log::create($user->id, $competency1->id)->fetch();
+        $this->verify_activity_log_entries($expected, $activity_log_data);
+
+        // Now check with assignment filter
+        $expected = [
+            "Minimum required proficiency value for assignment set to 'Arrived'",
+            'Competency active: Achievement tracking started',
+            'Assigned: Admin User (Admin)',
+        ];
+
+        $activity_log_data = data_providers\activity_log::create($user->id, $competency1->id)
+            ->set_filters(['assignment_id' => $user_asg1->id])
+            ->fetch();
+        $this->verify_activity_log_entries($expected, $activity_log_data);
+
+        $expected = [
+            'Minimum required proficiency value for assignment removed',
+            "Minimum required proficiency value for assignment set to 'Arrived'",
+            'Assigned: Test Position 1 (Position)',
+        ];
+
+        $activity_log_data = data_providers\activity_log::create($user->id, $competency1->id)
+            ->set_filters(['assignment_id' => $pos_asg1->id])
+            ->fetch();
+        $this->verify_activity_log_entries($expected, $activity_log_data);
+    }
+
+    /**
+     * @param string[] $expected
+     * @param activity_log[] $actual
+     */
+    private function verify_activity_log_entries(array $expected, array $actual): void {
+        $this->assertCount(count($expected), $actual);
+        foreach ($actual as $idx => $row) {
+            self::assertSame($expected[$idx], $row->get_description());
+        }
+    }
 }

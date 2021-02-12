@@ -1431,7 +1431,6 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
             'organisationid' => $organisation->id,
         ]);
 
-        // As we are using the
         /** @var competency $competency1 */
         $competency1 = $competency_generator->create_competency('Test competency 1', $framework);
         $pathway1 = $competency_generator->create_manual($competency1, [manager::class]);

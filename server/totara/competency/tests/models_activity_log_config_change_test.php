@@ -87,7 +87,7 @@ class totara_competency_models_activity_log_config_change_testcase extends advan
 
         $entry = activity_log\configuration_change::load_by_entity($config_change);
 
-        $this->assertEquals('Minimum required proficient value changed to \'Great\'', $entry->get_description());
+        $this->assertEquals('Minimum required proficiency value changed to \'Great\'', $entry->get_description());
         $this->assertNull($entry->get_assignment());
         $this->assertEquals($time, $entry->get_date());
         $this->assertNull($entry->get_proficient_status());

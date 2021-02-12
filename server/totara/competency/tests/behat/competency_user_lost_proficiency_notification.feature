@@ -87,4 +87,4 @@ Feature: User gets a message notification due to a configuration change in an as
     Then I should see "Activity log" in the ".tui-competencyDetailActivityLog__title" "css_element"
     And I should see "Rating: Just Barely Competent" in the ".tui-dataTableRow:nth-of-type(1) .tui-competencyDetailActivityLogTable__description" "css_element"
     And I should see "Criteria met: Course completion. Achieved 'Just Barely Competent' rating" in the ".tui-dataTableRow:nth-of-type(2) .tui-competencyDetailActivityLogTable__description" "css_element"
-    And I should see "Minimum required proficient value changed to 'Super Competent'" in the ".tui-dataTableRow:nth-of-type(3) .tui-competencyDetailActivityLogTable__description" "css_element"
+    And I should see "Minimum required proficiency value changed to 'Super Competent'" in the ".tui-dataTableRow:nth-of-type(3) .tui-competencyDetailActivityLogTable__description" "css_element"

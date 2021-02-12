@@ -76,6 +76,15 @@ class configuration_change extends activity_log {
                 $a = new stdClass();
                 $a->scale_value_name = (new scale_value($data['new_min_proficiency_id']))->name;
                 return get_string('activity_log_minprof_changed', 'totara_competency', $a);
+            case configuration_change_entity::OVERRIDE_MIN_PROFICIENCY:
+                $data = $entity->get_decoded_related_info();
+                if ($data['new_min_proficiency_id'] === null) {
+                    return get_string('activity_log_minprof_override_cancelled', 'totara_competency');
+                }
+
+                $a = new stdClass();
+                $a->scale_value_name = (new scale_value($data['new_min_proficiency_id']))->name;
+                return get_string('activity_log_minprof_override', 'totara_competency', $a);
             default:
                 throw new coding_exception('Invalid type', 'Invalid change type: ' . $entity->change_type);
         }

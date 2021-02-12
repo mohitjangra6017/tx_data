@@ -20,10 +20,10 @@ Feature: Edit minimum proficiency values of competency assignments
       | Percentage based Framework | pbfw     | Framework that uses percentages | scale1 |
       | Competency Framework       | fw       | Framework for competencies      | scale2 |
     And the following "competency" hierarchy exists:
-      | framework | fullname    | idnumber    | type | description                                  | assignavailability |
-      | pbfw      | Math        | math        | type | Adding, subtracting, and other calculations. | any                |
-      | fw        | Typing slow | typing_slow | type | The ability to type <em>slow.</em>           | any                |
-      | fw        | Typing fast | typing_fast | type | The ability to type <em>fast.</em>           | any                |
+      | framework | fullname    | idnumber    | description                                  | assignavailability |
+      | pbfw      | Math        | math        | Adding, subtracting, and other calculations. | any                |
+      | fw        | Typing slow | typing_slow | The ability to type <em>slow.</em>           | any                |
+      | fw        | Typing fast | typing_fast | The ability to type <em>fast.</em>           | any                |
     And the following "assignments" exist in "totara_competency" plugin:
       | competency  | user_group_type | user_group |
       | math        | user            | user       |

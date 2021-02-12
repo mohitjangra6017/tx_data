@@ -6,6 +6,7 @@ use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
 use core\orm\query\builder;
 use totara_competency\aggregation_users_table;
+use totara_competency\models\assignment as assignment_model;
 use totara_competency\hook\competency_configuration_changed;
 
 /**
@@ -28,6 +29,7 @@ class configuration_change extends entity {
     public const CHANGED_COMPETENCY_AGGREGATION = 'competency_aggregation_changed';
     public const CHANGED_AGGREGATION = 'aggregation_changed';
     public const CHANGED_MIN_PROFICIENCY = 'min_proficiency_changed';
+    public const OVERRIDE_MIN_PROFICIENCY = 'override_min_proficiency';
 
     /**
      * Log a configuration change
@@ -119,6 +121,32 @@ class configuration_change extends entity {
             // as potentially a lot of records could be affected
             builder::get_db()->insert_records_via_batch(configuration_change::TABLE, $records);
         }
+    }
+
+    /**
+     * Add entries for user assigned via the changed assignments where the min proficiency was overridden.
+     *
+     * @param assignment_model|int $assignment
+     * @param int|null $new_min_proficiency_id
+     */
+    public static function min_proficiency_override($assignment, ?int $new_min_proficiency_id) {
+        if (!$assignment instanceof assignment_model && !is_number($assignment)) {
+            throw new \coding_exception('assignment_model or assignment id expected. Instance of ' . get_class($assignment) . ' received');
+        }
+
+        if (!$assignment instanceof assignment_model) {
+            $assignment = assignment_model::load_by_id($assignment);
+        }
+
+        $related_info = json_encode(['new_min_proficiency_id' => $new_min_proficiency_id]);
+
+        $entry = new configuration_change();
+        $entry->competency_id = $assignment->competency->id;
+        $entry->assignment_id = $assignment->get_id();
+        $entry->change_type = self::OVERRIDE_MIN_PROFICIENCY;
+        $entry->time_changed = time();
+        $entry->related_info = $related_info;
+        $entry->save();
     }
 
     /**

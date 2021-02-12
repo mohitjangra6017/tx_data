@@ -25,8 +25,11 @@ namespace totara_competency\data_providers;
 
 use core\orm\entity\entity;
 use core\orm\entity\repository;
+use core\orm\query\builder;
+use core\orm\query\field;
 use totara_competency\entity\assignment;
 use totara_competency\entity\competency_achievement;
+use totara_competency\entity\competency_assignment_user;
 use totara_competency\entity\competency_assignment_user_log;
 use totara_competency\entity\configuration_change;
 use totara_competency\models;
@@ -169,9 +172,24 @@ class activity_log {
             return $achievements->all();
         }
 
+        $config_assignment_builder = builder::table(competency_assignment_user::TABLE, 'cau')
+            ->where_field('cau.assignment_id', 'cc.assignment_id')
+            ->where('cau.user_id', $this->user_id);
+        if (!is_null($this->assignment_id)) {
+            $config_assignment_builder->where('assignment_id', $this->assignment_id);
+        }
+
         $config_changes = configuration_change::repository()
+            ->as('cc')
             ->where('competency_id', $this->competency_id)
             ->where('time_changed', '>', $assignment_log->last()->created_at)
+            ->where(function (builder $builder) use ($config_assignment_builder) {
+                $builder->or_where_null('assignment_id')
+                    ->or_where_exists($config_assignment_builder);
+            });
+
+
+        $config_changes = $config_changes
             ->order_by('time_changed', 'desc')
             ->order_by('id', 'desc')
             ->get();
