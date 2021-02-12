@@ -1657,6 +1657,7 @@ function facetoface_message_substitutions($msg, $coursename, $facetofacename, $u
         return '';
     }
     $seminarintro = '';
+    $seminareventdetailslink = '';
     // Instantiate \mod_facetoface\signup to get cost.
     // If session has been deleted, this will fail with a missing record exception.
     try {
@@ -1671,6 +1672,8 @@ function facetoface_message_substitutions($msg, $coursename, $facetofacename, $u
         $seminarlink = html_writer::link($seminarlink, htmlentities($facetofacename));
         $eventlink = html_writer::link($eventlink, htmlentities($eventlink));
         $seminarintro = $seminar->get_intro();
+        $seminareventdetailslink = new \moodle_url('/mod/facetoface/attendees/event.php', ['s' => $seminarevent->get_id()]);
+        $seminareventdetailslink = html_writer::link($seminareventdetailslink, htmlentities($seminareventdetailslink));
         $signup = \mod_facetoface\signup::create($user->id, $seminarevent);
         $cost = $signup->get_cost();
 
@@ -1772,6 +1775,7 @@ function facetoface_message_substitutions($msg, $coursename, $facetofacename, $u
     $msg = str_replace('[booked]', $booked, $msg);
     $msg = str_replace('[capacity]', $data->capacity, $msg);
     $msg = str_replace('[mincapacity]', $data->mincapacity, $msg);
+    $msg = str_replace('[seminareventdetailslink]', $seminareventdetailslink, $msg);
     // Legacy.
     $msg = str_replace(get_string('placeholder:coursename', 'facetoface'), $coursename, $msg);
     $msg = str_replace(get_string('placeholder:facetofacename', 'facetoface'), $facetofacename, $msg);
