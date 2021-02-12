@@ -55,7 +55,9 @@
     <tr><td colspan="3">{{{header}}}</td></tr>
   {{/header}}
   {{^header}}
-    {{> core/email_header_html }}
+    <tr>
+      <td colspan="3" style="background-color: #3d444b; line-height: 5px; font-size: 5px;">&nbsp;</td>
+    </tr>
   {{/header}}
 
   <tr>
@@ -72,6 +74,11 @@
     <tr><td colspan="3">{{{footer}}}</td></tr>
   {{/footer}}
   {{^footer}}
-    {{> core/email_footer_html }}
+    <tr>
+      <td colspan="3" style="background-color: #36a5a6; line-height: 5px; font-size: 5px;">&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan="3" style="background-color: #3d444b; line-height: 25px; font-size: 25px;">&nbsp;</td>
+    </tr>
   {{/footer}}
 </table>
