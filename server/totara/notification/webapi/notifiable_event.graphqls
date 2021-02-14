@@ -1,6 +1,10 @@
 type totara_notification_notifiable_event {
   component: String!
   """
+  The human readerable name for component
+  """
+  plugin_name: String!
+  """
   The class name of notifiable event.
   """
   class_name: String!

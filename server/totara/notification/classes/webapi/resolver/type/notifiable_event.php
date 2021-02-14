@@ -55,6 +55,9 @@ class notifiable_event implements type_resolver {
             case 'component':
                 return helper::get_component_of_event_class_name($source);
 
+            case 'plugin_name':
+                return helper::get_human_readable_plugin_name($source);
+
             case 'class_name':
                 return (string) $source;
 

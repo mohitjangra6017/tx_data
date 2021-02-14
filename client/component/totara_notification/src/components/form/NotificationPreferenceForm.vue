@@ -78,6 +78,7 @@
             area: 'notification_body',
           }"
           variant="standard"
+          class="tui-notificationPreferenceForm__editor"
           @input="update"
         />
       </FormField>

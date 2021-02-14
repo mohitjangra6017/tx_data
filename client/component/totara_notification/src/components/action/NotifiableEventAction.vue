@@ -33,14 +33,15 @@
 
     <div class="tui-notifiableEventAction__actionButtons">
       <!-- Quick add button icon -->
-      <ButtonIcon
-        :styleclass="{ small: true, transparentNoPadding: true }"
-        :aria-label="$str('create_notification', 'totara_notification')"
-        @click="modal.create = true"
-      >
-        <AddIcon :size="300" />
-      </ButtonIcon>
-
+      <div class="tui-notifiableEventAction__actionButtons-button">
+        <ButtonIcon
+          :styleclass="{ small: true, transparentNoPadding: true }"
+          :aria-label="$str('create_notification', 'totara_notification')"
+          @click="modal.create = true"
+        >
+          <AddIcon :size="300" />
+        </ButtonIcon>
+      </div>
       <!-- Drop down button -->
       <Dropdown>
         <template v-slot:trigger="{ toggle, isOpen }">
@@ -168,6 +169,7 @@ export default {
 .tui-notifiableEventAction {
   &__actionButtons {
     display: flex;
+    align-items: center;
   }
 }
 </style>

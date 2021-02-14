@@ -25,12 +25,12 @@
 
       <template v-slot:row="{ row, expand, expandState }">
         <ExpandCell
-          :aria-label="row.component"
+          :aria-label="row.plugin_name"
           :expand-state="expandState"
           @click="expand()"
         />
         <Cell>
-          {{ row.component }}
+          {{ row.plugin_name }}
         </Cell>
       </template>
 
@@ -150,7 +150,6 @@ import Cell from 'tui/components/datatable/Cell';
 import ExpandCell from 'tui/components/datatable/ExpandCell';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
 import Table from 'tui/components/datatable/Table';
-import ModalPresenter from 'tui/components/modal/ModalPresenter';
 import NotifiableEventAction from 'totara_notification/components/action/NotifiableEventAction';
 
 export default {
@@ -159,7 +158,6 @@ export default {
     Cell,
     Table,
     ExpandCell,
-    ModalPresenter,
     NotifiableEventAction,
   },
 

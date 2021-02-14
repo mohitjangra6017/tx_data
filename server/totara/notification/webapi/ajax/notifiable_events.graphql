@@ -4,6 +4,7 @@ query totara_notification_notifiable_events($context_id: param_integer!) {
   ) {
     __typename
     class_name
+    plugin_name
     name
     component
     notification_preferences(context_id: $context_id) {

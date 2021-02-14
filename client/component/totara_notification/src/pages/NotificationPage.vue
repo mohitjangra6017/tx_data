@@ -73,10 +73,11 @@ export default {
       update({ notifiable_events }) {
         let result = {};
         notifiable_events.forEach(notifiable_event => {
-          const { component } = notifiable_event;
+          const { component, plugin_name } = notifiable_event;
           if (!result[component]) {
             result[component] = {
               component: component,
+              plugin_name: plugin_name,
               events: [],
             };
           }
