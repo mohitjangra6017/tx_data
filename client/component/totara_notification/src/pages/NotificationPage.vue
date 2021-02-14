@@ -18,6 +18,17 @@
 
 <template>
   <div class="tui-notificationPage">
+    <ModalPresenter :open="modal.open" @request-close="modal.open = false">
+      <NotificationPreferenceModal
+        :context-id="contextId"
+        :event-class-name="targetEventClassName"
+        :preference="targetPreference || undefined"
+        :parent-value="targetPreference ? targetPreference.parent_value : null"
+        :title="modal.title"
+        @form-submit="handleFormSubmit"
+      />
+    </ModalPresenter>
+
     <NotificationHeader :title="title" />
     <Layout class="tui-notificationPage">
       <!--filter-->
@@ -27,7 +38,7 @@
           :notifiable-events="notifiableEvents"
           :context-id="parseInt(contextId)"
           class="tui-notificationPage__table"
-          @created-custom-notification="createdCustomNotification"
+          @create-custom-notification="handleCreateCustomNotification"
         />
       </template>
     </Layout>
@@ -37,16 +48,23 @@
 import Layout from 'tui/components/layouts/LayoutTwoColumn';
 import NotificationTable from 'totara_notification/components/table/NotificationTable';
 import NotificationHeader from 'totara_notification/components/header/NotificationHeader';
-import apolloClient from 'tui/apollo_client';
+import ModalPresenter from 'tui/components/modal/ModalPresenter';
+import NotificationPreferenceModal from 'totara_notification/components/modal/NotificationPreferenceModal';
+import { notify } from 'tui/notifications';
 
 // GraphQL queries.
 import getNotifiableEvents from 'totara_notification/graphql/notifiable_events';
+import createCustomNotification from 'totara_notification/graphql/create_custom_notification_preference';
+
+const MODAL_STATE_CREATE = 'create';
 
 export default {
   components: {
     Layout,
     NotificationTable,
     NotificationHeader,
+    ModalPresenter,
+    NotificationPreferenceModal,
   },
 
   props: {
@@ -93,53 +111,145 @@ export default {
   data() {
     return {
       notifiableEvents: {},
+      modal: {
+        open: false,
+        title: '',
+        state: null,
+      },
+      targetEventClassName: null,
+      targetPreference: null,
     };
+  },
+
+  watch: {
+    modal: {
+      deep: true,
+      handler({ open }) {
+        if (!open) {
+          // Reset the target preference everytime the modal is closed.
+          this.targetPreference = null;
+          this.targetEventClassName = null;
+        }
+      },
+    },
   },
 
   methods: {
     /**
-     * @return {Object[]}
+     * @param {String} eventClassName
+     * @param {String} eventName
      */
-    $_getCachedNotifiableEvents() {
-      const { notifiable_events: notifiableEvents } = apolloClient.readQuery({
-        query: getNotifiableEvents,
-        variables: { context_id: this.contextId },
-      });
+    handleCreateCustomNotification({ eventClassName, eventName }) {
+      this.modal.title = this.$str(
+        'create_custom_notification_title',
+        'totara_notification',
+        eventName
+      );
+      this.modal.open = true;
+      this.modal.state = MODAL_STATE_CREATE;
 
-      return notifiableEvents;
+      this.targetEventClassName = eventClassName;
     },
-    /**
-     *
-     * @param {Object} notificationPreference
-     */
-    createdCustomNotification(notificationPreference) {
-      const { component, event_class_name: className } = notificationPreference,
-        notifiableEvents = this.$_getCachedNotifiableEvents();
 
-      apolloClient.writeQuery({
-        query: getNotifiableEvents,
+    /**
+     * @param {Object} formValue
+     */
+    async handleFormSubmit(formValue) {
+      try {
+        if (this.modal.state === MODAL_STATE_CREATE) {
+          await this.createCustomNotification(formValue);
+        } else {
+          throw new Exception('The modal state is invalid');
+        }
+
+        this.modal.open = false;
+        this.modal.title = '';
+      } catch (e) {
+        console.error(e);
+
+        await notify({
+          type: 'error',
+          message: this.$str(
+            'error_cannot_create_custom_notification',
+            'totara_notification'
+          ),
+        });
+      }
+    },
+
+    /**
+     * @param {String} subject
+     * @param {String} body
+     * @param {String} title
+     * @param {Number} body_format
+     * @param {String} event_class_name
+     */
+    async createCustomNotification({
+      subject,
+      body,
+      title,
+      body_format,
+      event_class_name,
+    }) {
+      await this.$apollo.mutate({
+        mutation: createCustomNotification,
         variables: {
+          body,
+          subject,
+          title,
+          body_format,
+          event_class_name,
           context_id: this.contextId,
         },
-        data: {
-          notifiable_events: notifiableEvents.map(notifiableEvent => {
-            if (
-              notifiableEvent.component === component &&
-              notifiableEvent.class_name === className
-            ) {
-              notifiableEvent = Object.assign({}, notifiableEvent);
+        update: (
+          proxy,
+          { data: { notification_preference: notificationPreference } }
+        ) => {
+          const { notifiable_events: notifiableEvents } = proxy.readQuery({
+            query: getNotifiableEvents,
+            variables: { context_id: this.contextId },
+          });
 
-              const { notification_preferences: preferences } = notifiableEvent;
-              notifiableEvent.notification_preferences = [
-                notificationPreference,
-              ].concat(preferences);
-            }
+          const {
+            component,
+            event_class_name: className,
+          } = notificationPreference;
 
-            return notifiableEvent;
-          }),
+          proxy.writeQuery({
+            query: getNotifiableEvents,
+            variables: { context_id: this.contextId },
+            data: {
+              notifiable_events: notifiableEvents.map(notifiableEvent => {
+                if (
+                  notifiableEvent.component === component &&
+                  notifiableEvent.class_name === className
+                ) {
+                  notifiableEvent = Object.assign({}, notifiableEvent);
+
+                  const {
+                    notification_preferences: preferences,
+                  } = notifiableEvent;
+                  notifiableEvent.notification_preferences = [
+                    notificationPreference,
+                  ].concat(preferences);
+                }
+
+                return notifiableEvent;
+              }),
+            },
+          });
         },
       });
     },
   },
 };
 </script>
+
+<lang-strings>
+  {
+    "totara_notification": [
+      "create_custom_notification_title",
+      "error_cannot_create_custom_notification"
+    ]
+  }
+</lang-strings>

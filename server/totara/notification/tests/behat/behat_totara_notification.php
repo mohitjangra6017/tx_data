@@ -28,11 +28,10 @@ class behat_totara_notification extends behat_base {
     /**
      * Goes to the notifications view page.
      *
-     * @Given I view notifications page
-     * @param $name
+     * @Given I navigate to system notifications page
      */
-    public function i_view_notifications_page() {
-        \behat_hooks::set_step_readonly(false);
+    public function i_navigate_to_system_notifications_page() {
+        behat_hooks::set_step_readonly(false);
 
         // Go directly to URL, we are testing functionality of page, not how to get there.
         $url = new moodle_url("/totara/notification/notifications.php");

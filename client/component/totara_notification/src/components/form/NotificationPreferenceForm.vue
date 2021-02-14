@@ -85,7 +85,7 @@
     </FormRow>
 
     <FormRow>
-      <ButtonGroup>
+      <ButtonGroup class="tui-notificationPreferenceForm__buttonGroup">
         <Button
           :styleclass="{ primary: true }"
           :text="$str('save', 'totara_core')"
@@ -302,3 +302,12 @@ export default {
     ]
   }
 </lang-strings>
+
+<style lang="scss">
+.tui-notificationPreferenceForm {
+  &__buttonGroup {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+</style>

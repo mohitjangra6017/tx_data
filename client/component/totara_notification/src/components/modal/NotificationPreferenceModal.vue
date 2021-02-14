@@ -36,8 +36,8 @@
       <NotificationPreferenceForm
         :context-id="contextId"
         :preference="preference"
-        :parent-preference="parentPreference"
-        @submit="$emit('submit', $event)"
+        :parent-value="parentValue"
+        @submit="handleSubmit"
         @cancel="$emit('request-close')"
       />
     </ModalContent>
@@ -88,6 +88,18 @@ export default {
       default() {
         return null;
       },
+    },
+
+    eventClassName: String,
+  },
+
+  methods: {
+    handleSubmit(formValue) {
+      if (this.eventClassName) {
+        formValue.event_class_name = this.eventClassName;
+      }
+
+      this.$emit('form-submit', formValue);
     },
   },
 };

@@ -80,10 +80,11 @@
             <Cell align="center">
               <NotifiableEventAction
                 :event-name="notifiableEvent.name"
-                :event-class-name="notifiableEvent.class_name"
-                :context-id="contextId"
-                @created-custom-notification="
-                  $emit('created-custom-notification', $event)
+                @create-custom-notification="
+                  $emit('create-custom-notification', {
+                    eventName: notifiableEvent.name,
+                    eventClassName: notifiableEvent.class_name,
+                  })
                 "
               />
             </Cell>
@@ -96,6 +97,7 @@
               :border-top-hidden="true"
               :border-bottom-hidden="true"
               :hover-off="true"
+              :get-id="(unused, index) => index"
             >
               <template v-slot:header-row>
                 <HeaderCell>
@@ -196,11 +198,3 @@ export default {
   ]
 }
 </lang-strings>
-<style lang="scss">
-.tui-notificationTable {
-  &__action {
-    display: flex;
-    justify-content: space-between;
-  }
-}
-</style>

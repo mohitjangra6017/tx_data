@@ -17,25 +17,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
-
 use totara_tui\output\component;
-
 global $CFG, $OUTPUT, $PAGE;
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
+$context_id = optional_param('context_id', null, PARAM_INT);
+$context = null === $context_id ? context_system::instance() : context::instance_by_id($context_id);
+
+if (CONTEXT_SYSTEM == $context->contextlevel) {
+    // If it is under the context system, we will redirect the user to the admin page
+    // rather than use this page. Because this page must only be used for lower context purpose.
+    // Note: in the future we might want to do sort of component,area and instance id check as well
+    redirect(new moodle_url("/totara/notification/notifications.php"));
+
+    // !!!
+    die();
+}
+
 require_login();
 
-// Please not that this page is tend to be for admin only. If you want to manage the notification at
-// lower context, please use different page.
-$context = context_system::instance();
 $PAGE->set_context($context);
-
-admin_externalpage_setup('notifications_setup', '', null, '', ['pagelayout' => 'noblocks']);
+$PAGE->set_url(new moodle_url("/totara/notification/context_notifications.php", ['context_id' => $context->id]));
+$PAGE->set_pagelayout('noblocks');
 $PAGE->set_url(new moodle_url('/totara/notification/notifications.php'));
 
 $tui = new component(

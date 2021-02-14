@@ -23,6 +23,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['create_notification'] = 'Create notification';
+$string['create_notification_for_event'] = 'Create notification for event {$a}';
 $string['create_custom_notification_title'] = '{$a}: Create notification';
 $string['enabled'] = 'Enabled';
 $string['error_cannot_create_custom_notification'] = "Cannot create the custom notification";
