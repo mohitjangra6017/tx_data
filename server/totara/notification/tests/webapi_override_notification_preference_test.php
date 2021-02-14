@@ -125,10 +125,8 @@ class totara_notification_webapi_override_notification_preference_testcase exten
         self::assertTrue($notification_preference['overridden_body']);
         self::assertTrue($notification_preference['overridden_subject']);
 
-        self::assertArrayHasKey('exist_in_context', $notification_preference);
-        self::assertTrue(
-            $notification_preference['exist_in_context']
-        );
+        self::assertArrayHasKey('context_id', $notification_preference);
+        self::assertEquals($context_course->id, $notification_preference['context_id']);
 
         self::assertArrayHasKey('event_name', $notification_preference);
         self::assertEquals(

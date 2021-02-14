@@ -19,7 +19,6 @@ mutation totara_notification_create_custom_notification_preference(
     title
     id
     ancestor_id
-    exist_in_context(context_id: $context_id)
     body
     body_format
     overridden_body
@@ -29,5 +28,8 @@ mutation totara_notification_create_custom_notification_preference(
     event_name
     event_class_name
     is_custom
+    component
+    parent_id
+    context_id
   }
 }

@@ -115,36 +115,13 @@ class totara_notification_webapi_type_notification_preference_testcase extends a
     /**
      * @return void
      */
-    public function test_resolve_exist_in_context(): void {
-        $generator = self::getDataGenerator();
-        $course = $generator->create_course();
-
-        $context_system = context_system::instance();
-        self::assertTrue(
+    public function test_resolve_context_id(): void {
+        self::assertEquals(
+            $this->system_built_in->get_context_id(),
             $this->resolve_graphql_type(
                 $this->get_graphql_name(notification_preference::class),
-                'exist_in_context',
+                'context_id',
                 $this->system_built_in,
-                ['context_id' => $context_system->id]
-            )
-        );
-
-        // This means that it does not exist in the context course.
-        self::assertFalse(
-            $this->resolve_graphql_type(
-                $this->get_graphql_name(notification_preference::class),
-                'exist_in_context',
-                $this->system_built_in,
-                ['context_id' => context_course::instance($course->id)->id]
-            )
-        );
-
-        self::assertFalse(
-            $this->resolve_graphql_type(
-                $this->get_graphql_name(notification_preference::class),
-                'exist_in_context',
-                $this->system_built_in,
-                ['context_id' => context_coursecat::instance($course->category)->id]
             )
         );
     }

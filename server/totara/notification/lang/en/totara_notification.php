@@ -23,8 +23,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['create_notification'] = 'Create notification';
-$string['create_notification_modal_title'] = '{$a}: Create notification';
+$string['create_custom_notification_title'] = '{$a}: Create notification';
 $string['enabled'] = 'Enabled';
+$string['error_cannot_create_custom_notification'] = "Cannot create the custom notification";
 $string['delivery_channels'] = 'Delivery channels';
 $string['disable'] = 'Disable notification';
 $string['disable_all'] = 'Disable all notifications';
@@ -32,6 +33,7 @@ $string['disable_all_helptext'] = 'Disable all notifications, including forced a
 $string['events_and_notifications'] = 'Events and notifications';
 $string['helpfor'] = 'Help for {$a}';
 $string['messaging_and_notification'] = 'Messaging and notifications';
+$string['notifiable_events'] = 'Notifiable events';
 $string['notifications'] = "Notifications";
 $string['notification_body_label'] = 'Notification body';
 $string['notification_subject_label'] = 'Notification subject';

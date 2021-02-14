@@ -1,0 +1,32 @@
+type totara_notification_notifiable_event {
+  component: String!
+  """
+  The class name of notifiable event.
+  """
+  class_name: String!
+  """
+  The human readable notifiable event name.
+  """
+  name: String!
+  """
+  Returning all the notification preferences that are associated with this very notifiable event.
+  """
+  notification_preferences(
+    context_id: param_integer
+  ): [totara_notification_notification_preference!]!
+  #Note this is where all the configuration fields within the system should be added.
+}
+
+extend type Query {
+  """
+  A query to fetch all the notifiable events within the system, and it is up to the
+  implementation of persist query to include the associated notification preferences
+  with the query or not.
+
+  TODO: UNIT TEST ME
+  """
+  totara_notification_notifiable_events(
+    context_id: param_integer
+    component: param_component
+  ): [totara_notification_notifiable_event!]!
+}

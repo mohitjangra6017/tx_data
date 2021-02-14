@@ -46,6 +46,7 @@ class notification_preference_formatter extends formatter {
         $record->overridden_subject = $notification_preference->is_overridden_subject();
         $record->ancestor_id = $notification_preference->get_ancestor_id();
         $record->is_custom = $notification_preference->is_custom_notification();
+        $record->context_id = $notification_preference->get_context_id();
 
         parent::__construct($record, $context);
     }
@@ -96,6 +97,7 @@ class notification_preference_formatter extends formatter {
             'ancestor_id' => null,
             'event_class_name' => null,
             'is_custom' => null,
+            'context_id' => null
         ];
     }
 }

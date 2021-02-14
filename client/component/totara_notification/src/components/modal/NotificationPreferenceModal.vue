@@ -33,7 +33,13 @@
       :title-id="$id('title')"
       :close-button="showCloseButton"
     >
-      <slot name="form" />
+      <NotificationPreferenceForm
+        :context-id="contextId"
+        :preference="preference"
+        :parent-preference="parentPreference"
+        @submit="$emit('submit', $event)"
+        @cancel="$emit('request-close')"
+      />
     </ModalContent>
   </Modal>
 </template>
@@ -41,11 +47,17 @@
 <script>
 import Modal from 'tui/components/modal/Modal';
 import ModalContent from 'tui/components/modal/ModalContent';
+import NotificationPreferenceForm from 'totara_notification/components/form/NotificationPreferenceForm';
+import {
+  getDefaultNotificationPreference,
+  validatePreferenceProp,
+} from '../../internal/notification_preference';
 
 export default {
   components: {
     Modal,
     ModalContent,
+    NotificationPreferenceForm,
   },
 
   props: {
@@ -54,9 +66,28 @@ export default {
       required: true,
     },
 
+    contextId: {
+      type: Number,
+      required: true,
+    },
+
     showCloseButton: {
       type: Boolean,
       default: true,
+    },
+
+    preference: {
+      type: Object,
+      validator: validatePreferenceProp(),
+      default: getDefaultNotificationPreference(),
+    },
+
+    parentPreference: {
+      type: Object,
+      validator: validatePreferenceProp(),
+      default() {
+        return null;
+      },
     },
   },
 };

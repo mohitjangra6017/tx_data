@@ -43,13 +43,7 @@ class notification_preference implements type_resolver {
             throw new coding_exception("Expected notification preference model");
         }
 
-        if ('exist_in_context' === $field) {
-            $context_id = $args['context_id'] ?? context_system::instance()->id;
-
-            // The preference is siting in the different (higher) context. Hence, this notification preference is
-            // marked as not overridden by the specific context.
-            return $context_id == $source->get_context_id();
-        } else if ('component' === $field) {
+        if ('component' === $field) {
             $event_class_name = $source->get_event_class_name();
             return helper::get_component_of_event_class_name($event_class_name);
         } else if ('parent_id' === $field) {

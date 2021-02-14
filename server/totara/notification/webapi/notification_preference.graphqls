@@ -6,11 +6,6 @@ type totara_notification_notification_preference {
   is existing at the specific context that is provided, then please use the field 'context_identifier'
   """
   id: Int!
-  """
-  A field to tell whether the notification preference record is existing in the given context which overriding
-  the upper context. Default the context_id to system context if it is not provided.
-  """
-  exist_in_context(context_id: param_integer): Boolean!
   title: String!
   subject: String!
   body: String!
@@ -52,6 +47,11 @@ type totara_notification_notification_preference {
   the system. Otherwise its own parent's id, or its ancestor's id.
   """
   parent_id: Int
+
+  """
+  The current context's id of this notification, as where it is sitting.
+  """
+  context_id: Int!
 }
 
 extend type Mutation {

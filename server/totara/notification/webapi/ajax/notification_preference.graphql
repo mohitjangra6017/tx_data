@@ -3,17 +3,20 @@ query totara_notification_notification_preference($id: param_integer!) {
     id: $id
   ) {
     __typename
-    id
     title
-    exist_in_context
+    id
+    ancestor_id
+    body
+    body_format
     overridden_body
     overridden_subject
     subject
-    body
-    body_format
-    event_class_name
+    title
     event_name
+    event_class_name
     is_custom
+    component
     parent_id
+    context_id
   }
 }

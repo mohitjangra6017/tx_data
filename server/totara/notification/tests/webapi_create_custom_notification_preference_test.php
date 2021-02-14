@@ -81,8 +81,8 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertArrayHasKey('body_format', $notification_preference);
         self::assertEquals(FORMAT_MOODLE, $notification_preference['body_format']);
 
-        self::assertArrayHasKey('exist_in_context', $notification_preference);
-        self::assertTrue($notification_preference['exist_in_context']);
+        self::assertArrayHasKey('context_id', $notification_preference);
+        self::assertEquals($context->id, $notification_preference['context_id']);
 
         self::assertArrayHasKey('is_custom', $notification_preference);
         self::assertTrue($notification_preference['is_custom']);
@@ -135,8 +135,8 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertArrayHasKey('body_format', $notification_preference);
         self::assertEquals(FORMAT_HTML, $notification_preference['body_format']);
 
-        self::assertArrayHasKey('exist_in_context', $notification_preference);
-        self::assertTrue($notification_preference['exist_in_context']);
+        self::assertArrayHasKey('context_id', $notification_preference);
+        self::assertEquals($context_course->id, $notification_preference['context_id']);
 
         self::assertArrayHasKey('is_custom', $notification_preference);
         self::assertTrue($notification_preference['is_custom']);

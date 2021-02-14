@@ -28,11 +28,23 @@ global $CFG, $OUTPUT, $PAGE;
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
+$context_id = optional_param('context_id', null, PARAM_INT);
+$context = !empty($context_id) ? context::instance_by_id($context_id) : context_system::instance();
+
 require_login();
+
+$PAGE->set_context($context);
 admin_externalpage_setup('notifications_setup', '', null, '', ['pagelayout' => 'noblocks']);
 
+
 $PAGE->set_url(new moodle_url('/totara/notification/notifications.php'));
-$tui = new component('totara_notification/pages/NotificationPage', ['title' => get_string('notifications', 'totara_notification')]);
+$tui = new component(
+    'totara_notification/pages/NotificationPage',
+    [
+        'title' => get_string('notifications', 'totara_notification'),
+        'context-id' => $context->id
+    ]
+);
 $tui->register($PAGE);
 
 echo $OUTPUT->header();

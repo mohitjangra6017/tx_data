@@ -1,0 +1,28 @@
+query totara_notification_notifiable_events($context_id: param_integer!) {
+  notifiable_events: totara_notification_notifiable_events(
+    context_id: $context_id
+  ) {
+    __typename
+    class_name
+    name
+    component
+    notification_preferences(context_id: $context_id) {
+      __typename
+      title
+      id
+      ancestor_id
+      body
+      body_format
+      overridden_body
+      overridden_subject
+      subject
+      title
+      event_name
+      event_class_name
+      is_custom
+      component
+      parent_id
+      context_id
+    }
+  }
+}
