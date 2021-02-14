@@ -39,7 +39,7 @@ class totara_playlist_comment_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist([
             'access' => access::PUBLIC,
@@ -98,7 +98,7 @@ class totara_playlist_comment_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist([
             'access' => access::PUBLIC,
@@ -163,7 +163,7 @@ class totara_playlist_comment_testcase extends advanced_testcase {
 
         $user_one = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist([
             'access' => access::PUBLIC,
@@ -231,7 +231,7 @@ class totara_playlist_comment_testcase extends advanced_testcase {
 
         $user_one = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist([
             'access' => access::PUBLIC,

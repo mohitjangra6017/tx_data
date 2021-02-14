@@ -35,7 +35,7 @@ class totara_engage_library_search_testcase extends advanced_testcase {
         $owner = $this->getDataGenerator()->create_user();
         $member = $this->getDataGenerator()->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $this->getDataGenerator()->get_plugin_generator('container_workspace');
 
         $priv_workspace_member = $workspace_generator->create_private_workspace(
@@ -119,11 +119,11 @@ class totara_engage_library_search_testcase extends advanced_testcase {
     }
 
     public function test_search_workspaces_with_multi_tenancy() {
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $this->getDataGenerator()->get_plugin_generator('container_workspace');
 
-        /** @var totara_tenant_generator $tenant_generator */
-        $tenant_generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenant_generator */
+        $tenant_generator = \totara_tenant\testing\generator::instance();
         $tenant_generator->enable_tenants();
 
         $tenant1 = $tenant_generator->create_tenant();

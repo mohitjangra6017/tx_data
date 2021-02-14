@@ -166,7 +166,7 @@ class totara_catalog_catalog_storage_testcase extends advanced_testcase {
         $this->assertSame(0, $DB->count_records('catalog'), "catalog records exist after delete");
 
         $generator = $this->getDataGenerator();
-        /** @var totara_program_generator $program_generator */
+        /** @var \totara_program\testing\generator $program_generator */
         $program_generator = $generator->get_plugin_generator('totara_program');
         for ($i = 0; $i < 20; $i++) {
             $generator->create_course();

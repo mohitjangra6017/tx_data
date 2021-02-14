@@ -29,7 +29,7 @@ class totara_reportbuilder_rb_content_course_visibility_testcase extends advance
     public function test_course_report_source_without_tenants() {
         global $DB;
 
-        /** @var core_completion_generator $comp_generator */
+        /** @var \core_completion\testing\generator $comp_generator */
         $completion_gen = self::getDataGenerator()->get_plugin_generator('core_completion');
 
         self::setAdminUser();
@@ -175,7 +175,7 @@ class totara_reportbuilder_rb_content_course_visibility_testcase extends advance
     public function test_course_report_source_with_nonisolated_tenants() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
         $tenantgenerator = self::getDataGenerator()->get_plugin_generator('totara_tenant');
         $tenantgenerator->enable_tenants();
         $tenant1 = $tenantgenerator->create_tenant();
@@ -183,7 +183,7 @@ class totara_reportbuilder_rb_content_course_visibility_testcase extends advance
         set_config('tenantsisolated', 0);
         $tenantgenerator->enable_tenants();
 
-        /** @var core_completion_generator $comp_generator */
+        /** @var \core_completion\testing\generator $comp_generator */
         $completion_gen = self::getDataGenerator()->get_plugin_generator('core_completion');
 
         self::setAdminUser();
@@ -414,7 +414,7 @@ class totara_reportbuilder_rb_content_course_visibility_testcase extends advance
     public function test_course_report_source_with_isolated_tenants() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
         $tenantgenerator = self::getDataGenerator()->get_plugin_generator('totara_tenant');
         $tenantgenerator->enable_tenants();
         $tenant1 = $tenantgenerator->create_tenant();
@@ -422,7 +422,7 @@ class totara_reportbuilder_rb_content_course_visibility_testcase extends advance
         set_config('tenantsisolated', 1);
         $tenantgenerator->enable_tenants();
 
-        /** @var core_completion_generator $comp_generator */
+        /** @var \core_completion\testing\generator $comp_generator */
         $completion_gen = self::getDataGenerator()->get_plugin_generator('core_completion');
 
         self::setAdminUser();

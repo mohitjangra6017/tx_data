@@ -160,7 +160,7 @@ class mod_perform_webapi_resolver_mutation_add_section_testcase extends advanced
         }
 
         $data_generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         $activity = $perform_generator->create_activity_in_container([

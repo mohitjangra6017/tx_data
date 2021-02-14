@@ -422,7 +422,7 @@ class core_blog_userdata_external_testcase extends advanced_testcase {
      * @return \stdClass
      */
     private function create_blog_entry(\stdClass $blog): \stdClass {
-        /** @var core_blog_generator $bloggenerator */
+        /** @var \core_blog\testing\generator $bloggenerator */
         $bloggenerator = $this->getDataGenerator()->get_plugin_generator('core_blog');
         return $bloggenerator->create_instance(['module' => 'blog_external', 'content' => $blog->id, 'userid' => $blog->userid]);
     }

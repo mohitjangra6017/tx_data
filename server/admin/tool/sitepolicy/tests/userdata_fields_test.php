@@ -43,7 +43,7 @@ class tool_sitepolicy_userdata_fields_testcase extends advanced_testcase {
         $that->otheruser = $this->getDataGenerator()->create_user();
 
         /**
-         * @var tool_sitepolicy_generator $generator
+         * @var \tool_sitepolicy\testing\generator $generator
          */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 

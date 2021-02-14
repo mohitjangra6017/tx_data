@@ -50,19 +50,19 @@ class totara_engage_rb_engagecontent_report_testcase extends advanced_testcase {
         $recipient2 = $gen->create_user();
         $recipient3 = $gen->create_user();
 
-        /** @var container_workspace_generator $workspacegen */
+        /** @var \container_workspace\testing\generator $workspacegen */
         $workspacegen = $gen->get_plugin_generator('container_workspace');
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
-        /** @var totara_topic_generator $topicgen */
+        /** @var \totara_topic\testing\generator $topicgen */
         $topicgen = $gen->get_plugin_generator('totara_topic');
 
         // Create 4 workspaces.
@@ -164,7 +164,7 @@ class totara_engage_rb_engagecontent_report_testcase extends advanced_testcase {
         }
 
         // Create comments.
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $gen->get_plugin_generator('totara_comment');
 
         $comment_size1 = 10;
@@ -322,7 +322,7 @@ class totara_engage_rb_engagecontent_report_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -331,7 +331,7 @@ class totara_engage_rb_engagecontent_report_testcase extends advanced_testcase {
         $tenant_generator->migrate_user_to_tenant($user_one->id, $tenant_one->id);
         $tenant_generator->migrate_user_to_tenant($user_two->id, $tenant_two->id);
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $generator->get_plugin_generator('engage_article');
 
         // Create articles for user_one.

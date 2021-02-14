@@ -23,13 +23,10 @@
 
 namespace totara_program\totara_catalog\program\dataformatter;
 
-use advanced_testcase;
 use context_system;
-use core_completion_generator;
 use stdClass;
 use totara_catalog\dataformatter\dataformatter_test_base;
 use totara_catalog\dataformatter\formatter;
-use totara_program_generator;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -54,7 +51,7 @@ class totara_program_totara_catalog_dataformatter_test extends dataformatter_tes
 
         $this->assertSame([formatter::TYPE_PLACEHOLDER_IMAGE], $df->get_suitable_types());
 
-        /** @var totara_program_generator $program_generator */
+        /** @var \totara_program\testing\generator $program_generator */
         $program_generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $program = $program_generator->create_program();
 

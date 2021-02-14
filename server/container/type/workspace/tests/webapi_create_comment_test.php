@@ -41,7 +41,7 @@ class container_workspace_webapi_create_comment_testcase extends advanced_testca
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -77,13 +77,13 @@ class container_workspace_webapi_create_comment_testcase extends advanced_testca
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
         $discussion = $workspace_generator->create_discussion($workspace->get_id());
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
 
         // Create a comment first - so that we can create a reply afterward.
@@ -121,14 +121,14 @@ class container_workspace_webapi_create_comment_testcase extends advanced_testca
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
         // Create a discussion, so that we can create a comment.
         $discussion = $workspace_generator->create_discussion($workspace->get_id());
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $discussion->get_id(),
@@ -169,14 +169,14 @@ class container_workspace_webapi_create_comment_testcase extends advanced_testca
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
         // Create a discussion, then a comment and a reply.=
         $discussion = $workspace_generator->create_discussion($workspace->get_id());
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $discussion->get_id(),

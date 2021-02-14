@@ -27,7 +27,6 @@ global $CFG;
 
 require_once($CFG->dirroot . '/totara/reportbuilder/tests/reportcache_advanced_testcase.php');
 require_once($CFG->dirroot . '/totara/cohort/lib.php');
-require_once($CFG->libdir . '/testing/generator/lib.php');
 
 /**
  * Test multiple job assignment rules.
@@ -56,9 +55,7 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
     private $otype2 = null;
     private $cohort = null;
     private $ruleset = 0;
-    /** @var totara_cohort_generator $cohort_generator */
     private $cohort_generator = null;
-    /** @var totara_hierarchy_generator $hierarchy_generator */
     private $hierarchy_generator = null;
     const TEST_POSITION_COUNT_MEMBERS = 24;
 
@@ -130,13 +127,13 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
         $this->users = array();
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
 
         // Set totara_hierarchy generator.
-        $this->hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
+        $this->hierarchy_generator = \totara_hierarchy\testing\generator::instance();
 
         // Create position framework.
-        $name = totara_hierarchy_generator::DEFAULT_NAME_FRAMEWORK_POSITION;
+        $name = $this->hierarchy_generator::DEFAULT_NAME_FRAMEWORK_POSITION;
         $name .= ' ' . totara_generator_util::get_next_record_number('pos_framework', 'fullname', $name);
         $data = array ('fullname' => $name);
         $this->posfw = $this->hierarchy_generator->create_framework('position', $data);
@@ -146,7 +143,7 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
         $this->ptype2 = $this->hierarchy_generator->create_pos_type(array('idnumber' => 'ptype2', 'fullname' => 'ptype2'));
 
         // Create organisation framework.
-        $name = totara_hierarchy_generator::DEFAULT_NAME_FRAMEWORK_ORGANISATION;
+        $name = $this->hierarchy_generator::DEFAULT_NAME_FRAMEWORK_ORGANISATION;
         $name .= ' ' . totara_generator_util::get_next_record_number('org_framework', 'fullname', $name);
         $data = array('fullname' => $name);
         $this->orgfw = $this->hierarchy_generator->create_framework('organisation', $data);

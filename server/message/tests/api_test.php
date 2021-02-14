@@ -295,7 +295,7 @@ class core_message_api_testcase extends core_message_messagelib_testcase {
         $generator = self::getDataGenerator();
         $data = new stdClass();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

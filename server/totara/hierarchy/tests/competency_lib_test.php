@@ -39,7 +39,7 @@ class totara_hierarchy_competency_lib_testcase extends advanced_testcase {
         // Todo: Make this test pass again (or remove it). Deal with this in cleanup task TL-22134.
         $this->markTestSkipped();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         // By default, the generator will create a scale with one proficient value.
         $scale1 = $hierarchy_generator->create_scale('comp');
@@ -97,7 +97,7 @@ class totara_hierarchy_competency_lib_testcase extends advanced_testcase {
         // Get it now before there's anything else in that table that makes it harder to find.
         $default_proficient_value = $DB->get_record('comp_scale_values', ['proficient' => 1]);
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         // By default, the generator will create a scale with one proficient value.
         $scale1 = $hierarchy_generator->create_scale('comp');
@@ -134,7 +134,7 @@ class totara_hierarchy_competency_lib_testcase extends advanced_testcase {
         $this->resetAfterTest();
         global $DB;
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         // By default, the generator will create a scale with one proficient value.
         $scale1 = $hierarchy_generator->create_scale('comp');

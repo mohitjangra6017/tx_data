@@ -49,7 +49,6 @@ require __DIR__ . '/../../server/config.php';
 /** @var core_config $CFG */
 
 require_once($CFG->dirroot . '/lib/clilib.php');
-require_once($CFG->dirroot . '/lib/phpunit/classes/util.php');
 
 global $options;
 [$options, $cli_unrecognized] = cli_get_params([
@@ -3947,7 +3946,7 @@ function create_manual_job_assignments($user, $assignments, $data) {
  *
  * @param array $record Course attributes
  * @param $data
- * @param testing_data_generator $generator
+ * @param \core\testing\generator $generator
  * @return stdClass|array|stdClass[] Course record
  */
 function create_course_($record, $data, $generator) {
@@ -4033,11 +4032,10 @@ function create_course_links($records, $data) {
  *
  * @param array $competencies
  * @param array $data
- * @param totara_competency_generator $generator
+ * @param \totara_competency\testing\generator $generator
  */
 function create_criteria_pathways($competencies, $data, $generator) {
-    /** @var totara_criteria_generator $criteria_generator */
-    $criteria_generator = phpunit_util::get_data_generator()->get_plugin_generator('totara_criteria');
+    $criteria_generator = \totara_criteria\testing\generator::instance();
 
     foreach ($competencies as $competency => $pathways) {
         $competency = new competency_entity(get_competency($competency, null, $data), false);
@@ -4062,7 +4060,7 @@ function create_criteria_pathways($competencies, $data, $generator) {
  *
  * @param array $criteria_group
  * @param stdClass|\totara_competency\entity\competency $competency
- * @param totara_criteria_generator $generator
+ * @param \totara_criteria\testing\generator $generator
  * @return criterion[]
  */
 function create_criteria($criteria_group, $competency, $generator) {
@@ -4169,7 +4167,7 @@ function create_manual_ratings($manual_ratings, $data) {
  * @param stdClass $user For user
  * @param array $plans Array of [competency => scale value]
  * @param array $data
- * @param totara_competency_generator $generator
+ * @param \totara_competency\testing\generator $generator
  * @return array
  */
 function create_learning_plans($user, $plans, $data, $generator) {
@@ -4201,7 +4199,7 @@ function create_learning_plans($user, $plans, $data, $generator) {
  * @param string $plan Plan key
  * @param array $competencies Competencies and evidence to link
  * @param array $data
- * @param totara_evidence_generator $generator
+ * @param \totara_evidence\testing\generator $generator
  */
 function link_evidence_to_plan($plan, $competencies, $data, $generator) {
     $preplan = $plan;
@@ -4236,7 +4234,7 @@ function link_evidence_to_plan($plan, $competencies, $data, $generator) {
  *
  * @param array $evidence_items
  * @param array $data
- * @param totara_evidence_generator $generator
+ * @param \totara_evidence\testing\generator $generator
  * @return array
  */
 function create_evidence_items($evidence_items, $data, $generator) {
@@ -4264,34 +4262,34 @@ function create_evidence_items($evidence_items, $data, $generator) {
 /**
  * Return an instance of testing data generator
  *
- * @return testing_data_generator
+ * @return \core\testing\generator;
  */
 function generator() {
-    return phpunit_util::get_data_generator();
+    return \core\testing\generator::instance();
 }
 
 /**
  * Get Competencies specific generator
  *
- * @return totara_competency_generator|component_generator_base
+ * @return \totara_competency\testing\generator
  */
 function competency_generator() {
-    return generator()->get_plugin_generator('totara_competency');
+    return \totara_competency\testing\generator::instance();
 }
 
 /**
  * Get Hierarchy specific generator
  *
- * @return totara_hierarchy_generator|component_generator_base
+ * @return \totara_hierarchy\testing\generator
  */
 function hierarchy_generator() {
-    return generator()->get_plugin_generator('totara_hierarchy');
+    return \totara_hierarchy\testing\generator::instance();
 }
 
 /**
  * Get Assignment specific generator
  *
- * @return totara_competency_assignment_generator|component_generator_base
+ * @return \totara_competency\testing\assignment_generator
  */
 function assignment_generator() {
     return generator()->get_plugin_generator('totara_competency')->assignment_generator();
@@ -4300,10 +4298,10 @@ function assignment_generator() {
 /**
  * Get Evidence specific generator
  *
- * @return totara_evidence_generator|component_generator_base
+ * @return \totara_evidence\testing\generator
  */
 function evidence_generator() {
-    return generator()->get_plugin_generator('totara_evidence');
+    return \totara_evidence\testing\generator::instance();
 }
 
 function run_tasks() {
@@ -4457,9 +4455,7 @@ function enable_multilang() {
  * Enable multi tenancy
  */
 function enable_multitenancy() {
-    /** @var totara_tenant_generator $multitenancy */
-    $multitenancy = generator()->get_plugin_generator('totara_tenant');
-
+    $multitenancy = \totara_tenant\testing\generator::instance();
     $multitenancy->enable_tenants();
 }
 
@@ -4476,7 +4472,7 @@ function create_tenants(): ?array {
 
     $generator = generator();
 
-    /** @var totara_tenant_generator $multitenancy */
+    /** @var \totara_tenant\testing\generator $multitenancy */
     $multitenancy = $generator->get_plugin_generator('totara_tenant');
 
     $tenant1 = $multitenancy->create_tenant(['name' => 'Tenant 1']);

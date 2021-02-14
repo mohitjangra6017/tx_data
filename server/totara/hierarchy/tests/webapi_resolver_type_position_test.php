@@ -304,7 +304,7 @@ class totara_hierarchy_webapi_resolver_type_position_testcase extends advanced_t
     public function test_resolve_framework() {
         $this->setAdminUser();
 
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_pos_frame([]);
         $typeid = $generator->create_pos_type([]);
@@ -314,7 +314,7 @@ class totara_hierarchy_webapi_resolver_type_position_testcase extends advanced_t
     }
 
     public function test_resolve_parent() {
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_pos_frame([]);
         $typeid = $generator->create_pos_type([]);
@@ -325,7 +325,7 @@ class totara_hierarchy_webapi_resolver_type_position_testcase extends advanced_t
     }
 
     public function test_resolve_children() {
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_pos_frame([]);
         $typeid = $generator->create_pos_type([]);
@@ -345,7 +345,7 @@ class totara_hierarchy_webapi_resolver_type_position_testcase extends advanced_t
 
     public function test_resolve_type() {
         global $DB;
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_pos_frame([]);
         $typeid = $generator->create_pos_type([]);

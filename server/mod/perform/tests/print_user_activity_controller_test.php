@@ -30,8 +30,8 @@ use mod_perform\entity\activity\participant_instance;
 class print_user_activity_controller_testcase extends advanced_testcase {
 
     public function test_user_must_be_participant_to_access_page(): void {
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_user = self::getDataGenerator()->create_user();
         $other_user = self::getDataGenerator()->create_user();
@@ -93,8 +93,8 @@ class print_user_activity_controller_testcase extends advanced_testcase {
     }
 
     public function test_subject_must_not_be_deleted_to_access_page(): void {
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_user = self::getDataGenerator()->create_user();
         $other_user = self::getDataGenerator()->create_user();

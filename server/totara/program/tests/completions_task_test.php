@@ -31,12 +31,12 @@ defined('MOODLE_INTERNAL') || die();
 class totara_program_completions_task_testcase extends advanced_testcase {
 
     /**
-     * @var testing_data_generator
+     * @var \core\testing\generator
      */
     protected $generator;
 
     /**
-     * @var totara_program_generator
+     * @var \totara_program\testing\generator
      */
     protected $generator_program;
 

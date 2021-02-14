@@ -70,7 +70,7 @@ class totara_cohort_certification_status_rules_testcase extends totara_cohort_ce
         $this->adminuser = $DB->get_record('user', ['username' => 'admin']);
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
 
         // Create programs, mostly so that we don't end up with coincidental success due to matching ids.
         $this->program_generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
@@ -83,14 +83,14 @@ class totara_cohort_certification_status_rules_testcase extends totara_cohort_ce
 
         // Create certifications.
         for ($i = 1; $i <= self::TEST_CERTIFICATIONS_COUNT; $i++) {
-            $this->certifications[$i] = $this->getDataGenerator()->create_certification();
+            $this->certifications[$i] = $this->program_generator->create_certification();
 
             // Also create a course, each certification to have one course associated to it.
             $this->courses[$i] = $this->getDataGenerator()->create_course();
 
             // Add the course to the certification.
-            $this->getDataGenerator()->add_courseset_program($this->certifications[$i]->id, [$this->courses[$i]->id], CERTIFPATH_CERT);
-            $this->getDataGenerator()->add_courseset_program($this->certifications[$i]->id, [$this->courses[$i]->id], CERTIFPATH_RECERT);
+            $this->program_generator->legacy_add_courseset_program($this->certifications[$i]->id, [$this->courses[$i]->id], CERTIFPATH_CERT);
+            $this->program_generator->legacy_add_courseset_program($this->certifications[$i]->id, [$this->courses[$i]->id], CERTIFPATH_RECERT);
         }
 
         // Create cohort.

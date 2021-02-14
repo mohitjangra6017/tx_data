@@ -51,7 +51,7 @@ class criteria_linkedcourses_linked_courses_observer_testcase extends advanced_t
             public $courses = [];
         };
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $data->competency = $competency_generator->create_competency('Comp A');
 
@@ -60,7 +60,7 @@ class criteria_linkedcourses_linked_courses_observer_testcase extends advanced_t
         }
 
         if ($add_criterion) {
-            /** @var totara_criteria_generator $criteria_generator */
+            /** @var \totara_criteria\testing\generator $criteria_generator */
             $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
             $data->criterion = $criteria_generator->create_linkedcourses(['competency' => $data->competency->id]);

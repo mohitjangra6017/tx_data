@@ -185,9 +185,9 @@ abstract class mod_perform_subject_instance_testcase extends advanced_testcase {
         return execution_context::create($type, $operation);
     }
 
-    protected static function perform_generator(): mod_perform_generator {
+    protected static function perform_generator(): \mod_perform\testing\generator {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return self::getDataGenerator()->get_plugin_generator('mod_perform');
+        return \mod_perform\testing\generator::instance();
     }
 
     protected function strip_expected_dates(array $actual_result): array {

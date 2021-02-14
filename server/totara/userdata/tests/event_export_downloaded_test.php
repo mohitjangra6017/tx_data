@@ -36,8 +36,7 @@ class totara_userdata_event_export_downloaded_testcase extends advanced_testcase
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $type = $generator->create_export_type(array('allowself' => 1, 'items' => 'core_user-names,core_user-username'));
         $syscontext = context_system::instance();

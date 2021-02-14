@@ -43,7 +43,7 @@ class tool_totara_sync_user_db_multitenancy_fields_testcase extends totara_sync_
     protected $sourcename       = 'totara_sync_source_user_database';
     protected $source           = null;
 
-    /** @var totara_tenant_generator $tenantgenerator */
+    /** @var \totara_tenant\testing\generator $tenantgenerator */
     protected $tenantgenerator  = null;
 
     public static function setUpBeforeClass(): void {
@@ -70,8 +70,8 @@ class tool_totara_sync_user_db_multitenancy_fields_testcase extends totara_sync_
         parent::setUp();
         $this->setAdminUser();
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $this->tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $this->tenantgenerator = \totara_tenant\testing\generator::instance();
         $this->tenantgenerator->enable_tenants();
 
         // Set the source.

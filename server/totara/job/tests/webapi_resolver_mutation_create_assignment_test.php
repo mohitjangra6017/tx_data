@@ -72,7 +72,7 @@ class totara_job_webapi_resolver_mutation_create_assignment_testcase extends adv
         $manager = $this->getDataGenerator()->create_user();
         $appraiser = $this->getDataGenerator()->create_user();
 
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_pos_frame([]);
         $typeid = $generator->create_pos_type([]);
@@ -160,7 +160,7 @@ class totara_job_webapi_resolver_mutation_create_assignment_testcase extends adv
         $appraiser = $this->getDataGenerator()->create_user();
         $manager = $this->getDataGenerator()->create_user();
         $managerja = job_assignment::create(['userid' => $manager->id, 'idnumber' => 'j1']);
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $orgframework = $generator->create_org_frame([]);
         $organisation = $generator->create_org(['frameworkid' => $orgframework->id, 'typeid' => $generator->create_org_type([])]);

@@ -47,8 +47,8 @@ class totara_tenant_core_user_access_controller_testcase extends advanced_testca
     public function test_can_view_profile() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -1124,8 +1124,8 @@ class totara_tenant_core_user_access_controller_testcase extends advanced_testca
     public function test_can_loginas() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 

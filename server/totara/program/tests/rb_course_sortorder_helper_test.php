@@ -35,7 +35,7 @@ class rb_course_sortorder_helper_testcase extends advanced_testcase {
         $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
-        /** @var totara_program_generator $prog_generator */
+        /** @var \totara_program\testing\generator $prog_generator */
         $prog_generator = $generator->get_plugin_generator('totara_program');
 
         // Generate a program and test it works for a basic program without content.
@@ -79,7 +79,7 @@ class rb_course_sortorder_helper_testcase extends advanced_testcase {
     public function test_deleting_an_empty_program() {
         $this->resetAfterTest();
 
-        /** @var totara_program_generator $prog_generator */
+        /** @var \totara_program\testing\generator $prog_generator */
         $prog_generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         // Test deleting a newly created program.
         $prog = $prog_generator->create_program();
@@ -99,7 +99,7 @@ class rb_course_sortorder_helper_testcase extends advanced_testcase {
     public function test_get_order_on_multiple_programs() {
         $this->resetAfterTest();
 
-        /** @var totara_program_generator $prog_generator */
+        /** @var \totara_program\testing\generator $prog_generator */
         $prog_generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $prog1 = $prog_generator->create_program();
         $prog2 = $prog_generator->create_program();

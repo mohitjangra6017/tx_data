@@ -35,8 +35,8 @@ class performelement_redisplay_element_relationship_model_testcase extends redis
     public function test_create() {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $source_activity = $perform_generator->create_activity_in_container(['activity_name' => 'activity']);
         $source_section = $perform_generator->create_section($source_activity, ['title' => 'section']);
@@ -58,8 +58,8 @@ class performelement_redisplay_element_relationship_model_testcase extends redis
     public function test_update() {
         $data = $this->create_test_data();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $activity = $perform_generator->create_activity_in_container(['activity_name' => 'activity']);
         $section = $perform_generator->create_section($activity, ['title' => 'section']);

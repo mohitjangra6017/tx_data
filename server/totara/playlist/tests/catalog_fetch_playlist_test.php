@@ -45,7 +45,7 @@ class totara_playlist_catalog_fetch_playlist_testcase extends advanced_testcase 
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlists = [];
 
@@ -117,7 +117,7 @@ class totara_playlist_catalog_fetch_playlist_testcase extends advanced_testcase 
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlists = [];
 

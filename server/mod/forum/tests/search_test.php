@@ -27,7 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->dirroot . '/search/tests/fixtures/testable_core_search.php');
-require_once($CFG->dirroot . '/mod/forum/tests/generator/lib.php');
 require_once($CFG->dirroot . '/mod/forum/lib.php');
 
 /**

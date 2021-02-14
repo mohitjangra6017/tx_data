@@ -49,8 +49,7 @@ class totara_cohort_audience_member_authentication_rule_testcase extends advance
      * @return void
      */
     private function create_cohort_rules(stdClass $rule, stdClass $ruleparam): void {
-        /** @var totara_cohort_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $generator = \totara_cohort\testing\generator::instance();
         $generator->create_cohort_rule_params(
             $rule->rulesetid, $rule->type, $rule->name, $ruleparam->params, $ruleparam->listofvalues
         );
@@ -60,7 +59,7 @@ class totara_cohort_audience_member_authentication_rule_testcase extends advance
      * @return stdClass
      */
     private function create_cohort_and_ruleset(): stdClass {
-        /** @var totara_cohort_generator $generator */
+        /** @var \totara_cohort\testing\generator $generator */
         $generator= $this->getDataGenerator()->get_plugin_generator('totara_cohort');
         $cohort = $generator->create_cohort(['cohorttype' => cohort::TYPE_DYNAMIC]);
         $rulesetid = cohort_rule_create_ruleset($cohort->activecollectionid);

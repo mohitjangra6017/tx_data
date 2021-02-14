@@ -32,8 +32,8 @@ class totara_tenant_core_message_api_testcase extends advanced_testcase {
     public function test_search_users() {
         global $DB;
 return;
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -290,8 +290,8 @@ return;
     public function test_can_post_message() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 

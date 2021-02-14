@@ -162,7 +162,7 @@ class totara_engage_webapi_shareto_recipients_testcase extends advanced_testcase
      * @return article
      */
     private function create_article(?string $name = null, ?int $access = access::RESTRICTED ): article {
-        /** @var engage_article_generator $generator */
+        /** @var \engage_article\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('engage_article');
 
         $params = ['access' => $access];

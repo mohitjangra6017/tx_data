@@ -59,11 +59,11 @@ class container_workspace_plugininfo_testcase extends advanced_testcase {
     /**
      * Get workspace generator
      *
-     * @return container_workspace_generator|component_generator_base
+     * @return \container_workspace\testing\generator
      * @throws coding_exception
      */
     protected function generator() {
-        return $this->getDataGenerator()->get_plugin_generator('container_workspace');
+        return \container_workspace\testing\generator::instance();
     }
 
     /**

@@ -32,8 +32,8 @@ class mod_perform_subject_static_instance_repository_testcase extends advanced_t
     public function test_user_can_view_when_target_user_has_manager_job_assignment(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $main_user = self::getDataGenerator()->create_user();
         $manager_user = self::getDataGenerator()->create_user();
@@ -79,8 +79,8 @@ class mod_perform_subject_static_instance_repository_testcase extends advanced_t
     public function test_user_can_view_when_target_user_is_appraiser(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $main_user = self::getDataGenerator()->create_user();
         $appraiser_user = self::getDataGenerator()->create_user();

@@ -177,7 +177,7 @@ class criteria_othercompetency_webapi_query_achievements_testcase extends totara
         $enabled_setting = 'criteria_types_enabled';
         set_config($enabled_setting, 'othercompetency', 'totara_criteria');
 
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $criterion = $criteria_generator->create_othercompetency(['competencyids' => $other_competency_ids]);

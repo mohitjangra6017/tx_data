@@ -170,7 +170,7 @@ class mod_scorm_userdata_scoes_track_testcase extends advanced_testcase {
         $that->courses['c3'] = $this->getDataGenerator()->create_course(['category' => $that->cat2->id]);
 
         /**
-         * @var mod_scorm_generator $scormgenerator
+         * @var \mod_scorm\testing\generator $scormgenerator
          */
         $scormgenerator = $this->getDataGenerator()->get_plugin_generator('mod_scorm');
 

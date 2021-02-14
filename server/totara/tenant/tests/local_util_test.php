@@ -31,8 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 class totara_tenant_local_util_testcase extends advanced_testcase {
     public function test_is_valid_name() {
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
         $this->setAdminUser();
 
@@ -52,8 +51,7 @@ class totara_tenant_local_util_testcase extends advanced_testcase {
     }
 
     public function test_is_valid_idnumber() {
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
         $this->setAdminUser();
 
@@ -77,8 +75,7 @@ class totara_tenant_local_util_testcase extends advanced_testcase {
         global $USER, $DB;
         $this->setAdminUser();
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
 
         $data = new stdClass();
@@ -179,8 +176,7 @@ class totara_tenant_local_util_testcase extends advanced_testcase {
         global $USER, $DB;
         $this->setAdminUser();
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
 
         $data = new stdClass();
@@ -289,8 +285,7 @@ class totara_tenant_local_util_testcase extends advanced_testcase {
     public function test_delete_tenant_delete() {
         global $DB, $USER;
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
 
         $this->setAdminUser();
@@ -339,8 +334,7 @@ class totara_tenant_local_util_testcase extends advanced_testcase {
     public function test_delete_tenant_migrate() {
         global $DB;
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
 
         $this->setAdminUser();
@@ -375,8 +369,7 @@ class totara_tenant_local_util_testcase extends advanced_testcase {
     public function test_delete_tenant_suspend() {
         global $DB;
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
 
         $this->setAdminUser();
@@ -411,8 +404,7 @@ class totara_tenant_local_util_testcase extends advanced_testcase {
     public function test_add_other_participant() {
         global $DB;
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
 
         $this->setAdminUser();
@@ -444,8 +436,7 @@ class totara_tenant_local_util_testcase extends advanced_testcase {
     public function test_remove_other_participant() {
         global $DB;
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
 
         $this->setAdminUser();
@@ -477,8 +468,7 @@ class totara_tenant_local_util_testcase extends advanced_testcase {
     }
 
     public function test_get_user_participation() {
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
 
         $this->setAdminUser();
@@ -512,8 +502,7 @@ class totara_tenant_local_util_testcase extends advanced_testcase {
     public function test_set_user_participation() {
         global $DB;
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
 
         $this->setAdminUser();
@@ -554,8 +543,7 @@ class totara_tenant_local_util_testcase extends advanced_testcase {
     public function test_migrate_user_to_tenant() {
         global $DB;
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
 
         $this->setAdminUser();

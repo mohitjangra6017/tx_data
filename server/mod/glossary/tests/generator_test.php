@@ -60,7 +60,7 @@ class mod_glossary_generator_testcase extends advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course();
         $glossary = $this->getDataGenerator()->create_module('glossary', array('course' => $course));
-        /** @var mod_glossary_generator $glossarygenerator */
+        /** @var \mod_glossary\testing\generator $glossarygenerator */
         $glossarygenerator = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
 
         $entry1 = $glossarygenerator->create_content($glossary);

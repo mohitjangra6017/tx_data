@@ -214,7 +214,7 @@ class aggregation_latest_achieved_aggregation_testcase extends advanced_testcase
         $active_achievements = [];
 
         if (!empty($pathways)) {
-            /** @var totara_competency_generator $competency_generator */
+            /** @var \totara_competency\testing\generator $competency_generator */
             $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
             /** @var scale $scale */

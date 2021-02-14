@@ -30,23 +30,11 @@ use container_workspace\workspace;
  *
  */
 class behat_container_workspace extends behat_base {
-
     /**
-     * @var totara_engage_generator
+     * @return \totara_engage\testing\generator
      */
-    protected static $engage_generator = null;
-
-    /**
-     * @return totara_engage_generator
-     */
-    protected function get_engage_data_generator(): totara_engage_generator {
-        global $CFG;
-        if (self::$engage_generator === null) {
-            require_once($CFG->libdir.'/testing/generator/lib.php');
-            require_once($CFG->dirroot.'/totara/engage/tests/generator/lib.php');
-            self::$engage_generator = new totara_engage_generator(testing_util::get_data_generator());
-        }
-        return self::$engage_generator;
+    protected function get_engage_data_generator(): \totara_engage\testing\generator {
+        return \totara_engage\testing\generator::instance();
     }
 
     /**

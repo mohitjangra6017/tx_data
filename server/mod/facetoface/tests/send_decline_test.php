@@ -49,7 +49,7 @@ class mod_facetoface_send_decline_testcase extends advanced_testcase {
 			'createsections' => true
 		]);
 
-		/** @var mod_facetoface_generator $generator*/
+		/** @var \mod_facetoface\testing\generator $generator*/
 		$generator = $this->getDataGenerator()->get_plugin_generator("mod_facetoface");
 		$facetoface = $generator->create_instance((object)[
 			'course' => $course->id,
@@ -89,7 +89,7 @@ class mod_facetoface_send_decline_testcase extends advanced_testcase {
      * @param stdClass $session
      */
 	private function create_signup(stdClass $user, stdClass $session): void {
-	    /** @var mod_facetoface_generator $generator */
+	    /** @var \mod_facetoface\testing\generator $generator */
 	    $generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 	    $refClass = new ReflectionClass($generator);
 

@@ -35,7 +35,7 @@ class container_workspace_webapi_member_request_loader_testcase extends advanced
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 
@@ -71,7 +71,7 @@ class container_workspace_webapi_member_request_loader_testcase extends advanced
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 
@@ -115,7 +115,7 @@ class container_workspace_webapi_member_request_loader_testcase extends advanced
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 
@@ -168,7 +168,7 @@ class container_workspace_webapi_member_request_loader_testcase extends advanced
         $user_one = $generator->create_user();
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 

@@ -28,7 +28,6 @@ global $CFG;
 
 require_once($CFG->dirroot . '/totara/reportbuilder/tests/reportcache_advanced_testcase.php');
 require_once($CFG->dirroot . '/totara/cohort/lib.php');
-require_once($CFG->libdir . '/testing/generator/lib.php');
 
 /**
  * Test position custom fields within dynamic audience.
@@ -68,10 +67,10 @@ class totara_cohort_position_custom_fields_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
 
         // Set totara_hierarchy generator.
-        $this->hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
+        $this->hierarchy_generator = \totara_hierarchy\testing\generator::instance();
 
         // Create position framework.
-        $name = totara_hierarchy_generator::DEFAULT_NAME_FRAMEWORK_POSITION;
+        $name = $this->hierarchy_generator::DEFAULT_NAME_FRAMEWORK_POSITION;
         $name .= ' ' . totara_generator_util::get_next_record_number('pos_framework', 'fullname', $name);
         $data = array ('fullname' => $name);
         $this->posfw = $this->hierarchy_generator->create_framework('position', $data);
@@ -107,7 +106,7 @@ class totara_cohort_position_custom_fields_testcase extends advanced_testcase {
         $this->assertSame(self::TEST_USER_COUNT_MEMBERS + 2, $DB->count_records('user'));
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $generator->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
 
         // Creating an empty dynamic cohort.
         $this->cohort = $this->cohort_generator->create_cohort(array('name' => 'Audience 1', 'cohorttype' => cohort::TYPE_DYNAMIC));

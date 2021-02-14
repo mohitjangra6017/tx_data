@@ -32,7 +32,7 @@ class totara_customfield_lib_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/totara/customfield/lib.php');
         $this->resetAfterTest();
 
-        /** @var totara_customfield_generator $cfgenerator */
+        /** @var \totara_customfield\testing\generator $cfgenerator */
         $cfgenerator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
         $textids = $cfgenerator->create_text('course', array('text1', 'text2'));
 

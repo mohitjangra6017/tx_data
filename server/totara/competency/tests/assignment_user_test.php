@@ -225,10 +225,9 @@ class totara_competency_assignment_user_testcase extends advanced_testcase {
     /**
      * Get hierarchy specific generator
      *
-     * @return totara_competency_generator|component_generator_base
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        return \totara_competency\testing\generator::instance();
     }
-
 }

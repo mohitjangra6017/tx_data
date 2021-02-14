@@ -41,7 +41,7 @@ defined('MOODLE_INTERNAL') || die();
 class totara_reportbuilder_external_testcase extends \advanced_testcase {
 
     /**
-     * @var \totara_reportbuilder_generator
+     * @var \totara_reportbuilder\testing\generator
      */
     public $rb_generator;
 
@@ -61,7 +61,7 @@ class totara_reportbuilder_external_testcase extends \advanced_testcase {
 
         $data = new \stdClass();
 
-        /** @var \totara_reportbuilder_generator $rbgen */
+        /** @var \totara_reportbuilder\testing\generator $rbgen */
         $rbgen = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
 
         // Create 2 users.

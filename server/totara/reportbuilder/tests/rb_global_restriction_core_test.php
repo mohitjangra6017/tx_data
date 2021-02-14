@@ -50,7 +50,7 @@ class totara_reportbuilder_rb_global_restriction_core_testcase extends advanced_
     protected $restr = null;
 
     /**
-     * @var totara_reportbuilder_generator
+     * @var \totara_reportbuilder\testing\generator
      */
     protected $reportgen = null;
 
@@ -76,7 +76,7 @@ class totara_reportbuilder_rb_global_restriction_core_testcase extends advanced_
         $this->uservis = $this->getDataGenerator()->create_user();
         $this->usernonvis = $this->getDataGenerator()->create_user();
 
-        /** @var totara_reportbuilder_generator $reportgen */
+        /** @var \totara_reportbuilder\testing\generator $reportgen */
         $reportgen = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
 
         $this->restr = $reportgen->create_global_restriction(array('active' => 1));

@@ -44,7 +44,7 @@ class engage_survey_webapi_create_answer_question_testcase extends advanced_test
         $user_evil = $gen->create_user();
         $this->setUser($user);
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
         $survey = $surveygen->create_survey('Why is yellow?', [], answer_type::MULTI_CHOICE, ['access' => access::PRIVATE]);
 
@@ -85,7 +85,7 @@ class engage_survey_webapi_create_answer_question_testcase extends advanced_test
         $user = $gen->create_user();
         $this->setUser($user);
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
         $survey = $surveygen->create_survey('Why is yellow?', [], answer_type::MULTI_CHOICE, ['access' => access::PUBLIC]);
 
@@ -132,7 +132,7 @@ class engage_survey_webapi_create_answer_question_testcase extends advanced_test
         $user = $gen->create_user();
         $this->setUser($user);
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
         $survey = $surveygen->create_survey('Why is yellow?', [], answer_type::MULTI_CHOICE, ['access' => access::PUBLIC]);
 

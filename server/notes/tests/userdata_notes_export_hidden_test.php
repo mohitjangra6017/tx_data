@@ -50,7 +50,7 @@ class core_notes_userdata_notes_export_hidden_testcase extends advanced_testcase
         $data->courses[] = $this->getDataGenerator()->create_course();
         $data->courses[] = $this->getDataGenerator()->create_course();
 
-        /** @var core_notes_generator $notegenerator */
+        /** @var \core_notes\testing\generator $notegenerator */
         $notegenerator = $this->getDataGenerator()->get_plugin_generator('core_notes');
 
         $data->notes[] = $notegenerator->create_instance(['userid' => $activeuser->id, 'courseid' => $data->courses[0]->id]);
@@ -90,7 +90,7 @@ class core_notes_userdata_notes_export_hidden_testcase extends advanced_testcase
         $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
-        /** @var core_notes_generator $notegenerator */
+        /** @var \core_notes\testing\generator $notegenerator */
         $notegenerator = $this->getDataGenerator()->get_plugin_generator('core_notes');
         $course = $this->getDataGenerator()->create_course();
         $startingcount = notes_export_hidden::execute_count($data->activeuser, $systemcontext);
@@ -292,7 +292,7 @@ class core_notes_userdata_notes_export_hidden_testcase extends advanced_testcase
 
         $data->usertarget = new target_user($data->user);
 
-        /** @var core_notes_generator $notegenerator */
+        /** @var \core_notes\testing\generator $notegenerator */
         $notegenerator = $this->getDataGenerator()->get_plugin_generator('core_notes');
 
         $data->notes[] = $notegenerator->create_instance([

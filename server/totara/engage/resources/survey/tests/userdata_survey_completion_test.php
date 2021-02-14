@@ -38,7 +38,7 @@ class engage_survey_userdata_survey_completion_testcase extends advanced_testcas
 
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
         $survey1 = $surveygen->create_survey();
         $survey2 = $surveygen->create_survey();
@@ -89,7 +89,7 @@ class engage_survey_userdata_survey_completion_testcase extends advanced_testcas
 
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
         $survey1 = $surveygen->create_survey();
         $survey2 = $surveygen->create_survey();

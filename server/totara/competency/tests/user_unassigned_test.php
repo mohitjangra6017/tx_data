@@ -496,7 +496,7 @@ class totara_competency_user_unassigned_testcase extends advanced_testcase {
     /**
      * Totara competency generator shortcut
      *
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
         return $this->getDataGenerator()->get_plugin_generator('totara_competency');

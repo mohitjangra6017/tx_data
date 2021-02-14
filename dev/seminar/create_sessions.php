@@ -28,7 +28,6 @@ define('CLI_SCRIPT', true);
 
 require(__DIR__.'/../../server/config.php');
 require_once($CFG->libdir.'/clilib.php');
-require_once($CFG->libdir.'/phpunit/classes/util.php');
 
 list($options, $unrecognized) = cli_get_params(
     [
@@ -62,7 +61,7 @@ Options:
     exit(0);
 }
 
-$gen = phpunit_util::get_data_generator();
+$gen = \core\testing\generator::instance();
 $users = ['f2flearner' => ['Learner', 'student'], 'f2ftrainer' => ['Trainer', 'teacher']];
 
 if (empty($options['facilitators'])) {
@@ -90,8 +89,7 @@ foreach ($users as $username => [$lastname, ]) {
     $userids[$username] = $userid;
 }
 
-/** @var mod_facetoface_generator */
-$f2fgen = $gen->get_plugin_generator('mod_facetoface');
+$f2fgen = \mod_facetoface\testing\generator::instance();
 
 $roomids = [];
 if (empty($options['rooms'])) {

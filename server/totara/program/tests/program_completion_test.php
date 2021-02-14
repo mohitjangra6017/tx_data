@@ -64,6 +64,8 @@ class totara_program_program_completion_testcase extends reportcache_advanced_te
         // Turn off certifications. This is to test that it doesn't interfere with program completion.
         set_config('enablecertifications', advanced_feature::DISABLED);
 
+        $program_generator = \totara_program\testing\generator::instance();
+
         // Create users.
         for ($i = 1; $i <= $this->numtestusers; $i++) {
             $this->users[$i] = $this->getDataGenerator()->create_user();
@@ -71,12 +73,12 @@ class totara_program_program_completion_testcase extends reportcache_advanced_te
 
         // Create certifications, mostly so that we don't end up with coincidental success due to matching ids.
         for ($i = 1; $i <= $this->numtestcerts; $i++) {
-            $this->certifications[$i] = $this->getDataGenerator()->create_certification();
+            $this->certifications[$i] = $program_generator->create_certification();
         }
 
         // Create programs.
         for ($i = 1; $i <= $this->numtestprogs; $i++) {
-            $this->programs[$i] = $this->getDataGenerator()->create_program();
+            $this->programs[$i] = $program_generator->create_program();
             $coursesetdata = array(
                 array(
                     'type' => CONTENTTYPE_MULTICOURSE,
@@ -87,13 +89,13 @@ class totara_program_program_completion_testcase extends reportcache_advanced_te
                     'courses' => array($this->getDataGenerator()->create_course()),
                 ),
             );
-            $this->getDataGenerator()->create_coursesets_in_program($this->programs[$i], $coursesetdata);
+            $program_generator->legacy_add_coursesets_to_program($this->programs[$i], $coursesetdata);
         }
 
         // Assign users to the programs as individuals.
         foreach ($this->users as $user) {
             foreach ($this->programs as $prog) {
-                $this->getDataGenerator()->assign_to_program($prog->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+                $program_generator->assign_to_program($prog->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
             }
         }
     }
@@ -406,7 +408,7 @@ class totara_program_program_completion_testcase extends reportcache_advanced_te
 
         $now = time();
 
-        /* @var totara_program_generator $generator */
+        /* @var \totara_program\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $prog = $generator->create_program();
 

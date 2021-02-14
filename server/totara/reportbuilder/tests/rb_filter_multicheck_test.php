@@ -443,7 +443,7 @@ class totara_reportbuilder_rb_filter_multicheck_testcase extends advanced_testca
     public function test_multicheck_for_filters_with_concat_false() {
         global $DB;
 
-        /** @var \mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         // Create a couple of courses

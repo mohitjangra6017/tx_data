@@ -29,7 +29,7 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_reportbuilder_generator $reportgenerator */
+        /** @var \totara_reportbuilder\testing\generator $reportgenerator */
         $reportgenerator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
 
         $record = new stdClass();
@@ -81,9 +81,9 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var totara_reportbuilder_generator $reportgenerator */
+        /** @var \totara_reportbuilder\testing\generator $reportgenerator */
         $reportgenerator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $cohort = $this->getDataGenerator()->create_cohort();
@@ -141,9 +141,9 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var totara_reportbuilder_generator $reportgenerator */
+        /** @var \totara_reportbuilder\testing\generator $reportgenerator */
         $reportgenerator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $cohort = $this->getDataGenerator()->create_cohort();
@@ -206,7 +206,7 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        /** @var totara_reportbuilder_generator $reportgenerator */
+        /** @var \totara_reportbuilder\testing\generator $reportgenerator */
         $reportgenerator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
 
         $user = $generator->create_user();
@@ -264,7 +264,7 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        /** @var totara_reportbuilder_generator $reportgenerator */
+        /** @var \totara_reportbuilder\testing\generator $reportgenerator */
         $reportgenerator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
 
         $user = $generator->create_user();
@@ -331,7 +331,7 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        /** @var totara_reportbuilder_generator $reportgenerator */
+        /** @var \totara_reportbuilder\testing\generator $reportgenerator */
         $reportgenerator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
 
         $report = (object)['fullname' => 'Users', 'shortname' => 'user', 'source' => 'user', 'hidden'=>1, 'embedded' => 1];
@@ -361,7 +361,7 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        /** @var totara_reportbuilder_generator $reportgenerator */
+        /** @var \totara_reportbuilder\testing\generator $reportgenerator */
         $reportgenerator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
 
         $report = (object)['fullname' => 'Users', 'shortname' => 'user', 'source' => 'user', 'hidden'=>1, 'embedded' => 1];
@@ -400,7 +400,7 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        /** @var totara_reportbuilder_generator $reportgenerator */
+        /** @var \totara_reportbuilder\testing\generator $reportgenerator */
         $reportgenerator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
 
         $report = (object)['fullname' => 'Users', 'shortname' => 'user', 'source' => 'user', 'hidden'=>1, 'embedded' => 1];

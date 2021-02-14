@@ -48,7 +48,7 @@ class pathway_criteria_group_external_testcase extends \advanced_testcase {
             public $courses = [];
         };
 
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $data->competencies['Comp A'] = $generator->create_competency('Comp A');
         $data->competencies['Comp B'] = $generator->create_competency('Comp B', null, ['parentid' => $data->competencies['Comp A']->id]);
@@ -183,7 +183,7 @@ class pathway_criteria_group_external_testcase extends \advanced_testcase {
 
         // Adding a manual pathway to CompB (the child) to ensure that users can achieve proficiency
 
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $generator->create_manual($comp_b->id, [manager::class]);
 

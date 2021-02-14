@@ -58,7 +58,7 @@ class container_workspace_webapi_workspace_category_interactor_testcase extends 
     }
 
     private function create_workspace(): workspace {
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $this->getDataGenerator()->get_plugin_generator('container_workspace');
         return $workspace_generator->create_workspace();
     }

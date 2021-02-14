@@ -34,10 +34,10 @@ use mod_perform\models\activity\track;
 class mod_perform_track_user_assignment_repository_testcase extends advanced_testcase {
 
     /**
-     * @return mod_perform_generator|component_generator_base
+     * @return \mod_perform\testing\generator
      */
-    protected function generator(): mod_perform_generator {
-        return $this->getDataGenerator()->get_plugin_generator('mod_perform');
+    protected function generator() {
+        return \mod_perform\testing\generator::instance();
     }
 
     protected function setUp(): void {
@@ -47,7 +47,7 @@ class mod_perform_track_user_assignment_repository_testcase extends advanced_tes
 
     public function test_filter_by_possibly_has_subject_instances_to_create(): void {
         $generator = $this->generator();
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_sections_per_activity(0)
             ->set_number_of_users_per_user_group_type(4);
         /** @var activity_model $activity */

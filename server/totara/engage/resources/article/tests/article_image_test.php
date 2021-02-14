@@ -127,7 +127,7 @@ class engage_article_image_testcase extends advanced_testcase {
         global $CFG;
 
         $generator = $this->getDataGenerator();
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $user_one = $generator->create_user();
         $this->setUser($user_one);
@@ -220,7 +220,7 @@ class engage_article_image_testcase extends advanced_testcase {
     public function test_pluginfile_visibility_unpublish() {
 
         $gen = $this->getDataGenerator();
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $gen->get_plugin_generator('engage_article');
         $user1 = $gen->create_user();
         $this->setAdminUser();
@@ -291,7 +291,7 @@ class engage_article_image_testcase extends advanced_testcase {
     public function test_pluginfile_visibility_publish() {
 
         $gen = $this->getDataGenerator();
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $gen->get_plugin_generator('engage_article');
         $user1 = $gen->create_user();
         $this->setAdminUser();

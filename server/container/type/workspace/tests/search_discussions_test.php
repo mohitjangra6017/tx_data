@@ -37,7 +37,7 @@ class container_workspace_search_discussions_testcase extends advanced_testcase 
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -46,7 +46,7 @@ class container_workspace_search_discussions_testcase extends advanced_testcase 
         $discussion = $workspace_generator->create_discussion($workspace_id);
 
         // Add comments to the discussion.
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment_generator->create_comment(
             $discussion->get_id(),
@@ -104,14 +104,14 @@ class container_workspace_search_discussions_testcase extends advanced_testcase 
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
         $discussion = $workspace_generator->create_discussion($workspace->get_id());
 
         // Add multiple comments with the same content to the discussion.
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
 
         for ($i = 0; $i < 5; $i++) {

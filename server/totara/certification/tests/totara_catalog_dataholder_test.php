@@ -48,7 +48,7 @@ class totara_certification_totara_catalog_dataholder_testcase extends \advanced_
             'idnumber' => 'Test IDNumber 101'
         );
         
-        $program_generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
+        $program_generator = \totara_program\testing\generator::instance();
         $program_generator->create_certification($cert);
     }
 

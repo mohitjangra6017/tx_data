@@ -67,7 +67,7 @@ class mod_lti_archive_testcase extends advanced_testcase {
         self::assertEquals(1, $DB->count_records('lti'));
 
         // Create completion criteria based on the LTI activity.
-        /** @var core_completion_generator $comp_generator */
+        /** @var \core_completion\testing\generator $comp_generator */
         $comp_generator = self::getDataGenerator()->get_plugin_generator('core_completion');
         $comp_generator->set_completion_criteria($course, [
             COMPLETION_CRITERIA_TYPE_ACTIVITY => [

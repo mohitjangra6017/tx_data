@@ -122,7 +122,7 @@ class totara_reportbuilder_rb_global_restriction_set_testcase extends advanced_t
 
         $CFG->enableglobalrestrictions = 1;
 
-        /** @var totara_reportbuilder_generator $reportgen */
+        /** @var \totara_reportbuilder\testing\generator $reportgen */
         $reportgen = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
 
         $this->user = $this->getDataGenerator()->create_user();

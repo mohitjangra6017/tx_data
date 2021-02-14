@@ -62,7 +62,7 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
      */
     public function test_from_version() {
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -109,7 +109,7 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
      */
     public function test_formatted_content() {
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -432,7 +432,7 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
      */
     public function test_get_statements() {
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -474,7 +474,7 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -521,7 +521,7 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -576,7 +576,7 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
         $this->expectExceptionMessage('Localised policy can\'t be deleted while user_consent entries exist');
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -617,7 +617,7 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -696,7 +696,7 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
     public function test_get_titles() {
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [

@@ -50,7 +50,7 @@ class totara_cohort_rendering_audience_testcase extends advanced_testcase {
      * @return stdClass[]
      */
     private function create_programs($max=2) {
-        /** @var totara_program_generator $generator */
+        /** @var \totara_program\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
 
         $data = [];
@@ -66,7 +66,7 @@ class totara_cohort_rendering_audience_testcase extends advanced_testcase {
      * @return stdClass[]
      */
     private function create_positions($max=2) {
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_pos_frame([]);
         $positions = [];
@@ -86,8 +86,7 @@ class totara_cohort_rendering_audience_testcase extends advanced_testcase {
      * @return stdClass
      */
     private function create_cohort_and_rules(array $listofids, $ruletype, $rulename, array $ruleparams, $paramname) {
-        /** @var totara_cohort_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $generator = \totara_cohort\testing\generator::instance();
 
         $cohort = $generator->create_cohort(['cohortype' => Cohort::TYPE_DYNAMIC]);
         $rulesetid = cohort_rule_create_ruleset($cohort->activecollectionid);

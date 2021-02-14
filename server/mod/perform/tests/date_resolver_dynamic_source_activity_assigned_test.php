@@ -61,8 +61,8 @@ class mod_perform_date_resolver_dynamic_source_activity_assigned_testcase extend
     ): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container(['create_track' => true]);
 
         /** @var track $track */
@@ -111,8 +111,8 @@ class mod_perform_date_resolver_dynamic_source_activity_assigned_testcase extend
     ): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container(['create_track' => true]);
 
         /** @var track $track */
@@ -240,8 +240,8 @@ class mod_perform_date_resolver_dynamic_source_activity_assigned_testcase extend
     ): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container(['create_track' => true]);
 
         /** @var track $track */

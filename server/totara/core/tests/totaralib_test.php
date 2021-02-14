@@ -139,7 +139,7 @@ class totara_core_totaralib_testcase extends advanced_testcase {
 
         $completion = new completion_info($course);
 
-        /** @var mod_quiz_generator $quizgenerator */
+        /** @var \mod_quiz\testing\generator $quizgenerator */
         $quizgenerator = $generator->get_plugin_generator('mod_quiz');
         $quizdata = new stdClass();
         $quizdata->course = $course;
@@ -214,7 +214,7 @@ class totara_core_totaralib_testcase extends advanced_testcase {
 
         $completion = new completion_info($course);
 
-        /** @var mod_quiz_generator $quizgenerator */
+        /** @var \mod_quiz\testing\generator $quizgenerator */
         $quizgenerator = $generator->get_plugin_generator('mod_quiz');
         $quizdata = new stdClass();
         $quizdata->course = $course;
@@ -293,7 +293,7 @@ class totara_core_totaralib_testcase extends advanced_testcase {
 
         $completion = new completion_info($course);
 
-        /** @var mod_quiz_generator $quizgenerator */
+        /** @var \mod_quiz\testing\generator $quizgenerator */
         $quizgenerator = $generator->get_plugin_generator('mod_quiz');
         $quizdata = new stdClass();
         $quizdata->course = $course;
@@ -376,7 +376,7 @@ class totara_core_totaralib_testcase extends advanced_testcase {
 
         $completion = new completion_info($course);
 
-        /** @var mod_quiz_generator $quizgenerator */
+        /** @var \mod_quiz\testing\generator $quizgenerator */
         $quizgenerator = $generator->get_plugin_generator('mod_quiz');
         $quizdata = new stdClass();
         $quizdata->course = $course;

@@ -130,7 +130,7 @@ class engage_article_update_testcase extends advanced_testcase {
      */
     public function test_update_article_via_graphql(): void {
         $this->setAdminUser();
-        /** @var totara_topic_generator $topicgen */
+        /** @var \totara_topic\testing\generator $topicgen */
         $topicgen = $this->getDataGenerator()->get_plugin_generator('totara_topic');
         $topics[] = $topicgen->create_topic('topic1')->get_id();
         $topics[] = $topicgen->create_topic('topic2')->get_id();

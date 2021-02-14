@@ -36,7 +36,7 @@ class container_course_report_builder_dp_course_testcase extends advanced_testca
         $course_one = $generator->create_course();
         $generator->enrol_user($user_one->id, $course_one->id);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setUser($user_one);
         $workspace = $workspace_generator->create_workspace();

@@ -60,7 +60,7 @@ class totara_tui_local_controllers_theme_settings_testcase extends advanced_test
 
         $controller = new theme_settings();
         $_POST['theme_name'] = 'ventura';
-        $_POST['tenant_id'] = $this->getDataGenerator()->get_plugin_generator('totara_tenant')->create_tenant()->id;
+        $_POST['tenant_id'] = \totara_tenant\testing\generator::instance()->create_tenant()->id;
 
         ob_start();
         $controller->process();
@@ -118,15 +118,15 @@ class totara_tui_local_controllers_theme_settings_testcase extends advanced_test
     }
 
     public function test_user_cant_see_other_tenant_capability() {
-        /** @var totara_tenant_generator $tenant_generator */
-        $tenant_generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenant_generator */
+        $tenant_generator = \totara_tenant\testing\generator::instance();
         $tenant_generator->enable_tenants();
 
         $roleid = $this->getDataGenerator()->create_role();
         assign_capability('totara/tui:themesettings', CAP_ALLOW, $roleid, \context_system::instance());
 
-        $tenant1 = $this->getDataGenerator()->get_plugin_generator('totara_tenant')->create_tenant();
-        $tenant2 = $this->getDataGenerator()->get_plugin_generator('totara_tenant')->create_tenant();
+        $tenant1 = \totara_tenant\testing\generator::instance()->create_tenant();
+        $tenant2 = \totara_tenant\testing\generator::instance()->create_tenant();
         $user1 = $this->getDataGenerator()->create_user(
             ['tenantid' => $tenant1->id, 'tenantdomainmanager' => $tenant1->idnumber]
         );

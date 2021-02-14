@@ -50,7 +50,7 @@ class engage_survey_multi_tenancy_contribution_loader_of_tenant_participant_test
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -84,12 +84,12 @@ class engage_survey_multi_tenancy_contribution_loader_of_tenant_participant_test
     }
 
     /**
-     * @return engage_survey_generator
+     * @return \engage_survey\testing\generator
      */
-    private function get_survey_generator(): engage_survey_generator {
+    private function get_survey_generator(): \engage_survey\testing\generator {
         $generator = self::getDataGenerator();
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         return $survey_generator;
     }

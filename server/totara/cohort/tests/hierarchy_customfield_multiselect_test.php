@@ -257,7 +257,7 @@ class totara_cohort_hierarchy_customfield_multiselect_testcase extends advanced_
 
         // Set up the expected data.
         list($cf_options, $pcf_ms, $ocf_ms, $users) = $this->setup_hierarchies();
-        $cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $cohort_generator = \totara_cohort\testing\generator::instance();
 
         // Create a rule to test cf_option 0.
         $c1 = $cohort_generator->create_cohort(array('cohorttype' => cohort::TYPE_DYNAMIC));

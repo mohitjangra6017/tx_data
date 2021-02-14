@@ -36,9 +36,9 @@ class ml_recommender_get_recommended_playlists_testcase extends advanced_testcas
      */
     public function test_recommended_playlists_graphql() {
         $generator = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
 
         $this->setAdminUser();
@@ -47,7 +47,7 @@ class ml_recommender_get_recommended_playlists_testcase extends advanced_testcas
         $user = $generator->create_user();
         $this->setUser($user);
 
-        /** @var ml_recommender_generator $recommendations_generator */
+        /** @var \ml_recommender\testing\generator $recommendations_generator */
         $recommendations_generator = $generator->get_plugin_generator('ml_recommender');
 
         // This is our target playlist. We're going to ask for recommendations related to this playlist
@@ -145,13 +145,13 @@ class ml_recommender_get_recommended_playlists_testcase extends advanced_testcas
      */
     public function test_recommended_playlists_graphql_tenancy() {
         $generator = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
-        /** @var ml_recommender_generator $recommendations_generator */
+        /** @var \ml_recommender\testing\generator $recommendations_generator */
         $recommendations_generator = $generator->get_plugin_generator('ml_recommender');
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
 
         $tenant_generator->enable_tenants();

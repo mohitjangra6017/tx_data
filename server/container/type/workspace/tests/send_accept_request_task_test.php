@@ -80,7 +80,7 @@ class container_workspace_send_accept_request_task_testcase extends advanced_tes
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 
@@ -105,7 +105,7 @@ class container_workspace_send_accept_request_task_testcase extends advanced_tes
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 
@@ -175,7 +175,7 @@ class container_workspace_send_accept_request_task_testcase extends advanced_tes
 
         $user_one = $generator->create_user(['lang' => $fake_language]);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 

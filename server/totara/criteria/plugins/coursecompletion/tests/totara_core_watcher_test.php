@@ -39,7 +39,7 @@ class criteria_coursecompletion_totara_core_watcher_testcase extends advanced_te
             $courses[$course_idx] = $this->getDataGenerator()->create_course(['enablecompletion' => true]);
         }
 
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $criteria = [

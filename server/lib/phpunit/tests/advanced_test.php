@@ -284,7 +284,7 @@ class core_phpunit_advanced_testcase extends advanced_testcase {
 
     public function test_getDataGenerator() {
         $generator = $this->getDataGenerator();
-        $this->assertInstanceOf('testing_data_generator', $generator);
+        $this->assertInstanceOf('core\testing\generator', $generator);
     }
 
     public function test_database_mock1() {

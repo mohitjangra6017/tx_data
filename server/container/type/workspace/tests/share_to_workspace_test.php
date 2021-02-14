@@ -43,7 +43,7 @@ class container_workspace_share_to_workspace_testcase extends advanced_testcase 
         $this->engage_capabilize($user_one);
         $this->setUser($user_one);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $restricted_article = $article_generator->create_article(['access' => access::RESTRICTED]);
         $user_three_recipient = new user($user_three->id);
@@ -56,7 +56,7 @@ class container_workspace_share_to_workspace_testcase extends advanced_testcase 
 
         // Create a workspace.
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 
@@ -87,7 +87,7 @@ class container_workspace_share_to_workspace_testcase extends advanced_testcase 
         $this->setUser($user_one);
 
         // Create survey and exclusively share to user_three only.
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $restricted_survey = $survey_generator->create_restricted_survey();
 
@@ -103,7 +103,7 @@ class container_workspace_share_to_workspace_testcase extends advanced_testcase 
 
         // Create workspace and add user two to the workspace.
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_hidden_workspace();
 
@@ -129,7 +129,7 @@ class container_workspace_share_to_workspace_testcase extends advanced_testcase 
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $restricted_playlist = $playlist_generator->create_playlist(['access' => access::RESTRICTED]);
 
@@ -138,7 +138,7 @@ class container_workspace_share_to_workspace_testcase extends advanced_testcase 
         $this->assertFalse(access_manager::can_access($restricted_playlist, $user_three->id));
 
         // Share the playlist to the workspace.
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 

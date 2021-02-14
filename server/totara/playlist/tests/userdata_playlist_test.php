@@ -35,7 +35,7 @@ class totara_playlist_userdata_playlist_testcase extends advanced_testcase {
         $user_one = $gen->create_user();
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         for ($i = 0; $i < 3; $i++) {
@@ -71,13 +71,13 @@ class totara_playlist_userdata_playlist_testcase extends advanced_testcase {
         $user_one = $gen->create_user();
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         $playlist = $playlistgen->create_playlist();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen  = $gen->get_plugin_generator('engage_survey');
 
         // Three resources created

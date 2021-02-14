@@ -82,8 +82,8 @@ class mod_perform_webapi_resolver_query_reportable_element_identifiers_testcase 
     public function test_failed_ajax_query(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $element = $perform_generator->create_element();
 
         $args = [];
@@ -100,8 +100,8 @@ class mod_perform_webapi_resolver_query_reportable_element_identifiers_testcase 
     }
 
     private function create_test_data(): stdClass {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $data = new stdClass();
         $data->identifier1 = $perform_generator->create_element_identifier('test_identifier_1');

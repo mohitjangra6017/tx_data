@@ -65,10 +65,10 @@ require_once($CFG->dirroot . '/lib/gradelib.php');
 
 class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
 
-    /** @var mod_facetoface_generator */
+    /** @var \mod_facetoface\testing\generator */
     protected $facetoface_generator;
 
-    /** @var totara_customfield_generator */
+    /** @var \totara_customfield\testing\generator */
     protected $customfield_generator;
 
     protected function tearDown(): void {
@@ -1332,7 +1332,7 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
     function test_facetoface_delete_signups_for_session() {
         global $DB;
 
-        /** @var \mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $course = $this->getDataGenerator()->create_course();
@@ -1410,7 +1410,7 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
         $this->getDataGenerator()->enrol_user($student1->id, $course->id, $studentrole->id);
         $this->getDataGenerator()->enrol_user($student2->id, $course->id, $studentrole->id);
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $facetoface = $facetofacegenerator->create_instance(['course' => $course->id]);
@@ -2690,7 +2690,7 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course(array('enablecompletion' => 1));
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $generator->get_plugin_generator('mod_facetoface');
 
         $f2fdata = new stdClass();
@@ -3151,7 +3151,7 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
         $this->getDataGenerator()->enrol_user($teacher1->id, $course1->id, $teacherrole->id);
         $this->getDataGenerator()->enrol_user($student1->id, $course1->id, $studentrole->id);
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $facetofacedata = array(
             'name' => 'facetoface1',
@@ -3778,7 +3778,7 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course(array('enablecompletion' => 1));
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $generator->get_plugin_generator('mod_facetoface');
 
         $f2fdata = new stdClass();
@@ -3860,7 +3860,7 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course(array('enablecompletion' => 1));
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $generator->get_plugin_generator('mod_facetoface');
 
         $f2fdata = new stdClass();
@@ -3956,7 +3956,7 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course(array('enablecompletion' => 1));
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $generator->get_plugin_generator('mod_facetoface');
 
         $f2fdata = new stdClass();
@@ -4844,7 +4844,7 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
         $gen->enrol_user($students[0]->id, $course->id, $studentrole->id);
         $gen->enrol_user($students[1]->id, $course->id, $studentrole->id);
 
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
         $f2f = $f2fgen->create_instance(['name' => 'my seminar', 'course' => $course->id, 'attendancetime' => 2]);
         $f2fsid = $f2fgen->add_session([

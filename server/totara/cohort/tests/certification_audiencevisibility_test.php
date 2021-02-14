@@ -63,7 +63,7 @@ class totara_cohort_certification_audiencevisibility_testcase extends advanced_t
     private $audience2 = null;
     private $category = null;
 
-    /** @var totara_program_generator $program_generator */
+    /** @var \totara_program\testing\generator $program_generator */
     private $program_generator = null;
 
     protected function tearDown(): void {

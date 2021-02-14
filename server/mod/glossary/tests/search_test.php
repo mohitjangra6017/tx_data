@@ -27,7 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->dirroot . '/search/tests/fixtures/testable_core_search.php');
-require_once($CFG->dirroot . '/mod/glossary/tests/generator/lib.php');
 
 /**
  * Provides the unit tests for glossary search.

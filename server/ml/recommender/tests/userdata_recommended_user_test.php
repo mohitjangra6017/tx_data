@@ -35,19 +35,19 @@ class ml_recommender_userdata_recommended_user_testcase extends advanced_testcas
 
         $gen = $this->getDataGenerator();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $gen->get_plugin_generator('totara_playlist');
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $gen->get_plugin_generator('container_workspace');
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $gen->get_plugin_generator('engage_article');
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $gen->get_plugin_generator('totara_topic');
 
-        /** @var ml_recommender_generator $recommendations_generator */
+        /** @var \ml_recommender\testing\generator $recommendations_generator */
         $recommendations_generator = $gen->get_plugin_generator('ml_recommender');
 
         $creator = $gen->create_user();

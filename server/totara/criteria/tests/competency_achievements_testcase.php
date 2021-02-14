@@ -72,7 +72,7 @@ abstract class totara_criteria_competency_achievements_testcase extends advanced
     protected $data;
 
     /**
-     * @var totara_competency_generator
+     * @var \totara_competency\testing\generator
      */
     protected $competency_generator;
 
@@ -259,7 +259,7 @@ abstract class totara_criteria_competency_achievements_testcase extends advanced
     /**
      * Get criteria data generator.
      *
-     * @return totara_criteria_generator
+     * @return \totara_criteria\testing\generator
      */
     protected function generator() {
         return $this->getDataGenerator()->get_plugin_generator('totara_criteria');

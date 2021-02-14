@@ -32,7 +32,7 @@ class block_totara_featured_links_tile_default_tile_testcase extends test_helper
 
     /**
      * The block generator instance for the test.
-     * @var block_totara_featured_links_generator $generator
+     * @var \block_totara_featured_links\testing\generator $generator
      */
     protected $blockgenerator;
 

@@ -44,7 +44,7 @@ class core_badges_generator_testcase extends advanced_testcase {
      */
     public function test_generator_instance() {
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
-        self::assertInstanceOf(core_badges_generator::class, $generator);
+        self::assertInstanceOf(\core_badges\testing\generator::class, $generator);
     }
 
     /**
@@ -53,7 +53,7 @@ class core_badges_generator_testcase extends advanced_testcase {
     public function test_create_badge() {
         $this->resetAfterTest();
 
-        /** @var core_badges_generator $generator */
+        /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
         $user = get_admin();
 
@@ -80,7 +80,7 @@ class core_badges_generator_testcase extends advanced_testcase {
     public function test_create_badge_customised() {
         $this->resetAfterTest();
 
-        /** @var core_badges_generator $generator */
+        /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
         $admin = get_admin();
         $user = $this->getDataGenerator()->create_user();
@@ -137,7 +137,7 @@ class core_badges_generator_testcase extends advanced_testcase {
     public function test_create_backpack_connection() {
         $this->resetAfterTest();
 
-        /** @var core_badges_generator $generator */
+        /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
         $admin = get_admin();
 
@@ -158,7 +158,7 @@ class core_badges_generator_testcase extends advanced_testcase {
     public function test_add_manual_badge_criteria() {
         $this->resetAfterTest();
 
-        /** @var core_badges_generator $generator */
+        /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
         $user = get_admin();
 
@@ -191,7 +191,7 @@ class core_badges_generator_testcase extends advanced_testcase {
     public function test_issue_badge_manually() {
         $this->resetAfterTest();
 
-        /** @var core_badges_generator $generator */
+        /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
         $admin = get_admin();
         $user = $this->getDataGenerator()->create_user();
@@ -222,7 +222,7 @@ class core_badges_generator_testcase extends advanced_testcase {
     public function test_issue_badge_without_criteria() {
         $this->resetAfterTest();
 
-        /** @var core_badges_generator $generator */
+        /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
         $admin = get_admin();
         $user = $this->getDataGenerator()->create_user();
@@ -238,7 +238,7 @@ class core_badges_generator_testcase extends advanced_testcase {
     public function test_mock_external_badges_in_cache() {
         $this->resetAfterTest();
 
-        /** @var core_badges_generator $generator */
+        /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
         $user = $this->getDataGenerator()->create_user();
         $cache = \cache::make('core', 'externalbadges');

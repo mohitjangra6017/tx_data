@@ -184,7 +184,7 @@ class totara_plan_webapi_resolver_type_learning_plan_testcase extends advanced_t
         global $CFG;
         require_once($CFG->dirroot . '/totara/plan/component.class.php');
 
-        /** @var totara_plan_generator $plan_generator */
+        /** @var \totara_plan\testing\generator $plan_generator */
         $plan_generator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
 
         $plan = $plan_generator->create_learning_plan($record);

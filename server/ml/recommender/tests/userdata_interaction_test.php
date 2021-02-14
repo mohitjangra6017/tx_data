@@ -38,16 +38,16 @@ class ml_recommender_userdata_interaction_testcase extends advanced_testcase {
         $target_user1 = $gen->create_user();
         $this->setUser($creator);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $gen->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist();
         $playlist1 = $playlist_generator->create_playlist();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $gen->get_plugin_generator('engage_article');
         $article = $article_generator->create_article();
 
-        /** @var ml_recommender_generator $recommendations_generator */
+        /** @var \ml_recommender\testing\generator $recommendations_generator */
         $recommendations_generator = $gen->get_plugin_generator('ml_recommender');
         $recommendations_generator->create_recommender_interaction($target_user1->id, $playlist->get_id(), 'totara_playlist');
         $recommendations_generator->create_recommender_interaction($target_user1->id, $article->get_id(), 'engage_article');

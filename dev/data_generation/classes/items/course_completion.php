@@ -112,7 +112,7 @@ class course_completion extends item {
     /**
      * Get course completion generator
      *
-     * @return \core_completion_generator
+     * @return \core_completion\testing\generator
      */
     public function generator() {
         return App::generator()->get_plugin_generator('core_completion');

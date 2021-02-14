@@ -533,7 +533,7 @@ class mod_forum_backup_activity_task_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
-        /** @var mod_forum_generator $forumgenerator */
+        /** @var \mod_forum\testing\generator $forumgenerator */
         $forumgenerator = $generator->get_plugin_generator('mod_forum');
 
         $user = $generator->create_user();
@@ -696,7 +696,7 @@ class mod_forum_backup_activity_task_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
-        /** @var mod_forum_generator $forumgenerator */
+        /** @var \mod_forum\testing\generator $forumgenerator */
         $forumgenerator = $generator->get_plugin_generator('mod_forum');
 
         $user = $generator->create_user();

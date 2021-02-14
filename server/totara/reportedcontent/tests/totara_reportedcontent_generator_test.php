@@ -39,7 +39,7 @@ class totara_reportedcontent_generator_test extends advanced_testcase {
         global $DB;
 
         $gen = $this->getDataGenerator();
-        /** @var engage_article_generator $article_gen */
+        /** @var \engage_article\testing\generator $article_gen */
         $article_gen = $this->getDataGenerator()->get_plugin_generator('engage_article');
 
         $user1 = $gen->create_user();
@@ -59,7 +59,7 @@ class totara_reportedcontent_generator_test extends advanced_testcase {
 
         $user2 = $gen->create_user();
 
-        /** @var totara_reportedcontent_generator $review_gen */
+        /** @var \totara_reportedcontent\testing\generator $review_gen */
         $review_gen = $gen->get_plugin_generator('totara_reportedcontent');
 
         foreach ($articles as $article) {
@@ -92,7 +92,7 @@ class totara_reportedcontent_generator_test extends advanced_testcase {
         global $DB;
 
         $gen = $this->getDataGenerator();
-        /** @var engage_survey_generator $survey_gen */
+        /** @var \engage_survey\testing\generator $survey_gen */
         $survey_gen = $this->getDataGenerator()->get_plugin_generator('engage_survey');
 
         $user1 = $gen->create_user();
@@ -112,7 +112,7 @@ class totara_reportedcontent_generator_test extends advanced_testcase {
 
         $user2 = $gen->create_user();
 
-        /** @var totara_reportedcontent_generator $review_gen */
+        /** @var \totara_reportedcontent\testing\generator $review_gen */
         $review_gen = $gen->get_plugin_generator('totara_reportedcontent');
 
         foreach ($surveys as $survey) {
@@ -145,7 +145,7 @@ class totara_reportedcontent_generator_test extends advanced_testcase {
         global $DB;
 
         $gen = $this->getDataGenerator();
-        /** @var container_workspace_generator $workspace_gen */
+        /** @var \container_workspace\testing\generator $workspace_gen */
         $workspace_gen = $this->getDataGenerator()->get_plugin_generator('container_workspace');
 
         $user1 = $gen->create_user();
@@ -167,7 +167,7 @@ class totara_reportedcontent_generator_test extends advanced_testcase {
 
         $user2 = $gen->create_user();
 
-        /** @var totara_reportedcontent_generator $review_gen */
+        /** @var \totara_reportedcontent\testing\generator $review_gen */
         $review_gen = $gen->get_plugin_generator('totara_reportedcontent');
 
         foreach ($discussions as $discussion) {
@@ -202,15 +202,15 @@ class totara_reportedcontent_generator_test extends advanced_testcase {
         $gen = $this->getDataGenerator();
 
         // We're going to comment on a workspace discussion, resource and playlist.
-        /** @var engage_article_generator $article_gen */
+        /** @var \engage_article\testing\generator $article_gen */
         $article_gen = $this->getDataGenerator()->get_plugin_generator('engage_article');
-        /** @var container_workspace_generator $workspace_gen */
+        /** @var \container_workspace\testing\generator $workspace_gen */
         $workspace_gen = $this->getDataGenerator()->get_plugin_generator('container_workspace');
-        /** @var totara_playlist_generator $playlist_gen */
+        /** @var \totara_playlist\testing\generator $playlist_gen */
         $playlist_gen = $this->getDataGenerator()->get_plugin_generator('totara_playlist');
-        /** @var totara_comment_generator $comment_gen */
+        /** @var \totara_comment\testing\generator $comment_gen */
         $comment_gen = $this->getDataGenerator()->get_plugin_generator('totara_comment');
-        /** @var totara_reportedcontent_generator $review_gen */
+        /** @var \totara_reportedcontent\testing\generator $review_gen */
         $review_gen = $gen->get_plugin_generator('totara_reportedcontent');
 
         $user1 = $gen->create_user();

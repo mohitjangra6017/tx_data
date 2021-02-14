@@ -71,7 +71,7 @@ class core_webapi_mutation_update_theme_settings_testcase extends advanced_testc
 
         // Disable tenants.
         $generator = self::getDataGenerator();
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->disable_tenants();
 
@@ -192,7 +192,7 @@ class core_webapi_mutation_update_theme_settings_testcase extends advanced_testc
     private static function create_tenants(): array {
         $generator = self::getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

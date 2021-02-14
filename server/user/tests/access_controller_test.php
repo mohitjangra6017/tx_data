@@ -591,7 +591,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
 
         $manager = $this->getDataGenerator()->create_user();
         $appraiser = $this->getDataGenerator()->create_user();
-        /** @var totara_job_generator $jobgen */
+        /** @var \totara_job\testing\generator $jobgen */
         $jobgen = $this->getDataGenerator()->get_plugin_generator('totara_job');
         [$user, $job] = $jobgen->create_user_and_job([], $manager->id);
         $DB->update_record('job_assignment', (object)['id' => $job->id, 'appraiserid' => $appraiser->id]);
@@ -1138,7 +1138,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         global $CFG;
 
         $manager = $this->getDataGenerator()->create_user();
-        /** @var totara_job_generator $jobgen */
+        /** @var \totara_job\testing\generator $jobgen */
         $jobgen = $this->getDataGenerator()->get_plugin_generator('totara_job');
         [$user, $job] = $jobgen->create_user_and_job([], $manager->id);
 
@@ -1171,7 +1171,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
     public function test_job_manager_cannot_see_report_at_course_not_enrolled() {
         $course = $this->getDataGenerator()->create_course();
         $manager = $this->getDataGenerator()->create_user();
-        /** @var totara_job_generator $jobgen */
+        /** @var \totara_job\testing\generator $jobgen */
         $jobgen = $this->getDataGenerator()->get_plugin_generator('totara_job');
         [$user, $job] = $jobgen->create_user_and_job([], $manager->id);
 
@@ -1184,7 +1184,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
     public function test_job_manager_can_see_report_at_course_enrolled_not_shared() {
         $course = $this->getDataGenerator()->create_course();
         $manager = $this->getDataGenerator()->create_user();
-        /** @var totara_job_generator $jobgen */
+        /** @var \totara_job\testing\generator $jobgen */
         $jobgen = $this->getDataGenerator()->get_plugin_generator('totara_job');
         [$user, $job] = $jobgen->create_user_and_job([], $manager->id);
         $this->getDataGenerator()->enrol_user($user->id, $course->id);
@@ -1216,7 +1216,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
     public function test_job_manager_can_see_report_at_course_enrolled_shared() {
         $course = $this->getDataGenerator()->create_course();
         $manager = $this->getDataGenerator()->create_user();
-        /** @var totara_job_generator $jobgen */
+        /** @var \totara_job\testing\generator $jobgen */
         $jobgen = $this->getDataGenerator()->get_plugin_generator('totara_job');
         [$user, $job] = $jobgen->create_user_and_job([], $manager->id);
         $this->getDataGenerator()->enrol_user($user->id, $course->id);
@@ -1248,7 +1248,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
 
     public function test_job_report_can_see_manager_at_site() {
         $manager = $this->getDataGenerator()->create_user();
-        /** @var totara_job_generator $jobgen */
+        /** @var \totara_job\testing\generator $jobgen */
         $jobgen = $this->getDataGenerator()->get_plugin_generator('totara_job');
         [$user, $job] = $jobgen->create_user_and_job([], $manager->id);
 
@@ -1280,7 +1280,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
     public function test_job_report_cannot_see_manager_at_course_not_enrolled() {
         $course = $this->getDataGenerator()->create_course();
         $manager = $this->getDataGenerator()->create_user();
-        /** @var totara_job_generator $jobgen */
+        /** @var \totara_job\testing\generator $jobgen */
         $jobgen = $this->getDataGenerator()->get_plugin_generator('totara_job');
         [$user, $job] = $jobgen->create_user_and_job([], $manager->id);
 
@@ -1293,7 +1293,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
     public function test_job_report_can_see_manager_at_course_enrolled_not_shared() {
         $course = $this->getDataGenerator()->create_course();
         $manager = $this->getDataGenerator()->create_user();
-        /** @var totara_job_generator $jobgen */
+        /** @var \totara_job\testing\generator $jobgen */
         $jobgen = $this->getDataGenerator()->get_plugin_generator('totara_job');
         [$user, $job] = $jobgen->create_user_and_job([], $manager->id);
 
@@ -1327,7 +1327,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
     public function test_job_report_can_see_manager_at_course_enrolled_shared() {
         $course = $this->getDataGenerator()->create_course();
         $manager = $this->getDataGenerator()->create_user();
-        /** @var totara_job_generator $jobgen */
+        /** @var \totara_job\testing\generator $jobgen */
         $jobgen = $this->getDataGenerator()->get_plugin_generator('totara_job');
         [$user, $job] = $jobgen->create_user_and_job([], $manager->id);
 
@@ -1363,7 +1363,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
         global $DB;
         $manager = $this->getDataGenerator()->create_user();
         $appraiser = $this->getDataGenerator()->create_user();
-        /** @var totara_job_generator $jobgen */
+        /** @var \totara_job\testing\generator $jobgen */
         $jobgen = $this->getDataGenerator()->get_plugin_generator('totara_job');
         [$user, $job] = $jobgen->create_user_and_job([], $manager->id);
         $DB->update_record('job_assignment', (object)['id' => $job->id, 'appraiserid' => $appraiser->id]);
@@ -1398,7 +1398,7 @@ class core_user_access_controller_testcase extends advanced_testcase {
 
         $appraiser = $this->getDataGenerator()->create_user();
         $manager = $this->getDataGenerator()->create_user();
-        /** @var totara_job_generator $jobgen */
+        /** @var \totara_job\testing\generator $jobgen */
         $jobgen = $this->getDataGenerator()->get_plugin_generator('totara_job');
         [$user, $job] = $jobgen->create_user_and_job([], $manager->id);
         $DB->update_record('job_assignment', (object)['id' => $job->id, 'appraiserid' => $appraiser->id]);

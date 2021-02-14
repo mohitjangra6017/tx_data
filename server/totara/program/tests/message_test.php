@@ -54,7 +54,7 @@ class totara_program_message_testcase extends advanced_testcase {
         $this->resetAfterTest();
         $this->messagesink = $this->redirectMessages();
         $this->user1 = $this->getDataGenerator()->create_user();
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $this->program1 = $programgenerator->create_program(array('fullname' => 'Program One'));
 
@@ -125,7 +125,7 @@ class totara_program_message_testcase extends advanced_testcase {
      * Send a message with the %duedate% placeholder, but no due date is set.
      */
     public function test_noneventbased_message_replacements_duedate_notset() {
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $programgenerator->assign_to_program($this->program1->id, ASSIGNTYPE_INDIVIDUAL, $this->user1->id,
             array('completiontime' => COMPLETION_TIME_NOT_SET), true);
@@ -142,7 +142,7 @@ class totara_program_message_testcase extends advanced_testcase {
      * Send a message with the %duedate% placeholder and have a due date set.
      */
     public function test_noneventbased_message_replacements_duedate_set() {
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $programgenerator->assign_to_program($this->program1->id, ASSIGNTYPE_INDIVIDUAL, $this->user1->id,
             array('completiontime' => '05/05/2030'), true);
@@ -159,7 +159,7 @@ class totara_program_message_testcase extends advanced_testcase {
      * Send a message with the %completioncriteria% placeholder, but no completion criteria has been set.
      */
     public function test_noneventbased_message_replacements_completioncriteria_notset() {
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $programgenerator->assign_to_program($this->program1->id, ASSIGNTYPE_INDIVIDUAL, $this->user1->id,
             array('completiontime' => COMPLETION_TIME_NOT_SET), true);
@@ -176,7 +176,7 @@ class totara_program_message_testcase extends advanced_testcase {
      * Send a message with the %completioncriteria% placeholder and some criteria has been set.
      */
     public function test_noneventbased_message_replacements_completioncriteria_set() {
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $programgenerator->assign_to_program($this->program1->id, ASSIGNTYPE_INDIVIDUAL, $this->user1->id,
             array('completiontime' => '5 ' . \totara_program\utils::TIME_SELECTOR_DAYS, 'completionevent' => COMPLETION_EVENT_ENROLLMENT_DATE), true);
@@ -196,7 +196,7 @@ class totara_program_message_testcase extends advanced_testcase {
      * was found.
      */
     public function test_noneventbased_message_replacements_completioncriteria_multiple() {
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $programgenerator->assign_to_program($this->program1->id, ASSIGNTYPE_INDIVIDUAL, $this->user1->id,
             array('completiontime' => '5 ' . \totara_program\utils::TIME_SELECTOR_DAYS, 'completionevent' => COMPLETION_EVENT_ENROLLMENT_DATE), true);
@@ -206,7 +206,7 @@ class totara_program_message_testcase extends advanced_testcase {
         $this->waitForSecond();
 
         $audience1 = $this->getDataGenerator()->create_cohort();
-        /** @var totara_cohort_generator $cohortgenerator */
+        /** @var \totara_cohort\testing\generator $cohortgenerator */
         $cohortgenerator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
         $cohortgenerator->cohort_assign_users($audience1->id, array($this->user1->id));
 

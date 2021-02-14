@@ -47,8 +47,8 @@ class mod_perform_data_provider_reportable_element_identifier_testcase extends a
     }
 
     private function create_test_data(): stdClass {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $data = new stdClass();
         $data->identifier1 = $perform_generator->create_element_identifier('test_identifier_1');

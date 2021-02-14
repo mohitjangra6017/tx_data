@@ -519,7 +519,7 @@ class mod_book_backup_activity_task_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
-        /** @var mod_book_generator $bookgenerator */
+        /** @var \mod_book\testing\generator $bookgenerator */
         $bookgenerator = $generator->get_plugin_generator('mod_book');
 
         $course1 = $generator->create_course();
@@ -680,7 +680,7 @@ class mod_book_backup_activity_task_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
-        /** @var mod_book_generator $bookgenerator */
+        /** @var \mod_book\testing\generator $bookgenerator */
         $bookgenerator = $generator->get_plugin_generator('mod_book');
 
         $course1 = $generator->create_course();

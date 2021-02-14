@@ -34,7 +34,7 @@ class criteria_childcompetency_display_testcase extends advanced_testcase {
       */
     public function test_configuration_aggregate_all() {
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $record = [
@@ -67,7 +67,7 @@ class criteria_childcompetency_display_testcase extends advanced_testcase {
       */
     public function test_configuration_aggregate_any() {
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $record = [

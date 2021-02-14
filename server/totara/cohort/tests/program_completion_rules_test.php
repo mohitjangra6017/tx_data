@@ -39,7 +39,7 @@ require_once($CFG->dirroot . '/totara/cohort/lib.php');
 class totara_cohort_program_completion_rules_testcase extends reportcache_advanced_testcase {
 
     private $userprograms = array();
-    /** @var totara_cohort_generator $cohort_generator */
+    /** @var \totara_cohort\testing\generator $cohort_generator */
     private $cohort_generator = null;
     private $cohort = null;
     private $ruleset = 0;
@@ -112,7 +112,8 @@ class totara_cohort_program_completion_rules_testcase extends reportcache_advanc
         $this->teststart = time();
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
+        $program_generator = \totara_program\testing\generator::instance();
 
         // Create 8 users.
         $this->assertEquals(2, $DB->count_records('user'));
@@ -132,31 +133,31 @@ class totara_cohort_program_completion_rules_testcase extends reportcache_advanc
 
         // Create two programs.
         $this->assertEquals(0, $DB->count_records('prog'));
-        $this->program1 = $this->getDataGenerator()->create_program();
-        $this->program2 = $this->getDataGenerator()->create_program();
-        $this->program3 = $this->getDataGenerator()->create_program();
-        $this->program4 = $this->getDataGenerator()->create_program();
+        $this->program1 = $program_generator->create_program();
+        $this->program2 = $program_generator->create_program();
+        $this->program3 = $program_generator->create_program();
+        $this->program4 = $program_generator->create_program();
         $this->assertEquals(4, $DB->count_records('prog'));
 
         // Assign courses to programs.
-        $this->getDataGenerator()->add_courseset_program($this->program1->id, array($course1->id));
-        $this->getDataGenerator()->add_courseset_program($this->program2->id, array($course2->id));
-        $this->getDataGenerator()->add_courseset_program($this->program3->id, array($course3->id));
-        $this->getDataGenerator()->add_courseset_program($this->program4->id, array($course4->id));
+        $program_generator->legacy_add_courseset_program($this->program1->id, array($course1->id));
+        $program_generator->legacy_add_courseset_program($this->program2->id, array($course2->id));
+        $program_generator->legacy_add_courseset_program($this->program3->id, array($course3->id));
+        $program_generator->legacy_add_courseset_program($this->program4->id, array($course4->id));
 
         // Assign users to programs.
         $usersprogram1 = array($this->user1->id, $this->user2->id, $this->user3->id);
-        $this->getDataGenerator()->assign_program($this->program1->id, $usersprogram1);
+        $program_generator->assign_program($this->program1->id, $usersprogram1);
 
         $usersprogram2 = array($this->user3->id, $this->user4->id, $this->user5->id, $this->user6->id, $this->user7->id);
-        $this->getDataGenerator()->assign_program($this->program2->id, $usersprogram2);
+        $program_generator->assign_program($this->program2->id, $usersprogram2);
 
         $this->userprograms[$this->program1->id] = $usersprogram1;
         $this->userprograms[$this->program2->id] = $usersprogram2;
 
         $usersprogram3 = array($this->user1->id, $this->user2->id, $this->user3->id, $this->user4->id, $this->user5->id, $this->user6->id, $this->user7->id);
-        $this->getDataGenerator()->assign_program($this->program3->id, $usersprogram3);
-        $this->getDataGenerator()->assign_program($this->program4->id, $usersprogram3);
+        $program_generator->assign_program($this->program3->id, $usersprogram3);
+        $program_generator->assign_program($this->program4->id, $usersprogram3);
 
         // Create timecreated for each user.
         $timecreated = array();

@@ -392,8 +392,8 @@ class mod_perform_participant_section_progress_testcase extends state_testcase {
     private function create_section_element_with_empty_responses($element_plugin = 'short_text'): participant_section {
         $participant_section_entity = $this->create_participant_section();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $participant_instance = participant_instance::load_by_entity($participant_section_entity->participant_instance);
 
@@ -431,8 +431,8 @@ class mod_perform_participant_section_progress_testcase extends state_testcase {
         stdClass $subject_user = null,
         stdClass $other_participant = null
     ): entity {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         self::setAdminUser();
 

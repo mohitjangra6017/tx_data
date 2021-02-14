@@ -48,7 +48,6 @@ use mod_perform\state\subject_instance\not_started;
 use mod_perform\state\subject_instance\not_submitted;
 use mod_perform\state\subject_instance\subject_instance_progress;
 
-require_once(__DIR__ . '/generator/activity_generator_configuration.php');
 require_once(__DIR__ . '/state_testcase.php');
 
 /**
@@ -151,13 +150,13 @@ class mod_perform_subject_instance_progress_testcase extends state_testcase {
     public function test_participant_instance_switch_triggers_subject_instance_switch(): void {
         $this->setAdminUser();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_relationships_per_section([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_APPRAISER])
             ->enable_appraiser_for_each_subject_user()
             ->set_number_of_users_per_user_group_type(2)
             ->set_number_of_elements_per_section(1);
 
-        /** @var mod_perform_generator $generator */
+        /** @var \mod_perform\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
         $generator->create_full_activities($configuration);
 
@@ -230,10 +229,10 @@ class mod_perform_subject_instance_progress_testcase extends state_testcase {
     ): void {
         $this->setAdminUser();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_users_per_user_group_type(1);
 
-        /** @var mod_perform_generator $generator */
+        /** @var \mod_perform\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
         $generator->create_full_activities($configuration);
 
@@ -266,10 +265,10 @@ class mod_perform_subject_instance_progress_testcase extends state_testcase {
     public function test_completion_sets_completed_at_date() {
         $this->setAdminUser();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_users_per_user_group_type(1);
 
-        /** @var mod_perform_generator $generator */
+        /** @var \mod_perform\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
         $generator->create_full_activities($configuration);
 
@@ -415,13 +414,13 @@ class mod_perform_subject_instance_progress_testcase extends state_testcase {
         $this->setAdminUser();
         $subject_user = self::getDataGenerator()->create_user();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_relationships_per_section(['subject', 'appraiser'])
             ->enable_appraiser_for_each_subject_user()
             ->set_number_of_users_per_user_group_type(1)
             ->set_number_of_elements_per_section(0);
 
-        /** @var mod_perform_generator $generator */
+        /** @var \mod_perform\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
         $generator->create_full_activities($configuration)->first();
 

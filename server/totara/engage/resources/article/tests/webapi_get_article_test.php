@@ -93,7 +93,7 @@ class engage_article_webapi_get_article_testcase extends advanced_testcase {
     }
 
     private function create_article(?array $params = []): article {
-        /** @var engage_article_generator $generator */
+        /** @var \engage_article\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('engage_article');
         return $generator->create_article($params);
     }

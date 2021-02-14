@@ -131,7 +131,7 @@ class tool_sitepolicy_sitepolicy_test extends \advanced_testcase {
     public function test_get_sitepolicylist($debugkey, $options) {
         $this->resetAfterTest();
 
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $generator->create_multiversion_policy($options);
@@ -166,7 +166,7 @@ class tool_sitepolicy_sitepolicy_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [

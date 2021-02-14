@@ -35,7 +35,7 @@ class totara_hierarchy_goal_user_assignments_testcase extends advanced_testcase 
 
         $data = new stdClass();
 
-        /** @var totara_hierarchy_generator $datagen */
+        /** @var \totara_hierarchy\testing\generator $datagen */
         $data->gen = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $pos_framework = $data->gen->create_framework('position');

@@ -37,7 +37,7 @@ use Behat\Behat\Tester\Exception\PendingException as PendingException;
  * Acceptance tests are block-boxed, so this steps definitions should only
  * be used to set up the test environment as we are not replicating user steps.
  *
- * All data generators should be in lib/testing/generator/*, shared between phpunit
+ * All data generators should be in \testing\ namespace, shared between phpunit
  * and behat and they should be called from here, if possible using the standard
  * 'create_$elementname($options)' and if it's not possible (data generators arguments will not be
  * always the same) or the element is not suitable to be a data generator, create a
@@ -581,9 +581,6 @@ class behat_totara_data_generators extends behat_base {
     public function the_following_exist_in_plugin($elementname, $component, TableNode $data) {
         \behat_hooks::set_step_readonly(false);
 
-        // Now that we need them require the data generators.
-        require_once(__DIR__ . '/../../../../lib/testing/generator/lib.php');
-
         if (empty(self::$componentelements[$component][$elementname])) {
             throw new PendingException($elementname . ' data generator is not implemented');
         }
@@ -670,9 +667,6 @@ class behat_totara_data_generators extends behat_base {
      */
     public function i_age_the_data_x_seconds($elementkey, $elementname, $component, $seconds) {
         \behat_hooks::set_step_readonly(true);
-
-        // Now that we need them require the data generators.
-        require_once(__DIR__ . '/../../../../lib/testing/generator/lib.php');
 
         if (empty(self::$componentelements[$component][$elementname])) {
             throw new PendingException($elementname . ' data generator is not implemented');

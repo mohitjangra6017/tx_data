@@ -28,8 +28,8 @@ defined('MOODLE_INTERNAL') || die();
  */
 class totara_tenant_accesslib_testcase extends advanced_testcase {
     public function test_tenant_context() {
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -45,8 +45,8 @@ class totara_tenant_accesslib_testcase extends advanced_testcase {
     }
 
     public function test_user_context() {
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -67,8 +67,8 @@ class totara_tenant_accesslib_testcase extends advanced_testcase {
         global $CFG;
         require_once($CFG->dirroot . '/lib/coursecatlib.php');
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -120,8 +120,8 @@ class totara_tenant_accesslib_testcase extends advanced_testcase {
         global $CFG;
         require_once($CFG->dirroot . '/lib/coursecatlib.php');
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -143,8 +143,8 @@ class totara_tenant_accesslib_testcase extends advanced_testcase {
     public function test_context_is_user_access_prevented() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -315,8 +315,8 @@ class totara_tenant_accesslib_testcase extends advanced_testcase {
     public function test_has_capability() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -585,8 +585,8 @@ class totara_tenant_accesslib_testcase extends advanced_testcase {
     public function test_get_default_role_archetype_allows() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
 
         $tenantdomainmanager = $DB->get_record('role', ['archetype' => 'tenantdomainmanager']);
@@ -637,8 +637,8 @@ class totara_tenant_accesslib_testcase extends advanced_testcase {
     public function test_get_users_by_capability() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -758,8 +758,8 @@ class totara_tenant_accesslib_testcase extends advanced_testcase {
     public function test_get_role_users() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -784,8 +784,8 @@ class totara_tenant_accesslib_testcase extends advanced_testcase {
     public function test_role_get_name() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
 
         $role = $DB->get_record('role', ['shortname' => 'tenantusermanager']);
@@ -798,8 +798,8 @@ class totara_tenant_accesslib_testcase extends advanced_testcase {
     public function test_role_get_description() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
 
         $role = $DB->get_record('role', ['shortname' => 'tenantusermanager']);
@@ -812,8 +812,8 @@ class totara_tenant_accesslib_testcase extends advanced_testcase {
     public function test_build_all_paths() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -872,8 +872,8 @@ class totara_tenant_accesslib_testcase extends advanced_testcase {
     public function test_get_switchable_roles() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 

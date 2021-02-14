@@ -36,7 +36,7 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
 
     /**
      * The block generator instance for the test.
-     * @var block_totara_featured_links_generator $generator
+     * @var \block_totara_featured_links\testing\generator $generator
      */
     protected $blockgenerator;
 
@@ -184,7 +184,7 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
         global $DB;
         $this->resetAfterTest();
         $this->setAdminUser();
-        /** @var block_totara_featured_links_generator $featuredlinksgenerator */
+        /** @var \block_totara_featured_links\testing\generator $featuredlinksgenerator */
         $featuredlinksgenerator = $this->getDataGenerator()->get_plugin_generator('block_totara_featured_links');
 
         $block1 = $featuredlinksgenerator->create_instance();

@@ -138,7 +138,7 @@ class tool_totara_sync_hierarchy_db_customfield_processing_testcase extends tota
      * @param string $hierarchyfullname
      */
     private function create_data_for_multiple_customfields($hierarchyshortname, $hierarchyfullname) {
-        /* @var totara_hierarchy_generator $hierarchy_generator */
+        /* @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $hierarchy_generator->create_framework(

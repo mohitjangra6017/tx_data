@@ -46,9 +46,9 @@ class criteria_othercompetency_watchers_testcase extends advanced_testcase {
         $event_sink = $this->redirectEvents();
         $hook_sink = $this->redirectHooks();
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $course1 = $this->getDataGenerator()->create_course(['enablecompletion' => true]);
@@ -107,9 +107,9 @@ class criteria_othercompetency_watchers_testcase extends advanced_testcase {
      * Test watcher when a user's competency achievement changes
      */
     public function test_competency_achievement_updated_bulk() {
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $framework = $competency_generator->create_framework();

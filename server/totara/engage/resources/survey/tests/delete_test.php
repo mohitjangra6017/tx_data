@@ -37,7 +37,7 @@ class engage_survey_delete_testcase extends advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $this->getDataGenerator()->get_plugin_generator('totara_topic');
 
         for ($i = 0; $i < 5; $i++) {

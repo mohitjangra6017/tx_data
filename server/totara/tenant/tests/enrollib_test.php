@@ -30,8 +30,8 @@ class totara_tenant_enrollib_testcase extends advanced_testcase {
     public function test_enrol_get_shared_courses() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -129,8 +129,8 @@ class totara_tenant_enrollib_testcase extends advanced_testcase {
     public function test_enrol_get_all_users_courses() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -186,8 +186,8 @@ class totara_tenant_enrollib_testcase extends advanced_testcase {
     public function test_is_enrolled() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -260,8 +260,8 @@ class totara_tenant_enrollib_testcase extends advanced_testcase {
     public function test_get_enrolled_join() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 

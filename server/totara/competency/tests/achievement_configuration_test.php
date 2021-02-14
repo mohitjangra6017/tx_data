@@ -48,7 +48,7 @@ class totara_competency_achievement_configuration_testcase extends advanced_test
             public $cc;
         };
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $data->comp = $competency_generator->create_competency();
         $data->config = new achievement_configuration($data->comp);
@@ -68,7 +68,7 @@ class totara_competency_achievement_configuration_testcase extends advanced_test
         //      - Course 1 AND Course 2
         //      - Course 1 OR Course 3 OR Course 5
 
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
         $data->cc[1] = $criteria_generator->create_coursecompletion([
             'aggregation' => criterion::AGGREGATE_ALL,
@@ -174,7 +174,7 @@ class totara_competency_achievement_configuration_testcase extends advanced_test
         // For now just testing that there is a row - empty content is tested later
 
         // Generate some configuration data
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $manual = $generator->create_manual($data->comp, [manager_role::class], 1);
@@ -225,7 +225,7 @@ class totara_competency_achievement_configuration_testcase extends advanced_test
     public function test_user_can_become_proficient() {
         $data = $this->setup_data();
 
-        /** totara_competency_generator $generator */
+        /** \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         /** @var achievement_configuration $config */
@@ -265,9 +265,9 @@ class totara_competency_achievement_configuration_testcase extends advanced_test
     }
 
     public function test_export_pathway_groups(): void {
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $course = $this->getDataGenerator()->create_course();

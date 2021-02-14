@@ -38,7 +38,7 @@ class pathway_learning_plan_totara_core_watcher_testcase extends advanced_testca
 
         advanced_feature::enable('learningplans');
 
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency1 = $generator->create_competency();
         $competency2 = $generator->create_competency();

@@ -40,7 +40,7 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $lesson = $this->getDataGenerator()->create_module('lesson', array('course' => $course));
         /**
-         * @var mod_lesson_generator $lessongenerator
+         * @var \mod_lesson\testing\generator $lessongenerator
          */
         $lessongenerator = $this->getDataGenerator()->get_plugin_generator('mod_lesson');
 
@@ -78,7 +78,7 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $lesson = $this->getDataGenerator()->create_module('lesson', array('course' => $course));
         /**
-         * @var mod_lesson_generator $lessongenerator
+         * @var \mod_lesson\testing\generator $lessongenerator
          */
         $lessongenerator = $this->getDataGenerator()->get_plugin_generator('mod_lesson');
 
@@ -115,7 +115,7 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $lesson = $this->getDataGenerator()->create_module('lesson', array('course' => $course));
         /**
-         * @var mod_lesson_generator $lessongenerator
+         * @var \mod_lesson\testing\generator $lessongenerator
          */
         $lessongenerator = $this->getDataGenerator()->get_plugin_generator('mod_lesson');
 
@@ -160,7 +160,7 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $lesson = $this->getDataGenerator()->create_module('lesson', array('course' => $course));
         /**
-         * @var mod_lesson_generator $lessongenerator
+         * @var \mod_lesson\testing\generator $lessongenerator
          */
         $lessongenerator = $this->getDataGenerator()->get_plugin_generator('mod_lesson');
 
@@ -218,7 +218,7 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $lesson = $this->getDataGenerator()->create_module('lesson', array('course' => $course));
         /**
-         * @var mod_lesson_generator $lessongenerator
+         * @var \mod_lesson\testing\generator $lessongenerator
          */
         $lessongenerator = $this->getDataGenerator()->get_plugin_generator('mod_lesson');
 
@@ -255,7 +255,7 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $lesson = $this->getDataGenerator()->create_module('lesson', array('course' => $course));
         /**
-         * @var mod_lesson_generator $lessongenerator
+         * @var \mod_lesson\testing\generator $lessongenerator
          */
         $lessongenerator = $this->getDataGenerator()->get_plugin_generator('mod_lesson');
 
@@ -292,7 +292,7 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
         $lesson = $this->getDataGenerator()->create_module('lesson', array('course' => $course));
         /**
-         * @var mod_lesson_generator $lessongenerator
+         * @var \mod_lesson\testing\generator $lessongenerator
          */
         $lessongenerator = $this->getDataGenerator()->get_plugin_generator('mod_lesson');
 

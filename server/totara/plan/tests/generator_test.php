@@ -29,7 +29,7 @@ class totara_plan_generator_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -73,10 +73,10 @@ class totara_plan_generator_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $competencyframework = $hierarchygenerator->create_framework('competency');
@@ -101,7 +101,7 @@ class totara_plan_generator_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
 
         $user = $this->getDataGenerator()->create_user();

@@ -30,7 +30,7 @@ class totara_playlist_availability_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist(['userid' => $user_one->id]);
 
@@ -50,7 +50,7 @@ class totara_playlist_availability_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist(['userid' => $user_one->id,]);
 

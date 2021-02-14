@@ -159,10 +159,10 @@ class engage_article_catalog_topic_filter_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $this->setAdminUser();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
 
         // Test case will be very contrived, Topic 1 => Article 1 etc...

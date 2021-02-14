@@ -37,7 +37,7 @@ class totara_playlist_share_graphql_testcase extends advanced_testcase {
      */
     public function test_share_item() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         // Create users.
@@ -87,7 +87,7 @@ class totara_playlist_share_graphql_testcase extends advanced_testcase {
      */
     public function test_playlist_update() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         // Create users.
@@ -141,7 +141,7 @@ class totara_playlist_share_graphql_testcase extends advanced_testcase {
      */
     public function test_share_totals() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         // Create users.
@@ -190,7 +190,7 @@ class totara_playlist_share_graphql_testcase extends advanced_testcase {
      */
     public function test_recipients() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         // Create users.

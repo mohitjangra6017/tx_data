@@ -56,7 +56,7 @@ class container_workspace_notify_join_request_testcase extends advanced_testcase
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         $this->setUser($user_one);
@@ -103,7 +103,7 @@ class container_workspace_notify_join_request_testcase extends advanced_testcase
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         $this->setUser($user_one);
@@ -138,7 +138,7 @@ class container_workspace_notify_join_request_testcase extends advanced_testcase
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         $this->setUser($user_one);
@@ -183,7 +183,7 @@ class container_workspace_notify_join_request_testcase extends advanced_testcase
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 
@@ -222,7 +222,7 @@ class container_workspace_notify_join_request_testcase extends advanced_testcase
         $user_one = $generator->create_user(['lang' => $fake_language]);
         $user_two = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         self::setUser($user_one);
         $workspace = $workspace_generator->create_private_workspace();

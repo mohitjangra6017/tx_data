@@ -90,7 +90,7 @@ class auth_approved_util_testcase extends advanced_testcase {
         // We don't have a real request id here, we expect an error string apparently!
         $this->assertSame(get_string('error'), \auth_approved\util::render_request_details_view(0));
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
 
         // Test the report with a pending signup.

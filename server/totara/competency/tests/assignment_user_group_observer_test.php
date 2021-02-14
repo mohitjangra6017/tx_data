@@ -325,7 +325,7 @@ class totara_competency_assignment_user_group_observer_testcase extends advanced
     private function prepare_assignments() {
         $this->setAdminUser();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->generator()->get_plugin_generator('totara_hierarchy');
 
         $test_data = new class() {
@@ -403,7 +403,7 @@ class totara_competency_assignment_user_group_observer_testcase extends advanced
     /**
      * Date generator shortcut
      *
-     * @return testing_data_generator
+     * @return \core\testing\generator
      */
     protected function generator() {
         return self::getDataGenerator();

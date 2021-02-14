@@ -58,9 +58,8 @@ class mod_forum_generator_testcase extends advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course();
 
-        /** @var mod_forum_generator $generator */
+        /** @var \mod_forum\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_forum');
-        $this->assertInstanceOf('mod_forum_generator', $generator);
         $this->assertEquals('forum', $generator->get_modulename());
 
         $generator->create_instance(array('course'=>$course->id));

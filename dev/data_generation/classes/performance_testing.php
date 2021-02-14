@@ -24,7 +24,6 @@
 namespace degeneration;
 
 use coding_exception;
-use container_workspace_generator;
 use core\entity\enrol;
 use core\orm\collection;
 use core\orm\query\builder;
@@ -74,7 +73,6 @@ use totara_engage\timeview\time_view;
 use totara_playlist\entity\playlist_resource;
 use totara_reaction\entity\reaction as reaction_entity;
 use totara_topic\topic;
-use totara_topic_generator;
 
 class performance_testing extends App {
 
@@ -1514,8 +1512,7 @@ class performance_testing extends App {
             $total = count($this->public_workspaces) * $sizes['members_per_workspace'];
             $done = 0;
 
-            /** @var container_workspace_generator $workspace_generator */
-            $workspace_generator = $generator->get_plugin_generator('container_workspace');
+            $workspace_generator = \container_workspace\testing\generator::instance();
 
             // We want to randomise the users who are assigned to workspaces, but we don't want to randomly
             // pick every time (that's slow). So we'll just start at the start of the list and work towards the end
@@ -1604,8 +1601,7 @@ class performance_testing extends App {
 
         builder::get_db()->transaction(function () use ($size) {
             $faker = App::faker();
-            /** @var totara_topic_generator $generator */
-            $generator = App::generator()->get_plugin_generator('totara_topic');
+            $generator = \totara_topic\testing\generator::instance();
             $done = 0;
             while ($done < $size) {
                 try {

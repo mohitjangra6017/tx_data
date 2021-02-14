@@ -137,8 +137,8 @@ class mod_perform_webapi_resolver_mutation_clone_activity_testcase extends advan
             self::setAdminUser();
         }
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container();
 
         $args = [

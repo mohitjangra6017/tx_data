@@ -727,9 +727,9 @@ class mod_glossary_userdata_rating_test extends advanced_testcase {
         $student_role = $DB->get_record('role', array('shortname' => 'student'));
         $this->getDataGenerator()->enrol_user($data->user->id, $data->course->id, $student_role->id);
 
-        /** @var mod_glossary_generator $glossary_generator */
+        /** @var \mod_glossary\testing\generator $glossary_generator */
         $glossary_generator = self::getDataGenerator()->get_plugin_generator('mod_glossary');
-        /** @var core_completion_generator $completiongenerator */
+        /** @var \core_completion\testing\generator $completiongenerator */
         $completiongenerator = $this->getDataGenerator()->get_plugin_generator('core_completion');
         $completiongenerator->enable_completion_tracking($data->course);
 

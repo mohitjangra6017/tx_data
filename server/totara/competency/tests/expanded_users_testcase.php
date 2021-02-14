@@ -76,7 +76,7 @@ abstract class expanded_users_testcase extends advanced_testcase {
         cohort_add_member($data->cohort2->id, $data->user4->id);
         cohort_add_member($data->cohort2->id, $data->user5->id);
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
 
         // Create two positions

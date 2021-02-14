@@ -42,7 +42,7 @@ class container_workspace_load_workspaces_testcase extends advanced_testcase {
         $user3 = $generator->create_user();
 
         $this->setUser($user1);
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace_generator->create_hidden_workspace();
         $workspace_generator->create_private_workspace();

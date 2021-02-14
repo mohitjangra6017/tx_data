@@ -41,7 +41,7 @@ class mod_facetoface_waitlist_event_testcase extends advanced_testcase {
     private function create_facetoface(): stdClass {
         $generator = $this->getDataGenerator();
 
-        /** @var mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $generator->get_plugin_generator("mod_facetoface");
 
         $course = $generator->create_course(null, ['createsections' => true]);
@@ -80,7 +80,7 @@ class mod_facetoface_waitlist_event_testcase extends advanced_testcase {
         $course = $DB->get_record("course", ['id' => $f2f->course]);
         $users = $this->create_users(4, $course);
 
-        /** @var mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $this->getDataGenerator()->get_plugin_generator("mod_facetoface");
         $sessiondate = new stdClass();
         $sessiondate->timestart = time() + (DAYSECS * 1);

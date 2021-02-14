@@ -66,7 +66,7 @@ class totara_playlist_webapi_playlist_delete_testcase extends advanced_testcase 
     public function test_delete_playlist_other_tenant_manager() {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
 
         $tenant_generator->enable_tenants();
@@ -99,7 +99,7 @@ class totara_playlist_webapi_playlist_delete_testcase extends advanced_testcase 
     public function test_delete_playlist_same_tenant_manager() {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
 
         $tenant_generator->enable_tenants();
@@ -145,7 +145,7 @@ class totara_playlist_webapi_playlist_delete_testcase extends advanced_testcase 
         $owner = $generator->create_user();
         $this->setUser($owner);
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $generator->get_plugin_generator('engage_article');
         $article = $articlegen->create_article([
             'access' => access::PUBLIC

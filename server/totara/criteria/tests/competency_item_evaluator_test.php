@@ -48,7 +48,7 @@ class totara_criteria_competency_item_evaluator_testcase extends advanced_testca
 
         // Simulating a competency (id = 1) with 1 child (id 11)
 
-        /** @var totara_criteria_generator $generator */
+        /** @var \totara_criteria\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
         $data->criterion = $generator->create_childcompetency(['competency' => 1]);
 
@@ -426,7 +426,7 @@ class totara_criteria_competency_item_evaluator_testcase extends advanced_testca
     /**
      * Get competency specific generator
      *
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
         return $this->getDataGenerator()->get_plugin_generator('totara_competency');

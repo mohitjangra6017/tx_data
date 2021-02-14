@@ -82,8 +82,8 @@ class mod_perform_subject_instance_activity_collection_test extends advanced_tes
     }
 
     private function build_subject_activity(): activity {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $activity = $generator->create_activity_in_container(['create_section' => 'false']);
         $relationships = relationship::repository()->get();
         $first_section = $generator->create_section($activity);

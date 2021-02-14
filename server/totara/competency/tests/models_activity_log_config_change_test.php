@@ -64,7 +64,7 @@ class totara_competency_models_activity_log_config_change_testcase extends advan
 
     public function test_changed_min_proficiency() {
         $time = 100;
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $hierarchy_generator->create_scale(
             'comp',

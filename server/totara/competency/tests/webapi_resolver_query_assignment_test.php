@@ -148,14 +148,14 @@ class totara_competency_webapi_resolver_query_assignment_testcase extends advanc
     }
 
     /**
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        return \totara_competency\testing\generator::instance();
     }
 
     /**
-     * @return totara_competency_assignment_generator
+     * @return \totara_competency\testing\assignment_generator
      */
     protected function assignment_generator() {
         return $this->generator()->assignment_generator();

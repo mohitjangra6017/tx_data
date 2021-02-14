@@ -71,7 +71,7 @@ class webapi_resolver_type_linked_course_testcase extends advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course($course_param);
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $compfw = $hierarchy_generator->create_comp_frame([]);
         $comp = $hierarchy_generator->create_comp(['frameworkid' => $compfw->id]);

@@ -82,7 +82,7 @@ class engage_survey_update_testcase extends advanced_testcase {
         $user = $gen->create_user();
         $this->setUser($user);
 
-        /** @var engage_survey_generator $articlegen */
+        /** @var \engage_survey\testing\generator $articlegen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         /** @var survey $survey */
@@ -112,7 +112,7 @@ class engage_survey_update_testcase extends advanced_testcase {
      */
     public function test_update_survey_via_graphql(): void {
         $this->setAdminUser();
-        /** @var totara_topic_generator $topicgen */
+        /** @var \totara_topic\testing\generator $topicgen */
         $topicgen = $this->getDataGenerator()->get_plugin_generator('totara_topic');
         $topics[] = $topicgen->create_topic('topic1')->get_id();
         $topics[] = $topicgen->create_topic('topic2')->get_id();
@@ -174,7 +174,7 @@ class engage_survey_update_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $user = $gen->create_user();
         $this->setUser($user);
-        /** @var engage_survey_generator $articlegen */
+        /** @var \engage_survey\testing\generator $articlegen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         /** @var survey $survey */
@@ -206,7 +206,7 @@ class engage_survey_update_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $user = $gen->create_user();
         $this->setUser($user);
-        /** @var engage_survey_generator $articlegen */
+        /** @var \engage_survey\testing\generator $articlegen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         /** @var survey $survey */

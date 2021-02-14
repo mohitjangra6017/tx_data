@@ -109,7 +109,7 @@ class core_completion_course_completion_testcase extends advanced_testcase {
         $this->assertEquals(3, $DB->count_records('certificate'));
 
         // Create completion based on the certificate activity that each course has.
-        /* @var core_completion_generator $completion_generator */
+        /* @var \core_completion\testing\generator $completion_generator */
         $completion_generator = $generator->get_plugin_generator('core_completion');
 
         for ($i = 1; $i <= COMPLETION_TEST_COURSES_CREATED; $i++) {

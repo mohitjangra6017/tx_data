@@ -41,7 +41,7 @@ class totara_comment_purge_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(42, 'totara_comment', 'bomba');
 
@@ -79,7 +79,7 @@ class totara_comment_purge_testcase extends advanced_testcase {
 
         $this->setUser($user);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
 
         // Create around 200 comments and see if the purge is purging them all.

@@ -36,7 +36,7 @@ class mod_facetoface_session_cancellation_testcase extends advanced_testcase {
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        /** @var mod_facetoface_generator $generator */
+        /** @var \mod_facetoface\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $course = $this->getDataGenerator()->create_course();
@@ -75,7 +75,7 @@ class mod_facetoface_session_cancellation_testcase extends advanced_testcase {
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        /** @var mod_facetoface_generator $generator */
+        /** @var \mod_facetoface\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $course = $this->getDataGenerator()->create_course();
@@ -106,7 +106,7 @@ class mod_facetoface_session_cancellation_testcase extends advanced_testcase {
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        /** @var mod_facetoface_generator $generator */
+        /** @var \mod_facetoface\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $course = $this->getDataGenerator()->create_course();

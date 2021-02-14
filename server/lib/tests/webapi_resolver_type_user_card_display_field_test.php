@@ -66,7 +66,7 @@ class core_webapi_resolver_type_user_card_display_field_testcase extends advance
 
         $generator = $this->getDataGenerator();
 
-        /** @var core_user_generator $user_generator */
+        /** @var \core_user\testing\generator $user_generator */
         $user_generator = $generator->get_plugin_generator('core_user');
         $user_generator->create_custom_field('text', 'text_short_name');
 

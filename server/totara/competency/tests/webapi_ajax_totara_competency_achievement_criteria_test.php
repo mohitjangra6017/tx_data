@@ -42,7 +42,7 @@ class totara_competency_webapi_ajax_totara_competency_achievement_criteria_testc
 
         $this->setAdminUser();
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $data->scale = $hierarchygenerator->create_scale(
             'comp',
@@ -63,7 +63,7 @@ class totara_competency_webapi_ajax_totara_competency_achievement_criteria_testc
 
         $framework = $hierarchygenerator->create_comp_frame(['scale' => $data->scale->id]);
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $data->comp = $competency_generator->create_competency('Test competency', $framework->id);
 
@@ -113,7 +113,7 @@ class totara_competency_webapi_ajax_totara_competency_achievement_criteria_testc
         // Create a coursecompletion criteria
         //      - Course 1 AND Course 2
 
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
         $cc = $criteria_generator->create_coursecompletion([
             'aggregation' => criterion::AGGREGATE_ALL,
@@ -124,7 +124,7 @@ class totara_competency_webapi_ajax_totara_competency_achievement_criteria_testc
         // - Manual rating by manager
         // - Criteria group
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $pathways = [];

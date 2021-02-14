@@ -46,11 +46,10 @@ class totara_comment_plugininfo_testcase extends advanced_testcase {
     /**
      * Get comment generator
      *
-     * @return totara_comment_generator|component_generator_base
-     * @throws coding_exception
+     * @return \totara_comment\testing\generator
      */
     protected function generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_comment');
+        return \totara_comment\testing\generator::instance();
     }
 
     /**

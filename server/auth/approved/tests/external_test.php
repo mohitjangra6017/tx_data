@@ -31,7 +31,7 @@ class auth_approved_external_testcase extends advanced_testcase {
         $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $hierarchygen */
+        /** @var \totara_hierarchy\testing\generator $hierarchygen */
         $hierarchygen = $generator->get_plugin_generator('totara_hierarchy');
 
         $positionframeworks = [

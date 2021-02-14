@@ -153,8 +153,8 @@ class mod_perform_activity_respository_testcase extends advanced_testcase {
         ];
     }
 
-    private function get_perform_generator(): mod_perform_generator {
-        return self::getDataGenerator()->get_plugin_generator('mod_perform');
+    private function get_perform_generator(): \mod_perform\testing\generator {
+        return \mod_perform\testing\generator::instance();
     }
 
     public function test_filter_by_not_draft() {

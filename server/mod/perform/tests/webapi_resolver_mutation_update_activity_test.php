@@ -185,8 +185,8 @@ class mod_perform_webapi_resolver_mutation_update_activity_testcase extends adva
             self::setAdminUser();
         }
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container(['activity_status' => draft::get_code()]);
         $new_type_id = 3;
 

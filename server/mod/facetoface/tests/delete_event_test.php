@@ -286,7 +286,7 @@ class mod_facetoface_delete_event_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         $time = time();
-        /** @var \mod_facetoface_generator $generator */
+        /** @var \mod_facetoface\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         // Allow one day for unassigned room as it can be just created and not stored in seminar session yet.
         $facilitator1 = $generator->add_custom_facilitator(['timecreated' => $time - (DAYSECS * 1.1)]);
@@ -338,7 +338,7 @@ class mod_facetoface_delete_event_testcase extends advanced_testcase {
     private function make_signup_for_seminar(int $f2fid, int $userid): signup {
         // Just boring boilerplate code as usual.
         $gen = $this->getDataGenerator();
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
         $f2fevtid = $f2fgen->add_session(['facetoface' => $f2fid]);
         $seminarevent = new seminar_event($f2fevtid);
@@ -357,7 +357,7 @@ class mod_facetoface_delete_event_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $user = $gen->create_user();
         $course = $gen->create_course();
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
         $f2fid = $f2fgen->create_instance(['course' => $course->id])->id;
         $signup = $this->make_signup_for_seminar($f2fid, $user->id);
@@ -472,7 +472,7 @@ class mod_facetoface_delete_event_testcase extends advanced_testcase {
 
         $this->setAdminUser();
 
-        /** @var mod_facetoface_generator $generator */
+        /** @var \mod_facetoface\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $course = $this->getDataGenerator()->create_course();
         $seminar = $this->getDataGenerator()->create_module('facetoface', ['course' => $course->id]);

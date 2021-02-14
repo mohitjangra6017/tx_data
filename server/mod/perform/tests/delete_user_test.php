@@ -35,10 +35,10 @@ use mod_perform\state\subject_instance\open as subject_instance_availability_ope
 class mod_perform_delete_user_testcase extends advanced_testcase {
 
     public function test_deleting_user_closes_subject_instances() {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(3)
             ->set_number_of_users_per_user_group_type(3)
             ->set_number_of_tracks_per_activity(1)
@@ -100,10 +100,10 @@ class mod_perform_delete_user_testcase extends advanced_testcase {
     }
 
     public function test_deleting_user_closes_participant_instances() {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(3)
             ->set_number_of_users_per_user_group_type(3)
             ->set_number_of_tracks_per_activity(1)

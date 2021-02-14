@@ -185,7 +185,7 @@ class totara_program_rb_display_program_course_status_testcase extends advanced_
         $this->setAdminUser();
         self::force_resort_required(true);
 
-        /** @var totara_reportbuilder_generator $generator */
+        /** @var \totara_reportbuilder\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
         $rid = $generator->create_default_custom_report(['shortname' => 'PO', 'source' => 'program_overview']);
 
@@ -208,7 +208,7 @@ class totara_program_rb_display_program_course_status_testcase extends advanced_
         $this->setAdminUser();
         self::force_resort_required(false);
 
-        /** @var totara_reportbuilder_generator $generator */
+        /** @var \totara_reportbuilder\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
         $rid = $generator->create_default_custom_report(['shortname' => 'PO', 'source' => 'program_overview']);
 
@@ -231,7 +231,7 @@ class totara_program_rb_display_program_course_status_testcase extends advanced_
         $this->setAdminUser();
         self::force_resort_required(true);
 
-        /** @var totara_reportbuilder_generator $generator */
+        /** @var \totara_reportbuilder\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
         $rid = $generator->create_default_custom_report(['shortname' => 'PO', 'source' => 'program_overview']);
 
@@ -254,7 +254,7 @@ class totara_program_rb_display_program_course_status_testcase extends advanced_
         $this->setAdminUser();
         self::force_resort_required(false);
 
-        /** @var totara_reportbuilder_generator $generator */
+        /** @var \totara_reportbuilder\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
         $rid = $generator->create_default_custom_report(['shortname' => 'PO', 'source' => 'program_overview']);
 
@@ -279,7 +279,7 @@ class totara_program_rb_display_program_course_status_testcase extends advanced_
         $this->setAdminUser();
         self::force_resort_required(true);
 
-        /** @var totara_reportbuilder_generator $generator */
+        /** @var \totara_reportbuilder\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
         $rid = $generator->create_default_custom_report(['shortname' => 'PO', 'source' => 'program_overview']);
 
@@ -336,7 +336,7 @@ class totara_program_rb_display_program_course_status_testcase extends advanced_
         $this->setAdminUser();
         self::force_resort_required(false);
 
-        /** @var totara_reportbuilder_generator $generator */
+        /** @var \totara_reportbuilder\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
         $rid = $generator->create_default_custom_report(['shortname' => 'PO', 'source' => 'program_overview']);
 

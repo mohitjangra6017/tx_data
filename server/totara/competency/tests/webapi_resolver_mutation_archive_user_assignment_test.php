@@ -47,7 +47,7 @@ class webapi_resolver_mutation_archive_user_assignment_test extends advanced_tes
     private $data;
 
     /**
-     * @var totara_competency_generator|component_generator_base Hierarchy generator
+     * @var \totara_hierarchy\testing\generator Hierarchy generator
      */
     private $generator;
 
@@ -182,7 +182,7 @@ class webapi_resolver_mutation_archive_user_assignment_test extends advanced_tes
      * @return void
      */
     private function set_generator(): void {
-        $this->generator = $this->getDataGenerator()->get_plugin_generator('totara_competency')->hierarchy_generator();
+        $this->generator = \totara_hierarchy\testing\generator::instance();
     }
 
     /**

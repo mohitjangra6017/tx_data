@@ -204,7 +204,7 @@ class webapi_resolver_query_cards_testcase extends advanced_testcase {
     }
 
     private function create_playlist($parameters = []): \totara_playlist\playlist {
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $this->getDataGenerator()->get_plugin_generator('totara_playlist');
         return $playlistgen->create_playlist($parameters);
     }
@@ -214,7 +214,7 @@ class webapi_resolver_query_cards_testcase extends advanced_testcase {
     }
 
     private function create_article($params = []): \engage_article\totara_engage\resource\article {
-        /** @var engage_article_generator $generator */
+        /** @var \engage_article\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('engage_article');
         return $generator->create_article($params);
     }

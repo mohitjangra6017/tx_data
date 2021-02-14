@@ -246,7 +246,7 @@ class totara_competency_webapi_resolver_query_scale_achievements_testcase extend
             public $assignment1;
         };
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator =  $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $data->scale = $hierarchy_generator->create_scale('comp');
@@ -345,21 +345,21 @@ class totara_competency_webapi_resolver_query_scale_achievements_testcase extend
     }
 
     /**
-     * Get competency specific generator
+     * Get hierarchy specific generator
      *
-     * @return totara_competency_generator|component_generator_base
+     * @return \totara_competency\testing\generator
      */
     protected function competency_generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        return \totara_competency\testing\generator::instance();
     }
 
     /**
      * Get criteria specific generator
      *
-     * @return totara_criteria_generator|component_generator_base
+     * @return \totara_criteria\testing\generator
      */
     protected function criteria_generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_criteria');
+        return \totara_criteria\testing\generator::instance();
     }
 
     private function activate_additional_pathways() {

@@ -131,12 +131,12 @@ class engage_survey_webapi_multi_tenancy_fetch_recipients_testcase extends advan
     }
 
     /**
-     * @return totara_tenant_generator
+     * @return \totara_tenant\testing\generator
      */
-    private function get_tenant_generator(): totara_tenant_generator {
+    private function get_tenant_generator(): \totara_tenant\testing\generator {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -144,12 +144,12 @@ class engage_survey_webapi_multi_tenancy_fetch_recipients_testcase extends advan
     }
 
     /**
-     * @return engage_survey_generator
+     * @return \engage_survey\testing\generator
      */
-    private function get_survey_generator(): engage_survey_generator {
+    private function get_survey_generator(): \engage_survey\testing\generator {
         $generator = $this->getDataGenerator();
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         return $survey_generator;
     }

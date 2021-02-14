@@ -40,7 +40,6 @@ use mod_perform\models\activity\section;
 use mod_perform\models\activity\track_assignment_type;
 use mod_perform\models\activity\track_status;
 use mod_perform\user_groups\grouping;
-use mod_perform_generator;
 
 class activity extends item {
 
@@ -52,13 +51,13 @@ class activity extends item {
     private $properties;
 
     /**
-     * @return mod_perform_generator
+     * @return \mod_perform\testing\generator
      * @throws \coding_exception
      */
-    public function get_perform_generator(): mod_perform_generator {
+    public function get_perform_generator(): \mod_perform\testing\generator {
         $generator = App::generator();
 
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $generator->get_plugin_generator('mod_perform');
 
         return $perform_generator;

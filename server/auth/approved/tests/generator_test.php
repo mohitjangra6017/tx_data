@@ -26,9 +26,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
     public function test_username_required() {
         $this->resetAfterTest();
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Pending request.
         $data = [
@@ -47,9 +46,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
     public function test_password_required() {
         $this->resetAfterTest();
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Pending request.
         $data = [
@@ -67,9 +65,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
     public function test_email_required() {
         $this->resetAfterTest();
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Pending request.
         $data = [
@@ -87,9 +84,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
     public function test_firstname_required() {
         $this->resetAfterTest();
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Pending request.
         $data = [
@@ -107,9 +103,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
     public function test_surname_required() {
         $this->resetAfterTest();
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Pending request.
         $data = [
@@ -127,9 +122,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
     public function test_status_required() {
         $this->resetAfterTest();
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Pending request.
         $data = [
@@ -149,9 +143,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Pending request.
         $data = [
@@ -212,9 +205,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Approved request.
         $data = [
@@ -274,9 +266,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Rejected request.
         $data = [
@@ -337,7 +328,7 @@ class auth_approved_generator_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var totara_hierarchy_generator $hierarchies */
+        /** @var \totara_hierarchy\testing\generator $hierarchies */
         $hierarchies = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $orgframework = $hierarchies->create_org_frame([]);
         $org = $hierarchies->create_org(['frameworkid' => $orgframework->id, 'idnumber' => '25']);
@@ -347,9 +338,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
         $manager = $this->getDataGenerator()->create_user(['username' => 'manager']);
         $job = \totara_job\job_assignment::create_default($manager->id, ['idnumber' => '27']);
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Pending request.
         $data = [
@@ -436,7 +426,7 @@ class auth_approved_generator_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var totara_hierarchy_generator $hierarchies */
+        /** @var \totara_hierarchy\testing\generator $hierarchies */
         $hierarchies = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $orgframework = $hierarchies->create_org_frame([]);
         $org = $hierarchies->create_org(['frameworkid' => $orgframework->id, 'idnumber' => '25']);
@@ -446,9 +436,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
         $manager = $this->getDataGenerator()->create_user(['username' => 'manager']);
         $job = \totara_job\job_assignment::create_default($manager->id, ['idnumber' => '27']);
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Pending request.
         $data = [
@@ -536,7 +525,7 @@ class auth_approved_generator_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var totara_hierarchy_generator $hierarchies */
+        /** @var \totara_hierarchy\testing\generator $hierarchies */
         $hierarchies = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $orgframework = $hierarchies->create_org_frame([]);
         $org = $hierarchies->create_org(['frameworkid' => $orgframework->id, 'idnumber' => '25']);
@@ -546,9 +535,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
         $manager = $this->getDataGenerator()->create_user(['username' => 'manager']);
         $job = \totara_job\job_assignment::create_default($manager->id, ['idnumber' => '27']);
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Pending request.
         $data = [
@@ -636,9 +624,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
         $approver = $this->getDataGenerator()->create_user();
 
         // Approved request.
@@ -683,9 +670,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
     }
 
     public function test_create_signup_invalid_country() {
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Approved request.
         $data = [
@@ -704,9 +690,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
     }
 
     public function test_create_signup_invalid_language() {
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Approved request.
         $data = [
@@ -725,9 +710,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
     }
 
     public function test_create_signup_invalid_status() {
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Approved request.
         $data = [
@@ -745,9 +729,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
     }
 
     public function test_create_signup_invalid_organisationid() {
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Approved request.
         $data = [
@@ -766,9 +749,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
     }
 
     public function test_create_signup_invalid_positionid() {
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Approved request.
         $data = [
@@ -787,9 +769,8 @@ class auth_approved_generator_testcase extends advanced_testcase {
     }
 
     public function test_create_signup_invalid_managerid() {
-        /** @var auth_approved_generator $generator */
+        /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
-        $this->assertInstanceOf('auth_approved_generator', $generator);
 
         // Approved request.
         $data = [

@@ -96,7 +96,7 @@ class core_tag_totara_catalog_tag_string_case_testcase extends advanced_testcase
 
         $gen = static::getDataGenerator();
 
-        /** @var totara_program_generator $proggen */
+        /** @var \totara_program\testing\generator $proggen */
         $proggen = $gen->get_plugin_generator('totara_program');
         $program = $proggen->create_program([]);
 

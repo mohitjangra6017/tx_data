@@ -33,8 +33,8 @@ class core_enrol_tenant_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/enrol/locallib.php');
         require_once($CFG->dirroot . '/cohort/lib.php');
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 

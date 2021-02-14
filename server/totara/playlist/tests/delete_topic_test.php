@@ -34,7 +34,7 @@ class totara_playlist_delete_topic_testcase extends advanced_testcase {
         // Login as admin and start creating list of topics.
         $this->setAdminUser();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         $topics = [];
 
@@ -46,7 +46,7 @@ class totara_playlist_delete_topic_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist_names = [];
 

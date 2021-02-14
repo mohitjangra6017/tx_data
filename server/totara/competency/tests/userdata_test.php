@@ -238,7 +238,7 @@ class totara_competency_userdata_testcase extends advanced_testcase {
 
     /**
      * Get competency generator
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
         return $this->getDataGenerator()->get_plugin_generator('totara_competency');

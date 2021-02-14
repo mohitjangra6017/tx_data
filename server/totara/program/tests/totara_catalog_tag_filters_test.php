@@ -65,7 +65,7 @@ class totara_program_totara_catalog_tag_filters_testcase extends \advanced_testc
         $tagged_programs = [];
         $attached_tags = [];
 
-        /** @var \totara_program_generator $program_generator */
+        /** @var \totara_program\testing\generator $program_generator */
         $program_generator = $generator->get_plugin_generator('totara_program');
         for ($i = 0; $i < $program_count; $i++) {
             $program = $program_generator->create_program(

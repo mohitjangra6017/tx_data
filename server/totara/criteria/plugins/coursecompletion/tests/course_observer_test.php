@@ -84,7 +84,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
         $this->assertEquals(0, $hook_sink->count());
 
         // We now generate a coursecompletion criterion but not for this course
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
         $criteria_generator->create_coursecompletion(['courseids' => [$data->courses[1]->id]]);
 
@@ -98,7 +98,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
 
     public function test_course_completed_single_item() {
         $data = $this->setup_data();
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
         $criterion = $criteria_generator->create_coursecompletion(['courseids' => [$data->courses[1]->id]]);
 
@@ -116,7 +116,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
     public function test_course_completed_multiple_items() {
         $data = $this->setup_data();
 
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $criteria = [
@@ -142,7 +142,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
         /** @var phpunit_hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $criteria = [
@@ -185,7 +185,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
 
     public function test_course_deleted_not_used() {
         $data = $this->setup_data();
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         /** @var phpunit_hook_sink $hook_sink */
@@ -219,7 +219,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
 
     public function test_course_deleted() {
         $data = $this->setup_data();
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         /** @var phpunit_hook_sink $hook_sink */
@@ -264,7 +264,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
         require_once($CFG->dirroot . '/backup/backup.class.php');
 
         $data = $this->setup_data();
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         /** @var phpunit_hook_sink $hook_sink */
@@ -329,7 +329,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
 
     public function test_course_settings_changed() {
         $data = $this->setup_data();
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         /** @var phpunit_hook_sink $hook_sink */
@@ -379,7 +379,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
     public function test_course_completion_reset() {
         $data = $this->setup_data();
 
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $criteria = [

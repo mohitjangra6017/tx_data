@@ -36,7 +36,7 @@ require_once($CFG->dirroot . '/totara/program/lib.php');
  */
 class totara_certification_events_testcase extends advanced_testcase {
 
-    /** @var totara_program_generator */
+    /** @var \totara_program\testing\generator */
     private $program_generator = null;
     /** @var program */
     private $program = null;

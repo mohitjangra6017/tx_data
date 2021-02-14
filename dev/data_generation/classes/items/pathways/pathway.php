@@ -31,7 +31,6 @@ use degeneration\items\item;
 use Exception;
 use ReflectionClass;
 use totara_competency\entity\scale_value;
-use totara_competency_generator;
 
 /**
  * Class criterion
@@ -140,7 +139,7 @@ abstract class pathway extends item {
     /**
      * Get competency generator
      *
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     public function generator() {
         return App::generator()->get_plugin_generator('totara_competency');

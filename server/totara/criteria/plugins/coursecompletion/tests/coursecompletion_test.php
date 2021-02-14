@@ -460,7 +460,7 @@ class criteria_coursecompletion_testcase extends advanced_testcase {
     public function test_save_with_item_validation() {
         global $CFG;
 
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         // Completion only enabled for every second course

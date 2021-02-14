@@ -74,6 +74,7 @@ class totara_core_task_send_reminder_messages_test extends reportcache_advanced_
 
         // Grab a generator, we're going to need this.
         $generator = $this->getDataGenerator();
+        $job_generator = \totara_job\testing\generator::instance();
 
         // Generate a course with completion enabled and set to start on enrol.
         $coursedefaults = array(
@@ -100,13 +101,14 @@ class totara_core_task_send_reminder_messages_test extends reportcache_advanced_
         ));
 
         // Create a manager and a learner with that same position assignment.
-        $this->manager = $generator->create_user(array('username' => 'manager'));
-        $this->learner1 = $generator->create_user(array('username' => 'learner1', 'managerid' => $this->manager->id));
-        $this->learner2 = $generator->create_user(array('username' => 'learner2', 'managerid' => $this->manager->id));
-        $this->learner3 = $generator->create_user(array('username' => 'learner3', 'managerid' => $this->manager->id));
+
+        $this->manager = $job_generator->create_user_and_job(array('username' => 'manager'))[0];
+        $this->learner1 = $job_generator->create_user_and_job(array('username' => 'learner1', 'managerid' => $this->manager->id))[0];
+        $this->learner2 = $job_generator->create_user_and_job(array('username' => 'learner2', 'managerid' => $this->manager->id))[0];
+        $this->learner3 = $job_generator->create_user_and_job(array('username' => 'learner3', 'managerid' => $this->manager->id))[0];
 
         // Give each user a second manager.
-        $secondmanager = $generator->create_user(['username' => 'butter_manager']);
+        $secondmanager = $job_generator->create_user_and_job(['username' => 'butter_manager'])[0];
         $managerja = \totara_job\job_assignment::create_default($secondmanager->id);
         \totara_job\job_assignment::create_default($this->learner1->id, array('managerjaid' => $managerja->id, 'fullname' => 'Head banana ripener'));
         \totara_job\job_assignment::create_default($this->learner2->id, array('managerjaid' => $managerja->id, 'fullname' => 'Internet explorer'));
@@ -648,8 +650,6 @@ class totara_core_task_send_reminder_messages_test extends reportcache_advanced_
 
         // Create a learner, the generator gives them a job assignment by default - delete that.
         $learner3 =  $this->getDataGenerator()->create_user();
-        $learner3_ja = \totara_job\job_assignment::get_first($learner3->id);
-        $DB->delete_records('job_assignment', array('id' => $learner3_ja->id));
 
         $sink = $this->redirectMessages();
 

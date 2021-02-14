@@ -37,7 +37,7 @@ class container_workspace_fetch_deleted_suspended_members_testcase extends advan
         // Create a workspace as user one.
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -86,7 +86,7 @@ class container_workspace_fetch_deleted_suspended_members_testcase extends advan
         // Log in as user one to create the workspace.
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 

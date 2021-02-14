@@ -27,18 +27,15 @@ require __DIR__ . '/../../server/config.php';
 
 /** @var core_config $CFG */
 
-require_once($CFG->libdir . '/phpunit/classes/util.php');
 require_once($CFG->dirroot . '/totara/plan/lib.php');
 
 global $DB;
 
 $USER = get_admin();
 
-$generator = phpunit_util::get_data_generator();
-/** @var totara_hierarchy_generator $hierarchy_generator */
-$hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
-/** @var totara_plan_generator $plan_generator */
-$plan_generator = $generator->get_plugin_generator('totara_plan');
+$generator = \core\testing\generator::instance();
+$hierarchy_generator = \totara_hierarchy\testing\generator::instance();
+$plan_generator = \totara_plan\testing\generator::instance();
 
 /****************************
  * START PARAMETERS
@@ -162,7 +159,7 @@ mtrace("Finished creating test data");
  *
  * @param string $hierarchy_type
  * @param int $frameworkid
- * @param totara_hierarchy_generator $hierarchy_generator
+ * @param \totara_hierarchy\testing\generator $hierarchy_generator
  * @param int $amount
  * @param int $parentid
  * @param int $level
@@ -173,7 +170,7 @@ mtrace("Finished creating test data");
 function create_hierarchy_items(
     string $hierarchy_type,
     int $frameworkid,
-    totara_hierarchy_generator $hierarchy_generator,
+    \totara_hierarchy\testing\generator $hierarchy_generator,
     int $amount,
     int $parentid = 0,
     int $level = 0,

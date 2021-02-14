@@ -25,7 +25,6 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
-require_once($CFG->dirroot . '/totara/cohort/tests/generator/totara_cohort_generator.class.php');
 require_once($CFG->dirroot . '/totara/cohort/lib.php');
 
 // Make constants available.
@@ -55,7 +54,7 @@ class totara_cohort_indirect_reports_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
     }
 
 

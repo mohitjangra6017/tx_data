@@ -68,8 +68,8 @@ class container_workspace_webapi_shared_cards_testcase extends advanced_testcase
     public function test_private_workspace_member_different_tenant() {
         [$workspace, $member] = $this->prepare(true, true);
 
-        /** @var totara_tenant_generator $tenant_generator */
-        $tenant_gen =  $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenant_generator */
+        $tenant_gen =  \totara_tenant\testing\generator::instance();
         $tenant2 = $tenant_gen->create_tenant();
         $tenant_gen->migrate_user_to_tenant($member->id, $tenant2->id);
 
@@ -128,13 +128,13 @@ class container_workspace_webapi_shared_cards_testcase extends advanced_testcase
     protected function prepare(bool $isprivateworkspace = false, bool $istenants = false): array {
         $gen = $this->getDataGenerator();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         $owner = $gen->create_user();
@@ -142,7 +142,7 @@ class container_workspace_webapi_shared_cards_testcase extends advanced_testcase
 
         $tenant = null;
         if ($istenants) {
-            /** @var totara_tenant_generator $tenant_generator */
+            /** @var \totara_tenant\testing\generator $tenant_generator */
             $tenant_gen = $gen->get_plugin_generator('totara_tenant');
             $tenant_gen->enable_tenants();
 
@@ -154,7 +154,7 @@ class container_workspace_webapi_shared_cards_testcase extends advanced_testcase
         $this->setUser($owner);
 
         /**
-         * @var container_workspace_generator $workspacegen
+         * @var \container_workspace\testing\generator $workspacegen
          */
         $workspacegen = $gen->get_plugin_generator('container_workspace');
 
@@ -186,8 +186,8 @@ class container_workspace_webapi_shared_cards_testcase extends advanced_testcase
      * Make another tenant manager
      */
     protected function make_other_tenant_manager(stdClass $member) {
-        /** @var totara_tenant_generator $tenant_generator */
-        $tenant_gen =  $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenant_generator */
+        $tenant_gen =  \totara_tenant\testing\generator::instance();
         $tenant2 = $tenant_gen->create_tenant();
         $tenant_gen->migrate_user_to_tenant($member->id, $tenant2->id);
 

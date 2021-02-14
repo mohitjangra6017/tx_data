@@ -38,10 +38,10 @@ require_once($CFG->dirroot . '/totara/program/program_content.class.php');
  */
 class totara_program_program_content_testcase extends advanced_testcase {
 
-    /** @var testing_data_generator */
+    /** @var \core\testing\generator */
     private $generator;
 
-    /** @var totara_program_generator*/
+    /** @var \totara_program\testing\generator*/
     private $program_generator;
 
     /** @var stdClass */
@@ -104,7 +104,7 @@ class totara_program_program_content_testcase extends advanced_testcase {
         $coursedata->{$coursesets[1]->get_set_prefix() . 'courseid'} = $this->course2->id;
         $progcontent->add_course(2, $coursedata);
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->generator->get_plugin_generator('totara_hierarchy');
         $competencyframework = $hierarchygenerator->create_comp_frame(array());
         $competencydata = array('frameworkid' => $competencyframework->id);
@@ -190,7 +190,7 @@ class totara_program_program_content_testcase extends advanced_testcase {
         $coursedata->{$coursesets[1]->get_set_prefix() . 'courseid'} = $this->course2->id;
         $progcontent->add_course(2, $coursedata);
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->generator->get_plugin_generator('totara_hierarchy');
         $competencyframework = $hierarchygenerator->create_comp_frame(array());
         $competencydata = array('frameworkid' => $competencyframework->id);
@@ -280,7 +280,7 @@ class totara_program_program_content_testcase extends advanced_testcase {
         $coursedata->{$coursesets[1]->get_set_prefix() . 'courseid'} = $this->course2->id;
         $progcontent->add_course(2, $coursedata);
 
-        /* @var totara_hierarchy_generator $hierarchygenerator */
+        /* @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->generator->get_plugin_generator('totara_hierarchy');
         $competencyframework = $hierarchygenerator->create_comp_frame(array());
         $competencydata = array('frameworkid' => $competencyframework->id);

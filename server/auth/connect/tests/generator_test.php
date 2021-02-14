@@ -32,7 +32,7 @@ class auth_connect_generator_testcase extends advanced_testcase {
     public function test_create_server() {
         $this->resetAfterTest();
 
-        /** @var auth_connect_generator $generator */
+        /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
 
         $this->setCurrentTimeStart();
@@ -64,7 +64,7 @@ class auth_connect_generator_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var auth_connect_generator $generator */
+        /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
 
         $server = $generator->create_server();
@@ -85,7 +85,7 @@ class auth_connect_generator_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var auth_connect_generator $generator */
+        /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
 
         $this->assertCount(2, $DB->get_records('user', array()));

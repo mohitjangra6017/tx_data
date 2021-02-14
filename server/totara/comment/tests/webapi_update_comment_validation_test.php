@@ -37,7 +37,7 @@ class totara_comment_webapi_update_comment_validation_testcase extends advanced_
 
         $this->setUser($user_one);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             42,
@@ -70,7 +70,7 @@ class totara_comment_webapi_update_comment_validation_testcase extends advanced_
 
         $this->setUser($user_one);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             42,

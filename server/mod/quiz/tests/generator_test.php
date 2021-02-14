@@ -42,9 +42,8 @@ class mod_quiz_generator_testcase extends advanced_testcase {
 
         $this->assertEquals(0, $DB->count_records('quiz'));
 
-        /** @var mod_quiz_generator $generator */
+        /** @var \mod_quiz\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
-        $this->assertInstanceOf('mod_quiz_generator', $generator);
         $this->assertEquals('quiz', $generator->get_modulename());
 
         $generator->create_instance(array('course'=>$SITE->id));

@@ -33,16 +33,12 @@ require_once($CFG->dirroot . '/totara/customfield/definelib.php');
 require_once($CFG->dirroot . '/totara/customfield/field/multiselect/define.class.php');
 require_once($CFG->dirroot . '/totara/customfield/field/multiselect/field.class.php');
 require_once($CFG->dirroot . '/totara/certification/lib.php');
-require_once($CFG->dirroot . '/totara/reportbuilder/tests/generator/lib.php');
 
 /**
  * @group totara_reportbuilder
  */
 abstract class reportcache_advanced_testcase extends advanced_testcase {
     use totara_reportbuilder\phpunit\report_testing;
-
-    /** @var totara_reportbuilder_cache_generator $generator */
-    protected static $generator = null;
 
     /**
      *  Get report recordset
@@ -98,19 +94,5 @@ abstract class reportcache_advanced_testcase extends advanced_testcase {
      */
     public function provider_use_cache() {
         return array(array(0), array(1));
-    }
-
-    /**
-     * Get data generator
-     * @static Late static binding of overloaded generator
-     * @return totara_reportbuilder_cache_generator
-     */
-    public static function getDataGenerator() {
-        if (is_null(static::$generator)) {
-            $generator = parent::getDataGenerator();
-            static::$generator = new totara_reportbuilder_cache_generator();
-            static::$generator->set_actual_generator($generator);
-        }
-        return static::$generator;
     }
 }

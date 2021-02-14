@@ -32,11 +32,11 @@ class totara_playlist_non_public_resources_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist();
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_survey();
 
@@ -53,11 +53,11 @@ class totara_playlist_non_public_resources_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist();
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_restricted_survey();
 
@@ -74,11 +74,11 @@ class totara_playlist_non_public_resources_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist();
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_public_survey();
 
@@ -95,11 +95,11 @@ class totara_playlist_non_public_resources_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist();
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
 
         $private_survey = $survey_generator->create_survey();

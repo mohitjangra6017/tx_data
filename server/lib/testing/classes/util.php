@@ -35,7 +35,7 @@
 abstract class testing_util {
 
     /**
-     * @var testing_data_generator
+     * @var \core\testing\generator
      */
     protected static $generator = null;
 
@@ -56,15 +56,10 @@ abstract class testing_util {
 
     /**
      * Get data generator
-     * @static
-     * @return testing_data_generator
+     * @return \core\testing\generator
      */
     public static function get_data_generator() {
-        if (is_null(self::$generator)) {
-            require_once(__DIR__.'/../generator/lib.php');
-            self::$generator = new testing_data_generator();
-        }
-        return self::$generator;
+        return \core\testing\generator::instance();
     }
 
     /**

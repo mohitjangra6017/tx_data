@@ -101,7 +101,7 @@ class mod_perform_section_participants_model_testcase extends advanced_testcase 
         $cohort = $base_generator->create_cohort();
         cohort_add_member($cohort->id, $subject->id);
 
-        /** @var mod_perform_generator $generator */
+        /** @var \mod_perform\testing\generator $generator */
         $generator = $base_generator->get_plugin_generator('mod_perform');
         $activity = $generator->create_activity_in_container(
             [

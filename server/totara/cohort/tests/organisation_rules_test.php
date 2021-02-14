@@ -28,7 +28,6 @@ global $CFG;
 
 require_once($CFG->dirroot . '/totara/reportbuilder/tests/reportcache_advanced_testcase.php');
 require_once($CFG->dirroot . '/totara/cohort/lib.php');
-require_once($CFG->libdir . '/testing/generator/lib.php');
 
 /**
  * Test organisation rules.
@@ -51,9 +50,7 @@ class totara_cohort_organisation_rules_testcase extends advanced_testcase {
     private $usersorg2 = array();
     private $usersorg3 = array();
     private $usersorg4 = array();
-    /** @var totara_cohort_generator $cohort_generator */
     private $cohort_generator = null;
-    /** @var totara_hierarchy_generator $hierarchy_generator */
     private $hierarchy_generator = null;
     const TEST_ORGANISATION_COUNT_MEMBERS = 23;
 
@@ -92,13 +89,13 @@ class totara_cohort_organisation_rules_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
 
         // Set totara_hierarchy generator.
-        $this->hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
+        $this->hierarchy_generator = \totara_hierarchy\testing\generator::instance();
 
         // Create organisations and organisation fw.
-        $name = totara_hierarchy_generator::DEFAULT_NAME_FRAMEWORK_ORGANISATION;
+        $name = $this->hierarchy_generator::DEFAULT_NAME_FRAMEWORK_ORGANISATION;
         $name .= ' ' . totara_generator_util::get_next_record_number('org_framework', 'fullname', $name);
         $data = array('fullname' => $name);
         $this->orgfw = $this->hierarchy_generator->create_framework('organisation', $data);

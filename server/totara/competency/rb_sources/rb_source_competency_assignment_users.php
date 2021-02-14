@@ -928,11 +928,8 @@ class rb_source_competency_assignment_users extends rb_base_source {
             throw new coding_exception('phpunit_column_test_add_data() cannot be used outside of unit tests');
         }
 
-        require_once($CFG->libdir . '/phpunit/classes/util.php');
-        $data_generator = phpunit_util::get_data_generator();
-
-        /** @var totara_competency_generator $competency_generator */
-        $competency_generator = $data_generator->get_plugin_generator('totara_competency');
+        $data_generator = \core\testing\generator::instance();
+        $competency_generator = \totara_competency\testing\generator::instance();
 
         $user1 = $data_generator->create_user();
         $user2 = $data_generator->create_user();

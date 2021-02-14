@@ -136,7 +136,7 @@ class totara_comment_add_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $this->setUser($user_one);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(42, 'totara_comment', 'comment');
 

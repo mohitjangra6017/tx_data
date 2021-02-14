@@ -143,7 +143,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
 
         $this->assertFalse($scale_model->is_in_use());
 
-        /** @var totara_competency_generator $comp_generator */
+        /** @var \totara_competency\testing\generator $comp_generator */
         $comp_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $assignment = $comp_generator->assignment_generator()->create_user_assignment($comp->id, $user->id);
@@ -184,7 +184,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
 
         $this->assertFalse($scale_model->is_in_use());
 
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
 
         $this->setAdminUser();
@@ -221,7 +221,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
 
         $this->assertFalse($scale_model->is_in_use());
 
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
 
         $this->setAdminUser();
@@ -314,7 +314,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
     }
 
     /**
-     * @return totara_hierarchy_generator
+     * @return \totara_hierarchy\testing\generator
      */
     protected function generator() {
         return $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');

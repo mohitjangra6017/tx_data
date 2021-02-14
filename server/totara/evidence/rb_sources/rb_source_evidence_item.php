@@ -808,10 +808,7 @@ class rb_source_evidence_item extends rb_base_source {
             throw new coding_exception('phpunit_column_test_add_data() cannot be used outside of unit tests');
         }
 
-        require_once($CFG->libdir . '/phpunit/classes/util.php');
-        $data_generator = phpunit_util::get_data_generator();
-        /** @var totara_evidence_generator $evidence_generator */
-        $evidence_generator = $data_generator->get_plugin_generator('totara_evidence');
+        $evidence_generator = \totara_evidence\testing\generator::instance();
         $evidence_generator->create_evidence_type(['name' => 'Type']);
         $evidence_generator->create_evidence_item(['type' => 'Type']);
     }

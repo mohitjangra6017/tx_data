@@ -121,8 +121,8 @@ class mod_perform_webapi_mutation_toggle_activity_close_on_completion_setting_te
     private function setup_env(bool $setting = false): array {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container();
 
         $activity_details = [

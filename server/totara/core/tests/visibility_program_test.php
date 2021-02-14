@@ -39,7 +39,7 @@ class totara_core_visibility_program_testcase extends advanced_testcase {
         unset($CFG->audiencevisibility);
 
         $gen = $this->getDataGenerator();
-        /** @var totara_program_generator $proggren */
+        /** @var \totara_program\testing\generator $proggren */
         $proggren = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $cap = 'totara/program:viewhiddenprograms';
 
@@ -182,10 +182,10 @@ class totara_core_visibility_program_testcase extends advanced_testcase {
         unset($CFG->audiencevisibility);
 
         $gen = $this->getDataGenerator();
-        /** @var totara_program_generator $proggren */
+        /** @var \totara_program\testing\generator $proggren */
         $proggren = $this->getDataGenerator()->get_plugin_generator('totara_program');
 
-        /** @var totara_tenant_generator $multitenancy */
+        /** @var \totara_tenant\testing\generator $multitenancy */
         $multitenancy = $gen->get_plugin_generator('totara_tenant');
 
         $multitenancy->enable_tenants();
@@ -336,10 +336,10 @@ class totara_core_visibility_program_testcase extends advanced_testcase {
         unset($CFG->audiencevisibility);
 
         $gen = $this->getDataGenerator();
-        /** @var totara_program_generator $proggren */
+        /** @var \totara_program\testing\generator $proggren */
         $proggren = $this->getDataGenerator()->get_plugin_generator('totara_program');
 
-        /** @var totara_tenant_generator $multitenancy */
+        /** @var \totara_tenant\testing\generator $multitenancy */
         $multitenancy = $gen->get_plugin_generator('totara_tenant');
 
         $multitenancy->enable_tenants();
@@ -492,7 +492,7 @@ class totara_core_visibility_program_testcase extends advanced_testcase {
         $CFG->audiencevisibility = 1;
 
         $gen = $this->getDataGenerator();
-        /** @var totara_program_generator $proggren */
+        /** @var \totara_program\testing\generator $proggren */
         $proggren = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $cap = 'totara/program:viewhiddenprograms';
 
@@ -840,9 +840,9 @@ class totara_core_visibility_program_testcase extends advanced_testcase {
         $CFG->audiencevisibility = 1;
 
         $gen = $this->getDataGenerator();
-        /** @var totara_program_generator $proggren */
+        /** @var \totara_program\testing\generator $proggren */
         $proggren = $this->getDataGenerator()->get_plugin_generator('totara_program');
-        /** @var totara_tenant_generator $multitenancy */
+        /** @var \totara_tenant\testing\generator $multitenancy */
         $multitenancy = $gen->get_plugin_generator('totara_tenant');
 
         $multitenancy->enable_tenants();
@@ -1180,9 +1180,9 @@ class totara_core_visibility_program_testcase extends advanced_testcase {
         $CFG->audiencevisibility = 1;
 
         $gen = $this->getDataGenerator();
-        /** @var totara_program_generator $proggren */
+        /** @var \totara_program\testing\generator $proggren */
         $proggren = $this->getDataGenerator()->get_plugin_generator('totara_program');
-        /** @var totara_tenant_generator $multitenancy */
+        /** @var \totara_tenant\testing\generator $multitenancy */
         $multitenancy = $gen->get_plugin_generator('totara_tenant');
 
         $multitenancy->enable_tenants();

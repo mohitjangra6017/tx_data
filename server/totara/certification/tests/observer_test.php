@@ -55,6 +55,7 @@ class totara_certification_observer_testcase extends reportcache_advanced_testca
         $this->resetAfterTest(true);
         $CFG->enablecompletion = true;
 
+        $program_generator = \totara_program\testing\generator::instance();
 
         $this->users = array();
         for ($i = 1; $i <= 5; $i++) {
@@ -78,29 +79,29 @@ class totara_certification_observer_testcase extends reportcache_advanced_testca
             'cert_activeperiod' => '6 Months',
             'cert_windowperiod' => '2 Months',
         );
-        $this->certif1 = $this->getDataGenerator()->create_certification($certdata);
+        $this->certif1 = $program_generator->legacy_create_certification($certdata);
 
-        $this->getDataGenerator()->add_courseset_program($this->certif1->id, array($this->course1->id, $this->course2->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($this->certif1->id, array($this->course3->id), CERTIFPATH_RECERT);
+        $program_generator->legacy_add_courseset_program($this->certif1->id, array($this->course1->id, $this->course2->id), CERTIFPATH_CERT);
+        $program_generator->legacy_add_courseset_program($this->certif1->id, array($this->course3->id), CERTIFPATH_RECERT);
 
         // Assign some users.
-        $this->getDataGenerator()->assign_to_program($this->certif1->id, ASSIGNTYPE_INDIVIDUAL, $this->users[1]->id);
-        $this->getDataGenerator()->assign_to_program($this->certif1->id, ASSIGNTYPE_INDIVIDUAL, $this->users[2]->id);
-        $this->getDataGenerator()->assign_to_program($this->certif1->id, ASSIGNTYPE_INDIVIDUAL, $this->users[3]->id);
+        $program_generator->assign_to_program($this->certif1->id, ASSIGNTYPE_INDIVIDUAL, $this->users[1]->id, null ,true);
+        $program_generator->assign_to_program($this->certif1->id, ASSIGNTYPE_INDIVIDUAL, $this->users[2]->id, null ,true);
+        $program_generator->assign_to_program($this->certif1->id, ASSIGNTYPE_INDIVIDUAL, $this->users[3]->id, null ,true);
 
         // Create a certification.
         $certdata = array(
             'cert_activeperiod' => '6 Months',
             'cert_windowperiod' => '2 Months',
         );
-        $this->certif2 = $this->getDataGenerator()->create_certification($certdata);
+        $this->certif2 = $program_generator->legacy_create_certification($certdata);
 
-        $this->getDataGenerator()->add_courseset_program($this->certif2->id, array($this->course4->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($this->certif2->id, array($this->course4->id), CERTIFPATH_RECERT);
+        $program_generator->legacy_add_courseset_program($this->certif2->id, array($this->course4->id), CERTIFPATH_CERT);
+        $program_generator->legacy_add_courseset_program($this->certif2->id, array($this->course4->id), CERTIFPATH_RECERT);
 
-        $this->getDataGenerator()->assign_to_program($this->certif2->id, ASSIGNTYPE_INDIVIDUAL, $this->users[3]->id);
-        $this->getDataGenerator()->assign_to_program($this->certif2->id, ASSIGNTYPE_INDIVIDUAL, $this->users[4]->id);
-        $this->getDataGenerator()->assign_to_program($this->certif2->id, ASSIGNTYPE_INDIVIDUAL, $this->users[5]->id);
+        $program_generator->assign_to_program($this->certif2->id, ASSIGNTYPE_INDIVIDUAL, $this->users[3]->id, null ,true);
+        $program_generator->assign_to_program($this->certif2->id, ASSIGNTYPE_INDIVIDUAL, $this->users[4]->id, null ,true);
+        $program_generator->assign_to_program($this->certif2->id, ASSIGNTYPE_INDIVIDUAL, $this->users[5]->id, null ,true);
     }
 
     public function test_course_started() {

@@ -200,7 +200,7 @@ class totara_core_visibility_cache_testcase extends advanced_testcase {
         $this->getDataGenerator()->create_course(['idnumber' => 'course_1', 'visible' => 1, 'category' => $category1->id]);
         $this->getDataGenerator()->create_course(['idnumber' => 'course_2', 'visible' => 0, 'category' => $category1->id]);
 
-        /** @var totara_program_generator $proggen */
+        /** @var \totara_program\testing\generator $proggen */
         $proggen = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $proggen->create_program(['idnumber' => 'program_1', 'visible' => 0, 'category' => $category1->id]);
         $proggen->create_program(['idnumber' => 'program_2', 'visible' => 1, 'category' => $category1->id]);

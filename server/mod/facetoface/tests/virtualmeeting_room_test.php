@@ -47,7 +47,7 @@ class mod_facetoface_virtualmeeting_room_testcase extends advanced_testcase {
 
         $user1 = $this->getDataGenerator()->create_user(['username' => 'alice']);
         $this->setUser($user1);
-        /** @var mod_facetoface_generator */
+        /** @var \mod_facetoface\testing\generator */
         $seminar_generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $virtual_room = $seminar_generator->add_virtualmeeting_room(['name' => 'virtual']);
 
@@ -147,7 +147,7 @@ class mod_facetoface_virtualmeeting_room_testcase extends advanced_testcase {
     public function test_room_virtualmeeting_list() {
         $user1 = $this->getDataGenerator()->create_user(['username' => 'alice']);
         $this->setUser($user1);
-        /** @var mod_facetoface_generator */
+        /** @var \mod_facetoface\testing\generator */
         $seminar_generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $virtual_room1 = $seminar_generator->add_virtualmeeting_room(['name' => 'virtual one']);
         $virtual_room2 = $seminar_generator->add_virtualmeeting_room(['name' => 'virtual two']);
@@ -183,7 +183,7 @@ class mod_facetoface_virtualmeeting_room_testcase extends advanced_testcase {
         $user2 = $this->getDataGenerator()->create_user();
         $user3 = $this->getDataGenerator()->create_user(['deleted' => 1]);
         $this->setUser($user2);
-        /** @var mod_facetoface_generator */
+        /** @var \mod_facetoface\testing\generator */
         $seminar_generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $customroom = $seminar_generator->add_virtualmeeting_room(['name' => 'virtual', 'url' => 'link', 'usercreated' => $user2->id], ['userid' => $user2->id]);
         $customroom2 = $seminar_generator->add_custom_room(['name' => 'casual', 'usercreated' => $user2->id]);

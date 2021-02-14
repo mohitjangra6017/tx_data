@@ -35,7 +35,7 @@ class totara_playlist_webapi_check_items_access_testcase extends advanced_testca
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist(['userid' => $user_one->id]);
 
@@ -62,7 +62,7 @@ class totara_playlist_webapi_check_items_access_testcase extends advanced_testca
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $restricted_playlist = $playlist_generator->create_playlist([
             'userid' => $user_one->id,
@@ -70,7 +70,7 @@ class totara_playlist_webapi_check_items_access_testcase extends advanced_testca
         ]);
 
         // Create one private and one public articles.
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $restricted_article = $article_generator->create_article([
             'userid' => $user_one->id,
@@ -117,7 +117,7 @@ class totara_playlist_webapi_check_items_access_testcase extends advanced_testca
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $public_playlist = $playlist_generator->create_playlist([
             'userid' => $user_one->id,
@@ -125,7 +125,7 @@ class totara_playlist_webapi_check_items_access_testcase extends advanced_testca
         ]);
 
         // Create one private and one public articles.
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $private_article = $article_generator->create_article([
             'userid' => $user_one->id,
@@ -172,7 +172,7 @@ class totara_playlist_webapi_check_items_access_testcase extends advanced_testca
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $public_playlist = $playlist_generator->create_playlist([
             'userid' => $user_one->id,
@@ -180,7 +180,7 @@ class totara_playlist_webapi_check_items_access_testcase extends advanced_testca
         ]);
 
         // Create one private and one public articles.
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $public_article = $article_generator->create_article([
             'userid' => $user_one->id,
@@ -218,14 +218,14 @@ class totara_playlist_webapi_check_items_access_testcase extends advanced_testca
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist([
             'userid' => $user_one->id,
             'access' => access::PUBLIC
         ]);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article([
             'userid' => $user_one->id,

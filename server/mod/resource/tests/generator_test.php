@@ -47,8 +47,8 @@ class mod_resource_generator_testcase extends advanced_testcase {
         $this->assertEquals(0, $DB->count_records('resource'));
 
         // Create the generator object and do standard checks.
+        /** @var \mod_resource\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_resource');
-        $this->assertInstanceOf('mod_resource_generator', $generator);
         $this->assertEquals('resource', $generator->get_modulename());
 
         // Create three instances in the site course.

@@ -50,7 +50,7 @@ class block_totara_featured_links_userdata_item_testcase extends test_helper {
         };
 
         $data->systemcontext = context_system::instance();
-        /** @var block_totara_featured_links_generator $generator */
+        /** @var \block_totara_featured_links\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('block_totara_featured_links');
         $data->user1 = new target_user($this->getDataGenerator()->create_user());
         $data->user2 = new target_user($this->getDataGenerator()->create_user());

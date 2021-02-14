@@ -60,23 +60,19 @@ class ml_recommender_export_user_interaction_testcase extends advanced_testcase 
     }
 
     /**
-     * @return ml_recommender_generator
+     * @return \ml_recommender\testing\generator
      */
-    private function get_recommender_generator(): ml_recommender_generator {
-        $generator = self::getDataGenerator();
-
-        /** @var ml_recommender_generator $recommender_generator */
-        $recommender_generator = $generator->get_plugin_generator('ml_recommender');
-        return $recommender_generator;
+    private function get_recommender_generator(): \ml_recommender\testing\generator {
+        return \ml_recommender\testing\generator::instance();
     }
 
     /**
-     * @return engage_article_generator
+     * @return \engage_article\testing\generator
      */
-    private function get_article_generator(): engage_article_generator {
+    private function get_article_generator(): \engage_article\testing\generator {
         $generator = self::getDataGenerator();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         return $article_generator;
     }
@@ -148,7 +144,7 @@ class ml_recommender_export_user_interaction_testcase extends advanced_testcase 
     public function test_export_items_with_tenancy(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

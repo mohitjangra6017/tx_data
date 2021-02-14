@@ -314,7 +314,7 @@ class mod_facetoface_signup_states_testcase extends advanced_testcase {
     private function make_signup(): signup {
         // Just boring boilerplate code as usual.
         $gen = $this->getDataGenerator();
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
         $user = $gen->create_user();
         $course = $gen->create_course();

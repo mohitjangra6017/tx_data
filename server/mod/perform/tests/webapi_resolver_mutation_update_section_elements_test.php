@@ -41,8 +41,8 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
 
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $activity = $perform_generator->create_activity_in_container();
         $section = $perform_generator->create_section($activity);
@@ -116,8 +116,8 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
 
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $activity = $perform_generator->create_activity_in_container();
         $section = $perform_generator->create_section($activity);
@@ -191,8 +191,8 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
 
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $activity = $perform_generator->create_activity_in_container();
         $section = $perform_generator->create_section($activity);
@@ -290,8 +290,8 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
 
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $activity = $perform_generator->create_activity_in_container();
         $section = $perform_generator->create_section($activity);
@@ -401,8 +401,8 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
 
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $activity = $perform_generator->create_activity_in_container();
         $section = $perform_generator->create_section($activity);
@@ -531,7 +531,7 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
 
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
 
         $activity = $perform_generator->create_activity_in_container();
@@ -700,7 +700,7 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
     public function test_validation_create_new(string $plugin1, string $id1, string $plugin2, string $id2, bool $passes_validation) {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
 
         $activity = $perform_generator->create_activity_in_container();
@@ -744,7 +744,7 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
     public function test_validation_update() {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
 
         $activity = $perform_generator->create_activity_in_container();

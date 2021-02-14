@@ -263,7 +263,7 @@ class totara_engage_webapi_middleware_require_valid_recipients_testcase extends 
     }
 
     private function create_workspace($name, $userid, $summary = null, $private = false, $hidden = false): \container_workspace\workspace {
-        /** @var container_workspace_generator $generator */
+        /** @var \container_workspace\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('container_workspace');
         return $generator->create_workspace($name, $summary ?? "{$name} summary", FORMAT_PLAIN, $userid, $private, $hidden);
     }

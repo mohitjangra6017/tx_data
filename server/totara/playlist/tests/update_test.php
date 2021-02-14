@@ -64,7 +64,7 @@ class totara_playlist_update_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist(['access' => access::PUBLIC]);
 
@@ -84,7 +84,7 @@ class totara_playlist_update_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist(['summaryformat' => FORMAT_PLAIN]);
 
@@ -115,7 +115,7 @@ class totara_playlist_update_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
 
         // Createthe playlist for user one.
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist(['userid' => $user_one->id]);
 

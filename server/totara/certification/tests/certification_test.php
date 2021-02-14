@@ -134,6 +134,8 @@ class totara_certification_certification_testcase extends reportcache_advanced_t
     private function actions_stage_1() {
         global $DB;
 
+        $program_generator = \totara_program\testing\generator::instance();
+
         $setuptime = time();
         $this->setuptimeminimum = $setuptime;
         // By waiting a little bit, we ensure that our time asserts are correct, and not just happening
@@ -160,14 +162,14 @@ class totara_certification_certification_testcase extends reportcache_advanced_t
             'cert_windowperiod' => '90 day',
             'cert_recertifydatetype' => CERTIFRECERT_EXPIRY,
         );
-        $this->certprogram1 = $this->getDataGenerator()->create_certification($cert1data);
+        $this->certprogram1 = $program_generator->legacy_create_certification($cert1data);
         $cert2data = array(
             'cert_learningcomptype' => CERTIFTYPE_PROGRAM,
             'cert_activeperiod' => '365 day',
             'cert_windowperiod' => '90 day',
             'cert_recertifydatetype' => CERTIFRECERT_COMPLETION,
         );
-        $this->certprogram2 = $this->getDataGenerator()->create_certification($cert2data);
+        $this->certprogram2 = $program_generator->legacy_create_certification($cert2data);
         $cert3data = array(
             'cert_learningcomptype' => CERTIFTYPE_PROGRAM,
             'cert_activeperiod' => '365 day',
@@ -175,21 +177,21 @@ class totara_certification_certification_testcase extends reportcache_advanced_t
             'cert_minimumactiveperiod' => '90 day',
             'cert_recertifydatetype' => CERTIFRECERT_FIXED,
         );
-        $this->certprogram3 = $this->getDataGenerator()->create_certification($cert3data);
+        $this->certprogram3 = $program_generator->legacy_create_certification($cert3data);
         $cert4data = array(
             'cert_learningcomptype' => CERTIFTYPE_PROGRAM,
             'cert_activeperiod' => '365 day',
             'cert_windowperiod' => '90 day',
             'cert_recertifydatetype' => CERTIFRECERT_EXPIRY,
         );
-        $this->certprogram4 = $this->getDataGenerator()->create_certification($cert4data);
+        $this->certprogram4 = $program_generator->legacy_create_certification($cert4data);
         $cert5data = array(
             'cert_learningcomptype' => CERTIFTYPE_PROGRAM,
             'cert_activeperiod' => '365 day',
             'cert_windowperiod' => '90 day',
             'cert_recertifydatetype' => CERTIFRECERT_COMPLETION,
         );
-        $this->certprogram5 = $this->getDataGenerator()->create_certification($cert5data);
+        $this->certprogram5 = $program_generator->legacy_create_certification($cert5data);
         $cert6data = array(
             'cert_learningcomptype' => CERTIFTYPE_PROGRAM,
             'cert_activeperiod' => '365 day',
@@ -197,7 +199,7 @@ class totara_certification_certification_testcase extends reportcache_advanced_t
             'cert_minimumactiveperiod' => '180 day',
             'cert_recertifydatetype' => CERTIFRECERT_FIXED,
         );
-        $this->certprogram6 = $this->getDataGenerator()->create_certification($cert6data);
+        $this->certprogram6 = $program_generator->legacy_create_certification($cert6data);
         $this->certprograms = array($this->certprogram1, $this->certprogram2, $this->certprogram3,
                                     $this->certprogram4, $this->certprogram5, $this->certprogram6);
         $this->certsforcompletion = array($this->certprogram1, $this->certprogram2, $this->certprogram3);
@@ -213,12 +215,12 @@ class totara_certification_certification_testcase extends reportcache_advanced_t
                 if ($i % 2) { // Half of the users (with odd $i) have an assignment due date.
                     $record = array('completiontime' => date('d/m/Y', $this->assignmentduedate),
                         'completionevent' => COMPLETION_EVENT_NONE);
-                    $this->getDataGenerator()->assign_to_program($certprogram->id,
-                        ASSIGNTYPE_INDIVIDUAL, $this->users[$i]->id, $record);
+                    $program_generator->assign_to_program($certprogram->id,
+                        ASSIGNTYPE_INDIVIDUAL, $this->users[$i]->id, $record, true);
                     $this->userswithassignmentduedate[] = $this->users[$i];
                 } else {
-                    $this->getDataGenerator()->assign_to_program($certprogram->id,
-                        ASSIGNTYPE_INDIVIDUAL, $this->users[$i]->id);
+                    $program_generator->assign_to_program($certprogram->id,
+                        ASSIGNTYPE_INDIVIDUAL, $this->users[$i]->id, null, true);
                 }
             }
         }
@@ -228,8 +230,8 @@ class totara_certification_certification_testcase extends reportcache_advanced_t
         foreach ($this->certprograms as $certprogram) {
             $course = $this->getDataGenerator()->create_course();
             $this->courses[$certprogram->id] = $course;
-            $this->getDataGenerator()->add_courseset_program($certprogram->id, array($course->id), CERTIFPATH_CERT);
-            $this->getDataGenerator()->add_courseset_program($certprogram->id, array($course->id), CERTIFPATH_RECERT);
+            $program_generator->legacy_add_courseset_program($certprogram->id, array($course->id), CERTIFPATH_CERT);
+            $program_generator->legacy_add_courseset_program($certprogram->id, array($course->id), CERTIFPATH_RECERT);
         }
 
         // Figure out which courses we want to do the completion actions on, in stages 2, 4 and 6.

@@ -76,7 +76,7 @@ class webapi_query_manual_relationship_options_testcase extends advanced_testcas
         self::setUser($as_user);
 
         $data_generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         $activity = $perform_generator->create_activity_in_container([

@@ -37,7 +37,7 @@ class container_workspace_track_workspace_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $this->setAdminUser();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -90,7 +90,7 @@ class container_workspace_track_workspace_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $this->setAdminUser();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -145,7 +145,7 @@ class container_workspace_track_workspace_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $this->setAdminUser();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -207,7 +207,7 @@ class container_workspace_track_workspace_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $this->setAdminUser();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 

@@ -1,14 +1,10 @@
 <?php
-// NOTE: If this throws an error at first, just uncomment the two offending lines
-// in mod_perform_generator_class.php (advanced_testcase::set...).
-
 define('CLI_SCRIPT', 1);
 require __DIR__ . '/../../server/config.php';
 
 /** @var core_config $CFG */
 
 require_once($CFG->dirroot . '/lib/clilib.php');
-require_once($CFG->dirroot . '/lib/phpunit/classes/util.php');
 
 use core\entity\user;
 use mod_perform\entity\activity\subject_instance;
@@ -31,8 +27,8 @@ $do_generate_instances = false;
 
 core\session\manager::set_user(get_admin());
 
-$generator = phpunit_util::get_data_generator()->get_plugin_generator('mod_perform');
-$config = mod_perform_activity_generator_configuration::new()
+$generator = \mod_perform\testing\generator::instance();
+$config = \mod_perform\testing\activity_generator_configuration::new()
     ->set_number_of_activities($num_activities)
     ->set_number_of_tracks_per_activity($num_tracks_per_activity)
     ->disable_subject_instances()

@@ -88,7 +88,7 @@ abstract class totara_competency_assignment_actions_testcase extends advanced_te
     /**
      * Get hierarchy specific generator
      *
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
         return $this->getDataGenerator()->get_plugin_generator('totara_competency');

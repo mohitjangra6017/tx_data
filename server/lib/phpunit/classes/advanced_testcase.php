@@ -481,7 +481,7 @@ abstract class advanced_testcase extends base_testcase {
      *
      * @return phpunit_message_sink
      */
-    public function redirectMessages() {
+    final public static function redirectMessages() {
         return phpunit_util::start_message_redirection();
     }
 
@@ -494,7 +494,7 @@ abstract class advanced_testcase extends base_testcase {
      *
      * @return phpunit_phpmailer_sink
      */
-    public function redirectEmails() {
+    final public static function redirectEmails() {
         return phpunit_util::start_phpmailer_redirection();
     }
 
@@ -507,7 +507,7 @@ abstract class advanced_testcase extends base_testcase {
      *
      * @return phpunit_event_sink
      */
-    public function redirectEvents() {
+    final public static function redirectEvents() {
         return phpunit_util::start_event_redirection();
     }
 
@@ -520,7 +520,7 @@ abstract class advanced_testcase extends base_testcase {
      *
      * @return phpunit_hook_sink
      */
-    public function redirectHooks() {
+    final public static function redirectHooks() {
         return phpunit_util::start_hook_redirection();
     }
 
@@ -689,11 +689,10 @@ abstract class advanced_testcase extends base_testcase {
 
     /**
      * Get data generator
-     * @static
-     * @return testing_data_generator
+     * @return \core\testing\generator;
      */
     public static function getDataGenerator() {
-        return phpunit_util::get_data_generator();
+        return \core\testing\generator::instance();
     }
 
     /**

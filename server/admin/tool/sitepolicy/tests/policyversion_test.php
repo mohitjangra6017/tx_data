@@ -51,7 +51,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
         $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Cannot create draft as it already exists');
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $sitepolicy = $generator->create_draft_policy([]);
@@ -65,7 +65,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $sitepolicy = $generator->create_published_policy([]);
@@ -99,7 +99,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $sitepolicy = $generator->create_published_policy([]);
@@ -146,7 +146,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -204,7 +204,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
         $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('This version was published, so it cannot be deleted');
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -248,7 +248,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -302,7 +302,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -546,7 +546,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_get_versionlist($debugkey, $options) {
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $sitepolicy = $generator->create_multiversion_policy($options);
@@ -610,7 +610,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -687,7 +687,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -792,7 +792,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -863,7 +863,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $sitepolicy = $generator->create_published_policy([]);
@@ -900,7 +900,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Cannot archive unpublished version');
 
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $sitepolicy = $generator->create_published_policy([]);
@@ -915,7 +915,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $sitepolicy = $generator->create_draft_policy([]);
@@ -961,7 +961,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_has_active($debugkey, $options) {
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $sitepolicy = $generator->create_multiversion_policy($options);
@@ -980,7 +980,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_get_languages() {
 
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -1021,7 +1021,7 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
 
     public function test_incomplete_language_translations() {
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
         $options = [
             'authorid' => 2,

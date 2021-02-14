@@ -120,7 +120,7 @@ class webapi_resolver_type_scale_testcase extends advanced_testcase {
             public $user;
         };
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator =  $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $scale = $hierarchy_generator->create_scale(

@@ -43,7 +43,7 @@ abstract class orm_entity_relation_testcase extends advanced_testcase {
     /**
      * Date generator shortcut
      *
-     * @return testing_data_generator
+     * @return \core\testing\generator
      */
     protected function generator() {
         return self::getDataGenerator();

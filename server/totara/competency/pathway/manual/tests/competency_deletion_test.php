@@ -41,7 +41,7 @@ class pathway_manual_competency_deletion_testcase extends advanced_testcase {
         $user_1 = $this->getDataGenerator()->create_user();
         $user_2 = $this->getDataGenerator()->create_user();
 
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $comp_1 = $generator->create_competency();

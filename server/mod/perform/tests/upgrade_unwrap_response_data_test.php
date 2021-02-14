@@ -96,10 +96,10 @@ class upgrade_unwrap_response_data_testcase extends advanced_testcase {
     }
 
     private function save_response_data($response_data, bool $encode = true): element_response {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
-        $config = mod_perform_activity_generator_configuration::new()->set_number_of_elements_per_section(1);
+        $config = \mod_perform\testing\activity_generator_configuration::new()->set_number_of_elements_per_section(1);
         $perform_generator->create_full_activities($config);
 
         $participant_instance_id = participant_instance::repository()->order_by('id')->first()->id;

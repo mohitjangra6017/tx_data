@@ -56,8 +56,8 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -94,8 +94,8 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -137,8 +137,8 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -211,8 +211,8 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -299,8 +299,8 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
     ): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_user = user::logged_in();
         $subject_user_id = $subject_user->id;
@@ -450,7 +450,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
         self::setAdminUser();
 
         $data_generator = self::getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         /** @var activity $activity */
@@ -478,8 +478,8 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
     public function test_responder_group_population_for_non_subject(string $fetching_as): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_user = user::logged_in();
         $subject_user_id = $subject_user->id;
@@ -670,8 +670,8 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
     public function test_responder_group_population_for_manager_where_there_is_another_manager(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_user = user::logged_in();
         $subject_user_id = $subject_user->id;
@@ -779,7 +779,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
     public function test_responder_group_population_same_user_is_manager_and_appraiser(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
+        /** @var \mod_perform\testing\generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
 
         $subject_user = user::logged_in();
@@ -831,7 +831,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
     public function test_responder_group_population_for_anonymous_activity(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
+        /** @var \mod_perform\testing\generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
 
         $subject_user = user::logged_in();
@@ -1135,9 +1135,9 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
      * @throws coding_exception
      */
     private function create_activity(): activity {
-        /** @var mod_perform_generator $generator */
+        /** @var \mod_perform\testing\generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
-        $activity_config = new mod_perform_activity_generator_configuration();
+        $activity_config = new \mod_perform\testing\activity_generator_configuration();
         $activity_config->set_number_of_elements_per_section(2)
             ->set_relationships_per_section(
                 [

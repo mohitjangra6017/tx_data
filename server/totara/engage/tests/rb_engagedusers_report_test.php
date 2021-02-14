@@ -50,16 +50,16 @@ class totara_engage_rb_engagedusers_report_testcase extends advanced_testcase {
         $user2 = $gen->create_user();
         $user3 = $gen->create_user();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
-        /** @var container_workspace_generator $workspacegen */
+        /** @var \container_workspace\testing\generator $workspacegen */
         $workspacegen = $gen->get_plugin_generator('container_workspace');
 
         // Create artcles.
@@ -361,7 +361,7 @@ class totara_engage_rb_engagedusers_report_testcase extends advanced_testcase {
      * @param string $name
      * @param int $number
      * @param int $userid
-     * @param component_generator_base $generator
+     * @param \core\testing\component_generator $generator
      * @param int|null $access
      * @return array
      */
@@ -369,7 +369,7 @@ class totara_engage_rb_engagedusers_report_testcase extends advanced_testcase {
         string $name,
         int $number,
         int $userid,
-        component_generator_base $generator,
+        \core\testing\component_generator $generator,
         ?int $access = access::PRIVATE
     ): array {
         $list = [];
@@ -390,13 +390,13 @@ class totara_engage_rb_engagedusers_report_testcase extends advanced_testcase {
     /**
      * @param int $number
      * @param stdClass $user
-     * @param component_generator_base $generator
+     * @param \core\testing\component_generator $generator
      * @return array
      */
     private function create_workspaces(
         int $number,
         stdClass $user,
-        component_generator_base $generator
+        \core\testing\component_generator $generator
     ): array {
         $list = [];
         for ($i = 0; $i < $number; $i++) {
@@ -418,7 +418,7 @@ class totara_engage_rb_engagedusers_report_testcase extends advanced_testcase {
         $user_two = $generator->create_user();
         $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -428,7 +428,7 @@ class totara_engage_rb_engagedusers_report_testcase extends advanced_testcase {
         $tenant_generator->migrate_user_to_tenant($user_one->id, $tenant_one->id);
         $tenant_generator->migrate_user_to_tenant($user_two->id, $tenant_two->id);
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $generator->get_plugin_generator('engage_article');
 
         // Create articles for user_one.

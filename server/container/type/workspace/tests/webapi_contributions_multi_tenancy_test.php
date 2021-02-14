@@ -34,7 +34,7 @@ class container_workspace_webapi_contributions_multi_tenancy_testcase extends ad
     public function test_fetch_contributions_of_public_workspace_by_non_member_in_different_tenant(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -47,7 +47,7 @@ class container_workspace_webapi_contributions_multi_tenancy_testcase extends ad
         // Log in as user one and start creating the workspace.
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -76,7 +76,7 @@ class container_workspace_webapi_contributions_multi_tenancy_testcase extends ad
     public function test_fetch_contributions_of_public_workspace_by_non_member_in_same_tenant(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -88,7 +88,7 @@ class container_workspace_webapi_contributions_multi_tenancy_testcase extends ad
         // Log in as user one and start creating the workspace.
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 

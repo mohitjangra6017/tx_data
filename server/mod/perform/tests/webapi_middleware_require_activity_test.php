@@ -111,7 +111,7 @@ class mod_perform_webapi_middleware_require_activity_testcase extends advanced_t
      * @covers ::handle
      */
     public function test_require_on_wrong_tenant(): void {
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
 
         $tenant1 = $tenantgenerator->create_tenant();
@@ -274,8 +274,8 @@ class mod_perform_webapi_middleware_require_activity_testcase extends advanced_t
     public function test_require_by_subject_instance_ids(): void {
         $this->setAdminUser();
         // Create 2 activities with 2 users each.
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
-        $config = mod_perform_activity_generator_configuration::new()
+        $generator = \mod_perform\testing\generator::instance();
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(2)
             ->set_number_of_users_per_user_group_type(2);
 
@@ -347,7 +347,7 @@ class mod_perform_webapi_middleware_require_activity_testcase extends advanced_t
             $this->setAdminUser();
         }
 
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $generator = \mod_perform\testing\generator::instance();
         $activity = $generator->create_activity_in_container([
             'create_track' => true,
             'create_section' => true,

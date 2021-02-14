@@ -148,7 +148,7 @@ class container_workspace_webapi_get_file_extensions_testcase extends advanced_t
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
         $this->setUser($user);
-        /** @var container_workspace_generator $workspace_gen */
+        /** @var \container_workspace\testing\generator $workspace_gen */
         $workspace_gen = $this->getDataGenerator()->get_plugin_generator('container_workspace');
         $workspace = $workspace_gen->create_workspace(null, null, null, $user->id, $private, $hidden);
 

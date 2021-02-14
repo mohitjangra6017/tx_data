@@ -82,12 +82,12 @@ class mod_perform_activity_type_model_testcase extends advanced_testcase {
             'feedback' => 1
         ];
 
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $generator = \mod_perform\testing\generator::instance();
         foreach ($types as $type => $count) {
             $data = ['activity_type' => $type];
 
             for ($i = 0; $i < $count; $i++) {
-                /** @var mod_perform_generator $perform_generator */
+                /** @var \mod_perform\testing\generator $perform_generator */
                 $generator->create_activity_in_container($data);
             }
         }

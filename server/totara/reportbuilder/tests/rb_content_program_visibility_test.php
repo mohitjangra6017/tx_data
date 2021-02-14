@@ -29,7 +29,7 @@ class totara_reportbuilder_rb_content_program_visibility_testcase extends advanc
     public function test_program_report_source_without_tenants() {
         global $DB;
 
-        /** @var totara_program_generator $program_gen */
+        /** @var \totara_program\testing\generator $program_gen */
         $program_gen = self::getDataGenerator()->get_plugin_generator('totara_program');
 
         self::setAdminUser();
@@ -166,7 +166,7 @@ class totara_reportbuilder_rb_content_program_visibility_testcase extends advanc
     public function test_program_report_source_with_nonisolated_tenants() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
         $tenantgenerator = self::getDataGenerator()->get_plugin_generator('totara_tenant');
         $tenantgenerator->enable_tenants();
         $tenant1 = $tenantgenerator->create_tenant();
@@ -174,7 +174,7 @@ class totara_reportbuilder_rb_content_program_visibility_testcase extends advanc
         set_config('tenantsisolated', 0);
         $tenantgenerator->enable_tenants();
 
-        /** @var totara_program_generator $program_gen */
+        /** @var \totara_program\testing\generator $program_gen */
         $program_gen = self::getDataGenerator()->get_plugin_generator('totara_program');
 
         self::setAdminUser();
@@ -396,7 +396,7 @@ class totara_reportbuilder_rb_content_program_visibility_testcase extends advanc
     public function test_program_report_source_with_isolated_tenants() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
         $tenantgenerator = self::getDataGenerator()->get_plugin_generator('totara_tenant');
         $tenantgenerator->enable_tenants();
         $tenant1 = $tenantgenerator->create_tenant();
@@ -404,7 +404,7 @@ class totara_reportbuilder_rb_content_program_visibility_testcase extends advanc
         set_config('tenantsisolated', 1);
         $tenantgenerator->enable_tenants();
 
-        /** @var totara_program_generator $program_gen */
+        /** @var \totara_program\testing\generator $program_gen */
         $program_gen = self::getDataGenerator()->get_plugin_generator('totara_program');
 
         self::setAdminUser();

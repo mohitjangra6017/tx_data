@@ -39,11 +39,11 @@ class engage_article_catalog_multi_tenancy_testcase extends advanced_testcase {
 
         $topic_ids = [];
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         for ($i = 0; $i < 2; $i++) {
             $topic = $topic_generator->create_topic();
@@ -60,7 +60,7 @@ class engage_article_catalog_multi_tenancy_testcase extends advanced_testcase {
         $tenant_generator->migrate_user_to_tenant($user_one->id, $tenant_one->id);
         $tenant_generator->migrate_user_to_tenant($user_two->id, $tenant_two->id);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
 
         // Login as user two and start creating article.
@@ -93,7 +93,7 @@ class engage_article_catalog_multi_tenancy_testcase extends advanced_testcase {
     public function test_migrate_tenant_member_cannot_see_articles_from_old_tenant(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -107,7 +107,7 @@ class engage_article_catalog_multi_tenancy_testcase extends advanced_testcase {
         // Create topics.
         $this->setAdminUser();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         $topic_ids = [];
 
@@ -120,7 +120,7 @@ class engage_article_catalog_multi_tenancy_testcase extends advanced_testcase {
         $this->setUser($user_two);
         $recipient = new user($user_one->id);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         for ($i = 0; $i < 5; $i++) {
             $article = $article_generator->create_article([
@@ -163,21 +163,21 @@ class engage_article_catalog_multi_tenancy_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
         $topic_ids = [];
         $this->setAdminUser();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         for ($i = 0; $i < 2; $i++) {
             $topic = $topic_generator->create_topic();
             $topic_ids[] = $topic->get_id();
         }
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
 
         // Login as first user and start creating articles.

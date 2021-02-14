@@ -56,7 +56,7 @@ class engage_article_catalog_item_testcase extends advanced_testcase {
 
         $this->setAdminUser();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $this->getDataGenerator()->get_plugin_generator('engage_article');
         $article = $article_generator->create_article([
             'name' => 'articleItem',

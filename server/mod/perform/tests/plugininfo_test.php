@@ -36,8 +36,8 @@ class mod_perform_plugininfo_testcase extends advanced_testcase {
     public function test_plugininfo_data() {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $plugininfo = new plugininfo();
 
@@ -49,7 +49,7 @@ class mod_perform_plugininfo_testcase extends advanced_testcase {
         $this->assertEquals(0, $result['numparticipantinstances']);
         $this->assertEquals(0, $result['numelementresponses']);
 
-        $config = (mod_perform_activity_generator_configuration::new())
+        $config = (\mod_perform\testing\activity_generator_configuration::new())
             ->set_number_of_activities(1)
             ->set_number_of_tracks_per_activity(1)
             ->set_number_of_users_per_user_group_type(1)

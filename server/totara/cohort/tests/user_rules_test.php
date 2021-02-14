@@ -42,7 +42,7 @@ require_once($CFG->dirroot.'/user/profile/field/text/define.class.php');
 class totara_cohort_user_rules_testcase extends reportcache_advanced_testcase {
 
     /**
-     * @var totara_cohort_generator The cohort data generator.
+     * @var \totara_cohort\testing\generator The cohort data generator.
      */
     private $cohort_generator = null;
     private $cohort = null;
@@ -74,7 +74,7 @@ class totara_cohort_user_rules_testcase extends reportcache_advanced_testcase {
         cohort_rules_list(true);
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
 
         // Create users.
         $users = array();
@@ -486,7 +486,7 @@ class totara_cohort_user_rules_testcase extends reportcache_advanced_testcase {
         // The 30 users without a value essentially have the default value.
         $params = array('equal' => COHORT_RULES_OP_IN_ISEMPTY);
         $values = array();
-        $this->cohort_generator->create_cohort_rule_params($this->ruleset, 'usercustomfields', 'customfield'.$this->profilevegetableid.'_0', $params, $values);
+        \totara_cohort\testing\generator::instance()->add_param_to_cohort_rule($this->ruleset, 'usercustomfields', 'customfield'.$this->profilevegetableid.'_0', $params, $values);
         cohort_rules_approve_changes($this->cohort);
         $this->assertEquals(5, $DB->count_records('cohort_members', array('cohortid' => $this->cohort->id)));
          */

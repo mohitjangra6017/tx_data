@@ -36,7 +36,7 @@ class container_workspace_workspace_loader_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setUser($user_one);
 
@@ -94,7 +94,7 @@ class container_workspace_workspace_loader_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setUser($user_one);
 

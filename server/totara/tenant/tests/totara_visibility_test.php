@@ -33,7 +33,7 @@ class totara_tenant_totara_visibility_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/course/renderer.php');
 
         $gen = self::getDataGenerator();
-        /** @var totara_tenant_generator $multitenancy */
+        /** @var \totara_tenant\testing\generator $multitenancy */
         $multitenancy = $gen->get_plugin_generator('totara_tenant');
 
         $chelper = new coursecat_helper();
@@ -107,7 +107,7 @@ class totara_tenant_totara_visibility_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/course/renderer.php');
 
         $gen = self::getDataGenerator();
-        /** @var totara_tenant_generator $multitenancy */
+        /** @var \totara_tenant\testing\generator $multitenancy */
         $multitenancy = $gen->get_plugin_generator('totara_tenant');
 
         $chelper = new coursecat_helper();

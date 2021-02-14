@@ -166,7 +166,7 @@ class mod_perform_section_relationship_model_testcase extends mod_perform_relati
 
     public function test_delete_with_properties_successful() {
         $this->setAdminUser();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $this->perform_generator();
         $appraiser_id = $perform_generator->get_core_relationship(constants::RELATIONSHIP_APPRAISER)->id;
         $activity1 = $perform_generator->create_activity_in_container();
@@ -223,7 +223,7 @@ class mod_perform_section_relationship_model_testcase extends mod_perform_relati
 
     public function test_delete_successful() {
         $this->setAdminUser();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $this->perform_generator();
         $activity1 = $perform_generator->create_activity_in_container();
         $section1 = $perform_generator->create_section($activity1);

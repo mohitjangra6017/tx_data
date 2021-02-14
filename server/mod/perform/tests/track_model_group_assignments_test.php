@@ -44,7 +44,7 @@ class mod_perform_track_model_group_assignments_testcase extends advanced_testca
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
 
-        /** @var totara_hierarchy_generator $hierarchies */
+        /** @var \totara_hierarchy\testing\generator $hierarchies */
         $hierarchies = $generator->get_plugin_generator('totara_hierarchy');
         $pos_fw_id = ['frameworkid' => $hierarchies->create_pos_frame([])->id];
         $org_fw_id = ['frameworkid' => $hierarchies->create_org_frame([])->id];
@@ -54,8 +54,8 @@ class mod_perform_track_model_group_assignments_testcase extends advanced_testca
         $cohort_id = $generator->create_cohort()->id;
         $user_id = $generator->create_user()->id;
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container(['create_track' => true]);
 
         // Note: creating an activity creates a "default" track; so can make use
@@ -113,8 +113,8 @@ class mod_perform_track_model_group_assignments_testcase extends advanced_testca
         $generator = $this->getDataGenerator();
         $cohort_id = $generator->create_cohort()->id;
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $activity = $generator->create_activity_in_container(['create_track' => true]);
 
         $admin_type = track_assignment_type::ADMIN;
@@ -148,8 +148,8 @@ class mod_perform_track_model_group_assignments_testcase extends advanced_testca
     public function test_remove_track_assignments(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $activity = $generator->create_activity_in_container(['create_track' => true]);
 
         // Note: creating an activity creates a "default" track; so can make use
@@ -198,7 +198,7 @@ class mod_perform_track_model_group_assignments_testcase extends advanced_testca
      */
     public function test_remove_duplicate_track_assignments(): void {
         $this->setAdminUser();
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $generator = \mod_perform\testing\generator::instance();
         $activity = $generator->create_activity_in_container();
         $track = $generator->create_single_activity_track_and_assignment($activity);
 
@@ -246,7 +246,7 @@ class mod_perform_track_model_group_assignments_testcase extends advanced_testca
             $org_id => grouping::by_type(grouping::ORG, $org_id)
         ];
 
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container(['create_track' => true]);
         $track = $activity->get_tracks()->first();
 

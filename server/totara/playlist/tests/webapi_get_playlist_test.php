@@ -137,7 +137,7 @@ class totara_playlist_webapi_get_playlist_testcase extends advanced_testcase {
     }
 
     private function create_playlist(?array $params = []): playlist {
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $this->getDataGenerator()->get_plugin_generator('totara_playlist');
         return $playlist_generator->create_playlist($params);
     }

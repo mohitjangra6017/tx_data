@@ -52,12 +52,11 @@ use totara_job\job_assignment;
  * @group perform
  */
 class mod_perform_subject_instance_creation_service_testcase extends advanced_testcase {
-
-     /**
-     * @return mod_perform_generator|component_generator_base
+    /**
+     * @return \mod_perform\testing\generator
      */
-    protected function perform_generator(): mod_perform_generator {
-        return $this->getDataGenerator()->get_plugin_generator('mod_perform');
+    protected function perform_generator() {
+        return \mod_perform\testing\generator::instance();
     }
 
     /**
@@ -373,7 +372,7 @@ class mod_perform_subject_instance_creation_service_testcase extends advanced_te
         // We will create job assignments separately.
         $data = $this->create_data(false);
 
-        /** @var totara_hierarchy_generator $hierarchies */
+        /** @var \totara_hierarchy\testing\generator $hierarchies */
         $hierarchies = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $pos_fw_id = ['frameworkid' => $hierarchies->create_pos_frame([])->id];
         $org_fw_id = ['frameworkid' => $hierarchies->create_org_frame([])->id];
@@ -469,8 +468,8 @@ class mod_perform_subject_instance_creation_service_testcase extends advanced_te
 
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $data->activity1 = $generator->create_activity_in_container([
             'create_track' => true,
@@ -800,7 +799,7 @@ class mod_perform_subject_instance_creation_service_testcase extends advanced_te
      */
     private function create_single_track_with_assignments(int $num_users): track {
         $generator = $this->perform_generator();
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->disable_subject_instances()
             ->set_number_of_users_per_user_group_type($num_users);
         /** @var activity_model $activity */

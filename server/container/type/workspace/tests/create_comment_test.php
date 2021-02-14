@@ -43,7 +43,7 @@ class container_workspace_create_comment_testcase extends advanced_testcase {
         // Create a workspace.
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -118,7 +118,7 @@ class container_workspace_create_comment_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace('workspace 101');
 
@@ -198,7 +198,7 @@ class container_workspace_create_comment_testcase extends advanced_testcase {
         // Create a workspace.
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -272,7 +272,7 @@ class container_workspace_create_comment_testcase extends advanced_testcase {
 
         $this->setUser($user);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace('workspace 101');
 
@@ -284,7 +284,7 @@ class container_workspace_create_comment_testcase extends advanced_testcase {
             FORMAT_JSON_EDITOR
         );
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment_generator->create_comment(
             $discussion->get_id(),

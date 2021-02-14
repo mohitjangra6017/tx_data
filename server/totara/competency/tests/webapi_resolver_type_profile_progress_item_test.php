@@ -77,12 +77,11 @@ class webapi_resolver_type_profile_progress_item_testcase extends advanced_testc
     }
 
     /**
-     * Get competency data generator
+     * Get hierarchy specific generator
      *
-     * @return component_generator_base
-     * @throws coding_exception
+     * @return \totara_competency\testing\generator
      */
-    public function generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_competency');
+    protected function generator() {
+        return \totara_competency\testing\generator::instance();
     }
 }

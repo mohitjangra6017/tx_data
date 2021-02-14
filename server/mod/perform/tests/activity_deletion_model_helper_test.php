@@ -64,7 +64,7 @@ class mod_perform_activity_deletion_model_helper_testcase extends advanced_testc
 
         $perform_generator = $this->perform_generator();
 
-        $config = new mod_perform_activity_generator_configuration();
+        $config = new \mod_perform\testing\activity_generator_configuration();
         $config->set_number_of_users_per_user_group_type($include_assignment_and_instances ? 2 : 0);
         /** @var activity $activity */
         $activity = $perform_generator->create_full_activities($config)->first();
@@ -249,12 +249,12 @@ class mod_perform_activity_deletion_model_helper_testcase extends advanced_testc
     }
 
     /**
-     * @return mod_perform_generator
+     * @return \mod_perform\testing\generator
      * @throws coding_exception
      */
-    private function perform_generator(): mod_perform_generator {
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+    private function perform_generator(): \mod_perform\testing\generator {
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         return $generator;
     }
 

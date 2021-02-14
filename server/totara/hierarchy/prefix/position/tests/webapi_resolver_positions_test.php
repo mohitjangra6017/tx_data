@@ -32,7 +32,7 @@ class hierarchy_position_webapi_resolver_positions_testcase extends advanced_tes
      * @inheritDoc
      */
     protected function setUp(): void {
-        /** @var totara_hierarchy_generator $gen */
+        /** @var \totara_hierarchy\testing\generator $gen */
         $gen = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         // Create some noise.
@@ -53,7 +53,7 @@ class hierarchy_position_webapi_resolver_positions_testcase extends advanced_tes
      * @throws coding_exception
      */
     protected function create_framework_positions(): array {
-        /** @var totara_hierarchy_generator $gen */
+        /** @var \totara_hierarchy\testing\generator $gen */
         $gen = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $framework = $gen->create_pos_frame([]);

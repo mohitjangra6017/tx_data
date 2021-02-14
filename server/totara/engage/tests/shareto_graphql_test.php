@@ -31,7 +31,7 @@ class totara_engage_shareto_graphql_testcase extends advanced_testcase {
 
     public function test_shareto_recipients() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $engagegen = $gen->get_plugin_generator('totara_engage');
 
         // Create users.

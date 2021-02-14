@@ -31,10 +31,10 @@ require_once($CFG->dirroot . '/mod/facetoface/lib.php');
 require_once($CFG->dirroot . '/lib/gradelib.php');
 
 class mod_facetoface_grade_helper_testcase extends advanced_testcase {
-    /** @var testing_data_generator */
+    /** @var \core\testing\generator */
     private $gen;
 
-    /** @var mod_facetoface_generator */
+    /** @var \mod_facetoface\testing\generator */
     private $f2fgen;
 
     /** @var integer */

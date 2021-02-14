@@ -38,10 +38,10 @@ use mod_facetoface\seminar_event;
 
 class mod_facetoface_assetlib_testcase extends advanced_testcase {
 
-    /** @var mod_facetoface_generator */
+    /** @var \mod_facetoface\testing\generator */
     protected $facetoface_generator;
 
-    /** @var totara_customfield_generator */
+    /** @var \totara_customfield\testing\generator */
     protected $customfield_generator;
 
     private $cfprefix = 'facetofaceasset', $cftableprefix = 'facetoface_asset';

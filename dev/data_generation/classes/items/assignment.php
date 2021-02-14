@@ -240,7 +240,7 @@ class assignment extends item {
     /**
      * Get a totara competency assignment generator
      *
-     * @return \totara_competency_assignment_generator
+     * @return \\totara_competency\testing\assignment_generator
      */
     public function generator() {
         return App::competency_generator()->assignment_generator();

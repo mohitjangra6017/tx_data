@@ -208,7 +208,7 @@ class ml_recommender_exporter_testcase extends advanced_testcase {
     protected function create_tenants(int $count): array {
         $generator = self::getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

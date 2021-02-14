@@ -66,9 +66,9 @@ class mod_perform_expand_task_testcase extends advanced_testcase {
     /**
      * Date generator shortcut
      *
-     * @return testing_data_generator
+     * @return \core\testing\generator
      */
-    protected function generator(): \testing_data_generator {
+    protected function generator(): \core\testing\generator {
         return self::getDataGenerator();
     }
 
@@ -151,7 +151,7 @@ class mod_perform_expand_task_testcase extends advanced_testcase {
     public function test_deleted_users_get_unassigned_position(): void {
         $test_data = $this->prepare_assignments();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $fw = $hierarchy_generator->create_pos_frame(['fullname' => 'FW 1']);
         $pos = $hierarchy_generator->create_pos(['frameworkid' => $fw->id]);
@@ -197,7 +197,7 @@ class mod_perform_expand_task_testcase extends advanced_testcase {
     public function test_deleted_users_get_unassigned_organisation(): void {
         $test_data = $this->prepare_assignments();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $fw = $hierarchy_generator->create_org_frame(['fullname' => 'FW 1']);
         $org = $hierarchy_generator->create_org(['frameworkid' => $fw->id]);
@@ -274,7 +274,7 @@ class mod_perform_expand_task_testcase extends advanced_testcase {
     public function test_expand_single_position_assignment_with_multi_tenancy_enabled(): void {
         $test_data = $this->prepare_assignments_for_multi_tenancy();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $fw = $hierarchy_generator->create_pos_frame(['fullname' => 'FW 1']);
         $pos = $hierarchy_generator->create_pos(['frameworkid' => $fw->id]);
@@ -1241,8 +1241,8 @@ class mod_perform_expand_task_testcase extends advanced_testcase {
         $test_data->cohort1 = $this->generator()->create_cohort();
         $test_data->cohort2 = $this->generator()->create_cohort();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $test_data->activity1 = $perform_generator->create_activity_in_container();
 
@@ -1290,12 +1290,12 @@ class mod_perform_expand_task_testcase extends advanced_testcase {
         };
 
         $generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $generator->get_plugin_generator('mod_perform');
 
         $this->setAdminUser();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
 
         $tenant_generator->enable_tenants();

@@ -179,7 +179,7 @@ class totara_competency_models_activity_log_assignment_testcase extends advanced
     public function test_position() {
         $time = time();
 
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $posfw = $totara_hierarchy_generator->create_pos_frame([]);
         $position = $totara_hierarchy_generator->create_pos(['frameworkid' => $posfw->id, 'fullname' => 'Developer']);
@@ -238,7 +238,7 @@ class totara_competency_models_activity_log_assignment_testcase extends advanced
     public function test_organisation() {
         $time = time();
 
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $orgfw = $totara_hierarchy_generator->create_org_frame([]);
         $organisation = $totara_hierarchy_generator->create_org(

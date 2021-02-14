@@ -44,10 +44,10 @@ class mod_perform_webapi_resolver_query_selectable_users_testcase extends advanc
 
     public function test_with_multi_tenancy_enabled(): void {
         $generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $generator->get_plugin_generator('mod_perform');
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
 
         $tenant_generator->enable_tenants();
@@ -68,7 +68,7 @@ class mod_perform_webapi_resolver_query_selectable_users_testcase extends advanc
 
         $this->setAdminUser();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_tenant_id($tenant1->id)
             ->set_category_id($perform_category_id_1)
             ->set_cohort_assignments_per_activity(1)
@@ -78,7 +78,7 @@ class mod_perform_webapi_resolver_query_selectable_users_testcase extends advanc
         /** @var activity_model $activity1 */
         $activity1 = $activities1->first();
 
-        $configuration2 = mod_perform_activity_generator_configuration::new()
+        $configuration2 = \mod_perform\testing\activity_generator_configuration::new()
             ->set_tenant_id($tenant2->id)
             ->set_category_id($perform_category_id_2)
             ->set_cohort_assignments_per_activity(1)
@@ -117,7 +117,7 @@ class mod_perform_webapi_resolver_query_selectable_users_testcase extends advanc
 
     public function test_get_users() {
         $generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $generator->get_plugin_generator('mod_perform');
 
         $this->setAdminUser();
@@ -128,7 +128,7 @@ class mod_perform_webapi_resolver_query_selectable_users_testcase extends advanc
         $suspended_user = $generator->create_user(['suspended' => 1]);
         $guest_user = guest_user();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_cohort_assignments_per_activity(1)
             ->set_number_of_users_per_user_group_type(5);
 
@@ -136,7 +136,7 @@ class mod_perform_webapi_resolver_query_selectable_users_testcase extends advanc
         /** @var activity_model $activity1 */
         $activity1 = $activities1->first();
 
-        $configuration2 = mod_perform_activity_generator_configuration::new()
+        $configuration2 = \mod_perform\testing\activity_generator_configuration::new()
             ->set_cohort_assignments_per_activity(1)
             ->set_number_of_users_per_user_group_type(5);
 
@@ -225,12 +225,12 @@ class mod_perform_webapi_resolver_query_selectable_users_testcase extends advanc
 
     public function test_get_users_subject_user_got_deleted() {
         $generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $generator->get_plugin_generator('mod_perform');
 
         $this->setAdminUser();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_cohort_assignments_per_activity(1)
             ->set_number_of_users_per_user_group_type(5);
 
@@ -253,7 +253,7 @@ class mod_perform_webapi_resolver_query_selectable_users_testcase extends advanc
 
     public function test_ajax_query_failed(): void {
         $generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $generator->get_plugin_generator('mod_perform');
 
         $activities = $perform_generator->create_full_activities();

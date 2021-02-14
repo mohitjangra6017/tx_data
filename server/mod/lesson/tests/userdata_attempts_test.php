@@ -187,7 +187,7 @@ class mod_lesson_userdata_attempts_testcase extends advanced_testcase {
         $that->courses['c3'] = $this->getDataGenerator()->create_course(['category' => $that->cat2->id]);
 
         /**
-         * @var mod_lesson_generator $lessongenerator
+         * @var \mod_lesson\testing\generator $lessongenerator
          */
         $lessongenerator = $this->getDataGenerator()->get_plugin_generator('mod_lesson');
 

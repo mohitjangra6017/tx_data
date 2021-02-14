@@ -395,7 +395,7 @@ class totara_competency_legacy_aggregation_testcase extends advanced_testcase {
             public $control_competency;
         };
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator =  $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $scale = $hierarchy_generator->create_scale(

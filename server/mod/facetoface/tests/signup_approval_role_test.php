@@ -44,7 +44,7 @@ class mod_facetoface_signup_approval_role_testcase extends advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course(null, ['createsections' => true]);
 
-        /** @var mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $generator->get_plugin_generator('mod_facetoface');
         $f2f = $f2fgenerator->create_instance([
             'course' => $course->id,

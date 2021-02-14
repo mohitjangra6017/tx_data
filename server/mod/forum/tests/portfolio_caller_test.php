@@ -44,7 +44,7 @@ class mod_forum_portfolio_caller_testcase extends advanced_testcase {
         $forum = $this->getDataGenerator()->create_module('forum', array('course' => $course->id));
         $context = context_module::instance($forum->cmid);
 
-        /* @var mod_forum_generator $forumgenerator */
+        /* @var \mod_forum\testing\generator $forumgenerator */
         $forumgenerator = $this->getDataGenerator()->get_plugin_generator('mod_forum');
         $discussion = $forumgenerator->create_discussion(
             array(
@@ -89,7 +89,7 @@ class mod_forum_portfolio_caller_testcase extends advanced_testcase {
         $forum = $this->getDataGenerator()->create_module('forum', array('course' => $course->id));
         $context = context_module::instance($forum->cmid);
 
-        /* @var mod_forum_generator $forumgenerator */
+        /* @var \mod_forum\testing\generator $forumgenerator */
         $forumgenerator = $this->getDataGenerator()->get_plugin_generator('mod_forum');
         $discussion = $forumgenerator->create_discussion(
             array(

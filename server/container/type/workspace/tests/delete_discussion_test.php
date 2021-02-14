@@ -44,7 +44,7 @@ class container_workspace_delete_discussion_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace('Workspace 101', null, null, $user_one->id);
 
@@ -57,7 +57,7 @@ class container_workspace_delete_discussion_testcase extends advanced_testcase {
         member::join_workspace($workspace, $user_two->id);
         $this->setUser($user_two);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
 
         // Start creating 10 comments
@@ -104,7 +104,7 @@ class container_workspace_delete_discussion_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace('This is workspace', null, null, $user_one->id);
 
@@ -150,7 +150,7 @@ class container_workspace_delete_discussion_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace('Workspace 101', null, null, $user_one->id);
 
@@ -163,7 +163,7 @@ class container_workspace_delete_discussion_testcase extends advanced_testcase {
         member::join_workspace($workspace, $user_two->id);
         $this->setUser($user_two);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
 
         // Start creating 10 comments

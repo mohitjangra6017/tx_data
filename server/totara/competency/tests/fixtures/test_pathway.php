@@ -30,7 +30,7 @@ use totara_competency\pathway;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * To use this in tests, call totara_competency_generator::create_test_pathway() instead of instantiating it directly.
+ * To use this in tests, call \totara_competency\testing\generator::create_test_pathway() instead of instantiating it directly.
  */
 class test_pathway extends pathway {
 

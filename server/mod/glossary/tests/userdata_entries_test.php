@@ -102,10 +102,8 @@ class core_user_userdata_entries_test extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($data->user2->id, $data->course2->id, $student_role->id);
         $this->getDataGenerator()->enrol_user($data->user2->id, $data->course3->id, $student_role->id);
 
-        /** @var mod_glossary_generator $glossary_generator */
-        $glossary_generator = self::getDataGenerator()->get_plugin_generator('mod_glossary');
-        /** @var core_completion_generator $completiongenerator */
-        $completiongenerator = $this->getDataGenerator()->get_plugin_generator('core_completion');
+        $glossary_generator = \mod_glossary\testing\generator::instance();
+        $completiongenerator = \core_completion\testing\generator::instance();
         $completiongenerator->enable_completion_tracking($data->course1);
         $completiongenerator->enable_completion_tracking($data->course2);
         $completiongenerator->enable_completion_tracking($data->course3);

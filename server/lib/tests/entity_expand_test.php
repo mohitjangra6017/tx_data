@@ -60,7 +60,7 @@ class core_entity_expand_testcase extends advanced_testcase {
 
     public function test_position_expansion() {
         $generator = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
 
         $fw = $hierarchy_generator->create_pos_frame(['fullname' => 'Framework 1']);
@@ -110,7 +110,7 @@ class core_entity_expand_testcase extends advanced_testcase {
 
     public function test_organisation_expansion() {
         $generator = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
 
         $fw = $hierarchy_generator->create_org_frame(['fullname' => 'Framework 1']);

@@ -26,7 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
 require_once($CFG->dirroot . '/totara/cohort/lib.php');
-require_once($CFG->libdir . '/testing/generator/lib.php');
 require_once($CFG->dirroot . '/totara/cohort/tests/position_rules_test.php');
 
 class totara_cohort_job_assignments_testcase extends totara_cohort_position_rules_testcase {

@@ -90,7 +90,7 @@ class totara_cohort_course_completion_history_rules_testcase extends reportcache
         $this->setAdminUser();
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
 
         // Create users.
         for ($i = 1; $i <= self::TEST_COURSE_COUNT_USERS; $i++) {

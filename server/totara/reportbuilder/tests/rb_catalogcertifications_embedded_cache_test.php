@@ -93,13 +93,15 @@ class totara_reportbuilder_rb_catalogcertifications_embedded_cache_testcase exte
                   'report_builder_columns' => $this->report_builder_columns_data,
                   'report_builder_filters' => $this->report_builder_filters_data)));
 
-        $this->certification1 = $this->getDataGenerator()->create_certification(
+        $program_generator = \totara_program\testing\generator::instance();
+
+        $this->certification1 = $program_generator->legacy_create_certification(
                 array('prog_fullname'=> 'Intro'));
-        $this->certification2 = $this->getDataGenerator()->create_certification(
+        $this->certification2 = $program_generator->legacy_create_certification(
                 array('prog_fullname'=> 'Basics'));
-        $this->certification3 = $this->getDataGenerator()->create_certification(
+        $this->certification3 = $program_generator->legacy_create_certification(
                 array('prog_fullname'=> 'Advanced'));
-        $this->certification4 = $this->getDataGenerator()->create_certification(
+        $this->certification4 = $program_generator->legacy_create_certification(
                 array('prog_fullname'=> 'Pro'));
     }
 
@@ -116,7 +118,7 @@ class totara_reportbuilder_rb_catalogcertifications_embedded_cache_testcase exte
     public function test_certifications() {
         $this->resetAfterTest();
 
-        /** @var totara_customfield_generator $cfgenerator */
+        /** @var \totara_customfield\testing\generator $cfgenerator */
         $cfgenerator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
         $cfids = $cfgenerator->create_multiselect('prog', array('cf1' => array('op<1> cf"1"', 'op[2]-cf[1]'),
                     'cf2' => array('op1cf2', 'op2cf2')));

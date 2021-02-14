@@ -44,7 +44,7 @@ class totara_playlist_webapi_playlist_resources_testcase extends advanced_testca
         $user_one = $generator->create_user();
 
         $this->setAdminUser();
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         $topic1 = $topic_generator->create_topic('topic1');
         $topic2 = $topic_generator->create_topic('topic2');
@@ -55,17 +55,17 @@ class totara_playlist_webapi_playlist_resources_testcase extends advanced_testca
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article([
             'topics' => $topics,
         ]);
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_survey(
             null,
@@ -139,8 +139,8 @@ class totara_playlist_webapi_playlist_resources_testcase extends advanced_testca
     public function test_different_tenant_manager() {
         [$playlist, $user] = $this->prepare(true);
 
-        /** @var totara_tenant_generator $tenant_generator */
-        $tenant_gen =  $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenant_generator */
+        $tenant_gen =  \totara_tenant\testing\generator::instance();
         $tenant2 = $tenant_gen->create_tenant();
         $tenant_gen->migrate_user_to_tenant($user->id, $tenant2->id);
 
@@ -160,7 +160,7 @@ class totara_playlist_webapi_playlist_resources_testcase extends advanced_testca
 
         $tenant = null;
         if ($istenants) {
-            /** @var totara_tenant_generator $tenant_generator */
+            /** @var \totara_tenant\testing\generator $tenant_generator */
             $tenant_gen = $generator->get_plugin_generator('totara_tenant');
             $tenant_gen->enable_tenants();
 
@@ -169,14 +169,14 @@ class totara_playlist_webapi_playlist_resources_testcase extends advanced_testca
             $tenant_gen->migrate_user_to_tenant($user->id, $tenant->id);
         }
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article1 = $article_generator->create_article(['userid' => $user->id, 'access' => access::PUBLIC]);
         $article_generator->create_article(['userid' => $user->id, 'access' => access::PUBLIC]);
 
         $this->setUser($owner);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist();
         $playlist->add_resource($article1);

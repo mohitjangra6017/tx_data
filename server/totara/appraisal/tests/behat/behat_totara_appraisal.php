@@ -41,8 +41,7 @@ class behat_totara_appraisal extends behat_base {
         \behat_hooks::set_step_readonly(false);
         global $DB;
 
-        /** @var totara_appraisal_generator $datagenerator */
-        $datagenerator = testing_util::get_data_generator()->get_plugin_generator('totara_appraisal');
+        $datagenerator = \totara_appraisal\testing\generator::instance();
 
         $page = $DB->get_record('appraisal_stage_page', array('name' => $page));
 

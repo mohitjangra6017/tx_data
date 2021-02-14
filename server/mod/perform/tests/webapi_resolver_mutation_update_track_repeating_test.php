@@ -30,7 +30,6 @@ use mod_perform\models\activity\activity;
 use totara_core\dates\date_time_setting;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-require_once(__DIR__ . '/generator/activity_generator_configuration.php');
 require_once(__DIR__ . '/webapi_resolver_mutation_update_track_schedule.php');
 
 /**
@@ -103,12 +102,12 @@ class mod_perform_webapi_resolver_mutation_update_track_repeating_testcase
 
         self::setAdminUser();
 
-        $configuration = mod_perform_activity_generator_configuration::new();
+        $configuration = \mod_perform\testing\activity_generator_configuration::new();
         $configuration->set_number_of_activities(2);
         $configuration->set_number_of_tracks_per_activity(2);
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activities = $perform_generator->create_full_activities($configuration);
 
         // Because notifications got emailed to the notification recipients

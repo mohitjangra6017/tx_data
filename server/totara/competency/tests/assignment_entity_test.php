@@ -33,7 +33,7 @@ class totara_competency_assignment_entity_testcase extends advanced_testcase {
 
     public function test_filters() {
 
-        /** @var totara_competency_assignment_generator $gen */
+        /** @var \totara_competency\testing\assignment_generator $gen */
         $gen = $this->getDataGenerator()->get_plugin_generator('totara_competency')->assignment_generator();
 
         $ass1 = $gen->create_user_assignment(null, null, ['status' => assignment::STATUS_DRAFT]);
@@ -102,7 +102,7 @@ class totara_competency_assignment_entity_testcase extends advanced_testcase {
     }
 
     public function test_filter_by_user_group() {
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $fw = $generator->hierarchy_generator()->create_comp_frame([]);

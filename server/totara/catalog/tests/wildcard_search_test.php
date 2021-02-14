@@ -139,7 +139,7 @@ class totara_catalog_wildcard_search_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
         $gen = static::getDataGenerator();
 
-        /** @var totara_program_generator $proggen */
+        /** @var \totara_program\testing\generator $proggen */
         $proggen = $gen->get_plugin_generator('totara_program');
         $prog1 = $proggen->create_program(
             [

@@ -34,8 +34,7 @@ class totara_userdata_task_purge_manual_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $contextsystem = context_system::instance();
         $type = $generator->create_purge_type(array('userstatus' => target_user::STATUS_ACTIVE, 'allowmanual' => 1, 'items' => 'core_user-additionalnames'));

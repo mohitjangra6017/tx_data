@@ -72,7 +72,9 @@ class totara_program_prog_assignment_completion_type_testcase extends reportcach
         $this->beforesetuptime = time();
         $this->waitForSecond();
 
-        $this->programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
+        $job_generator = \totara_job\testing\generator::instance();
+
+        $this->programgenerator = \totara_program\testing\generator::instance();
         $this->programs[0] = $this->programgenerator->create_program();
         $this->programs[1] = $this->programgenerator->create_program();
         $this->programs[2] = $this->programgenerator->create_program();
@@ -88,12 +90,12 @@ class totara_program_prog_assignment_completion_type_testcase extends reportcach
         $this->courses[5] = $this->getDataGenerator()->create_course();
 
         // Add the courses to the programs. Funky numbers to try to prevent tests passing due to luck.
-        $this->getDataGenerator()->add_courseset_program($this->programs[0]->id, array($this->courses[0]->id));
-        $this->getDataGenerator()->add_courseset_program($this->programs[1]->id, array($this->courses[1]->id));
-        $this->getDataGenerator()->add_courseset_program($this->programs[2]->id, array($this->courses[2]->id));
-        $this->getDataGenerator()->add_courseset_program($this->programs[3]->id, array($this->courses[5]->id)); // Note numbers!
-        $this->getDataGenerator()->add_courseset_program($this->programs[4]->id, array($this->courses[4]->id));
-        $this->getDataGenerator()->add_courseset_program($this->programs[5]->id, array($this->courses[3]->id)); // Note numbers!
+        $this->programgenerator->legacy_add_courseset_program($this->programs[0]->id, array($this->courses[0]->id));
+        $this->programgenerator->legacy_add_courseset_program($this->programs[1]->id, array($this->courses[1]->id));
+        $this->programgenerator->legacy_add_courseset_program($this->programs[2]->id, array($this->courses[2]->id));
+        $this->programgenerator->legacy_add_courseset_program($this->programs[3]->id, array($this->courses[5]->id)); // Note numbers!
+        $this->programgenerator->legacy_add_courseset_program($this->programs[4]->id, array($this->courses[4]->id));
+        $this->programgenerator->legacy_add_courseset_program($this->programs[5]->id, array($this->courses[3]->id)); // Note numbers!
 
         $this->positiongenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $posfw = $this->positiongenerator->create_framework('position');
@@ -109,7 +111,7 @@ class totara_program_prog_assignment_completion_type_testcase extends reportcach
         $this->users = array();
         $userids = array();
         for ($i = 0; $i < 25; $i++) {
-            $this->users[$i] = $this->getDataGenerator()->create_user();
+            list($this->users[$i], $ja) = $job_generator->create_user_and_job([]);
             $userids[] = $this->users[$i]->id;
 
             // Assign all test users to all courses.
@@ -187,7 +189,7 @@ class totara_program_prog_assignment_completion_type_testcase extends reportcach
             'data' => $this->dates[17], 'dataformat' => 0));
 
         // Data for prog_assigment_completion_enrollment_date.
-        $this->users[1000] = $this->getDataGenerator()->create_user();
+        list($this->users[1000], $ja) = $job_generator->create_user_and_job([]);
 
         $this->waitForSecond();
         $this->aftersetuptime = time();

@@ -101,8 +101,8 @@ class mod_perform_response_model_testcase extends advanced_testcase {
         $subject = self::getDataGenerator()->create_user();
         $participant = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -154,8 +154,8 @@ class mod_perform_response_model_testcase extends advanced_testcase {
         $subject = self::getDataGenerator()->create_user();
         $participant = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -202,8 +202,8 @@ class mod_perform_response_model_testcase extends advanced_testcase {
         $subject = self::getDataGenerator()->create_user();
         $participant = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -255,8 +255,8 @@ class mod_perform_response_model_testcase extends advanced_testcase {
     public function test_user_can_view_response(): void {
         self::setAdminUser();
         $generator = self::getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container();
 
         $subject_user = $generator->create_user();

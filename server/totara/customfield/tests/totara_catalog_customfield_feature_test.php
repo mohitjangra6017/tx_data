@@ -68,7 +68,7 @@ class totara_customfield_totara_catalog_feature_factory_testcase extends \advanc
             $item_names[] = $item->fullname;
         }
 
-        /** @var \totara_program_generator $program_generator */
+        /** @var \totara_program\testing\generator $program_generator */
         $program_generator = $generator->get_plugin_generator('totara_program');
         for ($i = 0; $i < $program_count; $i++) {
             $item = $program_generator->create_program(['fullname' => "test program name $i"]);
@@ -151,7 +151,7 @@ class totara_customfield_totara_catalog_feature_factory_testcase extends \advanc
             $menu_data['defaultdata'] = $metadata->menu_options[0];
         }
 
-        /** @var \totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
         $metadata->menu_course = $generator->create_custom_course_field($menu_data)->id;
         $metadata->menu_program = $generator->create_custom_program_field($menu_data)->id;
@@ -212,7 +212,7 @@ class totara_customfield_totara_catalog_feature_factory_testcase extends \advanc
     ): array {
         $by_cf = [];
 
-        /** @var \totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
         foreach ($items as $i => $tuple) {
             [$item, $prefix, $table] = $tuple;
@@ -255,7 +255,7 @@ class totara_customfield_totara_catalog_feature_factory_testcase extends \advanc
     ): array {
         $by_cf = [];
 
-        /** @var \totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
         foreach ($items as $i => $tuple) {
             [$item, $prefix, $table] = $tuple;
@@ -295,7 +295,7 @@ class totara_customfield_totara_catalog_feature_factory_testcase extends \advanc
     ): array {
         $by_cf = [];
 
-        /** @var \totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
         foreach ($items as $i => $tuple) {
             [$item, $prefix, $table] = $tuple;

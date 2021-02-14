@@ -300,10 +300,10 @@ class mod_perform_webapi_resolver_query_participant_section_external_participant
         self::setAdminUser();
 
         $data_generator = self::getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->enable_creation_of_manual_participants()
             ->set_relationships_per_section([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_EXTERNAL]);
 

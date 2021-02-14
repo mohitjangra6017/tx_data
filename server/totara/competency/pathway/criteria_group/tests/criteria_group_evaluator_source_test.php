@@ -42,7 +42,7 @@ class pathway_criteria_group_evaluator_source_testcase extends \advanced_testcas
     public function test_get_users_to_reaggregate_perform() {
         \totara_core\advanced_feature::enable('competency_assignment');
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $scale = $hierarchygenerator->create_scale('comp');
@@ -142,7 +142,7 @@ class pathway_criteria_group_evaluator_source_testcase extends \advanced_testcas
     public function test_get_users_to_reaggregate_learn() {
         \totara_core\advanced_feature::disable('competency_assignment');
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $scale = $hierarchygenerator->create_scale('comp');

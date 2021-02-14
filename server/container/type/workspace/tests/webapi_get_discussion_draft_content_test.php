@@ -60,7 +60,7 @@ class container_workspace_webapi_get_discussion_draft_content_testcase extends a
         $usercontext = context_user::instance($USER->id);
 
         // Create a workspace.
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $this->getDataGenerator()->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 

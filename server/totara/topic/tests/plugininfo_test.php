@@ -54,12 +54,11 @@ class totara_topic_plugininfo_testcase extends advanced_testcase {
     }
 
     /**
-     * @return totara_topic_generator|component_generator_base
+     * @return \totara_topic\testing\generator
      * @throws coding_exception
      */
     protected function generator() {
-        $gen = $this->getDataGenerator();
-        return $gen->get_plugin_generator('totara_topic');
+        return \totara_topic\testing\generator::instance();
     }
 
     /**
@@ -70,7 +69,7 @@ class totara_topic_plugininfo_testcase extends advanced_testcase {
 
         $gen = $this->getDataGenerator();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article = $articlegen->create_article();
 

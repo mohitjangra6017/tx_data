@@ -22,7 +22,6 @@
  * @category test
  */
 
-require_once(__DIR__ . '/generator/activity_generator_configuration.php');
 require_once(__DIR__ . '/webapi_resolver_mutation_update_track_schedule.php');
 
 use mod_perform\constants;

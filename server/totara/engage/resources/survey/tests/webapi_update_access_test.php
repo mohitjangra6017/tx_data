@@ -36,7 +36,7 @@ class engage_survey_webapi_update_access_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
 
         $this->setUser($user_one);
@@ -115,7 +115,7 @@ class engage_survey_webapi_update_access_testcase extends advanced_testcase {
         // Log in as user one and start creating a survey.
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_survey();
 
@@ -163,7 +163,7 @@ class engage_survey_webapi_update_access_testcase extends advanced_testcase {
         // Log in as first user and create a private survey
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_survey();
 
@@ -171,7 +171,7 @@ class engage_survey_webapi_update_access_testcase extends advanced_testcase {
         $this->assertTrue($survey->is_private());
         $this->assertFalse($survey->is_restricted());
 
-        /** @var totara_topic_generator  $topic_generator */
+        /** @var \totara_topic\testing\generator  $topic_generator */
         $this->setAdminUser();
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         $topic_one = $topic_generator->create_topic();
@@ -207,7 +207,7 @@ class engage_survey_webapi_update_access_testcase extends advanced_testcase {
         // Log in as first user and create a survey.
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_survey();
 
@@ -218,7 +218,7 @@ class engage_survey_webapi_update_access_testcase extends advanced_testcase {
         // Log in as admin and start updating the survey.
         $this->setAdminUser();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         $topic_one = $topic_generator->create_topic();
 
@@ -250,7 +250,7 @@ class engage_survey_webapi_update_access_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_public_survey();
 

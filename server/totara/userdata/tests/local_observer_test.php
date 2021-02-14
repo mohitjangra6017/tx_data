@@ -132,8 +132,7 @@ class totara_userdata_local_observer_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $typesuspendedvalid = $generator->create_purge_type(array('userstatus' => target_user::STATUS_SUSPENDED, 'allowsuspended' => 1, 'items' => 'core_user-additionalnames'));
         $typesuspendedinvalid = $generator->create_purge_type(array('userstatus' => target_user::STATUS_SUSPENDED, 'allowsuspended' => 0, 'items' => 'core_user-additionalnames'));
@@ -218,8 +217,7 @@ class totara_userdata_local_observer_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $typedeletedvalid = $generator->create_purge_type(array('userstatus' => target_user::STATUS_DELETED, 'allowdeleted' => 1, 'items' => 'core_user-additionalnames'));
         $typedeletedinvalid = $generator->create_purge_type(array('userstatus' => target_user::STATUS_DELETED, 'allowdeleted' => 0, 'items' => 'core_user-additionalnames'));

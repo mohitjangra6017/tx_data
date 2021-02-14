@@ -31,8 +31,8 @@ class totara_tenant_totara_dashboard_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/totara/dashboard/lib.php');
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -69,8 +69,8 @@ class totara_tenant_totara_dashboard_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/totara/dashboard/lib.php');
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -130,8 +130,8 @@ class totara_tenant_totara_dashboard_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/totara/dashboard/lib.php');
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 

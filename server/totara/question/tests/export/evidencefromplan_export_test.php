@@ -53,7 +53,7 @@ class totara_question_evidencefromplan_export_testcase extends advanced_testcase
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
 
-        /** @var totara_evidence_generator $evidence_generator */
+        /** @var \totara_evidence\testing\generator $evidence_generator */
         $evidence_generator = self::getDataGenerator()->get_plugin_generator('totara_evidence');
         $evidence1 = $evidence_generator->create_evidence_item_entity(['user_id' => $user1->id]);
         $evidence2 = $evidence_generator->create_evidence_item_entity(['user_id' => $user1->id]);

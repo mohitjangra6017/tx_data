@@ -756,7 +756,7 @@ class auth_approved_request_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_org_frame([]);
         $org = $generator->create_org(['frameworkid' => $framework->id]);
@@ -1010,7 +1010,7 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_validate_signup_form_data_organisation() {
         $this->resetAfterTest();
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_org_frame([]);
         $organisation = $generator->create_org(['frameworkid' => $framework->id]);
@@ -1061,7 +1061,7 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_validate_signup_form_data_position() {
         $this->resetAfterTest();
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_pos_frame([]);
         $position = $generator->create_pos(['frameworkid' => $framework->id]);

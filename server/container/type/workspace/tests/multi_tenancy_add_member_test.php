@@ -35,7 +35,7 @@ class container_workspace_multi_tenancy_add_member_testcase extends advanced_tes
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -48,7 +48,7 @@ class container_workspace_multi_tenancy_add_member_testcase extends advanced_tes
         // Login as first user and create workspace then add user to the workspace.
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -68,7 +68,7 @@ class container_workspace_multi_tenancy_add_member_testcase extends advanced_tes
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -79,7 +79,7 @@ class container_workspace_multi_tenancy_add_member_testcase extends advanced_tes
         // Login as first user and add the user participant.
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 
@@ -98,7 +98,7 @@ class container_workspace_multi_tenancy_add_member_testcase extends advanced_tes
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 
@@ -106,7 +106,7 @@ class container_workspace_multi_tenancy_add_member_testcase extends advanced_tes
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -135,14 +135,14 @@ class container_workspace_multi_tenancy_add_member_testcase extends advanced_tes
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 
         // Create a user from a tenant
         $user_one = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

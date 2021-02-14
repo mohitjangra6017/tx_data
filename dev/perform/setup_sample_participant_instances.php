@@ -28,7 +28,6 @@ require __DIR__ . '/../../server/config.php';
 /** @var core_config $CFG */
 
 require_once($CFG->dirroot . '/lib/clilib.php');
-require_once($CFG->dirroot . '/lib/phpunit/classes/util.php');
 
 echo "This script is for functionality testing and demo.\n";
 
@@ -97,8 +96,8 @@ class setup_data {
     /**
      * Get data generator.
      */
-    private function getDataGenerator(): testing_data_generator {
-        return phpunit_util::get_data_generator();
+    private function getDataGenerator(): \core\testing\generator {
+        return \core\testing\generator::instance();
     }
 
     /**
@@ -107,8 +106,7 @@ class setup_data {
      * @return stdClass
      */
     private function setup_activity(): stdClass {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $generator = \mod_perform\testing\generator::instance();
 
         $activity_tree = new stdClass();
         $activity_tree->activity = $generator->create_activity_in_container();

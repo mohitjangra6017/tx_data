@@ -33,8 +33,8 @@ class totara_tenant_moodlelib_testcase extends advanced_testcase {
     public function test_require_login() {
         global $DB, $PAGE;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -347,8 +347,8 @@ class totara_tenant_moodlelib_testcase extends advanced_testcase {
      * Make sure is tenants disabled or tenant suspended users cannot log in.
      */
     public function test_authenticate_user_login() {
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -386,8 +386,8 @@ class totara_tenant_moodlelib_testcase extends advanced_testcase {
      * Make sure emails do nto go out to users in disabled tenants.
      */
     public function test_email_to_user() {
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 
@@ -417,8 +417,8 @@ class totara_tenant_moodlelib_testcase extends advanced_testcase {
 
         set_config('allowdefaultpageselection', '1');
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 

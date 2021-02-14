@@ -37,10 +37,6 @@ require_once($CFG->dirroot . '/user/profile/field/checkbox/define.class.php');
  *       any changes in results need to be documented here.
  */
 class totara_cohort_organisation_profile_field_checkbox_testcase extends advanced_testcase {
-
-    /**
-     * @var totara_cohort_generator The cohort data generator.
-     */
     protected $cohort_generator = null;
     protected $hierarchy_generator = null;
     protected $cohort = null;
@@ -75,10 +71,10 @@ class totara_cohort_organisation_profile_field_checkbox_testcase extends advance
         $generator = $this->getDataGenerator();
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $generator->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
 
-        // Set totara_hierarchy_generator.
-        $this->hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
+        // Set \totara_hierarchy\testing\generator.
+        $this->hierarchy_generator = \totara_hierarchy\testing\generator::instance();
 
         // Create organisation type.
         $this->typeid = $this->hierarchy_generator->create_org_type();

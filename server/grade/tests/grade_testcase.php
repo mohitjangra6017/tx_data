@@ -36,7 +36,7 @@ abstract class grade_testcase extends advanced_testcase {
     /**
      * Return component data generator
      *
-     * @return \core_grades_generator
+     * @return \core_grades\testing\generator
      */
     protected function generator() {
         return $this->getDataGenerator()->get_plugin_generator('core_grades');

@@ -445,13 +445,9 @@ class rb_source_competency_rating extends rb_base_source {
             throw new coding_exception('phpunit_column_test_add_data() cannot be used outside of unit tests');
         }
 
-        require_once($CFG->libdir . '/phpunit/classes/util.php');
-
-        /** @var testing_data_generator $generator */
-        $generator = phpunit_util::get_data_generator();
+        $generator = \core\testing\generator::instance();
         $user1 = $generator->create_user(['lastname' => 'user1']);
-        /** @var totara_competency_generator $comp_generator */
-        $comp_generator = $generator->get_plugin_generator('totara_competency');
+        $comp_generator = \totara_competency\testing\generator::instance();
         $comp_generator->create_scale('scale1', 'scale1_description', [
             ['name' => 'scale_value1', 'proficient' => false, 'default' => true, 'sortorder' => 1],
         ]);

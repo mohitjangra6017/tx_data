@@ -36,7 +36,7 @@ class totara_notification_integration_testcase extends advanced_testcase {
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var \totara_notification\testing\generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
 
         $notification_generator->include_mock_notifiable_event();
@@ -52,7 +52,7 @@ class totara_notification_integration_testcase extends advanced_testcase {
         $generator = self::getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var \totara_notification\testing\generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
 
         // Mask the recipient ids to be sent to.

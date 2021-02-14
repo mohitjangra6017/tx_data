@@ -39,7 +39,7 @@ class engage_survey_share_graphql_testcase extends advanced_testcase {
      */
     public function test_share_item() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         // Create users.
@@ -89,7 +89,7 @@ class engage_survey_share_graphql_testcase extends advanced_testcase {
      */
     public function test_survey_create() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         // Create users.
@@ -139,7 +139,7 @@ class engage_survey_share_graphql_testcase extends advanced_testcase {
      */
     public function test_survey_update() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         // Create users.
@@ -185,7 +185,7 @@ class engage_survey_share_graphql_testcase extends advanced_testcase {
      */
     public function test_share_totals() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         // Create users.
@@ -236,7 +236,7 @@ class engage_survey_share_graphql_testcase extends advanced_testcase {
      */
     public function test_recipients() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         // Create users.

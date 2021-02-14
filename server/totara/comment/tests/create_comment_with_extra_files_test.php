@@ -48,7 +48,7 @@ class totara_comment_create_comment_with_extra_files_testcase extends advanced_t
         $this->setUser($user_one);
         $context_user = context_user::instance($user_one->id);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment_generator->add_context_for_default_resolver($context_user);
 
@@ -150,7 +150,7 @@ class totara_comment_create_comment_with_extra_files_testcase extends advanced_t
         $this->setUser($user_one);
         $context_user = context_user::instance($user_one->id);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment_generator->add_context_for_default_resolver($context_user);
 

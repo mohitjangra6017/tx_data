@@ -41,12 +41,12 @@ class totara_playlist_remove_resource_testcase extends advanced_testcase {
         $user_one = $gen->create_user();
         $user_two = $gen->create_user();
         $this->setUser($user_one);
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         $playlist = $playlistgen->create_playlist();
 
         $this->setUser($user_two);
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article1 = $articlegen->create_article(['access' => access::PUBLIC]);
         $article2 = $articlegen->create_article(['access' => access::PUBLIC]);
@@ -75,12 +75,12 @@ class totara_playlist_remove_resource_testcase extends advanced_testcase {
         $user_one = $gen->create_user();
         $user_two = $gen->create_user();
         $this->setUser($user_one);
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         $playlist = $playlistgen->create_playlist();
 
         $this->setUser($user_two);
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article1 = $articlegen->create_article(['access' => access::PUBLIC]);
         $article2 = $articlegen->create_article(['access' => access::PUBLIC]);
@@ -116,11 +116,11 @@ class totara_playlist_remove_resource_testcase extends advanced_testcase {
         $user_one = $gen->create_user();
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_gen */
+        /** @var \totara_playlist\testing\generator $playlist_gen */
         $playlist_gen = $gen->get_plugin_generator('totara_playlist');
         $playlist = $playlist_gen->create_playlist();
 
-        /** @var engage_article_generator $article_gen */
+        /** @var \engage_article\testing\generator $article_gen */
         $article_gen = $gen->get_plugin_generator('engage_article');
         $item_one = $article_gen->create_article();
 

@@ -69,20 +69,22 @@ class totara_certification_certification_completion_testcase extends reportcache
             $this->users[$i] = $this->getDataGenerator()->create_user();
         }
 
+        $program_generator = \totara_program\testing\generator::instance();
+
         // Create programs, mostly so that we don't end up with coincidental success due to matching ids.
         for ($i = 1; $i <= $this->numtestprogs; $i++) {
-            $this->programs[$i] = $this->getDataGenerator()->create_program();
+            $this->programs[$i] = $program_generator->legacy_create_program();
         }
 
         // Create certifications.
         for ($i = 1; $i <= $this->numtestcerts; $i++) {
-            $this->certifications[$i] = $this->getDataGenerator()->create_certification();
+            $this->certifications[$i] = $program_generator->legacy_create_certification();
         }
 
         // Assign users to the certification as individuals.
         foreach ($this->users as $user) {
             foreach ($this->certifications as $prog) {
-                $this->getDataGenerator()->assign_to_program($prog->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+                $program_generator->assign_to_program($prog->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
             }
         }
     }
@@ -2293,7 +2295,7 @@ class totara_certification_certification_completion_testcase extends reportcache
 
         $now = time();
 
-        /* @var totara_program_generator $generator */
+        /* @var \totara_program\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $prog = $generator->legacy_create_certification();
 
@@ -2332,7 +2334,7 @@ class totara_certification_certification_completion_testcase extends reportcache
     public function test_certif_write_completion_history_validation_failure() {
         global $DB;
 
-        /* @var totara_program_generator $generator */
+        /* @var \totara_program\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $prog = $generator->legacy_create_certification();
 
@@ -2362,7 +2364,7 @@ class totara_certification_certification_completion_testcase extends reportcache
     public function test_certif_write_completion_history_insert_and_update() {
         global $DB;
 
-        /* @var totara_program_generator $generator */
+        /* @var \totara_program\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $prog = $generator->legacy_create_certification();
 
@@ -2762,13 +2764,15 @@ class totara_certification_certification_completion_testcase extends reportcache
     public function test_certif_fix_cert_completion_date() {
         $this->resetAfterTest(true);
 
+        $program_generator = \totara_program\testing\generator::instance();
+
         // Case 1: Certification uses completion date method.
         $settings = array(
             'cert_activeperiod' => '100 day',
             'cert_windowperiod' => '20 day',
             'cert_recertifydatetype' => CERTIFRECERT_COMPLETION,
         );
-        $cert = $this->getDataGenerator()->create_certification($settings);
+        $cert = $program_generator->legacy_create_certification($settings);
 
         // Expected record is certified, before window opens.
         $testcertcompletion = new stdClass();
@@ -2828,7 +2832,7 @@ class totara_certification_certification_completion_testcase extends reportcache
             'cert_windowperiod' => '20 day',
             'cert_recertifydatetype' => CERTIFRECERT_EXPIRY,
         );
-        $cert = $this->getDataGenerator()->create_certification($settings);
+        $cert = $program_generator->legacy_create_certification($settings);
 
         $now = time(); // Arbitrary base time.
 
@@ -2882,7 +2886,7 @@ class totara_certification_certification_completion_testcase extends reportcache
             'cert_windowperiod' => '20 day',
             'cert_recertifydatetype' => CERTIFRECERT_EXPIRY,
         );
-        $cert = $this->getDataGenerator()->create_certification($settings);
+        $cert = $program_generator->legacy_create_certification($settings);
 
         $now = time(); // Arbitrary base time.
 

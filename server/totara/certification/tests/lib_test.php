@@ -77,44 +77,46 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
 
     public function test_find_courses_for_certif() {
 
+        $program_generator = \totara_program\testing\generator::instance();
+
         // Set up some courses and certifications.
         $courses = array();
         $certifications = array();
         for ($i = 1; $i <= 10; $i++) {
             $courses[$i] = $this->getDataGenerator()->create_course();
-            $certifications[$i] = $this->getDataGenerator()->create_certification();
+            $certifications[$i] = $program_generator->create_certification();
         }
 
         // Set up some courses in the certifications.
-        $this->getDataGenerator()->add_courseset_program($certifications[2]->id,
+        $program_generator->legacy_add_courseset_program($certifications[2]->id,
             array($courses[2]->id, $courses[3]->id, $courses[4]->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($certifications[2]->id,
+        $program_generator->legacy_add_courseset_program($certifications[2]->id,
             array($courses[3]->id, $courses[4]->id, $courses[5]->id), CERTIFPATH_RECERT);
 
-        $this->getDataGenerator()->add_courseset_program($certifications[3]->id,
+        $program_generator->legacy_add_courseset_program($certifications[3]->id,
             array($courses[2]->id, $courses[3]->id, $courses[4]->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($certifications[3]->id,
+        $program_generator->legacy_add_courseset_program($certifications[3]->id,
             array($courses[3]->id, $courses[4]->id, $courses[5]->id), CERTIFPATH_RECERT);
 
-        $this->getDataGenerator()->add_courseset_program($certifications[4]->id,
+        $program_generator->legacy_add_courseset_program($certifications[4]->id,
             array($courses[2]->id, $courses[3]->id, $courses[4]->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($certifications[4]->id,
+        $program_generator->legacy_add_courseset_program($certifications[4]->id,
             array($courses[2]->id, $courses[3]->id, $courses[4]->id), CERTIFPATH_RECERT);
 
-        $this->getDataGenerator()->add_courseset_program($certifications[5]->id,
+        $program_generator->legacy_add_courseset_program($certifications[5]->id,
             array($courses[8]->id, $courses[9]->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($certifications[5]->id,
+        $program_generator->legacy_add_courseset_program($certifications[5]->id,
             array($courses[8]->id, $courses[9]->id), CERTIFPATH_RECERT);
 
-        $this->getDataGenerator()->add_courseset_program($certifications[6]->id,
+        $program_generator->legacy_add_courseset_program($certifications[6]->id,
             array($courses[6]->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($certifications[6]->id,
+        $program_generator->legacy_add_courseset_program($certifications[6]->id,
             array($courses[7]->id), CERTIFPATH_RECERT);
 
-        $this->getDataGenerator()->add_courseset_program($certifications[7]->id,
+        $program_generator->legacy_add_courseset_program($certifications[7]->id,
             array($courses[6]->id), CERTIFPATH_CERT);
 
-        $this->getDataGenerator()->add_courseset_program($certifications[8]->id,
+        $program_generator->legacy_add_courseset_program($certifications[8]->id,
             array($courses[7]->id), CERTIFPATH_RECERT);
 
         // Call find_courses_for_certif with each of the three params and ensure that the correct courses are returned.
@@ -204,6 +206,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      * for a couse set, but if they weren't on that path then they won't have a course set completion record for it.
      */
     public function test_certif_get_content_completion_time() {
+        $program_generator = \totara_program\testing\generator::instance();
+
 
         // Set up some courses and certifications.
         $courses = array();
@@ -212,23 +216,23 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $this->getDataGenerator()->create_course();
         }
         for ($i = 1; $i <= 10; $i++) {
-            $certifications[$i] = $this->getDataGenerator()->create_certification();
+            $certifications[$i] = $program_generator->create_certification();
         }
 
         // Set up some courses in the certifications.
-        $this->getDataGenerator()->add_courseset_program($certifications[2]->id,
+        $program_generator->legacy_add_courseset_program($certifications[2]->id,
             array($courses[2]->id, $courses[3]->id, $courses[4]->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($certifications[2]->id,
+        $program_generator->legacy_add_courseset_program($certifications[2]->id,
             array($courses[5]->id, $courses[6]->id), CERTIFPATH_RECERT);
 
-        $this->getDataGenerator()->add_courseset_program($certifications[4]->id,
+        $program_generator->legacy_add_courseset_program($certifications[4]->id,
             array($courses[7]->id, $courses[8]->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($certifications[4]->id,
+        $program_generator->legacy_add_courseset_program($certifications[4]->id,
             array($courses[8]->id, $courses[9]->id), CERTIFPATH_RECERT);
 
-        $this->getDataGenerator()->add_courseset_program($certifications[6]->id,
+        $program_generator->legacy_add_courseset_program($certifications[6]->id,
             array($courses[11]->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($certifications[6]->id,
+        $program_generator->legacy_add_courseset_program($certifications[6]->id,
             array($courses[12]->id), CERTIFPATH_RECERT);
 
         // Set up some users.
@@ -240,7 +244,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         // Assign all users to all certification as individuals.
         foreach ($certifications as $certification) {
             foreach ($users as $user) {
-                $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+                $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
             }
         }
 
@@ -357,22 +361,24 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
     public function test_write_certif_completion_timecompleted_course_path() {
         global $DB;
 
+        $program_generator = \totara_program\testing\generator::instance();
+
         // Set up some stuff.
         $user = $this->getDataGenerator()->create_user();
-        $certification = $this->getDataGenerator()->create_certification();
+        $certification = $program_generator->create_certification();
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
         $course3 = $this->getDataGenerator()->create_course();
         $course4 = $this->getDataGenerator()->create_course();
 
         // Add the courses to the certification.
-        $this->getDataGenerator()->add_courseset_program($certification->id,
+        $program_generator->legacy_add_courseset_program($certification->id,
             array($course1->id, $course2->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($certification->id,
+        $program_generator->legacy_add_courseset_program($certification->id,
             array($course3->id, $course4->id), CERTIFPATH_RECERT);
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
 
         // Mark all the courses complete, with traceable time completed.
         // Recert path courses first to check that they aren't used for completion date.
@@ -435,7 +441,9 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_display_progress_single_then_courseset() {
         $now = time();
 
-        $certification = $this->getDataGenerator()->create_certification();
+        $program_generator = \totara_program\testing\generator::instance();
+
+        $certification = $program_generator->create_certification();
         $user = $this->getDataGenerator()->create_user();
         $courses = array();;
         for ($i = 1; $i <= 5; $i++) {
@@ -443,16 +451,16 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         }
 
         // Set up some courses in the certifications.
-        $this->getDataGenerator()->add_courseset_program($certification->id,
+        $program_generator->legacy_add_courseset_program($certification->id,
             array($courses[1]->id, $courses[2]->id, $courses[5]->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($certification->id,
+        $program_generator->legacy_add_courseset_program($certification->id,
             array($courses[4]->id, $courses[1]->id), CERTIFPATH_RECERT);
 
         // This is stupid, but done. We want to know if anyone changes it.
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
 
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
@@ -479,7 +487,9 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_display_progress_two_then_coursesets() {
         $now = time();
 
-        $certification = $this->getDataGenerator()->create_certification();
+        $program_generator = \totara_program\testing\generator::instance();
+
+        $certification = $program_generator->create_certification();
         $user = $this->getDataGenerator()->create_user();
         $courses = array();;
         for ($i = 1; $i <= 7; $i++) {
@@ -487,18 +497,18 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         }
 
         // Set up some courses in the certifications.
-        $this->getDataGenerator()->add_courseset_program($certification->id,
+        $program_generator->legacy_add_courseset_program($certification->id,
             array($courses[1]->id, $courses[2]->id, $courses[5]->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($certification->id,
+        $program_generator->legacy_add_courseset_program($certification->id,
             array($courses[4]->id, $courses[3]->id), CERTIFPATH_CERT);
-        $this->getDataGenerator()->add_courseset_program($certification->id,
+        $program_generator->legacy_add_courseset_program($certification->id,
             array($courses[6]->id, $courses[7]->id), CERTIFPATH_RECERT);
 
         // This is stupid, but done. We want to know if anyone changes it.
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
 
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
@@ -584,13 +594,15 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_three_then_coursesets() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
         for ($i = 1; $i <= 6; $i++) {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_THEN,
@@ -639,7 +651,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
 
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
@@ -656,6 +668,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_two_or_coursesets() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -663,7 +676,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_OR,
@@ -697,7 +711,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         $this->assert_program_progress_after_course_completion(50, $certification, $user, $courses[1]);
@@ -711,6 +725,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_two_and_coursesets() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -718,7 +733,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -752,7 +768,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         $this->assert_program_progress_after_course_completion((int)((1/4)*100), $certification, $user, $courses[1]);
@@ -777,6 +793,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_and_plus_or_coursesets() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -784,7 +801,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -855,7 +873,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         $this->assert_program_progress_after_course_completion((int)((1/8)*100), $certification, $user, $courses[1]);
@@ -886,6 +904,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_or_plus_and_coursesets() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -893,7 +912,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_OR,
@@ -964,7 +984,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         $this->assert_program_progress_after_course_completion((int)((1/8)*100), $certification, $user, $courses[1]);
@@ -993,6 +1013,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_simple_optional_coursesets() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();
@@ -1000,7 +1021,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_THEN,
@@ -1046,7 +1068,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         $this->assert_program_progress_after_course_completion((int)((1/4)*100), $certification, $user, $courses[1]);
@@ -1067,11 +1089,13 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_single_optional_courseset() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $course = $generator->create_course(['summary' => 'A short summary']);
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_THEN,
@@ -1089,7 +1113,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         // Completion is checked during assignment.
         $this->assertSame(100, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $course);
@@ -1107,6 +1131,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_OoO() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -1114,7 +1139,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_OR,
@@ -1141,7 +1167,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         // Completion is checked during assignment.
         $this->assertSame(100, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[1]);
@@ -1160,6 +1186,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_OaO() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -1167,7 +1194,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -1194,7 +1222,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         // Completion is checked during assignment.
         $this->assertSame(100, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[1]);
@@ -1213,6 +1241,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_RaO() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -1220,7 +1249,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -1252,7 +1282,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[1]);
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[2]);
@@ -1270,6 +1300,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_OaR() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -1277,7 +1308,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -1309,7 +1341,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion(0, $certification, $user, $courses[1]);
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[2]);
@@ -1327,6 +1359,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_OoR() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -1334,7 +1367,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_OR,
@@ -1361,7 +1395,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         // Completion is checked during assignment.
         $this->assertSame(100, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[1]);
@@ -1382,6 +1416,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_RaOaO() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -1389,7 +1424,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -1431,7 +1467,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[1]);
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[2]);
@@ -1452,6 +1488,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_OaOaR() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -1459,7 +1496,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -1501,7 +1539,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion(0, $certification, $user, $courses[1]);
         $this->assert_program_progress_after_course_completion(0, $certification, $user, $courses[2]);
@@ -1522,6 +1560,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_OaRaO() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -1529,7 +1568,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -1571,7 +1611,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion(0, $certification, $user, $courses[1]);
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[2]);
@@ -1592,6 +1632,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_RaOaR() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -1599,7 +1640,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -1641,7 +1683,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion((int)((1/2)*100), $certification, $user, $courses[1]);
         $this->assert_program_progress_after_course_completion((int)((1/2)*100), $certification, $user, $courses[2]);
@@ -1666,6 +1708,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_RaOtOaRto() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -1673,7 +1716,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -1743,7 +1787,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         $this->assert_program_progress_after_course_completion((int)((1/4)*100), $certification, $user, $courses[1]);
@@ -1778,6 +1822,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_RaStSaRtS_mincourses_0() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -1785,7 +1830,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -1856,7 +1902,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         // Mincourses == 0 implies that courseset is completed
         $this->assertSame((int)((3/7)*100), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true, true));
 
@@ -1890,6 +1936,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_RaStSaRtS_mincourses_1() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -1897,7 +1944,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -1971,7 +2019,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         $this->assert_program_progress_after_course_completion((int)((1/7)*100), $certification, $user, $courses[1]);
@@ -2004,6 +2052,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_RaOoO() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -2011,7 +2060,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -2047,7 +2097,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         // Completion is checked during assignment.
         $this->assertSame(100, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[1]);
@@ -2069,6 +2119,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_OaOoR() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -2076,7 +2127,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -2112,7 +2164,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         // Completion is checked during assignment.
         $this->assertSame(100, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[1]);
@@ -2134,6 +2186,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_OaRoO() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -2141,7 +2194,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -2177,7 +2231,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertSame(get_string('notassigned', 'totara_program'), prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         // Completion is checked during assignment.
         $this->assertSame(100, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[1]);
@@ -2199,6 +2253,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_prog_display_progress_RaOoR() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user = $generator->create_user();
         $courses = array();;
@@ -2206,7 +2261,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $courses[$i] = $generator->create_course(['summary' => 'A short summary']);
         }
 
-        $certification = $generator->create_certification([], [
+        $certification = $program_generator->legacy_create_certification();
+        $program_generator->legacy_add_coursesets_to_program($certification, [
             [
                 'type' => CONTENTTYPE_MULTICOURSE,
                 'nextsetoperator' => NEXTSETOPERATOR_AND,
@@ -2248,7 +2304,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         ]);
 
         // Assign the user to the cert as an individual.
-        $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+        $program_generator->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
         $this->assertSame(0, prog_display_progress($certification->id, $user->id, CERTIFPATH_CERT, true));
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[1]);
         $this->assert_program_progress_after_course_completion(100, $certification, $user, $courses[2]);
@@ -2263,6 +2319,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         global $DB;
 
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         // Set up some users, courses and certifications.
         $users = array();
@@ -2273,29 +2330,29 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $users[$i] = $user;
             $course = $generator->create_course();
             $courses[$i] = $course;
-            $certification = $generator->create_certification(['cert_windowperiod' => '6 month']);
+            $certification = $program_generator->create_certification(['cert_windowperiod' => '6 month']);
             $certifications[$i] = $certification;
         }
 
         // Set up some courses in the certifications.
-        $generator->add_courseset_program($certifications[5]->id, [$courses[2]->id, $courses[3]->id, $courses[4]->id], CERTIFPATH_CERT);
-        $generator->add_courseset_program($certifications[5]->id, [$courses[6]->id, $courses[7]->id], CERTIFPATH_RECERT);
+        $program_generator->legacy_add_courseset_program($certifications[5]->id, [$courses[2]->id, $courses[3]->id, $courses[4]->id], CERTIFPATH_CERT);
+        $program_generator->legacy_add_courseset_program($certifications[5]->id, [$courses[6]->id, $courses[7]->id], CERTIFPATH_RECERT);
 
-        $generator->add_courseset_program($certifications[7]->id, [$courses[2]->id, $courses[3]->id], CERTIFPATH_CERT);
-        $generator->add_courseset_program($certifications[7]->id, [$courses[3]->id, $courses[4]->id], CERTIFPATH_RECERT);
+        $program_generator->legacy_add_courseset_program($certifications[7]->id, [$courses[2]->id, $courses[3]->id], CERTIFPATH_CERT);
+        $program_generator->legacy_add_courseset_program($certifications[7]->id, [$courses[3]->id, $courses[4]->id], CERTIFPATH_RECERT);
 
-        $generator->add_courseset_program($certifications[9]->id, [$courses[6]->id], CERTIFPATH_CERT);
-        $generator->add_courseset_program($certifications[9]->id, [$courses[7]->id], CERTIFPATH_RECERT);
+        $program_generator->legacy_add_courseset_program($certifications[9]->id, [$courses[6]->id], CERTIFPATH_CERT);
+        $program_generator->legacy_add_courseset_program($certifications[9]->id, [$courses[7]->id], CERTIFPATH_RECERT);
 
         // Assign some users to certifications as individuals.
-        $generator->assign_to_program($certifications[5]->id, ASSIGNTYPE_INDIVIDUAL, $users[3]->id); // User 3 to cert 5 (will complete past).
-        $generator->assign_to_program($certifications[5]->id, ASSIGNTYPE_INDIVIDUAL, $users[4]->id); // User 4 to cert 5 (will complete future).
-        $generator->assign_to_program($certifications[7]->id, ASSIGNTYPE_INDIVIDUAL, $users[5]->id); // User 5 to cert 7 (will complete future).
-        $generator->assign_to_program($certifications[9]->id, ASSIGNTYPE_INDIVIDUAL, $users[5]->id); // User 5 to cert 9 (will complete future).
-        $generator->assign_to_program($certifications[7]->id, ASSIGNTYPE_INDIVIDUAL, $users[6]->id); // User 6 to cert 7 (will complete past).
-        $generator->assign_to_program($certifications[9]->id, ASSIGNTYPE_INDIVIDUAL, $users[6]->id); // User 6 to cert 9 (will complete past).
-        $generator->assign_to_program($certifications[7]->id, ASSIGNTYPE_INDIVIDUAL, $users[7]->id); // User 7 to cert 7 (will not complete).
-        $generator->assign_to_program($certifications[9]->id, ASSIGNTYPE_INDIVIDUAL, $users[7]->id); // User 7 to cert 9 (will complete future).
+        $program_generator->assign_to_program($certifications[5]->id, ASSIGNTYPE_INDIVIDUAL, $users[3]->id, null, true); // User 3 to cert 5 (will complete past).
+        $program_generator->assign_to_program($certifications[5]->id, ASSIGNTYPE_INDIVIDUAL, $users[4]->id, null, true); // User 4 to cert 5 (will complete future).
+        $program_generator->assign_to_program($certifications[7]->id, ASSIGNTYPE_INDIVIDUAL, $users[5]->id, null, true); // User 5 to cert 7 (will complete future).
+        $program_generator->assign_to_program($certifications[9]->id, ASSIGNTYPE_INDIVIDUAL, $users[5]->id, null, true); // User 5 to cert 9 (will complete future).
+        $program_generator->assign_to_program($certifications[7]->id, ASSIGNTYPE_INDIVIDUAL, $users[6]->id, null, true); // User 6 to cert 7 (will complete past).
+        $program_generator->assign_to_program($certifications[9]->id, ASSIGNTYPE_INDIVIDUAL, $users[6]->id, null, true); // User 6 to cert 9 (will complete past).
+        $program_generator->assign_to_program($certifications[7]->id, ASSIGNTYPE_INDIVIDUAL, $users[7]->id, null, true); // User 7 to cert 7 (will not complete).
+        $program_generator->assign_to_program($certifications[9]->id, ASSIGNTYPE_INDIVIDUAL, $users[7]->id, null, true); // User 7 to cert 9 (will complete future).
         $this->assertEquals(8, $DB->count_records('prog_completion', array('coursesetid' => 0)));
         $this->assertEquals(8, $DB->count_records('certif_completion'));
         $records = $DB->get_records('certif_completion');
@@ -2638,6 +2695,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         global $DB;
 
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         // Set up some users, courses and certifications.
         $users = [];
@@ -2648,24 +2706,24 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             $users[$i] = $user;
             $course = $generator->create_course();
             $courses[$i] = $course;
-            $certification = $generator->create_certification(array('cert_windowperiod' => '6 month'));
+            $certification = $program_generator->create_certification(array('cert_windowperiod' => '6 month'));
             $certifications[$i] = $certification;
         }
 
         // Set up some courses in the certifications.
-        $generator->add_courseset_program($certifications[4]->id, [$courses[2]->id, $courses[3]->id], CERTIFPATH_CERT);
-        $generator->add_courseset_program($certifications[4]->id, [$courses[2]->id, $courses[3]->id], CERTIFPATH_RECERT);
-        $generator->add_courseset_program($certifications[5]->id, [$courses[6]->id], CERTIFPATH_CERT);
-        $generator->add_courseset_program($certifications[5]->id, [$courses[7]->id], CERTIFPATH_RECERT);
-        $generator->add_courseset_program($certifications[9]->id, [$courses[4]->id], CERTIFPATH_CERT);
-        $generator->add_courseset_program($certifications[9]->id, [$courses[8]->id], CERTIFPATH_RECERT);
+        $program_generator->legacy_add_courseset_program($certifications[4]->id, [$courses[2]->id, $courses[3]->id], CERTIFPATH_CERT);
+        $program_generator->legacy_add_courseset_program($certifications[4]->id, [$courses[2]->id, $courses[3]->id], CERTIFPATH_RECERT);
+        $program_generator->legacy_add_courseset_program($certifications[5]->id, [$courses[6]->id], CERTIFPATH_CERT);
+        $program_generator->legacy_add_courseset_program($certifications[5]->id, [$courses[7]->id], CERTIFPATH_RECERT);
+        $program_generator->legacy_add_courseset_program($certifications[9]->id, [$courses[4]->id], CERTIFPATH_CERT);
+        $program_generator->legacy_add_courseset_program($certifications[9]->id, [$courses[8]->id], CERTIFPATH_RECERT);
 
         // Assign some users to some certs.
-        $generator->assign_to_program($certifications[4]->id, ASSIGNTYPE_INDIVIDUAL, $users[3]->id); // User 3 to cert 4.
-        $generator->assign_to_program($certifications[5]->id, ASSIGNTYPE_INDIVIDUAL, $users[3]->id); // User 3 to cert 5.
-        $generator->assign_to_program($certifications[4]->id, ASSIGNTYPE_INDIVIDUAL, $users[4]->id); // User 4 to cert 4.
-        $generator->assign_to_program($certifications[5]->id, ASSIGNTYPE_INDIVIDUAL, $users[4]->id); // User 4 to cert 5.
-        $generator->assign_to_program($certifications[9]->id, ASSIGNTYPE_INDIVIDUAL, $users[6]->id); // User 6 to cert 9.
+        $program_generator->assign_to_program($certifications[4]->id, ASSIGNTYPE_INDIVIDUAL, $users[3]->id, null, true); // User 3 to cert 4.
+        $program_generator->assign_to_program($certifications[5]->id, ASSIGNTYPE_INDIVIDUAL, $users[3]->id, null, true); // User 3 to cert 5.
+        $program_generator->assign_to_program($certifications[4]->id, ASSIGNTYPE_INDIVIDUAL, $users[4]->id, null, true); // User 4 to cert 4.
+        $program_generator->assign_to_program($certifications[5]->id, ASSIGNTYPE_INDIVIDUAL, $users[4]->id, null, true); // User 4 to cert 5.
+        $program_generator->assign_to_program($certifications[9]->id, ASSIGNTYPE_INDIVIDUAL, $users[6]->id, null, true); // User 6 to cert 9.
 
         // Check that program completion records have been set up.
         $records = $DB->get_records('prog_completion', array('coursesetid' => 0));
@@ -2820,9 +2878,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         global $DB;
 
         $generator = $this->getDataGenerator();
-
-        /* @var totara_program_generator $programgenerator */
-        $programgenerator = $generator->get_plugin_generator('totara_program');
+        $program_generator = \totara_program\testing\generator::instance();
 
         // Set up some stuff.
         $user1 = $generator->create_user();
@@ -2841,16 +2897,16 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $course4 = $generator->create_course($coursedefaults, ['createsections' => true]);
         $course5 = $generator->create_course($coursedefaults, ['createsections' => true]);
 
-        $cert1 = $generator->create_certification();
-        $cert2 = $generator->create_certification();
+        $cert1 = $program_generator->create_certification();
+        $cert2 = $program_generator->create_certification();
 
-        $programgenerator->add_courses_and_courseset_to_program($cert1, [[$course1], [$course2, $course3]], CERTIFPATH_STD);
-        $programgenerator->add_courses_and_courseset_to_program($cert1, [[$course1], [$course4]], CERTIFPATH_RECERT);
-        $programgenerator->add_courses_and_courseset_to_program($cert2, [[$course1]], CERTIFPATH_STD);
-        $programgenerator->add_courses_and_courseset_to_program($cert2, [[$course1]], CERTIFPATH_RECERT);
+        $program_generator->add_courses_and_courseset_to_program($cert1, [[$course1], [$course2, $course3]], CERTIFPATH_STD);
+        $program_generator->add_courses_and_courseset_to_program($cert1, [[$course1], [$course4]], CERTIFPATH_RECERT);
+        $program_generator->add_courses_and_courseset_to_program($cert2, [[$course1]], CERTIFPATH_STD);
+        $program_generator->add_courses_and_courseset_to_program($cert2, [[$course1]], CERTIFPATH_RECERT);
 
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
 
         $logcount = $DB->count_records('prog_completion_log');
 
@@ -2898,11 +2954,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         global $DB;
 
         $generator = $this->getDataGenerator();
-
-        /* @var totara_program_generator $programgenerator */
-        $programgenerator = $generator->get_plugin_generator('totara_program');
-        /* @var core_completion_generator $completiongenerator */
-        $completiongenerator = $generator->get_plugin_generator('core_completion');
+        $program_generator = \totara_program\testing\generator::instance();
+        $completion_generator = \core_completion\testing\generator::instance();
 
         // Set up some stuff.
         $user1 = $generator->create_user();
@@ -2917,16 +2970,16 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         // Create some courses.
         $course1 = $generator->create_course($coursedefaults, array('createsections' => true));
 
-        $cert1 = $generator->create_certification();
-        $cert2 = $generator->create_certification();
-        $prog = $generator->create_program();
+        $cert1 = $program_generator->create_certification();
+        $cert2 = $program_generator->create_certification();
+        $prog = $program_generator->create_program();
 
-        $programgenerator->add_courses_and_courseset_to_program($cert2, array(array($course1)), CERTIFPATH_STD);
-        $programgenerator->add_courses_and_courseset_to_program($cert2, array(array($course1)), CERTIFPATH_RECERT);
+        $program_generator->add_courses_and_courseset_to_program($cert2, array(array($course1)), CERTIFPATH_STD);
+        $program_generator->add_courses_and_courseset_to_program($cert2, array(array($course1)), CERTIFPATH_RECERT);
 
-        $generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $generator->assign_to_program($prog->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($prog->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
 
         // Prog_completion exists, user is not assigned, certif_completion missing - don't do anything.
         $data = new stdClass();
@@ -3006,7 +3059,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertEquals($beforecertcompletioncount, $DB->count_records('certif_completion')); // No records were created for other users.
 
         // Check that prog_update_completion is being run after the missing record is created.
-        $completiongenerator->complete_course($course1, $user1);
+        $completion_generator->complete_course($course1, $user1);
         list($certcompletion, $progcompletion) = certif_load_completion($cert2->id, $user1->id);
         $this->assertEquals(CERTIFSTATUS_COMPLETED, $certcompletion->status);
         $DB->delete_records('certif_completion', array('id' => $certcompletion->id));
@@ -3034,12 +3087,13 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         global $DB;
 
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         // Set up some stuff.
         $user = $generator->create_user();
 
-        $prog = $generator->create_program();
-        $cert = $generator->create_certification();
+        $prog = $program_generator->create_program();
+        $cert = $program_generator->create_certification();
 
         // Check that we get an exception if we try to do it with a program.
         try {
@@ -3184,14 +3238,15 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
      */
     public function test_certif_create_completion_missing_prog_completion() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user1 = $generator->create_user();
         $user2 = $generator->create_user();
         $user3 = $generator->create_user();
 
-        $cert1 = $generator->create_certification();
-        $cert2 = $generator->create_certification();
-        $cert3 = $generator->create_certification();
+        $cert1 = $program_generator->create_certification();
+        $cert2 = $program_generator->create_certification();
+        $cert3 = $program_generator->create_certification();
 
         //////////////////////////////
         // Assigned certif_completion.
@@ -3430,14 +3485,15 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         global $DB;
 
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $user1 = $generator->create_user();
         $user2 = $generator->create_user();
         $user3 = $generator->create_user();
 
-        $cert1 = $generator->create_certification();
-        $cert2 = $generator->create_certification();
-        $cert3 = $generator->create_certification();
+        $cert1 = $program_generator->create_certification();
+        $cert2 = $program_generator->create_certification();
+        $cert3 = $program_generator->create_certification();
 
         //////////////////////////////
         // Assigned certif_completion.
@@ -3770,30 +3826,31 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
 
     public function test_certif_load_all_completions() {
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         // Create some users.
         $user1 = $generator->create_user();
         $user2 = $generator->create_user();
 
         // Create some certs.
-        $cert1 = $generator->create_certification();
-        $cert2 = $generator->create_certification();
+        $cert1 = $program_generator->create_certification();
+        $cert2 = $program_generator->create_certification();
 
         // Create some programs.
-        $prog1 = $generator->create_program();
-        $prog2 = $generator->create_program();
+        $prog1 = $program_generator->create_program();
+        $prog2 = $program_generator->create_program();
 
         // Add the users to the certs.
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
 
         // Add the users to the programs.
-        $generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
+        $program_generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
 
         // Run the function and check the correct records are returned.
         $results = certif_load_all_completions($user1->id);
@@ -3932,30 +3989,31 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         global $DB;
 
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         // Create some users.
         $user1 = $generator->create_user();
         $user2 = $generator->create_user();
 
         // Create some certs.
-        $cert1 = $generator->create_certification();
-        $cert2 = $generator->create_certification();
+        $cert1 = $program_generator->create_certification();
+        $cert2 = $program_generator->create_certification();
 
         // Create some programs.
-        $prog1 = $generator->create_program();
-        $prog2 = $generator->create_program();
+        $prog1 = $program_generator->create_program();
+        $prog2 = $program_generator->create_program();
 
         // Add the users to the certs.
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
 
         // Add the users to the programs.
-        $generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
+        $program_generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
 
         // Hack the removal of the assignment records. We can't unassign the user because that would remove the completion records!
         if (!$isassigned) {
@@ -4029,18 +4087,19 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         global $DB;
 
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         // Create some users.
         $user1 = $generator->create_user();
         $user2 = $generator->create_user();
 
         // Create a cert.
-        $cert1 = $generator->create_certification();
+        $cert1 = $program_generator->create_certification();
 
         // We've already tested what happens when both records exist, so just try with missing cert or prog records.
 
         // Check that the cert record is still deleted if the prog record doesn't exist.
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
         $this->assertCount(1, $DB->get_records('certif_completion'));
         $this->assertCount(1, $DB->get_records('prog_completion'));
         $DB->delete_records('prog_completion', array('programid' => $cert1->id, 'userid' => $user1->id));
@@ -4050,7 +4109,7 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertCount(0, $DB->get_records('certif_completion'));
 
         // Check that the prog record is still deleted if the cert record doesn't exist.
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
         $this->assertCount(1, $DB->get_records('certif_completion'));
         $this->assertCount(1, $DB->get_records('prog_completion'));
         $DB->delete_records('certif_completion', array('certifid' => $cert1->certifid, 'userid' => $user2->id));
@@ -4064,30 +4123,31 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         global $DB;
 
         $generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         // Create some users.
         $user1 = $generator->create_user();
         $user2 = $generator->create_user();
 
         // Create some certs.
-        $cert1 = $generator->create_certification();
-        $cert2 = $generator->create_certification();
+        $cert1 = $program_generator->create_certification();
+        $cert2 = $program_generator->create_certification();
 
         // Create some programs.
-        $prog1 = $generator->create_program();
-        $prog2 = $generator->create_program();
+        $prog1 = $program_generator->create_program();
+        $prog2 = $program_generator->create_program();
 
         // Add the users to the certs.
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
 
         // Add the users to the programs.
-        $generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
+        $program_generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
 
         // Load the current set of data.
         $expectedcertcompletions = $DB->get_records('certif_completion');
@@ -4153,6 +4213,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         // Turn off programs. This is to test that it doesn't interfere with certification completion.
         set_config('enableprograms', advanced_feature::DISABLED);
 
+        $program_generator = \totara_program\testing\generator::instance();
+
         // Create users.
         for ($i = 1; $i <= $this->numtestusers; $i++) {
             $this->users[$i] = $this->getDataGenerator()->create_user();
@@ -4160,25 +4222,25 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
 
         // Create programs, mostly so that we don't end up with coincidental success due to matching ids.
         for ($i = 1; $i <= $this->numtestprogs; $i++) {
-            $this->programs[$i] = $this->getDataGenerator()->create_program();
+            $this->programs[$i] = $program_generator->create_program();
         }
 
         // Create certifications.
         for ($i = 1; $i <= $this->numtestcerts; $i++) {
-            $this->certifications[$i] = $this->getDataGenerator()->create_certification();
+            $this->certifications[$i] = $program_generator->create_certification();
         }
 
         // Assign users to the programs as individuals.
         foreach ($this->users as $user) {
             foreach ($this->programs as $prog) {
-                $this->getDataGenerator()->assign_to_program($prog->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+                $program_generator->assign_to_program($prog->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
             }
         }
 
         // Assign users to the certifications as individuals.
         foreach ($this->users as $user) {
             foreach ($this->certifications as $prog) {
-                $this->getDataGenerator()->assign_to_program($prog->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+                $program_generator->assign_to_program($prog->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
             }
         }
     }
@@ -4678,10 +4740,9 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
     public function create_certif_completion() {
         global $DB;
 
-        /* @var totara_program_generator $programgenerator */
-        $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
-        $certification1 = new program($programgenerator->create_certification());
-        $certification2 = new program($programgenerator->create_certification());
+        $program_generator = \totara_program\testing\generator::instance();
+        $certification1 = new program($program_generator->create_certification());
+        $certification2 = new program($program_generator->create_certification());
 
         // We'll clone this object and vary it to get a variation of history records.
         $originalcompletion = new stdClass();
@@ -4839,9 +4900,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
     public function test_certif_write_completion_history_creates_history_record() {
         global $DB;
 
-        /* @var totara_program_generator $programgenerator */
-        $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
-        $certification1 = new program($programgenerator->create_certification());
+        $program_generator = \totara_program\testing\generator::instance();
+        $certification1 = new program($program_generator->create_certification());
 
         $originalhistory = new stdClass();
         $originalhistory->certifid = $certification1->certifid;
@@ -4869,9 +4929,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
     public function test_certif_write_completion_history_duplicate() {
         global $DB;
 
-        /* @var totara_program_generator $programgenerator */
-        $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
-        $certification1 = new program($programgenerator->create_certification());
+        $program_generator = \totara_program\testing\generator::instance();
+        $certification1 = new program($program_generator->create_certification());
 
         $originalhistory = new stdClass();
         $originalhistory->certifid = $certification1->certifid;
@@ -4904,9 +4963,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
     public function test_certif_write_completion_history_different_timewindowopens() {
         global $DB;
 
-        /* @var totara_program_generator $programgenerator */
-        $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
-        $certification1 = new program($programgenerator->create_certification());
+        $program_generator = \totara_program\testing\generator::instance();
+        $certification1 = new program($program_generator->create_certification());
 
         $originalhistory = new stdClass();
         $originalhistory->certifid = $certification1->certifid;
@@ -4942,9 +5000,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
     public function test_certif_write_completion_history_different_timecompleted() {
         global $DB;
 
-        /* @var totara_program_generator $programgenerator */
-        $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
-        $certification1 = new program($programgenerator->create_certification());
+        $program_generator = \totara_program\testing\generator::instance();
+        $certification1 = new program($program_generator->create_certification());
 
         $originalhistory = new stdClass();
         $originalhistory->certifid = $certification1->certifid;
@@ -4976,9 +5033,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
     public function test_certif_write_completion_history_different_timeexpires() {
         global $DB;
 
-        /* @var totara_program_generator $programgenerator */
-        $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
-        $certification1 = new program($programgenerator->create_certification());
+        $program_generator = \totara_program\testing\generator::instance();
+        $certification1 = new program($program_generator->create_certification());
 
         $originalhistory = new stdClass();
         $originalhistory->certifid = $certification1->certifid;
@@ -5011,10 +5067,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
     public function test_certif_set_state_certified() {
         global $DB;
 
-        /* @var totara_program_generator $programgenerator */
-        $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
-        /* @var core_completion_generator $completiongenerator */
-        $completiongenerator = $this->getDataGenerator()->get_plugin_generator('core_completion');
+        $program_generator = \totara_program\testing\generator::instance();
+        $completion_generator = \core_completion\testing\generator::instance();
 
         // Set up some stuff.
         $user1 = $this->getDataGenerator()->create_user(); // Control user.
@@ -5025,8 +5079,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             'cert_windowperiod' => '5 day',
             'cert_activeperiod' => '10 day',
         );
-        $cert1 = $this->getDataGenerator()->create_certification($certsettings);
-        $cert2 = $this->getDataGenerator()->create_certification($certsettings); // Control certification.
+        $cert1 = $program_generator->legacy_create_certification($certsettings);
+        $cert2 = $program_generator->legacy_create_certification($certsettings); // Control certification.
 
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
@@ -5034,14 +5088,14 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $course4 = $this->getDataGenerator()->create_course();
         $course5 = $this->getDataGenerator()->create_course(); // Control course.
 
-        $programgenerator->add_courses_and_courseset_to_program($cert1, array(array($course1), array($course2), array($course3, $course4)), CERTIFPATH_CERT);
-        $programgenerator->add_courses_and_courseset_to_program($cert1, array(array($course3)), CERTIFPATH_RECERT);
-        $programgenerator->add_courses_and_courseset_to_program($cert2, array(array($course5)), CERTIFPATH_CERT);
+        $program_generator->add_courses_and_courseset_to_program($cert1, array(array($course1), array($course2), array($course3, $course4)), CERTIFPATH_CERT);
+        $program_generator->add_courses_and_courseset_to_program($cert1, array(array($course3)), CERTIFPATH_RECERT);
+        $program_generator->add_courses_and_courseset_to_program($cert2, array(array($course5)), CERTIFPATH_CERT);
 
-        $this->getDataGenerator()->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $this->getDataGenerator()->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $this->getDataGenerator()->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $this->getDataGenerator()->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user3->id);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user3->id, null, true);
 
         // Create some course set group completion records (with timecompleted).
         $now = time();
@@ -5050,11 +5104,11 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $user2course1timecompleted = $now - DAYSECS * 30;
         $user2course2timecompleted = $now - DAYSECS * 20; // Expected timecompleted - most recent relevant.
         $user2course3timecompleted = $now - DAYSECS * 15; // Not expected, because the course set group is not complete.
-        $completiongenerator->complete_course($course1, $user1, $user1course1timecompleted);
-        $completiongenerator->complete_course($course5, $user2, $user2course5timecompleted);
-        $completiongenerator->complete_course($course1, $user2, $user2course1timecompleted);
-        $completiongenerator->complete_course($course2, $user2, $user2course2timecompleted);
-        $completiongenerator->complete_course($course3, $user2, $user2course3timecompleted);
+        $completion_generator->complete_course($course1, $user1, $user1course1timecompleted);
+        $completion_generator->complete_course($course5, $user2, $user2course5timecompleted);
+        $completion_generator->complete_course($course1, $user2, $user2course1timecompleted);
+        $completion_generator->complete_course($course2, $user2, $user2course2timecompleted);
+        $completion_generator->complete_course($course3, $user2, $user2course3timecompleted);
         // Don't complete the fourth course, because it would mark the user certified.
 
         // Before doing the positive test, check that the function will fail correctly.
@@ -5111,10 +5165,8 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
     public function test_certif_set_state_windowopen() {
         global $DB;
 
-        /* @var totara_program_generator $programgenerator */
-        $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
-        /* @var core_completion_generator $completiongenerator */
-        $completiongenerator = $this->getDataGenerator()->get_plugin_generator('core_completion');
+        $program_generator = \totara_program\testing\generator::instance();
+        $completion_generator = \core_completion\testing\generator::instance();
 
         // Set up some stuff.
         $user1 = $this->getDataGenerator()->create_user(); // Control user.
@@ -5125,22 +5177,22 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
             'cert_windowperiod' => '5 day',
             'cert_activeperiod' => '10 day',
         );
-        $cert1 = $this->getDataGenerator()->create_certification($certsettings);
-        $cert2 = $this->getDataGenerator()->create_certification($certsettings); // Control certification.
+        $cert1 = $program_generator->create_certification($certsettings);
+        $cert2 = $program_generator->create_certification($certsettings); // Control certification.
 
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
         $course3 = $this->getDataGenerator()->create_course(); // Control course.
 
-        $programgenerator->add_courses_and_courseset_to_program($cert1, array(array($course1)), CERTIFPATH_CERT);
-        $programgenerator->add_courses_and_courseset_to_program($cert1, array(array($course2)), CERTIFPATH_RECERT);
-        $programgenerator->add_courses_and_courseset_to_program($cert2, array(array($course3)), CERTIFPATH_CERT);
-        $programgenerator->add_courses_and_courseset_to_program($cert2, array(array($course3)), CERTIFPATH_RECERT);
+        $program_generator->add_courses_and_courseset_to_program($cert1, array(array($course1)), CERTIFPATH_CERT);
+        $program_generator->add_courses_and_courseset_to_program($cert1, array(array($course2)), CERTIFPATH_RECERT);
+        $program_generator->add_courses_and_courseset_to_program($cert2, array(array($course3)), CERTIFPATH_CERT);
+        $program_generator->add_courses_and_courseset_to_program($cert2, array(array($course3)), CERTIFPATH_RECERT);
 
-        $this->getDataGenerator()->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $this->getDataGenerator()->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $this->getDataGenerator()->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $this->getDataGenerator()->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user3->id);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user3->id, null, true);
 
         $allmessagetypes = array(
             MESSAGETYPE_ENROLMENT,
@@ -5235,12 +5287,12 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $DB->execute('DELETE FROM {prog_messagelog}');
 
         // Create some certified records. Includes course completion and course set group completion records.
-        $completiongenerator->complete_course($course1, $user1);
-        $completiongenerator->complete_course($course2, $user1);
-        $completiongenerator->complete_course($course3, $user1);
-        $completiongenerator->complete_course($course1, $user2);
-        $completiongenerator->complete_course($course2, $user2);
-        $completiongenerator->complete_course($course3, $user2);
+        $completion_generator->complete_course($course1, $user1);
+        $completion_generator->complete_course($course2, $user1);
+        $completion_generator->complete_course($course3, $user1);
+        $completion_generator->complete_course($course1, $user2);
+        $completion_generator->complete_course($course2, $user2);
+        $completion_generator->complete_course($course3, $user2);
         list($user1cert1precertcompletion, $user1cert1preprogcompletion) = certif_load_completion($cert1->id, $user1->id);
         $this->assertEquals(CERTIFCOMPLETIONSTATE_CERTIFIED, certif_get_completion_state($user1cert1precertcompletion));
         list($user2cert1precertcompletion, $user2cert1preprogcompletion) = certif_load_completion($cert1->id, $user2->id);
@@ -5446,9 +5498,9 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         $this->assertTrue(certif_set_state_windowopen($cert2->id, $user2->id, 'Testing pass certif_set_state_windowopen'));
 
         // Mark the users certified again. This time, recertification path non-zero course set records will be created.
-        $completiongenerator->complete_course($course2, $user1);
-        $completiongenerator->complete_course($course2, $user2);
-        $completiongenerator->complete_course($course3, $user2);
+        $completion_generator->complete_course($course2, $user1);
+        $completion_generator->complete_course($course2, $user2);
+        $completion_generator->complete_course($course3, $user2);
 
         // Check the record status before running the function.
         $where = "programid = :programid AND userid = :userid AND coursesetid > 0 AND status = " . STATUS_COURSESET_COMPLETE;
@@ -5477,32 +5529,30 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
     public function test_certif_set_state_expired() {
         global $DB;
 
-        /* @var totara_program_generator $programgenerator */
-        $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
-        /* @var core_completion_generator $completiongenerator */
-        $completiongenerator = $this->getDataGenerator()->get_plugin_generator('core_completion');
+        $program_generator = \totara_program\testing\generator::instance();
+        $completion_generator = \core_completion\testing\generator::instance();
 
         // Set up some stuff.
         $user1 = $this->getDataGenerator()->create_user(); // Control user.
         $user2 = $this->getDataGenerator()->create_user();
         $user3 = $this->getDataGenerator()->create_user(); // Control user.
 
-        $cert1 = $this->getDataGenerator()->create_certification();
-        $cert2 = $this->getDataGenerator()->create_certification(); // Control certification.
+        $cert1 = $program_generator->create_certification();
+        $cert2 = $program_generator->create_certification(); // Control certification.
 
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
         $course3 = $this->getDataGenerator()->create_course(); // Control course.
 
-        $programgenerator->add_courses_and_courseset_to_program($cert1, array(array($course1)), CERTIFPATH_CERT);
-        $programgenerator->add_courses_and_courseset_to_program($cert1, array(array($course2)), CERTIFPATH_RECERT);
-        $programgenerator->add_courses_and_courseset_to_program($cert2, array(array($course3)), CERTIFPATH_CERT);
-        $programgenerator->add_courses_and_courseset_to_program($cert2, array(array($course3)), CERTIFPATH_RECERT);
+        $program_generator->add_courses_and_courseset_to_program($cert1, array(array($course1)), CERTIFPATH_CERT);
+        $program_generator->add_courses_and_courseset_to_program($cert1, array(array($course2)), CERTIFPATH_RECERT);
+        $program_generator->add_courses_and_courseset_to_program($cert2, array(array($course3)), CERTIFPATH_CERT);
+        $program_generator->add_courses_and_courseset_to_program($cert2, array(array($course3)), CERTIFPATH_RECERT);
 
-        $this->getDataGenerator()->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $this->getDataGenerator()->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $this->getDataGenerator()->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $this->getDataGenerator()->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user3->id);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user3->id, null, true);
 
         $allmessagetypes = [
             MESSAGETYPE_ENROLMENT,
@@ -5586,12 +5636,12 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
         // Start testing what happens when there are no problems.
 
         // Set the test data into the Window open state.
-        $completiongenerator->complete_course($course1, $user1);
-        $completiongenerator->complete_course($course2, $user1);
-        $completiongenerator->complete_course($course3, $user1);
-        $completiongenerator->complete_course($course1, $user2);
-        $completiongenerator->complete_course($course2, $user2);
-        $completiongenerator->complete_course($course3, $user2);
+        $completion_generator->complete_course($course1, $user1);
+        $completion_generator->complete_course($course2, $user1);
+        $completion_generator->complete_course($course3, $user1);
+        $completion_generator->complete_course($course1, $user2);
+        $completion_generator->complete_course($course2, $user2);
+        $completion_generator->complete_course($course3, $user2);
         $this->assertTrue(certif_set_state_windowopen($cert1->id, $user1->id));
         $this->assertTrue(certif_set_state_windowopen($cert1->id, $user2->id));
         $this->assertTrue(certif_set_state_windowopen($cert2->id, $user2->id));
@@ -5776,31 +5826,29 @@ class totara_certification_lib_testcase extends reportcache_advanced_testcase {
     public function test_certif_set_in_progress() {
         global $DB;
 
-        /* @var totara_program_generator $programgenerator */
-        $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
-        /* @var core_completion_generator $completiongenerator */
-        $completiongenerator = $this->getDataGenerator()->get_plugin_generator('core_completion');
+        $program_generator = \totara_program\testing\generator::instance();
+        $completion_generator = \core_completion\testing\generator::instance();
 
         // Set up some stuff.
         $user1 = $this->getDataGenerator()->create_user(); // Control user.
         $user2 = $this->getDataGenerator()->create_user();
         $user3 = $this->getDataGenerator()->create_user(); // Control user.
 
-        $cert1 = $this->getDataGenerator()->create_certification();
-        $cert2 = $this->getDataGenerator()->create_certification(); // Control certification.
+        $cert1 = $program_generator->create_certification();
+        $cert2 = $program_generator->create_certification(); // Control certification.
 
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
         $course3 = $this->getDataGenerator()->create_course(); // Control course.
 
-        $programgenerator->add_courses_and_courseset_to_program($cert1, array(array($course1)), CERTIFPATH_CERT);
-        $programgenerator->add_courses_and_courseset_to_program($cert1, array(array($course2)), CERTIFPATH_RECERT);
-        $programgenerator->add_courses_and_courseset_to_program($cert2, array(array($course3)), CERTIFPATH_CERT);
+        $program_generator->add_courses_and_courseset_to_program($cert1, array(array($course1)), CERTIFPATH_CERT);
+        $program_generator->add_courses_and_courseset_to_program($cert1, array(array($course2)), CERTIFPATH_RECERT);
+        $program_generator->add_courses_and_courseset_to_program($cert2, array(array($course3)), CERTIFPATH_CERT);
 
-        $this->getDataGenerator()->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $this->getDataGenerator()->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $this->getDataGenerator()->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $this->getDataGenerator()->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user3->id);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user3->id, null, true);
 
         // Collect the control data.
         list($user1cert1precertcompletion, $user1cert1preprogcompletion) = certif_load_completion($cert1->id, $user1->id);

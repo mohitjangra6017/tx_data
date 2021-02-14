@@ -53,7 +53,7 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
     use webapi_phpunit_helper;
 
     /**
-     * @param mod_perform_generator $perform_generator
+     * @param \mod_perform\testing\generator $perform_generator
     */
     private $perform_generator;
 
@@ -406,8 +406,8 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
      */
     private function create_test_users() {
         $this->setAdminUser();
-        /** @var mod_perform_generator $perform_generator */
-        $this->perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $this->perform_generator = \mod_perform\testing\generator::instance();
 
         $this->setup_users_job_assignments();
     }

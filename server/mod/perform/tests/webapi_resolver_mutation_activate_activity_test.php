@@ -164,7 +164,7 @@ class mod_perform_webapi_resolver_mutation_activate_activity_testcase extends ad
         }
 
         $data_generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         $activity = $perform_generator->create_activity_in_container([
@@ -191,7 +191,7 @@ class mod_perform_webapi_resolver_mutation_activate_activity_testcase extends ad
      */
     protected function create_valid_activity(int $status = null): array {
         $data_generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         [$activity, $args] = $this->create_activity($status);

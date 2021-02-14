@@ -44,7 +44,7 @@ class mod_perform_webapi_resolver_mutation_toggle_notification_recipient_testcas
         self::setAdminUser();
 
         $data_generator = self::getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         /** @var activity_model $activity */
@@ -54,7 +54,7 @@ class mod_perform_webapi_resolver_mutation_toggle_notification_recipient_testcas
 
     public function create_test_relationship(notification_model $notification): relationship {
         $data_generator = self::getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         $activity = $notification->get_activity();

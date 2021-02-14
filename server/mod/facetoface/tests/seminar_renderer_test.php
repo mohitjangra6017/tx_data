@@ -44,7 +44,7 @@ class mod_facetoface_seminar_renderer_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course([], ['createsections' => true]);
 
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $generator->get_plugin_generator('mod_facetoface');
         $f2f = $f2fgen->create_instance([
             'course' => $course->id,

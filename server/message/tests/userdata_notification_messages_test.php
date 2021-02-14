@@ -25,7 +25,6 @@ namespace core_message\userdata;
 
 use context_system;
 use context_user;
-use core_message_generator;
 use totara_userdata\userdata\export;
 use totara_userdata\userdata\item;
 use totara_userdata\userdata\target_user;
@@ -63,7 +62,7 @@ class core_message_userdata_notification_messages_testcase extends userdata_mess
         $user3 = $this->getDataGenerator()->create_user();
 
         // Set totara_program generator.
-        /** @var core_message_generator $message_generator */
+        /** @var \core_message\testing\generator $message_generator */
         $message_generator = $this->getDataGenerator()->get_plugin_generator('core_message');
 
         list($message1id, $message1readid) = $message_generator->create_message_data($user1->id, $user2->id, 'instantmessage');
@@ -137,7 +136,7 @@ class core_message_userdata_notification_messages_testcase extends userdata_mess
         $user3 = $this->getDataGenerator()->create_user();
 
         // Set totara_program generator.
-        /** @var core_message_generator $message_generator */
+        /** @var \core_message\testing\generator $message_generator */
         $message_generator = $this->getDataGenerator()->get_plugin_generator('core_message');
 
         $message_generator->create_message_data($user1->id, $user2->id, 'instantmessage');
@@ -177,7 +176,7 @@ class core_message_userdata_notification_messages_testcase extends userdata_mess
         $user3 = $this->getDataGenerator()->create_user();
 
         // Set totara_program generator.
-        /** @var core_message_generator $message_generator */
+        /** @var \core_message\testing\generator $message_generator */
         $message_generator = $this->getDataGenerator()->get_plugin_generator('core_message');
 
         list($message1id, $message1readid) = $message_generator->create_message_data($user1->id, $user2->id, 'instantmessage');

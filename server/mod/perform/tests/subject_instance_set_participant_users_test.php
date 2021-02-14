@@ -44,14 +44,12 @@ use totara_job\job_assignment;
 class mod_perform_subject_instance_set_participant_users_testcase extends advanced_testcase {
 
     /**
-     * @var mod_perform_generator
+     * @var \mod_perform\testing\generator
      */
     private $generator;
 
     protected function setUp(): void {
-        global $CFG;
-        require_once($CFG->dirroot . '/mod/perform/tests/generator/mod_perform_generator.class.php');
-        $this->generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        $this->generator = \mod_perform\testing\generator::instance();
     }
 
     protected function tearDown(): void {
@@ -438,7 +436,7 @@ class mod_perform_subject_instance_set_participant_users_testcase extends advanc
 
     private function generate_test_data(): manual_participant_selector_test_data {
         self::setAdminUser();
-        $data = new manual_participant_selector_test_data($this->getDataGenerator());
+        $data = new manual_participant_selector_test_data();
         $data->create_data();
         self::setUser();
         return $data;
@@ -474,18 +472,15 @@ class manual_participant_selector_test_data {
     /** @var subject_instance */
     public $act3_user2_subject_instance;
 
-    /** @var component_generator_base */
+    /** @var \core\testing\generator */
     private $generator;
 
-    /** @var mod_perform_generator|component_generator_base */
+    /** @var \mod_perform\testing\generator */
     private $perform_generator;
 
-    public function __construct($generator) {
-        global $CFG;
-        require_once($CFG->dirroot . '/mod/perform/tests/generator/mod_perform_generator.class.php');
-
-        $this->generator = $generator;
-        $this->perform_generator = $this->generator->get_plugin_generator('mod_perform');
+    public function __construct() {
+        $this->generator = \core\testing\generator::instance();
+        $this->perform_generator = \mod_perform\testing\generator::instance();
     }
 
     public function create_data(): void {

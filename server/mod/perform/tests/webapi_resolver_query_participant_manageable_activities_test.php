@@ -64,8 +64,8 @@ class mod_perform_webapi_resolver_participant_manageable_activities_testcase ext
 
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $activity_names[] = 'hidden-activity';
 

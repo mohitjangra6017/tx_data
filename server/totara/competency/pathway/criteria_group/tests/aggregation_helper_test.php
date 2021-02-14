@@ -68,7 +68,7 @@ class pathway_criteria_group_aggregation_helper_testcase extends advanced_testca
             $data->courses[$i] = $this->getDataGenerator()->create_course(['enablecompletion' => true]);
         }
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $scale = $hierarchygenerator->create_scale(
@@ -89,9 +89,7 @@ class pathway_criteria_group_aggregation_helper_testcase extends advanced_testca
 
         $framework = $hierarchygenerator->create_comp_frame(['scale' => $scale->id]);
 
-        /** @var totara_competency_generator $competency_generator */
-        $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
-        /** @var totara_competency_assignment_generator $assignment_generator */
+        $competency_generator = \totara_competency\testing\generator::instance();
         $assignment_generator = $competency_generator->assignment_generator();
 
         $to_create = [

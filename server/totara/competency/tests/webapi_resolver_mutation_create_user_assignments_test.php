@@ -264,10 +264,10 @@ class totara_competency_webapi_resolver_mutation_create_user_assignments_testcas
     /**
      * Get hierarchy specific generator
      *
-     * @return totara_competency_generator|component_generator_base
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        return \totara_competency\testing\generator::instance();
     }
 
     private function set_self_assignable($competency_id) {

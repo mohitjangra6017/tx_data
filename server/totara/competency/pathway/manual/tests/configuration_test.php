@@ -40,7 +40,7 @@ class pathway_manual_configuration_testcase extends advanced_testcase {
             public $competency;
         };
 
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $data->competency = $generator->create_competency();
 

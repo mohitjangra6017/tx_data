@@ -37,7 +37,7 @@ final class totara_playlist_add_topic_testcase extends advanced_testcase {
 
         $gen = $this->getDataGenerator();
 
-        /** @var totara_topic_generator $topicgen */
+        /** @var \totara_topic\testing\generator $topicgen */
         $topicgen = $gen->get_plugin_generator('totara_topic');
         $topics = [];
 
@@ -45,7 +45,7 @@ final class totara_playlist_add_topic_testcase extends advanced_testcase {
             $topics[] = $topicgen->create_topic();
         }
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         $playlist = $playlistgen->create_playlist();
 

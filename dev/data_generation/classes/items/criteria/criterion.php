@@ -29,7 +29,6 @@ use degeneration\Cache;
 use degeneration\items\item;
 use Exception;
 use ReflectionClass;
-use totara_criteria_generator;
 
 /**
  * Class criterion
@@ -93,7 +92,7 @@ abstract class criterion extends item {
     /**
      * Get competency generator
      *
-     * @return totara_criteria_generator
+     * @return \totara_criteria\testing\generator
      */
     public function generator() {
         return App::generator()->get_plugin_generator('totara_criteria');

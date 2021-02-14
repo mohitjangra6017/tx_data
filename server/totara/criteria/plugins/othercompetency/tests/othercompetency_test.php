@@ -226,10 +226,10 @@ class criteria_othercompetency_testcase extends advanced_testcase {
      * Test validate when othercompetency criteria is added later
      */
     public function test_validate_othercompetency_criteria_added_later() {
-        /** @var totara_criteria_generator $criterion_generator */
+        /** @var \totara_criteria\testing\generator $criterion_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         // Create the criterion without any competencies

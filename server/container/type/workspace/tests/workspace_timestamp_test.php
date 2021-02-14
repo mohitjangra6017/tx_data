@@ -44,7 +44,7 @@ class container_workspace_workspace_timestamp_testcase extends advanced_testcase
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -70,7 +70,7 @@ class container_workspace_workspace_timestamp_testcase extends advanced_testcase
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -101,7 +101,7 @@ class container_workspace_workspace_timestamp_testcase extends advanced_testcase
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         $this->setUser($user_one);
@@ -134,7 +134,7 @@ class container_workspace_workspace_timestamp_testcase extends advanced_testcase
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -147,7 +147,7 @@ class container_workspace_workspace_timestamp_testcase extends advanced_testcase
 
         member::join_workspace($workspace, $user_two->id);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $discussion->get_id(),
@@ -178,11 +178,11 @@ class container_workspace_workspace_timestamp_testcase extends advanced_testcase
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article(['access' => access::PUBLIC]);
 

@@ -193,10 +193,10 @@ class criteria_childcompetency_testcase extends advanced_testcase {
      * Test validate when childcompetency criteria is added later
      */
     public function test_validate_parent_criteria_first() {
-        /** @var totara_criteria_generator $criterion_generator */
+        /** @var \totara_criteria\testing\generator $criterion_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => true]);

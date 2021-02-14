@@ -39,11 +39,11 @@ final class container_workspace_get_discussion_testcase extends advanced_testcas
 
         $this->setUser($user);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
 
         for ($i = 0; $i < 7; $i++) {
@@ -82,7 +82,7 @@ final class container_workspace_get_discussion_testcase extends advanced_testcas
 
         $this->setUser($user);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 

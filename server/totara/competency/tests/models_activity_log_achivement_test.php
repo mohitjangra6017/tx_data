@@ -62,7 +62,7 @@ class totara_competency_models_activity_log_achievement_testcase extends advance
     public function test_value_given() {
         $time = time();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $hierarchy_generator->create_scale(
             'comp',

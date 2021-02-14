@@ -24,7 +24,6 @@
 namespace core_course\totara_catalog\course\dataformatter;
 
 use context_system;
-use core_completion_generator;
 use stdClass;
 use totara_catalog\dataformatter\dataformatter_test_base;
 use totara_catalog\dataformatter\formatter;

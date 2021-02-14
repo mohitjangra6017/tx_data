@@ -43,7 +43,7 @@ class container_workspace_user_data_discussion_testcase extends advanced_testcas
         $user1 = $generator->create_user();
 
 
-        /** @var container_workspace_generator $workspace_gen */
+        /** @var \container_workspace\testing\generator $workspace_gen */
         $workspace_gen = $generator->get_plugin_generator('container_workspace');
 
         //Create discussion for user.
@@ -125,7 +125,7 @@ class container_workspace_user_data_discussion_testcase extends advanced_testcas
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -146,7 +146,7 @@ class container_workspace_user_data_discussion_testcase extends advanced_testcas
 
         member::join_workspace($workspace, $user_two->id);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
 
         /** @var comment[] $comments */
@@ -224,7 +224,7 @@ class container_workspace_user_data_discussion_testcase extends advanced_testcas
         $user1 = $generator->create_user();
         $this->setUser($user);
 
-        /** @var container_workspace_generator $workspace_gen */
+        /** @var \container_workspace\testing\generator $workspace_gen */
         $workspace_gen = $generator->get_plugin_generator('container_workspace');
         $workspace =  $workspace_gen->create_workspace();
 

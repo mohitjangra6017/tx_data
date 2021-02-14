@@ -30,7 +30,7 @@ class totara_notification_notification_queue_manager_testcaase extends advanced_
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var \totara_notification\testing\generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_built_in_notification_for_component();
     }
@@ -46,7 +46,7 @@ class totara_notification_notification_queue_manager_testcaase extends advanced_
 
         $context_user = context_user::instance($user_one->id);
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var \totara_notification\testing\generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 

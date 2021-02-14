@@ -39,7 +39,7 @@ class container_workspace_webapi_update_discussion_validation_testcase extends a
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -66,7 +66,7 @@ class container_workspace_webapi_update_discussion_validation_testcase extends a
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -100,7 +100,7 @@ class container_workspace_webapi_update_discussion_validation_testcase extends a
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -136,7 +136,7 @@ class container_workspace_webapi_update_discussion_validation_testcase extends a
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
         $discussion = $workspace_generator->create_discussion($workspace->get_id());
@@ -166,7 +166,7 @@ class container_workspace_webapi_update_discussion_validation_testcase extends a
         $user_one = $generator->create_user();
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
         $discussion = $workspace_generator->create_discussion($workspace->get_id());
@@ -196,7 +196,7 @@ class container_workspace_webapi_update_discussion_validation_testcase extends a
         $user_two = $generator->create_user();
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 

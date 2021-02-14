@@ -331,7 +331,7 @@ class totara_competency_competency_deletion_testcase extends advanced_testcase {
     /**
      * Get hierarchy specific generator
      *
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
         return $this->getDataGenerator()->get_plugin_generator('totara_competency');

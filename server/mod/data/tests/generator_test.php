@@ -44,9 +44,8 @@ class mod_data_generator_testcase extends advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course();
 
-        /** @var mod_data_generator $generator */
+        /** @var \mod_data\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_data');
-        $this->assertInstanceOf('mod_data_generator', $generator);
         $this->assertEquals('data', $generator->get_modulename());
 
         $generator->create_instance(array('course' => $course->id));
@@ -82,9 +81,8 @@ class mod_data_generator_testcase extends advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course();
 
-        /** @var mod_data_generator $generator */
+        /** @var \mod_data\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_data');
-        $this->assertInstanceOf('mod_data_generator', $generator);
         $this->assertEquals('data', $generator->get_modulename());
 
         $data = $generator->create_instance(array('course' => $course->id));
@@ -143,9 +141,8 @@ class mod_data_generator_testcase extends advanced_testcase {
         $groupa = $this->getDataGenerator()->create_group(array('courseid' => $course->id, 'name' => 'groupA'));
         $this->getDataGenerator()->create_group_member(array('userid' => $user1->id, 'groupid' => $groupa->id));
 
-        /** @var mod_data_generator $generator */
+        /** @var \mod_data\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_data');
-        $this->assertInstanceOf('mod_data_generator', $generator);
         $this->assertEquals('data', $generator->get_modulename());
 
         $data = $generator->create_instance(array('course' => $course->id));

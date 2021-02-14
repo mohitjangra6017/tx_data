@@ -30,7 +30,7 @@ class totara_cohort_generator_testcase extends advanced_testcase {
     public function test_disable_enrol_plugin_enrolment() {
         $this->resetAfterTest();
 
-        /** @var totara_cohort_generator $generator */
+        /** @var \totara_cohort\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
 
         $this->assertTrue(enrol_is_enabled('cohort'));
@@ -41,7 +41,7 @@ class totara_cohort_generator_testcase extends advanced_testcase {
     public function test_enable_enrol_plugin_enrolment() {
         $this->resetAfterTest();
 
-        /** @var totara_cohort_generator $generator */
+        /** @var \totara_cohort\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
 
         $generator->disable_enrol_plugin();
@@ -54,7 +54,7 @@ class totara_cohort_generator_testcase extends advanced_testcase {
         global $DB, $CFG;
         $this->resetAfterTest();
 
-        /** @var totara_cohort_generator $generator */
+        /** @var \totara_cohort\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
 
         $course = $this->getDataGenerator()->create_course();
@@ -79,7 +79,7 @@ class totara_cohort_generator_testcase extends advanced_testcase {
             $this->fail('Exception expected!');
         } catch (moodle_exception $e) {
             $this->assertInstanceOf('coding_exception', $e);
-            $this->assertEquals('Coding error detected, it must be fixed by a programmer: cohortid is required in totara_cohort_generator::create_cohort_enrolment() $record', $e->getMessage());
+            $this->assertEquals('Coding error detected, it must be fixed by a programmer: cohortid is required in \totara_cohort\testing\generator::create_cohort_enrolment() $record', $e->getMessage());
         }
 
         try {
@@ -87,14 +87,14 @@ class totara_cohort_generator_testcase extends advanced_testcase {
             $this->fail('Exception expected!');
         } catch (moodle_exception $e) {
             $this->assertInstanceOf('coding_exception', $e);
-            $this->assertEquals('Coding error detected, it must be fixed by a programmer: courseid is required in totara_cohort_generator::create_cohort_enrolment() $record', $e->getMessage());
+            $this->assertEquals('Coding error detected, it must be fixed by a programmer: courseid is required in \totara_cohort\testing\generator::create_cohort_enrolment() $record', $e->getMessage());
         }
     }
 
     public function test_create_cohort_member() {
         $this->resetAfterTest();
 
-        /** @var totara_cohort_generator $generator */
+        /** @var \totara_cohort\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
 
         $cohort1 = $this->getDataGenerator()->create_cohort();
@@ -116,7 +116,7 @@ class totara_cohort_generator_testcase extends advanced_testcase {
             $this->fail('Exception expected!');
         } catch (moodle_exception $e) {
             $this->assertInstanceOf('coding_exception', $e);
-            $this->assertEquals('Coding error detected, it must be fixed by a programmer: cohortid is required in totara_cohort_generator::create_cohort_member() $record', $e->getMessage());
+            $this->assertEquals('Coding error detected, it must be fixed by a programmer: cohortid is required in \totara_cohort\testing\generator::create_cohort_member() $record', $e->getMessage());
         }
 
         try {
@@ -124,7 +124,7 @@ class totara_cohort_generator_testcase extends advanced_testcase {
             $this->fail('Exception expected!');
         } catch (moodle_exception $e) {
             $this->assertInstanceOf('coding_exception', $e);
-            $this->assertEquals('Coding error detected, it must be fixed by a programmer: userid is required in totara_cohort_generator::create_cohort_member() $record', $e->getMessage());
+            $this->assertEquals('Coding error detected, it must be fixed by a programmer: userid is required in \totara_cohort\testing\generator::create_cohort_member() $record', $e->getMessage());
         }
     }
 
@@ -132,7 +132,7 @@ class totara_cohort_generator_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_cohort_generator $generator */
+        /** @var \totara_cohort\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
 
         $this->assertCount(0, $DB->get_records('cohort'));

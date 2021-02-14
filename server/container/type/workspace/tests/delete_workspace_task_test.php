@@ -69,7 +69,7 @@ class container_workspace_delete_workspace_task_testcase extends advanced_testca
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -93,7 +93,7 @@ class container_workspace_delete_workspace_task_testcase extends advanced_testca
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -115,7 +115,7 @@ class container_workspace_delete_workspace_task_testcase extends advanced_testca
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -125,7 +125,7 @@ class container_workspace_delete_workspace_task_testcase extends advanced_testca
         $discussion_one = $workspace_generator->create_discussion($workspace_id);
         $discussion_two = $workspace_generator->create_discussion($workspace_id);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
 
         // Create a comment for discussion one and a comment for discussion two.

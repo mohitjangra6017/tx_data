@@ -142,7 +142,7 @@ class mod_perform_activity_settings_data_provider_testcase extends advanced_test
     private function create_test_data(): activity_settings {
         $this->setAdminUser();
 
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container();
 
         return new activity_settings($activity);

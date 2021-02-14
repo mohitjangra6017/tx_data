@@ -21,8 +21,6 @@
  * @package mod_perform
  */
 
-require_once(__DIR__ . '/generator/activity_generator_configuration.php');
-
 use mod_perform\constants;
 use mod_perform\entity\activity\section as section_entity;
 use mod_perform\models\activity\activity;
@@ -420,7 +418,7 @@ class mod_perform_activity_multisection_toggler_testcase extends advanced_testca
     ): activity {
         $this->setAdminUser();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_activity_status(draft::get_code())
             ->set_number_of_activities(1)
             ->set_number_of_sections_per_activity($no_of_sections)
@@ -446,9 +444,9 @@ class mod_perform_activity_multisection_toggler_testcase extends advanced_testca
     /**
      * Gets the generator instance
      *
-     * @return mod_perform_generator
+     * @return \mod_perform\testing\generator
      */
-    private function generator(): mod_perform_generator {
-        return $this->getDataGenerator()->get_plugin_generator('mod_perform');
+    private function generator(): \mod_perform\testing\generator {
+        return \mod_perform\testing\generator::instance();
     }
 }

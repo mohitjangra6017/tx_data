@@ -193,7 +193,7 @@ class webapi_resolver_type_self_assignable_competency_testcase extends advanced_
 
     private function create_data() {
         $this->setAdminUser();
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $data = new class() {

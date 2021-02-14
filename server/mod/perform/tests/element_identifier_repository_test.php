@@ -37,7 +37,7 @@ class mod_perform_element_identifier_respository_testcase extends advanced_testc
         $default_context = context_coursecat::instance(perform::get_default_category_id());
 
         $data_generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         $this->setAdminUser();

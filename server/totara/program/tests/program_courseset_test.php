@@ -37,10 +37,10 @@ require_once($CFG->dirroot . '/totara/program/program_courseset.class.php');
  */
 class totara_program_program_courseset_testcase extends advanced_testcase {
 
-    /** @var testing_data_generator */
+    /** @var \core\testing\generator */
     private $generator;
 
-    /** @var totara_program_generator*/
+    /** @var \totara_program\testing\generator*/
     private $program_generator;
 
     /** @var stdClass */
@@ -336,7 +336,7 @@ class totara_program_program_courseset_testcase extends advanced_testcase {
         $competencycourseset = new competency_course_set($this->program1->id, null, $uniqueidcomp);
 
         // Create the competency.
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->generator->get_plugin_generator('totara_hierarchy');
         $competencyframework = $hierarchygenerator->create_comp_frame(array());
         $competencydata = array('frameworkid' => $competencyframework->id);
@@ -407,7 +407,7 @@ class totara_program_program_courseset_testcase extends advanced_testcase {
         $competencycourseset = new competency_course_set($this->program1->id, null, $uniqueidcomp);
 
         // Create the competency.
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->generator->get_plugin_generator('totara_hierarchy');
         $competencyframework = $hierarchygenerator->create_comp_frame(array());
         $competencydata = array('frameworkid' => $competencyframework->id);

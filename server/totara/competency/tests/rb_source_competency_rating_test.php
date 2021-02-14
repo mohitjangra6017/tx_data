@@ -43,9 +43,9 @@ class totara_reportbuilder_rb_source_competency_rating_testcase extends advanced
         self::setAdminUser();
 
         $generator = self::getDataGenerator();
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
-        /** @var totara_competency_generator $comp_generator */
+        /** @var \totara_competency\testing\generator $comp_generator */
         $comp_generator = $generator->get_plugin_generator('totara_competency');
         $user1 = $generator->create_user(['lastname' => 'user1']);
         $user2 = $generator->create_user(['lastname' => 'user2']);

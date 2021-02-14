@@ -36,7 +36,7 @@ class totara_engage_rating_manager_testcase extends advanced_testcase {
         $user = $gen->create_user();
         $this->setUser($user);
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         $playlist = $playlistgen->create_playlist([
@@ -65,7 +65,7 @@ class totara_engage_rating_manager_testcase extends advanced_testcase {
         $user = $gen->create_user();
         $this->setUser($user);
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         $playlist = $playlistgen->create_playlist([
@@ -106,7 +106,7 @@ class totara_engage_rating_manager_testcase extends advanced_testcase {
         $viewer = $gen->create_user();
         $this->setUser($viewer);
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         $playlist = $playlistgen->create_playlist([
@@ -136,7 +136,7 @@ class totara_engage_rating_manager_testcase extends advanced_testcase {
         $user = $gen->create_user();
         $this->setUser($user);
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         $playlist = $playlistgen->create_playlist([
@@ -166,7 +166,7 @@ class totara_engage_rating_manager_testcase extends advanced_testcase {
         $owner = $gen->create_user();
         $this->setUser($owner);
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         $users = $playlistgen->create_users(3);
 
@@ -194,7 +194,7 @@ class totara_engage_rating_manager_testcase extends advanced_testcase {
         $user = $gen->create_user();
         $this->setUser($user);
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         $playlist = $playlistgen->create_playlist([
@@ -220,7 +220,7 @@ class totara_engage_rating_manager_testcase extends advanced_testcase {
         $owner = $gen->create_user();
         $this->setUser($owner);
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         $users = $playlistgen->create_users(3);
 

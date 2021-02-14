@@ -130,7 +130,7 @@ class engage_survey_webapi_vote_result_testcase extends advanced_testcase {
      */
     private function create_mock_survey_by_type(?string $type = 'PRIVATE'): survey {
         $gen = $this->getDataGenerator();
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         switch ($type) {

@@ -192,7 +192,7 @@ class totara_competency_advanced_feature_disable_testcase extends advanced_testc
     public function test_controllers_throw_error_if_feature_is_disabled(string $controller): void {
         self::setAdminUser();
 
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $generator->create_competency();
 

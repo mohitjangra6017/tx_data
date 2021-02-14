@@ -63,7 +63,7 @@ class mod_facetoface_userdata_signups_testcase extends mod_facetoface_facetoface
         $this->setAdminUser(); // Necessary for file handling.
 
         $datagenerator = $this->getDataGenerator();
-        /** @var \mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $datagenerator->get_plugin_generator('mod_facetoface');
 
         $course = $datagenerator->create_course();
@@ -186,7 +186,7 @@ class mod_facetoface_userdata_signups_testcase extends mod_facetoface_facetoface
         $this->setAdminUser();
 
         $datagenerator = $this->getDataGenerator();
-        /** @var \mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $datagenerator->get_plugin_generator('mod_facetoface');
 
         $course = $datagenerator->create_course();
@@ -300,7 +300,7 @@ class mod_facetoface_userdata_signups_testcase extends mod_facetoface_facetoface
         $this->setAdminUser();
 
         $datagenerator = $this->getDataGenerator();
-        /** @var \mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $datagenerator->get_plugin_generator('mod_facetoface');
 
         $course1 = $datagenerator->create_course();
@@ -434,7 +434,7 @@ class mod_facetoface_userdata_signups_testcase extends mod_facetoface_facetoface
         $this->setAdminUser();
 
         $datagenerator = $this->getDataGenerator();
-        /** @var \mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $datagenerator->get_plugin_generator('mod_facetoface');
 
         $category1 = $datagenerator->create_category();
@@ -644,7 +644,7 @@ class mod_facetoface_userdata_signups_testcase extends mod_facetoface_facetoface
      */
     public function test_count() {
         $datagenerator = $this->getDataGenerator();
-        /** @var \mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $datagenerator->get_plugin_generator('mod_facetoface');
 
         $category1 = $datagenerator->create_category();
@@ -723,7 +723,7 @@ class mod_facetoface_userdata_signups_testcase extends mod_facetoface_facetoface
      */
     public function test_export() {
         $datagenerator = $this->getDataGenerator();
-        /** @var \mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $datagenerator->get_plugin_generator('mod_facetoface');
 
         $category1 = $datagenerator->create_category();

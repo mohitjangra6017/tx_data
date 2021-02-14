@@ -35,7 +35,7 @@ class container_workspace_webapi_update_workspace_testcase extends advanced_test
     public function test_update_workspace_from_private_to_public(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setAdminUser();
         $workspace = $workspace_generator->create_private_workspace('wowop hop hko');
@@ -59,7 +59,7 @@ class container_workspace_webapi_update_workspace_testcase extends advanced_test
     public function test_update_workspace_from_public_to_private(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setAdminUser();
 
@@ -83,7 +83,7 @@ class container_workspace_webapi_update_workspace_testcase extends advanced_test
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_hidden_workspace('hooh oookoko');
 
@@ -114,7 +114,7 @@ class container_workspace_webapi_update_workspace_testcase extends advanced_test
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace('ddu ddu ddu');
 
@@ -139,7 +139,7 @@ class container_workspace_webapi_update_workspace_testcase extends advanced_test
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace('oookokokokoko');
 
@@ -176,7 +176,7 @@ class container_workspace_webapi_update_workspace_testcase extends advanced_test
             ]
         ]);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace(null, $original_description, FORMAT_JSON_EDITOR);
 
@@ -217,7 +217,7 @@ class container_workspace_webapi_update_workspace_testcase extends advanced_test
             ]
         ]);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace(null, $original_description, FORMAT_JSON_EDITOR);
 
@@ -244,7 +244,7 @@ class container_workspace_webapi_update_workspace_testcase extends advanced_test
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace('oookokokokoko');
 

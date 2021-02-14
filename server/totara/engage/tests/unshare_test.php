@@ -40,9 +40,9 @@ class totara_engage_unshare_testcase extends advanced_testcase {
 
         $gen = $this->getDataGenerator();
 
-        /** @var engage_article_generator $article_gen */
+        /** @var \engage_article\testing\generator $article_gen */
         $article_gen = $gen->get_plugin_generator('engage_article');
-        /** @var engage_survey_generator $survey_gen */
+        /** @var \engage_survey\testing\generator $survey_gen */
         $survey_gen = $gen->get_plugin_generator('engage_survey');
 
         // Create users.
@@ -88,7 +88,7 @@ class totara_engage_unshare_testcase extends advanced_testcase {
         global $DB;
 
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlist_gen = $gen->get_plugin_generator('totara_playlist');
 
         // Create users.
@@ -130,7 +130,7 @@ class totara_engage_unshare_testcase extends advanced_testcase {
 
         $gen = $this->getDataGenerator();
 
-        /** @var engage_article_generator $article_gen */
+        /** @var \engage_article\testing\generator $article_gen */
         $article_gen = $gen->get_plugin_generator('engage_article');
 
         // Create users.

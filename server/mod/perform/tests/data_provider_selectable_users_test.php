@@ -41,7 +41,7 @@ class mod_perform_data_provider_selectable_users_testcase extends advanced_testc
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $generator->get_plugin_generator('mod_perform');
 
         $user1 = $generator->create_user(['firstname' => 'bvcxz', 'lastname' => 'Qwertz']);
@@ -50,7 +50,7 @@ class mod_perform_data_provider_selectable_users_testcase extends advanced_testc
         $suspended_user = $generator->create_user(['suspended' => 1]);
         $guest_user = guest_user();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_cohort_assignments_per_activity(1)
             ->set_number_of_users_per_user_group_type(5);
 
@@ -58,7 +58,7 @@ class mod_perform_data_provider_selectable_users_testcase extends advanced_testc
         /** @var activity_model $activity1 */
         $activity1 = $activities1->first();
 
-        $configuration2 = mod_perform_activity_generator_configuration::new()
+        $configuration2 = \mod_perform\testing\activity_generator_configuration::new()
             ->set_cohort_assignments_per_activity(1)
             ->set_number_of_users_per_user_group_type(5);
 
@@ -162,10 +162,10 @@ class mod_perform_data_provider_selectable_users_testcase extends advanced_testc
 
     public function test_with_multi_tenancy_enabled(): void {
         $generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $generator->get_plugin_generator('mod_perform');
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
 
         $tenant_generator->enable_tenants();
@@ -186,7 +186,7 @@ class mod_perform_data_provider_selectable_users_testcase extends advanced_testc
 
         $this->setAdminUser();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_tenant_id($tenant1->id)
             ->set_category_id($perform_category_id_1)
             ->set_cohort_assignments_per_activity(1)
@@ -196,7 +196,7 @@ class mod_perform_data_provider_selectable_users_testcase extends advanced_testc
         /** @var activity_model $activity1 */
         $activity1 = $activities1->first();
 
-        $configuration2 = mod_perform_activity_generator_configuration::new()
+        $configuration2 = \mod_perform\testing\activity_generator_configuration::new()
             ->set_tenant_id($tenant2->id)
             ->set_category_id($perform_category_id_2)
             ->set_cohort_assignments_per_activity(1)

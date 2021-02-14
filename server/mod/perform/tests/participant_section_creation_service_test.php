@@ -249,7 +249,7 @@ class mod_perform_participant_section_creation_service_testcase extends advanced
      * @return stdClass
      */
     private function setup_activity_with_multiple_sections(): stdClass {
-        /** @var mod_perform_generator $generator */
+        /** @var \mod_perform\testing\generator $generator */
         $generator = $this->get_perform_generator();
 
         $activity_tree = new stdClass();
@@ -427,9 +427,9 @@ class mod_perform_participant_section_creation_service_testcase extends advanced
     /**
      * Get mod_perform data generator.
      *
-     * @return mod_perform_generator
+     * @return \mod_perform\testing\generator
      */
-    private function get_perform_generator(): mod_perform_generator {
-        return $this->getDataGenerator()->get_plugin_generator('mod_perform');
+    private function get_perform_generator(): \mod_perform\testing\generator {
+        return \mod_perform\testing\generator::instance();
     }
 }

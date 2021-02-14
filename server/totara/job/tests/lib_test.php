@@ -32,7 +32,7 @@ require_once($CFG->dirroot . '/totara/job/lib.php');
 
 class totara_job_lib_testcase extends advanced_testcase {
 
-    /** @var  testing_data_generator */
+    /** @var  \core\testing\generator */
     private $data_generator;
 
     protected function tearDown(): void {

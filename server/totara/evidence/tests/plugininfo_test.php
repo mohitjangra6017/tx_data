@@ -59,10 +59,10 @@ class totara_evidence_plugininfo_testcase extends advanced_testcase {
     /**
      * Get evidence specific generator
      *
-     * @return totara_evidence_generator|component_generator_base
+     * @return \totara_evidence\testing\generator
      */
     protected function generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_evidence');
+        return \totara_evidence\testing\generator::instance();
     }
 
     /**

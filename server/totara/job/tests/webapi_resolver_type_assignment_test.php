@@ -371,7 +371,7 @@ class totara_job_webapi_resolver_type_assignment_testcase extends advanced_testc
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
 
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_pos_frame([]);
         $typeid = $generator->create_pos_type([]);
@@ -411,7 +411,7 @@ class totara_job_webapi_resolver_type_assignment_testcase extends advanced_testc
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
 
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_org_frame([]);
         $typeid = $generator->create_org_type([]);

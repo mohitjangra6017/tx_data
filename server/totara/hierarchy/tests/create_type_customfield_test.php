@@ -32,7 +32,7 @@ require_once($CFG->dirroot . '/totara/customfield/lib.php');
 class totara_hierarchy_create_type_customfield_testcase extends advanced_testcase {
 
     /**
-     * @var totara_hierarchy_generator
+     * @var \totara_hierarchy\testing\generator
      */
     protected $hierarchy_generator = null;
 
@@ -48,7 +48,7 @@ class totara_hierarchy_create_type_customfield_testcase extends advanced_testcas
 
         $generator = $this->getDataGenerator();
 
-        // Set totara_hierarchy_generator.
+        // Set \totara_hierarchy\testing\generator.
         $this->hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
     }
 

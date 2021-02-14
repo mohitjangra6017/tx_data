@@ -32,8 +32,7 @@ class totara_tenant_core_record_tenant_testcase extends advanced_testcase {
     public function test_class() {
         global $DB;
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
         $this->setAdminUser();
 

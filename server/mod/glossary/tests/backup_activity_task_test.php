@@ -518,7 +518,7 @@ class mod_glossary_backup_activity_task_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
-        /** @var mod_glossary_generator $glossarygenerator */
+        /** @var \mod_glossary\testing\generator $glossarygenerator */
         $glossarygenerator = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
 
         $course1 = $generator->create_course();

@@ -80,7 +80,7 @@ class core_badges_userdata_backpack_testcase extends advanced_testcase {
      */
     public function test_purge_active_users() {
         $generator = $this->getDataGenerator();
-        /** @var \core_badges_generator $badgegenerator */
+        /** @var \core_badges\testing\generator $badgegenerator */
         $badgegenerator = $generator->get_plugin_generator('core_badges');
 
         $user1 = $generator->create_user(['username' => 'test1']);
@@ -137,7 +137,7 @@ class core_badges_userdata_backpack_testcase extends advanced_testcase {
      */
     public function test_purge_suspended_users() {
         $generator = $this->getDataGenerator();
-        /** @var \core_badges_generator $badgegenerator */
+        /** @var \core_badges\testing\generator $badgegenerator */
         $badgegenerator = $generator->get_plugin_generator('core_badges');
 
         $user1 = $generator->create_user(['username' => 'test1']);
@@ -197,7 +197,7 @@ class core_badges_userdata_backpack_testcase extends advanced_testcase {
      */
     public function test_purge_deleted_users() {
         $generator = $this->getDataGenerator();
-        /** @var \core_badges_generator $badgegenerator */
+        /** @var \core_badges\testing\generator $badgegenerator */
         $badgegenerator = $generator->get_plugin_generator('core_badges');
 
         $user1 = $generator->create_user(['username' => 'test1']);
@@ -299,7 +299,7 @@ class core_badges_userdata_backpack_testcase extends advanced_testcase {
         require_once($CFG->libdir . '/badgeslib.php');
 
         $generator = $this->getDataGenerator();
-        /** @var \core_badges_generator $badgegenerator */
+        /** @var \core_badges\testing\generator $badgegenerator */
         $badgegenerator = $generator->get_plugin_generator('core_badges');
 
         $user1 = $generator->create_user(['username' => 'test1']);
@@ -333,7 +333,7 @@ class core_badges_userdata_backpack_testcase extends advanced_testcase {
         require_once($CFG->libdir . '/badgeslib.php');
 
         $generator = $this->getDataGenerator();
-        /** @var \core_badges_generator $badgegenerator */
+        /** @var \core_badges\testing\generator $badgegenerator */
         $badgegenerator = $generator->get_plugin_generator('core_badges');
 
         $user1 = $generator->create_user(['username' => 'test1']);
@@ -370,7 +370,7 @@ class core_badges_userdata_backpack_testcase extends advanced_testcase {
         require_once($CFG->libdir . '/badgeslib.php');
 
         $generator = $this->getDataGenerator();
-        /** @var \core_badges_generator $badgegenerator */
+        /** @var \core_badges\testing\generator $badgegenerator */
         $badgegenerator = $generator->get_plugin_generator('core_badges');
 
         $user1 = $generator->create_user(['username' => 'test1']);
@@ -410,7 +410,7 @@ class core_badges_userdata_backpack_testcase extends advanced_testcase {
      */
     public function test_count() {
         $generator = $this->getDataGenerator();
-        /** @var \core_badges_generator $badgegenerator */
+        /** @var \core_badges\testing\generator $badgegenerator */
         $badgegenerator = $generator->get_plugin_generator('core_badges');
 
         $user1 = $generator->create_user(['username' => 'test1']);

@@ -37,7 +37,7 @@ class engage_article_multi_tenancy_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -48,7 +48,7 @@ class engage_article_multi_tenancy_testcase extends advanced_testcase {
         $topic_ids = [];
         $this->setAdminUser();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         for ($i = 0; $i < 5; $i++) {
             $topic = $topic_generator->create_topic();
@@ -58,7 +58,7 @@ class engage_article_multi_tenancy_testcase extends advanced_testcase {
         // Log in as user two and start creating articles that are shared with user one.
         $this->setUser($user_two);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $recipient = new user($user_one->id);
 

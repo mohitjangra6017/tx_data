@@ -44,9 +44,9 @@ class totara_reportbuilder_userdata_global_report_restrictions_test extends adva
         $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
-        /** @var \totara_reportbuilder_generator $rbgen */
+        /** @var \totara_reportbuilder\testing\generator $rbgen */
         $rbgen = $generator->get_plugin_generator('totara_reportbuilder');
-        /** @var \totara_hierarchy_generator $hierarchygen */
+        /** @var \totara_hierarchy\testing\generator $hierarchygen */
         $hierarchygen = $generator->get_plugin_generator('totara_hierarchy');
 
         $user = $generator->create_user();

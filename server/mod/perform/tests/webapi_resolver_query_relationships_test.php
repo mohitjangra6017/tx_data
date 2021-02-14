@@ -45,8 +45,8 @@ class mod_perform_webapi_resolver_query_relationships_testcase extends advanced_
     protected function setUp(): void {
         parent::setUp();
         self::setAdminUser();
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $this->activity = $generator->create_activity_in_container();
     }
 

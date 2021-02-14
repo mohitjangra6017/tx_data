@@ -46,16 +46,16 @@ class totara_playlist_rb_playlistengagement_report_testcase extends advanced_tes
         $user_two = $gen->create_user();
         $user_three = $gen->create_user();
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
-        /** @var container_workspace_generator $workspacegen */
+        /** @var \container_workspace\testing\generator $workspacegen */
         $workspacegen = $gen->get_plugin_generator('container_workspace');
 
-        /** @var totara_topic_generator $topicgen */
+        /** @var \totara_topic\testing\generator $topicgen */
         $topicgen = $gen->get_plugin_generator('totara_topic');
 
         // Create playlists.
@@ -258,7 +258,7 @@ class totara_playlist_rb_playlistengagement_report_testcase extends advanced_tes
         $user_three = $gen->create_user();
 
         $this->setAdminUser();
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $gen->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -267,7 +267,7 @@ class totara_playlist_rb_playlistengagement_report_testcase extends advanced_tes
         $tenant_generator->migrate_user_to_tenant($user_one->id, $tenant_one->id);
         $tenant_generator->migrate_user_to_tenant($user_two->id, $tenant_two->id);
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         // Create playlists.
         $playlist1 = $playlistgen->create_playlist(['userid' => $user_one->id, 'name' => 'playlist1']);

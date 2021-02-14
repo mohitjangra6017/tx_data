@@ -116,7 +116,7 @@ class mod_perform_webapi_mutation_remove_track_assignments_testcase extends adva
     private function setup_env(array $track_details = []): array {
         $this->setAdminUser();
 
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $generator = \mod_perform\testing\generator::instance();
         $activity = $generator->create_activity_in_container();
 
         $track = $generator->create_activity_tracks($activity, 1)->first();

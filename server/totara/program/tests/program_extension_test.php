@@ -32,13 +32,6 @@ require_once($CFG->dirroot . '/totara/reportbuilder/tests/reportcache_advanced_t
  * Lib test for prog_process_extension to ensure correct behaviour of extensions
  */
 class totara_program_extension_testcase extends reportcache_advanced_testcase {
-
-    /** @var totara_reportbuilder_cache_generator $data_generator */
-    private $data_generator;
-
-    /** @var totara_program_generator $program_generator */
-    private $program_generator;
-
     private $user, $course;
 
 
@@ -49,11 +42,10 @@ class totara_program_extension_testcase extends reportcache_advanced_testcase {
         $this->resetAfterTest(true);
         $CFG->enablecompletion = true;
 
-        $this->data_generator = $this->getDataGenerator();
-        $this->program_generator = $this->data_generator->get_plugin_generator('totara_program');
+        $job_generator = \totara_job\testing\generator::instance();
 
-        $this->course = $this->data_generator->create_course(array('enablecompletion' => true));
-        $this->user = $this->getDataGenerator()->create_user();
+        $this->course = \core\testing\generator::instance()->create_course(array('enablecompletion' => true));
+        $this->user = $job_generator->create_user_and_job([])[0];
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         $this->assertNotEmpty($studentrole);
 
@@ -69,8 +61,6 @@ class totara_program_extension_testcase extends reportcache_advanced_testcase {
     }
 
     protected function tearDown(): void {
-        $this->data_generator = null;
-        $this->program_generator = null;
         $this->user = null;
         $this->course = null;
         parent::tearDown();
@@ -81,11 +71,13 @@ class totara_program_extension_testcase extends reportcache_advanced_testcase {
 
         $this->setAdminUser();
 
+        $program_generator = \totara_program\testing\generator::instance();
+
         //Create a program
-        $programid = $this->program_generator->create_program()->id;
+        $programid = \totara_program\testing\generator::instance()->legacy_create_program()->id;
 
         //Assign User to program
-        $this->program_generator->assign_to_program($programid, ASSIGNTYPE_INDIVIDUAL, $this->user->id);
+        $program_generator->assign_to_program($programid, ASSIGNTYPE_INDIVIDUAL, $this->user->id);
 
         //Create a program completion
         $duedate = time();

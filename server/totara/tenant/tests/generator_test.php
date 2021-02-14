@@ -30,8 +30,7 @@ class totara_tenant_generator_testcase extends advanced_testcase {
     public function test_enable_tenants() {
         global $CFG;
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
 
         $this->assertSame('0', $CFG->tenantsenabled);
         $generator->enable_tenants();
@@ -41,8 +40,7 @@ class totara_tenant_generator_testcase extends advanced_testcase {
     public function test_disable_tenants() {
         global $CFG;
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
 
         $generator->enable_tenants();
         $this->assertSame('1', $CFG->tenantsenabled);
@@ -53,8 +51,7 @@ class totara_tenant_generator_testcase extends advanced_testcase {
     public function test_create_tenant() {
         global $DB, $USER;
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
 
         $this->setAdminUser();
@@ -109,8 +106,7 @@ class totara_tenant_generator_testcase extends advanced_testcase {
     public function test_create_user() {
         global $DB;
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
 
         $tenantusermanagerrole = $DB->get_record('role', ['shortname' => 'tenantusermanager']);
@@ -195,7 +191,7 @@ class totara_tenant_generator_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -286,7 +282,7 @@ class totara_tenant_generator_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

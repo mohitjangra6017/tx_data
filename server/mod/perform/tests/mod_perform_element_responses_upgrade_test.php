@@ -33,7 +33,7 @@ class mod_perform_element_responses_upgrade_testcase extends advanced_testcase {
         $user = get_admin();
 
         // Create some activity data.
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $generator = \mod_perform\testing\generator::instance();
         $activity = $generator->create_activity_in_container();
         $subject_instance = $generator->create_subject_instance([
             'activity_id' => $activity->id, 'subject_username' => $user->username, 'subject_is_participating' => true,

@@ -78,7 +78,7 @@ class mod_perform_activity_data_provider_testcase extends advanced_testcase {
 
     public function test_fetch_filter_capabilities() {
         $data_generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
         $data_provider = new activity();
 
@@ -133,8 +133,8 @@ class mod_perform_activity_data_provider_testcase extends advanced_testcase {
     }
 
     private function create_test_data(): stdClass {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $data = new stdClass();
 

@@ -36,7 +36,7 @@ class core_course_delete_module_testcase extends advanced_testcase {
 
         $this->executeAdhocTasks();
 
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2f = $gen->create_module('facetoface', ['course' => $course->id]);
 
         $event = new \stdClass();

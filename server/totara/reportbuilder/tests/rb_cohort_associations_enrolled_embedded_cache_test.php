@@ -92,7 +92,7 @@ class totara_reportbuilder_rb_cohort_associations_enrolled_embedded_cache_testca
     protected function setUp(): void {
         parent::setup();
         $this->setAdminUser();
-        $this->getDataGenerator()->reset();
+
         // Common parts of test cases:
         // Create report record in database
         $this->loadDataSet($this->createArrayDataSet(array('report_builder' => array($this->report_builder_data),

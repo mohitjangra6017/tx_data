@@ -34,10 +34,10 @@ class mod_perform_tenant_observer_testcase extends advanced_testcase {
         global $DB;
 
         $generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $generator->get_plugin_generator('mod_perform');
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -49,7 +49,7 @@ class mod_perform_tenant_observer_testcase extends advanced_testcase {
         $this->setUser($tenant_user1);
         $perform_category_id = perform_util::get_default_category_id();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_tenant_id($tenant1->id)
             ->set_category_id($perform_category_id)
             ->set_number_of_activities(2)

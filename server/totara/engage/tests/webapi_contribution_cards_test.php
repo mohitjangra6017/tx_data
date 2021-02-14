@@ -155,7 +155,7 @@ class totara_engage_webapi_contribution_cards_testcase extends advanced_testcase
      * @return article
      */
     private function create_article(int $user_id, ?string $name = null): article {
-        /** @var engage_article_generator $generator */
+        /** @var \engage_article\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('engage_article');
 
         $params = ['userid' => $user_id];
@@ -171,7 +171,7 @@ class totara_engage_webapi_contribution_cards_testcase extends advanced_testcase
      * @return \engage_survey\totara_engage\resource\survey
      */
     private function create_survey(int $user_id, ?string $question = null): \engage_survey\totara_engage\resource\survey {
-        /** @var engage_survey_generator $generator */
+        /** @var \engage_survey\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('engage_survey');
         return $generator->create_survey($question, [], answer_type::MULTI_CHOICE, ['userid' => $user_id]);
     }
@@ -182,7 +182,7 @@ class totara_engage_webapi_contribution_cards_testcase extends advanced_testcase
      * @return \totara_playlist\playlist
      */
     private function create_playlist(int $user_id, ?string $name = null): \totara_playlist\playlist {
-        /** @var totara_playlist_generator $generator */
+        /** @var \totara_playlist\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_playlist');
 
         $params = ['userid' => $user_id];

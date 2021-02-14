@@ -35,16 +35,16 @@ require_once($CFG->dirroot . '/mod/facetoface/lib.php');
  */
 class totara_core_courselib_testcase extends advanced_testcase {
 
-    /** @var testing_data_generator $generator */
+    /** @var \core\testing\generator $generator */
     private $data_generator;
 
-    /** @var core_grades_generator $grade_generator */
+    /** @var \core_grades\testing\generator $grade_generator */
     private $grade_generator;
 
-    /** @var core_completion_generator $completion_generator */
+    /** @var \core_completion\testing\generator $completion_generator */
     private $completion_generator;
 
-    /** @var mod_facetoface_generator $facetoface_generator */
+    /** @var \mod_facetoface\testing\generator $facetoface_generator */
     private $facetoface_generator;
 
     /** @var phpunit_message_sink $messagesink */
@@ -577,7 +577,7 @@ class totara_core_courselib_testcase extends advanced_testcase {
         ];
         $quiz = $this->data_generator->create_module('quiz', $options);
 
-        /** @var core_question_generator $questiongenerator */
+        /** @var \core_question\testing\generator $questiongenerator */
         $questiongenerator = $this->data_generator->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category();
         $question = $questiongenerator->create_question('truefalse', null, ['category' => $cat->id]);
@@ -589,7 +589,7 @@ class totara_core_courselib_testcase extends advanced_testcase {
         $item->update();
 
         // Set the course to be complete if the quiz is complete.
-        /** @var core_completion_generator $cgen */
+        /** @var \core_completion\testing\generator $cgen */
         $cgen = $this->data_generator->get_plugin_generator('core_completion');
         $cgen->set_activity_completion($course->id, [$quiz]);
 

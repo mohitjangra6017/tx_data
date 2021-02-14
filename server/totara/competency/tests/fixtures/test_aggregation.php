@@ -29,7 +29,7 @@ use totara_competency\overall_aggregation;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * To use this in tests, call totara_competency_generator::create_test_aggregation() instead of instantiating it directly.
+ * To use this in tests, call \totara_competency\testing\generator::create_test_aggregation() instead of instantiating it directly.
  */
 class test_aggregation extends overall_aggregation {
 

@@ -26,7 +26,6 @@ namespace totara_customfield\totara_catalog\dataformatter;
 use context_system;
 use totara_catalog\dataformatter\dataformatter_test_base;
 use totara_catalog\dataformatter\formatter;
-use totara_customfield_generator;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -70,7 +69,7 @@ class totara_customfield_totara_catalog_dataformatters_testcase extends dataform
         $context = context_system::instance();
 
         $generator = $this->getDataGenerator();
-        /** @var totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $generator->get_plugin_generator('totara_customfield');
 
         $course = $generator->create_course();

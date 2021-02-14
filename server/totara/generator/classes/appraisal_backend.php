@@ -36,22 +36,22 @@ class totara_generator_appraisal_backend extends tool_generator_backend {
     protected $size;
 
     /**
-     * @var testing_data_generator $appraisal_generator Moodle original data generator.
+     * @var \core\testing\generator Moodle original data generator.
      */
     protected $generator;
 
     /**
-     * @var totara_appraisal_generator $appraisal_generator.
+     * @var \totara_appraisal\testing\generator $appraisal_generator.
      */
     protected $appraisal_generator;
 
     /**
-     * @var totara_hierarchy_generator $hierarchy_generator.
+     * @var \totara_hierarchy\testing\generator $hierarchy_generator.
      */
     protected $hierarchy_generator;
 
     /**
-     * @var totara_cohort_generator $cohort_generator.
+     * @var \totara_cohort\testing\generator $cohort_generator.
      */
     protected $cohort_generator;
 
@@ -92,9 +92,6 @@ class totara_generator_appraisal_backend extends tool_generator_backend {
      * Runs the 'make' process for appraisals.
      */
     public function make() {
-        global $CFG;
-        require_once($CFG->dirroot . '/lib/phpunit/classes/util.php');
-
         //raise_memory_limit(MEMORY_EXTRA);
 
         if ($this->progress && !CLI_SCRIPT) {
@@ -104,7 +101,7 @@ class totara_generator_appraisal_backend extends tool_generator_backend {
         $entirestart = microtime(true);
 
         // Get generator.
-        $this->generator = phpunit_util::get_data_generator();
+        $this->generator = core\testing\generator::instance();
 
         // Set custom data generators.
         $this->set_custom_generators();
@@ -251,7 +248,7 @@ class totara_generator_appraisal_backend extends tool_generator_backend {
     protected function create_appraisal() {
         // If we've received a name over thc command line then
         // use that, otherwise use the appraisal generator default.
-        $default_name = ($this->name) ? $this->name : totara_appraisal_generator::DEFAULT_NAME;
+        $default_name = ($this->name) ? $this->name : \totara_appraisal\testing\generator::DEFAULT_NAME;
 
         // Create the name we want to use.
         $default_name = trim($default_name) . ' ' . totara_generator_util::get_size_name($this->size);

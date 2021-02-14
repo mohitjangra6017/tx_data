@@ -40,7 +40,7 @@ class engage_article_create_reaction_testcase extends advanced_testcase {
 
         $gen = $this->getDataGenerator();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
         $this->setAdminUser();
@@ -107,7 +107,7 @@ class engage_article_create_reaction_testcase extends advanced_testcase {
     public function test_create_reaction(): void {
         $gen = $this->getDataGenerator();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
         // Create users.
@@ -150,7 +150,7 @@ class engage_article_create_reaction_testcase extends advanced_testcase {
     public function test_create_reaction_with_area(): void {
         $gen = $this->getDataGenerator();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
         // Create user.
@@ -197,7 +197,7 @@ class engage_article_create_reaction_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $user_one = $gen->create_user();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article = $articlegen->create_article(['userid' => $user_one->id]);
 
@@ -220,7 +220,7 @@ class engage_article_create_reaction_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $user_one = $gen->create_user();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article = $articlegen->create_article(['userid' => $user_one->id, 'access' => access::RESTRICTED]);
 

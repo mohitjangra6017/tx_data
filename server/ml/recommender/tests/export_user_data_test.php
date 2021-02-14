@@ -104,7 +104,7 @@ class export_user_data_testcase extends advanced_testcase {
     public function test_cannot_export_data(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -133,7 +133,7 @@ class export_user_data_testcase extends advanced_testcase {
     public function test_export_tenant_user(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

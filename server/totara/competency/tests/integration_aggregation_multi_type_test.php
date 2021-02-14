@@ -74,7 +74,7 @@ class totara_competency_integration_multi_type_testcase extends totara_competenc
         // Create learning plans
         $data->learning_plans = [];
 
-        /** @var totara_plan_generator $plan_generator */
+        /** @var \totara_plan\testing\generator $plan_generator */
         $data->learning_plans['1-1'] = [
             'dplan' => $data->competency_generator->create_learning_plan_with_competencies($data->users[1]->id,
                 [$data->competencies[1]->id => null]
@@ -282,7 +282,7 @@ class totara_competency_integration_multi_type_testcase extends totara_competenc
      * @param string $task_to_execute
      */
     private function othercompetency_manual_run_1($data, string $task_to_execute) {
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         /*

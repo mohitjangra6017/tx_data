@@ -67,7 +67,7 @@ class mod_facetoface_cleanup_task_testcase extends advanced_testcase {
         \totara_job\job_assignment::create_default($user3->id, array('managerjaid' => $user1ja->id));
         \totara_job\job_assignment::create_default($user4->id, array('managerjaid' => $user1ja->id));
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $facetoface = $facetofacegenerator->create_instance([
@@ -216,7 +216,7 @@ class mod_facetoface_cleanup_task_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user3->id, $course1->id, $studentrole->id);
         $this->getDataGenerator()->enrol_user($user4->id, $course1->id, $studentrole->id);
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $facetoface = $facetofacegenerator->create_instance([

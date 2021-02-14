@@ -33,10 +33,8 @@ require_once($CFG->dirroot . '/totara/reportbuilder/tests/reportcache_advanced_t
  */
 class totara_program_duedates_report_testcase extends reportcache_advanced_testcase {
 
-    /** @var totara_reportbuilder_cache_generator $data_generator */
     private $data_generator;
 
-    /** @var totara_program_generator $program_generator */
     private $program_generator;
 
     protected function setUp(): void {
@@ -46,7 +44,7 @@ class totara_program_duedates_report_testcase extends reportcache_advanced_testc
         $this->resetAfterTest(true);
 
         $this->data_generator = $this->getDataGenerator();
-        $this->program_generator = $this->data_generator->get_plugin_generator('totara_program');
+        $this->program_generator = \totara_program\testing\generator::instance();
     }
 
     protected function tearDown(): void {
@@ -57,7 +55,7 @@ class totara_program_duedates_report_testcase extends reportcache_advanced_testc
     }
 
     public function test_rb_cert_assignment_duedates_is_capable() {
-        $certification = $this->data_generator->create_certification();
+        $certification = $this->program_generator->create_certification();
         $user = $this->data_generator->create_user();
 
         // Set up certification assignment report and embedded object for is_capable checks.
@@ -86,7 +84,7 @@ class totara_program_duedates_report_testcase extends reportcache_advanced_testc
         $user3 = $this->data_generator->create_user(['username' => 'user3']);
         $user4 = $this->data_generator->create_user(['username' => 'user4']);
 
-        $certification = $this->data_generator->create_certification();
+        $certification = $this->program_generator->create_certification();
 
         $cohort1 = $this->data_generator->create_cohort();
         cohort_add_member($cohort1->id, $user1->id);

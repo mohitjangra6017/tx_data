@@ -56,9 +56,8 @@ class totara_cohort_lib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
-        /** @var totara_cohort_generator $cohortgen */
-        $cohortgen = $generator->get_plugin_generator('totara_cohort');
-        /** @var totara_program_generator $programgen */
+        $cohortgen = \totara_cohort\testing\generator::instance();
+        /** @var \totara_program\testing\generator $programgen */
         $programgen = $generator->get_plugin_generator('totara_program');
 
         $this->course = $generator->create_course([

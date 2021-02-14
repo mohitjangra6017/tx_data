@@ -38,11 +38,11 @@ class ml_recommender_get_workspaces_testcase extends advanced_testcase {
         // Log in as user one and create a workspace.
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
-        /** @var ml_recommender_generator $recommender_generator */
+        /** @var \ml_recommender\testing\generator $recommender_generator */
         $recommender_generator = $generator->get_plugin_generator('ml_recommender');
         $recommender_generator->create_user_recommendation(
             $user_two->id,

@@ -53,7 +53,7 @@ class container_workspace_webapi_workspace_image_testcase extends advanced_testc
         $user_one = $generator->create_user();
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -92,7 +92,7 @@ class container_workspace_webapi_workspace_image_testcase extends advanced_testc
         $file_record->timemodified = $time;
         $fs->create_file_from_string($file_record, 'file_1');
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace(
             null,

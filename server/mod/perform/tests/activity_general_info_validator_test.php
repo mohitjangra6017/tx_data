@@ -21,8 +21,6 @@
  * @package mod_perform
  */
 
-require_once(__DIR__ . '/generator/activity_generator_configuration.php');
-
 use mod_perform\state\activity\draft;
 use mod_perform\models\activity\activity;
 use mod_perform\models\activity\activity_type;
@@ -37,7 +35,7 @@ class mod_perform_activity_general_info_validator_testcase extends advanced_test
     protected function setUp(): void {
         parent::setUp();
         self::setAdminUser();
-        $this->perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        $this->perform_generator = \mod_perform\testing\generator::instance();
     }
 
     protected function tearDown(): void {
@@ -103,7 +101,7 @@ class mod_perform_activity_general_info_validator_testcase extends advanced_test
     }
 
     public function test_update_changes_in_active_state(): void {
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_activity_status(draft::get_code())
             ->set_number_of_activities(1)
             ->set_number_of_sections_per_activity(1)

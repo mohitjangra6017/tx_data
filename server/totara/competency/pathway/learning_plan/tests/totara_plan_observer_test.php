@@ -240,7 +240,7 @@ class pathway_learning_plan_totara_plan_observer_testcase extends advanced_testc
 
         $data->user = $this->getDataGenerator()->create_user();
 
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $scale = $totara_hierarchy_generator->create_scale(
@@ -257,13 +257,13 @@ class pathway_learning_plan_totara_plan_observer_testcase extends advanced_testc
         $comp = $totara_hierarchy_generator->create_comp(['frameworkid' => $compfw->id]);
         $data->competency = new competency($comp);
 
-        /** @var totara_plan_generator $plan_generator */
+        /** @var \totara_plan\testing\generator $plan_generator */
         $plan_generator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
         $data->plan = $plan_generator->create_learning_plan(['userid' => $data->user->id]);
         $plan_generator->add_learning_plan_competency($data->plan->id, $data->competency->id);
 
-        /** @var totara_competency_assignment_generator $assignment_generator */
-        $assignment_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency')->assignment_generator();
+        $competency_generator = \totara_competency\testing\generator::instance();
+        $assignment_generator = $competency_generator->assignment_generator();
         $data->assignment = $assignment_generator->create_user_assignment($data->competency->id, $data->user->id);
         (new expand_task($GLOBALS['DB']))->expand_all();
 

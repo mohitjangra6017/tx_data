@@ -31,8 +31,7 @@ class totara_tenant_userlib_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/user/lib.php');
 
-        /** @var totara_tenant_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $generator = \totara_tenant\testing\generator::instance();
         $generator->enable_tenants();
         $tenant = $generator->create_tenant(null);
 

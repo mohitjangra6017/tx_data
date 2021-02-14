@@ -101,10 +101,10 @@ class core_completion_userdata_course_completion_testcase extends advanced_testc
      * @return stdClass
      */
     private function create_course_and_completions($category, array $users) {
-        /* @var mod_choice_generator $choicegenerator */
+        /* @var \mod_choice\testing\generator $choicegenerator */
         $choicegenerator = $this->getDataGenerator()->get_plugin_generator('mod_choice');
 
-        /* @var core_completion_generator $completiongenerator */
+        /* @var \core_completion\testing\generator $completiongenerator */
         $completiongenerator = $this->getDataGenerator()->get_plugin_generator('core_completion');
 
         $course = $this->getDataGenerator()->create_course(['category' => $category->id]);

@@ -38,7 +38,7 @@ class engage_article_webapi_update_article_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article();
 
@@ -80,7 +80,7 @@ class engage_article_webapi_update_article_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article();
 

@@ -231,7 +231,7 @@ class core_completion_externallib_testcase extends externallib_advanced_testcase
         groups_add_member($group1->id, $student->id);
         groups_add_member($group2->id, $teacher->id);
 
-        /** @var core_completion_generator $cgen */
+        /** @var \core_completion\testing\generator $cgen */
         $cgen = $this->getDataGenerator()->get_plugin_generator('core_completion');
         $cgen->enable_completion_tracking($course);
         $cgen->set_activity_completion($course->id, array($data, $forum));

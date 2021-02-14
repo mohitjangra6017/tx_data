@@ -43,8 +43,6 @@ use mod_perform\state\subject_instance\not_submitted as subject_instance_not_sub
 use mod_perform\webapi\resolver\mutation\create_track;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-require_once(__DIR__ . '/generator/activity_generator_configuration.php');
-
 /**
  * @coversDefaultClass \mod_perform\webapi\resolver\mutation\create_track
  *
@@ -163,15 +161,15 @@ class mod_perform_webapi_mutation_manually_change_participant_section_testcase e
     private function create_test_data(): void {
         $this->setAdminUser();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_number_of_sections_per_activity(1)
             ->set_relationships_per_section(['subject'])
             ->set_number_of_users_per_user_group_type(1)
             ->set_number_of_elements_per_section(0);
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $generator->create_full_activities($configuration);
     }
 }

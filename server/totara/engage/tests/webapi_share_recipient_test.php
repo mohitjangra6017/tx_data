@@ -40,7 +40,7 @@ class totara_engage_webapi_share_recipient_testcase extends advanced_testcase {
 
         // Create a resource for user two that share to user one.
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article([
             'userid' => $user_two->id,
@@ -101,7 +101,7 @@ class totara_engage_webapi_share_recipient_testcase extends advanced_testcase {
 
         // Create a resource for user two that share to user one.
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article([
             'userid' => $user_two->id,

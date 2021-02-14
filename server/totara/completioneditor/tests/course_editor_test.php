@@ -48,7 +48,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
     public function test_get_all_progs_and_certs() {
         $this->resetAfterTest(true);
 
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
 
         $course1 = $this->getDataGenerator()->create_course();
@@ -269,12 +269,12 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
 
         // Add a quiz.
-        /** @var mod_quiz_generator $quizgenerator */
+        /** @var \mod_quiz\testing\generator $quizgenerator */
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
         $quiz = $quizgenerator->create_instance(array('course' => $course->id, 'questionsperpage' => 3, 'grade' => 100.0));
 
         // Add a facetoface.
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $facetoface = $facetofacegenerator->create_instance(array('course' => $course->id));
 
@@ -505,7 +505,7 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
 
         // Add a facetoface.
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $facetoface = $facetofacegenerator->create_instance(array('course' => $course->id));
 

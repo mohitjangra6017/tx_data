@@ -37,7 +37,7 @@ use mod_perform\state\activity\draft;
 class mod_perform_activity_users_to_assign_count_testcase extends advanced_testcase {
 
     /**
-     * @var mod_perform_generator
+     * @var \mod_perform\testing\generator
      */
     protected $generator;
 
@@ -137,11 +137,11 @@ class mod_perform_activity_users_to_assign_count_testcase extends advanced_testc
     }
 
     /**
-     * @return mod_perform_generator
+     * @return \mod_perform\testing\generator
      */
-    private function generator(): mod_perform_generator {
+    private function generator(): \mod_perform\testing\generator {
         if (!isset($this->generator)) {
-            $this->generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+            $this->generator = \mod_perform\testing\generator::instance();
         }
         return $this->generator;
     }

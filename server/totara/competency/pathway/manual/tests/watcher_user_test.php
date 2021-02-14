@@ -37,7 +37,7 @@ class pathway_manual_watcher_user_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
     /**
-     * @var component_generator_base|totara_competency_generator
+     * @var \totara_competency\testing\generator
      */
     protected $generator;
 

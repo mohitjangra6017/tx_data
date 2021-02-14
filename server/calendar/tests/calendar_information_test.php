@@ -33,10 +33,10 @@ require_once($CFG->dirroot . '/calendar/lib.php');
  */
 class core_calendar_calendar_information_testcase extends advanced_testcase {
 
-    /** @var  testing_data_generator */
+    /** @var  \core\testing\generator */
     private $data_generator;
 
-    /** @var  mod_facetoface_generator */
+    /** @var  \mod_facetoface\testing\generator */
     private $facetoface_generator;
 
     private $course1, $course2, $course3, $course4, $course5, $course6;

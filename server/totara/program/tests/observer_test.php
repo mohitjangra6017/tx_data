@@ -34,8 +34,6 @@ require_once($CFG->dirroot . '/totara/program/classes/observer.php');
  * Tests functions found within the totara_program_observer class.
  */
 class totara_program_observer_testcase extends reportcache_advanced_testcase {
-
-    /** @var totara_reportbuilder_cache_generator */
     private $data_generator;
 
     /** @var stdClass */
@@ -58,14 +56,15 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
         global $DB;
 
         $this->data_generator = $this->getDataGenerator();
+        $program_generator = \totara_program\testing\generator::instance();
 
         $this->course1 = $this->data_generator->create_course(array('enablecompletion' => 1));
         $this->course2 = $this->data_generator->create_course(array('enablecompletion' => 1));
         $this->course3 = $this->data_generator->create_course(array('enablecompletion' => 1));
         $this->course4 = $this->data_generator->create_course(array('enablecompletion' => 1));
         $this->course5 = $this->data_generator->create_course(array('enablecompletion' => 1));
-        $this->program1 = $this->data_generator->create_program();
-        $this->program2 = $this->data_generator->create_program();
+        $this->program1 = $program_generator->create_program();
+        $this->program2 = $program_generator->create_program();
 
         // Reload courses. Otherwise when we compare the courses with the returned courses,
         // we get subtle differences in some values such as cacherev and sortorder.
@@ -116,8 +115,7 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
         $coursedata->{$coursesets[1]->get_set_prefix() . 'courseid'} = $this->course2->id;
         $progcontent1->add_course(2, $coursedata);
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
-        $hierarchygenerator = $this->data_generator->get_plugin_generator('totara_hierarchy');
+        $hierarchygenerator = \totara_hierarchy\testing\generator::instance();
         $competencyframework = $hierarchygenerator->create_comp_frame(array());
         $competencydata = array('frameworkid' => $competencyframework->id);
         $competency = $hierarchygenerator->create_comp($competencydata);
@@ -200,21 +198,24 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
     public function test_job_assignment_updated_prog_assignment_manager() {
         global $DB;
 
-        $user1 = $this->data_generator->create_user();
+        $program_generator = \totara_program\testing\generator::instance();
+        $job_generator = \totara_job\testing\generator::instance();
+
+        list($user1, $ja) = $job_generator->create_user_and_job([]);
         $user1_ja = \totara_job\job_assignment::get_first($user1->id);
-        $user2 = $this->data_generator->create_user();
+        list($user2, $ja) = $job_generator->create_user_and_job([]);
         $user2_ja = \totara_job\job_assignment::get_first($user2->id);
 
-        $manager1 = $this->data_generator->create_user();
+        list($manager1, $ja) = $job_generator->create_user_and_job([]);
         $manager1_ja = \totara_job\job_assignment::get_first($manager1->id);
-        $manager1a = $this->data_generator->create_user();
+        list($manager1a, $ja) = $job_generator->create_user_and_job([]);
         $manager1a_ja = \totara_job\job_assignment::get_first($manager1a->id);
-        $manager2 = $this->data_generator->create_user();
+        list($manager2, $ja) = $job_generator->create_user_and_job([]);
         $manager2_ja = \totara_job\job_assignment::get_first($manager2->id);
-        $manager2a = $this->data_generator->create_user();
+        list($manager2a, $ja) = $job_generator->create_user_and_job([]);
         $manager2a_ja = \totara_job\job_assignment::get_first($manager2a->id);
 
-        $this->data_generator->assign_to_program($this->program1->id, ASSIGNTYPE_MANAGERJA, $manager1_ja->id);
+        $program_generator->assign_to_program($this->program1->id, ASSIGNTYPE_MANAGERJA, $manager1_ja->id, null, true);
 
         // Check the deferred flag isn't set yet.
         $program1_record = $DB->get_record('prog', array('id' => $this->program1->id));
@@ -242,7 +243,7 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
         $this->assertEquals(0, $program2_record->assignmentsdeferred);
 
         // Now we'll test this where include children is set.
-        $this->data_generator->assign_to_program($this->program2->id, ASSIGNTYPE_MANAGERJA, $manager2_ja->id, array('includechildren' => 1));
+        $program_generator->assign_to_program($this->program2->id, ASSIGNTYPE_MANAGERJA, $manager2_ja->id, array('includechildren' => 1), true);
 
         $manager2a_ja->update(array('managerjaid' => $manager2_ja->id));
 
@@ -297,22 +298,24 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
     public function test_job_assignment_updated_prog_assignment_position() {
         global $DB;
 
-        $user1 = $this->data_generator->create_user();
+        $program_generator = \totara_program\testing\generator::instance();
+        $job_generator = \totara_job\testing\generator::instance();
+
+        list($user1, $ja) = $job_generator->create_user_and_job([]);
         $user1_ja = \totara_job\job_assignment::get_first($user1->id);
-        $user2 = $this->data_generator->create_user();
+        list($user2, $ja) = $job_generator->create_user_and_job([]);
         $user2_ja = \totara_job\job_assignment::get_first($user2->id);
-        $user3 = $this->data_generator->create_user();
+        list($user3, $ja) = $job_generator->create_user_and_job([]);
         $user3_ja = \totara_job\job_assignment::get_first($user3->id);
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
-        $hierarchy_generator = $this->data_generator->get_plugin_generator('totara_hierarchy');
+        $hierarchy_generator = \totara_hierarchy\testing\generator::instance();
         $posframework = $hierarchy_generator->create_pos_frame(array());
         $position1 = $hierarchy_generator->create_pos(array('frameworkid' => $posframework->id));
         $position1a = $hierarchy_generator->create_pos(array('frameworkid' => $posframework->id, 'parentid' => $position1->id));
         $position2 = $hierarchy_generator->create_pos(array('frameworkid' => $posframework->id));
         $position2a = $hierarchy_generator->create_pos(array('frameworkid' => $posframework->id, 'parentid' => $position2->id));
 
-        $this->data_generator->assign_to_program($this->program1->id, ASSIGNTYPE_POSITION, $position1->id);
+        $program_generator->assign_to_program($this->program1->id, ASSIGNTYPE_POSITION, $position1->id, null, true);
 
         // Check the deferred flag isn't set yet.
         $program1_record = $DB->get_record('prog', array('id' => $this->program1->id));
@@ -340,7 +343,7 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
         $this->assertEquals(0, $program2_record->assignmentsdeferred);
 
         // Now we'll test this where include children is set.
-        $this->data_generator->assign_to_program($this->program2->id, ASSIGNTYPE_POSITION, $position2->id, array('includechildren' => 1));
+        $program_generator->assign_to_program($this->program2->id, ASSIGNTYPE_POSITION, $position2->id, array('includechildren' => 1), true);
 
         $user3_ja->update(array('positionid' => $position2a->id));
 
@@ -384,22 +387,24 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
     public function test_job_assignment_updated_prog_assignment_organisation() {
         global $DB;
 
-        $user1 = $this->data_generator->create_user();
+        $job_generator = \totara_job\testing\generator::instance();
+
+        list($user1, $ja) = $job_generator->create_user_and_job([]);
         $user1_ja = \totara_job\job_assignment::get_first($user1->id);
-        $user2 = $this->data_generator->create_user();
+        list($user2, $ja) = $job_generator->create_user_and_job([]);
         $user2_ja = \totara_job\job_assignment::get_first($user2->id);
-        $user3 = $this->data_generator->create_user();
+        list($user3, $ja) = $job_generator->create_user_and_job([]);
         $user3_ja = \totara_job\job_assignment::get_first($user3->id);
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
-        $hierarchy_generator = $this->data_generator->get_plugin_generator('totara_hierarchy');
+        $program_generator = \totara_program\testing\generator::instance();
+        $hierarchy_generator = \totara_hierarchy\testing\generator::instance();
         $orgframework = $hierarchy_generator->create_org_frame(array());
         $organisation1 = $hierarchy_generator->create_org(array('frameworkid' => $orgframework->id));
         $organisation1a = $hierarchy_generator->create_org(array('frameworkid' => $orgframework->id, 'parentid' => $organisation1->id));
         $organisation2 = $hierarchy_generator->create_org(array('frameworkid' => $orgframework->id));
         $organisation2a = $hierarchy_generator->create_org(array('frameworkid' => $orgframework->id, 'parentid' => $organisation2->id));
 
-        $this->data_generator->assign_to_program($this->program1->id, ASSIGNTYPE_ORGANISATION, $organisation1->id);
+        $program_generator->assign_to_program($this->program1->id, ASSIGNTYPE_ORGANISATION, $organisation1->id, null, true);
 
         // Check the deferred flag isn't set yet.
         $program1_record = $DB->get_record('prog', array('id' => $this->program1->id));
@@ -427,7 +432,7 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
         $this->assertEquals(0, $program2_record->assignmentsdeferred);
 
         // Now we'll test this where include children is set.
-        $this->data_generator->assign_to_program($this->program2->id, ASSIGNTYPE_ORGANISATION, $organisation2->id, array('includechildren' => 1));
+        $program_generator->assign_to_program($this->program2->id, ASSIGNTYPE_ORGANISATION, $organisation2->id, array('includechildren' => 1), true);
 
         $user3_ja->update(array('organisationid' => $organisation2a->id));
 
@@ -473,15 +478,18 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
 
         $now = time();
 
-        $user1 = $this->data_generator->create_user(); // Test user.
-        $user2 = $this->data_generator->create_user(); // Control user.
+        $program_generator = \totara_program\testing\generator::instance();
+        $job_generator = \totara_job\testing\generator::instance();
+
+        list($user1, $ja) = $job_generator->create_user_and_job([]);  // Test user.
+        list($user2, $ja) = $job_generator->create_user_and_job([]);  // Control user.
 
         // Create some programs.
-        $this->data_generator->add_courseset_program(
+        $program_generator->legacy_add_courseset_program(
             $this->program1->id,
             array($this->course1->id, $this->course2->id)
         );
-        $this->data_generator->add_courseset_program(
+        $program_generator->legacy_add_courseset_program(
             $this->program1->id,
             array($this->course3->id, $this->course4->id)
         );
@@ -492,7 +500,7 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
         $cs1id = $DB->get_field('prog_courseset', 'id', array('programid' => $this->program1->id, 'sortorder' => 1));
         $cs2id = $DB->get_field('prog_courseset', 'id', array('programid' => $this->program1->id, 'sortorder' => 2));
 
-        $this->data_generator->add_courseset_program(
+        $program_generator->legacy_add_courseset_program(
             $this->program2->id,
             array($this->course5->id)
         );
@@ -503,11 +511,11 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
         $cs3id = $DB->get_field('prog_courseset', 'id', array('programid' => $this->program2->id, 'sortorder' => 1));
 
         // Assign some users.
-        $this->data_generator->assign_to_program($this->program1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $this->data_generator->assign_to_program($this->program1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
+        $program_generator->assign_to_program($this->program1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($this->program1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
         $this->program1->update_learner_assignments(true);
 
-        $this->data_generator->assign_to_program($this->program2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
+        $program_generator->assign_to_program($this->program2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
         $this->program2->update_learner_assignments(true);
 
         // Check the time created is set but the time started is empty.
@@ -621,30 +629,31 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
         global $DB;
 
         $generator = $this->data_generator;
+        $program_generator = \totara_program\testing\generator::instance();
 
         // Create some users.
         $user1 = $generator->create_user();
         $user2 = $generator->create_user();
 
         // Create some certs.
-        $cert1 = $generator->create_certification();
-        $cert2 = $generator->create_certification();
+        $cert1 = $program_generator->create_certification();
+        $cert2 = $program_generator->create_certification();
 
         // Create some programs.
-        $prog1 = $generator->create_program();
-        $prog2 = $generator->create_program();
+        $prog1 = $program_generator->create_program();
+        $prog2 = $program_generator->create_program();
 
         // Add the users to the certs.
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
 
         // Add the users to the programs.
-        $generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
+        $program_generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $program_generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $program_generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
 
         // Mark one of the programs complete for both users.
         $progcompletion = prog_load_completion($prog1->id, $user1->id);

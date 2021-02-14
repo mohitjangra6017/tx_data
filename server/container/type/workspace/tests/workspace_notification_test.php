@@ -37,7 +37,7 @@ class container_workspace_workspace_notification_testcase extends advanced_testc
         $this->setUser($user_one);
 
         // Create workspace for this user.
-        /** @var container_workspace_generator $worksapce_generator */
+        /** @var \container_workspace\testing\generator $worksapce_generator */
         $worksapce_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $worksapce_generator->create_workspace();
 
@@ -66,7 +66,7 @@ class container_workspace_workspace_notification_testcase extends advanced_testc
         $user_one = $generator->create_user();
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -106,7 +106,7 @@ class container_workspace_workspace_notification_testcase extends advanced_testc
         $user_one = $generator->create_user();
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -168,7 +168,7 @@ class container_workspace_workspace_notification_testcase extends advanced_testc
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -186,7 +186,7 @@ class container_workspace_workspace_notification_testcase extends advanced_testc
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 

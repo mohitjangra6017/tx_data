@@ -33,7 +33,7 @@ require_once($CFG->dirroot . '/totara/reportbuilder/tests/reportcache_advanced_t
 class totara_clean_enrolments_plugins_task_testcase extends reportcache_advanced_testcase {
 
     /**
-     * @var totara_program_generator
+     * @var \totara_program\testing\generator
      */
     protected $generator_program;
 
@@ -52,7 +52,7 @@ class totara_clean_enrolments_plugins_task_testcase extends reportcache_advanced
      */
     public function setUp(): void {
         // Make each generator more easily accessible.
-        $this->generator_program = $this->getDataGenerator()->get_plugin_generator('totara_program');
+        $this->generator_program = \totara_program\testing\generator::instance();
 
         $programplugin = enrol_get_plugin('totara_program');
         $programplugin->set_config('unenrolaction', ENROL_EXT_REMOVED_SUSPEND);
@@ -82,10 +82,10 @@ class totara_clean_enrolments_plugins_task_testcase extends reportcache_advanced
                 'courses' => array($this->courses[0])
             )
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->programs[0], $coursesetdata);
+        $this->generator_program->legacy_add_coursesets_to_program($this->programs[0], $coursesetdata);
 
         // Setup program2 based on competency
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $competencyframework = $hierarchygenerator->create_comp_frame(array());
         $competencydata = array('frameworkid' => $competencyframework->id, 'fullname' => 'Test Competency');
@@ -103,7 +103,7 @@ class totara_clean_enrolments_plugins_task_testcase extends reportcache_advanced
                 'competency' => $competency
             )
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->programs[1], $coursesetdata);
+        $this->generator_program->legacy_add_coursesets_to_program($this->programs[1], $coursesetdata);
 
         $this->users = array();
 

@@ -125,10 +125,10 @@ class totara_competency_webapi_resolver_query_achievement_paths_testcase extends
             'user_id' => $data->assignment1->user_group_id
         ];
 
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $generator->create_manual($data->comp1, [manager::class], 1);
@@ -328,12 +328,11 @@ class totara_competency_webapi_resolver_query_achievement_paths_testcase extends
     }
 
     /**
-     * Get assignment specific generator
+     * Get hierarchy specific generator
      *
-     * @return totara_competency_generator|component_generator_base
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        return \totara_competency\testing\generator::instance();
     }
-
 }

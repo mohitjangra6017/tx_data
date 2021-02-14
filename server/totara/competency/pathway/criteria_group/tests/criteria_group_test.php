@@ -47,7 +47,7 @@ class pathway_criteria_group_testcase extends \advanced_testcase {
             public $scalevalues = [];
         };
 
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $scale = $generator->create_scale(
@@ -86,7 +86,7 @@ class pathway_criteria_group_testcase extends \advanced_testcase {
         //      2 - Course 1 OR Course 3 OR Course 5
         //      3 - Course 4 AND Course 5
 
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
         $data->cc[1] = $criteria_generator->create_coursecompletion([
             'aggregation' => criterion::AGGREGATE_ALL,
@@ -448,7 +448,7 @@ class pathway_criteria_group_testcase extends \advanced_testcase {
      * Test that achievement detail includes no value and not related info if no criteria were there to complete.
      */
     public function test_aggregate_current_value_achievement_details_no_criteria() {
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $\totara_hierarchy\testing\generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $scale = $totara_hierarchy_generator->create_scale('comp');
         $scale = new scale($scale);
@@ -469,7 +469,7 @@ class pathway_criteria_group_testcase extends \advanced_testcase {
      * The value should be achieved and the single criteria should be given in related info.
      */
     public function test_aggregate_current_value_achievement_details_single_criteria() {
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $scale = $totara_hierarchy_generator->create_scale('comp');
         $scale = new scale($scale);
@@ -497,7 +497,7 @@ class pathway_criteria_group_testcase extends \advanced_testcase {
      * Both criteria are recorded in related info.
      */
     public function test_aggregate_current_value_achievement_details_both_satisfied() {
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $scale = $totara_hierarchy_generator->create_scale('comp');
         $scale = new scale($scale);
@@ -531,7 +531,7 @@ class pathway_criteria_group_testcase extends \advanced_testcase {
      * The related info is empty if they did not complete the necessary criteria.
      */
     public function test_aggregate_current_value_achievement_details_half_satisfied() {
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $scale = $totara_hierarchy_generator->create_scale('comp');
         $scale = new scale($scale);
@@ -563,7 +563,7 @@ class pathway_criteria_group_testcase extends \advanced_testcase {
      * Test archiving empty pathways
      */
     public function test_archive_empty_pathways() {
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $scale = $totara_hierarchy_generator->create_scale('comp');
         $scale = new scale($scale);

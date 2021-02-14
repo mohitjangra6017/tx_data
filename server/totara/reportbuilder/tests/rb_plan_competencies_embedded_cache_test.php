@@ -104,23 +104,23 @@ class totara_reportbuilder_rb_plan_competencies_embedded_cache_testcase extends 
 
         parent::setup();
         $this->setAdminUser();
-        $this->getDataGenerator()->reset();
+
         // Common parts of test cases:
         // Create report record in database
         $this->loadDataSet($this->createArrayDataSet(array('report_builder' => array($this->report_builder_data),
                                                            'report_builder_columns' => $this->report_builder_columns_data,
                                                            'report_builder_filters' => $this->report_builder_filters_data)));
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $competencyframework = $hierarchygenerator->create_framework('competency');
         $this->competency1 = $hierarchygenerator->create_hierarchy($competencyframework->id, 'competency');
         $this->competency2 = $hierarchygenerator->create_hierarchy($competencyframework->id, 'competency');
         $this->competency3 = $hierarchygenerator->create_hierarchy($competencyframework->id, 'competency');
 
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plan_generator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
-        /** @var totara_job_generator $plangenerator */
+        /** @var \totara_job\testing\generator $plangenerator */
         $user_generator = $this->getDataGenerator()->get_plugin_generator('totara_job');
         [$this->user1, $ja1] = $user_generator->create_user_and_job([], null, null);
         [$this->user2, $ja2] = $user_generator->create_user_and_job([], null, null);
@@ -192,7 +192,7 @@ class totara_reportbuilder_rb_plan_competencies_embedded_cache_testcase extends 
      *
      * @param stdClass|array $record
      *
-     * @deprecated since Totara 13, please use totara_plan_generator.
+     * @deprecated since Totara 13, please use \totara_plan\testing\generator.
      */
     public function create_competency($record = array()) {
         self::$ind++;
@@ -222,7 +222,7 @@ class totara_reportbuilder_rb_plan_competencies_embedded_cache_testcase extends 
      * @param int $planid
      * @param int $competencyid
      *
-     * @deprecated since Totara 13, please use totara_plan_generator.
+     * @deprecated since Totara 13, please use \totara_plan\testing\generator.
      */
     public function assign_competency($planid, $competencyid) {
         $plan = new development_plan($planid);

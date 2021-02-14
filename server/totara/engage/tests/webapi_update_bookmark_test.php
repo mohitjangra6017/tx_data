@@ -153,7 +153,7 @@ class totara_engage_webapi_update_bookmark_testcase extends advanced_testcase {
         $user = $this->setup_user();
 
         $generator = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist(['userid' => $user->id, 'access' => access::RESTRICTED]);
 
@@ -181,7 +181,7 @@ class totara_engage_webapi_update_bookmark_testcase extends advanced_testcase {
         $this->setup_user();
 
         $generator = $this->getDataGenerator();
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $generator->get_plugin_generator('engage_survey');
         $survey = $surveygen->create_public_survey();
 
@@ -209,7 +209,7 @@ class totara_engage_webapi_update_bookmark_testcase extends advanced_testcase {
         $this->setup_user();
 
         $generator = $this->getDataGenerator();
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $generator->get_plugin_generator('engage_survey');
         // Private survey.
         $survey = $surveygen->create_survey();
@@ -250,13 +250,13 @@ class totara_engage_webapi_update_bookmark_testcase extends advanced_testcase {
     }
 
     private function create_article(?array $params = []): article {
-        /** @var engage_article_generator $generator */
+        /** @var \engage_article\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('engage_article');
         return $generator->create_article($params);
     }
 
     private function create_share(\totara_engage\share\shareable $item, int $fromuserid, array $recipients, $ownerid = null) {
-        /** @var totara_engage_generator $generator */
+        /** @var \totara_engage\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_engage');
         return $generator->share_item($item, $fromuserid, $recipients, $ownerid);
     }

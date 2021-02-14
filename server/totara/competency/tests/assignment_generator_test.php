@@ -41,14 +41,14 @@ class totara_competency_assignment_generator_testcase extends advanced_testcase 
     }
 
     /**
-     * @return totara_competency_assignment_generator
+     * @return \totara_competency\testing\assignment_generator
      */
     protected function generator() {
         return $this->getDataGenerator()->get_plugin_generator('totara_competency')->assignment_generator();
     }
 
     /**
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     protected function competency_generator() {
         return $this->getDataGenerator()->get_plugin_generator('totara_competency');

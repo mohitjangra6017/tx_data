@@ -35,9 +35,8 @@ class mod_certificate_generator_testcase extends advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course();
 
-        /** @var mod_certificate_generator $generator */
+        /** @var \mod_certificate\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_certificate');
-        $this->assertInstanceOf('mod_certificate_generator', $generator);
         $this->assertEquals('certificate', $generator->get_modulename());
 
         $generator->create_instance(array('course' => $course->id));

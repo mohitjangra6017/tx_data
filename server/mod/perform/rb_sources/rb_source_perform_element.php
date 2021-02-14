@@ -332,12 +332,9 @@ class rb_source_perform_element extends rb_base_source {
             throw new coding_exception('phpunit_column_test_add_data() cannot be used outside of unit tests');
         }
 
-        require_once($CFG->dirroot.'/lib/testing/generator/component_generator_base.php');
-        require_once($CFG->dirroot.'/lib/testing/generator/data_generator.php');
-        require_once($CFG->dirroot.'/mod/perform/tests/generator/mod_perform_generator.class.php');
-
         // This creates a complete activity with two elements and related tables we need to test this source.
-        $si = (new mod_perform_generator(new testing_data_generator()))->create_subject_instance([
+        $perform_generator = \mod_perform\testing\generator::instance();
+        $perform_generator->create_subject_instance([
             'activity_name' => 'Weekly catchup',
             'subject_is_participating' => true,
             'subject_user_id' => user::repository()->get()->last()->id,

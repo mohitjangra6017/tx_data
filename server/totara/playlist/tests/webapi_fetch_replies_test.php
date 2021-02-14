@@ -38,7 +38,7 @@ class totara_playlist_webapi_fetch_replies_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist([
             'userid' => $user_one->id,
@@ -47,7 +47,7 @@ class totara_playlist_webapi_fetch_replies_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $playlist->get_id(),
@@ -77,12 +77,12 @@ class totara_playlist_webapi_fetch_replies_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist(['access' => access::PUBLIC]);
 
         // Create comments so that user two can fetch the replies.
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $playlist->get_id(),
@@ -111,11 +111,11 @@ class totara_playlist_webapi_fetch_replies_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist(['access' => access::RESTRICTED]);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $playlist->get_id(),
@@ -146,11 +146,11 @@ class totara_playlist_webapi_fetch_replies_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist(['access' => access::RESTRICTED]);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $playlist->get_id(),

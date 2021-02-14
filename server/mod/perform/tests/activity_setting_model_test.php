@@ -104,7 +104,7 @@ class mod_perform_activity_setting_model_testcase extends advanced_testcase {
      */
     public function test_visibility_condition_update_invalid_activity_status() {
         $this->setAdminUser();
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container(["anonymous_responses" => true]);
         $activity->refresh();
 
@@ -120,7 +120,7 @@ class mod_perform_activity_setting_model_testcase extends advanced_testcase {
      */
     public function test_incorrect_visibility_condition_should_throw_exception() {
         $this->setAdminUser();
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container(["anonymous_responses" => true, 'activity_status'=> draft::get_code()]);
         $activity->refresh();
 
@@ -135,7 +135,7 @@ class mod_perform_activity_setting_model_testcase extends advanced_testcase {
      */
     public function test_visibility_condition_update_invalid_value() {
         $this->setAdminUser();
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container();
 
         $this->expectExceptionMessage(
@@ -165,7 +165,7 @@ class mod_perform_activity_setting_model_testcase extends advanced_testcase {
     private function create_test_data(): activity {
         $this->setAdminUser();
 
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $perform_generator = \mod_perform\testing\generator::instance();
         return $perform_generator->create_activity_in_container();
     }
 }

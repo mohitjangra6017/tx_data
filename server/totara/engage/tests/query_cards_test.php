@@ -59,10 +59,10 @@ class totara_engage_query_cards_testcase extends advanced_testcase {
         $user = $gen->create_user();
         $this->setUser($user);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $gen->get_plugin_generator('engage_article');
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $gen->get_plugin_generator('engage_survey');
 
         $article_generator->create_article();
@@ -245,13 +245,13 @@ class totara_engage_query_cards_testcase extends advanced_testcase {
     private function create_test_data(): array {
         $generator = self::getDataGenerator();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
 
         // Create topics as admin.

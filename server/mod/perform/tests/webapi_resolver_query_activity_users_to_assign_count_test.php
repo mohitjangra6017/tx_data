@@ -91,8 +91,8 @@ class mod_perform_webapi_resolver_query_activity_users_to_assign_count_testcase 
     private function create_test_data(): array {
         self::setAdminUser();
 
-        /** @var mod_perform_generator|component_generator_base $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $activity = $generator->create_activity_in_container([
             'activity_status' => draft::get_code(),
             'create_section' => false,

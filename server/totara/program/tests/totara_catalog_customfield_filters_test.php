@@ -56,7 +56,7 @@ class totara_program_totara_catalog_customfield_filters_testcase extends \advanc
         // allow the setting of its default values. Then there is the totara_core
         // generator that can create custom fields with default data but cannot
         // assign custom fields to programs. Incredible.
-        /** @var \totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
         return $generator->create_custom_program_field($data)->id;
     }
@@ -71,7 +71,7 @@ class totara_program_totara_catalog_customfield_filters_testcase extends \advanc
     private function generate_programs(int $program_count): array {
         $all_programs = [];
 
-        /** @var \totara_program_generator $generator */
+        /** @var \totara_program\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         for ($i = 0; $i < $program_count; $i++) {
             $all_programs[] = $generator->create_program(
@@ -145,7 +145,7 @@ class totara_program_totara_catalog_customfield_filters_testcase extends \advanc
 
         $programs_by_cf = [];
         $program_names = [];
-        /** @var \totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
 
         foreach ($this->generate_programs($program_count) as $i => $program) {
@@ -321,7 +321,7 @@ class totara_program_totara_catalog_customfield_filters_testcase extends \advanc
 
         $programs_by_cf = [];
         $program_names = [];
-        /** @var \totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
 
         foreach ($this->generate_programs($program_count) as $i => $program) {
@@ -486,7 +486,7 @@ class totara_program_totara_catalog_customfield_filters_testcase extends \advanc
 
         $programs_by_cf = [];
         $program_names = [];
-        /** @var \totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
 
         foreach ($this->generate_programs($program_count) as $i => $program) {

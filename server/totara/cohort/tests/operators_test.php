@@ -67,7 +67,7 @@ class totara_cohort_operators_testcase extends reportcache_advanced_testcase {
         $timecompletedvalues = array(-1, -2, 1);
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
 
         // Create some users.
         $this->assertEquals(2, $DB->count_records('user'));

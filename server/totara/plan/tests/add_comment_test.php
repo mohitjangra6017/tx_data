@@ -32,10 +32,10 @@ require_once($CFG->dirroot."/totara/plan/lib.php");
  */
 class totara_plan_add_comment_testcase extends advanced_testcase {
 
-    /** @var totara_plan_generator $plangenerator */
+    /** @var \totara_plan\testing\generator $plangenerator */
     private $plangenerator = null;
 
-    /** @var testing_data_generator $datagenerator */
+    /** @var \core\testing\generator $datagenerator */
     private $datagenerator = null;
 
     protected function setUp(): void {

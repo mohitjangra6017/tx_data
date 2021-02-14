@@ -63,7 +63,7 @@ class pathway_manual_userdata_testcase extends advanced_testcase {
         $this->user1 = $this->getDataGenerator()->create_user();
         $this->user2 = $this->getDataGenerator()->create_user();
 
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $this->competency = $generator->create_competency();
         $this->scale_value = scale_value::repository()->order_by('id', 'desc')->first();

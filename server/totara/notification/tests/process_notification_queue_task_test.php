@@ -36,7 +36,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var \totara_notification\testing\generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_built_in_notification();
 
@@ -52,7 +52,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
         $generator = self::getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var \totara_notification\testing\generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
@@ -117,7 +117,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
 
         self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
 
-        /** @var totara_notification_generator $generator */
+        /** @var \totara_notification\testing\generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $trace = $generator->get_test_progress_trace();
 
@@ -180,7 +180,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
         self::assertEquals(0, $sink->count());
         self::assertEmpty($sink->get_messages());
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var \totara_notification\testing\generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
 
         $task = new process_notification_queue_task();

@@ -33,8 +33,8 @@ class totara_comment_get_replies_testcase extends advanced_testcase {
      * Verify that replies cannot be accessed across different tenants
      */
     public function test_get_replies_across_tenants_via_graphql(): void {
-        /** @var totara_tenant_generator $tenancy_generator */
-        $tenancy_generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenancy_generator */
+        $tenancy_generator = \totara_tenant\testing\generator::instance();
         $tenancy_generator->enable_tenants();
 
         $tenant1 = $tenancy_generator->create_tenant();
@@ -52,7 +52,7 @@ class totara_comment_get_replies_testcase extends advanced_testcase {
 
         // User 1 & 2 are in tenant 1, User 3 & 4 are in tenant 2.
         // User 1 & 3 will create comments, while 2 & 4 will view
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $this->getDataGenerator()->get_plugin_generator('totara_comment');
 
         $comment1 = $comment_generator->create_comment(1, 'totara_comment', 'xx_xx', null, null, $user1->id);

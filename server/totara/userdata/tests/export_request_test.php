@@ -149,7 +149,7 @@ class totara_userdata_export_request_testcase extends advanced_testcase {
      * @return int
      */
     private function create_export_file(stdClass $user) {
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
         $type = $generator->create_export_type(array('allowself' => 1));
 
         $exportid = manager::create_export($user->id, $this->systemcontext->id, $type->id, 'self');

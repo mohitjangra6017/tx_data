@@ -34,10 +34,10 @@ class mod_perform_section_respository_testcase extends advanced_testcase {
         self::setAdminUser();
 
         $data_generator = self::getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
-        $config = new mod_perform_activity_generator_configuration();
+        $config = new \mod_perform\testing\activity_generator_configuration();
         $config->set_number_of_sections_per_activity(3);
 
         /** @var activity $activity */

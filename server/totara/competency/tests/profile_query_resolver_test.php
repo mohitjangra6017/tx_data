@@ -82,12 +82,12 @@ abstract class profile_query_resolver_test extends advanced_testcase {
         $managerja = job_assignment::create_default($data->manager->id);
         job_assignment::create_default($data->user->id, ['managerjaid' => $managerja->id]);
 
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $compfw = $totara_hierarchy_generator->create_comp_frame([]);
         $data->comp = $totara_hierarchy_generator->create_comp(['frameworkid' => $compfw->id]);
 
-        /** @var totara_competency_assignment_generator $assignment_generator */
+        /** @var \totara_competency\testing\assignment_generator $assignment_generator */
         $assignment_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency')->assignment_generator();
         $data->assignment = $assignment_generator->create_user_assignment($data->comp->id, $data->user->id);
 

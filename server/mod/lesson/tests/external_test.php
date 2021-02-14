@@ -694,7 +694,7 @@ class mod_lesson_external_testcase extends externallib_advanced_testcase {
 
         $this->setAdminUser();
         // Create another content page.
-        $lessongenerator = $this->getDataGenerator()->get_plugin_generator('mod_lesson');
+        $lessongenerator = \mod_lesson\testing\generator::instance();
         $page3 = $lessongenerator->create_content($this->lesson);
 
         $p2answers = $DB->get_records('lesson_answers', array('lessonid' => $this->lesson->id, 'pageid' => $this->page2->id), 'id');

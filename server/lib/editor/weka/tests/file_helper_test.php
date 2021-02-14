@@ -93,8 +93,8 @@ class editor_weka_file_helper_testcase extends advanced_testcase {
     }
 
     public function test_get_uplolad_repository_with_multi_tenancy_enabled() {
-        /** @var $tenant_generator totara_tenant_generator */
-        $tenant_generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var $tenant_generator \totara_tenant\testing\generator */
+        $tenant_generator = \totara_tenant\testing\generator::instance();
         $tenant_generator->enable_tenants();
 
         $expected_repository = $this->get_expected_repository();
@@ -153,8 +153,8 @@ class editor_weka_file_helper_testcase extends advanced_testcase {
     }
 
     public function test_get_uplolad_repository_with_multi_tenancy_and_isolation_enabled() {
-        /** @var $tenant_generator totara_tenant_generator */
-        $tenant_generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var $tenant_generator \totara_tenant\testing\generator */
+        $tenant_generator = \totara_tenant\testing\generator::instance();
         $tenant_generator->enable_tenants();
         set_config('tenantsisolated', 1);
 

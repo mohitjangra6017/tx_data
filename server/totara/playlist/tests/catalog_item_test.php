@@ -56,7 +56,7 @@ class totara_playlist_catalog_item_testcase extends advanced_testcase {
 
         $this->setAdminUser();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $this->getDataGenerator()->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist([
             'name' => 'playlistItem',

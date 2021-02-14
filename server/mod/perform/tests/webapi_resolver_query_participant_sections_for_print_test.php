@@ -33,8 +33,6 @@ use totara_job\job_assignment;
 use totara_webapi\graphql;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-require_once(__DIR__ . '/generator/activity_generator_configuration.php');
-
 /**
  * @group perform
  */
@@ -140,7 +138,7 @@ class mod_perform_webapi_resolver_query_participant_sections_for_print_testcase 
     private function create_test_data(): array {
         self::setAdminUser();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->enable_appraiser_for_each_subject_user()
             ->enable_manager_for_each_subject_user()
             ->set_relationships_per_section(
@@ -188,7 +186,7 @@ class mod_perform_webapi_resolver_query_participant_sections_for_print_testcase 
         $this->get_perform_generator()->create_section_element($section, $element);
     }
 
-    private function get_perform_generator(): mod_perform_generator {
-        return self::getDataGenerator()->get_plugin_generator('mod_perform');
+    private function get_perform_generator(): \mod_perform\testing\generator {
+        return \mod_perform\testing\generator::instance();
     }
 }

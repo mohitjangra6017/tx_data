@@ -34,14 +34,14 @@ use totara_core\relationship\relationship;
 class mod_perform_activity_model_testcase extends advanced_testcase {
 
     /**
-     * @var mod_perform_generator|component_generator_base
+     * @var \mod_perform\testing\generator
      */
     protected $perform_generator;
 
     protected function setUp(): void {
         parent::setUp();
         self::setAdminUser();
-        $this->perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        $this->perform_generator = \mod_perform\testing\generator::instance();
     }
 
     protected function tearDown(): void {
@@ -382,7 +382,7 @@ class mod_perform_activity_model_testcase extends advanced_testcase {
     }
 
     public function test_update_general_info_cannot_change_in_active_state(): void {
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_activity_status(draft::get_code())
             ->set_number_of_activities(1)
             ->set_number_of_sections_per_activity(1)

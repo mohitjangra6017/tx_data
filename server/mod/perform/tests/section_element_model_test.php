@@ -32,8 +32,8 @@ class mod_perform_section_element_model_testcase extends advanced_testcase {
     public function test_create() {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $activity = $perform_generator->create_activity_in_container();
 
@@ -53,7 +53,7 @@ class mod_perform_section_element_model_testcase extends advanced_testcase {
 
     public function test_move_element_to_another_section() {
         self::setAdminUser();
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container(
             ['activity_name' => 'Activity 1', 'activity_status' => draft::get_code(), 'create_section' => false]
         );

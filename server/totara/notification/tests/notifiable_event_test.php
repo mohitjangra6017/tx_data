@@ -32,7 +32,7 @@ class totara_notification_notifiable_event_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $actor = $generator->create_user();
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
 
         $context_user = context_user::instance($actor->id);

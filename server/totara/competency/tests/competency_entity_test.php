@@ -246,20 +246,20 @@ class totara_competency_competency_entity_testcase extends \advanced_testcase {
     /**
      * Get competency data generator
      *
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      * @throws coding_exception
      */
-    public function generator(): \totara_competency_generator {
+    public function generator(): \totara_competency\testing\generator {
         return $this->getDataGenerator()->get_plugin_generator('totara_competency');
     }
 
     /**
      * Get competency data generator
      *
-     * @return totara_hierarchy_generator
+     * @return \totara_hierarchy\testing\generator
      * @throws coding_exception
      */
-    public function hierarchy_generator(): \totara_hierarchy_generator {
+    public function hierarchy_generator(): \totara_hierarchy\testing\generator {
         return $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
     }
 

@@ -91,7 +91,7 @@ class totara_engage_webapi_resolver_query_user_contributions_count_testcase exte
         // View as another user
         $user2 = $this->setup_user();
 
-        /** @var engage_article_generator $generator */
+        /** @var \engage_article\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('engage_article');
         $recipients = $generator->create_user_recipients([$user2]);
 
@@ -140,7 +140,7 @@ class totara_engage_webapi_resolver_query_user_contributions_count_testcase exte
      * @return article
      */
     private function create_article(string $name, int $userid, int $access = access::PUBLIC): article {
-        /** @var engage_article_generator $generator */
+        /** @var \engage_article\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('engage_article');
         $params = compact('name', 'userid', 'access');
         return $generator->create_article($params);

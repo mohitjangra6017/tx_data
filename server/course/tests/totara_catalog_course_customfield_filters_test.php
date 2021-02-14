@@ -56,7 +56,7 @@ class core_course_totara_catalog_course_customfield_filters_testcase extends \ad
         // allow the setting of its default values. Then there is the totara_core
         // generator that can create custom fields with default data but cannot
         // assign custom fields to courses. Incredible.
-        /** @var \totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
         return $generator->create_custom_course_field($data)->id;
     }
@@ -140,7 +140,7 @@ class core_course_totara_catalog_course_customfield_filters_testcase extends \ad
 
         $courses_by_cf = [];
         $course_names = [];
-        /** @var \totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
 
         foreach ($this->generate_courses($course_count) as $i => $course) {
@@ -316,7 +316,7 @@ class core_course_totara_catalog_course_customfield_filters_testcase extends \ad
 
         $courses_by_cf = [];
         $course_names = [];
-        /** @var \totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
 
         foreach ($this->generate_courses($course_count) as $i => $course) {
@@ -481,7 +481,7 @@ class core_course_totara_catalog_course_customfield_filters_testcase extends \ad
 
         $courses_by_cf = [];
         $course_names = [];
-        /** @var \totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
 
         foreach ($this->generate_courses($course_count) as $i => $course) {

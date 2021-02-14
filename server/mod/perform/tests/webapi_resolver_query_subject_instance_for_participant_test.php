@@ -148,8 +148,8 @@ class mod_perform_webapi_resolver_query_subject_instance_for_participant_testcas
     public function test_subject_static_instance_manager_is_resolved(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_user = self::getDataGenerator()->create_user();
         $manager_user = self::getDataGenerator()->create_user();

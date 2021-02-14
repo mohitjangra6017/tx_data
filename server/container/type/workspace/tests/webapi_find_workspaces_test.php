@@ -40,7 +40,7 @@ class container_workspace_webapi_find_workspaces_testcase extends advanced_testc
         $user2 = $generator->create_user();
 
         $this->setUser($user1);
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace1 = $workspace_generator->create_hidden_workspace('hidden by user1');
         $workspace2 = $workspace_generator->create_private_workspace('private by user1');
@@ -136,7 +136,7 @@ class container_workspace_webapi_find_workspaces_testcase extends advanced_testc
         $user3 = $generator->create_user();
 
         $this->setUser($user1);
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace_generator->create_hidden_workspace();
         $workspace_generator->create_private_workspace();
@@ -199,7 +199,7 @@ class container_workspace_webapi_find_workspaces_testcase extends advanced_testc
         $user2 = $generator->create_user();
 
         $this->setUser($user1);
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace_generator->create_hidden_workspace();
         $workspace_generator->create_private_workspace();

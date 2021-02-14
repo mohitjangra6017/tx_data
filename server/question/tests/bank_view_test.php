@@ -41,7 +41,7 @@ class core_question_bank_view_testcase extends advanced_testcase {
         $this->resetAfterTest();
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
-        /** @var core_question_generator $questiongenerator */
+        /** @var \core_question\testing\generator $questiongenerator */
         $questiongenerator = $generator->get_plugin_generator('core_question');
 
         // Cerate a course.

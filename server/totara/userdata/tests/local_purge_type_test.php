@@ -36,8 +36,7 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
     public function test_prepare_for_add() {
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $data = purge_type::prepare_for_add(target_user::STATUS_ACTIVE, 0);
         $this->assertSame('0', $data->id);
@@ -63,8 +62,7 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
     public function test_prepare_for_update() {
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $type = $generator->create_purge_type(array('userstatus' => target_user::STATUS_DELETED, 'allowmanual' => 1, 'allowdeleted' => 1,
             'fullname' => 'XX name', 'idnumber' => 'idxxx', 'description' => 'hihi',
@@ -84,8 +82,7 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $typeactive = $generator->create_purge_type(array('userstatus' => target_user::STATUS_ACTIVE, 'allowmanual' => 1));
         $typeasuspedned = $generator->create_purge_type(array('userstatus' => target_user::STATUS_ACTIVE, 'allowsuspended' => 1));
@@ -130,8 +127,7 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
         $type = $generator->create_purge_type(array('userstatus' => target_user::STATUS_ACTIVE, 'allowmanual' => 1));
 
         $this->assertTrue($DB->record_exists('totara_userdata_purge_type', array('id' => $type->id)));
@@ -143,8 +139,7 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $user = $this->getDataGenerator()->create_user();
         $otheruser = $this->getDataGenerator()->create_user();
@@ -184,8 +179,7 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $user = $this->getDataGenerator()->create_user();
         $otheruser = $this->getDataGenerator()->create_user();
@@ -242,8 +236,7 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $user = $this->getDataGenerator()->create_user();
         $otheruser = $this->getDataGenerator()->create_user();
@@ -284,8 +277,7 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $suspendedtype = $generator->create_purge_type(array('userstatus' => target_user::STATUS_SUSPENDED));
         $deletedtype = $generator->create_purge_type(array('userstatus' => target_user::STATUS_DELETED));
@@ -319,8 +311,7 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $typeactive = $generator->create_purge_type(array('userstatus' => target_user::STATUS_ACTIVE, 'items' => 'core_user-additionalnames,core_user-otherfields'));
         $typesuspended = $generator->create_purge_type(array('userstatus' => target_user::STATUS_SUSPENDED, 'items' => 'core_user-additionalnames,core_user-otherfields'));
@@ -340,8 +331,7 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
         $typeactive = $generator->create_purge_type(array('userstatus' => target_user::STATUS_ACTIVE, 'allowmanual' => 1, 'items' => 'core_user-additionalnames'));
         $activeuser = $this->getDataGenerator()->create_user(array('middlename' => 'midddle'));
         $creator = $this->getDataGenerator()->create_user();

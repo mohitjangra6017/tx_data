@@ -45,7 +45,7 @@ class mod_facetoface_reservation_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user1->id, $course->id);
         $this->getDataGenerator()->enrol_user($user2->id, $course->id);
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $facetoface = $facetofacegenerator->create_instance(array(
             'course' => $course->id,
@@ -137,7 +137,7 @@ class mod_facetoface_reservation_testcase extends advanced_testcase {
         $gen->enrol_user($manager->id, $course->id, 'manager');
         $gen->enrol_user($staff->id, $course->id, 'staffmanager');
 
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
         $f2f = $f2fgen->create_instance([
             'course' => $course->id,
@@ -225,7 +225,7 @@ class mod_facetoface_reservation_testcase extends advanced_testcase {
         $gen->enrol_user($student3->id, $course->id);
         $gen->enrol_user($manager->id, $course->id, 'manager');
 
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
         $f2f = $f2fgen->create_instance([
             'course' => $course->id,

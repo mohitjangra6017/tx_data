@@ -41,10 +41,10 @@ require_once($CFG->dirroot . '/mod/facetoface/lib.php');
 
 class mod_facetoface_roomlib_testcase extends advanced_testcase {
 
-    /** @var mod_facetoface_generator */
+    /** @var \mod_facetoface\testing\generator */
     protected $facetoface_generator;
 
-    /** @var totara_customfield_generator */
+    /** @var \totara_customfield\testing\generator */
     protected $customfield_generator;
 
     private $cfprefix = 'facetofaceroom', $cftableprefix = 'facetoface_room';

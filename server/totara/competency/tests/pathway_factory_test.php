@@ -92,7 +92,7 @@ class totara_competency_pathway_factory_testcase extends \advanced_testcase {
         $comp = $hierarchygenerator->create_comp(['frameworkid' => $compfw->id]);
 
         // Criteria_group pathway
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $cg = $generator->create_criteria_group($comp->id, [$cc1, $cc2], $scalevalueid);

@@ -297,11 +297,11 @@ class mod_perform_date_resolver_dynamic_source_another_activity_testcase extends
     private function generate_test_data(): stdClass {
         self::setAdminUser();
         $data_generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         // Create 2 activities with 2 tracks each.
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(2)
             ->set_number_of_tracks_per_activity(2)
             ->disable_user_assignments()

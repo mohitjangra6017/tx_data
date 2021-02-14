@@ -29,7 +29,7 @@ require_once($CFG->dirroot . '/totara/job/dialog/assign_manager.php');
 
 class totara_job_dialog_assign_manager_testcase extends advanced_testcase {
 
-    /** @var  testing_data_generator */
+    /** @var  \core\testing\generator */
     private $data_generator;
 
     private $max_users = 10;

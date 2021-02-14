@@ -288,8 +288,8 @@ class mod_quiz_userdata_user_overrides_testcase extends advanced_testcase {
      * @return stdClass
      */
     private function create_quiz(stdClass $course): stdClass {
-        /** @var mod_quiz_generator $quizgenerator */
-        /** @var core_question_generator $questiongenerator */
+        /** @var \mod_quiz\testing\generator $quizgenerator */
+        /** @var \core_question\testing\generator $questiongenerator */
         // Setup quiz1 with 2 questions.
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');

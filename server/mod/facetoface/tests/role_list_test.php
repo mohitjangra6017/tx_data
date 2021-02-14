@@ -28,7 +28,7 @@ class mod_facetoface_role_list_testcase extends advanced_testcase {
     public function test_constructor() {
         global $DB;
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $course1 = $this->getDataGenerator()->create_course();
@@ -68,7 +68,7 @@ class mod_facetoface_role_list_testcase extends advanced_testcase {
     public function test_get_distinct_users_from_seminarevent() {
         global $DB;
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $course1 = $this->getDataGenerator()->create_course();

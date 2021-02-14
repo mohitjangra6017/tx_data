@@ -34,11 +34,11 @@ class engage_survey_topic_testcase extends advanced_testcase {
 
         $gen = $this->getDataGenerator();
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
         $survey = $surveygen->create_survey();
 
-        /** @var totara_topic_generator $topicgen */
+        /** @var \totara_topic\testing\generator $topicgen */
         $topicgen = $gen->get_plugin_generator('totara_topic');
         $topicids = [];
 

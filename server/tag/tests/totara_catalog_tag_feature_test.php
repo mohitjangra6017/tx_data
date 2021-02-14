@@ -137,7 +137,7 @@ class core_tag_totara_catalog_tag_feature_testcase extends \advanced_testcase {
         int $no_of_items,
         int $tags_per_item
     ): array {
-        /** @var \totara_program_generator $generator */
+        /** @var \totara_program\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $item_type = 'prog';
 
@@ -216,7 +216,7 @@ class core_tag_totara_catalog_tag_feature_testcase extends \advanced_testcase {
         int $no_of_items,
         int $tags_per_item
     ): array {
-        /** @var \totara_program_generator $generator */
+        /** @var \totara_program\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $item_type = 'prog';
 

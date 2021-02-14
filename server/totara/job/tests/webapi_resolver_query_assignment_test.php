@@ -119,7 +119,7 @@ class totara_job_webapi_resolver_query_assignment_testcase extends advanced_test
         $appraiser = $this->getDataGenerator()->create_user();
         $manager = $this->getDataGenerator()->create_user();
         $managerja = $this->create_job_assignment(['userid' => $manager->id, 'idnumber' => 'j1']);
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $orgframework = $generator->create_org_frame([]);
         $organisation = $generator->create_org(['frameworkid' => $orgframework->id, 'typeid' => $generator->create_org_type([])]);

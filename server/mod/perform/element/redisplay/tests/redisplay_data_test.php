@@ -96,8 +96,8 @@ class performelement_redisplay_redisplay_data_testcase extends advanced_testcase
     private function create_test_data(): array {
         $this->setAdminUser();
 
-        /** @var $perform_generator mod_perform_generator*/
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var $perform_generator \mod_perform\testing\generator*/
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $this->activity = $perform_generator->create_activity_in_container(
             [

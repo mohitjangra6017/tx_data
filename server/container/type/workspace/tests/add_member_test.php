@@ -47,7 +47,7 @@ class container_workspace_add_member_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         // Login as first user and start creating the workspace.
@@ -109,7 +109,7 @@ class container_workspace_add_member_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         // Login as first user and start creating the workspace.
@@ -129,7 +129,7 @@ class container_workspace_add_member_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         // Login as first user and start creating the workspace.
@@ -149,7 +149,7 @@ class container_workspace_add_member_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         // Login as first user and start creating the workspace.
@@ -170,7 +170,7 @@ class container_workspace_add_member_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setUser($user_one);
 
@@ -204,7 +204,7 @@ class container_workspace_add_member_testcase extends advanced_testcase {
         $user_four = $generator->create_user();
         $user_five = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setUser($user_one);
 
@@ -259,7 +259,7 @@ class container_workspace_add_member_testcase extends advanced_testcase {
         $user_two = $generator->create_user();
         $user_three = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         $this->setUser($user_one);
@@ -281,7 +281,7 @@ class container_workspace_add_member_testcase extends advanced_testcase {
         $user_two = $generator->create_user();
         $user_three = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         $this->setUser($user_one);

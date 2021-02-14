@@ -43,13 +43,13 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
         $this->resetAfterTest(true);
 
         $that = new class() {
-            /** @var testing_data_generator */
+            /** @var \core\testing\generator */
             public $data_generator;
 
-            /** @var totara_program_generator */
+            /** @var \totara_program\testing\generator */
             public $program_generator;
 
-            /** @var core_completion_generator */
+            /** @var \core_completion\testing\generator */
             public $comp_generator;
 
             /** @var stdClass */
@@ -162,7 +162,7 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
                          'completiontype' => COMPLETIONTYPE_ALL,
                          'courses' => array($that->courses[1]));
 
-        $that->data_generator->create_coursesets_in_program($that->program1, $detail);
+        $that->program_generator->legacy_add_coursesets_to_program($that->program1, $detail);
 
         // Reload the program, because the content has changed.
         $that->program1 = new program($that->program1->id);
@@ -215,7 +215,7 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
                          'completiontype' => COMPLETIONTYPE_ALL,
                          'courses' => array($that->courses[1], $that->courses[2], $that->courses[3]));
 
-        $that->data_generator->create_coursesets_in_program($that->program1, $detail);
+        $that->program_generator->legacy_add_coursesets_to_program($that->program1, $detail);
 
         // Reload the programs, because their content has changed.
         $that->program1 = new program($that->program1->id);
@@ -324,7 +324,7 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
                           'completiontype' => COMPLETIONTYPE_ALL,
                           'courses' => array($that->courses[11]));
 
-        $that->data_generator->create_coursesets_in_program($that->program1, $detail);
+        $that->program_generator->legacy_add_coursesets_to_program($that->program1, $detail);
 
         // Reload the programs, because their content has changed.
         $that->program1 = new program($that->program1->id);
@@ -508,7 +508,7 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
                           'completiontype' => COMPLETIONTYPE_ALL,
                           'courses' => array($that->courses[1], $that->courses[3]));
 
-        $that->data_generator->create_coursesets_in_program($that->program1, $detail);
+        $that->program_generator->legacy_add_coursesets_to_program($that->program1, $detail);
 
         // Reload the programs, because their content has changed.
         $that->program1 = new program($that->program1->id);
@@ -587,7 +587,7 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
         $that = $this->setup_common();
 
         // Create a competency based on courses 2 and 3.
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $that->data_generator->get_plugin_generator('totara_hierarchy');
         $competencyframework = $hierarchygenerator->create_comp_frame(array());
         $competencydata = array('frameworkid' => $competencyframework->id);
@@ -603,7 +603,7 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
                          'completiontype' => COMPLETIONTYPE_ALL,
                          'competency' => $competency);
 
-        $that->data_generator->create_coursesets_in_program($that->program1, $detail);
+        $that->program_generator->legacy_add_coursesets_to_program($that->program1, $detail);
 
         // Reload the programs, because their content has changed.
         $that->program1 = new program($that->program1->id);
@@ -651,7 +651,7 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
         $that = $this->setup_common();
 
         // Create a competency based on courses 2 and 3.
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $that->data_generator->get_plugin_generator('totara_hierarchy');
         $competencyframework = $hierarchygenerator->create_comp_frame(array());
         $competencydata = array('frameworkid' => $competencyframework->id, 'aggregationmethod' => \competency::AGGREGATION_METHOD_ANY);
@@ -667,7 +667,7 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
                          'completiontype' => COMPLETIONTYPE_ALL, // courseset is set to ALL, competency set to ANY
                          'competency' => $competency);
 
-        $that->data_generator->create_coursesets_in_program($that->program1, $detail);
+        $that->program_generator->legacy_add_coursesets_to_program($that->program1, $detail);
 
         // Reload the programs, because their content has changed.
         $that->program1 = new program($that->program1->id);
@@ -728,7 +728,7 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
                          'completiontype' => COMPLETIONTYPE_ANY,
                          'courses' => array($that->courses[1], $that->courses[2]));
 
-        $that->data_generator->create_coursesets_in_program($that->program1, $detail);
+        $that->program_generator->legacy_add_coursesets_to_program($that->program1, $detail);
 
         // Reload the programs, because their content has changed.
         $that->program1 = new program($that->program1->id);
@@ -801,7 +801,7 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
                          'completiontype' => COMPLETIONTYPE_ALL,
                          'courses' => array($that->courses[1], $that->courses[2]));
 
-        $that->data_generator->create_coursesets_in_program($that->program1, $detail);
+        $that->program_generator->legacy_add_coursesets_to_program($that->program1, $detail);
 
         // Reload the programs, because their content has changed.
         $that->program1 = new program($that->program1->id);
@@ -880,7 +880,7 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
                                              $that->courses[4],
                                              $that->courses[5]));
 
-        $that->data_generator->create_coursesets_in_program($that->program1, $detail);
+        $that->program_generator->legacy_add_coursesets_to_program($that->program1, $detail);
 
         // Reload the programs, because their content has changed.
         $that->program1 = new program($that->program1->id);
@@ -980,7 +980,7 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
         $that = $this->setup_common();
 
         // Create a competency based on courses 7 and 8.
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $that->data_generator->get_plugin_generator('totara_hierarchy');
         $competencyframework = $hierarchygenerator->create_comp_frame(array());
         $competencydata = array('frameworkid' => $competencyframework->id, 'aggregationmethod' => \competency::AGGREGATION_METHOD_ANY);
@@ -1001,7 +1001,7 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
                          'completiontype' => COMPLETIONTYPE_ALL,  // Competency aggregation used here - this all is ignored
                          'competency' => $competency);
 
-        $that->data_generator->create_coursesets_in_program($that->program1, $detail);
+        $that->program_generator->legacy_add_coursesets_to_program($that->program1, $detail);
 
         // Reload the programs, because their content has changed.
         $that->program1 = new program($that->program1->id);

@@ -271,7 +271,7 @@ class totara_competency_migrate_achievements_testcase extends advanced_testcase 
     public function test_multiple_users_and_competencies() {
         global $DB;
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $user1 = $this->getDataGenerator()->create_user();

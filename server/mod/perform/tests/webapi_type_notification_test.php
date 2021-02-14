@@ -45,7 +45,7 @@ class mod_perform_webapi_type_notification_testcase extends advanced_testcase {
     private function create_test_data(): array {
         $this->setAdminUser();
 
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $activity = $perform_generator->create_activity_in_container();
         $context = $activity->get_context();

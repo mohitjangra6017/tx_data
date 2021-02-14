@@ -206,9 +206,9 @@ abstract class hierarchy_item extends item {
     /**
      * Get hierarchy generator
      *
-     * @return \totara_hierarchy_generator
+     * @return \totara_hierarchy\testing\generator
      */
     public static function generator() {
-        return \phpunit_util::get_data_generator()->get_plugin_generator('totara_hierarchy');
+        return \totara_hierarchy\testing\generator::instance();
     }
 }

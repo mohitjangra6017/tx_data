@@ -38,7 +38,7 @@ class totara_hierarchy_organisation_dialog_content_hierarchy_get_framework_testc
     public function create_organisations(): stdClass {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $generator->get_plugin_generator("totara_hierarchy");
         $framework = $hierarchygenerator->create_framework("organisation", [
             'shortname' => 'Organisation framework 1'
@@ -68,7 +68,7 @@ class totara_hierarchy_organisation_dialog_content_hierarchy_get_framework_testc
         global $DB;
         $generator = $this->getDataGenerator();
 
-        /** @var totara_reportbuilder_generator $reportgenerator */
+        /** @var \totara_reportbuilder\testing\generator $reportgenerator */
         $reportgenerator = $generator->get_plugin_generator("totara_reportbuilder");
 
         $rid = $reportgenerator->create_default_custom_report((object)[

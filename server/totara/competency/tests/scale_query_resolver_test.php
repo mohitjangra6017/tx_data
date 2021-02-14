@@ -94,7 +94,7 @@ abstract class scale_query_resolver_test extends advanced_testcase {
             public $assignment1;
         };
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $data->scale = $hierarchy_generator->create_scale('comp');

@@ -85,6 +85,8 @@ class totara_reportbuilder_rb_catalogprograms_embedded_cache_testcase extends re
     protected function setUp(): void {
         parent::setup();
 
+        $program_generator = \totara_program\testing\generator::instance();
+
         // Common parts of test cases.
         // Create report record in database.
         $this->loadDataSet($this->createArrayDataSet(
@@ -92,10 +94,10 @@ class totara_reportbuilder_rb_catalogprograms_embedded_cache_testcase extends re
                   'report_builder_columns' => $this->report_builder_columns_data,
                   'report_builder_filters' => $this->report_builder_filters_data)));
 
-        $this->program1 = $this->getDataGenerator()->create_program(array('fullname'=> 'Intro'));
-        $this->program2 = $this->getDataGenerator()->create_program(array('fullname'=> 'Basics'));
-        $this->program3 = $this->getDataGenerator()->create_program(array('fullname'=> 'Advanced'));
-        $this->program4 = $this->getDataGenerator()->create_program(array('fullname'=> 'Pro'));
+        $this->program1 = $program_generator->create_program(array('fullname'=> 'Intro'));
+        $this->program2 = $program_generator->create_program(array('fullname'=> 'Basics'));
+        $this->program3 = $program_generator->create_program(array('fullname'=> 'Advanced'));
+        $this->program4 = $program_generator->create_program(array('fullname'=> 'Pro'));
     }
 
     /**

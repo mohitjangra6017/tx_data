@@ -31,7 +31,7 @@ class core_user_generator_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        /** @var core_user_generator $user_generator */
+        /** @var \core_user\testing\generator $user_generator */
         $user_generator =  $generator->get_plugin_generator('core_user');
 
         require_once("{$CFG->dirroot}/user/profile/lib.php");
@@ -54,7 +54,7 @@ class core_user_generator_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        /** @var core_user_generator $user_generator */
+        /** @var \core_user\testing\generator $user_generator */
         $user_generator =  $generator->get_plugin_generator('core_user');
 
         require_once("{$CFG->dirroot}/user/profile/lib.php");
@@ -77,7 +77,7 @@ class core_user_generator_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        /** @var core_user_generator $user_generator */
+        /** @var \core_user\testing\generator $user_generator */
         $user_generator =  $generator->get_plugin_generator('core_user');
 
         require_once("{$CFG->dirroot}/user/profile/lib.php");
@@ -100,7 +100,7 @@ class core_user_generator_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        /** @var core_user_generator $user_generator */
+        /** @var \core_user\testing\generator $user_generator */
         $user_generator =  $generator->get_plugin_generator('core_user');
 
         require_once("{$CFG->dirroot}/user/profile/lib.php");
@@ -123,7 +123,7 @@ class core_user_generator_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        /** @var core_user_generator $user_generator */
+        /** @var \core_user\testing\generator $user_generator */
         $user_generator =  $generator->get_plugin_generator('core_user');
 
         require_once("{$CFG->dirroot}/user/profile/lib.php");

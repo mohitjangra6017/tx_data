@@ -91,7 +91,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
     public function test_get_unansweredpolicies_draft() {
         $this->resetAfterTest();
 
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -122,7 +122,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
     public function test_get_unansweredpolicies_archived() {
         $this->resetAfterTest();
 
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -155,7 +155,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -258,7 +258,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -323,7 +323,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -465,7 +465,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
      */
     public function test_get_user_consent_language($name, $options, $expectedlang) {
         $this->resetAfterTest();
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $stringmanager = get_string_manager();
@@ -500,7 +500,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
     public function test_get_userconsenttable() {
         $this->resetAfterTest();
 
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -538,7 +538,7 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var \tool_sitepolicy_generator $generator */
+        /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [

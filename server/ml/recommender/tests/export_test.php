@@ -80,7 +80,7 @@ class ml_recommender_export_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -99,7 +99,7 @@ class ml_recommender_export_testcase extends advanced_testcase {
         // Create content within tenant.
         $this->setUser($user3->id);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article_4 = $article_generator->create_article([
             'access' => access::PUBLIC,
@@ -112,7 +112,7 @@ class ml_recommender_export_testcase extends advanced_testcase {
         ]);
 
         // Interactions.
-        /** @var ml_recommender_generator $recommendations_generator */
+        /** @var \ml_recommender\testing\generator $recommendations_generator */
         $recommendations_generator = $generator->get_plugin_generator('ml_recommender');
         $recommendations_generator->create_recommender_interaction(2, $article_4->get_id(), 'engage_article');
         $recommendations_generator->create_recommender_interaction($user3->id, $article_4->get_id(), 'engage_article');

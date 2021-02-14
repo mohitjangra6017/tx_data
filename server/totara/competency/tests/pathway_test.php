@@ -64,7 +64,7 @@ class totara_competency_pathway_testcase extends \advanced_testcase {
      * Test leads_to_proficiency with SINGLE_VALUE type pathways
      */
     public function test_leads_to_proficiency_single_value() {
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $scale = $hierarchy_generator->create_scale(
             'comp',

@@ -36,7 +36,7 @@ class totara_engage_userdata_article_testcase extends advanced_testcase {
         $user_two = $gen->create_user();
         $this->setUser($user_one);
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
         $articlegen->create_article(['name' => 'article1']);
@@ -83,7 +83,7 @@ class totara_engage_userdata_article_testcase extends advanced_testcase {
         $user_one = $gen->create_user();
         $this->setUser($user_one);
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
         $articlegen->create_article(['name' => 'article1']);

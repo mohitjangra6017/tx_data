@@ -31,12 +31,12 @@ class engage_article_webapi_find_users_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
     /**
-     * @return engage_article_generator
+     * @return \engage_article\testing\generator
      */
-    private function get_article_generator(): engage_article_generator {
+    private function get_article_generator(): \engage_article\testing\generator {
         $generator = $this->getDataGenerator();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         return $article_generator;
     }
@@ -60,12 +60,12 @@ class engage_article_webapi_find_users_testcase extends advanced_testcase {
     }
 
     /**
-     * @return totara_tenant_generator
+     * @return \totara_tenant\testing\generator
      */
-    private function get_tenant_generator(): totara_tenant_generator {
+    private function get_tenant_generator(): \totara_tenant\testing\generator {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

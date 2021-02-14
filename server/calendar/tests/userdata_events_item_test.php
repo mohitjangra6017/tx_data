@@ -119,17 +119,17 @@ class core_calendar_userdata_events_testcase extends advanced_testcase {
     private function make_course_module_events($data): stdClass {
         $this->setAdminUser();
         $extradata = new stdClass();
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
-        /** @var mod_chat_generator $chatgenerator */
+        /** @var \mod_chat\testing\generator $chatgenerator */
         $chatgenerator = $this->getDataGenerator()->get_plugin_generator('mod_chat');
-        /** @var mod_feedback_generator $feedbackgenerator */
+        /** @var \mod_feedback\testing\generator $feedbackgenerator */
         $feedbackgenerator = $this->getDataGenerator()->get_plugin_generator('mod_feedback');
-        /** @var mod_quiz_generator $quizgenerator */
+        /** @var \mod_quiz\testing\generator $quizgenerator */
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
-        /** @var mod_lesson_generator $lessongenerator */
+        /** @var \mod_lesson\testing\generator $lessongenerator */
         $lessongenerator = $this->getDataGenerator()->get_plugin_generator('mod_lesson');
-        /** @var mod_workshop_generator $workshopgenerator */
+        /** @var \mod_workshop\testing\generator $workshopgenerator */
         $workshopgenerator = $this->getDataGenerator()->get_plugin_generator('mod_workshop');
 
         $course = $this->getDataGenerator()->create_course();

@@ -601,9 +601,7 @@ class totara_competency_aggregation_users_table_testcase extends \advanced_testc
         $sink = $this->redirectEvents();
         // The assignment table's foreign keys require us to create some actual competencies and users
 
-        /** @var totara_competency_generator $competency_generator */
-        $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
-        /** @var totara_competency_assignment_generator $assignment_generator */
+        $competency_generator = \totara_competency\testing\generator::instance();
         $assignment_generator = $competency_generator->assignment_generator();
 
         $competencies = [];

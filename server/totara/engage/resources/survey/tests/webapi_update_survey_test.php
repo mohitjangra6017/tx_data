@@ -34,7 +34,7 @@ class engage_survey_webapi_update_survey_testcase extends advanced_testcase {
      */
     public function test_survey_answer_validation(): void {
         $this->setAdminUser();
-        /** @var totara_topic_generator $topicgen */
+        /** @var \totara_topic\testing\generator $topicgen */
         $topicgen = $this->getDataGenerator()->get_plugin_generator('totara_topic');
         $topics[] = $topicgen->create_topic('topic1')->get_id();
         $topics[] = $topicgen->create_topic('topic2')->get_id();
@@ -96,7 +96,7 @@ class engage_survey_webapi_update_survey_testcase extends advanced_testcase {
      */
     public function test_survey_question_validation_via_graphql(): void {
         $this->setAdminUser();
-        /** @var totara_topic_generator $topicgen */
+        /** @var \totara_topic\testing\generator $topicgen */
         $topicgen = $this->getDataGenerator()->get_plugin_generator('totara_topic');
         $topics[] = $topicgen->create_topic('topic1')->get_id();
         $topics[] = $topicgen->create_topic('topic2')->get_id();

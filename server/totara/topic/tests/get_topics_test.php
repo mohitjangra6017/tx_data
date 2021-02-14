@@ -31,7 +31,7 @@ class totara_topic_get_topics_testcase extends advanced_testcase {
      * @return void
      */
     private function generate_topics(int $count = 2): void {
-        /** @var totara_topic_generator $gen */
+        /** @var \totara_topic\testing\generator $gen */
         $gen = $this->getDataGenerator()->get_plugin_generator('totara_topic');
 
         for ($i = 0; $i < $count; $i++) {

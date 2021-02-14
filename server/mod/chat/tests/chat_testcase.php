@@ -31,7 +31,7 @@ abstract class chat_testcase extends advanced_testcase {
     /**
      * Shorthand for data generator
      *
-     * @return testing_data_generator
+     * @return \core\testing\generator
      */
     protected function generator() {
         return $this->getDataGenerator();

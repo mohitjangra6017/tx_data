@@ -47,7 +47,7 @@ class engage_survey_share_testcase extends advanced_testcase {
      */
     public function test_create_share() {
         $gen = $this->getDataGenerator();
-        /** @var engage_survey_generator $articlegen */
+        /** @var \engage_survey\testing\generator $articlegen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         // Create users.
@@ -94,7 +94,7 @@ class engage_survey_share_testcase extends advanced_testcase {
      */
     public function test_total_sharers() {
         $gen = $this->getDataGenerator();
-        /** @var engage_survey_generator $articlegen */
+        /** @var \engage_survey\testing\generator $articlegen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         // Create users.
@@ -129,7 +129,7 @@ class engage_survey_share_testcase extends advanced_testcase {
      */
     public function test_total_recipients() {
         $gen = $this->getDataGenerator();
-        /** @var engage_survey_generator $articlegen */
+        /** @var \engage_survey\testing\generator $articlegen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         // Create users.
@@ -200,7 +200,7 @@ class engage_survey_share_testcase extends advanced_testcase {
      */
     public function test_recipients() {
         $gen = $this->getDataGenerator();
-        /** @var engage_survey_generator $articlegen */
+        /** @var \engage_survey\testing\generator $articlegen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         // Create users.
@@ -242,7 +242,7 @@ class engage_survey_share_testcase extends advanced_testcase {
      */
     public function test_clone() {
         $gen = $this->getDataGenerator();
-        /** @var engage_survey_generator $articlegen */
+        /** @var \engage_survey\testing\generator $articlegen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         // Create users.
@@ -304,7 +304,7 @@ class engage_survey_share_testcase extends advanced_testcase {
      */
     public function test_capabilities() {
         $gen = $this->getDataGenerator();
-        /** @var engage_survey_generator $articlegen */
+        /** @var \engage_survey\testing\generator $articlegen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         $users = $surveygen->create_users(2);

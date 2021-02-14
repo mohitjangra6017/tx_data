@@ -177,7 +177,7 @@ class mod_perform_webapi_resolver_mutation_delete_section_testcase extends advan
         } else {
             self::setAdminUser();
         }
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $data = new stdClass();
 

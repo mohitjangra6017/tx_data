@@ -120,7 +120,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
     /**
      * Returns facetoface plugin generator.
      *
-     * @return mod_facetoface_generator
+     * @return \mod_facetoface\testing\generator
      * @throws coding_exception
      */
     private function getSeminarGenerator() {
@@ -280,7 +280,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
         $this->getDataGenerator()->enrol_user($student1->id, $course->id, $studentrole->id);
         $this->getDataGenerator()->enrol_user($student2->id, $course->id, $studentrole->id);
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $facetofacedata = array(
@@ -970,7 +970,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
 
         $course = $this->getDataGenerator()->create_course();
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $facetofacedata = array(
@@ -1012,7 +1012,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
 
         $course = $this->getDataGenerator()->create_course();
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $facetofacedata = array(
@@ -1021,7 +1021,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
         );
         $facetoface = $facetofacegenerator->create_instance($facetofacedata);
 
-        /** @var totara_customfield_generator $customfieldgenerator */
+        /** @var \totara_customfield\testing\generator $customfieldgenerator */
         $customfieldgenerator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
 
         $customfields = array();
@@ -1138,7 +1138,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
 
         $course = $this->getDataGenerator()->create_course();
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $facetofacedata = array(
@@ -1147,7 +1147,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
         );
         $facetoface = $facetofacegenerator->create_instance($facetofacedata);
 
-        /** @var totara_customfield_generator $customfieldgenerator */
+        /** @var \totara_customfield\testing\generator $customfieldgenerator */
         $customfieldgenerator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
 
         // Use existing room custom fields.
@@ -1492,7 +1492,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
 
         $course = $this->getDataGenerator()->create_course();
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $facetofacedata = array(
@@ -1665,7 +1665,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
         $this->getDataGenerator()->enrol_user($student1->id, $course->id, $studentrole->id);
         $this->getDataGenerator()->enrol_user($student2->id, $course->id, $studentrole->id);
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $facetofacedata = array(
@@ -2130,7 +2130,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
         global $DB;
         $this->setAdminUser();
 
-        /** @var mod_facetoface_generator $generator */
+        /** @var \mod_facetoface\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $course = $this->getDataGenerator()->create_course();
@@ -2245,7 +2245,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
         $this->getDataGenerator()->enrol_user($student2->id, $course->id, $studentrole->id);
         $this->getDataGenerator()->enrol_user($student3->id, $course->id, $studentrole->id);
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $facetofacedata = array(
@@ -2319,7 +2319,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         $this->getDataGenerator()->enrol_user($student1->id, $course->id, $studentrole->id);
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $facetofacedata = array(
@@ -2461,7 +2461,7 @@ class mod_facetoface_notifications_testcase extends mod_facetoface_facetoface_te
         $course = $this->getDataGenerator()->create_course();
 
         /**
-         * @var \mod_facetoface_generator $seminargen
+         * @var \mod_facetoface\testing\generator $seminargen
          */
         $seminargen = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $seminarrec = $seminargen->create_instance([

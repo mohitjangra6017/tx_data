@@ -101,8 +101,7 @@ if ($total < $number_of_user) {
     // There are not enough users
     $different = ($number_of_user - $total);
 
-    require_once("{$CFG->dirroot}/lib/testing/classes/util.php");
-    $generator = testing_util::get_data_generator();
+    $generator = \core\testing\generator::instance();
 
     for ($i = 0; $i < $different; $i++) {
         $generator->create_user();

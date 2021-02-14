@@ -68,7 +68,7 @@ class tool_totara_sync_pos_csv_customfield_types_testcase extends advanced_testc
     }
 
     private function set_up_framework() {
-        /* @var totara_hierarchy_generator $hierarchy_generator */
+        /* @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $hierarchy_generator->create_framework(
@@ -78,7 +78,7 @@ class tool_totara_sync_pos_csv_customfield_types_testcase extends advanced_testc
     }
 
     private function set_up_type() {
-        /* @var totara_hierarchy_generator $hierarchy_generator */
+        /* @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         return $hierarchy_generator->create_hierarchy_type(

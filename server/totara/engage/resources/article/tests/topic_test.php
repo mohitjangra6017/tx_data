@@ -33,11 +33,11 @@ class engage_article_topic_testcase extends advanced_testcase {
         $this->setAdminUser();
         $gen = $this->getDataGenerator();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article = $articlegen->create_article();
 
-        /** @var totara_topic_generator $topicgen */
+        /** @var \totara_topic\testing\generator $topicgen */
         $topicgen = $gen->get_plugin_generator('totara_topic');
         $topics = [];
 

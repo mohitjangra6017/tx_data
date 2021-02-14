@@ -37,8 +37,8 @@ class mod_perform_webapi_resolver_query_element_testcase extends advanced_testca
     public function test_get_element(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $element = $perform_generator->create_element();
 
         $returned_element = $this->resolve_graphql_query(self::QUERY, ['element_id' => $element->id]);
@@ -49,8 +49,8 @@ class mod_perform_webapi_resolver_query_element_testcase extends advanced_testca
     public function test_successful_ajax_call(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $element = $perform_generator->create_element();
 
         $result = $this->parsed_graphql_operation(self::QUERY, ['element_id' => $element->id]);
@@ -63,8 +63,8 @@ class mod_perform_webapi_resolver_query_element_testcase extends advanced_testca
     public function test_failed_ajax_query(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $element = $perform_generator->create_element();
 
         $args = ['element_id' => $element->id];

@@ -51,7 +51,7 @@ class core_blog_userdata_blog_testcase extends advanced_testcase {
             public $systemcontext;
         };
         $data->systemcontext = context_system::instance();
-        /** @var core_blog_generator $bloggenerator */
+        /** @var \core_blog\testing\generator $bloggenerator */
         $bloggenerator = $this->getDataGenerator()->get_plugin_generator('core_blog');
         $this->setAdminUser();
 
@@ -136,7 +136,7 @@ class core_blog_userdata_blog_testcase extends advanced_testcase {
     public function test_purge_removes_files() {
         $data = $this->get_data();
 
-        /** @var core_blog_generator $bloggenerator */
+        /** @var \core_blog\testing\generator $bloggenerator */
         $bloggenerator = $this->getDataGenerator()->get_plugin_generator('core_blog');
 
         $newblog = $bloggenerator->create_instance([
@@ -334,7 +334,7 @@ class core_blog_userdata_blog_testcase extends advanced_testcase {
         $this->assertEquals(count($data->deleteduserblogs), $deletedcount);
 
         // Adding more blogs also increases the counts.
-        /** @var core_blog_generator $bloggenerator */
+        /** @var \core_blog\testing\generator $bloggenerator */
         $bloggenerator = $this->getDataGenerator()->get_plugin_generator('core_blog');
 
         $data->activeuserblogs[] = $bloggenerator->create_instance(['userid' => $data->activeuser->id]);

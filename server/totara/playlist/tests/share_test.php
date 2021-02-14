@@ -46,7 +46,7 @@ class totara_playlist_share_testcase extends advanced_testcase {
      */
     public function test_create_share() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         // Create users.
@@ -98,7 +98,7 @@ class totara_playlist_share_testcase extends advanced_testcase {
      */
     public function test_total_sharers() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         // Create users.
@@ -138,7 +138,7 @@ class totara_playlist_share_testcase extends advanced_testcase {
      */
     public function test_total_recipients() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         // Create users.
@@ -218,7 +218,7 @@ class totara_playlist_share_testcase extends advanced_testcase {
      */
     public function test_recipients() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         // Create users.
@@ -264,7 +264,7 @@ class totara_playlist_share_testcase extends advanced_testcase {
      */
     public function test_clone() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         // Create users.
@@ -327,7 +327,7 @@ class totara_playlist_share_testcase extends advanced_testcase {
      */
     public function test_capabilities() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         $users = $playlistgen->create_users(2);

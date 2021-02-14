@@ -35,16 +35,16 @@ class totara_plan_components_testcase extends advanced_testcase {
     /** @var phpunit_message_sink $messagesink */
     private $messagesink;
 
-    /** @var testing_data_generator */
+    /** @var \core\testing\generator */
     private $data_generator;
 
-    /** @var totara_plan_generator */
+    /** @var \totara_plan\testing\generator */
     private $plan_generator;
 
-    /** @var  totara_program_generator */
+    /** @var  \totara_program\testing\generator */
     private $program_generator;
 
-    /** @var  totara_evidence_generator */
+    /** @var  \totara_evidence\testing\generator */
     private $evidence_generator;
 
     protected function setUp(): void {
@@ -525,7 +525,7 @@ class totara_plan_components_testcase extends advanced_testcase {
         $user = $datagenerator->create_user();
         $this->setUser($user);
 
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $datagenerator->get_plugin_generator('totara_plan');
         $enddate = time() + DAYSECS;
         $planrecord = $plangenerator->create_learning_plan(array('userid' => $user->id, 'enddate' => $enddate));
@@ -535,7 +535,7 @@ class totara_plan_components_testcase extends advanced_testcase {
         // should give us the results that we're checking for.
         $plan->initialize_settings();
 
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $datagenerator->get_plugin_generator('totara_program');
         $program1 = $programgenerator->create_program();
 
@@ -578,7 +578,7 @@ class totara_plan_components_testcase extends advanced_testcase {
         $user = $datagenerator->create_user();
         $this->setUser($user);
 
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $datagenerator->get_plugin_generator('totara_plan');
         $enddate = time() + DAYSECS;
         $planrecord = $plangenerator->create_learning_plan(array('userid' => $user->id, 'enddate' => $enddate));
@@ -588,7 +588,7 @@ class totara_plan_components_testcase extends advanced_testcase {
         $plan->initialize_settings();
         $plan->settings['program_duedatemode'] = DP_DUEDATES_REQUIRED;
 
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $datagenerator->get_plugin_generator('totara_program');
         $program1 = $programgenerator->create_program();
 
@@ -628,7 +628,7 @@ class totara_plan_components_testcase extends advanced_testcase {
         $user = $datagenerator->create_user();
         $this->setUser($user);
 
-        /* @var totara_plan_generator $plangenerator */
+        /* @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $datagenerator->get_plugin_generator('totara_plan');
         $enddate = time() + DAYSECS * 100; // Further in the future than the program due date.
         $planrecord = $plangenerator->create_learning_plan(array('userid' => $user->id, 'enddate' => $enddate));

@@ -33,22 +33,10 @@ require_once($CFG->dirroot . '/totara/evidence/tests/evidence_testcase.php');
  * @group totara_evidence
  */
 class totara_evidence_file_testcase extends totara_evidence_testcase {
-
-    /**
-     * @var totara_evidence_generator
-     */
-    protected $generator;
-
     public function setUp(): void {
         parent::setUp();
         $this->generator()->set_create_files(true);
-        $this->generator = $this->generator();
         self::setAdminUser();
-    }
-
-    protected function tearDown(): void {
-        parent::tearDown();
-        $this->generator = null;
     }
 
     /**
@@ -57,8 +45,8 @@ class totara_evidence_file_testcase extends totara_evidence_testcase {
     public function test_filearea_files_deleted_on_item_deletion(): void {
         $this->assertEquals(0, $this->get_filearea_count(customfield_area\evidence::get_fileareas()[1]));
 
-        $this->generator->create_evidence_type(['field_types' => ['file']]);
-        $item = $this->generator->create_evidence_item();
+        $this->generator()->create_evidence_type(['field_types' => ['file']]);
+        $item = $this->generator()->create_evidence_item();
         $this->assertEquals(1, $this->get_filearea_count(customfield_area\evidence::get_fileareas()[1]));
 
         $item->delete();
@@ -71,8 +59,8 @@ class totara_evidence_file_testcase extends totara_evidence_testcase {
     public function test_textarea_files_deleted_on_item_deletion(): void {
         $this->assertEquals(0, $this->get_filearea_count(customfield_area\evidence::get_fileareas()[0]));
 
-        $this->generator->create_evidence_type(['field_types' => ['textarea']]);
-        $item = $this->generator->create_evidence_item();
+        $this->generator()->create_evidence_type(['field_types' => ['textarea']]);
+        $item = $this->generator()->create_evidence_item();
         $this->assertEquals(1, $this->get_filearea_count(customfield_area\evidence::get_fileareas()[0]));
 
         $item->delete();
@@ -85,7 +73,7 @@ class totara_evidence_file_testcase extends totara_evidence_testcase {
     public function test_textarea_files_deleted_on_type_deletion(): void {
         $this->assertEquals(0, $this->get_filearea_count('textarea'));
 
-        $type = $this->generator->create_evidence_type(['field_types' => ['textarea']]);
+        $type = $this->generator()->create_evidence_type(['field_types' => ['textarea']]);
         $this->assertEquals(1, $this->get_filearea_count('textarea'));
 
         $type->delete();
@@ -97,9 +85,9 @@ class totara_evidence_file_testcase extends totara_evidence_testcase {
      */
     public function test_observer_user_deleted(): void {
         global $DB;
-        $this->generator->create_evidence_type(['field_types' => ['file', 'textarea']]);
-        $user_one = $DB->get_record('user', ['id' => $this->generator->create_evidence_user()->id]);
-        $user_two = $DB->get_record('user', ['id' => $this->generator->create_evidence_user()->id]);
+        $this->generator()->create_evidence_type(['field_types' => ['file', 'textarea']]);
+        $user_one = $DB->get_record('user', ['id' => $this->generator()->create_evidence_user()->id]);
+        $user_two = $DB->get_record('user', ['id' => $this->generator()->create_evidence_user()->id]);
 
         /**
          * @var evidence_item[] $user_one_evidence
@@ -109,8 +97,8 @@ class totara_evidence_file_testcase extends totara_evidence_testcase {
         $user_two_evidence = [];
         $evidence_count = 3;
         for ($i = 0; $i < $evidence_count; $i++) {
-            $user_one_evidence[] = $this->generator->create_evidence_item_entity(['user_id' => $user_one->id]);
-            $user_two_evidence[] = $this->generator->create_evidence_item_entity(['user_id' => $user_two->id]);
+            $user_one_evidence[] = $this->generator()->create_evidence_item_entity(['user_id' => $user_one->id]);
+            $user_two_evidence[] = $this->generator()->create_evidence_item_entity(['user_id' => $user_two->id]);
         }
 
         for ($i = 0; $i < $evidence_count; $i++) {

@@ -66,7 +66,7 @@ class webapi_resolver_type_achievement_configuration_testcase extends advanced_t
             public $active_pathway;
         };
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $data->comp = $competency_generator->create_competency();
         $data->config = new achievement_configuration_model($data->comp);

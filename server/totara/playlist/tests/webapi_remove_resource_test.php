@@ -163,19 +163,19 @@ class totara_playlist_webapi_remove_resource_testcase extends advanced_testcase 
     }
 
     private function create_playlist(?array $params = []): \totara_playlist\playlist {
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $this->getDataGenerator()->get_plugin_generator('totara_playlist');
         return $playlist_generator->create_playlist($params);
     }
 
     private function create_article(?array $params = []): article {
-        /** @var engage_article_generator $generator */
+        /** @var \engage_article\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('engage_article');
         return $generator->create_article($params);
     }
 
     private function create_share(\totara_engage\share\shareable $item, int $fromuserid, array $recipients, $ownerid = null) {
-        /** @var totara_engage_generator $generator */
+        /** @var \totara_engage\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_engage');
         return $generator->share_item($item, $fromuserid, $recipients, $ownerid);
     }

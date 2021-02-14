@@ -63,7 +63,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
      * @return overall_aggregation
      */
     private function create_aggregation_method_achieved_by($pathway_achievements): overall_aggregation {
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $test_aggregation = new test_aggregation();
@@ -85,7 +85,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
     private function generate_active_expanded_user_assignments($competency, $users, $assignments_per_user = 1) {
         global $DB;
 
-        /** @var totara_competency_assignment_generator $assignment_generator */
+        /** @var \totara_competency\testing\assignment_generator $assignment_generator */
         $assignment_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency')->assignment_generator();
 
         $assignment_ids = [];
@@ -107,7 +107,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
     }
 
     public function test_with_no_users() {
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $compfw = $hierarchy_generator->create_comp_frame([]);
         $comp = $hierarchy_generator->create_comp(['frameworkid' => $compfw->id]);
@@ -125,7 +125,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
     }
 
     public function test_with_one_user_requiring_completion() {
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 
@@ -169,7 +169,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
     public function test_with_one_user_requiring_completion_via_two_pathways() {
         global $DB;
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 
@@ -235,7 +235,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
     public function test_one_user_from_two_via_records_to_one() {
         global $DB;
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 
@@ -306,7 +306,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
     public function test_one_user_from_having_value_to_null() {
         global $DB;
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 
@@ -398,7 +398,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
     public function test_one_user_with_change_in_scale_value() {
         global $DB;
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 
@@ -479,7 +479,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
     public function test_with_one_user_with_two_assignments_requiring_completion() {
         global $DB;
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 
@@ -577,7 +577,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
         // any comp records with active assignments should become superseded and replaced with a new one
         // (which is just the case if the scale value they had has gone from proficient to not or vice versa).
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 
@@ -717,7 +717,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
     public function test_archived_assignment_not_updated() {
         global $DB;
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 
@@ -807,7 +807,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
     public function test_superseded_record_not_updated() {
         global $DB;
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 
@@ -918,7 +918,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
 
         global $CFG;
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 
@@ -990,7 +990,7 @@ class totara_competency_achievement_aggregator_testcase extends advanced_testcas
 
         global $CFG;
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 

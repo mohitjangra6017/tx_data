@@ -38,12 +38,12 @@ class scale_value_test extends \advanced_testcase {
 
     /**
      * Test data Generator.
-     * @var testing_data_generator
+     * @var \core\testing\generator
     */
     private $generator;
     /**
      * Test competency data Generator.
-     * @var component_generator_base
+     * @var \totara_competency\testing\generator
     */
     private $competency_generator;
 
@@ -173,8 +173,6 @@ class scale_value_test extends \advanced_testcase {
      * Sets up generators.
      *
      * @return void
-     *
-     * @throws coding_exception
      */
     private function setup_generators(): void {
         $this->generator = $this->getDataGenerator();

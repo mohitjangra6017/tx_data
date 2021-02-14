@@ -35,7 +35,7 @@ class engage_survey_answer_question_testcase extends advanced_testcase {
         $user = $gen->create_user();
         $this->setUser($user);
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
         $survey = $surveygen->create_survey();
 

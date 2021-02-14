@@ -50,7 +50,7 @@ class core_course_backup_with_history_completion_testcase extends advanced_testc
         );
 
         // Setting up the completion criteria of the course
-        /** @var \core_completion_generator $completiongen */
+        /** @var \core_completion\testing\generator $completiongen */
         $completiongen = $gen->get_plugin_generator('core_completion');
         $completiongen->set_completion_criteria($course, [COMPLETION_CRITERIA_TYPE_SELF => 1]);
         $userstobechecked = [];
@@ -130,7 +130,7 @@ class core_course_backup_with_history_completion_testcase extends advanced_testc
             ]
         );
 
-        /** @var \core_completion_generator $completiongen */
+        /** @var \core_completion\testing\generator $completiongen */
         $completiongen = $gen->get_plugin_generator('core_completion');
         $completiongen->set_completion_criteria($course, [COMPLETION_CRITERIA_TYPE_SELF => 1]);
         $userstobechecked = [];

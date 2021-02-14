@@ -37,7 +37,7 @@ class container_workspace_fetch_deleted_suspended_member_request_testcase extend
         // Login as user one and create a private workspace.
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 
@@ -78,7 +78,7 @@ class container_workspace_fetch_deleted_suspended_member_request_testcase extend
         // Log in as first user and create a private workspace.
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 

@@ -46,7 +46,7 @@ class totara_competency_competency_aggregator_users_source_testcase extends \adv
         $user2 = $this->getDataGenerator()->create_user();
         $user3 = $this->getDataGenerator()->create_user();
 
-        /** @var totara_competency_assignment_generator $assignment_generator */
+        /** @var \totara_competency\testing\assignment_generator $assignment_generator */
         $assignment_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency')->assignment_generator();
         $assignment1 = $assignment_generator->create_user_assignment($data->competency->id, $user1->id);
         $assignment3 = $assignment_generator->create_user_assignment($data->control_competency->id, $user3->id);
@@ -175,7 +175,7 @@ class totara_competency_competency_aggregator_users_source_testcase extends \adv
 
         // Now make sure we have legacy assignments for the users
 
-        /** @var totara_competency_assignment_generator $assignment_generator */
+        /** @var \totara_competency\testing\assignment_generator $assignment_generator */
         $assignment_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency')->assignment_generator();
         $assignment1 = $assignment_generator->create_user_assignment(
             $data->competency->id,
@@ -229,7 +229,7 @@ class totara_competency_competency_aggregator_users_source_testcase extends \adv
 
         // Now set a value in a learning plan for User 2
 
-        /** @var totara_plan_generator $plan_generator */
+        /** @var \totara_plan\testing\generator $plan_generator */
         $plan_generator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
         $plan = $plan_generator->create_learning_plan(['userid' => $user2->id]);
         $plan_generator->add_learning_plan_competency($plan->id, $data->competency->id);
@@ -316,7 +316,7 @@ class totara_competency_competency_aggregator_users_source_testcase extends \adv
         // We don't want the create event fired here
         $sink = $this->redirectEvents();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator =  $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $scale = $hierarchy_generator->create_scale(

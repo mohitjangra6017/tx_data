@@ -35,8 +35,7 @@ class totara_userdata_task_purge_suspended_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $type = $generator->create_purge_type(array('userstatus' => target_user::STATUS_SUSPENDED, 'allowsuspended' => 1, 'items' => 'core_user-additionalnames'));
         $user = $this->getDataGenerator()->create_user(array('suspended' => 1));

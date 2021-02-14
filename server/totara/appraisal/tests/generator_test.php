@@ -27,7 +27,7 @@ require_once($CFG->dirroot.'/totara/appraisal/tests/appraisal_testcase.php');
 
 class totara_appraisal_generator_testcase extends advanced_testcase {
 
-    /** @var totara_appraisal_generator $appraisalgenerator */
+    /** @var \totara_appraisal\testing\generator $appraisalgenerator */
     public $appraisalgenerator = null;
     public $appraisal = null;
 
@@ -45,7 +45,7 @@ class totara_appraisal_generator_testcase extends advanced_testcase {
         $this->resetAfterTest();
 
         // All tests need the generator and an appraisal object.
-        $this->appraisalgenerator = $this->getDataGenerator()->get_plugin_generator('totara_appraisal');
+        $this->appraisalgenerator = \totara_appraisal\testing\generator::instance();
         $this->appraisal = $this->appraisalgenerator->create_appraisal();
     }
 
@@ -127,7 +127,7 @@ class totara_appraisal_generator_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_cohort_generator $cohortgenerator */
+        /** @var \totara_cohort\testing\generator $cohortgenerator */
         $cohortgenerator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
 
         // Create a learner account and assign it to a cohort.
@@ -210,7 +210,7 @@ class totara_appraisal_generator_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_cohort_generator $cohortgenerator */
+        /** @var \totara_cohort\testing\generator $cohortgenerator */
         $cohortgenerator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
 
         $appraisalid = $this->appraisal->id;

@@ -49,7 +49,7 @@ class totara_question_progfromplan_export_testcase extends advanced_testcase {
 
         $questiontype = 'progfromplan';
 
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $prog1 = $programgenerator->create_program();
         $prog2 = $programgenerator->create_program();
@@ -62,7 +62,7 @@ class totara_question_progfromplan_export_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         // Competency plan assignments.
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
         $planrecord1 = $plangenerator->create_learning_plan(array('userid' => $user1->id));
         $planrecord2 = $plangenerator->create_learning_plan(array('userid' => $user1->id));

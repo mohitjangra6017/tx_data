@@ -85,7 +85,8 @@ class totara_reportbuilder_rb_plan_programs_embedded_cache_testcase extends repo
         $this->resetAfterTest(true);
         $this->cleanup();
 
-        $this->getDataGenerator()->reset();
+        $program_generator = \totara_program\testing\generator::instance();
+
         // Common parts of test cases:
         // Create report record in database
         $this->loadDataSet($this->createArrayDataSet(array('report_builder' => array($this->report_builder_data),
@@ -96,15 +97,15 @@ class totara_reportbuilder_rb_plan_programs_embedded_cache_testcase extends repo
         $this->user3 = $this->getDataGenerator()->create_user();
         $this->user4 = $this->getDataGenerator()->create_user();
 
-        $this->program1 = $this->getDataGenerator()->create_program();
-        $this->program2 = $this->getDataGenerator()->create_program();
-        $this->program3 = $this->getDataGenerator()->create_program();
-        $this->program4 = $this->getDataGenerator()->create_program();
+        $this->program1 = $program_generator->create_program(['fullname' => 'Program 1']);
+        $this->program2 = $program_generator->create_program(['fullname' => 'Program 2']);
+        $this->program3 = $program_generator->create_program(['fullname' => 'Program 3']);
+        $this->program4 = $program_generator->create_program(['fullname' => 'Program 4']);
 
-        $this->getDataGenerator()->assign_program($this->program1->id, array($this->user1->id));
-        $this->getDataGenerator()->assign_program($this->program2->id, array($this->user2->id));
-        $this->getDataGenerator()->assign_program($this->program3->id, array($this->user1->id, $this->user2->id));
-        $this->getDataGenerator()->assign_program($this->program4->id, array($this->user2->id));
+        $program_generator->assign_program($this->program1->id, array($this->user1->id));
+        $program_generator->assign_program($this->program2->id, array($this->user2->id));
+        $program_generator->assign_program($this->program3->id, array($this->user1->id, $this->user2->id));
+        $program_generator->assign_program($this->program4->id, array($this->user2->id));
 
         $syscontext = context_system::instance();
 

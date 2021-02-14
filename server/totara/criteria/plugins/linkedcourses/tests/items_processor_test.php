@@ -58,7 +58,7 @@ class criteria_linkedcourses_items_processor_testcase extends advanced_testcase 
     public function test_update_items_no_data() {
         global $DB;
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $compfw = $hierarchy_generator->create_comp_frame([]);
         $comp = $hierarchy_generator->create_comp(['frameworkid' => $compfw->id]);
@@ -77,7 +77,7 @@ class criteria_linkedcourses_items_processor_testcase extends advanced_testcase 
     public function test_update_items_criteria_with_no_courses() {
         global $DB;
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $compfw = $hierarchy_generator->create_comp_frame([]);
         $comp = $hierarchy_generator->create_comp(['frameworkid' => $compfw->id]);
@@ -112,7 +112,7 @@ class criteria_linkedcourses_items_processor_testcase extends advanced_testcase 
         // We sink the events to prevent observer interference
         $sink = $this->redirectEvents();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $compfw = $hierarchy_generator->create_comp_frame([]);
         $comp = $hierarchy_generator->create_comp(['frameworkid' => $compfw->id]);
@@ -150,7 +150,7 @@ class criteria_linkedcourses_items_processor_testcase extends advanced_testcase 
         // We sink the events to prevent observer interference
         $sink = $this->redirectEvents();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $compfw = $hierarchy_generator->create_comp_frame([]);
         $comp = $hierarchy_generator->create_comp(['frameworkid' => $compfw->id]);
@@ -218,7 +218,7 @@ class criteria_linkedcourses_items_processor_testcase extends advanced_testcase 
         // We sink the events to prevent observer interference
         $sink = $this->redirectEvents();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $compfw = $hierarchy_generator->create_comp_frame([]);
         $comp = $hierarchy_generator->create_comp(['frameworkid' => $compfw->id]);
@@ -262,13 +262,13 @@ class criteria_linkedcourses_items_processor_testcase extends advanced_testcase 
         // We sink the events to prevent observer interference
         $sink = $this->redirectEvents();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $compfw = $hierarchy_generator->create_comp_frame([]);
         $comp = $hierarchy_generator->create_comp(['frameworkid' => $compfw->id]);
         $competency = new competency($comp->id);
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $assign_generator = $competency_generator->assignment_generator();
         $user1 = $assign_generator->create_user();
@@ -319,7 +319,7 @@ class criteria_linkedcourses_items_processor_testcase extends advanced_testcase 
         // We sink the events to prevent observer interference
         $sink = $this->redirectEvents();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $compfw = $hierarchy_generator->create_comp_frame([]);
         $comp1 = $hierarchy_generator->create_comp(['frameworkid' => $compfw->id]);
@@ -368,7 +368,7 @@ class criteria_linkedcourses_items_processor_testcase extends advanced_testcase 
         // We sink the events to prevent observer interference
         $sink = $this->redirectEvents();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $compfw = $hierarchy_generator->create_comp_frame([]);
         $comp1 = $hierarchy_generator->create_comp(['frameworkid' => $compfw->id]);
@@ -376,7 +376,7 @@ class criteria_linkedcourses_items_processor_testcase extends advanced_testcase 
         $competency1 = new competency($comp1->id);
         $competency2 = new competency($comp2->id);
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
 

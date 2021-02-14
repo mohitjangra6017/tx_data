@@ -46,10 +46,9 @@ class mod_lti_generator_testcase extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
 
         /*
-         * @var mod_lti_generator $generator
+         * @var \mod_lti\testing\generator $generator
          */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_lti');
-        $this->assertInstanceOf('mod_lti_generator', $generator);
         $this->assertEquals('lti', $generator->get_modulename());
 
         $generator->create_instance(array('course' => $course->id));

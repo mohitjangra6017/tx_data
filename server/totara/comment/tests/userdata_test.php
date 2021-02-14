@@ -44,7 +44,7 @@ class totara_comment_userdata_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $this->setUser($user_one);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
 
         // Now start creating a comment
@@ -103,7 +103,7 @@ class totara_comment_userdata_testcase extends advanced_testcase {
         $this->setUser($user_one);
         $comments = [];
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
 
         // Start creating 5 comments of an instance.

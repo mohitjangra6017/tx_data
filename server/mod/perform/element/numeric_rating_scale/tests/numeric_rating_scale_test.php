@@ -100,12 +100,9 @@ class performelement_numeric_rating_scale_testcase extends advanced_testcase {
     }
 
     /**
-     * @return component_generator_base|mod_perform_generator
+     * @return \mod_perform\testing\generator
      */
     protected function perform_generator() {
-        if (!isset($this->perform_generator)) {
-            $this->perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
-        }
-        return $this->perform_generator;
+        return \mod_perform\testing\generator::instance();
     }
 }

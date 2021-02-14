@@ -64,7 +64,7 @@ class mod_perform_activity_clone_model_helper_testcase extends advanced_testcase
         $this->setAdminUser();
 
         $data_generator = self::getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         /** @var activity $activity */
@@ -307,8 +307,8 @@ class mod_perform_activity_clone_model_helper_testcase extends advanced_testcase
      * @param string $exception_message
      */
     public function test_clone_capabilities(string $capability, string $exception_class, string $exception_message): void {
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $role_id = builder::table('role')->where('shortname', 'performanceactivitycreator')->value('id');
 
@@ -342,8 +342,8 @@ class mod_perform_activity_clone_model_helper_testcase extends advanced_testcase
     }
 
     public function test_clone_no_unexpected_roles_assigned(): void {
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $perform_role_id = builder::table('role')->where('shortname', 'performanceactivitycreator')->value('id');
         $editingteacher_role_id = builder::table('role')->where('shortname', 'editingteacher')->value('id');
@@ -371,8 +371,8 @@ class mod_perform_activity_clone_model_helper_testcase extends advanced_testcase
 
     public function test_clone_enroll_plugins_are_cloned(): void {
         global $DB;
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         self::setAdminUser();
         $activity = $generator->create_activity_in_container();
 

@@ -33,7 +33,7 @@ class engage_article_multi_tenancy_access_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -43,7 +43,7 @@ class engage_article_multi_tenancy_access_testcase extends advanced_testcase {
         // Log in as tenant user and create a public article.
         $this->setUser($user_two);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_public_article();
 
@@ -65,7 +65,7 @@ class engage_article_multi_tenancy_access_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -75,7 +75,7 @@ class engage_article_multi_tenancy_access_testcase extends advanced_testcase {
         // Log in as system level user and create an article.
         $this->setUser($user_two);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_public_article();
 
@@ -99,7 +99,7 @@ class engage_article_multi_tenancy_access_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -110,7 +110,7 @@ class engage_article_multi_tenancy_access_testcase extends advanced_testcase {
         // Log in as tenant user and create a public article.
         $this->setUser($user_two);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_public_article();
 
@@ -131,7 +131,7 @@ class engage_article_multi_tenancy_access_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -142,7 +142,7 @@ class engage_article_multi_tenancy_access_testcase extends advanced_testcase {
         // Log in as tenant participant and create a public article.
         $this->setUser($user_two);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_public_article();
 
@@ -164,7 +164,7 @@ class engage_article_multi_tenancy_access_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -177,7 +177,7 @@ class engage_article_multi_tenancy_access_testcase extends advanced_testcase {
         // Log in as user one and create an article.
         $this->setUser($user_one);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_public_article();
 

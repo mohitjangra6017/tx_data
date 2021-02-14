@@ -36,7 +36,7 @@ class totara_generator_course_category_backend extends tool_generator_backend {
     protected $size;
 
     /**
-     * @var testing_data_generator For general generator
+     * @var \core\testing\generator For general generator
      */
     protected $generator;
 
@@ -75,8 +75,6 @@ class totara_generator_course_category_backend extends tool_generator_backend {
      */
     public function make() {
         global $DB, $CFG;
-        require_once($CFG->libdir . '/phpunit/classes/util.php');
-
         raise_memory_limit(MEMORY_EXTRA);
 
         if ($this->progress && !CLI_SCRIPT) {
@@ -89,7 +87,7 @@ class totara_generator_course_category_backend extends tool_generator_backend {
         $transaction = $DB->start_delegated_transaction();
 
         // Get generator.
-        $this->generator = phpunit_util::get_data_generator();
+        $this->generator = \core\testing\generator::instance();
 
         // Make course category.
         $this->course_category = $this->create_course_category();

@@ -33,7 +33,6 @@ require __DIR__ . '/../../server/config.php';
 /** @var core_config $CFG */
 
 require_once($CFG->libdir . '/clilib.php');
-require_once($CFG->libdir . '/phpunit/classes/util.php');
 
 global $DB;
 
@@ -79,7 +78,7 @@ if (empty($options['user']) && empty($options['numusers'])) {
     die;
 }
 
-$generator = phpunit_util::get_data_generator();
+$generator = \core\testing\generator::instance();
 
 $user_ids = explode(',', $options['user'] ?? []);
 $num_users = $options['numusers'];

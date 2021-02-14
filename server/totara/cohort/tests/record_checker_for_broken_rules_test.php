@@ -51,7 +51,7 @@ class totara_cohort_record_checker_for_broken_rules_testcase extends advanced_te
      * @return stdClass[]
      */
     private function create_programs($n) {
-        /** @var totara_program_generator $generator */
+        /** @var \totara_program\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator("totara_program");
         $data = [];
 
@@ -71,8 +71,7 @@ class totara_cohort_record_checker_for_broken_rules_testcase extends advanced_te
      * @return stdClass
      */
     private function create_cohort_and_rules(array $programs=[], array $courses=[], array $positions=[], array $organisations=[]) {
-        /** @var totara_cohort_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $generator = \totara_cohort\testing\generator::instance();
         $cohort = $generator->create_cohort(['cohorttype' => cohort::TYPE_DYNAMIC]);
 
         $rulesetid = cohort_rule_create_ruleset($cohort->activecollectionid);
@@ -133,7 +132,7 @@ class totara_cohort_record_checker_for_broken_rules_testcase extends advanced_te
      * @return stdClass[]
      */
     private function create_organisations($max=2) {
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_org_frame([]);
 
@@ -150,7 +149,7 @@ class totara_cohort_record_checker_for_broken_rules_testcase extends advanced_te
      * @return stdClass[]
      */
     private function create_positions($max=2) {
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_pos_frame([]);
 

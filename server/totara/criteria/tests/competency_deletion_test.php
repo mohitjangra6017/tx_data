@@ -40,9 +40,9 @@ class totara_criteria_competency_deletion_testcase extends advanced_testcase {
      * Tests that associated criteria records are deleted upon deletion of a competency.
      */
     public function test_criteria_deleted() {
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $comp_1 = $competency_generator->create_competency();

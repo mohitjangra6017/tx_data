@@ -66,8 +66,8 @@ class mod_perform_data_provider_reportable_activities_testcase extends advanced_
 
     private function create_test_data(): stdClass {
         self::setAdminUser();
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $data = new stdClass();
 

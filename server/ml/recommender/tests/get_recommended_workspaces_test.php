@@ -36,7 +36,7 @@ class ml_recommender_get_recommended_workspaces_testcase extends advanced_testca
      */
     public function test_recommended_workspaces_by_user_graphql() {
         $generator = $this->getDataGenerator();
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         $this->setAdminUser();
@@ -44,7 +44,7 @@ class ml_recommender_get_recommended_workspaces_testcase extends advanced_testca
         $user = $generator->create_user();
         $this->setUser($user);
 
-        /** @var ml_recommender_generator $recommendations_generator */
+        /** @var \ml_recommender\testing\generator $recommendations_generator */
         $recommendations_generator = $generator->get_plugin_generator('ml_recommender');
 
         // We're going to recommend for user 2
@@ -131,11 +131,11 @@ class ml_recommender_get_recommended_workspaces_testcase extends advanced_testca
      */
     public function test_recommended_workspaces_multi_tenancy() {
         $generator = $this->getDataGenerator();
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
-        /** @var ml_recommender_generator $recommendations_generator */
+        /** @var \ml_recommender\testing\generator $recommendations_generator */
         $recommendations_generator = $generator->get_plugin_generator('ml_recommender');
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
 
         $tenant_generator->enable_tenants();

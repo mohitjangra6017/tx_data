@@ -35,7 +35,7 @@ class totara_engage_resource_completion_testcase extends advanced_testcase {
 
         // Login as owener.
         $this->setUser($owner);
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article = $articlegen->create_article();
 
@@ -59,7 +59,7 @@ class totara_engage_resource_completion_testcase extends advanced_testcase {
 
         // Login as owener.
         $this->setUser($owner);
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article = $articlegen->create_article();
 

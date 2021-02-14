@@ -42,7 +42,7 @@ class mod_workshop_userdata_submissions_testcase extends advanced_testcase {
      * @param $content
      */
     private function create_submission_with_assessment_and_grades($workshop, $submittinguser, $assessors, $content) {
-        /* @var mod_workshop_generator $workshop_generator */
+        /* @var \mod_workshop\testing\generator $workshop_generator */
         $workshop_generator = $this->getDataGenerator()->get_plugin_generator('mod_workshop');
 
         $dimensionid = $workshop_generator->get_accumulative_dimensionid($workshop);
@@ -126,7 +126,7 @@ class mod_workshop_userdata_submissions_testcase extends advanced_testcase {
         $course2 = $this->getDataGenerator()->create_course(['category' => $category2->id]);
         $course3 = $this->getDataGenerator()->create_course(['category' => $category2->id]);
 
-        /* @var mod_workshop_generator $workshop_generator */
+        /* @var \mod_workshop\testing\generator $workshop_generator */
         $workshop_generator = $this->getDataGenerator()->get_plugin_generator('mod_workshop');
 
         $workshop1 = $workshop_generator->create_instance(['course' => $course1, 'name' => 'workshop1']);
@@ -658,7 +658,7 @@ class mod_workshop_userdata_submissions_testcase extends advanced_testcase {
 
         $course1 = $this->getDataGenerator()->create_course();
 
-        /* @var mod_workshop_generator $workshop_generator */
+        /* @var \mod_workshop\testing\generator $workshop_generator */
         $workshop_generator = $this->getDataGenerator()->get_plugin_generator('mod_workshop');
 
         $workshop = $workshop_generator->create_instance(['course' => $course1]);

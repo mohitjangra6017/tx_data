@@ -3,6 +3,8 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* All testing data generators must be moved from my/plugin/tests/generator/lib.php
+  to \my_plugin\testing\generator classes in my/plugin/classes/testing/generator.php files
 * All deprecated "trusttext" features and APIs were removed.
 * Behat timeout constants behat_base::TIMEOUT, EXTENDED_TIMEOUT, and REDUCED_TIMEOUT have been
   deprecated. Please instead use the functions behat_base::get_timeout(), get_extended_timeout(),

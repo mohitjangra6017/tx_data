@@ -234,9 +234,9 @@ class core_user_profilelib_testcase extends advanced_testcase {
         set_config('allowsignuporganisation', 1, 'totara_job');
         set_config('allowsignupmanager', 1, 'totara_job');
 
-        /** @var testing_data_generator $data_generator */
+        /** @var \core\testing\generator $data_generator */
         $data_generator = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $data_generator->get_plugin_generator('totara_hierarchy');
         $posframe = $hierarchy_generator->create_pos_frame([]);
         $pos1 = $hierarchy_generator->create_pos(['frameworkid' => $posframe->id]);
@@ -285,9 +285,9 @@ class core_user_profilelib_testcase extends advanced_testcase {
         set_config('allowsignuporganisation', 1, 'totara_job');
         set_config('allowsignupmanager', 1, 'totara_job');
 
-        /** @var testing_data_generator $data_generator */
+        /** @var \core\testing\generator $data_generator */
         $data_generator = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $data_generator->get_plugin_generator('totara_hierarchy');
         $posframe = $hierarchy_generator->create_pos_frame([]);
         $pos1 = $hierarchy_generator->create_pos(['frameworkid' => $posframe->id]);
@@ -335,9 +335,9 @@ class core_user_profilelib_testcase extends advanced_testcase {
         set_config('allowsignuporganisation', 1, 'totara_job');
         set_config('allowsignupmanager', 1, 'totara_job');
 
-        /** @var testing_data_generator $data_generator */
+        /** @var \core\testing\generator $data_generator */
         $data_generator = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $data_generator->get_plugin_generator('totara_hierarchy');
         $posframe = $hierarchy_generator->create_pos_frame([]);
         $pos1 = $hierarchy_generator->create_pos(['frameworkid' => $posframe->id]);
@@ -396,9 +396,9 @@ class core_user_profilelib_testcase extends advanced_testcase {
         set_config('allowsignuporganisation', 0, 'totara_job');
         set_config('allowsignupmanager', 1, 'totara_job');
 
-        /** @var testing_data_generator $data_generator */
+        /** @var \core\testing\generator $data_generator */
         $data_generator = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $data_generator->get_plugin_generator('totara_hierarchy');
         $posframe = $hierarchy_generator->create_pos_frame([]);
         $pos1 = $hierarchy_generator->create_pos(['frameworkid' => $posframe->id]);
@@ -457,9 +457,9 @@ class core_user_profilelib_testcase extends advanced_testcase {
         // Start with just manager disabled.
         set_config('allowsignupmanager', 0, 'totara_job');
 
-        /** @var testing_data_generator $data_generator */
+        /** @var \core\testing\generator $data_generator */
         $data_generator = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $data_generator->get_plugin_generator('totara_hierarchy');
         $posframe = $hierarchy_generator->create_pos_frame([]);
         $pos1 = $hierarchy_generator->create_pos(['frameworkid' => $posframe->id]);

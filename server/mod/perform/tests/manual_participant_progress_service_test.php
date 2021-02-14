@@ -45,11 +45,11 @@ use totara_job\job_assignment;
  */
 class mod_perform_manual_participant_progress_service_testcase extends advanced_testcase {
 
-     /**
-     * @return mod_perform_generator|component_generator_base
+    /**
+     * @return \mod_perform\testing\generator
      */
-    protected function perform_generator(): mod_perform_generator {
-        return $this->getDataGenerator()->get_plugin_generator('mod_perform');
+    protected function perform_generator() {
+        return \mod_perform\testing\generator::instance();
     }
 
     public function test_generate_without_manual_relationships() {
@@ -398,8 +398,8 @@ class mod_perform_manual_participant_progress_service_testcase extends advanced_
         return $data;
     }
 
-    protected function generator(): mod_perform_generator {
-        return $this->getDataGenerator()->get_plugin_generator('mod_perform');
+    protected function generator(): \mod_perform\testing\generator {
+        return \mod_perform\testing\generator::instance();
     }
 
     private function assert_selectors_are_present(array $expected) {

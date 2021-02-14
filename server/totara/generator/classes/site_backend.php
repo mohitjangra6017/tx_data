@@ -92,25 +92,25 @@ class totara_generator_site_backend extends tool_generator_site_backend {
      */
     private static $paramaudience = array(1, 2, 2, 2, 4, 4);
 
-    /** @var testing_data_generator */
+    /** @var \core\testing\generator */
     protected $generator;
 
     /**
-     * @var totara_cohort_generator Data generator for hierarchy
+     * @var \totara_cohort\testing\generator Data generator for hierarchy
      */
     protected $cohort_generator;
 
     /**
-     * @var totara_hierarchy_generator Data generator for hierarchy
+     * @var \totara_hierarchy\testing\generator Data generator for hierarchy
      */
     protected $hierarchy_generator;
 
     /**
-     * @var totara_program_generator Data generator for program
+     * @var \totara_program\testing\generator Data generator for program
      */
     protected $program_generator;
 
-    /** @var core_completion_generator */
+    /** @var \core_completion\testing\generator */
     protected $completion_generator;
 
     /**
@@ -212,7 +212,6 @@ class totara_generator_site_backend extends tool_generator_site_backend {
      */
     public function make() {
         global $DB, $CFG;
-        require_once($CFG->dirroot . '/lib/phpunit/classes/util.php');
         raise_memory_limit(MEMORY_EXTRA);
 
         if ($this->progress && !CLI_SCRIPT) {
@@ -227,7 +226,7 @@ class totara_generator_site_backend extends tool_generator_site_backend {
         $transaction = $DB->start_delegated_transaction();
 
         // Get generator.
-        $this->generator = phpunit_util::get_data_generator();
+        $this->generator = \core\testing\generator::instance();
 
         // Begin site creation process.
         $prevchdir = getcwd();
@@ -309,53 +308,53 @@ class totara_generator_site_backend extends tool_generator_site_backend {
 
         // Create competency, goal, position and organisation hierarchies.
         // First competency.
-        $name = totara_hierarchy_generator::DEFAULT_NAME_FRAMEWORK_COMPETENCY;
+        $name = \totara_hierarchy\testing\generator::DEFAULT_NAME_FRAMEWORK_COMPETENCY;
         $name = trim($name) . ' ' . totara_generator_util::get_size_name($this->size);
         $name .= ' ' . totara_generator_util::get_next_record_number('comp_framework', 'fullname', $name);
         $data = array ('fullname' => $name);
         // Create competency framework.
         $compframework = $this->hierarchy_generator->create_framework('competency', $data);
         // Create a base competency hierarchy name.
-        $name = totara_hierarchy_generator::DEFAULT_NAME_HIERARCHY_COMPETENCY;
+        $name = \totara_hierarchy\testing\generator::DEFAULT_NAME_HIERARCHY_COMPETENCY;
         $name = trim($name) . ' ' . totara_generator_util::get_size_name($this->size);
         // Create the competency hierarchies.
         $this->competencyids = $this->hierarchy_generator->create_hierarchies($compframework->id, 'competency', self::$paramcompetencycount[$this->size], $name);
 
         // Then organisation.
-        $name = totara_hierarchy_generator::DEFAULT_NAME_FRAMEWORK_ORGANISATION;
+        $name = \totara_hierarchy\testing\generator::DEFAULT_NAME_FRAMEWORK_ORGANISATION;
         $name = trim($name) . ' ' . totara_generator_util::get_size_name($this->size);
         $name .= ' ' . totara_generator_util::get_next_record_number('org_framework', 'fullname', $name);
         $data = array ('fullname' => $name);
         // Create organisation framework.
         $orgframework = $this->hierarchy_generator->create_framework('organisation', $data);
         // Create a base organisation hierarchy name.
-        $name = totara_hierarchy_generator::DEFAULT_NAME_HIERARCHY_ORGANISATION;
+        $name = \totara_hierarchy\testing\generator::DEFAULT_NAME_HIERARCHY_ORGANISATION;
         $name = trim($name) . ' ' . totara_generator_util::get_size_name($this->size);
         // Create the organisation hierarchies.
         $this->organisationids = $this->hierarchy_generator->create_hierarchies($orgframework->id, 'organisation', self::$paramorganisationscount[$this->size], $name);
 
         // Then position.
-        $name = totara_hierarchy_generator::DEFAULT_NAME_FRAMEWORK_POSITION;
+        $name = \totara_hierarchy\testing\generator::DEFAULT_NAME_FRAMEWORK_POSITION;
         $name = trim($name) . ' ' . totara_generator_util::get_size_name($this->size);
         $name .= ' ' . totara_generator_util::get_next_record_number('pos_framework', 'fullname', $name);
         $data = array ('fullname' => $name);
         // Create position framework.
         $posframework = $this->hierarchy_generator->create_framework('position', $data);
         // Create a base organisation hierarchy name.
-        $name = totara_hierarchy_generator::DEFAULT_NAME_HIERARCHY_POSITION;
+        $name = \totara_hierarchy\testing\generator::DEFAULT_NAME_HIERARCHY_POSITION;
         $name = trim($name) . ' ' . totara_generator_util::get_size_name($this->size);
         // Create the position hierarchies.
         $this->positionids = $this->hierarchy_generator->create_hierarchies($posframework->id,'position', self::$parampositionscount[$this->size], $name);
 
         // Then goals.
-        $name = totara_hierarchy_generator::DEFAULT_NAME_FRAMEWORK_GOAL;
+        $name = \totara_hierarchy\testing\generator::DEFAULT_NAME_FRAMEWORK_GOAL;
         $name = trim($name) . ' ' . totara_generator_util::get_size_name($this->size);
         $name .= ' ' . totara_generator_util::get_next_record_number('goal_framework', 'fullname', $name);
         $data = array ('fullname' => $name);
         // Create goal framework.
         $goalframework = $this->hierarchy_generator->create_framework('goal', $data);
         // Create a base goal hierarchy name.
-        $name = totara_hierarchy_generator::DEFAULT_NAME_HIERARCHY_GOAL;
+        $name = \totara_hierarchy\testing\generator::DEFAULT_NAME_HIERARCHY_GOAL;
         $name = trim($name) . ' ' . totara_generator_util::get_size_name($this->size);
         // Create the goal hierarchies.
         $this->goalids = $this->hierarchy_generator->create_hierarchies($goalframework->id,'goal', self::$paramgoalscount[$this->size], $name);

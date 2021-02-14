@@ -56,7 +56,7 @@ class pathway_learning_plan_learning_plan_testcase extends advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user();
 
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $scale = $totara_hierarchy_generator->create_scale(
@@ -98,7 +98,7 @@ class pathway_learning_plan_learning_plan_testcase extends advanced_testcase {
         $other_assigned_user = $this->getDataGenerator()->create_user();
         $not_assigned_user = $this->getDataGenerator()->create_user();
 
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $scale = $totara_hierarchy_generator->create_scale(
@@ -121,7 +121,6 @@ class pathway_learning_plan_learning_plan_testcase extends advanced_testcase {
 
         $great = scale_value::repository()->where('name', '=', 'Great')->one();
 
-        /** @var totara_competency_assignment_generator $assignment_generator */
         $assignment_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency')->assignment_generator();
         $assignment = $assignment_generator->create_user_assignment($comp->id, $user->id);
         $other_assignment = $assignment_generator->create_user_assignment($comp->id, $other_assigned_user->id);
@@ -134,7 +133,7 @@ class pathway_learning_plan_learning_plan_testcase extends advanced_testcase {
             ->count();
         $this->assertEquals(0, $count);
 
-        /** @var totara_plan_generator $plan_generator */
+        /** @var \totara_plan\testing\generator $plan_generator */
         $plan_generator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
         $plan = $plan_generator->create_learning_plan(['userid' => $user->id]);
 

@@ -55,12 +55,12 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
 
         $user = $this->getDataGenerator()->create_user();
 
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $compfw = $totara_hierarchy_generator->create_comp_frame([]);
         $comp = $totara_hierarchy_generator->create_comp(['frameworkid' => $compfw->id]);
 
-        /** @var totara_competency_assignment_generator $assignment_generator */
+        /** @var \totara_competency\testing\assignment_generator $assignment_generator */
         $assignment_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency')->assignment_generator();
         $assignment = $assignment_generator->create_user_assignment($comp->id, $user->id);
 
@@ -124,7 +124,7 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
         $competency_id = 100;
         $achievement_date = 200;
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $hierarchy_generator->create_scale('comp', [], [
             ['name' => 'Great', 'proficient' => 1, 'sortorder' => 1, 'default' => 0],
@@ -192,7 +192,7 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
 
         $this->setAdminUser();
 
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $scale = $totara_hierarchy_generator->create_scale(
@@ -212,7 +212,7 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
         /** @var scale_value $great */
         $great = scale_value::repository()->where('name', '=', 'Great')->one();
 
-        /** @var totara_competency_assignment_generator $assignment_generator */
+        /** @var \totara_competency\testing\assignment_generator $assignment_generator */
         $assignment_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency')->assignment_generator();
         $assignment = $assignment_generator->create_user_assignment($comp->id, $user->id);
 
@@ -222,7 +222,7 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
         $expand_task = new expand_task($DB);
         $expand_task->expand_all();
 
-        /** @var totara_competency_generator $totara_competency_generator */
+        /** @var \totara_competency\testing\generator $totara_competency_generator */
         $totara_competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $pathway = $totara_competency_generator->create_test_pathway();
         $pathway->set_test_aggregate_current_value($great);
@@ -284,13 +284,13 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
         $other_user = $this->getDataGenerator()->create_user();
 
         $cohort = $this->getDataGenerator()->create_cohort(['name' => 'Audience One']);
-        /** @var totara_cohort_generator $cohort_generator */
+        /** @var \totara_cohort\testing\generator $cohort_generator */
         $cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
         $cohort_generator->cohort_assign_users($cohort->id, [$user->id, $other_user->id]);
 
         $this->setAdminUser();
 
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $scale = $totara_hierarchy_generator->create_scale(
@@ -315,7 +315,7 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
         /** @var scale_value $good */
         $good = scale_value::repository()->where('name', '=', 'Good')->one();
 
-        /** @var totara_competency_assignment_generator $assignment_generator */
+        /** @var \totara_competency\testing\assignment_generator $assignment_generator */
         $assignment_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency')->assignment_generator();
         $assignment = $assignment_generator->create_cohort_assignment($comp->id, $cohort->id);
         $other_competency_assignment = $assignment_generator->create_user_assignment($other_comp->id, $user->id);
@@ -323,7 +323,7 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
         (new assignment_actions())->activate([$assignment->id, $other_competency_assignment->id]);
         (new expand_task($DB))->expand_all();
 
-        /** @var totara_competency_generator $totara_competency_generator */
+        /** @var \totara_competency\testing\generator $\totara_competency\testing\generator */
         $totara_competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $pathway = $totara_competency_generator->create_test_pathway();
         $pathway->set_test_aggregate_current_value($great);
@@ -462,7 +462,7 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
         global $DB;
         $user = $this->getDataGenerator()->create_user();
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 
@@ -476,7 +476,7 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
         (new expand_task($DB))->expand_all();
         $this->assertEmpty(data_providers\activity_log::create($user->id, $competency->id)->fetch());
 
-        /** @var totara_competency_assignment_generator $assignment_generator */
+        /** @var \totara_competency\testing\assignment_generator $assignment_generator */
         $assignment_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency')->assignment_generator();
         $user_assignment = $assignment_generator->create_user_assignment($competency->id, $user->id);
         (new assignment_actions())->activate([$user_assignment->id, $competency->id]);
@@ -491,7 +491,7 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
 
         $this->waitForSecond();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $pos_frame = $hierarchy_generator->create_pos_frame([]);
         $pos = $hierarchy_generator->create_pos(['frameworkid' => $pos_frame->id]);
@@ -528,7 +528,7 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
      * but only if there is a previous non-null rating that has been achieved.
      */
     public function test_scale_value_none() {
-        /** @var totara_competency_generator $hierarchy_generator */
+        /** @var \totara_competency\testing\generator $hierarchy_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $user = $this->getDataGenerator()->create_user();
@@ -544,7 +544,7 @@ class totara_competency_data_provider_activity_log_testcase extends advanced_tes
         $assignment_id = $assignment->id;
         $user_id = $user->id;
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $hierarchy_generator->create_scale(
             'comp',

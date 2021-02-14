@@ -45,7 +45,7 @@ class mod_facetoface_cm_info_view_testcase extends advanced_testcase {
      * @return stdClass
      */
     private function create_facetoface_with_events(stdClass $course, array $configs, $numberofevents): stdClass {
-        /** @var mod_facetoface_generator $generator */
+        /** @var \mod_facetoface\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator("mod_facetoface");
 
         $data = array(
@@ -85,7 +85,7 @@ class mod_facetoface_cm_info_view_testcase extends advanced_testcase {
      * @throws Exception
      */
     private function create_signup(stdClass $user, stdClass $event, stdClass $facetoface, stdClass $course): void {
-        /** @var mod_facetoface_generator $generator */
+        /** @var \mod_facetoface\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator("mod_facetoface");
         $refClass = new ReflectionClass($generator);
 

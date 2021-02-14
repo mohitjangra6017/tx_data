@@ -91,7 +91,7 @@ class core_user_card_display_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        /** @var core_user_generator $user_generator */
+        /** @var \core_user\testing\generator $user_generator */
         $user_generator = $generator->get_plugin_generator('core_user');
         $custom_field = $user_generator->create_custom_field('text', 'short_text');
 

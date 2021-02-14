@@ -39,7 +39,7 @@ require_once($CFG->dirroot . '/user/profile/field/textarea/define.class.php');
 class totara_cohort_user_custom_profile_field_textarea_testcase extends advanced_testcase {
 
     /**
-     * @var totara_cohort_generator The cohort data generator.
+     * @var \totara_cohort\testing\generator The cohort data generator.
      */
     private $cohort_generator = null;
     private $cohort = null;
@@ -70,7 +70,7 @@ class totara_cohort_user_custom_profile_field_textarea_testcase extends advanced
         $this->profilevegetableid = $this->add_user_profile_textarea_field('vegetable', 'parsnip');
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $generator->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
 
         // Create users.
         $users = array();

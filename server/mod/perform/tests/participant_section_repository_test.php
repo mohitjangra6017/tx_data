@@ -40,8 +40,8 @@ class mod_perform_participant_section_repository_test extends advanced_testcase 
         $subject = $this->getDataGenerator()->create_user();
         $another_user = $this->getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $generator->create_subject_instance([
             'subject_is_participating' => true,

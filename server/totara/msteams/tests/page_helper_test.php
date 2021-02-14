@@ -95,7 +95,7 @@ class totara_msteams_page_helper_testcase extends advanced_testcase {
         $this->assertNotNull($instance);
         $this->assertEquals('system', $instance->configdata);
 
-        /** @var totara_tenant_generator */
+        /** @var \totara_tenant\testing\generator */
         $tengen = $gen->get_plugin_generator('totara_tenant');
         $tengen->enable_tenants();
         $tenant = $tengen->create_tenant();

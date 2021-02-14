@@ -65,7 +65,7 @@ class totara_cohort_audience_member_rule_testcase extends advanced_testcase {
         $users = array();
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
 
         // Create some test users.
         $this->assertEquals(2, $DB->count_records('user'));

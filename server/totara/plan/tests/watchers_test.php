@@ -47,9 +47,9 @@ class totara_plan_watchers_testcase extends advanced_testcase {
             2 => $this->getDataGenerator()->create_user(),
         ];
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
-        /** @var totara_competency_assignment_generator $assignment_generator */
+        /** @var \totara_competency\testing\assignment_generator $assignment_generator */
         $assignment_generator = $competency_generator->assignment_generator();
 
         /** @var scale $scale */
@@ -181,7 +181,7 @@ class totara_plan_watchers_testcase extends advanced_testcase {
      * @param array $competency_ids
      */
     private function create_plan(int $user_id, array $competency_ids) {
-        /** @var totara_plan_generator $plan_generator */
+        /** @var \totara_plan\testing\generator $plan_generator */
         $plan_generator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
 
         $plan = $plan_generator->create_learning_plan(['userid' => $user_id]);

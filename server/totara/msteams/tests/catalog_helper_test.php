@@ -47,7 +47,7 @@ class totara_msteams_catalog_helper_testcase extends advanced_testcase {
         $this->setUser($this->user);
 
         $pgmgen = $gen->get_plugin_generator('totara_program');
-        /** @var totara_program_generator $pgmgen */
+        /** @var \totara_program\testing\generator $pgmgen */
 
         $this->course = $gen->create_course(['fullname' => 'Test course', 'summary' => 'akoranga']);
         $this->program = $pgmgen->create_program(['fullname' => 'Test program', 'summary' => 'marau']);

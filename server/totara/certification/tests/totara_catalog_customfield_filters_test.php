@@ -56,8 +56,7 @@ class totara_certification_totara_catalog_customfield_filters_testcase extends \
         // allow the setting of its default values. Then there is the totara_core
         // generator that can create custom fields with default data but cannot
         // assign custom fields to certs. Incredible.
-        /** @var \totara_core_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
+        $generator = \totara_core\testing\generator::instance();
         return $generator->create_custom_program_field($data)->id;
     }
 
@@ -71,7 +70,7 @@ class totara_certification_totara_catalog_customfield_filters_testcase extends \
     private function generate_certs(int $cert_count): array {
         $all_certs = [];
 
-        /** @var \totara_program_generator $generator */
+        /** @var \totara_program\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         for ($i = 0; $i < $cert_count; $i++) {
             $id = $generator->create_certification(
@@ -146,7 +145,7 @@ class totara_certification_totara_catalog_customfield_filters_testcase extends \
 
         $certs_by_cf = [];
         $cert_names = [];
-        /** @var \totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
 
         foreach ($this->generate_certs($cert_count) as $i => $cert) {
@@ -322,7 +321,7 @@ class totara_certification_totara_catalog_customfield_filters_testcase extends \
 
         $certs_by_cf = [];
         $cert_names = [];
-        /** @var \totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
 
         foreach ($this->generate_certs($cert_count) as $i => $cert) {
@@ -487,7 +486,7 @@ class totara_certification_totara_catalog_customfield_filters_testcase extends \
 
         $certs_by_cf = [];
         $cert_names = [];
-        /** @var \totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
 
         foreach ($this->generate_certs($cert_count) as $i => $cert) {

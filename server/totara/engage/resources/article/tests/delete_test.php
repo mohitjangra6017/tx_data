@@ -88,7 +88,7 @@ class engage_article_delete_testcase extends advanced_testcase {
             'access' => access::PUBLIC
         ]);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $resource->get_id(),

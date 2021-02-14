@@ -34,8 +34,7 @@ class totara_userdata_generator_testcase extends advanced_testcase {
         global $USER, $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $this->setCurrentTimeStart();
         $type = $generator->create_purge_type();
@@ -127,8 +126,7 @@ class totara_userdata_generator_testcase extends advanced_testcase {
         global $USER, $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $this->setCurrentTimeStart();
         $type = $generator->create_export_type();

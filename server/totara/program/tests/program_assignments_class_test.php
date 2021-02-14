@@ -31,10 +31,8 @@ global $CFG;
  * Tests the methods in the program class in program_assignments.class.php
  */
 class totara_program_program_assignments_class_testcase extends advanced_testcase {
-    /** @var totara_reportbuilder_cache_generator $data_generator */
     private $data_generator;
 
-    /** @var totara_program_generator $program_generator */
     private $program_generator;
 
     public static function setUpBeforeClass(): void {
@@ -49,7 +47,7 @@ class totara_program_program_assignments_class_testcase extends advanced_testcas
         $this->resetAfterTest();
 
         $this->data_generator = $this->getDataGenerator();
-        $this->program_generator = $this->data_generator->get_plugin_generator('totara_program');
+        $this->program_generator = \totara_program\testing\generator::instance();
     }
 
     protected function tearDown(): void {

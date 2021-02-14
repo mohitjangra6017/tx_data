@@ -45,10 +45,10 @@ class mod_perform_webapi_mutation_move_element_to_section_testcase extends advan
     public function test_move_element_to_section(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(2)
             ->set_activity_status(draft::get_code())
             ->set_number_of_sections_per_activity(2)
@@ -102,10 +102,10 @@ class mod_perform_webapi_mutation_move_element_to_section_testcase extends advan
     public function test_move_element_to_section_fail_between_activities(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(2)
             ->set_activity_status(draft::get_code())
             ->set_number_of_sections_per_activity(1)
@@ -142,10 +142,10 @@ class mod_perform_webapi_mutation_move_element_to_section_testcase extends advan
     public function test_move_element_to_section_fail_within_same_section(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_activity_status(draft::get_code())
             ->set_number_of_sections_per_activity(1)
@@ -178,10 +178,10 @@ class mod_perform_webapi_mutation_move_element_to_section_testcase extends advan
     public function test_move_element_to_section_fail_with_invalid_element(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_activity_status(draft::get_code())
             ->set_number_of_sections_per_activity(1)
@@ -213,10 +213,10 @@ class mod_perform_webapi_mutation_move_element_to_section_testcase extends advan
     public function test_move_element_to_section_fail_with_invalid_source_section(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_activity_status(draft::get_code())
             ->set_number_of_sections_per_activity(2)
@@ -250,10 +250,10 @@ class mod_perform_webapi_mutation_move_element_to_section_testcase extends advan
     public function test_move_element_to_section_fail_with_invalid_target_section(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_activity_status(draft::get_code())
             ->set_number_of_sections_per_activity(1)
@@ -286,10 +286,10 @@ class mod_perform_webapi_mutation_move_element_to_section_testcase extends advan
     public function test_move_element_to_section_fail_with_mismatched_element_and_section(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_activity_status(draft::get_code())
             ->set_number_of_sections_per_activity(2)
@@ -323,10 +323,10 @@ class mod_perform_webapi_mutation_move_element_to_section_testcase extends advan
     public function test_move_element_to_section_fail_when_active(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_activity_status(active::get_code())
             ->set_number_of_sections_per_activity(2)
@@ -360,10 +360,10 @@ class mod_perform_webapi_mutation_move_element_to_section_testcase extends advan
     public function test_missing_permission(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(2)
             ->set_activity_status(draft::get_code())
             ->set_number_of_sections_per_activity(2)

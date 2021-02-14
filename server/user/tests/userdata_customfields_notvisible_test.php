@@ -77,7 +77,7 @@ class core_user_userdata_customfields_notvisible_testcase extends advanced_testc
 
         $this->resetAfterTest(true);
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field1 = $generator->create_custom_profile_field(['datatype' => 'text', 'visible' => PROFILE_VISIBLE_NONE]);
@@ -184,7 +184,7 @@ class core_user_userdata_customfields_notvisible_testcase extends advanced_testc
     public function test_count() {
         $this->resetAfterTest(true);
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field1 = $generator->create_custom_profile_field(['datatype' => 'text', 'visible' => PROFILE_VISIBLE_NONE]);
@@ -235,7 +235,7 @@ class core_user_userdata_customfields_notvisible_testcase extends advanced_testc
     public function test_export() {
         $this->resetAfterTest(true);
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field1 = $generator->create_custom_profile_field(['datatype' => 'text', 'visible' => PROFILE_VISIBLE_NONE]);

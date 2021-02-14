@@ -107,9 +107,9 @@ extends advanced_testcase {
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
-        $this->cohorts = $generator->get_plugin_generator('totara_cohort');
+        $this->cohorts = \totara_cohort\testing\generator::instance();
 
-        $hierarchies = $generator->get_plugin_generator('totara_hierarchy');
+        $hierarchies = \totara_hierarchy\testing\generator::instance();
         $org_type = $this->get_record(
             'org_type', 'id', $hierarchies->create_org_type()
         );

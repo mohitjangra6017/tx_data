@@ -47,7 +47,7 @@ class container_workspace_add_content_task_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         self::setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 

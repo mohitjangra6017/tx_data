@@ -29,7 +29,7 @@ use mod_facetoface\seminar_session;
 use mod_facetoface\seminar_session_list;
 
 class mod_facetoface_notify_facilitator_testcase extends advanced_testcase {
-    /** @var mod_facetoface_generator */
+    /** @var \mod_facetoface\testing\generator */
     private $f2fgen;
 
     /** @var stdClass */
@@ -72,7 +72,7 @@ class mod_facetoface_notify_facilitator_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
         $this->f2fgen = $f2fgen;
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
 
         $this->redirect_messages();
         $this->course = $gen->create_course();

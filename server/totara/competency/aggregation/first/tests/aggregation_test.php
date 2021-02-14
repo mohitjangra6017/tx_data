@@ -54,7 +54,7 @@ class aggregation_first_aggregation_testcase extends advanced_testcase {
     public function test_with_single_pathway_returning_null() {
         $user = $this->getDataGenerator()->create_user();
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 
@@ -89,7 +89,7 @@ class aggregation_first_aggregation_testcase extends advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user();
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 
@@ -134,7 +134,7 @@ class aggregation_first_aggregation_testcase extends advanced_testcase {
 
         $user = $this->getDataGenerator()->create_user();
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 

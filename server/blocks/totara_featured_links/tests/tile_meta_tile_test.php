@@ -45,7 +45,7 @@ class block_totara_featured_links_tile_meta_tile_testcase extends test_helper {
             /** @var base */
             public $subtile1, $subtile2, $subtile3;
         };
-        /** @var block_totara_featured_links_generator $blockgenerator */
+        /** @var \block_totara_featured_links\testing\generator $blockgenerator */
         $blockgenerator = $this->getDataGenerator()->get_plugin_generator('block_totara_featured_links');
         $data->block = $blockgenerator->create_instance();
 
@@ -67,7 +67,7 @@ class block_totara_featured_links_tile_meta_tile_testcase extends test_helper {
         global $DB;
         $this->resetAfterTest();
         $data = $this->setup_block_with_subtiles();
-        /** @var block_totara_featured_links_generator $blockgenerator */
+        /** @var \block_totara_featured_links\testing\generator $blockgenerator */
         $blockgenerator = $this->getDataGenerator()->get_plugin_generator('block_totara_featured_links');
 
         $this->assertEquals(1, $DB->get_field('block_totara_featured_links_tiles', 'sortorder', ['id' => $data->gallerytile->id]));
@@ -104,7 +104,7 @@ class block_totara_featured_links_tile_meta_tile_testcase extends test_helper {
         $this->resetAfterTest();
         $this->setAdminUser();
         $data = $this->setup_block_with_subtiles();
-        /** @var block_totara_featured_links_generator $blockgenerator */
+        /** @var \block_totara_featured_links\testing\generator $blockgenerator */
         $blockgenerator = $this->getDataGenerator()->get_plugin_generator('block_totara_featured_links');
 
         $newblock = $blockgenerator->create_instance();
@@ -132,7 +132,7 @@ class block_totara_featured_links_tile_meta_tile_testcase extends test_helper {
     public function test_clone_parentid_links_are_maintained() {
         global $DB;
         $this->resetAfterTest();
-        /** @var block_totara_featured_links_generator $featuredlinksgenerator */
+        /** @var \block_totara_featured_links\testing\generator $featuredlinksgenerator */
         $featuredlinksgenerator = $this->getDataGenerator()->get_plugin_generator('block_totara_featured_links');
 
         $block1data = $featuredlinksgenerator->create_instance();

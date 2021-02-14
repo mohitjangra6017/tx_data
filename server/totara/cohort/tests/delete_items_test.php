@@ -28,7 +28,6 @@ global $CFG;
 
 require_once($CFG->dirroot . '/totara/reportbuilder/tests/reportcache_advanced_testcase.php');
 require_once($CFG->dirroot . '/totara/cohort/lib.php');
-require_once($CFG->libdir . '/testing/generator/lib.php');
 
 /**
  * Test system access rules.
@@ -42,9 +41,7 @@ class totara_cohort_delete_items_testcase extends advanced_testcase {
     private $pos1 = null;
     private $pos2 = null;
     private $cohort = null;
-    /** @var totara_cohort_generator $cohort_generator */
     private $cohort_generator = null;
-    /** @var totara_hierarchy_generator $hierarchy_generator */
     private $hierarchy_generator = null;
 
     protected function tearDown(): void {
@@ -64,10 +61,10 @@ class totara_cohort_delete_items_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
 
         // Set totara_hierarchy generator.
-        $this->hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
+        $this->hierarchy_generator = \totara_hierarchy\testing\generator::instance();
 
         // Create 3 users.
         $user1 = $this->getDataGenerator()->create_user(array('username' => 'user1'));
@@ -75,7 +72,7 @@ class totara_cohort_delete_items_testcase extends advanced_testcase {
         $user3 = $this->getDataGenerator()->create_user(array('username' => 'user3'));
 
         // Create 2 positions
-        $name = totara_hierarchy_generator::DEFAULT_NAME_FRAMEWORK_POSITION;
+        $name = $this->hierarchy_generator::DEFAULT_NAME_FRAMEWORK_POSITION;
         $name .= ' ' . totara_generator_util::get_next_record_number('pos_framework', 'fullname', $name);
         $data = array ('fullname' => $name);
         $posfw = $this->hierarchy_generator->create_framework('position', $data);

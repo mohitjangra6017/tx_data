@@ -34,12 +34,12 @@ class block_current_learning_course_data_testcase extends block_current_learning
     // 'Stand-alone' courses are those that are not within a program or certifications.
 
     /**
-     * @var testing_data_generator
+     * @var \core\testing\generator
      */
     private $generator;
 
     /**
-     * @var totara_program_generator
+     * @var \totara_program\testing\generator
      */
     private $program_generator;
 
@@ -257,7 +257,7 @@ class block_current_learning_course_data_testcase extends block_current_learning
     }
 
     public function test_course_in_current_learning_with_tenants_enabled() {
-        /** @var totara_tenant_generator $multitenancy */
+        /** @var \totara_tenant\testing\generator $multitenancy */
         $multitenancy = $this->generator->get_plugin_generator('totara_tenant');
 
         $multitenancy->enable_tenants();

@@ -74,7 +74,8 @@ class totara_reportbuilder_rb_plan_programs_recurring_embedded_cache_testcase ex
         $this->resetAfterTest(true);
         $this->cleanup();
 
-        $this->getDataGenerator()->reset();
+        $program_generator = \totara_program\testing\generator::instance();
+
         // Common parts of test cases:
         // Create report record in database
         $this->loadDataSet($this->createArrayDataSet(array('report_builder' => array($this->report_builder_data),
@@ -84,11 +85,11 @@ class totara_reportbuilder_rb_plan_programs_recurring_embedded_cache_testcase ex
         $this->user3 = $this->getDataGenerator()->create_user();
         $this->user4 = $this->getDataGenerator()->create_user();
 
-        $this->program1 = $this->getDataGenerator()->create_program();
-        $this->program2 = $this->getDataGenerator()->create_program();
+        $this->program1 = $program_generator->create_program();
+        $this->program2 = $program_generator->create_program();
 
-        $this->getDataGenerator()->assign_program($this->program1->id, array($this->user1->id, $this->user1->id));
-        $this->getDataGenerator()->assign_program($this->program2->id, array($this->user2->id));
+        $program_generator->assign_program($this->program1->id, array($this->user1->id, $this->user1->id));
+        $program_generator->assign_program($this->program2->id, array($this->user2->id));
 
         $this->course1 = $this->getDataGenerator()->create_course();
         $this->course2 = $this->getDataGenerator()->create_course();

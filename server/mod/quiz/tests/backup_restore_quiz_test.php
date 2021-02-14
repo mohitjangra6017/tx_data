@@ -25,13 +25,13 @@ defined('MOODLE_INTERNAL') || die();
 
 class mod_quiz_backup_restore_quiz_testcase extends advanced_testcase {
 
-    /** @var testing_data_generator */
+    /** @var \core\testing\generator */
     private $generator;
 
-    /** @var mod_quiz_generator */
+    /** @var \mod_quiz\testing\generator */
     private $quiz_generator;
 
-    /** @var core_question_generator */
+    /** @var \core_question\testing\generator */
     private $question_generator;
 
     /** @var array Question bank for this test case */

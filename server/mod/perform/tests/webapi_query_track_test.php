@@ -130,7 +130,7 @@ class mod_perform_webapi_query_track_testcase extends advanced_testcase {
     private function setup_env(): array {
         $this->setAdminUser();
 
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $generator = \mod_perform\testing\generator::instance();
         $activity = $generator->create_activity_in_container();
         $track = track_model::create($activity);
 

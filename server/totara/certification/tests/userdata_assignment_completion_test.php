@@ -60,8 +60,7 @@ class totara_certification_userdata_assignment_completion_test extends totara_pr
         $user2 = new target_user($this->getDataGenerator()->create_user());
 
         $generator = $this->getDataGenerator();
-        /** @var \totara_program_generator $programgenerator */
-        $programgenerator = $generator->get_plugin_generator('totara_program');
+        $programgenerator = \totara_program\testing\generator::instance();
 
         $category1 = $generator->create_category();
         $category2 = $generator->create_category();
@@ -139,7 +138,7 @@ class totara_certification_userdata_assignment_completion_test extends totara_pr
         $fixtures->controluser = new target_user($this->getDataGenerator()->create_user());
 
         $generator = $this->getDataGenerator();
-        /** @var \totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $generator->get_plugin_generator('totara_program');
 
         $fixtures->category1 = $generator->create_category();

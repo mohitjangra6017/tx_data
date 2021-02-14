@@ -36,19 +36,11 @@ use Behat\Behat\Tester\Exception\PendingException as PendingException;
 
 class behat_totara_hierarchy extends behat_base {
 
-    protected static $generator = null;
-
     /**
-     * @return totara_hierarchy_generator
+     * @return \totara_hierarchy\testing\generator
      */
     protected function get_data_generator() {
-        global $CFG;
-        if (self::$generator === null) {
-            require_once($CFG->libdir.'/testing/generator/lib.php');
-            require_once($CFG->dirroot.'/totara/hierarchy/tests/generator/lib.php');
-            self::$generator = new totara_hierarchy_generator(testing_util::get_data_generator());
-        }
-        return self::$generator;
+        return \totara_hierarchy\testing\generator::instance();
     }
 
     /**

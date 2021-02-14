@@ -47,9 +47,9 @@ class criteria_childcompetency_observers_testcase extends advanced_testcase {
      * Test observer when a child competency is created for a comptetency with childcompetency criteria
      */
     public function test_competency_created_with_criteria() {
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $framework = $competency_generator->create_framework();
@@ -92,7 +92,7 @@ class criteria_childcompetency_observers_testcase extends advanced_testcase {
      * Test observer when a child competency is created for a comptetency without
      */
     public function test_competency_created_without_criteria() {
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $framework = $competency_generator->create_framework();
         $competency = $competency_generator->create_competency('Comp A', $framework);
@@ -118,9 +118,9 @@ class criteria_childcompetency_observers_testcase extends advanced_testcase {
      * Test observer when a child competency is moved to another competency. Both with criteria
      */
     public function test_competency_moved_to_competency_with_criteria() {
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $framework = $competency_generator->create_framework();
@@ -206,7 +206,7 @@ class criteria_childcompetency_observers_testcase extends advanced_testcase {
      * Test observer when a child competency is moved to another competency. Both with criteria
      */
     public function test_competency_moved_to_competency_without_criteria() {
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $framework = $competency_generator->create_framework();

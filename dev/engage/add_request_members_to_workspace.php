@@ -88,9 +88,8 @@ if (!$workspace->is_typeof(workspace::get_type())) {
 }
 
 $number = $options['number'] ?? 100;
-require_once("{$CFG->dirroot}/lib/testing/classes/util.php");
 
-$generator = \testing_util::get_data_generator();
+$generator = \core\testing\generator::instance();
 
 for ($i = 0; $i < $number; $i++) {
     $user = $generator->create_user();

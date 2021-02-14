@@ -168,8 +168,8 @@ class mod_perform_assignment_audience_user_group_observer_testcase extends advan
         $test_data->cohort1 = $this->generator()->create_cohort();
         $test_data->cohort2 = $this->generator()->create_cohort();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $this->setAdminUser();
 
@@ -205,7 +205,7 @@ class mod_perform_assignment_audience_user_group_observer_testcase extends advan
     /**
      * Date generator shortcut
      *
-     * @return testing_data_generator
+     * @return \core\testing\generator
      */
     protected function generator() {
         return self::getDataGenerator();

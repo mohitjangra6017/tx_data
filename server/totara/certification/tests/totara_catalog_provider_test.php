@@ -53,8 +53,7 @@ class totara_certification_totara_catalog_provider_testcase extends \advanced_te
         $this->setAdminUser();
         $this->resetAfterTest();
         $this->provider = new certification_provider();
-        /** @var \totara_program_generator $program_generator */
-        $program_generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
+        $program_generator = \totara_program\testing\generator::instance();
         $this->certification = $program_generator->create_certification();
     }
 

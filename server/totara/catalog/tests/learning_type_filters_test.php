@@ -83,7 +83,7 @@ class totara_catalog_learning_type_filters_testcase extends advanced_testcase {
             $by_types[$course_type][] = $name;
         }
 
-        /** @var totara_program_generator $program_generator */
+        /** @var \totara_program\testing\generator $program_generator */
         $program_generator = $generator->get_plugin_generator('totara_program');
         for ($i = 0; $i < $program_count; $i++) {
             $name = "test program name $i";

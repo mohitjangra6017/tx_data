@@ -45,8 +45,8 @@ class performelement_static_content_clone_testcase extends performelement_static
         $this->setAdminUser();
 
         // Generate some data.
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container();
         $section = $perform_generator->create_section($activity);
 

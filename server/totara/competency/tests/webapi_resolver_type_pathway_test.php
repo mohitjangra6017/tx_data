@@ -143,7 +143,7 @@ class webapi_resolver_type_pathway_testcase extends advanced_testcase {
     private function create_pathway() {
         $this->setAdminUser();
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
 

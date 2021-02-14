@@ -82,7 +82,7 @@ class mod_perform_external_participant_token_validator_testcase extends advanced
     private function setup_data() {
         $generator = $this->generator();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->enable_creation_of_manual_participants()
             ->set_relationships_per_section(
                 [
@@ -96,9 +96,9 @@ class mod_perform_external_participant_token_validator_testcase extends advanced
     }
 
     /**
-     * @return mod_perform_generator
+     * @return \mod_perform\testing\generator
      */
-    protected function generator(): mod_perform_generator {
-        return $this->getDataGenerator()->get_plugin_generator('mod_perform');
+    protected function generator(): \mod_perform\testing\generator {
+        return \mod_perform\testing\generator::instance();
     }
 }

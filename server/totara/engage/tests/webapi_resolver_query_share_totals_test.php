@@ -41,7 +41,7 @@ class totara_engage_webapi_resolver_query_share_totals_testcase extends advanced
     }
 
     private function create_article($name, $userid, $content = null): \engage_article\totara_engage\resource\article {
-        /** @var engage_article_generator $generator */
+        /** @var \engage_article\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('engage_article');
         $params = [
             'name' => $name,
@@ -54,13 +54,13 @@ class totara_engage_webapi_resolver_query_share_totals_testcase extends advanced
     }
 
     private function create_workspace($name, $userid, $summary = null, $private = false, $hidden = false): \container_workspace\workspace {
-        /** @var container_workspace_generator $generator */
+        /** @var \container_workspace\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('container_workspace');
         return $generator->create_workspace($name, $summary ?? "{$name} summary", FORMAT_PLAIN, $userid, $private, $hidden);
     }
 
     private function create_share(\totara_engage\share\shareable $item, int $fromuserid, array $recipients, $ownerid = null) {
-        /** @var totara_engage_generator $generator */
+        /** @var \totara_engage\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_engage');
         return $generator->share_item($item, $fromuserid, $recipients, $ownerid);
     }

@@ -42,7 +42,7 @@ class totara_playlist_fetch_testcase extends advanced_testcase {
     private function create_different_accesses_playlist(int $user_id): array {
         $gen = $this->getDataGenerator();
 
-        /** @var totara_playlist_generator $playlist_gen */
+        /** @var \totara_playlist\testing\generator $playlist_gen */
         $playlist_gen = $gen->get_plugin_generator('totara_playlist');
         $accesses = [
             access::PUBLIC,
@@ -172,7 +172,7 @@ class totara_playlist_fetch_testcase extends advanced_testcase {
     public function test_get_all_playlists_that_user_can_see_with_shared(): void {
         $gen = $this->getDataGenerator();
 
-        /** @var totara_engage_generator $engage_gen */
+        /** @var \totara_engage\testing\generator $engage_gen */
         $engage_gen = $gen->get_plugin_generator('totara_engage');
 
         $user_one = $gen->create_user();
@@ -225,7 +225,7 @@ class totara_playlist_fetch_testcase extends advanced_testcase {
     public function test_get_book_mark_only(): void {
         $gen = $this->getDataGenerator();
 
-        /** @var totara_engage_generator $engage_gen */
+        /** @var \totara_engage\testing\generator $engage_gen */
         $engage_gen = $gen->get_plugin_generator('totara_engage');
 
         $user_one = $gen->create_user();

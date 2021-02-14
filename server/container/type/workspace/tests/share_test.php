@@ -49,16 +49,16 @@ class container_workspace_share_testcase extends advanced_testcase {
         $user = $gen->create_user();
         $this->setUser($user);
 
-        /** @var container_workspace_generator $workspacegen */
+        /** @var \container_workspace\testing\generator $workspacegen */
         $workspacegen = $gen->get_plugin_generator('container_workspace');
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         // Give user create workspace capability.
@@ -140,10 +140,10 @@ class container_workspace_share_testcase extends advanced_testcase {
         $user = $gen->create_user();
         $this->setUser($user);
 
-        /** @var container_workspace_generator $workspacegen */
+        /** @var \container_workspace\testing\generator $workspacegen */
         $workspacegen = $gen->get_plugin_generator('container_workspace');
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
         // Give user create workspace capability.

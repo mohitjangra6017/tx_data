@@ -43,7 +43,7 @@ class tool_uploadcourse_singleactivity_testcase extends advanced_testcase {
             ['createsections' => true]
         );
 
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
         for ($i = 0; $i < 5; $i++) {
             $f2fgen->create_instance(['course' => $course1->id]);

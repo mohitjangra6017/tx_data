@@ -281,7 +281,7 @@ class mod_scorm_lib_testcase extends externallib_advanced_testcase {
         require_once($CFG->libdir . '/gradelib.php');
         $this->create_one_instance();
 
-        /** @var core_grades_generator $grade_generator */
+        /** @var \core_grades\testing\generator $grade_generator */
         $grade_generator = self::getDataGenerator()->get_plugin_generator('core_grades');
 
         // Create an additional student.

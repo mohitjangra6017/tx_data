@@ -39,10 +39,10 @@ class mod_perform_webapi_resolver_mutation_add_participants_testcase extends adv
     use webapi_phpunit_helper;
 
     /**
-     * @return mod_perform_generator|component_generator_base
+     * @return \mod_perform\testing\generator
      */
-    protected function generator(): mod_perform_generator {
-        return $this->getDataGenerator()->get_plugin_generator('mod_perform');
+    protected function generator() {
+        return \mod_perform\testing\generator::instance();
     }
 
     protected function setUp(): void {
@@ -202,7 +202,7 @@ class mod_perform_webapi_resolver_mutation_add_participants_testcase extends adv
         $generator = $this->generator();
 
         // Create 2 activities with 2 users each.
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(2)
             ->set_number_of_users_per_user_group_type(2)
             ->set_relationships_per_section([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_APPRAISER]);

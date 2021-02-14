@@ -23,8 +23,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
-require_once($CFG->libdir . '/phpunit/classes/util.php');
 
 class totara_generator_hierarchy_backend extends tool_generator_backend {
 
@@ -44,12 +42,12 @@ class totara_generator_hierarchy_backend extends tool_generator_backend {
     protected $type;
 
     /**
-     * @var testing_data_generator Moodle original data generator.
+     * @var \core\testing\generator Moodle original data generator.
      */
     protected $generator;
 
     /**
-     * @var totara_hierarchy_generator Hierarchy data generator.
+     * @var \totara_hierarchy\testing\generator Hierarchy data generator.
      */
     protected $totara_hierarchy_generator;
 
@@ -94,7 +92,7 @@ class totara_generator_hierarchy_backend extends tool_generator_backend {
 
         parent::__construct($size, $fixeddataset, $filesizelimit, $progress);
         // Get generator.
-        $this->generator = phpunit_util::get_data_generator();
+        $this->generator = \core\testing\generator::instance();
         // Set custom data generators.
         $this->set_custom_generators();
     }

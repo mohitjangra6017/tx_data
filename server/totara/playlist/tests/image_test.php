@@ -257,7 +257,7 @@ class totara_playlist_image_testcase extends advanced_testcase {
     public function test_pluginfile_visibility_unpublish() {
 
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $gen->get_plugin_generator('totara_playlist');
         $admin = $gen->create_user();
         $user1 = $gen->create_user();
@@ -329,7 +329,7 @@ class totara_playlist_image_testcase extends advanced_testcase {
     public function test_pluginfile_visibility_publish() {
 
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $gen->get_plugin_generator('totara_playlist');
         $admin = $gen->create_user();
         $user1 = $gen->create_user();

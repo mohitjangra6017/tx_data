@@ -57,8 +57,6 @@ use totara_core\advanced_feature;
 use totara_job\job_assignment;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-require_once(__DIR__ . '/generator/activity_generator_configuration.php');
-
 /**
  * @group perform
  */
@@ -69,8 +67,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     use webapi_phpunit_helper;
 
     public function test_query_successful_with_single_section(): void {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_full_activities()->first();
         /** @var participant_instance_entity $participant_instance */
         $participant_instance = participant_instance_entity::repository()
@@ -178,10 +176,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     }
 
     public function test_query_with_deleted_participant(): void {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_number_of_tracks_per_activity(1)
             ->set_cohort_assignments_per_activity(1)
@@ -238,10 +236,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     }
 
     public function test_query_with_deleted_subject(): void {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_number_of_tracks_per_activity(1)
             ->set_cohort_assignments_per_activity(1)
@@ -299,10 +297,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     }
 
     public function test_query_successful_with_single_section_and_external_participant(): void {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->enable_creation_of_manual_participants()
             ->set_relationships_per_section([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_EXTERNAL]);
 
@@ -460,10 +458,10 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     }
 
     public function test_query_successful_with_single_section_anonymous_responses(): void {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_number_of_tracks_per_activity(1)
             ->set_cohort_assignments_per_activity(1)
@@ -618,8 +616,8 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     public function test_get_subject_instances_with_multiple_sections(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $activity1 = $perform_generator->create_activity_in_container([
             'activity_status' => draft::get_code(),
@@ -660,7 +658,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
 
         $cohort1 = $this->getDataGenerator()->create_cohort();
 
-        /** @var totara_job_generator $job_generator */
+        /** @var \totara_job\testing\generator $job_generator */
         $job_generator = $this->getDataGenerator()->get_plugin_generator('totara_job');
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -1079,15 +1077,15 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         $this->setAdminUser();
 
         // Set up an activity with a single participant, the subject.
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_number_of_sections_per_activity(1)
             ->set_relationships_per_section(['subject'])
             ->set_number_of_users_per_user_group_type(1)
             ->set_number_of_elements_per_section(0);
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $generator->create_full_activities($configuration);
 
         // Mark the subject instance manually close.

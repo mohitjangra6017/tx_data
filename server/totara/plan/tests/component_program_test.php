@@ -37,8 +37,8 @@ class totara_plan_component_program_testcase extends reportcache_advanced_testca
         global $DB;
 
         $generator = $this->getDataGenerator();
-        /* @var totara_plan_generator $plangenerator */
-        $plangenerator = $generator->get_plugin_generator('totara_plan');
+        $plangenerator = \totara_plan\testing\generator::instance();
+        $progragenerator = \totara_program\testing\generator::instance();
 
         // A user with permissions is required to do some of the operations, so just do it all as admin.
         $this->setAdminUser();
@@ -48,8 +48,8 @@ class totara_plan_component_program_testcase extends reportcache_advanced_testca
         $user2 = $generator->create_user();
 
         // Create some programs.
-        $prog1 = $generator->create_program();
-        $prog2 = $generator->create_program();
+        $prog1 = $progragenerator->create_program();
+        $prog2 = $progragenerator->create_program();
 
         // Add the programs to learning plans. User1 has two plans, both with program1, only first with program2.
         // User2 has two learning plans, each with one program. We'll be removing user1's program1 which should

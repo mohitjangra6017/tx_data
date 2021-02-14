@@ -107,7 +107,7 @@ class pathway_criteria_group_webapi_resolver_query_achievements_testcase extends
             public $scale;
         };
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator =  $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $data->scale = $hierarchy_generator->create_scale('comp');

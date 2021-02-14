@@ -53,7 +53,7 @@ class totara_cohort_events_testcase extends advanced_testcase {
      * SetUp.
      */
     public function setUp(): void {
-        $this->cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
         $this->program_generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $this->cohort = $this->cohort_generator->create_cohort(array('cohorttype' => cohort::TYPE_DYNAMIC));
     }

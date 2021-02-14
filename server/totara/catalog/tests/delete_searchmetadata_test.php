@@ -73,7 +73,7 @@ class totara_catalog_delete_searchmetadata_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
         $gen = static::getDataGenerator();
 
-        /** @var totara_program_generator $proggen */
+        /** @var \totara_program\testing\generator $proggen */
         $proggen = $gen->get_plugin_generator('totara_program');
         $prog = $proggen->create_program();
 
@@ -109,7 +109,7 @@ class totara_catalog_delete_searchmetadata_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
         $gen = static::getDataGenerator();
 
-        /** @var totara_program_generator $proggen */
+        /** @var \totara_program\testing\generator $proggen */
         $proggen = $gen->get_plugin_generator('totara_program');
         $cert = $proggen->create_certification();
 

@@ -107,7 +107,7 @@ class totara_core_export_course_progress_for_template_testcase extends externall
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         $this->getDataGenerator()->enrol_user($student->id, $course->id, $studentrole->id);
 
-        /** @var core_completion_generator $cgen */
+        /** @var \core_completion\testing\generator $cgen */
         $cgen = $this->getDataGenerator()->get_plugin_generator('core_completion');
         $cgen->enable_completion_tracking($course);
         $cgen->set_activity_completion($course->id, array($data));
@@ -134,7 +134,7 @@ class totara_core_export_course_progress_for_template_testcase extends externall
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         $this->getDataGenerator()->enrol_user($student->id, $course->id, $studentrole->id);
 
-        /** @var core_completion_generator $cgen */
+        /** @var \core_completion\testing\generator $cgen */
         $cgen = $this->getDataGenerator()->get_plugin_generator('core_completion');
         $cgen->enable_completion_tracking($course);
         $cgen->set_activity_completion($course->id, array($data));
@@ -142,7 +142,7 @@ class totara_core_export_course_progress_for_template_testcase extends externall
         $student = $DB->get_record('user', ['idnumber' => 'export_student'], '*', MUST_EXIST);
         $course = $DB->get_record('course', ['idnumber' => 'test_course'], '*', MUST_EXIST);
 
-        /** @var core_completion_generator $cgen */
+        /** @var \core_completion\testing\generator $cgen */
         $cgen = $this->getDataGenerator()->get_plugin_generator('core_completion');
         $cgen->disable_completion_tracking($course);
 

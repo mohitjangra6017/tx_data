@@ -573,7 +573,7 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $orgframework = $hierarchy_generator->create_org_frame(array());
         $org1 = $hierarchy_generator->create_org(array('frameworkid' => $orgframework->id, 'idnumber' => 'org1'));
@@ -608,7 +608,7 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $orgframework = $hierarchy_generator->create_org_frame(array());
         $org1 = $hierarchy_generator->create_org(array('frameworkid' => $orgframework->id, 'idnumber' => 'org1'));

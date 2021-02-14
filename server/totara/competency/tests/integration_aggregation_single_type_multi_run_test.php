@@ -102,7 +102,7 @@ class totara_competency_integration_aggregation_single_type_multi_run_testcase e
         // Create learning plans
         $data->learning_plans = [];
 
-        /** @var totara_plan_generator $plan_generator */
+        /** @var \totara_plan\testing\generator $plan_generator */
         $data->learning_plans['1-1'] = [
             'dplan' => $data->competency_generator->create_learning_plan_with_competencies($data->users[1]->id,
                 [$data->competencies[1]->id => null]
@@ -1258,7 +1258,7 @@ class totara_competency_integration_aggregation_single_type_multi_run_testcase e
      * @param string $task_to_execute
      */
     private function manual_multi_run_1($data, string $task_to_execute) {
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         // manager rates user1 = 4, user2 = 3
@@ -1410,7 +1410,7 @@ class totara_competency_integration_aggregation_single_type_multi_run_testcase e
      * @param string $task_to_execute
      */
     private function manual_multi_run_2($data, string $task_to_execute) {
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         // user1 rates himself = 2

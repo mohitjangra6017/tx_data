@@ -33,8 +33,8 @@ abstract class redisplay_testcase extends advanced_testcase {
 
         $data = new stdClass();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         /*
          * activity1                    [SOURCE ACTIVITY]

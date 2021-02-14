@@ -84,13 +84,14 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Turn off certifications. This is to test that it doesn't interfere with program completion.
         set_config('enablecertifications', advanced_feature::DISABLED);
 
-        $this->program_generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
+        $this->program_generator = \totara_program\testing\generator::instance();
+        $job_generator = \totara_job\testing\generator::instance();
 
         // Create users.
         $this->assertEquals(2, $DB->count_records('user'));
         $this->manager = $this->getDataGenerator()->create_user();
         for ($i = 1; $i <= 6; $i++) {
-            $this->{'user'.$i} = $this->getDataGenerator()->create_user(array('managerid' => $this->manager->id));
+            list($this->{'user'.$i}, $ja) = $job_generator->create_user_and_job(array('managerid' => $this->manager->id));
         }
         $this->assertEquals(6 + 3, $DB->count_records('user'));
 
@@ -343,7 +344,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
                 'courses' => array($course2)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->program1, $coursesetdata);
+        $this->program_generator->legacy_add_coursesets_to_program($this->program1, $coursesetdata);
 
         // Assign users to courses.
         $this->getDataGenerator()->enrol_user($this->user2->id, $course1->id);
@@ -453,7 +454,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
                 'courses' => array($course2)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->program1, $coursesetdata);
+        $this->program_generator->legacy_add_coursesets_to_program($this->program1, $coursesetdata);
 
         // Assign users to program.
         $usersprogram = array($this->user1->id, $this->user2->id, $this->user3->id, $this->user4->id, $this->user5->id, $this->user6->id);
@@ -600,7 +601,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
                 'courses' => array($course2)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->program1, $coursesetdata);
+        $this->program_generator->legacy_add_coursesets_to_program($this->program1, $coursesetdata);
 
         // Assign users to program.
         $usersprogram = array($this->user1->id, $this->user2->id, $this->user3->id, $this->user4->id, $this->user5->id, $this->user6->id);
@@ -724,7 +725,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
                 'courses' => array($course2)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->program1, $coursesetdata);
+        $this->program_generator->legacy_add_coursesets_to_program($this->program1, $coursesetdata);
 
         // Assign user2 to courses.
         $this->getDataGenerator()->enrol_user($this->user2->id, $course1->id);
@@ -827,7 +828,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
                 'courses' => array($course2)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->program1, $coursesetdata);
+        $this->program_generator->legacy_add_coursesets_to_program($this->program1, $coursesetdata);
 
         // Assign users to program.
         $usersprogram = array($this->user1->id, $this->user2->id, $this->user3->id, $this->user4->id, $this->user5->id, $this->user6->id);
@@ -976,7 +977,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
                 'courses' => array($course2)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->program1, $coursesetdata);
+        $this->program_generator->legacy_add_coursesets_to_program($this->program1, $coursesetdata);
 
         // Assign users to program.
         $usersprogram = array($this->user1->id, $this->user2->id, $this->user3->id, $this->user4->id, $this->user5->id, $this->user6->id);
@@ -1119,7 +1120,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
                 'courses' => array($course2)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->program1, $coursesetdata);
+        $this->program_generator->legacy_add_coursesets_to_program($this->program1, $coursesetdata);
 
         // Assign users to program.
         $usersprogram = array($this->user1->id, $this->user2->id, $this->user3->id, $this->user4->id, $this->user5->id);

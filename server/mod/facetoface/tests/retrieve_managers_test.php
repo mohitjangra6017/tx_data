@@ -35,7 +35,7 @@ class mod_facetoface_retrieve_managers_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $course = $gen->create_course([], ['createsections' => 1]);
 
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
         $f2f = $f2fgen->create_instance(['course' => $course->id]);
 

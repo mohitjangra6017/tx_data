@@ -38,7 +38,7 @@ class engage_article_webapi_fetch_comment_cursor_testcase extends advanced_testc
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article([
             'userid' => $user_one->id,
@@ -68,7 +68,7 @@ class engage_article_webapi_fetch_comment_cursor_testcase extends advanced_testc
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article([
             'userid' => $user_one->id,
@@ -98,7 +98,7 @@ class engage_article_webapi_fetch_comment_cursor_testcase extends advanced_testc
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article([
             'userid' => $user_one->id,

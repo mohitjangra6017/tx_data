@@ -78,12 +78,12 @@ class totara_generator_course_backend extends tool_generator_course_backend {
     private $shortname;
 
     /**
-     * @var testing_data_generator Data generator
+     * @var \core\testing\generator Data generator
      */
     protected $generator;
 
     /**
-     * @var core_completion_generator
+     * @var \core_completion\testing\generator
      */
     protected $completion_generator;
 
@@ -152,8 +152,7 @@ class totara_generator_course_backend extends tool_generator_course_backend {
      * @return int Course id
      */
     public function make() {
-        global $DB, $CFG;
-        require_once($CFG->dirroot . '/lib/phpunit/classes/util.php');
+        global $DB;
 
         raise_memory_limit(MEMORY_EXTRA);
 
@@ -167,7 +166,7 @@ class totara_generator_course_backend extends tool_generator_course_backend {
         $transaction = $DB->start_delegated_transaction();
 
         // Get generator.
-        $this->generator = phpunit_util::get_data_generator();
+        $this->generator = \core\testing\generator::instance();
 
         // Make course.
         $this->course = $this->create_course();
@@ -259,7 +258,7 @@ class totara_generator_course_backend extends tool_generator_course_backend {
         $this->log('createactivities', $number, true);
         for ($i = 1; $i <= $number; $i++) {
             $mod = 'mod_' . self::$activities[rand(0, $activitiescount)];
-            /** @var testing_module_generator $modgenerator */
+            /** @var \core\testing\mod_generator $modgenerator */
             $modgenerator = $this->generator->get_plugin_generator($mod);
             $record = array('course' => $this->course->id);
             $options = array(

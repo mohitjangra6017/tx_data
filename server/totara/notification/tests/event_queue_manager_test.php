@@ -32,7 +32,7 @@ class totara_notification_event_queue_manager_testcase extends advanced_testcase
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var \totara_notification\testing\generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_notifiable_event();
 
@@ -68,7 +68,7 @@ class totara_notification_event_queue_manager_testcase extends advanced_testcase
         self::assertEquals(2, $DB->count_records(notifiable_event_queue::TABLE));
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var \totara_notification\testing\generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $trace = $notification_generator->get_test_progress_trace();
 

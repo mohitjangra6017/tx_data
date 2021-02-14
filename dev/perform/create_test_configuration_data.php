@@ -31,7 +31,6 @@ require __DIR__ . '/../../server/config.php';
 /** @var core_config $CFG */
 
 require_once($CFG->libdir . '/clilib.php');
-require_once($CFG->libdir . '/phpunit/classes/util.php');
 
 global $DB;
 
@@ -73,11 +72,9 @@ if ($options['help']) {
     die;
 }
 
-$generator = phpunit_util::get_data_generator();
-/** @var totara_hierarchy_generator $hierarchy_generator */
-$hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
-/** @var totara_competency_generator $competency_generator */
-$comp_generator = $generator->get_plugin_generator('totara_competency');
+$generator = \core\testing\generator::instance();
+$hierarchy_generator = \totara_hierarchy\testing\generator::instance();
+$comp_generator = \totara_competency\testing\generator::instance();
 
 $num_scalevalues = $options['scalevalues'];
 $num_fw = $options['frameworks'];

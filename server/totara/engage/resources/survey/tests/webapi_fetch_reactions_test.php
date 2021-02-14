@@ -38,7 +38,7 @@ class engage_survey_webapi_fetch_reactions_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_survey(
             "Question 1 ?",
@@ -76,7 +76,7 @@ class engage_survey_webapi_fetch_reactions_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_restricted_survey();
 
@@ -106,7 +106,7 @@ class engage_survey_webapi_fetch_reactions_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_public_survey();
 

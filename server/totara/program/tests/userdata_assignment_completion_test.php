@@ -60,7 +60,7 @@ class totara_program_userdata_assignment_completion_test extends totara_program_
         $user2 = new target_user($this->getDataGenerator()->create_user());
 
         $generator = $this->getDataGenerator();
-        /** @var \totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $generator->get_plugin_generator('totara_program');
 
         $category1 = $generator->create_category();
@@ -139,7 +139,7 @@ class totara_program_userdata_assignment_completion_test extends totara_program_
         $fixtures->controluser = new target_user($this->getDataGenerator()->create_user());
 
         $generator = $this->getDataGenerator();
-        /** @var \totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $generator->get_plugin_generator('totara_program');
 
         $fixtures->category1 = $generator->create_category();

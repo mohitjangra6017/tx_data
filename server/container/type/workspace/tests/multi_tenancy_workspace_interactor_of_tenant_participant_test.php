@@ -81,23 +81,23 @@ class container_workspace_multi_tenancy_workspace_interactor_of_tenant_participa
     }
 
     /**
-     * @return container_workspace_generator
+     * @return \container_workspace\testing\generator
      */
-    private function get_workspace_generator(): container_workspace_generator {
+    private function get_workspace_generator(): \container_workspace\testing\generator {
         $generator = self::getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         return $workspace_generator;
     }
 
     /**
-     * @return totara_tenant_generator
+     * @return \totara_tenant\testing\generator
      */
-    private function get_tenant_generator(): totara_tenant_generator {
+    private function get_tenant_generator(): \totara_tenant\testing\generator {
         $generator = self::getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

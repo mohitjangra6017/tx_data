@@ -55,7 +55,7 @@ class totara_tui_local_controllers_theme_tenants_testcase extends advanced_testc
 
         $controller = new theme_tenants();
         $_POST['theme_name'] = 'ventura';
-        $_POST['tenant_id'] = $this->getDataGenerator()->get_plugin_generator('totara_tenant')->create_tenant()->id;
+        $_POST['tenant_id'] = \totara_tenant\testing\generator::instance()->create_tenant()->id;
 
         ob_start();
         $controller->process();
@@ -117,8 +117,8 @@ class totara_tui_local_controllers_theme_tenants_testcase extends advanced_testc
         $roleid = $this->getDataGenerator()->create_role();
         assign_capability('totara/tui:themesettings', CAP_ALLOW, $roleid, \context_system::instance());
 
-        $tenant1 = $this->getDataGenerator()->get_plugin_generator('totara_tenant')->create_tenant();
-        $tenant2 = $this->getDataGenerator()->get_plugin_generator('totara_tenant')->create_tenant();
+        $tenant1 = \totara_tenant\testing\generator::instance()->create_tenant();
+        $tenant2 = \totara_tenant\testing\generator::instance()->create_tenant();
         $user1 = $this->getDataGenerator()->create_user(['tenantid' => $tenant1->id]);
         $user2 = $this->getDataGenerator()->create_user(['tenantid' => $tenant2->id]);
         $this->getDataGenerator()->role_assign($roleid, $user1->id);

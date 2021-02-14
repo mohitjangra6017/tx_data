@@ -40,14 +40,14 @@ class container_workspace_webapi_fetch_replies_testcase extends advanced_testcas
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 
         // Create a discussion, and comment for this discussion.
         $discussion = $workspace_generator->create_discussion($workspace->get_id());
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $discussion->get_id(),
@@ -77,14 +77,14 @@ class container_workspace_webapi_fetch_replies_testcase extends advanced_testcas
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_hidden_workspace();
 
         // Create a discussion, and comment for this discussion.
         $discussion = $workspace_generator->create_discussion($workspace->get_id());
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $discussion->get_id(),
@@ -114,14 +114,14 @@ class container_workspace_webapi_fetch_replies_testcase extends advanced_testcas
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
         // Create a discussion, and comment for this discussion.
         $discussion = $workspace_generator->create_discussion($workspace->get_id());
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $discussion->get_id(),
@@ -151,7 +151,7 @@ class container_workspace_webapi_fetch_replies_testcase extends advanced_testcas
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 
@@ -160,7 +160,7 @@ class container_workspace_webapi_fetch_replies_testcase extends advanced_testcas
 
         $discussion = $workspace_generator->create_discussion($workspace->get_id());
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $discussion->get_id(),

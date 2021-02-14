@@ -73,13 +73,16 @@ class totara_reportbuilder_rb_findprograms_embedded_cache_testcase extends repor
      */
     protected function setUp(): void {
         parent::setup();
+
+        $program_generator = \totara_program\testing\generator::instance();
+
         $this->loadDataSet($this->createArrayDataSet(array('report_builder' => array($this->report_builder_data),
                                                            'report_builder_columns' => $this->report_builder_columns_data,
                                                            'report_builder_filters' => $this->report_builder_filters_data)));
 
-        $this->program1 = $this->getDataGenerator()->create_program(array('fullname'=> 'Program level 1'));
-        $this->program2 = $this->getDataGenerator()->create_program(array('fullname'=> 'Program 2'));
-        $this->program3 = $this->getDataGenerator()->create_program(array('fullname'=> 'Program level 3'));
+        $this->program1 = $program_generator->create_program(array('fullname'=> 'Program level 1'));
+        $this->program2 = $program_generator->create_program(array('fullname'=> 'Program 2'));
+        $this->program3 = $program_generator->create_program(array('fullname'=> 'Program level 3'));
 
         $this->user1 = $this->getDataGenerator()->create_user();
 

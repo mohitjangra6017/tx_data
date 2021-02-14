@@ -34,7 +34,7 @@ class container_workspace_multi_tenancy_join_workspace_testcase extends advanced
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -46,7 +46,7 @@ class container_workspace_multi_tenancy_join_workspace_testcase extends advanced
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setUser($user_one);
         $workspace = $workspace_generator->create_workspace();
@@ -65,7 +65,7 @@ class container_workspace_multi_tenancy_join_workspace_testcase extends advanced
     public function test_join_workspace_as_same_user_within_same_tenant(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
         $tenant_one = $tenant_generator->create_tenant();
@@ -76,7 +76,7 @@ class container_workspace_multi_tenancy_join_workspace_testcase extends advanced
         $tenant_generator->migrate_user_to_tenant($user_one->id, $tenant_one->id);
         $tenant_generator->migrate_user_to_tenant($user_two->id, $tenant_one->id);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setUser($user_one);
         $workspace = $workspace_generator->create_workspace();

@@ -97,7 +97,7 @@ class mod_perform_webapi_type_track_assignment_testcase extends advanced_testcas
     private function create_assignment(): array {
         $this->setAdminUser();
 
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $generator = \mod_perform\testing\generator::instance();
         $activity = $generator->create_activity_in_container();
         $context = $activity->get_context();
 

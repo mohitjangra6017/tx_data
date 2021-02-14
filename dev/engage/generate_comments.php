@@ -25,7 +25,6 @@ global $CFG, $DB, $USER;
 
 require_once(__DIR__ . "/../../server/config.php");
 require_once("{$CFG->dirroot}/lib/clilib.php");
-require_once("{$CFG->dirroot}/lib/testing/classes/util.php");
 
 [$options, $unrecognized] = cli_get_params(
     [
@@ -84,9 +83,9 @@ if (isset($options['user_id'])) {
     $USER = get_admin();
 }
 
-$generator = testing_util::get_data_generator();
+$generator = \core\testing\generator::instance();
 
-/** @var totara_comment_generator $comment_generator */
+/** @var \totara_comment\testing\generator $comment_generator */
 $comment_generator = $generator->get_plugin_generator('totara_comment');
 $total_number = $options['number'];
 

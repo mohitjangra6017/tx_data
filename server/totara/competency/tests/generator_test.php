@@ -42,7 +42,7 @@ class totara_competency_generator_testcase extends \advanced_testcase {
             public $cc;
         };
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $data->scale = $hierarchygenerator->create_scale(
             'comp',
@@ -165,14 +165,13 @@ class totara_competency_generator_testcase extends \advanced_testcase {
 
     public function test_it_returns_assignment_generator() {
         $ag = $this->generator()->assignment_generator();
-        $this->assertInstanceOf(totara_competency_assignment_generator::class, $ag);
         $this->assertSame($ag, $this->generator()->assignment_generator());
     }
 
     /**
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        return \totara_competency\testing\generator::instance();
     }
 }

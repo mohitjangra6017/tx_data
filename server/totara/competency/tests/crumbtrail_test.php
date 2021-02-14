@@ -39,7 +39,7 @@ class totara_competency_crumbtrail_testcase extends advanced_testcase {
     /**
      * Date generator shortcut
      *
-     * @return testing_data_generator
+     * @return \core\testing\generator
      */
     protected function generator() {
         return self::getDataGenerator();
@@ -168,7 +168,7 @@ class totara_competency_crumbtrail_testcase extends advanced_testcase {
     }
 
     private function prepare_data() {
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->generator()->get_plugin_generator('totara_hierarchy');
 
         $test_data = new class() {

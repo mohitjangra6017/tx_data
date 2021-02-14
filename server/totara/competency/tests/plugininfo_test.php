@@ -85,19 +85,19 @@ class totara_competency_plugininfo_testcase extends advanced_testcase {
     /**
      * Get hierarchy specific generator
      *
-     * @return totara_competency_generator|component_generator_base
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        return \totara_competency\testing\generator::instance();
     }
 
     /**
      * Get criteria specific generator
      *
-     * @return totara_criteria_generator|component_generator_base
+     * @return \totara_criteria\testing\generator
      */
     protected function criteria_generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_criteria');
+        return \totara_criteria\testing\generator::instance();
     }
 
     /**

@@ -28,17 +28,8 @@ use Behat\Gherkin\Node\TableNode;
 
 
 class behat_totara_dashboards extends behat_base {
-
-    protected static $generator = null;
-
     protected function get_data_generator() {
-        global $CFG;
-        if (self::$generator === null) {
-            require_once($CFG->libdir.'/testing/generator/lib.php');
-            require_once($CFG->dirroot.'/totara/dashboard/tests/generator/lib.php');
-            self::$generator = new totara_dashboard_generator(testing_util::get_data_generator());
-        }
-        return self::$generator;
+        return \totara_dashboard\testing\generator::instance();
     }
 
     /**

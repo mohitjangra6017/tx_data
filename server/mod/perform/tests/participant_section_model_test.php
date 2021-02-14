@@ -36,7 +36,7 @@ class mod_perform_participant_section_model_testcase extends advanced_testcase {
 
         $data_generator = self::getDataGenerator();
 
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         $subject_user = $data_generator->create_user();
@@ -192,7 +192,7 @@ class mod_perform_participant_section_model_testcase extends advanced_testcase {
         $subject_user = $data_generator->create_user();
         $manager_appraiser_user = $data_generator->create_user();
 
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         $subject_instance = $perform_generator->create_subject_instance([

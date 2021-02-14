@@ -194,7 +194,7 @@ class pathway_manual_roles_testcase extends advanced_testcase {
      * Make sure that get_roles_for_competency() gets sorted list of available roles without duplicates for the given competency.
      */
     public function test_get_roles_for_competency() {
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $competency_1 = $generator->create_competency();
@@ -219,7 +219,7 @@ class pathway_manual_roles_testcase extends advanced_testcase {
      * Make sure that get_competencies_with_role() gets sorted list of available roles without duplicates for the given competency.
      */
     public function test_get_competencies_with_role() {
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $competency_1 = $generator->create_competency();
@@ -254,7 +254,7 @@ class pathway_manual_roles_testcase extends advanced_testcase {
      * Make sure that competency_has_role() correctly checks if a competency has the specified role.
      */
     public function test_competency_has_role() {
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $competency_1 = $generator->create_competency();

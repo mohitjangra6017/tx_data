@@ -36,12 +36,12 @@ class totara_generator_learning_plan_backend extends tool_generator_backend {
     protected $size;
 
     /**
-     * @var testing_data_generator Moodle original data generator.
+     * @var \core\testing\generator Moodle original data generator.
      */
     protected $generator;
 
     /**
-     * @var totara_plan_generator Learning plan data generator.
+     * @var \totara_plan\testing\generator Learning plan data generator.
      */
     protected $learning_plan_generator;
 
@@ -87,8 +87,6 @@ class totara_generator_learning_plan_backend extends tool_generator_backend {
      */
     public function make() {
         global $DB, $CFG;
-        require_once($CFG->dirroot . '/lib/phpunit/classes/util.php');
-
         raise_memory_limit(MEMORY_EXTRA);
 
         if ($this->progress && !CLI_SCRIPT) {
@@ -100,7 +98,7 @@ class totara_generator_learning_plan_backend extends tool_generator_backend {
         $transaction = $DB->start_delegated_transaction();
 
         // Get generator.
-        $this->generator = phpunit_util::get_data_generator();
+        $this->generator = \core\testing\generator::instance();
 
         // Set custom data generators.
         $this->set_custom_generators();
@@ -138,7 +136,7 @@ class totara_generator_learning_plan_backend extends tool_generator_backend {
         if ($this->name) {
             $default_name = $this->name;
         } else {
-            $default_name = totara_plan_generator::DEFAULT_NAME;
+            $default_name = \totara_plan\testing\generator::DEFAULT_NAME;
         }
 
         // Create the name we want to use.
@@ -220,7 +218,7 @@ class totara_generator_learning_plan_backend extends tool_generator_backend {
         $this->log('planassignobjectives', $numitems);
         // Create the objective name we want to use with by getting
         // the number off any previous matching records we created.
-        $default_name = totara_plan_generator::DEFAULT_NAME_OBJECTIVE;
+        $default_name = \totara_plan\testing\generator::DEFAULT_NAME_OBJECTIVE;
         $default_name = trim($default_name) . ' ' . totara_generator_util::get_size_name($this->size);
         $name_number = totara_generator_util::get_next_record_number('dp_plan_objective', 'fullname', $default_name);
 

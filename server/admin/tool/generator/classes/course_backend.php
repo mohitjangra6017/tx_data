@@ -99,7 +99,7 @@ class tool_generator_course_backend extends tool_generator_backend {
     private $summaryformat = FORMAT_HTML;
 
     /**
-     * @var testing_data_generator Data generator
+     * @var \core\testing\generator Data generator
      */
     protected $generator;
 
@@ -206,7 +206,6 @@ class tool_generator_course_backend extends tool_generator_backend {
      */
     public function make() {
         global $DB, $CFG;
-        require_once($CFG->dirroot . '/lib/phpunit/classes/util.php');
 
         raise_memory_limit(MEMORY_EXTRA);
 
@@ -217,7 +216,7 @@ class tool_generator_course_backend extends tool_generator_backend {
         $entirestart = microtime(true);
 
         // Get generator.
-        $this->generator = phpunit_util::get_data_generator();
+        $this->generator = \core\testing\generator::instance();
 
         // Make course.
         $this->course = $this->create_course();

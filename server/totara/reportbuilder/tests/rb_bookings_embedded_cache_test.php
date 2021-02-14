@@ -108,10 +108,11 @@ class totara_reportbuilder_rb_bookings_embedded_cache_testcase extends reportcac
                                                            'report_builder_columns' => $this->report_builder_columns_data,
                                                            'report_builder_settings' => $this->report_builder_settings_data)));
         // Create four users
-        $this->user1 = $this->getDataGenerator()->create_user();
-        $this->user2 = $this->getDataGenerator()->create_user();
-        $this->user3 = $this->getDataGenerator()->create_user();
-        $this->user4 = $this->getDataGenerator()->create_user();
+        $job_generator = \totara_job\testing\generator::instance();
+        $this->user1 = $job_generator->create_user_and_job()[0];
+        $this->user2 = $job_generator->create_user_and_job()[0];
+        $this->user3 = $job_generator->create_user_and_job()[0];
+        $this->user4 = $job_generator->create_user_and_job()[0];
 
         // Create two courses
         $this->course1 = $this->getDataGenerator()->create_course(array(), array('createsections' => true));

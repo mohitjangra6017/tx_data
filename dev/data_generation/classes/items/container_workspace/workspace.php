@@ -64,7 +64,7 @@ final class workspace extends item {
     public function create_workspace(?int $owner_id = null): model {
         $generator = App::generator();
 
-        /** @var \container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         $properties = $this->get_properties();

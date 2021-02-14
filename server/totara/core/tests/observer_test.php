@@ -32,10 +32,10 @@ require_once($CFG->dirroot . '/completion/criteria/completion_criteria_course.ph
 
 class totara_core_observer_testcase extends advanced_testcase {
 
-    /** @var  testing_data_generator $data_generator */
+    /** @var  \core\testing\generator $data_generator */
     protected $generator;
 
-    /** @var core_completion_generator $completion_generator */
+    /** @var \core_completion\testing\generator $completion_generator */
     protected $completion_generator;
 
     protected function tearDown(): void {

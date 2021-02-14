@@ -68,7 +68,7 @@ abstract class totara_cohort_certification_testcase extends reportcache_advanced
     public function assign_users($users, $certifications = []) {
         foreach ($users as $user) {
             foreach ($certifications as $certification) {
-                $this->getDataGenerator()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id);
+                \totara_program\testing\generator::instance()->assign_to_program($certification->id, ASSIGNTYPE_INDIVIDUAL, $user->id, null, true);
             }
         }
     }

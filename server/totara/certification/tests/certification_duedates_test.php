@@ -32,9 +32,9 @@ class totara_certification_certification_duedates_testcase extends advanced_test
     public function test_adding_new_assignment_when_user_is_assigned() {
         global $DB;
 
-        /** @var testing_data_generator $datagenerator */
+        /** @var \core\testing\generator $datagenerator */
         $datagenerator = $this->getDataGenerator();
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $datagenerator->get_plugin_generator('totara_program');
 
         // Create a certification.
@@ -80,9 +80,9 @@ class totara_certification_certification_duedates_testcase extends advanced_test
     public function test_adding_new_assignment_user_inprogress() {
         global $DB;
 
-        /** @var testing_data_generator $datagenerator */
+        /** @var \core\testing\generator $datagenerator */
         $datagenerator = $this->getDataGenerator();
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $datagenerator->get_plugin_generator('totara_program');
 
         // Create a certification.
@@ -128,9 +128,9 @@ class totara_certification_certification_duedates_testcase extends advanced_test
     public function test_adding_new_assignment_user_certified() {
         global $DB;
 
-        /** @var testing_data_generator $datagenerator */
+        /** @var \core\testing\generator $datagenerator */
         $datagenerator = $this->getDataGenerator();
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $datagenerator->get_plugin_generator('totara_program');
 
         // Create a certification.
@@ -172,9 +172,9 @@ class totara_certification_certification_duedates_testcase extends advanced_test
     public function test_adding_new_assignment_user_expired() {
         global $DB;
 
-        /** @var testing_data_generator $datagenerator */
+        /** @var \core\testing\generator $datagenerator */
         $datagenerator = $this->getDataGenerator();
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $datagenerator->get_plugin_generator('totara_program');
 
         // Create a certification.
@@ -219,9 +219,9 @@ class totara_certification_certification_duedates_testcase extends advanced_test
     public function test_adding_new_assignment_user_has_history_record() {
         global $DB;
 
-        /** @var testing_data_generator $datagenerator */
+        /** @var \core\testing\generator $datagenerator */
         $datagenerator = $this->getDataGenerator();
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $datagenerator->get_plugin_generator('totara_program');
 
         // Create a certification.

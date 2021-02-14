@@ -47,7 +47,7 @@ class behat_totara_competency extends behat_base {
     private const TOTARA_COMPETENCY_ACHIEVEMENT_PATHS_PATH = 'totara/competency/competency_edit.php';
 
     /**
-     * @var totara_competency_generator
+     * @var \totara_competency\testing\generator
      */
     protected $generator;
 
@@ -251,17 +251,10 @@ class behat_totara_competency extends behat_base {
     }
 
     /**
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     private function get_data_generator() {
-        global $CFG;
-        require_once($CFG->dirroot . '/totara/competency/tests/generator/totara_competency_generator.class.php');
-
-        if (is_null($this->generator)) {
-            $this->generator = new totara_competency_generator(new testing_data_generator());
-        }
-
-        return $this->generator;
+        return \totara_competency\testing\generator::instance();
     }
 
     /**

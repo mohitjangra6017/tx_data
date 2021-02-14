@@ -98,7 +98,7 @@ class totara_topic_delete_topic_testcase extends advanced_testcase {
         $this->executeAdhocTasks();
         $this->setAdminUser();
 
-        /** @var totara_topic_generator $gen */
+        /** @var \totara_topic\testing\generator $gen */
         $gen = $this->getDataGenerator()->get_plugin_generator('totara_topic');
         $gen->add_default_area();
 

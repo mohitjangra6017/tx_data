@@ -37,7 +37,7 @@ class container_workspace_user_data_workspace_testcase extends advanced_testcase
         $user = $generator->create_user();
         $user1 = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         // Create workspaces for user.
@@ -102,7 +102,7 @@ class container_workspace_user_data_workspace_testcase extends advanced_testcase
         $user1 = $generator->create_user();
         $this->setUser($user);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace_generator->create_workspace();
         $workspace_generator->create_workspace();

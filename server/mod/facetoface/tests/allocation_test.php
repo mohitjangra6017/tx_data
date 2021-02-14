@@ -33,7 +33,7 @@ class mod_facetoface_allocation_testcase extends advanced_testcase {
         $this->resetAfterTest();
         $this->preventResetByRollback(); // Transactions prevent email redirection!
 
-        /** @var mod_facetoface_generator $seminargenerator */
+        /** @var \mod_facetoface\testing\generator $seminargenerator */
         $seminargenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));

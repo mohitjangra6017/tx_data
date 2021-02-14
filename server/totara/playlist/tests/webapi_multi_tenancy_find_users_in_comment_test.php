@@ -31,23 +31,23 @@ class totara_playlist_webapi_multi_tenancy_find_users_in_comment_testcase extend
     use webapi_phpunit_helper;
 
     /**
-     * @return totara_playlist_generator
+     * @return \totara_playlist\testing\generator
      */
-    private function get_playlist_generator(): totara_playlist_generator {
+    private function get_playlist_generator(): \totara_playlist\testing\generator {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         return $playlist_generator;
     }
 
     /**
-     * @return totara_tenant_generator
+     * @return \totara_tenant\testing\generator
      */
-    private function get_tenant_generator(): totara_tenant_generator {
+    private function get_tenant_generator(): \totara_tenant\testing\generator {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -73,12 +73,12 @@ class totara_playlist_webapi_multi_tenancy_find_users_in_comment_testcase extend
     }
 
     /**
-     * @return totara_comment_generator
+     * @return \totara_comment\testing\generator
      */
-    private function get_comment_generator(): totara_comment_generator {
+    private function get_comment_generator(): \totara_comment\testing\generator {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         return $comment_generator;
     }

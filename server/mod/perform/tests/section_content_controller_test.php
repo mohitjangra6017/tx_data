@@ -107,9 +107,9 @@ class section_content_controller_testcase extends advanced_testcase {
     private function create_activity(int $num_sections = 1): activity {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
-        $config = mod_perform_activity_generator_configuration::new()
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_number_of_sections_per_activity($num_sections);
         return $generator->create_full_activities($config)->first();

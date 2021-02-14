@@ -40,7 +40,7 @@ require_once(__DIR__ . '/pathway_manual_base_testcase.php');
 class pathway_manual_data_provider_rateable_users_testcase extends pathway_manual_base_testcase {
 
     /**
-     * @var testing_data_generator
+     * @var \core\testing\generator
      */
     private $user_generator;
 

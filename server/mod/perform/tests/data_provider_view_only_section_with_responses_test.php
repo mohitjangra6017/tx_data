@@ -49,8 +49,8 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_instance = $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -104,8 +104,8 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
         $subject = self::getDataGenerator()->create_user();
         $manager = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -168,8 +168,8 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
         $subject = self::getDataGenerator()->create_user();
         $manager = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -210,8 +210,8 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_instance = $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -269,10 +269,10 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
     public function test_sibling_section_population(int $section_sort_order): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
-        $config = new mod_perform_activity_generator_configuration();
+        $config = new \mod_perform\testing\activity_generator_configuration();
         $config->set_number_of_sections_per_activity(3);
 
         $generator->create_full_activities($config);
@@ -347,8 +347,8 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
     ): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_user = user::logged_in();
         $subject_user_id = $subject_user->id;
@@ -457,8 +457,8 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
     public function test_responder_group_population_same_user_is_manager_and_appraiser(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_user = user::logged_in();
         $subject_user_id = $subject_user->id;
@@ -509,8 +509,8 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
     public function test_responder_group_population_for_anonymous_activity(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_user = user::logged_in();
         $manager_appraiser_user = self::getDataGenerator()->create_user();

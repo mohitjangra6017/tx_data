@@ -45,7 +45,7 @@ class container_workspace_get_other_workspaces_testcase extends advanced_testcas
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $gen->get_plugin_generator('container_workspace');
 
         for ($i = 0; $i < 5; $i++) {
@@ -81,7 +81,7 @@ class container_workspace_get_other_workspaces_testcase extends advanced_testcas
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_gen */
+        /** @var \container_workspace\testing\generator $workspace_gen */
         $workspace_gen = $gen->get_plugin_generator('container_workspace');
         $joined_workspaces = [];
 

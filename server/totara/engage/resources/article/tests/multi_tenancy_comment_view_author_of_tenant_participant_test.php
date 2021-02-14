@@ -48,7 +48,7 @@ class engage_article_multi_tenancy_comment_view_author_of_tenant_participant_tes
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -83,23 +83,23 @@ class engage_article_multi_tenancy_comment_view_author_of_tenant_participant_tes
     }
 
     /**
-     * @return engage_article_generator
+     * @return \engage_article\testing\generator
      */
-    private function get_article_generator(): engage_article_generator {
+    private function get_article_generator(): \engage_article\testing\generator {
         $generator = self::getDataGenerator();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         return $article_generator;
     }
 
     /**
-     * @return totara_comment_generator
+     * @return \totara_comment\testing\generator
      */
-    private function get_comment_generator(): totara_comment_generator {
+    private function get_comment_generator(): \totara_comment\testing\generator {
         $generator = self::getDataGenerator();
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         return $comment_generator;
     }

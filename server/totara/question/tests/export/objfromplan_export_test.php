@@ -52,7 +52,7 @@ class totara_question_objfromplan_export_testcase extends advanced_testcase {
         $admin = get_admin();
         $this->setUser($admin);
 
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
         $plan = $plangenerator->create_learning_plan();
         $objective1 = $plangenerator->create_learning_plan_objective($plan->id, null);

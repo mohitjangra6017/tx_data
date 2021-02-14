@@ -47,10 +47,10 @@ defined('MOODLE_INTERNAL') || die();
 class mod_perform_track_schedule_sync_testcase extends advanced_testcase {
 
     /**
-     * @return mod_perform_generator|component_generator_base
+     * @return \mod_perform\testing\generator
      */
-    protected function generator(): mod_perform_generator {
-        return $this->getDataGenerator()->get_plugin_generator('mod_perform');
+    protected function generator() {
+        return \mod_perform\testing\generator::instance();
     }
 
     protected function setUp(): void {
@@ -60,7 +60,7 @@ class mod_perform_track_schedule_sync_testcase extends advanced_testcase {
 
     public function test_sync_updates_user_assignment_dates(): void {
         $generator = $this->generator();
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->disable_user_assignments()
             ->set_number_of_users_per_user_group_type(1);
         /** @var activity_model $activity */
@@ -91,7 +91,7 @@ class mod_perform_track_schedule_sync_testcase extends advanced_testcase {
 
     public function test_sync_updates_user_assignment_dates_using_anniversary_date_resolution(): void {
         $generator = $this->generator();
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->disable_user_assignments()
             ->set_number_of_users_per_user_group_type(1);
 
@@ -140,7 +140,7 @@ class mod_perform_track_schedule_sync_testcase extends advanced_testcase {
 
     public function test_draft_activity_is_not_synced(): void {
         $generator = $this->generator();
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->disable_user_assignments()
             ->set_number_of_users_per_user_group_type(1);
         /** @var activity_model $activity */
@@ -179,7 +179,7 @@ class mod_perform_track_schedule_sync_testcase extends advanced_testcase {
 
     public function test_paused_track_is_not_synced(): void {
         $generator = $this->generator();
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->disable_user_assignments()
             ->set_number_of_users_per_user_group_type(1);
         /** @var activity_model $activity */
@@ -222,7 +222,7 @@ class mod_perform_track_schedule_sync_testcase extends advanced_testcase {
 
     public function test_expand_picks_up_synced_dates(): void {
         $generator = $this->generator();
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->disable_user_assignments();
         /** @var activity_model $activity */
         $activity = $generator->create_full_activities($config)->first();
@@ -307,7 +307,7 @@ class mod_perform_track_schedule_sync_testcase extends advanced_testcase {
      */
     public function test_sync_flagged_and_unflagged(string $method_name, bool $flagged, bool $is_sync_expected) {
         $generator = $this->generator();
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->disable_user_assignments()
             ->set_number_of_users_per_user_group_type(1);
         /** @var activity_model $activity */

@@ -40,7 +40,7 @@ class totara_notification_notifiable_event_factory_testcase extends advanced_tes
     public function test_get_events_from_component(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_notification_generator $notification_generator */
+        /** @var \totara_notification\testing\generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_notifiable_event();
 

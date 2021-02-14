@@ -34,19 +34,14 @@ require_once($CFG->dirroot . '/totara/reportbuilder/tests/reportcache_advanced_t
  */
 class totara_program_program_class_testcase extends reportcache_advanced_testcase {
 
-    /** @var totara_reportbuilder_cache_generator $data_generator */
     private $data_generator;
 
-    /** @var totara_program_generator $program_generator */
     private $program_generator;
 
-    /** @var totara_hierarchy_generator $hierarchy_generator */
     private $hierarchy_generator;
 
-    /** @var totara_cohort_generator $cohort_generator */
     private $cohort_generator;
 
-    /** @var totara_plan_generator $plan_generator */
     private $plan_generator;
 
     /** @var phpunit_message_sink $messagesink */
@@ -75,17 +70,18 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         $maxmanagers = 3;
 
         $this->data_generator = $this->getDataGenerator();
-        $this->program_generator = $this->data_generator->get_plugin_generator('totara_program');
-        $this->hierarchy_generator = $this->data_generator->get_plugin_generator('totara_hierarchy');
-        $this->cohort_generator = $this->data_generator->get_plugin_generator('totara_cohort');
-        $this->plan_generator = $this->data_generator->get_plugin_generator('totara_plan');
+        $this->program_generator = \totara_program\testing\generator::instance();
+        $this->hierarchy_generator = \totara_hierarchy\testing\generator::instance();
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
+        $this->plan_generator = \totara_plan\testing\generator::instance();
+        $job_generator = \totara_job\testing\generator::instance();
 
         for($numuser = 0; $numuser < $maxusers; $numuser++) {
             // Important to remember that create_user also creates a job assignment for each user and assigns
             // a manager. When no manager is specified, admin is the manager. So this will be overwritten
             // in this test for users with a managerja type program assignment, the rest will still have
             // admin as manager.
-            $this->users[$numuser] = $this->data_generator->create_user();
+            $this->users[$numuser] = $job_generator->create_user_and_job([])[0];
         }
 
         $this->orgframe = $this->hierarchy_generator->create_org_frame(array());
@@ -106,7 +102,7 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
             // This is really assignment via hierarchies based on the manager's job assignment rather than
             // the manager themselves. For our testing, the managers and their job assignments map onto each
             // other according to the keys in $this->managers and $this->managerjas.
-            $this->managers[$numman] = $this->data_generator->create_user();
+            $this->managers[$numman] = $job_generator->create_user_and_job([])[0];
             $this->managerjas[$numman] = \totara_job\job_assignment::create_default($this->managers[$numman]->id);
         }
     }
@@ -203,7 +199,7 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
                         $jobassignment->update(array('managerjaid' => $groupid));
                         break;
                 }
-                $this->data_generator->assign_to_program($program->id, $assignment_method, $user_data[2][$key]->id);
+                $this->program_generator->assign_to_program($program->id, $assignment_method, $user_data[2][$key]->id, null, true);
             }
         }
     }
@@ -887,11 +883,13 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
 
         $this->resetAfterTest();
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $courses = [];
         $users = [];
         for ($i = 0; $i < 10; $i++) {
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
-            $user = $this->data_generator->create_user(['email' => 'user'.$i.'@example.com', 'username' => 'user'.$i, 'idnumber' => 'u'.$i]);
+            list($user, $ja) = $job_generator->create_user_and_job(['email' => 'user'.$i.'@example.com', 'username' => 'user'.$i, 'idnumber' => 'u'.$i]);
             $users[$user->id] = $user;
         }
         $this->assertCount(10, $courses);
@@ -957,12 +955,14 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
 
         $this->resetAfterTest();
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $courses = [];
         $users = [];
         $reassignuserids = [];
         for ($i = 0; $i < 5; $i++) {
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
-            $user = $this->data_generator->create_user(['email' => 'user'.$i.'@example.com', 'username' => 'user'.$i, 'idnumber' => 'u'.$i]);
+            list($user, $ja) = $job_generator->create_user_and_job(['email' => 'user'.$i.'@example.com', 'username' => 'user'.$i, 'idnumber' => 'u'.$i]);
             $users[$user->id] = $user;
             if ($i < 3) {
                 $reassignuserids[] = $user->id;
@@ -1064,12 +1064,14 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
 
         $this->resetAfterTest();
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $courses = [];
         $users = [];
         $oddusers = [];
         for ($i = 0; $i < 6; $i++) {
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
-            $user = $this->data_generator->create_user(['email' => 'user'.$i.'@example.com', 'username' => 'user'.$i, 'idnumber' => 'u'.$i]);
+            list($user, $ja) = $job_generator->create_user_and_job(['email' => 'user'.$i.'@example.com', 'username' => 'user'.$i, 'idnumber' => 'u'.$i]);
             $users[$user->id] = $user;
             if ($i % 2 !== 0) {
                 $oddusers[$user->id] = $user;
@@ -1156,31 +1158,32 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         global $DB;
 
         $this->resetAfterTest(true);
-        $generator = $this->getDataGenerator();
+
+        $job_generator = \totara_job\testing\generator::instance();
 
         // Create some users.
-        $user1 = $generator->create_user();
-        $user2 = $generator->create_user();
+        list($user1, $ja) = $job_generator->create_user_and_job([]);
+        list($user2, $ja) = $job_generator->create_user_and_job([]);
 
         // Create some certs.
-        $cert1 = $generator->create_certification();
-        $cert2 = $generator->create_certification();
+        $cert1 = $this->program_generator->create_certification();
+        $cert2 = $this->program_generator->create_certification();
 
         // Create some programs.
-        $prog1 = $generator->create_program();
-        $prog2 = $generator->create_program();
+        $prog1 = $this->program_generator->create_program();
+        $prog2 = $this->program_generator->create_program();
 
         // Add the users to the certs.
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
+        $this->program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $this->program_generator->assign_to_program($cert1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $this->program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $this->program_generator->assign_to_program($cert2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
 
         // Add the users to the programs.
-        $generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
-        $generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id);
-        $generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id);
+        $this->program_generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $this->program_generator->assign_to_program($prog1->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
+        $this->program_generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user1->id, null, true);
+        $this->program_generator->assign_to_program($prog2->id, ASSIGNTYPE_INDIVIDUAL, $user2->id, null, true);
 
         // Mark program 1 as complete.
         $progcompletion = prog_load_completion($prog1->id, $user1->id);
@@ -1275,11 +1278,13 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      * Test that assigned users can access and gain enrolment in courses.
      */
     public function test_user_is_assigned() {
+        $job_generator = \totara_job\testing\generator::instance();
+
         $courses = [];
         $users = [];
         for ($i = 0; $i < 2; $i++) {
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
-            $user = $this->data_generator->create_user(['email' => 'user'.$i.'@example.com', 'username' => 'user'.$i, 'idnumber' => 'u'.$i]);
+            list($user, $ja) = $job_generator->create_user_and_job(['email' => 'user'.$i.'@example.com', 'username' => 'user'.$i, 'idnumber' => 'u'.$i]);
             $users[$user->id] = $user;
         }
         $this->assertCount(2, $courses);
@@ -1293,7 +1298,7 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         $this->program_generator->add_courseset_to_program($program->id, 1, 1);
         $this->program_generator->assign_program($program->id, array_keys($users));
 
-        $unassigneduser = $this->data_generator->create_user();
+        list($unassigneduser, $ja) = $job_generator->create_user_and_job([]);
 
         foreach ($users as $user) {
             $this->assertTrue($program->user_is_assigned($user->id));
@@ -1319,6 +1324,8 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
     public function test_user_is_assigned_through_plan() {
         $this->resetAfterTest();
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $courses = [];
         for ($i = 0; $i < 2; $i++) {
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
@@ -1332,14 +1339,14 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         $program = $this->program_generator->create_program($detail);
         $this->program_generator->add_courseset_to_program($program->id, 1, 1);
 
-        $planuser = $this->data_generator->create_user();
+        list($planuser, $ja) = $job_generator->create_user_and_job([]);
         // Not assigned through a plan yet.
         $this->assertFalse($program->user_is_assigned($planuser->id));
 
         // We need a capable user for this next bit.
         $this->setAdminUser();
 
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->data_generator->get_plugin_generator('totara_plan');
         $plan = $plangenerator->create_learning_plan(['userid' => $planuser->id]);
         $plangenerator->add_learning_plan_program($plan->id, $program->id);
@@ -1360,13 +1367,15 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
 
         $this->resetAfterTest();
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $programs = [];
         $courses = [];
         $users = [];
         for ($i = 0; $i < 5; $i++) {
 
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
-            $user = $this->data_generator->create_user(['email' => 'user'.$i.'@example.com', 'username' => 'user'.$i, 'idnumber' => 'u'.$i]);
+            list($user, $ja) = $job_generator->create_user_and_job(['email' => 'user'.$i.'@example.com', 'username' => 'user'.$i, 'idnumber' => 'u'.$i]);
             $users[$user->id] = $user;
         }
 
@@ -1411,13 +1420,15 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
     public function test_assigned_to_users_required_learning() {
         $this->resetAfterTest();
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $courses = [];
         for ($i = 0; $i < 2; $i++) {
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
         }
         $this->assertCount(2, $courses);
 
-        $user = $this->data_generator->create_user();
+        list($user, $ja) = $job_generator->create_user_and_job([]);
 
         $detail = [
             'fullname' => 'Testing program fullname',
@@ -1443,13 +1454,15 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
 
         $this->resetAfterTest();
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $courses = [];
         for ($i = 0; $i < 2; $i++) {
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
         }
         $this->assertCount(2, $courses);
 
-        $user = $this->data_generator->create_user();
+        list($user, $ja) = $job_generator->create_user_and_job([]);
 
         $detail = [
             'fullname' => 'Testing program fullname',
@@ -1492,13 +1505,15 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
     public function test_can_enter_course_with_unavailable_program() {
         $this->resetAfterTest();
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $courses = [];
         for ($i = 0; $i < 2; $i++) {
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
         }
         $this->assertCount(2, $courses);
 
-        $user = $this->data_generator->create_user();
+        list($user, $ja) = $job_generator->create_user_and_job([]);
 
         // Create a new program that is not visible.
         $now = time();
@@ -1526,13 +1541,15 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
 
         $this->resetAfterTest();
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $courses = [];
         for ($i = 0; $i < 10; $i++) {
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
         }
         $this->assertCount(10, $courses);
 
-        $user = $this->data_generator->create_user();
+        list($user, $ja) = $job_generator->create_user_and_job([]);
 
         $detail = [
             'fullname' => 'Testing program fullname',
@@ -1567,7 +1584,7 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
             // Stupid bloody random generator.
             // If you get here you are here because we tried to add more than one course to a courseset in the program
             // using the generator and it failed, it randomly selected to add 1. YAY!
-            // Look for mt_rand within totara_program_generator::add_courseset_to_program.
+            // Look for mt_rand within \totara_program\testing\generator::add_courseset_to_program.
             $this->markTestSkipped('Skipped due to bad luck - fix the program add_courseset_to_program method');
         }
         $course = reset($courses);
@@ -1583,14 +1600,16 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
 
         $this->resetAfterTest();
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $courses = [];
         for ($i = 0; $i < 2; $i++) {
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
         }
         $this->assertCount(2, $courses);
 
-        $user_complete = $this->data_generator->create_user();
-        $user_incomplete = $this->data_generator->create_user();
+        list($user_complete, $ja) = $job_generator->create_user_and_job([]);
+        list($user_incomplete, $ja) = $job_generator->create_user_and_job([]);
 
         $detail = [
             'fullname' => 'Testing program fullname',
@@ -1631,14 +1650,16 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
 
         $this->resetAfterTest();
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $courses = [];
         for ($i = 0; $i < 2; $i++) {
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
         }
         $this->assertCount(2, $courses);
 
-        $user_complete = $this->data_generator->create_user();
-        $user_incomplete = $this->data_generator->create_user();
+        list($user_complete, $ja) = $job_generator->create_user_and_job([]);
+        list($user_incomplete, $ja) = $job_generator->create_user_and_job([]);
 
         $detail = [
             'fullname' => 'Testing program fullname',
@@ -1689,14 +1710,16 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         // We need the admin user for this test, as we need to work with learning plans.
         $this->setAdminUser();
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $courses = [];
         for ($i = 0; $i < 5; $i++) {
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
         }
         $this->assertCount(5, $courses);
 
-        $user_complete = $this->data_generator->create_user();
-        $user_incomplete = $this->data_generator->create_user();
+        list($user_complete, $ja) = $job_generator->create_user_and_job([]);
+        list($user_incomplete, $ja) = $job_generator->create_user_and_job([]);
 
         $detail = [
             'fullname' => 'Testing program fullname',
@@ -1742,7 +1765,7 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         $this->assertNotFalse($courseset->check_courseset_complete($user_complete->id));
 
         // Now add the program to an incomplete users plan.
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->data_generator->get_plugin_generator('totara_plan');
         $plan = $plangenerator->create_learning_plan(['userid' => $user_incomplete->id]);
         $plangenerator->add_learning_plan_program($plan->id, $program->id);
@@ -1842,14 +1865,16 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         // We need the admin user for this test, as we need to work with learning plans.
         $this->setAdminUser();
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $courses = [];
         for ($i = 0; $i < 5; $i++) {
             $courses[] = $this->data_generator->create_course(['fullname' => 'Test course '.$i, 'shortname' => 'Test '.$i, 'idnumber' => 'TC'.$i]);
         }
         $this->assertCount(5, $courses);
 
-        $user_complete = $this->data_generator->create_user();
-        $user_incomplete = $this->data_generator->create_user();
+        list($user_complete, $ja) = $job_generator->create_user_and_job([]);
+        list($user_incomplete, $ja) = $job_generator->create_user_and_job([]);
 
         $detail = [
             'fullname' => 'Testing program fullname',
@@ -1892,7 +1917,7 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         $this->assertNotFalse($courseset->check_courseset_complete($user_complete->id));
 
         // Now add the program to an incomplete users plan.
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->data_generator->get_plugin_generator('totara_plan');
         $plan = $plangenerator->create_learning_plan(['userid' => $user_incomplete->id]);
         $plangenerator->add_learning_plan_program($plan->id, $certification->id);
@@ -2258,7 +2283,7 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         $this->resetAfterTest();
         $this->setAdminUser();
         $usercontext = context_user::instance($USER->id);
-        $certification = $this->getDataGenerator()->create_certification();
+        $certification = $this->program_generator->create_certification();
 
         // Check that the default is the theme-independent default image.
         $result = $certification->get_image();
@@ -2346,7 +2371,7 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         $multicourseset1->timeallowed = (2 * WEEKSECS) - 1; // 1 second less than 2 Weeks (to ensure exception)
         $multicourseset1->save_set();
 
-        $this->data_generator->assign_to_program($program1->id, ASSIGNTYPE_INDIVIDUAL, $this->users[0]->id);
+        $this->program_generator->assign_to_program($program1->id, ASSIGNTYPE_INDIVIDUAL, $this->users[0]->id, null, true);
         $assignment = $DB->get_record('prog_assignment', ['programid' => $program1->id, 'assignmenttype' => ASSIGNTYPE_INDIVIDUAL, 'assignmenttypeid' => $this->users[0]->id]);
 
         // Check there are no exceptions

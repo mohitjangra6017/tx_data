@@ -33,7 +33,7 @@ class mod_facetoface_sort_sessiondates_testcase extends advanced_testcase {
         $gen = static::getDataGenerator();
         $course = $gen->create_course();
 
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
         $f2f = $f2fgen->create_instance(['course' => $course->id]);
 

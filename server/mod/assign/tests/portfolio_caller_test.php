@@ -43,7 +43,7 @@ class mod_assign_portfolio_caller_testcase extends advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
 
-        /* @var mod_assign_generator $assigngenerator */
+        /* @var \mod_assign\testing\generator $assigngenerator */
         $assigngenerator = $this->getDataGenerator()->get_plugin_generator('mod_assign');
 
         $activityrecord = $assigngenerator->create_instance(array('course' => $course->id));
@@ -93,7 +93,7 @@ class mod_assign_portfolio_caller_testcase extends advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
 
-        /* @var mod_assign_generator $assigngenerator */
+        /* @var \mod_assign\testing\generator $assigngenerator */
         $assigngenerator = $this->getDataGenerator()->get_plugin_generator('mod_assign');
 
         $activityrecord = $assigngenerator->create_instance(array('course' => $course->id));
@@ -143,7 +143,7 @@ class mod_assign_portfolio_caller_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user->id, $course->id);
         groups_add_member($groupid, $user);
 
-        /* @var mod_assign_generator $assigngenerator */
+        /* @var \mod_assign\testing\generator $assigngenerator */
         $assigngenerator = $this->getDataGenerator()->get_plugin_generator('mod_assign');
 
         $activityrecord = $assigngenerator->create_instance(array('course' => $course->id));
@@ -201,7 +201,7 @@ class mod_assign_portfolio_caller_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user->id, $course->id);
         groups_add_member($groupid, $user);
 
-        /* @var mod_assign_generator $assigngenerator */
+        /* @var \mod_assign\testing\generator $assigngenerator */
         $assigngenerator = $this->getDataGenerator()->get_plugin_generator('mod_assign');
 
         $activityrecord = $assigngenerator->create_instance(array('course' => $course->id));

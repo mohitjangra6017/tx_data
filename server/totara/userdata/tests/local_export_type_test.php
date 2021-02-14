@@ -34,8 +34,7 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
     public function test_prepare_for_add() {
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $data = export_type::prepare_for_add(0);
         $this->assertSame('0', $data->id);
@@ -60,8 +59,7 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
     public function test_prepare_for_update() {
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $type = $generator->create_export_type(array('allowself' => 1, 'includefiledir' => 1,
             'fullname' => 'XX name', 'idnumber' => 'idxxx', 'description' => 'hihi',
@@ -80,8 +78,7 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
     public function test_is_deletable() {
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $type = $generator->create_export_type(array('allowself' => 1));
         $user = $this->getDataGenerator()->create_user();
@@ -97,8 +94,7 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
         $type = $generator->create_export_type(array('allowself' => 1));
 
         $this->assertTrue($DB->record_exists('totara_userdata_export_type', array('id' => $type->id)));
@@ -110,8 +106,7 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $user = $this->getDataGenerator()->create_user();
         $otheruser = $this->getDataGenerator()->create_user();
@@ -151,8 +146,7 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $user = $this->getDataGenerator()->create_user();
         $otheruser = $this->getDataGenerator()->create_user();
@@ -203,8 +197,7 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $type1 = $generator->create_export_type(array('items' => 'core_user-additionalnames,core_user-otherfields'));
         $type2 = $generator->create_export_type(array('items' => ''));
@@ -221,8 +214,7 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
         $type = $generator->create_export_type(array('allowself' => 1, 'items' => 'core_user-additionalnames'));
         $user = $this->getDataGenerator()->create_user(array('middlename' => 'midddle'));
         $syscontext = context_system::instance();

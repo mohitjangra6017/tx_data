@@ -93,7 +93,7 @@ class course_visibility_with_audience_test extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var \testing_data_generator */
+        /** @var \core\testing\generator */
         $gen = $this->getDataGenerator();
 
         // cohort: user1 & student1 & teacher1

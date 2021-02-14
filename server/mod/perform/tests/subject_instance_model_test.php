@@ -37,10 +37,10 @@ class mod_perform_subject_instance_model_testcase extends advanced_testcase {
      * @dataProvider get_instance_count_provider
      */
     public function test_get_instance_count(int $extra_instance_count): void {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_number_of_tracks_per_activity(1)
             ->set_number_of_users_per_user_group_type(1);

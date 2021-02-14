@@ -26,7 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
 require_once($CFG->dirroot . '/totara/dashboard/lib.php');
-require_once($CFG->libdir . '/testing/generator/lib.php');
 
 /**
  * Test totara dashboard

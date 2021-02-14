@@ -47,7 +47,7 @@ class totara_reportbuilder_userdata_saved_search_public_test extends advanced_te
         $this->resetAfterTest(true);
 
         $gen = $this->getDataGenerator();
-        /** @var \totara_reportbuilder_generator $rbgen */
+        /** @var \totara_reportbuilder\testing\generator $rbgen */
         $rbgen = $gen->get_plugin_generator('totara_reportbuilder');
 
         // 2 users

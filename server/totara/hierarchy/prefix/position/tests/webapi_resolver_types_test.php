@@ -31,7 +31,7 @@ class totara_hierarchy_webapi_resolver_position_types_testcase extends advanced_
      * @inheritDoc
      */
     protected function setUp(): void {
-        /** @var totara_hierarchy_generator $gen */
+        /** @var \totara_hierarchy\testing\generator $gen */
         $gen = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         // Create types.

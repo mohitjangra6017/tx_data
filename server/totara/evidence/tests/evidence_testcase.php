@@ -26,33 +26,11 @@ use core\orm\entity\repository;
 use totara_evidence\entity;
 
 abstract class totara_evidence_testcase extends advanced_testcase {
-
     /**
-     * @var totara_evidence_generator
+     * @return \totara_evidence\testing\generator
      */
-    private $evidence_plugin_generator;
-
-    protected function tearDown(): void {
-        parent::tearDown();
-
-        if (isset($this->evidence_plugin_generator)) {
-            $this->evidence_plugin_generator::remove_evidence_files();
-            $this->evidence_plugin_generator = null;
-        }
-    }
-
-    /**
-     * @return totara_evidence_generator|component_generator_base
-     */
-    protected function generator(): totara_evidence_generator {
-        global $CFG;
-
-        if (isset($this->evidence_plugin_generator) && $this->evidence_plugin_generator instanceof totara_evidence_generator) {
-            return $this->evidence_plugin_generator;
-        }
-
-        require_once($CFG->dirroot . '/totara/evidence/tests/generator/lib.php');
-        return self::getDataGenerator()->get_plugin_generator('totara_evidence');
+    protected function generator(): \totara_evidence\testing\generator {
+        return \totara_evidence\testing\generator::instance();
     }
 
     protected function items(): collection {

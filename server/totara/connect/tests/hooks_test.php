@@ -32,7 +32,7 @@ class totara_connect_hooks_testcase extends advanced_testcase {
         require_once("$CFG->dirroot/user/editlib.php");
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
         $user = get_admin();

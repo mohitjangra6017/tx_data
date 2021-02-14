@@ -68,11 +68,11 @@ class totara_engage_plugininfo_testcase extends advanced_testcase {
     /**
      * Get engage generator
      *
-     * @return totara_engage_generator|component_generator_base
+     * @return \totara_engage\testing\generator
      * @throws coding_exception
      */
     protected function generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_engage');
+        return \totara_engage\testing\generator::instance();
     }
 
     /**
@@ -80,15 +80,15 @@ class totara_engage_plugininfo_testcase extends advanced_testcase {
      */
     private function generate_data() {
         $gen = $this->getDataGenerator();
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article = $articlegen->create_article();
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
         $survey = $surveygen->create_survey();
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         $playlist = $playlistgen->create_playlist([

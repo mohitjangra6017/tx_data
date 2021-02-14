@@ -36,7 +36,7 @@ class engage_survey_delete_topic_testcase extends advanced_testcase {
         $this->setAdminUser();
         $topics = [];
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
 
         for ($i = 0; $i < 5; $i++) {
@@ -56,7 +56,7 @@ class engage_survey_delete_topic_testcase extends advanced_testcase {
             $topics
         );
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         for ($i = 0; $i < 5; $i++) {
             $survey = $survey_generator->create_survey(

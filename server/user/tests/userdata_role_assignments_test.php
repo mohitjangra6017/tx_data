@@ -100,13 +100,13 @@ class core_user_userdata_role_assignments_test extends advanced_testcase {
         $data->course2 = $this->getDataGenerator()->create_course(['category' => $data->category2->id, 'fullname' => 'Test course 2']);
 
         // Create programs
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $data->program1 = $programgenerator->create_program(['fullname' => 'Test prog 1']);
         $data->program2 = $programgenerator->create_program(['fullname' => 'Test prog 2']);
 
         // Create modules
-        /** @var mod_glossary_generator $glossary_generator */
+        /** @var \mod_glossary\testing\generator $glossary_generator */
         $glossary_generator = self::getDataGenerator()->get_plugin_generator('mod_glossary');
         $data->module1 = $glossary_generator->create_instance(['course' => $data->course1->id, 'name' => 'Test module 1']);
         $data->module2 = $glossary_generator->create_instance(['course' => $data->course2->id, 'name' => 'Test module 2']);

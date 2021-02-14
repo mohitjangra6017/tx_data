@@ -167,7 +167,7 @@ class totara_job_totara_core_relationship_resolvers_appraiser_testcase extends \
     public function test_get_users_with_multi_tenancy_enabled(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
 
         $tenant_generator->enable_tenants();

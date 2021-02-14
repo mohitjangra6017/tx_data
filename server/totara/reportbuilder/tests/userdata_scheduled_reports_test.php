@@ -47,7 +47,7 @@ class totara_reportbuilder_userdata_scheduled_reports_test extends advanced_test
         $this->resetAfterTest(true);
 
         $gen = $this->getDataGenerator();
-        /** @var \totara_reportbuilder_generator $rbgen */
+        /** @var \totara_reportbuilder\testing\generator $rbgen */
         $rbgen = $gen->get_plugin_generator('totara_reportbuilder');
 
         // 3 users

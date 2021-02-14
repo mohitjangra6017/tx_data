@@ -31,7 +31,6 @@ if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once(__DIR__ . '/../../server/config.php');
-require_once(App::config()->libdir . '/phpunit/classes/util.php');
 require_once(App::config()->dirroot . "/lib/clilib.php");
 
 core_php_time_limit::raise(0);

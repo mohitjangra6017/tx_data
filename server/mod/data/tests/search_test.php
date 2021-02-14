@@ -31,7 +31,6 @@ require_once($CFG->dirroot . '/mod/data/lib.php');
 require_once($CFG->dirroot . '/lib/datalib.php');
 require_once($CFG->dirroot . '/lib/csvlib.class.php');
 require_once($CFG->dirroot . '/search/tests/fixtures/testable_core_search.php');
-require_once($CFG->dirroot . '/mod/data/tests/generator/lib.php');
 
 /**
  * Unit tests for {@see data_get_all_recordids()}.

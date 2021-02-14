@@ -65,8 +65,7 @@ class totara_certification_totara_catalog_tag_filters_testcase extends \advanced
         $tagged_certifications = [];
         $attached_tags = [];
 
-        /** @var \totara_program_generator $program_generator */
-        $program_generator = $generator->get_plugin_generator('totara_program');
+        $program_generator = \totara_program\testing\generator::instance();
         for ($i = 0; $i < $certification_count; $i++) {
             $fullname = "tagged test certification name $i";
             $certification_id = $program_generator->create_certification(

@@ -40,7 +40,7 @@ class mod_facetoface_room_search_testcase extends advanced_testcase {
      * @throws coding_exception
      */
     private function create_course_with_seminar() {
-        /** @var mod_facetoface_generator $generator */
+        /** @var \mod_facetoface\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator("mod_facetoface");
 
         $course = $this->getDataGenerator()->create_course([], ['createsections' => true]);
@@ -64,7 +64,7 @@ class mod_facetoface_room_search_testcase extends advanced_testcase {
      */
     private function create_session_with_rooms(stdClass $user, stdClass $facetoface, $numberofrooms=50) {
         global $DB;
-        /** @var mod_facetoface_generator $generator */
+        /** @var \mod_facetoface\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator("mod_facetoface");
         $time = time();
         $sessiontime = time() + 3600;

@@ -180,7 +180,7 @@ class totara_core_visibility_course_testcase extends advanced_testcase {
         unset($CFG->audiencevisibility);
 
         $gen = $this->getDataGenerator();
-        /** @var totara_tenant_generator $multitenancy */
+        /** @var \totara_tenant\testing\generator $multitenancy */
         $multitenancy = $gen->get_plugin_generator('totara_tenant');
 
         $multitenancy->enable_tenants();
@@ -328,7 +328,7 @@ class totara_core_visibility_course_testcase extends advanced_testcase {
         unset($CFG->audiencevisibility);
 
         $gen = $this->getDataGenerator();
-        /** @var totara_tenant_generator $multitenancy */
+        /** @var \totara_tenant\testing\generator $multitenancy */
         $multitenancy = $gen->get_plugin_generator('totara_tenant');
 
         $multitenancy->enable_tenants();
@@ -824,7 +824,7 @@ class totara_core_visibility_course_testcase extends advanced_testcase {
 
         $gen = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $multitenancy */
+        /** @var \totara_tenant\testing\generator $multitenancy */
         $multitenancy = $gen->get_plugin_generator('totara_tenant');
 
         $multitenancy->enable_tenants();
@@ -1163,7 +1163,7 @@ class totara_core_visibility_course_testcase extends advanced_testcase {
 
         $gen = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $multitenancy */
+        /** @var \totara_tenant\testing\generator $multitenancy */
         $multitenancy = $gen->get_plugin_generator('totara_tenant');
 
         $multitenancy->enable_tenants();

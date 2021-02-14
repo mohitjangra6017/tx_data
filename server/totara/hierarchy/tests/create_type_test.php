@@ -42,7 +42,7 @@ class totara_hierarchy_create_type_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        // Set totara_hierarchy_generator.
+        // Set \totara_hierarchy\testing\generator.
         $this->hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
     }
 

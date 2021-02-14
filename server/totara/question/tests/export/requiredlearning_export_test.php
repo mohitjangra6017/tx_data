@@ -49,7 +49,7 @@ class totara_question_requiredlearning_export_testcase extends advanced_testcase
 
         $questiontype = 'requiredlearning';
 
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $prog1 = $programgenerator->create_program();
         $prog2 = $programgenerator->create_certification();

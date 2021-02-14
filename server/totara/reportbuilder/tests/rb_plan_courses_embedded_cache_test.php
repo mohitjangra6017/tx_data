@@ -95,7 +95,7 @@ class totara_reportbuilder_rb_plan_courses_embedded_cache_testcase extends repor
 
         parent::setup();
         $this->setAdminUser();
-        $this->getDataGenerator()->reset();
+
         // Common parts of test cases:
         // Create report record in database
         $this->loadDataSet($this->createArrayDataSet(array('report_builder' => array($this->report_builder_data),

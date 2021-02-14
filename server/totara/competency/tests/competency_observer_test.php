@@ -131,7 +131,7 @@ class totara_competency_competency_observer_testcase extends advanced_testcase {
     }
 
     protected function create_competency(int $aggregation_method) {
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator =  $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $scale = $hierarchy_generator->create_scale(

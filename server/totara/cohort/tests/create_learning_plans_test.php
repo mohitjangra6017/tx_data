@@ -37,7 +37,7 @@ class totara_cohort_create_learning_plans_testcase extends advanced_testcase {
     private $cohort = null;
 
     /**
-     * @var totara_plan_generator
+     * @var \totara_plan\testing\generator
      */
     private $plan_generator = null;
 

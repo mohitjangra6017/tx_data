@@ -37,7 +37,7 @@ class totara_engage_access_manager_testcase extends advanced_testcase {
 
         // Create engage instance by first user
         $this->setUser($owner);
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $generator->get_plugin_generator('engage_article');
         $context = $articlegen->create_article(['access' => access::PUBLIC])->get_context();
 
@@ -62,7 +62,7 @@ class totara_engage_access_manager_testcase extends advanced_testcase {
     public function test_can_manage_engage_multi_tenant() {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
 
         $tenant_generator->enable_tenants();
@@ -127,7 +127,7 @@ class totara_engage_access_manager_testcase extends advanced_testcase {
 
 
         $this->setUser($owner);
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $shared_article = $article_generator->create_article(['access' => access::RESTRICTED]);
         $private_article = $article_generator->create_article(['access' => access::PRIVATE]);
@@ -188,7 +188,7 @@ class totara_engage_access_manager_testcase extends advanced_testcase {
     public function test_can_access_multi_tenant() {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
 
         $tenant_generator->enable_tenants();
@@ -205,7 +205,7 @@ class totara_engage_access_manager_testcase extends advanced_testcase {
         $other2 = $generator->create_user(['tenantid' => $tenant2->id]);
 
         $this->setUser($owner);
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $shared_article = $article_generator->create_article(['access' => access::RESTRICTED]);
         $private_article = $article_generator->create_article(['access' => access::PRIVATE]);
@@ -279,7 +279,7 @@ class totara_engage_access_manager_testcase extends advanced_testcase {
 
         // Create engage instance by the owner and share with the user
         $this->setUser($owner);
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article(['access' => access::RESTRICTED]);
         $recipients = $article_generator->create_user_recipients([$shared]);

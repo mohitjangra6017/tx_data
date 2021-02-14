@@ -42,7 +42,7 @@ class tool_sitepolicy_navbar_test extends \advanced_testcase {
         $this->setAdminUser();
 
         /**
-         * @var \tool_sitepolicy_generator $generator
+         * @var \tool_sitepolicy\testing\generator $generator
          */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
         $generator->create_published_policy();
@@ -68,7 +68,7 @@ class tool_sitepolicy_navbar_test extends \advanced_testcase {
         $this->setUser($this->getDataGenerator()->create_user());
 
         /**
-         * @var \tool_sitepolicy_generator $generator
+         * @var \tool_sitepolicy\testing\generator $generator
          */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
         $generator->create_published_policy();
@@ -91,7 +91,7 @@ class tool_sitepolicy_navbar_test extends \advanced_testcase {
         $this->setUser($this->getDataGenerator()->create_user());
 
         /**
-         * @var \tool_sitepolicy_generator $generator
+         * @var \tool_sitepolicy\testing\generator $generator
          */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
         $generator->create_published_policy();
@@ -120,7 +120,7 @@ class tool_sitepolicy_navbar_test extends \advanced_testcase {
         $this->setUser($user);
 
         /**
-         * @var \tool_sitepolicy_generator $generator
+         * @var \tool_sitepolicy\testing\generator $generator
          */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
         $generator->create_published_policy([

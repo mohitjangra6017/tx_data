@@ -74,8 +74,8 @@ class mod_perform_webapi_resolver_query_reportable_activities_testcase extends a
             $actual_activities->pluck('id')
         );
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         // Draft activites never should show up
         $draft_activity = $perform_generator->create_activity_in_container(['activity_status' => draft::get_code()]);
@@ -92,12 +92,12 @@ class mod_perform_webapi_resolver_query_reportable_activities_testcase extends a
 
     public function test_get_activities_for_report_admin_multi_tenancy_enabled(): void {
         $generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $generator->get_plugin_generator('mod_perform');
 
         $this->setAdminUser();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
 
         $system_user = $generator->create_user();
@@ -128,14 +128,14 @@ class mod_perform_webapi_resolver_query_reportable_activities_testcase extends a
 
         // Create a system activity
         $activities0 = $perform_generator->create_full_activities(
-            mod_perform_activity_generator_configuration::new()
+            \mod_perform\testing\activity_generator_configuration::new()
                 ->set_number_of_activities(3)
         );
 
         $this->setUser($tenant1_manager);
 
         $activities1 = $perform_generator->create_full_activities(
-            mod_perform_activity_generator_configuration::new()
+            \mod_perform\testing\activity_generator_configuration::new()
                 ->set_number_of_activities(3)
                 ->set_tenant_id($tenant1->id)
         );
@@ -143,7 +143,7 @@ class mod_perform_webapi_resolver_query_reportable_activities_testcase extends a
         $this->setUser($tenant2_manager);
 
         $activities2 = $perform_generator->create_full_activities(
-            mod_perform_activity_generator_configuration::new()
+            \mod_perform\testing\activity_generator_configuration::new()
                 ->set_number_of_activities(3)
                 ->set_tenant_id($tenant2->id)
         );
@@ -245,8 +245,8 @@ class mod_perform_webapi_resolver_query_reportable_activities_testcase extends a
     public function test_failed_ajax_query(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $element = $perform_generator->create_element();
 
         $args = [];
@@ -263,11 +263,11 @@ class mod_perform_webapi_resolver_query_reportable_activities_testcase extends a
     }
 
     private function create_test_data(): collection {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $activities = $perform_generator->create_full_activities(
-            mod_perform_activity_generator_configuration::new()
+            \mod_perform\testing\activity_generator_configuration::new()
                 ->set_number_of_activities(3)
         );
 

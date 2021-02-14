@@ -37,7 +37,7 @@ class totara_playlist_delete_testcase extends advanced_testcase {
         $user = $gen->create_user();
         $this->setUser($user);
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article = $articlegen->create_article([
             'access' => access::PUBLIC
@@ -47,7 +47,7 @@ class totara_playlist_delete_testcase extends advanced_testcase {
         $resouce_item = resource_factory::create_instance_from_id($article->get_id());
         $playlist->add_resource($resouce_item);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $gen->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $playlist->get_id(),

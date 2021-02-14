@@ -54,10 +54,9 @@ class totara_competency_webapi_resolver_query_competency_plans_testcase extends 
     protected function setUp(): void {
         global $DB;
 
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
-        $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
+        $totara_hierarchy_generator = \totara_hierarchy\testing\generator::instance();
 
-        /** @var totara_competency_assignment_generator $totara_competency_generator */
+        /** @var \totara_competency\testing\assignment_generator $totara_competency_generator */
         $totara_competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency')->assignment_generator();
 
         $compfw = $totara_hierarchy_generator->create_comp_frame([]);
@@ -190,7 +189,7 @@ class totara_competency_webapi_resolver_query_competency_plans_testcase extends 
         require_once($CFG->dirroot . '/totara/plan/component.class.php');
         require_once($CFG->dirroot . '/totara/plan/components/competency/competency.class.php');
 
-        /** @var totara_plan_generator $plan_generator */
+        /** @var \totara_plan\testing\generator $plan_generator */
         $plan_generator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
         $plan = $plan_generator->create_learning_plan(['userid' => $for_user]);
 

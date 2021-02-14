@@ -40,7 +40,7 @@ class totara_connect_util_testcase extends advanced_testcase {
     public function test_get_sep_setup_url() {
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
         $record = array(
@@ -61,7 +61,7 @@ class totara_connect_util_testcase extends advanced_testcase {
     public function test_get_sep_url() {
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
         $record = array(
@@ -82,7 +82,7 @@ class totara_connect_util_testcase extends advanced_testcase {
     public function test_get_sso_finish_url() {
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
         $record = array(
@@ -114,7 +114,7 @@ class totara_connect_util_testcase extends advanced_testcase {
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $poshierarchyframework1 = $hierarchygenerator->create_pos_frame(array());
@@ -264,7 +264,7 @@ class totara_connect_util_testcase extends advanced_testcase {
         $course2 = $this->getDataGenerator()->create_course();
         $course3 = $this->getDataGenerator()->create_course();
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $poshierarchyframework1 = $hierarchygenerator->create_pos_frame(array());
@@ -345,7 +345,7 @@ class totara_connect_util_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
         $cohort1 = $this->getDataGenerator()->create_cohort();
@@ -353,7 +353,7 @@ class totara_connect_util_testcase extends advanced_testcase {
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $poshierarchyframework1 = $hierarchygenerator->create_pos_frame(array());
@@ -419,7 +419,7 @@ class totara_connect_util_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
         $cohort1 = $this->getDataGenerator()->create_cohort();
@@ -442,7 +442,7 @@ class totara_connect_util_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
         $cohort1 = $this->getDataGenerator()->create_cohort();
@@ -468,7 +468,7 @@ class totara_connect_util_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
         $course1 = $this->getDataGenerator()->create_course();
@@ -494,7 +494,7 @@ class totara_connect_util_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
         $course1 = $this->getDataGenerator()->create_course();
@@ -517,10 +517,10 @@ class totara_connect_util_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $pos_framework1 = $hierarchygenerator->create_pos_frame(array());
@@ -547,10 +547,10 @@ class totara_connect_util_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $pos_framework1 = $hierarchygenerator->create_pos_frame(array());
@@ -574,10 +574,10 @@ class totara_connect_util_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $org_framework1 = $hierarchygenerator->create_org_frame(array());
@@ -604,10 +604,10 @@ class totara_connect_util_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $org_framework1 = $hierarchygenerator->create_org_frame(array());
@@ -630,7 +630,7 @@ class totara_connect_util_testcase extends advanced_testcase {
     public function test_validate_sso_request_token() {
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
         $client = $generator->create_client();
 
@@ -649,7 +649,7 @@ class totara_connect_util_testcase extends advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $cohort = $this->getDataGenerator()->create_cohort();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
         $client = $generator->create_client();
 
@@ -702,7 +702,7 @@ class totara_connect_util_testcase extends advanced_testcase {
         $CFG->enableconnectserver = '1';
 
         $user = $this->getDataGenerator()->create_user();
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
         $client = $generator->create_client();
 
@@ -737,7 +737,7 @@ class totara_connect_util_testcase extends advanced_testcase {
         $CFG->enableconnectserver = '1';
 
         $user = $this->getDataGenerator()->create_user();
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
         $client = $generator->create_client();
 
@@ -757,7 +757,7 @@ class totara_connect_util_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $generator */
+        /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
         $client = $generator->create_client();
 
@@ -791,7 +791,7 @@ class totara_connect_util_testcase extends advanced_testcase {
 
         $this->resetAfterTest();
 
-        /** @var totara_connect_generator $connectgenerator */
+        /** @var \totara_connect\testing\generator $connectgenerator */
         $connectgenerator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
 
         $client1 = $connectgenerator->create_client(array('apiversion' => 1, 'syncjobs' => 1, 'syncprofilefields' => 1));
@@ -802,7 +802,7 @@ class totara_connect_util_testcase extends advanced_testcase {
         $user3 = $this->getDataGenerator()->create_user();
         $user4 = $this->getDataGenerator()->create_user();
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $pos_type1id = $hierarchygenerator->create_pos_type();

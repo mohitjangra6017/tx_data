@@ -235,7 +235,7 @@ class pathway_criteria_group_evaluator_testcase extends \advanced_testcase {
     public function test_aggregate_from_table($pathway_scale_value_key, $criteria, $expected) {
         // Setting up the data
         $data = $this->setup_data();
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $cg_criteria = [];

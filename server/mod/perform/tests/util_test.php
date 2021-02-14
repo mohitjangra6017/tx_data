@@ -61,8 +61,8 @@ class mod_perform_util_testcase extends advanced_testcase {
 
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $subject_instance = $perform_generator->create_subject_instance(['subject_user_id' => $employee->id]);
         $expected_activity = $subject_instance->activity();
 
@@ -109,8 +109,8 @@ class mod_perform_util_testcase extends advanced_testcase {
 
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $activity_names[] = 'hidden-activity';
 
@@ -201,8 +201,8 @@ class mod_perform_util_testcase extends advanced_testcase {
 
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $perform_generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -237,8 +237,8 @@ class mod_perform_util_testcase extends advanced_testcase {
 
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $perform_generator->create_subject_instance([
             'subject_is_participating' => true,

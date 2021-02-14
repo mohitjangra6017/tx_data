@@ -49,7 +49,7 @@ class container_workspace_discussion_with_extra_files_testcase extends advanced_
         $this->setUser($user_one);
         $context_user = context_user::instance($user_one->id);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -123,7 +123,7 @@ class container_workspace_discussion_with_extra_files_testcase extends advanced_
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 

@@ -63,8 +63,7 @@ class totara_userdata_local_export_testcase extends advanced_testcase {
 
         $fs = get_file_storage();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $type = $generator->create_export_type(array('allowself' => 1, 'items' => 'core_user-names,core_user-username'));
         $user = $this->getDataGenerator()->create_user();
@@ -100,8 +99,7 @@ class totara_userdata_local_export_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $type = $generator->create_export_type(array('allowself' => 1, 'items' => 'core_user-names,core_user-username'));
         $user = $this->getDataGenerator()->create_user();
@@ -135,8 +133,7 @@ class totara_userdata_local_export_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $type = $generator->create_export_type(array('allowself' => 1, 'items' => 'core_user-names,core_user-username'));
         $user = $this->getDataGenerator()->create_user();
@@ -191,8 +188,7 @@ class totara_userdata_local_export_testcase extends advanced_testcase {
     public function test_get_my_last_export() {
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $type = $generator->create_export_type(array('allowself' => 1, 'items' => 'core_user-names,core_user-username'));
         $syscontext = context_system::instance();
@@ -219,8 +215,7 @@ class totara_userdata_local_export_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $type = $generator->create_export_type(array('allowself' => 1, 'items' => 'core_user-names,core_user-username'));
         $syscontext = context_system::instance();

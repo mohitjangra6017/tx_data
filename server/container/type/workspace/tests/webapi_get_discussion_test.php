@@ -292,17 +292,17 @@ class container_workspace_webapi_get_discussion_testcase extends advanced_testca
     }
 
     /**
-     * @return container_workspace_generator
+     * @return \container_workspace\testing\generator
      */
-    private function workspace_generator(): container_workspace_generator {
+    private function workspace_generator(): \container_workspace\testing\generator {
         return $this->getDataGenerator()->get_plugin_generator('container_workspace');
     }
 
     /**
-     * @return totara_tenant_generator
+     * @return \totara_tenant\testing\generator
      */
-    private function tenant_generator(): totara_tenant_generator {
-        return $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+    private function tenant_generator(): \totara_tenant\testing\generator {
+        return \totara_tenant\testing\generator::instance();
     }
 
     /**

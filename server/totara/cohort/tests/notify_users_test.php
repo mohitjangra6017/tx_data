@@ -30,7 +30,7 @@ class totara_cohort_notify_users_testcase extends advanced_testcase {
         $this->resetAfterTest();
 
         $gen = $this->getDataGenerator();
-        /** @var totara_cohort_generator $cohortgen */
+        /** @var \totara_cohort\testing\generator $cohortgen */
         $cohortgen = $gen->get_plugin_generator('totara_cohort');
 
         $userids = [];
@@ -59,7 +59,7 @@ class totara_cohort_notify_users_testcase extends advanced_testcase {
 
         $gen = $this->getDataGenerator();
 
-        /** @var totara_cohort_generator $cohortgen */
+        /** @var \totara_cohort\testing\generator $cohortgen */
         $cohortgen = $gen->get_plugin_generator('totara_cohort');
 
         $userids = [];

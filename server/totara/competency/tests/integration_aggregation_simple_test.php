@@ -1201,7 +1201,7 @@ class totara_competency_integration_aggregation_simple_testcase extends totara_c
      * @dataProvider task_to_execute_data_provider
      */
     public function test_aggregation_single_manual(string $task_to_execute) {
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $data = $this->setup_data();
@@ -1636,7 +1636,7 @@ class totara_competency_integration_aggregation_simple_testcase extends totara_c
         // The user should get a second achievement record for that competency with the same values as the existing one
 
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
-        /** @var totara_competency_assignment_generator $assign_generator */
+        /** @var \totara_competency\testing\assignment_generator $assign_generator */
         $assign_generator = $competency_generator->assignment_generator();
 
         $assign_generator->create_self_assignment($data->competencies[1]->id, $data->users[1]->id);
@@ -1725,7 +1725,7 @@ class totara_competency_integration_aggregation_simple_testcase extends totara_c
         cohort_add_member($cohort2->id, $data->users[1]->id);
         cohort_add_member($cohort2->id, $data->users[3]->id);
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $data->competency_generator;
         // Now assign both audiences to the competency
         $assignments = [

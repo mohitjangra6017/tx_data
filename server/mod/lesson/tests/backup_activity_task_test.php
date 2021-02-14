@@ -950,7 +950,7 @@ class mod_lesson_backup_activity_task_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
-        /** @var mod_lesson_generator $lessongenerator */
+        /** @var \mod_lesson\testing\generator $lessongenerator */
         $lessongenerator = $generator->get_plugin_generator('mod_lesson');
 
         $course1 = $generator->create_course();
@@ -1099,7 +1099,7 @@ class mod_lesson_backup_activity_task_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
-        /** @var mod_lesson_generator $lessongenerator */
+        /** @var \mod_lesson\testing\generator $lessongenerator */
         $lessongenerator = $generator->get_plugin_generator('mod_lesson');
 
         $course1 = $generator->create_course();

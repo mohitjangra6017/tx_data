@@ -81,7 +81,7 @@ class container_workspace_notify_discussion_new_comment_testcase extends advance
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -98,7 +98,7 @@ class container_workspace_notify_discussion_new_comment_testcase extends advance
         // Now log in as user one and create a comment on the discussion.
         $this->setUser($user_one);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment = $comment_generator->create_comment(
             $user_two_discussion->get_id(),
@@ -143,7 +143,7 @@ class container_workspace_notify_discussion_new_comment_testcase extends advance
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -167,7 +167,7 @@ class container_workspace_notify_discussion_new_comment_testcase extends advance
         // Then run the adhoc tasks.
         $this->setUser($user_one);
 
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment_generator->create_comment(
             $user_two_discussion->get_id(),
@@ -193,7 +193,7 @@ class container_workspace_notify_discussion_new_comment_testcase extends advance
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -204,7 +204,7 @@ class container_workspace_notify_discussion_new_comment_testcase extends advance
         $this->executeAdhocTasks();
 
         // Create comment for the discussion.
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment_generator->create_comment(
             $discussion->get_id(),
@@ -234,7 +234,7 @@ class container_workspace_notify_discussion_new_comment_testcase extends advance
         $user_one = $generator->create_user();
         self::setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -249,7 +249,7 @@ class container_workspace_notify_discussion_new_comment_testcase extends advance
 
         // As user one, create a comment on the discussion.
         self::setUser($user_one);
-        /** @var totara_comment_generator $comment_generator */
+        /** @var \totara_comment\testing\generator $comment_generator */
         $comment_generator = $generator->get_plugin_generator('totara_comment');
         $comment_generator->create_comment(
             $user_two_discussion->get_id(),

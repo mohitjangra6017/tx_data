@@ -94,7 +94,7 @@ class mod_facetoface_send_thirdparty_testcase extends advanced_testcase {
             'createsections' => 1
         ]);
 
-        /** @var mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $generator->get_plugin_generator('mod_facetoface');
         $f2f = $f2fgenerator->create_instance([
             'course'        => $course->id,

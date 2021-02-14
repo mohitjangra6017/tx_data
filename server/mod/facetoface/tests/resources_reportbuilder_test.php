@@ -164,7 +164,7 @@ class mod_facetoface_rooms_reportbuilder_testcase extends advanced_testcase {
     private function create_face2face_resources(string $type, stdClass $user): array {
         $addsitewide = "add_site_wide_{$type}";
         $addcustom = "add_custom_{$type}";
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         return [
             $f2fgen->{$addsitewide}([

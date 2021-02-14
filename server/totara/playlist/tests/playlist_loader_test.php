@@ -40,7 +40,7 @@ class totara_playlist_playlist_loader_testcase extends advanced_testcase {
         $user_two = $generator->create_user();
 
         // Create 2 playlists for user two.
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
 
         $playlist_one = $playlist_generator->create_playlist([
@@ -97,7 +97,7 @@ class totara_playlist_playlist_loader_testcase extends advanced_testcase {
         $user_two = $generator->create_user();
 
         // Create 2 playlists for user two.
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
 
         $playlist_one = $playlist_generator->create_playlist([

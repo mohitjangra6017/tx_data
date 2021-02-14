@@ -65,10 +65,7 @@ class totara_cohort_cross_dependency_testcase extends advanced_testcase {
 
         // Create ciruclar dependency on cohorts
         $gen = $this->getDataGenerator();
-        /**
-         * @var totara_cohort_generator $cohortgen
-         */
-        $cohortgen = $gen->get_plugin_generator('totara_cohort');
+        $cohortgen = \totara_cohort\testing\generator::instance();
 
         // Cohort A (will depend on C)
         $cohorta = $gen->create_cohort(
@@ -213,7 +210,7 @@ class totara_cohort_cross_dependency_testcase extends advanced_testcase {
     protected function create_username_cohort(string $suffix, string $username): stdClass {
         $gen = $this->getDataGenerator();
         /**
-         * @var totara_cohort_generator $cohortgen
+         * @var \totara_cohort\testing\generator $cohortgen
          */
         $cohortgen = $gen->get_plugin_generator('totara_cohort');
 
@@ -243,7 +240,7 @@ class totara_cohort_cross_dependency_testcase extends advanced_testcase {
     protected function create_cohort_cohort(string $suffix, array $cohortids): stdClass {
         $gen = $this->getDataGenerator();
         /**
-         * @var totara_cohort_generator $cohortgen
+         * @var \totara_cohort\testing\generator $cohortgen
          */
         $cohortgen = $gen->get_plugin_generator('totara_cohort');
 

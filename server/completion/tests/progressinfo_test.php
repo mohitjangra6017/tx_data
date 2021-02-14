@@ -63,7 +63,7 @@ class core_completion_progressinfo_testcase extends externallib_advanced_testcas
         $this->getDataGenerator()->enrol_user($student->id, $course->id, $studentrole->id);
         $this->getDataGenerator()->enrol_user($teacher->id, $course->id, $teacherrole->id);
 
-        /** @var core_completion_generator $cgen */
+        /** @var \core_completion\testing\generator $cgen */
         $cgen = $this->getDataGenerator()->get_plugin_generator('core_completion');
         $cgen->enable_completion_tracking($course);
         $cgen->set_activity_completion($course->id, array($data, $forum));
@@ -96,7 +96,7 @@ class core_completion_progressinfo_testcase extends externallib_advanced_testcas
         $teacherrole = $DB->get_record('role', array('shortname' => 'teacher'));
         $editteacherrole = $DB->get_record('role', array('shortname' => 'editingteacher'));
 
-        /** @var core_completion_generator $cgen */
+        /** @var \core_completion\testing\generator $cgen */
         $cgen = $this->getDataGenerator()->get_plugin_generator('core_completion');
 
         // Create 3 courses
@@ -194,7 +194,7 @@ class core_completion_progressinfo_testcase extends externallib_advanced_testcas
         global $DB;
 
         $generator = $this->getDataGenerator();
-        /** @var core_completion_generator $comp_generator */
+        /** @var \core_completion\testing\generator $comp_generator */
         $comp_generator = $generator->get_plugin_generator('core_completion');
 
         // Create a course
@@ -396,7 +396,7 @@ class core_completion_progressinfo_testcase extends externallib_advanced_testcas
         // test advanced all course completion criteria progress calculation
 
         $generator = $this->getDataGenerator();
-        /** @var core_completion_generator $comp_generator */
+        /** @var \core_completion\testing\generator $comp_generator */
         $comp_generator = $generator->get_plugin_generator('core_completion');
 
         $learner = $DB->get_record('user', ['idnumber' => 'progress_learner'], '*', MUST_EXIST);
@@ -547,7 +547,7 @@ class core_completion_progressinfo_testcase extends externallib_advanced_testcas
         // test advanced any course completion criteria progress calculation
 
         $generator = $this->getDataGenerator();
-        /** @var core_completion_generator $comp_generator */
+        /** @var \core_completion\testing\generator $comp_generator */
         $comp_generator = $generator->get_plugin_generator('core_completion');
 
         $learner = $DB->get_record('user', ['idnumber' => 'progress_learner'], '*', MUST_EXIST);
@@ -704,7 +704,7 @@ class core_completion_progressinfo_testcase extends externallib_advanced_testcas
         $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
-        /** @var core_completion_generator $comp_generator */
+        /** @var \core_completion\testing\generator $comp_generator */
         $comp_generator = $generator->get_plugin_generator('core_completion');
 
         // Create a course

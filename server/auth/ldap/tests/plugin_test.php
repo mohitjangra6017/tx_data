@@ -327,7 +327,7 @@ class auth_ldap_plugin_testcase extends advanced_testcase {
         $this->assertEquals(2, $DB->count_records('role_assignments', array('roleid'=>$creatorrole->id)));
 
         // Test custom fields.
-        /** @var totara_core_generator $totaragenerator */
+        /** @var \totara_core\testing\generator $totaragenerator */
         $totaragenerator = $this->getDataGenerator()->get_plugin_generator('totara_core');
         $field = $totaragenerator->create_custom_profile_field(array('datatype' => 'text', 'name' => 'Pokus', 'shortname' => 'pokus'));
         set_config('field_map_profile_field_pokus', 'uidnumber', 'auth_ldap');

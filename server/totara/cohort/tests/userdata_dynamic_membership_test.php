@@ -112,8 +112,7 @@ class totara_cohort_userdata_dynamic_membership_testcase extends advanced_testca
         $category1context = context_coursecat::instance($category1->id);
         $category2context = context_coursecat::instance($category2->id);
 
-        /* @var totara_cohort_generator $cohortgenerator */
-        $cohortgenerator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $cohortgenerator = \totara_cohort\testing\generator::instance();
 
         $category1_audience = $this->getDataGenerator()->create_cohort(
             ['contextid' => $category1context->id, 'cohorttype' => cohort::TYPE_DYNAMIC, 'name' => 'cat1 aud1']

@@ -68,7 +68,7 @@ class totara_competency_webapi_resolver_query_competency_overview_testcase exten
 
         $this->setUser($user);
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $comp_type = $hierarchy_generator->create_comp_type([
@@ -170,10 +170,11 @@ class totara_competency_webapi_resolver_query_competency_overview_testcase exten
     }
 
     /**
-     * @return totara_competency_generator|component_generator_base
+     * Get hierarchy specific generator
+     *
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
-        return $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        return \totara_competency\testing\generator::instance();
     }
-
 }

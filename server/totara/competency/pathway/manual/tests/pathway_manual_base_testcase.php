@@ -29,7 +29,7 @@ use totara_job\job_assignment;
 abstract class pathway_manual_base_testcase extends advanced_testcase {
 
     /**
-     * @var totara_competency_generator
+     * @var \totara_competency\testing\generator
      */
     protected $generator;
 

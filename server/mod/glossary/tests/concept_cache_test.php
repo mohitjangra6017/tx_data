@@ -60,7 +60,7 @@ class mod_glossary_concept_cache_testcase extends advanced_testcase {
         $glossary3 = $this->getDataGenerator()->create_module('glossary',
             array('course' => $site->id, 'mainglossary' => 1, 'usedynalink' => 1, 'globalglossary' => 1));
 
-        /** @var mod_glossary_generator $generator */
+        /** @var \mod_glossary\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
         $entry1a1 = $generator->create_content($glossary1a, array('concept' => 'first', 'usedynalink' => 1), array('prvni', 'erste'));
         $entry1a2 = $generator->create_content($glossary1a, array('concept' => 'A&B', 'usedynalink' => 1));

@@ -35,7 +35,7 @@ class totara_playlist_multi_tenancy_access_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -44,14 +44,14 @@ class totara_playlist_multi_tenancy_access_testcase extends advanced_testcase {
 
         $this->setAdminUser();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         $topic =  $topic_generator->create_topic();
 
         // Log in as user one and start creating the playlists
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist([
             'access' => access::PUBLIC,
@@ -75,14 +75,14 @@ class totara_playlist_multi_tenancy_access_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
         $tenant = $tenant_generator->create_tenant();
         $tenant_generator->migrate_user_to_tenant($user_two->id, $tenant->id);
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         $this->setAdminUser();
 
@@ -91,7 +91,7 @@ class totara_playlist_multi_tenancy_access_testcase extends advanced_testcase {
         // Log in as user two and create a public playlist.
         $this->setUser($user_two);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist([
             'access' => access::PUBLIC,
@@ -118,7 +118,7 @@ class totara_playlist_multi_tenancy_access_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -131,14 +131,14 @@ class totara_playlist_multi_tenancy_access_testcase extends advanced_testcase {
         // Create topics with admin.
         $this->setAdminUser();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         $topic = $topic_generator->create_topic();
 
         // Log in as user one to create a public playlist.
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_public_playlist([
             'topics' => [$topic->get_id()],

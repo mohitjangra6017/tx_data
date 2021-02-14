@@ -100,7 +100,7 @@ class totara_reportbuilder_rb_cohort_admin_embedded_cache_testcase extends repor
     protected function setUp(): void {
         parent::setup();
         $this->setAdminUser();
-        $this->getDataGenerator()->reset();
+
         // Common parts of test cases:
         // Create report record in database
         $this->loadDataSet($this->createArrayDataSet(array('report_builder' => array($this->report_builder_data),
@@ -129,7 +129,7 @@ class totara_reportbuilder_rb_cohort_admin_embedded_cache_testcase extends repor
                       $this->users[3]->firstname,
                       $this->users[4]->firstname,
                       $this->users[5]->firstname);
-        $this->getDataGenerator()->create_cohort_rule_params($ruleid, array('equal' => COHORT_RULES_OP_IN_ISEQUALTO), $values);
+        \totara_cohort\testing\generator::instance()->add_param_to_cohort_rule($ruleid, array('equal' => COHORT_RULES_OP_IN_ISEQUALTO), $values);
         cohort_rules_approve_changes($this->cohort2);
     }
 

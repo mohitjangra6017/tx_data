@@ -35,7 +35,7 @@ class engage_article_catalog_image_dataformatter_testcase extends advanced_testc
 
         $topic_ids = [];
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         for ($i = 0; $i < 2; $i++) {
             $topic = $topic_generator->create_topic();
@@ -44,7 +44,7 @@ class engage_article_catalog_image_dataformatter_testcase extends advanced_testc
 
         $user_one = $generator->create_user();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article([
             'access' => access::PUBLIC,

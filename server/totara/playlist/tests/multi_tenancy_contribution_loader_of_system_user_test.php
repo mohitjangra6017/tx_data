@@ -50,7 +50,7 @@ class totara_playlist_multi_tenancy_contribution_loader_of_system_user_testcase 
     protected function setUp(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -84,12 +84,12 @@ class totara_playlist_multi_tenancy_contribution_loader_of_system_user_testcase 
     }
 
     /**
-     * @return totara_playlist_generator
+     * @return \totara_playlist\testing\generator
      */
-    private function get_playlist_generator(): totara_playlist_generator {
+    private function get_playlist_generator(): \totara_playlist\testing\generator {
         $generator = self::getDataGenerator();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         return $playlist_generator;
     }

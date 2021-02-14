@@ -40,7 +40,7 @@ class container_workspace_multi_tenancy_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -52,7 +52,7 @@ class container_workspace_multi_tenancy_testcase extends advanced_testcase {
         $tenant_generator->migrate_user_to_tenant($user_two->id, $tenant_two->id);
 
         // Now start creating the several workspaces for user_one.
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setUser($user_one);
 
@@ -87,7 +87,7 @@ class container_workspace_multi_tenancy_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -98,7 +98,7 @@ class container_workspace_multi_tenancy_testcase extends advanced_testcase {
         // if the user one is able to see the workspace created by this user.
         $this->setUser($user_two);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         for ($i = 0; $i < 5; $i++) {
@@ -128,7 +128,7 @@ class container_workspace_multi_tenancy_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -139,7 +139,7 @@ class container_workspace_multi_tenancy_testcase extends advanced_testcase {
         // Now start creating workspaces that live outside of tenants by user_two.
         $this->setUser($user_two);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         for ($i = 0; $i < 5; $i++) {
             $workspace_generator->create_workspace();

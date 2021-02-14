@@ -37,10 +37,10 @@ class container_workspace_multi_tenancy_library_testcase extends advanced_testca
     public function test_fetch_shared_card(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_engage_generator $engage_generator */
+        /** @var \totara_engage\testing\generator $engage_generator */
         $engage_generator = $generator->get_plugin_generator('totara_engage');
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -55,7 +55,7 @@ class container_workspace_multi_tenancy_library_testcase extends advanced_testca
         // Login as user one and start creating the workspace
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         $workspace = $workspace_generator->create_workspace();
@@ -65,7 +65,7 @@ class container_workspace_multi_tenancy_library_testcase extends advanced_testca
         member::join_workspace($workspace, $user_two->id);
 
         // Now start creating a bunch of resources/surveys.
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $workspace_recipient = new library($workspace->get_id());
 
@@ -124,12 +124,12 @@ class container_workspace_multi_tenancy_library_testcase extends advanced_testca
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_engage_generator $engage_generator */
+        /** @var \totara_engage\testing\generator $engage_generator */
         $engage_generator = $generator->get_plugin_generator('totara_engage');
 
         $this->setAdminUser();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         $topic = $topic_generator->create_topic();
 
@@ -137,7 +137,7 @@ class container_workspace_multi_tenancy_library_testcase extends advanced_testca
         $this->setUser($user_one);
         $user_two_recipient = new user($user_one->id);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article([
             'access' => access::PUBLIC,
@@ -149,7 +149,7 @@ class container_workspace_multi_tenancy_library_testcase extends advanced_testca
         // Log in as admin user and create the workspace.
         $this->setAdminUser();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -181,7 +181,7 @@ class container_workspace_multi_tenancy_library_testcase extends advanced_testca
         $this->assertCount(1, $result->data['contribution']['cards']);
 
         // Now move the two of users to different tenant, and hence we can check if the user one
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

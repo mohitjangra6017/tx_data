@@ -101,7 +101,9 @@ class totara_reportbuilder_rb_plan_objectives_embedded_cache_testcase extends re
 
         parent::setup();
         $this->setAdminUser();
-        $this->getDataGenerator()->reset();
+
+        $plan_generator = \totara_plan\testing\generator::instance();
+
         // Common parts of test cases:
         // Create report record in database
         $this->loadDataSet($this->createArrayDataSet(array('report_builder' => array($this->report_builder_data),
@@ -111,9 +113,9 @@ class totara_reportbuilder_rb_plan_objectives_embedded_cache_testcase extends re
         $this->user2 = $this->getDataGenerator()->create_user();
         $this->user3 = $this->getDataGenerator()->create_user();
         $this->user4 = $this->getDataGenerator()->create_user();
-        $this->plan1 = $this->getDataGenerator()->create_plan($this->user1->id);
-        $this->plan2 = $this->getDataGenerator()->create_plan($this->user2->id);
-        $this->plan3 = $this->getDataGenerator()->create_plan($this->user2->id);
+        $this->plan1 = $plan_generator->legacy_create_plan($this->user1->id, []);
+        $this->plan2 = $plan_generator->legacy_create_plan($this->user2->id, []);
+        $this->plan3 = $plan_generator->legacy_create_plan($this->user2->id, []);
         $this->objectives[] = $this->create_objective($this->plan1->id);
         $this->objectives[] = $this->create_objective($this->plan1->id);
         $this->objectives[] = $this->create_objective($this->plan2->id);

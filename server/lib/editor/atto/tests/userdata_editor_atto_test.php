@@ -254,7 +254,7 @@ class editor_atto_userdata_editor_atto_testcase extends advanced_testcase {
     public function test_purge_in_program_context() {
         global $DB;
 
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
 
         // Set up users.
@@ -361,7 +361,7 @@ class editor_atto_userdata_editor_atto_testcase extends advanced_testcase {
      * Test count
      */
     public function test_count() {
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
 
         // Set up users.

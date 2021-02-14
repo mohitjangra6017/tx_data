@@ -37,7 +37,7 @@ class totara_engage_userdata_survey_testcase extends advanced_testcase {
         $user_two = $gen->create_user();
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         $surveygen->create_survey('survey1?');
@@ -83,7 +83,7 @@ class totara_engage_userdata_survey_testcase extends advanced_testcase {
         $user_one = $gen->create_user();
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         $surveygen->create_survey('survey1?');

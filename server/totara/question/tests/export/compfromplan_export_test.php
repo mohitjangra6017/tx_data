@@ -64,7 +64,7 @@ class totara_question_compfromplan_export_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         // Competency plan assignments.
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
         $planrecord1 = $plangenerator->create_learning_plan(array('userid' => $user1->id));
         $planrecord2 = $plangenerator->create_learning_plan(array('userid' => $user1->id));

@@ -44,9 +44,8 @@ class mod_label_generator_testcase extends advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course();
 
-        /** @var mod_label_generator $generator */
+        /** @var \mod_label\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_label');
-        $this->assertInstanceOf('mod_label_generator', $generator);
         $this->assertEquals('label', $generator->get_modulename());
 
         $generator->create_instance(array('course'=>$course->id));

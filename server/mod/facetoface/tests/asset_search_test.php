@@ -35,9 +35,9 @@ class mod_facetoface_asset_search_testcase extends advanced_testcase {
      * @return array
      */
     private function create_course_with_seminar() {
-        /** @var testing_data_generator $generator */
+        /** @var \core\testing\generator $generator */
         $generator = $this->getDataGenerator();
-        /** @var mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $generator->get_plugin_generator('mod_facetoface');
 
         $course = $generator->create_course([], ['createsections' => true]);
@@ -59,7 +59,7 @@ class mod_facetoface_asset_search_testcase extends advanced_testcase {
     private function create_session_with_assets(stdClass $user, stdClass $f2f, $numberofassets=50) {
         global $DB;
 
-        /** @var mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $this->getDataGenerator()->get_plugin_generator("mod_facetoface");
 
         // session time is for session date, and this will increase to avoid one of constraints in db

@@ -363,9 +363,9 @@ class mod_perform_activity_state_testcase extends advanced_testcase {
         return $activity;
     }
 
-    protected function generator(): mod_perform_generator {
+    protected function generator(): \mod_perform\testing\generator {
         $data_generator = $this->getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         return $data_generator->get_plugin_generator('mod_perform');
     }
 

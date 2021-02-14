@@ -30,12 +30,12 @@ require_once($CFG->dirroot . '/totara/plan/development_plan.class.php');
 class totara_plan_user_learning_item_testcase extends advanced_testcase {
 
     /**
-     * @var testing_data_generator
+     * @var \core\testing\generator
      */
     private $generator;
 
     /**
-     * @var totara_plan_generator
+     * @var \totara_plan\testing\generator
      */
     private $plan_generator;
 

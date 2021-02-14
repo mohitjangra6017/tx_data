@@ -41,7 +41,7 @@ class totara_reportbuilder_custom_fields_testcase extends advanced_testcase {
         $user2 = $this->getDataGenerator()->create_user();
         $user3 = $this->getDataGenerator()->create_user();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field1 = $generator->create_custom_profile_field(array('datatype' => 'menu', 'param1' => "xx\nyy\nzz", 'defaultdata' => 'yy'));

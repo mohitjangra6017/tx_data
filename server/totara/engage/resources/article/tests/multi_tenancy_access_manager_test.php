@@ -38,7 +38,7 @@ class engage_article_multi_tenancy_access_manager_testcase extends advanced_test
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -51,7 +51,7 @@ class engage_article_multi_tenancy_access_manager_testcase extends advanced_test
         // Log in as first user to create a public article and check if the user is able to access it.
         $this->setUser($user_one);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article_one = $article_generator->create_article(['access' => access::PUBLIC]);
 

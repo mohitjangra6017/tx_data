@@ -39,7 +39,7 @@ class container_course_report_builder_course_report_testcase extends advanced_te
 
         // Create 1 workspaces.
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 

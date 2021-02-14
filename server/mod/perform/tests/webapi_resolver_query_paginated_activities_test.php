@@ -303,8 +303,8 @@ class mod_perform_webapi_resolver_query_paginated_activities_testcase extends ad
     private function create_test_data(array $activities) {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         foreach ($activities as $activity) {
             $perform_generator->create_activity_in_container($activity);
         }

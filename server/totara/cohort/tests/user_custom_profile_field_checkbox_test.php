@@ -49,7 +49,7 @@ require_once($CFG->dirroot . '/user/profile/field/checkbox/define.class.php');
 class totara_cohort_user_custom_profile_field_checkbox_testcase extends advanced_testcase {
 
     /**
-     * @var totara_cohort_generator The cohort data generator.
+     * @var \totara_cohort\testing\generator The cohort data generator.
      */
     protected $cohort_generator = null;
     protected $cohort = null;
@@ -80,7 +80,7 @@ class totara_cohort_user_custom_profile_field_checkbox_testcase extends advanced
         $this->profiledeveloperid = $this->add_user_profile_checkbox_field('developer', 0);
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $generator->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
 
         // Create users.
         $users = array();

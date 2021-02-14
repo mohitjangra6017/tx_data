@@ -2825,11 +2825,11 @@ class core_course_courselib_testcase extends advanced_testcase {
     /**
      * Returns a user object and its assigned new role.
      *
-     * @param testing_data_generator $generator
+     * @param \core\testing\generator $generator
      * @param $contextid
      * @return array The user object and the role ID
      */
-    protected function get_user_objects(testing_data_generator $generator, $contextid) {
+    protected function get_user_objects(\core\testing\generator $generator, $contextid) {
         global $USER;
 
         if (empty($USER->id)) {

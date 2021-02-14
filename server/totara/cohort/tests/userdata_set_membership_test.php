@@ -119,7 +119,7 @@ class totara_cohort_userdata_set_membership_testcase extends advanced_testcase {
         $category2_audience1 = $this->getDataGenerator()->create_cohort(['contextid' => $category2context->id, 'name' => 'cat2 aud1']);
         $category2_audience2 = $this->getDataGenerator()->create_cohort(['contextid' => $category2context->id, 'name' => 'cat2 aud2']);
 
-        /* @var totara_cohort_generator $cohortgenerator */
+        /* @var \totara_cohort\testing\generator $cohortgenerator */
         $cohortgenerator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
 
         $cohortgenerator->cohort_assign_users($system_audience->id, [$user1->id, $user2->id]);

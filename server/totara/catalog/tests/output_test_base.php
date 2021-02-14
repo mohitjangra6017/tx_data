@@ -161,7 +161,7 @@ abstract class output_test_base extends advanced_testcase {
             return $course->id;
         }
 
-        /** @var totara_program_generator $program_generator */
+        /** @var \totara_program\testing\generator $program_generator */
         $program_generator = $generator->get_plugin_generator('totara_program');
         if ($provider == 'program') {
             $program = $program_generator->create_program();

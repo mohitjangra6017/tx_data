@@ -91,8 +91,7 @@ class totara_userdata_local_purge_testcase extends advanced_testcase {
 
         $syscontext = context_system::instance();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $typeactive = $generator->create_purge_type(array('userstatus' => target_user::STATUS_ACTIVE, 'allowmanual' => 1, 'items' => 'core_user-additionalnames,core_user-otherfields'));
         $typesuspended = $generator->create_purge_type(array('userstatus' => target_user::STATUS_SUSPENDED, 'allowsuspended' => 1, 'items' => 'core_user-additionalnames,core_user-otherfields'));
@@ -145,8 +144,7 @@ class totara_userdata_local_purge_testcase extends advanced_testcase {
 
         $syscontext = context_system::instance();
 
-        /** @var totara_userdata_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_userdata');
+        $generator = \totara_userdata\testing\generator::instance();
 
         $typeactive = $generator->create_purge_type(array('userstatus' => target_user::STATUS_ACTIVE, 'allowmanual' => 1, 'items' => 'core_user-additionalnames,core_user-otherfields'));
         $typesuspended = $generator->create_purge_type(array('userstatus' => target_user::STATUS_SUSPENDED, 'allowsuspended' => 1, 'items' => 'core_user-additionalnames,core_user-otherfields'));

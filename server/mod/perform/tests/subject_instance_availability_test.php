@@ -239,8 +239,8 @@ class mod_perform_subject_instance_availability_testcase extends state_testcase 
     private function create_data(): array {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $activity = $generator->create_activity_in_container();
         $activity->settings->update([activity_setting::CLOSE_ON_COMPLETION => true]);

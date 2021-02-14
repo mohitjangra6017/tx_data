@@ -442,7 +442,7 @@ class mod_facetoface_notifications_multilang_testcase extends advanced_testcase 
         $this->getDataGenerator()->enrol_user($student1->id, $course->id, $studentrole->id);
         $this->getDataGenerator()->enrol_user($student2->id, $course->id, $studentrole->id);
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
 
         $facetofacedata = array(

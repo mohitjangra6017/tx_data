@@ -53,7 +53,7 @@ abstract class totara_appraisal_messages_testcase extends appraisal_testcase {
      *        appraisee_details().
      *      - [array] post_activation_appraisees: list of tuples generated from
      *        appraisee_details().
-     *      - [totara_appraisal_generator] generator: appraisal generator.
+     *      - [\totara_appraisal\testing\generator] generator: appraisal generator.
      *      - [array[string=>mixed]] restores: system configuration values to be
      *        restored after the test.
      *      - [phpunit_phpmailer_sink] sink: email sink.
@@ -79,7 +79,7 @@ abstract class totara_appraisal_messages_testcase extends appraisal_testcase {
             range(0, 1) // 2 appraisees per manager assigned after activation
         );
 
-        $appraisal_generator = $generator->get_plugin_generator('totara_appraisal');
+        $appraisal_generator = \totara_appraisal\testing\generator::instance();
         $appraisal = $appraisal_generator->create_appraisal();
 
         $appraisalid = $appraisal->id;

@@ -30,12 +30,12 @@ class totara_program_rb_source_program_completion_testcase extends advanced_test
     use totara_reportbuilder\phpunit\report_testing;
 
     /**
-     * @var testing_data_generator
+     * @var \core\testing\generator
      */
     protected $generator;
 
     /**
-     * @var totara_program_generator
+     * @var \totara_program\testing\generator
      */
     protected $generator_program;
 

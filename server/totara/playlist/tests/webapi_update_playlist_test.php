@@ -39,7 +39,7 @@ class totara_playlist_webapi_update_playlist_testcase extends advanced_testcase 
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist(['summaryformat' => FORMAT_JSON_EDITOR]);
 
@@ -75,7 +75,7 @@ class totara_playlist_webapi_update_playlist_testcase extends advanced_testcase 
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist();
 
@@ -106,7 +106,7 @@ class totara_playlist_webapi_update_playlist_testcase extends advanced_testcase 
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist(['summaryformat' => FORMAT_JSON_EDITOR]);
 
@@ -152,7 +152,7 @@ class totara_playlist_webapi_update_playlist_testcase extends advanced_testcase 
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist();
 
@@ -192,7 +192,7 @@ class totara_playlist_webapi_update_playlist_testcase extends advanced_testcase 
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist();
 
@@ -224,7 +224,7 @@ class totara_playlist_webapi_update_playlist_testcase extends advanced_testcase 
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist();
 
@@ -251,7 +251,7 @@ class totara_playlist_webapi_update_playlist_testcase extends advanced_testcase 
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist();
 

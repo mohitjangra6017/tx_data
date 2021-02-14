@@ -62,7 +62,7 @@ class totara_criteria_item_evaluator_user_source_testcase extends advanced_testc
         ];
         $data->course = $this->getDataGenerator()->create_course($record);
 
-        /** @var totara_criteria_generator $generator */
+        /** @var \totara_criteria\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $record = ['courseids' => [$data->course->id]];

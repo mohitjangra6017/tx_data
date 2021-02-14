@@ -45,7 +45,6 @@ use mod_perform\state\participant_section\in_progress as in_progress_section;
 use mod_perform\state\participant_section\not_started as not_started_section;
 use mod_perform\state\state_helper;
 
-require_once(__DIR__ . '/generator/activity_generator_configuration.php');
 require_once(__DIR__ . '/state_testcase.php');
 
 /**
@@ -141,13 +140,13 @@ class mod_perform_participant_instance_progress_testcase extends state_testcase 
     public function test_section_switch_triggers_instance_switch(): void {
         $this->setAdminUser();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_sections_per_activity(2)
             ->set_number_of_users_per_user_group_type(2)
             ->set_number_of_elements_per_section(1);
 
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $generator->create_full_activities($configuration);
         $participant_instances = participant_instance_entity::repository()->get()->all();
         $this->assertCount(2, $participant_instances);
@@ -358,8 +357,8 @@ class mod_perform_participant_instance_progress_testcase extends state_testcase 
         $participant_instance = participant_instance::load_by_entity($entity);
         $this->assertInstanceOf($initial_state_class, $participant_instance->get_progress_state());
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         switch ($condition) {
             case 'NONE_COMPLETE':
@@ -441,8 +440,8 @@ class mod_perform_participant_instance_progress_testcase extends state_testcase 
         stdClass $subject_user = null,
         stdClass $other_participant = null
     ): entity {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         self::setAdminUser();
 

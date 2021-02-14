@@ -32,7 +32,7 @@ class block_totara_featured_links_block_totara_featured_links_testcase extends t
 
     /**
      * The block generator instance for the test.
-     * @var block_totara_featured_links_generator $generator
+     * @var \block_totara_featured_links\testing\generator $generator
      */
     protected $blockgenerator;
 

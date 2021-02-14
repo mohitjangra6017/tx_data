@@ -165,7 +165,7 @@ class mod_facetoface_booking_within_signup_period_testcase extends advanced_test
         $this->getDataGenerator()->enrol_user($learner1->id, $course->id);
         $this->getDataGenerator()->enrol_user($learner2->id, $course->id);
 
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $facetoface = $facetofacegenerator->create_instance(['course' => $course->id]);
 

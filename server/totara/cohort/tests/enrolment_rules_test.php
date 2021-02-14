@@ -25,8 +25,6 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
-require_once($CFG->dirroot . '/totara/program/tests/generator/totara_program_generator.class.php');
-require_once($CFG->dirroot . '/totara/cohort/tests/generator/totara_cohort_generator.class.php');
 require_once($CFG->dirroot . '/totara/cohort/lib.php');
 
 
@@ -145,7 +143,7 @@ Program 2 - Course 1 and Course 2
         $this->program_generator->assign_to_program($this->program2->id, ASSIGNTYPE_INDIVIDUAL, $this->users[3]->id, null, true);
 
         // Set totara_cohort generator.
-        $this->cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $this->cohort_generator = \totara_cohort\testing\generator::instance();
     }
 
     public function test_enrolment_rules() {

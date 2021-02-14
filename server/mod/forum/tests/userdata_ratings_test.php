@@ -28,7 +28,6 @@ use context_course;
 use context_coursecat;
 use context_module;
 use context_system;
-use mod_forum_generator;
 use stdClass;
 use totara_userdata\userdata\export;
 use totara_userdata\userdata\item;
@@ -62,7 +61,7 @@ class mod_forum_userdata_ratings_testcase extends advanced_testcase {
     private $forum1, $forum2, $forum3;
 
     /**
-     * @var mod_forum_generator
+     * @var \mod_forum\testing\generator
      */
     private $generator;
 

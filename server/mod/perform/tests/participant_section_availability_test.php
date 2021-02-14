@@ -211,8 +211,8 @@ class mod_perform_participant_section_availability_testcase extends state_testca
         stdClass $subject_user = null,
         stdClass $other_participant = null
     ): participant_section_entity {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         self::setAdminUser();
 

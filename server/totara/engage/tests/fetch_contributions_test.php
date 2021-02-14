@@ -40,10 +40,10 @@ class totara_engage_fetch_contributions_testcase extends advanced_testcase {
         $user_two = $generator->create_user();
         $user_three = $generator->create_user();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $user_three_recipient = new user($user_three->id);
 
@@ -154,10 +154,10 @@ class totara_engage_fetch_contributions_testcase extends advanced_testcase {
         $user_two = $generator->create_user();
         $user_three = $generator->create_user();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $user_three_recipient = new user($user_three->id);
 

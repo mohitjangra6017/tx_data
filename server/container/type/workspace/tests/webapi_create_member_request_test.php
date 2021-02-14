@@ -34,7 +34,7 @@ class container_workspace_webapi_create_member_request_testcase extends advanced
     public function test_create_member_request(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         // Log in as admin and create a workspace.
@@ -66,7 +66,7 @@ class container_workspace_webapi_create_member_request_testcase extends advanced
 
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         $this->setAdminUser();
@@ -103,7 +103,7 @@ class container_workspace_webapi_create_member_request_testcase extends advanced
     public function test_create_same_member_request(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         $this->setAdminUser();
@@ -136,7 +136,7 @@ class container_workspace_webapi_create_member_request_testcase extends advanced
     public function test_create_member_request_with_public_workspace(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setAdminUser();
 
@@ -168,7 +168,7 @@ class container_workspace_webapi_create_member_request_testcase extends advanced
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_private_workspace();
 

@@ -143,7 +143,7 @@ class totara_playlist_add_rating_test extends advanced_testcase {
 
     public function test_rate_no_access_private() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         // Create two users.
@@ -169,7 +169,7 @@ class totara_playlist_add_rating_test extends advanced_testcase {
 
     public function test_rate_no_access_restricted_not_shared() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         $user1 = $gen->create_user();
@@ -206,7 +206,7 @@ class totara_playlist_add_rating_test extends advanced_testcase {
         global $DB;
 
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         $user1 = $gen->create_user();
@@ -253,7 +253,7 @@ class totara_playlist_add_rating_test extends advanced_testcase {
      */
     private function prepare() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         // Create two users.

@@ -22,21 +22,22 @@
  * @category test
  */
 
-defined('MOODLE_INTERNAL') || die();
+use \mod_facetoface\testing\generator_util;
+use \mod_facetoface\testing\generator;
 
-require_once(__DIR__ . '/generator/mod_facetoface_generator_util.php');
+defined('MOODLE_INTERNAL') || die();
 
 class mod_facetoface_generator_testcase extends \advanced_testcase {
     /**
      * Test get_event_id_from_detail() with obnoxious event details.
-     * @covers mod_facetoface_generator_util::get_event_id_from_detail
+     * @covers generator_util::get_event_id_from_detail
      */
     public function test_get_event_id_from_detail() {
-        $method = new ReflectionMethod(mod_facetoface_generator_util::class, 'get_event_id_from_detail');
+        $method = new ReflectionMethod(generator_util::class, 'get_event_id_from_detail');
         $method->setAccessible(true);
         $gen = $this->getDataGenerator();
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var generator $f2fgen */
         $course = $gen->create_course()->id;
         $f2f = $f2fgen->create_instance([
             'name' => 'Test seminar',

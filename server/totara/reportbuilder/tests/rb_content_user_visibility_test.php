@@ -103,8 +103,8 @@ class totara_reportbuilder_rb_content_user_visibility_testcase extends advanced_
     public function test_user_source_with_nonisolated_tenants() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $tenant1 = $tenantgenerator->create_tenant();
         $tenant2 = $tenantgenerator->create_tenant();
@@ -239,8 +239,8 @@ class totara_reportbuilder_rb_content_user_visibility_testcase extends advanced_
     public function test_user_source_with_isolated_tenants() {
         global $DB;
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $tenant1 = $tenantgenerator->create_tenant();
         $tenant2 = $tenantgenerator->create_tenant();

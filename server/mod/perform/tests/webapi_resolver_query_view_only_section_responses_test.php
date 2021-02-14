@@ -160,7 +160,7 @@ class mod_perform_webapi_resolver_query_view_only_section_responses_testcase ext
         self::setAdminUser();
 
         $data_generator = self::getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         /** @var activity $activity */

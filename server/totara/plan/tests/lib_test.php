@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 class totara_plan_lib_testcase extends advanced_testcase {
-    /** @var totara_plan_generator $plangenerator */
+    /** @var \totara_plan\testing\generator $plangenerator */
     protected $plangenerator;
 
     protected function tearDown(): void {
@@ -71,7 +71,7 @@ class totara_plan_lib_testcase extends advanced_testcase {
         $plan = $this->plangenerator->create_learning_plan();
 
         // Get a hierarchy generator.
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchy_gen = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         // Create a new competency framework and check it exists.
@@ -99,7 +99,7 @@ class totara_plan_lib_testcase extends advanced_testcase {
         // Create a learning plan.
         $plan = $this->plangenerator->create_learning_plan();
 
-        /** @var totara_plan_generator $plangenerator */
+        /** @var \totara_plan\testing\generator $plangenerator */
         $program_gen = $this->getDataGenerator()->get_plugin_generator('totara_program');
 
         // Create a new program and check it exists
@@ -165,7 +165,7 @@ class totara_plan_lib_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
 
-        /** @var totara_program_generator $program_generator */
+        /** @var \totara_program\testing\generator $program_generator */
         $program_generator = $generator->get_plugin_generator('totara_program');
 
         // This program won't be assigned. Just helps to detect things like joins being done incorrectly.
@@ -194,7 +194,7 @@ class totara_plan_lib_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
 
-        /** @var totara_program_generator $program_generator */
+        /** @var \totara_program\testing\generator $program_generator */
         $program_generator = $generator->get_plugin_generator('totara_program');
 
         // We'll have the user complete this program.

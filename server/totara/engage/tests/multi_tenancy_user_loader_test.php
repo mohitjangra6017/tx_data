@@ -46,12 +46,12 @@ class totara_engage_multi_tenancy_user_loader_testcase extends advanced_testcase
     }
 
     /**
-     * @return totara_tenant_generator
+     * @return \totara_tenant\testing\generator
      */
-    private function get_tenant_generator(): totara_tenant_generator {
+    private function get_tenant_generator(): \totara_tenant\testing\generator {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

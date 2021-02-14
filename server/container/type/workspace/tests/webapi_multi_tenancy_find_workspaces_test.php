@@ -61,7 +61,7 @@ class container_workspace_webapi_multi_tenancy_find_workspaces_testcase extends 
     protected function setUp(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -114,12 +114,12 @@ class container_workspace_webapi_multi_tenancy_find_workspaces_testcase extends 
     }
 
     /**
-     * @return container_workspace_generator
+     * @return \container_workspace\testing\generator
      */
-    private function get_workspace_generator(): container_workspace_generator {
+    private function get_workspace_generator(): \container_workspace\testing\generator {
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         return $workspace_generator;
     }

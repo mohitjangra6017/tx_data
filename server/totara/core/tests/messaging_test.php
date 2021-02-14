@@ -26,10 +26,10 @@ require_once($CFG->dirroot . '/totara/reportbuilder/tests/reportcache_advanced_t
 
 class totara_core_messaging_testcase extends advanced_testcase {
 
-    /** @var totara_plan_generator $plangenerator */
+    /** @var \totara_plan\testing\generator $plangenerator */
     private $plangenerator = null;
 
-    /** @var totara_program_generator $programgenerator */
+    /** @var \totara_program\testing\generator $programgenerator */
     private $programgenerator = null;
 
     private $user1, $user2, $user3, $manager1, $manager2;

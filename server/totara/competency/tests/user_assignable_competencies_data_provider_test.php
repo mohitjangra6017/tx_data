@@ -1161,7 +1161,7 @@ class totara_competency_user_assignable_competencies_data_provider_testcase exte
     /**
      * Get hierarchy specific generator
      *
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
         return $this->getDataGenerator()->get_plugin_generator('totara_competency');

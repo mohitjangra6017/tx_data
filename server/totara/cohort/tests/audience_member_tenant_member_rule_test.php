@@ -25,8 +25,7 @@ defined('MOODLE_INTERNAL') || die();
 
 class totara_cohort_audience_member_tenant_member_rule_testcase extends advanced_testcase {
     private function create_cohort_rules(stdClass $rule, stdClass $ruleparam): void {
-        /** @var totara_cohort_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
+        $generator = \totara_cohort\testing\generator::instance();
         $generator->create_cohort_rule_params(
             $rule->rulesetid, $rule->type, $rule->name, $ruleparam->params, $ruleparam->listofvalues
         );
@@ -46,8 +45,8 @@ class totara_cohort_audience_member_tenant_member_rule_testcase extends advanced
         global $DB, $CFG;
         require_once("{$CFG->dirroot}/totara/cohort/lib.php");
 
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
         $this->setAdminUser();
 

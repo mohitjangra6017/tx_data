@@ -609,7 +609,7 @@ class hierarchy_organisation_service_testcase extends advanced_testcase {
     /**
      * Get hierarchy specific generator
      *
-     * @return totara_hierarchy_generator
+     * @return \totara_hierarchy\testing\generator
      */
     protected function org_generator() {
         return $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');

@@ -44,7 +44,7 @@ class totara_engage_userdata_bookmark_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article();
 
@@ -87,7 +87,7 @@ class totara_engage_userdata_bookmark_testcase extends advanced_testcase {
 
         $this->setUser($user_one);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         $playlist = $playlist_generator->create_playlist();
 

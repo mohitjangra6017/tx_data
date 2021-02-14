@@ -39,7 +39,7 @@ class performelement_redisplay_redisplay_visibility_testcase extends redisplay_t
 
     public function test_manager_can_view_other_managers_previous_response(): void {
         $generator = self::getDataGenerator();
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $generator->get_plugin_generator('mod_perform');
         $data = $this->create_test_data();
         /** @var activity $original_activity */

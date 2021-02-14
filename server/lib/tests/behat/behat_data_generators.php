@@ -36,7 +36,7 @@ use Behat\Behat\Tester\Exception\PendingException as PendingException;
  * Acceptance tests are block-boxed, so this steps definitions should only
  * be used to set up the test environment as we are not replicating user steps.
  *
- * All data generators should be in lib/testing/generator/*, shared between phpunit
+ * All data generators should be in \testing\ namespace, shared between phpunit
  * and behat and they should be called from here, if possible using the standard
  * 'create_$elementname($options)' and if it's not possible (data generators arguments will not be
  * always the same) or the element is not suitable to be a data generator, create a
@@ -51,7 +51,7 @@ use Behat\Behat\Tester\Exception\PendingException as PendingException;
 class behat_data_generators extends behat_base {
 
     /**
-     * @var testing_data_generator
+     * @var \core\testing\generator
      */
     protected $datagenerator;
 
@@ -203,14 +203,11 @@ class behat_data_generators extends behat_base {
     public function the_following_exist($elementname, TableNode $data) {
         \behat_hooks::set_step_readonly(true); // Backend action.
 
-        // Now that we need them require the data generators.
-        require_once(__DIR__ . '/../../testing/generator/lib.php');
-
         if (empty(self::$elements[$elementname])) {
             throw new PendingException($elementname . ' data generator is not implemented');
         }
 
-        $this->datagenerator = testing_util::get_data_generator();
+        $this->datagenerator = \core\testing\generator::instance();
 
         // Totara: add support for plugins
         if (empty(self::$elements[$elementname]['plugin'])) {
@@ -373,7 +370,7 @@ class behat_data_generators extends behat_base {
      * @param array $data should mostly match the fields of the block_instances table.
      *     The block type is specified by blockname.
      *     The parentcontextid is set from contextlevel and reference.
-     *     Missing values are filled in by testing_block_generator::prepare_record.
+     *     Missing values are filled in by \core\testing\block_generator::prepare_record.
      *     $data is passed to create_block as both $record and $options. Normally
      *     the keys are different, so this is a way to let people set values in either place.
      */

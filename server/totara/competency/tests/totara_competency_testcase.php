@@ -529,7 +529,7 @@ abstract class totara_competency_testcase extends advanced_testcase {
     /**
      * Get competency data generator
      *
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     public function generator() {
         return $this->getDataGenerator()->get_plugin_generator('totara_competency');
@@ -538,7 +538,7 @@ abstract class totara_competency_testcase extends advanced_testcase {
     /**
      * Get competency data generator
      *
-     * @return totara_hierarchy_generator
+     * @return \totara_hierarchy\testing\generator
      */
     public function hierarchy_generator() {
         return $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');

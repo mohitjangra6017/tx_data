@@ -22,21 +22,13 @@
  */
 
 /**
- * @coversDefaultClass \mod_perform_activity_name_generator
+ * @coversDefaultClass \mod_perform\testing\activity_name_generator()
  *
  * @group perform
  */
 class mod_perform_activity_name_generator_testcase extends advanced_testcase {
-
-    public static function setUpBeforeClass(): void {
-        global $CFG;
-        require_once $CFG->dirroot.'/mod/perform/tests/generator/activity_name_generator.php';
-
-        parent::setUpBeforeClass();
-    }
-
     public function test_generate_name() {
-        $name_generator = new mod_perform_activity_name_generator();
+        $name_generator = new \mod_perform\testing\activity_name_generator();
 
         [$name, $type] = $name_generator->generate();
         $this->assertIsString($name);
@@ -45,7 +37,7 @@ class mod_perform_activity_name_generator_testcase extends advanced_testcase {
     }
 
     public function test_generate_names() {
-        $name_generator = new mod_perform_activity_name_generator();
+        $name_generator = new \mod_perform\testing\activity_name_generator();
 
         $names = $name_generator->generate_multiple(5);
         $this->assertIsArray($names);

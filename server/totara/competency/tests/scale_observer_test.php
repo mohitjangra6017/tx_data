@@ -377,7 +377,7 @@ class totara_competency_scale_observer_testcase extends advanced_testcase {
     }
 
     protected function create_scale() {
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->generator()->hierarchy_generator();
 
         return $hierarchy_generator->create_scale(
@@ -413,10 +413,10 @@ class totara_competency_scale_observer_testcase extends advanced_testcase {
     }
 
     /**
-     * @return totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     protected function generator() {
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         return $competency_generator;
     }

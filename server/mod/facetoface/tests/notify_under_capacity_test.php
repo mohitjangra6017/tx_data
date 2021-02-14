@@ -49,7 +49,7 @@ class mod_facetoface_notify_under_capacity_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $course = $generator->create_course([], ['createsections' => true]);
 
-        /** @var mod_facetoface_generator $f2fgenerator */
+        /** @var \mod_facetoface\testing\generator $f2fgenerator */
         $f2fgenerator = $generator->get_plugin_generator('mod_facetoface');
         $f2f = $f2fgenerator->create_instance((object)[
             'course' => $course->id

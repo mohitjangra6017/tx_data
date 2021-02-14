@@ -42,8 +42,8 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
         $subject = self::getDataGenerator()->create_user();
         $participant = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -79,8 +79,8 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
         $subject = self::getDataGenerator()->create_user();
         $participant = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -117,8 +117,8 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $course_subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -141,8 +141,8 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
         $default_category_context = context_coursecat::instance(perform::get_default_category_id());
 
         // Enable multi-tenancy so we can create an activity in another category context.
-        /** @var totara_tenant_generator $tenantgenerator */
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenantgenerator */
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
 
         $tenant1 = $tenantgenerator->create_tenant();
@@ -186,8 +186,8 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
         $subject = self::getDataGenerator()->create_user();
         $participant = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -275,8 +275,8 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
         $subject = self::getDataGenerator()->create_user();
         $participant = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -376,8 +376,8 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $activity = $generator->create_activity_in_container();
         $context_id = $activity->get_context()->id;

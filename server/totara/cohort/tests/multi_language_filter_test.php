@@ -67,7 +67,7 @@ class totara_cohort_multi_language_filter_testcase extends advanced_testcase {
         set_config('stringfilters', 'multilang');
 
         $gen = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $posgen */
+        /** @var \totara_hierarchy\testing\generator $posgen */
         $posgen = $gen->get_plugin_generator('totara_hierarchy');
 
         $typeid = $posgen->create_pos_type([
@@ -99,7 +99,7 @@ class totara_cohort_multi_language_filter_testcase extends advanced_testcase {
         $formfield = new customfield_define_text();
         $formfield->define_save($data, 'pos_type');
 
-        /** @var totara_cohort_generator $cohortgen */
+        /** @var \totara_cohort\testing\generator $cohortgen */
         $cohortgen = $gen->get_plugin_generator('totara_cohort');
         $cohort = $cohortgen->create_cohort([
             'cohorttype' => cohort::TYPE_DYNAMIC
@@ -148,7 +148,7 @@ class totara_cohort_multi_language_filter_testcase extends advanced_testcase {
         set_config('stringfilters', 'multilang');
 
         $gen = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $orggen */
+        /** @var \totara_hierarchy\testing\generator $orggen */
         $orggen = $gen->get_plugin_generator('totara_hierarchy');
         $typeid = $orggen->create_org_type([
             'shortname' => 'shortname'
@@ -178,7 +178,7 @@ class totara_cohort_multi_language_filter_testcase extends advanced_testcase {
         $formfield = new customfield_define_text();
         $formfield->define_save($data, 'org_type');
 
-        /** @var totara_cohort_generator $cohortgen */
+        /** @var \totara_cohort\testing\generator $cohortgen */
         $cohortgen = $gen->get_plugin_generator('totara_cohort');
         $cohort = $cohortgen->create_cohort([
             'cohorttype' => cohort::TYPE_DYNAMIC

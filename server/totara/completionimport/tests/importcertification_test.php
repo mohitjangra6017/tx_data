@@ -100,6 +100,8 @@ class totara_completionimport_importcertification_testcase extends completionimp
         set_config('enablecompletion', 1);
         $this->resetAfterTest(true);
 
+        $program_generator = \totara_program\testing\generator::instance();
+
         $importname = 'certification';
         $pluginname = 'totara_completionimport_' . $importname;
         $csvdateformat = get_default_config($pluginname, 'csvdateformat', TCI_CSV_DATE_FORMAT);
@@ -111,7 +113,7 @@ class totara_completionimport_importcertification_testcase extends completionimp
         // Create some programs.
         $this->assertEquals(0, $DB->count_records('prog'), "Programs table isn't empty");
         for ($i = 1; $i <= self::COUNT_CERTIFICATIONS; $i++) {
-            $this->getDataGenerator()->create_certification(['prog_idnumber' => 'ID' . $i, 'prog_shortname' => 'shortname' . $i]);
+            $program_generator->legacy_create_certification(['prog_idnumber' => 'ID' . $i, 'prog_shortname' => 'shortname' . $i]);
         }
         $this->assertEquals(self::COUNT_CERTIFICATIONS, $DB->count_records('prog'),
             'Record count mismatch in program table');
@@ -183,16 +185,18 @@ class totara_completionimport_importcertification_testcase extends completionimp
         $this->resetAfterTest(true);
         $this->setAdminUser();
 
+        $program_generator = \totara_program\testing\generator::instance();
+
         set_config('enablecompletion', 1);
 
         // Create a certification
-        $cert1 =  $this->getDataGenerator()->create_certification(array(
+        $cert1 =  $program_generator->legacy_create_certification(array(
             'prog_shortname' => 'cert1',
             'prog_idnumber' => 'certid1'
         ));
 
         // Create another certification with blank spaces in the shortname and idnumber fields.
-        $cert2 =  $this->getDataGenerator()->create_certification(array(
+        $cert2 =  $program_generator->legacy_create_certification(array(
             'prog_shortname' => '   cert2   ',
             'prog_idnumber' => '   certid2   '
         ));
@@ -333,6 +337,8 @@ class totara_completionimport_importcertification_testcase extends completionimp
 
         $this->resetAfterTest(true);
 
+        $program_generator = \totara_program\testing\generator::instance();
+
         $importname = 'certification';
         $pluginname = 'totara_completionimport_' . $importname;
         $csvdateformat = get_default_config($pluginname, 'csvdateformat', TCI_CSV_DATE_FORMAT);
@@ -349,7 +355,7 @@ class totara_completionimport_importcertification_testcase extends completionimp
         $data['cert_activeperiod'] = '1 year';
         $data['cert_windowperiod'] = '4 week';
         $data['cert_recertifydatetype'] = CERTIFRECERT_EXPIRY;
-        $program = $this->getDataGenerator()->create_certification($data);
+        $program = $program_generator->legacy_create_certification($data);
         $this->assertEquals(1, $DB->count_records('prog'), 'Record count mismatch in programs table');
         $this->assertEquals(1, $DB->count_records('certif'), 'Record count mismatch in certif table');
 
@@ -374,15 +380,15 @@ class totara_completionimport_importcertification_testcase extends completionimp
         $this->assertEquals(5, $DB->count_records('cohort_members', array('cohortid' => $cohort->id)));
 
         // Assign audience to the certification.
-        $this->getDataGenerator()->assign_to_program($program->id, ASSIGNTYPE_COHORT, $cohort->id);
+        $program_generator->assign_to_program($program->id, ASSIGNTYPE_COHORT, $cohort->id, null, true);
 
         // Assign some users as individual to the certification - (users: 6 and 7).
-        $this->getDataGenerator()->assign_to_program($program->id, ASSIGNTYPE_INDIVIDUAL, $users[6]->id);
-        $this->getDataGenerator()->assign_to_program($program->id, ASSIGNTYPE_INDIVIDUAL, $users[7]->id);
+        $program_generator->assign_to_program($program->id, ASSIGNTYPE_INDIVIDUAL, $users[6]->id, null, true);
+        $program_generator->assign_to_program($program->id, ASSIGNTYPE_INDIVIDUAL, $users[7]->id, null, true);
 
         // Assign user 8 as an individual but set completion date in the future.
         $record = array('completiontime' => '15 2'  , 'completionevent' => COMPLETION_EVENT_FIRST_LOGIN);
-        $this->getDataGenerator()->assign_to_program($program->id, ASSIGNTYPE_INDIVIDUAL, $users[8]->id, $record);
+        $program_generator->assign_to_program($program->id, ASSIGNTYPE_INDIVIDUAL, $users[8]->id, $record, true);
 
         // Generate import data - product of user and certif tables.
         $fields = array('username', 'certificationshortname', 'certificationidnumber', 'completiondate', 'duedate');
@@ -505,6 +511,9 @@ class totara_completionimport_importcertification_testcase extends completionimp
     private function setup_import_action_tests($recertifydatetype) {
         global $CFG, $DB;
 
+        $program_generator = \totara_program\testing\generator::instance();
+        $job_generator = \totara_job\testing\generator::instance();
+
         set_config('enablecompletion', 1);
         $this->resetAfterTest(true);
 
@@ -525,7 +534,7 @@ class totara_completionimport_importcertification_testcase extends completionimp
         $this->progdata['cert_windowperiod'] = '4 week';
         $this->progdata['cert_minimumactiveperiod'] = '8 month';
         $this->progdata['cert_recertifydatetype'] = $recertifydatetype;
-        $this->program = $this->getDataGenerator()->create_certification($this->progdata);
+        $this->program = $program_generator->legacy_create_certification($this->progdata);
         $this->assertEquals(1, $DB->count_records('prog'), 'Record count mismatch in programs table');
         $this->assertEquals(1, $DB->count_records('certif'), 'Record count mismatch in certif table');
 
@@ -533,7 +542,7 @@ class totara_completionimport_importcertification_testcase extends completionimp
         $this->assertEquals(2, $DB->count_records('user')); // Guest + Admin.
         $this->users = array();
         for ($i = 1; $i <= 20; $i++) {
-            $this->users[$i] = $this->getDataGenerator()->create_user();
+            $this->users[$i] = $job_generator->create_user_and_job()[0];
         }
         $this->assertEquals(20 + 2, $DB->count_records('user'),
             'Record count mismatch for users'); // Guest + Admin + generated users.
@@ -550,17 +559,17 @@ class totara_completionimport_importcertification_testcase extends completionimp
         $this->assertEquals(10, $DB->count_records('cohort_members', array('cohortid' => $this->cohort->id)));
 
         // Assign audience to the certification.
-        $this->getDataGenerator()->assign_to_program($this->program->id, ASSIGNTYPE_COHORT, $this->cohort->id);
+        $program_generator->assign_to_program($this->program->id, ASSIGNTYPE_COHORT, $this->cohort->id, null, true);
 
         // Assign some users as individual to the certification - (users: 11 and 12).
-        $this->getDataGenerator()->assign_to_program($this->program->id, ASSIGNTYPE_INDIVIDUAL, $this->users[11]->id);
-        $this->getDataGenerator()->assign_to_program($this->program->id, ASSIGNTYPE_INDIVIDUAL, $this->users[12]->id);
+        $program_generator->assign_to_program($this->program->id, ASSIGNTYPE_INDIVIDUAL, $this->users[11]->id, null, true);
+        $program_generator->assign_to_program($this->program->id, ASSIGNTYPE_INDIVIDUAL, $this->users[12]->id, null, true);
 
         // Assign users 13 and 14 as individual but set completion date to require login.
         $record = array('completiontime' => '15 2'  , 'completionevent' => COMPLETION_EVENT_FIRST_LOGIN);
-        $this->getDataGenerator()->assign_to_program($this->program->id, ASSIGNTYPE_INDIVIDUAL, $this->users[13]->id, $record);
+        $program_generator->assign_to_program($this->program->id, ASSIGNTYPE_INDIVIDUAL, $this->users[13]->id, $record, true);
         $record = array('completiontime' => '15 2'  , 'completionevent' => COMPLETION_EVENT_FIRST_LOGIN);
-        $this->getDataGenerator()->assign_to_program($this->program->id, ASSIGNTYPE_INDIVIDUAL, $this->users[14]->id, $record);
+        $program_generator->assign_to_program($this->program->id, ASSIGNTYPE_INDIVIDUAL, $this->users[14]->id, $record, true);
 
         $this->initialcompletiondate = time();
         $this->initialexpirydate = get_timeexpires($this->initialcompletiondate, $this->progdata['cert_activeperiod']);

@@ -44,10 +44,10 @@ defined('MOODLE_INTERNAL') || die();
 
 class mod_facetoface_query_filter_testcase extends advanced_testcase {
 
-    /** @var testing_data_generator */
+    /** @var \core\testing\generator */
     protected $generator;
 
-    /** @var mod_facetoface_generator */
+    /** @var \mod_facetoface\testing\generator */
     protected $facetoface_generator;
 
     /** @var stdClass */

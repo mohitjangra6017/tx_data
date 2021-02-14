@@ -48,8 +48,8 @@ class totara_certification_user_learning_item_testcase extends advanced_testcase
         parent::setUp();
 
         $this->generator = $this->getDataGenerator();
-        $this->program_generator = $this->generator->get_plugin_generator('totara_program');
-        $this->completion_generator = $this->getDataGenerator()->get_plugin_generator('core_completion');
+        $this->program_generator = \totara_program\testing\generator::instance();
+        $this->completion_generator = \core_completion\testing\generator::instance();
 
         // Create some course.
         $this->course1 = $this->generator->create_course();

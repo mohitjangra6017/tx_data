@@ -35,13 +35,13 @@ require_once($CFG->dirroot . '/lib/phpunit/classes/advanced_testcase.php');
 
 class mod_facetoface_renderer_testcase extends advanced_testcase {
 
-    /** @var testing_data_generator $data_generator */
+    /** @var \core\testing\generator $data_generator */
     private $data_generator;
 
-    /** @var mod_facetoface_generator */
+    /** @var \mod_facetoface\testing\generator */
     private $facetoface_generator;
 
-    /** @var totara_customfield_generator */
+    /** @var \totara_customfield\testing\generator */
     protected $customfield_generator;
 
     public function setUp(): void {

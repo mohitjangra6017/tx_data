@@ -114,7 +114,7 @@ class totara_plan_userdata_plan_test extends advanced_testcase {
         $data->link2 = $link2_data;
 
         // Add linked evidence
-        /** @var totara_evidence_generator $evidence_generator */
+        /** @var \totara_evidence\testing\generator $evidence_generator */
         $evidence_generator = $this->getDataGenerator()->get_plugin_generator('totara_evidence');
         $data->evidenceitem1 = $evidence_generator->create_evidence_item_entity(['user_id' => $data->user1->id]);
 

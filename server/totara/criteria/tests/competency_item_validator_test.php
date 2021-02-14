@@ -37,10 +37,10 @@ class totara_criteria_competency_item_validator_testcase extends advanced_testca
 
         $CFG->enablecompletion = true;
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => true]);

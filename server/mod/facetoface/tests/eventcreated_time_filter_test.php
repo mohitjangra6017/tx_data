@@ -107,7 +107,7 @@ class mod_facetoface_eventcreated_time_filter_testcase extends advanced_testcase
      */
     private function generate_facetoface(int $timecreated): void {
         $gen = $this->getDataGenerator();
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
 
         $course = $gen->create_course(null, ['createsections' => 1]);

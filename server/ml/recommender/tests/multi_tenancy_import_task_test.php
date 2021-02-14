@@ -69,7 +69,7 @@ class ml_recommender_multi_tenancy_import_task_tesetcase extends advanced_testca
         $generator = self::getDataGenerator();
         $user = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

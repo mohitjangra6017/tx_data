@@ -52,7 +52,7 @@ class totara_program_totara_catalog_provider_testcase extends \advanced_testcase
         $this->setAdminUser();
         $this->resetAfterTest();
         $this->provider = new program_provider();
-        /** @var \totara_program_generator $program_generator */
+        /** @var \totara_program\testing\generator $program_generator */
         $program_generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $this->program = $program_generator->create_program();
     }

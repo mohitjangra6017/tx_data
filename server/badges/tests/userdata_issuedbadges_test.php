@@ -44,7 +44,7 @@ class core_badges_userdata_issuedbadges_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/lib/badgeslib.php');
 
         $generator = $this->getDataGenerator();
-        /** @var \core_badges_generator $badgegenerator */
+        /** @var \core_badges\testing\generator $badgegenerator */
         $badgegenerator = $generator->get_plugin_generator('core_badges');
 
         $admin = get_admin();

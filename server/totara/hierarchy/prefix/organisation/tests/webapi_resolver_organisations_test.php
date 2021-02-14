@@ -32,7 +32,7 @@ class hierarchy_organisation_webapi_resolver_organisations_testcase extends adva
      * @inheritDoc
      */
     protected function setUp(): void {
-        /** @var totara_hierarchy_generator $gen */
+        /** @var \totara_hierarchy\testing\generator $gen */
         $gen = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         // Create some noise.
@@ -53,7 +53,7 @@ class hierarchy_organisation_webapi_resolver_organisations_testcase extends adva
      * @throws coding_exception
      */
     protected function create_framework_organisations(): array {
-        /** @var totara_hierarchy_generator $gen */
+        /** @var \totara_hierarchy\testing\generator $gen */
         $gen = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $framework = $gen->create_org_frame([]);

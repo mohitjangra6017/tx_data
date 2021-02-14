@@ -150,8 +150,8 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
     }
 
     public function test_add_participants() {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $data = $this->generate_test_data_for_adding_participants([
             constants::RELATIONSHIP_SUBJECT,
             constants::RELATIONSHIP_APPRAISER,
@@ -197,11 +197,11 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
     }
 
     public function test_add_participants_multiple_subject_instances() {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         // Create an activity with 2 tracks.
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_tracks_per_activity(2)
             ->set_number_of_users_per_user_group_type(2)
             ->set_relationships_per_section([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_APPRAISER]);
@@ -242,8 +242,8 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
     }
 
     public function test_add_participants_multiple_relationships() {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $data = $this->generate_test_data_for_adding_participants([
             constants::RELATIONSHIP_SUBJECT,
             constants::RELATIONSHIP_APPRAISER,
@@ -294,8 +294,8 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
     }
 
     public function test_add_participants_varying_section_relationships() {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $data = $this->generate_test_data_for_adding_participants([
             constants::RELATIONSHIP_SUBJECT,
             constants::RELATIONSHIP_APPRAISER,
@@ -368,8 +368,8 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
     }
 
     public function test_add_participants_invalid_participant_id() {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $data = $this->generate_test_data_for_adding_participants([
             constants::RELATIONSHIP_SUBJECT,
             constants::RELATIONSHIP_APPRAISER,
@@ -399,8 +399,8 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
     }
 
     public function test_add_participants_activity_must_be_active() {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $data = $this->generate_test_data_for_adding_participants([
             constants::RELATIONSHIP_SUBJECT,
             constants::RELATIONSHIP_APPRAISER
@@ -428,8 +428,8 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
     }
 
     public function test_add_participants_invalid_relationship() {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $data = $this->generate_test_data_for_adding_participants([
             constants::RELATIONSHIP_SUBJECT,
             constants::RELATIONSHIP_MANAGER
@@ -455,8 +455,8 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
     }
 
     public function test_add_participants_cannot_add_subject_relationship() {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $data = $this->generate_test_data_for_adding_participants([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_MANAGER]);
 
         $subject_relationship = $generator->get_core_relationship(constants::RELATIONSHIP_SUBJECT);
@@ -479,8 +479,8 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
     }
 
     public function test_add_participants_with_invalid_and_valid_relationships() {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $data = $this->generate_test_data_for_adding_participants([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_MANAGER]);
 
         $appraiser_relationship = $generator->get_core_relationship(constants::RELATIONSHIP_APPRAISER);
@@ -516,8 +516,8 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
     }
 
     public function test_add_participants_invalid_subject_instance() {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $data = $this->generate_test_data_for_adding_participants([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_APPRAISER]);
 
         $appraiser_relationship = $generator->get_core_relationship(constants::RELATIONSHIP_APPRAISER);
@@ -560,8 +560,8 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
      * @param array $subject_instance_ids
      */
     public function test_add_participants_must_pass_existing_subject_instance_ids(array $subject_instance_ids) {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $this->generate_test_data_for_adding_participants([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_MANAGER]);
 
         $subject_relationship = $generator->get_core_relationship(constants::RELATIONSHIP_SUBJECT);
@@ -584,7 +584,7 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
     }
 
     public function test_add_participants_silently_ignored_if_already_existing() {
-        /** @var mod_perform_generator $generator */
+        /** @var \mod_perform\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
         $data = $this->generate_test_data_for_adding_participants([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_APPRAISER]);
         $this->assertEquals(4, participant_instance::repository()->count());
@@ -629,7 +629,7 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
      * @dataProvider reopen_and_uncomplete_data_provider
      */
     public function test_add_participants_reopens_and_uncompletes_subject_instance(int $state_before_adding) {
-        /** @var mod_perform_generator $generator */
+        /** @var \mod_perform\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
         $data = $this->generate_test_data_for_adding_participants([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_APPRAISER]);
 
@@ -736,11 +736,11 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
      * @return stdClass
      */
     private function generate_test_data_for_adding_participants(array $relationships, int $num_sections = 1): stdClass {
-        /** @var mod_perform_generator $generator */
+        /** @var \mod_perform\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
 
         // Create 2 activities with 2 users each.
-        $config = mod_perform_activity_generator_configuration::new()
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(2)
             ->set_number_of_users_per_user_group_type(2)
             ->set_number_of_sections_per_activity($num_sections)
@@ -1051,7 +1051,7 @@ class mod_perform_participant_instance_creation_service_testcase extends advance
         bool $expand_per_job_assignment = false,
         bool $add_manual_participants = false
     ): stdClass {
-        /** @var mod_perform_generator $generator */
+        /** @var \mod_perform\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
         $activity_tree = new stdClass();
         $activity_tree->activity = $generator->create_activity_in_container();

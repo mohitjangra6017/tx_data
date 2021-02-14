@@ -53,8 +53,8 @@ class mod_perform_track_model_testcase extends advanced_testcase {
     public function test_create_tracks(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container(['create_track' => true]);
 
         // There is already a "default" track, created when the activity is
@@ -129,8 +129,8 @@ class mod_perform_track_model_testcase extends advanced_testcase {
         $active = track_status::ACTIVE;
         $paused = track_status::PAUSED;
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container();
         $track = track::create($activity);
 
@@ -595,8 +595,8 @@ class mod_perform_track_model_testcase extends advanced_testcase {
      * @return track
      */
     private function create_activity_track(string $activity_status): track {
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         /** @var activity $activity */
         $activity = $perform_generator->create_activity_in_container([
             'create_track' => true,
@@ -609,8 +609,8 @@ class mod_perform_track_model_testcase extends advanced_testcase {
     public function test_update_performs_validation(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container();
         $track = track::create($activity);
 
@@ -626,8 +626,8 @@ class mod_perform_track_model_testcase extends advanced_testcase {
     public function test_validate_fails_due_to_invalid_due_date_type(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container();
         $track = track::create($activity);
 
@@ -643,8 +643,8 @@ class mod_perform_track_model_testcase extends advanced_testcase {
     public function test_validate_fails_due_to_invalid_fixed_due_date(): void {
         $this->setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_activity_in_container();
         $track = track::create($activity);
 

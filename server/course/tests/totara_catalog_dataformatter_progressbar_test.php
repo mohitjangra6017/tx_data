@@ -24,7 +24,6 @@
 namespace core_course\totara_catalog\course\dataformatter;
 
 use context_system;
-use core_completion_generator;
 use stdClass;
 use totara_catalog\dataformatter\dataformatter_test_base;
 use totara_catalog\dataformatter\formatter;
@@ -55,7 +54,7 @@ class core_course_totara_catalog_dataformatter_progressbar_testcase extends data
         $module_data = $generator->create_module('data', ['course' => $course->id]);
         $studentrole = $DB->get_record('role', ['shortname' => 'student']);
         $generator->enrol_user($student->id, $course->id, $studentrole->id);
-        /** @var core_completion_generator $cgen */
+        /** @var \core_completion\testing\generator $cgen */
         $cgen = $generator->get_plugin_generator('core_completion');
         $cgen->enable_completion_tracking($course);
         $cgen->set_activity_completion($course->id, [$module_data]);

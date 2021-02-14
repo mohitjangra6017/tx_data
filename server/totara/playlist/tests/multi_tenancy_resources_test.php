@@ -41,14 +41,14 @@ class totara_playlist_multi_tenancy_resources_testcase extends advanced_testcase
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
 
         $tenant_one = $tenant_generator->create_tenant();
@@ -58,7 +58,7 @@ class totara_playlist_multi_tenancy_resources_testcase extends advanced_testcase
         $topic_ids = [];
         $this->setAdminUser();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         for ($i = 0; $i < 2; $i++) {
             $topic = $topic_generator->create_topic();
@@ -132,17 +132,17 @@ class totara_playlist_multi_tenancy_resources_testcase extends advanced_testcase
         $user_two = $generator->create_user();
 
         $this->setAdminUser();
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         $topic = $topic_generator->create_topic();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
         $tenant_one = $tenant_generator->create_tenant();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
 
         $tenant_generator->migrate_user_to_tenant($user_one->id, $tenant_one->id);
@@ -156,7 +156,7 @@ class totara_playlist_multi_tenancy_resources_testcase extends advanced_testcase
         ]);
 
         // Login as user two and start create several resources.
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $this->setUser($user_two);
         $user_recipient = new user($user_one->id);
@@ -228,11 +228,11 @@ class totara_playlist_multi_tenancy_resources_testcase extends advanced_testcase
         $user_four = $generator->create_user();
 
         $this->setAdminUser();
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         $topic = $topic_generator->create_topic();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -241,7 +241,7 @@ class totara_playlist_multi_tenancy_resources_testcase extends advanced_testcase
         $tenant_generator->migrate_user_to_tenant($user_three->id, $tenant->id);
         $tenant_generator->set_user_participation($user_one->id, [$tenant->id]);
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
 
         // Log in as first user, then start creating the playlist
@@ -253,10 +253,10 @@ class totara_playlist_multi_tenancy_resources_testcase extends advanced_testcase
 
         $user_one_recipient = new user($user_one->id);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
 
         // Login as second user, and start creating the surveys

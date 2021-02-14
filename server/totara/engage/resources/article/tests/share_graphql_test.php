@@ -39,7 +39,7 @@ class engage_article_share_graphql_testcase extends advanced_testcase {
      */
     public function test_share_item() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
         // Create users.
@@ -89,7 +89,7 @@ class engage_article_share_graphql_testcase extends advanced_testcase {
      */
     public function test_article_create() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
         // Create users.
@@ -138,13 +138,13 @@ class engage_article_share_graphql_testcase extends advanced_testcase {
      */
     public function test_article_update() {
         $this->setAdminUser();
-        /** @var totara_topic_generator $topicgen */
+        /** @var \totara_topic\testing\generator $topicgen */
         $topicgen = $this->getDataGenerator()->get_plugin_generator('totara_topic');
         $topics[] = $topicgen->create_topic('topic1')->get_id();
         $topics[] = $topicgen->create_topic('topic2')->get_id();
 
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
         // Create users.
@@ -193,7 +193,7 @@ class engage_article_share_graphql_testcase extends advanced_testcase {
      */
     public function test_share_totals() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
         // Create users.
@@ -245,7 +245,7 @@ class engage_article_share_graphql_testcase extends advanced_testcase {
      */
     public function test_recipients() {
         $gen = $this->getDataGenerator();
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
         // Create users.

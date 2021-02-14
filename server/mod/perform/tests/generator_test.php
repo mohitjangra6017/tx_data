@@ -37,7 +37,7 @@ use totara_job\entity\job_assignment as job_assignment_entity;
 use totara_job\job_assignment;
 
 /**
- * @coversDefaultClass \mod_perform_generator
+ * @coversDefaultClass \\mod_perform\testing\generator
  *
  * @group perform
  */
@@ -165,7 +165,7 @@ class mod_perform_generator_testcase extends advanced_testcase {
     public function test_create_full_activities_with_anonymous_responeses() {
         $generator = $this->generator();
 
-        $configuration = mod_perform_activity_generator_configuration::new()->enable_anonymous_responses();
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()->enable_anonymous_responses();
 
         $activities = $generator->create_full_activities($configuration);
         $this->assertCount(1, $activities);
@@ -186,7 +186,7 @@ class mod_perform_generator_testcase extends advanced_testcase {
     public function test_create_full_activities_with_increased_number() {
         $generator = $this->generator();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(3)
             ->set_number_of_tracks_per_activity(2)
             ->set_cohort_assignments_per_activity(4)
@@ -237,7 +237,7 @@ class mod_perform_generator_testcase extends advanced_testcase {
     public function test_create_full_activities_without_subject_instances() {
         $generator = $this->generator();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->disable_subject_instances();
 
         $activities = $generator->create_full_activities($configuration);
@@ -270,7 +270,7 @@ class mod_perform_generator_testcase extends advanced_testcase {
     public function test_create_full_activities_without_user_assignments() {
         $generator = $this->generator();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->disable_user_assignments();
 
         $activities = $generator->create_full_activities($configuration);
@@ -303,7 +303,7 @@ class mod_perform_generator_testcase extends advanced_testcase {
     public function test_create_full_activities_with_additional_roles() {
         $generator = $this->generator();
 
-        $configuration = mod_perform_activity_generator_configuration::new()
+        $configuration = \mod_perform\testing\activity_generator_configuration::new()
             ->set_number_of_activities(2)
             ->set_number_of_users_per_user_group_type(2)
             ->set_relationships_per_section([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_APPRAISER])
@@ -374,9 +374,9 @@ class mod_perform_generator_testcase extends advanced_testcase {
     /**
      * Gets the generator instance
      *
-     * @return mod_perform_generator
+     * @return \mod_perform\testing\generator
      */
-    protected function generator(): mod_perform_generator {
-        return $this->getDataGenerator()->get_plugin_generator('mod_perform');
+    protected function generator(): \mod_perform\testing\generator {
+        return \mod_perform\testing\generator::instance();
     }
 }

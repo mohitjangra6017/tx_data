@@ -31,7 +31,7 @@ class criteria_othercompetency_display_testcase extends advanced_testcase {
 
     private function setup_data() {
         $data = new class() {
-            /** @var totara_criteria_generator criteria_generator */
+            /** @var \totara_criteria\testing\generator criteria_generator */
             public $criteria_generator;
             /** @var competency[] other_competency_items */
             public $other_competency_items = [];
@@ -41,7 +41,7 @@ class criteria_othercompetency_display_testcase extends advanced_testcase {
 
         $data->criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $data->other_competency_items = [
             $competency_generator->create_competency('<span>Other Comp 1</span>'),

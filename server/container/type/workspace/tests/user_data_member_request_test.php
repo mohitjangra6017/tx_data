@@ -35,7 +35,7 @@ class container_workspace_user_data_member_request_testcase extends advanced_tes
         global $DB;
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setAdminUser();
 
@@ -74,7 +74,7 @@ class container_workspace_user_data_member_request_testcase extends advanced_tes
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setAdminUser();
 

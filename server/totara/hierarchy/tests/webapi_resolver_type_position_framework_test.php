@@ -227,7 +227,7 @@ class totara_hierarchy_webapi_resolver_type_position_framework_testcase extends 
     }
 
     public function test_resolve_positions() {
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_pos_frame([]);
         $typeid = $generator->create_pos_type([]);

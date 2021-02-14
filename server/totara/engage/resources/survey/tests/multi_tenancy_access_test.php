@@ -34,7 +34,7 @@ class engage_survey_multi_tenancy_access_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -44,7 +44,7 @@ class engage_survey_multi_tenancy_access_testcase extends advanced_testcase {
         // Log in as second user to create a public survey.
         $this->setUser($user_two);
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_public_survey();
 
@@ -64,7 +64,7 @@ class engage_survey_multi_tenancy_access_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -74,7 +74,7 @@ class engage_survey_multi_tenancy_access_testcase extends advanced_testcase {
         // Log in as system level user to create a survey.
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_public_survey();
 
@@ -95,7 +95,7 @@ class engage_survey_multi_tenancy_access_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -109,7 +109,7 @@ class engage_survey_multi_tenancy_access_testcase extends advanced_testcase {
         // ability to access it or not.
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_public_survey();
 
@@ -130,7 +130,7 @@ class engage_survey_multi_tenancy_access_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -141,7 +141,7 @@ class engage_survey_multi_tenancy_access_testcase extends advanced_testcase {
         // Log in as system user to create a public survey and check if tenant user is able to access it or not.
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_public_survey();
 
@@ -161,7 +161,7 @@ class engage_survey_multi_tenancy_access_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -172,7 +172,7 @@ class engage_survey_multi_tenancy_access_testcase extends advanced_testcase {
         // Log in as tenant member to create a survey.
         $this->setUser($user_one);
 
-        /** @var engage_survey_generator $survey_generator */
+        /** @var \engage_survey\testing\generator $survey_generator */
         $survey_generator = $generator->get_plugin_generator('engage_survey');
         $survey = $survey_generator->create_public_survey();
 

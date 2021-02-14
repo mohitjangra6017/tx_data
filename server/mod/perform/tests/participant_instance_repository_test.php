@@ -33,8 +33,8 @@ class mod_perform_participant_instance_repository_testcase extends advanced_test
     public function test_user_can_not_view_other_user_details_with_no_link_between_users(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $main_user = self::getDataGenerator()->create_user();
         $other_user = self::getDataGenerator()->create_user();
@@ -61,8 +61,8 @@ class mod_perform_participant_instance_repository_testcase extends advanced_test
     public function test_user_can_view_other_users_profile_when_they_share_a_subject_instance(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_user = self::getDataGenerator()->create_user();
         $subject_user2 = self::getDataGenerator()->create_user();
@@ -107,8 +107,8 @@ class mod_perform_participant_instance_repository_testcase extends advanced_test
     public function test_user_can_not_view_other_users_profile_when_anonymous_setting_is_on(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $subject_user = self::getDataGenerator()->create_user();
         $main_user = self::getDataGenerator()->create_user();
@@ -167,8 +167,8 @@ class mod_perform_participant_instance_repository_testcase extends advanced_test
     public function test_user_can_view_other_users_profile_when_other_is_subject(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $main_user = self::getDataGenerator()->create_user();
         $other_user = self::getDataGenerator()->create_user();
@@ -188,8 +188,8 @@ class mod_perform_participant_instance_repository_testcase extends advanced_test
     public function test_subject_can_not_view_participant_details(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
 
         $main_user = self::getDataGenerator()->create_user();
         $other_user = self::getDataGenerator()->create_user();

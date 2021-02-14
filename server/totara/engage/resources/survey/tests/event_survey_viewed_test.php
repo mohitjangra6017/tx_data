@@ -32,7 +32,7 @@ class engage_survey_event_survey_viewed_testcase extends advanced_testcase {
     public function test_view_private_survey_interaction(): void {
         $gen = $this->getDataGenerator();
 
-        /** @var engage_survey_generator $articlegen */
+        /** @var \engage_survey\testing\generator $articlegen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         $users = $surveygen->create_users(2);
@@ -54,7 +54,7 @@ class engage_survey_event_survey_viewed_testcase extends advanced_testcase {
     public function test_view_public_survey_interaction(): void {
         $gen = $this->getDataGenerator();
 
-        /** @var engage_survey_generator $articlegen */
+        /** @var \engage_survey\testing\generator $articlegen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         $users = $surveygen->create_users(2);

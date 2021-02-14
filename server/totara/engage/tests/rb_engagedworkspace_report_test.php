@@ -48,13 +48,13 @@ class totara_engage_rb_engagedworkspace_report_testcase extends advanced_testcas
         $user_two = $gen->create_user();
         $user_three = $gen->create_user();
 
-        /** @var container_workspace_generator $workspacegen */
+        /** @var \container_workspace\testing\generator $workspacegen */
         $workspacegen = $gen->get_plugin_generator('container_workspace');
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
 
         $this->setUser($user_one);
@@ -202,7 +202,7 @@ class totara_engage_rb_engagedworkspace_report_testcase extends advanced_testcas
         $user_two = $gen->create_user();
         $user_three = $gen->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $gen->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -212,7 +212,7 @@ class totara_engage_rb_engagedworkspace_report_testcase extends advanced_testcas
         $tenant_generator->migrate_user_to_tenant($user_one->id, $tenant_one->id);
         $tenant_generator->migrate_user_to_tenant($user_two->id, $tenant_two->id);
 
-        /** @var container_workspace_generator $workspacegen */
+        /** @var \container_workspace\testing\generator $workspacegen */
         $workspacegen = $gen->get_plugin_generator('container_workspace');
 
         $this->setUser($user_one);

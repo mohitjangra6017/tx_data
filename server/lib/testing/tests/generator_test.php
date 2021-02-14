@@ -37,14 +37,14 @@ defined('MOODLE_INTERNAL') || die();
 class core_test_generator_testcase extends advanced_testcase {
     public function test_get_plugin_generator_good_case() {
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
-        $this->assertInstanceOf('core_question_generator', $generator);
+        $this->assertInstanceOf('core_question\testing\generator', $generator);
     }
 
     public function test_get_plugin_generator_sloppy_name() {
         $generator = $this->getDataGenerator()->get_plugin_generator('quiz');
         $this->assertDebuggingCalled('Please specify the component you want a generator for as ' .
                     'mod_quiz, not quiz.', DEBUG_DEVELOPER);
-        $this->assertInstanceOf('mod_quiz_generator', $generator);
+        $this->assertInstanceOf('mod_quiz\testing\generator', $generator);
     }
 
     /**
@@ -52,7 +52,7 @@ class core_test_generator_testcase extends advanced_testcase {
      */
     public function test_get_plugin_generator_no_component_dir() {
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage('Component core_filter does not support generators yet. Missing tests/generator/lib.php.');
+        $this->expectExceptionMessage('Component core_filter does not support generators. Class core_filter\testing\generator is missing.');
         $generator = $this->getDataGenerator()->get_plugin_generator('core_filter');
     }
 

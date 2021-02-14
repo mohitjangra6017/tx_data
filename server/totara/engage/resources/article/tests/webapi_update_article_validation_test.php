@@ -37,7 +37,7 @@ class engage_article_webapi_update_article_validation_testcase extends advanced_
 
         $this->setUser($user_one);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $article = $article_generator->create_article([
             'format' => FORMAT_JSON_EDITOR,

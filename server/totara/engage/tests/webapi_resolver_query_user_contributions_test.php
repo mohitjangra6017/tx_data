@@ -48,7 +48,7 @@ class totara_engage_webapi_resolver_query_user_contributions_testcase extends ad
     }
 
     private function create_article($name, $userid, $content = null): article {
-        /** @var engage_article_generator $generator */
+        /** @var \engage_article\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('engage_article');
         $params = ['name' => $name, 'userid' => $userid];
         if ($content !== null) {

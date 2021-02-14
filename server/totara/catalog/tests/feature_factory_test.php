@@ -129,7 +129,7 @@ class totara_catalog_feature_factory_testcase extends advanced_testcase {
         /** @var feature_factory $factory_program */
         $factory_program = new $factories['program']();
 
-        /** @var totara_customfield_generator $cf_generator */
+        /** @var \totara_customfield\testing\generator $cf_generator */
         $cf_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
 
         // Create a course menu customfield.

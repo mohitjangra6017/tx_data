@@ -39,9 +39,9 @@ use totara_criteria\hook\criteria_validity_changed;
 class totara_criteria_competency_item_helper_testcase extends advanced_testcase {
 
     public function test_achievement_updated() {
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $framework = $competency_generator->create_framework();
@@ -90,9 +90,9 @@ class totara_criteria_competency_item_helper_testcase extends advanced_testcase 
         $event_sink = $this->redirectEvents();
         $hook_sink = $this->redirectHooks();
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         $course1 = $this->getDataGenerator()->create_course(['enablecompletion' => true]);

@@ -4584,7 +4584,7 @@ class core_accesslib_testcase extends advanced_testcase {
         $this->assertEquals($course_expected, $output);
 
         // Tenant context
-        $tenantgenerator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        $tenantgenerator = \totara_tenant\testing\generator::instance();
         $tenantgenerator->enable_tenants();
 
         $tenant = $tenantgenerator->create_tenant();

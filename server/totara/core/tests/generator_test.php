@@ -34,7 +34,7 @@ class totara_core_generator_testcase extends advanced_testcase {
         $this->assertCount(0, $DB->get_records('user_info_category'));
         $this->assertCount(0, $DB->get_records('user_info_field'));
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $category1 = $generator->create_custom_profile_category(array());
@@ -60,7 +60,7 @@ class totara_core_generator_testcase extends advanced_testcase {
         $this->assertCount(0, $DB->get_records('user_info_category'));
         $this->assertCount(0, $DB->get_records('user_info_field'));
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         try {
@@ -86,7 +86,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_profile_field_checkbox() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_profile_field(array('datatype' => 'checkbox'));
@@ -155,7 +155,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_profile_field_date() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_profile_field(array('datatype' => 'date'));
@@ -172,7 +172,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_profile_field_datetime() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $category = $generator->create_custom_profile_category();
@@ -214,7 +214,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_profile_field_menu() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_profile_field(array('datatype' => 'menu', 'param1' => "xx\nyy\nzz", 'defaultdata' => 'yy'));
@@ -266,7 +266,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_profile_field_text() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_profile_field(array('datatype' => 'text'));
@@ -283,7 +283,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_profile_field_textarea() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_profile_field(array('datatype' => 'textarea', 'defaultdata' => 'xxx'));
@@ -302,7 +302,7 @@ class totara_core_generator_testcase extends advanced_testcase {
 
         $this->assertCount(0, $DB->get_records('course_info_field'));
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         try {
@@ -327,7 +327,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_course_field_checkbox() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_course_field(array('datatype' => 'checkbox'));
@@ -386,7 +386,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_course_field_datetime() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_course_field(
@@ -422,7 +422,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_course_field_menu() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_course_field(array('datatype' => 'menu', 'param1' => "xx\nyy\nzz", 'defaultdata' => 'yy'));
@@ -471,7 +471,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_course_field_multiselect() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $options = '[{"option":"prvni","icon":"achieving-success","default":"1","delete":0},{"option":"druhy","icon":"","default":"1","delete":0},{"option":"treti","icon":"forecasting-budgeting-and-strategic-planning","default":"0","delete":0}]';
@@ -498,7 +498,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_course_field_text() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_course_field(array('datatype' => 'text'));
@@ -514,7 +514,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_course_field_textarea() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_course_field(array('datatype' => 'textarea', 'defaultdata' => 'xxx'));
@@ -533,7 +533,7 @@ class totara_core_generator_testcase extends advanced_testcase {
 
         $this->assertCount(0, $DB->get_records('prog_info_field'));
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         try {
@@ -558,7 +558,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_program_field_checkbox() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_program_field(array('datatype' => 'checkbox'));
@@ -583,7 +583,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_program_field_datetime() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_program_field(
@@ -619,7 +619,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_program_field_menu() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_program_field(array('datatype' => 'menu', 'param1' => "xx\nyy\nzz", 'defaultdata' => 'yy'));
@@ -668,7 +668,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_program_field_multiselect() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $options = '[{"option":"prvni","icon":"achieving-success","default":"1","delete":0},{"option":"druhy","icon":"","default":"1","delete":0},{"option":"treti","icon":"forecasting-budgeting-and-strategic-planning","default":"0","delete":0}]';
@@ -695,7 +695,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_program_field_text() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_program_field(array('datatype' => 'text'));
@@ -711,7 +711,7 @@ class totara_core_generator_testcase extends advanced_testcase {
     public function test_create_custom_program_field_textarea() {
         $this->resetAfterTest();
 
-        /** @var totara_core_generator $generator */
+        /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
 
         $field = $generator->create_custom_program_field(array('datatype' => 'textarea', 'defaultdata' => 'xxx'));

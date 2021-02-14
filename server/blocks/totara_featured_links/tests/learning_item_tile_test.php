@@ -38,7 +38,7 @@ class block_totara_featured_links_learning_item_tile_testcase extends test_helpe
         global $DB;
 
         $this->setAdminUser();
-        /* @var block_totara_featured_links_generator $blockgenerator */
+        /* @var \block_totara_featured_links\testing\generator $blockgenerator */
         $blockgenerator = $this->getDataGenerator()->get_plugin_generator('block_totara_featured_links');
         $instance = $blockgenerator->create_instance();
         $tile = $blockgenerator->create_course_tile($instance->id);
@@ -160,7 +160,7 @@ class block_totara_featured_links_learning_item_tile_testcase extends test_helpe
         global $DB;
         $this->setAdminUser();
 
-        /* @var block_totara_featured_links_generator $blockgenerator */
+        /* @var \block_totara_featured_links\testing\generator $blockgenerator */
         $blockgenerator = $this->getDataGenerator()->get_plugin_generator('block_totara_featured_links');
         $instance = $blockgenerator->create_instance();
         $tile = $blockgenerator->create_program_tile($instance->id);

@@ -40,7 +40,7 @@ class totara_competency_models_activity_log_achieved_via_testcase extends advanc
         $competency_id = 200;
         $achievement_time = 300;
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $hierarchy_generator->create_scale(
             'comp',
@@ -89,9 +89,9 @@ class totara_competency_models_activity_log_achieved_via_testcase extends advanc
      * then they are all displayed correctly.
      */
     public function test_achieved_via_multiple_pathways() {
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
         // Competency and user records required.

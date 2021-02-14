@@ -312,9 +312,9 @@ class criteria_linkedcourses_testcase extends advanced_testcase {
     public function test_save_with_item_validation() {
         global $CFG;
 
-        /** @var totara_criteria_generator $criteria_generator */
+        /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         // Completion only enabled for every second course

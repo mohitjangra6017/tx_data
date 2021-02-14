@@ -448,12 +448,12 @@ class core_completion_helper_testcase extends advanced_testcase {
         $course2 = $this->getDataGenerator()->create_course();
 
         // Add a quiz.
-        /** @var mod_quiz_generator $quizgenerator */
+        /** @var \mod_quiz\testing\generator $quizgenerator */
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
         $quiz = $quizgenerator->create_instance(array('course' => $course1->id, 'questionsperpage' => 3, 'grade' => 100.0));
 
         // Add a facetoface.
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $facetoface = $facetofacegenerator->create_instance(array('course' => $course2->id));
 
@@ -1751,12 +1751,12 @@ class core_completion_helper_testcase extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
 
         // Add a quiz.
-        /** @var mod_quiz_generator $quizgenerator */
+        /** @var \mod_quiz\testing\generator $quizgenerator */
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
         $quiz = $quizgenerator->create_instance(array('course' => $course->id, 'questionsperpage' => 3, 'grade' => 100.0));
 
         // Add a facetoface.
-        /** @var mod_facetoface_generator $facetofacegenerator */
+        /** @var \mod_facetoface\testing\generator $facetofacegenerator */
         $facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $facetoface = $facetofacegenerator->create_instance(array('course' => $course->id));
 

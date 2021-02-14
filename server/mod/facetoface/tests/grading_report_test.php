@@ -51,7 +51,7 @@ class grading_report_testcase extends advanced_testcase {
         $this->setAdminUser();
 
         $gen = $this->getDataGenerator();
-        /** @var mod_facetoface_generator $f2f_gen */
+        /** @var \mod_facetoface\testing\generator $f2f_gen */
         $f2f_gen = $gen->get_plugin_generator('mod_facetoface');
 
         $course = $gen->create_course([], ['createsections' => true]);

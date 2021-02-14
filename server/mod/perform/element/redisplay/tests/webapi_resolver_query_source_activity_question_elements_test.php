@@ -87,8 +87,8 @@ class performelement_redisplay_webapi_resolver_query_source_activity_question_el
     private function create_test_data() {
         $this->setAdminUser();
 
-        /** @var $perform_generator mod_perform_generator*/
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var $perform_generator \mod_perform\testing\generator*/
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $activity = $perform_generator->create_activity_in_container(['create_section' => false]);
         $this->activity = $activity;

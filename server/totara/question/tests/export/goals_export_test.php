@@ -49,7 +49,7 @@ class totara_question_goals_export_testcase extends advanced_testcase {
 
         $questiontype = 'goals';
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $fwk = $hierarchygenerator->create_goal_frame([]);
@@ -61,7 +61,7 @@ class totara_question_goals_export_testcase extends advanced_testcase {
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
 
-        /** @var totara_hierarchy_generator $hierarchygen */
+        /** @var \totara_hierarchy\testing\generator $hierarchygen */
         $hierarchygen = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $hierarchygen->goal_assign_individuals($companygoal1->id, [$user1->id]);
         $hierarchygen->goal_assign_individuals($companygoal2->id, [$user1->id]);
@@ -141,7 +141,7 @@ class totara_question_goals_export_testcase extends advanced_testcase {
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $personalgoal1 = $hierarchygenerator->create_personal_goal($user1->id);
@@ -215,7 +215,7 @@ class totara_question_goals_export_testcase extends advanced_testcase {
 
         $user1 = $this->getDataGenerator()->create_user();
 
-        /** @var totara_hierarchy_generator $hierarchygenerator */
+        /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $fwk = $hierarchygenerator->create_goal_frame([]);
@@ -225,7 +225,7 @@ class totara_question_goals_export_testcase extends advanced_testcase {
 
         $user1 = $this->getDataGenerator()->create_user();
 
-        /** @var totara_hierarchy_generator $hierarchygen */
+        /** @var \totara_hierarchy\testing\generator $hierarchygen */
         $hierarchygen = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $hierarchygen->goal_assign_individuals($companygoal1->id, [$user1->id]);
 

@@ -102,7 +102,7 @@ class mod_perform_assignment_organisation_user_group_observer_testcase extends a
     }
 
     private function prepare_assignments() {
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $this->generator()->get_plugin_generator('totara_hierarchy');
 
         $test_data = new class() {
@@ -126,8 +126,8 @@ class mod_perform_assignment_organisation_user_group_observer_testcase extends a
             'frameworkid' => $framework->id
         ]);
 
-        /** @var mod_perform_generator $perform_generator */
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $perform_generator */
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $this->setAdminUser();
 
@@ -163,7 +163,7 @@ class mod_perform_assignment_organisation_user_group_observer_testcase extends a
     /**
      * Date generator shortcut
      *
-     * @return testing_data_generator
+     * @return \core\testing\generator
      */
     protected function generator() {
         return self::getDataGenerator();

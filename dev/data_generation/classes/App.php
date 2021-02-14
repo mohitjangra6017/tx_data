@@ -82,19 +82,19 @@ class App {
     /**
      * Get data testing generator
      *
-     * @return \testing_data_generator
+     * @return \core\testing\generator
      */
     public static function generator() {
-        return \phpunit_util::get_data_generator();
+        return \core\testing\generator::instance();
     }
 
     /**
      * Get totara competency generator
      *
-     * @return \totara_competency_generator
+     * @return \totara_competency\testing\generator
      */
     public static function competency_generator() {
-        return static::generator()->get_plugin_generator('totara_competency');
+        return \totara_competency\testing\generator::instance();
     }
 
     /**

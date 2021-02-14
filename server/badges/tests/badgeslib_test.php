@@ -57,7 +57,7 @@ class core_badges_badgeslib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
         $CFG->enablecompletion = true;
 
-        /** @var core_badges_generator $generator */
+        /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
 
         $user = $this->getDataGenerator()->create_user();
@@ -575,7 +575,7 @@ class core_badges_badgeslib_testcase extends advanced_testcase {
 
         // Create a program, assign a user to it and mark it as complete.
         $data_generator = $this->getDataGenerator();
-        /** @var totara_program_generator $program_generator */
+        /** @var \totara_program\testing\generator $program_generator */
         $program_generator = $data_generator->get_plugin_generator('totara_program');
         $program1 = $program_generator->create_program();
         $program_generator->assign_to_program($program1->id, ASSIGNTYPE_INDIVIDUAL, $this->user->id);
@@ -645,7 +645,7 @@ class core_badges_badgeslib_testcase extends advanced_testcase {
 
         // Create a program, assign a user to it and mark it as complete.
         $data_generator = $this->getDataGenerator();
-        /** @var totara_program_generator $program_generator */
+        /** @var \totara_program\testing\generator $program_generator */
         $program_generator = $data_generator->get_plugin_generator('totara_program');
         $program1 = $program_generator->create_program();
         $program_generator->assign_to_program($program1->id, ASSIGNTYPE_INDIVIDUAL, $this->user->id);
@@ -719,7 +719,7 @@ class core_badges_badgeslib_testcase extends advanced_testcase {
 
         // Create a program, assign a user to it and mark it as complete.
         $data_generator = $this->getDataGenerator();
-        /** @var totara_program_generator $program_generator */
+        /** @var \totara_program\testing\generator $program_generator */
         $program_generator = $data_generator->get_plugin_generator('totara_program');
         $program1 = $program_generator->create_program();
         $program_generator->assign_to_program($program1->id, ASSIGNTYPE_INDIVIDUAL, $this->user->id);
@@ -775,7 +775,7 @@ class core_badges_badgeslib_testcase extends advanced_testcase {
 
         // Create a program, assign a user to it. Don't add a completion for either programs.
         $data_generator = $this->getDataGenerator();
-        /** @var totara_program_generator $program_generator */
+        /** @var \totara_program\testing\generator $program_generator */
         $program_generator = $data_generator->get_plugin_generator('totara_program');
         $program1 = $program_generator->create_program();
         $program_generator->assign_to_program($program1->id, ASSIGNTYPE_INDIVIDUAL, $this->user->id);

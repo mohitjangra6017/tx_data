@@ -29,7 +29,6 @@ define('LOG_MANAGER_CLASS', '\core\log\dummy_manager');
 
 require(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir. '/clilib.php');
-require_once($CFG->dirroot . '/lib/testing/generator/data_generator.php');
 
 $CFG->noemailever = 1;
 
@@ -81,7 +80,7 @@ $quiet = $options['quiet'];
 $admin = get_admin();
 \core\session\manager::set_user($admin);
 
-$generator = new testing_data_generator();
+$generator = \core\testing\generator::instance();
 $start = time();
 
 $record = array();

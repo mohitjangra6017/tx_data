@@ -50,7 +50,7 @@ class mod_perform_webapi_type_notification_recipient_testcase extends advanced_t
     private function create_test_data(): array {
         $this->setAdminUser();
 
-        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $perform_generator = \mod_perform\testing\generator::instance();
 
         $subject_id = $perform_generator->get_core_relationship(constants::RELATIONSHIP_SUBJECT)->id;
 

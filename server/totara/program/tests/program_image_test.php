@@ -353,7 +353,7 @@ class totara_program_image_testcase extends advanced_testcase {
     /**
      * Create a program ora certification with a catalogue image and a summary image.
      *
-     * @param array $data properties passed to totara_program_generator::create_program
+     * @param array $data properties passed to \totara_program\testing\generator::create_program
      * @param array $userids array of assigned user ids
      * @param boolean $program true = program, false = certification
      * @return program
@@ -361,7 +361,7 @@ class totara_program_image_testcase extends advanced_testcase {
     private function create_program_with_images(array $data, array $userids, bool $program): program {
         $this->setAdminUser();
         $gen = $this->getDataGenerator();
-        /** @var totara_program_generator */
+        /** @var \totara_program\testing\generator */
         $progen = $gen->get_plugin_generator('totara_program');
         if ($program) {
             $prog = $progen->create_program($data);

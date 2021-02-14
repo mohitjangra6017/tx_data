@@ -60,45 +60,45 @@ class ml_recommender_export_item_data_testcase extends advanced_testcase {
     }
 
     /**
-     * @return engage_article_generator
+     * @return \engage_article\testing\generator
      */
-    private function get_article_generator(): engage_article_generator {
+    private function get_article_generator(): \engage_article\testing\generator {
         $generator = self::getDataGenerator();
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         return $article_generator;
     }
 
     /**
-     * @return totara_playlist_generator
+     * @return \totara_playlist\testing\generator
      */
-    private function get_playlist_generator(): totara_playlist_generator {
+    private function get_playlist_generator(): \totara_playlist\testing\generator {
         $generator = self::getDataGenerator();
 
-        /** @var totara_playlist_generator $playlist_generator */
+        /** @var \totara_playlist\testing\generator $playlist_generator */
         $playlist_generator = $generator->get_plugin_generator('totara_playlist');
         return $playlist_generator;
     }
 
     /**
-     * @return container_workspace_generator
+     * @return \container_workspace\testing\generator
      */
-    private function get_workspace_generator(): container_workspace_generator {
+    private function get_workspace_generator(): \container_workspace\testing\generator {
         $generator = self::getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         return $workspace_generator;
     }
 
     /**
-     * @return totara_topic_generator
+     * @return \totara_topic\testing\generator
      */
-    private function get_topic_generator(): totara_topic_generator {
+    private function get_topic_generator(): \totara_topic\testing\generator {
         $generator = self::getDataGenerator();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         return $topic_generator;
     }
@@ -287,7 +287,7 @@ class ml_recommender_export_item_data_testcase extends advanced_testcase {
     public function test_export_article_with_tenants(): void {
         $generator = self::getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

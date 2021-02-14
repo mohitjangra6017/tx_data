@@ -40,11 +40,11 @@ class totara_playlist_update_card_order_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $this->setAdminUser();
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         $playlist = $playlistgen->create_playlist();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article = $articlegen->create_article();
         $article1 = $articlegen->create_article();
@@ -111,11 +111,11 @@ class totara_playlist_update_card_order_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $this->setAdminUser();
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         $playlist = $playlistgen->create_playlist();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article = $articlegen->create_article();
         $article1 = $articlegen->create_article();
@@ -138,11 +138,11 @@ class totara_playlist_update_card_order_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $this->setAdminUser();
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         $playlist = $playlistgen->create_playlist();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article = $articlegen->create_article();
         $article1 = $articlegen->create_article();
@@ -167,11 +167,11 @@ class totara_playlist_update_card_order_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $this->setAdminUser();
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         $playlist = $playlistgen->create_playlist();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article = $articlegen->create_article();
         $article1 = $articlegen->create_article();
@@ -255,11 +255,11 @@ class totara_playlist_update_card_order_testcase extends advanced_testcase {
         $user1 = $gen->create_user();
         $this->setUser($user1);
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         $playlist = $playlistgen->create_playlist();
 
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $gen->get_plugin_generator('engage_article');
         $article = $articlegen->create_article();
         $article1 = $articlegen->create_article();
@@ -346,7 +346,7 @@ class totara_playlist_update_card_order_testcase extends advanced_testcase {
         $this->setAdminUser();
         $gen = $this->getDataGenerator();
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         $playlist = $playlistgen->create_playlist();
 
@@ -379,7 +379,7 @@ class totara_playlist_update_card_order_testcase extends advanced_testcase {
         $this->setAdminUser();
         $gen = $this->getDataGenerator();
 
-        /** @var totara_playlist_generator $playlistgen */
+        /** @var \totara_playlist\testing\generator $playlistgen */
         $playlistgen = $gen->get_plugin_generator('totara_playlist');
         $playlist1 = $playlistgen->create_playlist();
         $playlist2 = $playlistgen->create_playlist();
@@ -447,7 +447,7 @@ class totara_playlist_update_card_order_testcase extends advanced_testcase {
      * @param int $number
      */
     private function add_resources_for_playlist(playlist $playlist, int $number): void {
-        /** @var engage_article_generator $articlegen */
+        /** @var \engage_article\testing\generator $articlegen */
         $articlegen = $this->getDataGenerator()->get_plugin_generator('engage_article');
         for ($i = 0; $i < $number; $i++) {
             $playlist->add_resource($articlegen->create_article());

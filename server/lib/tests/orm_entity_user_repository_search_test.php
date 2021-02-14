@@ -171,8 +171,8 @@ class core_orm_entity_user_repository_search_testcase extends advanced_testcase 
     }
 
     private function create_users_for_multi_tenancy() {
-        /** @var totara_tenant_generator $tenant_generator */
-        $tenant_generator = $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenant_generator */
+        $tenant_generator = \totara_tenant\testing\generator::instance();
         $tenant_generator->enable_tenants();
 
         $tenant1 = $tenant_generator->create_tenant();

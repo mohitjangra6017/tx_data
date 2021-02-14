@@ -120,7 +120,7 @@ class webapi_resolver_type_comptency_type_testcase extends advanced_testcase {
     }
 
     private function create_data() {
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $comp_type = $generator
             ->create_type(

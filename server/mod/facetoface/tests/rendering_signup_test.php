@@ -57,7 +57,7 @@ class mod_facetoface_rendering_signup_testcase extends advanced_testcase {
         $ja = \totara_job\job_assignment::create_default($user->id);
         $gen->enrol_user($user->id, $course->id);
 
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $gen->get_plugin_generator("mod_facetoface");
         $f2f = $f2fgen->create_instance((object)[
             'course' => $course->id,

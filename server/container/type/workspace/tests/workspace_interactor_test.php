@@ -33,7 +33,7 @@ class container_workspace_workspace_interactor_testcase extends advanced_testcas
     public function test_has_seen(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $this->setAdminUser();
 
@@ -59,7 +59,7 @@ class container_workspace_workspace_interactor_testcase extends advanced_testcas
     public function test_check_owner(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         $user_one = $generator->create_user();
@@ -90,7 +90,7 @@ class container_workspace_workspace_interactor_testcase extends advanced_testcas
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -107,7 +107,7 @@ class container_workspace_workspace_interactor_testcase extends advanced_testcas
     public function test_check_manage(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         $user_one = $generator->create_user();
@@ -139,7 +139,7 @@ class container_workspace_workspace_interactor_testcase extends advanced_testcas
         $this->setUser($user_one);
 
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -286,7 +286,7 @@ class container_workspace_workspace_interactor_testcase extends advanced_testcas
 
         $this->setUser($user);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 

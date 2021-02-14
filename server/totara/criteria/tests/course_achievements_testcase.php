@@ -365,7 +365,7 @@ abstract class totara_criteria_course_achievements_testcase extends advanced_tes
             public $user;
         };
 
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator =  $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $data->fw1 = $hierarchy_generator->create_comp_frame([]);
         $data->comp1 = $hierarchy_generator->create_comp([

@@ -29,23 +29,11 @@ use core_user\totara_engage\share\recipient\user as user_recipient;
  *
  */
 class behat_totara_engage extends behat_base {
-
     /**
-     * @var totara_engage_generator
+     * @return \totara_engage\testing\generator
      */
-    protected static $generator = null;
-
-    /**
-     * @return totara_engage_generator
-     */
-    protected function get_data_generator(): totara_engage_generator {
-        global $CFG;
-        if (self::$generator === null) {
-            require_once($CFG->libdir.'/testing/generator/lib.php');
-            require_once($CFG->dirroot.'/totara/engage/tests/generator/lib.php');
-            self::$generator = new totara_engage_generator(testing_util::get_data_generator());
-        }
-        return self::$generator;
+    protected function get_data_generator(): \totara_engage\testing\generator {
+        return \totara_engage\testing\generator::instance();
     }
 
     /**

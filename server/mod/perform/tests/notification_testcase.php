@@ -50,7 +50,7 @@ use totara_core\entity\relationship as relationship_entity;
 use totara_core\relationship\relationship;
 
 abstract class mod_perform_notification_testcase extends advanced_testcase {
-    /** @var mod_perform_generator */
+    /** @var \mod_perform\testing\generator */
     protected $perfgen;
 
     /** @var phpunit_message_sink */
@@ -64,7 +64,7 @@ abstract class mod_perform_notification_testcase extends advanced_testcase {
 
     public function setUp(): void {
         $this->setAdminUser();
-        $this->perfgen = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $this->perfgen = \mod_perform\testing\generator::instance();
         // Unfortunately, there's no way to reset static properties across test functions.
         // We need to capture initial values and set them back on tearDown.
         $class = new ReflectionClass(factory::class);

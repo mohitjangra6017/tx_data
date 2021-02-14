@@ -53,7 +53,7 @@ class filter_glossary_filter_testcase extends advanced_testcase {
                 array('course' => $course->id, 'mainglossary' => 1));
 
         // Create two entries with ampersands and one normal entry.
-        /** @var mod_glossary_generator $generator */
+        /** @var \mod_glossary\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
         $normal = $generator->create_content($glossary, array('concept' => 'normal'));
         $amp1 = $generator->create_content($glossary, array('concept' => 'A&B'));
@@ -98,7 +98,7 @@ class filter_glossary_filter_testcase extends advanced_testcase {
         $glossary = 'Test glossary 1';
         $glossary_object = $this->getDataGenerator()->create_module('glossary', ['name' => $glossary, 'course' => $course, 'mainglossary' => 1]);
         $cmcontext = context_module::instance($glossary_object->cmid);
-        /** @var mod_glossary_generator $generator */
+        /** @var \mod_glossary\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
         $entry = $generator->create_content($glossary_object, [
             'concept' => 'Fun',

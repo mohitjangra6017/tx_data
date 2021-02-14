@@ -38,7 +38,7 @@ require_once($CFG->dirroot . '/totara/reportbuilder/tests/reportcache_advanced_t
  */
 class totara_program_update_learner_assignments_testcase extends reportcache_advanced_testcase {
 
-    /** @var totara_program_generator */
+    /** @var \totara_program\testing\generator */
     private $programgenerator = null;
     private $users = array();
     private $audiences = array();
@@ -69,6 +69,8 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
 
         $this->resetAfterTest(true);
 
+        $job_generator = \totara_job\testing\generator::instance();
+
         $this->programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $this->program = $this->programgenerator->create_program(array('fullname' => 'program1'));
         $this->controlprogram = $this->programgenerator->create_program(array('fullname' => 'controlprogram'));
@@ -80,7 +82,7 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         $this->audienceusers[0] = array();
         $this->audienceusers[1] = array();
         for ($i = 0; $i < 20; $i++) {
-            $this->users[$i] = $this->getDataGenerator()->create_user(array('firstname' => 'user' . $i));
+            $this->users[$i] = $job_generator->create_user_and_job(array('firstname' => 'user' . $i))[0];
             // Assign half of them (even $i) to audience[0], half of them (odd $i) to audience[1].
             cohort_add_member($this->audiences[$i % 2]->id, $this->users[$i]->id);
             $this->audienceusers[$i % 2][$i] = $this->users[$i];
@@ -211,7 +213,7 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         $course2 = $this->getDataGenerator()->create_course();
 
         // Assign courses to program. Reload program after changing it.
-        $this->getDataGenerator()->add_courseset_program($this->program->id, array($course1->id, $course2->id));
+        $this->programgenerator->legacy_add_courseset_program($this->program->id, array($course1->id, $course2->id));
         $this->program = new program($this->program->id);
 
         // Add individual assignments.
@@ -1820,10 +1822,9 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         $timebefore = time();
 
         // Update_learner_assignments is also run within the assign_to_program generator methods.
-        $generator = $this->getDataGenerator();
-        $generator->assign_to_program($this->program->id, ASSIGNTYPE_MANAGERJA, $topmanager1ja->id,
-            array('includechildren' => 1));
-        $generator->assign_to_program($this->program->id, ASSIGNTYPE_MANAGERJA, $topmanager2ja->id);
+        $this->programgenerator->assign_to_program($this->program->id, ASSIGNTYPE_MANAGERJA, $topmanager1ja->id,
+            array('includechildren' => 1), true);
+        $this->programgenerator->assign_to_program($this->program->id, ASSIGNTYPE_MANAGERJA, $topmanager2ja->id, null, true);
 
         $timeafter = time();
 
@@ -1932,10 +1933,9 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         $timebefore = time();
 
         // Update_learner_assignments is also run within the assign_to_program generator methods.
-        $generator = $this->getDataGenerator();
-        $generator->assign_to_program($this->program->id, ASSIGNTYPE_MANAGERJA, $topmanager1ja->id,
-            array('includechildren' => 1));
-        $generator->assign_to_program($this->program->id, ASSIGNTYPE_MANAGERJA, $topmanager2ja->id);
+        $this->programgenerator->assign_to_program($this->program->id, ASSIGNTYPE_MANAGERJA, $topmanager1ja->id,
+            array('includechildren' => 1), true);
+        $this->programgenerator->assign_to_program($this->program->id, ASSIGNTYPE_MANAGERJA, $topmanager2ja->id, null, true);
 
         // Check that records exist.
         $this->assertEquals(2, $DB->count_records('prog_assignment',
@@ -2029,7 +2029,7 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         global $DB;
 
         $generator = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
         $positionfw = $hierarchy_generator->create_pos_frame(array());
         $position1 = $hierarchy_generator->create_pos(array('frameworkid' => $positionfw->id, 'fullname' => 'position1'));
@@ -2084,11 +2084,10 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         $timebefore = time();
 
         // Update_learner_assignments is also run within the assign_to_program generator methods.
-        $generator = $this->getDataGenerator();
-        $generator->assign_to_program($this->program->id, ASSIGNTYPE_POSITION, $position1->id,
-            array('includechildren' => 1));
-        $generator->assign_to_program($this->program->id, ASSIGNTYPE_POSITION, $position3->id,
-            array('includechildren' => null));
+        $this->programgenerator->assign_to_program($this->program->id, ASSIGNTYPE_POSITION, $position1->id,
+            array('includechildren' => 1), true);
+        $this->programgenerator->assign_to_program($this->program->id, ASSIGNTYPE_POSITION, $position3->id,
+            array('includechildren' => null), true);
 
         $timeafter = time();
 
@@ -2165,7 +2164,7 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         global $DB;
 
         $generator = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
         $positionfw = $hierarchy_generator->create_pos_frame(array());
         $position1 = $hierarchy_generator->create_pos(array('frameworkid' => $positionfw->id, 'fullname' => 'position1'));
@@ -2220,11 +2219,10 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         $timebefore = time();
 
         // Update_learner_assignments is also run within the assign_to_program generator methods.
-        $generator = $this->getDataGenerator();
-        $generator->assign_to_program($this->program->id, ASSIGNTYPE_POSITION, $position1->id,
-            array('includechildren' => 1));
-        $generator->assign_to_program($this->program->id, ASSIGNTYPE_POSITION, $position3->id,
-            array('includechildren' => null));
+        $this->programgenerator->assign_to_program($this->program->id, ASSIGNTYPE_POSITION, $position1->id,
+            array('includechildren' => 1), true);
+        $this->programgenerator->assign_to_program($this->program->id, ASSIGNTYPE_POSITION, $position3->id,
+            array('includechildren' => null), true);
 
         // Check that records exist.
         $this->assertEquals(2, $DB->count_records('prog_assignment',
@@ -2319,7 +2317,7 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         global $DB;
 
         $generator = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
         $organisationfw = $hierarchy_generator->create_org_frame(array());
         $organisation1 = $hierarchy_generator->create_org(array('frameworkid' => $organisationfw->id, 'fullname' => 'organisation1'));
@@ -2374,11 +2372,10 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         $timebefore = time();
 
         // Update_learner_assignments is also run within the assign_to_program generator methods.
-        $generator = $this->getDataGenerator();
-        $generator->assign_to_program($this->program->id, ASSIGNTYPE_ORGANISATION, $organisation1->id,
-            array('includechildren' => 1));
-        $generator->assign_to_program($this->program->id, ASSIGNTYPE_ORGANISATION, $organisation3->id,
-            array('includechildren' => null));
+        $this->programgenerator->assign_to_program($this->program->id, ASSIGNTYPE_ORGANISATION, $organisation1->id,
+            array('includechildren' => 1), true);
+        $this->programgenerator->assign_to_program($this->program->id, ASSIGNTYPE_ORGANISATION, $organisation3->id,
+            array('includechildren' => null), true);
 
         $timeafter = time();
 
@@ -2455,7 +2452,7 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         global $DB;
 
         $generator = $this->getDataGenerator();
-        /** @var totara_hierarchy_generator $hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $hierarchy_generator */
         $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
         $organisationfw = $hierarchy_generator->create_org_frame(array());
         $organisation1 = $hierarchy_generator->create_org(array('frameworkid' => $organisationfw->id, 'fullname' => 'organisation1'));
@@ -2510,11 +2507,10 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         $timebefore = time();
 
         // Update_learner_assignments is also run within the assign_to_program generator methods.
-        $generator = $this->getDataGenerator();
-        $generator->assign_to_program($this->program->id, ASSIGNTYPE_ORGANISATION, $organisation1->id,
-            array('includechildren' => 1));
-        $generator->assign_to_program($this->program->id, ASSIGNTYPE_ORGANISATION, $organisation3->id,
-            array('includechildren' => null));
+        $this->programgenerator->assign_to_program($this->program->id, ASSIGNTYPE_ORGANISATION, $organisation1->id,
+            array('includechildren' => 1), true);
+        $this->programgenerator->assign_to_program($this->program->id, ASSIGNTYPE_ORGANISATION, $organisation3->id,
+            array('includechildren' => null), true);
 
         // Check that records exist.
         $this->assertEquals(2, $DB->count_records('prog_assignment',
@@ -2620,7 +2616,7 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
         $course2 = $this->getDataGenerator()->create_course();
 
         // Assign courses to program. Reload program after changing it.
-        $this->getDataGenerator()->add_courseset_program($this->program->id, array($course1->id, $course2->id));
+        $this->programgenerator->legacy_add_courseset_program($this->program->id, array($course1->id, $course2->id));
         $this->program = new program($this->program->id);
 
         // Assign users to courses.

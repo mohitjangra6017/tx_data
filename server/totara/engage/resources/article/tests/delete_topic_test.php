@@ -34,7 +34,7 @@ final class engage_article_delete_topic_testcase extends advanced_testcase {
         // Log in as admin and start creating the topics.
         $this->setAdminUser();
 
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
         $topics = [];
 
@@ -48,7 +48,7 @@ final class engage_article_delete_topic_testcase extends advanced_testcase {
         $user_one = $generator->create_user();
         $this->setUser($user_one);
 
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
         $topic_ids = array_map(
             function (topic $topic): int {

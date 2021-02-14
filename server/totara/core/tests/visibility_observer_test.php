@@ -42,7 +42,7 @@ class totara_core_visibility_observer_testcase extends advanced_testcase {
         global $DB;
 
         $gen = self::getDataGenerator();
-        /** @var totara_program_generator $gen_prog */
+        /** @var \totara_program\testing\generator $gen_prog */
         $gen_prog = $gen->get_plugin_generator('totara_program');
 
         $roleid = $gen->create_role();
@@ -103,7 +103,7 @@ class totara_core_visibility_observer_testcase extends advanced_testcase {
         global $DB;
 
         $gen = self::getDataGenerator();
-        /** @var totara_program_generator $gen_prog */
+        /** @var \totara_program\testing\generator $gen_prog */
         $gen_prog = $gen->get_plugin_generator('totara_program');
 
         $roleid = $gen->create_role();
@@ -164,7 +164,7 @@ class totara_core_visibility_observer_testcase extends advanced_testcase {
         global $DB;
 
         $gen = self::getDataGenerator();
-        /** @var totara_program_generator $gen_prog */
+        /** @var \totara_program\testing\generator $gen_prog */
         $gen_prog = $gen->get_plugin_generator('totara_program');
 
         $category1 = $gen->create_category();
@@ -226,7 +226,7 @@ class totara_core_visibility_observer_testcase extends advanced_testcase {
         global $DB;
 
         $gen = self::getDataGenerator();
-        /** @var totara_program_generator $gen_prog */
+        /** @var \totara_program\testing\generator $gen_prog */
         $gen_prog = $gen->get_plugin_generator('totara_program');
 
         $category0 = $gen->create_category();

@@ -56,7 +56,7 @@ class totara_program_recurring_courses_testcase extends reportcache_advanced_tes
         global $DB;
 
         $generator = $this->getDataGenerator();
-        /** @var totara_program_generator $programgenerator */
+        /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $generator->get_plugin_generator('totara_program');
 
         $course = $generator->create_course(array('enablecompletion' => 1));
@@ -67,7 +67,7 @@ class totara_program_recurring_courses_testcase extends reportcache_advanced_tes
         // Create users and assign users to the programs as individuals..
         for ($i = 1; $i <= 5; $i++) {
             $this->users[$i] = $this->getDataGenerator()->create_user();
-            $this->getDataGenerator()->assign_to_program($program->id, ASSIGNTYPE_INDIVIDUAL, $this->users[$i]->id);
+            $programgenerator->assign_to_program($program->id, ASSIGNTYPE_INDIVIDUAL, $this->users[$i]->id, null, true);
             $this->getDataGenerator()->enrol_user($this->users[$i]->id, $course->id, 'student');
         }
 

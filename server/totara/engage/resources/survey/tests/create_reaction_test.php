@@ -43,7 +43,7 @@ class engage_survey_create_reaction_testcase extends advanced_testcase {
 
         $gen = $this->getDataGenerator();
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         $this->setAdminUser();
@@ -110,7 +110,7 @@ class engage_survey_create_reaction_testcase extends advanced_testcase {
     public function test_create_reaction(): void {
         $gen = $this->getDataGenerator();
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
         // Create users.
@@ -153,7 +153,7 @@ class engage_survey_create_reaction_testcase extends advanced_testcase {
     public function test_create_reaction_with_area(): void {
         $gen = $this->getDataGenerator();
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
 
 
@@ -201,7 +201,7 @@ class engage_survey_create_reaction_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $user_one = $gen->create_user();
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
         $this->setUser($user_one);
         $survey = $surveygen->create_survey();
@@ -225,7 +225,7 @@ class engage_survey_create_reaction_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $user_one = $gen->create_user();
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
         $this->setUser($user_one);
         $survey = $surveygen->create_survey();
@@ -251,7 +251,7 @@ class engage_survey_create_reaction_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $user_one = $gen->create_user();
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
         $this->setUser($user_one);
         $survey = $surveygen->create_restricted_survey();
@@ -291,7 +291,7 @@ class engage_survey_create_reaction_testcase extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $user_one = $gen->create_user();
 
-        /** @var engage_survey_generator $surveygen */
+        /** @var \engage_survey\testing\generator $surveygen */
         $surveygen = $gen->get_plugin_generator('engage_survey');
         $this->setUser($user_one);
         $survey = $surveygen->create_restricted_survey();

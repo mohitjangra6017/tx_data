@@ -97,7 +97,7 @@ class webapi_resolver_type_pathway_achievement_testcase extends advanced_testcas
     private function create_data() {
         $user = $this->getDataGenerator()->create_user();
 
-        /** @var totara_competency_generator $competency_generator */
+        /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
         $pathway = $competency_generator->create_test_pathway($competency, pathway_achievement_entity::STATUS_CURRENT);

@@ -35,7 +35,7 @@ class totara_customfield_menu_test extends advanced_testcase {
         $prefix = 'course';
         $tableprefix = 'course';
         /**
-         * @var totara_customfield_generator $generator
+         * @var \totara_customfield\testing\generator $generator
          */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
 

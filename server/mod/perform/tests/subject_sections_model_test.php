@@ -136,8 +136,8 @@ class mod_perform_subject_sections_model_testcase extends advanced_testcase {
         array $relationships,
         int $no_of_sections
     ): collection {
-        /** @var mod_perform_generator $generator */
-        $generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        /** @var \mod_perform\testing\generator $generator */
+        $generator = \mod_perform\testing\generator::instance();
         $activity = $generator->create_activity_in_container(
             [
                 'create_section' => false,

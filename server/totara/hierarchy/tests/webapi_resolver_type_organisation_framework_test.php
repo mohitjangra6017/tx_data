@@ -231,7 +231,7 @@ class totara_hierarchy_webapi_resolver_type_organisation_framework_testcase exte
     }
 
     public function test_resolve_organisations() {
-        /** @var totara_hierarchy_generator $generator */
+        /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_org_frame([]);
         $typeid = $generator->create_org_type([]);

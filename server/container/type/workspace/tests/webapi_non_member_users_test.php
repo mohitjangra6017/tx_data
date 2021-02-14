@@ -75,8 +75,8 @@ class container_workspace_webapi_non_member_users_testcase extends advanced_test
     public function test_private_other_tenant_manager() {
         [$workspace, $member, $nonmember] = $this->prepare(false, true);
 
-        /** @var totara_tenant_generator $tenant_generator */
-        $tenant_gen =  $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenant_generator */
+        $tenant_gen =  \totara_tenant\testing\generator::instance();
         $tenant2 = $tenant_gen->create_tenant();
         $tenant_gen->migrate_user_to_tenant($nonmember->id, $tenant2->id);
 
@@ -92,8 +92,8 @@ class container_workspace_webapi_non_member_users_testcase extends advanced_test
     public function test_member_moved_to_other_tenant() {
         [$workspace, $member] = $this->prepare(false, true);
 
-        /** @var totara_tenant_generator $tenant_generator */
-        $tenant_gen =  $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenant_generator */
+        $tenant_gen =  \totara_tenant\testing\generator::instance();
         $tenant2 = $tenant_gen->create_tenant();
         $tenant_gen->migrate_user_to_tenant($member->id, $tenant2->id);
 
@@ -104,8 +104,8 @@ class container_workspace_webapi_non_member_users_testcase extends advanced_test
     public function test_user_from_other_tenant() {
         [$workspace, $member, $nonmember] = $this->prepare(false, true);
 
-        /** @var totara_tenant_generator $tenant_generator */
-        $tenant_gen =  $this->getDataGenerator()->get_plugin_generator('totara_tenant');
+        /** @var \totara_tenant\testing\generator $tenant_generator */
+        $tenant_gen =  \totara_tenant\testing\generator::instance();
         $tenant2 = $tenant_gen->create_tenant();
         $tenant_gen->migrate_user_to_tenant($nonmember->id, $tenant2->id);
 
@@ -141,7 +141,7 @@ class container_workspace_webapi_non_member_users_testcase extends advanced_test
 
         $tenant = null;
         if ($is_tenants) {
-            /** @var totara_tenant_generator $tenant_generator */
+            /** @var \totara_tenant\testing\generator $tenant_generator */
             $tenant_gen = $generator->get_plugin_generator('totara_tenant');
             $tenant_gen->enable_tenants();
 
@@ -154,7 +154,7 @@ class container_workspace_webapi_non_member_users_testcase extends advanced_test
 
         $this->setUser($owner);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         if ($is_private) {
             $workspace = $workspace_generator->create_private_workspace();

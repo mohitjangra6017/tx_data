@@ -63,7 +63,7 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
     /* @var phpunit_message_sink $sink */
     private $sink;
 
-    /* @var totara_program_generator $programgenerator */
+    /* @var \totara_program\testing\generator $programgenerator */
     private $programgenerator;
 
     public function setUp(): void {
@@ -77,6 +77,8 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
         // Turn off programs. This is to test that it doesn't interfere with certification completion.
         set_config('enableprograms', advanced_feature::DISABLED);
 
+        $this->programgenerator = \totara_program\testing\generator::instance();
+
         // Create users.
         $this->assertEquals(2, $DB->count_records('user'));
         $this->user1 = $this->getDataGenerator()->create_user();
@@ -89,8 +91,8 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
             'cert_activeperiod' => '1 year',
             'cert_windowperiod' => '6 month',
         );
-        $this->cert1 = $this->getDataGenerator()->create_certification($data);
-        $this->cert2 = $this->getDataGenerator()->create_certification($data);
+        $this->cert1 = $this->programgenerator->legacy_create_certification($data);
+        $this->cert2 = $this->programgenerator->legacy_create_certification($data);
         $this->assertEquals(2, $DB->count_records('certif'));
 
         unset_config('noemailever');
@@ -98,8 +100,6 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
 
         // Make sure the mail is redirecting and the sink is clear.
         $this->sink->clear();
-
-        $this->programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
     }
 
     protected function tearDown(): void {
@@ -148,7 +148,7 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
                 'courses' => array($course1)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->cert1, $coursesetdata);
+        $this->programgenerator->legacy_add_coursesets_to_program($this->cert1, $coursesetdata);
 
         // Assign users to program.
         $usersprogram = array($this->user1->id, $this->user2->id);
@@ -250,7 +250,7 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
                 'courses' => array($course1)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->cert1, $coursesetdata);
+        $this->programgenerator->legacy_add_coursesets_to_program($this->cert1, $coursesetdata);
 
         // Assign users to program.
         $usersprogram = array($this->user1->id, $this->user2->id);
@@ -385,7 +385,7 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
                 'courses' => array($course1)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->cert1, $coursesetdata);
+        $this->programgenerator->legacy_add_coursesets_to_program($this->cert1, $coursesetdata);
 
         // Assign users to program.
         $usersprogram = array($this->user1->id, $this->user2->id);
@@ -524,7 +524,7 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
                 'courses' => array($course2)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->cert1, $coursesetdata);
+        $this->programgenerator->legacy_add_coursesets_to_program($this->cert1, $coursesetdata);
         $params = array('programid' => $this->cert1->id, 'certifpath' => CERTIFPATH_CERT);
         $primarycoursesetid = $DB->get_field('prog_courseset', 'id', $params);
         $params = array('programid' => $this->cert1->id, 'certifpath' => CERTIFPATH_RECERT);
@@ -733,7 +733,7 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
                 'courses' => array($course2)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->cert1, $coursesetdata);
+        $this->programgenerator->legacy_add_coursesets_to_program($this->cert1, $coursesetdata);
         $params = array('programid' => $this->cert1->id, 'certifpath' => CERTIFPATH_CERT);
         $primarycoursesetid = $DB->get_field('prog_courseset', 'id', $params);
         $params = array('programid' => $this->cert1->id, 'certifpath' => CERTIFPATH_RECERT);
@@ -1012,7 +1012,7 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
                 'courses' => array($course2)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->cert1, $coursesetdata);
+        $this->programgenerator->legacy_add_coursesets_to_program($this->cert1, $coursesetdata);
         $params = array('programid' => $this->cert1->id, 'certifpath' => CERTIFPATH_CERT);
         $primarycoursesetid = $DB->get_field('prog_courseset', 'id', $params);
         $params = array('programid' => $this->cert1->id, 'certifpath' => CERTIFPATH_RECERT);
@@ -1281,7 +1281,7 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
                 'courses' => array($course1)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->cert1, $coursesetdata);
+        $this->programgenerator->legacy_add_coursesets_to_program($this->cert1, $coursesetdata);
 
         // Assign users to program.
         $usersprogram = array($this->user1->id, $this->user2->id);
@@ -1411,7 +1411,7 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
                 'courses' => array($course1)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->cert1, $coursesetdata);
+        $this->programgenerator->legacy_add_coursesets_to_program($this->cert1, $coursesetdata);
 
         // Assign users to program.
         $usersprogram = array($this->user1->id, $this->user2->id);
@@ -1547,7 +1547,7 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
                 'courses' => array($course1)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->cert1, $coursesetdata);
+        $this->programgenerator->legacy_add_coursesets_to_program($this->cert1, $coursesetdata);
 
         // Assign users to program.
         $usersprogram = array($this->user1->id, $this->user2->id);
@@ -1721,7 +1721,7 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
                 'courses' => array($course1)
             ),
         );
-        $this->getDataGenerator()->create_coursesets_in_program($this->cert1, $coursesetdata);
+        $this->programgenerator->legacy_add_coursesets_to_program($this->cert1, $coursesetdata);
 
         // Assign users to program.
         $usersprogram = array($this->user1->id, $this->user2->id);

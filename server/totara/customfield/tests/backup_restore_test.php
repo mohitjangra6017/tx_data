@@ -40,7 +40,7 @@ class totara_customfield_backup_restore_testcase extends advanced_testcase {
         parent::setUp();
 
         // Create course customfields.
-        /** @var totara_customfield_generator $cfgenerator */
+        /** @var \totara_customfield\testing\generator $cfgenerator */
         $cfgenerator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
         $textids = $cfgenerator->create_text('course', array('text1'));
         $multids = $cfgenerator->create_multiselect('course', array('multi1'=>array('opt1', 'opt2', 'opt3')));

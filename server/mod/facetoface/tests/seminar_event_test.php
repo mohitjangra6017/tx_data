@@ -302,7 +302,7 @@ class mod_facetoface_seminar_event_testcase extends advanced_testcase {
         global $DB;
 
         $gen = $this->getDataGenerator();
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
         $course = $gen->create_course();
 
@@ -393,7 +393,7 @@ class mod_facetoface_seminar_event_testcase extends advanced_testcase {
         global $DB;
 
         $gen = $this->getDataGenerator();
-        /** @var mod_facetoface_generator $f2fgen */
+        /** @var \mod_facetoface\testing\generator $f2fgen */
         $f2fgen = $gen->get_plugin_generator('mod_facetoface');
         $course = $gen->create_course();
 

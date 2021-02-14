@@ -197,7 +197,7 @@ class totara_competency_default_criteria_on_install_testcase extends advanced_te
     }
 
     private function add_learning_plan($competency_id = null) {
-        /** @var totara_plan_generator $plan_generator */
+        /** @var \totara_plan\testing\generator $plan_generator */
         $plan_generator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
         $plan = $plan_generator->create_learning_plan();
 
@@ -213,7 +213,7 @@ class totara_competency_default_criteria_on_install_testcase extends advanced_te
         // No events this time
         $sink = $this->redirectEvents();
 
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $compfw = $totara_hierarchy_generator->create_comp_frame([]);
         $comp = $totara_hierarchy_generator->create_comp(
@@ -472,7 +472,7 @@ class totara_competency_default_criteria_on_install_testcase extends advanced_te
         // Skip event execution
         $sink = $this->redirectEvents();
 
-        /** @var totara_hierarchy_generator $totara_hierarchy_generator */
+        /** @var \totara_hierarchy\testing\generator $totara_hierarchy_generator */
         $totara_hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         $scale1 = $totara_hierarchy_generator->create_scale('comp');

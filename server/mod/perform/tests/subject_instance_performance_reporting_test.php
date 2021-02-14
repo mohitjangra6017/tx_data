@@ -38,8 +38,8 @@ class mod_perform_subject_instance_performance_reporting_testcase extends advanc
     public function test_report_data_with_repeating_subject_instances() {
         self::setAdminUser();
 
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
-        $config = mod_perform_activity_generator_configuration::new()
+        $generator = \mod_perform\testing\generator::instance();
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->disable_subject_instances()
             ->enable_appraiser_for_each_subject_user()
             ->enable_manager_for_each_subject_user()
@@ -104,8 +104,8 @@ class mod_perform_subject_instance_performance_reporting_testcase extends advanc
     public function test_capabilities() {
         self::setAdminUser();
 
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
-        $config = mod_perform_activity_generator_configuration::new()
+        $generator = \mod_perform\testing\generator::instance();
+        $config = \mod_perform\testing\activity_generator_configuration::new()
             ->enable_manager_for_each_subject_user()
             ->set_number_of_users_per_user_group_type(1);
         /** @var activity $activity */

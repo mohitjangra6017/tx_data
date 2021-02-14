@@ -32,7 +32,7 @@ class container_workspace_multi_tenancy_non_member_loader_testcase extends advan
     public function test_get_non_member_users_from_same_tenant(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -63,7 +63,7 @@ class container_workspace_multi_tenancy_non_member_loader_testcase extends advan
         // Create a workspace as user_one.
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         // This specific workspace is a part of tenant one. Hence when we are looking for non member for thi
@@ -90,7 +90,7 @@ class container_workspace_multi_tenancy_non_member_loader_testcase extends advan
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 
@@ -135,7 +135,7 @@ class container_workspace_multi_tenancy_non_member_loader_testcase extends advan
 
         $this->setUser($user_one);
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
         $workspace = $workspace_generator->create_workspace();
 
@@ -158,7 +158,7 @@ class container_workspace_multi_tenancy_non_member_loader_testcase extends advan
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
 
-        /** @var container_workspace_generator $workspace_generator */
+        /** @var \container_workspace\testing\generator $workspace_generator */
         $workspace_generator = $generator->get_plugin_generator('container_workspace');
 
         // This is non-tenant workspace
@@ -167,7 +167,7 @@ class container_workspace_multi_tenancy_non_member_loader_testcase extends advan
         // Create 5 users for tenant one, 5 users for tenant two and 2 system level users see if
         // the workspace is able to see them all.
 
-        /** @var totara_tenant_generator $tenant_generator */
+        /** @var \totara_tenant\testing\generator $tenant_generator */
         $tenant_generator = $generator->get_plugin_generator('totara_tenant');
         $tenant_generator->enable_tenants();
 

@@ -43,7 +43,7 @@ class core_user_summary_card_field_provider_testcase extends advanced_testcase {
         // Provider will only able to fetch the text/menu for now, but not date time.
         $generator = $this->getDataGenerator();
 
-        /** @var core_user_generator $user_generator */
+        /** @var \core_user\testing\generator $user_generator */
         $user_generator = $generator->get_plugin_generator('core_user');
 
         // Generate text field.
@@ -101,7 +101,7 @@ class core_user_summary_card_field_provider_testcase extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
 
-        /** @var core_user_generator $user_generator */
+        /** @var \core_user\testing\generator $user_generator */
         $user_generator = $generator->get_plugin_generator('core_user');
         for ($i = 0; $i < 5; $i++) {
             $user_generator->create_custom_field('text', uniqid());
@@ -142,7 +142,7 @@ class core_user_summary_card_field_provider_testcase extends advanced_testcase {
     public function test_find_custom_field(): void {
         $generator = $this->getDataGenerator();
 
-        /** @var core_user_generator $user_generator */
+        /** @var \core_user\testing\generator $user_generator */
         $user_generator = $generator->get_plugin_generator('core_user');
         $custom_fields = [];
 

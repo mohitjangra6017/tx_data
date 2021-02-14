@@ -66,11 +66,11 @@ class ml_recommender_plugininfo_testcase extends advanced_testcase {
     /**
      * Get recommender generator
      *
-     * @return ml_recommender_generator|component_generator_base
+     * @return \ml_recommender\testing\generator
      * @throws coding_exception
      */
     protected function generator() {
-        return $this->getDataGenerator()->get_plugin_generator('ml_recommender');
+        return \ml_recommender\testing\generator::instance();
     }
 
     /**
@@ -78,9 +78,9 @@ class ml_recommender_plugininfo_testcase extends advanced_testcase {
      */
     private function generate_data() {
         $generator = $this->getDataGenerator();
-        /** @var engage_article_generator $article_generator */
+        /** @var \engage_article\testing\generator $article_generator */
         $article_generator = $generator->get_plugin_generator('engage_article');
-        /** @var totara_topic_generator $topic_generator */
+        /** @var \totara_topic\testing\generator $topic_generator */
         $topic_generator = $generator->get_plugin_generator('totara_topic');
 
         $this->setAdminUser();

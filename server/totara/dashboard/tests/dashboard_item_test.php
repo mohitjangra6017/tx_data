@@ -218,9 +218,9 @@ class totara_dashboard_item_testcase extends advanced_testcase {
         $data->user = $this->getDataGenerator()->create_user();
         $data->usertarget = new target_user($data->user);
 
-        /** @var totara_cohort_generator $cohort_generator */
+        /** @var \totara_cohort\testing\generator $cohort_generator */
         $cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
-        /** @var totara_dashboard_generator $dashboard_generator */
+        /** @var \totara_dashboard\testing\generator $dashboard_generator */
         $dashboard_generator = $this->getDataGenerator()->get_plugin_generator('totara_dashboard');
 
         $data->cohort = $this->getDataGenerator()->create_cohort();

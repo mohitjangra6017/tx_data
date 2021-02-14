@@ -98,6 +98,8 @@ class totara_program_rb_source_program_overview_testcase extends reportcache_adv
         $this->resetAfterTest();
         $this->setAdminUser();
 
+        $program_generator = \totara_program\testing\generator::instance();
+
         $usernum = 10;
         $coursenum = 2;
         $programnum = 2;
@@ -127,12 +129,12 @@ class totara_program_rb_source_program_overview_testcase extends reportcache_adv
         for ($prgcnt = 1; $prgcnt <= $programnum; $prgcnt++) {
             $starttime = time();
             $this->output_log("Create programs ({$prgcnt} of $programnum)...");
-            $programs[$prgcnt] = $this->getDataGenerator()->create_program();
+            $programs[$prgcnt] = $program_generator->create_program();
             // Add courses to programs.
-            $this->getDataGenerator()->add_courseset_program($programs[$prgcnt]->id, array_keys($courses));
+            $program_generator->legacy_add_courseset_program($programs[$prgcnt]->id, array_keys($courses));
 
             // Add users to programs.
-            $this->getDataGenerator()->assign_program($programs[$prgcnt]->id, array_keys($users));
+            $program_generator->assign_program($programs[$prgcnt]->id, array_keys($users));
 
             $left = (time() - $starttime) * ($programnum - $prgcnt);
             $togo = ceil($left / 60).' min';

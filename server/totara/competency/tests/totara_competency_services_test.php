@@ -107,7 +107,7 @@ class pathway_competency_services_testcase extends advanced_testcase {
     public function test_totara_competency_get_frameworks() {
         $this->setAdminUser();
 
-        /** @var totara_competency_generator $generator */
+        /** @var \totara_competency\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
 
         $frameworks = [
