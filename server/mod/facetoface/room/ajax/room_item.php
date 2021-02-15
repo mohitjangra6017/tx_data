@@ -26,10 +26,12 @@ define('AJAX_SCRIPT', true);
 require_once(__DIR__ . '/../../../../config.php');
 require_once($CFG->dirroot . '/mod/facetoface/lib.php');
 
+use core\plugininfo\virtualmeeting;
 use mod_facetoface\room;
 use mod_facetoface\room_virtualmeeting;
 use mod_facetoface\room_dates_virtualmeeting;
 use mod_facetoface\seminar;
+use totara_core\virtualmeeting\plugin\feature;
 
 $facetofaceid = required_param('facetofaceid', PARAM_INT);
 $itemseq = required_param('itemids', PARAM_SEQUENCE);
@@ -54,15 +56,6 @@ $rooms = array();
 foreach($itemids as $itemid) {
     $room = new room($itemid);
     $virtual_meeting = room_virtualmeeting::get_virtual_meeting($room);
-    $virtual_meeting_data = [];
-    $room_dates_virtual_meetings = room_dates_virtualmeeting::load_all_by_room($room);
-    foreach ($room_dates_virtual_meetings as $i => $room_dates_virtualmeeting) {
-        /** @var room_dates_virtualmeeting $room_dates_virtualmeeting */
-        $virtual_meeting_data[] = (object)[
-            'sessionsdateid' => $room_dates_virtualmeeting->get_sessionsdateid(),
-            'status' => $room_dates_virtualmeeting->get_status()
-        ];
-    }
     $res = (object)[
         'id' => $room->get_id(),
         'name' => $room->get_name(),
@@ -71,10 +64,29 @@ foreach($itemids as $itemid) {
         'custom' => $room->get_custom(),
         'capacity' => $room->get_capacity(),
         'can_manage' => $virtual_meeting->can_manage(),
-        'virtualmeeting' => $virtual_meeting->exists(),
-        'virtualroom' => $virtual_meeting->exists() || !empty($room->get_url()),
-        'virtualroom_status' => $virtual_meeting_data
+        'virtualmeeting' => false,
+        'virtualroom' => !empty($room->get_url()),
+        'virtualroom_status' => [],
+        'lossyupdate' => null,
     ];
+    if ($virtual_meeting->exists()) {
+        $res->virtualmeeting = true;
+        $res->virtualroom = true;
+        $virtual_meeting_data = [];
+        $room_dates_virtual_meetings = room_dates_virtualmeeting::load_all_by_room($room);
+        foreach ($room_dates_virtual_meetings as $i => $room_dates_virtualmeeting) {
+            /** @var room_dates_virtualmeeting $room_dates_virtualmeeting */
+            $virtual_meeting_data[] = (object)[
+                'sessionsdateid' => $room_dates_virtualmeeting->get_sessionsdateid(),
+                'status' => $room_dates_virtualmeeting->get_status()
+            ];
+        }
+        $res->virtualroom_status = $virtual_meeting_data;
+        $plugin = virtualmeeting::get_all_plugins()[$virtual_meeting->get_plugin()] ?? null;
+        if ($plugin !== null) {
+            $res->lossyupdate = $plugin->get_feature(feature::LOSSY_UPDATE);
+        }
+    }
     $rooms[] = $res;
 }
 
