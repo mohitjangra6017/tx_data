@@ -49,10 +49,7 @@
           </div>
         </GridItem>
         <GridItem :units="4" :class="'tui-competencyDetailAssignment__status'">
-          <ProgressTrackerCircle
-            :state="selectedAssignmentProficiencyState"
-            :target="selectedAssignmentProficiencyState !== 'complete'"
-          />
+          <ProgressTrackerNavCircleAchievement :states="progressStates" />
 
           <span
             class="tui-competencyDetailAssignment__status-text"
@@ -109,7 +106,7 @@ import ButtonIcon from 'tui/components/buttons/ButtonIcon';
 import ConfirmationModal from 'tui/components/modal/ConfirmationModal';
 import Grid from 'tui/components/grid/Grid';
 import GridItem from 'tui/components/grid/GridItem';
-import ProgressTrackerCircle from 'tui/components/progresstracker/ProgressTrackerCircle';
+import ProgressTrackerNavCircleAchievement from 'tui/components/progresstracker/ProgressTrackerNavCircleAchievement';
 import SelectFilter from 'tui/components/filters/SelectFilter';
 import { notify } from 'tui/notifications';
 // GraphQL
@@ -123,8 +120,8 @@ export default {
     ConfirmationModal,
     Grid,
     GridItem,
-    ProgressTrackerCircle,
     SelectFilter,
+    ProgressTrackerNavCircleAchievement,
   },
 
   props: {
@@ -156,6 +153,20 @@ export default {
   },
 
   computed: {
+    /**
+     * Return states for progress tracking marker
+     *
+     * @return {Array}
+     */
+    progressStates() {
+      let states = [this.selectedAssignmentProficiencyState];
+
+      if (this.selectedAssignmentProficiencyState !== 'complete') {
+        states.push('target');
+      }
+      return states;
+    },
+
     /**
      * Return proficient state (pending, complete, achieved)
      *

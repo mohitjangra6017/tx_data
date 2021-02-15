@@ -25,8 +25,9 @@
  */
 $string['add_organisation'] = 'Add organisation';
 $string['add_position'] = 'Add position';
-$string['a11yachievementtarget'] = 'Achievement target';
-$string['a11yachievedrequiredgoal'] = 'Achieved required goal';
+$string['a11y_achievement_target_with_status'] = 'Achievement target. Status: {$a}';
+$string['a11y_achievedrequiredgoal'] = 'Achieved required goal';
+$string['ally_status_with_value'] = 'Status: {$a}';
 $string['a11y_filter_panel_desc'] = 'The following options are used to filter the result data';
 $string['a11y_active_filter_type'] = '{$a} active filter type';
 $string['a11y_active_filter_type_plural'] = '{$a} active filter types';
@@ -917,3 +918,7 @@ $string['menuitem:topnavigation'] = 'Top navigation';
 $string['strftimedateshortmonth'] = '%d %b %Y';
 $string['bookingsfor'] = 'Bookings for ';
 $string['pastbookingsfor'] = 'Past Bookings for ';
+
+// Deprecated in 15
+$string['a11yachievementtarget'] = 'Achievement target';
+$string['a11yachievedrequiredgoal'] = 'Achieved required goal';

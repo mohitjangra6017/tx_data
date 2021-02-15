@@ -84,10 +84,7 @@
             :units="4"
             class="tui-linkedReviewViewCompetency__bar-status"
           >
-            <ProgressTrackerCircle
-              :state="state"
-              :target="state !== 'complete'"
-            />
+            <ProgressTrackerNavCircleAchievement :states="progressStates" />
             <span
               class="tui-linkedReviewViewCompetency__bar-statusText"
               :class="{
@@ -116,7 +113,7 @@
 import Grid from 'tui/components/grid/Grid';
 import GridItem from 'tui/components/grid/GridItem';
 import InfoIconButton from 'tui/components/buttons/InfoIconButton';
-import ProgressTrackerCircle from 'tui/components/progresstracker/ProgressTrackerCircle';
+import ProgressTrackerNavCircleAchievement from 'tui/components/progresstracker/ProgressTrackerNavCircleAchievement';
 import RatingScaleOverview from 'totara_competency/components/RatingScaleOverview';
 
 export default {
@@ -124,7 +121,7 @@ export default {
     Grid,
     GridItem,
     InfoIconButton,
-    ProgressTrackerCircle,
+    ProgressTrackerNavCircleAchievement,
     RatingScaleOverview,
   },
 
@@ -187,6 +184,20 @@ export default {
       } else {
         return 'pending';
       }
+    },
+
+    /**
+     * Return states for progress tracking marker
+     *
+     * @return {Array}
+     */
+    progressStates() {
+      let states = [this.state];
+
+      if (this.state !== 'complete') {
+        states.push('target');
+      }
+      return states;
     },
   },
 };

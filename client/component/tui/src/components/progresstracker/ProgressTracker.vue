@@ -14,6 +14,7 @@
 
   @author Kevin Hottinger <kevin.hottinger@totaralearning.com>
   @module tui
+  @deprecated Since Totara 15.0
 -->
 
 <template>

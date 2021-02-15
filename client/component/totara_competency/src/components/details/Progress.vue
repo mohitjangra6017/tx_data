@@ -20,10 +20,13 @@
   <div class="tui-competencyDetailProgress">
     <ProgressTracker
       :items="formattedForTracker"
-      :current-id="myValue"
       :popover-trigger-type="['click']"
-      :target-id="minProficientValueId"
+      :label-opens-popover="true"
     >
+      <!-- Label -->
+      <template v-slot:label="{ entry }">
+        {{ entry.label }}
+      </template>
       <!-- Popover content -->
       <template v-slot:custom-popover-content="{ description, label, target }">
         <div class="tui-competencyDetailProgress__popover">
@@ -58,7 +61,7 @@
 <script>
 // Components
 import Lozenge from 'tui/components/lozenge/Lozenge';
-import ProgressTracker from 'tui/components/progresstracker/ProgressTracker';
+import ProgressTracker from 'tui/components/progresstracker/ProgressTrackerNav';
 
 // GraphQL
 import ScaleDetailsQuery from 'totara_competency/graphql/scale';
@@ -124,31 +127,119 @@ export default {
      */
     formattedForTracker() {
       if (!this.scale.values) return [];
-      return this.scale.values.map(function(elem) {
+
+      return this.scale.values.map(elem => {
+        let itemStates = this.getItemStates(elem),
+          itemStateString = this.getItemStateString(itemStates);
+
         return {
           description: elem.description,
           id: elem.id,
           label: elem.name,
+          states: itemStates,
+          stateString: itemStateString,
         };
       });
+    },
+  },
+
+  methods: {
+    /**
+     * Implementation-specific logic to decide what states each progress tracker
+     * item should have, based on incoming GraphQL scale values
+     *
+     * @param {Object} item
+     * @return {Array}
+     **/
+    getItemStates(item) {
+      let stateArray = [];
+      let id = parseInt(item.id);
+      let target = parseInt(this.minProficientValueId);
+      let current = parseInt(this.myValue);
+      let targetMet = current <= target;
+
+      // is the item our target?
+      if (target && id === target) {
+        stateArray.push('target');
+      }
+
+      // is this our current item?
+      if (id === current) {
+        stateArray.push('current');
+      }
+
+      // do we have some sort of completed state on this item, or is it pending?
+      if (current && id >= current) {
+        if (targetMet && id >= target) {
+          // we do, and we've met our target, we have done more than complete,
+          // we have achieved
+          stateArray.push('achieved');
+        } else {
+          // we have, but we haven't met our target, just complete for now
+          stateArray.push('complete');
+        }
+      } else {
+        // nope, still work to do
+        stateArray.push('pending');
+      }
+
+      // all collected states will be passed to the item in the progress tracker
+      return stateArray;
+    },
+
+    /**
+     * Accessibility string for each progress item state
+     *
+     * @param {Object} itemStates
+     * @return {String}
+     */
+    getItemStateString(itemStates) {
+      let strVar;
+
+      if (itemStates.includes('pending')) {
+        strVar = this.$str('completion-n', 'completion');
+      } else if (itemStates.includes('complete')) {
+        strVar = this.$str('completion-y', 'completion');
+      } else {
+        strVar = this.$str('a11y_achievedrequiredgoal', 'totara_core');
+      }
+
+      if (itemStates.includes('target')) {
+        return this.$str(
+          'a11y_achievement_target_with_status',
+          'totara_core',
+          strVar
+        );
+      } else {
+        return this.$str('ally_status_with_value', 'totara_core', strVar);
+      }
     },
   },
 };
 </script>
 
 <lang-strings>
-  {
-    "totara_competency": [
-      "no_description",
-      "proficient_level"
-    ]
-  }
+{
+  "totara_competency": [
+    "no_description",
+    "proficient_level"
+  ],
+  "completion": [
+    "completion-n",
+    "completion-y"
+  ],
+  "totara_core": [
+    "a11y_achievedrequiredgoal",
+    "ally_status_with_value",
+    "a11y_achievement_target_with_status"
+  ]
+}
 </lang-strings>
 
 <style lang="scss">
 .tui-competencyDetailProgress {
   min-height: 65px;
-  margin-top: var(--gap-7);
+  margin: var(--gap-7) auto 0;
 
   &__popover {
     &-header {

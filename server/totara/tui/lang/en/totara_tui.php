@@ -145,3 +145,15 @@ $string['site'] = 'Site';
 $string['sitebranding'] = 'Site branding';
 $string['sitebrandinginformation'] = 'Control the visual appearance of your site brand such as logos, colours, default images etc.';
 $string['tenantbranding'] = 'Tenant branding';
+
+// Default component completion strings
+$string['completionstatus_pending'] = 'Pending';
+$string['completionstatus_target'] = 'Target';
+$string['completionstatus_complete'] = 'Complete';
+$string['completionstatus_achieved'] = 'Achieved';
+$string['completionstatus_current'] = 'Current';
+$string['completionstatus_ready'] = 'Ready';
+$string['completionstatus_done'] = 'Done';
+$string['completionstatus_selected'] = 'Selected';
+$string['completionstatus_locked'] = 'Locked';
+$string['completionstatus_optional'] = 'Optional';

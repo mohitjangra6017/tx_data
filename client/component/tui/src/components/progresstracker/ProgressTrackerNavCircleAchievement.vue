@@ -1,7 +1,7 @@
 <!--
   This file is part of Totara Enterprise Extensions.
 
-  Copyright (C) 2020 onwards Totara Learning Solutions LTD
+  Copyright (C) 2021 onwards Totara Learning Solutions LTD
 
   Totara Enterprise Extensions is provided only to Totara
   Learning Solutions LTD's customers and partners, pursuant to
@@ -12,22 +12,25 @@
   LTD, you may not access, use, modify, or distribute this software.
   Please contact [licensing@totaralearning.com] for more information.
 
+  @author Dave Wallace <dave.wallace@totaralearning.com>
   @author Kevin Hottinger <kevin.hottinger@totaralearning.com>
   @module tui
-  @deprecated Since Totara 15.0
 -->
 
 <template>
   <div
-    class="tui-progressTrackerCircle tui-progressTrackerCircle__outer"
-    :class="[
-      state ? 'tui-progressTrackerCircle--' + state : '',
-      target ? 'tui-progressTrackerCircle--target' : '',
-    ]"
+    class="tui-progressTrackerNavCircleAchievement tui-progressTrackerNavCircleAchievement__outer"
+    :class="{
+      'tui-progressTrackerNavCircleAchievement--pending': pending,
+      'tui-progressTrackerNavCircleAchievement--target': target,
+      'tui-progressTrackerNavCircleAchievement--complete': complete,
+      'tui-progressTrackerNavCircleAchievement--achieved': achieved,
+      'tui-progressTrackerNavCircleAchievement--current': current,
+    }"
     aria-hidden="true"
   >
-    <div class="tui-progressTrackerCircle__middle">
-      <div class="tui-progressTrackerCircle__inner" />
+    <div class="tui-progressTrackerNavCircleAchievement__middle">
+      <div class="tui-progressTrackerNavCircleAchievement__inner" />
     </div>
   </div>
 </template>
@@ -35,21 +38,57 @@
 <script>
 export default {
   props: {
-    state: {
-      default: 'pending',
-      type: String,
+    states: {
+      default: () => ['pending'],
+      type: Array,
+      validator: function(values) {
+        const allowedOptions = [
+          'pending',
+          'target',
+          'complete',
+          'achieved',
+          'current',
+        ];
+        // warn on invalid state found within the supplied Array
+        return !values.filter(value => {
+          return allowedOptions.indexOf(value) === -1;
+        }).length;
+      },
     },
-    target: Boolean,
+  },
+  data() {
+    return {
+      open: false,
+    };
+  },
+  computed: {
+    pending() {
+      return this.states.includes('pending');
+    },
+    target() {
+      return this.states.includes('target');
+    },
+    complete() {
+      return this.states.includes('complete');
+    },
+    achieved() {
+      return this.states.includes('achieved');
+    },
+    current() {
+      return this.states.includes('current');
+    },
   },
 };
 </script>
 
 <style lang="scss">
-.tui-progressTrackerCircle {
+.tui-progressTrackerNavCircleAchievement {
+  // states
   $pending: #{&}--pending;
   $complete: #{&}--complete;
   $achieved: #{&}--achieved;
   $target: #{&}--target;
+  $current: #{&}--current;
 
   &__outer {
     z-index: 2;
@@ -57,17 +96,18 @@ export default {
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: calc(var(--gap-7) + 1px);
-    height: calc(var(--gap-7) + 1px);
+    width: var(--progresstracker-full-marker-size);
+    height: var(--progresstracker-full-marker-size);
     border: var(--border-width-normal) transparent dotted;
     border-radius: 50%;
 
-    // Pending target
+    /**
+     * states
+     **/
     &#{$pending}&#{$target} {
       border-color: var(--progresstracker-color-pending);
     }
 
-    // Achieved target
     &#{$target}&#{$achieved} {
       background: var(--progresstracker-container-bg-color);
       border-color: var(--progresstracker-color-achieved);
@@ -79,54 +119,65 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: calc(var(--gap-4) + 1px);
-    height: calc(var(--gap-4) + 1px);
+    width: calc(
+      calc(var(--progresstracker-full-marker-size) / 2) + var(--gap-1)
+    );
+    height: calc(
+      calc(var(--progresstracker-full-marker-size) / 2) + var(--gap-1)
+    );
     background: transparent;
     border: var(--border-width-thin) solid transparent;
     border-radius: 50%;
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
 
-    // Pending
+    /**
+     * states
+     **/
     #{$pending} & {
       background: var(--progresstracker-color-pending);
     }
 
-    // Pending target
     #{$pending}#{$target} & {
       background: transparent;
     }
 
-    // Complete
     #{$complete} & {
       background: var(--progresstracker-color-complete);
     }
 
-    // Achieved
     #{$achieved} & {
       background: var(--progresstracker-color-achieved);
     }
   }
 
   &__inner {
-    width: calc(var(--gap-2) + 1px);
-    height: calc(var(--gap-2) + 1px);
+    display: flex;
+    align-items: center;
+    width: calc(
+      calc(var(--progresstracker-full-marker-size) / 4) +
+        var(--border-width-thin)
+    );
+    height: calc(
+      calc(var(--progresstracker-full-marker-size) / 4) +
+        var(--border-width-thin)
+    );
     background: var(--progresstracker-container-bg-color);
     border: var(--border-width-thin) solid
       var(--progresstracker-container-bg-color);
     border-radius: 50%;
 
-    // Pending
+    /**
+     * states
+     **/
     #{$pending} & {
       border-color: var(--progresstracker-container-bg-color);
     }
 
-    // Pending target
     #{$pending}#{$target} & {
       border-color: var(--progresstracker-color-pending);
     }
 
-    // Achieved
     #{$achieved} & {
       border-color: var(--progresstracker-container-bg-color);
     }

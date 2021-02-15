@@ -15,9 +15,22 @@
 // @module tuickage   tui
 
 :root {
-  // CSS arrows
+  --progresstracker-container-bg-color: var(--color-neutral-1);
+
+  // states related to Achievement
+  --progresstracker-color-pending: var(--color-neutral-6);
+  --progresstracker-color-current: var(--color-prompt-info);
   --progresstracker-color-achieved: var(--color-tertiary);
   --progresstracker-color-complete: var(--color-prompt-warning);
-  --progresstracker-color-pending: var(--color-neutral-6);
-  --progresstracker-container-bg-color: var(--color-neutral-1);
+
+  // states related to Workflows
+  --progresstracker-color-ready: var(--color-neutral-6);
+  --progresstracker-color-done: var(--color-prompt-success);
+  --progresstracker-color-done--inverse: var(--color-neutral-1);
+  --progresstracker-color-locked: var(--color-neutral-6);
+  --progresstracker-color-locked--inverse: var(--color-neutral-1);
+  --progresstracker-color-optional: var(--color-neutral-6);
+  --progresstracker-color-optional--inverse: var(--color-neutral-1);
+  --progresstracker-color-selected: var(--color-neutral-6);
+  --progresstracker-color-selected--inverse: var(--color-neutral-1);
 }

@@ -1,6 +1,10 @@
 This file describes API changes in /client/component/totara_competency,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+* Switched usage of ProgressTracker to ProgressTrackerNav in Progress.vue
+    * Template, langstring and status logic changes
+
 === 14.0 ===
 * Extended the page templates CompetencyDetail.vue and CompetencyProfile.vue to have a conditional NotificationBanner warning.
 * Change the presentation of the no pathway warning in AchievementConfiguration.vue
