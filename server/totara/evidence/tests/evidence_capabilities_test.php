@@ -259,7 +259,7 @@ class test_data {
     /** @var evidence_item */
     public $manager_evidence_by_manager;
 
-    public function __construct(totara_evidence_generator $generator) {
+    public function __construct(\totara_evidence\testing\generator $generator) {
         $this->manager_user = $generator->create_evidence_user();
         $this->staff_user = $generator->create_evidence_user();
         $generator->create_relationship($this->staff_user->id, $this->manager_user->id);
