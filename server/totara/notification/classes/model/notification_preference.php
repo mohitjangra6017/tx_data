@@ -33,6 +33,15 @@ use totara_notification\notification\built_in_notification;
  */
 class notification_preference {
     /**
+     * This is a temporary custom recipient name that we are using as a
+     * place holder for any custom notification preference.
+     *
+     * Note that this will be removed once recipient's name/class name is done.
+     * @var string
+     */
+    public const CUSTOM_RECIPIENT_NAME = 'custom_recipient_name';
+
+    /**
      * This is a threshold for number of times that the code is trying to do DB look up.
      * It is quite a reasonable number to do DB look up, as the level of cascading should not exceeding
      * 5 level down.
@@ -326,7 +335,7 @@ class notification_preference {
     public function get_recipient(): string {
         if ($this->is_custom_notification()) {
             // This is for temporary.
-            return 'martin_garrix';
+            return self::CUSTOM_RECIPIENT_NAME;
         }
 
         return $this->get_property_from_built_in_notification('recipient');

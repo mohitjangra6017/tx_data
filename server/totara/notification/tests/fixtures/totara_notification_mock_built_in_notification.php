@@ -20,6 +20,8 @@
  * @author Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+
+use totara_notification\model\notification_preference;
 use totara_notification\notification\built_in_notification;
 
 class totara_notification_mock_built_in_notification extends built_in_notification {
@@ -58,7 +60,7 @@ class totara_notification_mock_built_in_notification extends built_in_notificati
      * @return string
      */
     public static function get_recipient_name(): string {
-        return 'martin_garrix';
+        return notification_preference::CUSTOM_RECIPIENT_NAME;
     }
 
     /**

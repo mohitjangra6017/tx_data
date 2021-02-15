@@ -1,0 +1,15 @@
+mutation totara_notification_validate_notification_preference_input(
+  $body: String!
+  $title: String!
+  $subject: String!
+) {
+  result: totara_notification_validate_notification_preference_input(
+    title: $title
+    subject: $subject
+    body: $body
+  ) {
+    __typename
+    field_name
+    error_message
+  }
+}

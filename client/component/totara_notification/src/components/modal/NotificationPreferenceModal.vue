@@ -20,7 +20,6 @@
   <Modal
     size="large"
     :aria-labelledby="$id('title')"
-    class="tui-notificaitonCreationModal"
     :dismissable="{
       esc: true,
       backdropClick: false,
@@ -28,15 +27,14 @@
     }"
   >
     <ModalContent
-      class="tui-notificaitonCreationModal_content"
       :title="title"
       :title-id="$id('title')"
       :close-button="showCloseButton"
     >
       <NotificationPreferenceForm
+        class="tui-notificationPreferenceModal__form"
         :context-id="contextId"
         :preference="preference"
-        :parent-value="parentValue"
         @submit="handleSubmit"
         @cancel="$emit('request-close')"
       />
@@ -104,3 +102,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.tui-notificationPreferenceModal {
+  &__form {
+    margin-top: var(--gap-6);
+  }
+}
+</style>

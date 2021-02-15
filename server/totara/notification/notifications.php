@@ -30,7 +30,7 @@ require_once($CFG->libdir.'/adminlib.php');
 
 require_login();
 
-// Please not that this page is tend to be for admin only. If you want to manage the notification at
+// Please note that this page is intended for admin only. If you want to manage the notification at
 // lower context, please use different page.
 $context = context_system::instance();
 $PAGE->set_context($context);

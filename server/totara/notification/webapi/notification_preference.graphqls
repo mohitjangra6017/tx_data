@@ -49,9 +49,17 @@ type totara_notification_notification_preference {
   parent_id: Int
 
   """
-  The current context's id of this notification, as where it is sitting.
+  The context ID of the notification.
   """
   context_id: Int!
+}
+
+"""
+A type to hold the result of data validation.
+"""
+type totara_notification_notification_preference_validation_result {
+  field_name: String!
+  error_message: String!
 }
 
 extend type Mutation {
@@ -89,6 +97,23 @@ extend type Mutation {
     title: param_text
     subject: param_text
   ): totara_notification_notification_preference!
+
+  """
+  This mutation is about validating the input data from
+  the client side when user is trying to create a new custom notification.
+  Even though it is under mutation, but it will not cause any state change in the system.
+  """
+  totara_notification_validate_notification_preference_input(
+    """
+    We use String because we want to validate all sort of data, before any
+    param_{what_ever} stripped out the value.
+
+    This apply for the other fields of this mutation.
+    """
+    title: String!
+    body: String!
+    subject: String!
+  ): [totara_notification_notification_preference_validation_result]!
 }
 
 extend type Query {

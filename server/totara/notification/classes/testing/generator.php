@@ -23,18 +23,27 @@
 
 namespace totara_notification\testing;
 
-use coding_exception, context_system;
+use coding_exception;
+use context_system;
+use core\testing\component_generator;
+use lang_string;
+use ReflectionClass;
 use totara_notification\builder\notification_preference_builder;
+use totara_notification\entity\notification_preference as entity;
 use totara_notification\event\notifiable_event;
 use totara_notification\factory\built_in_notification_factory;
 use totara_notification\factory\notifiable_event_factory;
 use totara_notification\local\helper;
 use totara_notification\model\notification_preference;
-use totara_notification\entity\notification_preference as entity;
 use totara_notification\notification\built_in_notification;
 use totara_notification\task\process_notification_queue_task;
+use totara_notification_mock_built_in_notification;
+use totara_notification_mock_lang_string;
+use totara_notification_mock_notifiable_event;
+use totara_notification_mock_notifiable_event_resolver;
+use totara_notification_test_progress_trace;
 
-final class generator extends \core\testing\component_generator {
+final class generator extends component_generator {
     /**
      * @return string
      */
@@ -47,7 +56,7 @@ final class generator extends \core\testing\component_generator {
      * @return string
      */
     private static function fixtures_location(): string {
-        $location = static::plugin_location();
+        $location = self::plugin_location();
         return "{$location}/tests/fixtures";
     }
 
@@ -57,14 +66,16 @@ final class generator extends \core\testing\component_generator {
      *
      * @return notification_preference
      */
-    public function add_mock_built_in_notification_for_component(?string $notification_class_name = null,
-                                                             string $component = 'totara_notification'): notification_preference {
+    public function add_mock_built_in_notification_for_component(
+        ?string $notification_class_name = null,
+        string $component = 'totara_notification'
+    ): notification_preference {
         if (empty($notification_class_name)) {
             $this->include_mock_built_in_notification();
-            $notification_class_name = \totara_notification_mock_built_in_notification::class;
+            $notification_class_name = totara_notification_mock_built_in_notification::class;
         }
 
-        $reflection_class = new \ReflectionClass(built_in_notification_factory::class);
+        $reflection_class = new ReflectionClass(built_in_notification_factory::class);
 
         /** @see  built_in_notification_factory::get_map() */
         $method = $reflection_class->getMethod('get_map');
@@ -169,7 +180,7 @@ final class generator extends \core\testing\component_generator {
     /**
      * A helper function to create an overridden notification at lower context.
      * The parameter array $overridden_data should be similar to the one from
-     * {@see totara_notification_generator::create_notification_preference()}.
+     * {@see generator::create_notification_preference()}.
      *
      * Note that we context's id of overridden must not but the same as the preference that
      * we are trying to override from.
@@ -218,10 +229,10 @@ final class generator extends \core\testing\component_generator {
                                                             string $component = 'totara_notification'): void {
         if (empty($event_name)) {
             $this->include_mock_notifiable_event();
-            $event_name = \totara_notification_mock_notifiable_event::class;
+            $event_name = totara_notification_mock_notifiable_event::class;
         }
 
-        $reflection_class = new \ReflectionClass(notifiable_event_factory::class);
+        $reflection_class = new ReflectionClass(notifiable_event_factory::class);
 
         /** @see notifiable_event_factory::get_map() */
         $method = $reflection_class->getMethod('get_map');
@@ -252,15 +263,15 @@ final class generator extends \core\testing\component_generator {
 
     /**
      * @param string $you_are_saying
-     * @return \lang_string
+     * @return lang_string
      */
-    public function give_my_mock_lang_string(string $you_are_saying): \lang_string {
+    public function give_my_mock_lang_string(string $you_are_saying): lang_string {
         if (!class_exists('totara_notification_mock_lang_string')) {
             $fixture_director = self::fixtures_location();
             require_once("{$fixture_director}/totara_notification_mock_lang_string.php");
         }
 
-        return new \totara_notification_mock_lang_string($you_are_saying);
+        return new totara_notification_mock_lang_string($you_are_saying);
     }
 
     /**
@@ -272,15 +283,15 @@ final class generator extends \core\testing\component_generator {
     }
 
     /**
-     * @return \totara_notification_test_progress_trace
+     * @return totara_notification_test_progress_trace
      */
-    public function get_test_progress_trace(): \totara_notification_test_progress_trace {
+    public function get_test_progress_trace(): totara_notification_test_progress_trace {
         if (!class_exists('totara_notification_test_progress_trace')) {
             $fixture_path = self::fixtures_location();
             require_once("{$fixture_path}/totara_notification_test_progress_trace.php");
         }
 
-        return new \totara_notification_test_progress_trace();
+        return new totara_notification_test_progress_trace();
     }
 
     /**
@@ -300,12 +311,12 @@ final class generator extends \core\testing\component_generator {
     }
 
     /**
-     * @param \lang_string $body
+     * @param lang_string $body
      * @return void
      */
-    public function add_body_to_mock_built_in_notification(\lang_string $body): void {
+    public function add_body_to_mock_built_in_notification(lang_string $body): void {
         $this->include_mock_built_in_notification();
-        \totara_notification_mock_built_in_notification::set_default_body($body);
+        totara_notification_mock_built_in_notification::set_default_body($body);
     }
 
     /**
@@ -318,12 +329,12 @@ final class generator extends \core\testing\component_generator {
     }
 
     /**
-     * @param \lang_string $subject
+     * @param lang_string $subject
      * @return void
      */
-    public function add_subject_to_mock_built_in_notification(\lang_string $subject): void {
+    public function add_subject_to_mock_built_in_notification(lang_string $subject): void {
         $this->include_mock_built_in_notification();
-        \totara_notification_mock_built_in_notification::set_default_subject($subject);
+        totara_notification_mock_built_in_notification::set_default_subject($subject);
     }
 
     /**
@@ -347,7 +358,7 @@ final class generator extends \core\testing\component_generator {
         };
 
         $this->include_mock_notifiable_event_resolver();
-        \totara_notification_mock_notifiable_event_resolver::set_recipient_ids_resolver($callback);
+        totara_notification_mock_notifiable_event_resolver::set_recipient_ids_resolver($callback);
     }
 
     /**
@@ -358,7 +369,7 @@ final class generator extends \core\testing\component_generator {
      */
     public function set_due_time_of_process_notification_task(process_notification_queue_task $task,
                                                               int $due_time): void {
-        $reflection_class = new \ReflectionClass($task);
+        $reflection_class = new ReflectionClass($task);
 
         /** @see process_notification_queue_task::$due_time */
         $property = $reflection_class->getProperty('due_time');

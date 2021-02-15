@@ -26,6 +26,7 @@ use coding_exception;
 use totara_comment\comment;
 use totara_comment\resolver_factory;
 use totara_comment\totara_notification\notification\comment_created_notification;
+use totara_notification\model\notification_preference;
 use totara_notification\resolver\notifiable_event_resolver;
 
 class comment_created extends notifiable_event_resolver {
@@ -34,7 +35,14 @@ class comment_created extends notifiable_event_resolver {
      * @return int[]
      */
     public function get_recipient_ids(string $recipient_name): array {
-        if (comment_created_notification::get_recipient_name() !== $recipient_name) {
+        $valid_recipient_names = [
+            comment_created_notification::get_recipient_name(),
+
+            // This is temporary for any custom recipient's name.
+            notification_preference::CUSTOM_RECIPIENT_NAME
+        ];
+
+        if (!in_array($recipient_name, $valid_recipient_names)) {
             throw new coding_exception("Invalid recipient name");
         }
 

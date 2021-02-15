@@ -137,13 +137,11 @@ export default {
   methods: {
     /**
      * @param {String} eventClassName
-     * @param {String} eventName
      */
-    handleCreateCustomNotification({ eventClassName, eventName }) {
+    handleCreateCustomNotification({ eventClassName }) {
       this.modal.title = this.$str(
         'create_custom_notification_title',
-        'totara_notification',
-        eventName
+        'totara_notification'
       );
       this.modal.open = true;
       this.modal.state = MODAL_STATE_CREATE;
@@ -159,7 +157,7 @@ export default {
         if (this.modal.state === MODAL_STATE_CREATE) {
           await this.createCustomNotification(formValue);
         } else {
-          throw new Exception('The modal state is invalid');
+          throw new Error('The modal state is invalid');
         }
 
         this.modal.open = false;

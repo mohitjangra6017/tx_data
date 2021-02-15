@@ -50,7 +50,7 @@
             <HeaderCell>
               {{ $str('delivery_channels', 'totara_notification') }}
             </HeaderCell>
-            <HeaderCell align="center">
+            <HeaderCell align="start">
               {{ $str('status', 'core') }}
             </HeaderCell>
             <HeaderCell>
@@ -73,7 +73,7 @@
             <Cell>
               {{ $str('delivery_channels', 'totara_notification') }}
             </Cell>
-            <Cell align="center">
+            <Cell align="start">
               <!-- Toggle Switch goes here !!! -->
               {{ $str('enabled', 'totara_notification') }}
             </Cell>
@@ -82,7 +82,6 @@
                 :event-name="notifiableEvent.name"
                 @create-custom-notification="
                   $emit('create-custom-notification', {
-                    eventName: notifiableEvent.name,
                     eventClassName: notifiableEvent.class_name,
                   })
                 "
@@ -100,16 +99,16 @@
               :get-id="(unused, index) => index"
             >
               <template v-slot:header-row>
-                <HeaderCell align="left">
+                <HeaderCell align="start">
                   {{ $str('notifications', 'totara_notification') }}
                 </HeaderCell>
-                <HeaderCell align="center">
+                <HeaderCell align="start">
                   {{ $str('recipient', 'totara_notification') }}
                 </HeaderCell>
-                <HeaderCell align="center">
+                <HeaderCell align="start">
                   {{ $str('schedule', 'totara_notification') }}
                 </HeaderCell>
-                <HeaderCell align="center">
+                <HeaderCell align="start">
                   {{ $str('status', 'core') }}
                 </HeaderCell>
                 <HeaderCell>
@@ -119,19 +118,19 @@
                 </HeaderCell>
               </template>
               <template v-slot:row="{ row: notificationPreference }">
-                <Cell align="left">
+                <Cell align="start">
                   {{ notificationPreference.title }}
                 </Cell>
 
-                <Cell align="center">
+                <Cell align="start">
                   {{ $str('recipient', 'totara_notification') }}
                 </Cell>
 
-                <Cell align="center">
+                <Cell align="start">
                   {{ $str('schedule', 'totara_notification') }}
                 </Cell>
 
-                <Cell align="center">
+                <Cell align="start">
                   {{ $str('enabled', 'totara_notification') }}
                 </Cell>
 
@@ -171,7 +170,7 @@ export default {
 
     notifiableEvents: {
       type: Array,
-      default: [],
+      default: () => [],
       validator(prop) {
         return prop.every(preference => {
           return 'component' in preference && 'events' in preference;

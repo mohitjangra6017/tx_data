@@ -19,6 +19,7 @@
   <Uniform
     v-if="formInitialValues"
     :initial-values="formInitialValues"
+    :errors="errors"
     input-width="full"
     class="tui-notificationPreferenceForm"
     @submit="submitForm"
@@ -42,6 +43,11 @@
         :name="['title', 'value']"
         :disabled="disableTitleField"
         :validations="v => [v.required()]"
+        @input="
+          () => {
+            if (errors && errors.title) errors.title.value = '';
+          }
+        "
       />
     </FormRow>
 
@@ -55,6 +61,11 @@
         :id="id"
         :name="['subject', 'value']"
         :validations="v => (requiredSubject ? [v.required()] : [])"
+        @input="
+          () => {
+            if (errors && errors.subject) errors.subject.value = '';
+          }
+        "
       />
     </FormRow>
     <FormRow
@@ -79,7 +90,7 @@
           }"
           variant="standard"
           class="tui-notificationPreferenceForm__editor"
-          @input="update"
+          @input="updateEditor($event, update)"
         />
       </FormField>
     </FormRow>
@@ -100,18 +111,20 @@
 </template>
 
 <script>
-import { Uniform, FormField, FormText } from 'tui/components/uniform';
+import { FormField, FormText, Uniform } from 'tui/components/uniform';
 import FormRow from 'tui/components/form/FormRow';
-import { Format } from 'tui/editor';
+import { EditorContent, Format } from 'tui/editor';
 import Editor from 'tui/components/editor/Editor';
 import ButtonGroup from 'tui/components/buttons/ButtonGroup';
 import Button from 'tui/components/buttons/Button';
 import Cancel from 'tui/components/buttons/Cancel';
 import {
-  validatePreferenceProp,
   getDefaultNotificationPreference,
+  validatePreferenceProp,
 } from '../../internal/notification_preference';
-import { EditorContent } from 'tui/editor';
+
+// GraphQL queries
+import validateNotificationPreferenceInput from 'totara_notification/graphql/validate_notification_preference_input';
 
 /**
  *
@@ -198,6 +211,7 @@ export default {
 
   data() {
     return {
+      errors: null,
       formInitialValues: createFormValues(
         this.preference,
         this.parentPreference
@@ -262,7 +276,11 @@ export default {
      *
      * @param {Object} currentValues
      */
-    submitForm(currentValues) {
+    async submitForm(currentValues) {
+      if (!this.errors) {
+        this.errors = null;
+      }
+
       const fields = Object.keys(currentValues);
       let parameters = {};
 
@@ -281,26 +299,62 @@ export default {
         parameters[field] = value;
       });
 
+      const {
+        data: { result },
+      } = await this.$apollo.mutate({
+        mutation: validateNotificationPreferenceInput,
+        variables: {
+          title: parameters.title || '',
+          subject: parameters.subject || '',
+          body: parameters.body || '',
+        },
+      });
+
+      if (result.length) {
+        this.errors = {};
+        result.forEach(({ field_name, error_message }) => {
+          this.errors[field_name] = {
+            value: error_message,
+          };
+        });
+
+        return;
+      }
+
       this.$emit('submit', parameters);
+    },
+
+    /**
+     * Update method to reset the error on the body field if there is any.
+     *
+     * @param {*}        data
+     * @param {Function} callback
+     */
+    updateEditor(data, callback) {
+      if (this.errors && this.errors.body) {
+        this.errors.body.value = '';
+      }
+
+      callback(data);
     },
   },
 };
 </script>
 
 <lang-strings>
-  {
-    "totara_notification": [
-      "notification_body_label",
-      "notification_title_label",
-      "notification_subject_label"
-    ],
-    "totara_core": [
-      "save"
-    ],
-    "core": [
-      "required"
-    ]
-  }
+{
+  "totara_notification": [
+    "notification_body_label",
+    "notification_title_label",
+    "notification_subject_label"
+  ],
+  "totara_core": [
+    "save"
+  ],
+  "core": [
+    "required"
+  ]
+}
 </lang-strings>
 
 <style lang="scss">

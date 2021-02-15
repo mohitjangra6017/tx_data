@@ -200,7 +200,11 @@ class notification_queue_manager {
             $message->savedmessageid = $notification->id;
 
             $processors['popup']->object->send_message($message);
-            $processors['email']->object->send_message($message);
+
+            if (isset($processors['email'])) {
+                // This is for behat, as in behat enviroment, email is not enabled by default.
+                $processors['email']->object->send_message($message);
+            }
         }
     }
 }
