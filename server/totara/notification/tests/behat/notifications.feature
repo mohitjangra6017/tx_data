@@ -4,10 +4,9 @@ Feature: Notifications page
   I need to be able to view notifications and manage notifications
   so they can be available to users.
 
-  Scenario Admin is able to view notifications page
+  Scenario: Admin is able to view notifications page
     Given I log in as "admin"
     And I navigate to system notifications page
-    Then I should see "Notifications" in the ".tui-notificationHeader" "css_element"
     And I should see " Totara comment"
     When I click on "Totara comment details" "button"
     Then I should see "New comment create"
@@ -38,7 +37,10 @@ Feature: Notifications page
 
   Scenario: Admin is able to create custom notification in context notification page
     Given I log in as "admin"
-    And I navigate to context notifications page
+    And the following "courses" exist:
+      | fullname   | shortname | format |
+      | Course 101 | c101      | topics |
+    And I navigate to notifications page of "course" "c101"
     And I click on "Totara comment details" "button"
     And I click on "Create notification" "button"
     And I set the field "Name" to "Test context notification name"
@@ -48,7 +50,7 @@ Feature: Notifications page
     When I click on "New comment created details" "button"
     Then I should see "Test context notification name"
 
-    And I navigate to system notifications page with context id
+    And I navigate to system notifications page
     And I click on "Totara comment details" "button"
     When I click on "New comment created details" "button"
     Then I should not see "Test context notification name"

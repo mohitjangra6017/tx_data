@@ -21,18 +21,10 @@
  * @package totara_notification
  */
 
-use context_course;
-
 /**
  * Behat steps to generate notification related data.
  */
 class behat_totara_notification extends behat_base {
-
-    /**
-     * @var stdClass
-     */
-    private $course;
-
     /**
      * Goes to the notifications page.
      *
@@ -48,37 +40,46 @@ class behat_totara_notification extends behat_base {
     }
 
     /**
-     * Goes to the context_notifications page with param context id
+     * I navigate to the notifications page of the component with a unique name.
+     * @Given /^I navigate to notifications page of "([^"]*)" "([^"]*)"$/
+     * @param string $component
+     * @param string $unique_name
      *
-     * @Given I navigate to context notifications page
+     * @return void
      */
-    public function i_navigate_to_context_notifications_page() {
-        \behat_hooks::set_step_readonly(false);
+    public function i_navigate_to_notifications_page_of(string $component, string $unique_name): void {
+        global $DB;
 
-        $gen = testing_util::get_data_generator();
-        $this->course = $gen->create_course();
-        $context = context_course::instance((int)$this->course->id);
+        behat_hooks::set_step_readonly(true);
+        $context_id = null;
 
-        $url = new moodle_url("/totara/notification/context_notifications.php?context_id={$context->id}");
-        $this->getSession()->visit($this->locate_path($url->out_as_local_url(false)));
-        $this->wait_for_pending_js();
-    }
+        switch ($component) {
+            case 'course':
+                $course_id = $DB->get_field(
+                    'course',
+                    'id',
+                    ['shortname' => $unique_name],
+                    MUST_EXIST
+                );
 
-    /**
-     * Goes to the notifications page with param context id
-     *
-     * @Given I navigate to system notifications page with context id
-     */
-    public function i_navigate_to_system_notifications_page_with_context_id() {
-        if (empty($this->course)) {
-            throw new coding_exception('Please call i_navigate_to_context_notifications_page() first');
+                $context_id = context_course::instance($course_id)->id;
+                break;
+
+            default:
+                throw new coding_exception(
+                    "Unsupported component '{$component}' for fetching the context's id for notification page"
+                );
         }
 
-        \behat_hooks::set_step_readonly(false);
-        $context = context_course::instance((int)$this->course->id);
+        $url = new moodle_url(
+            '/totara/notification/context_notifications.php',
+            ['context_id' => $context_id]
+        );
 
-        $url = new moodle_url("/totara/notification/notifications.php?context_id={$context->id}}");
-        $this->getSession()->visit($this->locate_path($url->out_as_local_url(false)));
+        $this->getSession()->visit(
+            $this->locate_path($url->out_as_local_url(false))
+        );
+
         $this->wait_for_pending_js();
     }
 }

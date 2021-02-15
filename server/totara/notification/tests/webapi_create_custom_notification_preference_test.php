@@ -182,12 +182,13 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         $generator = self::getDataGenerator();
         $user_one = $generator->create_user();
 
+        $context_system = context_system::instance();
         $this->setUser($user_one);
         $result = $this->execute_graphql_operation(
             'totara_notification_create_custom_notification_preference',
             [
                 'event_class_name' => totara_notification_mock_notifiable_event::class,
-                'context_id' => context_system::instance()->id,
+                'context_id' => $context_system->id,
                 'title' => 'This is custom',
                 'body' => 'This is body',
                 'subject' => 'This is subject',
@@ -218,8 +219,8 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertArrayHasKey('body_format', $notification_preference);
         self::assertEquals(FORMAT_MOODLE, $notification_preference['body_format']);
 
-        self::assertArrayHasKey('exist_in_context', $notification_preference);
-        self::assertTrue($notification_preference['exist_in_context']);
+        self::assertArrayHasKey('context_id', $notification_preference);
+        self::assertEquals($context_system->id, $notification_preference['context_id']);
 
         self::assertArrayHasKey('is_custom', $notification_preference);
         self::assertTrue($notification_preference['is_custom']);

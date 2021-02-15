@@ -100,7 +100,7 @@
               :get-id="(unused, index) => index"
             >
               <template v-slot:header-row>
-                <HeaderCell align="center">
+                <HeaderCell align="left">
                   {{ $str('notifications', 'totara_notification') }}
                 </HeaderCell>
                 <HeaderCell align="center">
@@ -119,7 +119,7 @@
                 </HeaderCell>
               </template>
               <template v-slot:row="{ row: notificationPreference }">
-                <Cell align="center">
+                <Cell align="left">
                   {{ notificationPreference.title }}
                 </Cell>
 
