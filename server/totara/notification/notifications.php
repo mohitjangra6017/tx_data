@@ -34,9 +34,9 @@ require_login();
 // lower context, please use different page.
 $context = context_system::instance();
 $PAGE->set_context($context);
+$PAGE->set_url(new moodle_url('/totara/notification/notifications.php'));
 
 admin_externalpage_setup('notifications_setup', '', null, '', ['pagelayout' => 'noblocks']);
-$PAGE->set_url(new moodle_url('/totara/notification/notifications.php'));
 
 $tui = new component(
     'totara_notification/pages/NotificationPage',

@@ -77,7 +77,7 @@
               <!-- Toggle Switch goes here !!! -->
               {{ $str('enabled', 'totara_notification') }}
             </Cell>
-            <Cell align="center">
+            <Cell align="end">
               <NotifiableEventAction
                 :event-name="notifiableEvent.name"
                 @create-custom-notification="
@@ -100,16 +100,16 @@
               :get-id="(unused, index) => index"
             >
               <template v-slot:header-row>
-                <HeaderCell>
+                <HeaderCell align="center">
                   {{ $str('notifications', 'totara_notification') }}
                 </HeaderCell>
-                <HeaderCell>
+                <HeaderCell align="center">
                   {{ $str('recipient', 'totara_notification') }}
                 </HeaderCell>
-                <HeaderCell>
+                <HeaderCell align="center">
                   {{ $str('schedule', 'totara_notification') }}
                 </HeaderCell>
-                <HeaderCell>
+                <HeaderCell align="center">
                   {{ $str('status', 'core') }}
                 </HeaderCell>
                 <HeaderCell>
@@ -119,23 +119,23 @@
                 </HeaderCell>
               </template>
               <template v-slot:row="{ row: notificationPreference }">
-                <Cell>
+                <Cell align="center">
                   {{ notificationPreference.title }}
                 </Cell>
 
-                <Cell>
+                <Cell align="center">
                   {{ $str('recipient', 'totara_notification') }}
                 </Cell>
 
-                <Cell>
+                <Cell align="center">
                   {{ $str('schedule', 'totara_notification') }}
                 </Cell>
 
-                <Cell>
+                <Cell align="center">
                   {{ $str('enabled', 'totara_notification') }}
                 </Cell>
 
-                <Cell align="center">
+                <Cell align="end">
                   <!-- Notification action -->
                 </Cell>
               </template>

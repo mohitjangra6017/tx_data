@@ -17,37 +17,38 @@
 -->
 
 <template>
-  <div class="tui-notificationPage">
-    <ModalPresenter :open="modal.open" @request-close="modal.open = false">
-      <NotificationPreferenceModal
-        :context-id="contextId"
-        :event-class-name="targetEventClassName"
-        :preference="targetPreference || undefined"
-        :parent-value="targetPreference ? targetPreference.parent_value : null"
-        :title="modal.title"
-        @form-submit="handleFormSubmit"
+  <Layout
+    class="tui-notificationPage"
+    :title="title"
+    :loading="$apollo.loading"
+  >
+    <template v-if="!$apollo.loading" v-slot:content>
+      <NotificationTable
+        :notifiable-events="notifiableEvents"
+        :context-id="parseInt(contextId)"
+        class="tui-notificationPage__table"
+        @create-custom-notification="handleCreateCustomNotification"
       />
-    </ModalPresenter>
-
-    <NotificationHeader :title="title" />
-    <Layout class="tui-notificationPage">
-      <!--filter-->
-      <template v-slot:left />
-      <template v-if="!$apollo.loading" v-slot:right>
-        <NotificationTable
-          :notifiable-events="notifiableEvents"
-          :context-id="parseInt(contextId)"
-          class="tui-notificationPage__table"
-          @create-custom-notification="handleCreateCustomNotification"
+    </template>
+    <template v-slot:modals>
+      <ModalPresenter :open="modal.open" @request-close="modal.open = false">
+        <NotificationPreferenceModal
+          :context-id="contextId"
+          :event-class-name="targetEventClassName"
+          :preference="targetPreference || undefined"
+          :parent-value="
+            targetPreference ? targetPreference.parent_value : null
+          "
+          :title="modal.title"
+          @form-submit="handleFormSubmit"
         />
-      </template>
-    </Layout>
-  </div>
+      </ModalPresenter>
+    </template>
+  </Layout>
 </template>
 <script>
-import Layout from 'tui/components/layouts/LayoutTwoColumn';
+import Layout from 'tui/components/layouts/LayoutOneColumn';
 import NotificationTable from 'totara_notification/components/table/NotificationTable';
-import NotificationHeader from 'totara_notification/components/header/NotificationHeader';
 import ModalPresenter from 'tui/components/modal/ModalPresenter';
 import NotificationPreferenceModal from 'totara_notification/components/modal/NotificationPreferenceModal';
 import { notify } from 'tui/notifications';
@@ -62,7 +63,6 @@ export default {
   components: {
     Layout,
     NotificationTable,
-    NotificationHeader,
     ModalPresenter,
     NotificationPreferenceModal,
   },

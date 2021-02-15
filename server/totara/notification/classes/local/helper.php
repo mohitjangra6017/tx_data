@@ -173,10 +173,10 @@ class helper {
      */
     public static function get_human_readable_plugin_name(string $event_class_name): string {
         $component = self::get_component_of_event_class_name($event_class_name);
+
         if (get_string_manager()->string_exists('pluginname', $component)) {
             $plugin_name = get_string('pluginname', $component);
         } else {
-
             // If component dose not define pluginname in langstring, we just fallback to the name of component, then
             // put debugging here to let dev know they need to define the pluginname for each plugin.
             $plugin_name = $component;

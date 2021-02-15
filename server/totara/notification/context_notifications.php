@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 use totara_tui\output\component;
+
 global $CFG, $OUTPUT, $PAGE;
 
 require_once(__DIR__ . '/../../config.php');
@@ -34,9 +35,6 @@ if (CONTEXT_SYSTEM == $context->contextlevel) {
     // rather than use this page. Because this page must only be used for lower context purpose.
     // Note: in the future we might want to do sort of component,area and instance id check as well
     redirect(new moodle_url("/totara/notification/notifications.php"));
-
-    // !!!
-    die();
 }
 
 require_login();
