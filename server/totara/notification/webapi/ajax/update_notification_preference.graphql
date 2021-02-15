@@ -1,6 +1,16 @@
-query totara_notification_notification_preference($id: param_integer!) {
-  notification_preference: totara_notification_notification_preference(
+mutation totara_notification_update_notification_preference(
+  $id: param_integer!
+  $body: param_text
+  $subject: param_text
+  $body_format: param_integer
+  $title: param_text
+) {
+  notification_preference: totara_notification_update_notification_preference(
     id: $id
+    body: $body
+    subject: $subject
+    body_format: $body_format
+    title: $title
   ) {
     __typename
     title

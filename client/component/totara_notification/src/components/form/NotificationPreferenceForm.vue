@@ -18,6 +18,7 @@
 <template>
   <Uniform
     v-if="formInitialValues"
+    ref="preferenceForm"
     :initial-values="formInitialValues"
     :errors="errors"
     input-width="full"
@@ -27,11 +28,7 @@
     <FormRow
       v-slot="{ id }"
       :label="$str('notification_title_label', 'totara_notification')"
-      :required="
-        !parentPreference ||
-          !parentPreference.title ||
-          parentPreference.title === ''
-      "
+      :required="!parentValue || !parentValue.title || parentValue.title === ''"
     >
       <!--
         We are requiring the field title if it is a new custom notification.
@@ -52,47 +49,64 @@
     </FormRow>
 
     <FormRow
-      v-slot="{ id }"
       :label="$str('notification_subject_label', 'totara_notification')"
       :required="requiredSubject"
     >
-      <!-- We are only requiring the field subject if the parent does not have one -->
-      <FormText
-        :id="id"
-        :name="['subject', 'value']"
-        :validations="v => (requiredSubject ? [v.required()] : [])"
-        @input="
-          () => {
-            if (errors && errors.subject) errors.subject.value = '';
-          }
-        "
-      />
+      <template v-slot="{ id }">
+        <ToggleSwitch
+          v-if="showCustomCheckBoxes"
+          :aria-label="$str('enable_custom_subject', 'totara_notification')"
+          :value="customisation.subject"
+          @input="customisation.subject = $event"
+        />
+
+        <!-- We are only requiring the field subject if the parent does not have one -->
+        <FormText
+          :id="id"
+          :name="['subject', 'value']"
+          :validations="v => (requiredSubject ? [v.required()] : [])"
+          :disabled="showCustomCheckBoxes && !customisation.subject"
+          @input="
+            () => {
+              if (errors && errors.subject) errors.subject.value = '';
+            }
+          "
+        />
+      </template>
     </FormRow>
     <FormRow
-      v-slot="{ id }"
       :required="requiredBody"
       :label="$str('notification_body_label', 'totara_notification')"
     >
-      <FormField
-        v-slot="{ value, update, name }"
-        :name="['body', 'value']"
-        :validate="validateEditor"
-        char-length="full"
-      >
-        <!-- We are only requiring the field body if the parent does not have one -->
-        <Editor
-          :id="id"
-          :value="value"
-          :context-id="contextId"
-          :usage-identifier="{
-            component: 'totara_notification',
-            area: 'notification_body',
-          }"
-          variant="standard"
-          class="tui-notificationPreferenceForm__editor"
-          @input="updateEditor($event, update)"
+      <template v-slot="{ id }">
+        <ToggleSwitch
+          v-if="showCustomCheckBoxes"
+          :aria-label="$str('enable_custom_body', 'totara_notification')"
+          :value="customisation.body"
+          @input="customisation.body = $event"
         />
-      </FormField>
+        <FormField
+          v-slot="{ value, update, name }"
+          :name="['body', 'value']"
+          :validate="validateEditor"
+          :disabled="showCustomCheckBoxes && !customisation.body"
+          char-length="full"
+        >
+          <!-- We are only requiring the field body if the parent does not have one -->
+          <Editor
+            :id="id"
+            :value="value"
+            :context-id="contextId"
+            :usage-identifier="{
+              component: 'totara_notification',
+              area: 'notification_body',
+            }"
+            class="tui-notificationPreferenceForm__editor"
+            variant="standard"
+            @input="updateEditor($event, update)"
+          />
+        </FormField>
+      </template>
     </FormRow>
 
     <FormRow>
@@ -122,6 +136,7 @@ import {
   getDefaultNotificationPreference,
   validatePreferenceProp,
 } from '../../internal/notification_preference';
+import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
 
 // GraphQL queries
 import validateNotificationPreferenceInput from 'totara_notification/graphql/validate_notification_preference_input';
@@ -129,17 +144,17 @@ import validateNotificationPreferenceInput from 'totara_notification/graphql/val
 /**
  *
  * @param {Object} currentPreference
- * @param {Object|NULL} parentPreference
+ * @param {Object|NULL} parentValue
  *
  * @return {Object}
  */
-function createFormValues(currentPreference, parentPreference) {
+function createFormValues(currentPreference, parentValue) {
   const formValue = {
     subject: {
       value:
-        !parentPreference || currentPreference.overridden_subject
+        !parentValue || currentPreference.overridden_subject
           ? currentPreference.subject
-          : parentPreference.subject,
+          : parentValue.subject,
       type: 'text',
     },
     body: {
@@ -150,14 +165,14 @@ function createFormValues(currentPreference, parentPreference) {
     },
     title: {
       value:
-        !parentPreference || !parentPreference.title
+        !parentValue || !parentValue.title
           ? currentPreference.title
-          : parentPreference.title,
+          : parentValue.title,
       type: 'text',
     },
   };
 
-  if (!parentPreference || currentPreference.overridden_body) {
+  if (!parentValue || currentPreference.overridden_body) {
     formValue.body.value = new EditorContent({
       format: currentPreference.body_format
         ? currentPreference.body_format
@@ -166,10 +181,8 @@ function createFormValues(currentPreference, parentPreference) {
     });
   } else {
     formValue.body.value = new EditorContent({
-      format: parentPreference.body_format
-        ? parentPreference.body_format
-        : Format.MOODLE,
-      content: parentPreference.body,
+      format: parentValue.body_format ? parentValue.body_format : Format.MOODLE,
+      content: parentValue.body,
     });
   }
 
@@ -186,6 +199,7 @@ export default {
     ButtonGroup,
     Button,
     Cancel,
+    ToggleSwitch,
   },
 
   props: {
@@ -194,12 +208,10 @@ export default {
       required: true,
     },
 
-    parentPreference: {
+    parentValue: {
       type: Object,
       validator: validatePreferenceProp(),
-      default() {
-        return null;
-      },
+      default: () => null,
     },
 
     preference: {
@@ -211,11 +223,13 @@ export default {
 
   data() {
     return {
+      customisation: {
+        body: this.preference.overridden_body || Boolean(!this.parentValue),
+        subject:
+          this.preference.overridden_subject || Boolean(!this.parentValue),
+      },
       errors: null,
-      formInitialValues: createFormValues(
-        this.preference,
-        this.parentPreference
-      ),
+      formInitialValues: createFormValues(this.preference, this.parentValue),
     };
   },
 
@@ -225,11 +239,11 @@ export default {
      * @return {boolean}
      */
     disableTitleField() {
-      if (!this.parentPreference) {
+      if (!this.parentValue) {
         return false;
       }
 
-      return this.parentPreference.title && this.parentPreference.title !== '';
+      return this.parentValue.title && this.parentValue.title !== '';
     },
 
     /**
@@ -237,13 +251,11 @@ export default {
      * @return {Boolean}
      */
     requiredSubject() {
-      if (!this.parentPreference) {
+      if (!this.parentValue) {
         return true;
       }
 
-      return (
-        !this.parentPreference.subject || this.parentPreference.subject === ''
-      );
+      return !this.parentValue.subject || this.parentValue.subject === '';
     },
 
     /**
@@ -251,11 +263,54 @@ export default {
      * @return {Boolean}
      */
     requiredBody() {
-      if (!this.parentPreference) {
+      if (!this.parentValue) {
         return true;
       }
 
-      return !this.parentPreference.body || this.parentPreference.body === '';
+      return !this.parentValue.body || this.parentValue.body === '';
+    },
+
+    /**
+     * @return {Boolean}
+     */
+    showCustomCheckBoxes() {
+      return !!this.parentValue;
+    },
+  },
+
+  watch: {
+    customisation: {
+      deep: true,
+      handler(toggle) {
+        if (!this.showCustomCheckBoxes || !this.$refs.preferenceForm) {
+          return;
+        }
+
+        if (!this.parentValue) {
+          throw new Error(
+            'Cannot toggle the customisation when the parent ' +
+              'preference is not passed down to the form'
+          );
+        }
+
+        const { preferenceForm } = this.$refs;
+
+        if (!toggle.subject) {
+          preferenceForm.update(['subject', 'value'], this.parentValue.subject);
+        }
+
+        if (!toggle.body) {
+          preferenceForm.update(
+            ['body', 'value'],
+            new EditorContent({
+              content: this.parentValue.body,
+              format: this.parentValue.body_format
+                ? this.parentValue.body_format
+                : Format.MOODLE,
+            })
+          );
+        }
+      },
     },
   },
 
@@ -274,39 +329,21 @@ export default {
 
     /**
      *
-     * @param {Object} currentValues
+     * @param {Object} formValue
      */
-    async submitForm(currentValues) {
+    async submitForm(formValue) {
       if (!this.errors) {
         this.errors = null;
       }
-
-      const fields = Object.keys(currentValues);
-      let parameters = {};
-
-      fields.forEach(field => {
-        let value = currentValues[field].value
-          ? currentValues[field].value
-          : null;
-        if (value instanceof EditorContent) {
-          // Storing the body_format instance.
-          parameters['body_format'] = value.format;
-
-          // Then convert the value to a string content.
-          value = value.getContent();
-        }
-
-        parameters[field] = value;
-      });
 
       const {
         data: { result },
       } = await this.$apollo.mutate({
         mutation: validateNotificationPreferenceInput,
         variables: {
-          title: parameters.title || '',
-          subject: parameters.subject || '',
-          body: parameters.body || '',
+          title: formValue.title.value || '',
+          subject: formValue.subject.value || '',
+          body: formValue.body.value.getContent() || '',
         },
       });
 
@@ -320,6 +357,17 @@ export default {
 
         return;
       }
+
+      const parameters = {
+        subject: !this.customisation.subject ? null : formValue.subject.value,
+        title: formValue.title.value,
+        body: !this.customisation.body
+          ? null
+          : formValue.body.value.getContent(),
+        body_format: !this.customisation.body
+          ? null
+          : formValue.body.value.format,
+      };
 
       this.$emit('submit', parameters);
     },
@@ -346,7 +394,9 @@ export default {
   "totara_notification": [
     "notification_body_label",
     "notification_title_label",
-    "notification_subject_label"
+    "notification_subject_label",
+    "enable_custom_subject",
+    "enable_custom_body"
   ],
   "totara_core": [
     "save"

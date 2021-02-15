@@ -47,7 +47,10 @@ type totara_notification_notification_preference {
   the system. Otherwise its own parent's id, or its ancestor's id.
   """
   parent_id: Int
-
+  """
+  An attribute that holds the content value fields of its own parent.
+  """
+  parent_value: totara_notification_notification_preference_value
   """
   The context ID of the notification.
   """
@@ -60,6 +63,20 @@ A type to hold the result of data validation.
 type totara_notification_notification_preference_validation_result {
   field_name: String!
   error_message: String!
+}
+
+"""
+A compact type to only store the content field's values.
+For simplicity, no ID's will be included.
+
+The purpose of this type is to allow notification_preference to have its
+parent's content value fields in one place for quick reference.
+"""
+type totara_notification_notification_preference_value {
+  body: String!
+  subject: String!
+  body_format: String!
+  title: String!
 }
 
 extend type Mutation {

@@ -29,6 +29,7 @@ use core\webapi\type_resolver;
 use totara_notification\local\helper;
 use totara_notification\model\notification_preference as model;
 use totara_notification\webapi\formatter\notification_preference_formatter;
+use totara_notification\model\notification_preference_value as model_value;
 
 class notification_preference implements type_resolver {
     /**
@@ -49,6 +50,22 @@ class notification_preference implements type_resolver {
         } else if ('parent_id' === $field) {
             $parent = $source->get_parent();
             return (null === $parent) ? null : $parent->get_id();
+        } else if ('parent_value' === $field) {
+            $parent = $source->get_parent();
+
+            if (null === $parent) {
+                if ($source->is_custom_notification()) {
+                    return null;
+                }
+
+                // Righty, so the current notification preference is not a custom
+                // notification, hence we are returning the built_in notification class
+                // instead. Which will help us fallback to the system defined values.
+                $built_in_class_name = $source->get_notification_class_name();
+                return model_value::from_built_in_notification($built_in_class_name);
+            }
+
+            return model_value::from_parent_notification_preference($parent);
         }
 
         $context = context_system::instance();

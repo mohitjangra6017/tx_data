@@ -135,7 +135,12 @@
                 </Cell>
 
                 <Cell align="end">
-                  <!-- Notification action -->
+                  <NotificationAction
+                    :preference-title="notificationPreference.title"
+                    @edit-notification="
+                      $emit('edit-notification', notificationPreference)
+                    "
+                  />
                 </Cell>
               </template>
             </Table>
@@ -151,10 +156,12 @@ import Cell from 'tui/components/datatable/Cell';
 import ExpandCell from 'tui/components/datatable/ExpandCell';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
 import Table from 'tui/components/datatable/Table';
+import NotificationAction from 'totara_notification/components/action/NotificationAction';
 import NotifiableEventAction from 'totara_notification/components/action/NotifiableEventAction';
 
 export default {
   components: {
+    NotificationAction,
     HeaderCell,
     Cell,
     Table,

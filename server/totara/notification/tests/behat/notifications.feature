@@ -35,6 +35,13 @@ Feature: Notifications page
     When I click on "New comment created details" "button"
     Then I should see "Test custom notification name"
 
+    #Update custom notification
+    When I click on "Edit notification Test custom notification name" "button"
+    Then I should see "Edit notification"
+    And I set the field "Name" to "New notification name"
+    And I click on "Save" "button"
+    Then I should see "New notification name"
+
   Scenario: Admin is able to create custom notification in context notification page
     Given I log in as "admin"
     And the following "courses" exist:

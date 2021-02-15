@@ -28,6 +28,7 @@
         :context-id="parseInt(contextId)"
         class="tui-notificationPage__table"
         @create-custom-notification="handleCreateCustomNotification"
+        @edit-notification="handleEditNotification"
       />
     </template>
     <template v-slot:modals>
@@ -56,8 +57,11 @@ import { notify } from 'tui/notifications';
 // GraphQL queries.
 import getNotifiableEvents from 'totara_notification/graphql/notifiable_events';
 import createCustomNotification from 'totara_notification/graphql/create_custom_notification_preference';
+import overrideNotification from 'totara_notification/graphql/override_notification_preference';
+import updateNotification from 'totara_notification/graphql/update_notification_preference';
 
 const MODAL_STATE_CREATE = 'create';
+const MODAL_STATE_UPDATE = 'update';
 
 export default {
   components: {
@@ -150,12 +154,25 @@ export default {
     },
 
     /**
+     * @param {Object} oldPreference
+     */
+    async handleEditNotification(oldPreference) {
+      this.targetPreference = await this.getOverriddenPreference(oldPreference);
+
+      this.modal.title = this.$str('edit_notification', 'totara_notification');
+      this.modal.open = true;
+      this.modal.state = MODAL_STATE_UPDATE;
+    },
+
+    /**
      * @param {Object} formValue
      */
     async handleFormSubmit(formValue) {
       try {
         if (this.modal.state === MODAL_STATE_CREATE) {
           await this.createCustomNotification(formValue);
+        } else if (this.modal.state === MODAL_STATE_UPDATE) {
+          await this.updateNotification(formValue);
         } else {
           throw new Error('The modal state is invalid');
         }
@@ -167,10 +184,16 @@ export default {
 
         await notify({
           type: 'error',
-          message: this.$str(
-            'error_cannot_create_custom_notification',
-            'totara_notification'
-          ),
+          message:
+            this.modal.state === MODAL_STATE_CREATE
+              ? this.$str(
+                  'error_cannot_create_custom_notification',
+                  'totara_notification'
+                )
+              : this.$str(
+                  'error_cannot_update_notification',
+                  'totara_notification'
+                ),
         });
       }
     },
@@ -239,6 +262,143 @@ export default {
         },
       });
     },
+
+    /**
+     * @param {Object} oldPreference
+     * @return {Object}
+     */
+    async getOverriddenPreference(oldPreference) {
+      if (oldPreference.context_id == this.contextId) {
+        return oldPreference;
+      }
+
+      // The preference is in different context, hence we are going to
+      // create a blank overridden notification preference record and use it.
+      const {
+        data: { notification_preference },
+      } = await this.$apollo.mutate({
+        mutation: overrideNotification,
+        variables: {
+          context_id: this.contextId,
+          event_class_name: oldPreference.event_class_name,
+          ancestor_id: oldPreference.ancestor_id
+            ? oldPreference.ancestor_id
+            : oldPreference.id,
+        },
+        update: (
+          proxy,
+          { data: { notification_preference: overriddenPreference } }
+        ) => {
+          const { notifiable_events: notifiableEvents } = proxy.readQuery({
+            query: getNotifiableEvents,
+            variables: { context_id: this.contextId },
+          });
+
+          const {
+            component,
+            event_class_name: className,
+            parent_id: parentId,
+          } = overriddenPreference;
+
+          proxy.writeQuery({
+            query: getNotifiableEvents,
+            variables: { context_id: this.contextId },
+            data: {
+              notifiable_events: notifiableEvents.map(notifiableEvent => {
+                if (
+                  notifiableEvent.component === component &&
+                  notifiableEvent.class_name === className
+                ) {
+                  notifiableEvent = Object.assign({}, notifiableEvent);
+                  const {
+                    notification_preferences: preferences,
+                  } = notifiableEvent;
+
+                  notifiableEvent.notification_preferences = preferences.map(
+                    oldPreference => {
+                      return oldPreference.id == parentId
+                        ? overriddenPreference
+                        : oldPreference;
+                    }
+                  );
+                }
+
+                return notifiableEvent;
+              }),
+            },
+          });
+        },
+      });
+
+      return notification_preference;
+    },
+
+    /**
+     * @param {String} subject
+     * @param {String} title
+     * @param {String} body
+     * @param {Number} body_format
+     */
+    async updateNotification({ subject, title, body, body_format }) {
+      if (!this.targetPreference) {
+        throw new Error('Cannot run update while target preference is empty');
+      }
+
+      await this.$apollo.mutate({
+        mutation: updateNotification,
+        variables: {
+          id: this.targetPreference.id,
+          subject,
+          body,
+          body_format,
+          // Note that we don't want NULL here, but undefined, because we would want the graphql
+          // to exclute the field title when updating a custom notification at a very specific context.
+          title:
+            this.targetPreference.is_custom && !this.targetPreference.parent_id
+              ? title
+              : undefined,
+        },
+        update: (
+          proxy,
+          { data: { notification_preference: updatedPreference } }
+        ) => {
+          const { notifiable_events: notifiableEvents } = proxy.readQuery({
+            query: getNotifiableEvents,
+            variables: { context_id: this.contextId },
+          });
+
+          const { component, event_class_name: className } = updatedPreference;
+
+          proxy.writeQuery({
+            query: getNotifiableEvents,
+            variables: { context_id: this.contextId },
+            data: {
+              notifiable_events: notifiableEvents.map(notifiableEvent => {
+                if (
+                  notifiableEvent.component === component &&
+                  notifiableEvent.class_name === className
+                ) {
+                  notifiableEvent = Object.assign({}, notifiableEvent);
+
+                  const {
+                    notification_preferences: preferences,
+                  } = notifiableEvent;
+                  notifiableEvent.notification_preferences = preferences.map(
+                    oldPreference => {
+                      return oldPreference.id == updatedPreference.id
+                        ? updatedPreference
+                        : oldPreference;
+                    }
+                  );
+                }
+
+                return notifiableEvent;
+              }),
+            },
+          });
+        },
+      });
+    },
   },
 };
 </script>
@@ -247,7 +407,9 @@ export default {
   {
     "totara_notification": [
       "create_custom_notification_title",
-      "error_cannot_create_custom_notification"
+      "error_cannot_create_custom_notification",
+      "edit_notification",
+      "error_cannot_update_notification"
     ]
   }
 </lang-strings>

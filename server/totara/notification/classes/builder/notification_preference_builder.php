@@ -255,14 +255,23 @@ class notification_preference_builder {
             $notification_preference = notification_preference::from_entity($entity);
 
             if ($notification_preference->is_custom_notification() && !$notification_preference->has_parent()) {
-                $fields = ['body', 'body_format', 'subject', 'title'];
+                $text_fields = ['body', 'subject', 'title'];
 
-                foreach ($fields as $field) {
+                foreach ($text_fields as $field) {
                     if (array_key_exists($field, $this->record_data) && empty($record_data[$field])) {
                         throw new coding_exception(
                             "Cannot reset the field '{$field}' for custom notification that does not have parent(s)"
                         );
                     }
+                }
+
+                if (array_key_exists('body_format', $this->record_data) && null === $this->record_data['body_format']) {
+                    // Special treatment for 'body_format', because the value of the field 'body_format'
+                    // can be set to zero, which it will make the validation go wrong easily.
+                    throw new coding_exception(
+                        "Cannot reset the field 'body_format' for custom " .
+                        "notification that does not have parent(s)"
+                    );
                 }
             }
         }

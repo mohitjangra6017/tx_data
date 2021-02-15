@@ -35,6 +35,7 @@
         class="tui-notificationPreferenceModal__form"
         :context-id="contextId"
         :preference="preference"
+        :parent-value="parentValue"
         @submit="handleSubmit"
         @cancel="$emit('request-close')"
       />
@@ -80,7 +81,7 @@ export default {
       default: getDefaultNotificationPreference(),
     },
 
-    parentPreference: {
+    parentValue: {
       type: Object,
       validator: validatePreferenceProp(),
       default() {

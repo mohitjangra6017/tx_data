@@ -24,6 +24,13 @@ query totara_notification_notifiable_events($context_id: param_integer!) {
       component
       parent_id
       context_id
+      parent_value {
+        __typename
+        subject
+        body
+        body_format
+        title
+      }
     }
   }
 }

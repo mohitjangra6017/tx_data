@@ -31,5 +31,12 @@ mutation totara_notification_create_custom_notification_preference(
     component
     parent_id
     context_id
+    parent_value {
+      __typename
+      subject
+      body
+      body_format
+      title
+    }
   }
 }
