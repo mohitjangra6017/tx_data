@@ -67,6 +67,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     use webapi_phpunit_helper;
 
     public function test_query_successful_with_single_section(): void {
+        self::setAdminUser();
         /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = \mod_perform\testing\generator::instance();
         $activity = $perform_generator->create_full_activities()->first();
@@ -176,6 +177,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     }
 
     public function test_query_with_deleted_participant(): void {
+        self::setAdminUser();
         /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = \mod_perform\testing\generator::instance();
 
@@ -236,6 +238,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     }
 
     public function test_query_with_deleted_subject(): void {
+        self::setAdminUser();
         /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = \mod_perform\testing\generator::instance();
 
@@ -297,6 +300,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     }
 
     public function test_query_successful_with_single_section_and_external_participant(): void {
+        self::setAdminUser();
         /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = \mod_perform\testing\generator::instance();
 
@@ -458,6 +462,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
     }
 
     public function test_query_successful_with_single_section_anonymous_responses(): void {
+        self::setAdminUser();
         /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = \mod_perform\testing\generator::instance();
 

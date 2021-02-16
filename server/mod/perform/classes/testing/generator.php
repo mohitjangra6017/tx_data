@@ -591,7 +591,10 @@ final class generator extends \core\testing\component_generator {
      * @return collection|activity[]
      */
     public function create_full_activities(activity_generator_configuration $configuration = null) {
-        global $USER;
+        // For the activity generation we need to make sure the admin user is set
+        if (!is_siteadmin()) {
+            throw new coding_exception('perform generator requires active user to be an administrator');
+        }
 
         // Create a default configuration if it wasn't provided
         if ($configuration === null) {
@@ -600,13 +603,6 @@ final class generator extends \core\testing\component_generator {
 
         $tenant_id = $configuration->get_tenant_id();
         $category_id = $configuration->get_category_id() ?? util::get_default_category_id();
-
-        $previous_user = clone $USER;
-
-        // For the activity generation we need to make sure the admin user is set
-        $user = get_admin();
-        manager::init_empty_session();
-        manager::set_user($user);
 
         $manual_idnumbers = relationship::repository()
             ->where('type', relationship::TYPE_MANUAL)
@@ -739,8 +735,6 @@ final class generator extends \core\testing\component_generator {
                 }
             }
         }
-
-        \advanced_testcase::setUser($previous_user);
 
         return collection::new($activities);
     }
