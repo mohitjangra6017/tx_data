@@ -774,24 +774,16 @@ final class generator extends \core\testing\component_generator {
     }
 
     /**
-     * Generate subject instance, for unit tests make sure no messages are being sent.
-     * If you need to intercept the messages use this function directly and the message sink it returns.
+     * Generate subject instance.
      *
-     * @return \phpunit_message_sink|null
+     * NOTE: this used to have illegal dependency on PHPUnit message redirection,
+     *       use message sink in tests if necessary.
+     *
+     * @return void
      */
-    public function generate_subject_instances(): ?\phpunit_message_sink {
-        $message_sink = null;
-        if (PHPUNIT_TEST) {
-            $message_sink = \phpunit_util::start_message_redirection();
-        }
+    public function generate_subject_instances(): void {
         // Create subject instances for all user assignments
         (new subject_instance_creation())->generate_instances();
-
-        if ($message_sink !== null) {
-            $message_sink->close();
-        }
-
-        return $message_sink;
     }
 
     private function generate_fullname(): string {
