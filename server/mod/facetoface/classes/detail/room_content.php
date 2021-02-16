@@ -327,7 +327,8 @@ class room_content extends content_generator {
         if (!in_array($roomdate_vm->get_status(), $failure_statuses, true)) {
             return null;
         }
-        $notification = new notification(get_string('virtualroom_banner_retry', 'mod_facetoface'), notification::NOTIFY_WARNING);
+        $url = new moodle_url('/mod/facetoface/events/edit.php', ['s' => $session->get_sessionid(), 'backtoallsessions' => 1]);
+        $notification = new notification(get_string('virtualroom_banner_retry', 'mod_facetoface', $url->out()), notification::NOTIFY_WARNING);
         $notification->set_extra_classes(['mod_facetoface__resource-card__notification']);
         return $notification;
     }

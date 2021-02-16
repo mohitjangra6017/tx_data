@@ -309,6 +309,9 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
             if (!in_array($key, ['message', 'extraclasses'])) {
                 continue;
             }
+            if ($key === 'message') {
+                $value = preg_replace('/https?:\/\/.+\/events\/edit.php\?.*(backtoallsessions=\d+)/', 'https://example.com/mod/facetoface/events/edit.php?$1', $value);
+            }
             $output[$key] = $value;
         }
         return $output;
@@ -1386,7 +1389,7 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
 
     public function test_render_banner_based_on_virtual_meeting_status() {
         $retryable = [
-            'message' => 'Failed to update the virtual room. <a class="action">Please click to try again.</a>',
+            'message' => 'Failed to update the virtual room. <a href="https://example.com/mod/facetoface/events/edit.php?backtoallsessions=1">Please click to assign the room again.</a>',
             'extraclasses' => 'mod_facetoface__resource-card__notification',
         ];
 

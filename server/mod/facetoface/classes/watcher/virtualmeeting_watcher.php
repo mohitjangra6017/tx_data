@@ -25,6 +25,7 @@ namespace mod_facetoface\watcher;
 
 use core\task\manager as task_manager;
 use core\orm\query\builder;
+use mod_facetoface\event\session_updated;
 use mod_facetoface\hook\event_is_being_cancelled;
 use mod_facetoface\hook\resources_are_being_updated;
 use mod_facetoface\hook\service\seminar_session_resource;
@@ -122,6 +123,22 @@ final class virtualmeeting_watcher {
     }
 
     /**
+     * @param session_updated $event
+     */
+    public static function seminar_event_updated(session_updated $event): void {
+        global $USER;
+        $eventdata = $event->get_session();
+        if (empty($eventdata->id) || empty($USER->id)) {
+            return;
+        }
+        $roomdate_vms = self::get_failing_virtualmeeting_states($eventdata->id, $USER->id);
+        if (self::retry_failing_virtualmeetings($roomdate_vms)) {
+            $task = manage_virtualmeetings_adhoc_task::create_from_seminar_event_id($eventdata->id);
+            task_manager::queue_adhoc_task($task, true);
+        }
+    }
+
+    /**
      * @param seminar_event $event
      * @param array $rooms_of_interest
      */
@@ -151,7 +168,7 @@ final class virtualmeeting_watcher {
 
         if (!empty($roomids_confirmed)) {
             $task = manage_virtualmeetings_adhoc_task::create_from_seminar_event_id($event->get_id());
-            task_manager::queue_adhoc_task($task);
+            task_manager::queue_adhoc_task($task, true);
         }
     }
 
@@ -340,6 +357,58 @@ final class virtualmeeting_watcher {
                 return $record->id;
             })
             ->fetch(true);
+    }
+
+    /**
+     * @param integer $eventid
+     * @param integer $userid
+     * @return integer[] id => status
+     */
+    private static function get_failing_virtualmeeting_states(int $eventid, int $userid): array {
+        $failures = [
+            room_dates_virtualmeeting::STATUS_FAILURE_CREATION,
+            room_dates_virtualmeeting::STATUS_FAILURE_UPDATE,
+            room_dates_virtualmeeting::STATUS_FAILURE_DELETION
+        ];
+        return builder::table(room_dates_virtualmeeting::DBTABLE, 'frdvm')
+            ->join([seminar_session::DBTABLE, 'fsd'], 'frdvm.sessionsdateid', 'fsd.id')
+            ->join([room::DBTABLE, 'fr'], 'frdvm.roomid', 'fr.id')
+            ->join([room_virtualmeeting::DBTABLE, 'frvm'], 'frvm.roomid', 'fr.id')
+            ->join(['user', 'u'], 'frvm.userid', 'u.id')
+            ->where('fsd.sessionid', $eventid)
+            ->where('u.id', $userid)
+            ->where('u.deleted', 0)
+            ->where('u.suspended', 0)
+            ->where_in('frdvm.status', $failures)
+            ->select(['frdvm.id', 'frdvm.status'])
+            ->map_to(function ($record) {
+                return $record->status;
+            })
+            ->fetch(false);
+    }
+
+    /**
+     * @param integer[] $roomdate_vms id => status
+     * @return boolean retried
+     */
+    private static function retry_failing_virtualmeetings(array $roomdate_vms): bool {
+        $updates = array_filter($roomdate_vms, function (int $status) {
+            return $status == room_dates_virtualmeeting::STATUS_FAILURE_CREATION || $status == room_dates_virtualmeeting::STATUS_FAILURE_UPDATE;
+        });
+        $deletes = array_filter($roomdate_vms, function (int $status) {
+            return $status == room_dates_virtualmeeting::STATUS_FAILURE_DELETION;
+        });
+        if (!empty($updates)) {
+            builder::table(room_dates_virtualmeeting::DBTABLE)
+                ->where_in('id', array_keys($updates))
+                ->update(['status' => room_dates_virtualmeeting::STATUS_PENDING_UPDATE]);
+        }
+        if (!empty($deletes)) {
+            builder::table(room_dates_virtualmeeting::DBTABLE)
+                ->where_in('id', array_keys($deletes))
+                ->update(['status' => room_dates_virtualmeeting::STATUS_PENDING_DELETION]);
+        }
+        return !empty($updates) || !empty($deletes);
     }
 
     /**

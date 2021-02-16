@@ -93,4 +93,8 @@ $observers = [
         'eventname' => \totara_job\event\job_assignment_deleted::class,
         'callback'  => '\mod_facetoface\event_handler::job_assignment_deleted',
     ],
+    [
+        'eventname' => \mod_facetoface\event\session_updated::class,
+        'callback'  => '\mod_facetoface\watcher\virtualmeeting_watcher::seminar_event_updated',
+    ],
 ];

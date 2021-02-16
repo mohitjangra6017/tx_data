@@ -24,6 +24,7 @@
 
 use core\entity\user;
 use core\orm\query\builder;
+use mod_facetoface\event\session_updated;
 use mod_facetoface\room;
 use mod_facetoface\room_dates_virtualmeeting;
 use mod_facetoface\room_helper;
@@ -34,6 +35,7 @@ use mod_facetoface\seminar_event;
 use mod_facetoface\seminar_event_helper;
 use mod_facetoface\seminar_session;
 use mod_facetoface\task\manage_virtualmeetings_adhoc_task;
+use mod_facetoface\watcher\virtualmeeting_watcher;
 use totara_core\http\clients\simple_mock_client;
 use totara_core\virtualmeeting\virtual_meeting as virtual_meeting_model;
 
@@ -54,7 +56,7 @@ class mod_facetoface_virtual_meeting_watcher_testcase extends advanced_testcase 
      */
     private function create_seminar(): seminar {
         $course = $this->getDataGenerator()->create_course();
-        /** @var mod_facetoface_generator */
+        /** @var mod_facetoface\testing\generator */
         $f2g = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         return new seminar($f2g->create_instance(['course' => $course->id])->id);
     }
@@ -163,7 +165,7 @@ class mod_facetoface_virtual_meeting_watcher_testcase extends advanced_testcase 
      * @return room
      */
     private function create_custom_room(string $name): room {
-        /** @var mod_facetoface_generator */
+        /** @var mod_facetoface\testing\generator */
         $f2g = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         return (new room())->from_record($f2g->add_custom_room(['name' => $name]));
     }
@@ -180,7 +182,7 @@ class mod_facetoface_virtual_meeting_watcher_testcase extends advanced_testcase 
         }
         $userid = $userid ?: $USER->id;
         $this->assertNotEquals(0, $userid, 'setUser() must be called first');
-        /** @var mod_facetoface_generator */
+        /** @var mod_facetoface\testing\generator */
         $f2g = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         return (new room())->from_record($f2g->add_virtualmeeting_room([], ['plugin' => $plugin, 'userid' => $userid]));
     }
@@ -230,7 +232,7 @@ class mod_facetoface_virtual_meeting_watcher_testcase extends advanced_testcase 
         $room1->set_name('room 1')->save();
         $room2->set_name('room 2')->save();
         $seminar = $this->create_seminar();
-        /** @var mod_facetoface_generator */
+        /** @var mod_facetoface\testing\generator */
         $f2g = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         // add session + assign room1 & room2
         $event = new seminar_event($f2g->add_session([
@@ -318,7 +320,7 @@ class mod_facetoface_virtual_meeting_watcher_testcase extends advanced_testcase 
         $now = time();
         $room = $this->create_virtual_room();
         $seminar = $this->create_seminar();
-        /** @var mod_facetoface_generator */
+        /** @var mod_facetoface\testing\generator */
         $f2g = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         // add session + assign room1 & room2
         $event = new seminar_event($f2g->add_session([
@@ -629,6 +631,105 @@ class mod_facetoface_virtual_meeting_watcher_testcase extends advanced_testcase 
         $this->switch_to_virtual_meeting($past, [$room_paa]);
         $this->assertEquals(4, $builder->count());
         $this->assertEquals(1, $this->count_confirmed_room_virtualmeeting());
+    }
+
+    public function test_seminar_event_updated(): void {
+        $creator = $this->getDataGenerator()->create_user();
+        $this->setUser($creator);
+
+        $room1 = $this->create_virtual_room();
+        $room2 = $this->create_virtual_room();
+        $room1->set_name('room 1')->save();
+        $room2->set_name('room 2')->save();
+        $seminar = $this->create_seminar();
+        $event1 = new seminar_event();
+        $event1->set_facetoface($seminar->get_id())->save();
+        $event2 = new seminar_event();
+        $event2->set_facetoface($seminar->get_id())->save();
+        $now = time();
+        $statuses1 = [
+            room_dates_virtualmeeting::STATUS_UNAVAILABLE => room_dates_virtualmeeting::STATUS_UNAVAILABLE,
+            room_dates_virtualmeeting::STATUS_AVAILABLE => room_dates_virtualmeeting::STATUS_AVAILABLE,
+            room_dates_virtualmeeting::STATUS_PENDING_UPDATE => room_dates_virtualmeeting::STATUS_PENDING_UPDATE,
+            room_dates_virtualmeeting::STATUS_PENDING_DELETION => room_dates_virtualmeeting::STATUS_PENDING_DELETION,
+            room_dates_virtualmeeting::STATUS_FAILURE_CREATION => room_dates_virtualmeeting::STATUS_PENDING_UPDATE,
+            room_dates_virtualmeeting::STATUS_FAILURE_UPDATE => room_dates_virtualmeeting::STATUS_PENDING_UPDATE,
+            room_dates_virtualmeeting::STATUS_FAILURE_DELETION => room_dates_virtualmeeting::STATUS_PENDING_DELETION,
+        ];
+        $statuses2 = [
+            room_dates_virtualmeeting::STATUS_FAILURE_CREATION,
+            room_dates_virtualmeeting::STATUS_FAILURE_UPDATE,
+            room_dates_virtualmeeting::STATUS_FAILURE_DELETION,
+        ];
+        /** @var room_dates_virtualmeeting[] */
+        $roomdatevms1 = [];
+        /** @var room_dates_virtualmeeting[] */
+        $roomdatevms2 = [];
+        $i = DAYSECS;
+        foreach ($statuses1 as $status => $x) {
+            $session = new seminar_session();
+            $session->set_sessionid($event1->get_id())->set_timestart($now + $i)->set_timefinish($now + $i + HOURSECS)->set_sessiontimezone('99')->save();
+            room_helper::sync($session->get_id(), [$room1->get_id()]);
+            if (in_array($status, [room_dates_virtualmeeting::STATUS_AVAILABLE, room_dates_virtualmeeting::STATUS_PENDING_DELETION, room_dates_virtualmeeting::STATUS_FAILURE_UPDATE, room_dates_virtualmeeting::STATUS_FAILURE_DELETION])) {
+                $vmid = virtual_meeting_model::create('poc_app', $creator->id, 'test room ' . ($i / DAYSECS), DateTime::createFromFormat('U', $now + $i), DateTime::createFromFormat('U', $now + $i + HOURSECS), new simple_mock_client())->id;
+            } else {
+                $vmid = null;
+            }
+            $roomdate_vm = (new room_dates_virtualmeeting())
+                ->set_sessionsdateid($session->get_id())
+                ->set_roomid($room1->get_id())
+                ->set_virtualmeetingid($vmid)
+                ->set_status($status);
+            $roomdate_vm->save();
+            $roomdatevms1[$status] = $roomdate_vm;
+            $i += DAYSECS;
+        }
+        foreach ($statuses2 as $status) {
+            $session = new seminar_session();
+            $session->set_sessionid($event2->get_id())->set_timestart($now + $i)->set_timefinish($now + $i + HOURSECS)->set_sessiontimezone('99')->save();
+            room_helper::sync($session->get_id(), [$room2->get_id()]);
+            if (in_array($status, [room_dates_virtualmeeting::STATUS_FAILURE_UPDATE, room_dates_virtualmeeting::STATUS_FAILURE_DELETION])) {
+                $vmid = virtual_meeting_model::create('poc_app', $creator->id, 'test room ' . ($i / DAYSECS), DateTime::createFromFormat('U', $now + $i), DateTime::createFromFormat('U', $now + $i + HOURSECS), new simple_mock_client())->id;
+            } else {
+                $vmid = null;
+            }
+            $roomdate_vm = (new room_dates_virtualmeeting())
+                ->set_sessionsdateid($session->get_id())
+                ->set_roomid($room2->get_id())
+                ->set_virtualmeetingid($vmid)
+                ->set_status($status);
+            $roomdate_vm->save();
+            $roomdatevms2[$status] = $roomdate_vm;
+            $i += DAYSECS;
+        }
+        $builder = builder::table('task_adhoc')->where('classname', '\\' . manage_virtualmeetings_adhoc_task::class);
+        $context = context_module::instance($seminar->get_coursemodule()->id);
+
+        $event = session_updated::create_from_session((object)['id' => 0], $context);
+        virtualmeeting_watcher::seminar_event_updated($event);
+        $this->assertEquals(0, $builder->count());
+
+        $this->setUser();
+        $event = session_updated::create_from_session((object)['id' => $event1->get_id()], $context);
+        virtualmeeting_watcher::seminar_event_updated($event);
+        $this->assertEquals(0, $builder->count());
+
+        $this->setAdminUser();
+        $event = session_updated::create_from_session((object)['id' => $event1->get_id()], $context);
+        virtualmeeting_watcher::seminar_event_updated($event);
+        $this->assertEquals(0, $builder->count());
+
+        $this->setUser($creator->id);
+        $event = session_updated::create_from_session((object)['id' => $event1->get_id()], $context);
+        virtualmeeting_watcher::seminar_event_updated($event);
+        $this->assertEquals(1, $builder->count());
+
+        foreach ($statuses1 as $status => $newstatus) {
+            $this->assertEquals($newstatus, $roomdatevms1[$status]->load()->get_status());
+        }
+        foreach ($statuses2 as $status) {
+            $this->assertEquals($status, $roomdatevms2[$status]->load()->get_status());
+        }
     }
 
     /**

@@ -53,6 +53,7 @@ Feature: User sees virtual meeting status
       | Add virtual room link | PoC App          |
     And I click on "OK" "button_exact" in the "[aria-describedby='editcustomroom1-dialog']" "css_element"
     And I press "Save changes"
+    Then I should not see "Editing event in"
     And I log out
 
   Scenario: mod_facetoface_virtualmeeting_201: See the virtual room card before/after ad-hoc task creates meetings
@@ -151,9 +152,10 @@ Feature: User sees virtual meeting status
     And I click on "Edit session" "link" in the "Christmas" "table_row"
     And I fill seminar session with relative date in form data:
       | timefinish[timezone] | Australia/Perth |
-      | timefinish[minute]   | +8 |
+      | timefinish[minute]   | +5 |
     And I click on "OK" "button" in the "//div[@aria-describedby='selectdate0-dialog']" "xpath_element"
     And I press "Save changes"
+    Then I should not see "Editing event in"
 
     Then "Join now" "link" should not exist in the "Christmas" "table_row"
     But "Join now" "link" should exist in the "Troll" "table_row"
@@ -225,7 +227,8 @@ Feature: User sees virtual meeting status
     # we just simply save changes and run ad-hoc tasks to make sure that the system doesn't throw an exception.
 
     And I press "Save changes"
-    Then "Join now" "link" should not exist in the "Christmas" "table_row"
+    Then I should not see "Editing event in"
+    And "Join now" "link" should not exist in the "Christmas" "table_row"
     And I run all adhoc tasks
 
   Scenario: mod_facetoface_virtualmeeting_204: See the virtual room card before/after ad-hoc task fails to create meetings
@@ -245,8 +248,10 @@ Feature: User sees virtual meeting status
     When I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
     Then I should see "Virtual room is unavailable"
     But "Host meeting" "link" should not exist
-    And I click on "Please click to try again" "link"
-    Then I should see "Re-attempting to update the room"
+    And I click on "Please click to assign the room again." "link"
+    Then I should see "Editing event in Virtual seminar"
+    And I press "Save changes"
+    Then I should not see "Editing event in"
     And I log out
 
     Given I log in as "admin"
@@ -278,9 +283,10 @@ Feature: User sees virtual meeting status
     And I click on "Edit session" "link" in the "Christmas" "table_row"
     And I fill seminar session with relative date in form data:
       | timefinish[timezone] | Australia/Perth |
-      | timefinish[minute]   | +10 |
+      | timefinish[minute]   | +5 |
     And I click on "OK" "button" in the "//div[@aria-describedby='selectdate0-dialog']" "xpath_element"
     And I press "Save changes"
+    Then I should not see "Editing event in"
 
     Then "Join now" "link" should not exist in the "Christmas" "table_row"
     And I log out
@@ -301,8 +307,10 @@ Feature: User sees virtual meeting status
     When I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
     Then I should see "Virtual room is unavailable"
     But "Host meeting" "link" should not exist
-    And I click on "Please click to try again" "link"
-    Then I should see "Re-attempting to update the room"
+    And I click on "Please click to assign the room again." "link"
+    Then I should see "Editing event in Virtual seminar"
+    And I press "Save changes"
+    Then I should not see "Editing event in"
     And I log out
 
     Given I log in as "admin"
@@ -338,7 +346,8 @@ Feature: User sees virtual meeting status
     # we just simply save changes and run ad-hoc tasks to make sure that the system doesn't throw an exception.
 
     And I press "Save changes"
-    Then "Join now" "link" should not exist in the "Christmas" "table_row"
+    Then I should not see "Editing event in"
+    And "Join now" "link" should not exist in the "Christmas" "table_row"
     And I log out
 
     Given I log in as "admin"
@@ -361,12 +370,14 @@ Feature: User sees virtual meeting status
     And I click on "Delete" "link_or_button" in the "Virtual Room Dos" "table_row"
 
     And I press "Save changes"
+    Then I should not see "Editing event in"
 
     When I click on the seminar event action "Edit event" in row "#1"
     And I click on "Select rooms" "link" in the "Christmas" "table_row"
     And I click on "Virtual Room Dos (Capacity: 100)" "text"
     And I click on "OK" "button_exact" in the "Choose rooms" "totaradialogue"
     And I press "Save changes"
+    Then I should not see "Editing event in"
 
     And I click on "Virtual Room Dos" "link" in the "Christmas" "table_row"
     Then I should see "Updating virtual room"
