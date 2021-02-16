@@ -347,9 +347,7 @@ final class generator extends \core\testing\component_generator {
         global $USER;
         $userid = $USER->id;
 
-        $generator = \advanced_testcase::getDataGenerator();
-        /** @var \engage_article\testing\generator $article_generator */
-        $article_generator = $generator->get_plugin_generator('engage_article');
+        $article_generator = \engage_article\testing\generator::instance();
 
         $article1 = $article_generator->create_article_with_image('totara1','/totara/playlist/tests/fixtures/red.png', 1);
         $article2 = $article_generator->create_article_with_image('totara2','/totara/playlist/tests/fixtures/yellow.png', 1);
