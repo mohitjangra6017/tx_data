@@ -21,6 +21,11 @@
  * @package ml_recommender
  */
 
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
+require_once($CFG->dirroot.'/ml/recommender/db/upgradelib.php');
+
 /**
  * Local database upgrade script
  *
@@ -49,6 +54,13 @@ function xmldb_ml_recommender_upgrade($oldversion) {
         }
 
         upgrade_plugin_savepoint(true, 2020121100, 'ml', 'recommender');
+    }
+
+    if ($oldversion < 2021021000) {
+        ml_recommender_upgrade_default_configuration();
+
+        // Update ml recommender savepoint.
+        upgrade_plugin_savepoint(true, 2021021000, 'ml', 'recommender');
     }
 
     return true;

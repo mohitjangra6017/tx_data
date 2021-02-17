@@ -23,7 +23,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2020121100;             // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2021021000;             // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2020101200;             // Requires this Totara version
 $plugin->component = 'ml_recommender';   // Full name of the plugin (used for diagnostics)
 
