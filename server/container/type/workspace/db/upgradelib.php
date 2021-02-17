@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package container_workspace
  */
-
 defined('MOODLE_INTERNAL') || die();
 
-/* NOTE: the following version number must be bumped during each major or minor Totara release. */
+function container_workspace_update_hidden_workspace_with_audience_visibility(): void {
+    global $DB, $CFG;
 
-$plugin->version  = 2021021800;                 // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020101200;                 // Requires this Totara version.
-$plugin->component = 'container_workspace';          // To check on upgrade, that module sits in correct place
+    if (!defined('COHORT_VISIBLE_ENROLLED')) {
+        require_once("{$CFG->dirroot}/totara/core/totara.php");
+    }
 
-$plugin->dependencies = [
-    'totara_engage' => 2020101200,
-    'editor_weka' => 2020101200,
-    'totara_comment' => 2020101200,
-    'enrol_self' => 2020101200,
-    'enrol_manual' => 2020101200
-];
+    $DB->execute(
+        'UPDATE "ttr_course" SET audiencevisible = :new_audience_visible 
+         WHERE containertype = :workspace AND visible = 0 AND audiencevisible = :audience_visible',
+        [
+            'workspace' => 'container_workspace',
+            'audience_visible' => COHORT_VISIBLE_ALL,
+            'new_audience_visible' => COHORT_VISIBLE_ENROLLED
+        ]
+    );
+}

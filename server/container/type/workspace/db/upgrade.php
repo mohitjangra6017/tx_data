@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 function xmldb_container_workspace_upgrade($old_version) {
     global $DB, $CFG;
+    require_once("{$CFG->dirroot}/container/type/workspace/db/upgradelib.php");
 
     // Totara 13.0 release line.
     $db_manager = $DB->get_manager();
@@ -51,6 +52,11 @@ function xmldb_container_workspace_upgrade($old_version) {
         \core\task\manager::queue_adhoc_task(new \container_workspace\task\create_missing_categories());
 
         upgrade_plugin_savepoint(true, 2020110601, 'container', 'workspace');
+    }
+
+    if ($old_version < 2021021800) {
+        container_workspace_update_hidden_workspace_with_audience_visibility();
+        upgrade_plugin_savepoint(true, 2021021800, 'container', 'workspace');
     }
 
     return true;
