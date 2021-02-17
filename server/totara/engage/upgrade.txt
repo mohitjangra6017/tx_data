@@ -9,4 +9,8 @@ information provided here is intended especially for developers.
 * Removed unused class totara_engage\generator\engage_generator
 * Added query totara_engage_user_contributions_count
 * Updated user_contribution_cards persistent query to include query totara_engage_user_contributions_count
+* Added "theme" parameter to the "image" field in the "totara_engage_card" type
+* Added "theme" parameter to the "extra" field in the "totara_engage_card" type
+* Added required "theme" parameter to "totara_engage_shareto_recipients" query
+* Added required "theme" parameter to "totara_engage_share_recipients" query
 
