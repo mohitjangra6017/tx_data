@@ -6,7 +6,7 @@ Feature: Add a bookmarks to an admin pages
 
   Background:
     Given I log in as "admin"
-    And I navigate to "Notifications" node in "Site administration > System information"
+    And I navigate to "System information" node in "Site administration > System information"
     And I click on "Blocks editing on" "button"
     And I add the "Admin bookmarks" block if not present
     And I configure the "Admin bookmarks" block
@@ -29,14 +29,14 @@ Feature: Add a bookmarks to an admin pages
 
   Scenario: Admin page can be accessed through bookmarks block
     Given I log in as "admin"
-    And I navigate to "Notifications" node in "Site administration > System information"
+    And I navigate to "System information" node in "Site administration > System information"
     And I click on "Scheduled tasks" "link" in the "Admin bookmarks" "block"
     # Verify that we are on the right page.
     Then I should see "Scheduled tasks" in the page title
 
   Scenario: Admin page can be removed from bookmarks
     Given I log in as "admin"
-    And I navigate to "Notifications" node in "Site administration > System information"
+    And I navigate to "System information" node in "Site administration > System information"
     And I click on "Scheduled tasks" "link" in the "Admin bookmarks" "block"
     When I click on "Unbookmark this page" "link" in the "Admin bookmarks" "block"
     Then I should see "Bookmark deleted"

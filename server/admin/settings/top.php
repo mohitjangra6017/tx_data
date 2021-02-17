@@ -18,7 +18,7 @@ $hassiteconfig = has_capability('moodle/site:config', $systemcontext);
 
 $ADMIN->add('root', new admin_category('systeminformation', new lang_string('systeminformation')));
 
-$ADMIN->add('systeminformation', new admin_externalpage('adminnotifications', new lang_string('notifications'), "$CFG->wwwroot/$CFG->admin/index.php"));
+$ADMIN->add('systeminformation', new admin_externalpage('adminnotifications', new lang_string('systeminformation'), "$CFG->wwwroot/$CFG->admin/index.php"));
 
 // Totara: always show the registration page unless registration was disabled via config.php.
 $ADMIN->add('systeminformation', new admin_externalpage('totararegistration', new lang_string('totararegistration', 'totara_core'),

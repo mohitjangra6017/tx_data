@@ -84,7 +84,7 @@ Feature: Ensure page layouts are listed correctly
     And the "Region" select box should not contain "Main"
 
   Scenario: Ensure editing a block on an admin page lists the admin layout options
-    When I navigate to "Notifications" node in "Site administration > System information"
+    When I navigate to "System information" node in "Site administration > System information"
     And I click on "Blocks editing on" "button"
     And I add the "Navigation" block if not present
     And I configure the "Navigation" block
