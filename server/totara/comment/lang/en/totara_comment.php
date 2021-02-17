@@ -26,6 +26,7 @@ $string['bracketnumber'] = '({$a})';
 $string['cachedef_author_access'] = "Comment's author access cache";
 $string['comments'] = 'Comments ({$a})';
 $string['comment_created'] = 'Comment created';
+$string['commenter_placeholder_group'] = 'Commenter\'s {$a}';
 $string['deletecommentconfirm'] = 'Your comment will be deleted. Any replies to your comment will remain.';
 $string['deletedcomment'] = "This comment has been deleted.";
 $string['done'] = 'Done';
@@ -57,3 +58,4 @@ $string['error:reportreply'] = "Cannot report the reply";
 $string['error:softdelete'] = "Cannot delete a comment";
 
 $string['notification_comment_created_body'] = 'A new comment created on your item';
+$string['item_owner_placeholder_group'] = 'Item owner\'s {$a}';

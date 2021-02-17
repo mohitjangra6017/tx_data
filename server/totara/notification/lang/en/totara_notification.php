@@ -37,6 +37,7 @@ $string['error_cannot_create_custom_notification'] = "Cannot create the custom n
 $string['error_cannot_update_notification'] = "Cannot update the notification";
 $string['invalid_input'] = 'Invalid value';
 $string['messaging_and_notification'] = 'Messaging and notifications';
+$string['no_available_data_for_key'] = '<no available data for {$a}>';
 $string['notifiable_events'] = 'Notifiable triggers';
 $string['notifications'] = "Notifications";
 $string['notification_body_label'] = 'Body';

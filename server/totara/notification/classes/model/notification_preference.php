@@ -264,6 +264,7 @@ class notification_preference {
     }
 
     /**
+     * Return the raw value of notification's body text.
      * @return string
      */
     public function get_body(): string {
@@ -281,6 +282,7 @@ class notification_preference {
     }
 
     /**
+     * Return the raw value of notification's subject text
      * @return string
      */
     public function get_subject(): string {

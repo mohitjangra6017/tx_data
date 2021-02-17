@@ -23,6 +23,7 @@
 namespace totara_notification\event;
 
 use core\event\abstraction\context_aware;
+use totara_notification\placeholder\placeholder_option;
 
 /**
  * An interface to help us integrating the centralised notification system's event with the
@@ -61,6 +62,13 @@ interface notifiable_event extends context_aware {
      * @return array
      */
     public static function get_notification_default_delivery_channels(): array;
+
+    /**
+     * Returns the list of available placeholder options.
+     *
+     * @return placeholder_option[]
+     */
+    public static function get_notification_available_placeholder_options(): array;
 
     /**
      * Returns a hash-map of data attributes that the event should be using to feed to all the

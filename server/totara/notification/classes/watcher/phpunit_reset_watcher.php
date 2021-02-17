@@ -17,17 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 namespace totara_notification\watcher;
 
-use ReflectionProperty;
 use core\hook\phpunit_reset;
+use ReflectionProperty;
 use totara_notification\factory\built_in_notification_factory;
 use totara_notification\factory\notifiable_event_factory;
 use totara_notification_mock_built_in_notification;
+use totara_notification_mock_notifiable_event;
 use totara_notification_mock_notifiable_event_resolver;
+use totara_notification_mock_single_placeholder;
 
 class phpunit_reset_watcher {
     /**
@@ -51,6 +53,14 @@ class phpunit_reset_watcher {
 
         if (class_exists('totara_notification_mock_built_in_notification')) {
             totara_notification_mock_built_in_notification::clear();
+        }
+
+        if (class_exists('totara_notification_mock_notifiable_event')) {
+            totara_notification_mock_notifiable_event::clear();
+        }
+
+        if (class_exists('totara_notification_mock_single_placeholder')) {
+            totara_notification_mock_single_placeholder::clear();
         }
     }
 

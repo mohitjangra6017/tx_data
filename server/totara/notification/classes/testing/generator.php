@@ -311,6 +311,30 @@ final class generator extends component_generator {
     }
 
     /**
+     * @return void
+     */
+    public function include_mock_single_placeholder(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_mock_single_placeholder.php");
+    }
+
+    /**
+     * @return void
+     */
+    public function include_mock_invalid_placeholder(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_mock_invalid_placeholder.php");
+    }
+
+    /**
+     * @return void
+     */
+    public function include_mock_collection_placeholder(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_mock_collection_placeholder.php");
+    }
+
+    /**
      * @param lang_string $body
      * @return void
      */

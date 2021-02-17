@@ -27,6 +27,7 @@ use core_component;
 use totara_notification\event\notifiable_event;
 use totara_notification\notification\built_in_notification;
 use totara_notification\resolver\notifiable_event_resolver;
+use totara_notification_mock_notifiable_event;
 use totara_notification_mock_notifiable_event_resolver;
 
 class helper {
@@ -150,6 +151,44 @@ class helper {
          * {@see notifiable_event_resolver::__construct()}
          */
         return new $resolver_classname($context_id, $event_data);
+    }
+
+    /**
+     * @param string $resolver_class_name
+     * @return string
+     */
+    public static function get_notifiable_event_from_resolver(string $resolver_class_name): string {
+        global $CFG;
+
+        if (!is_subclass_of($resolver_class_name, notifiable_event_resolver::class)) {
+            throw new coding_exception("The resolver class name is not a child of " . notifiable_event_resolver::class);
+        }
+
+        $resolver_class_name = ltrim($resolver_class_name, '\\');
+        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
+            // We are in test environment. Check that if the resolver class name is equal
+            // to the mock event notifiable resolver or not.
+            if ('totara_notification_mock_notifiable_event_resolver' === $resolver_class_name) {
+                require_once(
+                    "{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event.php"
+                );
+
+                return totara_notification_mock_notifiable_event::class;
+            }
+        }
+
+        $parts = explode("\\", $resolver_class_name);
+        $component = reset($parts);
+        $event_name = end($parts);
+
+        $notifiable_event_class_name = "{$component}\\event\\{$event_name}";
+        if (!self::is_valid_notifiable_event($notifiable_event_class_name)) {
+            throw new coding_exception(
+                "Cannot find the resolver for notifiable event '{$resolver_class_name}'"
+            );
+        }
+
+        return $notifiable_event_class_name;
     }
 
     /**

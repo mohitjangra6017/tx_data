@@ -140,46 +140,34 @@ class notification_queue_manager {
         $recipient_name = $preference->get_recipient();
         $recipient_ids = $resolver->get_recipient_ids($recipient_name);
 
-        $body_notification = $preference->get_body();
-        $subject_notification = $preference->get_subject();
+        $engine = $resolver->get_placeholder_engine();
 
-        $processors = get_message_processors(true, (defined('PHPUNIT_TEST') && PHPUNIT_TEST));
+        $body_format = $preference->get_body_format();
+        $body_text = $preference->get_body();
+
+        // Constructing a default message that will be sent for multiple users.
+        $default_message  = new stdClass();
+        $default_message->notification = 1;
+        $default_message->fullmessage = $engine->replace(format_text_email($body_text, $body_format));
+        $default_message->fullmessagehtml = $engine->replace(format_text($body_text, $body_format));
+        $default_message->fullmessageformat = $body_format;
+        $default_message->subject = $engine->replace($preference->get_subject());
+
+        // Static data - which can be tweaked later on.
+        $default_message->contexturl = '';
+        $default_message->contexturlname = '';
+
+        // Note: we are hardcoded to no_reply_user for now, however, it should be up
+        // to the resolver to decide who is the sender.
+        $default_message->userfrom = core_user::get_noreply_user();
+        $default_message->useridfrom = $default_message->userfrom->id;
+
+        $message_processors = get_message_processors(true, (defined('PHPUNIT_TEST') && PHPUNIT_TEST));
 
         foreach ($recipient_ids as $target_user_id) {
-            $message = new stdClass();
-
-            // Note: we are hardcoded to no_reply_user for now, however, it should be up
-            // to the resolver to decide who is the sender.
-            $message->userfrom = core_user::get_noreply_user();
+            $message = clone $default_message;
             $message->userto = core_user::get_user($target_user_id);
-
-            $message->useridfrom = $message->userfrom->id;
             $message->useridto = $target_user_id;
-
-            // Note: subject and fullmessage are hardcoded to notification for now, however it should
-            // be up to the notification preferences, then fallback to the default built-in notification
-            // if none provided from preferences, instead.
-            $message->subject = $subject_notification;
-            $message->fullmessage = $body_notification;
-
-            // Note: we are hardcoded to FORMAT_MOODLE for now, however, it should be up
-            // to the notification preferences.
-            $message->fullmessagehtml = format_string($message->fullmessage, FORMAT_MOODLE);
-            $message->fullmessageformat = FORMAT_MOODLE;
-
-            // Static data - which can be tweaked later on.
-            $message->notification = 1;
-            $message->contexturl = '';
-            $message->contexturlname = '';
-
-            if (defined('PHPUNIT_TEST') && PHPUNIT_TEST && class_exists('phpunit_util')) {
-                // For  unit tests purpose only.
-
-                if (phpunit_util::is_redirecting_messages()) {
-                    phpunit_util::message_sent($message);
-                    return;
-                }
-            }
 
             // Save the notification first before sending out the message.
             // Note: TL-29518 will encapsulate these logics in API.
@@ -199,11 +187,20 @@ class notification_queue_manager {
             $notification->save();
             $message->savedmessageid = $notification->id;
 
-            $processors['popup']->object->send_message($message);
+            if (defined('PHPUNIT_TEST') && PHPUNIT_TEST && class_exists('phpunit_util')) {
+                // For  unit tests purpose only.
 
-            if (isset($processors['email'])) {
+                if (phpunit_util::is_redirecting_messages()) {
+                    phpunit_util::message_sent($message);
+                    return;
+                }
+            }
+
+            $message_processors['popup']->object->send_message($message);
+
+            if (isset($message_processors['email'])) {
                 // This is for behat, as in behat enviroment, email is not enabled by default.
-                $processors['email']->object->send_message($message);
+                $message_processors['email']->object->send_message($message);
             }
         }
     }

@@ -22,7 +22,10 @@
  */
 namespace totara_notification\resolver;
 
+use totara_notification\local\helper;
 use totara_notification\notification\built_in_notification;
+use totara_notification\placeholder\template_engine\engine;
+use totara_notification\placeholder\template_engine\square_bracket\engine as square_bracket_engine;
 
 /**
  * Given that the {@see built_in_notification} is the default configuration that used to define the message, delivery channels,
@@ -67,4 +70,16 @@ abstract class notifiable_event_resolver {
      * @return int[]
      */
     abstract public function get_recipient_ids(string $recipient_name): array;
+
+    /**
+     * Get the placeholder engine instance. It can either be square bracket
+     * engine or mustache engine. By default, we are using square bracket
+     * engine, however the children can define which engine it is using.
+     *
+     * @return engine
+     */
+    public function get_placeholder_engine(): engine {
+        $event_name = helper::get_notifiable_event_from_resolver(static::class);
+        return square_bracket_engine::create($event_name, $this->event_data);
+    }
 }

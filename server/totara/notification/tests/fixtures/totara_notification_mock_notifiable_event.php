@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 use totara_notification\event\notifiable_event;
+use totara_notification\placeholder\placeholder_option;
 
 class totara_notification_mock_notifiable_event implements notifiable_event {
     /**
@@ -32,6 +33,11 @@ class totara_notification_mock_notifiable_event implements notifiable_event {
      * @var array
      */
     private $event_data;
+
+    /**
+     * @var array
+     */
+    private static $placeholder_options;
 
     /**
      * totara_notification_mock_notifiable_event constructor.
@@ -73,6 +79,17 @@ class totara_notification_mock_notifiable_event implements notifiable_event {
     }
 
     /**
+     * @return placeholder_option[]
+     */
+    public static function get_notification_available_placeholder_options(): array {
+        if (!isset(self::$placeholder_options)) {
+            self::$placeholder_options = [];
+        }
+
+        return self::$placeholder_options;
+    }
+
+    /**
      * @return array
      */
     public function get_notification_event_data(): array {
@@ -84,5 +101,22 @@ class totara_notification_mock_notifiable_event implements notifiable_event {
      */
     public function get_context() {
         return context::instance_by_id($this->context_id);
+    }
+
+    /**
+     * @param placeholder_option[] $options
+     * @return void
+     */
+    public static function add_placeholder_options(placeholder_option ...$options): void {
+        self::$placeholder_options = $options;
+    }
+
+    /**
+     * @return void
+     */
+    public static function clear(): void {
+        if (isset(self::$placeholder_options)) {
+            self::$placeholder_options = [];
+        }
     }
 }

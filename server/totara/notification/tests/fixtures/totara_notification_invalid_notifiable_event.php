@@ -26,6 +26,8 @@ use totara_notification\event\notifiable_event;
  * This class should only be used for any sort of testing that you
  * would want to give an error and expect the error rather than
  * expecting a successfull result.
+ *
+ * Ideally that this fixture file does not come with the resolver class.
  */
 class totara_notification_invalid_notifiable_event implements notifiable_event {
     /**
@@ -60,6 +62,13 @@ class totara_notification_invalid_notifiable_event implements notifiable_event {
      * @return array
      */
     public static function get_notification_default_delivery_channels(): array {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public static function get_notification_available_placeholder_options(): array {
         return [];
     }
 
