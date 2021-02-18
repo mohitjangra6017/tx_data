@@ -65,38 +65,30 @@ function xmldb_totara_notification_upgrade($old_version) {
     }
 
     if ($old_version < 2021012002) {
+        totara_notification_sync_built_in_notification();
+
+        // Notification savepoint reached.
+        upgrade_plugin_savepoint(true, 2021012002, 'totara', 'notification');
+    }
+
+    if ($old_version < 2021012003) {
         // This is for continuous development only.
         $table = new xmldb_table('notification_queue');
 
         // Define field notification_name to be dropped from notification_queue.
         $old_index = new xmldb_index('notification_name_index', XMLDB_INDEX_NOTUNIQUE, array('notification_name'));
-
-        // Conditionally launch drop index notification_name_index.
-        if ($db_manager->index_exists($table, $old_index)) {
-            $db_manager->drop_index($table, $old_index);
-        }
-
         $old_field = new xmldb_field('notification_name');
-        // Conditionally launch drop field notification_name.
-        if ($db_manager->field_exists($table, $old_field)) {
-            $db_manager->drop_field($table, $old_field);
-        }
 
         $new_field = new xmldb_field(
             'notification_preference_id',
             XMLDB_TYPE_INTEGER,
             '10',
             null,
-            XMLDB_NOTNULL,
+            null,
             null,
             null,
             'id'
         );
-
-        // Conditionally launch add field notification_preference_id.
-        if (!$db_manager->field_exists($table, $new_field)) {
-            $db_manager->add_field($table, $new_field);
-        }
 
         $preference_key = new xmldb_key(
             'notification_preference_id_key',
@@ -106,17 +98,66 @@ function xmldb_totara_notification_upgrade($old_version) {
             ['id']
         );
 
+        if (0 != $DB->count_records('notification_queue')) {
+            // For the table that has records, we will have to do the following:
+            // + Add the field notification_preference_id but leave it nullable
+            // + Search for preference table with notification_name
+            // + Populate the data on column
+            // + Delete the field notification_name field
+            // + Make the field notification_preference_id not-nullable
+
+            // Add the field first but it has to be null-able, then fetch the records.
+            $new_field->setNotNull(false);
+            if (!$db_manager->field_exists($table, $new_field)) {
+                $db_manager->add_field($table, $new_field);
+
+                if ($db_manager->field_exists($table, $old_field)) {
+                    // We do not need context's id here, because the system firstly install/upgrade will not have
+                    // the overridden record at lower context just yet. Hence using context_system here.
+                    $records = $DB->get_records_sql('SELECT id, notification_name FROM "ttr_notification_queue"');
+                    $context_id = $DB->get_field('context', 'id', ['contextlevel' => CONTEXT_SYSTEM]);
+
+                    foreach ($records as $record) {
+                        $preference_id = $DB->get_field(
+                            'notification_preference',
+                            'id',
+                            [
+                                'notification_class_name' => $record->notification_name,
+                                'context_id' => $context_id
+                            ],
+                            MUST_EXIST
+                        );
+
+                        $record->notification_preference_id = $preference_id;
+                        $DB->update_record('notification_queue', $record);
+                    }
+                }
+            }
+        }
+
+        $new_field->setNotNull(XMLDB_NOTNULL);
+        if ($db_manager->field_exists($table, $new_field)) {
+            // This is probably from the if statement above that we need to populate the data.
+            // Hence we will update the field this time.
+            $db_manager->change_field_notnull($table, $new_field);
+        } else {
+            $db_manager->add_field($table, $new_field);
+        }
+
+        // Conditionally launch drop index notification_name_index.
+        if ($db_manager->index_exists($table, $old_index)) {
+            $db_manager->drop_index($table, $old_index);
+        }
+
+        // Conditionally launch drop field notification_name.
+        if ($db_manager->field_exists($table, $old_field)) {
+            $db_manager->drop_field($table, $old_field);
+        }
+
         // Launch add key notification_preference_id_key.
         if (!$db_manager->key_exists($table, $preference_key)) {
             $db_manager->add_key($table, $preference_key);
         }
-
-        // Notification savepoint reached.
-        upgrade_plugin_savepoint(true, 2021012002, 'totara', 'notification');
-    }
-
-    if ($old_version < 2021012003) {
-        totara_notification_sync_built_in_notification();
 
         // Notification savepoint reached.
         upgrade_plugin_savepoint(true, 2021012003, 'totara', 'notification');
