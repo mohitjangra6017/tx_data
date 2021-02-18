@@ -30,13 +30,13 @@ Feature: Overridden notifications at lower context
     And the field "Subject" matches value "Overridden subject at system"
     And the field with xpath "//textarea[@class='tui-formTextarea tui-editorTextarea__textarea']" matches value "Overridden body at system"
 
-    And the "Notification subject" "field" should be enabled
+    And the "Subject" "field" should be enabled
     When I click on the "Enable customizing field subject" tui toggle button
     And I click on the "Enable customizing field body" tui toggle button
-    And the field "Notification subject" does not match value "Overridden subject at system"
+    And the field "Subject" does not match value "Overridden subject at system"
     And the field with xpath "//textarea[@class='tui-formTextarea tui-editorTextarea__textarea']" does not match value "Overridden body at system"
 
     And I click on "Save" "button"
     When I click on "Edit notification Comment created" "button"
-    And the field "Notification subject" does not match value "Overridden subject at system"
+    And the field "Subject" does not match value "Overridden subject at system"
     And the field with xpath "//textarea[@class='tui-formTextarea tui-editorTextarea__textarea']" does not match value "Overridden body at system"
