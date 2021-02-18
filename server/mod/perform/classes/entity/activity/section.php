@@ -94,6 +94,21 @@ class section extends entity {
     }
 
     /**
+     * A section's collection of aggregatable section elements.
+     *
+     * @return has_many
+     */
+    public function aggregatable_section_elements(): has_many {
+        $aggregatable_plugins = element_plugin::get_aggregatable_element_plugins();
+
+        return $this->has_many(section_element::class, 'section_id')
+            ->as('se')
+            ->join([element::TABLE, 'e'], 'element_id', 'e.id')
+            ->where_in('e.plugin_name', array_keys($aggregatable_plugins))
+            ->order_by('se.sort_order');
+    }
+
+    /**
      * A section owns a collection of participant sections.
      *
      * @return has_many

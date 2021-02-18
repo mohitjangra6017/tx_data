@@ -87,4 +87,7 @@ class custom_rating_scale extends respondable_element_plugin {
         return 60;
     }
 
+    public function get_is_aggregatable(): bool {
+        return true;
+    }
 }

@@ -43,6 +43,7 @@ class section extends entity_model_formatter {
             'sort_order' => null,
             'section_elements' => null,
             'respondable_section_elements' => null,
+            'aggregatable_section_elements' => null,
             'section_relationships' => null,
             'section_elements_summary' => null,
             'created_at' => date_field_formatter::class,

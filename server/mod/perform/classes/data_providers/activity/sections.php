@@ -23,6 +23,7 @@
 namespace mod_perform\data_providers\activity;
 
 use core\collection;
+use core\orm\entity\repository;
 use core\orm\query\builder;
 use mod_perform\entity\activity\element;
 use mod_perform\entity\activity\section as section_entity;
@@ -40,18 +41,40 @@ class sections {
      */
     public function get_sections_with_respondable_section_elements(int $activity_id): collection {
         $respondable_plugins = element_plugin::get_element_plugins(true, false);
+        $repository = $this->sections_for_plugin_names($activity_id, array_keys($respondable_plugins));
+        return $repository->with('respondable_section_elements.element')
+            ->get()
+            ->map_to(section_model::class);
+    }
 
+    /**
+     * Get sections of an activity with aggregatable section elements.
+     *
+     * @param int $activity_id
+     * @return collection
+     */
+    public function get_sections_with_aggregatable_section_elements(int $activity_id): collection {
+        $aggregatable_plugins = element_plugin::get_aggregatable_element_plugins();
+        $repository = $this->sections_for_plugin_names($activity_id, array_keys($aggregatable_plugins));
+        return $repository->with('aggregatable_section_elements.element')
+            ->get()
+            ->map_to(section_model::class);
+    }
+
+    /**
+     * @param int $activity_id
+     * @param array $plugin_names
+     * @return repository
+     */
+    private function sections_for_plugin_names(int $activity_id, array $plugin_names): repository {
         return section_entity::repository()->as('s')
             ->where_exists(
                 builder::table(section_element::TABLE, 'se')
                     ->join([element::TABLE, 'e'], 'element_id', 'id')
                     ->where('s.activity_id',$activity_id)
                     ->where_field('se.section_id', 's.id')
-                    ->where_in('e.plugin_name', array_keys($respondable_plugins))
+                    ->where_in('e.plugin_name', $plugin_names)
             )
-            ->order_by('sort_order')
-            ->with('respondable_section_elements.element')
-            ->get()
-            ->map_to(section_model::class);
+            ->order_by('sort_order');
     }
 }

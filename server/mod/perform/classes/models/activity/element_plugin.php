@@ -87,6 +87,22 @@ abstract class element_plugin {
     }
 
     /**
+     * Get all aggregatable element plugins.
+     *
+     * Returns array of elements, keyed by plugin_name, value is instance of element model.
+     *
+     * @return element_plugin[]
+     */
+    final public static function get_aggregatable_element_plugins(): array {
+        $elements = \core_component::get_plugin_list('performelement');
+
+        return array_filter($elements, static function (string $plugin_name) {
+            $element_plugin = self::load_by_plugin($plugin_name);
+            return $element_plugin->get_is_aggregatable();
+        }, ARRAY_FILTER_USE_KEY);
+    }
+
+    /**
      * Get plugin name, used as a key
      *
      * @return string

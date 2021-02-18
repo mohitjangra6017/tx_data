@@ -51,6 +51,10 @@ type mod_perform_section {
   """
   respondable_section_elements: [mod_perform_section_element!]!
   """
+  List of aggregatable section elements within this section
+  """
+  aggregatable_section_elements: [mod_perform_section_element!]!
+  """
   List of relationships involved in this section, and the abilities those relationships have within the section
   """
   section_relationships: [mod_perform_section_relationship!]!

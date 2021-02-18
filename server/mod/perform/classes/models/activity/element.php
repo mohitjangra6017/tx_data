@@ -151,6 +151,15 @@ class element extends model {
     }
 
     /**
+     * Is this element aggregatable?
+     *
+     * @return bool
+     */
+    public function get_is_aggregatable(): bool {
+        return $this->get_element_plugin()->get_is_aggregatable();
+    }
+
+    /**
      * Get the context that this element belongs to
      *
      * @return context

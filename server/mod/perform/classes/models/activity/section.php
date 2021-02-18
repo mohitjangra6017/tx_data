@@ -70,6 +70,7 @@ class section extends model {
         'display_title',
         'section_elements',
         'respondable_section_elements',
+        'aggregatable_section_elements',
         'section_relationships',
         'participant_sections',
         'section_elements_summary',
@@ -192,6 +193,21 @@ class section extends model {
      */
     public function get_respondable_section_elements(): collection {
         return $this->get_section_element_manager()->get_respondable_section_elements();
+    }
+
+    /**
+     * Get a collection of all section elements that can be aggregated.
+     *
+     * @return collection|section_element[]
+     */
+    public function get_aggregatable_section_elements(): collection {
+        if ($this->entity->relation_loaded('aggregatable_section_elements')) {
+            return $this->entity->aggregatable_section_elements->map_to(section_element::class);
+        }
+
+        return $this->get_section_elements()->filter(function (section_element $section_element) {
+            return $section_element->element->get_is_aggregatable();
+        });
     }
 
     /**
