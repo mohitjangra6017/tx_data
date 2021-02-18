@@ -154,6 +154,7 @@ class totara_competency_model_profile_progress_testcase extends totara_competenc
             $self_ass3,
             $self_ass4,
         ]);
+
         $collection = competency_progress::build_from_assignments($assignments);
 
         // Expecting 2 items as there are two competencies
@@ -177,9 +178,10 @@ class totara_competency_model_profile_progress_testcase extends totara_competenc
             $self_ass1,
         ]);
 
+        // We use assert equals here because we expect these to be ordered by created date.
         /** @var competency_progress $item */
         foreach ($collection as $key => $item) {
-            $this->assertEqualsCanonicalizing(
+            $this->assertEquals(
                 $expected_assignemts[$key]->pluck('id'),
                 $item->get_assignments()->map(function (assignment_model $assignment_model) {
                     return $assignment_model->get_entity();

@@ -506,7 +506,7 @@ final class generator extends \core\testing\component_generator {
         );
         unset($attributes['user_group']);
 
-        if (isset($attributes['min_proficiency_override'])) {
+        if (isset($attributes['min_proficiency_override']) && $attributes['min_proficiency_override']) {
             $attributes['minproficiencyid'] = self::get_record_id_from_field(
                 'comp_scale_values',
                 'idnumber',

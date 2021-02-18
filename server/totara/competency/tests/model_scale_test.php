@@ -26,8 +26,13 @@ use core\collection;
 use totara_competency\entity\competency_achievement;
 use totara_competency\entity\scale as scale_entity;
 use totara_competency\entity\scale_value;
+use totara_competency\entity\assignment as assignment_entity;
+use totara_competency\models\assignment_specific_scale_value;
 use totara_competency\models\scale;
+use totara_competency\models\assignment as assignment_model;
+use totara_competency\user_groups;
 use totara_core\advanced_feature;
+use totara_hierarchy\testing\generator as hierarchy_generator;
 
 /**
  * Class totara_competency_model_scale_testcase
@@ -250,6 +255,100 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
         $this->assertFalse($scale_model->is_in_use());
     }
 
+    public function test_create_for_assignment(): void {
+        $data = $this->create_data();
+
+        $user = $this->getDataGenerator()->create_user();
+        self::setUser($user);
+
+        $assignment = $this->create_active_user_assignment($data['competencies']->first()->id, $user->id);
+
+        /** @var assignment_entity $assignment_entity */
+        $assignment_entity = assignment_entity::repository()->find($assignment->get_id());
+
+
+        // No override.
+        $assignment_specific_scale = scale::create_for_assignment($assignment_entity);
+        self::assertContainsOnlyInstancesOf(scale_value::class,  $assignment_specific_scale->values);
+        foreach ($assignment_specific_scale->values as $value) {
+            self::assertNotInstanceOf(assignment_specific_scale_value::class, $value);
+        }
+
+        $proficient = $assignment_specific_scale->values->pluck('proficient');
+        self::assertEquals([0, 0, 1], $proficient);
+
+
+        // Override is the lowest scale value.
+        $assignment_entity->minproficiencyid = $assignment_entity->competency->scale->values->first()->id;
+        $assignment_entity->save();
+        $assignment_entity = $assignment_entity::repository()->find($assignment_entity->id);
+
+        $assignment_specific_scale = scale::create_for_assignment($assignment_entity);
+        self::assertContainsOnlyInstancesOf(assignment_specific_scale_value::class,  $assignment_specific_scale->values);
+
+        $proficient = $assignment_specific_scale->values->pluck('proficient');
+        self::assertEquals([true, true, true], $proficient);
+
+
+        // Override is the highest scale value.
+        $assignment_entity->minproficiencyid = $assignment_entity->competency->scale->values->last()->id;
+        $assignment_entity->save();
+        $assignment_entity = $assignment_entity::repository()->find($assignment_entity->id);
+
+        $assignment_specific_scale = scale::create_for_assignment($assignment_entity);
+        self::assertContainsOnlyInstancesOf(assignment_specific_scale_value::class,  $assignment_specific_scale->values);
+
+        $proficient = $assignment_specific_scale->values->pluck('proficient');
+        self::assertEquals([false, false, true], $proficient);
+
+
+        // Override is the middle scale value.
+        $assignment_entity->minproficiencyid = $assignment_entity->competency->scale->values->all(false)[1]->id;
+        $assignment_entity->save();
+        $assignment_entity = $assignment_entity::repository()->find($assignment_entity->id);
+
+        $assignment_specific_scale = scale::create_for_assignment($assignment_entity);
+        self::assertContainsOnlyInstancesOf(assignment_specific_scale_value::class,  $assignment_specific_scale->values);
+
+        $proficient = $assignment_specific_scale->values->pluck('proficient');
+        self::assertEquals([false, true, true], $proficient);
+    }
+
+    public function test_create_for_assignment_underlying_scale_entity_is_not_shared(): void {
+        $data = $this->create_data();
+
+        $user1 = $this->getDataGenerator()->create_user();
+        $user2 = $this->getDataGenerator()->create_user();
+        self::setUser($user1);
+
+        $assignment1 = $this->create_active_user_assignment($data['competencies']->first()->id, $user1->id);
+        $assignment2 = $this->create_active_user_assignment($data['competencies']->first()->id, $user2->id);
+
+        /** @var assignment_entity $assignment1_entity */
+        /** @var assignment_entity $assignment2_entity */
+        [$assignment1_entity, $assignment2_entity] = assignment_entity::repository()
+            ->where('id', [$assignment1->get_id(), $assignment2->get_id()])
+            ->with('competency.scale.values')
+            ->order_by('id')
+            ->get()
+            ->all();
+
+        self::assertSame($assignment1_entity->competency->scale, $assignment2_entity->competency->scale);
+
+        /** @var scale_value $first_scale_value */
+        $first_scale_value = $assignment2_entity->competency->scale->values->first();
+
+        $assignment2_entity->minproficiencyid = $first_scale_value->id;
+        $assignment2_entity->save();
+
+        $assignment_specific_scale1 = scale::create_for_assignment($assignment1_entity);
+        $assignment_specific_scale2 = scale::create_for_assignment($assignment2_entity);
+
+        // If the scale entities are were shared scale models, then the values collection would be the same instance as well.
+        self::assertNotSame($assignment_specific_scale1->values, $assignment_specific_scale2->values);
+        self::assertNotEquals($assignment_specific_scale1->values->to_array(), $assignment_specific_scale2->values->to_array());
+    }
+
     /**
      * Assert that given collection is a valid collection of scale models
      *
@@ -325,10 +424,16 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
         ];
     }
 
-    /**
-     * @return \totara_hierarchy\testing\generator
-     */
-    protected function generator(): \totara_hierarchy_generator {
-        return $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
+    protected function generator(): hierarchy_generator {
+        return hierarchy_generator::instance();
     }
+
+    protected function create_active_user_assignment(int $competency_id, int $user_id): assignment_model {
+        $type = assignment_entity::TYPE_ADMIN;
+        $user_group_type = user_groups::USER;
+        $status = assignment_entity::STATUS_ACTIVE;
+
+        return assignment_model::create($competency_id, $type, $user_group_type, $user_id, $status);
+    }
+
 }

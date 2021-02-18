@@ -14,6 +14,8 @@
 
   @author Aleksandr Baishev <aleksandr.baishev@totaralearning.com>
   @module totara_competency
+  @deprecated since Totara 14.0
+  This component has been deprecated, please use competency_list/ListBody.vue instead
 -->
 
 <template>

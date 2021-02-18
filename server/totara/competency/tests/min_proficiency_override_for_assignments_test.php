@@ -31,6 +31,7 @@ use totara_competency\event\assignment_min_proficiency_override_updated;
 use totara_competency\expand_task;
 use totara_competency\min_proficiency_override_for_assignments;
 use totara_competency\models\assignment;
+use totara_competency\testing\generator as competency_generator;
 
 /**
  * Class totara_competency_model_scale_testcase
@@ -42,7 +43,7 @@ use totara_competency\models\assignment;
 class totara_competency_min_proficiency_override_for_assignments_testcase extends advanced_testcase {
 
     public function test_set_and_unset_single_assignment(): void {
-        $assignment = $this->generator()->assignment_generator()->create_self_assignment();
+        $assignment = competency_generator::instance()->assignment_generator()->create_self_assignment();
         $assignment_entity = new assignment_entity($assignment->id);
 
         /** @var scale_value $new_min_scale_value */
@@ -52,7 +53,7 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
 
         $original_min_scale_value = $assignment_entity->competency->scale->min_proficient_value;
 
-        $sink = $this->redirectEvents();
+        $sink = self::redirectEvents();
 
         $updated_assignments = (new min_proficiency_override_for_assignments(
             $new_min_scale_value->id,
@@ -86,11 +87,11 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
     }
 
     public function test_set_and_unset_multi_assignments_same_competency(): void {
-        $assignment1 = $this->generator()->assignment_generator()->create_self_assignment();
+        $assignment1 = competency_generator::instance()->assignment_generator()->create_self_assignment();
         $assignment_entity1 = new assignment_entity($assignment1->id);
 
         // One and two share the same competency.
-        $assignment2 = $this->generator()->assignment_generator()->create_self_assignment();
+        $assignment2 = competency_generator::instance()->assignment_generator()->create_self_assignment();
         $assignment_entity2 = new assignment_entity($assignment2->id);
         $assignment_entity2->competency_id = $assignment1->competency_id;
         $assignment_entity2->save();
@@ -102,7 +103,7 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
 
         $original_min_scale_value = $assignment_entity1->competency->scale->min_proficient_value;
 
-        $sink = $this->redirectEvents();
+        $sink = self::redirectEvents();
 
         $updated_assignments = (new min_proficiency_override_for_assignments(
             $new_min_scale_value->id,
@@ -145,11 +146,11 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
     }
 
     public function test_set_and_unset_multi_assignments_different_competency(): void {
-        $assignment1 = $this->generator()->assignment_generator()->create_self_assignment();
+        $assignment1 = competency_generator::instance()->assignment_generator()->create_self_assignment();
         $assignment_entity1 = new assignment_entity($assignment1->id);
 
         // One and two share the same framework, different competencies.
-        $assignment2 = $this->generator()->assignment_generator()->create_self_assignment();
+        $assignment2 = competency_generator::instance()->assignment_generator()->create_self_assignment();
         $assignment_entity2 = new assignment_entity($assignment2->id);
 
         self::assertNotEquals($assignment_entity2->competency_id, $assignment1->competency_id);
@@ -164,7 +165,7 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
 
         $original_min_scale_value = $assignment_entity1->competency->scale->min_proficient_value;
 
-        $sink = $this->redirectEvents();
+        $sink = self::redirectEvents();
 
         $updated_assignments = (new min_proficiency_override_for_assignments(
             $new_min_scale_value->id,
@@ -210,7 +211,7 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
     }
 
     public function test_non_existent_assignments(): void {
-        $assignment1 = $this->generator()->assignment_generator()->create_self_assignment();
+        $assignment1 = competency_generator::instance()->assignment_generator()->create_self_assignment();
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage('Assignments with ids (-100, -200) do not exist');
@@ -222,7 +223,7 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
     }
 
     public function test_scale_value_does_not_exist(): void {
-        $assignment1 = $this->generator()->assignment_generator()->create_self_assignment();
+        $assignment1 = competency_generator::instance()->assignment_generator()->create_self_assignment();
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage(min_proficiency_override_for_assignments::SCALE_VALUE_DOES_NOT_EXIST);
@@ -234,8 +235,8 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
     }
 
     public function test_scale_value_does_not_belong_to_a_framework(): void {
-        $assignment1 = $this->generator()->assignment_generator()->create_self_assignment();
-        $scale = $this->generator()->create_scale('No framework');
+        $assignment1 = competency_generator::instance()->assignment_generator()->create_self_assignment();
+        $scale = competency_generator::instance()->create_scale('No framework');
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage(min_proficiency_override_for_assignments::COMPETENCIES_DO_NOT_BELONG_TO_OVERRIDE_FRAMEWORK);
@@ -247,17 +248,17 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
     }
 
     public function test_assigned_users_are_queued_for_re_aggregation(): void {
-        $user = $this->getDataGenerator()->create_user();
-        $fw = $this->generator()->create_framework();
-        $competency1 = $this->generator()->create_competency('Comp1', $fw);
-        $competency2 = $this->generator()->create_competency('Comp2', $fw);
+        $user = self::getDataGenerator()->create_user();
+        $fw = competency_generator::instance()->create_framework();
+        $competency1 = competency_generator::instance()->create_competency('Comp1', $fw);
+        $competency2 = competency_generator::instance()->create_competency('Comp2', $fw);
 
         // One and two share the same competency.
-        $assignment1 = $this->generator()->assignment_generator()->create_self_assignment($competency1->id, $user->id);
-        $assignment2 = $this->generator()->assignment_generator()->create_self_assignment($competency1->id, $user->id);
+        $assignment1 = competency_generator::instance()->assignment_generator()->create_self_assignment($competency1->id, $user->id);
+        $assignment2 = competency_generator::instance()->assignment_generator()->create_self_assignment($competency1->id, $user->id);
 
         // Three - different competency, same framework.
-        $assignment3 = $this->generator()->assignment_generator()->create_self_assignment($competency2->id, $user->id);
+        $assignment3 = competency_generator::instance()->assignment_generator()->create_self_assignment($competency2->id, $user->id);
 
         /** @var scale_value $new_min_scale_value */
         $new_min_scale_value = $competency1->scale->values->find(function (scale_value $scale_value) {
@@ -265,7 +266,7 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
         });
 
         (new expand_task(builder::get_db()))->expand_all();
-        $this->redirectEvents();
+        self::redirectEvents();
 
         // Set new custom min proficiency for two and three
         (new min_proficiency_override_for_assignments(
@@ -289,10 +290,6 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
         ]);
     }
 
-    protected function generator(): totara_competency_generator {
-        return $this->getDataGenerator()->get_plugin_generator('totara_competency');
-    }
-
     /**
      * @param phpunit_event_sink $sink
      * @param int[] $expected_assignment_ids
@@ -313,8 +310,7 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
     }
 
     private function verify_and_clear_queued_for_aggregation(array $expected_queued): void {
-        /** @var bulder $builder */
-        $builder = $builder = builder::table((new aggregation_users_table())->get_table_name());
+        $builder = builder::table((new aggregation_users_table())->get_table_name());
         $actual_queued = $builder->get();
 
         self::assertCount(count($expected_queued), $actual_queued);

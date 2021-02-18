@@ -111,9 +111,10 @@ Feature: Test competencies can be user assigned
 
     When I change the competency profile to list view
     Then I should see the tui datatable contains:
-      | Competency                     |
-      | Self assignable                |
-      | Self assignable no description |
+      | Competency                     | Reason assigned   | Proficient | Achievement level |
+      | Self assignable                | Directly assigned | - No       | No value achieved |
+      |                                | Self-assigned     | - No       | No value achieved |
+      | Self assignable no description | Self-assigned     | - No       | No value achieved |
 
   Scenario: I can return from and clear selections
     Given I log in as "admin"

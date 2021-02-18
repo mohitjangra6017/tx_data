@@ -23,7 +23,6 @@
 
 namespace totara_competency\models\profile;
 
-use coding_exception;
 use core\entity\user;
 use core\orm\collection;
 use stdClass;
@@ -106,12 +105,21 @@ class competency_progress {
     /**
      * Build a collection of competency progress models using assignments
      *
-     * @param collection $assignments
+     * @param collection|assignment_model[] $assignments
      * @return collection
      */
     public static function build_from_assignments(collection $assignments): collection {
         $progress = new collection();
         $user_group_entities = user_group_factory::load_user_groups($assignments);
+
+        // Explicitly sort by first assigned first.
+        $assignments->sort(function (assignment $a, assignment $b) {
+            if ($a->created_at === $b->created_at) {
+                return $a->id - $b->id;
+            }
+
+            return $a->created_at - $b->created_at;
+        });
 
         /** @var assignment $assignment */
         foreach ($assignments as $assignment) {
@@ -194,6 +202,18 @@ class competency_progress {
     }
 
     /**
+     * We consider having assignment with an achievement as being proficient.
+     * @return bool
+     */
+    public function is_proficient(): bool {
+        $found = $this->assignments->find(function (assignment_model $assignment): bool {
+            return $assignment->current_achievement_is_proficient();
+        });
+
+        return $found !== null;
+    }
+
+    /**
      * Append assignment to the current progress item model.
      * Only adds the assignment to the collection if there's none with the same
      * user_group_type and user_group_id to not show duplicates.
@@ -201,9 +221,10 @@ class competency_progress {
      * @param assignment_model $assignment
      * @return $this
      */
-    protected function append_assignment(assignment_model $assignment) {
-            $this->assignments->append($assignment);
+    protected function append_assignment(assignment_model $assignment): competency_progress {
+        $this->assignments->append($assignment);
 
         return $this;
     }
+
 }

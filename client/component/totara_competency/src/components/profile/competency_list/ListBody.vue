@@ -14,21 +14,19 @@
 
   @author Aleksandr Baishev <aleksandr.baishev@totaralearning.com>
   @module totara_competency
-  @deprecated since Totara 14.0
-  This component has been deprecated, please use competency_list/ListBody.vue (with archived=true)
 -->
 
 <template>
-  <Table :data="groupedCompetencyData" :group-mode="true" :archived="true">
+  <Table :data="groupedCompetencyData" group-mode :archived="archived">
     <template v-slot:header-row>
-      <HeaderCell size="3">
+      <HeaderCell :size="nameCellSize">
         {{ $str('header_competency', 'totara_competency') }}
+      </HeaderCell>
+      <HeaderCell v-if="archived" size="2">
+        {{ $str('header_archived_date', 'totara_competency') }}
       </HeaderCell>
       <HeaderCell size="2">
         {{ $str('header_reason_assigned', 'totara_competency') }}
-      </HeaderCell>
-      <HeaderCell size="2">
-        {{ $str('header_archived_date', 'totara_competency') }}
       </HeaderCell>
       <HeaderCell size="2" align="center">
         {{ $str('proficient', 'totara_competency') }}
@@ -39,11 +37,19 @@
     </template>
     <template v-slot:row="{ row, firstInGroup }">
       <Cell
-        size="3"
+        :size="nameCellSize"
         :column-header="$str('header_competency', 'totara_competency')"
         :repeated-header="!firstInGroup"
       >
         <a :href="competencyDetailsLink(row)">{{ row.competency.fullname }}</a>
+      </Cell>
+
+      <Cell
+        v-if="archived"
+        size="2"
+        :column-header="$str('header_archived_date', 'totara_competency')"
+      >
+        {{ row.assignment && row.assignment.archived_at }}
       </Cell>
 
       <Cell
@@ -55,23 +61,16 @@
 
       <Cell
         size="2"
-        :column-header="$str('header_archived_date', 'totara_competency')"
-      >
-        {{ row.assignment && row.assignment.archived_at }}
-      </Cell>
-
-      <Cell
-        size="2"
         align="center"
         :column-header="$str('proficient', 'totara_competency')"
       >
-        <CheckIcon
-          v-if="row.proficient"
+        <CheckSuccess
+          v-if="row.my_value && row.my_value.proficient"
           size="200"
           :alt="$str('yes', 'core')"
         />
         <span v-else>
-          <span :aria-hidden="true">-</span>
+          <span aria-hidden="true">-</span>
           <span class="sr-only">{{ $str('no', 'core') }}</span>
         </span>
       </Cell>
@@ -83,7 +82,7 @@
         <MyRatingCell
           v-if="row.my_value"
           :value="row.my_value"
-          :scales="scales"
+          :rating-scale="row.assignment.assignment_specific_scale"
         />
       </Cell>
     </template>
@@ -91,23 +90,32 @@
 </template>
 
 <script>
-import Table from 'tui/components/datatable/Table';
-import HeaderCell from 'tui/components/datatable/HeaderCell';
 import Cell from 'tui/components/datatable/Cell';
+import HeaderCell from 'tui/components/datatable/HeaderCell';
 import MyRatingCell from 'totara_competency/components/profile/MyRatingCell';
+import CheckSuccess from 'tui/components/icons/CheckSuccess';
+import Table from 'tui/components/datatable/Table';
 
 export default {
   components: {
-    Table,
-    HeaderCell,
     Cell,
+    HeaderCell,
     MyRatingCell,
+    CheckSuccess,
+    Table,
   },
-
   props: {
     competencies: {
       required: true,
       type: Array,
+    },
+    isMine: {
+      required: true,
+      type: Boolean,
+    },
+    archived: {
+      required: true,
+      type: Boolean,
     },
     baseUrl: {
       required: true,
@@ -116,10 +124,6 @@ export default {
     userId: {
       required: true,
       type: Number,
-    },
-    scales: {
-      required: true,
-      type: Array,
     },
   },
 
@@ -132,8 +136,10 @@ export default {
         ),
       }));
     },
+    nameCellSize() {
+      return this.archived ? '3' : '5';
+    },
   },
-
   methods: {
     competencyDetailsLink(row) {
       const params = { competency_id: row.competency.id };

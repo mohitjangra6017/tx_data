@@ -41,6 +41,7 @@ use totara_competency\models\user_group_factory;
  *
  * @property-read string $key A key uniquely identifying this progress item
  * @property-read collection $assignments Collection of assignments for this user group
+ * @property-read collection $items Alias for assignments
  * @property-read collection $filters Collection of filters
  * @property-read string $latest_achievement Latest achieved competency name (if any)
  * @package totara_competency\models

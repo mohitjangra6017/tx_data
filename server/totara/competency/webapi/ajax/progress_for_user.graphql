@@ -10,7 +10,6 @@ query totara_competency_progress_for_user(
       overall_progress
       name
       items {
-        proficient
         min_value {
           id
           name

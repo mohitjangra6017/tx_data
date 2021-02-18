@@ -13,14 +13,14 @@
   Please contact [licensing@totaralearning.com] for more information.
 
   @author Aleksandr Baishev <aleksandr.baishev@totaralearning.com>
-  @module totara_competency
+  @deprecated since Totara 14.0
 -->
 
 <template>
   <div>
     <Loader :loading="$apollo.loading">
       <Filters
-        :is-for-archived="!filterNotArchived"
+        :is-for-archived="filteringToArchived"
         :default-order="order"
         :default-filter-values="{
           proficient: proficientFilter,
@@ -29,19 +29,12 @@
         @filters-updated="filtersUpdated"
         @order-updated="orderUpdated"
       />
-      <CurrentList
-        v-if="filterNotArchived"
+      <ListBody
+        :archived="filteringToArchived"
         :competencies="competencies"
         :base-url="baseUrl"
         :user-id="userId"
-        :scales="scales"
-      />
-      <ArchivedList
-        v-else
-        :competencies="competencies"
-        :scales="scales"
-        :base-url="baseUrl"
-        :user-id="userId"
+        :is-mine="isMine"
       />
     </Loader>
   </div>
@@ -50,17 +43,14 @@
 <script>
 import Loader from 'tui/components/loading/Loader';
 import CompetencyProgressQuery from 'totara_competency/graphql/competency_progress_for_user';
-import CompetencyScalesQuery from 'totara_competency/graphql/scales';
 import Filters from 'totara_competency/components/profile/competency_list/Filters';
-import ArchivedList from 'totara_competency/components/profile/competency_list/ArchivedList';
-import CurrentList from 'totara_competency/components/profile/competency_list/CurrentList';
+import ListBody from 'totara_competency/components/profile/competency_list/ListBody';
 import { pick } from 'tui/util';
 
 export default {
   components: {
     Loader,
-    CurrentList,
-    ArchivedList,
+    ListBody,
     Filters,
   },
 
@@ -90,7 +80,6 @@ export default {
       order: 'alphabetical',
       proficientFilter: null,
       searchFilter: '',
-      scales: [],
     };
   },
 
@@ -98,14 +87,10 @@ export default {
     selectedFilters() {
       // We gotta conditionally add proficient filter, since apparently it's not designed to be used for
       // archived assignments
-
       const extraFilters = {
         search: this.searchFilter,
+        proficient: this.filteringToArchived ? null : this.proficientFilter,
       };
-
-      if (this.filterNotArchived) {
-        extraFilters.proficient = this.proficientFilter;
-      }
 
       return Object.assign(
         extraFilters,
@@ -117,9 +102,27 @@ export default {
         ])
       );
     },
-
-    filterNotArchived() {
-      return this.filters && this.filters.status !== 2;
+    /**
+     * Are we currently filtering to archived.
+     *
+     * @return {boolean}
+     */
+    filteringToArchived() {
+      return this.filters && this.filters.status === 2;
+    },
+    groupedCompetencyData() {
+      return this.competencies.map(x => ({
+        id: x.competency.id,
+        rows: x.items.map(item =>
+          Object.assign(
+            {
+              competency: x.competency,
+              link: this.competencyDetailsLink(x),
+            },
+            item
+          )
+        ),
+      }));
     },
   },
 
@@ -127,12 +130,12 @@ export default {
     competencies: {
       query: CompetencyProgressQuery,
       variables() {
-        if (this.filterNotArchived) {
-          if (this.order === 'recently-archived') {
+        if (this.filteringToArchived) {
+          if (this.order === 'recently-assigned') {
             this.order = 'alphabetical';
           }
         } else {
-          if (this.order === 'recently-assigned') {
+          if (this.order === 'recently-archived') {
             this.order = 'alphabetical';
           }
         }
@@ -147,24 +150,6 @@ export default {
         return data;
       },
     },
-
-    scales: {
-      query: CompetencyScalesQuery,
-      variables() {
-        return {
-          competency_id: this.competencies.map(
-            ({ competency }) => competency.id
-          ),
-        };
-      },
-      update({ totara_competency_scales: data }) {
-        return data;
-      },
-
-      skip() {
-        return !this.competencies.length;
-      },
-    },
   },
 
   methods: {
@@ -172,7 +157,6 @@ export default {
       this.searchFilter = search;
       this.proficientFilter = proficient;
     },
-
     orderUpdated(order) {
       this.order = order;
     },

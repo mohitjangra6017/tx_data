@@ -77,6 +77,11 @@ type totara_competency_assignment {
   True if current user is permitted to archive this assignment
   """
   can_archive: Boolean
+  """
+  The scale for the associated competency, with proficient flags on the values adjusted
+  if there is an assignment specific min proficient value override.
+  """
+  assignment_specific_scale: totara_competency_scale
 }
 
 """

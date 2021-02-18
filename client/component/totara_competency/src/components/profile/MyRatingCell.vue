@@ -36,22 +36,49 @@ export default {
     Popover,
     RatingScaleOverview,
   },
-
   props: {
     value: {
       required: true,
       type: Object,
     },
+    ratingScale: Object,
+    /**
+     * This property has been deprecated, please use scale instead.
+     * @deprecated since Totara 14.0
+     */
     scales: {
-      required: true,
       type: Array,
+      validator() {
+        console.warn(
+          'The "scales" prop has been deprecated, please use the "rating-scale" prop instead.'
+        );
+        return true;
+      },
     },
   },
-
   computed: {
+    /**
+     * This computed property has been deprecated,
+     * this exists for backwards compatibility with the scales prop.
+     * @deprecated since Totara 14.0
+     */
     scale() {
-      return this.scales.find(({ id }) => id === this.value.scale_id);
+      if (this.scales) {
+        return this.scales.find(({ id }) => id === this.value.scale_id);
+      }
+
+      return this.ratingScale;
     },
+  },
+  /**
+   * This exists for backwards compatibility with the scales prop,
+   * rating-scale should be made required once removed.
+   * @deprecated since Totara 14.0
+   */
+  created() {
+    if (!this.scales && !this.ratingScale) {
+      console.warn('Either scale or scales prop must be supplied.');
+    }
   },
 };
 </script>

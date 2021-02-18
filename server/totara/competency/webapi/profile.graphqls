@@ -87,6 +87,9 @@ type totara_competency_profile_assignment_progress {
   True if the user is considered proficient, false otherwise
   """
   proficient: Boolean
+    @deprecated(
+      reason: "This field returns null no matter what. Use `my_value.proficient` instead."
+    )
   """
   The value currently held by the user
   """

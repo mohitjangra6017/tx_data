@@ -9,3 +9,6 @@ information provided here is intended especially for developers.
     * Template & SCSS changes
 * Add a warning notification banner if there are achievement pathway warnings in CompetencySummary.vue
     * Template, SCSS changes & lang string changes
+* Deprecated competency_list/CurrentList.vue and competency_list/ArchivedList.vue, their roles are now combined into competency_list/ListBody.vue
+* Deprecated scales prop and foundScale computed property in MyRatingCell.vue, the scale prop should be used instead
+* Deprecated totara_competency_profile_assignment_progress.proficient graphql field

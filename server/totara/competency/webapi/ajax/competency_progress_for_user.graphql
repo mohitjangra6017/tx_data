@@ -13,10 +13,25 @@ query totara_competency_competency_progress_for_user(
       fullname
     }
     items {
-      proficient
       assignment {
         archived_at(format: DATE)
         progress_name
+        assignment_specific_scale {
+          id
+          name
+          description
+          defaultid
+          values {
+            id
+            name
+            idnumber
+            description
+            scaleid
+            numericscore
+            sortorder
+            proficient
+          }
+        }
       }
       my_value {
         id

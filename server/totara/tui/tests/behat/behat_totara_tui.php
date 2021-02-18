@@ -479,13 +479,6 @@ class behat_totara_tui extends behat_base {
     }
 
     /**
-     * Formats a date.
-     */
-    private function format_date(string $offset, string $format = DATE_ISO8601): string {
-        return $now->modify($offset)->format($format);
-    }
-
-    /**
      * @When /^I toggle expanding row "([^"]*)" of the tui datatable$/
      * @When /^I toggle expanding row "([^"]*)" of the tui datatable in the "([^"]*)" "([^"]*)"$/
      * @When /^I toggle expanding row "([^"]*)" of the tui datatable in the "([^"]*)" "([^"]*)" in the "([^"]*)" tui collapsible$/
@@ -888,9 +881,7 @@ class behat_totara_tui extends behat_base {
      */
     public function i_should_see_in_the_tui_popover(string $should_see_or_not, string $expected_text): void {
         $should = $should_see_or_not === 'should';
-        $popover_text = $this
-            ->find_single_visible(self::POPOVER_CONTENT_LOCATOR, 'popover')
-            ->getText();
+        $popover_text = $this->find_visible_popover()->getText();
 
         $text_is_visible = strpos($popover_text, $expected_text) !== false;
         if ($should && !$text_is_visible) {
@@ -1508,7 +1499,7 @@ class behat_totara_tui extends behat_base {
         $row_count = $this->get_data_table_row_count($table);
 
         if ($expected_row_count !== $row_count) {
-            $exception_message = "Expected table to have {$expected_row_count} rows but only had {$row_count} rows";
+            $exception_message = "Expected table to have {$expected_row_count} rows but found {$row_count} rows";
             throw new ExpectationException($exception_message, $this->getSession());
         }
     }
@@ -1852,6 +1843,14 @@ class behat_totara_tui extends behat_base {
         }
         if (!$result) {
             $this->fail('The element "' . $element . '" is not ' . $state);
+        }
+    }
+
+    public function find_visible_popover(): NodeElement {
+        try {
+            return $this->find_single_visible(self::POPOVER_CONTENT_LOCATOR, 'popover');
+        } catch (ElementNotFoundException $e) {
+            throw new ExpectationException('No visible popover found', $this->getSession(), $e);
         }
     }
 

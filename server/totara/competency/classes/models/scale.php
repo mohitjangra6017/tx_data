@@ -26,11 +26,13 @@ namespace totara_competency\models;
 use core\orm\collection;
 use core\orm\entity\model;
 use core\orm\entity\repository;
+use totara_competency\entity\assignment as assignment_entity;
 use totara_competency\entity\competency;
 use totara_competency\entity\competency_achievement;
 use totara_competency\entity\competency_scale_assignment;
 use totara_competency\entity\scale as scale_entity;
 use totara_competency\entity\scale_assignment;
+use totara_competency\entity\scale_value;
 use totara_core\advanced_feature;
 
 /**
@@ -147,6 +149,37 @@ class scale extends model {
     }
 
     /**
+     *  Creates a virtual model that represent a scale for a specific competency assignment.
+     *  The values proficiency flags are adjusted based on any assignment specific min proficient value override.
+     *
+     * @param assignment_entity $assignment_entity
+     * @return static
+     */
+    public static function create_for_assignment(assignment_entity $assignment_entity): self {
+        // Ensure we don't share underlying scale instances between different virtual scale models.
+        // This would happen when we are dealing with a collection on assignments that share a competency and scale instance.
+        $scale_entity_clone = clone $assignment_entity->competency->scale;
+
+        $scale = new static($scale_entity_clone);
+
+        $min_value_override = $assignment_entity->min_proficient_value_override;
+
+        if ($min_value_override === null) {
+            return $scale;
+        }
+
+        $assignment_specific_values = $scale->entity->values->map(function (scale_value $scale_value) use ($min_value_override) {
+            $is_proficient = $scale_value->sortorder <= $min_value_override->sortorder;
+
+            return new assignment_specific_scale_value($scale_value, $is_proficient);
+        });
+
+        $scale->entity->relate('values', $assignment_specific_values);
+
+        return $scale;
+    }
+
+    /**
      * Checks if a scale is used in the system. A scale is used if there are any
      * achievement records or it's been given a value in a learning plan
      *
@@ -202,4 +235,5 @@ class scale extends model {
     public function to_array(): array {
         return $this->entity->to_array();
     }
+
 }

@@ -27,6 +27,12 @@ use core\collection;
 use totara_competency\models\assignment;
 use totara_competency\models\profile\competency_progress as competency_progress_model;
 
+/**
+ * Class competency_progress
+ *
+ * @package totara_competency\data_providers
+ * @property-read collection|competency_progress_model[] items
+ */
 class competency_progress extends user_data_provider {
 
     /**
@@ -159,16 +165,9 @@ class competency_progress extends user_data_provider {
      *
      * @param bool $value Proficient flag
      */
-    protected function filter_by_proficient($value) {
-        $this->items = $this->items->filter(function ($item) use ($value) {
-            // Let's iterate over assignment records for a given competency
-            // We need to find at least one with achievement that has a proficient value.
-            $proficient = $item->assignments->reduce(function (bool $proficient, assignment $assignment) {
-                // We need at least one proficient value for an achievement.
-                return $proficient || ($assignment->current_achievement->value->proficient ?? false);
-            }, false);
-
-            return $value ? $proficient : !$proficient;
+    protected function filter_by_proficient(bool $value): void {
+        $this->items = $this->items->filter(function (competency_progress_model $item) use ($value): bool {
+            return $item->is_proficient() === $value;
         });
     }
 

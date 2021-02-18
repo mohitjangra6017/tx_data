@@ -35,7 +35,6 @@ use totara_competency\assignment_create_exception;
 use totara_competency\entity\assignment as assignment_entity;
 use totara_competency\entity\competency;
 use totara_competency\entity\competency_assignment_user;
-use totara_competency\entity\scale_value;
 use totara_competency\event\assignment_activated;
 use totara_competency\event\assignment_archived;
 use totara_competency\event\assignment_created;
@@ -47,6 +46,12 @@ use totara_competency\task\expand_assignment_task;
 use totara_competency\user_groups;
 use totara_hierarchy\entity\hierarchy_item;
 
+/**
+ * Class assignment
+ *
+ * @package totara_competency\models
+ * @property-read current_achievement
+ */
 class assignment {
 
     /**
@@ -588,6 +593,9 @@ class assignment {
             case 'has_default_proficiency_value_override':
                 return $this->has_default_proficiency_value_override();
 
+            case 'assignment_specific_scale':
+                return $this->get_assignment_specific_scale();
+
             case 'assigned_at':
                 if ($this->entity->relation_loaded('assignment_user')) {
                     // The relation might be loaded, but the related model does not always exist,
@@ -636,6 +644,7 @@ class assignment {
             'can_archive',
             'min_proficiency_value',
             'has_default_proficiency_value_override',
+            'assignment_specific_scale',
         ];
 
         return in_array($field, $extra_fields) || isset($this->entity->{$field});
@@ -719,6 +728,18 @@ class assignment {
      */
     public function has_default_proficiency_value_override(): bool {
         return $this->entity->minproficiencyid !== null;
+    }
+
+    public function get_assignment_specific_scale(): scale {
+        return scale::create_for_assignment($this->entity);
+    }
+
+    public function current_achievement_is_proficient(): bool {
+        if ($this->entity->current_achievement === null) {
+            return false;
+        }
+
+        return $this->entity->current_achievement->proficient;
     }
 
 }

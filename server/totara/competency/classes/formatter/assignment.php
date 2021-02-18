@@ -56,6 +56,7 @@ class assignment extends formatter {
             'can_archive' => null,
             'min_proficiency_value' => null,
             'has_default_proficiency_value_override' => null,
+            'assignment_specific_scale' => null,
         ];
     }
 

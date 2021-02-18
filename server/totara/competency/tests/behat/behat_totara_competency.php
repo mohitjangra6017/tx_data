@@ -24,6 +24,7 @@
 
 use Behat\Gherkin\Node\TableNode as TableNode;
 use Behat\Mink\Exception\ExpectationException;
+use core\collection;
 use core\entity\user;
 use Behat\Mink\Element\NodeElement;
 use totara_competency\entity\assignment;
@@ -38,13 +39,15 @@ class behat_totara_competency extends behat_base {
     private const COMPETENCY_PROFILE_LIST_VIEW_TOGGLE_LOCATOR = '//*[@aria-label="Display formats"]//*[@aria-label="Show tables"]/*';
     private const COMPETENCY_PROFILE_MANUAL_ACHIEVEMENT_LOCATOR = '.tui-pathwayManualAchievementRater';
     private const COMPETENCY_PROFILE_MANUAL_ACHIEVEMENT_ROLE_LOCATOR = '.tui-pathwayManualAchievementRater__overview-role';
-    private const COMPETENCY_PROFILE_MANUAL_ACHIEVEMENT_CELL_LOCATOR = '.tui-dataTableCell';
-    private const COMPETENCY_PROFILE_MANUAL_ACHIEVEMENT_LABEL_LOCATOR = '.tui-dataTableCell__label';
     private const COMPETENCY_PROFILE_MANUAL_ACHIEVEMENT_CONTENT_LOCATOR = '.tui-dataTableCell__content';
     private const TOTARA_COMPETENCY_PROFILE_PATH = 'totara/competency/profile/index.php';
     private const TOTARA_COMPETENCY_PROFILE_DETAIL_PATH = 'totara/competency/profile/details/index.php';
     private const TOTARA_COMPETENCY_USER_ASSIGNMENT_PATH = 'totara/competency/profile/assign/index.php';
     private const TOTARA_COMPETENCY_ACHIEVEMENT_PATHS_PATH = 'totara/competency/competency_edit.php';
+    private const COMPETENCY_RATING_SCALE_OVERVIEW_TITLE = '.tui-competencyRatingScaleOverview__title';
+    private const COMPETENCY_RATING_SCALE_OVERVIEW_LIST_ITEM = '.tui-competencyRatingScaleOverview__list-item';
+    private const COMPETENCY_RATING_SCALE_OVERVIEW_SCALE_VALUE_NAME = '.tui-competencyRatingScaleOverview__scaleValue-name';
+    private const SVG_ICON_STATE_SUCCESS = '.tui-svgIcon--state-success';
 
     /**
      * @var \totara_competency\testing\generator
@@ -131,6 +134,76 @@ class behat_totara_competency extends behat_base {
     }
 
     /**
+     * @Then /^The competency profile rating scale popover title should be "([^"]*)"$/
+     * @param string $expected_text
+     */
+    public function competency_profile_rating_scale_popover_title_should_be(string $expected_text): void {
+        $popover = $this->get_behat_tui()->find_visible_popover();
+
+        $text = trim($popover->find('css', self::COMPETENCY_RATING_SCALE_OVERVIEW_TITLE)->getText());
+
+        if ($text !== $expected_text) {
+            throw new ExpectationException("Expected title {$expected_text}, but found {$text}", $this->getSession());
+        }
+    }
+
+    /**
+     * @Then /^The competency profile rating scale popover values should match:$/
+     * @param TableNode $table_node
+     */
+    public function competency_profile_rating_scale_popover_values_should_match(TableNode $table_node): void {
+        $actual_list_items = $this->get_behat_tui()
+            ->find_visible_popover()
+            ->findAll('css', self::COMPETENCY_RATING_SCALE_OVERVIEW_LIST_ITEM);
+
+        $actual_list_item_count = count($actual_list_items);
+        $expected_list_item_count = count($table_node->getHash());
+
+        if ($actual_list_item_count !== $expected_list_item_count) {
+            throw new ExpectationException(
+                "Expected {$actual_list_item_count}, but found {$expected_list_item_count}",
+                $this->getSession()
+            );
+        }
+
+        foreach ($table_node->getHash() as $index => $expectation) {
+            $actual_value_name = trim($actual_list_items[$index]->find(
+                'css', self::COMPETENCY_RATING_SCALE_OVERVIEW_SCALE_VALUE_NAME)->getText()
+            );
+
+            if ($expectation['value_name'] !== $actual_value_name) {
+                throw new ExpectationException(
+                    "Expected '{$expectation['value_name']}' for item {$index}, but found '{$actual_value_name}'",
+                    $this->getSession()
+                );
+            }
+
+            $actual_is_proficient_value = $actual_list_items[$index]->find('css', self::SVG_ICON_STATE_SUCCESS);
+
+            if (!in_array($expectation['is_proficient'], ['yes', 'no'], true)){
+                throw new ExpectationException(
+                    "You must supply either 'yes' or 'no' for is_proficient {$expectation['is_proficient']} was supplied",
+                    $this->getSession()
+                );
+            }
+
+            if ($expectation['is_proficient'] === 'yes' && $actual_is_proficient_value === null) {
+                throw new ExpectationException(
+                    "Expected '{$expectation['value_name']}' (item {$index}) to be marked as is_proficient but it was not",
+                    $this->getSession()
+                );
+            }
+
+            if ($expectation['is_proficient'] === 'no' && $actual_is_proficient_value !== null) {
+                throw new ExpectationException(
+                    "Expected '{$expectation['value_name']}' (item {$index}) to be not be marked as is_proficient but it was",
+                    $this->getSession()
+                );
+            }
+        }
+    }
+
+    /**
      * Create a scale with a name and scale values.
      *
      * @Given /^a competency scale called "(?P<scalename_string>(?:[^"]|\\")*)" exists with the following values:$/
@@ -152,16 +225,30 @@ class behat_totara_competency extends behat_base {
      * Archive all assignments for a given competency.
      *
      * @Given /^all assignments for the "(?P<competency_string>(?:[^"]|\\")*)" competency are archived$/
+     * @Given /^all assignments for the "(?P<competency_string>(?:[^"]|\\")*)" competency are archived at "([^"]*)"$/
      * @param string $competency
+     * @param string $date
+     * @throws coding_exception
      */
-    public function all_assignments_for_the_competency_are_archived($competency) {
+    public function all_assignments_for_the_competency_are_archived(string $competency, string $date): void {
+        /** @var collection|assignment[] $assignments */
         $assignments = assignment::repository()
             ->filter_by_active()
             ->join([competency::TABLE, 'comp'], 'competency_id', 'id')
             ->where('comp.idnumber', $competency)
-            ->get_lazy();
+            ->get();
+
+        if (count($assignments) === null) {
+            throw new \InvalidArgumentException("No competency exists with the idnumber {$competency}");
+        }
+
         foreach ($assignments as $assignment) {
             assignment_model::load_by_entity($assignment)->archive();
+
+            if ($date) {
+                $assignment->archived_at = (new DateTime($date))->getTimestamp();
+                $assignment->save();
+            }
         }
     }
 
@@ -1563,6 +1650,13 @@ class behat_totara_competency extends behat_base {
                 ($rater !== null ? "\"{$rater}\"" : '') . ' is not clickable';
             throw new ExpectationException($msg, $this->getSession());
         }
+    }
+
+    /**
+     * @return behat_totara_tui|behat_base
+     */
+    private function get_behat_tui(): behat_totara_tui {
+        return behat_context_helper::get('behat_totara_tui');
     }
 
 }

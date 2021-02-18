@@ -12,7 +12,6 @@ query totara_competency_profile_competency_details(
       description
     }
     items {
-      proficient
       assignment {
         id
         archived_at(format: DATE)

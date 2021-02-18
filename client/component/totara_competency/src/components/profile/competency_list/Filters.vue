@@ -21,14 +21,14 @@
   <FilterBar
     v-model="filters"
     class="tui-competencyProfileListFilters"
-    :title="this.$str('filter_competencies', 'totara_competency')"
+    :title="$str('filter_competencies', 'totara_competency')"
   >
     <template v-slot:filters-left="{ stacked }">
       <SelectFilter
         v-if="!isForArchived"
         v-model="filters.proficient"
         :label="$str('proficiency_status', 'totara_competency')"
-        :show-label="true"
+        show-label
         :options="proficientOptions"
         :stacked="stacked"
         @input="filtersUpdated"
@@ -44,7 +44,7 @@
       <SelectFilter
         v-model="order"
         :label="$str('sortby', 'core')"
-        :show-label="true"
+        show-label
         :stacked="stacked"
         :options="orderOptions"
         @input="orderUpdated"
@@ -64,13 +64,11 @@ export default {
     SelectFilter,
     SearchFilter,
   },
-
   props: {
     isForArchived: {
       required: true,
       type: Boolean,
     },
-
     defaultFilterValues: {
       type: Object,
       default() {
@@ -80,24 +78,21 @@ export default {
         };
       },
     },
-
     defaultOrder: {
       required: false,
       type: String,
       default: 'alphabetical',
     },
   },
-
   data() {
     return {
       filters: {
-        search: '',
-        proficient: null,
+        search: this.defaultFilterValues.search,
+        proficient: this.defaultFilterValues.proficient,
       },
-      order: 'alphabetical',
+      order: this.defaultOrder,
     };
   },
-
   computed: {
     proficientOptions() {
       return [
@@ -106,7 +101,6 @@ export default {
         { id: false, label: this.$str('not_proficient', 'totara_competency') },
       ];
     },
-
     orderOptions() {
       return [
         {
@@ -124,28 +118,10 @@ export default {
       ].filter(Boolean);
     },
   },
-
-  watch: {
-    defaultFilters(newFilters) {
-      this.filters.search = newFilters.search;
-      this.filters.proficient = newFilters.proficient;
-    },
-    defaultOrder(newOrder) {
-      this.order = newOrder;
-    },
-  },
-
-  mounted() {
-    this.filters.search = this.defaultFilterValues.search;
-    this.filters.proficient = this.defaultFilterValues.proficient;
-    this.order = this.defaultOrder;
-  },
-
   methods: {
     filtersUpdated() {
       this.$emit('filters-updated', this.filters);
     },
-
     orderUpdated() {
       this.$emit('order-updated', this.order);
     },
