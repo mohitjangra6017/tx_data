@@ -109,7 +109,13 @@ abstract class cursor_paginator extends base_cursor_paginator {
                 }
 
                 foreach ($cursor_keys as $key) {
-                    $next_cursor['columns'][$key] = $last_item->$key;
+                    $actual_field = str_replace('.', '_', $key);
+
+                    if (!isset($last_item->$actual_field) && strpos($key, '.') !== false) {
+                        throw new coding_exception("To support cursor based pagination on queries that order by a joined column, you need to include a select statement like 'SELECT {$key} AS {$actual_field}'.", DEBUG_DEVELOPER);
+                    }
+
+                    $next_cursor['columns'][$key] = $last_item->$actual_field;
                 }
 
                 $next_cursor = new cursor($next_cursor);
