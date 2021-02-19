@@ -91,11 +91,6 @@ final class settings {
     public function get_categories(bool $tenant_enabled = true, bool $include_default_file_categories = true): array {
         global $DB;
 
-        // We can skip all of this for a theme that does not support theme settings.
-        if (!$this->theme_config->use_tui_theme_settings) {
-            return [];
-        }
-
         $theme = $this->theme_config->name;
         $categories = $this->get_default_categories($include_default_file_categories);
 
@@ -180,7 +175,9 @@ final class settings {
      * @return array
      */
     private function get_default_categories(bool $include_files): array {
-        $categories = [];
+        $categories = [
+            $this->get_default_email_category(),
+        ];
 
         if ($include_files) {
             $instances = $this->get_file_instances();
@@ -192,6 +189,31 @@ final class settings {
         }
 
         return $categories;
+    }
+
+    /**
+     * @return array
+     *
+     */
+    private function get_default_email_category(): array {
+        global $PAGE;
+        $renderer = $PAGE->get_renderer('core');
+
+        return [
+            'name' => 'email',
+            'properties' => [
+                [
+                    'name' => 'formemail_field_notificationshtmlheader',
+                    'type' => 'html',
+                    'value' => $renderer->render_from_template('core/email_header_html', []),
+                ],
+                [
+                    'name' => 'formemail_field_notificationshtmlfooter',
+                    'type' => 'html',
+                    'value' => $renderer->render_from_template('core/email_footer_html', []),
+                ],
+            ],
+        ];
     }
 
     /**
@@ -364,11 +386,6 @@ final class settings {
      * @return theme_file[]
      */
     private function get_file_instances(): array {
-        // We can skip all of this for a theme that does not support theme settings.
-        if (!$this->theme_config->use_tui_theme_settings) {
-            return [];
-        }
-
         // Get classes and instantiate them all.
         if (empty($this->file_instances)) {
             $classes = helper::get_classes();

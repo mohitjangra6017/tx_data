@@ -32,8 +32,6 @@ information provided here is intended especially for developers.
 * Removed the output of parsing errors when handling invalid requests in ajax/service.php
 * Added "action" field to input type "core_theme_file_input" in GraphQL
 * Enrollment plugins used in require_login() can now be overridden via the \totara_core\hook\enrol_plugins hook.
-* New theme_config property added (use_tui_theme_settings). Add `$THEME->use_tui_theme_settings = true` to your theme's
-  config.php file if your theme relies on the TUI theme settings implementation.
 
 === 13.0 ===
 
