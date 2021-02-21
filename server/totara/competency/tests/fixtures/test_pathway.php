@@ -92,7 +92,7 @@ class test_pathway extends pathway {
      * Not supported for test pathway.
      */
     protected function configuration_is_dirty(): bool {
-        return null;
+        return false;
     }
 
     /**
@@ -106,7 +106,7 @@ class test_pathway extends pathway {
      * Not supported for test pathway.
      */
     public function get_short_description(): string {
-        return null;
+        return '';
     }
 
 }

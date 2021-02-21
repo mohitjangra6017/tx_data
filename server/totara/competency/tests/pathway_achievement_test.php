@@ -36,7 +36,7 @@ class totara_competency_pathway_achievement_testcase extends advanced_testcase {
         /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
-        $pathway = $competency_generator->create_test_pathway($competency, pathway_achievement::STATUS_CURRENT);
+        $pathway = $competency_generator->create_test_pathway($competency);
 
         $this->setCurrentTimeStart();
 
@@ -66,7 +66,7 @@ class totara_competency_pathway_achievement_testcase extends advanced_testcase {
         /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
-        $pathway = $competency_generator->create_test_pathway($competency, pathway_achievement::STATUS_CURRENT);
+        $pathway = $competency_generator->create_test_pathway($competency);
 
         // A custom time that is definitely not now.
         $time = 100;
@@ -98,7 +98,7 @@ class totara_competency_pathway_achievement_testcase extends advanced_testcase {
         /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
-        $pathway = $competency_generator->create_test_pathway($competency, pathway_achievement::STATUS_CURRENT);
+        $pathway = $competency_generator->create_test_pathway($competency);
 
         // A custom time that is definitely not now.
         $archived_time = 100;
@@ -139,7 +139,7 @@ class totara_competency_pathway_achievement_testcase extends advanced_testcase {
         /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
-        $pathway = $competency_generator->create_test_pathway($competency, pathway_achievement::STATUS_CURRENT);
+        $pathway = $competency_generator->create_test_pathway($competency);
 
         // Archived time is later than current time.
         $archived_time = 5000;
@@ -182,7 +182,7 @@ class totara_competency_pathway_achievement_testcase extends advanced_testcase {
         /** @var \totara_competency\testing\generator $competency_generator */
         $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
         $competency = $competency_generator->create_competency();
-        $pathway = $competency_generator->create_test_pathway($competency, pathway_achievement::STATUS_CURRENT);
+        $pathway = $competency_generator->create_test_pathway($competency);
 
         // A custom time that is definitely not now.
         $original_time = 100;

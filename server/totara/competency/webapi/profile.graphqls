@@ -225,6 +225,10 @@ Result wrapper for perform linked competencies
 """
 type totara_competency_perform_linked_competencies_result {
   progress: totara_competency_profile_assignment_progress!
+  """
+  The value achieved by the user at time of linking the competency to the performance activity
+  """
+  achievement: totara_competency_profile_scale_value_progress
 }
 
 extend type Query {

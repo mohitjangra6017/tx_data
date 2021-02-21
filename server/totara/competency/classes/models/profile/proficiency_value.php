@@ -25,6 +25,7 @@ namespace totara_competency\models\profile;
 
 use coding_exception;
 use totara_competency\entity\assignment;
+use totara_competency\entity\competency_achievement;
 use totara_competency\models\assignment as assignment_model;
 use totara_competency\entity\scale;
 use totara_competency\entity\scale_value;
@@ -35,10 +36,10 @@ use totara_competency\entity\scale_value;
  * This model represents a relative proficiency value
  *
  * @property int $id
- * @property string name
- * @property bool proficient
- * @property int percentage
- * @property int scale_id
+ * @property string $name
+ * @property float $percentage
+ * @property bool $proficient
+ * @property int $scale_id
  */
 class proficiency_value {
 
@@ -107,6 +108,26 @@ class proficiency_value {
     }
 
     /**
+     * Create my proficiency value based on a competency assignment for a user and a given timestamp.
+     *
+     * @param assignment $assignment
+     * @param int $user_id the user we want to get the achievement for
+     * @param int $achieved_at filter achievement on certain timestamp
+     * @return proficiency_value
+     */
+    public static function value_at_timestamp(assignment $assignment, int $user_id, int $achieved_at): self {
+        // If a timestamp was given get the last achievement before that
+        $achievement = $assignment->achievements()
+            ->where('user_id', $user_id)
+            ->order_by('time_created', 'desc')
+            ->order_by('id', 'desc')
+            ->where('time_created', '<=', $achieved_at)
+            ->first();
+
+        return self::get_value_for_achievement($assignment, $achievement);
+    }
+
+    /**
      * Create my proficiency value based on a competency assignment
      * Note, the assignment that you supply MUST have current_achievement relation pre-loaded,
      * otherwise it doesn't make sense and will return you a value of the first random user on the assignment
@@ -115,23 +136,35 @@ class proficiency_value {
      * @return proficiency_value
      */
     public static function my_value(assignment $assignment): proficiency_value {
-        $value = new static($assignment);
-
         if (!$assignment->relation_loaded('current_achievement')) {
-            throw new coding_exception('You must preload "current_achievement" relation with a user filter included, otherwise it does not make sense...');
+            throw new coding_exception(
+                'You must preload "current_achievement" relation with a user filter included, otherwise it does not make sense...'
+            );
         }
 
+        return self::get_value_for_achievement($assignment, $assignment->current_achievement);
+    }
+
+    /**
+     * Build instance from given assignment and achievement
+     *
+     * @param assignment $assignment
+     * @param competency_achievement|null $achievement
+     * @return proficiency_value
+     */
+    private static function get_value_for_achievement(assignment $assignment, ?competency_achievement $achievement): self {
+        $value = new static($assignment);
         $value->scale_id = $assignment->competency->scale->id;
 
         // We need to check that the achievement actually has a value as it could not have it yet
-        if ($assignment->current_achievement && $assignment->current_achievement->value) {
-            $value->id = $assignment->current_achievement->value->id;
-            $value->name = $assignment->current_achievement->value->name;
+        if ($achievement && $achievement->value) {
+            $value->id = $achievement->value->id;
+            $value->name = $achievement->value->name;
             // Get the proficient flag from the achievement directly, not from the scale_value, because it can
             // be overridden per assignment.
-            $value->proficient = (bool)$assignment->current_achievement->proficient;
+            $value->proficient = (bool)$achievement->proficient;
             $value->percentage = static::calculate_scale_value_percentage(
-                $assignment->current_achievement->value,
+                $achievement->value,
                 $assignment->competency->scale
             );
         } else {

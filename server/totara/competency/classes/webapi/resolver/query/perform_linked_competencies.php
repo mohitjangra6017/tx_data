@@ -23,29 +23,40 @@
 
 namespace totara_competency\webapi\resolver\query;
 
-use core\collection;
-use core\entity\user;
+use core\orm\collection;
 use core\webapi\middleware\require_advanced_feature;
 use performelement_linked_review\webapi\resolver\query\content_items;
 use totara_competency\data_providers\assignments;
 use totara_competency\entity\assignment as assignment_entity;
 use totara_competency\models\assignment as assignment_model;
+use totara_competency\models\profile\proficiency_value;
 
 class perform_linked_competencies extends content_items {
 
-    protected static function query_content(int $user_id, array $content_ids): array {
+    /**
+     * @inheritDoc
+     */
+    protected static function query_content(int $user_id, collection $content): array {
+        $created_at = $content->first() ? $content->first()->created_at : null;
+
         return assignments::for($user_id)
-            ->set_filters(['ids' => $content_ids])
+            ->set_filters([
+                'ids' => $content->pluck('content_id'),
+            ])
             ->fetch()
             ->get()
-            ->map(static function (assignment_entity $assignment) {
+            ->map(static function (assignment_entity $assignment) use ($user_id, $created_at) {
                 return [
-                    'progress' => assignment_model::load_by_entity($assignment)
+                    'progress' => assignment_model::load_by_entity($assignment),
+                    'achievement' => proficiency_value::value_at_timestamp($assignment, $user_id, $created_at)
                 ];
             })
             ->all();
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function get_middleware(): array {
         return array_merge(parent::get_middleware(), [
             new require_advanced_feature('competency_assignment'),

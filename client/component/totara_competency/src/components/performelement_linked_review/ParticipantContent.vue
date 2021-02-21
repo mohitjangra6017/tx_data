@@ -32,7 +32,7 @@
         <ProgressTrackerCircle state="pending" :target="true" />
         <span class="tui-linkedReviewViewCompetency__bar-statusText">
           {{
-            content.progress.my_value.proficient
+            content.achievement.proficient
               ? $str('proficient', 'totara_competency')
               : $str('not_proficient', 'totara_competency')
           }}

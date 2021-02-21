@@ -24,6 +24,7 @@
 namespace performelement_linked_review\webapi\resolver\query;
 
 use coding_exception;
+use core\orm\collection;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_advanced_feature;
 use core\webapi\middleware\require_login;
@@ -62,28 +63,26 @@ abstract class content_items implements query_resolver, has_middleware {
             ->one()
             ->subject_user_id;
 
-        $content_ids = linked_review_content::repository()
-            ->select('content_id')
+        $content = linked_review_content::repository()
             ->where('section_element_id', $section_element_id)
             ->where('participant_instance_id', $participant_instance_id)
-            ->get()
-            ->pluck('content_id');
+            ->get();
 
-        if (empty($content_ids)) {
+        if ($content->count() === 0) {
             return [];
         }
 
-        return static::query_content($subject_user_id, $content_ids);
+        return static::query_content($subject_user_id, $content);
     }
 
     /**
      * Fetch the linked content with the specified IDs.
      *
      * @param int $user_id
-     * @param int[] $content_ids
+     * @param linked_review_content[]|collection $content
      * @return array
      */
-    abstract protected static function query_content(int $user_id, array $content_ids): array;
+    abstract protected static function query_content(int $user_id, collection $content): array;
 
     /**
      * {@inheritdoc}

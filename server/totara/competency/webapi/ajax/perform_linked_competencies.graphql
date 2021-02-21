@@ -15,10 +15,11 @@ query totara_competency_perform_linked_competencies(
       assignment {
         reason_assigned
       }
-      my_value {
-        name
-        proficient
-      }
+    }
+    achievement {
+      id
+      name
+      proficient
     }
   }
 }
