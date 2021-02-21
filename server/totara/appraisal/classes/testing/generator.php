@@ -25,7 +25,7 @@
 
 namespace totara_appraisal\testing;
 
-use stdClass, coding_exception;
+use stdClass, coding_exception, moodle_exception;
 use appraisal, appraisal_stage, appraisal_page, appraisal_question, appraisal_message;
 
 /**
@@ -306,7 +306,7 @@ final class generator extends \core\testing\component_generator {
         $data = (object) array_merge($defaults, (array) $data);
 
         // Create a new page.
-        $qmanager = new question_manager();
+        $qmanager = new \question_manager();
         $qmanager->reset();
         $question = new appraisal_question();
         $element = $qmanager->create_element($question, $data->datatype);
