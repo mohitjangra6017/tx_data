@@ -22,7 +22,9 @@
  * @subpackage totara_hierarchy
  */
 
-use \pathway_criteria_group\criteria_group;
+use pathway_criteria_group\criteria_group;
+use totara_competency\entity\assignment;
+use totara_competency\min_proficiency_override_for_assignments;
 use totara_competency\models\scale;
 
 require_once(__DIR__ . '/../../../../../config.php');
@@ -84,17 +86,35 @@ if (!$delete) {
     echo $OUTPUT->header();
 
     $scale_value_delete_message = html_writer::tag('p', get_string('deletecheckscalevalue', 'totara_hierarchy'));
-    $scale_value_pathway_count = criteria_group::get_pathway_count_by_scale_value_id($value->id);
 
-    if ($scale_value_pathway_count > 0) {
-        $pathway_message_object = new stdClass();
-        $pathway_message_object->scale_value_name = $value->name;
-        $pathway_message_object->pathway_count = $scale_value_pathway_count;
-        $pathway_delete_message = html_writer::tag(
-            'p',
-            get_string('delete_check_scale_value_pathways', 'totara_hierarchy', $pathway_message_object)
-        );
-        $scale_value_delete_message = $pathway_delete_message . $scale_value_delete_message;
+    $scale_value_pathway_count = criteria_group::get_pathway_count_by_scale_value_id($value->id);
+    $override_count = assignment::repository()
+        ->where('minproficiencyid', $value->id)
+        ->count();
+
+    if ($scale_value_pathway_count > 0 || $override_count > 0) {
+        $warnings = [];
+
+        if ($scale_value_pathway_count > 0) {
+            $warnings[] = get_string(
+                'delete_check_scale_value_pathways2',
+                'totara_hierarchy',
+                $scale_value_pathway_count
+            );
+        }
+
+        if ($override_count > 0) {
+            $warnings[] = get_string(
+                'delete_check_scale_value_overrides',
+                'totara_hierarchy',
+                $override_count
+            );
+        }
+
+        $warning_message = get_string('delete_check_scale_value_start', 'totara_hierarchy', $value->name) .
+            html_writer::alist($warnings);
+
+        $scale_value_delete_message = $warning_message . $scale_value_delete_message;
     }
 
     echo $OUTPUT->confirm(
@@ -123,44 +143,52 @@ if (!confirm_sesskey()) {
     redirect($returnurl);
 }
 
-if ($value->id == $scale->minproficiencyid) {
-    // Deal with this being the minimum proficiency value.
+$DB->transaction(function () use ($value, $scale) {
+    global $DB;
 
-    $values = $DB->get_records('comp_scale_values', array('scaleid' => $scale->id), 'sortorder ASC');
-    $choose_next = false;
-    $new_minimum = null;
-    foreach ($values as $this_value) {
-        if ($choose_next) {
-            $new_minimum = $this_value;
-            break;
-        }
+    if ($value->id == $scale->minproficiencyid) {
+        // Deal with this being the minimum proficiency value.
 
-        if ($this_value->id == $value->id) {
-            if (is_null($new_minimum)) {
-                // We haven't got a previous value to use, meaning this was the highest.
-                // Choose the next value.
-                $choose_next = true;
-                continue;
-            } else {
-                // The next highest record, which is what $new_minimum will have been set to, is going
-                // to be our new minimum.
+        $values = $DB->get_records('comp_scale_values', array('scaleid' => $scale->id), 'sortorder ASC');
+        $choose_next = false;
+        $new_minimum = null;
+        foreach ($values as $this_value) {
+            if ($choose_next) {
+                $new_minimum = $this_value;
                 break;
             }
+
+            if ($this_value->id == $value->id) {
+                if (is_null($new_minimum)) {
+                    // We haven't got a previous value to use, meaning this was the highest.
+                    // Choose the next value.
+                    $choose_next = true;
+                    continue;
+                } else {
+                    // The next highest record, which is what $new_minimum will have been set to, is going
+                    // to be our new minimum.
+                    break;
+                }
+            }
+
+            // Set this latest value as candidate for the new minimum.
+            $new_minimum = $this_value;
         }
 
-        // Set this latest value as candidate for the new minimum.
-        $new_minimum = $this_value;
+        $DB->set_field('comp_scale', 'minproficiencyid', $new_minimum->id, array('id' => $scale->id));
+        if ($new_minimum->proficient != 1) {
+            $DB->set_field('comp_scale_values', 'proficient', 1, array('id' => $new_minimum->id));
+        }
     }
 
-    $DB->set_field('comp_scale', 'minproficiencyid', $new_minimum->id, array('id' => $scale->id));
-    if ($new_minimum->proficient != 1) {
-        $DB->set_field('comp_scale_values', 'proficient', 1, array('id' => $new_minimum->id));
-    }
-}
+    // Delete all minimum proficiency overrides which use the deleted scale value.
+    min_proficiency_override_for_assignments::reset_with_scale_value($value->id);
 
-$DB->delete_records('comp_scale_values', array('id' => $value->id));
+    $DB->delete_records('comp_scale_values', array('id' => $value->id));
 
-\hierarchy_competency\event\scale_value_deleted::create_from_instance($value)->trigger();
+    \hierarchy_competency\event\scale_value_deleted::create_from_instance($value)->trigger();
+});
+
 
 \core\notification::success(get_string('deletedcompetencyscalevalue', 'totara_hierarchy', format_string($value->name)));
 redirect($returnurl);

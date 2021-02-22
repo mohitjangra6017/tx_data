@@ -328,4 +328,76 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
 
         $builder->delete();
     }
+
+    public function test_reset_with_scale_value(): void {
+        $assignment1 = competency_generator::instance()->assignment_generator()->create_self_assignment();
+        $assignment_entity1 = new assignment_entity($assignment1->id);
+
+        $assignment2 = competency_generator::instance()->assignment_generator()->create_self_assignment(
+            $assignment_entity1->competency_id
+        );
+        $assignment_entity2 = new assignment_entity($assignment2->id);
+
+        $assignment3 = competency_generator::instance()->assignment_generator()->create_self_assignment(
+            $assignment_entity1->competency_id
+        );
+        $assignment_entity3 = new assignment_entity($assignment3->id);
+
+        $default_min_scale_value_id = $assignment_entity1->competency->scale->minproficiencyid;
+
+        // The first assignment has the override set to the scale default.
+        (new min_proficiency_override_for_assignments(
+            $default_min_scale_value_id,
+            [$assignment_entity1->id]
+        ))->process();
+
+        // The second assignment has the override set to some other value.
+        /** @var scale_value $new_min_scale_value */
+        $other_scale_value = $assignment_entity1->competency->scale->values->find(function (scale_value $scale_value) {
+            return $scale_value->id !== $scale_value->scale->minproficiencyid;
+        });
+        (new min_proficiency_override_for_assignments(
+            $other_scale_value->id,
+            [$assignment_entity2->id]
+        ))->process();
+
+        // There are three total.
+        self::assertEquals(
+            3,
+            assignment_entity::repository()->count()
+        );
+
+        // One does not have an override.
+        self::assertEquals(
+            1,
+            assignment_entity::repository()->where_null('minproficiencyid')->count()
+        );
+
+        // One has an override set to the default.
+        self::assertEquals(
+            1,
+            assignment_entity::repository()->where('minproficiencyid', $default_min_scale_value_id)->count()
+        );
+
+        // Reset all assignments which have this scale value as an override back to default (null).
+        min_proficiency_override_for_assignments::reset_with_scale_value($default_min_scale_value_id);
+
+        // There are three total.
+        self::assertEquals(
+            3,
+            assignment_entity::repository()->count()
+        );
+
+        // Two do not have an override.
+        self::assertEquals(
+            2,
+            assignment_entity::repository()->where_null('minproficiencyid')->count()
+        );
+
+        // Zero have an override set to the default.
+        self::assertEquals(
+            0,
+            assignment_entity::repository()->where('minproficiencyid', $default_min_scale_value_id)->count()
+        );
+    }
 }

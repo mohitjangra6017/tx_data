@@ -290,7 +290,9 @@ $string['competencyscaledescription'] = 'Description';
 $string['competencyscaleinuse'] = 'This scale is in use (i.e. users have competencies marked with values from this scale). Scale values cannot be created, re-ordered or deleted to preserve data integrity. You can still rename scale values but this may confuse users when their proficiency changes without warning.';
 $string['competenctscaleoutoforderexist'] = 'There are scales with non-proficient values that are set higher than proficient ones. Scale values should be ordered from most proficient to least proficient – please adjust the proficiency setting on affected scale values to reflect this.';
 $string['competenctscaleoutoforderthis'] = 'This scale has non-proficient values that are set higher than proficient ones. Scale values should be ordered from most proficient to least proficient – please adjust the proficiency setting on affected scale values to reflect this.';
-$string['competencyscaleinusemayaffect'] = 'This scale is in use (i.e. users have competencies marked with values from this scale). Scale values cannot be created, re-ordered or deleted to preserve data integrity. You can still rename scale values but this may confuse users when their proficiency changes without warning. Changing the minimum required proficiency value may impact the proficiency status of users currently assigned to competencies using this scale.';
+$string['competencyscaleinusemayaffectconfusion'] = 'You can rename scale values but this may confuse users.';
+$string['competencyscaleinusemayaffectchange'] = 'You can change the minimum required proficiency value but this may impact the proficiency status of assigned users and/or any proficiency value override set by assignment.';
+$string['competencyscaleinusemayaffectlocked'] = 'Scale values cannot be deleted, re-ordered, or added, as this scale is in use.';
 $string['competencyscaleminprofvalue'] = 'Minimum required proficiency value';
 $string['competencyscaleminprofvalue_help'] = 'The lowest value a user has to achieve to be considered proficient in a competency using this scale. All higher scale values are automatically classified as proficient values (i.e. values at which the user will be considered proficient).';
 $string['competencyscaleminprofvaluewithassignments'] = 'Minimum required proficiency value';
@@ -383,8 +385,9 @@ $string['deletecheckdepth'] = 'Are you absolutely sure you want to completely de
 $string['deletecheckscale'] = 'Are you absolutely sure you want to completely delete this scale?';
 $string['deletecheckscalevalue'] = 'Are you sure you would like to delete this scale value?';
 $string['delete_check_scale_value_confirmation'] = 'Confirm scale value deletion';
-$string['delete_check_scale_value_pathways'] = 'Deleting the \'{$a->scale_value_name}\' scale value will affect competencies that have achievement pathways defined against it.
- A total of {$a->pathway_count} achievement pathway(s) will be deleted.';
+$string['delete_check_scale_value_overrides'] = 'Affect competency assignments which override the default minimum required proficiency value. {$a} assignment(s) will be reset to the default minimum required proficiency value.';
+$string['delete_check_scale_value_pathways2'] = 'Affect competencies that have achievement pathways defined against it. {$a} achievement pathway(s) will be deleted.';
+$string['delete_check_scale_value_start'] = 'Deleting the ‘{$a}’ scale will:';
 $string['deletechecktemplate'] = 'Are you absolutely sure you want to delete this competency template?';
 $string['deletechecktype'] = 'Are you absolutely sure you want to delete this type?';
 $string['deletechecktypeassociated'] = 'This type has {$a} assigned items. Are you absolutely sure you want to delete this type?';
@@ -1332,11 +1335,14 @@ $string['xitemsmoved'] = '{$a->num} {$a->items} and all children have been moved
 
 // Deprecated in 13
 $string['assignedcompetencies'] = 'Assigned Competencies';
+$string['competencyscaleinusemayaffect'] = 'This scale is in use (i.e. users have competencies marked with values from this scale). Scale values cannot be created, re-ordered or deleted to preserve data integrity. You can still rename scale values but this may confuse users when their proficiency changes without warning. Changing the minimum required proficiency value may impact the proficiency status of users currently assigned to competencies using this scale.';
 $string['competencyscalevalueconfirmtitle'] = 'Confirm updates to scale values';
 $string['competencyscalevalueconfirmproficient'] = 'The proficiency status of users currently assigned to competencies using this scale may be affected.
 
 Do you want to proceed with applying these changes?';
 $string['confirmframeworkdeletion'] = 'Confirm framework deletion';
+$string['delete_check_scale_value_pathways'] = 'Deleting the \'{$a->scale_value_name}\' scale value will affect competencies that have achievement pathways defined against it.
+ A total of {$a->pathway_count} achievement pathway(s) will be deleted.';
 $string['deleteincludexcustomfields'] = '- {$a} custom field record(s)';
 $string['deleteincludexuserstatusrecords'] = '- {$a} user status record(s)';
 $string['organisationdeleteincludexjobassignments'] = '- {$a} assignment(s) to this organisation (users assigned to this organisation will be unassigned)';

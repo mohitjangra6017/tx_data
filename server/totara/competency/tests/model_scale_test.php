@@ -23,16 +23,19 @@
  */
 
 use core\collection;
+use totara_competency\entity\assignment as assignment_entity;
 use totara_competency\entity\competency_achievement;
 use totara_competency\entity\scale as scale_entity;
 use totara_competency\entity\scale_value;
-use totara_competency\entity\assignment as assignment_entity;
 use totara_competency\models\assignment_specific_scale_value;
+use totara_competency\min_proficiency_override_for_assignments;
+use totara_competency\models\assignment_actions;
 use totara_competency\models\scale;
 use totara_competency\models\assignment as assignment_model;
 use totara_competency\user_groups;
 use totara_core\advanced_feature;
 use totara_hierarchy\testing\generator as hierarchy_generator;
+use totara_criteria\criterion;
 
 /**
  * Class totara_competency_model_scale_testcase
@@ -146,7 +149,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
         $this->assertTrue($scale_model->is_assigned());
     }
 
-    public function test_if_scale_is_used(): void {
+    public function test_if_scale_is_in_use_in_achievement_record(): void {
         $generator = $this->generator();
 
         $user = $this->getDataGenerator()->create_user();
@@ -187,7 +190,74 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
         $this->assertTrue($scale_model->is_in_use());
     }
 
-    public function test_if_scale_is_used_in_learning_plan(): void {
+    public function test_if_scale_is_in_use_with_minimum_proficiency_override(): void {
+        $generator = $this->generator();
+
+        $scale = $generator->create_scale('comp', ['name' => 'Scale 1']);
+        $framework = $generator->create_comp_frame(['scale' => $scale->id]);
+
+        $comp = $generator->create_comp(['frameworkid' => $framework->id]);
+
+        $scale_model = scale::load_by_id_with_values($scale->id);
+
+        /** @var totara_competency\testing\generator $competency_generator */
+        $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        $assignment = $competency_generator->assignment_generator()->create_self_assignment($comp->id);
+        $assignment_entity = new assignment_entity($assignment->id);
+
+        $model = new assignment_actions();
+        $model->activate([$assignment_entity->id]);
+
+        // The scale is not in use, even though there is an active assignment (the assignment doesn't have an override yet).
+        $this->assertFalse($scale_model->is_in_use());
+
+        // Update the assignment with a minimum proficiency override.
+        /** @var scale_value $new_min_scale_value */
+        $new_min_scale_value = $assignment_entity->competency->scale->values->find(function (scale_value $scale_value) {
+            return $scale_value->id !== $scale_value->scale->minproficiencyid;
+        });
+        (new min_proficiency_override_for_assignments(
+            $new_min_scale_value->id,
+            [$assignment_entity->id]
+        ))->process();
+
+        // The scale is now in use, because there is a minimum proficiency override on an active assignment.
+        $this->assertTrue($scale_model->is_in_use());
+    }
+
+    public function test_if_scale_is_in_use_in_achievement_pathway(): void {
+        $generator = $this->generator();
+
+        $scale = $generator->create_scale('comp', ['name' => 'Scale 1']);
+        $framework = $generator->create_comp_frame(['scale' => $scale->id]);
+
+        $comp = $generator->create_comp(['frameworkid' => $framework->id]);
+
+        $scale_model = scale::load_by_id_with_values($scale->id);
+
+        /** @var totara_competency\testing\generator $competency_generator */
+        $competency_generator = $this->getDataGenerator()->get_plugin_generator('totara_competency');
+        $assignment = $competency_generator->assignment_generator()->create_self_assignment($comp->id);
+        $assignment_entity = new assignment_entity($assignment->id);
+
+        // The scale is not in use, even though there is an active assignment.
+        $this->assertFalse($scale_model->is_in_use());
+
+        // Add a scale based criteria group to an achievement pathway.
+        $course = $this->getDataGenerator()->create_course();
+        /** @var totara_criteria\testing\generator $crit_generator */
+        $crit_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
+        $cc1 = $crit_generator->create_coursecompletion([
+            'aggregation' => criterion::AGGREGATE_ALL,
+            'courseids' => [$course->id],
+        ]);
+        $competency_generator->create_criteria_group($comp->id, [$cc1], $assignment_entity->competency->scale->values->first()->id);
+
+        // The scale is now in use.
+        $this->assertTrue($scale_model->is_in_use());
+    }
+
+    public function test_if_scale_is_in_use_in_learning_plan(): void {
         $generator = $this->generator();
 
         $user = $this->getDataGenerator()->create_user();
@@ -222,7 +292,7 @@ class totara_competency_model_scale_testcase extends advanced_testcase {
         $this->assertFalse($scale_model->is_in_use());
     }
 
-    public function test_if_scale_is_used_with_learning_plan_disabled(): void {
+    public function test_if_scale_is_in_use_with_learning_plan_disabled(): void {
         advanced_feature::disable('learningplans');
 
         $generator = $this->generator();

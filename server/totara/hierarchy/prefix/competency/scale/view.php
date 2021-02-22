@@ -279,7 +279,11 @@ if ($canupdatescales && !$scale_used_by_users) {
 
 // Display warning if scale is in use
 if ($canupdatescales && $scale_used_by_users) {
-    echo $OUTPUT->notification(get_string('competencyscaleinusemayaffect', 'totara_hierarchy'), 'warning');
+    $warning = get_string('competencyscaleinusemayaffectlocked', 'totara_hierarchy') . html_writer::alist([
+        get_string('competencyscaleinusemayaffectchange', 'totara_hierarchy'),
+        get_string('competencyscaleinusemayaffectconfusion', 'totara_hierarchy'),
+    ]);
+    echo $OUTPUT->notification($warning, 'warning');
 }
 
 // Display scale values

@@ -80,6 +80,18 @@ class min_proficiency_override_for_assignments {
         return $this->update_override_values();
     }
 
+    /**
+     * Resets all minimum proficiency overrides back to default where they have the given scale value ID.
+     * Used when a scale value is deleted.
+     *
+     * @param int $scale_value_id
+     */
+    public static function reset_with_scale_value(int $scale_value_id): void {
+        assignment::repository()
+            ->where('minproficiencyid', $scale_value_id)
+            ->update(['minproficiencyid' => null]);
+    }
+
     private function ensure_all_assignments_exist(): void {
         $non_existent_assignment_ids = $this->get_non_existent_assignment_ids();
 
