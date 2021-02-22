@@ -267,6 +267,33 @@ input totara_competency_self_assigned_competencies_filter {
   ids: [param_integer]
 }
 
+"""
+Filters input for the user assignments adder query.
+"""
+input totara_competency_user_assignments_filters {
+  search: String
+  ids: [core_id]
+}
+
+"""
+Input for the user assignments query.
+"""
+input totara_competency_user_assignments_query {
+  filters: totara_competency_user_assignments_filters
+  result_size: Int
+  cursor: String
+}
+
+"""
+Result for the user assignments query.
+"""
+type totara_competency_user_assignments_result implements core_pageable_result {
+  items: [totara_competency_profile_assignment_progress!]
+  total: Int!
+  next_cursor: String!
+}
+
+
 extend type Query {
   """
   Query to return a specific competency assignment by its ID
@@ -300,6 +327,13 @@ extend type Query {
     """
     cursor: String
   ): totara_competency_self_assigned_competencies_result!
+
+  """
+  Query to return a paginated set of competencies that have been assigned to a user.
+  """
+  totara_competency_user_assignments(
+    query: totara_competency_user_assignments_query
+  ): totara_competency_user_assignments_result!
 }
 
 input totara_competency_assignment_min_proficiency_override_input {

@@ -314,6 +314,10 @@ export default {
     handleMouseDown(e) {
       if (e.button !== 0) return;
       if (e.target.tagName === 'SELECT') return;
+
+      // Stops any mouse down events from propagating from within a draggable element to outside, this allows nested draggable elements
+      e.stopPropagation();
+
       if (this.dragging) {
         defaultDragDropManager.endDrag(this.dragId);
       }

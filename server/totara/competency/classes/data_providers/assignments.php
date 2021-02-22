@@ -24,12 +24,15 @@
 namespace totara_competency\data_providers;
 
 use core\orm\entity\repository;
+use core\orm\pagination\cursor_paginator;
+use core\orm\query\builder;
 use core\orm\query\field;
+use core\pagination\cursor;
 use totara_competency\entity\assignment;
 use totara_competency\entity\assignment_repository;
-use totara_competency\user_groups;
+use totara_competency\entity\competency;
 use totara_competency\entity\competency_assignment_user;
-use core\orm\query\builder;
+use totara_competency\user_groups;
 
 /**
  * Class assignments
@@ -48,43 +51,85 @@ class assignments extends user_data_provider {
      * @return $this
      */
     public function fetch() {
-        $this->fetch_assignments()
-            ->order_assignments();
-
-        return $this;
-    }
-
-    /**
-     * Actually fetch assignments
-     *
-     * @return $this
-     */
-    protected function fetch_assignments() {
-
-        // Let's outline the relations we want to fetch the assignments with
-        $repo = $this->assignments_repository_for_user()->with([
-            'competency' => function (repository $repository) {
-                $repository->with([
-                    'scale' => function (repository $repository) {
-                        $repository->with('values')
-                            ->with('min_proficient_value');
-                    }
-                ]);
-            },
-            'current_achievement' => function (repository $repository) {
-                $repository->where('user_id', $this->get_user()->id)
-                    ->with('value');
-            },
-            'assignment_user' => function (repository $repository) {
-                $repository->where('user_id', $this->get_user()->id);
-            },
-        ]);
+        $repo = $this->build_query();
 
         $this->apply_filters($repo);
 
         $this->items = $repo->get();
 
+        $this->order_assignments();
+
         return $this;
+    }
+
+    /**
+     * Fetch a paginated list of assignments.
+     *
+     * @param string|null $cursor
+     * @param int|null $limit
+     * @return cursor_paginator
+     */
+    public function fetch_paginated(?string $cursor, ?int $limit): cursor_paginator {
+        $page_cursor = cursor::create()->set_limit($limit ?? cursor_paginator::DEFAULT_ITEMS_PER_PAGE);
+        if ($cursor) {
+            $page_cursor = cursor::decode($cursor);
+        }
+
+        $query = $this->build_query();
+        $this->apply_filters($query);
+
+        $paginator = new cursor_paginator($query, $page_cursor, true);
+        $paginator->get();
+
+        return $paginator;
+    }
+
+    /**
+     * Build the query
+     *
+     * @return assignment_repository
+     */
+    protected function build_query(): assignment_repository {
+
+        // Let's outline the relations we want to fetch the assignments with
+        return $this->assignments_repository_for_user()
+            ->with([
+                'competency' => function (repository $repository) {
+                    $repository->with([
+                        'scale' => function (repository $repository) {
+                            $repository->with('values')
+                                ->with('min_proficient_value');
+                        }
+                    ]);
+                },
+                'current_achievement' => function (repository $repository) {
+                    $repository->where('user_id', $this->get_user()->id)
+                        ->with('value');
+                },
+                'assignment_user' => function (repository $repository) {
+                    $repository->where('user_id', $this->get_user()->id);
+                },
+            ])
+            // The following is necessary in order to support cursor based pagination.
+            ->join([competency::TABLE, 'competency'], 'competency_id', 'id')
+            ->select([
+                '*',
+                'competency.fullname AS competency_fullname',
+            ])
+            ->order_by('competency.fullname')
+            ->order_by('competency.id');
+    }
+
+    /**
+     * @deprecated since Totara 14
+     * @return $this
+     */
+    protected function fetch_assignments() {
+        debugging(
+            'fetch_assignments() is deprecated and should no longer be used. Please use fetch() directly instead.',
+            DEBUG_DEVELOPER
+        );
+        return $this->fetch();
     }
 
     /**
@@ -266,14 +311,20 @@ class assignments extends user_data_provider {
      * @param $value
      */
     protected function filter_by_search(assignment_repository $repository, $value) {
-        if (!$repository->has_join('comp')) {
-            $repository->join('comp', 'competency_id', 'id');
-        }
-
         $repository->where(function (builder $builder) use ($value) {
-            $builder->where('comp.fullname', 'ilike', $value)
-                ->or_where('comp.description', 'ilike', $value);
+            $builder->where('competency.fullname', 'ilike', $value)
+                ->or_where('competency.description', 'ilike', $value);
         });
+    }
+
+    /**
+     * Filter by a set of assignment IDs
+     *
+     * @param assignment_repository $repository
+     * @param int[] $assignment_ids
+     */
+    protected function filter_by_ids(assignment_repository $repository, array $assignment_ids): void {
+        $repository->where_in('id', $assignment_ids);
     }
 
 }

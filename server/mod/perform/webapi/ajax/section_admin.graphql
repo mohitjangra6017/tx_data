@@ -1,6 +1,13 @@
 query mod_perform_section_admin($section_id: core_id!) {
   mod_perform_section_admin(section_id: $section_id) {
     display_title
+    section_relationships {
+      core_relationship {
+        id
+        idnumber
+        name
+      }
+    }
     section_elements {
       id
       element {

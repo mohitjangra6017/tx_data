@@ -557,6 +557,9 @@ class assignment {
      */
     public function get_field(string $field) {
         switch ($field) {
+            case 'id':
+                return $this->get_id();
+
             case 'status_name':
                 return $this->get_status_name();
 
@@ -628,6 +631,7 @@ class assignment {
      */
     public function has_field(string $field): bool {
         $extra_fields = [
+            'id',
             'user_group',
             'competency',
             'status_name',

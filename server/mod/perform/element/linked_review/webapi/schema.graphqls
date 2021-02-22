@@ -1,0 +1,40 @@
+"""
+A content type e.g. competency, goal that can be linked.
+"""
+type performelement_linked_review_content_type {
+  identifier: String!
+  display_name(format: core_format = PLAIN): String!
+  is_enabled: Boolean!
+  available_settings: String!
+  admin_settings_component: String
+  admin_view_component: String
+  participant_picker_component: String!
+  participant_content_component: String!
+}
+
+"""
+Input required for updating the linked content.
+"""
+input performelement_linked_review_update_linked_content_input {
+  content_ids: [core_id!]!
+  section_element_id: core_id!
+  participant_instance_id: core_id!
+}
+
+extend type Query {
+  """
+  Get the available content types that can be selected.
+  """
+  performelement_linked_review_content_types(
+    section_id: core_id!
+  ): [performelement_linked_review_content_type]!
+}
+
+extend type Mutation {
+  """
+  Update what content is linked to the activity.
+  """
+  performelement_linked_review_update_linked_review_content (
+    input: performelement_linked_review_update_linked_content_input!
+  ): Boolean
+}
