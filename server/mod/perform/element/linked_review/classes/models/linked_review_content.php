@@ -72,6 +72,7 @@ class linked_review_content extends model {
         'section_element_id',
         'subject_instance_id',
         'selector_id',
+        'created_at',
     ];
 
     /**
@@ -86,9 +87,11 @@ class linked_review_content extends model {
         self::validate_input($content_ids, $section_element_id, $participant_instance_id);
 
         return builder::get_db()->transaction(function () use ($content_ids, $section_element_id, $participant_instance_id) {
+            $participant_instance = participant_instance_model::load_by_id($participant_instance_id);
+
             $current_linked_content_ids = self::get_existing_selected_content(
                 $section_element_id,
-                $participant_instance_id
+                $participant_instance->subject_instance_id
             )->pluck('content_id');
 
             $content_ids_to_delete = array_diff($current_linked_content_ids, $content_ids);
@@ -193,18 +196,16 @@ class linked_review_content extends model {
      * Get the content IDs that have already been selected for the subject's section element.
      *
      * @param int $section_element_id
-     * @param int $participant_instance_id
+     * @param int $subject_instance_id
      * @return static[]|collection
      */
-    private static function get_existing_selected_content(
+    public static function get_existing_selected_content(
         int $section_element_id,
-        int $participant_instance_id
+        int $subject_instance_id
     ): collection {
         return linked_review_content_entity::repository()
             ->where('section_element_id', $section_element_id)
-            // Check other links done for the same subject
-            ->join(['perform_participant_instance', 'pi'], 'subject_instance_id', 'subject_instance_id')
-            ->where('pi.id', $participant_instance_id)
+            ->where('subject_instance_id', $subject_instance_id)
             ->get()
             ->map_to(static::class);
     }

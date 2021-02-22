@@ -220,17 +220,6 @@ input totara_competency_activity_log_filters {
   assignment_id: core_id
 }
 
-"""
-Result wrapper for perform linked competencies
-"""
-type totara_competency_perform_linked_competencies_result {
-  progress: totara_competency_profile_assignment_progress!
-  """
-  The value achieved by the user at time of linking the competency to the performance activity
-  """
-  achievement: totara_competency_profile_scale_value_progress
-}
-
 extend type Query {
   """
   Activity log entries for a single user/competency pair, optionally filtered.
@@ -270,12 +259,4 @@ extend type Query {
   Gets a single user
   """
   totara_competency_user(user_id: core_id!): core_user!
-
-  """
-  Get the competency assignments that have been linked to a performance activity.
-  """
-  totara_competency_perform_linked_competencies(
-    subject_instance_id: core_id!
-    section_element_id: core_id!
-  ): [totara_competency_perform_linked_competencies_result]!
 }

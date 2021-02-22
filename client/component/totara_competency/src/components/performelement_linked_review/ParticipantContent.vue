@@ -47,7 +47,11 @@ import ProgressTrackerCircle from 'tui/components/progresstracker/ProgressTracke
 
 // The GraphQL query to use for getting the selected competencies.
 import linkedCompetenciesQuery from 'totara_competency/graphql/perform_linked_competencies';
-export { linkedCompetenciesQuery as query };
+import linkedCompetenciesQueryNoSession from 'totara_competency/graphql/perform_linked_competencies_nosession';
+export {
+  linkedCompetenciesQuery as query,
+  linkedCompetenciesQueryNoSession as query_external,
+};
 
 export default {
   components: {

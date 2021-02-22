@@ -183,6 +183,7 @@
                     :show-other-response="showOtherResponse"
                     :view-only="viewOnlyReportMode"
                     :subject-user="subjectUser"
+                    :token="token"
                   />
                 </div>
               </div>
@@ -765,7 +766,6 @@ export default {
               children: childElements,
               parent_element: item.element.parent_element,
               participantSectionId: result.id ? result.id : null,
-              token: this.token,
               responseData: null,
             },
             sort_order: item.sort_order,

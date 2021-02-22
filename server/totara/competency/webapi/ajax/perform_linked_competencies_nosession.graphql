@@ -1,0 +1,27 @@
+query totara_competency_perform_linked_competencies_nosession(
+  $subject_instance_id: core_id!
+  $section_element_id: core_id!
+  $token: String
+) {
+  items: totara_competency_perform_linked_competencies(
+    subject_instance_id: $subject_instance_id
+    section_element_id: $section_element_id
+    token: $token
+  ) {
+    progress {
+      id
+      competency {
+        display_name
+        description
+      }
+      assignment {
+        reason_assigned
+      }
+    }
+    achievement {
+      id
+      name
+      proficient
+    }
+  }
+}

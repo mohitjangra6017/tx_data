@@ -75,6 +75,17 @@
                 sectionElement.id + '-' + index + '-' + elementIndex,
               ]"
               :section-element="sectionElement"
+              :active-section-is-closed="activeSectionIsClosed"
+              :anonymous-responses="anonymousResponses"
+              :error="error"
+              :group-id="checkboxGroupId"
+              :is-draft="isDraft"
+              :is-external-participant="isExternalParticipant"
+              :participant-can-answer="participantCanAnswer"
+              :subject-instance-id="subjectInstanceId"
+              :show-other-response="showOtherResponse"
+              :view-only="viewOnlyReportMode"
+              :token="token"
             />
           </div>
         </div>
@@ -98,6 +109,7 @@ export default {
   props: {
     element: Object,
     hasPrintedToDoIcon: Boolean,
+    isExternalParticipant: Boolean,
     participantInstanceId: {
       type: [String, Number],
       required: true,
@@ -115,6 +127,15 @@ export default {
       type: Number,
       required: true,
     },
+    error: String,
+    token: String,
+    isDraft: Boolean,
+    viewOnlyReportMode: Boolean,
+    showOtherResponse: Boolean,
+    participantCanAnswer: Boolean,
+    checkboxGroupId: String,
+    anonymousResponses: Boolean,
+    activeSectionIsClosed: Boolean,
   },
 
   data() {
@@ -138,12 +159,22 @@ export default {
     tui
       .import(this.element.data.components.participant_content)
       .then(component => {
+        if (!component.query || !component.query_external) {
+          throw new Error(
+            'The component for the selected review type does not provide the necessary queries.'
+          );
+        }
+        let query = this.isExternalParticipant
+          ? component.query_external
+          : component.query;
+
         this.$apollo.addSmartQuery('selectedContent', {
-          query: component.query,
+          query: query,
           variables() {
             return {
               subject_instance_id: this.subjectInstanceId,
               section_element_id: this.sectionElement.id,
+              token: this.token ? this.token : null,
             };
           },
           update(data) {

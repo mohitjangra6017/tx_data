@@ -23,7 +23,6 @@
 
 namespace performelement_linked_review\entity;
 
-use container_workspace\watcher\core_user;
 use core\entity\user;
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
@@ -78,7 +77,7 @@ class linked_review_content extends entity {
      * @return belongs_to
      */
     public function selector(): belongs_to {
-        return $this->belongs_to(core_user::class, 'selector_id');
+        return $this->belongs_to(user::class, 'selector_id');
     }
 
     /**
