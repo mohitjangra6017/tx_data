@@ -131,7 +131,7 @@ class export_user_data_testcase extends advanced_testcase {
         // Despite of not writing to the file, the file was still created
         // because it was opened for any writes.
         self::assertTrue(file_exists($csv_file));
-        self::assertEquals(1, substr_count(file_get_contents($csv_file), "\n"));
+        self::assertEmpty(file_get_contents($csv_file));
 
         $writer->close();
     }
@@ -561,8 +561,13 @@ class export_user_data_testcase extends advanced_testcase {
         $headings = 'user_id,lang,city,country,interests,asp_position,positions,organisations,competencies_scale,badges,description';
         $csv_content = file_get_contents($export['filename']);
 
-        // Tenants 1, 2 & 3 should pass as headers are mandatory.
-        self::assertStringContainsString($headings, $csv_content);
+        // Tenant2 is empty, so it should fail here.
+        if ($export['tenant']->name === 'TestTenant2') {
+            self::assertStringNotContainsString($headings, $csv_content);
+        } else {
+            // Tenants 1 & 3 should pass.
+            self::assertStringContainsString($headings, $csv_content);
+        }
 
         // Check for guest user, which should never be included.
         $guest_user = guest_user();

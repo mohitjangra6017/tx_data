@@ -41,6 +41,11 @@ class user_data extends export {
      * @return bool
      */
     public function export(writer $writer): bool {
+        $recordset = $this->get_export_recordset();
+        if (!$recordset->valid()) {
+            return false;
+        }
+
         // Column headings for csv file.
         $writer->add_headings([
             'user_id',
@@ -55,11 +60,6 @@ class user_data extends export {
             'badges',
             'description'
         ]);
-
-        $recordset = $this->get_export_recordset();
-        if (!$recordset->valid()) {
-            return false;
-        }
 
         foreach ($recordset as $user) {
             // Swap out embedded double-quotes in text fields.

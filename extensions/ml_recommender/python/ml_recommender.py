@@ -97,13 +97,23 @@ def run_modelling_process():
             users_df=users_data, items_df=items_data, interactions_df=interactions_df
         )
         interactions_df = interactions_cleaner.clean_interactions()
-        shape = (users_data.shape[0], items_data.shape[0])
+        processed_data = d_loader.load_data(
+            interactions_df=interactions_df,
+            items_data=items_data,
+            users_data=users_data,
+            query=query,
+        )
+        m, s = divmod((time.time() - t1), 60)
+        print(
+            f"The data loading and processing/transformation of tenant {tenant} took"
+            f" {m: .0f} minutes and {s: .2f} seconds.\n"
+        )
         min_data = cfg.get_property("min_data")
-
+        shape = processed_data["interactions"].shape
         if shape[0] < min_data["min_users"] or shape[1] < min_data["min_items"]:
             print(
                 "The number of users or items is too small to run the recommendation"
-                f" engine. Skipping tenant {tenant}."
+                f"engine. Skipping tenant {tenant}."
             )
 
             with open(file=i2i_file_path, mode="w") as f:
@@ -113,17 +123,6 @@ def run_modelling_process():
                 f.write("uid,iid,ranking")
 
         else:
-            processed_data = d_loader.load_data(
-                interactions_df=interactions_df,
-                items_data=items_data,
-                users_data=users_data,
-                query=query,
-            )
-            m, s = divmod((time.time() - t1), 60)
-            print(
-                f"The data loading and processing/transformation of tenant {tenant}"
-                f" took {m: .0f} minutes and {s: .2f} seconds.\n"
-            )
             if query in ["hybrid", "partial"]:
                 item_alpha = cfg.get_property("item_alpha")
                 user_alpha = cfg.get_property("user_alpha")
@@ -148,7 +147,7 @@ def run_modelling_process():
             m, s = divmod((time.time() - t2), 60)
             print(
                 f"The hyper-parameters optimization of the model for tenant {tenant}"
-                f" took\n{m: .0f} minutes and {s: .2f} seconds to converge.\n"
+                f"took\n{m: .0f} minutes and {s: .2f} seconds to converge.\n"
             )
             print(
                 f"The best hyper-parameters found for tenant {tenant}:\n"
