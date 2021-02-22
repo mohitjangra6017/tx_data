@@ -17,6 +17,9 @@
         <KEY NAME="section_element_id" TYPE="foreign" FIELDS="section_element_id" REFTABLE="perform_section_element" REFFIELDS="id" ONDELETE="cascade"/>
         <KEY NAME="participant_instance_id" TYPE="foreign" FIELDS="participant_instance_id" REFTABLE="perform_participant_instance" REFFIELDS="id" ONDELETE="cascade"/>
       </KEYS>
+      <INDEXES>
+        <INDEX NAME="content_id" UNIQUE="false" FIELDS="content_id"/>
+      </INDEXES>
     </TABLE>
   </TABLES>
 </XMLDB>

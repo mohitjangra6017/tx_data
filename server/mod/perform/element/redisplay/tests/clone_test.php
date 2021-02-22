@@ -57,7 +57,6 @@ class clone_testcase extends advanced_testcase {
         $section_element1 = $perform_generator->create_section_element($section1, $element1);
 
         $redisplay_data = [
-            'activityId' => $activity1->id,
             'sectionElementId' => $section_element1->id,
         ];
 
@@ -92,7 +91,7 @@ class clone_testcase extends advanced_testcase {
     public function test_clone_with_redisplay_pointing_to_same_activity(): void {
         self::setAdminUser();
 
-        /** @var mod_perform_generator $perform_generator */
+        /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
 
         /*

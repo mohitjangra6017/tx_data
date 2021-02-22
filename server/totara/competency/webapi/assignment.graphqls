@@ -278,7 +278,7 @@ input totara_competency_user_assignments_filters {
 """
 Input for the user assignments query.
 """
-input totara_competency_user_assignments_query {
+input totara_competency_user_assignments_input {
   filters: totara_competency_user_assignments_filters
   result_size: Int
   cursor: String
@@ -292,7 +292,6 @@ type totara_competency_user_assignments_result implements core_pageable_result {
   total: Int!
   next_cursor: String!
 }
-
 
 extend type Query {
   """
@@ -332,7 +331,7 @@ extend type Query {
   Query to return a paginated set of competencies that have been assigned to a user.
   """
   totara_competency_user_assignments(
-    query: totara_competency_user_assignments_query
+    query: totara_competency_user_assignments_input!
   ): totara_competency_user_assignments_result!
 }
 

@@ -21,6 +21,7 @@
  * @package mod_perform
  */
 
+use mod_perform\testing\generator as mod_perform_generator;
 use performelement_redisplay\entity\element_redisplay_relationship as element_redisplay_relationship_entity;
 
 /**
@@ -34,8 +35,8 @@ abstract class redisplay_testcase extends advanced_testcase {
 
         $data = new stdClass();
 
-        /** @var \mod_perform\testing\generator $perform_generator */
-        $perform_generator = \mod_perform\testing\generator::instance();
+        /** @var mod_perform_generator $perform_generator */
+        $perform_generator = mod_perform_generator::instance();
 
         /*
          * activity1                    [SOURCE ACTIVITY]
@@ -106,14 +107,19 @@ abstract class redisplay_testcase extends advanced_testcase {
         $data->section1 = $perform_generator->create_section($data->activity1, ['title' => 'section1']);
 
         $data->element1 = $perform_generator->create_element();
-        $data->element2 = $perform_generator->create_element(['plugin_name' => 'redisplay']);
-
         $data->section_element1 = $perform_generator->create_section_element($data->section1, $data->element1);
-        $data->section_element2 = $perform_generator->create_section_element($data->section1, $data->element2);
-
-        $data->element_redisplay_relationship = element_redisplay_relationship::create(
-            $data->activity1->id, $data->section_element1->id, $data->element2->id
+        $data->element2 = $perform_generator->create_element(
+            [
+                'plugin_name' => 'redisplay',
+                'data' => json_encode(
+                    [
+                        'sectionElementId' => $data->section_element1->id,
+                    ]
+                )
+            ]
         );
+
+        $data->section_element2 = $perform_generator->create_section_element($data->section1, $data->element2);
 
         return $data;
     }

@@ -158,6 +158,9 @@ class linked_review extends respondable_element_plugin {
         return array_merge($data, ['content_type_settings' => $settings]);
     }
 
+    /**
+     * @inheritDocs
+     */
     public function process_data(?string $data): ?string {
         $data = json_decode($data, true);
 
@@ -166,7 +169,7 @@ class linked_review extends respondable_element_plugin {
         $components = [
             'admin_settings' => $content_type::get_admin_settings_component(),
             'admin_view' => $content_type::get_admin_view_component(),
-            'participant_picker' => $content_type::get_participant_picker_component(),
+            'content_picker' => $content_type::get_content_picker_component(),
             'participant_content' => $content_type::get_participant_content_component(),
         ];
 

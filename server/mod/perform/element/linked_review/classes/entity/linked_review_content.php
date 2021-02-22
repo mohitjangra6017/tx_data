@@ -25,17 +25,19 @@ namespace performelement_linked_review\entity;
 
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
+use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\section_element;
 
 /**
  * Element subject instance review content entity
  *
  * Properties:
- * @property-read int $id ID
  * @property int $section_element_id
  * @property int $participant_instance_id
  * @property int $content_id
  * @property int $created_at
+ * @property-read participant_instance $participant_instance
+ * @property-read section_element $section_element
  *
  * @package performelement_linked_reivew\entity
  */
@@ -45,4 +47,21 @@ class linked_review_content extends entity {
 
     public const CREATED_TIMESTAMP = 'created_at';
 
+    /**
+     * Participant instance that selected the content.
+     *
+     * @return belongs_to
+     */
+    public function participant_instance(): belongs_to {
+        return $this->belongs_to(participant_instance::class, 'participant_instance_id');
+    }
+
+    /**
+     * Section element for this content.
+     *
+     * @return belongs_to
+     */
+    public function section_element(): belongs_to {
+        return $this->belongs_to(section_element::class, 'section_element_id');
+    }
 }

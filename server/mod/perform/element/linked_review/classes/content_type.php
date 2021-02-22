@@ -82,7 +82,7 @@ interface content_type {
      *
      * @return string
      */
-    public static function get_participant_picker_component(): string;
+    public static function get_content_picker_component(): string;
 
     /**
      * The component path of the vue component for rendering the content response display.

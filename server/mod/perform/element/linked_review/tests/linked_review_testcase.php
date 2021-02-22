@@ -30,7 +30,11 @@ use mod_perform\testing\generator as perform_generator;
 use totara_competency\testing\generator as competency_generator;
 use totara_core\relationship\relationship;
 
-class linked_review_testcase extends advanced_testcase {
+/**
+ * @group perform
+ * @group perform_element
+ */
+abstract class linked_review_testcase extends advanced_testcase {
 
     /**
      * @var perform_generator $perform_generator

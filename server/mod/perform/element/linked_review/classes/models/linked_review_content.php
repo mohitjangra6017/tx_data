@@ -30,9 +30,11 @@ use core\orm\collection;
 use core\orm\entity\model;
 use core\orm\query\builder;
 use mod_perform\entity\activity\element;
-use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\entity\activity\section_element as section_element_entity;
+use mod_perform\models\activity\element as element_model;
+use mod_perform\models\activity\participant_instance as participant_instance_model;
+use mod_perform\models\activity\participant_source;
 use mod_perform\models\activity\section_element;
 use moodle_exception;
 use performelement_linked_review\entity\linked_review_content as linked_review_content_entity;
@@ -186,7 +188,10 @@ class linked_review_content extends model {
      * @param int $participant_instance_id
      * @return static[]|collection
      */
-    private static function get_existing_selected_content(int $section_element_id, int $participant_instance_id): collection {
+    private static function get_existing_selected_content(
+        int $section_element_id,
+        int $participant_instance_id
+    ): collection {
         return linked_review_content_entity::repository()
             ->where('section_element_id', $section_element_id)
             // Check other links done for the same subject
@@ -207,7 +212,11 @@ class linked_review_content extends model {
      * @throws coding_exception
      * @throws moodle_exception
      */
-    private static function validate_input(array $content_ids, int $section_element_id, int $participant_instance_id): void {
+    private static function validate_input(
+        array $content_ids,
+        int $section_element_id,
+        int $participant_instance_id
+    ): void {
         // Make sure the section element is a linked review element, and that the participant section has the element in it.
         $is_valid_element = section_element_entity::repository()
             ->where('id', $section_element_id)
@@ -223,16 +232,13 @@ class linked_review_content extends model {
             );
         }
 
-        // Make sure the current user who is specifying the content is actually participating in the activity.
-        $user_is_participating_in_section = participant_instance::repository()
-            ->filter_by_participant_user(user::logged_in()->id)
-            ->exists();
-        if (!$user_is_participating_in_section) {
+        $section_element = section_element::load_by_id($section_element_id);
+        $element = $section_element->get_element();
+        if (!self::can_participant_select_content($participant_instance_id, $element)) {
             throw new moodle_exception('nopermissions', 'error');
         }
 
-        // Make sure the content IDs actually point to content.
-        $element = section_element::load_by_id($section_element_id)->get_element();
+        // Make sure the content IDs actually point to content.;
         /** @var linked_review $element_plugin */
         $element_plugin = $element->get_element_plugin();
         $content_table = $element_plugin->get_content_type($element)::get_table_name();
@@ -244,6 +250,37 @@ class linked_review_content extends model {
                 ', Number of IDs in the ' . $content_table . ' table: ' . $content_count
             );
         }
+    }
+
+    /**
+     * Checks if the participant can select content.
+     *
+     * @param int $participant_instance_id
+     * @param element_model $linked_review_element
+     * @return bool
+     */
+    private static function can_participant_select_content(int $participant_instance_id, element_model $linked_review_element): bool {
+        $participant_instance = participant_instance_model::load_by_id($participant_instance_id);
+        $element_data = json_decode($linked_review_element->get_data(), 'true');
+        $selection_relationships = $element_data['selection_relationships'] ?? [];
+
+        if (empty($selection_relationships)) {
+            return false;
+        }
+
+        return self::participant_instance_belongs_to_logged_in_user($participant_instance)
+            && in_array((int)$participant_instance->core_relationship_id, $selection_relationships);
+    }
+
+    /**
+     * Checks if participant instance belongs to logged in user.
+     *
+     * @param participant_instance_model $participant_instance
+     * @return bool
+     */
+    private static function participant_instance_belongs_to_logged_in_user(participant_instance_model $participant_instance): bool {
+        return (int)$participant_instance->participant_id === user::logged_in()->id
+        && (int)$participant_instance->participant_source === participant_source::INTERNAL;
     }
 
 }

@@ -22,7 +22,7 @@
   <div v-else class="tui-linkedReviewParticipantForm">
     <!-- User selects what content they want to review -->
     <component
-      :is="getComponent(element.data.components.participant_picker)"
+      :is="getComponent(element.data.components.content_picker)"
       v-if="selectedContent.length === 0"
       :participant-instance-id="participantInstanceId"
       :section-element-id="sectionElement.id"

@@ -27,6 +27,7 @@ use coding_exception;
 use mod_perform\models\activity\element as element_model;
 use mod_perform\models\activity\element_plugin;
 use mod_perform\models\activity\helpers\element_clone_helper;
+use mod_perform\models\activity\section_element;
 use performelement_redisplay\data_provider\redisplay_data;
 use performelement_redisplay\models\element_redisplay_relationship;
 use performelement_redisplay\models\helpers\redisplay_element_clone;
@@ -91,11 +92,11 @@ class redisplay extends element_plugin {
      */
     public function post_create(element_model $element): void {
         $data = json_decode($element->data, true);
-        $source_activity_id = $data['activityId'];
         $source_section_element_id = $data['sectionElementId'];
 
-        if (isset($source_activity_id) && isset($source_section_element_id)) {
-            element_redisplay_relationship::create($source_activity_id, $source_section_element_id, $element->id);
+        if (isset($source_section_element_id)) {
+            $section_element = section_element::load_by_id($source_section_element_id);
+            element_redisplay_relationship::create($section_element->section->activity_id, $source_section_element_id, $element->id);
         }
     }
 
@@ -107,11 +108,11 @@ class redisplay extends element_plugin {
      */
     public function post_update(element_model $element): void {
         $data = json_decode($element->data, true);
-        $source_activity_id = $data['activityId'];
         $source_section_element_id = $data['sectionElementId'];
 
-        if (isset($source_activity_id) && isset($source_section_element_id)) {
-            element_redisplay_relationship::update($source_activity_id, $source_section_element_id, $element->id);
+        if (isset($source_section_element_id)) {
+            $section_element = section_element::load_by_id($source_section_element_id);
+            element_redisplay_relationship::update($section_element->section->activity_id, $source_section_element_id, $element->id);
         }
     }
 

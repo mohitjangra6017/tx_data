@@ -127,6 +127,7 @@ class element_redisplay_relationship extends model {
             ->join([section_element::TABLE, 'se'], 's.id', 'se.section_id')
             ->join([element_redisplay_relationship_entity::TABLE, 'rd'], 'se.element_id', 'rd.redisplay_element_id')
             ->where('rd.source_activity_id', $source_activity_id)
+            ->group_by('s.id')
             ->get()
             ->sort(Closure::fromCallable([element_redisplay_relationship::class, 'activity_sections_callback']))
             ->map_to(section::class);

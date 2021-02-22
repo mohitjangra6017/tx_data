@@ -1,5 +1,5 @@
-mutation performelement_linked_review_update_linked_review_content (
+mutation performelement_linked_review_update_linked_review_content(
   $input: performelement_linked_review_update_linked_content_input!
 ) {
-  performelement_linked_review_update_linked_review_content (input: $input)
+  performelement_linked_review_update_linked_review_content(input: $input)
 }

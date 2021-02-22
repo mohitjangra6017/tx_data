@@ -8,7 +8,7 @@ type performelement_linked_review_content_type {
   available_settings: String!
   admin_settings_component: String
   admin_view_component: String
-  participant_picker_component: String!
+  content_picker_component: String!
   participant_content_component: String!
 }
 
@@ -34,7 +34,7 @@ extend type Mutation {
   """
   Update what content is linked to the activity.
   """
-  performelement_linked_review_update_linked_review_content (
+  performelement_linked_review_update_linked_review_content(
     input: performelement_linked_review_update_linked_content_input!
   ): Boolean
 }

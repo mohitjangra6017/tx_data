@@ -23,10 +23,12 @@
 
 namespace performelement_linked_review\webapi\resolver\type;
 
+use coding_exception;
 use core\format;
 use core\webapi\execution_context;
 use core\webapi\formatter\field\string_field_formatter;
 use core\webapi\type_resolver;
+use invalid_parameter_exception;
 use performelement_linked_review\content_type as type;
 
 class content_type implements type_resolver {
@@ -40,9 +42,9 @@ class content_type implements type_resolver {
      * @return mixed
      */
     public static function resolve(string $field, $type, array $args, execution_context $ec) {
-        $type_class = new \ReflectionClass($type);
-        if (!$type_class->implementsInterface(type::class)) {
-            throw new \coding_exception($type_class->getName() . ' must implement ' . type::class);
+        $type_class = new $type();
+        if(!$type_class instanceof type) {
+            throw new coding_exception($type . ' must implement ' . type::class);
         }
 
         switch ($field) {
@@ -58,14 +60,14 @@ class content_type implements type_resolver {
                 return $type::get_admin_settings_component();
             case 'admin_view_component':
                 return $type::get_admin_view_component();
-            case 'participant_picker_component':
-                return $type::get_participant_picker_component();
+            case 'content_picker_component':
+                return $type::get_content_picker_component();
             case 'participant_content_component':
                 return $type::get_participant_content_component();
             case 'available_settings':
                 return json_encode($type::get_available_settings());
             default:
-                throw new \invalid_parameter_exception("Invalid field '$field' passed to " . self::class);
+                throw new invalid_parameter_exception("Invalid field '$field' passed to " . self::class);
         }
     }
 

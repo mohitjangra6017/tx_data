@@ -133,7 +133,6 @@ class performelement_redisplay_redisplay_data_testcase extends advanced_testcase
             $name,
             'A2 Element',
             json_encode([
-                'activityId' => $this->activity->id,
                 'sectionElementId' => $section_element_id,
             ])
         );

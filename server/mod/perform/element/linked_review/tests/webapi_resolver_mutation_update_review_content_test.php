@@ -34,6 +34,10 @@ use totara_core\feature_not_available_exception;
 use totara_core\relationship\relationship;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group perform
+ * @group perform_element
+ */
 class performelement_linked_review_webapi_resolver_mutation_update_linked_review_content_testcase extends linked_review_testcase {
 
     private const MUTATION = 'performelement_linked_review_update_linked_review_content';
@@ -63,34 +67,7 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
 
         /** @var linked_review_content_entity[]|collection $linked_content */
         $linked_content = linked_review_content_entity::repository()->get();
-        $this->assertEquals(count($content_ids), $linked_content->count());
-        foreach ($linked_content as $content) {
-            $this->assertEquals($section_element->id, $content->section_element_id);
-            $this->assertEquals($participant_instance1->id, $content->participant_instance_id);
-            $this->assertContainsEquals($content->content_id, $content_ids);
-            $this->assertGreaterThan(0, $content->created_at);
-        }
-
-
-        // Run the query again, but only specify the first content ID.
-        // This will remove existing content IDs specified by the same participant instance.
-        $content_ids_to_delete = $content_ids;
-        $content_ids_to_keep = [array_pop($content_ids_to_delete)];
-
-        $args = [
-            'input' => [
-                'content_ids' => $content_ids_to_keep,
-                'section_element_id' => $section_element->id,
-                'participant_instance_id' => $participant_instance2->id,
-            ],
-        ];
-
-        $this->assertEquals(3, linked_review_content_entity::repository()->count());
-
-        $this->resolve_graphql_mutation(self::MUTATION, $args);
-
-        /** @var linked_review_content_entity[]|collection $linked_content */
-        $linked_content = linked_review_content_entity::repository()->get();
+        $this->assertEquals(3, $linked_content->count());
         $this->assertEquals(count($content_ids), $linked_content->count());
         foreach ($linked_content as $content) {
             $this->assertEquals($section_element->id, $content->section_element_id);

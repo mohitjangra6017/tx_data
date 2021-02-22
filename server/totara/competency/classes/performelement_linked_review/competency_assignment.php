@@ -77,7 +77,7 @@ class competency_assignment implements content_type {
     /**
      * @inheritDoc
      */
-    public static function get_participant_picker_component(): string {
+    public static function get_content_picker_component(): string {
         return 'totara_competency/components/performelement_linked_review/ParticipantPicker';
     }
 

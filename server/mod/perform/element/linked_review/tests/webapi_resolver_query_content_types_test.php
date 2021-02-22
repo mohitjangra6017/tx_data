@@ -25,6 +25,7 @@ require_once(__DIR__ . '/linked_review_testcase.php');
 
 use performelement_linked_review\content_type;
 use performelement_linked_review\content_type_factory;
+use totara_competency\performelement_linked_review\competency_assignment;
 use totara_core\advanced_feature;
 use totara_core\feature_not_available_exception;
 use totara_webapi\phpunit\webapi_phpunit_helper;
@@ -59,7 +60,7 @@ class performelement_linked_review_query_content_types_testcase extends linked_r
         $activity = self::getDataGenerator()->get_plugin_generator('mod_perform')->create_activity_in_container();
 
         /** @var content_type|string $competency_type */
-        $competency_type = \totara_competency\performelement_linked_review\competency_assignment::class;
+        $competency_type = competency_assignment::class;
 
         $value_map = [
             'identifier' => $competency_type::get_identifier(),
@@ -68,7 +69,7 @@ class performelement_linked_review_query_content_types_testcase extends linked_r
             'available_settings' => json_encode($competency_type::get_available_settings()),
             'admin_settings_component' => $competency_type::get_admin_settings_component(),
             'admin_view_component' => $competency_type::get_admin_view_component(),
-            'participant_picker_component' => $competency_type::get_participant_picker_component(),
+            'content_picker_component' => $competency_type::get_content_picker_component(),
             'participant_content_component' => $competency_type::get_participant_content_component(),
         ];
 
