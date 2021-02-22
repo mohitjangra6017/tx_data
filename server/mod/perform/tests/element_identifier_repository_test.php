@@ -53,7 +53,7 @@ class mod_perform_element_identifier_respository_testcase extends advanced_testc
             'Title',
             'A1 Element'
         );
-        $section1->add_element($element1);
+        $section1->get_section_element_manager()->add_element_after($element1);
 
         $activity2 = $perform_generator->create_activity_in_container([
             'create_section' => true,
@@ -67,7 +67,7 @@ class mod_perform_element_identifier_respository_testcase extends advanced_testc
             'Title',
             'A2 Element'
         );
-        $section2->add_element($element2);
+        $section2->get_section_element_manager()->add_element_after($element2);
 
         // Create an identifier not attached to any elements.
         $unused_element_identifier = element_identifier_model::create(

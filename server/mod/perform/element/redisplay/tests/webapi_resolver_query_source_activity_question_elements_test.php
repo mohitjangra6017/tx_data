@@ -125,14 +125,14 @@ class performelement_redisplay_webapi_resolver_query_source_activity_question_el
             $this->create_static_content_data()
         );
 
-        $section_1->add_element($short_text_element_1);
-        $section_1->add_element($short_text_element_2);
-        $section_1->add_element($static_content_element_1);
+        $section_1->get_section_element_manager()->add_element_after($short_text_element_1);
+        $section_1->get_section_element_manager()->add_element_after($short_text_element_2);
+        $section_1->get_section_element_manager()->add_element_after($static_content_element_1);
 
-        $section_2->add_element($static_content_element_2);
+        $section_2->get_section_element_manager()->add_element_after($static_content_element_2);
 
-        $section_3->add_element($short_text_element_2);
-        $section_3->add_element($static_content_element_2);
+        $section_3->get_section_element_manager()->add_element_after($short_text_element_2);
+        $section_3->get_section_element_manager()->add_element_after($static_content_element_2);
     }
 
     private function create_static_content_data() {

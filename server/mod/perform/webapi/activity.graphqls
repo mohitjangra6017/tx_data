@@ -204,6 +204,13 @@ type mod_perform_element {
   Encoded data storing configuration information used by the element
   """
   data(format: core_format = PLAIN): String
+
+  children: [mod_perform_element!]!
+
+  parent_element: mod_perform_element
+
+  sort_order: Int
+
   """
   Whether a participant is required to respond to this element in order to submit a section
   """
@@ -727,6 +734,8 @@ extend type Query {
 
 """
 Create a new element and add it to a section
+
+Deprecated since Totara 14: Use the individual mutation inputs for creating element in section.
 """
 input mod_perform_create_new_element_input {
   plugin_name: param_text!
@@ -735,10 +744,13 @@ input mod_perform_create_new_element_input {
   identifier: param_text!
   data: String
   sort_order: param_integer!
+  parent: param_integer
 }
 
 """
 Link to an existing element
+
+Deprecated since Totara 14: Use the individual mutation inputs for creating element in section.
 """
 input mod_perform_create_link_element_input {
   element_id: core_id!
@@ -747,6 +759,8 @@ input mod_perform_create_link_element_input {
 
 """
 Update an existing element
+
+Deprecated since Totara 14: Use the individual mutation inputs for updating element in section.
 """
 input mod_perform_update_element_input {
   element_id: core_id!

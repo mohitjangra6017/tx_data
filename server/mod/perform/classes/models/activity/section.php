@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of Totara Learn
  *
  * Copyright (C) 2020 onwards Totara Learning Solutions LTD
@@ -27,11 +27,13 @@ use coding_exception;
 use core\orm\collection;
 use core\orm\entity\model;
 use core\orm\query\builder;
+use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\entity\activity\section as section_entity;
+use mod_perform\entity\activity\section_relationship as section_relationship_entity;
 use mod_perform\hook\dto\pre_deleted_dto;
 use mod_perform\hook\pre_section_deleted;
+use mod_perform\models\activity\helpers\section_element_manager;
 use mod_perform\models\response\participant_section;
-use  mod_perform\models\activity\element as model_element;
 use stdClass;
 
 /**
@@ -47,6 +49,7 @@ use stdClass;
  * @property-read int $sort_order
  * @property-read collection|section_element[] $section_elements
  * @property-read collection|section_relationship[] $section_relationships
+ * @property-read section_element_manager $section_element_manager
  *
  * @package mod_perform\models\activity
  */
@@ -69,6 +72,7 @@ class section extends model {
         'section_relationships',
         'participant_sections',
         'section_elements_summary',
+        'section_element_manager',
         'respondable_element_count'
     ];
 
@@ -177,19 +181,7 @@ class section extends model {
      * @return collection|section_element[]
      */
     public function get_section_elements(): collection {
-        $section_element_models = [];
-
-        foreach ($this->entity->section_elements as $section_element_entity) {
-            if (isset($section_element_models[$section_element_entity->sort_order])) {
-                throw new coding_exception('Section elements have invalid sort orders');
-            }
-            $section_element_models[$section_element_entity->sort_order] =
-                section_element::load_by_entity($section_element_entity);
-        }
-
-        ksort($section_element_models);
-
-        return new collection($section_element_models);
+        return $this->get_section_element_manager()->get_section_elements();
     }
 
     /**
@@ -198,13 +190,7 @@ class section extends model {
      * @return collection|section_element[]
      */
     public function get_respondable_section_elements(): collection {
-        if ($this->entity->relation_loaded('respondable_section_elements')) {
-            return $this->entity->respondable_section_elements->map_to(section_element::class);
-        }
-
-        return $this->get_section_elements()->filter(function (section_element $section_element) {
-            return $section_element->element->get_is_respondable();
-        });
+        return $this->get_section_element_manager()->get_respondable_section_elements();
     }
 
     /**
@@ -231,28 +217,7 @@ class section extends model {
      * @return stdClass
      */
     public function get_section_elements_summary(): stdClass {
-        $other_element_count = 0;
-        $optional_count = 0;
-        $required_count = 0;
-        foreach ($this->entity->section_elements as $section_element) {
-            $is_required = $section_element->element->is_required;
-            $element = model_element::load_by_entity($section_element->element);
-            if (!$element->is_respondable) {
-                $other_element_count ++;
-            } else {
-                if ($is_required) {
-                    $required_count++;
-                } else {
-                    $optional_count++;
-                }
-            }
-        }
-
-        return (object)[
-            'required_question_count' => $required_count,
-            'optional_question_count' => $optional_count,
-            'other_element_count'     => $other_element_count,
-        ];
+        return $this->get_section_element_manager()->get_section_elements_summary();
     }
 
     /**
@@ -323,32 +288,6 @@ class section extends model {
     }
 
     /**
-     * Check if the sort orders on the section elements are valid and throw an exception if not
-     *
-     * @throws coding_exception when the ordering is not valid
-     */
-    private function validate_sort_orders(): void {
-        $section_elements = $this->get_section_elements();
-
-        // If there are no items then sorting can't be invalid.
-        if ($section_elements->count() < 1) {
-            return;
-        }
-
-        $sort_orders = array_unique($section_elements->pluck('sort_order'));
-
-        if (count($sort_orders) != count($section_elements)) {
-            throw new coding_exception('Section element sort orders are not unique!');
-        }
-
-        sort($sort_orders);
-
-        if (reset($sort_orders) != 1 || end($sort_orders) != count($sort_orders)) {
-            throw new coding_exception('Section element sort orders are not consecutive starting at 1!');
-        }
-    }
-
-    /**
      * Add the given element to this section
      *
      * Note that the element will be added at the end of the list of existing elements. To position it elsewhere,
@@ -357,9 +296,11 @@ class section extends model {
      * @param element $element
      * @return section_element
      * @throws coding_exception
+     * @deprecated Since Totara 14.0
      */
     public function add_element(element $element): section_element {
-        if ($this->is_section_deleted()) {
+        debugging('Method has been deprecated. Use section_element_manager::add_element_after', DEBUG_DEVELOPER);
+        if ($this->entity->deleted()) {
             throw new coding_exception('Section has been deleted, can not add section element');
         }
 
@@ -382,41 +323,11 @@ class section extends model {
      *
      * @param section_element[] $remove_section_elements
      * @throws coding_exception|\Throwable
+     * @deprecated Since Totara 14.0
      */
     public function remove_section_elements(array $remove_section_elements): void {
-        global $DB;
-
-        if ($this->is_section_deleted()) {
-            throw new coding_exception('Section has been deleted, can not remove section elements');
-        }
-
-        if (empty($remove_section_elements)) {
-            return;
-        }
-
-        $DB->transaction(function () use ($remove_section_elements) {
-            foreach ($remove_section_elements as $section_element) {
-                if ($section_element->section_id != $this->id) {
-                    throw new coding_exception('Cannot delete a section element that does not belong to this section');
-                }
-                $section_element->delete();
-            }
-
-            // Reorder the remaining section elements.
-            $section_elements = $this->get_section_elements();
-
-            $i = 0;
-            foreach ($section_elements as $section_element) {
-                $i++;
-                if ($section_element->sort_order != $i) {
-                    $section_element->update_sort_order($i);
-                }
-            }
-            // No need to validate sort orders because we've just resorted everything.
-        });
-
-        // Refresh the relation otherwise the elements are outdated
-        $this->entity->load_relation('section_elements');
+        debugging('Method has been deprecated. Use section_element_manager::remove_section_elements', DEBUG_DEVELOPER);
+        $this->get_section_element_manager()->remove_section_elements($remove_section_elements);
     }
 
     /**
@@ -426,40 +337,12 @@ class section extends model {
      *
      * @param section_element[] $move_section_elements where $key is the new sort order and $value is the section element
      * @throws coding_exception|\Throwable
+     * @deprecated Since Totara 14.0
+     * @see section_element_manager::move_section_elements
      */
     public function move_section_elements(array $move_section_elements): void {
-        global $DB;
-
-        if ($this->is_section_deleted()) {
-            throw new coding_exception('Section has been deleted, can not move section elements');
-        }
-
-        if (empty($move_section_elements)) {
-            return;
-        }
-
-        $DB->transaction(function () use ($move_section_elements) {
-            global $DB;
-
-            foreach ($move_section_elements as $sort_order => $section_element) {
-                if ($section_element->section_id != $this->id) {
-                    throw new coding_exception('Cannot move a section element that does not belong to this section');
-                }
-                // Sort order has a unique key. The destination sort order might still be in use by a following
-                // element, so we temporarily set the sort order to the negative of its final position.
-                $section_element->update_sort_order(-$sort_order);
-            }
-
-            foreach ($move_section_elements as $sort_order => $section_element) {
-                // We move the section element back into the correct position, which must currently be vacant.
-                $section_element->update_sort_order($sort_order);
-            }
-
-            $this->validate_sort_orders();
-        });
-
-        // Refresh the relation otherwise the elements are outdated
-        $this->entity->load_relation('section_elements');
+        debugging('Method has been deprecated. Use section_element_manager::move_section_elements', DEBUG_DEVELOPER);
+        $this->get_section_element_manager()->move_section_elements($move_section_elements);
     }
 
     /**
@@ -473,12 +356,22 @@ class section extends model {
     }
 
     /**
+     * Gets the section element manager for the section.
+     *
+     * @return section_element_manager
+     */
+    public function get_section_element_manager(): section_element_manager {
+        return (new section_element_manager($this->entity));
+    }
+
+    /**
      * Delete the section
      *
      * @throws coding_exception
      */
     public function delete(): void {
         global $DB;
+        require_capability('mod/perform:manage_activity', $this->activity->get_context());
 
         // check if section can be deleted
         $hook = new pre_section_deleted($this->get_id());
@@ -490,22 +383,22 @@ class section extends model {
         $reasons = $hook->get_reasons();
 
         if (!empty($reasons)) {
-            throw new coding_exception(array_shift($reasons)->get_description());
+            throw new coding_exception($hook->get_first_reason()->get_description());
         }
 
-        $section_relationships = $this->get_section_relationships();
-        $participant_sections = $this->get_participant_sections();
-
         $DB->transaction(
-            function () use ($section_relationships, $participant_sections) {
+            function () {
                 // delete section relationship
+                $section_relationships = $this->get_section_relationships();
                 foreach ($section_relationships as $section_relationship) {
                     section_relationship::delete_with_properties($this->id, $section_relationship->core_relationship->id);
                 }
-                // delete participant section
-                foreach ($participant_sections as $participant_section) {
-                    $participant_section->delete();
-                }
+
+                // delete participant sections
+                participant_section_entity::repository()
+                    ->where('section_id', $this->id)
+                    ->delete();
+
                 // delete section
                 $this->entity->delete();
             }
@@ -580,10 +473,12 @@ class section extends model {
      *
      * @return int
      * @throws coding_exception
+     * @deprecated Since Totara 14.0
+     * @see section_element_manager::get_highest_sort_order
      */
     public function get_highest_sort_order() {
-        $last_section_element = $this->get_section_elements()->last();
-        return $last_section_element ? $last_section_element->sort_order : 0;
+        debugging('Method has been deprecated. Use section_element_manager::get_highest_sort_order', DEBUG_DEVELOPER);
+        return $this->get_section_element_manager()->get_highest_sort_order();
     }
 
     /**

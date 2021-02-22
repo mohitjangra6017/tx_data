@@ -107,6 +107,16 @@ abstract class element_plugin {
     }
 
     /**
+     * Modify json data to add extra information to it.
+     *
+     * @param string|null $data
+     * @return string|null
+     */
+    public function process_data(?string $data): ?string {
+        return $data;
+    }
+
+    /**
      * This method return element's admin form vue component name
      *
      * This function is going to be deprecated. Use element_plugin::get_admin_edit_component() instead
@@ -329,4 +339,13 @@ abstract class element_plugin {
      * @return int
      */
     abstract public function get_sortorder(): int;
+
+    /**
+     * If element supports child elements.
+     *
+     * @return bool
+     */
+    public function supports_child_elements(): bool {
+        return false;
+    }
 }

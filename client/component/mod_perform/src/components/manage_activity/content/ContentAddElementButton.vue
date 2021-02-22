@@ -32,6 +32,7 @@
       </template>
 
       <DropdownGroup
+        v-if="questionElement.length > 0"
         :separator="true"
         :text="$str('section_dropdown_question_elements', 'mod_perform')"
       >
@@ -45,6 +46,7 @@
       </DropdownGroup>
 
       <DropdownGroup
+        v-if="otherElement.length > 0"
         :separator="true"
         :text="$str('section_dropdown_other_elements', 'mod_perform')"
       >

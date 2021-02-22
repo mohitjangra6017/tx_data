@@ -115,8 +115,8 @@ class performelement_redisplay_redisplay_data_testcase extends advanced_testcase
             'Projected performance',
             'A2 Element'
         );
-        $section_element_1 = $section_1->add_element($short_text_element_1);
-        $redisplay_section_element = $section_1->add_element(
+        $section_element_1 = $section_1->get_section_element_manager()->add_element_after($short_text_element_1);
+        $redisplay_section_element = $section_1->get_section_element_manager()->add_element_after(
             $this->get_redisplay_data($section_element_1->id, 'Performance analysis')
         );
 

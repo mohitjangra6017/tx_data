@@ -122,7 +122,7 @@ class previous_responses {
 
         return $this->return_response(
             $this->get_title_with_responses($responses['latest_response']),
-            $responses['your_response'],
+            $responses['your_response'] ?? null,
             $relationship_data['other_responder_groups'],
             $relationship_data['is_anonymous']
         );
@@ -175,12 +175,17 @@ class previous_responses {
             $other_responder_groups = new collection();
         }
 
-        return [
+        $result = [
             'title' => $title,
-            'your_response' => $your_response,
             'other_responder_groups' => $other_responder_groups,
             'is_anonymous' => $is_anonymous,
         ];
+
+        if ($your_response !== null) {
+            $result['your_response'] = $your_response;
+        }
+
+        return $result;
     }
 
     /**

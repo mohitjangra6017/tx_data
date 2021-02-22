@@ -49,8 +49,30 @@ class section_element_response extends entity_model_formatter {
                 return $formatter->format($value);
             },
             'response_data_formatted_lines' => function ($value, $format) {
-                return (new string_field_formatter($format ?? format::FORMAT_PLAIN, $this->object->element->get_context()))
-                    ->format($value);
+                $formatter = element_response_formatter::get_instance($this->object->element, $format);
+                if ($this->object->exists()) {
+                    $formatter->set_response_id($this->object->id);
+                }
+
+                if (is_array($value) && (count($value) > 1 || empty($value))) {
+                    return $value;
+                }
+                $value = reset($value);
+
+
+                if (empty($value)) {
+                    if (is_null($value)) {
+                        return [];
+                    }
+
+                    return [$value];
+                }
+                $value = $formatter->format($value);
+                $value = is_null($value)
+                    ? ''
+                    : $value;
+
+                return [$value] ?? [];
             },
             'participant_instance' => null,
             'other_responder_groups' => null,

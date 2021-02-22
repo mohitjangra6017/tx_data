@@ -94,6 +94,7 @@
       <Uniform
         v-if="initialValues"
         :key="activeParticipantSection.id"
+        ref="form"
         v-slot="{ getSubmitting }"
         class="tui-participantContent__form"
         :initial-values="initialValues"
@@ -203,6 +204,7 @@
                         :aria-labelledby="labelId"
                         :label-id="checkboxGroupId"
                         :section-element-id="sectionElement.id"
+                        :participant-section-id="participantSectionId"
                         :participant-instance-id="participantInstanceId"
                         :is-external-participant="isExternalParticipant"
                       />
@@ -810,6 +812,8 @@ export default {
               identifier: item.element.identifier,
               data: JSON.parse(item.element.data),
               is_required: item.element.is_required,
+              children: item.element.children,
+              parent_element: item.element.parent_element,
               participantSectionId: result.id ? result.id : null,
               token: this.token,
               responseData: null,

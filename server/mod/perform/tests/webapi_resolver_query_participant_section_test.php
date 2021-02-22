@@ -30,6 +30,7 @@ use mod_perform\entity\activity\section_element;
 use mod_perform\models\activity\section;
 use mod_perform\models\activity\activity;
 use mod_perform\entity\activity\participant_section as participant_section_entity;
+use mod_perform\testing\activity_generator_configuration;
 use totara_core\advanced_feature;
 use totara_job\job_assignment;
 use totara_webapi\phpunit\webapi_phpunit_helper;
@@ -112,7 +113,7 @@ class mod_perform_webapi_resolver_query_participant_section_testcase extends adv
         $respondable_element_response = $section_element_responses[0];
         self::assertEquals('"alert(1)bold"', $respondable_element_response['response_data']);
         self::assertEquals('"<script>alert(1)<\/script><b>bold<\/b>"', $respondable_element_response['response_data_raw']);
-        self::assertEquals('alert(1)bold', $respondable_element_response['response_data_formatted_lines'][0]);
+        self::assertEquals('"alert(1)bold"', $respondable_element_response['response_data_formatted_lines'][0]);
     }
 
     public function test_failed_ajax_query(): void {
@@ -166,7 +167,7 @@ class mod_perform_webapi_resolver_query_participant_section_testcase extends adv
         /** @var \mod_perform\testing\generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
-        $configuration = \mod_perform\testing\activity_generator_configuration::new()
+        $configuration = activity_generator_configuration::new()
             ->set_number_of_activities(1)
             ->set_number_of_tracks_per_activity(1)
             ->set_cohort_assignments_per_activity(1)
@@ -310,6 +311,8 @@ class mod_perform_webapi_resolver_query_participant_section_testcase extends adv
                         ],
                     'title' => 'test element title',
                     'data' => null,
+                    'children' => [],
+                    '__typename' => 'mod_perform_element',
                     'is_required' => false,
                     'is_respondable' => true,
                 ],
@@ -336,6 +339,8 @@ class mod_perform_webapi_resolver_query_participant_section_testcase extends adv
                         ],
                     'title' => 'test element title',
                     'data' => null,
+                    'children' => [],
+                    '__typename' => 'mod_perform_element',
                     'is_required' => false,
                     'is_respondable' => false,
                 ],

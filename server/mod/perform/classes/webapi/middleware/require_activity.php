@@ -24,6 +24,7 @@
 namespace mod_perform\webapi\middleware;
 
 use Closure;
+use container_course\module\course_module;
 use core\orm\query\exceptions\record_not_found_exception;
 use invalid_parameter_exception;
 use core\webapi\middleware;
@@ -31,10 +32,12 @@ use core\webapi\resolver\payload;
 use core\webapi\resolver\result;
 use mod_perform\entity\activity\subject_instance;
 use mod_perform\models\activity\activity;
+use mod_perform\models\activity\element;
 use mod_perform\models\activity\notification;
 use mod_perform\models\activity\helpers\access_checks;
 use mod_perform\models\activity\participant_instance;
 use mod_perform\models\activity\section;
+use mod_perform\models\activity\section_element as section_element_model;
 use mod_perform\models\activity\track;
 use mod_perform\models\response\participant_section;
 use moodle_exception;
@@ -135,6 +138,65 @@ class require_activity implements middleware {
             }
 
             return section::load_by_id($id)->activity;
+        };
+
+        return new require_activity($retriever, $set_relevant_context);
+    }
+
+    /**
+     * Creates an object instance that validates based on a section element id in the
+     * incoming payload.
+     *
+     * @param string $payload_keys the keys in the payload to use to extract the
+     *        id from the payload. For example if the keys are "a.b.c", then the
+     *        id is retrieved as $payload['a']['b']['c'].
+     * @param bool $set_relevant_context if true, sets the graphql execution
+     *        context's relevant context field with the activity context.
+     *
+     * @return require_activity the object instance.
+     */
+    public static function by_section_element_id(
+        string $payload_keys,
+        bool $set_relevant_context = false
+    ): require_activity {
+        $retriever = function (payload $payload) use ($payload_keys): activity {
+            $id = self::get_id($payload_keys, $payload);
+            if (!$id) {
+                throw new invalid_parameter_exception('invalid section element id');
+            }
+
+            return section_element_model::load_by_id($id)->section->activity;
+        };
+
+        return new require_activity($retriever, $set_relevant_context);
+    }
+
+    /**
+     * Creates an object instance that validates based on an element id in the
+     * incoming payload.
+     *
+     * @param string $payload_keys the keys in the payload to use to extract the
+     *        id from the payload. For example if the keys are "a.b.c", then the
+     *        id is retrieved as $payload['a']['b']['c'].
+     * @param bool $set_relevant_context if true, sets the graphql execution
+     *        context's relevant context field with the activity context.
+     *
+     * @return require_activity the object instance.
+     */
+    public static function by_element_id(
+        string $payload_keys,
+        bool $set_relevant_context = false
+    ): require_activity {
+        $retriever = function (payload $payload) use ($payload_keys): activity {
+            $id = self::get_id($payload_keys, $payload);
+
+            if (!$id) {
+                throw new invalid_parameter_exception('invalid element id');
+            }
+            $course_module_id = element::load_by_id($id)->get_context()->instanceid;
+            $activity_id = course_module::from_id($course_module_id)->get_instance();
+
+            return activity::load_by_id($activity_id);
         };
 
         return new require_activity($retriever, $set_relevant_context);

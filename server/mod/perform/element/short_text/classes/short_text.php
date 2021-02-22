@@ -23,7 +23,6 @@
 
 namespace performelement_short_text;
 
-use coding_exception;
 use core\collection;
 use mod_perform\models\activity\element;
 use core_text;
@@ -64,6 +63,13 @@ class short_text extends respondable_element_plugin {
      */
     public function decode_response(?string $encoded_response_data, ?string $encoded_element_data): ?string {
         return $this->decode_simple_string_response($encoded_response_data);
+    }
+
+    /**
+     * @inheritDocs
+     */
+    public function format_response_lines(?string $encoded_response_data, ?string $encoded_element_data): array {
+        return [$encoded_response_data];
     }
 
     /**

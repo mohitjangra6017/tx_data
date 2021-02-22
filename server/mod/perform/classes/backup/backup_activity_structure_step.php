@@ -102,6 +102,8 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
                 'identifier_id',
                 'data',
                 'context_id',
+                'parent',
+                'sort_order',
                 'is_required'
             ]
         );

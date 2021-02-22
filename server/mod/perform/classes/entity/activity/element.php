@@ -23,10 +23,10 @@
 
 namespace mod_perform\entity\activity;
 
+use core\collection;
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
-use core\orm\entity\relations\has_one;
-use performelement_redisplay\entity\element_redisplay_relationship;
+use core\orm\entity\relations\has_many;
 
 /**
  * Section element entity
@@ -39,8 +39,11 @@ use performelement_redisplay\entity\element_redisplay_relationship;
  * @property int $identifier_id used to match elements that share the same identifier
  * @property string $data configuration data specific to this type of element
  * @property bool $is_required used to check response required or optional
+ * @property int|null $parent element parent.
+ * @property int|null $sort_order element sort_order in parent parent.
  * @property-read element_identifier $element_identifier
- * @property-read element_redisplay_relationship $element_redisplay_relationship
+ * @property-read collection|element[] $children
+ * @property-read element $parent_element
  *
  * @method static element_repository repository()
  *
@@ -82,11 +85,20 @@ class element extends entity {
     }
 
     /**
-     * get the element redisplay relationship
+     * Children elements of the element.
      *
-     * @return has_one
+     * @return has_many
      */
-    public function element_redisplay_relationship(): has_one {
-        return $this->has_one(element_redisplay_relationship::class, 'redisplay_element_id', 'element_id');
+    public function children(): has_many {
+        return $this->has_many(element::class, 'parent')->order_by('sort_order');
+    }
+
+    /**
+     * Parent element of the element.
+     *
+     * @return belongs_to
+     */
+    public function parent_element(): belongs_to {
+        return $this->belongs_to(element::class, 'parent');
     }
 }

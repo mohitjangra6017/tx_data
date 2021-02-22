@@ -28,7 +28,6 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
 /**
  * @coversDefaultClass \mod_perform\webapi\resolver\mutation\update_section_elements
  *
- * @group perform
  * Tests the mutation to add, update and delete section elements
  */
 class mod_perform_webapi_resolver_mutation_update_section_elements_testcase extends advanced_testcase {
@@ -72,6 +71,16 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
         ];
 
         $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
+        $this->assertDebuggingCalled(
+            [
+                'This mutation has been deprecated. Use the individual section element mutations.',
+                'Method has been deprecated. Use section_element_manager::remove_section_elements',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::move_section_elements',
+            ],
+            DEBUG_DEVELOPER
+        );
 
         // Check that the changes were made.
         $section_element_records = $DB->get_records('perform_section_element', ['section_id' => $section->id]);
@@ -150,6 +159,17 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
 
         $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
 
+        $this->assertDebuggingCalled(
+            [
+                'This mutation has been deprecated. Use the individual section element mutations.',
+                'Method has been deprecated. Use section_element_manager::remove_section_elements',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::move_section_elements',
+            ],
+            DEBUG_DEVELOPER
+        );
+
         // Check that the changes were made.
         $section_element_records = $DB->get_records('perform_section_element', ['section_id' => $section->id]);
         $this->assertCount(2, $section_element_records);
@@ -226,6 +246,17 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
 
         $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
 
+        $this->assertDebuggingCalled(
+            [
+                'This mutation has been deprecated. Use the individual section element mutations.',
+                'Method has been deprecated. Use section_element_manager::remove_section_elements',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::move_section_elements',
+            ],
+            DEBUG_DEVELOPER
+        );
+
         $args = [
             'input' => [
                 'section_id' => $section->id,
@@ -248,6 +279,15 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
         // Section sort order 1 => element 2 (title 4), section sort order 2 => element 1 (title 3).
 
         $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
+
+        $this->assertDebuggingCalled(
+            [
+                'This mutation has been deprecated. Use the individual section element mutations.',
+                'Method has been deprecated. Use section_element_manager::remove_section_elements',
+                'Method has been deprecated. Use section_element_manager::move_section_elements',
+            ],
+            DEBUG_DEVELOPER
+        );
 
         // Check that the changes were made.
         $section_element_records = $DB->get_records('perform_section_element', ['section_id' => $section->id]);
@@ -334,6 +374,19 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
 
         $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
 
+        $this->assertDebuggingCalled(
+            [
+                'This mutation has been deprecated. Use the individual section element mutations.',
+                'Method has been deprecated. Use section_element_manager::remove_section_elements',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::move_section_elements',
+            ],
+            DEBUG_DEVELOPER
+        );
+
         $section_elements = $section->get_section_elements()->all(true);
 
         $args = [
@@ -359,6 +412,15 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
         ];
 
         $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
+
+        $this->assertDebuggingCalled(
+            [
+                'This mutation has been deprecated. Use the individual section element mutations.',
+                'Method has been deprecated. Use section_element_manager::remove_section_elements',
+                'Method has been deprecated. Use section_element_manager::move_section_elements',
+            ],
+            DEBUG_DEVELOPER
+        );
 
         // Check that the changes were made.
         $section_element_records = $DB->get_records('perform_section_element', ['section_id' => $section->id]);
@@ -431,6 +493,17 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
 
         $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
 
+        $this->assertDebuggingCalled(
+            [
+                'This mutation has been deprecated. Use the individual section element mutations.',
+                'Method has been deprecated. Use section_element_manager::remove_section_elements',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::move_section_elements',
+            ],
+            DEBUG_DEVELOPER
+        );
+
         $section_elements = $section->get_section_elements()->all(true);
 
         $args = [
@@ -466,6 +539,17 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
         ];
 
         $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
+
+        $this->assertDebuggingCalled(
+            [
+                'This mutation has been deprecated. Use the individual section element mutations.',
+                'Method has been deprecated. Use section_element_manager::remove_section_elements',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::move_section_elements',
+            ],
+            DEBUG_DEVELOPER
+        );
 
         // Check that the changes were made.
         $section_element_records = $DB->get_records('perform_section_element', ['section_id' => $section->id]);
@@ -570,6 +654,17 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
         ];
 
         $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
+        $this->assertDebuggingCalled(
+            [
+                'This mutation has been deprecated. Use the individual section element mutations.',
+                'Method has been deprecated. Use section_element_manager::remove_section_elements',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::move_section_elements',
+            ],
+            DEBUG_DEVELOPER
+        );
 
         $section_elements = $section->get_section_elements()->all(true);
 
@@ -627,6 +722,16 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
         ];
 
         $result = $this->parsed_graphql_operation(self::MUTATION, $args);
+        $this->assertDebuggingCalled(
+            [
+                'This mutation has been deprecated. Use the individual section element mutations.',
+                'Method has been deprecated. Use section_element_manager::remove_section_elements',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::move_section_elements',
+            ],
+            DEBUG_DEVELOPER
+        );
         $this->assert_webapi_operation_successful($result);
 
         $result_data = $this->get_webapi_operation_data($result);
@@ -734,6 +839,16 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
         }
         $context = $this->create_webapi_context(self::MUTATION);
         $result = update_section_elements::resolve($args, $context);
+
+        $this->assertDebuggingCalled(
+            [
+                'This mutation has been deprecated. Use the individual section element mutations.',
+                'Method has been deprecated. Use section_element_manager::remove_section_elements',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::move_section_elements',
+            ],
+            DEBUG_DEVELOPER
+        );
         if ($passes_validation) {
             /** @var section $result_section */
             $result_section = $result['section'];
@@ -775,5 +890,14 @@ class mod_perform_webapi_resolver_mutation_update_section_elements_testcase exte
         ];
         $context = $this->create_webapi_context(self::MUTATION);
         update_section_elements::resolve($args, $context);
+        $this->assertDebuggingCalled(
+            [
+                'This mutation has been deprecated. Use the individual section element mutations.',
+                'Method has been deprecated. Use section_element_manager::remove_section_elements',
+                'Method has been deprecated. Use section_element_manager::add_element_after',
+                'Method has been deprecated. Use section_element_manager::move_section_elements',
+            ],
+            DEBUG_DEVELOPER
+        );
     }
 }

@@ -84,17 +84,21 @@
                       !$apollo.loading
                   "
                   :dragging="dragging"
+                  :element-plugins="elementPlugins"
                   :section-component="getSectionComponent(sectionElement)"
                   :section-element="sectionElement"
                   :section-id="sectionId"
+                  :section="section"
                   :activity-id="activityId"
                   :activity-context-id="activityContextId"
+                  @child-update="childUpdate"
                   @update="update(sectionElement, $event, index)"
                   @edit="edit(sectionElement)"
                   @display="display(sectionElement)"
                   @display-read="displayReadOnly(sectionElement)"
                   @remove="tryDelete(sectionElement, index)"
                   @move="showMoveModal(sectionElement, index)"
+                  @unsaved-child="setUnsavedChildElements($event)"
                 />
               </div>
             </Draggable>
@@ -166,10 +170,7 @@
                 >
                   {{ title }}
                 </FormRow>
-                <FormRow
-                  v-slot="{ id, label }"
-                  :label="$str('modal_element_move_to', 'mod_perform')"
-                >
+                <FormRow :label="$str('modal_element_move_to', 'mod_perform')">
                   <FormSelect
                     v-model="moveToSectionId"
                     :name="$str('modal_element_move_to', 'mod_perform')"
@@ -221,12 +222,16 @@ import moveElementToSectionMutation from 'mod_perform/graphql/move_element_to_se
 import performElementPluginsQuery from 'mod_perform/graphql/element_plugins';
 import sectionDetailQuery from 'mod_perform/graphql/section_admin';
 import sectionsQuery from 'mod_perform/graphql/sections';
-import updateSectionElementMutation from 'mod_perform/graphql/update_section_elements';
+import createElementInSectionMutation from 'mod_perform/graphql/create_element_in_section';
+import deleteSectionElementMutation from 'mod_perform/graphql/delete_section_element';
+import reorderSectionElementMutation from 'mod_perform/graphql/reorder_section_element';
+import updateElementInSectionMutation from 'mod_perform/graphql/update_element_in_section';
 import elementDeletionValidationQuery from 'mod_perform/graphql/element_deletion_validation';
 
 import { ACTIVITY_STATUS_DRAFT } from 'mod_perform/constants';
 import { notify } from 'tui/notifications';
 import { pull, uniqueId } from 'tui/util';
+import Vue from 'vue';
 
 export default {
   components: {
@@ -260,7 +265,7 @@ export default {
       required: true,
     },
     sectionId: {
-      type: String,
+      type: Number,
       required: true,
     },
     title: {
@@ -306,6 +311,7 @@ export default {
       modalTitle: null,
       modalDescription: null,
       modalData: [],
+      unsavedChildElements: {},
     };
   },
 
@@ -359,6 +365,21 @@ export default {
      */
     hasUnsavedChanges() {
       return this.editingIds.length > 0;
+    },
+
+    /**
+     * Check if any elements have unsaved child elements
+     *
+     * @return {Boolean}
+     */
+    hasUnsavedChildElements() {
+      let hasUnsavedChanges = false;
+      Object.entries(this.unsavedChildElements).forEach(([key]) => {
+        if (this.unsavedChildElements[key] === true) {
+          hasUnsavedChanges = true;
+        }
+      });
+      return hasUnsavedChanges;
     },
 
     /**
@@ -422,6 +443,22 @@ export default {
     },
 
     /**
+     * Child element update
+     */
+    childUpdate() {
+      this.$apollo.queries.section.refetch();
+    },
+
+    /**
+     * Track if elements have unsaved child elements
+     *
+     * @param {Object} data
+     */
+    setUnsavedChildElements(data) {
+      Vue.set(this.unsavedChildElements, data.key, data.hasChanges);
+    },
+
+    /**
      * Update existing elements and shows display view of the element.
      */
     update(sectionElement, elementData, index) {
@@ -431,6 +468,7 @@ export default {
         {
           raw_title: elementData.title,
           raw_data: elementData.data,
+          parent: elementData.parent,
         }
       );
 
@@ -447,34 +485,32 @@ export default {
         elementToSave.is_required = sectionElement.element.is_required;
       }
 
-      const toSave = {};
+      let variables = {};
+      let mutation;
+
       if (sectionElement.creating) {
         delete sectionElement.creating;
-        toSave.create_new = [
-          Object.assign(elementToSave, {
+        mutation = createElementInSectionMutation;
+        variables = {
+          section_id: this.sectionId,
+          after_section_element_id: this.getSectionElementIdBeforeIndex(index),
+          element: {
             plugin_name: sectionElement.element.type.plugin_name,
-            sort_order: this.getSortOrder(index),
-          }),
-        ];
-
-        // Increment the sort order of every saved element after this element by 1.
-        toSave.move = this.sectionElements
-          .slice(index + 1)
-          .filter(this.elementExists)
-          .map(element => {
-            return {
-              section_element_id: element.id,
-              sort_order: element.sort_order + 1,
-            };
-          });
+            element_details: elementToSave,
+          },
+        };
       } else {
-        toSave.update = [
-          Object.assign(elementToSave, {
-            element_id: sectionElement.element.id,
-          }),
-        ];
+        mutation = updateElementInSectionMutation;
+        variables = {
+          element_details: elementToSave,
+          section_element_id: sectionElement.id,
+        };
       }
-      this.save(toSave, this.$str('toast_success_save_element', 'mod_perform'));
+      this.save(
+        variables,
+        this.$str('toast_success_save_element', 'mod_perform'),
+        mutation
+      );
 
       this.display(sectionElement);
     },
@@ -497,6 +533,7 @@ export default {
      * Calculate the sort order value for a section element.
      *
      * @param {Number} index
+     * @deprecated in favor of getSectionElementBefore
      */
     getSortOrder(index) {
       const savedSectionElementsBefore = this.sectionElements
@@ -504,6 +541,28 @@ export default {
         .filter(this.elementExists);
 
       return savedSectionElementsBefore.length + 1;
+    },
+
+    /**
+     * Returns the section_element_id before the specified index.
+     *
+     * @param {Number} index
+     */
+    getSectionElementIdBeforeIndex(index) {
+      const savedSectionElementsBefore = this.sectionElements
+        .slice(0, index)
+        .filter(this.elementExists);
+      if (savedSectionElementsBefore.length === 0) {
+        return null;
+      }
+
+      let previousSavedSectionElement = savedSectionElementsBefore
+        .reverse()
+        .find(this.elementExists);
+
+      return previousSavedSectionElement
+        ? previousSavedSectionElement.id
+        : null;
     },
 
     /**
@@ -669,27 +728,12 @@ export default {
     async deleteSelectedElement() {
       this.isSaving = true;
 
-      // Need to recalculate the sort orders if deleting
-      const move = this.sectionElements
-        .slice(this.elementToDelete.index + 1)
-        .filter(this.elementExists)
-        .map((element, index) => {
-          return {
-            section_element_id: element.id,
-            sort_order: this.elementToDelete.sort_order + index,
-          };
-        });
-
       await this.save(
         {
-          move,
-          delete: [
-            {
-              section_element_id: this.elementToDelete.id,
-            },
-          ],
+          section_element_id: this.elementToDelete.id,
         },
-        this.$str('toast_success_delete_element', 'mod_perform')
+        this.$str('toast_success_delete_element', 'mod_perform'),
+        deleteSectionElementMutation
       );
 
       this.remove(this.elementToDelete);
@@ -712,7 +756,7 @@ export default {
           };
         });
 
-      await this.save(toSave, null);
+      await this.save(toSave, null, reorderSectionElementMutation);
 
       this.isSaving = false;
     },
@@ -779,21 +823,20 @@ export default {
      *
      * @param {Object} variables
      * @param {String} [saveNotificationMessage] Override text that is shown in the success notification.
+     * @param mutation
      */
-    async save(variables, saveNotificationMessage) {
+    async save(variables, saveNotificationMessage, mutation) {
       this.isSaving = true;
 
       try {
         const { data: result } = await this.$apollo.mutate({
-          mutation: updateSectionElementMutation,
+          mutation,
           variables: {
-            input: Object.assign(variables, {
-              section_id: this.sectionId,
-            }),
+            input: variables,
           },
           refetchAll: false,
         });
-        const section = result.mod_perform_update_section_elements.section;
+        const section = result.updated_section_details.section;
         this.updateSectionElementData(section.section_elements);
         if (saveNotificationMessage) {
           this.showSuccessNotification(saveNotificationMessage);
@@ -812,7 +855,7 @@ export default {
      * @returns {String|void}
      */
     unloadHandler(e) {
-      if (!this.hasUnsavedChanges) {
+      if (!this.hasUnsavedChanges && !this.hasUnsavedChildElements) {
         return;
       }
 
@@ -846,6 +889,7 @@ export default {
             type: item.element.element_plugin,
             data: JSON.parse(item.element.data),
             raw_data: JSON.parse(item.element.raw_data),
+            children: item.element.children,
           }),
         });
       });
@@ -894,7 +938,7 @@ export default {
     /**
      * check whether a drag is allowed.
      *
-     * @param {Array} sectionElements
+     * @param {Array} sectionElement
      */
     validDragElement(sectionElement) {
       return !this.isEditing(sectionElement) && this.sectionElements.length > 1;
@@ -915,13 +959,24 @@ export default {
      * @param {DropInfo} info
      */
     handleDropElement(info) {
-      if (info.destination.sourceId == info.source.sourceId) {
-        //reorder elements
-        const item = this.sectionElements.splice(info.source.index, 1)[0];
-        this.sectionElements.splice(info.destination.index, 0, item);
-
-        this.reorderElements(this.sectionElements);
+      if (info.destination.index === info.source.index) {
+        return;
       }
+      let newIndex =
+        info.source.index < info.destination.index
+          ? info.destination.index + 1
+          : info.destination.index;
+      let afterSectionElementId = this.getSectionElementIdBeforeIndex(newIndex);
+
+      if (afterSectionElementId === info.item.value) {
+        return;
+      }
+
+      let variables = {
+        section_element_id: info.item.value,
+        move_to_after_section_element_id: afterSectionElementId,
+      };
+      this.save(variables, null, reorderSectionElementMutation);
     },
 
     /**

@@ -69,4 +69,23 @@ class mod_perform_section_element_model_testcase extends advanced_testcase {
         $section_element_two->move_to_section($activity_section2);
         $this->assertEquals(1, $section_element_two->sort_order);
     }
+
+    public function test_get_element_data() {
+        self::setAdminUser();
+        $perform_generator = $this->getDataGenerator()->get_plugin_generator('mod_perform');
+        $activity = $perform_generator->create_activity_in_container(
+            ['activity_status' => draft::get_code(), 'create_section' => false]
+        );
+        $activity_section = $perform_generator->create_section($activity);
+
+        $data_key = 'contentType';
+        $data_value = 'totara_competency';
+        $data = $json = json_encode([$data_key => $data_value]);
+
+        $element = $perform_generator->create_element(['data' => $data]);
+        $section_element = $perform_generator->create_section_element($activity_section, $element);
+
+        $element_data = $section_element->get_element_data();
+        $this->assertEquals($data_value, $element_data[$data_key]);
+    }
 }

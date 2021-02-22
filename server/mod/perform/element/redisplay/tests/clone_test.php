@@ -22,9 +22,11 @@
  */
 
 use core\orm\collection;
+use mod_perform\entity\activity\element;
 use mod_perform\entity\activity\section;
 use mod_perform\entity\activity\section_element;
 use mod_perform\models\activity\activity;
+use mod_perform\testing\generator as mod_perform_generator;
 use performelement_redisplay\entity\element_redisplay_relationship as element_redisplay_relationship_entity;
 use performelement_redisplay\models\element_redisplay_relationship;
 
@@ -37,8 +39,8 @@ class clone_testcase extends advanced_testcase {
     public function test_clone() {
         $this->setAdminUser();
 
-        /** @var \mod_perform\testing\generator $perform_generator */
-        $perform_generator = \mod_perform\testing\generator::instance();
+        /** @var mod_perform_generator $perform_generator */
+        $perform_generator = mod_perform_generator::instance();
 
         /*
          * activity1                    [SOURCE ACTIVITY]
@@ -63,8 +65,6 @@ class clone_testcase extends advanced_testcase {
         $section2 = $perform_generator->create_section($activity2, ['title' => 'section2']);
         $element2 = $perform_generator->create_element(['plugin_name' => 'redisplay', 'data' => json_encode($redisplay_data)]);
         $section_element2 = $perform_generator->create_section_element($section2, $element2);
-
-        element_redisplay_relationship::create($activity1->id, $section_element1->id, $element2->id);
 
         $redisplay_relationships = $this->load_relationships_by_source_activity_id($activity1->id);
 
@@ -116,7 +116,6 @@ class clone_testcase extends advanced_testcase {
             ['plugin_name' => 'redisplay', 'data' => json_encode($redisplay_data, JSON_THROW_ON_ERROR)]
         );
         $section_element2 = $perform_generator->create_section_element($section2, $redisplay_element);
-        element_redisplay_relationship::create($activity1->id, $section_element1->id, $redisplay_element->id);
 
         $redisplay_relationships = $this->load_relationships_by_source_activity_id($activity1->id);
 
@@ -155,7 +154,7 @@ class clone_testcase extends advanced_testcase {
         self::assertEquals($cloned_redisplay_section_element->element_id, $cloned_relationship->redisplay_element_id);
 
         // Also verify that the element's json got adjusted.
-        $element = \mod_perform\entity\activity\element::repository()->find($cloned_redisplay_section_element->element_id);
+        $element = element::repository()->find($cloned_redisplay_section_element->element_id);
         $data = json_decode($element->data, true, 512, JSON_THROW_ON_ERROR);
         self::assertEquals($cloned_relationship->source_section_element_id, $data['sectionElementId']);
         // Make sure that the adjustment left other json data untouched.

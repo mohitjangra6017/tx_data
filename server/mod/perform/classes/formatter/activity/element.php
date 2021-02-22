@@ -44,6 +44,9 @@ class element extends entity_model_formatter {
             'data' => element_data_field_formatter::for_model($this->object),
             'is_required' => null,
             'is_respondable' => null,
+            'children' => null,
+            'parent_element' => null,
+            'sort_order' => null,
         ];
     }
 }

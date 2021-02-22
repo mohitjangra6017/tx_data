@@ -68,8 +68,6 @@ class performelement_static_content_draft_area_testcase extends performelement_s
 
         // Test post_create.
         /** @var static_content $plugin */
-        $plugin = element_plugin::load_by_plugin('static_content');
-        $plugin->post_create($element);
 
         $data = json_decode($element->data, true);
 

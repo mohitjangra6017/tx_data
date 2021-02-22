@@ -17,10 +17,13 @@
 -->
 <template>
   <div class="tui-participantFormResponseDisplay">
-    <template v-if="responseLines.length > 0">
-      <div v-for="(responseLine, i) in responseLines" :key="i">
-        {{ responseLine }}
+    <template v-if="responseData && Array.isArray(responseData)">
+      <div v-for="(dataLine, i) in responseData" :key="i">
+        {{ dataLine }}
       </div>
+    </template>
+    <template v-else-if="responseData">
+      {{ responseData }}
     </template>
     <NoResponseSubmitted v-else />
   </div>
@@ -32,9 +35,31 @@ import NoResponseSubmitted from 'mod_perform/components/element/participant_form
 export default {
   components: { NoResponseSubmitted },
   props: {
-    responseLines: {
-      type: Array,
-      required: true,
+    data: Array,
+  },
+
+  computed: {
+    /**
+     * Return correct data type (array/string) for value
+     *
+     * @return {String||Array}
+     */
+    responseData() {
+      if (!this.data || !this.data[0]) {
+        return false;
+      }
+
+      if (this.data.length > 1) {
+        return this.data;
+      } else {
+        let result;
+        try {
+          result = JSON.parse(this.data[0]);
+        } catch (e) {
+          result = this.data[0];
+        }
+        return result;
+      }
     },
   },
 };

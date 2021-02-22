@@ -490,8 +490,7 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
             '',
             "{\"sectionElementId\":\"$source_section_element_id\"}"
         );
-        element::post_create($redisplay_element);
-        $redisplay['redisplay_section_element'] = $redisplay['section']->add_element($redisplay_element);
+        $redisplay['redisplay_section_element'] = $redisplay['section']->get_section_element_manager()->add_element_after($redisplay_element);
 
         return $redisplay;
     }

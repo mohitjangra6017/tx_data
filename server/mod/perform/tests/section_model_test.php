@@ -356,7 +356,7 @@ class mod_perform_section_model_testcase extends mod_perform_relationship_testca
         $this->expectExceptionMessage('Section has been deleted, can not add section element');
 
         $section->delete();
-        $section->add_element($element);
+        $section->get_section_element_manager()->add_element_after($element);
     }
 
     public function test_move_section_element_fail_if_section_is_deleted() {
@@ -366,7 +366,7 @@ class mod_perform_section_model_testcase extends mod_perform_relationship_testca
         $this->expectExceptionMessage('Section has been deleted, can not move section elements');
 
         $section->delete();
-        $section->move_section_elements([$section_element]);
+        $section->get_section_element_manager()->move_section_elements([$section_element]);
     }
 
     public function test_remove_section_element_fail_if_section_is_deleted() {
@@ -376,7 +376,7 @@ class mod_perform_section_model_testcase extends mod_perform_relationship_testca
         $this->expectExceptionMessage('Section has been deleted, can not remove section elements');
 
         $section->delete();
-        $section->remove_section_elements([$section_element]);
+        $section->get_section_element_manager()->remove_section_elements([$section_element]);
     }
 
     public function test_update_relationship_fail_if_section_is_deleted() {
@@ -414,8 +414,8 @@ class mod_perform_section_model_testcase extends mod_perform_relationship_testca
         $element = $perform_generator->create_element(['title' => 'Question one']);
         $section_element = $perform_generator->create_section_element($activity_section1, $element);
 
-        $this->assertEquals(1, $activity_section1->get_highest_sort_order());
-        $this->assertEquals(0, $activity_section2->get_highest_sort_order());
+        $this->assertEquals(1, $activity_section1->get_section_element_manager()->get_highest_sort_order());
+        $this->assertEquals(0, $activity_section2->get_section_element_manager()->get_highest_sort_order());
     }
 
     /**

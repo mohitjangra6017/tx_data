@@ -22,6 +22,7 @@
  */
 
 use core\orm\collection;
+use performelement_redisplay\entity\element_redisplay_relationship as element_redisplay_relationship_entity;
 use performelement_redisplay\models\element_redisplay_relationship;
 
 require_once(__DIR__ . '/redisplay_test.php');
@@ -44,11 +45,15 @@ class performelement_redisplay_element_relationship_model_testcase extends redis
         $element = $perform_generator->create_element();
         $source_section_element = $perform_generator->create_section_element($source_section, $element);
 
-        $redisplay_element = $perform_generator->create_element(['plugin_name' => 'redisplay']);
+        $redisplay_data = sprintf('{"sectionElementId": "%s" }', $source_section_element->id);
+        $redisplay_element = $perform_generator->create_element([
+            'plugin_name' => 'redisplay',
+            'data' => $redisplay_data,
+        ]);
 
-        $element_redisplay_relationship = element_redisplay_relationship::create(
-            $source_activity->id, $source_section_element->id, $redisplay_element->id
-        );
+        $element_redisplay_relationship = element_redisplay_relationship_entity::repository()
+            ->where('redisplay_element_id', $redisplay_element->id)
+            ->get()->first();
 
         $this->assertEquals($source_activity->id, $element_redisplay_relationship->source_activity_id);
         $this->assertEquals($source_section_element->id, $element_redisplay_relationship->source_section_element_id);

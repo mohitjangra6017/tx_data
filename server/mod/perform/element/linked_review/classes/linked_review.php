@@ -196,4 +196,10 @@ class linked_review extends respondable_element_plugin {
         return [];
     }
 
+    /**
+     * @inheritDocs
+     */
+    public function supports_child_elements(): bool {
+        return true;
+    }
 }

@@ -182,6 +182,8 @@ extend type Query {
 
 """
 Delete an existing section element
+
+Deprecated since Totara 14: Use the individual mutation inputs for deleting a section element.
 """
 input mod_perform_delete_section_element_input {
   section_element_id: core_id!
@@ -189,6 +191,8 @@ input mod_perform_delete_section_element_input {
 
 """
 Move an existing section element within the current section
+
+Deprecated since Totara 14: Use the individual mutation inputs for reordering a section element.
 """
 input mod_perform_move_section_element_input {
   section_element_id: core_id!
@@ -197,6 +201,8 @@ input mod_perform_move_section_element_input {
 
 """
 Update a section
+
+Deprecated since Totara 14: Use the individual mutation inputs for managing section elements.
 """
 input mod_perform_update_section_elements_input {
   """
@@ -312,6 +318,8 @@ extend type Mutation {
 
   """
   Update the elements in a section
+
+  Deprecated since Totara 14: Use the individual mutations for managing section elements.
   """
   mod_perform_update_section_elements(
     input: mod_perform_update_section_elements_input!

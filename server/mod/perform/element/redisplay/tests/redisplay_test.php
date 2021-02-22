@@ -21,7 +21,7 @@
  * @package mod_perform
  */
 
-use performelement_redisplay\models\element_redisplay_relationship;
+use performelement_redisplay\entity\element_redisplay_relationship as element_redisplay_relationship_entity;
 
 /**
  * @group perform
@@ -59,19 +59,25 @@ abstract class redisplay_testcase extends advanced_testcase {
         $data->section3 = $perform_generator->create_section($data->activity3, ['title' => 'section3']);
 
         $data->element1 = $perform_generator->create_element();
-        $data->element2 = $perform_generator->create_element(['plugin_name' => 'redisplay']);
-        $data->element3 = $perform_generator->create_element(['plugin_name' => 'redisplay']);
-
         $data->section_element1 = $perform_generator->create_section_element($data->section1, $data->element1);
+
+        $redisplay_data = sprintf('{"sectionElementId": "%s" }', $data->section_element1->id);
+        $data->element2 = $perform_generator->create_element([
+            'plugin_name' => 'redisplay',
+            'data' => $redisplay_data,
+        ]);
+
+        $data->element3 = $perform_generator->create_element([
+            'plugin_name' => 'redisplay',
+            'data' => $redisplay_data,
+        ]);
+
+        $data->element_redisplay_relationship2 = element_redisplay_relationship_entity::repository()
+            ->where('redisplay_element_id', $data->element2->id)->get()->first();
+        $data->element_redisplay_relationship3 = element_redisplay_relationship_entity::repository()
+            ->where('redisplay_element_id', $data->element3->id)->get()->first();
         $data->section_element2 = $perform_generator->create_section_element($data->section2, $data->element2);
         $data->section_element3 = $perform_generator->create_section_element($data->section3, $data->element3);
-
-        $data->element_redisplay_relationship2 = element_redisplay_relationship::create(
-            $data->activity1->id, $data->section_element1->id, $data->element2->id
-        );
-        $data->element_redisplay_relationship3 = element_redisplay_relationship::create(
-            $data->activity1->id, $data->section_element1->id, $data->element3->id
-        );
 
         return $data;
     }

@@ -25,6 +25,7 @@ require_once(__DIR__ . '/linked_review_testcase.php');
 
 use mod_perform\constants;
 use performelement_linked_review\content_type_factory;
+use totara_competency\performelement_linked_review\competency_assignment;
 use totara_core\advanced_feature;
 use totara_core\relationship\relationship;
 
@@ -74,7 +75,7 @@ class performelement_linked_review_content_type_testcase extends linked_review_t
 
         $all_content_types = content_type_factory::get_all();
         $enabled_content_types = content_type_factory::get_all_enabled();
-        $competency_content_type = \totara_competency\performelement_linked_review\competency_assignment::class;
+        $competency_content_type = competency_assignment::class;
 
         $this->assertEquals($all_content_types->to_array(), $enabled_content_types->to_array());
         $this->assertContainsEquals($competency_content_type, $enabled_content_types->to_array());
@@ -113,7 +114,9 @@ class performelement_linked_review_content_type_testcase extends linked_review_t
 
         $element2_input_data = [
             'content_type' => 'totara_competency',
-            'content_type_settings' => [],
+            'content_type_settings' => [
+                'show_rating' => true,
+            ],
             'selection_relationships' => [$manager_relationship_id],
         ];
         $element2 = $this->create_element($element2_input_data);

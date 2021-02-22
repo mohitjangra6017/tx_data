@@ -23,6 +23,7 @@
 
 namespace performelement_linked_review\webapi\resolver\query;
 
+use coding_exception;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_advanced_feature;
 use core\webapi\middleware\require_login;
@@ -48,7 +49,7 @@ abstract class content_items implements query_resolver, has_middleware {
             ->where('se.id', $section_element_id)
             ->one(true);
         if (!$element) {
-            throw new \coding_exception('Invalid section element ID: ' . $section_element_id);
+            throw new coding_exception('Invalid section element ID: ' . $section_element_id);
         }
 
         // TODO: Need to check permissions.
@@ -82,7 +83,9 @@ abstract class content_items implements query_resolver, has_middleware {
         return [
             new require_advanced_feature('performance_activities'),
             new require_login(),
-            require_activity::by_participant_instance_id('participant_instance_id', true),
+            //todo: verify use of content_items with participant instance_id.
+            // performance response data page does not use participant instance id.
+            // require_activity::by_participant_instance_id('participant_instance_id', true),
         ];
     }
 

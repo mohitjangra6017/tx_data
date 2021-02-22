@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of Totara Learn
  *
  * Copyright (C) 2020 onwards Totara Learning Solutions LTD
@@ -20,14 +20,16 @@
  * @author Nathan Lewis <nathan.lewis@totaralearning.com>
  * @package mod_perform
  */
-
 use container_perform\perform;
+use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element;
+
+require_once(__DIR__ . '/child_element_manager_testcase.php');
 
 /**
  * @group perform
  */
-class mod_perform_element_model_testcase extends advanced_testcase {
+class mod_perform_element_model_testcase extends child_element_manager_testcase {
 
     public function test_create() {
         $default_context = context_coursecat::instance(perform::get_default_category_id());
@@ -78,5 +80,17 @@ class mod_perform_element_model_testcase extends advanced_testcase {
             null,
             true
         );
+    }
+
+    public function test_deleting_parent_element_deletes_child_elements() {
+        $data = $this->generate_data();
+        /** @var element $parent */
+        $parent = $data['parent'];
+        $elements = element_entity::repository()->get();
+        $this->assertEquals(4, $elements->count());
+        $parent->delete();
+
+        $elements = element_entity::repository()->get();
+        $this->assertEquals(0, $elements->count());
     }
 }

@@ -174,5 +174,31 @@ function xmldb_perform_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2020122100, 'perform');
     }
 
+    if ($oldversion < 2020122102) {
+        $table = new xmldb_table('perform_element');
+        $parent_field = new xmldb_field('parent', XMLDB_TYPE_INTEGER, '10', null, false, null, null, 'context_id');
+        $dbman->add_field($table, $parent_field);
+        $key = new xmldb_key('parent', XMLDB_KEY_FOREIGN, array('parent'), 'perform_element', array('id'));
+        $dbman->add_key($table, $key);
+
+        upgrade_mod_savepoint(true, 2020122102, 'perform');
+    }
+
+    if ($oldversion < 2020122104) {
+        $table = new xmldb_table('perform_element');
+        $sort_order_field = new xmldb_field('sort_order', XMLDB_TYPE_INTEGER, '10', null, false, null, null, 'data');
+
+        if (!$dbman->field_exists($table, $sort_order_field)) {
+            $dbman->add_field($table, $sort_order_field);
+        }
+        $index = new xmldb_index('parent_sort_order', XMLDB_INDEX_UNIQUE, ['parent', 'sort_order']);
+
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        upgrade_mod_savepoint(true, 2020122104, 'perform');
+    }
+
     return true;
 }

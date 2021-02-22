@@ -7,25 +7,39 @@ mutation mod_perform_update_section_elements(
       section_elements {
         id
         element {
-          id
-          element_plugin {
-            plugin_name
-            name
+          ...element_data
+          children {
+            ...element_data
           }
-          title
-          raw_title: title(format: RAW)
-          identifier
-          data
-          raw_data: data(format: RAW)
-          is_required
         }
         sort_order
       }
-      section_elements_summary {
-        required_question_count
-        optional_question_count
-        other_element_count
-      }
+    }
+  }
+}
+
+fragment element_data on mod_perform_element {
+  __typename
+  id
+  title
+  raw_title: title(format: RAW)
+  identifier
+  data
+  raw_data: data(format: RAW)
+  is_required
+  is_respondable
+  element_plugin {
+    plugin_name
+    name
+    admin_edit_component
+    admin_view_component
+    plugin_config {
+      is_respondable
+      has_title
+      has_reporting_id
+      title_text
+      is_title_required
+      is_response_required_enabled
     }
   }
 }

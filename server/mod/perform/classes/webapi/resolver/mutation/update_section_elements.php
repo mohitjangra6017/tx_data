@@ -41,6 +41,7 @@ class update_section_elements implements mutation_resolver, has_middleware {
      * {@inheritdoc}
      */
     public static function resolve(array $args, execution_context $ec) {
+        debugging('This mutation has been deprecated. Use the individual section element mutations.', DEBUG_DEVELOPER);
         $section_form_data = $args['input'];
 
         $section = section::load_by_id($section_form_data['section_id']);
@@ -74,7 +75,6 @@ class update_section_elements implements mutation_resolver, has_middleware {
                         $create_new_form_data['data'] ?? null,
                         $create_new_form_data['is_required'] ?? null
                     );
-                    element::post_create($element);
                     $sort_orders[$create_new_form_data['sort_order']] = $section->add_element($element);
                 }
             }
@@ -100,7 +100,6 @@ class update_section_elements implements mutation_resolver, has_middleware {
                     $update_form_data['is_required'] ?? null,
                     $update_form_data['identifier'] ?? ''
                 );
-                element::post_update($element);
             }
         });
 

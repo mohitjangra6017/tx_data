@@ -148,9 +148,20 @@ class section_element extends model {
      */
     public function move_to_section(section $new_section, int $new_sort_order = null) {
         $this->entity->section_id = $new_section->id;
-        $this->entity->sort_order = $new_sort_order ?? $new_section->get_highest_sort_order() + 1;
+        $this->entity->sort_order = $new_sort_order ?? $new_section->get_section_element_manager()->get_highest_sort_order() + 1;
         $this->entity->save();
 
         $this->entity->load_relation('section');
+    }
+
+    /**
+     * Get element data which related to this section element
+     *
+     * @return mixed
+     */
+    public function get_element_data() {
+        $element_data = $this->get_element()->get_data();
+        $decoded_element_data = json_decode($element_data, true);
+        return $decoded_element_data;
     }
 }

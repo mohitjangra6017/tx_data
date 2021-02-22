@@ -23,6 +23,7 @@
 
 namespace performelement_static_content;
 
+use mod_perform\entity\activity\element;
 use mod_perform\models\activity\element_plugin;
 use mod_perform\models\activity\element as element_model;
 use performelement_static_content\local\helper;
@@ -106,12 +107,11 @@ class static_content extends element_plugin {
             $data = json_encode($data);
 
             // Update the element data with the updated content.
-            $element->update_details(
-                $element->title,
-                $data,
-                $element->is_required,
-                $element->get_identifier() ?? ''
-            );
+            element::repository()
+                ->where('id', $element->id)
+                ->update([
+                    'data' => $data,
+                ]);
         }
     }
 

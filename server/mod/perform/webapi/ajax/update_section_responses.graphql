@@ -13,12 +13,11 @@ mutation mod_perform_update_section_responses(
       section_element_responses {
         section_element_id
         element {
-          element_plugin {
-            participant_form_component
+          ...element_data
+          children {
+            id
+            ...element_data
           }
-          title
-          data
-          is_respondable
         }
         sort_order
         response_data
@@ -48,5 +47,17 @@ mutation mod_perform_update_section_responses(
         }
       }
     }
+  }
+}
+
+fragment element_data on mod_perform_element {
+  __typename
+  title
+  data
+  is_required
+  is_respondable
+  element_plugin {
+    participant_form_component
+    participant_response_component
   }
 }

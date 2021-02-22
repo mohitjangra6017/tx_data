@@ -226,6 +226,90 @@ class mod_perform_webapi_middleware_require_activity_testcase extends advanced_t
     }
 
     /**
+     * @covers ::by_section_element_id
+     * @covers ::handle
+     */
+    public function test_require_by_section_element_id() {
+        $expected = 34324;
+        [$activity, $context, $next] = $this->create_test_data($expected);
+        $section = $activity->sections->first();
+
+        $id_key = 'abc';
+        $single_key_args = [$id_key => $section->section_elements->first()->id];
+        $single_key_payload = payload::create($single_key_args, $context);
+
+        $result = require_activity::by_section_element_id($id_key, false)
+            ->handle($single_key_payload, $next);
+
+        $this->assertEquals($expected, $result->get_data(), 'wrong result');
+        $this->assertFalse($context->has_relevant_context(), 'relevant context set');
+
+        // Test with composite key.
+        $root_key = 'xyz';
+        $composite_key_args = [$root_key => $single_key_args];
+        $composite_key_payload = payload::create($composite_key_args, $context);
+
+        $result = require_activity::by_section_element_id("$root_key.$id_key", true)
+            ->handle($composite_key_payload, $next);
+
+        $this->assertEquals($expected, $result->get_data(), 'wrong result');
+        $this->assertTrue($context->has_relevant_context(), 'relevant context not set');
+        $this->assertEquals(
+            $activity->get_context()->id,
+            $context->get_relevant_context()->id,
+            'wrong context id'
+        );
+
+        // Test with wrong key.
+        $this->expectException(invalid_parameter_exception::class);
+        $this->expectExceptionMessage('section element id');
+        require_activity::by_section_element_id($id_key, true)
+            ->handle($composite_key_payload, $next);
+    }
+
+    /**
+     * @covers ::by_element_id
+     * @covers ::handle
+     */
+    public function test_require_by_element_id() {
+        $expected = 34324;
+        [$activity, $context, $next] = $this->create_test_data($expected);
+        $section = $activity->sections->first();
+
+        $id_key = 'abc';
+        $single_key_args = [$id_key => $section->section_elements->first()->element->id];
+        $single_key_payload = payload::create($single_key_args, $context);
+
+        $result = require_activity::by_element_id($id_key, false)
+            ->handle($single_key_payload, $next);
+
+        $this->assertEquals($expected, $result->get_data(), 'wrong result');
+        $this->assertFalse($context->has_relevant_context(), 'relevant context set');
+
+        // Test with composite key.
+        $root_key = 'xyz';
+        $composite_key_args = [$root_key => $single_key_args];
+        $composite_key_payload = payload::create($composite_key_args, $context);
+
+        $result = require_activity::by_element_id("$root_key.$id_key", true)
+            ->handle($composite_key_payload, $next);
+
+        $this->assertEquals($expected, $result->get_data(), 'wrong result');
+        $this->assertTrue($context->has_relevant_context(), 'relevant context not set');
+        $this->assertEquals(
+            $activity->get_context()->id,
+            $context->get_relevant_context()->id,
+            'wrong context id'
+        );
+
+        // Test with wrong key.
+        $this->expectException(invalid_parameter_exception::class);
+        $this->expectExceptionMessage('element id');
+        require_activity::by_element_id($id_key, true)
+            ->handle($composite_key_payload, $next);
+    }
+
+    /**
      * @covers ::by_notification_id
      * @covers ::handle
      */
@@ -352,6 +436,10 @@ class mod_perform_webapi_middleware_require_activity_testcase extends advanced_t
             'create_track' => true,
             'create_section' => true,
         ]);
+        $element = $generator->create_element(
+            ['context' => $activity->get_context()]
+        );
+        $generator->create_section_element($activity->sections->first(), $element);
 
         $next = function (payload $payload) use ($expected_result): result {
             return new result($expected_result);

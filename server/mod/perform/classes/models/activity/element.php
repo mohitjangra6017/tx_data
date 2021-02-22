@@ -26,9 +26,12 @@ namespace mod_perform\models\activity;
 use coding_exception;
 use context;
 use context_helper;
+use core\collection;
 use core\orm\entity\model;
+use core\orm\query\builder;
 use mod_perform\entity\activity\element as element_entity;
 use mod_perform\entity\activity\section_element as section_element_entity;
+use mod_perform\models\activity\helpers\child_element_manager;
 
 /**
  * Class element
@@ -47,6 +50,7 @@ use mod_perform\entity\activity\section_element as section_element_entity;
  * @property-read bool $is_respondable
  * @property-read string element_$identifier
  * @property-read element_identifier $element_identifier
+ * @property-read int|null $parent
  *
  * @package mod_perform\models\activity
  */
@@ -60,6 +64,8 @@ class element extends model {
         'identifier_id',
         'is_required',
         'element_section',
+        'parent',
+        'sort_order',
     ];
 
     protected $model_accessor_whitelist = [
@@ -69,6 +75,8 @@ class element extends model {
         'identifier',
         'data',
         'element_identifier',
+        'parent_element',
+        'children',
     ];
 
     /**
@@ -90,6 +98,7 @@ class element extends model {
      * @param string $identifier
      * @param string $data
      * @param bool $is_required
+     * @param int $parent
      *
      * @return static
      */
@@ -99,7 +108,9 @@ class element extends model {
         string $title,
         string $identifier = '',
         string $data = null,
-        bool $is_required = null
+        bool $is_required = null,
+        ?int $parent = null,
+        ?int $sort_order = null
     ): self {
         $entity = new element_entity();
         $entity->context_id = $context->id;
@@ -109,11 +120,14 @@ class element extends model {
         $entity->identifier_id = $element_identifier ? $element_identifier->id : null;
         $entity->data = $data;
         $entity->is_required  = $is_required;
+        $entity->parent  = $parent;
+        $entity->sort_order = $sort_order;
         self::validate($entity);
         $entity->save();
-
         $model = self::load_by_entity($entity);
-        return $model;
+        self::post_create($model);
+
+        return element::load_by_id($model->id);
     }
 
     /**
@@ -173,11 +187,53 @@ class element extends model {
      * @return string|null
      */
     public function get_data(): ?string {
-        $element_plugin = element_plugin::load_by_plugin($this->plugin_name);
+        return element_plugin::load_by_plugin($this->plugin_name)->process_data($this->entity->data);
+    }
 
-        return method_exists($element_plugin, 'process_data')
-            ? $element_plugin->process_data($this->entity->data)
-            : $this->entity->data;
+    /**
+     * Get child element manager.
+     *
+     * @return child_element_manager
+     */
+    public function get_child_element_manager(): child_element_manager {
+        return new child_element_manager($this->entity);
+    }
+
+    /**
+     * Get parent element
+     *
+     * @return element|null
+     */
+    public function get_parent_element(): ?element {
+        $parent = $this->entity->parent_element;
+
+        if ($parent) {
+            return self::load_by_entity($parent);
+        }
+        return null;
+    }
+
+    /**
+     * Get children elements.
+     *
+     * @return collection|null
+     */
+    public function get_children(): collection {
+        return $this->get_child_element_manager()->get_children_elements();
+    }
+
+    /**
+     * Delete an element.
+     *
+     * @return void
+     */
+    public function delete(): void {
+        if ($this->element_plugin->supports_child_elements()) {
+            foreach ($this->get_children() as $child_element) {
+                $child_element->delete();
+            }
+        }
+        $this->entity->delete();
     }
 
     /**
@@ -193,14 +249,32 @@ class element extends model {
     }
 
     /**
+     * Update element sort_order.
+     *
+     * @param int $sort_order
+     */
+    public function update_sort_order(int $sort_order) {
+        if ($this->parent === null) {
+            throw new coding_exception("Can not update sort order of element without a parent.");
+        }
+        $this->entity->sort_order = $sort_order;
+        $this->entity->save();
+    }
+
+    /**
      * Update the standard properties that define this element
      *
      * @param string $title
-     * @param string $data
+     * @param string|null $data
      * @param bool $is_required
      * @param string $identifier
      */
-    public function update_details(string $title, string $data = null, bool $is_required = null, string $identifier = '') {
+    public function update_details(
+        string $title,
+        string $data = null,
+        bool $is_required = null,
+        string $identifier = ''
+    ) {
         $this->entity->title = $title;
         $this->entity->data = $data;
         $this->entity->is_required = $is_required;
@@ -208,6 +282,7 @@ class element extends model {
         $this->entity->identifier_id = $element_identifier ? $element_identifier->id : null;
         self::validate($this->entity);
         $this->entity->save();
+        element::post_update($this);
     }
 
     /**
@@ -240,7 +315,19 @@ class element extends model {
      * @param element $element
      */
     public static function post_update(element $element): void {
-        element_plugin::load_by_plugin($element->plugin_name)->post_update($element);
+        builder::get_db()->transaction(function () use ($element) {
+            element_plugin::load_by_plugin($element->plugin_name)->post_update($element);
+        });
+    }
+
+    /**
+     * Change the internal element JSON data.
+     * Note that this does not save the data, it only changes the value in memory.
+     *
+     * @param string $data
+     */
+    public function set_data(string $data): void {
+        $this->entity->data = $data;
     }
 
     /**

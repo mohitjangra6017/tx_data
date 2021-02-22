@@ -69,8 +69,6 @@ class performelement_static_content_clone_testcase extends performelement_static
 
         // Update the element, saving the files and so on.
         /** @var static_content $plugin */
-        $plugin = element_plugin::load_by_plugin('static_content');
-        $plugin->post_create($element);
 
         // Clone the activity.
         $new_activity = activity::load_by_id($activity->id)->clone();

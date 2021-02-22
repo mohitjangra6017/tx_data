@@ -119,17 +119,22 @@
         :aria-hidden="true"
         :data="sectionElement.element.data"
         :element-id="sectionElement.element.id"
+        :element-plugins="elementPlugins"
         :identifier="sectionElement.element.identifier"
         :is-required="sectionElement.element.is_required"
         :raw-data="sectionElement.element.raw_data"
         :raw-title="sectionElement.element.raw_title"
+        :section="section"
+        :section-element="sectionElement"
         :section-id="sectionId"
         :settings="sectionComponent.settings"
         :title="sectionElement.element.title"
         :activity-context-id="activityContextId"
         :current-activity-id="activityId"
+        @child-update="$emit('child-update')"
         @display="$emit('display', sectionElement)"
         @display-read="$emit('display-read', sectionElement)"
+        @unsaved-child="$emit('unsaved-child', $event)"
         @update="$emit('update', $event)"
       />
     </div>
@@ -179,6 +184,7 @@ export default {
     activityId: Number,
     draggable: Boolean,
     dragging: Boolean,
+    elementPlugins: Array,
     errors: Object,
     isMultiSectionActive: {
       type: Boolean,
@@ -186,7 +192,8 @@ export default {
     },
     sectionComponent: Object,
     sectionElement: Object,
-    sectionId: String,
+    section: Object,
+    sectionId: Number,
     activityContextId: [Number, String],
   },
 
@@ -284,8 +291,8 @@ export default {
     display: none;
   }
 
-  &--dragging &__moveIcon,
-  &:hover &__moveIcon {
+  &--dragging > &__moveIcon,
+  &:hover > &__moveIcon {
     display: block;
   }
 }
