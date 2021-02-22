@@ -115,6 +115,7 @@
                     elementResponse.is_respondable && sectionResponse.can_answer
                   "
                   :participant-instance-id="participantInstanceId"
+                  :subject-instance-id="subjectInstanceId"
                   :path="['sectionElements', elementResponse.id]"
                   :section-element="elementResponse"
                   :show-other-response="true"
@@ -201,6 +202,14 @@ export default {
      * The participant instance id used to fetch the participant sections.
      */
     participantInstanceId: {
+      type: Number,
+      required: true,
+    },
+
+    /**
+     * subject instance id
+     */
+    subjectInstanceId: {
       type: Number,
       required: true,
     },

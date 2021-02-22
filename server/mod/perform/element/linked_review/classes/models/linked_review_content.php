@@ -45,7 +45,8 @@ use performelement_linked_review\linked_review;
  *
  * @property-read int $id
  * @property-read int $section_element_id
- * @property-read int $participant_instance_id
+ * @property-read int $subject_instance_id
+ * @property-read int $selector_id
  * @property-read int $content_id
  * @property-read int $created_at
  *
@@ -69,7 +70,8 @@ class linked_review_content extends model {
         'id',
         'content_id',
         'section_element_id',
-        'participant_instance_id',
+        'subject_instance_id',
+        'selector_id',
     ];
 
     /**
@@ -84,8 +86,10 @@ class linked_review_content extends model {
         self::validate_input($content_ids, $section_element_id, $participant_instance_id);
 
         return builder::get_db()->transaction(function () use ($content_ids, $section_element_id, $participant_instance_id) {
-            $current_linked_content_ids = self::get_existing_selected_content($section_element_id, $participant_instance_id)
-                ->pluck('content_id');
+            $current_linked_content_ids = self::get_existing_selected_content(
+                $section_element_id,
+                $participant_instance_id
+            )->pluck('content_id');
 
             $content_ids_to_delete = array_diff($current_linked_content_ids, $content_ids);
             self::delete_multiple($content_ids_to_delete, $section_element_id, $participant_instance_id, false);
@@ -139,10 +143,13 @@ class linked_review_content extends model {
             self::validate_input([$content_id], $section_element_id, $participant_instance_id);
         }
 
+        $participant_instance = participant_instance_model::load_by_id($participant_instance_id);
+
         $entity = new linked_review_content_entity();
         $entity->content_id = $content_id;
         $entity->section_element_id = $section_element_id;
-        $entity->participant_instance_id = $participant_instance_id;
+        $entity->subject_instance_id = $participant_instance->subject_instance_id;
+        $entity->selector_id = $participant_instance->participant_id;
         $entity->save();
 
         return static::load_by_entity($entity);
@@ -155,7 +162,6 @@ class linked_review_content extends model {
      * @param int $section_element_id
      * @param int $participant_instance_id
      * @param bool $validate Whether to validate the inputted IDs.
-     * @throws coding_exception
      */
     public static function delete_multiple(
         array $content_ids,
@@ -167,9 +173,11 @@ class linked_review_content extends model {
             self::validate_input($content_ids, $section_element_id, $participant_instance_id);
         }
 
+        $participant_instance = participant_instance_model::load_by_id($participant_instance_id);
+
         linked_review_content_entity::repository()
             ->where('section_element_id', $section_element_id)
-            ->where('participant_instance_id', $participant_instance_id)
+            ->where('subject_instance_id', $participant_instance->subject_instance_id)
             ->where_in('content_id', $content_ids)
             ->delete();
     }
@@ -195,10 +203,8 @@ class linked_review_content extends model {
         return linked_review_content_entity::repository()
             ->where('section_element_id', $section_element_id)
             // Check other links done for the same subject
-            ->join(['perform_participant_instance', 'pi1'], 'participant_instance_id', 'id')
-            ->join(['perform_participant_instance', 'pi2'], 'pi1.subject_instance_id', 'subject_instance_id')
-            ->where('pi1.id', $participant_instance_id)
-            ->or_where('pi2.id', $participant_instance_id)
+            ->join(['perform_participant_instance', 'pi'], 'subject_instance_id', 'subject_instance_id')
+            ->where('pi.id', $participant_instance_id)
             ->get()
             ->map_to(static::class);
     }

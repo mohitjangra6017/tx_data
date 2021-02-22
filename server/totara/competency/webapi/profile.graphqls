@@ -275,7 +275,7 @@ extend type Query {
   Get the competency assignments that have been linked to a performance activity.
   """
   totara_competency_perform_linked_competencies(
-    participant_instance_id: core_id!
+    subject_instance_id: core_id!
     section_element_id: core_id!
   ): [totara_competency_perform_linked_competencies_result]!
 }

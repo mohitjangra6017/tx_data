@@ -34,6 +34,7 @@ use mod_perform\entity\activity\element;
 use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\section_element;
 use mod_perform\entity\activity\subject_instance;
+use mod_perform\models\activity\subject_instance as subject_instance_model;
 use mod_perform\webapi\middleware\require_activity;
 use performelement_linked_review\entity\linked_review_content;
 
@@ -43,7 +44,7 @@ abstract class content_items implements query_resolver, has_middleware {
      * {@inheritdoc}
      */
     final public static function resolve(array $args, execution_context $ec) {
-        $participant_instance_id = $args['participant_instance_id'];
+        $subject_instance_id = $args['subject_instance_id'];
         $section_element_id = $args['section_element_id'];
 
         $element = element::repository()
@@ -55,24 +56,22 @@ abstract class content_items implements query_resolver, has_middleware {
             throw new coding_exception('Invalid section element ID: ' . $section_element_id);
         }
 
-        // TODO: Need to check permissions.
-        $subject_user_id = subject_instance::repository()
-            ->select('subject_user_id')
-            ->join([participant_instance::TABLE, 'pi'], 'id', 'subject_instance_id')
-            ->where('pi.id', $participant_instance_id)
-            ->one()
-            ->subject_user_id;
+        $subject_instance = subject_instance_model::load_by_id($subject_instance_id);
+
+        // TODO: Need to check permissions:
+        //       Check whether the current user participates in the section the review element is in
+        //       or has reporting capabilities on responses?
 
         $content = linked_review_content::repository()
             ->where('section_element_id', $section_element_id)
-            ->where('participant_instance_id', $participant_instance_id)
+            ->where('subject_instance_id', $subject_instance->id)
             ->get();
 
         if ($content->count() === 0) {
             return [];
         }
 
-        return static::query_content($subject_user_id, $content);
+        return static::query_content($subject_instance->subject_user_id, $content);
     }
 
     /**
@@ -91,9 +90,7 @@ abstract class content_items implements query_resolver, has_middleware {
         return [
             new require_advanced_feature('performance_activities'),
             new require_login(),
-            //todo: verify use of content_items with participant instance_id.
-            // performance response data page does not use participant instance id.
-            // require_activity::by_participant_instance_id('participant_instance_id', true),
+            require_activity::by_subject_instance_id('subject_instance_id', true),
         ];
     }
 

@@ -1,9 +1,9 @@
 query totara_competency_perform_linked_competencies(
-  $participant_instance_id: core_id!
+  $subject_instance_id: core_id!
   $section_element_id: core_id!
 ) {
   items: totara_competency_perform_linked_competencies(
-    participant_instance_id: $participant_instance_id
+    subject_instance_id: $subject_instance_id
     section_element_id: $section_element_id
   ) {
     progress {

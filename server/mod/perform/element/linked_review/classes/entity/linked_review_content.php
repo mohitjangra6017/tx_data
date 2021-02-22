@@ -23,10 +23,13 @@
 
 namespace performelement_linked_review\entity;
 
+use container_workspace\watcher\core_user;
+use core\entity\user;
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
 use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\section_element;
+use mod_perform\entity\activity\subject_instance;
 
 /**
  * Element subject instance review content entity
@@ -34,9 +37,13 @@ use mod_perform\entity\activity\section_element;
  * Properties:
  * @property int $section_element_id
  * @property int $participant_instance_id
+ * @property int $subject_instance_id
+ * @property int $selector_id
  * @property int $content_id
  * @property int $created_at
  * @property-read participant_instance $participant_instance
+ * @property-read user $selector
+ * @property-read subject_instance $subject_instance
  * @property-read section_element $section_element
  *
  * @package performelement_linked_reivew\entity
@@ -54,6 +61,24 @@ class linked_review_content extends entity {
      */
     public function participant_instance(): belongs_to {
         return $this->belongs_to(participant_instance::class, 'participant_instance_id');
+    }
+
+    /**
+     * Subject instance that the content belongs to.
+     *
+     * @return belongs_to
+     */
+    public function subject_instance(): belongs_to {
+        return $this->belongs_to(subject_instance::class, 'subject_instance_id');
+    }
+
+    /**
+     * User who selected the content
+     *
+     * @return belongs_to
+     */
+    public function selector(): belongs_to {
+        return $this->belongs_to(core_user::class, 'selector_id');
     }
 
     /**

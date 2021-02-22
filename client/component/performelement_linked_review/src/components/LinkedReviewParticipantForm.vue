@@ -111,6 +111,10 @@ export default {
       required: true,
       type: Object,
     },
+    subjectInstanceId: {
+      type: Number,
+      required: true,
+    },
   },
 
   data() {
@@ -124,7 +128,7 @@ export default {
   computed: {
     userId() {
       return parseInt(this.subjectUser.id);
-    }
+    },
   },
 
   /**
@@ -138,7 +142,7 @@ export default {
           query: component.query,
           variables() {
             return {
-              participant_instance_id: this.participantInstanceId,
+              subject_instance_id: this.subjectInstanceId,
               section_element_id: this.sectionElement.id,
             };
           },

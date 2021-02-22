@@ -71,7 +71,7 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
         $this->assertEquals(count($content_ids), $linked_content->count());
         foreach ($linked_content as $content) {
             $this->assertEquals($section_element->id, $content->section_element_id);
-            $this->assertEquals($participant_instance1->id, $content->participant_instance_id);
+            $this->assertEquals($participant_instance1->subject_instance_id, $content->subject_instance_id);
             $this->assertContainsEquals($content->content_id, $content_ids);
             $this->assertGreaterThan(0, $content->created_at);
         }

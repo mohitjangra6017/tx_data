@@ -177,6 +177,7 @@
                     :is-external-participant="isExternalParticipant"
                     :participant-can-answer="participantCanAnswer"
                     :participant-instance-id="participantInstanceId"
+                    :subject-instance-id="subjectInstanceId"
                     :path="['sectionElements', sectionElement.id]"
                     :section-element="sectionElement"
                     :show-other-response="showOtherResponse"
@@ -408,6 +409,7 @@ export default {
      */
     subjectInstanceId: {
       type: Number,
+      required: true,
     },
 
     /**
@@ -471,7 +473,7 @@ export default {
      * Participant mode requires the participantInstanceId prop (participantSectionId is optional)
      */
     viewOnlyReportMode() {
-      return Boolean(this.subjectInstanceId);
+      return Boolean(!this.participantInstanceId);
     },
 
     participantCanAnswer() {
