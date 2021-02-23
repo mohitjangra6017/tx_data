@@ -316,7 +316,7 @@ class behat_mod_perform extends behat_base {
 
         $section_node = $this->get_section_node($section_number);
         $element_found = $this->find_element_in_container($section_node, $element, $selector_type);
-        $element_found->click();
+        $this->click_node($element_found);
     }
 
     /**
@@ -342,7 +342,7 @@ class behat_mod_perform extends behat_base {
         $section_node = $this->get_section_node($section_number);
         $container_found = $this->find_element_in_container($section_node, $container_element, $container_selector);
         $element_found = $this->find_element_in_container($container_found, $element, $selector_type);
-        $element_found->click();
+        $this->click_node($element_found);
     }
 
     /**
@@ -1130,7 +1130,7 @@ class behat_mod_perform extends behat_base {
 
         $section_node = $this->get_section_node($section_number);
         $element_node = $this->find_element_in_container($section_node, "Edit content elements", "link_or_button");
-        $element_node->click();
+        $this->click_node($element_node);
     }
 
     /**
