@@ -186,6 +186,13 @@ class totara_competency_proficiency_value_testcase extends advanced_testcase {
         $this->assertFalse($value->proficient);
         $this->assertEquals(33.0, $value->percentage);
     }
+
+    public function test_empty_value() {
+        $value = proficiency_value::empty_value();
+
+        $this->assert_user_has_no_achievement($value);
+    }
+
     /**
      * Assert that the given value points to 'no achievement'
      *

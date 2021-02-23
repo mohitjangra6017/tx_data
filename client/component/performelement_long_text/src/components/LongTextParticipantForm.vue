@@ -86,7 +86,11 @@ export default {
     isExternalParticipant: Boolean,
     participantInstanceId: {
       type: [String, Number],
-      required: true,
+      required: false,
+    },
+    subjectInstanceId: {
+      type: [String, Number],
+      required: false,
     },
     path: {
       type: [String, Array],
@@ -126,8 +130,9 @@ export default {
   },
 
   async mounted() {
-    if (this.isExternalParticipant) {
-      // File upload is problematic for external participants.
+    // File upload is problematic for external participants
+    // and it is not needed for the view-only form (no participant instance id).
+    if (this.isExternalParticipant || !this.participantInstanceId) {
       return;
     }
     await this.$_loadDraftId();

@@ -44,7 +44,9 @@ use totara_competency\entity\scale_value;
 class proficiency_value {
 
     /**
-     * @var assignment
+     * Optional as we want to support an empty achievement
+     *
+     * @var assignment|null
      */
     protected $assignment;
 
@@ -101,9 +103,9 @@ class proficiency_value {
     /**
      * proficiency_value constructor.
      *
-     * @param assignment $assignment
+     * @param assignment|null $assignment $assignment
      */
-    public function __construct(assignment $assignment) {
+    public function __construct(?assignment $assignment = null) {
         $this->assignment = $assignment;
     }
 
@@ -153,11 +155,10 @@ class proficiency_value {
      * @return proficiency_value
      */
     private static function get_value_for_achievement(assignment $assignment, ?competency_achievement $achievement): self {
-        $value = new static($assignment);
-        $value->scale_id = $assignment->competency->scale->id;
-
         // We need to check that the achievement actually has a value as it could not have it yet
         if ($achievement && $achievement->value) {
+            $value = new static($assignment);
+            $value->scale_id = $assignment->competency->scale->id;
             $value->id = $achievement->value->id;
             $value->name = $achievement->value->name;
             // Get the proficient flag from the achievement directly, not from the scale_value, because it can
@@ -167,12 +168,32 @@ class proficiency_value {
                 $achievement->value,
                 $assignment->competency->scale
             );
-        } else {
-            $value->id = 0; // It's a pseudo value, with no actual record in the db
-            $value->name = get_string('no_value_achieved', 'totara_competency');
-            $value->proficient = false; // No value is always not proficient
-            $value->percentage = 0; // No value is always 0 percent.
+
+            return $value;
         }
+
+        return self::empty_value($assignment);
+    }
+
+    /**
+     * Returns an instance representing an empty achievement
+     *
+     * @param assignment|null $assignment
+     * @return proficiency_value
+     */
+    public static function empty_value(?assignment $assignment = null): self {
+        $value = new static($assignment);
+
+        if ($assignment) {
+            $value->scale_id = $assignment->competency->scale->id;
+        } else {
+            $value->scale_id = 0;
+        }
+
+        $value->id = 0; // It's a pseudo value, with no actual record in the db
+        $value->name = get_string('no_value_achieved', 'totara_competency');
+        $value->proficient = false; // No value is always not proficient
+        $value->percentage = 0; // No value is always 0 percent.
 
         return $value;
     }

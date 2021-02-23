@@ -24,6 +24,8 @@
 
 namespace mod_perform\testing;
 
+use mod_perform\entity\activity\external_participant;
+use mod_perform\entity\activity\section_relationship;
 use stdClass, coding_exception, invalid_parameter_exception;
 use container_perform\perform as perform_container;
 use core\collection;
@@ -1597,25 +1599,22 @@ final class generator extends \core\testing\component_generator {
     /**
      * Create an external user, with corresponding participant instance and sections
      *
-     * @param array $data E.g: ['subject' => Subject instance username, 'fullname' => 'XYZ', 'email' => 'xyz@abc.com']
+     * @param int $subject_instance_id
+     * @param array $data E.g: ['fullname' => 'XYZ', 'email' => 'xyz@abc.com']
      * @return array [participant_instance, ]
      */
-    public function create_external_participant_instances(array $data): array {
-        return builder::get_db()->transaction(function () use ($data) {
+    public function create_external_participant_instances(int $subject_instance_id, array $data): array {
+        return builder::get_db()->transaction(function () use ($subject_instance_id, $data) {
             $external_relationship_id = core_relationship::load_by_idnumber(
                 constants::RELATIONSHIP_EXTERNAL
             )->id;
 
-            $subject_instance_entity = subject_instance_entity::repository()
-                ->join([user::TABLE, 'u'], 'subject_user_id', 'id')
-                ->where('u.username', $data['subject'])
-                ->one(true);
-            $subject_instance_model = subject_instance::load_by_entity($subject_instance_entity);
+            $subject_instance_model = subject_instance::load_by_id($subject_instance_id);
 
-            $section_ids = \mod_perform\entity\activity\section::repository()
+            $section_ids = section_entity::repository()
                 ->select('id')
                 ->where('activity_id', $subject_instance_model->get_activity()->id)
-                ->join([\mod_perform\entity\activity\section_relationship::TABLE, 'rel'], 'id', 'section_id')
+                ->join([section_relationship::TABLE, 'rel'], 'id', 'section_id')
                 ->where('rel.core_relationship_id', $external_relationship_id)
                 ->get()
                 ->pluck('id');
@@ -1623,9 +1622,9 @@ final class generator extends \core\testing\component_generator {
                 throw new coding_exception('There are no sections that the external respondent can participate in');
             }
 
-            $external_user = new \mod_perform\entity\activity\external_participant();
-            $external_user->name = $data['fullname'];
-            $external_user->email = $data['email'];
+            $external_user = new external_participant();
+            $external_user->name = $data['fullname'] ?? random_string();
+            $external_user->email = $data['email'] ?? random_string().'@example.com';
             $external_user->token = hash('sha256', microtime());
             $external_user->save();
 

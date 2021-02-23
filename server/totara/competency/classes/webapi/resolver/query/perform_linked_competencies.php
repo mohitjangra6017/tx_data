@@ -38,20 +38,46 @@ class perform_linked_competencies extends content_items {
      */
     protected static function query_content(int $user_id, collection $content): array {
         $created_at = $content->first() ? $content->first()->created_at : null;
+        $content_ids = $content->pluck('content_id');
 
-        return assignments::for($user_id)
+        if (empty($content_ids)) {
+            return [];
+        }
+
+        $assignments = assignments::for($user_id)
             ->set_filters([
-                'ids' => $content->pluck('content_id'),
+                'ids' => $content_ids,
             ])
             ->fetch()
             ->get()
             ->map(static function (assignment_entity $assignment) use ($user_id, $created_at) {
-                return [
-                    'progress' => assignment_model::load_by_entity($assignment),
-                    'achievement' => proficiency_value::value_at_timestamp($assignment, $user_id, $created_at)
-                ];
+                return self::create_item($assignment, $user_id, $created_at);
             })
-            ->all();
+            ->all(true);
+
+        $result = [];
+        foreach ($content_ids as $content_id) {
+            $result[] = $assignments[$content_id] ?? self::create_item(null, null, null);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param assignment_entity|null $assignment
+     * @param int|null $user_id
+     * @param int|null $created_at
+     * @return array
+     */
+    private static function create_item(?assignment_entity $assignment, ?int $user_id, ?int $created_at): array {
+        $proficiency_value = ($assignment && $user_id && $created_at)
+            ? proficiency_value::value_at_timestamp($assignment, $user_id, $created_at)
+            : proficiency_value::empty_value($assignment);
+
+        return [
+            'progress' => $assignment ? assignment_model::load_by_entity($assignment) : null,
+            'achievement' => $proficiency_value,
+        ];
     }
 
     /**

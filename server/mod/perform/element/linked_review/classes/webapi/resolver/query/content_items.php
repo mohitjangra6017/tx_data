@@ -46,13 +46,14 @@ abstract class content_items implements query_resolver, has_middleware {
     final public static function resolve(array $args, execution_context $ec) {
         global $USER;
 
+        $validator = null;
         $token = $args['token'] ?? null;
         if (!empty($token)) {
             $validator = new external_participant_token_validator($token);
             if (!$validator->is_valid() || $validator->is_subject_instance_closed()) {
                 throw new coding_exception('Token validation for external participant failed');
             }
-            if ((int) $validator->get_participant_instance()->subject_instance_id !== $args['subject_instance_id']) {
+            if ((int) $validator->get_participant_instance()->subject_instance_id !== (int) $args['subject_instance_id']) {
                 throw new coding_exception('Invalid subject instance for given token');
             }
         } else {

@@ -328,11 +328,13 @@ class mod_perform_response_model_testcase extends advanced_testcase {
             true,
             true
         );
-        [$external_participant_instance] = $perform_generator->create_external_participant_instances([
-            'subject' => $subject_instance->subject_user->username,
-            'fullname' => 'A name',
-            'email' => 'A email',
-        ]);
+        [$external_participant_instance] = $perform_generator->create_external_participant_instances(
+            $subject_instance->id,
+            [
+                'fullname' => 'A name',
+                'email' => 'A email',
+            ]
+        );
         $external_participant_instance = participant_instance::load_by_entity($external_participant_instance);
         $external_user_response_model = new section_element_response(
             $external_participant_instance,
