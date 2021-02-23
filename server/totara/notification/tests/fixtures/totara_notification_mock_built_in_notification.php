@@ -37,6 +37,16 @@ class totara_notification_mock_built_in_notification extends built_in_notificati
     private static $subject;
 
     /**
+     * @var int|null
+     */
+    private static $body_format;
+
+    /**
+     * @var int|null
+     */
+    private static $subject_format;
+
+    /**
      * @return string
      */
     public static function get_event_class_name(): string {
@@ -89,6 +99,30 @@ class totara_notification_mock_built_in_notification extends built_in_notificati
     }
 
     /**
+     * @return int
+     */
+    public static function get_default_body_format(): int {
+        if (!isset(self::$body_format)) {
+            // Use format MOODLE as default value for body format.
+            return FORMAT_MOODLE;
+        }
+
+        return self::$body_format;
+    }
+
+    /**
+     * @return int
+     */
+    public static function get_default_subject_format(): int {
+        if (!isset(self::$subject_format)) {
+            // Use format MOODLE as default value for body format.
+            return FORMAT_MOODLE;
+        }
+
+        return self::$subject_format;
+    }
+
+    /**
      * @param lang_string $mock_body
      * @return void
      */
@@ -105,6 +139,22 @@ class totara_notification_mock_built_in_notification extends built_in_notificati
     }
 
     /**
+     * @param int $value
+     * @return void
+     */
+    public static function set_default_subject_format(int $value): void {
+        self::$subject_format = $value;
+    }
+
+    /**
+     * @param int $value
+     * @return void
+     */
+    public static function set_default_body_format(int $value): void {
+        self::$body_format = $value;
+    }
+
+    /**
      * @return void
      */
     public static function clear(): void {
@@ -114,6 +164,14 @@ class totara_notification_mock_built_in_notification extends built_in_notificati
 
         if (isset(self::$subject)) {
             self::$subject = null;
+        }
+
+        if (isset(self::$subject_format)) {
+            self::$subject_format = null;
+        }
+
+        if (isset(self::$body_format)) {
+            self::$body_format = null;
         }
     }
 

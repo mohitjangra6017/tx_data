@@ -79,11 +79,8 @@ class editor_weka_webapi_core_editor_with_old_variant_testcase extends advanced_
 
         self::assertArrayHasKey('extensions', $variant_options);
 
-        $all_extensions = extension_loader::get_all_extension_classes();
-        self::assertCount(
-            count($all_extensions),
-            $variant_options['extensions']
-        );
+        ['extensions' => $all_extensions] = extension_loader::get_extensions_for_variant('engage_article-content');
+        self::assertCount(count($all_extensions), $variant_options['extensions']);
 
         $test_case = $this;
         $extension_names = array_map(
@@ -153,12 +150,8 @@ class editor_weka_webapi_core_editor_with_old_variant_testcase extends advanced_
         self::assertEquals(JSON_ERROR_NONE, json_last_error());
 
         self::assertArrayHasKey('extensions', $variant_options);
-
-        $all_extensions = extension_loader::get_all_extension_classes();
-        self::assertCount(
-            count($all_extensions),
-            $variant_options['extensions']
-        );
+        ['extensions' => $all_extensions] = extension_loader::get_extensions_for_variant('engage_article-content');
+        self::assertCount(count($all_extensions), $variant_options['extensions']);
 
         $test_case = $this;
         $extension_names = array_map(

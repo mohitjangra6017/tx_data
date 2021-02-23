@@ -24,7 +24,7 @@ Feature: Sending overridden notification
     And the "Subject" "field" should be disabled
     When I click on the "Enable customising field subject" tui toggle button
     Then the "Subject" "field" should be enabled
-    And I set the field "Subject" to "Overridden subject at system"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Overridden subject at system"
     And I click on "Save" "button"
     And I log out
     And I log in as "two"

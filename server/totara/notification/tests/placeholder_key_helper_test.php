@@ -127,4 +127,29 @@ class totara_notification_placeholder_key_helper_testcase extends advanced_testc
         // to be appearing in the string. Hence it will fail the key.
         self::assertFalse(key_helper::is_valid_grouped_key('[bob:builder]'));
     }
+
+    /**
+     * @return void
+     */
+    public function test_key_helper_with_loops_key(): void {
+        self::assertEquals('key:loop_start', key_helper::get_start_collection_key('key'));
+        self::assertEquals('[key:loop_start]', key_helper::get_start_collection_key('key', true));
+
+        self::assertEquals('bob:loop_end', key_helper::get_end_collection_key('bob'));
+        self::assertEquals('[bob:loop_end]', key_helper::get_end_collection_key('bob', true));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_strip_invalid_characters_from_key(): void {
+        self::assertEquals('hello:world', key_helper::strip_invalid_characters_from_key('hello+:world'));
+        self::assertEquals('helloworld', key_helper::strip_invalid_characters_from_key('hello+world'));
+        self::assertEquals('hello:world', key_helper::strip_invalid_characters_from_key('[hello:world$^&@*]'));
+        self::assertEquals('hello:world', key_helper::strip_invalid_characters_from_key('hello:world'));
+        self::assertEquals('helloworld', key_helper::strip_invalid_characters_from_key('helloworld'));
+
+        self::assertEquals('bringer', key_helper::strip_invalid_characters_from_key('運命bringer'));
+        self::assertEquals('bringer', key_helper::strip_invalid_characters_from_key('рокbringer'));
+    }
 }

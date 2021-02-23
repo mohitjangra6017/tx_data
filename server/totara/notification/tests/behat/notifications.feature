@@ -27,8 +27,8 @@ Feature: Notifications page
     When I click on "Create notification" "link"
     Then I should see "Create notification" in the ".tui-modalContent__header-title" "css_element"
     And I set the field "Name" to "Test custom notification name"
-    And I set the field "Subject" to "Test custom notification subject"
-    And I set the field with xpath "//textarea[@class='tui-formTextarea tui-editorTextarea__textarea']" to "Test custom notification body"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test custom notification subject"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Test custom notification body"
     And I click on the "Days after" tui radio
     And I set the field "Number" to "7"
     And I click on "Save" "button"
@@ -55,8 +55,8 @@ Feature: Notifications page
     And I click on "Totara comment details" "button"
     And I click on "Create notification" "button"
     And I set the field "Name" to "Test context notification name"
-    And I set the field "Subject" to "Test context notification subject"
-    And I set the field with xpath "//textarea[@class='tui-formTextarea tui-editorTextarea__textarea']" to "Test context notification body"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test context notification subject"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Test context notification body"
     And I click on the "Days after" tui radio
     And I set the field "Number" to "55"
     And I click on "Save" "button"

@@ -24,6 +24,7 @@ export const NOTIFICATION_PREFERENCE_KEYS = [
   'title',
   'schedule_type',
   'schedule_offset',
+  'subject_format',
 ];
 
 export const SCHEDULE_TYPES = {
@@ -56,12 +57,13 @@ export function validatePreferenceProp(extraKeys = []) {
  * @return {Object}
  */
 export function getDefaultNotificationPreference(extraAttributes = {}) {
-  // We are default the body format to MOODLE for the fallback.
+  // We are default the body format to JSON_EDITOR for the fallback.
   // Ideally it will be defined by the server-side.
   const defaultAttributes = {
     subject: '',
     body: '',
-    body_format: Format.MOODLE,
+    body_format: Format.JSON_EDITOR,
+    subject_format: Format.JSON_EDITOR,
     title: null,
     schedule_type: SCHEDULE_TYPES.ON_EVENT,
     schedule_offset: null,

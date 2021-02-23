@@ -81,6 +81,7 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
                 'body' => 'System body',
                 'subject' => 'System subject',
                 'body_format' => FORMAT_PLAIN,
+                'subject_format' => FORMAT_PLAIN,
                 'title' => 'System custom notification'
             ]
         );
@@ -100,6 +101,7 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
         self::assertEquals('System subject', $second_custom->get_subject());
         self::assertEquals('System custom notification', $second_custom->get_title());
         self::assertEquals(FORMAT_PLAIN, $second_custom->get_body_format());
+        self::assertEquals(FORMAT_PLAIN, $second_custom->get_subject_format());
 
         // Create the overridden values.
         $second_custom_builder = notification_preference_builder::from_exist($second_custom->get_id());
@@ -107,6 +109,7 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
         $second_custom_builder->set_title('Category title');
         $second_custom_builder->set_subject('Category subject');
         $second_custom_builder->set_body_format(FORMAT_MOODLE);
+        $second_custom_builder->set_subject_format(FORMAT_MOODLE);
 
         $second_custom_builder->save();
         $second_custom->refresh();
@@ -120,6 +123,7 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
         self::assertEquals('Category title', $second_custom->get_title());
         self::assertEquals('Category subject', $second_custom->get_subject());
         self::assertEquals(FORMAT_MOODLE, $second_custom->get_body_format());
+        self::assertEquals(FORMAT_MOODLE, $second_custom->get_subject_format());
     }
 
     /**

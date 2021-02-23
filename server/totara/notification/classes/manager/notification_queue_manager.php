@@ -24,6 +24,7 @@ namespace totara_notification\manager;
 
 use coding_exception;
 use core\entity\notification;
+use core\json_editor\helper\document_helper;
 use core\orm\query\builder;
 use core_user;
 use null_progress_trace;
@@ -145,13 +146,32 @@ class notification_queue_manager {
         $body_format = $preference->get_body_format();
         $body_text = $preference->get_body();
 
+        if (FORMAT_JSON_EDITOR == $body_format && !document_helper::looks_like_json($body_text, true)) {
+            // This is probably happening because of the language string is comming from the language pack
+            // that it is purely a string. Which in this case we will help to convert it as a string into a json document.
+            // Note that with this converting into json document, all the placeholder will be treated as text,
+            // however even as a text, the the placeholder replacement can actually work just fine.
+            $body_text = document_helper::create_json_string_document_from_text($body_text);
+        }
+
+        $subject_format = $preference->get_subject_format();
+        $subject_text = $preference->get_subject();
+
+        if (FORMAT_JSON_EDITOR == $subject_format && !document_helper::looks_like_json($subject_text, true)) {
+            // This is probably happening because of the language string is comming from the language pack
+            // that it is purely a string. Which in this case we will help to convert it as a string into a json document.
+            // Note that with this converting into json document, all the placeholder will be treated as text,
+            // however even as a text, the the placeholder replacement can actually work just fine.
+            $subject_text = document_helper::create_json_string_document_from_text($subject_text);
+        }
+
         // Constructing a default message that will be sent for multiple users.
         $default_message  = new stdClass();
         $default_message->notification = 1;
         $default_message->fullmessage = $engine->replace(format_text_email($body_text, $body_format));
         $default_message->fullmessagehtml = $engine->replace(format_text($body_text, $body_format));
         $default_message->fullmessageformat = $body_format;
-        $default_message->subject = $engine->replace($preference->get_subject());
+        $default_message->subject = $engine->replace(content_to_text($subject_text, $subject_format));
 
         // Static data - which can be tweaked later on.
         $default_message->contexturl = '';

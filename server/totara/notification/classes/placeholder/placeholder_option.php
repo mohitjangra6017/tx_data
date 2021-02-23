@@ -126,6 +126,30 @@ class placeholder_option {
     }
 
     /**
+     * @param string $pattern
+     * @return array
+     */
+    public function find_map_group_options_match(string $pattern): array {
+        // This is to keep the regex friendly with or without the square bracket.
+        $pattern = key_helper::remove_bracket($pattern);
+
+        $group_options = $this->get_map_group_options();
+        if (empty($pattern)) {
+            // Pattern is an empty string, skip the match process to speed up
+            // the process and return everything.
+            return $group_options;
+        }
+
+        return array_filter(
+            $group_options,
+            function (option $option) use ($pattern): bool {
+                $option_key = $option->get_key();
+                return (bool) preg_match("/{$pattern}/", $option_key);
+            }
+        );
+    }
+
+    /**
      * Call to the instantiation callback to get the place holder object.
      *
      * @param array $event_data

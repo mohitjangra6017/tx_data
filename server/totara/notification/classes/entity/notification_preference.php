@@ -36,6 +36,7 @@ use totara_notification\repository\notification_preference_repository;
  * @property string|null $title
  * @property string|null $recipient
  * @property string|null $subject
+ * @property string|null $subject_format
  * @property string|null $body
  * @property int|null    $body_format
  * @property int         $time_created

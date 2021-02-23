@@ -111,6 +111,14 @@ class notification_preference_builder {
     }
 
     /**
+     * @param int|null $subject_format
+     * @return void
+     */
+    public function set_subject_format(?int $subject_format): void {
+        $this->record_data['subject_format'] = $subject_format;
+    }
+
+    /**
      * By setting this value to NULL, you are more likely to reset the notification record to
      * fallback to the ancestor notification preference, if it has any.
      *
@@ -189,7 +197,6 @@ class notification_preference_builder {
             $ancestor_context_path = $ancestor->get_context()->path;
             $current_context_path = $context->path;
 
-            // Todo: test me maybe ? break me !
             if (0 !== stripos($current_context_path, $ancestor_context_path)) {
                 // If the current context path does not contain the ancestor context path at the
                 // start of the string then we are overriding a notification preference that reference
@@ -251,7 +258,7 @@ class notification_preference_builder {
             if (!isset($record_data['notification_class_name']) && !isset($record_data['ancestor_id'])) {
                 // When the notification preference is for the custom, meaning that when the notification_class_name
                 // is not provided. Hence the fields below will be required by the business logic.
-                $required_fields = ['body', 'body_format', 'subject', 'title', 'schedule_offset'];
+                $required_fields = ['body', 'body_format', 'subject', 'title', 'schedule_offset', 'subject_format'];
 
                 foreach ($required_fields as $required_field) {
                     if (!isset($record_data[$required_field]) || '' === $record_data[$required_field]) {
@@ -278,13 +285,20 @@ class notification_preference_builder {
                     }
                 }
 
-                if (array_key_exists('body_format', $this->record_data) && null === $this->record_data['body_format']) {
-                    // Special treatment for 'body_format', because the value of the field 'body_format'
-                    // can be set to zero, which it will make the validation go wrong easily.
-                    throw new coding_exception(
-                        "Cannot reset the field 'body_format' for custom " .
-                        "notification that does not have parent(s)"
-                    );
+                $format_keys = [
+                    'body_format',
+                    'subject_format'
+                ];
+
+                foreach ($format_keys as $format_key) {
+                    if (array_key_exists($format_key, $this->record_data) && null === $this->record_data[$format_key]) {
+                        // Special treatment for 'body_format', because the value of the field 'body_format'
+                        // can be set to zero, which it will make the validation go wrong easily.
+                        throw new coding_exception(
+                            "Cannot reset the field '{$format_key}' for custom " .
+                            "notification that does not have parent(s)"
+                        );
+                    }
                 }
 
                 if (array_key_exists('schedule_offset', $this->record_data) && null === $this->record_data['schedule_offset']) {

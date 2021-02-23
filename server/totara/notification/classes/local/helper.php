@@ -43,18 +43,7 @@ class helper {
      * @return bool
      */
     public static function is_valid_notifiable_event(string $event_class_name): bool {
-        if (!class_exists($event_class_name)) {
-            return false;
-        }
-
-        $interfaces = class_implements($event_class_name);
-
-        if (!is_array($interfaces)) {
-            // More likely the event class name does not exist in the system.
-            return false;
-        }
-
-        return in_array(notifiable_event::class, $interfaces);
+        return is_a($event_class_name, notifiable_event::class, true);
     }
 
     /**

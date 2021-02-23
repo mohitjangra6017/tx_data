@@ -100,12 +100,8 @@ class editor_weka_webapi_core_editor_testcase extends advanced_testcase {
         self::assertNotEmpty($options);
 
         self::assertArrayHasKey('extensions', $options);
-        $all_extensions = extension_loader::get_all_extension_classes();
-
-        self::assertCount(
-            count($all_extensions),
-            $options['extensions']
-        );
+        ['extensions' => $all_extensions] = extension_loader::get_extensions_for_variant(variant_name::STANDARD);
+        self::assertCount(count($all_extensions), $options['extensions']);
 
         $test_case = $this;
         $extension_names = array_map(

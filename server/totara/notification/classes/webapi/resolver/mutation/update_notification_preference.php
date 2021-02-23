@@ -25,6 +25,7 @@ namespace totara_notification\webapi\resolver\mutation;
 use coding_exception;
 use core\webapi\execution_context;
 use core\webapi\middleware\clean_content_format;
+use core\webapi\middleware\clean_editor_content;
 use core\webapi\middleware\require_login;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
@@ -65,6 +66,10 @@ class update_notification_preference implements mutation_resolver, has_middlewar
             // reset the value of $subject.
             $subject = ('' === $args['subject']) ? null : $args['subject'];
             $builder->set_subject($subject);
+        }
+
+        if (array_key_exists('subject_format', $args)) {
+            $builder->set_subject_format($args['subject_format']);
         }
 
         if (array_key_exists('title', $args)) {
@@ -111,7 +116,10 @@ class update_notification_preference implements mutation_resolver, has_middlewar
     public static function get_middleware(): array {
         return [
             new require_login(),
-            new clean_content_format('body_format')
+            new clean_content_format('body_format'),
+            new clean_content_format('subject_format'),
+            new clean_editor_content('body', 'body_format', false),
+            new clean_editor_content('subject', 'subject_format', false),
         ];
     }
 }

@@ -83,10 +83,25 @@ abstract class built_in_notification {
      * + @see FORMAT_MARKDOWN
      * + @see FORMAT_JSON_EDITOR
      *
-     * We default to FORMAT_MOODLE, because this format will work well with the language pack.
+     * We default to FORMAT_JSON_EDITOR.
      * @return int
      */
     public static function get_default_body_format(): int {
-        return FORMAT_MOODLE;
+        return FORMAT_JSON_EDITOR;
+    }
+
+    /**
+     * The function should only return the following values:
+     * + @see FORMAT_MOODLE
+     * + @see FORMAT_HTML
+     * + @see FORMAT_PLAIN
+     * + @see FORMAT_MARKDOWN
+     * + @see FORMAT_JSON_EDITOR
+     *
+     * We default to FORMAT_JSON_EDITOR.
+     * @return int
+     */
+    public static function get_default_subject_format(): int {
+        return FORMAT_JSON_EDITOR;
     }
 }

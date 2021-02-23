@@ -21,9 +21,15 @@
  * @package totara_notification
  */
 
+use core\json_editor\helper\document_helper;
+use core\json_editor\node\paragraph;
+use core\json_editor\node\text;
+use core_user\totara_notification\placeholder\user;
 use totara_notification\builder\notification_preference_builder;
+use totara_notification\json_editor\node\placeholder;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\model\notification_preference as model;
+use totara_notification\placeholder\placeholder_option;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\mutation\update_notification_preference;
 use totara_webapi\phpunit\webapi_phpunit_helper;
@@ -113,6 +119,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
                 'body' => 'This is custom body',
                 'subject' => 'This is custom subject',
                 'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN,
             ]
         );
 
@@ -120,6 +127,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         self::assertEquals('This is custom body', $custom_notification->get_body());
         self::assertEquals('This is custom subject', $custom_notification->get_subject());
         self::assertEquals(FORMAT_MOODLE, $custom_notification->get_body_format());
+        self::assertEquals(FORMAT_PLAIN, $custom_notification->get_subject_format());
 
         self::assertNotEquals('Updated title', $custom_notification->get_title());
 
@@ -325,6 +333,28 @@ class totara_notification_webapi_update_notification_preference_testcase extends
     /**
      * @return void
      */
+    public function test_update_notification_preference_with_invalid_subject_format(): void {
+        $this->setAdminUser();
+        $system_built_in = notification_preference_loader::get_built_in(
+            totara_notification_mock_built_in_notification::class
+        );
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("The format value is invalid");
+
+        // Run the mutation.
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $system_built_in->get_id(),
+                'subject_format' => 42,
+            ]
+        );
+    }
+
+    /**
+     * @return void
+     */
     public function test_update_notification_preference_without_providing_fields(): void {
         $this->setAdminUser();
 
@@ -337,6 +367,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
                 'body' => 'Custom body',
                 'body_format' => FORMAT_MOODLE,
                 'subject' => 'Custom subject',
+                'subject_format' => FORMAT_PLAIN,
                 'title' => 'Custom title',
             ]
         );
@@ -378,6 +409,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
                 'subject' => 'Custom subject',
                 'title' => 'Custom title',
                 'schedule_offset' => 0,
+                'subject_format' => FORMAT_PLAIN,
             ]
         );
 
@@ -427,5 +459,65 @@ class totara_notification_webapi_update_notification_preference_testcase extends
 
         self::assertNotEquals(-5, $notification->get_schedule_offset());
         self::assertEquals(0, $notification->get_schedule_offset());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_custom_notification_body_with_format_json_editor(): void {
+        /** @var generator $generator */
+        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $context_system = context_system::instance();
+
+        totara_notification_mock_notifiable_event::add_placeholder_options(
+            placeholder_option::create(
+                'user',
+                user::class,
+                $generator->give_my_mock_lang_string('User'),
+                function (): void {
+                    // The test is not about this function - so no point to write one.
+                    throw new coding_exception("Do not call to this function in unit test");
+                }
+            )
+        );
+
+        $preference = $generator->create_notification_preference(
+            totara_notification_mock_notifiable_event::class,
+            $context_system->id,
+            [
+                'body_format' => FORMAT_PLAIN,
+                'body' => 'This is body',
+            ]
+        );
+
+        self::assertEquals(FORMAT_PLAIN, $preference->get_body_format());
+        self::assertEquals('This is body', $preference->get_body());
+
+        $this->setAdminUser();
+        $updated_body = document_helper::json_encode_document(
+            document_helper::create_document_from_content_nodes([
+                paragraph::create_json_node_with_content_nodes([
+                    text::create_json_node_from_text('Hello '),
+                    placeholder::create_node_from_key_and_label('user:firstname', 'User first name'),
+                ]),
+            ])
+        );
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $preference->get_id(),
+                'body_format' => FORMAT_JSON_EDITOR,
+                'body' => $updated_body,
+            ]
+        );
+
+        // Refresh with the newly updated field
+        $preference->refresh();
+        self::assertNotEquals(FORMAT_PLAIN, $preference->get_body_format());
+        self::assertEquals(FORMAT_JSON_EDITOR, $preference->get_body_format());
+
+        self::assertNotEquals('This is body', $preference->get_body());
+        self::assertEquals($updated_body, $preference->get_body());
     }
 }

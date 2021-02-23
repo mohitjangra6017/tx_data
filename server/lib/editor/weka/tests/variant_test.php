@@ -49,6 +49,6 @@ class editor_weka_variant_testcase extends advanced_testcase {
         $variant = variant::create(variant_name::DESCRIPTION, $context->id);
         $variant->set_extra_extensions([['name' => 'non_existing_extension']]);
 
-        $this->assertDebuggingCalled("No extension exist for name 'non_existing_extension'");
+        $this->assertDebuggingCalled("No weka extension exists for name 'non_existing_extension'");
     }
 }

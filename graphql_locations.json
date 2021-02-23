@@ -96,8 +96,11 @@
         "tool_([a-zA-Z0-9_]+)": "server/admin/tool/{$1}/webapi/ajax/",
         "totara_([a-zA-Z0-9_]+)": "server/totara/{$1}/webapi/ajax/",
         "user": "server/user/webapi/ajax/",
+        "virtualmeeting": "server/integrations/virtualmeeting/webapi/ajax/",
+        "virtualmeeting_([a-zA-Z0-9_]+)": "server/integrations/virtualmeeting/{$1}/webapi/ajax/",
         "webservice": "server/webservice/webapi/ajax/",
         "webservice_([a-zA-Z0-9_]+)": "server/webservice/{$1}/webapi/ajax/",
+        "weka_([a-zA-Z0-9_]+)": "server/lib/editor/weka/extensions/{$1}/webapi/ajax/",
         "workshopallocation_([a-zA-Z0-9_]+)": "server/mod/workshop/allocation/{$1}/webapi/ajax/",
         "workshopeval_([a-zA-Z0-9_]+)": "server/mod/workshop/eval/{$1}/webapi/ajax/",
         "workshopform_([a-zA-Z0-9_]+)": "server/mod/workshop/form/{$1}/webapi/ajax/"

@@ -21,8 +21,8 @@ Feature: Sending custom notifications to user
     And I click on "New comment created details" "button"
     And I click on "Create notification" "button"
     And I set the field "Name" to "Custom notification one"
-    And I set the field "Subject" to "Test custom notification subject"
-    And I set the field with xpath "//textarea[@class='tui-formTextarea tui-editorTextarea__textarea']" to "Test custom notification body"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test custom notification subject"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Test custom notification body"
     When I click on "Save" "button"
     Then I should see "Custom notification one"
     And I log out
@@ -51,8 +51,8 @@ Feature: Sending custom notifications to user
     And I click on "New comment created details" "button"
     And I click on "Create notification" "button"
     And I set the field "Name" to "Custom notification one"
-    And I set the field "Subject" to "Custom notification subject"
-    And I set the field with css ".tui-notificationPreferenceForm__editor textarea" to "Custom notification body"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Custom notification subject"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Custom notification body"
     And I click on "Save" "button"
     And the following "courses" exist:
       | fullname | shortname | format |
@@ -65,8 +65,7 @@ Feature: Sending custom notifications to user
     And I click on "Edit notification Custom notification one" "button"
     And the "Subject" "field" should be disabled
     When I click on the "Enable customising field subject" tui toggle button
-    And the "Subject" "field" should be enabled
-    And I set the field "Subject" to "Custom notification at course context"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Custom notification at course context"
     And I click on "Save" "button"
     And I log out
     And I log in as "one"
@@ -81,9 +80,9 @@ Feature: Sending custom notifications to user
     And I reset the email sink
     When I trigger cron
     Then the following emails should not have been sent:
-      | To                 | Subject                          | Body                          |
+      | To                 | Subject                               | Body                     |
       | moodle@example.com | Custom notification at course context | Custom notification body |
     And the message "Custom notification subject" contains "Custom notification body" for "admin" user
     And the following emails should have been sent:
-      | To                 | Subject                          | Body                          |
+      | To                 | Subject                     | Body                     |
       | moodle@example.com | Custom notification subject | Custom notification body |

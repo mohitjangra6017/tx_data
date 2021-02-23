@@ -32,7 +32,11 @@
       />
     </template>
     <template v-slot:modals>
-      <ModalPresenter :open="modal.open" @request-close="modal.open = false">
+      <ModalPresenter
+        :open="modal.open"
+        @request-close="modal.open = false"
+        @close-complete="resetState"
+      >
         <NotificationPreferenceModal
           :context-id="contextId"
           :event-class-name="targetEventClassName"
@@ -127,21 +131,26 @@ export default {
     };
   },
 
-  watch: {
-    modal: {
-      deep: true,
-      handler({ open }) {
-        if (!open) {
-          // Reset the target preference everytime the modal is closed.
-          this.targetPreference = null;
-          this.targetEventClassName = null;
-          this.targetScheduleTypes = [];
-        }
-      },
-    },
-  },
-
   methods: {
+    /**
+     * A method to call when we are closing down the modal.
+     * As this function will try to reset the state of several variables,
+     * when the modal is closed.
+     */
+    resetState() {
+      // Reset the target event class name.
+      this.targetEventClassName = null;
+
+      // Then the target preference.
+      this.targetPreference = null;
+
+      // Reset the modal title
+      this.modal.title = '';
+
+      // Reset the target schedule types
+      this.targetScheduleTypes = [];
+    },
+
     /**
      * @param {String} eventClassName
      * @param {Array} scheduleTypes
@@ -164,6 +173,7 @@ export default {
      */
     async handleEditNotification(oldPreference, scheduleTypes) {
       this.targetPreference = await this.getOverriddenPreference(oldPreference);
+      this.targetEventClassName = this.targetPreference.event_class_name;
       this.targetScheduleTypes = scheduleTypes;
 
       this.modal.title = this.$str('edit_notification', 'totara_notification');
@@ -185,7 +195,6 @@ export default {
         }
 
         this.modal.open = false;
-        this.modal.title = '';
       } catch (e) {
         console.error(e);
 
@@ -213,6 +222,7 @@ export default {
      * @param {String} event_class_name
      * @param {String} schedule_type
      * @param {Number} schedule_offset
+     * @param {Number} subject_format
      */
     async createCustomNotification({
       subject,
@@ -222,6 +232,7 @@ export default {
       event_class_name,
       schedule_type,
       schedule_offset,
+      subject_format,
     }) {
       await this.$apollo.mutate({
         mutation: createCustomNotification,
@@ -231,6 +242,7 @@ export default {
           title,
           body_format,
           event_class_name,
+          subject_format,
           context_id: this.contextId,
           schedule_type,
           schedule_offset,
@@ -353,6 +365,7 @@ export default {
      * @param {Number} body_format
      * @param {String} schedule_type
      * @param {Number} schedule_offset
+     * @param {Number} subject_format
      */
     async updateNotification({
       subject,
@@ -361,6 +374,7 @@ export default {
       body_format,
       schedule_type,
       schedule_offset,
+      subject_format,
     }) {
       if (!this.targetPreference) {
         throw new Error('Cannot run update while target preference is empty');
@@ -373,6 +387,7 @@ export default {
           subject,
           body,
           body_format,
+          subject_format,
           // Note that we don't want NULL here, but undefined, because we would want the graphql
           // to exclude the field title when updating a custom notification at a very specific context.
           title:

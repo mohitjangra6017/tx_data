@@ -23,6 +23,9 @@
 namespace totara_notification\webapi\formatter;
 
 use context;
+use core\json_editor\helper\document_helper;
+use core\webapi\formatter\field\string_field_formatter;
+use core\webapi\formatter\field\text_field_formatter;
 use core\webapi\formatter\formatter;
 use stdClass;
 use totara_notification\local\helper;
@@ -50,6 +53,7 @@ class notification_preference_formatter extends formatter {
         $record->context_id = $notification_preference->get_context_id();
         $record->schedule_offset = $notification_preference->get_schedule_offset();
         $record->overridden_schedule = $notification_preference->is_overridden_schedule();
+        $record->subject_format = $notification_preference->get_subject_format();
 
         parent::__construct($record, $context);
     }
@@ -90,11 +94,43 @@ class notification_preference_formatter extends formatter {
      * @return array
      */
     protected function get_map(): array {
+        $that = $this;
+
         return [
             'id' => null,
-            'body' => null,
+            'body' => function (?string $value, text_field_formatter $formatter) use ($that): string {
+                if (empty($value)) {
+                    return '';
+                }
+
+                if (FORMAT_JSON_EDITOR == $that->object->body_format &&
+                    !document_helper::looks_like_json($value, true)) {
+                    // This is happening because the text that we are receiving at this point
+                    // is properly from the language text and we want to convert it into a proper
+                    // json document content from a normal text.
+                    $value = document_helper::create_json_string_document_from_text($value);
+                }
+
+                $formatter->disabled_pluginfile_url_rewrite();
+                return $formatter->format($value);
+            },
             'title' => null,
-            'subject' => null,
+            'subject' => function (?string $value, string_field_formatter $formatter) use ($that): string {
+                if (empty($value)) {
+                    return '';
+                }
+
+                if (FORMAT_JSON_EDITOR == $that->object->subject_format &&
+                    !document_helper::looks_like_json($value, true)) {
+                    // This is happening because the text that we are receiving at this point
+                    // is properly from the language text and we want to convert it into a proper
+                    // json document content from a normal text.
+                    $value = document_helper::create_json_string_document_from_text($value);
+                }
+
+                return $formatter->format($value);
+            },
+            'subject_format' => null,
             'body_format' => null,
             'event_name' => function (string $event_class_name): string {
                 return helper::get_human_readable_event_name($event_class_name);

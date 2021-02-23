@@ -149,6 +149,9 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'This is title',
                 'subject' => 'This is subject',
+                'subject_format' => FORMAT_PLAIN,
+                'schedule_type' => schedule_on_event::identifier(),
+                'schedule_offset' => 0,
             ]
         );
     }
@@ -173,6 +176,36 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'body' => 'This is body',
                 'title' => 'This is title',
                 'subject' => 'This is subject',
+                'subject_format' => FORMAT_PLAIN,
+                'schedule_type' => schedule_on_event::identifier(),
+                'schedule_offset' => 0,
+            ]
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_custom_notification_with_missing_subject_format_field(): void {
+        $this->setAdminUser();
+
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("The record data does not have required field 'subject_format'");
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(create_notification_preference::class),
+            [
+                'context_id' => context_course::instance($course->id)->id,
+                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'body' => 'This is body',
+                'body_format' => FORMAT_PLAIN,
+                'title' => 'This is title',
+                'subject' => 'This is subject',
+                'schedule_type' => schedule_on_event::identifier(),
+                'schedule_offset' => 0,
             ]
         );
     }
@@ -197,6 +230,9 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'body' => 'This is body',
                 'title' => 'This is title',
                 'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN,
+                'schedule_type' => schedule_on_event::identifier(),
+                'schedule_offset' => 0,
             ]
         );
     }
@@ -221,6 +257,9 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'body' => 'This is body',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN,
+                'schedule_type' => schedule_on_event::identifier(),
+                'schedule_offset' => 0,
             ]
         );
     }
@@ -244,6 +283,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'body' => 'This is body',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_HTML,
+                'subject_format' => FORMAT_PLAIN,
                 'title' => 'This is title',
                 'schedule_type' => schedule_on_event::identifier(),
                 'schedule_offset' => 0,
@@ -438,6 +478,26 @@ class totara_notification_webapi_create_notification_preference_testcase extends
     /**
      * @return void
      */
+    public function test_create_a_custom_notification_with_invalid_subject_format(): void {
+        $this->setAdminUser();
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("The format value is invalid");
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(create_notification_preference::class),
+            [
+                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'context_id' => context_system::instance()->id,
+                'subject_format' => 42,
+            ]
+        );
+    }
+
+
+    /**
+     * @return void
+     */
     public function test_create_notification_preference_from_a_different_path_context(): void {
         $generator = self::getDataGenerator();
         $other_category = $generator->create_category();
@@ -472,6 +532,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'subject' => 'This is new subject',
                 'title' => 'This is title',
                 'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN
             ]
         );
     }
@@ -515,6 +576,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'body' => 'New body',
                 'event_class_name' => totara_notification_mock_notifiable_event::class,
                 'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN,
             ]
         );
     }

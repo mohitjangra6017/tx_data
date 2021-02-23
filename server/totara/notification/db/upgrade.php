@@ -220,5 +220,33 @@ function xmldb_totara_notification_upgrade($old_version) {
         upgrade_plugin_savepoint(true, 2021012004, 'totara', 'notification');
     }
 
+    if ($old_version < 2021012005) {
+        // Define field subject_format to be added to notification_preference.
+        $table = new xmldb_table('notification_preference');
+        $field = new xmldb_field('subject_format', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'subject');
+
+        // Conditionally launch add field subject_format.
+        if (!$db_manager->field_exists($table, $field)) {
+            $db_manager->add_field($table, $field);
+        }
+
+        $records = $DB->get_records_sql('
+            SELECT id FROM "ttr_notification_preference" 
+            WHERE ancestor_id IS NULL AND notification_class_name IS NULL
+        ');
+
+        foreach ($records as $record) {
+            // We are defaulting format to FORMAT_MOODLE
+            $record->subject_format = FORMAT_MOODLE;
+            $DB->update_record(
+                'notification_preference',
+                $record
+            );
+        }
+
+        // Notification savepoint reached.
+        upgrade_plugin_savepoint(true, 2021012005, 'totara', 'notification');
+    }
+
     return true;
 }

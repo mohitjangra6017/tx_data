@@ -24,12 +24,13 @@ namespace totara_notification\webapi\resolver\type;
 
 use coding_exception;
 use context_system;
+use core\format;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
 use totara_notification\local\helper;
 use totara_notification\model\notification_preference as model;
-use totara_notification\webapi\formatter\notification_preference_formatter;
 use totara_notification\model\notification_preference_value as model_value;
+use totara_notification\webapi\formatter\notification_preference_formatter;
 
 class notification_preference implements type_resolver {
     /**
@@ -78,6 +79,16 @@ class notification_preference implements type_resolver {
         // our model will try to look up DB for its parent, unless its parent is already
         // fetched in the model itself.
         $formatter = new notification_preference_formatter($source, $context);
-        return $formatter->format($field, $args['format'] ?? null);
+        $format = $args['format'] ?? null;
+
+        if (in_array($field, ['body', 'subject'])) {
+            // For these fields, we are defaulting the format to format raw.
+            // Because we would want these fields to be formatted as raw content
+            // when the format argument is not provided.
+            $format = format::FORMAT_RAW;
+        }
+
+
+        return $formatter->format($field, $format);
     }
 }

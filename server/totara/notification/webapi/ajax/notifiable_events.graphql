@@ -12,11 +12,12 @@ query totara_notification_notifiable_events($context_id: param_integer!) {
       title
       id
       ancestor_id
-      body
+      body(format: RAW)
       body_format
       overridden_body
       overridden_subject
-      subject
+      subject(format: RAW)
+      subject_format
       title
       event_name
       event_class_name
@@ -30,12 +31,13 @@ query totara_notification_notifiable_events($context_id: param_integer!) {
       overridden_schedule
       parent_value {
         __typename
-        subject
-        body
+        subject(format: RAW)
+        body(format: RAW)
         body_format
         title
         schedule_offset
         schedule_type
+        subject_format
       }
     }
     valid_schedules

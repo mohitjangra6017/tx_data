@@ -25,6 +25,7 @@ namespace totara_notification\testing;
 
 use coding_exception;
 use context_system;
+use core\json_editor\helper\document_helper;
 use core\testing\component_generator;
 use lang_string;
 use ReflectionClass;
@@ -125,6 +126,7 @@ final class generator extends component_generator {
      * + body: String
      * + body_format: Int
      * + subject: String
+     * + subject_format: Int
      *
      * @param array    $data
      * @param int|null $context_id
@@ -161,11 +163,35 @@ final class generator extends component_generator {
         if (empty($data['notification_class_name']) && empty($data['ancestor_id'])) {
             // We are only giving the default value if the notification_class_name or the ancestor is not
             // appearing in the $data parameter.
+            $data['body_format'] = $data['body_format'] ?? FORMAT_JSON_EDITOR;
+            $data['subject_format'] = $data['subject_format'] ?? FORMAT_JSON_EDITOR;
+
             $data['body'] = $data['body'] ?? 'This is a body';
             $data['title'] = $data['title'] ?? 'This is title';
-            $data['body_format'] = $data['body_format'] ?? FORMAT_MOODLE;
             $data['subject'] = $data['subject'] ?? 'This is a subject';
             $data['schedule_offset'] = $data['schedule_offset'] ?? 0;
+        }
+
+        if (isset($data['body']) && isset($data['body_format'])) {
+            // Note: we can do a one statement if here with lots of "&&" condition. However it would leave us to
+            // the point where the condition is a nightmare condition. Therefore i had made it simpler with nested
+            // like this and debugging would just be easier - you are welcome :)
+            $body_format = $data['body_format'];
+
+            if (FORMAT_JSON_EDITOR == $body_format && !document_helper::looks_like_json($data['body'])) {
+                $data['body'] = document_helper::create_json_string_document_from_text($data['body']);
+            }
+        }
+
+        if (isset($data['subject']) && isset($data['subject_format'])) {
+            // Note: we can do a one statement if here with lots of "&&" condition. However it would leave us to
+            // the point where the condition is a nightmare condition. Therefore i had made it simpler with nested
+            // like this and debugging would just be easier - you are welcome :)
+            $subject_format = $data['subject_format'];
+
+            if (FORMAT_JSON_EDITOR == $subject_format && !document_helper::looks_like_json($data['subject'])) {
+                $data['subject'] = document_helper::create_json_string_document_from_text($data['subject']);
+            }
         }
 
         $builder->set_notification_class_name($data['notification_class_name'] ?? null);
@@ -173,6 +199,7 @@ final class generator extends component_generator {
         $builder->set_body($data['body'] ?? null);
         $builder->set_body_format($data['body_format'] ?? null);
         $builder->set_subject($data['subject'] ?? null);
+        $builder->set_subject_format($data['subject_format'] ?? null);
         $builder->set_title($data['title'] ?? null);
         $builder->set_schedule_offset($data['schedule_offset'] ?? null);
 
@@ -207,6 +234,7 @@ final class generator extends component_generator {
             'body' => $overridden_data['body'] ?? null,
             'subject' => $overridden_data['subject'] ?? null,
             'body_format' => $overridden_data['body_format'] ?? null,
+            'subject_format' => $overridden_data['subject_format'] ?? null
         ];
 
         if (!$preference->has_parent()) {

@@ -57,6 +57,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body_format' => FORMAT_MOODLE,
                 'subject' => 'This is subject',
                 'title' => 'This is title',
+                'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 5,
             ]
@@ -119,6 +120,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body_format' => FORMAT_HTML,
                 'subject' => 'First subject',
                 'title' => 'First title',
+                'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_after_event::identifier(),
                 'schedule_offset' => 10,
             ]
@@ -174,6 +176,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => 'custom body',
                 'subject' => 'custom subject',
                 'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 6,
             ]
@@ -213,6 +216,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => 'This is body',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 6,
             ]
@@ -270,6 +274,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => /** @lang text */ '<input type="text" value="cc"/>',
                 'subject' => 'lplpdw',
                 'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
             ]
@@ -303,6 +308,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => 'cccd',
                 'subject' => /** @lang text */ '<input type="text" value="cc"/>',
                 'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
             ]
@@ -336,6 +342,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => 'cccd',
                 'subject' => 'pokopkopfw',
                 'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
             ]
@@ -370,6 +377,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => /** @lang text */ '<script type="javascript">alert(1)</script>',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
             ]
@@ -407,6 +415,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => 'This is body',
                 'subject' => /** @lang text */ '<script type="javascript">alert(1)</script>',
                 'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
             ]

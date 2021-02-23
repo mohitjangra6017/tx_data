@@ -1700,7 +1700,9 @@ function format_text_email($text, $format) {
         case FORMAT_JSON_EDITOR:
             // Totara: Added support for json_editor content.
             $editor = \core\json_editor\json_editor::default();
-            return html_to_text($editor->to_html($text));
+            $html_content = $editor->to_html($text);
+
+            return html_to_text(core_text::entities_to_utf8($html_content));
             break;
 
         case FORMAT_MOODLE:

@@ -21,8 +21,12 @@
  * @package totara_notification
  */
 
+use core\json_editor\helper\document_helper;
+use core\json_editor\node\paragraph;
+use core\json_editor\node\text;
 use core_user\totara_notification\placeholder\user;
 use totara_notification\entity\notification_queue;
+use totara_notification\json_editor\node\placeholder;
 use totara_notification\manager\event_queue_manager;
 use totara_notification\manager\notification_queue_manager;
 use totara_notification\observer\notifiable_event_observer;
@@ -269,6 +273,136 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
         self::assertEquals(
             "Hello {$user_one->firstname}, a new notification for you",
             $message->subject
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_send_noptification_with_json_editor_for_subject_and_body(): void {
+        global $DB;
+        $generator = self::getDataGenerator();
+
+        $user_one = $generator->create_user();
+        $user_two = $generator->create_user();
+
+        /** @var generator $notification_generator */
+        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
+
+        $context_system = context_system::instance();
+        $notification_generator->create_notification_preference(
+            mock_notifiable_event::class,
+            $context_system->id,
+            [
+                'subject_format' => FORMAT_JSON_EDITOR,
+                'subject' => document_helper::json_encode_document(
+                    document_helper::create_document_from_content_nodes([
+                        paragraph::create_json_node_with_content_nodes([
+                            text::create_json_node_from_text('Hello '),
+                            placeholder::create_node_from_key_and_label('user_one:firstname', 'User\'s first name')
+                        ])
+                    ])
+                ),
+                'body_format' => FORMAT_JSON_EDITOR,
+                'body' => document_helper::json_encode_document(
+                    document_helper::create_document_from_content_nodes([
+                        paragraph::create_json_node_from_text('Boom user'),
+                        paragraph::create_json_node_with_content_nodes([
+                            text::create_json_node_from_text('User\'s two full name from first name and last name is '),
+                            placeholder::create_node_from_key_and_label('user_two:firstname', 'User\'s first name'),
+                            text::create_json_node_from_text(' '),
+                            placeholder::create_node_from_key_and_label('user_two:lastname', 'User\'s last name')
+                        ])
+                    ])
+                )
+            ]
+        );
+
+        mock_notifiable_event::add_placeholder_options(
+            placeholder_option::create(
+                'user_one',
+                user::class,
+                $notification_generator->give_my_mock_lang_string('User one'),
+                function (array $event_data): user {
+                    return user::from_id($event_data['user_one_id']);
+                }
+            ),
+            placeholder_option::create(
+                'user_two',
+                user::class,
+                $notification_generator->give_my_mock_lang_string('User two'),
+                function (array $event_data): user {
+                    return user::from_id($event_data['user_two_id']);
+                }
+            )
+        );
+
+        $event = new mock_notifiable_event($context_system->id, [
+            'user_one_id' => $user_one->id,
+            'user_two_id' => $user_two->id
+        ]);
+
+        self::assertEquals(0, $DB->count_records(notifiable_event_queue::TABLE));
+        self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
+
+        notifiable_event_observer::watch_notifiable_event($event);
+
+        self::assertEquals(1, $DB->count_records(notifiable_event_queue::TABLE));
+        self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
+
+        $event_queue_manager = new event_queue_manager();
+        $event_queue_manager->process_queues();
+
+        self::assertEquals(0, $DB->count_records(notifiable_event_queue::TABLE));
+        self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
+
+        $sink = $this->redirectMessages();
+        self::assertEquals(0, $sink->count());
+        self::assertEmpty($sink->get_messages());
+
+        $notification_queue_manager = new notification_queue_manager();
+        $notification_queue_manager->dispatch_queues();
+
+        self::assertEquals(1, $sink->count());
+        $messages = $sink->get_messages();
+
+        self::assertNotEmpty($messages);
+        self::assertCount(1, $messages);
+
+        $message = reset($messages);
+        self::assertIsObject($message);
+
+        self::assertObjectHasAttribute('subject', $message);
+        self::assertEquals(
+            "Hello {$user_one->firstname}",
+            $message->subject
+        );
+
+        self::assertObjectHasAttribute('fullmessage', $message);
+
+        // Note that the html_to_text is not provided with the length for optional, hence we have a result of first name and
+        // last name are separated from each other.
+        self::assertEquals(
+            "Boom user\n\nUser's two full name from first name and last name is {$user_two->firstname}\n{$user_two->lastname}\n",
+            $message->fullmessage
+        );
+
+        self::assertObjectHasAttribute('fullmessagehtml', $message);
+        self::assertEquals(
+            implode(
+                '',
+                [
+                    /** @lang text */"<p>Boom user</p>",
+                    /** @lang text */"<p>User&#039;s two full name from first name and last name is ",
+                    /** @lang text */'<span data-key="user_two:firstname" data-label="User&#039;s first name">',
+                    /** @lang text */"{$user_two->firstname}</span> ",
+                    /** @lang text */'<span data-key="user_two:lastname" data-label="User&#039;s last name">',
+                    /** @lang text */"{$user_two->lastname}</span>",
+                    /** @lang text */"</p>"
+                ]
+            ),
+            $message->fullmessagehtml
         );
     }
 }

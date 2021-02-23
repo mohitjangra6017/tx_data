@@ -7,8 +7,9 @@ type totara_notification_notification_preference {
   """
   id: Int!
   title: String!
-  subject: String!
-  body: String!
+  subject(format: core_format = RAW): String!
+  subject_format: Int!
+  body(format: core_format = RAW): String!
   body_format: Int!
   """
   Whether the field 'body' is overridden
@@ -91,9 +92,10 @@ The purpose of this type is to allow notification_preference to have its
 parent's content value fields in one place for quick reference.
 """
 type totara_notification_notification_preference_value {
-  body: String!
-  subject: String!
-  body_format: String!
+  body(format: core_format = RAW): String!
+  body_format: Int!
+  subject(format: core_format = RAW): String!
+  subject_format: Int!
   title: String!
   schedule_offset: Int!
   schedule_type: totara_notification_schedule_type!
@@ -119,6 +121,7 @@ extend type Mutation {
     subject: param_text
     schedule_offset: param_integer
     schedule_type: param_text
+    subject_format: param_integer
   ): totara_notification_notification_preference!
 
   """
@@ -137,6 +140,7 @@ extend type Mutation {
     subject: param_text
     schedule_offset: param_integer
     schedule_type: param_text
+    subject_format: param_integer
   ): totara_notification_notification_preference!
 
   """

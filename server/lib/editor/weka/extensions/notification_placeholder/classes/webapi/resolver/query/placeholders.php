@@ -17,20 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
- * @package totara_core
+ * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @package weka_notification_placeholder
  */
-namespace totara_core\webapi\resolver\query;
+namespace weka_notification_placeholder\webapi\resolver\query;
 
-use core\webapi\execution_context;
-use core\webapi\query_resolver;
 use context;
-use core\webapi\middleware\require_login ;
+use core\webapi\execution_context;
+use core\webapi\middleware\require_login;
+use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
+use totara_notification\event\notifiable_event;
+use totara_notification\placeholder\placeholder_option;
+use totara_notification\webapi\middleware\validate_event_class_name;
 
 /**
- * A query resolver to return the list of placeholder options.
- * Resolves query totara_core_placeholders
+ * A resolver for query weka_notification_placeholder_placeholders
  */
 class placeholders implements query_resolver, has_middleware {
     /**
@@ -40,17 +42,28 @@ class placeholders implements query_resolver, has_middleware {
      */
     public static function resolve(array $args, execution_context $ec): array {
         $context = context::instance_by_id($args['context_id']);
-        if (CONTEXT_SYSTEM !== $context->contextlevel && !$ec->has_relevant_context()) {
+        if (CONTEXT_SYSTEM != $context->contextlevel && !$ec->has_relevant_context()) {
             $ec->set_relevant_context($context);
         }
 
-        $factory_class = $args['factory_class_name'] ?? null;
+        $event_class_name = $args['event_class_name'];
+
+        // Empty string pattern will yield the whole list of available placeholders.
+        $pattern = $args['pattern'] ?? '';
+
+        /**
+         * @see notifiable_event::get_notification_available_placeholder_options()
+         * @var placeholder_option[] $placeholder_options
+         */
+        $placeholder_options = call_user_func([$event_class_name, 'get_notification_available_placeholder_options']);
         $options = [];
-        if (!empty($factory_class)) {
-            return call_user_func([$factory_class, 'get_placeholder_options']);
+
+        foreach ($placeholder_options as $placeholder_option) {
+            $group_options = $placeholder_option->find_map_group_options_match($pattern);
+            $options = array_merge($options, $group_options);
         }
 
-        return [];
+        return $options;
     }
 
     /**
@@ -58,7 +71,8 @@ class placeholders implements query_resolver, has_middleware {
      */
     public static function get_middleware(): array {
         return [
-            new require_login()
+            new require_login(),
+            new validate_event_class_name('event_class_name', true)
         ];
     }
 }

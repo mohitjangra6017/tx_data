@@ -51,6 +51,8 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $builder->set_title('title');
         $builder->set_body_format(FORMAT_PLAIN);
         $builder->set_subject('subject');
+        $builder->set_subject_format(FORMAT_PLAIN);
+        $builder->set_schedule_offset(0);
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("The record data does not have required field 'body'");
@@ -70,6 +72,8 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $builder->set_body('body');
         $builder->set_body_format(FORMAT_PLAIN);
         $builder->set_subject('subject');
+        $builder->set_subject_format(FORMAT_PLAIN);
+        $builder->set_schedule_offset(0);
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("The record data does not have required field 'title'");
@@ -89,13 +93,14 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $builder->set_title('title');
         $builder->set_body('body');
         $builder->set_body_format(FORMAT_PLAIN);
+        $builder->set_subject_format(FORMAT_PLAIN);
+        $builder->set_schedule_offset(0);
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("The record data does not have required field 'subject'");
 
         $builder->save();
     }
-
 
     /**
      * @return void
@@ -109,9 +114,32 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $builder->set_title('title');
         $builder->set_body('body');
         $builder->set_subject('subject');
+        $builder->set_subject_format(FORMAT_PLAIN);
+        $builder->set_schedule_offset(0);
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("The record data does not have required field 'body_format'");
+
+        $builder->save();
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_of_custom_notification_with_no_required_field_subject_format(): void {
+        $builder = new notification_preference_builder(
+            totara_notification_mock_notifiable_event::class,
+            context_system::instance()->id
+        );
+
+        $builder->set_title('title');
+        $builder->set_body('body');
+        $builder->set_subject('subject');
+        $builder->set_body_format(FORMAT_PLAIN);
+        $builder->set_schedule_offset(0);
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("The record data does not have required field 'subject_format'");
 
         $builder->save();
     }
@@ -131,6 +159,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $builder->set_body('body');
         $builder->set_subject('subject');
         $builder->set_body_format(FORMAT_PLAIN);
+        $builder->set_subject_format(FORMAT_PLAIN);
         $builder->set_schedule_offset(0);
 
         $preference = $builder->save();
@@ -187,6 +216,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'body_format' => FORMAT_PLAIN,
                 'title' => 'First title',
                 'schedule_offset' => 0,
+                'subject_format' => FORMAT_PLAIN,
             ]
         );
 

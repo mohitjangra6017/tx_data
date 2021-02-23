@@ -1493,6 +1493,10 @@ class core_plugin_manager {
                 'rest', 'soap', 'xmlrpc'
             ),
 
+            'weka' => array(
+                'notification_placeholder'
+            ),
+
             'workshopallocation' => array(
                 'manual', 'random', 'scheduled'
             ),

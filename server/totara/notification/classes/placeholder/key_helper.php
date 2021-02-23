@@ -149,4 +149,13 @@ class key_helper {
     public static function get_end_collection_key(string $group_key, bool $with_bracket = false): string {
         return self::get_collection_key($group_key, false, $with_bracket);
     }
+
+    /**
+     * @param string $group_key
+     * @return string
+     */
+    public static function strip_invalid_characters_from_key(string $group_key): string {
+        $regex = '/[^a-zA-Z0-9:_]/';
+        return preg_replace($regex, '', $group_key);
+    }
 }

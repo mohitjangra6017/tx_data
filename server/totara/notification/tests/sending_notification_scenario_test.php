@@ -126,6 +126,8 @@ class totara_notification_sending_notification_scenario_testcase extends advance
                 'title' => 'System custom',
                 'subject' => 'System subject',
                 'body' => 'System body',
+                'body_format' => FORMAT_PLAIN,
+                'subject_format' => FORMAT_PLAIN,
             ]
         );
 
@@ -381,6 +383,8 @@ class totara_notification_sending_notification_scenario_testcase extends advance
             [
                 'subject' => 'System custom subject',
                 'body' => 'System custom body',
+                'subject_format' => FORMAT_PLAIN,
+                'body_format' => FORMAT_PLAIN,
             ]
         );
 
@@ -552,6 +556,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
                 'body' => 'Course one body',
                 'title' => 'Course one title',
                 'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN,
             ]
         );
 

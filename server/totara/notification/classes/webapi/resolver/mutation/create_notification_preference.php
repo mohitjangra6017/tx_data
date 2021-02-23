@@ -26,6 +26,7 @@ use coding_exception;
 use context;
 use core\webapi\execution_context;
 use core\webapi\middleware\clean_content_format;
+use core\webapi\middleware\clean_editor_content;
 use core\webapi\middleware\require_login;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
@@ -119,6 +120,7 @@ class create_notification_preference implements mutation_resolver, has_middlewar
         $builder->set_body($args['body'] ?? null);
         $builder->set_subject($args['subject'] ?? null);
         $builder->set_body_format($args['body_format'] ?? null);
+        $builder->set_subject_format($args['subject_format'] ?? null);
 
         // Schedule works in a pair, but writes to a single value.
         $schedule_type = $args['schedule_type'] ?? null;
@@ -141,7 +143,10 @@ class create_notification_preference implements mutation_resolver, has_middlewar
     public static function get_middleware(): array {
         return [
             new require_login(),
-            new clean_content_format('body_format')
+            new clean_content_format('body_format'),
+            new clean_content_format('subject_format'),
+            new clean_editor_content('body', 'body_format', false),
+            new clean_editor_content('subject', 'subject_format', false)
         ];
     }
 }

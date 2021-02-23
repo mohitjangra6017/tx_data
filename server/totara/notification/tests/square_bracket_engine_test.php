@@ -24,7 +24,6 @@
 use totara_notification\placeholder\option;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\placeholder\template_engine\square_bracket\engine;
-use totara_notification\placeholder\template_engine\square_bracket\engine as square_bracket_engine;
 use totara_notification\testing\generator;
 use totara_notification_mock_notifiable_event as mock_notifiable_event;
 use totara_notification_mock_single_placeholder as mock_placeholder;
@@ -107,7 +106,7 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
             )
         );
 
-        $engine = square_bracket_engine::create(
+        $engine = engine::create(
             mock_notifiable_event::class,
             [
                 'firstname' => 'Martin',
@@ -245,6 +244,49 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
 
         $this->assertDebuggingCalled(
             "The placeholder key '[course:idnumber]' is not a valid placeholder key provided by the options list"
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_render_content_with_xss_content_of_user_fields(): void {
+        /** @var generator $notification_generator */
+        $notification_generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+
+        mock_placeholder::add_options(option::create('firstname', 'First name'));
+        mock_notifiable_event::add_placeholder_options(
+            placeholder_option::create(
+                'user',
+                mock_placeholder::class,
+                $notification_generator->give_my_mock_lang_string('User'),
+                function (array $event_data): mock_placeholder {
+                    return new mock_placeholder($event_data);
+                }
+            )
+        );
+
+        $engine = engine::create(
+            mock_notifiable_event::class,
+            [
+                'firstname' => /** @lang text */'<script>alert("doom bringer")</script>'
+            ]
+        );
+
+        self::assertNotEquals(
+            /** @lang text */'Hello <script>alert("doom")</script>',
+            $engine->replace(
+                "Hello [user:firstname]"
+            )
+        );
+
+        // Mustache engine is escaping `<script/>` tag - hence we should be safe from xss. Unless we would want to strip out
+        // the <script/> tag from the user's value.
+        self::assertEquals(
+            s(/** @lang text */'Hello <script>alert("doom bringer")</script>'),
+            $engine->replace(
+                "Hello [user:firstname]"
+            )
         );
     }
 }

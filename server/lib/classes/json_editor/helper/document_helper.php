@@ -22,6 +22,7 @@
  */
 namespace core\json_editor\helper;
 
+use coding_exception;
 use core\json_editor\schema;
 use core\json_editor\node\abstraction\block_node;
 use core\json_editor\node\paragraph;
@@ -30,6 +31,12 @@ use core\json_editor\node\paragraph;
  * A helper class for document, which it can run the validation, sanitizing on the json document.
  */
 final class document_helper {
+    /**
+     * The doc type name for json editor document.
+     * @var string
+     */
+    public const DOC_TYPE_NAME = 'doc';
+
     /**
      * document_helper constructor.
      * Preventing this class from construction.
@@ -416,5 +423,71 @@ final class document_helper {
         }
 
         return false;
+    }
+
+    /**
+     * Create a json encoded document from a text content. If the argument $is_html is
+     * set to true, then the function will try to convert it into a text first.
+     *
+     * This function is a pass thru of {@see document_helper::create_document_from_text()}
+     *
+     * @param string $text
+     * @param bool   $is_html
+     * @return string
+     */
+    public static function create_json_string_document_from_text(string $text, bool $is_html = false): string {
+        if (self::looks_like_json($text, true)) {
+            // The text is already a json content text. Hence no point to do the rest.
+            return $text;
+        }
+
+        $document = self::create_document_from_text($text, $is_html);
+        return self::json_encode_document($document);
+    }
+
+    /**
+     * Create a json document from a text content. If the argument $is_html is
+     * set to true, then the function will try to convert it into a text first.
+     *
+     * @param string $text
+     * @param bool $is_html
+     * @return array
+     */
+    public static function create_document_from_text(string $text, bool $is_html = false): array {
+        if (self::looks_like_json($text, true)) {
+            // The text is already a json content text. Hence no point to do the rest.
+            throw new coding_exception("The text is already in a json editor document format");
+        }
+
+        if ($is_html) {
+            $text = html_to_text($text);
+        }
+
+        $lines = explode("\n", $text);
+        $document_content = [];
+
+        foreach ($lines as $line) {
+            if (!empty($line)) {
+                $document_content[] = paragraph::create_json_node_from_text($line);
+            }
+        }
+
+        return self::create_document_from_content_nodes($document_content);
+    }
+
+    /**
+     * This function is to create a json-serializable document for the whole json editor document,
+     * with the given list of nodes to be in the content of document.
+     *
+     * The array $content_nodes is the collection of nodes.
+     *
+     * @param array $content_nodes
+     * @return array
+     */
+    public static function create_document_from_content_nodes(array $content_nodes): array {
+        return [
+            'type' => 'doc',
+            'content' => $content_nodes
+        ];
     }
 }

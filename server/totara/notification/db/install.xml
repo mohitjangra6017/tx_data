@@ -47,6 +47,7 @@
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="This is required for custom notifications, but should be null for notification override records. The overridden of custom does not have to have value."/>
         <FIELD NAME="recipient" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a custom notification then this is required, otherwise null to fallback to the default defined in built in notification"/>
         <FIELD NAME="subject" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a custom notification then it is required, otherwise null to fallback to the default defined in ancestor notification"/>
+        <FIELD NAME="subject_format" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a custom notification then it is required, otherwise null to fallback to the default define in ancester notification"/>
         <FIELD NAME="body" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a custom notification then it is required, otherwise null to fallback to the default defined in ancestor notification"/>
         <FIELD NAME="body_format" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The format text of a body"/>
         <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

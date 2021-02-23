@@ -58,20 +58,27 @@ class notification_preference_value {
     private $body_format;
 
     /**
+     * @var int
+     */
+    private $subject_format;
+
+    /**
      * notification_preference_value constructor.
      * @param string   $body
      * @param string   $subject
      * @param string   $title
      * @param int      $schedule_offset
      * @param int|null $body_format
+     * @param int|null $subject_format
      */
     private function __construct(string $body, string $subject, string $title,
-                                 int $schedule_offset, ?int $body_format = null) {
+                                 int $schedule_offset, ?int $body_format = null,  ?int $subject_format = null) {
         $this->body = $body;
         $this->subject = $subject;
         $this->title = $title;
         $this->schedule_offset = $schedule_offset;
         $this->body_format = $body_format ?? FORMAT_MOODLE;
+        $this->subject_format = $subject_format ?? FORMAT_JSON_EDITOR;
     }
 
     /**
@@ -88,6 +95,8 @@ class notification_preference_value {
          * @see built_in_notification::get_default_subject()
          * @see built_in_notification::get_title()
          * @see built_in_notification::get_default_body_format()
+         * @see built_in_notification::get_default_subject_format()
+         * @see built_in_notification::get_default_schedule_offset()
          *
          * @var lang_string $body
          * @var lang_string $subject
@@ -99,13 +108,15 @@ class notification_preference_value {
         $title = call_user_func([$built_in_class_name, 'get_title']);
         $body_format = call_user_func([$built_in_class_name, 'get_default_body_format']);
         $schedule_offset = call_user_func([$built_in_class_name, 'get_default_schedule_offset']);
+        $subject_format = call_user_func([$built_in_class_name, 'get_default_subject_format']);
 
         return new static(
             $body,
             $subject,
             $title,
             $schedule_offset,
-            $body_format
+            $body_format,
+            $subject_format
         );
     }
 
@@ -122,7 +133,8 @@ class notification_preference_value {
             $model->get_subject(),
             $model->get_title(),
             $model->get_schedule_offset(),
-            $model->get_body_format()
+            $model->get_body_format(),
+            $model->get_subject_format()
         );
     }
 
@@ -159,5 +171,12 @@ class notification_preference_value {
      */
     public function get_scheduled_offset(): int {
         return $this->schedule_offset;
+    }
+
+    /**
+     * @return int
+     */
+    public function get_subject_format(): int {
+        return $this->subject_format;
     }
 }

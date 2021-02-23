@@ -230,6 +230,8 @@ class notification_preference {
      * + @see built_in_notification::get_title()
      * + @see built_in_notification::get_recipient_name()
      * + @see built_in_notification::get_default_body_format()
+     * + @see built_in_notification::get_default_subject_format()
+     * + @see built_in_notification::get_default_schedule_offset()
      *
      * @param string $attribute_name
      * @return mixed|null
@@ -252,6 +254,7 @@ class notification_preference {
             'recipient' => 'get_recipient_name',
             'body_format' => 'get_default_body_format',
             'schedule_offset' => 'get_default_schedule_offset',
+            'subject_format' => 'get_default_subject_format'
         ];
 
         if (!isset($map_methods[$attribute_name])) {
@@ -301,6 +304,25 @@ class notification_preference {
     }
 
     /**
+     * Returns the content format that we are using for the notification's subject.
+     * @return int
+     */
+    public function get_subject_format(): int {
+        $value = $this->entity->subject_format;
+        if (null !== $value) {
+            // Note that we are using NULL here instead of empty because text format
+            // can be 0 (ZERO) which is FORMAT_MOODLE :supprise:
+            return $value;
+        }
+
+        if ($this->has_parent()) {
+            return $this->parent->get_body_format();
+        }
+
+        return $this->get_property_from_built_in_notification('subject_format');
+    }
+
+    /**
      * @return string
      */
     public function get_title(): string {
@@ -322,6 +344,8 @@ class notification_preference {
     public function get_body_format(): int {
         $value = $this->entity->body_format;
         if (null !== $value) {
+            // Note that we are using NULL here instead of empty because text format
+            // can be 0 (ZERO) which is FORMAT_MOODLE :supprise:
             return $value;
         }
 

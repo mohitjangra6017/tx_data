@@ -23,13 +23,14 @@
 
 use totara_notification\model\notification_preference_value;
 use totara_notification_mock_built_in_notification as mock_built_in;
+use totara_notification\testing\generator;
 
 class totara_notification_notification_preference_value_testcase extends advanced_testcase {
     /**
      * @return void
      */
     public function test_instantiate_from_built_in(): void {
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->include_mock_built_in_notification();
 
@@ -53,13 +54,18 @@ class totara_notification_notification_preference_value_testcase extends advance
             mock_built_in::get_default_subject()->out(),
             $preference_value->get_subject()
         );
+
+        self::assertEquals(
+            mock_built_in::get_default_subject_format(),
+            $preference_value->get_subject_format()
+        );
     }
 
     /**
      * @return void
      */
     public function test_instiantiate_from_preference_instance(): void {
-        /** @var totara_notification_generator $generator */
+        /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->include_mock_notifiable_event();
 
@@ -88,6 +94,11 @@ class totara_notification_notification_preference_value_testcase extends advance
         self::assertEquals(
             $preference->get_body(),
             $preference_value->get_body()
+        );
+
+        self::assertEquals(
+            $preference->get_subject_format(),
+            $preference_value->get_subject_format()
         );
     }
 }

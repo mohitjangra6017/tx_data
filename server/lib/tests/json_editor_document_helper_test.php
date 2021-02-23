@@ -446,4 +446,135 @@ class core_json_editor_document_helper_testcase extends advanced_testcase {
             $this->assertEquals($expected, document_helper::is_document_empty($test));
         }
     }
+
+    /**
+     * @return void
+     */
+    public function test_create_json_string_document_from_text_string(): void {
+        self::assertEquals(
+            json_encode([
+                'type' => 'doc',
+                'content' => [
+                    [
+                        'type' => 'paragraph',
+                        'content' => [
+                            [
+                                'type' => 'text',
+                                'text' => 'Hello world',
+                                'marks' => []
+                            ]
+                        ]
+                    ]
+                ]
+            ]),
+            document_helper::create_json_string_document_from_text('Hello world')
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_json_string_document_from_json_text_string(): void {
+        $document = json_encode([
+            'type' => 'doc',
+            'content' => [
+                [
+                    'type' => 'paragraph',
+                    'content' => [
+                        [
+                            'type' => 'text',
+                            'text' => 'Some text'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        self::assertEquals(
+            $document,
+            document_helper::create_json_string_document_from_text($document)
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_json_string_document_from_text_string_with_multiple_line(): void {
+        $text = "Hello world\nBoom";
+        $document = document_helper::create_json_string_document_from_text($text);
+
+        self::assertEquals(
+            json_encode([
+                'type' => 'doc',
+                'content' => [
+                    paragraph::create_json_node_from_text('Hello world'),
+                    paragraph::create_json_node_from_text('Boom')
+                ]
+            ]),
+            $document
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_json_string_document_from_text_string_with_multiple_line_as_html(): void {
+        $text = /** @lang text */"<p>Hello world</p><p>Boom</p>";
+        $document = document_helper::create_json_string_document_from_text($text, true);
+
+        self::assertEquals(
+            json_encode([
+                'type' => 'doc',
+                'content' => [
+                    paragraph::create_json_node_from_text('Hello world'),
+                    paragraph::create_json_node_from_text('Boom')
+                ]
+            ]),
+            $document
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_json_string_document_from_text_string_with_multiple_line_as_html_with_br(): void {
+        $text = /** @lang text */"Hello world<br/>Boom";
+        $document = document_helper::create_json_string_document_from_text($text, true);
+
+        self::assertEquals(
+            json_encode([
+                'type' => 'doc',
+                'content' => [
+                    paragraph::create_json_node_from_text('Hello world'),
+                    paragraph::create_json_node_from_text('Boom')
+                ]
+            ]),
+            $document
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_document_with_a_json_string(): void {
+        $document = json_encode([
+            'type' => 'doc',
+            'content' => [
+                [
+                    'type' => 'paragraph',
+                    'content' => [
+                        [
+                            'type' => 'text',
+                            'text' => 'Some text'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage('The text is already in a json editor document format');
+
+        document_helper::create_document_from_text($document);
+    }
 }

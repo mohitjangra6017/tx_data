@@ -143,10 +143,13 @@ export default class Suggestion {
     this._range = range;
 
     this._location = Vue.observable(this._getLocation());
+    const propsData = component.props
+      ? Object.assign({}, component.props, { location: this._location })
+      : undefined;
 
     this._instance = new (Vue.extend(component.component))({
       parent: this._editor.getParent(),
-      propsData: {
+      propsData: propsData || {
         location: this._location,
         pattern: text,
         area: this._editor.identifier.area || undefined,

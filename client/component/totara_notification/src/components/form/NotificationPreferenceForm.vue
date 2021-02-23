@@ -40,11 +40,7 @@
         :name="['title', 'value']"
         :disabled="disableTitleField"
         :validations="v => [v.required()]"
-        @input="
-          () => {
-            if (errors && errors.title) errors.title.value = '';
-          }
-        "
+        @input="resetErrorFieldTitle"
       />
     </FormRow>
 
@@ -62,17 +58,36 @@
         />
 
         <!-- We are only requiring the field subject if the parent does not have one -->
-        <FormText
-          :id="id"
+        <FormField
+          v-slot="{ value, update }"
           :name="['subject', 'value']"
-          :validations="v => (requiredSubject ? [v.required()] : [])"
+          :validate="validateSubjectEditor"
           :disabled="showCustomCheckBoxes && !customisation.subject"
-          @input="
-            () => {
-              if (errors && errors.subject) errors.subject.value = '';
-            }
-          "
-        />
+          char-length="full"
+        >
+          <!-- We are only requiring the field body if the parent does not have one -->
+          <Editor
+            :id="id"
+            :value="value"
+            :context-id="contextId"
+            :usage-identifier="{
+              component: 'totara_notification',
+              area: 'notification_subject',
+            }"
+            :extra-extensions="[
+              {
+                name: 'weka_notification_placeholder_extension',
+                options: {
+                  event_class_name: eventClassName,
+                },
+              },
+            ]"
+            class="tui-notificationPreferenceForm__subjectEditor"
+            variant="description"
+            :compact="true"
+            @input="updateSubjectEditor($event, update)"
+          />
+        </FormField>
       </template>
     </FormRow>
 
@@ -179,7 +194,7 @@
         <FormField
           v-slot="{ value, update }"
           :name="['body', 'value']"
-          :validate="validateEditor"
+          :validate="validateBodyEditor"
           :disabled="showCustomCheckBoxes && !customisation.body"
           char-length="full"
         >
@@ -192,9 +207,17 @@
               component: 'totara_notification',
               area: 'notification_body',
             }"
-            class="tui-notificationPreferenceForm__editor"
-            variant="standard"
-            @input="updateEditor($event, update)"
+            :extra-extensions="[
+              {
+                name: 'weka_notification_placeholder_extension',
+                options: {
+                  event_class_name: eventClassName,
+                },
+              },
+            ]"
+            class="tui-notificationPreferenceForm__bodyEditor"
+            variant="description"
+            @input="updateBodyEditor($event, update)"
           />
         </FormField>
       </template>
@@ -242,6 +265,8 @@ import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
 import validateNotificationPreferenceInput from 'totara_notification/graphql/validate_notification_preference_input';
 
 /**
+ * This function is here because it does not fit in the component's functionalities.
+ * It is just a helper do all sort of business logic before the initialisation of component state.
  *
  * @param {Object} currentPreference
  * @param {Object|NULL} parentValue
@@ -251,11 +276,10 @@ import validateNotificationPreferenceInput from 'totara_notification/graphql/val
 function createFormValues(currentPreference, parentValue) {
   const formValue = {
     subject: {
-      value:
-        !parentValue || currentPreference.overridden_subject
-          ? currentPreference.subject
-          : parentValue.subject,
-      type: 'text',
+      // At this initial state, we keep it undefined and definitely the
+      // lower part of this function will have to populate this field.
+      value: undefined,
+      type: EditorContent,
     },
     body: {
       // At this initial state, we keep it undefined and definitely the
@@ -295,16 +319,36 @@ function createFormValues(currentPreference, parentValue) {
         : parentValue.schedule_offset;
   }
 
+  // Overridden subject initializing values.
+  if (!parentValue || currentPreference.overridden_subject) {
+    formValue.subject.value = new EditorContent({
+      format: !currentPreference.subject_format
+        ? currentPreference.subject_format
+        : Format.JSON_EDITOR,
+      content: currentPreference.subject,
+    });
+  } else {
+    formValue.subject.value = new EditorContent({
+      format: parentValue.subject_format
+        ? parentValue.subject_format
+        : Format.JSON_EDITOR,
+      content: parentValue.subject,
+    });
+  }
+
+  // Overridden body initializing values.
   if (!parentValue || currentPreference.overridden_body) {
     formValue.body.value = new EditorContent({
-      format: currentPreference.body_format
+      format: !currentPreference.body_format
         ? currentPreference.body_format
-        : Format.MOODLE,
+        : Format.JSON_EDITOR,
       content: currentPreference.body,
     });
   } else {
     formValue.body.value = new EditorContent({
-      format: parentValue.body_format ? parentValue.body_format : Format.MOODLE,
+      format: parentValue.body_format
+        ? parentValue.body_format
+        : Format.JSON_EDITOR,
       content: parentValue.body,
     });
   }
@@ -330,6 +374,11 @@ export default {
   },
 
   props: {
+    eventClassName: {
+      type: String,
+      required: true,
+    },
+
     contextId: {
       type: Number,
       required: true,
@@ -452,7 +501,15 @@ export default {
         const { preferenceForm } = this.$refs;
 
         if (!toggle.subject) {
-          preferenceForm.update(['subject', 'value'], this.parentValue.subject);
+          preferenceForm.update(
+            ['subject', 'value'],
+            new EditorContent({
+              content: this.parentValue.subject,
+              format: this.parentValue.subject_format
+                ? this.parentValue.subject_format
+                : Format.JSON_EDITOR,
+            })
+          );
         }
 
         if (!toggle.body) {
@@ -462,7 +519,7 @@ export default {
               content: this.parentValue.body,
               format: this.parentValue.body_format
                 ? this.parentValue.body_format
-                : Format.MOODLE,
+                : Format.JSON_EDITOR,
             })
           );
         }
@@ -475,8 +532,16 @@ export default {
      * @param {EditorContent} content
      * @return {String}
      */
-    validateEditor(content) {
+    validateBodyEditor(content) {
       if (!this.requiredBody) {
+        return '';
+      }
+
+      return !content || content.isEmpty ? this.$str('required', 'core') : '';
+    },
+
+    validateSubjectEditor(content) {
+      if (!this.requiredSubject) {
         return '';
       }
 
@@ -498,7 +563,7 @@ export default {
         mutation: validateNotificationPreferenceInput,
         variables: {
           title: formValue.title.value || '',
-          subject: formValue.subject.value || '',
+          subject: formValue.subject.value.getContent() || '',
           body: formValue.body.value.getContent() || '',
           schedule_type: formValue.schedule_type.value || '',
           schedule_offset:
@@ -518,8 +583,13 @@ export default {
       }
 
       const parameters = {
-        subject: !this.customisation.subject ? null : formValue.subject.value,
         title: formValue.title.value,
+        subject: !this.customisation.subject
+          ? null
+          : formValue.subject.value.getContent(),
+        subject_format: !this.customisation.subject
+          ? null
+          : formValue.subject.value.format,
         body: !this.customisation.body
           ? null
           : formValue.body.value.getContent(),
@@ -543,7 +613,7 @@ export default {
      * @param {*}        data
      * @param {Function} callback
      */
-    updateEditor(data, callback) {
+    updateBodyEditor(data, callback) {
       if (this.errors && this.errors.body) {
         this.errors.body.value = '';
       }
@@ -563,6 +633,29 @@ export default {
       }
       if (callback) {
         callback(data);
+      }
+    },
+
+    /**
+     * Update method to reset the error on the subject field if there is any.
+     *
+     * @param {*}        data
+     * @param {Function} callback
+     */
+    updateSubjectEditor(data, callback) {
+      if (this.errors && this.errors.subject) {
+        this.errors.subject.value = '';
+      }
+
+      callback(data);
+    },
+
+    /**
+     * Resetting the field title's value.
+     */
+    resetErrorFieldTitle() {
+      if (this.errors && this.errors.title) {
+        this.errors.title.value = '';
       }
     },
   },
@@ -599,6 +692,10 @@ export default {
   &__buttonGroup {
     display: flex;
     justify-content: flex-end;
+  }
+
+  &__bodyEditor {
+    height: 400px;
   }
 }
 </style>

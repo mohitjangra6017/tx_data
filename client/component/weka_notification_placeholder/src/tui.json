@@ -1,0 +1,7 @@
+{
+  "component": "weka_notification_placeholder",
+  "vendor": "totara",
+  "dependencies": [
+    "editor_weka"
+  ]
+}

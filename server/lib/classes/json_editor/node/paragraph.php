@@ -224,8 +224,22 @@ final class paragraph extends node implements block_node {
      */
     public static function create_json_node_from_text(string $text): array {
         return [
-            'type' => static::get_type(),
+            'type' => self::get_type(),
             'content' => [text::create_json_node_from_text($text)]
+        ];
+    }
+
+    /**
+     * Mainly this function is to create a mock json node of itself for test only.
+     * The array $content_nodes is the collection of nodes.
+     *
+     * @param array $content_nodes
+     * @return array
+     */
+    public static function create_json_node_with_content_nodes(array $content_nodes): array {
+        return [
+            'type' => paragraph::get_type(),
+            'content' => $content_nodes
         ];
     }
 }

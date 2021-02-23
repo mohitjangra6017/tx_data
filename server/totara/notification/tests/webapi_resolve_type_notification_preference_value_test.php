@@ -21,10 +21,15 @@
  * @package totara_notification
  */
 
+use core\format;
+use core\json_editor\helper\document_helper;
+use core\json_editor\node\paragraph;
+use totara_notification\entity\notification_preference;
 use totara_notification\model\notification_preference_value as model;
-use totara_webapi\phpunit\webapi_phpunit_helper;
-use totara_notification_mock_notifiable_event as mock_event;
+use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\type\notification_preference_value;
+use totara_notification_mock_notifiable_event as mock_event;
+use totara_webapi\phpunit\webapi_phpunit_helper;
 
 class totara_notification_webapi_resolve_type_notification_preference_value_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
@@ -38,7 +43,7 @@ class totara_notification_webapi_resolve_type_notification_preference_value_test
      * @return void
      */
     protected function setUp(): void {
-        /** @var totara_notification_generator $notification_generator */
+        /** @var generator $notification_generator */
         $notification_generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_notifiable_event();
 
@@ -49,7 +54,8 @@ class totara_notification_webapi_resolve_type_notification_preference_value_test
                 'title' => 'This is custom title',
                 'body' => 'This is custom body',
                 'body_format' => FORMAT_MOODLE,
-                'subject' => 'This is custom subject'
+                'subject' => 'This is custom subject',
+                'subject_format' => FORMAT_MOODLE,
             ]
         );
 
@@ -115,6 +121,115 @@ class totara_notification_webapi_resolve_type_notification_preference_value_test
                 $this->get_graphql_name(notification_preference_value::class),
                 'body_format',
                 $this->preference_value
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_resolve_field_subject_format(): void {
+        self::assertEquals(
+            FORMAT_MOODLE,
+            $this->resolve_graphql_type(
+                $this->get_graphql_name(notification_preference_value::class),
+                'subject_format',
+                $this->preference_value
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_resolve_field_subject_with_format_json_editor_as_content_format_and_raw_as_format(): void {
+        global $DB;
+
+        /** @var generator $generator */
+        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+
+        // First we will create a preference record that has subject_format as FORMAT_PLAIN so that it will not get
+        // to convert the subject into a json document content.
+        $preference = $generator->create_notification_preference(
+            mock_event::class,
+            context_system::instance()->id,
+            [
+                'subject_format' => FORMAT_PLAIN,
+                'subject' => 'This is subject',
+            ]
+        );
+
+        // Then we will update the field subject_format to JSON_EDITOR hence we can
+        // check if the content get formatted by the output or not.
+        $record = new stdClass();
+        $record->id = $preference->get_id();
+        $record->subject_format = FORMAT_JSON_EDITOR;
+        $DB->update_record(notification_preference::TABLE, $record);
+
+        // Refresh our model with newly updated fields.
+        $preference->refresh();
+        $preference_value = model::from_parent_notification_preference($preference);
+
+        self::assertEquals(
+            json_encode([
+                'type' => document_helper::DOC_TYPE_NAME,
+                'content' => [
+                    paragraph::create_json_node_from_text('This is subject'),
+                ],
+            ]),
+            $this->resolve_graphql_type(
+                $this->get_graphql_name(notification_preference_value::class),
+                'subject',
+                $preference_value,
+                ['format' => format::FORMAT_RAW]
+            )
+        );
+    }
+
+
+    /**
+     * @return void
+     */
+    public function test_resolve_field_body_with_format_json_editor_as_content_format_and_raw_as_format(): void {
+        global $DB;
+
+        /** @var generator $generator */
+        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+
+        // First we will create a preference record that has body_format as FORMAT_PLAIN so that it will not get
+        // to convert the body into a json document content.
+        $preference = $generator->create_notification_preference(
+            mock_event::class,
+            context_system::instance()->id,
+            [
+                'body_format' => FORMAT_PLAIN,
+                'body' => 'This is body',
+            ]
+        );
+
+        // Then we will update the field body_format to JSON_EDITOR hence we can
+        // check if the content get formatted by the output or not.
+        $record = new stdClass();
+        $record->id = $preference->get_id();
+        $record->body_format = FORMAT_JSON_EDITOR;
+        $DB->update_record(notification_preference::TABLE, $record);
+
+        // Refresh our model with newly updated fields.
+        $preference->refresh();
+        $preference_value = model::from_parent_notification_preference($preference);
+
+        self::assertEquals(
+            json_encode([
+                'type' => document_helper::DOC_TYPE_NAME,
+                'content' => [
+                    paragraph::create_json_node_from_text('This is body'),
+                ],
+            ]),
+            $this->resolve_graphql_type(
+                $this->get_graphql_name(notification_preference_value::class),
+                'body',
+                $preference_value,
+                ['format' => format::FORMAT_RAW]
             )
         );
     }
