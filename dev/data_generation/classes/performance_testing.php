@@ -174,6 +174,12 @@ class performance_testing extends App {
     protected $badges = [];
 
     /**
+     * Hard-coded password that can be set for all users with "not cached" value
+     * @var string[]
+     */
+    protected $password = ['pa$$word' => '$2y$10$7GBQQ8GFSixJRmCI1LjyCeTqzxm9IBemXhVpdAFKgHlK0ZAn8NFsO'];
+
+    /**
      * Enable / disable function calls here to control which data is generated
      * when you run this script.
      */
@@ -184,6 +190,8 @@ class performance_testing extends App {
 
         $this
             ->create_users()
+            ->hardcode_passwords()
+            ->create_users_csv()
             ->create_organisations()
             ->create_positions()
             ->add_aspirational_positions()
@@ -766,6 +774,40 @@ class performance_testing extends App {
         // We mostly need only the userid,
         // to save memory we only load those
         $this->users = user::load_existing_ids();
+
+        return $this;
+    }
+
+    /**
+     * Set hard-coded password for all users without passwords
+     * @return performance_testing
+     */
+    public function hardcode_passwords() {
+        $this->output('Adding hard-coded password...');
+        $password_hash = reset($this->password);
+        App::db()->set_field('user', 'password', $password_hash, ['password' => 'not cached']);
+        return $this;
+    }
+    /**
+     * Save all users with hard-coded password (self::$password) into dataroot/users.csv file
+     * Fields saved are: id,username,password
+     *
+     * @return performance_testing
+     */
+    public function create_users_csv() {
+        $this->output('Creating users.csv...');
+        $dataroot = App::config()->dataroot;
+        $password_hash = reset($this->password);
+        $password = key($this->password);
+
+        $file = fopen($dataroot . '/users.csv', 'w');
+        fputcsv($file, ['id', 'username', 'password']);
+
+        $userset = App::db()->get_recordset('user', ['password' => $password_hash], '', 'id, username');
+        foreach ($userset as $user) {
+            fputcsv($file, [$user->id, $user->username, $password]);
+        }
+        fclose($file);
 
         return $this;
     }
