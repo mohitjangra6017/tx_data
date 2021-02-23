@@ -50,7 +50,7 @@ class user_assignments implements query_resolver, has_middleware {
         self::require_view_capability($user_id, $ec);
 
         $status_filter = ['status' => assignment_entity::STATUS_ACTIVE];
-        $query_filters = array_merge($status_filter, $args['input']['filters']);
+        $query_filters = array_merge($status_filter, $args['input']['filters'] ?? []);
 
         // Get competency assignments
         $result = assignments::for($user_id)

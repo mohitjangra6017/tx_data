@@ -1,4 +1,4 @@
-query totara_evidence_perform_linked_evidence_items(
+query totara_evidence_perform_linked_evidence_items_nosession(
   $subject_instance_id: core_id!
   $section_element_id: core_id!
   $token: String

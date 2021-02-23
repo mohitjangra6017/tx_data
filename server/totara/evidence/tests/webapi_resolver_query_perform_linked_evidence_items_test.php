@@ -43,7 +43,7 @@ class webapi_resolver_query_perform_linked_evidence_items_testcase extends advan
 
         $input = [
             'section_element_id' => $data->section_element->id,
-            'participant_instance_id' => $data->participant_instance->id,
+            'subject_instance_id' => $data->participant_instance->subject_instance_id,
         ];
 
         $result = $this->resolve_graphql_query(self::QUERY, $input);
@@ -55,7 +55,7 @@ class webapi_resolver_query_perform_linked_evidence_items_testcase extends advan
 
         $input = [
             'section_element_id' => $data->section_element->id,
-            'participant_instance_id' => $data->participant_instance->id,
+            'subject_instance_id' => $data->participant_instance->subject_instance_id,
         ];
 
         advanced_feature::disable('evidence');

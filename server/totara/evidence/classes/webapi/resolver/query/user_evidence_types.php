@@ -17,24 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Marco Song <marco.song@totaralearning.com>
+ * @author Fabian Derschatta <fabian.derschatta@totaralearning.com>
  * @package totara_evidence
  */
 
 namespace totara_evidence\webapi\resolver\query;
 
 use core\entity\user;
+use core\orm\query\builder;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_advanced_feature;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
-use totara_evidence\data_providers\evidence as evidence_provider;
-use totara_evidence\entity\evidence_item as evidence_entity;
-use totara_evidence\models\evidence_item as evidence_model;
+use totara_evidence\entity\evidence_item;
+use totara_evidence\entity\evidence_type;
+use totara_evidence\models\evidence_type as evidence_type_model;
 use totara_evidence\models\helpers\evidence_item_capability_helper;
 
-class user_evidence_items implements query_resolver, has_middleware {
+class user_evidence_types implements query_resolver, has_middleware {
+
     /**
      * @inheritDoc
      */
@@ -47,15 +49,18 @@ class user_evidence_items implements query_resolver, has_middleware {
             return ['items' => []];
         }
 
-        $args['input']['filters']['user_id'] = $user_id;
-
-        return (new evidence_provider())
-            ->add_filters($args['input']['filters'])
-            ->fetch_paginated($args['input']['cursor'] ?? null, $args['input']['limit'] ?? null)
-            ->transform(static function (evidence_entity $evidence) {
-                return evidence_model::load_by_entity($evidence);
-            })
-            ->get();
+        return [
+            'items' => evidence_type::repository()
+                ->as('et')
+                ->where_exists(builder::table(evidence_item::TABLE)
+                    ->where_field('typeid', 'et.id')
+                    ->where('user_id', $user_id)
+                )
+                ->order_by('name')
+                ->get()
+                ->map_to(evidence_type_model::class)
+                ->all()
+        ];
     }
 
     /**
@@ -67,4 +72,5 @@ class user_evidence_items implements query_resolver, has_middleware {
             new require_advanced_feature('evidence'),
         ];
     }
+
 }

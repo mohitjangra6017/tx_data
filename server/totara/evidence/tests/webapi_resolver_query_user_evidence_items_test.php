@@ -37,11 +37,11 @@ class webapi_resolver_query_user_evidence_items_testcase extends advanced_testca
         $data = $this->create_test_data();
 
         // Test without filters applied, page size 2
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user_id));
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user->id));
         $this->assertCount(2, $result['items']);
 
         // Change page size to 10
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user_id, null, null, 10));
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user->id, null, null, 10));
         $this->assertCount(4, $result['items']);
     }
 
@@ -52,7 +52,7 @@ class webapi_resolver_query_user_evidence_items_testcase extends advanced_testca
         $filter = [
             'search' => 'Evidence1'
         ];
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user_id, $filter));
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user->id, $filter));
         $this->assertCount(1, $result['items']);
         $this->assertEquals('Evidence1', $result['items'][0]->name);
 
@@ -60,7 +60,7 @@ class webapi_resolver_query_user_evidence_items_testcase extends advanced_testca
         $filter = [
             'type_id' => $data->type_2->id
         ];
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user_id, $filter));
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user->id, $filter));
         $this->assertCount(1, $result['items']);
 
         // Apply name and type filter
@@ -68,7 +68,7 @@ class webapi_resolver_query_user_evidence_items_testcase extends advanced_testca
             'search' => 'Evidence1',
             'type_id' => $data->type_1->id
         ];
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user_id, $filter));
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user->id, $filter));
         $this->assertCount(1, $result['items']);
         $this->assertEquals('Evidence1', $result['items'][0]->name);
 
@@ -76,14 +76,14 @@ class webapi_resolver_query_user_evidence_items_testcase extends advanced_testca
             'search' => 'Evidence1',
             'type_id' => $data->type_2->id
         ];
-        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user_id, $filter));
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user->id, $filter));
         $this->assertCount(0, $result['items']);
     }
 
     public function test_no_input_should_set_current_user_as_default() {
         $data = $this->create_test_data();
 
-        $this->setUser($data->user_id);
+        $this->setUser($data->user->id);
 
         $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null));
         $this->assertCount(2, $result['items']);
@@ -92,7 +92,7 @@ class webapi_resolver_query_user_evidence_items_testcase extends advanced_testca
     public function test_no_user_id_should_set_current_user_as_default() {
         $data = $this->create_test_data();
 
-        $this->setUser($data->user_id);
+        $this->setUser($data->user->id);
 
         $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, null, null, 10));
         $this->assertCount(4, $result['items']);
@@ -109,30 +109,34 @@ class webapi_resolver_query_user_evidence_items_testcase extends advanced_testca
     }
 
     public function test_require_view_self_capability() {
-        $this->setGuestUser();
         $role_id = builder::table('role')->where('shortname', 'user')->value('id');
-
         unassign_capability('totara/evidence:viewanyevidenceonself', $role_id);
+        unassign_capability('totara/evidence:manageanyevidenceonself', $role_id);
+        unassign_capability('totara/evidence:manageownevidenceonself', $role_id);
 
-        $this->expectException(required_capability_exception::class);
-        $this->expectExceptionMessage('Sorry, but you do not currently have permissions to do that (View any evidence on self)');
+        $data = $this->create_test_data();
 
-        // Users will view evidence of them self if don't pass input parameter
-        $this->resolve_graphql_query(self::QUERY, []);
+        // Should return an empty array
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user->id));
+        $this->assertArrayHasKey('items', $result);
+        $this->assertIsArray($result['items']);
+        $this->assertEmpty($result['items']);
     }
 
     public function test_require_view_other_capability() {
+        $data = $this->create_test_data();
+
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
 
         $role_id = builder::table('role')->where('shortname', 'user')->value('id');
-
         unassign_capability('totara/evidence:viewanyevidenceonothers', $role_id);
 
-        $this->expectException(required_capability_exception::class);
-        $this->expectExceptionMessage('Sorry, but you do not currently have permissions to do that (View any evidence on others)');
-
-        $this->resolve_graphql_query(self::QUERY, $this->get_query_options(2));
+        // Should return an empty array
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($data->user->id));
+        $this->assertArrayHasKey('items', $result);
+        $this->assertIsArray($result['items']);
+        $this->assertEmpty($result['items']);
     }
 
     private function create_test_data() {
@@ -145,7 +149,7 @@ class webapi_resolver_query_user_evidence_items_testcase extends advanced_testca
         $type_1 = $evidence_generator->create_evidence_type(['name' => 'Type_1']);
         $type_2 = $evidence_generator->create_evidence_type(['name' => 'Type_2']);
 
-        $field_data = (object)[
+        $field_data = (object) [
             'key' => 'value',
         ];
 
@@ -162,7 +166,7 @@ class webapi_resolver_query_user_evidence_items_testcase extends advanced_testca
 
         // encapsulate return value
         $data = new stdClass();
-        $data->user_id = $user->id;
+        $data->user = $user;
         $data->type_1 = $type_1;
         $data->type_2 = $type_2;
         $data->items = $items;

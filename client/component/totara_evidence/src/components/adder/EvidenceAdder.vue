@@ -157,6 +157,7 @@ import SelectTable from 'tui/components/datatable/SelectTable';
 
 //Queries
 import evidenceQuery from 'totara_evidence/graphql/user_evidence_items';
+import evidenceTypesQuery from 'totara_evidence/graphql/user_evidence_types';
 import { debounce } from 'tui/util';
 
 export default {
@@ -242,12 +243,8 @@ export default {
           },
         };
       },
-      update({ ['totara_evidence_user_evidence_items']: evidence }) {
+      update({ ['evidence']: evidence }) {
         this.nextPage = evidence.next_cursor ? evidence.next_cursor : false;
-        if (!this.evidenceTypes.length) {
-          // we want to get the types from initial load only
-          this.evidenceTypes = evidence.items.map(i => i.type);
-        }
         return evidence;
       },
     });
@@ -270,9 +267,29 @@ export default {
           },
         };
       },
-      update({ ['totara_evidence_user_evidence_items']: selectedEvidence }) {
+      update({ ['evidence']: selectedEvidence }) {
         this.evidenceSelectedItems = selectedEvidence.items;
         return selectedEvidence;
+      },
+    });
+
+    /**
+     * Evidence types
+     */
+    this.$apollo.addSmartQuery('evidenceTypes', {
+      query: evidenceTypesQuery,
+      skip() {
+        return this.skipQueries;
+      },
+      variables() {
+        return {
+          input: {
+            user_id: this.userId,
+          },
+        };
+      },
+      update({ ['types']: evidenceTypes }) {
+        return evidenceTypes.items;
       },
     });
   },
@@ -305,7 +322,7 @@ export default {
             const newList = oldData.items.concat(newData.items);
 
             return {
-              ['totara_evidence_user_evidence_items']: {
+              ['evidence']: {
                 items: newList,
                 next_cursor: newData.next_cursor,
               },

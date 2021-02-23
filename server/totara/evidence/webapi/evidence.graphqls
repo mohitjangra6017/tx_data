@@ -21,9 +21,23 @@ input totara_evidence_user_evidence_items_input {
 Result for the user evidence items query.
 """
 type totara_evidence_user_evidence_items_result implements core_pageable_result {
-  items: [totara_evidence_evidence_item]
+  items: [totara_evidence_evidence_item!]!
   total: Int!
   next_cursor: String!
+}
+
+"""
+Input for the user evidence types query.
+"""
+input totara_evidence_user_evidence_types_input {
+  user_id: core_id
+}
+
+"""
+Result for the user evidence types query.
+"""
+type totara_evidence_user_evidence_types_result {
+  items: [totara_evidence_evidence_type!]!
 }
 
 """
@@ -33,7 +47,7 @@ type totara_evidence_evidence_item {
   """
   The id of the evidence item
   """
-  id: core_id!,
+  id: core_id!
   """
   The name of the evidence item
   """
@@ -51,7 +65,7 @@ type totara_evidence_evidence_type {
   """
   The id of the evidence type
   """
-  id: core_id!,
+  id: core_id!
   """
   The name of the evidence type
   """
@@ -80,7 +94,15 @@ extend type Query {
   Get the evidence that have been linked to a performance activity.
   """
   totara_evidence_perform_linked_evidence_items(
-    participant_instance_id: core_id!
+    subject_instance_id: core_id!
     section_element_id: core_id!
+    token: String
   ): [totara_evidence_evidence_id]!
+
+  """
+  Loads all evidence types in use by the user
+  """
+  totara_evidence_user_evidence_types(
+    input: totara_evidence_user_evidence_types_input!
+  ): totara_evidence_user_evidence_types_result!
 }
