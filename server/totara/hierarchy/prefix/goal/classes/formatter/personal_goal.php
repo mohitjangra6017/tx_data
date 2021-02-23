@@ -1,0 +1,104 @@
+<?php
+/**
+ * This file is part of Totara Learn
+ *
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author Murali Nair <murali.nair@totaralearning.com>
+ * @package hierarchy_goal
+ */
+
+namespace hierarchy_goal\formatter;
+
+use core\webapi\formatter\formatter;
+use core\webapi\formatter\field\date_field_formatter;
+use core\webapi\formatter\field\string_field_formatter;
+use core\webapi\formatter\field\text_field_formatter;
+use hierarchy_goal\assignment_type_extended;
+use hierarchy_goal\personal_goal_assignment_type;
+
+/**
+ * Maps the personal_goal entity class into a GraphQL totara_hierarchy_personal_goal
+ * type.
+ */
+class personal_goal extends formatter {
+    /**
+     * {@inheritdoc}
+     */
+    protected function get_map(): array {
+        return [
+            'assignment_type' => null,
+            'id' => null,
+            'user_id' => null,
+            'name' => string_field_formatter::class,
+            'description' => function ($value, text_field_formatter $formatter) {
+                $component = 'goal';
+                $filearea = 'description';
+                $itemid = $this->object->id;
+
+                return $formatter
+                    ->set_pluginfile_url_options($this->context, $component, $filearea, $itemid)
+                    ->format($value);
+            },
+            'target_date' => date_field_formatter::class,
+            'scale_id' => null,
+            'scale_value_id' => null,
+            'deleted' => null,
+            'type_id' => null,
+            'visible' => null
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function get_field(string $field) {
+        switch ($field) {
+            case 'assignment_type':
+                $type = (int)$this->object->assigntype;
+
+                return assignment_type_extended::create_personal_goal_assignment_type(
+                    personal_goal_assignment_type::by_value($type),
+                    $this->object
+                );
+
+            case 'type_id':
+                return $this->object->typeid;
+
+            case 'target_date':
+                return $this->object->targetdate;
+
+            case 'scale_id':
+                return $this->object->scaleid;
+
+            case 'scale_value_id':
+                return $this->object->scalevalueid;
+
+            case 'user_id':
+                return $this->object->userid;
+
+            default:
+                return $this->object->$field;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function has_field(string $field): bool {
+        return array_key_exists($field, $this->get_map());
+    }
+}

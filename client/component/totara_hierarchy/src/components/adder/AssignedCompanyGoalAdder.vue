@@ -1,0 +1,399 @@
+<!--
+  This file is part of Totara Learn
+
+  Copyright (C) 2021 onwards Totara Learning Solutions LTD
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+  @author Murali Nair <murali.nair@totaralearning.com>
+  @package totara_hierarchy
+-->
+
+<template>
+  <Adder
+    :open="open"
+    :title="$str('assigned_company_goal_adder_title', 'totara_hierarchy')"
+    :existing-items="existingItems"
+    :loading="$apollo.loading"
+    :show-load-more="nextPage"
+    :show-loading-btn="showLoadingBtn"
+    @added="closeWithData($event)"
+    @cancel="cancelAdder()"
+    @load-more="loadMoreItems()"
+    @selected-tab-active="updateSelectedItems($event)"
+  >
+    <template v-slot:browse-filters>
+      <FilterBar
+        :has-top-bar="false"
+        :title="
+          $str('assigned_company_goal_adder_filter_title', 'totara_hierarchy')
+        "
+      >
+        <template v-slot:filters-left="{ stacked }">
+          <SearchFilter
+            v-model="searchDebounce"
+            :label="
+              $str(
+                'assigned_company_goal_adder_filter_name',
+                'totara_hierarchy'
+              )
+            "
+            :show-label="false"
+            :placeholder="
+              $str(
+                'assigned_company_goal_adder_filter_name',
+                'totara_hierarchy'
+              )
+            "
+            :stacked="stacked"
+          />
+        </template>
+      </FilterBar>
+    </template>
+
+    <template v-slot:browse-list="{ disabledItems, selectedItems, update }">
+      <SelectTable
+        :large-check-box="true"
+        :no-label-offset="true"
+        :value="selectedItems"
+        :data="goals && goals.items ? goals.items : []"
+        :disabled-ids="disabledItems"
+        checkbox-v-align="center"
+        :select-all-enabled="true"
+        :border-bottom-hidden="true"
+        @input="update($event)"
+      >
+        <template v-slot:header-row>
+          <HeaderCell size="8" valign="center">
+            {{
+              $str('assigned_company_goal_adder_label_name', 'totara_hierarchy')
+            }}
+          </HeaderCell>
+          <HeaderCell size="8" valign="center">
+            {{
+              $str(
+                'assigned_company_goal_adder_label_assignment_type',
+                'totara_hierarchy'
+              )
+            }}
+          </HeaderCell>
+        </template>
+
+        <template v-slot:row="{ row }">
+          <Cell
+            size="8"
+            :column-header="
+              $str('assigned_company_goal_adder_label_name', 'totara_hierarchy')
+            "
+            valign="center"
+          >
+            {{ row.goal.full_name }}
+          </Cell>
+
+          <Cell
+            size="8"
+            :column-header="
+              $str(
+                'assigned_company_goal_adder_label_assignment_type',
+                'totara_hierarchy'
+              )
+            "
+            valign="center"
+          >
+            <div
+              v-for="(item, index) in row.assignment_types"
+              :key="'general' + index"
+            >
+              {{ item.description }}
+            </div>
+          </Cell>
+        </template>
+      </SelectTable>
+    </template>
+
+    <template v-slot:basket-list="{ disabledItems, selectedItems, update }">
+      <SelectTable
+        :large-check-box="true"
+        :no-label-offset="true"
+        :value="selectedItems"
+        :data="goalSelectedItems"
+        :disabled-ids="disabledItems"
+        checkbox-v-align="center"
+        :border-bottom-hidden="true"
+        :select-all-enabled="true"
+        @input="update($event)"
+      >
+        <template v-slot:header-row>
+          <HeaderCell size="8" valign="center">
+            {{
+              $str('assigned_company_goal_adder_label_name', 'totara_hierarchy')
+            }}
+          </HeaderCell>
+          <HeaderCell size="8" valign="center">
+            {{
+              $str(
+                'assigned_company_goal_adder_label_assignment_type',
+                'totara_hierarchy'
+              )
+            }}
+          </HeaderCell>
+        </template>
+
+        <template v-slot:row="{ row }">
+          <Cell
+            size="8"
+            :column-header="
+              $str('assigned_company_goal_adder_label_name', 'totara_hierarchy')
+            "
+            valign="center"
+          >
+            {{ row.goal.full_name }}
+          </Cell>
+
+          <Cell
+            size="8"
+            :column-header="
+              $str(
+                'assigned_company_goal_adder_label_assignment_type',
+                'totara_hierarchy'
+              )
+            "
+            valign="center"
+          >
+            <div
+              v-for="(item, index) in row.assignment_types"
+              :key="'general' + index"
+            >
+              {{ item.description }}
+            </div>
+          </Cell>
+        </template>
+      </SelectTable>
+    </template>
+  </Adder>
+</template>
+
+<script>
+// Components
+import Adder from 'tui/components/adder/Adder';
+import Cell from 'tui/components/datatable/Cell';
+import FilterBar from 'tui/components/filters/FilterBar';
+import HeaderCell from 'tui/components/datatable/HeaderCell';
+import SearchFilter from 'tui/components/filters/SearchFilter';
+import SelectTable from 'tui/components/datatable/SelectTable';
+import { debounce } from 'tui/util';
+
+//Queries
+import assigned_company_goals from 'totara_hierarchy/graphql/assigned_company_goals';
+
+export default {
+  components: {
+    Adder,
+    Cell,
+    FilterBar,
+    HeaderCell,
+    SearchFilter,
+    SelectTable,
+  },
+
+  props: {
+    existingItems: {
+      type: Array,
+      default: () => [],
+    },
+    open: Boolean,
+    customQuery: Object,
+    customQueryKey: String,
+    showLoadingBtn: Boolean,
+    targetUserId: {
+      required: false,
+      type: String,
+      default: null,
+    },
+  },
+
+  data() {
+    return {
+      goals: null,
+      goalSelectedItems: [],
+      filters: {
+        search: '',
+      },
+      nextPage: false,
+      skipQueries: true,
+      stacked: false,
+      searchDebounce: '',
+    };
+  },
+
+  watch: {
+    open() {
+      if (this.open) {
+        this.searchDebounce = '';
+        this.skipQueries = false;
+      } else {
+        this.skipQueries = true;
+      }
+    },
+
+    searchDebounce(newValue) {
+      this.updateFilterDebounced(newValue);
+    },
+  },
+
+  created() {
+    this.$apollo.addSmartQuery('goals', {
+      query: this.customQuery ? this.customQuery : assigned_company_goals,
+      skip() {
+        return this.skipQueries;
+      },
+      variables() {
+        return {
+          input: {
+            filters: {
+              goal_name: this.filters.search,
+              user_id: this.targetUserId,
+            },
+          },
+        };
+      },
+      update({
+        [this.customQueryKey
+          ? this.customQueryKey
+          : 'totara_hierarchy_assigned_company_goals']: goals,
+      }) {
+        this.nextPage = goals.next_cursor ? goals.next_cursor : false;
+        return goals;
+      },
+    });
+
+    this.$apollo.addSmartQuery('selectedGoals', {
+      query: this.customQuery ? this.customQuery : assigned_company_goals,
+      skip() {
+        return this.skipQueries;
+      },
+      variables() {
+        return {
+          input: {
+            filters: {
+              ids: [],
+            },
+          },
+        };
+      },
+      update({
+        [this.customQueryKey
+          ? this.customQueryKey
+          : 'totara_hierarchy_assigned_company_goals']: selectedGoals,
+      }) {
+        this.goalSelectedItems = selectedGoals.items;
+        return selectedGoals;
+      },
+    });
+  },
+
+  methods: {
+    async loadMoreItems() {
+      if (!this.nextPage) {
+        return;
+      }
+      try {
+        this.$apollo.queries.goals.fetchMore({
+          variables: {
+            input: {
+              cursor: this.nextPage,
+              filters: {
+                goal_name: this.filters.search,
+                user_id: this.targetUserId,
+              },
+            },
+          },
+
+          updateQuery: (previousResult, { fetchMoreResult }) => {
+            const oldData =
+              previousResult.totara_hierarchy_assigned_company_goals;
+            const newData =
+              fetchMoreResult.totara_hierarchy_assigned_company_goals;
+            const newList = oldData.items.concat(newData.items);
+
+            return {
+              [this.customQueryKey
+                ? this.customQueryKey
+                : 'totara_hierarchy_assigned_company_goals']: {
+                items: newList,
+                next_cursor: newData.next_cursor,
+              },
+            };
+          },
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async updateSelectedItems(selection) {
+      const numberOfItems = selection.length;
+
+      try {
+        await this.$apollo.queries.selectedGoals.refetch({
+          input: {
+            filters: {
+              ids: selection,
+            },
+            result_size: numberOfItems,
+          },
+        });
+      } catch (error) {
+        console.error(error);
+      }
+
+      return this.goalSelectedItems;
+    },
+
+    async closeWithData(selection) {
+      let data;
+
+      this.$emit('add-button-clicked');
+
+      try {
+        data = await this.updateSelectedItems(selection);
+      } catch (error) {
+        console.error(error);
+        return;
+      }
+      this.$emit('added', { ids: selection, data: data });
+    },
+
+    cancelAdder() {
+      this.$emit('cancel');
+    },
+
+    updateFilterDebounced: debounce(function(input) {
+      this.filters.search = input;
+    }, 500),
+  },
+};
+</script>
+
+<lang-strings>
+  {
+    "totara_hierarchy": [
+      "assigned_company_goal_adder_filter_title",
+      "assigned_company_goal_adder_filter_name",
+      "assigned_company_goal_adder_label_assignment_type",
+      "assigned_company_goal_adder_label_name",
+      "assigned_company_goal_adder_title"
+    ]
+  }
+</lang-strings>
