@@ -1599,13 +1599,30 @@ final class generator extends \core\testing\component_generator {
     }
 
     /**
-     * Create an external user, with corresponding participant instance and sections
+     * Creates external participant with email and fullname for a subject username.
+     * Used in behat generator.
+     *
+     * @param array $data
+     * @return array
+     */
+    public function create_external_participant_instances(array $data): array {
+        $subject_instance_entity = subject_instance_entity::repository()
+            ->join([user::TABLE, 'u'], 'subject_user_id', 'id')
+            ->where('u.username', $data['subject'])
+            ->one(true);
+        unset($data['subject']);
+
+        return $this->generate_external_participant_instances($subject_instance_entity->id, $data);
+    }
+
+    /**
+     * Generates an external user, with corresponding participant instance and sections
      *
      * @param int $subject_instance_id
      * @param array $data E.g: ['fullname' => 'XYZ', 'email' => 'xyz@abc.com']
      * @return array [participant_instance, ]
      */
-    public function create_external_participant_instances(int $subject_instance_id, array $data): array {
+    public function generate_external_participant_instances(int $subject_instance_id, array $data): array {
         return builder::get_db()->transaction(function () use ($subject_instance_id, $data) {
             $external_relationship_id = core_relationship::load_by_idnumber(
                 constants::RELATIONSHIP_EXTERNAL

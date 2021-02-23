@@ -24,11 +24,17 @@
 defined('MOODLE_INTERNAL') || die();
 
 use editor_weka\hook\find_context;
+use mod_perform\hook\post_element_response_submission;
 use performelement_long_text\watcher\editor_weka_watcher;
+use performelement_long_text\watcher\post_response_submission;
 
 $watchers = [
     [
         'hookname' => find_context::class,
         'callback' => [editor_weka_watcher::class, 'load_context']
+    ],
+    [
+        'hookname' => post_element_response_submission::class,
+        'callback' => [post_response_submission::class, 'process_response']
     ],
 ];

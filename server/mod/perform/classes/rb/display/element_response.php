@@ -66,6 +66,7 @@ class element_response extends base {
         // Convert response data into actual answer.
         $formatted_response_data = element_response_formatter::get_instance($element, $output_format)
             ->set_response_id($extrafields->response_id)
+            ->set_element($element)
             ->format($response_data);
         $response = $element_plugin->decode_response($formatted_response_data, $element->data);
 

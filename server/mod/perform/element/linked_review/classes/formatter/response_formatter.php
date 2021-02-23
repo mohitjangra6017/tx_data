@@ -23,22 +23,28 @@
 
 namespace performelement_linked_review\formatter;
 
+use core\webapi\formatter\field\base;
 use mod_perform\formatter\response\element_response_formatter;
+use mod_perform\models\activity\element;
 
 /**
- * Formats user entered responses for this element.
+ * Formats user entered responses for all child elements.
  */
 class response_formatter extends element_response_formatter {
+
+    use response_formatter_trait;
 
     /**
      * {@inheritdoc}
      */
     protected function get_default_format($value) {
-        $parsed_json = json_decode($value, true);
-        if (empty($parsed_json)) {
-            return '{}';
-        }
-        return $value;
+        return $this->format_value($value);
     }
 
+    /**
+     * @inheritDocs
+     */
+    private function get_child_element_formatter(element $element): base {
+        return element_response_formatter::get_instance($element, $this->format);
+    }
 }

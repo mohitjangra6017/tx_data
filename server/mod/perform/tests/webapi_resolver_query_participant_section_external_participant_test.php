@@ -206,6 +206,12 @@ class mod_perform_webapi_resolver_query_participant_section_external_participant
                                 'performelement_short_text/components/ShortTextParticipantForm',
                             'participant_response_component' =>
                                 'mod_perform/components/element/participant_form/ResponseDisplay',
+                            'child_element_config' => [
+                                'supports_child_elements' => false,
+                                'supports_repeating_child_elements' => false,
+                                'repeating_item_identifier' => null,
+                                'child_element_responses_identifier' => null,
+                            ],
                         ],
                     '__typename' => 'mod_perform_element',
                     'title' => 'test element title',
@@ -254,7 +260,13 @@ class mod_perform_webapi_resolver_query_participant_section_external_participant
                         [
                             'participant_form_component' =>
                                 'performelement_static_content/components/StaticContentParticipantForm',
-                            'participant_response_component' => null
+                            'participant_response_component' => null,
+                            'child_element_config' => [
+                                'supports_child_elements' => false,
+                                'supports_repeating_child_elements' => false,
+                                'repeating_item_identifier' => null,
+                                'child_element_responses_identifier' => null,
+                            ],
                         ],
                     'title' => 'test element title',
                     'data' => null,

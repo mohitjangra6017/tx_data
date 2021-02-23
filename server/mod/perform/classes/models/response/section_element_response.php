@@ -30,15 +30,13 @@ use core\orm\entity\model;
 use core\orm\query\builder;
 use mod_perform\entity\activity\element_response;
 use mod_perform\entity\activity\element_response as element_response_entity;
-use mod_perform\entity\activity\participant_instance as participant_instance_entity;
-use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\entity\activity\section_element as section_element_entity;
 use mod_perform\entity\activity\section_relationship;
+use mod_perform\hook\post_element_response_submission;
 use mod_perform\hook\element_response_visibility;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\participant_instance;
 use mod_perform\models\activity\participant_source;
-use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\models\activity\section_element;
 use mod_perform\util;
 
@@ -50,10 +48,13 @@ use mod_perform\util;
  * other participants (or all participants in the case of a view-only
  * observer) are held in other_responder_groups.
  *
- * @property-read int section_element_id Foreign key
+ * @property int $section_element_id Foreign key
+ * @property int $participant_instance_id Foreign key
  * @property-read section_element $section_element The parent section element
+ * @property-read participant_instance $participant_instance The participant instance submitted the response.
  * @property-read collection|element_validation_error[] $validation_errors A collection of element_validation_errors
- * @property-read string $response_data Raw JSON encoded response data
+ * @property-read string $response_data Processed response data
+ * @property-read string $raw_response_data Raw JSON encoded response data
  * @property-read element $element The element this is a response to
  * @property-read collection|participant_instance[] $visible_to
  * @property-read collection|responder_group[] $other_responder_groups
@@ -63,14 +64,16 @@ use mod_perform\util;
  */
 class section_element_response extends model implements section_element_responses_interface {
 
-    protected $entity_attribute_whitelist = [];
+    protected $entity_attribute_whitelist = [
+        'participant_instance_id'
+    ];
 
     protected $model_accessor_whitelist = [
         'id',
         'section_element_id',
         'section_element',
-        'section_element_id',
         'response_data', // as a JSON encoded string
+        'raw_response_data',
         'response_data_formatted_lines',
         'element',
         'validation_errors',
@@ -103,6 +106,16 @@ class section_element_response extends model implements section_element_response
      * @var collection
      */
     protected $validation_errors;
+
+    /**
+     * @var string|null
+     */
+    private $computed_response_data;
+
+    /**
+     * @var string|null
+     */
+    private $computed_response_data_formatted_lines;
 
     /**
      * @inheritDoc
@@ -174,12 +187,37 @@ class section_element_response extends model implements section_element_response
         }
     }
 
+    /**
+     * Get's the computed response data.
+     * The raw response is processed by the element plugin.
+     *
+     * @return string|null
+     */
     public function get_response_data(): ?string {
+        $element_plugin = $this->section_element->element->element_plugin;
+
+        if (!$element_plugin->get_is_respondable()) {
+            return null;
+        }
+
+        if ($this->computed_response_data === null) {
+            $this->computed_response_data = $element_plugin->build_response_data($this);
+        }
+
+        return $this->computed_response_data;
+    }
+
+    /**
+     * Get's the raw response data from the entity.
+     *
+     * @return string|null
+     */
+    public function get_raw_response_data(): ?string {
         return $this->entity->response_data;
     }
 
     /**
-     * Get the response data formatted ready for display broken into an array entry for each response.
+     * Get the computed response data formatted ready for display broken into an array entry for each response.
      * For example for multi_choice_multi will have each selected checkbox value as an array entry.
      *
      * @return string[]
@@ -191,16 +229,26 @@ class section_element_response extends model implements section_element_response
             return [];
         }
 
+        if ($this->computed_response_data_formatted_lines === null) {
+            $this->computed_response_data_formatted_lines = $element_plugin->build_response_data_formatted_lines($this);
+        }
+
         return $element_plugin->format_response_lines(
-            $this->entity->response_data,
+            $this->computed_response_data_formatted_lines,
             $this->get_element()->data
         );
     }
 
+    /**
+     * @inheritDocs
+     */
     public function get_section_element(): section_element {
         return $this->section_element;
     }
 
+    /**
+     * @inheritDocs
+     */
     public function get_section_element_id(): int {
         return $this->section_element->id;
     }
@@ -232,10 +280,10 @@ class section_element_response extends model implements section_element_response
     /**
      * Set the raw JSON encoded response data.
      *
-     * @param string $encoded_response_data
+     * @param string|null $encoded_response_data
      * @return self
      */
-    public function set_response_data(string $encoded_response_data): self {
+    public function set_response_data(?string $encoded_response_data): self {
         $this->entity->response_data = $encoded_response_data;
         return $this;
     }
@@ -267,7 +315,7 @@ class section_element_response extends model implements section_element_response
         }
 
         $this->validation_errors = $element_plugin->validate_response(
-            $this->entity->response_data,
+            $this->raw_response_data,
             $this->get_element(),
             $is_draft_validation
         );
@@ -285,18 +333,26 @@ class section_element_response extends model implements section_element_response
     }
 
     /**
+     * Save section element response.
      * @return $this
      */
     public function save(): self {
         return builder::get_db()->transaction(function () {
             // Need to save first in case the response ID is required.
+
             $this->entity->save();
 
-            $element_plugin = $this->get_element()->get_element_plugin();
-            if ($element_plugin->get_is_respondable()) {
-                $element_plugin->post_response_submission($this);
-                $this->entity->save();
-            }
+            $hook = new post_element_response_submission(
+                $this->id,
+                $this->element,
+                $this->participant_instance,
+                $this->raw_response_data,
+            );
+            $hook->execute();
+            $this->set_response_data($hook->get_response_data());
+            $this->entity->save();
+            $this->computed_response_data = null;
+            $this->computed_response_data_formatted_lines = null;
 
             return $this;
         });
@@ -310,7 +366,10 @@ class section_element_response extends model implements section_element_response
         return $this->participant_instance->core_relationship->get_name();
     }
 
-    public function get_element(): element {
+    /**
+     * @inheritDocs
+     */
+    public function get_element(): ?element {
         $element = null;
         if ($this->section_element->element) {
             $element = $this->section_element->element;

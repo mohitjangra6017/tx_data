@@ -24,6 +24,7 @@
 use mod_perform\constants;
 use performelement_linked_review\models\linked_review_content;
 use performelement_linked_review\entity\linked_review_content as linked_review_content_entity;
+use totara_core\relationship\relationship;
 
 require_once(__DIR__ . '/base_linked_review_testcase.php');
 
@@ -99,9 +100,16 @@ class linked_review_content_testcase extends performelement_linked_review_base_l
         linked_review_content::update_content([1, 2], 99999, 99988);
     }
 
-    public function test_participant_can_answer() {
+    public function test_participant_cannot_select_content() {
         [$activity1, $section1, $element1, $section_element1] = $this->create_activity_with_section_and_review_element();
-        [$user1, $subject_instance1, $participant_instance1] = $this->create_participant_in_section($activity1, $section1);
+
+        $appraiser_relationship = relationship::load_by_idnumber(constants::RELATIONSHIP_APPRAISER);
+        [$user1, $subject_instance1, $participant_instance1] = $this->create_participant_in_section(
+            $activity1,
+            $section1,
+            null,
+            $appraiser_relationship->id
+        );
         $content_ids = $this->create_competency_assignments($user1->id);
 
         $this->generator()->create_section_relationship(

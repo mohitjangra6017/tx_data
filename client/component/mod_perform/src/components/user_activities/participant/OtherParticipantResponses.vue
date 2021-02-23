@@ -47,11 +47,7 @@
             <ElementParticipantResponse>
               <template v-slot:content>
                 <component
-                  :is="
-                    getComponent(
-                      sectionElement.element.type.participant_response_component
-                    )
-                  "
+                  :is="getResponseComponent(sectionElement)"
                   :element="sectionElement.element"
                   :data="response.response_data_formatted_lines"
                 />
@@ -84,11 +80,7 @@
             <ElementParticipantResponse>
               <template v-slot:content>
                 <component
-                  :is="
-                    getComponent(
-                      sectionElement.element.type.participant_response_component
-                    )
-                  "
+                  :is="getResponseComponent(sectionElement)"
                   :element="sectionElement.element"
                   :data="response.response_data_formatted_lines"
                 />
@@ -157,13 +149,15 @@ export default {
 
   methods: {
     /**
-     * Get dynamic component
+     * Get response component
      *
-     * @param {String} componentPath Vue component path
+     * @param {Object} sectionElement
      * @return {function}
      */
-    getComponent(componentPath) {
-      return tui.asyncComponent(componentPath);
+    getResponseComponent(sectionElement) {
+      return tui.asyncComponent(
+        sectionElement.element.element_plugin.participant_response_component
+      );
     },
 
     /**

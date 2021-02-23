@@ -102,7 +102,7 @@
                   "
                   :anonymous-responses="activity.anonymous_responses"
                   :element="elementResponse.element"
-                  :element-components="elementResponse.element.type"
+                  :element-components="elementResponse.element.element_plugin"
                   :from-print="
                     elementResponse.is_respondable && sectionResponse.can_answer
                   "
@@ -142,6 +142,7 @@
 // Util
 import { uniqueId } from 'tui/util';
 import { RELATIONSHIP_SUBJECT } from 'mod_perform/constants';
+import { generateInitialValue } from 'mod_perform/initial_value_processor';
 // Components
 import Button from 'tui/components/buttons/Button';
 import Loader from 'tui/components/loading/Loader';
@@ -254,14 +255,12 @@ export default {
             // Parse child data
             let childElements = sectionElementResponse.element.children.map(
               child => {
-                return {
-                  data: JSON.parse(child.data),
-                  element_plugin: child.element_plugin,
-                  id: child.id,
-                  is_required: child.is_required,
-                  is_respondable: child.is_respondable,
-                  title: child.title,
-                };
+                return Object.assign(
+                  {
+                    participantSectionId: sectionResponse.id,
+                  },
+                  this.getElementDetails(child)
+                );
               }
             );
 
@@ -272,14 +271,13 @@ export default {
                 sectionElementResponse.element.element_plugin
                   .participant_form_component
               ),
-              element: {
-                children: childElements,
-                type: sectionElementResponse.element.element_plugin,
-                title: sectionElementResponse.element.title,
-                data: JSON.parse(sectionElementResponse.element.data),
-                is_required: sectionElementResponse.element.is_required,
-                participantSectionId: sectionResponse.id,
-              },
+              element: Object.assign(
+                {
+                  children: childElements,
+                  participantSectionId: sectionResponse.id,
+                },
+                this.getElementDetails(sectionElementResponse.element)
+              ),
               sort_order: sectionElementResponse.sort_order,
               is_respondable: sectionElementResponse.element.is_respondable,
               response_data: JSON.parse(sectionElementResponse.response_data),
@@ -316,7 +314,10 @@ export default {
           .forEach(elementResponse => {
             initialUniformValues[sectionResponse.id].sectionElements[
               elementResponse.id
-            ] = { response: elementResponse.response_data_raw };
+            ] = generateInitialValue(
+              elementResponse.element,
+              elementResponse.response_data_raw
+            );
           });
       });
 
@@ -405,6 +406,24 @@ export default {
     },
   },
   methods: {
+    /**
+     * Get element details from object.
+     *
+     * @param {Object} element
+     * @return Object
+     */
+    getElementDetails(element) {
+      return {
+        data: JSON.parse(element.data),
+        element_plugin: element.element_plugin,
+        id: element.id,
+        is_required: element.is_required,
+        is_respondable: element.is_respondable,
+        title: element.title,
+        identifier: element.identifier,
+      };
+    },
+
     /**
      * Open the print dialog.
      */

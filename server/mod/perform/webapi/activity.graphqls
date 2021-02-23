@@ -173,6 +173,36 @@ type mod_perform_element_plugin {
   Value indicating which group of elements this element is under (1 for question elements, 2 for other non-respondable elements)
   """
   group: String!
+
+  """
+  Child element configuration.
+  """
+  child_element_config: mod_perform_child_element_config!
+}
+
+"""
+Child element configuration.
+"""
+type mod_perform_child_element_config {
+  """
+  If the element supports child elements.
+  """
+  supports_child_elements: Boolean!
+
+  """
+  If the element supports repeating child elements.
+  """
+  supports_repeating_child_elements: Boolean!
+
+  """
+  Repeating item identifier.
+  """
+  repeating_item_identifier: String
+
+  """
+  Child element responses identifier.
+  """
+  child_element_responses_identifier: String
 }
 
 """

@@ -27,6 +27,7 @@ use core\collection;
 use core\orm\query\builder;
 use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element;
+use mod_perform\models\activity\element_plugin;
 
 /**
  * This class handles managing the child elements of a perform element.
@@ -66,36 +67,46 @@ class child_element_manager {
      *
      * @return element
      */
-    public function create_child_element(array $child_element_data, string $plugin_name, ?int $after_sibling_element_id = null): element {
+    public function create_child_element(
+        array $child_element_data,
+        string $plugin_name,
+        ?int $after_sibling_element_id = null
+    ): element {
         $parent_element_model = element::load_by_entity($this->parent_element_entity);
 
-        if (!$parent_element_model->get_element_plugin()->supports_child_elements()) {
+        if (!$parent_element_model->get_element_plugin()->get_child_element_config()->supports_child_elements) {
             throw new coding_exception("Element doesn't support child elements");
         }
 
-        return builder::get_db()->transaction(function() use($child_element_data, $plugin_name, $parent_element_model, $after_sibling_element_id) {
-            $child_elements = $this->get_children_elements()->all();
-            $items_ordering = new item_ordering($child_elements);
-            $new_element_sort_order = $items_ordering->get_new_item_sort_order_after($after_sibling_element_id);
-            $sibling_elements_to_reorder = $items_ordering->get_items_to_reorder($new_element_sort_order);
-            $this->update_child_elements_sort_order($sibling_elements_to_reorder);
+        if (element_plugin::load_by_plugin($plugin_name)->get_child_element_config()->supports_child_elements) {
+            throw new coding_exception('Can not create an element that supports child elements as well');
+        }
 
-            $new_child_element = element::create(
-                $parent_element_model->get_context(),
-                $plugin_name,
-                $child_element_data['title'],
-                $child_element_data['identifier'] ?? '',
-                $child_element_data['data'] ?? null,
-                $child_element_data['is_required'] ?? null,
-                $this->parent_element_entity->id,
-                $new_element_sort_order
-            );
+        return builder::get_db()->transaction(
+            function () use ($child_element_data, $plugin_name, $parent_element_model, $after_sibling_element_id) {
+                $child_elements = $this->get_children_elements()->all();
+                $items_ordering = new item_ordering($child_elements);
+                $new_element_sort_order = $items_ordering->get_new_item_sort_order_after($after_sibling_element_id);
+                $sibling_elements_to_reorder = $items_ordering->get_items_to_reorder($new_element_sort_order);
+                $this->update_child_elements_sort_order($sibling_elements_to_reorder);
 
-            $this->parent_element_entity->load_relation('children');
-            (new item_ordering($this->get_children_elements()->all()))->validate_sort_orders();
+                $new_child_element = element::create(
+                    $parent_element_model->get_context(),
+                    $plugin_name,
+                    $child_element_data['title'],
+                    $child_element_data['identifier'] ?? '',
+                    $child_element_data['data'] ?? null,
+                    $child_element_data['is_required'] ?? null,
+                    $this->parent_element_entity->id,
+                    $new_element_sort_order
+                );
 
-            return $new_child_element;
-        });
+                $this->parent_element_entity->load_relation('children');
+                (new item_ordering($this->get_children_elements()->all()))->validate_sort_orders();
+
+                return $new_child_element;
+            }
+        );
     }
 
     /**
@@ -108,10 +119,10 @@ class child_element_manager {
      */
     public function reorder_child_element_to_after(int $child_element_id, ?int $after_element_id = null): void {
         $parent_element_model = element::load_by_entity($this->parent_element_entity);
-        if (!$parent_element_model->get_element_plugin()->supports_child_elements()) {
+        if (!$parent_element_model->get_element_plugin()->get_child_element_config()->supports_child_elements) {
             throw new coding_exception("Element doesn't support child elements");
         }
-        builder::get_db()->transaction(function() use($child_element_id, $after_element_id) {
+        builder::get_db()->transaction(function () use ($child_element_id, $after_element_id) {
             $element_siblings = $this->get_children_elements()->all(true);
 
             if (empty($element_siblings)) {
@@ -134,11 +145,11 @@ class child_element_manager {
     public function remove_child_element(int $child_element_id): void {
         $parent_element_model = element::load_by_entity($this->parent_element_entity);
 
-        if (!$parent_element_model->get_element_plugin()->supports_child_elements()) {
+        if (!$parent_element_model->get_element_plugin()->get_child_element_config()->supports_child_elements) {
             throw new coding_exception("Element doesn't support child elements");
         }
 
-        builder::get_db()->transaction(function() use($child_element_id) {
+        builder::get_db()->transaction(function () use ($child_element_id) {
             $child_element_list = $this->get_children_elements();
             /** @var element $child_element*/
             $child_element = $child_element_list->find('id', $child_element_id);
@@ -178,11 +189,10 @@ class child_element_manager {
         if (empty($child_elements)) {
             return;
         }
-        builder::get_db()->transaction(function() use ($child_elements) {
+        builder::get_db()->transaction(function () use ($child_elements) {
 
             $child_element_ids = [];
             foreach ($child_elements as $sort_order => $child_element) {
-
                 if ((int)$this->parent_element_entity->id !== (int)$child_element->parent) {
                     throw new coding_exception('Can not move child elements that does not belong to same parent');
                 }

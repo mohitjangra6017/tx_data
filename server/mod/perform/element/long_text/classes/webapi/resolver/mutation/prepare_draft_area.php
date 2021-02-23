@@ -33,6 +33,10 @@ use mod_perform\models\activity\activity;
 use mod_perform\webapi\middleware\require_activity;
 use performelement_long_text\long_text;
 
+/**
+ * Mutation prepare_draft_area
+ *
+ */
 class prepare_draft_area implements mutation_resolver, has_middleware {
 
     /**
@@ -41,6 +45,7 @@ class prepare_draft_area implements mutation_resolver, has_middleware {
     public static function resolve(array $args, execution_context $ec) {
         global $CFG;
         require_once($CFG->dirroot . '/lib/filelib.php');
+        debugging('The performelement_long_text_prepare_draft_area mutation has been deprecated, please use the performelement_long_text_get_draft_id query instead', DEBUG_DEVELOPER);
 
         /** @var activity $activity */
         $activity = $args['activity'];

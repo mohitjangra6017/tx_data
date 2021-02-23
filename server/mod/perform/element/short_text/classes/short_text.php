@@ -66,13 +66,6 @@ class short_text extends respondable_element_plugin {
     }
 
     /**
-     * @inheritDocs
-     */
-    public function format_response_lines(?string $encoded_response_data, ?string $encoded_element_data): array {
-        return [$encoded_response_data];
-    }
-
-    /**
      * @inheritDoc
      */
     public function get_sortorder(): int {

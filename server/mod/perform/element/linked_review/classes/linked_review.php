@@ -27,7 +27,11 @@ use coding_exception;
 use core\collection;
 use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element;
+use mod_perform\models\activity\helpers\child_element_config as base_child_element_config;
 use mod_perform\models\activity\respondable_element_plugin;
+use mod_perform\models\response\section_element_response;
+use performelement_linked_review\helpers\content_element_response_builder;
+use performelement_linked_review\helpers\content_element_response_validator;
 use totara_core\entity\relationship;
 use totara_core\relationship\relationship as relationship_model;
 
@@ -63,8 +67,11 @@ class linked_review extends respondable_element_plugin {
         ?element $element,
         $is_draft_validation = false
     ): collection {
-        // TODO
-        return new collection();
+        return (new content_element_response_validator())->validate_responses(
+            $encoded_response_data,
+            $element,
+            $is_draft_validation
+        );
     }
 
     /**
@@ -75,7 +82,7 @@ class linked_review extends respondable_element_plugin {
      * @return string|null
      */
     public function decode_response(?string $encoded_response_data, ?string $encoded_element_data): ?string {
-        return ''; // TODO
+        return '';
     }
 
     /**
@@ -217,33 +224,38 @@ class linked_review extends respondable_element_plugin {
     }
 
     /**
-     * @inheritDoc
+     * @inheritDocs
      */
-    public function get_participant_response_component(): string {
-        // TODO may need a special response display element
-        return 'mod_perform/components/element/participant_form/HtmlResponseDisplay';
+    public function build_response_data(section_element_response $section_element_response): ?string {
+        return (new content_element_response_builder($section_element_response))->build_response_data();
     }
 
     /**
      * @inheritDoc
      */
-    public function get_sortorder(): int {
-        return 1000; // TODO: Change this
+    public function build_response_data_formatted_lines(section_element_response $section_element_response): ?string {
+        return (new content_element_response_builder($section_element_response))->build_response_data_formatted_lines();
     }
 
     /**
      * @inheritDoc
      */
     public function format_response_lines(?string $encoded_response_data, ?string $encoded_element_data): array {
-        // The response is displayed as HTML instead of individual lines, so nothing is returned here.
-        return [];
+        return [$encoded_response_data];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_sortorder(): int {
+        return 100;
     }
 
     /**
      * @inheritDocs
      */
-    public function supports_child_elements(): bool {
-        return true;
+    public function get_child_element_config(): base_child_element_config {
+        return new child_element_config();
     }
 
 }

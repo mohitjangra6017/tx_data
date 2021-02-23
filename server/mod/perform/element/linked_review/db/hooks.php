@@ -20,12 +20,18 @@
  * @author Kunle Odusan <kunle.odusan@totaralearning.com>
  */
 
+use mod_perform\hook\post_element_response_submission;
 use mod_perform\hook\pre_section_relationship_deleted;
+use performelement_linked_review\watcher\post_response_submission;
 use performelement_linked_review\watcher\section_relationship_deletion_check;
 
 $watchers = [
     [
         'hookname' => pre_section_relationship_deleted::class,
         'callback' => [section_relationship_deletion_check::class, 'can_delete'],
-    ]
+    ],
+    [
+        'hookname' => post_element_response_submission::class,
+        'callback' => [post_response_submission::class, 'process_content_child_element_responses'],
+    ],
 ];

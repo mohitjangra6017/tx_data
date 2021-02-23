@@ -68,7 +68,7 @@ import Weka from 'editor_weka/components/Weka';
 import WekaWrapper from 'performelement_long_text/components/WekaWrapper';
 import { v as validation } from 'tui/validation';
 // GraphQL queries
-import prepareDraftArea from 'performelement_long_text/graphql/prepare_draft_area';
+import getDraftId from 'performelement_long_text/graphql/get_draft_id';
 
 export default {
   components: {
@@ -105,6 +105,29 @@ export default {
     };
   },
 
+  apollo: {
+    /**
+     * Get the draft file area id to be used for temporarily storing uploaded files.
+     */
+    draftFileId: {
+      query: getDraftId,
+      variables() {
+        return {
+          section_element_id: this.sectionElement.id,
+          participant_instance_id: this.participantInstanceId,
+        };
+      },
+      update({ draft_id: draftFileId }) {
+        return draftFileId;
+      },
+      skip() {
+        // File upload is problematic for external participants
+        // and it is not needed for the view-only form (no participant instance id).
+        return this.isExternalParticipant || !this.participantInstanceId;
+      },
+    },
+  },
+
   computed: {
     /**
      * Have the required queries been loaded?
@@ -129,32 +152,7 @@ export default {
     },
   },
 
-  async mounted() {
-    // File upload is problematic for external participants
-    // and it is not needed for the view-only form (no participant instance id).
-    if (this.isExternalParticipant || !this.participantInstanceId) {
-      return;
-    }
-    await this.$_loadDraftId();
-  },
-
   methods: {
-    /**
-     * Get a Draft ID to use for temporarily storing uploading files.
-     */
-    async $_loadDraftId() {
-      const {
-        data: { draft_id: draftFileId },
-      } = await this.$apollo.mutate({
-        mutation: prepareDraftArea,
-        variables: {
-          section_element_id: this.sectionElement.id,
-          participant_instance_id: this.participantInstanceId,
-        },
-      });
-      this.draftFileId = draftFileId;
-    },
-
     /**
      * Process the form values.
      *

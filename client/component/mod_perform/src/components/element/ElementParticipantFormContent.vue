@@ -22,7 +22,7 @@
       v-if="participantCanAnswer && !viewOnly"
       class="tui-performElementParticipantFormContent__response"
     >
-      <!-- If element is in a state where the participant can't provide a response 
+      <!-- If element is in a state where the participant can't provide a response
       (Complete, closed, print view)  -->
       <FormRow
         v-if="activeSectionIsClosed || fromPrint"
@@ -32,7 +32,7 @@
         <div class="tui-performElementParticipantFormContent__response-output">
           <!-- If section is closed and form no longer editable display the response -->
           <component
-            :is="component(elementComponents.participant_response_component)"
+            :is="responseComponent(elementComponents)"
             v-if="activeSectionIsClosed"
             :data="sectionElement.response_data_formatted_lines"
             :element="element"
@@ -40,7 +40,7 @@
 
           <!-- If on print view show printable version of element -->
           <component
-            :is="component(elementComponents.participant_print_component)"
+            :is="printComponent(elementComponents)"
             v-else
             :data="sectionElement.response_data_formatted_lines"
             :element="element"
@@ -102,11 +102,23 @@ export default {
 
   methods: {
     /**
-     * @param {String} componentPath Vue component path
+     * Returns print component
+     *
+     * @param {Object} components
      * @return {Function}
      */
-    component(componentPath) {
-      return tui.asyncComponent(componentPath);
+    printComponent(components) {
+      return tui.asyncComponent(components.participant_print_component);
+    },
+
+    /**
+     * Returns response component
+     *
+     * @param {Object} components
+     * @return {Function}
+     */
+    responseComponent(components) {
+      return tui.asyncComponent(components.participant_response_component);
     },
   },
 };

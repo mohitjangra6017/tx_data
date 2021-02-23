@@ -88,5 +88,11 @@ fragment mod_perform_participant_section_external_participant_nosession_element_
   element_plugin {
     participant_form_component
     participant_response_component
+    child_element_config {
+      supports_child_elements
+      supports_repeating_child_elements
+      repeating_item_identifier
+      child_element_responses_identifier
+    }
   }
 }

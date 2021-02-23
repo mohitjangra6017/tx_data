@@ -41,7 +41,7 @@ function xmldb_performelement_linked_review_upgrade($oldversion) {
         // Adding fields to table perform_element_linked_review_content_responses.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('linked_review_content_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('element_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('child_element_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('participant_instance_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('response_data', XMLDB_TYPE_TEXT, null, null, null, null, null);
         $table->add_field('created_at', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
@@ -49,9 +49,22 @@ function xmldb_performelement_linked_review_upgrade($oldversion) {
 
         // Adding keys to table perform_element_linked_review_content_responses.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('linked_review_content_id', XMLDB_KEY_FOREIGN, array('linked_review_content_id'), 'perform_element_linked_review_content', array('id'));
-        $table->add_key('element_id', XMLDB_KEY_FOREIGN, array('element_id'), 'perform_element', array('id'));
-        $table->add_key('participant_instance_id', XMLDB_KEY_FOREIGN, array('participant_instance_id'), 'perform_participant_instance', array('id'), 'cascade');
+        $table->add_key(
+            'linked_review_content_id',
+            XMLDB_KEY_FOREIGN,
+            array('linked_review_content_id'),
+            'perform_element_linked_review_content',
+            array('id')
+        );
+        $table->add_key('child_element_id', XMLDB_KEY_FOREIGN, array('child_element_id'), 'perform_element', array('id'));
+        $table->add_key(
+            'participant_instance_id',
+            XMLDB_KEY_FOREIGN,
+            array('participant_instance_id'),
+            'perform_participant_instance',
+            array('id'),
+            'cascade'
+        );
 
         // Conditionally launch create table for perform_element_linked_review_content_responses.
         if (!$dbman->table_exists($table)) {

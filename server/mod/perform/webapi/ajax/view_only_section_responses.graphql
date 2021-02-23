@@ -49,5 +49,11 @@ fragment mod_perform_view_only_section_responses_element_data on mod_perform_ele
   element_plugin {
     participant_form_component
     participant_response_component
+    child_element_config {
+      supports_child_elements
+      supports_repeating_child_elements
+      repeating_item_identifier
+      child_element_responses_identifier
+    }
   }
 }

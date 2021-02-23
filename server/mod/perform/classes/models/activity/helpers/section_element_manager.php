@@ -161,7 +161,7 @@ class section_element_manager {
         if ($this->section_entity->deleted()) {
             throw new coding_exception('Section has been deleted, can not add section element');
         }
-        return builder::get_db()->transaction(function() use ($element, $after_section_element_id) {
+        return builder::get_db()->transaction(function () use ($element, $after_section_element_id) {
             $item_ordering = new item_ordering($this->get_section_elements()->all());
             $new_section_element_sort_order = $item_ordering->get_new_item_sort_order_after($after_section_element_id);
             $section_elements_to_reorder = $item_ordering->get_items_to_reorder($new_section_element_sort_order);
@@ -194,7 +194,7 @@ class section_element_manager {
             throw new coding_exception('Section has been deleted, can not add section element');
         }
 
-        builder::get_db()->transaction(function() use ($section_element_id, $after_section_element_id) {
+        builder::get_db()->transaction(function () use ($section_element_id, $after_section_element_id) {
             $item_ordering = new item_ordering($this->get_section_elements()->all());
             $section_elements_to_reorder = $item_ordering->move_item_after($section_element_id, $after_section_element_id);
             $this->move_section_elements($section_elements_to_reorder);
@@ -282,7 +282,10 @@ class section_element_manager {
                 // element, so we temporarily set the sort order to the negative of its final position.
                 $section_element_ids[] = $section_element->id;
             }
-            [$section_element_in_sql, $section_element_ids_params] = builder::get_db()->get_in_or_equal($section_element_ids, SQL_PARAMS_NAMED);
+            [$section_element_in_sql, $section_element_ids_params] = builder::get_db()->get_in_or_equal(
+                $section_element_ids,
+                SQL_PARAMS_NAMED
+            );
             $sql = "            
                 update {perform_section_element}
                 set sort_order = -sort_order

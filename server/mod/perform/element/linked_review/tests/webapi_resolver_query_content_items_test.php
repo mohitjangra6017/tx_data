@@ -187,7 +187,7 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
             ['relationship' => constants::RELATIONSHIP_EXTERNAL]
         );
 
-        [$external_participant_instance1] = $this->perform_generator->create_external_participant_instances(
+        [$external_participant_instance1] = $this->perform_generator->generate_external_participant_instances(
             $subject_instance1->id,
             [
                 'fullname' => 'External user',
@@ -200,7 +200,7 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
             ['relationship' => constants::RELATIONSHIP_EXTERNAL]
         );
 
-        [$external_participant_instance2] = $this->perform_generator->create_external_participant_instances(
+        [$external_participant_instance2] = $this->perform_generator->generate_external_participant_instances(
             $subject_instance2->id,
             [
                 'fullname' => 'Other External user',

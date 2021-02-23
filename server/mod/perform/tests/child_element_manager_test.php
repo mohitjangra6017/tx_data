@@ -24,6 +24,8 @@ require_once(__DIR__ . '/child_element_manager_testcase.php');
 
 use mod_perform\models\activity\element;
 use mod_perform\entity\activity\element as element_entity;
+use mod_perform\models\activity\element_plugin;
+use mod_perform\data_providers\activity\element_plugin as element_plugin_data_provider;
 
 /**
  * @group perform
@@ -98,6 +100,28 @@ class mod_perform_child_element_manager_testcase extends child_element_manager_t
         $this->assertEquals($test_data['children']['c']->title, $children[2]->title);
         $this->assertEquals($new_child_title, $children[3]->title);
         $this->assertEquals(4, $children[3]->sort_order);
+    }
+
+    public function test_create_grand_child_element() {
+        $test_data = $this->generate_data();
+        $elements_supporting_child_elements = array_filter(
+            (new element_plugin_data_provider())->fetch()->get(),
+            function($element_plugin) {
+                return $element_plugin->get_child_element_config()->supports_child_elements === true;
+            }
+        );
+        /** @var element_plugin $element_supporting_child_elements*/
+        $element_supporting_child_elements = reset($elements_supporting_child_elements);
+        $new_child_title = 'Child 1-A';
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("Can not create an element that supports child elements as well");
+        $test_data['parent']->get_child_element_manager()->create_child_element(
+            [
+                'title' => $new_child_title,
+            ],
+            $element_supporting_child_elements->get_plugin_name()
+        );
     }
 
     public function test_create_child_element_for_element_that_does_not_support_children() {

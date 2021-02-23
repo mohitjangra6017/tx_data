@@ -51,6 +51,7 @@ use mod_perform\models\activity\helpers\child_element_manager;
  * @property-read string element_$identifier
  * @property-read element_identifier $element_identifier
  * @property-read int|null $parent
+ * @property-read collection $children
  *
  * @package mod_perform\models\activity
  */
@@ -229,7 +230,7 @@ class element extends model {
      * @return void
      */
     public function delete(): void {
-        if ($this->element_plugin->supports_child_elements()) {
+        if ($this->element_plugin->get_child_element_config()->supports_child_elements) {
             foreach ($this->get_children() as $child_element) {
                 $child_element->delete();
             }

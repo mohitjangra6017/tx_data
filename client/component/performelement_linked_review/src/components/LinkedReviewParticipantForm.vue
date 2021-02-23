@@ -22,7 +22,7 @@
   <div v-else class="tui-linkedReviewParticipantForm">
     <!-- User selects what content they want to review -->
     <component
-      :is="getComponent(element.data.components.content_picker)"
+      :is="getPickerComponent(element)"
       v-if="
         selectedContent.items &&
           selectedContent.items.length === 0 &&
@@ -33,14 +33,13 @@
       :can-show-adder="canSelectContent"
       :core-relationship="element.data.selection_relationships_display"
       :participant-instance-id="participantInstanceId"
-      :preview-component="
-        getComponent(element.data.components.participant_content)
-      "
+      :preview-component="getContentComponent(element)"
       :required="element.is_required"
       :section-element-id="sectionElement.id"
       :settings="contentSettings"
       :user-id="userId"
       @update="refetch"
+      @unsaved-plugin-change="$emit('unsaved-plugin-change', $event)"
     />
 
     <template v-else>
@@ -62,7 +61,7 @@
       <div class="tui-linkedReviewParticipantForm__items">
         <!-- Iterate thought selected content -->
         <div
-          v-for="(item, itemIndex) in selectedContent.items"
+          v-for="item in selectedContent.items"
           :key="item.id"
           class="tui-linkedReviewParticipantForm__item"
         >
@@ -73,11 +72,10 @@
           >
             <div class="tui-linkedReviewParticipantForm__item-cardContent">
               <component
-                :is="getComponent(element.data.components.participant_content)"
+                :is="getContentComponent(element)"
                 :content="getContent(item.content)"
                 :created-at="item.created_at_date"
                 :from-print="fromPrint"
-                :settings="contentSettings"
               />
             </div>
             <div
@@ -89,8 +87,8 @@
           <!-- Display for each respondable question within the group -->
           <div class="tui-linkedReviewParticipantForm__questions">
             <div
-              v-for="(childElement, childElementIndex) in element.children"
-              :key="item.id + '-' + childElement.id"
+              v-for="childElement in element.children"
+              :key="childElement.id"
             >
               <ResponseHeader
                 v-if="childElement.title"
@@ -104,43 +102,37 @@
               />
 
               <div class="tui-linkedReviewParticipantForm__questions-content">
-                <FormScope
-                  :path="contentPath(itemIndex)"
-                  :process="contentResponsesProcessor(item)"
+                <ContentChildElementFormScope
+                  :content-item="item"
+                  :path="path"
+                  :section-element="sectionElement"
+                  :child-element="childElement"
                 >
-                  <ChildElementFormScope
-                    :key="childElementIndex"
+                  <!-- Load child component here -->
+                  <component
+                    :is="getFormComponent(childElement)"
+                    v-bind="$attrs"
                     :element="childElement"
-                    :child-element-index="childElementIndex"
-                  >
-                    <!-- Load child component here -->
-                    <component
-                      :is="
-                        getComponent(
-                          childElement.element_plugin.participant_form_component
-                        )
-                      "
-                      v-bind="$attrs"
-                      :element="childElement"
-                      :element-components="childElement.element_plugin"
-                      :from-print="fromPrint"
-                      :participant-instance-id="participantInstanceId"
-                      :path="'response_data'"
-                      :section-element="sectionElement"
-                      :active-section-is-closed="activeSectionIsClosed"
-                      :anonymous-responses="anonymousResponses"
-                      :error="error"
-                      :group-id="checkboxGroupId"
-                      :is-draft="isDraft"
-                      :is-external-participant="isExternalParticipant"
-                      :participant-can-answer="participantCanAnswer"
-                      :subject-instance-id="subjectInstanceId"
-                      :show-other-response="showOtherResponse"
-                      :view-only="viewOnlyReportMode"
-                      :token="token"
-                    />
-                  </ChildElementFormScope>
-                </FormScope>
+                    :element-components="childElement.element_plugin"
+                    :participant-instance-id="participantInstanceId"
+                    :from-print="fromPrint"
+                    :path="'response_data'"
+                    :section-element="
+                      sectionElementWithResponseGroups(item.id, childElement)
+                    "
+                    :active-section-is-closed="activeSectionIsClosed"
+                    :anonymous-responses="anonymousResponses"
+                    :error="error"
+                    :group-id="checkboxGroupId"
+                    :is-draft="isDraft"
+                    :is-external-participant="isExternalParticipant"
+                    :participant-can-answer="participantCanAnswer"
+                    :subject-instance-id="subjectInstanceId"
+                    :show-other-response="showOtherResponse"
+                    :view-only="viewOnlyReportMode"
+                    :token="token"
+                  />
+                </ContentChildElementFormScope>
               </div>
             </div>
           </div>
@@ -152,18 +144,16 @@
 
 <script>
 import Card from 'tui/components/card/Card';
-import ChildElementFormScope from 'mod_perform/components/element/ChildElementFormScope';
-import FormScope from 'tui/components/reform/FormScope';
 import Loader from 'tui/components/loading/Loader';
 import ResponseHeader from 'mod_perform/components/element/ElementParticipantResponseHeader';
 import selectedContentItemsQuery from 'performelement_linked_review/graphql/content_items';
 import selectedContentItemsQueryExternal from 'performelement_linked_review/graphql/content_items_nosession';
+import ContentChildElementFormScope from 'performelement_linked_review/components/ContentChildElementFormScope';
 
 export default {
   components: {
     Card,
-    ChildElementFormScope,
-    FormScope,
+    ContentChildElementFormScope,
     Loader,
     ResponseHeader,
   },
@@ -226,50 +216,197 @@ export default {
 
   methods: {
     /**
-     * Generates content path.
+     * Get dynamic component
      *
-     * @param itemIndex index of item.
+     * @param {Object} element
+     * @return {function}
      */
-    contentPath(itemIndex) {
-      let contentPath = [];
-
-      if (this.path instanceof String) {
-        contentPath.push(this.path);
-      }
-
-      if (this.path instanceof Array) {
-        this.path.forEach(pathItem => contentPath.push(pathItem));
-      }
-      contentPath.push('response', itemIndex);
-
-      return contentPath;
-    },
-
-    /**
-     * Parses the content responses.
-     */
-    contentResponsesProcessor(item) {
-      const contentItem = item;
-
-      return value => {
-        // remove later.
-        if (!contentItem) {
-          return value;
-        }
-        value.content_id = 'content id at index';
-
-        return value;
-      };
+    getContentComponent(element) {
+      return tui.asyncComponent(element.data.components.participant_content);
     },
 
     /**
      * Get dynamic component
      *
-     * @param {String} componentPath Vue component path
+     * @param {Object} element
      * @return {function}
      */
-    getComponent(componentPath) {
-      return tui.asyncComponent(componentPath);
+    getFormComponent(element) {
+      return tui.asyncComponent(
+        element.element_plugin.participant_form_component
+      );
+    },
+
+    /**
+     * Get dynamic component
+     *
+     * @param {Object} element
+     * @return {function}
+     */
+    getPickerComponent(element) {
+      return tui.asyncComponent(element.data.components.content_picker);
+    },
+
+    /**
+     * Selects the right child element to the sectionElement object.
+     * Selects the response_data, response_data_raw & response_data_formatted_lines values for the
+     * specified content child element.
+     *
+     * @param {Number} contentItemId
+     * @param {Object} childElement
+     * @return {Object}
+     */
+    sectionElementWithResponseGroups(contentItemId, childElement) {
+      return Object.assign({}, this.sectionElement, {
+        element: childElement,
+        response_data: this.childElementResponseData(
+          contentItemId,
+          childElement.id
+        ),
+        response_data_raw: this.childElementResponseDataRaw(
+          contentItemId,
+          childElement.id
+        ),
+        response_data_formatted_lines: this.childElementResponseDataFormattedLines(
+          contentItemId,
+          childElement.id
+        ),
+        other_responder_groups: this.childElementOtherResponderGroups(
+          contentItemId,
+          childElement.id
+        ),
+      });
+    },
+
+    /**
+     * Get the child element response data specific to the content item id.
+     *
+     * @param {Number} contentItemId
+     * @param {Number} childElementId
+     */
+    childElementResponseData(contentItemId, childElementId) {
+      if (!this.sectionElement.response_data) {
+        return null;
+      }
+
+      return this.getContentChildElementValue(
+        this.sectionElement.response_data,
+        contentItemId,
+        childElementId
+      );
+    },
+
+    /**
+     * Get the child element raw response data specific to the content item id.
+     *
+     * @param {Number} contentItemId
+     * @param {Number} childElementId
+     */
+    childElementResponseDataRaw(contentItemId, childElementId) {
+      if (!this.sectionElement.response_data_raw) {
+        return null;
+      }
+
+      return this.getContentChildElementValue(
+        this.sectionElement.response_data_raw,
+        contentItemId,
+        childElementId
+      );
+    },
+
+    /**
+     * Get the child element response data formatted lines specific to the content item id.
+     *
+     * @param {Number} contentItemId
+     * @param {Number} childElementId
+     * @return Array
+     */
+    childElementResponseDataFormattedLines(contentItemId, childElementId) {
+      if (this.sectionElement.response_data_formatted_lines.length < 1) {
+        return [];
+      }
+      let formattedLines = JSON.parse(
+        this.sectionElement.response_data_formatted_lines[0]
+      );
+
+      return this.getContentChildElementValue(
+        formattedLines,
+        contentItemId,
+        childElementId
+      );
+    },
+
+    /**
+     * Get the child element other responder groups specific to the content item id.
+     *
+     * @param {Number} contentItemId
+     * @param {Number} childElementId
+     * @return Array
+     */
+    childElementOtherResponderGroups(contentItemId, childElementId) {
+      return this.sectionElement.other_responder_groups.map(responseGroup => {
+        let contentChildElementResponses = responseGroup.responses.map(
+          participantResponse => {
+            let responseData = null;
+            if (participantResponse.response_data !== null) {
+              responseData = this.getContentChildElementValue(
+                JSON.parse(participantResponse.response_data),
+                contentItemId,
+                childElementId
+              );
+            }
+
+            let formattedLines = [];
+            if (participantResponse.response_data_formatted_lines.length > 0) {
+              let responseDataFormattedLines = JSON.parse(
+                participantResponse.response_data_formatted_lines[0]
+              );
+
+              formattedLines = this.getContentChildElementValue(
+                responseDataFormattedLines,
+                contentItemId,
+                childElementId
+              );
+            }
+
+            return Object.assign({}, participantResponse, {
+              response_data: responseData,
+              response_data_formatted_lines: formattedLines,
+            });
+          }
+        );
+
+        return Object.assign({}, responseGroup, {
+          responses: contentChildElementResponses,
+        });
+      });
+    },
+
+    /**
+     * Get the content's child element value from the response object.
+     *
+     * @param {Object} response
+     * @param {Number} contentItemId
+     * @param {Number} childElementId
+     *
+     * @return Object|String|Array
+     */
+    getContentChildElementValue(response, contentItemId, childElementId) {
+      let repeatingItemIdentifier = this.sectionElement.element.element_plugin
+        .child_element_config.repeating_item_identifier;
+      let childElementResponsesIdentifier = this.sectionElement.element
+        .element_plugin.child_element_config.child_element_responses_identifier;
+
+      let childElementResponse =
+        response[repeatingItemIdentifier][contentItemId][
+          childElementResponsesIdentifier
+        ][childElementId];
+
+      if (!childElementResponse || !childElementResponse.response_data) {
+        return null;
+      }
+
+      return childElementResponse.response_data;
     },
 
     /**

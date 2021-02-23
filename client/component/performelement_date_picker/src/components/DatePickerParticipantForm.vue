@@ -24,14 +24,13 @@
     :is-draft="isDraft"
   >
     <template v-slot:content="{ labelId }">
-      <FormScope :path="path" :process="process">
+      <FormScope :path="path" :process="process" :validate="validate">
         <FieldGroup :aria-labelledby="labelId">
           <FormDateSelector
             name="response"
             :years-midrange="midrangeYear"
             :years-before-midrange="midrangeYearBefore"
             :years-after-midrange="midrangeYearAfter"
-            :validations="validations"
           />
         </FieldGroup>
       </FormScope>
@@ -43,7 +42,7 @@
 import ElementParticipantFormContent from 'mod_perform/components/element/ElementParticipantFormContent';
 import { FormDateSelector, FormScope } from 'tui/components/uniform';
 import FieldGroup from 'tui/components/form/FieldGroup';
-import { v as validation } from 'tui/validation';
+import { getValuesFromIso, isExists } from 'tui/date';
 
 export default {
   components: {
@@ -70,43 +69,56 @@ export default {
     };
   },
 
-  computed: {
+  methods: {
     /**
      * An array of validation rules for the element.
      * The rules returned depend on if we are saving as draft or if a response is required or not.
      *
-     * @return {(function|object)[]}
+     * @param {Object|null|undefined} values
+     * @return {object}
      */
-    validations() {
-      const rules = [validation.date(), this.fullDateRequired];
+    validate(values) {
+      // Date element has been interacted with
+      if (
+        values &&
+        Object.prototype.hasOwnProperty.call(values, 'response') &&
+        values.response !== null
+      ) {
+        let dateCheck = this.validDate(values.response);
 
-      if (this.isDraft) {
-        return rules;
+        if (typeof values.response === 'undefined' || !dateCheck) {
+          return {
+            response: this.$str(
+              'error_invalid_date',
+              'performelement_date_picker'
+            ),
+          };
+        }
       }
 
-      if (this.element && this.element.is_required) {
-        // Required will also fail for haf filled in dates,
-        // so we put it at the end so 'fullDateRequired' can be triggered first.
-        return [...rules, validation.required()];
+      if (
+        !this.isDraft &&
+        this.element.is_required &&
+        (!values || !values.response)
+      ) {
+        return { response: this.$str('required', 'core') };
       }
-
-      return rules;
     },
-  },
 
-  methods: {
     /**
-     * Validation method, that requires the entire date to be filled in.
+     * Validates the date iso value.
      *
-     * @param value
-     * @return {string}
+     * @param {Object} value
+     * @return {Boolean}
      */
-    fullDateRequired(value) {
-      // Specifically we must test for undefined, null means not filled at all.
-      if (typeof value === 'undefined') {
-        return this.$str('error_invalid_date', 'performelement_date_picker');
+    validDate(value) {
+      if (!value) {
+        return false;
       }
+      const date = getValuesFromIso(value.iso);
+      return isExists(date.year, date.month, date.day);
     },
+
     /**
      * Process the form values.
      *
@@ -126,6 +138,9 @@ export default {
 
 <lang-strings>
   {
+    "core": [
+      "required"
+    ],
     "performelement_date_picker": [
         "error_invalid_date"
     ]

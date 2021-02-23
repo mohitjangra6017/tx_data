@@ -171,7 +171,7 @@
                     :anonymous-responses="activity.anonymous_responses"
                     :core-relationship-id="coreRelationshipId"
                     :element="sectionElement.element"
-                    :element-components="sectionElement.element.type"
+                    :element-components="sectionElement.element.element_plugin"
                     :error="errors && errors[sectionElement.id]"
                     :group-id="checkboxGroupId"
                     :is-draft="isDraft"
@@ -185,6 +185,7 @@
                     :view-only="viewOnlyReportMode"
                     :subject-user="subjectUser"
                     :token="token"
+                    @unsaved-plugin-change="unsavedPluginChange"
                   />
                 </div>
               </div>
@@ -282,6 +283,7 @@
 <script>
 // Util
 import { formatParams, getQueryStringParam, uniqueId } from 'tui/util';
+import { generateInitialValue } from 'mod_perform/initial_value_processor';
 import { RELATIONSHIP_SUBJECT } from 'mod_perform/constants';
 import { redirectWithPost } from 'mod_perform/redirect';
 import { notify } from 'tui/notifications';
@@ -464,6 +466,7 @@ export default {
       selectedSectionId: this.selectedSectionId || null,
       isDraft: false,
       checkboxGroupId: this.$id('label'),
+      unsavedPluginChanges: [],
     };
   },
   computed: {
@@ -753,14 +756,12 @@ export default {
 
         this.sectionElements = result.section_element_responses.map(item => {
           let childElements = item.element.children.map(child => {
-            return {
-              data: JSON.parse(child.data),
-              element_plugin: child.element_plugin,
-              id: child.id,
-              is_required: child.is_required,
-              is_respondable: child.is_respondable,
-              title: child.title,
-            };
+            return Object.assign(
+              {
+                participantSectionId: result.id ? result.id : null,
+              },
+              this.getElementDetails(child)
+            );
           });
 
           return {
@@ -769,17 +770,13 @@ export default {
             formComponent: tui.asyncComponent(
               item.element.element_plugin.participant_form_component
             ),
-            element: {
-              type: item.element.element_plugin,
-              title: item.element.title,
-              identifier: item.element.identifier,
-              data: JSON.parse(item.element.data),
-              is_required: item.element.is_required,
-              children: childElements,
-              parent_element: item.element.parent_element,
-              participantSectionId: result.id ? result.id : null,
-              responseData: null,
-            },
+            element: Object.assign(
+              {
+                children: childElements,
+                participantSectionId: result.id ? result.id : null,
+              },
+              this.getElementDetails(item.element)
+            ),
             sort_order: item.sort_order,
             is_respondable: item.element.is_respondable,
             // We need to handle the absence of response data in the view-only report mode
@@ -803,9 +800,12 @@ export default {
         result.section_element_responses
           .filter(item => item.element.is_respondable)
           .forEach(item => {
-            this.initialValues.sectionElements[item.section_element_id] = {
-              response: JSON.parse(item.response_data_raw),
-            };
+            this.initialValues.sectionElements[
+              item.section_element_id
+            ] = generateInitialValue(
+              item.element,
+              JSON.parse(item.response_data_raw)
+            );
 
             this.hasOtherResponse = item.other_responder_groups.length > 0;
             item.other_responder_groups.forEach(group => {
@@ -831,6 +831,23 @@ export default {
       return groupClone;
     },
 
+    /**
+     * Get element details from object.
+     *
+     * @param {Object} element
+     * @return Object
+     */
+    getElementDetails(element) {
+      return {
+        data: JSON.parse(element.data),
+        id: element.id,
+        is_required: element.is_required,
+        is_respondable: element.is_respondable,
+        title: element.title,
+        element_plugin: element.element_plugin,
+        identifier: element.identifier,
+      };
+    },
     /**
      * Show a generic saving error toast.
      */
@@ -869,6 +886,7 @@ export default {
       } else {
         this.submit(this.formValues);
         this.hasUnsavedChanges = false;
+        this.unsavedPluginChanges = [];
       }
     },
 
@@ -879,6 +897,7 @@ export default {
       this.submit(this.formValues);
       this.modalOpen = false;
       this.hasUnsavedChanges = false;
+      this.unsavedPluginChanges = [];
     },
 
     /**
@@ -1119,7 +1138,10 @@ export default {
      * Check for unsaved changes before nav change.
      */
     checkForUnsavedChanges() {
-      if (this.viewOnlyReportMode || !this.hasUnsavedChanges) {
+      if (
+        this.viewOnlyReportMode ||
+        (!this.hasUnsavedChanges && !this.unsavedPluginChanges.length)
+      ) {
         return true;
       }
 
@@ -1132,7 +1154,25 @@ export default {
       }
 
       this.hasUnsavedChanges = false;
+      this.unsavedPluginChanges = [];
       return true;
+    },
+
+    /**
+     * Track unsaved changes in sub plugins
+     */
+    unsavedPluginChange(data) {
+      // add plugin keys with changes
+      if (data.hasChanges) {
+        if (!this.unsavedPluginChanges.includes(data.key)) {
+          this.unsavedPluginChanges.push(data.key);
+        }
+      } else {
+        // Remove plugin keys without changes
+        this.unsavedPluginChanges = this.unsavedPluginChanges.filter(
+          t => t !== data.key
+        );
+      }
     },
 
     /**
@@ -1197,7 +1237,7 @@ export default {
      * @returns {String|void}
      */
     unloadHandler(e) {
-      if (!this.hasUnsavedChanges) {
+      if (!this.hasUnsavedChanges && !this.unsavedPluginChanges.length) {
         return;
       }
 

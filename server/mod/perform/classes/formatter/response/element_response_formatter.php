@@ -24,9 +24,6 @@
 namespace mod_perform\formatter\response;
 
 use core\webapi\formatter\field\base;
-use mod_perform\models\activity\element;
-use mod_perform\models\activity\element_plugin;
-use mod_perform\models\response\section_element_response;
 
 /**
  * Generic element response formatter.
@@ -39,81 +36,15 @@ use mod_perform\models\response\section_element_response;
  */
 class element_response_formatter extends base {
 
-    /**
-     * @var int|null
-     */
-    private $response_id;
+    use response_formatter_trait;
 
     /**
-     * Create a formatter instance for the specific element and format.
-     *
-     * @param element $element_model
-     * @param string|null $format
-     * @return static
+     * @var string
      */
-    public static function get_instance(element $element_model, ?string $format): self {
-        $classname = static::for_element($element_model);
-        return new $classname($format, $element_model->get_context());
-    }
+    private static $default_formatter_class = __CLASS__;
 
     /**
-     * Returns the specified element's response formatter classname.
-     *
-     * @param element $element_model the element for which to get a response
-     *        formatter.
-     *
-     * @return string the response formatter classname. Note this could be the
-     *         generic formatter classname if the element does not have a
-     *         response formatter.
+     * @var string
      */
-    public static function for_element(element $element_model) {
-        return self::for_plugin($element_model->get_element_plugin());
-    }
-
-    /**
-     * Returns the specified element plugin's response formatter classname.
-     *
-     * @param element_plugin $element_plugin plugin for which to get a response
-     *        formatter.
-     *
-     * @return string the response formatter classname. Note this could be the
-     *         generic formatter classname if the element plugin does not have a
-     *         response formatter.
-     */
-    public static function for_plugin(element_plugin $element_plugin) {
-        $plugin_name = $element_plugin->get_plugin_name();
-        $formatter_class = "performelement_{$plugin_name}\\formatter\\response_formatter";
-
-        // If the plugin does not implement it's own formatter use a blank one
-        if (!class_exists($formatter_class)) {
-            $formatter_class = __CLASS__;
-        } else if (!is_subclass_of($formatter_class, base::class)) {
-            throw new \coding_exception('The response formatter must extend the base field formatter class');
-        }
-
-        return $formatter_class;
-    }
-
-    /**
-     * Set the ID of the response for use in the formatter.
-     * This is particularly useful when using file related functions.
-     *
-     * @param int $response_id
-     * @return $this
-     */
-    final public function set_response_id(int $response_id): self {
-        $this->response_id = $response_id;
-        return $this;
-    }
-
-    /**
-     * Get the ID of the actual response record.
-     * This is particularly useful when using file related functions.
-     *
-     * @return int|null Returns the response ID, or null if there is no record yet.
-     */
-    final public function get_response_id(): ?int {
-        return $this->response_id;
-    }
-
+    private static $formatter_class_name = 'response_formatter';
 }

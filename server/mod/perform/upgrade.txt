@@ -96,3 +96,4 @@ information provided here is intended especially for developers.
     * New input mod_perform_activities_input has a sort_by field that can be used to change the order of activities.
 * Deprecated mod_perform\data_providers\activity\activity::DEFAULT_SORTING use mod_perform\data_providers\activity\activity::SORT_BY_CREATION_DATE instead.
 * Abstract method \mod_perform\models\activity\element_plugin::validate_element() now has 'void' as return type. All child classes should be matched with the method signature
+* respondable_element_plugin::post_response_submission() has been deprecated, please use the \mod_perform\hook\post_element_response_submission hook instead.

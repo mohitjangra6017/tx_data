@@ -21,18 +21,14 @@
  * @package performelement_long_text
  */
 
-use container_perform\perform;
 use core\collection;
-use core\entity\user;
 use core\json_editor\helper\document_helper;
 use mod_perform\constants;
 use mod_perform\models\activity\element;
-use mod_perform\models\activity\element_plugin;
 use mod_perform\models\activity\section_element;
 use mod_perform\models\response\participant_section;
 use mod_perform\models\response\section_element_response;
 use performelement_long_text\long_text;
-use performelement_static_content\static_content;
 use totara_core\relationship\relationship;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
@@ -76,7 +72,7 @@ class performelement_long_text_draft_files_testcase extends mod_perform_weka_tes
         self::setUser($user);
 
         // Get a draft ID from the mutation
-        $draft_id = $this->resolve_graphql_mutation('performelement_long_text_prepare_draft_area', [
+        $draft_id = $this->resolve_graphql_query('performelement_long_text_get_draft_id', [
             'section_element_id' => $section_element->id,
             'participant_instance_id' => $participant_section->participant_instance_id,
         ]);

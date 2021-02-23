@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of Totara Learn
  *
  * Copyright (C) 2020 onwards Totara Learning Solutions LTD
@@ -25,7 +25,6 @@ namespace mod_perform\formatter\response;
 
 use core\format;
 use core\orm\formatter\entity_model_formatter;
-use core\webapi\formatter\field\string_field_formatter;
 use mod_perform\models\response\section_element_response as section_element_response_model;
 
 /**
@@ -43,36 +42,23 @@ class section_element_response extends entity_model_formatter {
             'sort_order' => null,
             'response_data' => function ($value, $format) {
                 $formatter = element_response_formatter::get_instance($this->object->element, $format);
+
                 if ($this->object->exists()) {
                     $formatter->set_response_id($this->object->id);
                 }
+                $formatter->set_element($this->object->element);
+
                 return $formatter->format($value);
             },
             'response_data_formatted_lines' => function ($value, $format) {
-                $formatter = element_response_formatter::get_instance($this->object->element, $format);
+                $formatter = element_response_lines_formatter::get_instance($this->object->element, $format ?? format::FORMAT_PLAIN);
+
                 if ($this->object->exists()) {
                     $formatter->set_response_id($this->object->id);
                 }
+                $formatter->set_element($this->object->element);
 
-                if (is_array($value) && (count($value) > 1 || empty($value))) {
-                    return $value;
-                }
-                $value = reset($value);
-
-
-                if (empty($value)) {
-                    if (is_null($value)) {
-                        return [];
-                    }
-
-                    return [$value];
-                }
-                $value = $formatter->format($value);
-                $value = is_null($value)
-                    ? ''
-                    : $value;
-
-                return [$value] ?? [];
+                return $formatter->format($value);
             },
             'participant_instance' => null,
             'other_responder_groups' => null,

@@ -201,7 +201,7 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
             ['id'],
             [
                 'linked_review_content_id',
-                'element_id',
+                'child_element_id',
                 'participant_instance_id',
                 'response_data',
                 'created_at',

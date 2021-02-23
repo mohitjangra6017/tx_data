@@ -36,13 +36,11 @@ use mod_perform\entity\activity\subject_instance;
  *
  * Properties:
  * @property int $section_element_id
- * @property int $participant_instance_id
  * @property int $subject_instance_id
  * @property int $selector_id
  * @property string $content_type
  * @property int $content_id
  * @property int $created_at
- * @property-read participant_instance $participant_instance
  * @property-read user $selector
  * @property-read subject_instance $subject_instance
  * @property-read section_element $section_element
@@ -55,15 +53,6 @@ class linked_review_content extends entity {
     public const TABLE = 'perform_element_linked_review_content';
 
     public const CREATED_TIMESTAMP = 'created_at';
-
-    /**
-     * Participant instance that selected the content.
-     *
-     * @return belongs_to
-     */
-    public function participant_instance(): belongs_to {
-        return $this->belongs_to(participant_instance::class, 'participant_instance_id');
-    }
 
     /**
      * Subject instance that the content belongs to.

@@ -86,5 +86,11 @@ fragment mod_perform_participant_section_element_data on mod_perform_element {
   element_plugin {
     participant_form_component
     participant_response_component
+    child_element_config {
+      supports_child_elements
+      supports_repeating_child_elements
+      repeating_item_identifier
+      child_element_responses_identifier
+    }
   }
 }

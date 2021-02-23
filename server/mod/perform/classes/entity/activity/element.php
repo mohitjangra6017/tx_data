@@ -29,7 +29,7 @@ use core\orm\entity\relations\belongs_to;
 use core\orm\entity\relations\has_many;
 
 /**
- * Section element entity
+ * Element entity
  *
  * Properties:
  * @property-read int $id ID

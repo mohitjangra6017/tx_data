@@ -39,7 +39,7 @@ require_once($CFG->dirroot . '/mod/perform/tests/weka_testcase.php');
  */
 class performelement_long_text_webapi_resolver_mutation_prepare_draft_area_testcase extends mod_perform_weka_testcase {
 
-    private const MUTATION = 'performelement_prepare_draft_area';
+    private const MUTATION = 'performelement_long_text_prepare_draft_area';
 
     use webapi_phpunit_helper;
 
@@ -47,10 +47,11 @@ class performelement_long_text_webapi_resolver_mutation_prepare_draft_area_testc
         [$participant_user, $participant_instance_id, $section_element_id] = $this->create_data();
         self::setUser($participant_user);
 
-        $result = $this->resolve_graphql_mutation('performelement_long_text_prepare_draft_area', [
+        $result = $this->resolve_graphql_mutation(self::MUTATION, [
             'section_element_id' => $section_element_id,
             'participant_instance_id' => $participant_instance_id,
         ]);
+        $this->assertDebuggingCalled('The performelement_long_text_prepare_draft_area mutation has been deprecated, please use the performelement_long_text_get_draft_id query instead', DEBUG_DEVELOPER);
         $this->assertNotNull($result);
         $this->assertGreaterThan(1, $result);
     }
@@ -61,10 +62,11 @@ class performelement_long_text_webapi_resolver_mutation_prepare_draft_area_testc
 
         $this->expectException(require_login_exception::class);
 
-        $this->resolve_graphql_mutation('performelement_long_text_prepare_draft_area', [
+        $this->resolve_graphql_mutation(self::MUTATION, [
             'section_element_id' => $section_element_id,
             'participant_instance_id' => $participant_instance_id,
         ]);
+        $this->assertDebuggingCalled('The performelement_long_text_prepare_draft_area mutation has been deprecated, please use the performelement_long_text_get_draft_id query instead', DEBUG_DEVELOPER);
     }
 
     public function test_ajax_mutation_fails_when_feature_disabled(): void {
@@ -74,10 +76,11 @@ class performelement_long_text_webapi_resolver_mutation_prepare_draft_area_testc
         advanced_feature::disable('performance_activities');
         $this->expectException(feature_not_available_exception::class);
 
-        $this->resolve_graphql_mutation('performelement_long_text_prepare_draft_area', [
+        $this->resolve_graphql_mutation(self::MUTATION, [
             'section_element_id' => $section_element_id,
             'participant_instance_id' => $participant_instance_id,
         ]);
+        $this->assertDebuggingCalled('The performelement_long_text_prepare_draft_area mutation has been deprecated, please use the performelement_long_text_get_draft_id query instead', DEBUG_DEVELOPER);
     }
 
     public function test_ajax_mutation_fails_when_ids_are_invalid(): void {
@@ -85,10 +88,11 @@ class performelement_long_text_webapi_resolver_mutation_prepare_draft_area_testc
         $this->expectException(moodle_exception::class);
         $this->expectExceptionMessage('Invalid activity');
 
-        $this->resolve_graphql_mutation('performelement_long_text_prepare_draft_area', [
+        $this->resolve_graphql_mutation(self::MUTATION, [
             'section_element_id' => -1,
             'participant_instance_id' => -1,
         ]);
+        $this->assertDebuggingCalled('The performelement_long_text_prepare_draft_area mutation has been deprecated, please use the performelement_long_text_get_draft_id query instead', DEBUG_DEVELOPER);
     }
 
     private function create_data(): array {

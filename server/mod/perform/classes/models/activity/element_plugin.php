@@ -23,7 +23,10 @@
 
 namespace mod_perform\models\activity;
 
+use coding_exception;
+use core_component;
 use mod_perform\entity\activity\element as element_entity;
+use mod_perform\models\activity\helpers\child_element_config;
 use mod_perform\models\activity\helpers\element_clone_helper;
 use mod_perform\models\response\section_element_response;
 
@@ -55,7 +58,7 @@ abstract class element_plugin {
     final public static function load_by_plugin(string $plugin_name): self {
         $plugin_class = "performelement_{$plugin_name}\\{$plugin_name}";
         if (!is_subclass_of($plugin_class, self::class)) {
-            throw new \coding_exception('Tried to load an unknown element plugin: ' . $plugin_class);
+            throw new coding_exception('Tried to load an unknown element plugin: ' . $plugin_class);
         }
         return new $plugin_class();
     }
@@ -68,10 +71,10 @@ abstract class element_plugin {
      * @param bool $get_respondable
      * @param bool $get_non_respondable
      * @return element_plugin[]
-     * @throws \coding_exception
+     * @throws coding_exception
      */
     final public static function get_element_plugins(bool $get_respondable = true, bool $get_non_respondable = true): array {
-        $elements = \core_component::get_plugin_list('performelement');
+        $elements = core_component::get_plugin_list('performelement');
 
         $out = [];
         foreach ($elements as $plugin_name => $plugin_path) {
@@ -350,11 +353,33 @@ abstract class element_plugin {
     abstract public function get_sortorder(): int;
 
     /**
-     * If element supports child elements.
+     * Builds the response data.
      *
-     * @return bool
+     * @param section_element_response $section_element_response
+     *
+     * @return string|null
      */
-    public function supports_child_elements(): bool {
-        return false;
+    public function build_response_data(section_element_response $section_element_response): ?string {
+        return $section_element_response->raw_response_data;
+    }
+
+    /**
+     * Builds the response data formatted lines.
+     *
+     * @param section_element_response $section_element_response
+     *
+     * @return string|null
+     */
+    public function build_response_data_formatted_lines(section_element_response $section_element_response): ?string {
+        return $section_element_response->raw_response_data;
+    }
+
+    /**
+     * Child element configuration.
+     *
+     * @return child_element_config
+     */
+    public function get_child_element_config(): child_element_config {
+        return new child_element_config();
     }
 }

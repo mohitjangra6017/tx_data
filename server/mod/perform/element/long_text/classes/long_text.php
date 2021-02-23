@@ -24,6 +24,7 @@
 
 namespace performelement_long_text;
 
+use context_user;
 use core\collection;
 use core\json_editor\formatter\default_formatter;
 use core\json_editor\helper\document_helper;
@@ -127,20 +128,28 @@ class long_text extends respondable_element_plugin implements element_response_h
     }
 
     /**
+     * Processes a long text element response and returns the processed response.
+     *
      * Check if the user uploaded files, and if so save them to permanent storage for the specified response.
      *
-     * @param section_element_response $element_response
+     * @param int $element_response_id
+     * @param element $element
+     * @param string|null $response_data
+     *
+     * @return string|null
      */
-    public function post_response_submission(section_element_response $element_response): void {
+    public static function process_weka_response(int $element_response_id, element $element, ?string $response_data): ?string {
         global $CFG, $TEXTAREA_OPTIONS, $USER;
+
         require_once($CFG->dirroot . '/lib/filelib.php');
         require_once($CFG->dirroot . '/lib/formslib.php');
 
-        $data = json_decode($element_response->response_data, true);
+        $context_id = $element->context_id;
+        $data = json_decode($response_data, true);
         $draft_id = $data['draft_id'] ?? null;
 
         $weka_content = null;
-        $response =  null;
+        $response = null;
         if (isset($data['weka'])) {
             $response = document_helper::json_encode_document($data['weka']);
             $weka_content = $response;
@@ -150,7 +159,7 @@ class long_text extends respondable_element_plugin implements element_response_h
                 $weka_content = file_rewrite_pluginfile_urls(
                     $response,
                     'draftfile.php',
-                    \context_user::instance($USER->id)->id,
+                    context_user::instance($USER->id)->id,
                     'user',
                     'draft',
                     $draft_id
@@ -159,23 +168,28 @@ class long_text extends respondable_element_plugin implements element_response_h
         }
 
         if (!$weka_content || self::is_weka_response_empty($weka_content)) {
-            $element_response->set_empty_response();
-            return;
-        }
-
-        if (!empty($draft_id)) {
+            $response = null;
+        } else if (!empty($draft_id)) {
             $response = file_save_draft_area_files(
                 $draft_id,
-                $element_response->get_element()->context_id,
+                $context_id,
                 self::get_response_files_component_name(),
                 self::get_response_files_filearea_name(),
-                $element_response->get_id(),
+                $element_response_id,
                 $TEXTAREA_OPTIONS,
                 $response
             );
         }
+        return $response;
+    }
 
-        $element_response->set_response_data($response);
+    /**
+     * @param section_element_response $section_element_response
+     *
+     * @deprecated since Totara 14
+     */
+    public function post_response_submission(section_element_response $section_element_response): void {
+        parent::post_response_submission($section_element_response);
     }
 
     /**

@@ -26,6 +26,7 @@ namespace mod_perform\models\activity;
 use coding_exception;
 use core\collection;
 use mod_perform\entity\activity\element as element_entity;
+use mod_perform\hook\post_element_response_submission;
 use mod_perform\models\activity\helpers\element_response_has_files;
 use mod_perform\models\response\element_validation_error;
 use mod_perform\models\response\section_element_response;
@@ -121,12 +122,24 @@ abstract class respondable_element_plugin extends element_plugin {
     }
 
     /**
-     * Do any required actions after the response has been submitted and saved.
+     * @param section_element_response $section_element_response
      *
-     * @param section_element_response $element_response
+     * @deprecated since Totara 14
      */
-    public function post_response_submission(section_element_response $element_response): void {
-        // Can be overridden if necessary.
+    public function post_response_submission(section_element_response $section_element_response): void {
+        debugging(
+            'post_response_submission is deprecated and should no longer be used. ' .
+            'It has been replaced with a hook (see \mod_perform\hook\post_element_response_submission).',
+            DEBUG_DEVELOPER
+        );
+        $hook = new post_element_response_submission(
+            $section_element_response->id,
+            $section_element_response->element,
+            $section_element_response->participant_instance,
+            $section_element_response->raw_response_data
+        );
+        $hook->execute();
+        $section_element_response->set_response_data($hook->get_response_data());
     }
 
     /**

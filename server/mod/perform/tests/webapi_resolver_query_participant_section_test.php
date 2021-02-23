@@ -113,7 +113,7 @@ class mod_perform_webapi_resolver_query_participant_section_testcase extends adv
         $respondable_element_response = $section_element_responses[0];
         self::assertEquals('"alert(1)bold"', $respondable_element_response['response_data']);
         self::assertEquals('"<script>alert(1)<\/script><b>bold<\/b>"', $respondable_element_response['response_data_raw']);
-        self::assertEquals('"alert(1)bold"', $respondable_element_response['response_data_formatted_lines'][0]);
+        self::assertEquals('alert(1)bold', $respondable_element_response['response_data_formatted_lines'][0]);
     }
 
     public function test_failed_ajax_query(): void {
@@ -308,6 +308,12 @@ class mod_perform_webapi_resolver_query_participant_section_testcase extends adv
                                 'performelement_short_text/components/ShortTextParticipantForm',
                             'participant_response_component' =>
                                 'mod_perform/components/element/participant_form/ResponseDisplay',
+                            'child_element_config' => [
+                                'supports_child_elements' => false,
+                                'supports_repeating_child_elements' => false,
+                                'repeating_item_identifier' => null,
+                                'child_element_responses_identifier' => null,
+                            ],
                         ],
                     'title' => 'test element title',
                     'data' => null,
@@ -336,6 +342,12 @@ class mod_perform_webapi_resolver_query_participant_section_testcase extends adv
                             'participant_form_component' =>
                                 'performelement_static_content/components/StaticContentParticipantForm',
                             'participant_response_component' => null,
+                            'child_element_config' => [
+                                'supports_child_elements' => false,
+                                'supports_repeating_child_elements' => false,
+                                'repeating_item_identifier' => null,
+                                'child_element_responses_identifier' => null,
+                            ],
                         ],
                     'title' => 'test element title',
                     'data' => null,

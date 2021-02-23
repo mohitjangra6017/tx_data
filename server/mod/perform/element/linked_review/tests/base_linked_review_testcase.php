@@ -22,6 +22,7 @@
  */
 
 use core\orm\query\builder;
+use core_phpunit\testcase;
 use mod_perform\constants;
 use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\subject_instance;
@@ -41,7 +42,7 @@ use totara_core\relationship\relationship;
  * @group perform
  * @group perform_element
  */
-abstract class performelement_linked_review_base_linked_review_testcase extends advanced_testcase {
+abstract class performelement_linked_review_base_linked_review_testcase extends testcase {
 
     /**
      * @var perform_generator $perform_generator
@@ -68,11 +69,13 @@ abstract class performelement_linked_review_base_linked_review_testcase extends 
         self::setAdminUser();
         $activity = $this->perform_generator()->create_activity_in_container();
         $section = $this->perform_generator()->create_section($activity);
+        /** @var element $element*/
         $element = element::create($activity->get_context(), 'linked_review', 'title', '', json_encode([
             'content_type' => $content_type,
             'content_type_settings' => [],
             'selection_relationships' => [relationship::load_by_idnumber(constants::RELATIONSHIP_SUBJECT)->id],
         ]));
+        $element->get_child_element_manager()->create_child_element(['title' => 'child short element'], 'short_text');
         $section_element = $this->perform_generator()->create_section_element($section, $element);
         return [$activity, $section, $element, $section_element];
     }
@@ -109,7 +112,7 @@ abstract class performelement_linked_review_base_linked_review_testcase extends 
     ): linked_review_content_response {
         $response = new linked_review_content_response();
         $response->linked_review_content_id = $lined_review_content->id;
-        $response->element_id = $child_element->id;
+        $response->child_element_id = $child_element->id;
         $response->participant_instance_id = $participant_instance->id;
         $response->response_data = $response_data ?? json_encode("Response");
         $response->save();

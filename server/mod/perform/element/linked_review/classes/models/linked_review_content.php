@@ -40,6 +40,7 @@ use moodle_exception;
 use performelement_linked_review\entity\linked_review_content as linked_review_content_entity;
 use performelement_linked_review\entity\linked_review_content_response;
 use performelement_linked_review\linked_review;
+use stdClass;
 
 /**
  * Class element_subject_instance_review_content
@@ -248,7 +249,7 @@ class linked_review_content extends model {
      * @param $content
      */
     public function set_content($content) {
-        if (!is_array($content) && $content instanceof \stdClass && $content instanceof JsonSerializable) {
+        if (!is_array($content) && $content instanceof stdClass && $content instanceof JsonSerializable) {
             throw new coding_exception('Content data needs to be json serializable.');
         }
 
@@ -327,7 +328,10 @@ class linked_review_content extends model {
      * @param section_element $linked_review_section_element
      * @return bool
      */
-    private static function can_participant_select_content(int $participant_instance_id, section_element $linked_review_section_element): bool {
+    private static function can_participant_select_content(
+        int $participant_instance_id,
+        section_element $linked_review_section_element
+    ): bool {
         $element = $linked_review_section_element->element;
         $participant_instance = participant_instance_model::load_by_id($participant_instance_id);
 
@@ -366,8 +370,10 @@ class linked_review_content extends model {
      * @param participant_instance_model $participant_instance
      * @return bool
      */
-    private static function can_participate_on_section(section_element $linked_review_section_element,
-                                                         participant_instance_model $participant_instance): bool {
+    private static function can_participate_on_section(
+        section_element $linked_review_section_element,
+        participant_instance_model $participant_instance
+    ): bool {
         $section_relationship = $linked_review_section_element
             ->section
             ->get_section_relationships()

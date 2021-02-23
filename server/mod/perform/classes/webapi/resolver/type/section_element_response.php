@@ -23,7 +23,6 @@
 
 namespace mod_perform\webapi\resolver\type;
 
-use core\format;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
 use mod_perform\formatter\response\section_element_response as section_element_response_formatter;

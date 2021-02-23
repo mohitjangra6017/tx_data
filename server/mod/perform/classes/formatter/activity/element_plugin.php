@@ -23,6 +23,7 @@
 
 namespace mod_perform\formatter\activity;
 
+use coding_exception;
 use core\webapi\formatter\field\string_field_formatter;
 use core\webapi\formatter\formatter;
 use mod_perform\models\activity\respondable_element_plugin;
@@ -51,6 +52,7 @@ class element_plugin extends formatter {
             'participant_response_component' => null, //not formatted, because this participant response display vue component name
             'participant_print_component' => null, //not formatted, because this print vue component name
             'group' => null, // Not formatted, because this is an internal key
+            'child_element_config' => null,
         ];
     }
 
@@ -88,8 +90,10 @@ class element_plugin extends formatter {
                 return $this->object->get_participant_print_component();
             case 'group':
                 return $this->object->get_group();
+            case 'child_element_config':
+                return $this->object->get_child_element_config();
             default:
-                throw new \coding_exception('Unexpected field passed to formatter');
+                throw new coding_exception('Unexpected field passed to formatter');
         }
     }
 
@@ -107,7 +111,8 @@ class element_plugin extends formatter {
             'participant_form_component',
             'participant_response_component',
             'participant_print_component',
-            'group'
+            'group',
+            'child_element_config',
         ];
         return in_array($field, $fields);
     }

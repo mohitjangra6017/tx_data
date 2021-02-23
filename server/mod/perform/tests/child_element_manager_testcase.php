@@ -35,8 +35,8 @@ abstract class child_element_manager_testcase extends advanced_testcase {
         $activity = $perform_generator->create_activity_in_container();
         $elements_supporting_child_elements = array_filter(
             (new element_plugin_data_provider())->fetch()->get(),
-            function($element) {
-                return $element->supports_child_elements() === true;
+            function ($element_plugin) {
+                return $element_plugin->get_child_element_config()->supports_child_elements === true;
             }
         );
         /** @var element_plugin $parent_element*/
@@ -57,33 +57,33 @@ abstract class child_element_manager_testcase extends advanced_testcase {
         // todo: how not to hard-code short_text string. An idea would be to:
         // update create element method to take in an element_plugin object rather than a plugin name.
         // this would make it possible to send mock plugins for tests like this.
-        $child_element_A = $parent_element_model->get_child_element_manager()->create_child_element(
+        $child_element_a = $parent_element_model->get_child_element_manager()->create_child_element(
             [
                 'title' => 'Child A',
             ],
             'short_text'
         );
-        $child_element_C = $parent_element_model->get_child_element_manager()->create_child_element(
+        $child_element_c = $parent_element_model->get_child_element_manager()->create_child_element(
             [
                 'title' => 'Child C',
             ],
             'short_text',
-            $child_element_A->id
+            $child_element_a->id
         );
-        $child_element_B = $parent_element_model->get_child_element_manager()->create_child_element(
+        $child_element_b = $parent_element_model->get_child_element_manager()->create_child_element(
             [
                 'title' => 'Child B',
             ],
             'short_text',
-            $child_element_A->id
+            $child_element_a->id
         );
 
         return [
             'parent' => $parent_element_model,
             'children' => [
-                'a' => $child_element_A,
-                'b' => $child_element_B,
-                'c' => $child_element_C,
+                'a' => $child_element_a,
+                'b' => $child_element_b,
+                'c' => $child_element_c,
             ]
         ];
     }

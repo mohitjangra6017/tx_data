@@ -142,6 +142,10 @@ export default {
   },
 
   computed: {
+    id() {
+      return this.$id();
+    },
+
     /**
      * An array of validation rules for the element.
      * The rules returned depend on if we are saving as draft or if a response is required or not.
@@ -156,9 +160,13 @@ export default {
     },
   },
 
-  mounted() {
-    // Confirm navigation away if user is currently editing.
-    window.addEventListener('beforeunload', this.unloadHandler);
+  watch: {
+    selectedIds(value) {
+      this.$emit('unsaved-plugin-change', {
+        key: this.id,
+        hasChanges: value.length ? true : false,
+      });
+    },
   },
 
   methods: {
@@ -197,6 +205,10 @@ export default {
       } catch (e) {
         this.showMutationErrorNotification();
       } finally {
+        this.$emit('unsaved-plugin-change', {
+          key: this.id,
+          hasChanges: false,
+        });
         this.$emit('update');
       }
     },
@@ -238,25 +250,6 @@ export default {
         message: this.$str('error', 'core'),
         type: 'error',
       });
-    },
-
-    /**
-     * Displays a warning message if the user tries to navigate away without saving.
-     * @param {Event} e
-     * @returns {String|void}
-     */
-    unloadHandler(e) {
-      if (!this.selectedIds.length) {
-        return;
-      }
-      // For older browsers that still show custom message.
-      const discardUnsavedChanges = this.$str(
-        'unsaved_changes_warning',
-        'mod_perform'
-      );
-      e.preventDefault();
-      e.returnValue = discardUnsavedChanges;
-      return discardUnsavedChanges;
     },
   },
 };
@@ -306,8 +299,7 @@ export default {
     "remove"
   ],
   "mod_perform": [
-    "confirm_selection",
-    "unsaved_changes_warning"
+    "confirm_selection"
   ]
 }
 </lang-strings>

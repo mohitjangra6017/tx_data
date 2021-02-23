@@ -32,7 +32,7 @@
           v-bind="$attrs"
           :active-section-is-closed="true"
           :element="element"
-          :element-components="otherData.element.type"
+          :element-components="otherData.element.element_plugin"
           :section-element="otherData"
           :show-other-response="true"
         />
@@ -100,13 +100,13 @@ export default {
         return null;
       }
 
-      let componentTypes = Object.assign({}, this.element.type, {
+      let componentTypes = Object.assign({}, this.element.element_plugin, {
         participant_response_component: this.element.data
           .elementPluginDisplayComponent,
       });
 
       let elementData = Object.assign({}, this.element, {
-        type: componentTypes,
+        element_plugin: componentTypes,
       });
 
       let data = {
@@ -114,7 +114,7 @@ export default {
         other_responder_groups: this.redisplayData.other_responder_groups,
         response_data_formatted_lines: this.redisplayData.your_response
           ? this.redisplayData.your_response.response_data_formatted_lines
-          : null,
+          : [],
       };
 
       return data;

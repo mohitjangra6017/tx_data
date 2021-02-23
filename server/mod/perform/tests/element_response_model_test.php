@@ -31,10 +31,12 @@ use mod_perform\entity\activity\participant_instance as participant_instance_ent
 use mod_perform\entity\activity\section as section_entity;
 use mod_perform\entity\activity\section_element as section_element_entity;
 use mod_perform\entity\activity\section_relationship;
+use mod_perform\hook\post_element_response_submission;
 use mod_perform\models\activity\participant_instance;
 use mod_perform\models\activity\section_element;
 use mod_perform\models\response\section_element_response;
 use mod_perform\models\response\element_validation_error;
+use mod_perform\testing\generator as perform_generator;
 use performelement_short_text\answer_length_exceeded_error;
 use totara_core\relationship\relationship;
 
@@ -92,6 +94,39 @@ class mod_perform_response_model_testcase extends advanced_testcase {
         ];
     }
 
+    public function test_post_element_response_submission_hook_is_called_on_saving() {
+        self::setAdminUser();
+        $subject = self::getDataGenerator()->create_user();
+        /** @var perform_generator $generator */
+        $generator = perform_generator::instance();
+        $activity = $generator->create_activity_in_container();
+
+        $subject_instance = $generator->create_subject_instance([
+            'activity_id' => $activity->id,
+            'subject_is_participating' => true,
+            'subject_user_id' => $subject->id,
+            'include_questions' => true,
+        ]);
+        $participant_instance = $subject_instance->participant_instances->first();
+
+        /** @var section_entity $section*/
+        $section = $subject_instance->activity()->sections->first();
+        $section_element = $section->section_elements->first();
+
+        $section_element_response = new section_element_response(
+            participant_instance::load_by_entity($participant_instance),
+            section_element::load_by_entity($section_element),
+            null,
+            new collection()
+        );
+        $sink = $this->redirectHooks();
+        $section_element_response->set_response_data('"random response"')->save();
+        $hooks_executed = $sink->get_hooks();
+        $this->assertGreaterThan(0, count($hooks_executed));
+        $hook = reset($hooks_executed);
+        $this->assertTrue($hook instanceof post_element_response_submission);
+    }
+
     /**
      * @throws coding_exception
      */
@@ -101,8 +136,8 @@ class mod_perform_response_model_testcase extends advanced_testcase {
         $subject = self::getDataGenerator()->create_user();
         $participant = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $generator */
+        $generator = perform_generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -154,8 +189,8 @@ class mod_perform_response_model_testcase extends advanced_testcase {
         $subject = self::getDataGenerator()->create_user();
         $participant = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $generator */
+        $generator = perform_generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -202,8 +237,8 @@ class mod_perform_response_model_testcase extends advanced_testcase {
         $subject = self::getDataGenerator()->create_user();
         $participant = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $generator */
+        $generator = perform_generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -255,8 +290,8 @@ class mod_perform_response_model_testcase extends advanced_testcase {
     public function test_user_can_view_response(): void {
         self::setAdminUser();
         $generator = self::getDataGenerator();
-        /** @var \mod_perform\testing\generator $perform_generator */
-        $perform_generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $perform_generator */
+        $perform_generator = perform_generator::instance();
         $activity = $perform_generator->create_activity_in_container();
 
         $subject_user = $generator->create_user();
@@ -328,7 +363,7 @@ class mod_perform_response_model_testcase extends advanced_testcase {
             true,
             true
         );
-        [$external_participant_instance] = $perform_generator->create_external_participant_instances(
+        [$external_participant_instance] = $perform_generator->generate_external_participant_instances(
             $subject_instance->id,
             [
                 'fullname' => 'A name',

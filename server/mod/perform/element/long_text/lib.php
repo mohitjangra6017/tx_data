@@ -49,7 +49,7 @@ function performelement_long_text_pluginfile($course, $cm, $context, $filearea, 
     $response_id = $args[0];
 
     if ($context->contextlevel != CONTEXT_MODULE) {
-        debugging('Long text file responses are always be in the context of their activity.', DEBUG_DEVELOPER);
+        debugging('Long text file responses must always be in the context of their activity.', DEBUG_DEVELOPER);
         send_file_not_found();
     }
 

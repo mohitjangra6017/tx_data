@@ -13,11 +13,12 @@
   Please contact [licensing@totaralearning.com] for more information.
 
   @author Kunle Odusan <kunle.odusan@totaralearning.com>
+  @module performelement_linked_review
 -->
 
 <template>
   <FormScope
-    :path="['childElementResponses', childElementIndex]"
+    :path="[childElementResponsesIdentifier, element.id]"
     :process="childElementProcessor"
   >
     <slot />
@@ -28,20 +29,30 @@
 import FormScope from 'tui/components/reform/FormScope';
 
 export default {
-  name: 'ChildElementFormScope',
-
   components: {
     FormScope,
   },
-
   props: {
-    childElementIndex: Number,
+    childElementResponsesIdentifier: String,
     element: Object,
   },
-
   methods: {
+    /**
+     * Stringifies the child element response and
+     * appends the child_element_id to it.
+     *
+     * @param {null|Object} value
+     * @return {Object}
+     */
     childElementProcessor(value) {
-      value.element_id = this.element.id;
+      if (!value) {
+        return {};
+      }
+      value.child_element_id = this.element.id;
+
+      // stringify response
+      value.response_data = JSON.stringify(value.response_data);
+
       return value;
     },
   },
