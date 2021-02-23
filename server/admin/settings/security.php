@@ -142,8 +142,8 @@ if ($hassiteconfig) { // speedup for non-admins, add all caps used on this page
                new lang_string('curlsecurityallowedportsyntax', 'admin'), ""));
     $ADMIN->add('security', $temp);
 
-    // "notifications" settingpage
-    $temp = new admin_settingpage('notifications', new lang_string('notifications', 'admin'));
+    // "loginfailures" settingpage
+    $temp = new admin_settingpage('loginfailures', new lang_string('loginfailures', 'admin'));
     $temp->add(new admin_setting_configcheckbox('displayloginfailures', new lang_string('displayloginfailures', 'admin'),
             new lang_string('configdisplayloginfailures', 'admin'), 0));
     $temp->add(new admin_setting_users_with_capability('notifyloginfailures', new lang_string('notifyloginfailures', 'admin'), new lang_string('confignotifyloginfailures', 'admin'), array(), 'moodle/site:config'));

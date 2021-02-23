@@ -704,6 +704,7 @@ $string['lockoutwindow_desc'] = 'Observation time for lockout threshold, if ther
 $string['log'] = 'Logs';
 $string['logguests'] = 'Log guest access';
 $string['logguests_help'] = 'This setting enables logging of actions by guest account and not logged in users. High profile sites may want to disable this logging for performance reasons. It is recommended to keep this setting enabled on production sites.';
+$string['loginfailures'] = 'Login failure settings';
 $string['loginpageautofocus'] = 'Autofocus login page form';
 $string['loginpageautofocus_help'] = 'Enabling this option improves usability of the login page, but automatically focusing fields may be considered an accessibility issue.';
 $string['loglifetime'] = 'Keep logs for';
@@ -815,7 +816,6 @@ $string['noreplydomain'] = 'No-reply and domain';
 $string['noreplydomaindetail'] = 'Settings for No-reply and configured domains';
 $string['noresults'] = 'No results found.';
 $string['noroles'] = 'No roles';
-$string['notifications'] = 'Notifications';
 $string['notifyloginfailures'] = 'Email login failures to';
 $string['notifyloginthreshold'] = 'Threshold for email notifications';
 $string['notloggedinroleid'] = 'Role for visitors';
@@ -1391,3 +1391,8 @@ $string['loginpasswordautocomplete_help'] = 'If enabled, users are not allowed t
  * @deprecated since Totara 13.0
  */
 $string['taskcreatecontexts'] = 'Create missing contexts';
+
+/*
+ * @deprecated since Totara 14.0
+ */
+$string['notifications'] = 'Notifications';
