@@ -25,10 +25,10 @@ query mod_perform_participant_section_external_participant_nosession(
     section_element_responses {
       section_element_id
       element {
-        ...element_data
+        ...mod_perform_participant_section_external_participant_nosession_element_data
         children {
           id
-          ...element_data
+          ...mod_perform_participant_section_external_participant_nosession_element_data
         }
       }
       sort_order
@@ -78,7 +78,7 @@ query mod_perform_participant_section_external_participant_nosession(
   }
 }
 
-fragment element_data on mod_perform_element {
+fragment mod_perform_participant_section_external_participant_nosession_element_data on mod_perform_element {
   __typename
   title
   data

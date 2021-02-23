@@ -11,9 +11,9 @@ query mod_perform_section_admin($section_id: core_id!) {
     section_elements {
       id
       element {
-        ...element_data
+        ...mod_perform_section_admin_element_data
         children {
-          ...element_data
+          ...mod_perform_section_admin_element_data
         }
       }
       sort_order
@@ -21,7 +21,7 @@ query mod_perform_section_admin($section_id: core_id!) {
   }
 }
 
-fragment element_data on mod_perform_element {
+fragment mod_perform_section_admin_element_data on mod_perform_element {
   __typename
   id
   title

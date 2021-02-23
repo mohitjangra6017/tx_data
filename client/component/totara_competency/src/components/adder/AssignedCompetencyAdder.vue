@@ -346,7 +346,9 @@ export default {
           label: option.name,
         }));
 
-        let first_option = [{ id: null, label: this.$str('all', 'totara_competency') }];
+        let first_option = [
+          { id: null, label: this.$str('all', 'totara_competency') },
+        ];
 
         this.reasonAssignedFilterOptions = [...first_option, ...filterOptions];
 

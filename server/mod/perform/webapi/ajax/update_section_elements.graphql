@@ -7,9 +7,9 @@ mutation mod_perform_update_section_elements(
       section_elements {
         id
         element {
-          ...element_data
+          ...mod_perform_update_section_elements_element_data
           children {
-            ...element_data
+            ...mod_perform_update_section_elements_element_data
           }
         }
         sort_order
@@ -18,7 +18,7 @@ mutation mod_perform_update_section_elements(
   }
 }
 
-fragment element_data on mod_perform_element {
+fragment mod_perform_update_section_elements_element_data on mod_perform_element {
   __typename
   id
   title

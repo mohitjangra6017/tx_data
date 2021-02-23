@@ -23,7 +23,7 @@
 
 namespace totara_evidence\webapi\resolver\query;
 
-use core\collection;
+use core\orm\collection;
 use core\webapi\middleware\require_advanced_feature;
 use performelement_linked_review\webapi\resolver\query\content_items;
 
@@ -32,13 +32,8 @@ class perform_linked_evidence_items extends content_items {
     /**
      * @inheritDoc
      */
-    protected static function query_content(array $content_ids): array {
-        return collection::new($content_ids)
-            ->map(static function (int $id) {
-                return (object) [
-                    'id' => $id,
-                ];
-            })
+    protected static function query_content(int $user_id, collection $content): array {
+        return $content
             ->all();
     }
 
