@@ -19,8 +19,8 @@
  * @author Carl Anderson <carl.anderson@totaralearning.com>
  * @package totara_core
  */
-define(['core/str', 'core/popover_region_controller'], function(str, PopoverRegionController) {
-
+define(['core/str', 'core/popover_region_controller', 'core/ajax', 'core/templates', 'core/notification'],
+    function(str, PopoverRegionController, api, templatesLib, notificationLib) {
     /**
      * Internal class to extend popover functionality
      * @constructor
@@ -62,18 +62,31 @@ define(['core/str', 'core/popover_region_controller'], function(str, PopoverRegi
      */
     QuickAccessPopoverController.prototype.setupEvents = function() {
         var self = this;
-        this.element.querySelector('[data-quickaccessmenu-close-menu]').addEventListener('click', function(e) {
-            e.preventDefault();
-            self.closeMenu();
 
-            return false;
+        // Root is a jQuery element so one works here
+        this.root.one(this.events().menuOpened, function() {
+            M.util.js_pending('totara_core--quickaccessmenu_content_loading');
+            api.call([{
+                args: {
+                    'userid': null,
+                },
+                methodname: 'totara_core_quickaccessmenu_get_user_menu'
+            }])[0].then(function(response) {
+                return templatesLib.render('totara_core/quickaccessmenu_content', response);
+            }).then(function(html) {
+                self.element.querySelector('#quickaccess-popover-content').innerHTML = html;
+
+                self.element.querySelector('[data-quickaccessmenu-close-menu]').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    self.closeMenu();
+
+                    return false;
+                });
+
+                self.checkLocation();
+                M.util.js_complete('totara_core--quickaccessmenu_content_loading');
+            }).catch(notificationLib.exception);
         });
-
-        if (document.readyState === 'complete') {
-            self.checkLocation();
-        } else {
-            window.addEventListener('load', self.checkLocation.bind(self));
-        }
     };
 
     QuickAccessPopoverController.prototype.checkLocation = function() {

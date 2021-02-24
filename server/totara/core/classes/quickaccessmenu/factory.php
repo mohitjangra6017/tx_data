@@ -194,4 +194,26 @@ final class factory {
         return $item;
     }
 
+    /**
+     * Returns true if the menu has possible items.
+     *
+     * This function is optimised to speed up resolution. It maintains a session cache to save requesting this frequently.
+     *
+     * @return bool
+     */
+    public function has_possible_items(): bool {
+        $cache = \cache::make_from_params(\cache_store::MODE_SESSION, 'totara_core', 'quickaccessmenu_hasitems', [], [
+            'simplekeys' => true,
+            'simpledata' => true,
+            'staticacceleration' => true
+        ]);
+        $cachekey = 'has_possible_items';
+        $possible_count = $cache->get($cachekey);
+        if ($possible_count === false) {
+            $possible_count = count($this->get_possible_items());
+            $cache->set($cachekey, $possible_count);
+        }
+        return $possible_count > 0;
+    }
+
 }

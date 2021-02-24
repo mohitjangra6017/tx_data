@@ -497,10 +497,8 @@ class totara_core_renderer extends plugin_renderer_base {
         if (totara_core\quickaccessmenu\factory::can_current_user_have_quickaccessmenu()) {
             $menuinstance = totara_core\quickaccessmenu\factory::instance($USER->id);
 
-            if (!empty($menuinstance->get_possible_items())) {
-                $adminmenu = $menuinstance->get_menu();
-                $quickaccessmenu = totara_core\output\quickaccessmenu::create_from_menu($adminmenu);
-                $mastheaddata->masthead_quickaccessmenu = $quickaccessmenu->get_template_data();
+            if (!empty($menuinstance->has_possible_items())) {
+                $mastheaddata->masthead_quickaccessmenu = true;
             }
         }
 
