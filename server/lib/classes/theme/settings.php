@@ -175,9 +175,7 @@ final class settings {
      * @return array
      */
     private function get_default_categories(bool $include_files): array {
-        $categories = [
-            $this->get_default_email_category(),
-        ];
+        $categories = [];
 
         if ($include_files) {
             $instances = $this->get_file_instances();
@@ -189,31 +187,6 @@ final class settings {
         }
 
         return $categories;
-    }
-
-    /**
-     * @return array
-     *
-     */
-    private function get_default_email_category(): array {
-        global $PAGE;
-        $renderer = $PAGE->get_renderer('core');
-
-        return [
-            'name' => 'email',
-            'properties' => [
-                [
-                    'name' => 'formemail_field_notificationshtmlheader',
-                    'type' => 'html',
-                    'value' => $renderer->render_from_template('core/email_header_html', []),
-                ],
-                [
-                    'name' => 'formemail_field_notificationshtmlfooter',
-                    'type' => 'html',
-                    'value' => $renderer->render_from_template('core/email_footer_html', []),
-                ],
-            ],
-        ];
     }
 
     /**

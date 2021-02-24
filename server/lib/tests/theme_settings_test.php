@@ -155,7 +155,7 @@ class core_theme_settings_testcase extends advanced_testcase {
         $this->assertArrayHasKey('categories', $result->data['core_get_theme_settings']);
         $categories = $result->data['core_get_theme_settings']['categories'];
         $this->assertIsArray($categories);
-        $this->assertEquals(3, sizeof($categories));
+        $this->assertEquals(2, sizeof($categories));
         $this->validate_default_categories($categories);
     }
 
@@ -245,7 +245,7 @@ class core_theme_settings_testcase extends advanced_testcase {
         $this->assertArrayHasKey('categories', $result->data['core_update_theme_settings']);
         $categories = $result->data['core_update_theme_settings']['categories'];
         $this->assertIsArray($categories);
-        $this->assertCount(4, $categories);
+        $this->assertCount(3, $categories);
         $this->validate_default_categories($categories);
 
         // Check colours.
@@ -275,7 +275,7 @@ class core_theme_settings_testcase extends advanced_testcase {
         $this->assertIsArray($output);
         $this->assertArrayHasKey('categories', $output);
         $this->assertIsArray($output['categories']);
-        $this->assertEquals(3, sizeof($output['categories']));
+        $this->assertEquals(2, sizeof($output['categories']));
         $this->validate_default_categories($output['categories']);
     }
 
@@ -1089,7 +1089,7 @@ class core_theme_settings_testcase extends advanced_testcase {
 
         // Exclude default file categories.
         $categories = $ventura_settings->get_categories(false, false);
-        $this->assertCount(1, $categories);
+        $this->assertCount(0, $categories);
     }
 
     public function test_tenant_theme_hooks_default() {
