@@ -23,7 +23,7 @@
     <!-- User selects what content they want to review -->
     <component
       :is="getComponent(element.data.components.content_picker)"
-      v-if="selectedContent.length === 0"
+      v-if="selectedContent.length === 0 && participantInstanceId"
       :participant-instance-id="participantInstanceId"
       :section-element-id="sectionElement.id"
       :settings="contentSettings"
@@ -112,7 +112,7 @@ export default {
     isExternalParticipant: Boolean,
     participantInstanceId: {
       type: [String, Number],
-      required: true,
+      required: false,
     },
     path: {
       type: [String, Array],

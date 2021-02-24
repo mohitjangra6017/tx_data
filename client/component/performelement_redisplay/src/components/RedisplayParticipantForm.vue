@@ -60,6 +60,7 @@ export default {
         return value.data && value.data.elementPluginDisplayComponent;
       },
     },
+    token: String,
   },
 
   data() {
@@ -72,7 +73,7 @@ export default {
   apollo: {
     redisplayData: {
       query() {
-        return this.element.token && this.element.token.length > 0
+        return this.token && this.token.length > 0
           ? subjectInstancePreviousResponsesForExternalParticipantQuery
           : subjectInstancePreviousResponsesQuery;
       },
@@ -82,7 +83,7 @@ export default {
           input: {
             participant_section_id: this.element.participantSectionId,
             section_element_id: this.element.data.sectionElementId,
-            token: this.element.token || null,
+            token: this.token || null,
           },
         };
       },

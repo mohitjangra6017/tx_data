@@ -126,7 +126,7 @@ export default {
      */
     showMutationErrorNotification() {
       notify({
-        message: this.$str('error'),
+        message: this.$str('error', 'core'),
         type: 'error',
       });
     },
@@ -136,7 +136,7 @@ export default {
      */
     showMutationSuccessNotification() {
       notify({
-        message: this.$str('success'),
+        message: this.$str('success', 'core'),
         type: 'success',
       });
     },
@@ -171,6 +171,7 @@ export default {
 {
   "core": [
     "delete",
+    "error",
     "success"
   ]
 }

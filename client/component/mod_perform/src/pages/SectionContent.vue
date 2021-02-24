@@ -122,6 +122,7 @@
             :section-component="getSectionComponent(sectionElement)"
             :section-element="sectionElement"
             :section-id="sectionId"
+            :element-plugins="elementPlugins"
             @update="update(sectionElement, $event, index)"
             @edit="edit(sectionElement)"
             @display="display(sectionElement)"

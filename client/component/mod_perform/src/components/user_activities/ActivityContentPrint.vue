@@ -116,6 +116,7 @@
                   "
                   :participant-instance-id="participantInstanceId"
                   :subject-instance-id="subjectInstanceId"
+                  :subject-user="subjectUser"
                   :path="['sectionElements', elementResponse.id]"
                   :section-element="elementResponse"
                   :show-other-response="true"

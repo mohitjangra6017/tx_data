@@ -393,7 +393,13 @@ export default {
      * @param {Number} id child element id
      */
     setElementToView(id) {
-      this.setChildState(id, 'view');
+      // if it's unsaved, remove it
+      if (id.substring(0, 7) === 'unsaved') {
+        this.newElements = this.newElements.filter(item => id !== item.id);
+        this.getChildElements();
+      } else {
+        this.setChildState(id, 'view');
+      }
     },
 
     /**
