@@ -42,8 +42,9 @@ Feature: Delete scale values pathways when users haven't achieved the competency
     And I navigate to "Manage competencies" node in "Site administration > Competencies"
     And I click on "Deletable Value scale" "link"
     And I click on "Delete" "link" in the "Intermediate" "table_row"
-    Then I should see "Deleting the 'Intermediate' scale value will affect competencies that have achievement pathways defined against it."
-    And I should see " A total of 3 achievement pathway(s) will be deleted."
+    Then I should see "Deleting the 'Intermediate' scale value will:"
+    And I should see "Affect competencies that have achievement pathways defined against it."
+    And I should see "3 achievement pathway(s) will be deleted."
     When I click on "Continue" "button"
     Then I should see "The competency scale value \"Intermediate\" has been deleted."
     And "Intermediate" "table_row" should not exist
