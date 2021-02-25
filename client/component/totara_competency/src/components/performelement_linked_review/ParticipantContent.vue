@@ -20,34 +20,97 @@
 <template>
   <div class="tui-linkedReviewViewCompetency">
     <h4 class="tui-linkedReviewViewCompetency__title">
-      {{ content.competency.display_name }}
+      <a v-if="!fromPrint && !preview" :href="competencyUrl">
+        {{ content.competency.display_name }}
+      </a>
+      <template v-else>
+        {{ content.competency.display_name }}
+      </template>
     </h4>
+
     <div
       class="tui-linkedReviewViewCompetency__description"
       v-html="content.competency.description"
     />
 
-    <div class="tui-linkedReviewViewCompetency__bar">
-      <div class="tui-linkedReviewViewCompetency__bar-status">
-        <ProgressTrackerCircle state="pending" :target="true" />
-        <span class="tui-linkedReviewViewCompetency__bar-statusText">
-          {{
-            content.achievement.proficient
-              ? $str('proficient', 'totara_competency')
-              : $str('not_proficient', 'totara_competency')
-          }}
-        </span>
+    <div class="tui-linkedReviewViewCompetency__overview">
+      <div v-if="!preview" class="tui-linkedReviewViewCompetency__timestamp">
+        {{ createdAt }}
+      </div>
+
+      <div class="tui-linkedReviewViewCompetency__bar">
+        <Grid :stack-at="600">
+          <GridItem :units="3">
+            <p class="tui-linkedReviewViewCompetency__bar-header">
+              {{ $str('reason_assigned', 'totara_competency') }}
+            </p>
+            <div class="tui-linkedReviewViewCompetency__bar-value">
+              {{ content.assignment.reason_assigned }}
+            </div>
+          </GridItem>
+
+          <GridItem :units="5">
+            <div
+              class="tui-linkedReviewViewCompetency__bar-wrap"
+              :class="'tui-linkedReviewViewCompetency__bar-wrap-' + state"
+            >
+              <p class="tui-linkedReviewViewCompetency__bar-header">
+                {{ $str('achievement_level', 'totara_competency') }}
+                <InfoIconButton
+                  v-if="!fromPrint && !preview"
+                  :is-help-for="$str('rating_scale', 'totara_competency')"
+                >
+                  <RatingScaleOverview :scale="scale" :reverse-values="true" />
+                </InfoIconButton>
+              </p>
+              <div class="tui-linkedReviewViewCompetency__bar-value">
+                {{ content.achievement.name }}
+              </div>
+            </div>
+          </GridItem>
+
+          <GridItem
+            :units="4"
+            class="tui-linkedReviewViewCompetency__bar-status"
+          >
+            <ProgressTrackerCircle
+              :state="state"
+              :target="state !== 'complete'"
+            />
+            <span
+              class="tui-linkedReviewViewCompetency__bar-statusText"
+              :class="{
+                'tui-linkedReviewViewCompetency__bar-statusTextComplete':
+                  state === 'complete',
+              }"
+            >
+              {{
+                content.achievement.proficient
+                  ? $str('proficient', 'totara_competency')
+                  : $str('not_proficient', 'totara_competency')
+              }}
+            </span>
+          </GridItem>
+        </Grid>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Grid from 'tui/components/grid/Grid';
+import GridItem from 'tui/components/grid/GridItem';
+import InfoIconButton from 'tui/components/buttons/InfoIconButton';
 import ProgressTrackerCircle from 'tui/components/progresstracker/ProgressTrackerCircle';
+import RatingScaleOverview from 'totara_competency/components/RatingScaleOverview';
 
 export default {
   components: {
+    Grid,
+    GridItem,
+    InfoIconButton,
     ProgressTrackerCircle,
+    RatingScaleOverview,
   },
 
   props: {
@@ -55,18 +118,60 @@ export default {
       type: Object,
       required: false,
     },
+    createdAt: String,
+    fromPrint: Boolean,
+    preview: Boolean,
     settings: Object,
+  },
+
+  computed: {
+    /**
+     * Provide URL for competency
+     *
+     * @return {String}
+     */
+    competencyUrl() {
+      return this.$url('/totara/competency/profile/details/index.php', {
+        competency_id: this.content.competency.id,
+      });
+    },
+
+    /**
+     * Return scale values
+     * @return {Object}
+     */
+    scale() {
+      return { values: this.content.scale_values };
+    },
+
+    /**
+     * Return proficient state (pending, complete, achieved)
+     *
+     * @return {String}
+     */
+    state() {
+      if (this.content.achievement.id && this.content.achievement.proficient) {
+        return 'achieved';
+      } else if (this.content.achievement.id) {
+        return 'complete';
+      } else {
+        return 'pending';
+      }
+    },
   },
 };
 </script>
 
 <lang-strings>
-{
-  "totara_competency": [
-    "not_proficient",
-    "proficient"
-  ]
-}
+  {
+    "totara_competency": [
+      "achievement_level",
+      "not_proficient",
+      "proficient",
+      "rating_scale",
+      "reason_assigned"
+    ]
+  }
 </lang-strings>
 
 <style lang="scss">
@@ -75,24 +180,35 @@ export default {
     margin-top: var(--gap-4);
   }
 
+  &__title {
+    @include tui-font-heading-x-small();
+    margin: 0;
+  }
+
+  &__overview {
+    & > * + * {
+      margin-top: var(--gap-1);
+    }
+  }
+
+  &__timestamp {
+    @include tui-font-body-small();
+  }
+
   &__bar {
     display: flex;
-    padding: var(--gap-2);
-    background: var(--color-neutral-3);
-
-    &-status {
-      display: flex;
-      margin-left: auto;
-
-      & > * + * {
-        margin-left: var(--gap-2);
-      }
-    }
+    padding: var(--gap-4);
+    background: var(--color-neutral-1);
+    border: var(--border-width-thin) solid var(--color-neutral-5);
 
     &-status {
       display: flex;
       align-items: center;
       justify-content: flex-end;
+
+      & > * + * {
+        margin-left: var(--gap-2);
+      }
     }
 
     &-statusText {
@@ -102,13 +218,46 @@ export default {
       .dir-rtl & {
         margin: 0 var(--gap-2) 0 0;
       }
+    }
+
+    &-statusTextComplete {
+      margin-left: var(--gap-1);
+
+      .dir-rtl & {
+        margin: 0 var(--gap-1) 0 0;
+      }
+    }
+
+    &-header {
+      display: flex;
+      margin: 0;
+      @include tui-font-body-small();
+    }
+
+    &-value {
+      @include tui-font-heading-label-small();
+    }
+
+    &-wrap {
+      padding-left: var(--gap-2);
+      border-style: solid;
+      border-width: 0 0 0 var(--border-width-thick);
+
+      .dir-rtl & {
+        padding-right: var(--gap-2);
+        border-width: 0 var(--border-width-thick) 0 0;
+      }
+
+      &-achieved {
+        border-color: var(--progresstracker-color-achieved);
+      }
 
       &-complete {
-        margin-left: var(--gap-1);
+        border-color: var(--progresstracker-color-complete);
+      }
 
-        .dir-rtl & {
-          margin: 0 var(--gap-1) 0 0;
-        }
+      &-pending {
+        border-color: var(--progresstracker-color-pending);
       }
     }
   }

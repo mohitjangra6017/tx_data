@@ -28,6 +28,8 @@
           selectedContent.items.length === 0 &&
           participantInstanceId
       "
+      :is-external-participant="isExternalParticipant"
+      :participant-can-answer="participantCanAnswer"
       :participant-instance-id="participantInstanceId"
       :section-element-id="sectionElement.id"
       :settings="contentSettings"
@@ -35,71 +37,110 @@
       @update="refetch"
     />
 
-    <!-- Respondable card for each group of questions -->
-    <Card v-for="(item, index) in selectedContent.items" v-else :key="item.id">
-      <div class="tui-linkedReviewParticipantForm__group">
-        <!-- Display of review content -->
-        <component
-          :is="getComponent(element.data.components.participant_content)"
-          :content="getContent(item.content)"
-          :settings="contentSettings"
-        />
+    <template v-else>
+      <!-- Overview of who selected the content -->
+      <div class="tui-linkedReviewParticipantForm__selectedBy">
+        <template v-if="selectedContent.items[0]">
+          {{
+            $str('items_selected_by', 'mod_perform', {
+              date: selectedContent.items[0].created_at_date,
+              user: selectedContent.items[0].selector.fullname,
+            })
+          }}
+        </template>
+        <template v-else>
+          {{ $str('no_items_selected', 'mod_perform') }}
+        </template>
+      </div>
 
-        <!-- Display for each respondable question within the group -->
+      <div class="tui-linkedReviewParticipantForm__items">
+        <!-- Iterate thought selected content -->
         <div
-          v-for="(childElement, elementIndex) in element.children"
-          :key="item.id + '-' + childElement.id"
-          class="tui-linkedReviewParticipantForm__groupQuestion"
+          v-for="(item, itemIndex) in selectedContent.items"
+          :key="item.id"
+          class="tui-linkedReviewParticipantForm__item"
         >
-          <ResponseHeader
-            v-if="childElement.title"
-            :id="$id('title')"
-            :has-printed-to-do-icon="
-              hasPrintedToDoIcon && childElement.is_respondable
-            "
-            :is-respondable="childElement.is_respondable"
-            :required="childElement.is_required"
-            :title="childElement.title"
-          />
+          <!-- Card summary of selected content item-->
+          <Card class="tui-linkedReviewParticipantForm__item-card">
+            <div class="tui-linkedReviewParticipantForm__item-cardContent">
+              <component
+                :is="getComponent(element.data.components.participant_content)"
+                :content="getContent(item.content)"
+                :created-at="item.created_at_date"
+                :from-print="fromPrint"
+                :settings="contentSettings"
+              />
+            </div>
+          </Card>
 
-          <div class="tui-linkedReviewParticipantForm__groupQuestion-content">
-            <!-- Load child component here -->
-            <component
-              :is="
-                getComponent(
-                  childElement.element_plugin.participant_form_component
-                )
-              "
-              v-bind="$attrs"
-              :element="childElement"
-              :element-components="childElement.element_plugin"
-              :participant-instance-id="participantInstanceId"
-              :path="[
-                'sectionElements',
-                sectionElement.id + '-' + index + '-' + elementIndex,
-              ]"
-              :section-element="sectionElement"
-              :active-section-is-closed="activeSectionIsClosed"
-              :anonymous-responses="anonymousResponses"
-              :error="error"
-              :group-id="checkboxGroupId"
-              :is-draft="isDraft"
-              :is-external-participant="isExternalParticipant"
-              :participant-can-answer="participantCanAnswer"
-              :subject-instance-id="subjectInstanceId"
-              :show-other-response="showOtherResponse"
-              :view-only="viewOnlyReportMode"
-              :token="token"
-            />
+          <!-- Display for each respondable question within the group -->
+          <div class="tui-linkedReviewParticipantForm__questions">
+            <div
+              v-for="(childElement, childElementIndex) in element.children"
+              :key="item.id + '-' + childElement.id"
+            >
+              <ResponseHeader
+                v-if="childElement.title"
+                :id="$id('title')"
+                :has-printed-to-do-icon="
+                  hasPrintedToDoIcon && childElement.is_respondable
+                "
+                :is-respondable="childElement.is_respondable"
+                :required="childElement.is_required"
+                :title="childElement.title"
+              />
+
+              <div class="tui-linkedReviewParticipantForm__questions-content">
+                <FormScope
+                  :path="contentPath(itemIndex)"
+                  :process="contentResponsesProcessor(item)"
+                >
+                  <ChildElementFormScope
+                    :key="childElementIndex"
+                    :element="childElement"
+                    :child-element-index="childElementIndex"
+                  >
+                    <!-- Load child component here -->
+                    <component
+                      :is="
+                        getComponent(
+                          childElement.element_plugin.participant_form_component
+                        )
+                      "
+                      v-bind="$attrs"
+                      :element="childElement"
+                      :element-components="childElement.element_plugin"
+                      :from-print="fromPrint"
+                      :participant-instance-id="participantInstanceId"
+                      :path="'response_data'"
+                      :section-element="sectionElement"
+                      :active-section-is-closed="activeSectionIsClosed"
+                      :anonymous-responses="anonymousResponses"
+                      :error="error"
+                      :group-id="checkboxGroupId"
+                      :is-draft="isDraft"
+                      :is-external-participant="isExternalParticipant"
+                      :participant-can-answer="participantCanAnswer"
+                      :subject-instance-id="subjectInstanceId"
+                      :show-other-response="showOtherResponse"
+                      :view-only="viewOnlyReportMode"
+                      :token="token"
+                    />
+                  </ChildElementFormScope>
+                </FormScope>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </Card>
+    </template>
   </div>
 </template>
 
 <script>
 import Card from 'tui/components/card/Card';
+import ChildElementFormScope from 'mod_perform/components/element/ChildElementFormScope';
+import FormScope from 'tui/components/reform/FormScope';
 import Loader from 'tui/components/loading/Loader';
 import ResponseHeader from 'mod_perform/components/element/ElementParticipantResponseHeader';
 import selectedContentItemsQuery from 'performelement_linked_review/graphql/content_items';
@@ -108,14 +149,23 @@ import selectedContentItemsQueryExternal from 'performelement_linked_review/grap
 export default {
   components: {
     Card,
+    ChildElementFormScope,
+    FormScope,
     Loader,
     ResponseHeader,
   },
 
   props: {
+    activeSectionIsClosed: Boolean,
+    anonymousResponses: Boolean,
+    checkboxGroupId: String,
     element: Object,
+    error: String,
+    fromPrint: Boolean,
     hasPrintedToDoIcon: Boolean,
+    isDraft: Boolean,
     isExternalParticipant: Boolean,
+    participantCanAnswer: Boolean,
     participantInstanceId: {
       type: [String, Number],
       required: false,
@@ -125,6 +175,7 @@ export default {
       default: '',
     },
     sectionElement: Object,
+    showOtherResponse: Boolean,
     subjectUser: {
       required: true,
       type: Object,
@@ -133,15 +184,8 @@ export default {
       type: Number,
       required: true,
     },
-    error: String,
     token: String,
-    isDraft: Boolean,
     viewOnlyReportMode: Boolean,
-    showOtherResponse: Boolean,
-    participantCanAnswer: Boolean,
-    checkboxGroupId: String,
-    anonymousResponses: Boolean,
-    activeSectionIsClosed: Boolean,
   },
 
   data() {
@@ -159,6 +203,43 @@ export default {
   },
 
   methods: {
+    /**
+     * Generates content path.
+     *
+     * @param itemIndex index of item.
+     */
+    contentPath(itemIndex) {
+      let contentPath = [];
+
+      if (this.path instanceof String) {
+        contentPath.push(this.path);
+      }
+
+      if (this.path instanceof Array) {
+        this.path.forEach(pathItem => contentPath.push(pathItem));
+      }
+      contentPath.push('response', itemIndex);
+
+      return contentPath;
+    },
+
+    /**
+     * Parses the content responses.
+     */
+    contentResponsesProcessor(item) {
+      const contentItem = item;
+
+      return value => {
+        // remove later.
+        if (!contentItem) {
+          return value;
+        }
+        value.content_id = 'content id at index';
+
+        return value;
+      };
+    },
+
     /**
      * Get dynamic component
      *
@@ -209,19 +290,47 @@ export default {
 };
 </script>
 
+<lang-strings>
+  {
+    "mod_perform": [
+      "items_selected_by",
+      "no_items_selected"
+    ]
+  }
+</lang-strings>
+
 <style lang="scss">
 .tui-linkedReviewParticipantForm {
   & > * + * {
     margin-top: var(--gap-4);
   }
 
-  &__group {
-    width: 100%;
-    padding: var(--gap-4);
+  &__items {
+    & > * + * {
+      margin-top: var(--gap-8);
+    }
   }
 
-  &__groupQuestion {
-    margin-top: var(--gap-12);
+  &__item {
+    & > * + * {
+      margin-top: var(--gap-4);
+    }
+
+    &-card {
+      max-width: 1200px;
+      background: var(--color-neutral-3);
+    }
+
+    &-cardContent {
+      width: 100%;
+      padding: var(--gap-4);
+    }
+  }
+
+  &__questions {
+    & > * + * {
+      margin-top: var(--gap-8);
+    }
 
     &-content {
       margin-top: var(--gap-8);
