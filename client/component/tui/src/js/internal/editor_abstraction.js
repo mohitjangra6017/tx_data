@@ -36,7 +36,8 @@ import configQuery from 'core/graphql/editor';
  * @param {object} opts
  * @param {number} opts.format
  * @param {string} opts.variant
- * @param {object} opts.identifier
+ * @param {object} opts.usageIdentifier
+ * @params {array} opts.extraExtensions
  * @returns {EditorConfigResult}
  */
 export async function getEditorConfig({
@@ -44,6 +45,7 @@ export async function getEditorConfig({
   variant,
   usageIdentifier,
   contextId,
+  extraExtensions,
 }) {
   const usageId = usageIdentifier;
 
@@ -54,6 +56,9 @@ export async function getEditorConfig({
       format,
       variant_name: variant,
       context_id: contextId,
+      extra_extensions: extraExtensions
+        ? JSON.stringify(extraExtensions)
+        : undefined,
       usage_identifier: usageId
         ? {
             component: usageId.component,

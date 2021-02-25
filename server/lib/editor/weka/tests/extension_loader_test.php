@@ -67,4 +67,12 @@ class editor_weka_extension_loader_testcase extends advanced_testcase {
         self::assertContainsEquals(hashtag::class, $extensions);
         self::assertContainsEquals(mention::class, $extensions);
     }
+
+    /**
+     * @return void
+     */
+    public function test_get_all_extensions_classes(): void {
+        $extensions = extension_loader::get_all_extension_classes();
+        self::assertGreaterThanOrEqual(9, $extensions);
+    }
 }

@@ -23,6 +23,8 @@
 namespace editor_weka\factory;
 
 use core\editor\variant_name;
+use core_component;
+use editor_weka\extension\abstraction\specific_custom_extension;
 use editor_weka\extension\attachment;
 use editor_weka\extension\hashtag;
 use editor_weka\extension\mention;
@@ -38,19 +40,32 @@ class extension_loader {
      * extension_loader constructor.
      */
     private function __construct() {
-        // Prevent the construction of
+        // Prevent the construction of this class.
     }
 
     /**
+     * Return a merge array of standard extensions introduce by the core
+     * system (editor_weka) itself and the array of plugin extension.
+     *
      * @return string[]
      */
     public static function get_all_extension_classes(): array {
-        return static::get_standard_extension_classes();
+        return array_merge(
+            static::get_standard_extension_classes(),
+            static::get_all_plugin_extensions()
+        );
     }
 
     /**
      * Returning a built-up metadata of extensions and potentially extension options
      * base on the variant's name.
+     *
+     * Return with the schema as example below:
+     * [
+     *  'extensions' => [
+     *      'editor_weka\extension\attachment'
+     *  ]
+     * ]
      *
      * @param string $name
      * @return array
@@ -74,7 +89,18 @@ class extension_loader {
             $exclude_extensions = $definition['exclude_extensions'];
         }
 
-        $metadata['extensions'] = static::get_all_extension_classes_exclude($exclude_extensions);
+        $extensions = static::get_all_extension_classes_exclude($exclude_extensions);
+
+        // Excluding the extensions that are implement the interface specific_custom_extension
+        // as it is only be included per use case and not to be use as a generic extension.
+        $extensions = array_filter(
+            $extensions,
+            function (string $extension_class_name): bool {
+                return !is_a($extension_class_name, specific_custom_extension::class, true);
+            }
+        );
+
+        $metadata['extensions'] = $extensions;
         return $metadata;
     }
 
@@ -136,5 +162,30 @@ class extension_loader {
             text::class,
             ruler::class
         ];
+    }
+
+    /**
+     * @return array
+     */
+    final public static function get_all_plugin_extensions(): array {
+        $sub_plugins = core_component::get_subplugins('editor_weka');
+        $extensions = [];
+
+        foreach ($sub_plugins as $plugin_type => $sub_plugin_names) {
+            foreach ($sub_plugin_names as $plugin_name) {
+                $extension_class = "{$plugin_type}_{$plugin_name}\\extension";
+
+                if (!class_exists($extension_class)) {
+                    debugging(
+                        "The extension class '{$extension_class}' does not exist in the system",
+                        DEBUG_DEVELOPER
+                    );
+                }
+
+                $extensions[] = $extension_class;
+            }
+        }
+
+        return $extensions;
     }
 }

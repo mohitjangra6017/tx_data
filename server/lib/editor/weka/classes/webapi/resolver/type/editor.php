@@ -94,6 +94,17 @@ final class editor implements type_resolver {
                     }
                 }
 
+                if (isset($args['extra_extensions'])) {
+                    $extra_extensions = json_decode(
+                        $args['extra_extensions'],
+                        true,
+                        512,
+                        JSON_THROW_ON_ERROR
+                    );
+
+                    $variant->set_extra_extensions($extra_extensions);
+                }
+
                 return $variant->get_extensions();
 
             case 'showtoolbar':

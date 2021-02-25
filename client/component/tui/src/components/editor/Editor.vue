@@ -81,6 +81,21 @@ export default {
     loading: Boolean,
 
     placeholder: String,
+
+    /**
+     * Array of extra extensions to load. Each entry should be an object with
+     * a "name" key, and optionally an "options" key.
+     */
+    extraExtensions: {
+      type: Array,
+      validator(extensions) {
+        return extensions.every(extension => {
+          // The key 'name' must exist in the extension object.
+          // The key 'options' is optional for it to appear in the extension object.
+          return 'name' in extension;
+        });
+      },
+    },
   },
 
   data() {
@@ -108,6 +123,7 @@ export default {
         contextId: this.contextId,
         placeholder: this.placeholder,
         compact: this.compact,
+        extraExtensions: this.extraExtensions,
       };
     },
 
@@ -192,6 +208,7 @@ export default {
         variant: fixedConfig.variant,
         usageIdentifier: fixedConfig.usageIdentifier,
         contextId: fixedConfig.contextId,
+        extraExtensions: fixedConfig.extraExtensions,
       });
 
       // load the js module for the editor
@@ -217,6 +234,8 @@ export default {
             this.value && this.value.fileItemId ? this.value.fileItemId : null,
           placeholder: fixedConfig.placeholder,
           compact: fixedConfig.compact,
+          usageIdentifier: fixedConfig.usageIdentifier,
+          extraExtensions: fixedConfig.extraExtensions,
         }),
       ]);
 

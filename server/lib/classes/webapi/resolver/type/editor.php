@@ -26,6 +26,7 @@ use coding_exception;
 use context_system;
 use core\editor\abstraction\context_aware_editor;
 use core\editor\abstraction\custom_variant_aware;
+use core\editor\abstraction\extra_extension_aware_variant;
 use core\editor\abstraction\usage_identifier_aware_variant;
 use core\editor\abstraction\variant;
 use core\editor\fallback_variant;
@@ -86,6 +87,18 @@ class editor implements type_resolver {
 
                 /** @see variant::create() */
                 $variant = call_user_func_array([$variant_class, 'create'], [$variant_name, $context_id]);
+
+                if (!empty($args['extra_extensions']) && $variant instanceof extra_extension_aware_variant) {
+                    // Set the extra extensions for the variant if the variant instance is an extra extension aware variant.
+                    $extra_extensions = json_decode(
+                        $args['extra_extensions'],
+                        true,
+                        512,
+                        JSON_THROW_ON_ERROR
+                    );
+
+                    $variant->set_extra_extensions($extra_extensions);
+                }
 
                 if ($variant instanceof usage_identifier_aware_variant && isset($args['usage_identifier'])) {
                     /** @var array $usage_identifier */

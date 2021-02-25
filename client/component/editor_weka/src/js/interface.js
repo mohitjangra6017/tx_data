@@ -25,9 +25,19 @@ export default {
     return Weka;
   },
 
-  getProps({ contextId, config, fileItemId, placeholder, compact }) {
+  getProps({
+    contextId,
+    config,
+    fileItemId,
+    placeholder,
+    compact,
+    usageIdentifer,
+    extraExtensions,
+  }) {
     return {
       fileItemId,
+      usageIdentifer,
+      extraExtensions,
       options: {
         context_id: contextId,
         extensions: config.extensions,

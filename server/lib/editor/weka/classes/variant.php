@@ -17,30 +17,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package editor_weka
  */
 namespace editor_weka;
 
 use coding_exception;
 use core\editor\abstraction\custom_variant_aware;
+use core\editor\abstraction\extra_extension_aware_variant;
+use core\editor\abstraction\usage_identifier_aware_variant;
 use core\editor\abstraction\variant as variant_interface;
 use core\editor\variant_name;
 use editor_weka\extension\extension;
 use editor_weka\factory\extension_loader;
 use editor_weka\factory\variant_definition;
-use core\editor\abstraction\usage_identifier_aware_variant;
+use editor_weka\local\extension_helper;
 use totara_core\identifier\component_area;
 
 /**
  * Variant implementation for editor_weka.
  */
-final class variant implements variant_interface, usage_identifier_aware_variant, custom_variant_aware {
+final class variant implements variant_interface, usage_identifier_aware_variant,
+    custom_variant_aware, extra_extension_aware_variant {
     /**
      * An array of all extension class name.
      * @var string[]
      */
     private $extension_classes;
+
+    /**
+     * The hash map of extension options where the key is the extension class name,
+     * and the value is another hash-map of key => values that the extension instance
+     * is needed.
+     *
+     * @var array
+     */
+    private $extension_options;
 
     /**
      * @var int
@@ -75,6 +87,7 @@ final class variant implements variant_interface, usage_identifier_aware_variant
         $this->instance_id = null;
 
         $this->component_area = new component_area('editor_weka', 'learn');
+        $this->extension_options = [];
     }
 
     /**
@@ -85,16 +98,27 @@ final class variant implements variant_interface, usage_identifier_aware_variant
         $options = [
             'component' => $this->component_area->get_component(),
             'area' => $this->component_area->get_area(),
-            'context_id' => $this->context_id
+            'context_id' => $this->context_id,
         ];
 
         if (!empty($this->instance_id)) {
             $options['instance_id'] = $this->instance_id;
         }
 
+        $extension_options = $this->extension_options;
         return array_map(
-            function (string $extension_class) use ($options) {
-                return call_user_func_array([$extension_class, 'create'], [$options]);
+            function (string $extension_class) use ($options, $extension_options) {
+                $merge_options = $options;
+
+                if (isset($extension_options[$extension_class])) {
+                    $merge_options = array_merge(
+                        $options,
+                        $extension_options[$extension_class]
+                    );
+                }
+
+                /** @see extension::create() */
+                return call_user_func_array([$extension_class, 'create'], [$merge_options]);
             },
             $this->extension_classes
         );
@@ -111,7 +135,7 @@ final class variant implements variant_interface, usage_identifier_aware_variant
                     return $extension->jsonSerialize();
                 },
                 $extensions
-            )
+            ),
         ];
     }
 
@@ -148,6 +172,10 @@ final class variant implements variant_interface, usage_identifier_aware_variant
             $variant->extension_classes = $extension_metadata['extensions'];
         }
 
+        if (array_key_exists('extensions_options', $extension_metadata)) {
+            $variant->extension_options = $extension_metadata['extensions_options'];
+        }
+
         return $variant;
     }
 
@@ -179,5 +207,36 @@ final class variant implements variant_interface, usage_identifier_aware_variant
      */
     public function get_instance_id(): ?int {
         return $this->instance_id;
+    }
+
+    /**
+     * @param array $extra_extensions
+     * @return void
+     */
+    public function set_extra_extensions(array $extra_extensions): void {
+        foreach ($extra_extensions as $extension_datum) {
+            if (empty($extension_datum['name'])) {
+                debugging(
+                    "The extension data map does not provide the extension's name to add to the list of extensions",
+                    DEBUG_DEVELOPER
+                );
+
+                continue;
+            }
+
+            $name = $extension_datum['name'];
+            $extension_class_name = extension_helper::get_extension_class_name_from_extension_name($name);
+
+            if (null === $extension_class_name) {
+                debugging("No weka extension exists for name '{$name}'", DEBUG_DEVELOPER);
+                continue;
+            }
+
+            $this->extension_classes[] = $extension_class_name;
+
+            if (!empty($extension_datum['options']) && is_array($extension_datum['options'])) {
+                $this->extension_options[$extension_class_name] = $extension_datum['options'];
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ query editor_weka_weka(
   # Optional context's id - which developer can pass instead of instance's id.
   $context_id: param_integer
   $variant_name: param_alphaext
+  $extra_extensions: param_text
 ) {
   editor: editor_weka_editor(
     usage_identifier: {
@@ -22,6 +23,7 @@ query editor_weka_weka(
         instance_id: $instance_id
       }
       variant_name: $variant_name
+      extra_extensions: $extra_extensions
     ) {
       __typename
       name

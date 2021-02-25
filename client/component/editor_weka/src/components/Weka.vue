@@ -121,6 +121,32 @@ export default {
       type: Boolean,
       default: true,
     },
+    /**
+     * An array which the result of its JSON_ENCODED is equal to the example below:
+     * "
+     *  [
+     *    {
+     *      "name": "unique_valid_extension_name_zero"
+     *    },
+     *    {
+     *      "name": "unique_valid_extension_name_one",
+     *      "options": {
+     *        "argument_1": "argument_1_value"
+     *      }
+     *    }
+     *  ]
+     * "
+     */
+    extraExtensions: {
+      type: Array,
+      validator(extensions) {
+        return extensions.every(extension => {
+          // The key 'name' must exist in the extension object.
+          // The key 'options' is optional for it to appear in the extension object.
+          return 'name' in extension;
+        });
+      },
+    },
   },
 
   data() {
@@ -160,6 +186,7 @@ export default {
     variant: warnChange('variant'),
     instanceId: warnChange('instanceId'),
     options: warnChange('options'),
+    extraExtensions: warnChange('extraExtensions'),
 
     /**
      * @param {Number|String} value
@@ -228,6 +255,9 @@ export default {
           component: this.usageIdentifier.component,
           area: this.usageIdentifier.area,
           context_id: this.contextId || undefined,
+          extra_extensions: this.extraExtensions
+            ? JSON.stringify(this.extraExtensions)
+            : undefined,
           variant_name:
             this.variant ||
             `${this.usageIdentifier.component}-${this.usageIdentifier.area}`,

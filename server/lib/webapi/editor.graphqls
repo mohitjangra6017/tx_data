@@ -25,6 +25,22 @@ type core_editor {
     extra data.
     """
     usage_identifier: core_editor_usage_identifier
+    """
+    A json encoded text string that the front-end want to pass to the server side for loading any other extra
+    extension, for example: specific custom extension.
+
+    The json content should look like:
+    [
+      {
+        "name": "valid_extension_name",
+        "options": {
+          "some_key": "valid_extension_value"
+        }
+      },
+      // And the list of extensions go on with the schema as same as object above.
+    ]
+    """
+    extra_extensions: param_text
   ): core_editor_variant!
 }
 
