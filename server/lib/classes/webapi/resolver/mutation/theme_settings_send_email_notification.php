@@ -43,20 +43,20 @@ final class theme_settings_send_email_notification implements mutation_resolver,
 
         $categories = [
             [
-                'name' => 'email',
+                'name' => 'brand',
                 'properties' => [
                     [
-                        'name' => 'formemail_field_notificationshtmlheader',
+                        'name' => 'formbrand_field_notificationshtmlheader',
                         'type' => 'html',
                         'value' => $args['html_header'] ?? '',
                     ],
                     [
-                        'name' => 'formemail_field_notificationshtmlfooter',
+                        'name' => 'formbrand_field_notificationshtmlfooter',
                         'type' => 'html',
                         'value' => $args['html_footer'] ?? '',
                     ],
                     [
-                        'name' => 'formemail_field_notificationstextfooter',
+                        'name' => 'formbrand_field_notificationstextfooter',
                         'type' => 'text',
                         'value' => $args['text_footer'] ?? '',
                     ],

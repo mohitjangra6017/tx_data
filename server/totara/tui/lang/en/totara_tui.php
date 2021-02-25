@@ -64,7 +64,6 @@ $string['tabbrand'] = 'Brand';
 $string['tabcolours'] = 'Colours';
 $string['tabimages'] = 'Images';
 $string['tabcustom'] = 'Custom';
-$string['tabemail'] = 'Email';
 
 $string['form_details_default'] = 'Default:';
 $string['defaultimage'] = '{$a} default image';
@@ -76,6 +75,15 @@ $string['formbrand_label_logoalttext'] = 'Logo alternative text';
 $string['formbrand_details_logoalttext'] = 'Add the name of the site, to function as a text alternative to the logo image. There\'s no need to include "logo" in this field.';
 $string['formbrand_label_favicon'] = 'Favicon';
 $string['formbrand_details_favicon'] = 'Upload your browser tab icon here and it will appear next to your site address in the browser. The format of the icon file should be in a .ico, .png or .svg format. (Suggested dimension: 16 x 16px)';
+$string['formbrand_group_notifications'] = 'Email notifications';
+$string['formbrand_details_notificationshtmlheader'] = 'Add custom HTML (for example, social media links and icons) in HTML email notifications.';
+$string['formbrand_details_notificationshtmlfooter'] = 'Add custom HTML (for example, social media links and icons) in HTML email notifications.';
+$string['formbrand_details_notificationstextfooter'] = 'Add information (for example, contact details and legal disclaimers) in plain-text email notifications.';
+$string['formbrand_label_notificationshtmlheader'] = 'HTML header';
+$string['formbrand_label_notificationshtmlfooter'] = 'HTML footer';
+$string['formbrand_label_notificationstextfooter'] = 'Plain-text footer';
+$string['settings_email_send_error'] = 'Error sending notification email';
+$string['settings_email_send_success'] = 'Successfully sent email notification. Please check your email inbox.';
 
 // Theme settings - Colours tab.
 $string['formcolours_label_primary'] = 'Primary brand colour';
@@ -127,17 +135,6 @@ $string['formcustom_label_customfooter'] = 'Custom footer';
 $string['formcustom_details_customfooter'] = 'The text entered here will be visible in the footer for this Theme.';
 $string['formcustom_label_customcss'] = 'Custom CSS';
 $string['formcustom_details_customcss'] = 'Warning: Any CSS you enter here will be added after all other styles on every page.';
-
-// Theme settings - Email tab.
-$string['formemail_group_notifications'] = 'Notifications';
-$string['formemail_details_notificationshtmlheader'] = 'Add custom HTML (for example, social media links and icons) in HTML email notifications.';
-$string['formemail_details_notificationshtmlfooter'] = 'Add custom HTML (for example, social media links and icons) in HTML email notifications.';
-$string['formemail_details_notificationstextfooter'] = 'Add information (for example, contact details and legal disclaimers) in plain-text email notifications.';
-$string['formemail_label_notificationshtmlheader'] = 'HTML header';
-$string['formemail_label_notificationshtmlfooter'] = 'HTML footer';
-$string['formemail_label_notificationstextfooter'] = 'Plain-text footer';
-$string['settings_email_send_error'] = 'Error sending notification email';
-$string['settings_email_send_success'] = 'Successfully sent email notification. Please check your email inbox.';
 
 // Theme settings - Tenants page.
 $string['branding'] = 'Branding';

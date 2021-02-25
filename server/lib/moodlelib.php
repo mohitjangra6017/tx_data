@@ -6442,8 +6442,8 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
         // Only process html templates if the user preferences allow html email.
 
         // If either header or footer has a value then both apply even if one is empty.
-        $html_header = $theme_settings->get_property('email', 'formemail_field_notificationshtmlheader');
-        $html_footer = $theme_settings->get_property('email', 'formemail_field_notificationshtmlfooter');
+        $html_header = $theme_settings->get_property('brand', 'formbrand_field_notificationshtmlheader');
+        $html_footer = $theme_settings->get_property('brand', 'formbrand_field_notificationshtmlfooter');
         if ((is_array($html_header) && !empty($html_header['value']))
             || (is_array($html_footer) && !empty($html_footer['value']))) {
             $context['header'] = is_array($html_header) && !empty($html_header['value']) ? $html_header['value'] : '&nbsp;';
@@ -6477,7 +6477,7 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
         $mail->MessageID = generate_email_messageid();
     }
 
-    $text_footer = $theme_settings->get_property('email', 'formemail_field_notificationstextfooter') ?? ['value' => ''];
+    $text_footer = $theme_settings->get_property('brand', 'formbrand_field_notificationstextfooter') ?? ['value' => ''];
     if ($messagehtml && !empty($user->mailformat) && $user->mailformat == 1) {
         // Don't ever send HTML to users who don't want it.
         $mail->isHTML(true);

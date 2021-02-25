@@ -81,19 +81,132 @@
           {{ $str('formbrand_details_favicon', 'totara_tui') }}
         </FormRowDetails>
       </FormRow>
+    </FormRowStack>
+    <FormRowStack spacing="large">
+      <Collapsible
+        :label="$str('formbrand_group_notifications', 'totara_tui')"
+        :initial-state="false"
+      >
+        <FormRowStack spacing="large">
+          <FormRow
+            v-slot="{ id }"
+            :label="
+              $str('formbrand_label_notificationshtmlheader', 'totara_tui')
+            "
+            :is-stacked="true"
+          >
+            <FormField
+              v-slot="{ value, update }"
+              :name="['formbrand_field_notificationshtmlheader', 'value']"
+              char-length="full"
+            >
+              <Editor
+                :id="id"
+                :value="value"
+                :default-format="htmlFormat"
+                :context-id="contextIdNumber"
+                :usage-identifier="{
+                  component: 'totara_tui',
+                  area: 'formbrand_notifications_htmlheader',
+                }"
+                variant="standard"
+                @input="update"
+              />
+            </FormField>
+            <FormRowDetails
+              :id="$id('formbrand-notifications-htmlheader-details')"
+            >
+              {{
+                $str('formbrand_details_notificationshtmlheader', 'totara_tui')
+              }}
+            </FormRowDetails>
+          </FormRow>
+
+          <FormRow
+            v-slot="{ id }"
+            :label="
+              $str('formbrand_label_notificationshtmlfooter', 'totara_tui')
+            "
+          >
+            <FormField
+              v-slot="{ value, update }"
+              :name="['formbrand_field_notificationshtmlfooter', 'value']"
+              char-length="full"
+            >
+              <Editor
+                :id="id"
+                :value="value"
+                :default-format="htmlFormat"
+                :context-id="contextIdNumber"
+                :usage-identifier="{
+                  component: 'totara_tui',
+                  area: 'formbrand_notifications_htmlfooter',
+                }"
+                variant="standard"
+                @input="update"
+              />
+            </FormField>
+            <FormRowDetails
+              :id="$id('formbrand-notifications-htmlfooter-details')"
+            >
+              {{
+                $str('formbrand_details_notificationshtmlfooter', 'totara_tui')
+              }}
+            </FormRowDetails>
+          </FormRow>
+
+          <FormRow
+            :label="
+              $str('formbrand_label_notificationstextfooter', 'totara_tui')
+            "
+            :is-stacked="true"
+          >
+            <FormTextarea
+              :name="['formbrand_field_notificationstextfooter', 'value']"
+              spellcheck="false"
+              :rows="rows('formbrand_field_notificationstextfooter', 8, 30)"
+              char-length="full"
+              :aria-describedby="
+                $id('formbrand-notificationstextfooter-details')
+              "
+            />
+            <FormRowDetails
+              :id="$id('formbrand-notifications-textfooter-details')"
+            >
+              {{
+                $str('formbrand_details_notificationstextfooter', 'totara_tui')
+              }}
+            </FormRowDetails>
+          </FormRow>
+          <FormRow>
+            <InputSet>
+              <Button
+                :styleclass="{ primary: false }"
+                :text="$str('test_email_notification', 'totara_core')"
+                :disabled="isSending"
+                @click="sendEmailNotification"
+              />
+              <InfoIconButton
+                class="tui-settingsFormBrand__testEmailInfoButton"
+                :is-help-for="$str('test_email_notification', 'totara_core')"
+              >
+                {{ $str('test_email_notification_help', 'totara_core') }}
+              </InfoIconButton>
+            </InputSet>
+          </FormRow>
+        </FormRowStack>
+      </Collapsible>
 
       <FormRow>
         <ButtonGroup>
           <Button
-            :styleclass="{ primary: 'true' }"
+            :styleclass="{ primary: true }"
             :text="$str('save', 'totara_core')"
             :aria-label="
               $str(
                 'saveextended',
                 'totara_core',
-                $str('tabbrand', 'totara_tui') +
-                  ' ' +
-                  $str('settings', 'totara_core')
+                $str('tabbrand', 'totara_tui')
               )
             "
             :disabled="isSaving"
@@ -112,11 +225,22 @@ import {
   FormRow,
   FormRowStack,
   FormText,
+  FormField,
+  FormTextarea,
 } from 'tui/components/uniform';
 import ImageUploadSetting from 'tui/components/theme_settings/ImageUploadSetting';
 import FormRowDetails from 'tui/components/form/FormRowDetails';
 import Button from 'tui/components/buttons/Button';
 import ButtonGroup from 'tui/components/buttons/ButtonGroup';
+import Editor from 'tui/components/editor/Editor';
+import { Format } from 'tui/editor';
+import InfoIconButton from 'tui/components/buttons/InfoIconButton';
+import Collapsible from 'tui/components/collapsible/Collapsible';
+import { notify } from 'tui/notifications';
+import InputSet from 'tui/components/form/InputSet';
+
+// GraphQL
+import tuiSendEmailNotification from 'core/graphql/theme_settings_send_email_notification';
 
 // Mixins
 import FileMixin from 'tui/mixins/settings_form_file_mixin';
@@ -131,6 +255,12 @@ export default {
     ImageUploadSetting,
     Button,
     ButtonGroup,
+    FormTextarea,
+    Editor,
+    InfoIconButton,
+    FormField,
+    Collapsible,
+    InputSet,
   },
 
   mixins: [FileMixin],
@@ -184,6 +314,26 @@ export default {
           value: null,
           type: 'text',
         },
+        formbrand_field_notificationshtmlheader: {
+          value: '',
+          type: 'html',
+        },
+        formbrand_field_notificationshtmlfooter: {
+          value: '',
+          type: 'html',
+        },
+        formbrand_field_notificationstextfooter: {
+          value: '',
+          type: 'text',
+        },
+      },
+      editorFields: {
+        formbrand_field_notificationshtmlheader: {
+          format: Format.HTML,
+        },
+        formbrand_field_notificationshtmlfooter: {
+          format: Format.HTML,
+        },
       },
       fileData: {
         sitefavicon: null,
@@ -194,6 +344,9 @@ export default {
       valuesForm: null,
       resultForm: null,
       theme_settings: theme_settings,
+      isSending: false,
+      htmlFormat: Format.HTML,
+      contextIdNumber: parseInt(this.contextId),
     };
   },
 
@@ -220,6 +373,10 @@ export default {
     ]);
     this.initialValues = this.theme_settings.getResolvedInitialValues(
       mergedFormData
+    );
+    this.initialValues = this.theme_settings.resolveEditorContentFields(
+      this.initialValues,
+      this.editorFields
     );
     this.initialValuesSet = true;
     this.$emit('mounted', {
@@ -263,6 +420,27 @@ export default {
     },
 
     /**
+     * Adjust the height of a textarea field as the user types, up to
+     * a supplied limit, which then invokes a scrollbar
+     **/
+    rows(field, minLines, maxLines) {
+      let text = '';
+      if (this.valuesForm && field in this.valuesForm) {
+        text = this.valuesForm[field].value;
+      } else if (this.initialValues && field in this.initialValues) {
+        text = this.initialValues[field].value;
+      }
+      let lines = (text.match(/\n/g) || []).length + 1;
+      if (lines < minLines) {
+        return minLines;
+      }
+      if (lines > maxLines) {
+        return maxLines;
+      }
+      return lines;
+    },
+
+    /**
      * Handle submission of an embedded form.
      *
      * @param {Object} currentValues The submitted form data.
@@ -293,10 +471,20 @@ export default {
 
       // handle non-image upload form fields
       Object.keys(currentValues).forEach(field => {
+        let value;
+        if (
+          Object.keys(this.editorFields).find(
+            editorField => editorField === field
+          )
+        ) {
+          value = currentValues[field].value.getContent();
+        } else {
+          value = String(currentValues[field].value);
+        }
         data.fields.push({
           name: field,
           type: currentValues[field].type,
-          value: String(currentValues[field].value),
+          value: value,
         });
       });
 
@@ -309,6 +497,45 @@ export default {
       });
 
       return data;
+    },
+
+    async sendEmailNotification() {
+      this.isSending = true;
+      const values = this.valuesForm || this.initialValues;
+
+      try {
+        const { data } = await this.$apollo.mutate({
+          mutation: tuiSendEmailNotification,
+          variables: {
+            html_header: values[
+              'formbrand_field_notificationshtmlheader'
+            ].value.getContent(),
+            html_footer: values[
+              'formbrand_field_notificationshtmlfooter'
+            ].value.getContent(),
+            text_footer:
+              values['formbrand_field_notificationstextfooter'].value,
+          },
+        });
+
+        if (data['core_theme_settings_send_email_notification']) {
+          notify({
+            message: this.$str('settings_email_send_success', 'totara_tui'),
+            type: 'success',
+          });
+        } else {
+          notify({
+            message: this.$str('settings_email_send_error', 'totara_tui'),
+            type: 'error',
+          });
+        }
+      } catch (e) {
+        notify({
+          message: this.$str('settings_email_send_error', 'totara_tui'),
+          type: 'error',
+        });
+      }
+      this.isSending = false;
     },
   },
 };
@@ -324,12 +551,30 @@ export default {
     "formbrand_details_logoalttext",
     "formbrand_label_favicon",
     "formbrand_details_favicon",
-    "tabbrand"
+    "formbrand_group_notifications",
+    "formbrand_label_notificationshtmlheader",
+    "formbrand_label_notificationshtmlfooter",
+    "formbrand_label_notificationstextfooter",
+    "formbrand_details_notificationshtmlheader",
+    "formbrand_details_notificationshtmlfooter",
+    "formbrand_details_notificationstextfooter",
+    "tabbrand",
+    "settings_email_send_success",
+    "settings_email_send_error"
   ],
   "totara_core": [
     "save",
     "saveextended",
-    "settings"
+    "settings",
+    "enabled",
+    "test_email_notification",
+    "test_email_notification_help"
   ]
 }
 </lang-strings>
+
+<style lang="scss">
+.tui-settingsFormBrand__testEmailInfoButton {
+  align-self: center;
+}
+</style>

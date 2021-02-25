@@ -1315,20 +1315,20 @@ class core_theme_settings_testcase extends advanced_testcase {
 
         $categories = [
             [
-                'name' => 'email',
+                'name' => 'brand',
                 'properties' => [
                     [
-                        'name' => 'formemail_field_notificationshtmlheader',
+                        'name' => 'formbrand_field_notificationshtmlheader',
                         'type' => 'html',
                         'value' => '<div>This is the header</div>',
                     ],
                     [
-                        'name' => 'formemail_field_notificationshtmlfooter',
+                        'name' => 'formbrand_field_notificationshtmlfooter',
                         'type' => 'html',
                         'value' => '<div>This is the footer</div>',
                     ],
                     [
-                        'name' => 'formemail_field_notificationstextfooter',
+                        'name' => 'formbrand_field_notificationstextfooter',
                         'type' => 'text',
                         'value' => 'This is the plain-text footer',
                     ],
