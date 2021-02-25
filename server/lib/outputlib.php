@@ -1073,6 +1073,8 @@ class theme_config {
         $rtlmode = ($this->rtlmode == true) ? 'rtl' : 'ltr';
         // Totara: Legacy CSS
         $legacy = $this->legacybrowser ? 'legacy' : 'modern';
+        // KINEO CCM - GLOTOT-1355
+        return $nosvg . $this->name . '_' . $rtlmode . '_' . $legacy . '_' . theme_kineo_get_tenant_id();
 
         return $nosvg . $this->name . '_' . $rtlmode . '_' . $legacy;
     }
