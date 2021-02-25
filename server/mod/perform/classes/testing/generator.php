@@ -345,7 +345,7 @@ final class generator extends \core\testing\component_generator {
      * @return element
      */
     public function create_element(array $data = []): element {
-        return element::create(
+        $element = element::create(
             $data['context'] ?? \context_coursecat::instance(perform_container::get_default_category_id()),
             $data['plugin_name'] ?? 'short_text',
             $data['title'] ?? 'test element title',
@@ -355,6 +355,9 @@ final class generator extends \core\testing\component_generator {
             $data['parent'] ?? null,
             $data['sort_order'] ?? null
         );
+        element::post_create($element);
+
+        return $element;
     }
 
     /**

@@ -176,6 +176,7 @@ class aggregation extends derived_responses_element_plugin {
 
     public function format_response_lines(?string $encoded_response_data, ?string $encoded_element_data): array {
         // TODO: Implement format_response_lines() method.
+        return [];
     }
 
     private function strip_section_element_references(element_model $element, array $data): void {

@@ -38,6 +38,7 @@ use mod_perform\observers\notification;
 use mod_perform\observers\participant_instance_availability;
 use mod_perform\observers\participant_instance_progress;
 use mod_perform\observers\participant_section_availability;
+use mod_perform\observers\participant_section_derived_responses;
 use mod_perform\observers\participant_section_progress;
 use mod_perform\observers\subject_instance_availability;
 use mod_perform\observers\subject_instance_manual_status;
@@ -81,6 +82,10 @@ $observers = [
     [
         'eventname' => participant_section_progress_updated::class,
         'callback' => participant_section_progress::class.'::progress_updated',
+    ],
+    [
+        'eventname' => participant_section_progress_updated::class,
+        'callback' => participant_section_derived_responses::class.'::update_derived_responses',
     ],
     [
         'eventname' => participant_instance_progress_updated::class,

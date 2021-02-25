@@ -383,6 +383,27 @@ abstract class element_plugin {
     abstract public function get_sortorder(): int;
 
     /**
+     * Return the aggregatable value
+     * Aggregatable plugins should override
+     *
+     * @param string|null $encoded_response_data
+     * @param string|null $encoded_element_data
+     * @return int|null
+     */
+    public function get_aggregatable_value(?string $encoded_response_data, ?string $encoded_element_data): ?int {
+        if (!$this->get_is_aggregatable()) {
+            return null;
+        }
+
+        $decoded_response = $this->decode_response($encoded_response_data, $encoded_element_data);
+        if ($decoded_response === null) {
+            return null;
+        }
+
+        return (int)$decoded_response;
+    }
+
+    /**
      * Builds the response data.
      *
      * @param section_element_response $section_element_response

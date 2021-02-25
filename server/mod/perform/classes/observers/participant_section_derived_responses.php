@@ -1,0 +1,51 @@
+<?php
+/**
+ * This file is part of Totara Learn
+ *
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author Riana Rossouw <riana.rossouw@totaralearning.com>
+ * @package mod_perform
+ */
+
+namespace mod_perform\observers;
+
+use core\event\base;
+use mod_perform\event\participant_section_progress_updated;
+use mod_perform\entity\activity\participant_section as participant_section_entity;
+use mod_perform\models\activity\derived_responses_element_plugin;
+use mod_perform\state\participant_section\complete;
+
+class participant_section_derived_responses {
+
+    /**
+     * When progress status of a participant section is updated
+     * update derived responses
+     *
+     * @param participant_section_progress_updated $event
+     */
+    public static function update_derived_responses(participant_section_progress_updated $event) {
+        // Aggregation is only calculated for submitted sections
+        $progress = $event->other['progress'];
+        if ($progress !== complete::get_name()) {
+            return;
+        }
+
+        /** @var participant_section_entity $participant_section */
+        $source_participant_section = participant_section_entity::repository()->find_or_fail($event->objectid);
+        derived_responses_element_plugin::calculate_derived_response_for_participant_section($source_participant_section);
+    }
+}
