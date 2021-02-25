@@ -77,7 +77,14 @@ class mod_perform_activity_clone_model_helper_testcase extends advanced_testcase
                 'identifier' => 'test ID'
             ]
         );
-        $section_element = $perform_generator->create_section_element($section, $element);
+        $perform_generator->create_section_element($section, $element);
+
+        $perform_generator->create_element([
+            'context' => $activity->get_context(),
+            'plugin_name' => 'short_text',
+            'title' => 'test sub element title',
+            'parent' => $element->id
+        ]);
 
         $entity = activity_entity::repository()->find($activity->get_id());
         $new_activity = activity::load_by_entity($entity)->clone();
@@ -128,6 +135,11 @@ class mod_perform_activity_clone_model_helper_testcase extends advanced_testcase
                     $this->fail('Section element was not cloned');
                 }
                 $this->assertEquals($old_section_element->sort_order, $new_section_element->sort_order);
+
+                $old_sub_elements = $old_section_element->element->children->pluck('title');
+                $new_sub_elements = $new_section_element->element->children->pluck('title');
+                $this->assertSameSize($old_sub_elements, $new_sub_elements);
+                $this->assertEqualsCanonicalizing($old_sub_elements, $new_sub_elements);
 
                 $old_section_elements->__unset($section_element_key);
             }
@@ -402,7 +414,7 @@ class mod_perform_activity_clone_model_helper_testcase extends advanced_testcase
             }
         }
 
-        return $result;
+        return array_unique($result);
     }
 
 

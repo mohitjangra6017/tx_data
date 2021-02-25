@@ -349,7 +349,9 @@ final class generator extends \core\testing\component_generator {
             $data['title'] ?? 'test element title',
             $data['identifier'] ?? '',
             $data['data'] ?? null,
-            $data['is_required'] ?? false
+            $data['is_required'] ?? false,
+            $data['parent'] ?? null,
+            $data['sort_order'] ?? null
         );
     }
 

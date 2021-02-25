@@ -26,7 +26,6 @@ namespace mod_perform\backup;
 
 defined('MOODLE_INTERNAL') || die();
 
-use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\helpers\element_cloning;
 use restore_path_element;
@@ -66,6 +65,11 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         $paths[] = new restore_path_element(
             'element',
             '/activity/perform/elements/element'
+        );
+
+        $paths[] = new restore_path_element(
+            'sub_element',
+            '/activity/perform/elements/element/sub_elements/sub_element'
         );
 
         $paths[] = new restore_path_element(
@@ -253,6 +257,28 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         }
 
         $this->set_mapping('perform_element', $old_id, $new_item_id);
+    }
+
+    protected function process_sub_element($data) {
+        global $DB;
+
+        $data = (object)$data;
+        $old_id = $data->id;
+
+        $activity_id = $this->get_new_parentid('perform');
+        $data->context_id = activity::load_by_id($activity_id)->get_context()->id;
+        $data->parent = $this->get_mappingid('perform_element', $data->parent);
+
+        // If the element has its own cloner then use that instead.
+        $class = "\\performelement_{$data->plugin_name}\\models\\helpers\\element_clone";
+        if (class_exists($class)) {
+            $element_clone = new $class();
+            $new_item_id = $element_clone->create($activity_id, $data);
+        } else {
+            $new_item_id = $DB->insert_record('perform_element', $data);
+        }
+
+        $this->set_mapping('perform_sub_element', $old_id, $new_item_id);
     }
 
     protected function process_element_identifier($data) {
