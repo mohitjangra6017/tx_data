@@ -36,6 +36,7 @@
         :context-id="contextId"
         :preference="preference"
         :parent-value="parentValue"
+        :valid-schedule-types="validScheduleTypes"
         @submit="handleSubmit"
         @cancel="$emit('request-close')"
       />
@@ -90,6 +91,11 @@ export default {
     },
 
     eventClassName: String,
+
+    validScheduleTypes: {
+      type: Array,
+      required: true,
+    },
   },
 
   methods: {

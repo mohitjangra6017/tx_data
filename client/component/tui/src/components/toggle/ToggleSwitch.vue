@@ -43,6 +43,7 @@
 
     <span
       class="tui-toggleSwitch__ui"
+      :class="toggleOnly && 'tui-toggleSwitch__ui--toggleOnly'"
       aria-hidden="true"
       @click="togglePressed"
     />
@@ -68,6 +69,7 @@ export default {
       type: Boolean,
       default: false,
     },
+    toggleOnly: Boolean,
     value: {
       type: Boolean,
     },
@@ -136,6 +138,12 @@ export default {
     margin-left: var(--form-toggle-text-offset);
     // prettier-ignore
     padding: calc(var(--form-toggle-focus-gap) + var(--form-toggle-focus-border));
+
+    &--toggleOnly {
+      margin-left: calc(
+        -1 * (var(--form-toggle-focus-gap) + var(--form-toggle-focus-border))
+      );
+    }
 
     // the toggle background
     &:before {

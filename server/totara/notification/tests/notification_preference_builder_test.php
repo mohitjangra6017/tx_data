@@ -131,6 +131,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $builder->set_body('body');
         $builder->set_subject('subject');
         $builder->set_body_format(FORMAT_PLAIN);
+        $builder->set_schedule_offset(0);
 
         $preference = $builder->save();
         self::assertTrue($DB->record_exists(notification_preference::TABLE, ['id' => $preference->get_id()]));
@@ -185,17 +186,20 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'subject' => 'First subject',
                 'body_format' => FORMAT_PLAIN,
                 'title' => 'First title',
+                'schedule_offset' => 0,
             ]
         );
 
         self::assertEquals('First body', $first_custom->get_body());
         self::assertEquals('First subject', $first_custom->get_subject());
         self::assertEquals('First title', $first_custom->get_title());
+        self::assertEquals(0, $first_custom->get_schedule_offset());
 
         $builder = notification_preference_builder::from_exist($first_custom->get_id());
         $builder->set_body('Second body');
         $builder->set_subject('Second subject');
         $builder->set_title('Second title');
+        $builder->set_schedule_offset(5);
 
         $builder->save();
         $first_custom->refresh();
@@ -203,10 +207,12 @@ class totara_notification_notification_preference_builder_testcase extends advan
         self::assertNotEquals('First body', $first_custom->get_body());
         self::assertNotEquals('First subject', $first_custom->get_subject());
         self::assertNotEquals('First title', $first_custom->get_title());
+        self::assertNotEquals(0, $first_custom->get_schedule_offset());
 
         self::assertEquals('Second body', $first_custom->get_body());
         self::assertEquals('Second subject', $first_custom->get_subject());
         self::assertEquals('Second title', $first_custom->get_title());
+        self::assertEquals(5, $first_custom->get_schedule_offset());
     }
 
     /**
@@ -231,6 +237,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'subject' => 'subject',
                 'body_format' => FORMAT_PLAIN,
                 'title' => 'title',
+                'schedule_offset' => 0,
             ]
         );
 
@@ -258,6 +265,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'This is title',
+                'schedule_offset' => 0,
             ]
         );
 
@@ -291,6 +299,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'This is title',
+                'schedule_offset' => 0,
             ]
         );
 
@@ -324,6 +333,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'This is title',
+                'schedule_offset' => 0,
             ]
         );
 
@@ -357,6 +367,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'This is title',
+                'schedule_offset' => 0,
             ]
         );
 
@@ -370,6 +381,40 @@ class totara_notification_notification_preference_builder_testcase extends advan
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("Cannot reset the field 'subject' for custom notification that does not have parent(s)");
+
+        $builder->save();
+    }
+
+    /**
+     * @return void
+     */
+    public function test_reset_schedule_offset_of_custom_notification_that_does_not_have_parent(): void {
+        global $DB;
+
+        /** @var generator $generator */
+        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $notification_preference = $generator->create_notification_preference(
+            totara_notification_mock_notifiable_event::class,
+            context_system::instance()->id,
+            [
+                'body' => 'This is body',
+                'subject' => 'This is subject',
+                'body_format' => FORMAT_MOODLE,
+                'title' => 'This is title',
+                'schedule_offset' => 0,
+            ]
+        );
+
+        self::assertTrue(
+            $DB->record_exists(notification_preference::TABLE, ['id' => $notification_preference->get_id()])
+        );
+
+        // Start the update with the builder.
+        $builder = notification_preference_builder::from_exist_model($notification_preference);
+        $builder->set_schedule_offset(null);
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("Cannot reset the field 'schedule_offset' for custom notification that does not have parent(s)");
 
         $builder->save();
     }

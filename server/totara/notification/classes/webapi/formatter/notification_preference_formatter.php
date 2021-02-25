@@ -26,6 +26,7 @@ use context;
 use core\webapi\formatter\formatter;
 use stdClass;
 use totara_notification\local\helper;
+use totara_notification\local\schedule_helper;
 use totara_notification\model\notification_preference as model;
 
 class notification_preference_formatter extends formatter {
@@ -47,6 +48,8 @@ class notification_preference_formatter extends formatter {
         $record->ancestor_id = $notification_preference->get_ancestor_id();
         $record->is_custom = $notification_preference->is_custom_notification();
         $record->context_id = $notification_preference->get_context_id();
+        $record->schedule_offset = $notification_preference->get_schedule_offset();
+        $record->overridden_schedule = $notification_preference->is_overridden_schedule();
 
         parent::__construct($record, $context);
     }
@@ -62,6 +65,11 @@ class notification_preference_formatter extends formatter {
             // try to convert the event_class_name into a human readable event name.
             $field = 'event_class_name';
         }
+        if ($field === 'schedule_label' || $field === 'schedule_type') {
+            // Convert the schedule fields back into the schedule_offset, and calculate
+            // the correct value based off of that.
+            $field = 'schedule_offset';
+        }
 
         return parent::get_field($field);
     }
@@ -71,8 +79,7 @@ class notification_preference_formatter extends formatter {
      * @return bool
      */
     protected function has_field(string $field): bool {
-        if ('event_name' === $field) {
-            // Yes we do have field 'event_name' for this formatter.
+        if ('event_name' === $field || 'schedule_label' === $field || 'schedule_type' === $field) {
             return true;
         }
 
@@ -92,8 +99,18 @@ class notification_preference_formatter extends formatter {
             'event_name' => function (string $event_class_name): string {
                 return helper::get_human_readable_event_name($event_class_name);
             },
+            'schedule_offset' => function (int $offset): int {
+                return schedule_helper::get_schedule_offset($offset);
+            },
+            'schedule_type' => function (int $offset): string {
+                return schedule_helper::get_schedule_identifier($offset);
+            },
+            'schedule_label' => function (int $offset): string {
+                return schedule_helper::get_human_readable_schedule_label($offset);
+            },
             'overridden_body' => null,
             'overridden_subject' => null,
+            'overridden_schedule' => null,
             'ancestor_id' => null,
             'event_class_name' => null,
             'is_custom' => null,

@@ -22,10 +22,10 @@
  */
 namespace totara_comment\totara_notification\notification;
 
-use coding_exception;
 use lang_string;
 use totara_comment\event\comment_created;
 use totara_notification\notification\built_in_notification;
+use totara_notification\schedule\schedule_on_event;
 
 final class comment_created_notification extends built_in_notification {
     /**
@@ -61,5 +61,12 @@ final class comment_created_notification extends built_in_notification {
      */
     public static function get_default_subject(): lang_string {
         return new lang_string('comment_created', 'totara_comment');
+    }
+
+    /**
+     * @return int
+     */
+    public static function get_default_schedule_offset(): int {
+        return schedule_on_event::default_value();
     }
 }

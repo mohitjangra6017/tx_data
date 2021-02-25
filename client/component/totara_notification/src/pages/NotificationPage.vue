@@ -41,6 +41,7 @@
             targetPreference ? targetPreference.parent_value : null
           "
           :title="modal.title"
+          :valid-schedule-types="targetScheduleTypes"
           @form-submit="handleFormSubmit"
         />
       </ModalPresenter>
@@ -122,6 +123,7 @@ export default {
       },
       targetEventClassName: null,
       targetPreference: null,
+      targetScheduleTypes: [],
     };
   },
 
@@ -133,6 +135,7 @@ export default {
           // Reset the target preference everytime the modal is closed.
           this.targetPreference = null;
           this.targetEventClassName = null;
+          this.targetScheduleTypes = [];
         }
       },
     },
@@ -141,8 +144,9 @@ export default {
   methods: {
     /**
      * @param {String} eventClassName
+     * @param {Array} scheduleTypes
      */
-    handleCreateCustomNotification({ eventClassName }) {
+    handleCreateCustomNotification({ eventClassName, scheduleTypes }) {
       this.modal.title = this.$str(
         'create_custom_notification_title',
         'totara_notification'
@@ -151,13 +155,16 @@ export default {
       this.modal.state = MODAL_STATE_CREATE;
 
       this.targetEventClassName = eventClassName;
+      this.targetScheduleTypes = scheduleTypes;
     },
 
     /**
      * @param {Object} oldPreference
+     * @param scheduleTypes
      */
-    async handleEditNotification(oldPreference) {
+    async handleEditNotification(oldPreference, scheduleTypes) {
       this.targetPreference = await this.getOverriddenPreference(oldPreference);
+      this.targetScheduleTypes = scheduleTypes;
 
       this.modal.title = this.$str('edit_notification', 'totara_notification');
       this.modal.open = true;
@@ -204,6 +211,8 @@ export default {
      * @param {String} title
      * @param {Number} body_format
      * @param {String} event_class_name
+     * @param {String} schedule_type
+     * @param {Number} schedule_offset
      */
     async createCustomNotification({
       subject,
@@ -211,6 +220,8 @@ export default {
       title,
       body_format,
       event_class_name,
+      schedule_type,
+      schedule_offset,
     }) {
       await this.$apollo.mutate({
         mutation: createCustomNotification,
@@ -221,6 +232,8 @@ export default {
           body_format,
           event_class_name,
           context_id: this.contextId,
+          schedule_type,
+          schedule_offset,
         },
         update: (
           proxy,
@@ -338,8 +351,17 @@ export default {
      * @param {String} title
      * @param {String} body
      * @param {Number} body_format
+     * @param {String} schedule_type
+     * @param {Number} schedule_offset
      */
-    async updateNotification({ subject, title, body, body_format }) {
+    async updateNotification({
+      subject,
+      title,
+      body,
+      body_format,
+      schedule_type,
+      schedule_offset,
+    }) {
       if (!this.targetPreference) {
         throw new Error('Cannot run update while target preference is empty');
       }
@@ -352,11 +374,13 @@ export default {
           body,
           body_format,
           // Note that we don't want NULL here, but undefined, because we would want the graphql
-          // to exclute the field title when updating a custom notification at a very specific context.
+          // to exclude the field title when updating a custom notification at a very specific context.
           title:
             this.targetPreference.is_custom && !this.targetPreference.parent_id
               ? title
               : undefined,
+          schedule_type,
+          schedule_offset,
         },
         update: (
           proxy,

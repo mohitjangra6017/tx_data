@@ -29,6 +29,7 @@ use core\webapi\middleware\require_login;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
 use totara_notification\builder\notification_preference_builder;
+use totara_notification\local\schedule_helper;
 use totara_notification\model\notification_preference;
 
 class update_notification_preference implements mutation_resolver, has_middleware {
@@ -60,8 +61,8 @@ class update_notification_preference implements mutation_resolver, has_middlewar
         }
 
         if (array_key_exists('subject', $args)) {
-            // Treating empty string as null, so that our bulder can
-            // reset the value of$ subject.
+            // Treating empty string as null, so that our builder can
+            // reset the value of $subject.
             $subject = ('' === $args['subject']) ? null : $args['subject'];
             $builder->set_subject($subject);
         }
@@ -87,6 +88,18 @@ class update_notification_preference implements mutation_resolver, has_middlewar
             }
 
             $builder->set_title($title);
+        }
+
+        if (array_key_exists('schedule_type', $args) && array_key_exists('schedule_offset', $args)) {
+            // We must translate the value based on the provided schedule type
+            $offset = null;
+            if (null !== $args['schedule_type']) {
+                $offset = schedule_helper::convert_schedule_offset_for_storage(
+                    $args['schedule_type'],
+                    $args['schedule_offset']
+                );
+            }
+            $builder->set_schedule_offset($offset);
         }
 
         return $builder->save();

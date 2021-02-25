@@ -70,6 +70,12 @@ abstract class built_in_notification {
     abstract public static function get_default_subject(): lang_string;
 
     /**
+     * Returns the schedule offset value, translated for storage.
+     * @return int
+     */
+    abstract public static function get_default_schedule_offset(): int;
+
+    /**
      * The function should only return the following values:
      * + @see FORMAT_MOODLE
      * + @see FORMAT_HTML

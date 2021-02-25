@@ -23,6 +23,7 @@
 
 use totara_notification\model\notification_preference;
 use totara_notification\notification\built_in_notification;
+use totara_notification\schedule\schedule_on_event;
 
 class totara_notification_mock_built_in_notification extends built_in_notification {
     /**
@@ -114,5 +115,12 @@ class totara_notification_mock_built_in_notification extends built_in_notificati
         if (isset(self::$subject)) {
             self::$subject = null;
         }
+    }
+
+    /**
+     * @return int
+     */
+    public static function get_default_schedule_offset(): int {
+        return schedule_on_event::default_value();
     }
 }

@@ -165,6 +165,7 @@ final class generator extends component_generator {
             $data['title'] = $data['title'] ?? 'This is title';
             $data['body_format'] = $data['body_format'] ?? FORMAT_MOODLE;
             $data['subject'] = $data['subject'] ?? 'This is a subject';
+            $data['schedule_offset'] = $data['schedule_offset'] ?? 0;
         }
 
         $builder->set_notification_class_name($data['notification_class_name'] ?? null);
@@ -173,6 +174,7 @@ final class generator extends component_generator {
         $builder->set_body_format($data['body_format'] ?? null);
         $builder->set_subject($data['subject'] ?? null);
         $builder->set_title($data['title'] ?? null);
+        $builder->set_schedule_offset($data['schedule_offset'] ?? null);
 
         return $builder->save();
     }

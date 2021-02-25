@@ -35,6 +35,7 @@ use totara_notification\repository\notifiable_event_queue_repository;
  *                                  decoded version of this attribute. Note that the result returned will be an array.
  * @property int    $context_id
  * @property int    $time_created
+ * @property int    $event_time
  *
  * @method static notifiable_event_queue_repository repository()
  */

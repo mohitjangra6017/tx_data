@@ -24,6 +24,7 @@
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\model\notification_preference as model;
+use totara_notification\schedule\schedule_on_event;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\mutation\create_notification_preference;
 use totara_webapi\phpunit\webapi_phpunit_helper;
@@ -244,6 +245,8 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_HTML,
                 'title' => 'This is title',
+                'schedule_type' => schedule_on_event::identifier(),
+                'schedule_offset' => 0,
             ]
         );
 

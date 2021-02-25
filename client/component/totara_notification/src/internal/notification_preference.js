@@ -22,7 +22,15 @@ export const NOTIFICATION_PREFERENCE_KEYS = [
   'body',
   'body_format',
   'title',
+  'schedule_type',
+  'schedule_offset',
 ];
+
+export const SCHEDULE_TYPES = {
+  ON_EVENT: 'ON_EVENT',
+  BEFORE_EVENT: 'BEFORE_EVENT',
+  AFTER_EVENT: 'AFTER_EVENT',
+};
 
 /**
  * Validator function for the notification preference props.
@@ -55,6 +63,8 @@ export function getDefaultNotificationPreference(extraAttributes = {}) {
     body: '',
     body_format: Format.MOODLE,
     title: null,
+    schedule_type: SCHEDULE_TYPES.ON_EVENT,
+    schedule_offset: null,
   };
 
   return () => {

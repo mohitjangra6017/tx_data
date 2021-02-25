@@ -16,6 +16,10 @@ type totara_notification_notifiable_event {
   """
   name: String!
   """
+  Collection of schedule types valid for this type of notifiable event.
+  """
+  valid_schedules: [totara_notification_schedule_type!]!
+  """
   Returning all the notification preferences that are associated with this very notifiable event.
   """
   notification_preferences(

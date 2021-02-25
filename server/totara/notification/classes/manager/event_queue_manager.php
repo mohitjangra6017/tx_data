@@ -30,6 +30,7 @@ use totara_notification\entity\notifiable_event_queue;
 use totara_notification\entity\notification_queue;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\helper;
+use totara_notification\local\schedule_helper;
 
 class event_queue_manager {
     /**
@@ -80,7 +81,10 @@ class event_queue_manager {
                     $notification_queue->notification_preference_id = $notification_preference->get_id();
                     $notification_queue->context_id = $queue->context_id;
                     $notification_queue->event_data = $queue->event_data;
-                    $notification_queue->scheduled_time = 0;
+                    $notification_queue->scheduled_time = schedule_helper::calculate_schedule_timestamp(
+                        $queue->event_time,
+                        $notification_preference->get_schedule_offset()
+                    );
                     $notification_queue->save();
                 }
 

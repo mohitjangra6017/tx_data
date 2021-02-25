@@ -39,6 +39,7 @@ use totara_notification\repository\notification_preference_repository;
  * @property string|null $body
  * @property int|null    $body_format
  * @property int         $time_created
+ * @property int         $schedule_offset
  *
  * @method static notification_preference_repository repository()
  */

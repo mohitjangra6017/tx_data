@@ -30,10 +30,10 @@ use core\webapi\middleware\require_login;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
 use totara_notification\builder\notification_preference_builder;
-use totara_notification\loader\notification_preference_loader;
-use totara_notification\local\helper;
-use totara_notification\model\notification_preference;
 use totara_notification\entity\notification_preference as entity;
+use totara_notification\local\helper;
+use totara_notification\local\schedule_helper;
+use totara_notification\model\notification_preference;
 
 class create_notification_preference implements mutation_resolver, has_middleware {
     /**
@@ -93,7 +93,7 @@ class create_notification_preference implements mutation_resolver, has_middlewar
                 }
             }
 
-            // We are checking if the overridding had already been existing in the system or not.
+            // We are checking if the overriding had already been existing in the system or not.
             // that it may exist in this context already.
             $custom_existing = $DB->record_exists(
                 entity::TABLE,
@@ -119,6 +119,18 @@ class create_notification_preference implements mutation_resolver, has_middlewar
         $builder->set_body($args['body'] ?? null);
         $builder->set_subject($args['subject'] ?? null);
         $builder->set_body_format($args['body_format'] ?? null);
+
+        // Schedule works in a pair, but writes to a single value.
+        $schedule_type = $args['schedule_type'] ?? null;
+        $schedule_offset = $args['schedule_offset'] ?? null;
+        $raw_schedule_offset = null;
+        if (null !== $schedule_type && null !== $schedule_offset) {
+            $raw_schedule_offset = schedule_helper::convert_schedule_offset_for_storage(
+                $schedule_type,
+                $schedule_offset
+            );
+        }
+        $builder->set_schedule_offset($raw_schedule_offset);
 
         return $builder->save();
     }

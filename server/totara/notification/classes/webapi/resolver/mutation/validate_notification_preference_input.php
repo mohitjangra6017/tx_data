@@ -26,6 +26,7 @@ use core\webapi\execution_context;
 use core\webapi\middleware\require_login;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
+use totara_notification\local\schedule_helper;
 
 /**
  * Mutation to validate the notification preference input data from user.
@@ -34,7 +35,7 @@ class validate_notification_preference_input implements mutation_resolver, has_m
     /**
      * Please note that any content that cause the value of cleaned param to
      * be empty string then it is invalid value. Otherwise we can accept those,
-     * because we can be sured that those malicious content will be stripped out
+     * because we can be sure that those malicious content will be stripped out
      * and leave us the legit content.
      *
      * @param array             $args
@@ -45,6 +46,8 @@ class validate_notification_preference_input implements mutation_resolver, has_m
         $title = $args['title'] ?? '';
         $body = $args['body'] ?? '';
         $subject = $args['subject'] ?? '';
+        $schedule_type = $args['schedule_type'] ?? '';
+        $schedule_offset = $args['schedule_offset'] ?? '';
 
         $result = [];
 
@@ -67,6 +70,33 @@ class validate_notification_preference_input implements mutation_resolver, has_m
                 'field_name' => 'subject',
                 'error_message' => get_string('invalid_input', 'totara_notification'),
             ];
+        }
+
+        if (clean_param($schedule_type, PARAM_TEXT) === '' || clean_param($schedule_offset, PARAM_TEXT) === '') {
+            $result[] = [
+                'field_name' => 'schedule_type',
+                'error_message' => get_string('invalid_input', 'totara_notification'),
+            ];
+        } else {
+            // If schedule isn't empty, we need to validate it's a valid type plus the provided offset matches.
+            $schedule_class = null;
+            try {
+                $schedule_class = schedule_helper::get_schedule_class_from_type($schedule_type);
+                if ($schedule_class) {
+                    $offset_valid = call_user_func([$schedule_class, 'validate_offset'], $schedule_offset);
+                    if (!$offset_valid) {
+                        $result[] = [
+                            'field_name' => 'schedule_type',
+                            'error_message' => get_string('invalid_input', 'totara_notification'),
+                        ];
+                    }
+                }
+            } catch (\coding_exception $exception) {
+                $result[] = [
+                    'field_name' => 'schedule_type',
+                    'error_message' => get_string('invalid_input', 'totara_notification'),
+                ];
+            }
         }
 
         return $result;

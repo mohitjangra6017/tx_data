@@ -22,6 +22,8 @@
  */
 
 use totara_notification\entity\notification_preference as entity;
+use totara_notification\schedule\schedule_after_event;
+use totara_notification\schedule\schedule_before_event;
 use totara_notification\testing\generator;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
@@ -55,6 +57,8 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body_format' => FORMAT_MOODLE,
                 'subject' => 'This is subject',
                 'title' => 'This is title',
+                'schedule_type' => schedule_before_event::identifier(),
+                'schedule_offset' => 5,
             ]
         );
 
@@ -86,6 +90,12 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
 
         self::assertArrayHasKey('is_custom', $notification_preference);
         self::assertTrue($notification_preference['is_custom']);
+
+        self::assertArrayHasKey('schedule_type', $notification_preference);
+        self::assertEquals(schedule_before_event::identifier(), $notification_preference['schedule_type']);
+
+        self::assertArrayHasKey('schedule_offset', $notification_preference);
+        self::assertEquals(5, $notification_preference['schedule_offset']);
     }
 
     /**
@@ -109,6 +119,8 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body_format' => FORMAT_HTML,
                 'subject' => 'First subject',
                 'title' => 'First title',
+                'schedule_type' => schedule_after_event::identifier(),
+                'schedule_offset' => 10,
             ]
         );
 
@@ -140,6 +152,12 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
 
         self::assertArrayHasKey('is_custom', $notification_preference);
         self::assertTrue($notification_preference['is_custom']);
+
+        self::assertArrayHasKey('schedule_type', $notification_preference);
+        self::assertEquals(schedule_after_event::identifier(), $notification_preference['schedule_type']);
+
+        self::assertArrayHasKey('schedule_offset', $notification_preference);
+        self::assertEquals(10, $notification_preference['schedule_offset']);
     }
 
     /**
@@ -156,6 +174,8 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => 'custom body',
                 'subject' => 'custom subject',
                 'body_format' => FORMAT_MOODLE,
+                'schedule_type' => schedule_before_event::identifier(),
+                'schedule_offset' => 6,
             ]
         );
 
@@ -193,6 +213,8 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => 'This is body',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
+                'schedule_type' => schedule_before_event::identifier(),
+                'schedule_offset' => 6,
             ]
         );
 
@@ -224,6 +246,12 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
 
         self::assertArrayHasKey('is_custom', $notification_preference);
         self::assertTrue($notification_preference['is_custom']);
+
+        self::assertArrayHasKey('schedule_type', $notification_preference);
+        self::assertEquals(schedule_before_event::identifier(), $notification_preference['schedule_type']);
+
+        self::assertArrayHasKey('schedule_offset', $notification_preference);
+        self::assertEquals(6, $notification_preference['schedule_offset']);
     }
 
     /**
@@ -242,6 +270,8 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => /** @lang text */ '<input type="text" value="cc"/>',
                 'subject' => 'lplpdw',
                 'body_format' => FORMAT_MOODLE,
+                'schedule_type' => schedule_before_event::identifier(),
+                'schedule_offset' => 2,
             ]
         );
 
@@ -273,6 +303,8 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => 'cccd',
                 'subject' => /** @lang text */ '<input type="text" value="cc"/>',
                 'body_format' => FORMAT_MOODLE,
+                'schedule_type' => schedule_before_event::identifier(),
+                'schedule_offset' => 2,
             ]
         );
 
@@ -304,6 +336,8 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => 'cccd',
                 'subject' => 'pokopkopfw',
                 'body_format' => FORMAT_MOODLE,
+                'schedule_type' => schedule_before_event::identifier(),
+                'schedule_offset' => 2,
             ]
         );
 
@@ -336,6 +370,8 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => /** @lang text */ '<script type="javascript">alert(1)</script>',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
+                'schedule_type' => schedule_before_event::identifier(),
+                'schedule_offset' => 2,
             ]
         );
 
@@ -371,6 +407,8 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body' => 'This is body',
                 'subject' => /** @lang text */ '<script type="javascript">alert(1)</script>',
                 'body_format' => FORMAT_MOODLE,
+                'schedule_type' => schedule_before_event::identifier(),
+                'schedule_offset' => 2,
             ]
         );
 

@@ -65,6 +65,7 @@ class totara_notification_process_event_task_testcase extends advanced_testcase 
         $event_queue->context_id = $context_system->id;
         $event_queue->event_name = totara_notification_mock_notifiable_event::class;
         $event_queue->set_decoded_event_data($data);
+        $event_queue->event_time = time();
         $event_queue->save();
 
         self::assertEquals(1, $DB->count_records(notifiable_event_queue::TABLE));
@@ -116,6 +117,7 @@ class totara_notification_process_event_task_testcase extends advanced_testcase 
         $event_queue = new notifiable_event_queue();
         $event_queue->context_id = $context_system->id;
         $event_queue->event_name = totara_notification_mock_notifiable_event::class;
+        $event_queue->event_time = time();
         $event_queue->set_decoded_event_data([]);
         $event_queue->save();
 
@@ -145,6 +147,7 @@ class totara_notification_process_event_task_testcase extends advanced_testcase 
         $event_queue = new notifiable_event_queue();
         $event_queue->context_id = $context_system->id;
         $event_queue->event_name = 'martin_garrix_anima_event';
+        $event_queue->event_time = time();
         $event_queue->set_decoded_event_data([]);
         $event_queue->save();
 

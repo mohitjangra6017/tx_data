@@ -56,6 +56,7 @@ class totara_notification_event_queue_manager_testcase extends advanced_testcase
         $valid_queue->context_id = $context_user->id;
         $valid_queue->set_decoded_event_data(['message' => 'data']);
         $valid_queue->event_name = totara_notification_mock_notifiable_event::class;
+        $valid_queue->event_time = time();
         $valid_queue->save();
 
         // Create an invalid queue.
@@ -63,6 +64,7 @@ class totara_notification_event_queue_manager_testcase extends advanced_testcase
         $invalid_queue->context_id = $context_user->id;
         $invalid_queue->set_decoded_event_data(['boom' => 'kaboom']);
         $invalid_queue->event_name = 'anima_martin_garrix';
+        $invalid_queue->event_time = time();
         $invalid_queue->save();
 
         // There should be two queues within database.

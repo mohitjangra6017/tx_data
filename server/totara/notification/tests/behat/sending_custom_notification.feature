@@ -64,7 +64,7 @@ Feature: Sending custom notifications to user
     Then I should see "Custom notification one"
     And I click on "Edit notification Custom notification one" "button"
     And the "Subject" "field" should be disabled
-    When I click on the "Enable customizing field subject" tui toggle button
+    When I click on the "Enable customising field subject" tui toggle button
     And the "Subject" "field" should be enabled
     And I set the field "Subject" to "Custom notification at course context"
     And I click on "Save" "button"

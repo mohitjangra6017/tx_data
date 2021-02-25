@@ -29,6 +29,8 @@ Feature: Notifications page
     And I set the field "Name" to "Test custom notification name"
     And I set the field "Subject" to "Test custom notification subject"
     And I set the field with xpath "//textarea[@class='tui-formTextarea tui-editorTextarea__textarea']" to "Test custom notification body"
+    And I click on the "Days after" tui radio
+    And I set the field "Number" to "7"
     And I click on "Save" "button"
     And I navigate to system notifications page
     And I click on "Totara comment details" "button"
@@ -39,8 +41,10 @@ Feature: Notifications page
     When I click on "Edit notification Test custom notification name" "button"
     Then I should see "Edit notification"
     And I set the field "Name" to "New notification name"
+    And I set the field "Number" to "12"
     And I click on "Save" "button"
     Then I should see "New notification name"
+    And I should see "12 days after"
 
   Scenario: Admin is able to create custom notification in context notification page
     Given I log in as "admin"
@@ -53,11 +57,15 @@ Feature: Notifications page
     And I set the field "Name" to "Test context notification name"
     And I set the field "Subject" to "Test context notification subject"
     And I set the field with xpath "//textarea[@class='tui-formTextarea tui-editorTextarea__textarea']" to "Test context notification body"
+    And I click on the "Days after" tui radio
+    And I set the field "Number" to "55"
     And I click on "Save" "button"
     When I click on "New comment created details" "button"
     Then I should see "Test context notification name"
+    And I should see "55"
 
     And I navigate to system notifications page
     And I click on "Totara comment details" "button"
     When I click on "New comment created details" "button"
     Then I should not see "Test context notification name"
+    And I should not see "55"

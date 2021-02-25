@@ -22,6 +22,9 @@
  */
 use totara_notification\event\notifiable_event;
 use totara_notification\placeholder\placeholder_option;
+use totara_notification\schedule\schedule_after_event;
+use totara_notification\schedule\schedule_before_event;
+use totara_notification\schedule\schedule_on_event;
 
 class totara_notification_mock_notifiable_event implements notifiable_event {
     /**
@@ -40,14 +43,21 @@ class totara_notification_mock_notifiable_event implements notifiable_event {
     private static $placeholder_options;
 
     /**
+     * @var int
+     */
+    public $timecreated;
+
+    /**
      * totara_notification_mock_notifiable_event constructor.
      *
      * @param int $context_id
      * @param array $mock_event_data
+     * @param int|null $time_created
      */
-    public function __construct(int $context_id, array $mock_event_data = []) {
+    public function __construct(int $context_id, array $mock_event_data = [], ?int $time_created = null) {
         $this->context_id = $context_id;
         $this->event_data = $mock_event_data;
+        $this->timecreated = $time_created ?? time();
     }
 
     /**
@@ -68,7 +78,11 @@ class totara_notification_mock_notifiable_event implements notifiable_event {
      * @return array
      */
     public static function get_notification_available_schedules(): array {
-        return [];
+        return [
+            schedule_on_event::class,
+            schedule_before_event::class,
+            schedule_after_event::class,
+        ];
     }
 
     /**

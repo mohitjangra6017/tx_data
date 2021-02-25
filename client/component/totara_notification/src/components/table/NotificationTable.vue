@@ -83,6 +83,7 @@
                 @create-custom-notification="
                   $emit('create-custom-notification', {
                     eventClassName: notifiableEvent.class_name,
+                    scheduleTypes: notifiableEvent.valid_schedules,
                   })
                 "
               />
@@ -127,7 +128,7 @@
                 </Cell>
 
                 <Cell align="start">
-                  {{ $str('schedule', 'totara_notification') }}
+                  {{ notificationPreference.schedule_label }}
                 </Cell>
 
                 <Cell align="start">
@@ -138,7 +139,11 @@
                   <NotificationAction
                     :preference-title="notificationPreference.title"
                     @edit-notification="
-                      $emit('edit-notification', notificationPreference)
+                      $emit(
+                        'edit-notification',
+                        notificationPreference,
+                        notifiableEvent.valid_schedules
+                      )
                     "
                   />
                 </Cell>

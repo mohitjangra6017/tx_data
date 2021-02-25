@@ -250,7 +250,8 @@ class notification_preference {
             'subject' => 'get_default_subject',
             'title' => 'get_title',
             'recipient' => 'get_recipient_name',
-            'body_format' => 'get_default_body_format'
+            'body_format' => 'get_default_body_format',
+            'schedule_offset' => 'get_default_schedule_offset',
         ];
 
         if (!isset($map_methods[$attribute_name])) {
@@ -344,6 +345,25 @@ class notification_preference {
     }
 
     /**
+     * Returns the raw schedule offset. This is used to figure out
+     * what type of schedule is selected, so has to be translated first.
+     *
+     * @return int
+     */
+    public function get_schedule_offset(): int {
+        $value = $this->entity->schedule_offset;
+        if (null !== $value) {
+            return $value;
+        }
+
+        if ($this->has_parent()) {
+            return $this->parent->get_schedule_offset();
+        }
+
+        return $this->get_property_from_built_in_notification('schedule_offset');
+    }
+
+    /**
      * @return int|null
      */
     public function get_ancestor_id(): ?int {
@@ -372,6 +392,15 @@ class notification_preference {
      */
     public function is_overridden_subject(): bool {
         return !empty($this->entity->subject);
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_overridden_schedule(): bool {
+        // We check for null as 0 is a valid answer and empty would
+        // incorrectly handle on_event methods
+        return $this->entity->schedule_offset !== null;
     }
 
     /**

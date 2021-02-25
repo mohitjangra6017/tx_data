@@ -41,9 +41,12 @@ final class notifiable_event_observer {
      * @return void
      */
     public static function watch_notifiable_event(notifiable_event $event): void {
+        $event_data = $event->get_notification_event_data();
+
         $queue = new notifiable_event_queue();
         $queue->event_name = get_class($event);
-        $queue->set_decoded_event_data($event->get_notification_event_data());
+        $queue->event_time = $event_data['event_time'] ?? $event->timecreated;
+        $queue->set_decoded_event_data($event_data);
         $queue->context_id = $event->get_context()->id;
 
         $queue->save();

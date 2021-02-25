@@ -360,4 +360,72 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         self::assertEquals('Custom subject', $notification->get_subject());
         self::assertEquals('Custom title', $notification->get_title());
     }
+
+    /**
+     * @return void
+     */
+    public function test_update_notification_preference_for_schedule(): void {
+        $this->setAdminUser();
+
+        /** @var generator $generator */
+        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $notification = $generator->create_notification_preference(
+            totara_notification_mock_notifiable_event::class,
+            context_system::instance()->id,
+            [
+                'body' => 'Custom body',
+                'body_format' => FORMAT_MOODLE,
+                'subject' => 'Custom subject',
+                'title' => 'Custom title',
+                'schedule_offset' => 0,
+            ]
+        );
+
+        self::assertEquals('Custom body', $notification->get_body());
+        self::assertEquals('Custom subject', $notification->get_subject());
+        self::assertEquals('Custom title', $notification->get_title());
+        self::assertEquals(0, $notification->get_schedule_offset());
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $notification->get_id(),
+                'schedule_offset' => 10,
+                'schedule_type' => \totara_notification\schedule\schedule_after_event::identifier(),
+            ]
+        );
+
+        $notification->refresh();
+
+        self::assertNotEquals(0, $notification->get_schedule_offset());
+        self::assertEquals(10, $notification->get_schedule_offset());
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $notification->get_id(),
+                'schedule_offset' => 5,
+                'schedule_type' => \totara_notification\schedule\schedule_before_event::identifier(),
+            ]
+        );
+
+        $notification->refresh();
+
+        self::assertNotEquals(10, $notification->get_schedule_offset());
+        self::assertEquals(-5, $notification->get_schedule_offset());
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $notification->get_id(),
+                'schedule_offset' => 0,
+                'schedule_type' => \totara_notification\schedule\schedule_on_event::identifier(),
+            ]
+        );
+
+        $notification->refresh();
+
+        self::assertNotEquals(-5, $notification->get_schedule_offset());
+        self::assertEquals(0, $notification->get_schedule_offset());
+    }
 }

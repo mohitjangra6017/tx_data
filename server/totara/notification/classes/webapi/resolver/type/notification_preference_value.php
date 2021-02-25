@@ -24,6 +24,7 @@ namespace totara_notification\webapi\resolver\type;
 use coding_exception;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
+use totara_notification\local\schedule_helper;
 use totara_notification\model\notification_preference_value as model;
 
 /**
@@ -56,6 +57,12 @@ class notification_preference_value implements type_resolver {
 
             case 'title':
                 return $source->get_title();
+
+            case 'schedule_offset':
+                return schedule_helper::get_schedule_offset($source->get_scheduled_offset());
+
+            case 'schedule_type':
+                return schedule_helper::get_schedule_identifier($source->get_scheduled_offset());
 
             default:
                 throw new coding_exception(

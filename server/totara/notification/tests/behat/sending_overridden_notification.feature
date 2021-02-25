@@ -22,7 +22,7 @@ Feature: Sending overridden notification
     And I click on "New comment created details" "button"
     And I click on "Edit notification Comment created" "button"
     And the "Subject" "field" should be disabled
-    When I click on the "Enable customizing field subject" tui toggle button
+    When I click on the "Enable customising field subject" tui toggle button
     Then the "Subject" "field" should be enabled
     And I set the field "Subject" to "Overridden subject at system"
     And I click on "Save" "button"

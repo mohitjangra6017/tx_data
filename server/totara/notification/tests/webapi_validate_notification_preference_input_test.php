@@ -21,6 +21,9 @@
  * @package totara_notification
  */
 
+use totara_notification\schedule\schedule_after_event;
+use totara_notification\schedule\schedule_before_event;
+use totara_notification\schedule\schedule_on_event;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use totara_notification\webapi\resolver\mutation\validate_notification_preference_input;
 
@@ -28,7 +31,7 @@ class totara_notification_webapi_validate_notification_preference_input_testcase
     use webapi_phpunit_helper;
 
     /**
-     * For <input/> tags, they are malicous value and will be stripped out by clean_param.
+     * For <input/> tags, they are malicious value and will be stripped out by clean_param.
      * Hence we will be left with empty string, and that will fail the validation if the content is empty.
      *
      * @return void
@@ -40,20 +43,22 @@ class totara_notification_webapi_validate_notification_preference_input_testcase
             [
                 'title' => /** @lang text */ '<input type="text" value="value"/>',
                 'body' => /** @lang text */ '<input type="text" value="value"/>',
-                'subject' => /** @lang text */ '<input type="text" value="vvv"/>'
+                'subject' => /** @lang text */ '<input type="text" value="vvv"/>',
+                'schedule_type' => '',
+                'schedule_offset' => '',
             ]
         );
 
         self::assertIsArray($result);
         self::assertNotEmpty($result);
-        self::assertCount(3, $result);
+        self::assertCount(4, $result);
 
         foreach ($result as $single_item) {
             self::assertIsArray($single_item);
             self::assertArrayHasKey('field_name', $single_item);
             self::assertArrayHasKey('error_message', $single_item);
 
-            self::assertContainsEquals($single_item['field_name'], ['body', 'subject', 'title']);
+            self::assertContainsEquals($single_item['field_name'], ['body', 'subject', 'title', 'schedule_type']);
             self::assertEquals(
                 get_string('invalid_input', 'totara_notification'),
                 $single_item['error_message']
@@ -63,7 +68,7 @@ class totara_notification_webapi_validate_notification_preference_input_testcase
 
 
     /**
-     * For <input/> tags, they are malicous value and will be stripped out by clean_param.
+     * For <input/> tags, they are malicious value and will be stripped out by clean_param.
      * Hence we will be left with empty string, and that will fail the validation if the content is empty.
      *
      * @return void
@@ -75,7 +80,9 @@ class totara_notification_webapi_validate_notification_preference_input_testcase
             [
                 'title' => /** @lang text */ '<input type="text" value="value"/> Some randome text',
                 'body' => /** @lang text */ '<input type="text" value="value"/>  Some randome text',
-                'subject' => /** @lang text */ '<input type="text" value="vvv"/>  Some randome text'
+                'subject' => /** @lang text */ '<input type="text" value="vvv"/>  Some randome text',
+                'schedule_type' => schedule_before_event::identifier(),
+                'schedule_offset' => 10,
             ]
         );
 
@@ -98,7 +105,9 @@ class totara_notification_webapi_validate_notification_preference_input_testcase
             [
                 'title' => /** @lang text */ '<script>alert(1)</script>',
                 'body' => /** @lang text */ '<script>alert(1)</script>',
-                'subject' => /** @lang text */ '<script>alert(1)</script>'
+                'subject' => /** @lang text */ '<script>alert(1)</script>',
+                'schedule_type' => schedule_before_event::identifier(),
+                'schedule_offset' => 10,
             ]
         );
 
@@ -109,18 +118,90 @@ class totara_notification_webapi_validate_notification_preference_input_testcase
     /**
      * @return void
      */
-    public function test_validat_notification_preference_with_text(): void {
+    public function test_validate_notification_preference_with_text(): void {
         $this->setAdminUser();
         $result = $this->resolve_graphql_mutation(
             $this->get_graphql_name(validate_notification_preference_input::class),
             [
                 'title' => 'ccd',
                 'body' => 'ccd',
-                'subject' => 'ccd'
+                'subject' => 'ccd',
+                'schedule_type' => schedule_before_event::identifier(),
+                'schedule_offset' => 10,
             ]
         );
 
         self::assertIsArray($result);
         self::assertEmpty($result);
+    }
+
+    public function test_validate_notification_preference_with_invalid_schedule_type(): void {
+        $this->setAdminUser();
+        $result = $this->resolve_graphql_mutation(
+            $this->get_graphql_name(validate_notification_preference_input::class),
+            [
+                'title' => 'ccd',
+                'body' => 'ccd',
+                'subject' => 'ccd',
+                'schedule_type' => 'invalid_type',
+                'schedule_offset' => 10,
+            ]
+        );
+
+        self::assertIsArray($result);
+        self::assertNotEmpty($result);
+        self::assertCount(1, $result);
+
+        foreach ($result as $single_item) {
+            self::assertIsArray($single_item);
+            self::assertArrayHasKey('field_name', $single_item);
+            self::assertArrayHasKey('error_message', $single_item);
+
+            self::assertContainsEquals($single_item['field_name'], ['schedule_type']);
+            self::assertEquals(
+                get_string('invalid_input', 'totara_notification'),
+                $single_item['error_message']
+            );
+        }
+    }
+
+    public function test_validate_notification_preference_with_invalid_schedule_offset(): void {
+        $this->setAdminUser();
+
+        $invalid_combinations = [
+            ['type' => schedule_on_event::identifier(), 'offset' => 5],
+            ['type' => schedule_before_event::identifier(), 'offset' => -5],
+            ['type' => schedule_before_event::identifier(), 'offset' => 0],
+            ['type' => schedule_after_event::identifier(), 'offset' => -5],
+            ['type' => schedule_after_event::identifier(), 'offset' => 0],
+        ];
+
+        foreach ($invalid_combinations as $invalid_combination) {
+            $result = $this->resolve_graphql_mutation(
+                $this->get_graphql_name(validate_notification_preference_input::class),
+                [
+                    'title' => 'ccd',
+                    'body' => 'ccd',
+                    'subject' => 'ccd',
+                    'schedule_type' => $invalid_combination['type'],
+                    'schedule_offset' => $invalid_combination['offset'],
+                ]
+            );
+
+            self::assertIsArray($result);
+            self::assertNotEmpty($result);
+            self::assertCount(1, $result);
+            foreach ($result as $single_item) {
+                self::assertIsArray($single_item);
+                self::assertArrayHasKey('field_name', $single_item);
+                self::assertArrayHasKey('error_message', $single_item);
+
+                self::assertContainsEquals($single_item['field_name'], ['schedule_type']);
+                self::assertEquals(
+                    get_string('invalid_input', 'totara_notification'),
+                    $single_item['error_message']
+                );
+            }
+        }
     }
 }

@@ -11,6 +11,7 @@
         <FIELD NAME="event_data" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="A json string encoded of data. It contents the data of the notifiable_event"/>
         <FIELD NAME="context_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="event_time" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Base time any schedules are calculated from. Defaults to the time_created if not specified."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -18,6 +19,7 @@
       </KEYS>
       <INDEXES>
         <INDEX NAME="event_name_index" UNIQUE="false" FIELDS="event_name"/>
+        <INDEX NAME="event_time_index" UNIQUE="false" FIELDS="event_time"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="notification_queue" COMMENT="A table to queue all the notifications to be sending out to the outputs">
@@ -48,6 +50,7 @@
         <FIELD NAME="body" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a custom notification then it is required, otherwise null to fallback to the default defined in ancestor notification"/>
         <FIELD NAME="body_format" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The format text of a body"/>
         <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="schedule_offset" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="Offset in days. Negative = before event, Positive = after event, 0 = on event. Null = inherit from parent."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

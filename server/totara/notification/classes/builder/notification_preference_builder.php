@@ -31,7 +31,7 @@ use totara_notification\entity\notification_preference as entity;
  * Treat the builder like a placeholder instance that should be used per one
  * notification preference only.
  *
- * If you would want to modify (upgrade/create) another noitification preference,
+ * If you would want to modify (upgrade/create) another notification preference,
  * please bring up a new instance of the builder.
  */
 class notification_preference_builder {
@@ -124,6 +124,19 @@ class notification_preference_builder {
     }
 
     /**
+     * By setting this value to NULL, you are more likely to reset the notification record to
+     * fallback to the ancestor notification preference, if it has any.
+     *
+     * This must be the raw offset value (for example, a negative value for a before_event).
+     *
+     * @param int|null $offset
+     * @return void
+     */
+    public function set_schedule_offset(?int $offset): void {
+        $this->record_data['schedule_offset'] = $offset;
+    }
+
+    /**
      * @param int|null $ancestor_id
      * @return void
      */
@@ -193,7 +206,7 @@ class notification_preference_builder {
 
             if (isset($record_data['title'])) {
                 throw new coding_exception(
-                    "For overridding notification preference, the field 'title' must not be overridden."
+                    "For overriding notification preference, the field 'title' must not be overridden."
                 );
             }
         }
@@ -238,7 +251,7 @@ class notification_preference_builder {
             if (!isset($record_data['notification_class_name']) && !isset($record_data['ancestor_id'])) {
                 // When the notification preference is for the custom, meaning that when the notification_class_name
                 // is not provided. Hence the fields below will be required by the business logic.
-                $required_fields = ['body', 'body_format', 'subject', 'title'];
+                $required_fields = ['body', 'body_format', 'subject', 'title', 'schedule_offset'];
 
                 foreach ($required_fields as $required_field) {
                     if (!isset($record_data[$required_field]) || '' === $record_data[$required_field]) {
@@ -270,6 +283,14 @@ class notification_preference_builder {
                     // can be set to zero, which it will make the validation go wrong easily.
                     throw new coding_exception(
                         "Cannot reset the field 'body_format' for custom " .
+                        "notification that does not have parent(s)"
+                    );
+                }
+
+                if (array_key_exists('schedule_offset', $this->record_data) && null === $this->record_data['schedule_offset']) {
+                    // Like body_format, schedule_offset can be a valid 0 therefore we cannot use empty to check.
+                    throw new coding_exception(
+                        "Cannot reset the field 'schedule_offset' for custom " .
                         "notification that does not have parent(s)"
                     );
                 }

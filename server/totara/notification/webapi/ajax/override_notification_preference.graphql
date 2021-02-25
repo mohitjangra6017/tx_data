@@ -6,6 +6,8 @@ mutation totara_notification_override_notification_preference(
   $body: param_text
   $body_format: param_integer
   $subject: param_text
+  $schedule_type: param_text
+  $schedule_offset: param_integer
 ) {
   notification_preference: totara_notification_create_notification_preference(
     context_id: $context_id
@@ -15,6 +17,8 @@ mutation totara_notification_override_notification_preference(
     body: $body
     body_format: $body_format
     subject: $subject
+    schedule_type: $schedule_type
+    schedule_offset: $schedule_offset
   ) {
     __typename
     title
@@ -32,12 +36,18 @@ mutation totara_notification_override_notification_preference(
     component
     parent_id
     context_id
+    schedule_offset
+    schedule_type
+    schedule_label
+    overridden_schedule
     parent_value {
       __typename
       subject
       body
       body_format
       title
+      schedule_offset
+      schedule_type
     }
   }
 }

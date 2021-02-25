@@ -24,13 +24,20 @@ query totara_notification_notifiable_events($context_id: param_integer!) {
       component
       parent_id
       context_id
+      schedule_offset
+      schedule_type
+      schedule_label
+      overridden_schedule
       parent_value {
         __typename
         subject
         body
         body_format
         title
+        schedule_offset
+        schedule_type
       }
     }
+    valid_schedules
   }
 }

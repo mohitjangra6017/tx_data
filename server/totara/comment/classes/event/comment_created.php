@@ -31,6 +31,8 @@ use totara_comment\resolver_factory;
 use totara_notification\event\notifiable_event;
 use totara_notification\placeholder\placeholder_option;
 use core_user\totara_notification\placeholder\user;
+use totara_notification\schedule\schedule_after_event;
+use totara_notification\schedule\schedule_on_event;
 
 /**
  * Class comment_created
@@ -158,7 +160,10 @@ final class comment_created extends base implements interaction_event, notifiabl
      * @return array
      */
     public static function get_notification_available_schedules(): array {
-        return [];
+        return [
+            schedule_on_event::class,
+            schedule_after_event::class,
+        ];
     }
 
     /**

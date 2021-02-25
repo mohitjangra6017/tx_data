@@ -55,6 +55,24 @@ type totara_notification_notification_preference {
   The context ID of the notification.
   """
   context_id: Int!
+  """
+  Number of days before/after/on the event the schedule should be adjusted for.
+  Always a positive number, meaning is derived from the schedule_type field.
+  """
+  schedule_offset: Int!
+  """
+  The type of schedule that's in play.
+  """
+  schedule_type: totara_notification_schedule_type!
+  """
+  Whether the fields 'schedule_offset' or 'schedule_type' are overridden.
+  These fields work in a pair so either both are overridden or neither are.
+  """
+  overridden_schedule: Boolean!
+  """
+  Human readable label of the active schedule_type.
+  """
+  schedule_label: String
 }
 
 """
@@ -77,6 +95,8 @@ type totara_notification_notification_preference_value {
   subject: String!
   body_format: String!
   title: String!
+  schedule_offset: Int!
+  schedule_type: totara_notification_schedule_type!
 }
 
 extend type Mutation {
@@ -97,6 +117,8 @@ extend type Mutation {
     body: param_text
     body_format: param_integer
     subject: param_text
+    schedule_offset: param_integer
+    schedule_type: param_text
   ): totara_notification_notification_preference!
 
   """
@@ -113,6 +135,8 @@ extend type Mutation {
     body_format: param_integer
     title: param_text
     subject: param_text
+    schedule_offset: param_integer
+    schedule_type: param_text
   ): totara_notification_notification_preference!
 
   """
@@ -130,6 +154,8 @@ extend type Mutation {
     title: String!
     body: String!
     subject: String!
+    schedule_type: String!
+    schedule_offset: Int!
   ): [totara_notification_notification_preference_validation_result]!
 }
 

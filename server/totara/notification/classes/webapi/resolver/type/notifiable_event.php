@@ -28,6 +28,7 @@ use core\webapi\execution_context;
 use core\webapi\type_resolver;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\helper;
+use totara_notification\local\schedule_helper;
 
 /**
  * Type resolver for totara_notification_notifiable_event.
@@ -68,8 +69,11 @@ class notifiable_event implements type_resolver {
                 $context_id = $args['context_id'] ?? context_system::instance()->id;
                 return notification_preference_loader::get_notification_preferences($context_id, $source);
 
+            case 'valid_schedules':
+                return schedule_helper::get_available_schedules_for_event($source);
+
             default:
-                throw new coding_exception("The field '{$field}' had not yet supported");
+                throw new coding_exception("The field '{$field}' is not yet supported");
         }
     }
 }

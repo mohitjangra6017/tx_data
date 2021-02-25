@@ -163,5 +163,62 @@ function xmldb_totara_notification_upgrade($old_version) {
         upgrade_plugin_savepoint(true, 2021012003, 'totara', 'notification');
     }
 
+    if ($old_version < 2021012004) {
+        // Add the scheduled tasks changes
+        $table = new xmldb_table('notifiable_event_queue');
+
+        // This field is not null, but must default to the created_time value
+        // We're going to insert it, then change it afterwards
+        $new_field = new xmldb_field(
+            'event_time',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            null,
+            null
+        );
+        if (!$db_manager->field_exists($table, $new_field)) {
+            $db_manager->add_field($table, $new_field);
+
+            // Set any to the time_created default
+            $DB->execute(
+                'UPDATE "ttr_notifiable_event_queue" 
+                SET event_time = time_created 
+                WHERE event_time IS NULL'
+            );
+
+            // Now make it not null
+            $new_field->setNotNull(XMLDB_NOTNULL);
+            $db_manager->change_field_notnull($table, $new_field);
+        }
+
+        $index = new xmldb_index('event_time_index', XMLDB_INDEX_NOTUNIQUE, array('event_time'));
+        if (!$db_manager->index_exists($table, $index)) {
+            $db_manager->add_index($table, $index);
+        }
+
+        // Notification preferences
+        $pref_table = new xmldb_table('notification_preference');
+        $offset = new xmldb_field(
+            'schedule_offset',
+            XMLDB_TYPE_INTEGER,
+            '3',
+            null,
+            null,
+        );
+        if (!$db_manager->field_exists($pref_table, $offset)) {
+            $db_manager->add_field($pref_table, $offset);
+        }
+
+        // For any preferences that do not have an ancestor we will default
+        // their offset to 0 (on_event).
+        $DB->execute(
+            'UPDATE "ttr_notification_preference" 
+                SET schedule_offset = 0 
+                WHERE schedule_offset IS NULL AND ancestor_id IS NULL'
+        );
+
+        upgrade_plugin_savepoint(true, 2021012004, 'totara', 'notification');
+    }
+
     return true;
 }

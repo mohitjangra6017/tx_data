@@ -57,6 +57,7 @@
           v-if="showCustomCheckBoxes"
           :aria-label="$str('enable_custom_subject', 'totara_notification')"
           :value="customisation.subject"
+          :toggle-only="true"
           @input="customisation.subject = $event"
         />
 
@@ -74,6 +75,95 @@
         />
       </template>
     </FormRow>
+
+    <FormRow
+      :label="$str('notification_schedule_label', 'totara_notification')"
+      :required="!parentValue"
+    >
+      <template v-slot="{ id }">
+        <ToggleSwitch
+          v-if="showCustomCheckBoxes"
+          :aria-label="$str('enable_custom_schedule', 'totara_notification')"
+          :value="customisation.schedule"
+          :toggle-only="true"
+          @input="customisation.schedule = $event"
+        />
+        <FormRadioGroup
+          :aria-labelledby="id"
+          :disabled="showCustomCheckBoxes && !customisation.schedule"
+          :validations="v => [v.required()]"
+          :name="['schedule_type', 'value']"
+          @input="updateSchedule($event)"
+        >
+          <Radio v-if="showScheduleOnEvent" :value="scheduleTypes.ON_EVENT">
+            {{ $str('schedule_form_label_on_event', 'totara_notification') }}
+          </Radio>
+          <FormRadioWithInput
+            v-if="showScheduleBeforeEvent"
+            v-slot="{
+              disabledRadio,
+              nameLabel,
+              setAccessibleLabel,
+              update,
+              value,
+            }"
+            :disabled="showCustomCheckBoxes && !customisation.schedule"
+            :name="['schedule_offset', scheduleTypes.BEFORE_EVENT]"
+            :value="scheduleTypes.BEFORE_EVENT"
+            :text="
+              $str('schedule_form_label_before_event', 'totara_notification')
+            "
+          >
+            <RadioNumberInput
+              :disabled="disabledRadio"
+              :name="nameLabel"
+              :value="value"
+              @input="updateSchedule($event, update)"
+              @accessible-change="
+                a =>
+                  setAccessibleLabel(
+                    $str(
+                      'schedule_label_before_event',
+                      'totara_notification',
+                      a
+                    )
+                  )
+              "
+            />
+          </FormRadioWithInput>
+          <FormRadioWithInput
+            v-if="showScheduleAfterEvent"
+            v-slot="{
+              disabledRadio,
+              nameLabel,
+              setAccessibleLabel,
+              update,
+              value,
+            }"
+            :disabled="showCustomCheckBoxes && !customisation.schedule"
+            :name="['schedule_offset', scheduleTypes.AFTER_EVENT]"
+            :value="scheduleTypes.AFTER_EVENT"
+            :text="
+              $str('schedule_form_label_after_event', 'totara_notification')
+            "
+          >
+            <RadioNumberInput
+              :disabled="disabledRadio"
+              :name="nameLabel"
+              :value="value"
+              @input="updateSchedule($event, update)"
+              @accessible-change="
+                a =>
+                  setAccessibleLabel(
+                    $str('schedule_label_after_event', 'totara_notification', a)
+                  )
+              "
+            />
+          </FormRadioWithInput>
+        </FormRadioGroup>
+      </template>
+    </FormRow>
+
     <FormRow
       :required="requiredBody"
       :label="$str('notification_body_label', 'totara_notification')"
@@ -83,10 +173,11 @@
           v-if="showCustomCheckBoxes"
           :aria-label="$str('enable_custom_body', 'totara_notification')"
           :value="customisation.body"
+          :toggle-only="true"
           @input="customisation.body = $event"
         />
         <FormField
-          v-slot="{ value, update, name }"
+          v-slot="{ value, update }"
           :name="['body', 'value']"
           :validate="validateEditor"
           :disabled="showCustomCheckBoxes && !customisation.body"
@@ -125,8 +216,16 @@
 </template>
 
 <script>
-import { FormField, FormText, Uniform } from 'tui/components/uniform';
+import {
+  FormField,
+  FormRadioGroup,
+  FormRadioWithInput,
+  FormText,
+  Uniform,
+} from 'tui/components/uniform';
 import FormRow from 'tui/components/form/FormRow';
+import Radio from 'tui/components/form/Radio';
+import RadioNumberInput from 'tui/components/form/RadioNumberInput';
 import { EditorContent, Format } from 'tui/editor';
 import Editor from 'tui/components/editor/Editor';
 import ButtonGroup from 'tui/components/buttons/ButtonGroup';
@@ -134,6 +233,7 @@ import Button from 'tui/components/buttons/Button';
 import Cancel from 'tui/components/buttons/Cancel';
 import {
   getDefaultNotificationPreference,
+  SCHEDULE_TYPES,
   validatePreferenceProp,
 } from '../../internal/notification_preference';
 import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
@@ -170,7 +270,30 @@ function createFormValues(currentPreference, parentValue) {
           : parentValue.title,
       type: 'text',
     },
+    schedule_type: {
+      value:
+        !parentValue || currentPreference.overridden_schedule
+          ? currentPreference.schedule_type
+          : parentValue.schedule_type,
+      type: 'text',
+    },
+    schedule_offset: {
+      // Sensible defaults are set here, while the real defaults are set below
+      [SCHEDULE_TYPES.BEFORE_EVENT]: 1,
+      [SCHEDULE_TYPES.AFTER_EVENT]: 1,
+      [SCHEDULE_TYPES.ON_EVENT]: 0,
+      type: 'number',
+    },
   };
+
+  // Set the default offset values (it involves a little bit of looking at schedule_type).
+  // We only want to change the active type away from defaults.
+  if (formValue.schedule_type.value !== SCHEDULE_TYPES.ON_EVENT) {
+    formValue.schedule_offset[formValue.schedule_type.value] =
+      parentValue === null || currentPreference.overridden_schedule
+        ? currentPreference.schedule_offset
+        : parentValue.schedule_offset;
+  }
 
   if (!parentValue || currentPreference.overridden_body) {
     formValue.body.value = new EditorContent({
@@ -200,6 +323,10 @@ export default {
     Button,
     Cancel,
     ToggleSwitch,
+    FormRadioGroup,
+    Radio,
+    RadioNumberInput,
+    FormRadioWithInput,
   },
 
   props: {
@@ -219,6 +346,11 @@ export default {
       validator: validatePreferenceProp(),
       default: getDefaultNotificationPreference(),
     },
+
+    validScheduleTypes: {
+      type: Array,
+      required: true,
+    },
   },
 
   data() {
@@ -227,9 +359,12 @@ export default {
         body: this.preference.overridden_body || Boolean(!this.parentValue),
         subject:
           this.preference.overridden_subject || Boolean(!this.parentValue),
+        schedule:
+          this.preference.overridden_schedule || Boolean(!this.parentValue),
       },
       errors: null,
       formInitialValues: createFormValues(this.preference, this.parentValue),
+      scheduleTypes: SCHEDULE_TYPES,
     };
   },
 
@@ -275,6 +410,27 @@ export default {
      */
     showCustomCheckBoxes() {
       return !!this.parentValue;
+    },
+
+    /**
+     * @return {Boolean}
+     */
+    showScheduleOnEvent() {
+      return this.validScheduleTypes.indexOf(SCHEDULE_TYPES.ON_EVENT) >= 0;
+    },
+
+    /**
+     * @return {Boolean}
+     */
+    showScheduleBeforeEvent() {
+      return this.validScheduleTypes.indexOf(SCHEDULE_TYPES.BEFORE_EVENT) >= 0;
+    },
+
+    /**
+     * @return {Boolean}
+     */
+    showScheduleAfterEvent() {
+      return this.validScheduleTypes.indexOf(SCHEDULE_TYPES.AFTER_EVENT) >= 0;
     },
   },
 
@@ -344,6 +500,9 @@ export default {
           title: formValue.title.value || '',
           subject: formValue.subject.value || '',
           body: formValue.body.value.getContent() || '',
+          schedule_type: formValue.schedule_type.value || '',
+          schedule_offset:
+            formValue.schedule_offset[formValue.schedule_type.value] || 0,
         },
       });
 
@@ -367,6 +526,12 @@ export default {
         body_format: !this.customisation.body
           ? null
           : formValue.body.value.format,
+        schedule_type: !this.customisation.schedule
+          ? null
+          : formValue.schedule_type.value,
+        schedule_offset: !this.customisation.schedule
+          ? null
+          : formValue.schedule_offset[formValue.schedule_type.value],
       };
 
       this.$emit('submit', parameters);
@@ -385,6 +550,21 @@ export default {
 
       callback(data);
     },
+
+    /**
+     * Update method to reset the error on the schedule_type field if there are any.
+     *
+     * @param {*}        data
+     * @param {Function} callback
+     */
+    updateSchedule(data, callback = null) {
+      if (this.errors && this.errors.schedule_type) {
+        this.errors.schedule_type.value = '';
+      }
+      if (callback) {
+        callback(data);
+      }
+    },
   },
 };
 </script>
@@ -394,9 +574,16 @@ export default {
   "totara_notification": [
     "notification_body_label",
     "notification_title_label",
+    "notification_schedule_label",
     "notification_subject_label",
+    "enable_custom_schedule",
     "enable_custom_subject",
-    "enable_custom_body"
+    "enable_custom_body",
+    "schedule_form_label_after_event",
+    "schedule_form_label_before_event",
+    "schedule_form_label_on_event",
+    "schedule_label_before_event",
+    "schedule_label_after_event"
   ],
   "totara_core": [
     "save"

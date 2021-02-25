@@ -50,6 +50,11 @@ class notification_preference_value {
     /**
      * @var int
      */
+    private $schedule_offset;
+
+    /**
+     * @var int
+     */
     private $body_format;
 
     /**
@@ -57,13 +62,15 @@ class notification_preference_value {
      * @param string   $body
      * @param string   $subject
      * @param string   $title
+     * @param int      $schedule_offset
      * @param int|null $body_format
      */
     private function __construct(string $body, string $subject, string $title,
-                                 ?int $body_format = null) {
+                                 int $schedule_offset, ?int $body_format = null) {
         $this->body = $body;
         $this->subject = $subject;
         $this->title = $title;
+        $this->schedule_offset = $schedule_offset;
         $this->body_format = $body_format ?? FORMAT_MOODLE;
     }
 
@@ -91,11 +98,13 @@ class notification_preference_value {
         $subject = call_user_func([$built_in_class_name, 'get_default_subject']);
         $title = call_user_func([$built_in_class_name, 'get_title']);
         $body_format = call_user_func([$built_in_class_name, 'get_default_body_format']);
+        $schedule_offset = call_user_func([$built_in_class_name, 'get_default_schedule_offset']);
 
         return new static(
             $body,
             $subject,
             $title,
+            $schedule_offset,
             $body_format
         );
     }
@@ -112,6 +121,7 @@ class notification_preference_value {
             $model->get_body(),
             $model->get_subject(),
             $model->get_title(),
+            $model->get_schedule_offset(),
             $model->get_body_format()
         );
     }
@@ -142,5 +152,12 @@ class notification_preference_value {
      */
     public function get_body_format(): int {
         return $this->body_format;
+    }
+
+    /**
+     * @return int
+     */
+    public function get_scheduled_offset(): int {
+        return $this->schedule_offset;
     }
 }
