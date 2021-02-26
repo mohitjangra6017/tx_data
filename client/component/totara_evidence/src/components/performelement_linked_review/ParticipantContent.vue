@@ -21,19 +21,10 @@
 -->
 
 <template>
-  <div>Showing Evidence ID: {{ content.id }}</div>
+  <div>Showing Evidence ID: {{ content && content.id }}</div>
 </template>
 
 <script>
-// The GraphQL query to use for getting the selected evidence.
-import linkedEvidencesQuery from 'totara_evidence/graphql/perform_linked_evidence_items';
-import linkedEvidencesQueryExternal from 'totara_evidence/graphql/perform_linked_evidence_items_nosession';
-
-export {
-  linkedEvidencesQuery as query,
-  linkedEvidencesQueryExternal as query_external,
-};
-
 export default {
   props: {
     content: {

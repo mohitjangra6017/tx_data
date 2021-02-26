@@ -27,7 +27,7 @@ use performelement_linked_review\content_type;
 use totara_core\advanced_feature;
 use totara_evidence\entity\evidence_item;
 
-class evidence implements content_type {
+class evidence extends content_type {
 
     /**
      * @inheritDoc
@@ -91,5 +91,12 @@ class evidence implements content_type {
      */
     public static function get_content_picker_component(): string {
         return 'totara_evidence/components/performelement_linked_review/ParticipantContentPicker';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function load_content_items(int $user_id, array $content_ids, int $created_at): array {
+        return [];
     }
 }

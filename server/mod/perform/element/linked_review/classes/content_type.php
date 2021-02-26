@@ -23,14 +23,40 @@
 
 namespace performelement_linked_review;
 
-interface content_type {
+use context;
+
+/**
+ * This is the base class for all linked review content types.
+ *
+ * Extend this class in another plugin to make a new type available.
+ * Make sure all the functions required return valid values.
+ *
+ * The @see content_type::load_content_items() method has to return
+ * the content which the VUE component @see content_type::get_participant_content_component()
+ * uses to display the item.
+ *
+ * @package performelement_linked_review
+ */
+abstract class content_type {
+
+    /**
+     * @var context
+     */
+    protected $context;
+
+    /**
+     * @param context $context
+     */
+    public function __construct(context $context) {
+        $this->context = $context;
+    }
 
     /**
      * The unique name identifier of this content type.
      *
      * @return string
      */
-    public static function get_identifier(): string;
+    abstract public static function get_identifier(): string;
 
     /**
      * The display name of this content type.
@@ -38,35 +64,35 @@ interface content_type {
      *
      * @return string
      */
-    public static function get_display_name(): string;
+    abstract public static function get_display_name(): string;
 
     /**
      * Get the database table that the content ID is a foreign key for.
      *
      * @return string
      */
-    public static function get_table_name(): string;
+    abstract public static function get_table_name(): string;
 
     /**
      * Is this content type enabled?
      *
      * @return bool
      */
-    public static function is_enabled(): bool;
+    abstract public static function is_enabled(): bool;
 
     /**
      * The component path of the vue component for rendering on the admin view.
      *
      * @return string
      */
-    public static function get_admin_view_component(): string;
+    abstract public static function get_admin_view_component(): string;
 
     /**
      * The component path of the vue component for allowing admins to configure extra settings. (Optional)
      *
      * @return string|null
      */
-    public static function get_admin_settings_component(): ?string;
+    abstract public static function get_admin_settings_component(): ?string;
 
     /**
      * Array of available settings that can be configured by the admin (keys) and their default values (values)
@@ -75,20 +101,38 @@ interface content_type {
      *
      * @return array
      */
-    public static function get_available_settings(): array;
+    abstract public static function get_available_settings(): array;
 
     /**
      * The component path of the vue component for picking the content items.
      *
      * @return string
      */
-    public static function get_content_picker_component(): string;
+    abstract public static function get_content_picker_component(): string;
 
     /**
      * The component path of the vue component for rendering the content response display.
      *
      * @return string
      */
-    public static function get_participant_content_component(): string;
+    abstract public static function get_participant_content_component(): string;
+
+    /**
+     * This function is responsible for loading the actual items when requested by the
+     * @see \performelement_linked_review\webapi\resolver\query\content_items query.
+     * This data is injected in the content items and used for display in the
+     * VUE component returned by @see content_type::get_participant_content_component().
+     *
+     * Make sure this method returns the array keyed by the content_ids passed in
+     * otherwise the content won't be returned to the frontend.
+     *
+     * Each individual content item returned needs to have an id property or key.
+     *
+     * @param int $user_id the user the items belong to
+     * @param array $content_ids
+     * @param int $created_at the timestamp the content got created, this might be needed for point in time / static data
+     * @return array the array needs to be keyed by the id of the item
+     */
+    abstract public function load_content_items(int $user_id, array $content_ids, int $created_at): array;
 
 }

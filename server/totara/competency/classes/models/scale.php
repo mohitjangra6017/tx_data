@@ -46,7 +46,7 @@ use totara_core\advanced_feature;
  * @property-read int $usermodified
  * @property-read int $defaultid
  * @property-read int $minproficiencyid
- * @property-read collection $values
+ * @property-read collection|scale_value[] $values
  * @property scale_entity $entity
  *
  * @package totara_competency\models

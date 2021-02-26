@@ -24,7 +24,7 @@
 namespace performelement_linked_review\webapi\resolver\query;
 
 use coding_exception;
-use core\orm\collection;
+use context;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_advanced_feature;
 use core\webapi\query_resolver;
@@ -36,9 +36,11 @@ use mod_perform\models\activity\participant_source;
 use mod_perform\models\activity\section_element as section_element_model;
 use mod_perform\models\activity\subject_instance as subject_instance_model;
 use mod_perform\util;
+use performelement_linked_review\content_type;
+use performelement_linked_review\content_type_factory;
 use performelement_linked_review\models\linked_review_content as linked_review_content_model;
 
-abstract class content_items implements query_resolver, has_middleware {
+final class content_items implements query_resolver, has_middleware {
 
     /**
      * {@inheritdoc}
@@ -47,21 +49,21 @@ abstract class content_items implements query_resolver, has_middleware {
         global $USER;
 
         $validator = null;
-        $token = $args['token'] ?? null;
+        $token = $args['token'] ?? $args['input']['token'] ?? null;
+        $subject_instance_id = $args['subject_instance_id'] ?? $args['input']['subject_instance_id'] ?? null;
+        $section_element_id = $args['section_element_id'] ?? $args['input']['section_element_id'] ?? null;
+
         if (!empty($token)) {
             $validator = new external_participant_token_validator($token);
             if (!$validator->is_valid() || $validator->is_subject_instance_closed()) {
                 throw new coding_exception('Token validation for external participant failed');
             }
-            if ((int) $validator->get_participant_instance()->subject_instance_id !== (int) $args['subject_instance_id']) {
+            if ((int) $validator->get_participant_instance()->subject_instance_id !== (int) $subject_instance_id) {
                 throw new coding_exception('Invalid subject instance for given token');
             }
         } else {
             \require_login(null, false, null, false, true);
         }
-
-        $subject_instance_id = $args['subject_instance_id'];
-        $section_element_id = $args['section_element_id'];
 
         $section_element = section_element_model::load_by_id($section_element_id);
         if ($section_element->element->get_element_plugin()->get_plugin_name() !== 'linked_review') {
@@ -69,6 +71,9 @@ abstract class content_items implements query_resolver, has_middleware {
         }
 
         $subject_instance = subject_instance_model::load_by_id($subject_instance_id);
+        if (!$ec->has_relevant_context()) {
+            $ec->set_relevant_context($subject_instance->get_context());
+        }
 
         if ($validator) {
             $has_participant_section = participant_section::repository()
@@ -91,22 +96,44 @@ abstract class content_items implements query_resolver, has_middleware {
             throw new coding_exception('User does not participant on given section');
         }
 
-        $content = linked_review_content_model::get_existing_selected_content($section_element_id, $subject_instance_id);
-        if ($content->count() === 0) {
-            return [];
+        $content_items = linked_review_content_model::get_existing_selected_content($section_element_id, $subject_instance_id);
+        if ($content_items->count() === 0) {
+            return ['items' => []];
         }
 
-        return static::query_content($subject_instance->subject_user_id, $content);
+        $content_type = self::get_content_type_instance($section_element, $subject_instance->get_context());
+
+        // TODO: Pass additional data as for learning items we also need the type (course, program, certification), the id is not enough
+        $created_at = $content_items->first()->created_at;
+        $content_items_data = $content_type->load_content_items(
+            $subject_instance->subject_user_id,
+            $content_items->pluck('content_id'),
+            $created_at
+        );
+        foreach ($content_items_data as $content_id => $content_data) {
+            /** @var linked_review_content_model $item */
+            $item = $content_items->find('content_id', $content_id);
+            if ($item) {
+                $item->set_content($content_data);
+            }
+        }
+
+        return ['items' => $content_items->all() ?? []];
     }
 
     /**
-     * Fetch the linked content with the specified IDs.
+     * Get the instance of the content_type responsible for the content of the review element
      *
-     * @param int $user_id
-     * @param linked_review_content_model[]|collection $content
-     * @return array
+     * @param section_element_model $section_element
+     * @param context $context
+     * @return string|content_type
      */
-    abstract protected static function query_content(int $user_id, collection $content): array;
+    private static function get_content_type_instance(section_element_model $section_element, context $context): content_type {
+        $element_data = $section_element->element->data;
+        $data = json_decode($element_data, true);
+
+        return content_type_factory::get_from_identifier($data['content_type'], $context);
+    }
 
     /**
      * {@inheritdoc}

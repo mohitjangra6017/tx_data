@@ -20,11 +20,11 @@
 <template>
   <div class="tui-linkedReviewViewCompetency">
     <h4 class="tui-linkedReviewViewCompetency__title">
-      {{ content.progress.competency.display_name }}
+      {{ content.competency.display_name }}
     </h4>
     <div
       class="tui-linkedReviewViewCompetency__description"
-      v-html="content.progress.competency.description"
+      v-html="content.competency.description"
     />
 
     <div class="tui-linkedReviewViewCompetency__bar">
@@ -45,14 +45,6 @@
 <script>
 import ProgressTrackerCircle from 'tui/components/progresstracker/ProgressTrackerCircle';
 
-// The GraphQL query to use for getting the selected competencies.
-import linkedCompetenciesQuery from 'totara_competency/graphql/perform_linked_competencies';
-import linkedCompetenciesQueryNoSession from 'totara_competency/graphql/perform_linked_competencies_nosession';
-export {
-  linkedCompetenciesQuery as query,
-  linkedCompetenciesQueryNoSession as query_external,
-};
-
 export default {
   components: {
     ProgressTrackerCircle,
@@ -61,7 +53,7 @@ export default {
   props: {
     content: {
       type: Object,
-      required: true,
+      required: false,
     },
     settings: Object,
   },

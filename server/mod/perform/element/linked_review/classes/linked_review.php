@@ -40,7 +40,7 @@ class linked_review extends respondable_element_plugin {
      */
     public function get_content_type(element $element): string {
         $data = json_decode($element->data, true);
-        return content_type_factory::get_from_identifier($data['content_type']);
+        return content_type_factory::get_class_name_from_identifier($data['content_type']);
     }
 
     /**
@@ -107,7 +107,7 @@ class linked_review extends respondable_element_plugin {
             );
         }
 
-        $content_type = content_type_factory::get_from_identifier($data['content_type']);
+        $content_type = content_type_factory::get_class_name_from_identifier($data['content_type']);
         $available_settings = $content_type::get_available_settings();
         $saved_settings = $data['content_type_settings'] ?? [];
 
@@ -149,7 +149,7 @@ class linked_review extends respondable_element_plugin {
      * @return array Element data with the corrected settings.
      */
     private function set_content_type_and_settings(array $data): array {
-        $content_type = content_type_factory::get_from_identifier($data['content_type']);
+        $content_type = content_type_factory::get_class_name_from_identifier($data['content_type']);
 
         $available_settings = $content_type::get_available_settings();
         $saved_settings = $data['content_type_settings'] ?? [];
@@ -164,7 +164,7 @@ class linked_review extends respondable_element_plugin {
     public function process_data(?string $data): ?string {
         $data = json_decode($data, true);
 
-        $content_type = content_type_factory::get_from_identifier($data['content_type']);
+        $content_type = content_type_factory::get_class_name_from_identifier($data['content_type']);
 
         $components = [
             'admin_settings' => $content_type::get_admin_settings_component(),

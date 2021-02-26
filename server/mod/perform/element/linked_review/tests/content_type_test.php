@@ -59,13 +59,13 @@ class performelement_linked_review_content_type_testcase extends linked_review_t
             $this->markTestSkipped('Test requires totara_competency');
         }
 
-        $content_type = content_type_factory::get_from_identifier('totara_competency');
+        $content_type = content_type_factory::get_class_name_from_identifier('totara_competency');
         $this->assertStringContainsString('totara_competency', $content_type);
         $this->assertEquals('totara_competency', $content_type::get_identifier());
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("Couldn't locate a review content type with the identifier 'Not A Content Type!'");
-        content_type_factory::get_from_identifier('Not A Content Type!');
+        content_type_factory::get_class_name_from_identifier('Not A Content Type!');
     }
 
     public function test_factory_get_all_enabled(): void {

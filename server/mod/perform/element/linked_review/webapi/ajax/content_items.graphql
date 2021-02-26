@@ -1,0 +1,15 @@
+query performelement_linked_review_content_items(
+  $input: performelement_linked_review_content_items_input!
+) {
+  performelement_linked_review_content_items(input: $input) {
+    items {
+      id
+      content_id
+      selector {
+        fullname
+      }
+      content
+      created_at_date: created_at(format: DATELONG)
+    }
+  }
+}

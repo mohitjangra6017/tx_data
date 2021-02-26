@@ -27,8 +27,10 @@ namespace performelement_linked_review\models;
 use coding_exception;
 use core\entity\user;
 use core\orm\collection;
+use core\orm\entity\entity;
 use core\orm\entity\model;
 use core\orm\query\builder;
+use JsonSerializable;
 use mod_perform\entity\activity\element;
 use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\entity\activity\section_element as section_element_entity;
@@ -47,6 +49,7 @@ use performelement_linked_review\linked_review;
  * @property-read int $section_element_id
  * @property-read int $subject_instance_id
  * @property-read int $selector_id
+ * @property-read string $content
  * @property-read int $content_id
  * @property-read int $created_at
  *
@@ -60,6 +63,13 @@ class linked_review_content extends model {
     protected $entity;
 
     /**
+     * Actucal content which can be json encoded
+     *
+     * @var mixed
+     */
+    protected $content;
+
+    /**
      * @inheritDoc
      */
     protected static function get_entity_class(): string {
@@ -71,8 +81,13 @@ class linked_review_content extends model {
         'content_id',
         'section_element_id',
         'subject_instance_id',
+        'selector',
         'selector_id',
         'created_at',
+    ];
+
+    protected $model_accessor_whitelist = [
+        'content'
     ];
 
     /**
@@ -211,6 +226,36 @@ class linked_review_content extends model {
     }
 
     /**
+     * Set the content. As the types are pluggable the code loading the content item needs to make sure the
+     * type code loads the correct item and set it here.
+     *
+     * @param $content
+     */
+    public function set_content($content) {
+        if (!is_array($content) && $content instanceof \stdClass && $content instanceof JsonSerializable) {
+            throw new coding_exception('Content data needs to be json serializable.');
+        }
+
+        // Try to validate it
+        if ((isset($content->id) && (int) $content->id !== (int) $this->content_id)
+            || (isset($content['id']) && (int) $content['id'] !== (int) $this->content_id)
+        ) {
+            throw new coding_exception('Content item does not have an id.');
+        }
+
+        $this->content = $content;
+    }
+
+    /**
+     * Returns the content for this item
+     *
+     * @return mixed
+     */
+    public function get_content() {
+        return $this->content;
+    }
+
+    /**
      * Validate the values inputted when saving and throw errors if they are invalid.
      *
      * @param array $content_ids
@@ -266,7 +311,10 @@ class linked_review_content extends model {
      * @param element_model $linked_review_element
      * @return bool
      */
-    private static function can_participant_select_content(int $participant_instance_id, element_model $linked_review_element): bool {
+    private static function can_participant_select_content(
+        int $participant_instance_id,
+        element_model $linked_review_element
+    ): bool {
         $participant_instance = participant_instance_model::load_by_id($participant_instance_id);
         $element_data = json_decode($linked_review_element->get_data(), 'true');
         $selection_relationships = $element_data['selection_relationships'] ?? [];

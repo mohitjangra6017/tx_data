@@ -30,23 +30,23 @@ use mod_perform\constants;
 use mod_perform\models\activity\participant_instance;
 use mod_perform\models\activity\section_relationship;
 use performelement_linked_review\models\linked_review_content;
-use performelement_linked_review\webapi\resolver\query\content_items;
+use performelement_linked_review\webapi\resolver\query\base_content_items;
+use totara_competency\models\assignment;
 use totara_core\relationship\relationship;
 use totara_webapi\graphql;
+use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
  * @group perform
  * @group perform_element
  */
-class performelement_linked_review_content_items_testcase extends linked_review_testcase {
+class performelement_linked_review_webapi_resolver_query_content_items_testcase extends linked_review_testcase {
+
+    use webapi_phpunit_helper;
+
+    private const QUERY = 'performelement_linked_review_content_items';
 
     public function test_get_content_items(): void {
-        $query = new class() extends content_items {
-            protected static function query_content(int $user_id, \core\orm\collection $content): array {
-                return [$user_id, $content];
-            }
-        };
-
         [$activity1, $section1, $element1, $section_element1] = $this->create_activity_with_section_and_review_element();
         [$activity2, $section2, $element2, $section_element2] = $this->create_activity_with_section_and_review_element();
         [$user1, $subject_instance1, $participant_instance1] = $this->create_participant_in_section($activity1, $section1);
@@ -76,23 +76,31 @@ class performelement_linked_review_content_items_testcase extends linked_review_
             'subject_instance_id' => $participant_instance1->subject_instance_id,
         ];
 
-        [$actual_user_id, $actual_content] = $query::resolve($args, execution_context::create(graphql::TYPE_AJAX));
+        $result = $this->resolve_graphql_query(self::QUERY, $args);
+        $this->assertArrayHasKey('items', $result);
+        $this->assertEquals($content_items1->count(), count($result['items']));
+        $this->assertContainsOnlyInstancesOf(linked_review_content::class, $result['items']);
+        $actual_ids = array_column($result['items'], 'id');
+        $expected_ids = $content_items1->pluck('id');
+        $this->assertEqualsCanonicalizing($expected_ids, $actual_ids);
 
-        $this->assertEquals($user1->id, $actual_user_id);
-        $this->assertInstanceOf(collection::class, $actual_content);
-        $items = $actual_content->all();
-        $this->assertContainsOnlyInstancesOf(linked_review_content::class, $items);
-        $this->assertEqualsCanonicalizing($content_items1->pluck('id'), $actual_content->pluck('id'));
-        $this->assertNotEqualsCanonicalizing($content_items2->pluck('id'), $actual_content->pluck('id'));
+        $content_id = array_shift($content_ids1);
+        $assignment = assignment::load_by_id($content_id);
+        /** @var linked_review_content $matched_content_item */
+        $matched_content_item = array_filter($result['items'], function (linked_review_content $item) use ($content_id) {
+            return $item->content_id == $content_id;
+        });
+        $matched_content_item = array_shift($matched_content_item);
+        $this->assertInstanceOf(linked_review_content::class, $matched_content_item);
+        $content = $matched_content_item->content;
+        $this->assertIsArray($content);
+        $this->assertEquals($assignment->get_id(), $content['id']);
+        $this->assertNotEmpty($content['competency']);
+        $this->assertNotEmpty($content['achievement']);
+        $this->assertNotEmpty($content['assignment']);
     }
 
     public function test_error_cases() {
-        $query = new class() extends content_items {
-            protected static function query_content(int $user_id, \core\orm\collection $content): array {
-                return [$user_id, $content];
-            }
-        };
-
         [$activity1, $section1, $element1, $section_element1] = $this->create_activity_with_section_and_review_element();
         [$activity2, $section2, $element2, $section_element2] = $this->create_activity_with_section_and_review_element();
         [$user1, $subject_instance1, $participant_instance1] = $this->create_participant_in_section($activity1, $section1);
@@ -125,7 +133,7 @@ class performelement_linked_review_content_items_testcase extends linked_review_
         ];
 
         try {
-            $query::resolve($args, execution_context::create(graphql::TYPE_AJAX));
+            $result = $this->resolve_graphql_query(self::QUERY, $args);
             $this->fail('expected query to fail');
         } catch (coding_exception $exception) {
             $this->assertStringContainsString('User does not participant on given section', $exception->getMessage());
@@ -134,7 +142,7 @@ class performelement_linked_review_content_items_testcase extends linked_review_
         // Test non existing section_element
         try {
             $args['section_element_id'] = 666;
-            $query::resolve($args, execution_context::create(graphql::TYPE_AJAX));
+            $result = $this->resolve_graphql_query(self::QUERY, $args);
             $this->fail('expected query to fail');
         } catch (record_not_found_exception $exception) {
             $this->assertStringContainsString('Can not find data record in database', $exception->getMessage());
@@ -143,7 +151,7 @@ class performelement_linked_review_content_items_testcase extends linked_review_
         // Test non-linked_review section_element
         try {
             $args['section_element_id'] = $section_element3->id;
-            $query::resolve($args, execution_context::create(graphql::TYPE_AJAX));
+            $result = $this->resolve_graphql_query(self::QUERY, $args);
             $this->fail('expected query to fail');
         } catch (coding_exception $exception) {
             $this->assertStringContainsString('Invalid section element ID: '.$section_element3->id, $exception->getMessage());
@@ -159,7 +167,7 @@ class performelement_linked_review_content_items_testcase extends linked_review_
         ];
 
         try {
-            $query::resolve($args, execution_context::create(graphql::TYPE_AJAX));
+            $result = $this->resolve_graphql_query(self::QUERY, $args);
             $this->fail('expected query to fail');
         } catch (coding_exception $exception) {
             $this->assertStringContainsString('User does not participant on given section', $exception->getMessage());
@@ -167,12 +175,6 @@ class performelement_linked_review_content_items_testcase extends linked_review_
     }
 
     public function test_external_participant() {
-        $query = new class() extends content_items {
-            protected static function query_content(int $user_id, \core\orm\collection $content): array {
-                return [$user_id, $content];
-            }
-        };
-
         [$activity1, $section1, $element1, $section_element1] = $this->create_activity_with_section_and_review_element();
         [$activity2, $section2, $element2, $section_element2] = $this->create_activity_with_section_and_review_element();
         [$user1, $subject_instance1, $participant_instance1] = $this->create_participant_in_section($activity1, $section1);
@@ -230,7 +232,7 @@ class performelement_linked_review_content_items_testcase extends linked_review_
         ];
 
         try {
-            $query::resolve($args, execution_context::create(graphql::TYPE_AJAX));
+            $result = $this->resolve_graphql_query(self::QUERY, $args);
             $this->fail('expected query to fail');
         } catch (require_login_exception $exception) {
             $this->assertStringContainsString('You are not logged in', $exception->getMessage());
@@ -239,7 +241,7 @@ class performelement_linked_review_content_items_testcase extends linked_review_
         // Now try with invalid token
         try {
             $args['token'] = 'abcdefg';
-            $query::resolve($args, execution_context::create(graphql::TYPE_AJAX));
+            $result = $this->resolve_graphql_query(self::QUERY, $args);
             $this->fail('expected query to fail');
         } catch (coding_exception $exception) {
             $this->assertStringContainsString('Token validation for external participant failed', $exception->getMessage());
@@ -248,7 +250,7 @@ class performelement_linked_review_content_items_testcase extends linked_review_
         // Now try with token from a different instance
         try {
             $args['token'] = $token2;
-            $query::resolve($args, execution_context::create(graphql::TYPE_AJAX));
+            $result = $this->resolve_graphql_query(self::QUERY, $args);
             $this->fail('expected query to fail');
         } catch (coding_exception $exception) {
             $this->assertStringContainsString('Invalid subject instance for given token', $exception->getMessage());
@@ -257,22 +259,16 @@ class performelement_linked_review_content_items_testcase extends linked_review_
         // Now try the successful one
         $args['token'] = $token1;
 
-        [$actual_user_id, $actual_content] = $query::resolve($args, execution_context::create(graphql::TYPE_AJAX));
-
-        $this->assertEquals($user1->id, $actual_user_id);
-        $this->assertInstanceOf(collection::class, $actual_content);
-        $items = $actual_content->all();
-        $this->assertContainsOnlyInstancesOf(linked_review_content::class, $items);
-        $this->assertEqualsCanonicalizing($content_items->pluck('id'), $actual_content->pluck('id'));
+        $result = $this->resolve_graphql_query(self::QUERY, $args);
+        $this->assertArrayHasKey('items', $result);
+        $this->assertEquals($content_items->count(), count($result['items']));
+        $this->assertContainsOnlyInstancesOf(linked_review_content::class, $result['items']);
+        $actual_ids = array_column($result['items'], 'id');
+        $expected_ids = $content_items->pluck('id');
+        $this->assertEqualsCanonicalizing($expected_ids, $actual_ids);
     }
 
     public function test_user_who_can_report_on_responses_can_load_the_items() {
-        $query = new class() extends content_items {
-            protected static function query_content(int $user_id, \core\orm\collection $content): array {
-                return [$user_id, $content];
-            }
-        };
-
         [$activity, $section, $element, $section_element] = $this->create_activity_with_section_and_review_element();
         [$user, $subject_instance, $participant_instance] = $this->create_participant_in_section($activity, $section);
 
@@ -295,13 +291,13 @@ class performelement_linked_review_content_items_testcase extends linked_review_
             'subject_instance_id' => $participant_instance->subject_instance_id,
         ];
 
-        [$actual_user_id, $actual_content] = $query::resolve($args, execution_context::create(graphql::TYPE_AJAX));
-
-        $this->assertEquals($user->id, $actual_user_id);
-        $this->assertInstanceOf(collection::class, $actual_content);
-        $items = $actual_content->all();
-        $this->assertContainsOnlyInstancesOf(linked_review_content::class, $items);
-        $this->assertEqualsCanonicalizing($content_items->pluck('id'), $actual_content->pluck('id'));
+        $result = $this->resolve_graphql_query(self::QUERY, $args);
+        $this->assertArrayHasKey('items', $result);
+        $this->assertEquals($content_items->count(), count($result['items']));
+        $this->assertContainsOnlyInstancesOf(linked_review_content::class, $result['items']);
+        $actual_ids = array_column($result['items'], 'id');
+        $expected_ids = $content_items->pluck('id');
+        $this->assertEqualsCanonicalizing($expected_ids, $actual_ids);
     }
 
     /**

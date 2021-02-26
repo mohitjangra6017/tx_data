@@ -24,6 +24,7 @@
 namespace performelement_linked_review;
 
 use coding_exception;
+use context;
 use core\collection;
 use core_component;
 
@@ -66,13 +67,25 @@ final class content_type_factory {
     }
 
     /**
+     * Factory method to get a content_type instance
+     *
+     * @param string $identifier
+     * @param context $context
+     * @return content_type
+     */
+    public static function get_from_identifier(string $identifier, context $context): content_type {
+        $class_name = self::get_class_name_from_identifier($identifier);
+        return new $class_name($context);
+    }
+
+    /**
      * Return the class name for the given content type identifier.
      * Note that the content_type class name is returned, and not an instance.
      *
      * @param string $identifier
      * @return string|content_type
      */
-    public static function get_from_identifier(string $identifier): string {
+    public static function get_class_name_from_identifier(string $identifier): string {
         $type = static::get_all()
             ->filter(static function ($type) use ($identifier) {
                 return $type::get_identifier() === $identifier;

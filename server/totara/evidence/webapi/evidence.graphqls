@@ -72,16 +72,6 @@ type totara_evidence_evidence_type {
   name(format: core_format = PLAIN): String
 }
 
-"""
-this is a temporary solution until we tackle TL-29504
-"""
-type totara_evidence_evidence_id {
-  """
-  The id of the evidence type
-  """
-  id: core_id
-}
-
 extend type Query {
   """
   Query to return a paginated set of evidence that belongs to a user
@@ -89,15 +79,6 @@ extend type Query {
   totara_evidence_user_evidence_items(
     input: totara_evidence_user_evidence_items_input
   ): totara_evidence_user_evidence_items_result!
-
-  """
-  Get the evidence that have been linked to a performance activity.
-  """
-  totara_evidence_perform_linked_evidence_items(
-    subject_instance_id: core_id!
-    section_element_id: core_id!
-    token: String
-  ): [totara_evidence_evidence_id]!
 
   """
   Loads all evidence types in use by the user

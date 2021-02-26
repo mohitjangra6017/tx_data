@@ -35,15 +35,14 @@ class content_type implements type_resolver {
 
     /**
      * @param string $field
-     * @param type $type
+     * @param string $type
      * @param array $args
      * @param execution_context $ec
      *
      * @return mixed
      */
     public static function resolve(string $field, $type, array $args, execution_context $ec) {
-        $type_class = new $type();
-        if(!$type_class instanceof type) {
+        if (!is_subclass_of($type, type::class)) {
             throw new coding_exception($type . ' must implement ' . type::class);
         }
 

@@ -21,12 +21,14 @@
  * @package performelement_linked_review
  */
 
+use core\orm\query\builder;
 use mod_perform\constants;
 use mod_perform\entity\activity\subject_instance;
 use mod_perform\models\activity\activity;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\section;
 use mod_perform\testing\generator as perform_generator;
+use totara_competency\expand_task;
 use totara_competency\testing\generator as competency_generator;
 use totara_core\relationship\relationship;
 
@@ -105,6 +107,7 @@ abstract class linked_review_testcase extends advanced_testcase {
             $assignment = $this->competency_generator()->assignment_generator()->create_user_assignment($competency->id, $user_id);
             $competency_assignment_ids[] = $assignment->id;
         }
+        (new expand_task(builder::get_db()))->expand_all();
         return $competency_assignment_ids;
     }
 

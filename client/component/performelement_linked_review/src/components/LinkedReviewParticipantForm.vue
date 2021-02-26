@@ -23,7 +23,11 @@
     <!-- User selects what content they want to review -->
     <component
       :is="getComponent(element.data.components.content_picker)"
-      v-if="selectedContent.length === 0 && participantInstanceId"
+      v-if="
+        selectedContent.items &&
+          selectedContent.items.length === 0 &&
+          participantInstanceId
+      "
       :participant-instance-id="participantInstanceId"
       :section-element-id="sectionElement.id"
       :settings="contentSettings"
@@ -32,12 +36,12 @@
     />
 
     <!-- Respondable card for each group of questions -->
-    <Card v-for="(item, index) in selectedContent" v-else :key="item.id">
+    <Card v-for="(item, index) in selectedContent.items" v-else :key="item.id">
       <div class="tui-linkedReviewParticipantForm__group">
         <!-- Display of review content -->
         <component
           :is="getComponent(element.data.components.participant_content)"
-          :content="item"
+          :content="getContent(item.content)"
           :settings="contentSettings"
         />
 
@@ -98,6 +102,8 @@
 import Card from 'tui/components/card/Card';
 import Loader from 'tui/components/loading/Loader';
 import ResponseHeader from 'mod_perform/components/element/ElementParticipantResponseHeader';
+import selectedContentItemsQuery from 'performelement_linked_review/graphql/content_items';
+import selectedContentItemsQueryExternal from 'performelement_linked_review/graphql/content_items_nosession';
 
 export default {
   components: {
@@ -152,38 +158,6 @@ export default {
     },
   },
 
-  /**
-   * Dynamically load the query defined by the content type's participant content display component.
-   */
-  created() {
-    tui
-      .import(this.element.data.components.participant_content)
-      .then(component => {
-        if (!component.query || !component.query_external) {
-          throw new Error(
-            'The component for the selected review type does not provide the necessary queries.'
-          );
-        }
-        let query = this.isExternalParticipant
-          ? component.query_external
-          : component.query;
-
-        this.$apollo.addSmartQuery('selectedContent', {
-          query: query,
-          variables() {
-            return {
-              subject_instance_id: this.subjectInstanceId,
-              section_element_id: this.sectionElement.id,
-              token: this.token ? this.token : null,
-            };
-          },
-          update(data) {
-            return data.items;
-          },
-        });
-      });
-  },
-
   methods: {
     /**
      * Get dynamic component
@@ -201,6 +175,35 @@ export default {
     refetch() {
       this.loading = true;
       this.$apollo.queries.selectedContent.refetch();
+    },
+
+    /**
+     * @param {string} content
+     */
+    getContent(content) {
+      return content ? JSON.parse(content) : {};
+    },
+  },
+
+  apollo: {
+    selectedContent: {
+      query() {
+        return this.isExternalParticipant
+          ? selectedContentItemsQueryExternal
+          : selectedContentItemsQuery;
+      },
+      variables() {
+        return {
+          input: {
+            subject_instance_id: this.subjectInstanceId,
+            section_element_id: this.sectionElement.id,
+            token: this.token ? this.token : null,
+          },
+        };
+      },
+      update({ performelement_linked_review_content_items }) {
+        return performelement_linked_review_content_items;
+      },
     },
   },
 };
