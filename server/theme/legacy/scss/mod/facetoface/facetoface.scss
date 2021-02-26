@@ -341,6 +341,7 @@ select.menuf2f-select {
       &.cancelled,
       &.fullybooked,
       &.closed {
+        // stylelint-disable-next-line totara/at-extend-only-placeholders
         @extend .text-muted;
       }
     }
@@ -494,7 +495,7 @@ select.menuf2f-select {
     }
 
     &__table {
-      @extend .table;
+      @include bs-table();
       // Override .table
       margin-bottom: 0;
       max-width: none;
@@ -1373,7 +1374,7 @@ select.menuf2f-select {
   margin-bottom: $form-group-margin-bottom;
 
   input[name='saveattendance'] {
-    @extend .btn-primary;
+    @include bs-btn-primary();
   }
 
   .actionsbuttons {

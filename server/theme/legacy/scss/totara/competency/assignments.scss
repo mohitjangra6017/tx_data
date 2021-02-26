@@ -51,7 +51,7 @@
   }
 
   &__btn {
-    @extend .btn;
+    @include bs-btn();
     @include bs-btn-default();
   }
 
