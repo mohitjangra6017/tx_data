@@ -23,7 +23,7 @@
 
 $string['answer_text'] = 'Answer text {$a}';
 $string['error_answer_required'] = 'Answer is required';
-$string['name'] = 'Multiple choice: multi-select';
+$string['name'] = 'Multiple choice: Multi-select';
 $string['no_response_submitted'] = 'No response submitted';
 $string['option_required_error'] = 'Option field cannot be left blank';
 $string['participant_restriction_min'] = 'Select at least {$a} options';

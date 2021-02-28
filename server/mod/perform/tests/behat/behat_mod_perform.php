@@ -1643,7 +1643,7 @@ class behat_mod_perform extends behat_base {
             case 'Response redisplay':
                 $this->fill_redisplay_admin_form_settings();
                 break;
-            case 'Linked Review (TBD)':
+            case 'Review items':
                 $this->fill_linked_review_admin_form_settings($element_setting_container);
                 break;
             default:

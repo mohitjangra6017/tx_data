@@ -22,90 +22,64 @@
 
 <template>
   <SelectContent
+    :adder="getAdder()"
+    :add-btn-text="$str('add_evidence', 'totara_evidence')"
+    :can-show-adder="canShowAdder"
+    :cant-add-text="
+      $str(
+        'awaiting_selection_text',
+        'totara_evidence',
+        coreRelationship[0].name
+      )
+    "
+    :is-draft="isDraft"
     :participant-instance-id="participantInstanceId"
-    :selected-content="selectedContent"
+    :required="required"
     :section-element-id="sectionElementId"
-    @delete-content="deleteContent"
+    :user-id="userId"
     @update="$emit('update')"
   >
-    <template v-slot:content-picker>
-      <Button
-        :text="$str('add_evidence', 'totara_evidence')"
-        @click="adderOpen"
-      />
-
-      <EvidenceAdder
-        :open="showAdder"
-        :existing-items="selectedIds"
-        :user-id="userId"
-        @added="adderUpdate"
-        @cancel="adderClose"
-      />
-    </template>
-
-    <template v-slot:content-title="{ content }">
-      {{ content.name }}
-    </template>
-
-    <template v-slot:content-detail="{ content }">
-      TBD
-    </template>
-
-    <template v-slot:confirm="{ confirm }">
-      <Button text="confirm evidences" @click="confirm" />
+    <template v-slot:content-preview="{ content }">
+      <component :is="previewComponent" :content="content" />
     </template>
   </SelectContent>
 </template>
 
 <script>
-import Button from 'tui/components/buttons/Button';
 import EvidenceAdder from 'totara_evidence/components/adder/EvidenceAdder';
 import SelectContent from 'performelement_linked_review/components/SelectContent';
 
 export default {
   components: {
-    Button,
     EvidenceAdder,
     SelectContent,
   },
 
   props: {
+    canShowAdder: {
+      type: Boolean,
+      required: true,
+    },
+    coreRelationship: Array,
+    isDraft: Boolean,
     participantInstanceId: {
       type: [String, Number],
       required: true,
     },
+    previewComponent: [Function, Object],
+    required: Boolean,
     sectionElementId: String,
     userId: Number,
   },
 
-  data() {
-    return {
-      selectedContent: [],
-      selectedIds: [],
-      showAdder: false,
-    };
-  },
-
   methods: {
-    adderOpen() {
-      this.showAdder = true;
-    },
-
-    adderUpdate(selection) {
-      this.selectedContent = selection.data;
-      this.selectedIds = selection.ids;
-      this.adderClose();
-    },
-
-    adderClose() {
-      this.showAdder = false;
-    },
-
-    deleteContent(contentId) {
-      this.selectedContent = this.selectedContent.filter(
-        item => item.id !== contentId
-      );
-      this.selectedIds = this.selectedIds.filter(e => e !== contentId);
+    /**
+     * Get adder component
+     *
+     * @return {Object}
+     */
+    getAdder() {
+      return EvidenceAdder;
     },
   },
 };
@@ -114,7 +88,8 @@ export default {
 <lang-strings>
   {
     "totara_evidence": [
-      "add_evidence"
+      "add_evidence",
+      "awaiting_selection_text"
     ]
   }
 </lang-strings>

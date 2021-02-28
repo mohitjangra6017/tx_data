@@ -68,5 +68,4 @@ class competency extends entity_formatter {
             'display_custom_fields' => null,
         ];
     }
-
 }

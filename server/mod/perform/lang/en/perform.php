@@ -115,6 +115,7 @@ Their input is needed by {$a->duedate}.
 $string['configshowhistoricactivities'] = 'Use this setting to make any historic activities from Legacy Appraisals and 360 Feedback visible to assigned users under their Performance Activities.
 
 Note: Legacy appraisals and legacy 360 feedback features must also be enabled in order to make historic activities visible.';
+$string['confirm_selection'] = 'Confirm selection';
 $string['create_activity'] = 'Add activity';
 $string['create_activity_select_placeholder'] = 'Select...';
 $string['create_activity_title'] = 'Title';
@@ -528,7 +529,7 @@ $string['section_action_delete'] = 'Delete';
 $string['section_action_add_above'] = 'Add section above';
 $string['section_action_add_below'] = 'Add section below';
 $string['section_add_element'] = 'Add element';
-$string['section_add_child_element'] = 'Add child element';
+$string['section_add_child_element'] = 'Add sub-element';
 $string['section_delete_element'] = 'Delete';
 $string['section_relationship_deletion_error'] = 'Cannot remove relationship ({$a})';
 $string['section_dropdown_menu'] = 'Section dropdown menu';

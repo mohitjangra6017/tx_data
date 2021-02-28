@@ -324,6 +324,10 @@ type totara_competency_competency_framework {
   List of competencies belonging to this framework
   """
   competencies: [totara_competency_competency]
+  """
+  Scale that belongs to this competency
+  """
+  scale: totara_competency_scale
 }
 
 """

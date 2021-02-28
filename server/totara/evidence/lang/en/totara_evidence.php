@@ -27,6 +27,7 @@ $string['add_evidence_item'] = 'Add evidence item';
 $string['add_evidence_item_for_user'] = 'Add an evidence item for {$a}';
 $string['add_evidence_type'] = 'Add evidence type';
 $string['add_evidence'] = 'Add evidence';
+$string['awaiting_selection_text'] = 'Awaiting evidence selection from a {$a}';
 $string['confirm_delete_item'] = 'Confirm deletion of evidence item "{$a}"';
 $string['confirm_delete_item_body'] = '<p>The evidence item and any attached files will be deleted permanently.</p><p>Do you want to proceed with deletion?</p>';
 $string['confirm_delete_type'] = 'Confirm deletion of evidence type "{$a}"';

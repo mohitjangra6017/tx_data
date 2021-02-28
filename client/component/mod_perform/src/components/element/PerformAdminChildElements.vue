@@ -75,7 +75,7 @@
     </Droppable>
 
     <ContentAddElementButton
-      v-if="!isActive"
+      v-if="canShowButton"
       :element-plugins="addableElementPlugins"
       :for-child-elements="true"
       @add-element-item="addElement"
@@ -130,8 +130,8 @@ export default {
   },
 
   computed: {
-    isActive() {
-      return this.activityState.name === 'ACTIVE';
+    canShowButton() {
+      return this.activityState.code == 0;
     },
   },
 

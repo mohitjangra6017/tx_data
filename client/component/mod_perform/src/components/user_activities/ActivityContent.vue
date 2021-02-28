@@ -169,6 +169,7 @@
                     :is="sectionElement.formComponent"
                     :active-section-is-closed="activeSectionIsClosed"
                     :anonymous-responses="activity.anonymous_responses"
+                    :core-relationship-id="coreRelationshipId"
                     :element="sectionElement.element"
                     :element-components="sectionElement.element.type"
                     :error="errors && errors[sectionElement.id]"
@@ -479,6 +480,17 @@ export default {
 
     participantCanAnswer() {
       return this.activeParticipantSection.can_answer;
+    },
+
+    coreRelationshipId() {
+      let relationshipId = null;
+
+      if (this.activeParticipantSection.answerable_participant_instances) {
+        relationshipId = this.activeParticipantSection
+          .answerable_participant_instances[0].core_relationship.id;
+      }
+
+      return relationshipId;
     },
 
     /**

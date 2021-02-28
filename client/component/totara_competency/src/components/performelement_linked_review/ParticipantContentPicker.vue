@@ -19,91 +19,90 @@
 
 <template>
   <SelectContent
+    :adder="getAdder()"
+    :add-btn-text="$str('add_competencies', 'totara_competency')"
+    :can-show-adder="canShowAdder"
+    :cant-add-text="
+      $str(
+        'awaiting_selection_text',
+        'totara_competency',
+        coreRelationship[0].name
+      )
+    "
+    :is-draft="isDraft"
     :participant-instance-id="participantInstanceId"
-    :selected-content="selectedContent"
+    :required="required"
     :section-element-id="sectionElementId"
-    @delete-content="deleteContent"
+    :user-id="userId"
     @update="$emit('update')"
   >
-    <template v-slot:content-picker>
-      <Button
-        :text="$str('add_competencies', 'totara_competency')"
-        @click="adderOpen"
-      />
-
-      <AssignedCompetencyAdder
-        :open="showAdder"
-        :existing-items="selectedIds"
-        :user-id="userId"
-        @added="adderUpdate"
-        @cancel="adderClose"
-      />
-    </template>
-
-    <template v-slot:content-title="{ content }">
-      {{ content.competency.display_name }}
-    </template>
-
-    <template v-slot:content-detail="{ content }">
-      TBD
-    </template>
-
-    <template v-slot:confirm="{ confirm }">
-      <Button text="confirm competencies" @click="confirm" />
+    <template v-slot:content-preview="{ content }">
+      <component :is="previewComponent" :content="getItemData(content)" />
     </template>
   </SelectContent>
 </template>
 
 <script>
 import AssignedCompetencyAdder from 'totara_competency/components/adder/AssignedCompetencyAdder';
-import Button from 'tui/components/buttons/Button';
 import SelectContent from 'performelement_linked_review/components/SelectContent';
 
 export default {
   components: {
     AssignedCompetencyAdder,
-    Button,
     SelectContent,
   },
 
   props: {
+    canShowAdder: {
+      type: Boolean,
+      required: true,
+    },
+    coreRelationship: Array,
+    isDraft: Boolean,
     participantInstanceId: {
       type: [String, Number],
       required: true,
     },
+    previewComponent: [Function, Object],
+    required: Boolean,
     sectionElementId: String,
-    settings: Object,
     userId: Number,
   },
 
-  data() {
-    return {
-      selectedContent: [],
-      selectedIds: [],
-      showAdder: false,
-    };
-  },
-
   methods: {
-    adderOpen() {
-      this.showAdder = true;
+    /**
+     * Get adder component
+     *
+     * @return {Object}
+     */
+    getAdder() {
+      return AssignedCompetencyAdder;
     },
 
-    adderUpdate(selection) {
-      this.selectedContent = selection.data;
-      this.selectedIds = selection.ids;
-      this.adderClose();
-    },
+    /**
+     * Get data for competency preview component
+     *
+     * @param {Object} values
+     * @return {Object}
+     */
+    getItemData(values) {
+      return {
+        competency: {
+          display_name: values.competency.display_name,
+          description: values.competency.description,
+          id: values.competency.id,
+        },
+        assignment: {
+          reason_assigned: values.reason_assigned,
+        },
 
-    adderClose() {
-      this.showAdder = false;
-    },
-
-    deleteContent(contentId) {
-      this.selectedContent = this.selectedContent.filter(
-        item => item.id !== contentId
-      );
-      this.selectedIds = this.selectedIds.filter(e => e !== contentId);
+        achievement: {
+          id: values.my_value.id,
+          name: values.my_value.name,
+          proficient: values.my_value.proficient,
+        },
+        scale_values: values.assignment.scale.values,
+      };
     },
   },
 };
@@ -112,7 +111,8 @@ export default {
 <lang-strings>
 {
   "totara_competency": [
-    "add_competencies"
+    "add_competencies",
+    "awaiting_selection_text"
   ]
 }
 </lang-strings>

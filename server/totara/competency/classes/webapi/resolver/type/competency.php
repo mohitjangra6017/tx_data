@@ -61,7 +61,6 @@ class competency implements type_resolver {
         if (!self::authorize($field, $format)) {
             return null;
         }
-
         $formatter = new formatter\competency($competency, context_system::instance());
         return $formatter->format($field, $format);
     }

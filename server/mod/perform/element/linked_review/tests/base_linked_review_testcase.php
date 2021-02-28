@@ -29,6 +29,7 @@ use mod_perform\models\activity\activity;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\section;
 use mod_perform\models\activity\section_element;
+use mod_perform\models\activity\section_relationship;
 use mod_perform\testing\generator as perform_generator;
 use performelement_linked_review\entity\linked_review_content_response;
 use performelement_linked_review\models\linked_review_content;
@@ -132,6 +133,12 @@ abstract class performelement_linked_review_base_linked_review_testcase extends 
         if ($relationship_id === null) {
             $relationship_id = relationship::load_by_idnumber(constants::RELATIONSHIP_SUBJECT)->id;
         }
+
+        section_relationship::create(
+            $section->get_id(),
+            $relationship_id,
+            true
+        );
 
         $participant_section = $this->perform_generator()->create_participant_instance_and_section(
             $activity,

@@ -27,14 +27,12 @@ namespace performelement_linked_review\models;
 use coding_exception;
 use core\entity\user;
 use core\orm\collection;
-use core\orm\entity\entity;
 use core\orm\entity\model;
 use core\orm\query\builder;
 use JsonSerializable;
 use mod_perform\entity\activity\element;
 use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\entity\activity\section_element as section_element_entity;
-use mod_perform\models\activity\element as element_model;
 use mod_perform\models\activity\participant_instance as participant_instance_model;
 use mod_perform\models\activity\participant_source;
 use mod_perform\models\activity\section_element;
@@ -293,7 +291,7 @@ class linked_review_content extends model {
 
         $section_element = section_element::load_by_id($section_element_id);
         $element = $section_element->get_element();
-        if (!self::can_participant_select_content($participant_instance_id, $element)) {
+        if (!self::can_participant_select_content($participant_instance_id, $section_element)) {
             throw new moodle_exception('nopermissions', 'error');
         }
 
@@ -315,16 +313,21 @@ class linked_review_content extends model {
      * Checks if the participant can select content.
      *
      * @param int $participant_instance_id
-     * @param element_model $linked_review_element
+     * @param section_element $linked_review_section_element
      * @return bool
      */
-    private static function can_participant_select_content(
-        int $participant_instance_id,
-        element_model $linked_review_element
-    ): bool {
+    private static function can_participant_select_content(int $participant_instance_id, section_element $linked_review_section_element): bool {
+        $element = $linked_review_section_element->element;
         $participant_instance = participant_instance_model::load_by_id($participant_instance_id);
-        $element_data = json_decode($linked_review_element->get_data(), 'true');
-        $selection_relationships = $element_data['selection_relationships'] ?? [];
+
+        $can_select_content = self::can_participate_on_section($linked_review_section_element, $participant_instance);
+
+        if (!$can_select_content) {
+            return false;
+        }
+
+        $element_data = json_decode($element->get_data(), 'true');
+        $selection_relationships =  $element_data['selection_relationships'] ?? null;
 
         if (empty($selection_relationships)) {
             return false;
@@ -343,6 +346,23 @@ class linked_review_content extends model {
     private static function participant_instance_belongs_to_logged_in_user(participant_instance_model $participant_instance): bool {
         return (int)$participant_instance->participant_id === user::logged_in()->id
         && (int)$participant_instance->participant_source === participant_source::INTERNAL;
+    }
+
+    /**
+     * Checks if participant instance can select content
+     *
+     * @param section_element $linked_review_section_element
+     * @param participant_instance_model $participant_instance
+     * @return bool
+     */
+    private static function can_participate_on_section(section_element $linked_review_section_element,
+                                                         participant_instance_model $participant_instance): bool {
+        $section_relationship = $linked_review_section_element
+            ->section
+            ->get_section_relationships()
+            ->find('core_relationship_id', $participant_instance->core_relationship_id);
+
+        return $section_relationship !== null;
     }
 
 }

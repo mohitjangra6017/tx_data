@@ -57,7 +57,7 @@
               <p class="tui-linkedReviewViewCompetency__bar-header">
                 {{ $str('achievement_level', 'totara_competency') }}
                 <InfoIconButton
-                  v-if="!fromPrint && !preview"
+                  v-if="!fromPrint"
                   :is-help-for="$str('rating_scale', 'totara_competency')"
                 >
                   <RatingScaleOverview :scale="scale" :reverse-values="true" />
@@ -121,7 +121,6 @@ export default {
     createdAt: String,
     fromPrint: Boolean,
     preview: Boolean,
-    settings: Object,
   },
 
   computed: {
@@ -231,11 +230,11 @@ export default {
     &-header {
       display: flex;
       margin: 0;
-      @include tui-font-body-small();
+      @include tui-font-body();
     }
 
     &-value {
-      @include tui-font-heading-label-small();
+      @include tui-font-heavy();
     }
 
     &-wrap {

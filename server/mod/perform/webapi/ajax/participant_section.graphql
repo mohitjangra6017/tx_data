@@ -16,6 +16,7 @@ query mod_perform_participant_section(
     answerable_participant_instances {
       id
       core_relationship {
+        id
         name
         idnumber
       }

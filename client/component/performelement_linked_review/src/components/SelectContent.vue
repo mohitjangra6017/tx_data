@@ -19,89 +19,198 @@
 
 <template>
   <div class="tui-linkedReviewSelectedContent">
-    <slot name="content-picker" />
-
-    <div class="tui-linkedReviewSelectedContent__itemGroup">
+    <!-- Preview of selected content -->
+    <div class="tui-linkedReviewSelectedContent__items">
       <div
         v-for="content in selectedContent"
         :key="content.id"
-        class="tui-linkedReviewSelectedContent__itemGroup-item"
+        class="tui-linkedReviewSelectedContent__item"
       >
-        <Collapsible label="">
-          <template v-slot:label-extra>
-            <slot name="content-title" :content="content" />
-          </template>
+        <Card
+          class="tui-linkedReviewSelectedContent__item-card"
+          :no-border="true"
+        >
+          <div class="tui-linkedReviewSelectedContent__item-cardContent">
+            <slot name="content-preview" :content="content" />
+          </div>
 
-          <template v-slot:collapsible-side-content>
-            <ButtonIcon
-              :aria-label="$str('delete', 'core')"
-              :styleclass="{
-                small: true,
-                transparent: true,
-              }"
+          <div class="tui-linkedReviewSelectedContent__item-cardActions">
+            <CloseButton
+              :aria-label="$str('remove', 'core')"
+              :size="300"
               @click="deleteContent(content.id)"
-            >
-              <DeleteIcon />
-            </ButtonIcon>
-          </template>
-
-          <template v-slot:expanded>
-            <slot name="content-detail" :content="content" />
-          </template>
-        </Collapsible>
+            />
+          </div>
+        </Card>
       </div>
     </div>
 
+    <!-- Content adder  -->
+    <div v-if="canShowAdder">
+      <ButtonIcon
+        :aria-label="addBtnText"
+        :text="addBtnText"
+        @click="adderOpen"
+      >
+        <AddIcon />
+      </ButtonIcon>
+
+      <component
+        :is="adder"
+        :open="showAdder"
+        :existing-items="selectedIds"
+        :user-id="userId"
+        @added="adderUpdate"
+        @cancel="adderClose"
+      />
+    </div>
+    <div v-else>
+      {{ cantAddText }}
+    </div>
+
+    <!-- Confirm selection button -->
     <div
       v-if="selectedContent.length > 0"
       class="tui-linkedReviewSelectedContent__confirm"
     >
-      <slot name="confirm" :confirm="confirmSelectedIds" />
+      <Button
+        :text="$str('confirm_selection', 'mod_perform')"
+        :styleclass="{ primary: true }"
+        @click="confirmSelectedIds"
+      />
     </div>
+
+    <!-- Display validation error when field is required and no selection made -->
+    <FormField :name="$id('contentAdder')" :validations="validations" />
   </div>
 </template>
 
 <script>
 // tui
+import AddIcon from 'tui/components/icons/Add';
+import Button from 'tui/components/buttons/Button';
 import ButtonIcon from 'tui/components/buttons/ButtonIcon';
-import Collapsible from 'tui/components/collapsible/Collapsible';
-import DeleteIcon from 'tui/components/icons/Delete';
+import Card from 'tui/components/card/Card';
+import CloseButton from 'tui/components/buttons/CloseIcon';
+import { FormField } from 'tui/components/uniform';
 import { notify } from 'tui/notifications';
+import { v as validation } from 'tui/validation';
 
 // GraphQL
 import updateReviewContentMutation from 'performelement_linked_review/graphql/update_linked_review_content';
 
 export default {
   components: {
+    AddIcon,
+    Button,
     ButtonIcon,
-    Collapsible,
-    DeleteIcon,
+    Card,
+    CloseButton,
+    FormField,
   },
 
   props: {
+    addBtnText: {
+      type: String,
+      required: true,
+    },
+    adder: Object,
+    canShowAdder: {
+      type: Boolean,
+      required: true,
+    },
+    cantAddText: {
+      type: String,
+      required: true,
+    },
+    isDraft: Boolean,
     participantInstanceId: {
       type: [String, Number],
       required: true,
     },
+    required: Boolean,
     sectionElementId: String,
-    selectedContent: {
-      type: Array,
+    userId: Number,
+  },
+
+  data() {
+    return {
+      selectedContent: [],
+      selectedIds: [],
+      showAdder: false,
+    };
+  },
+
+  computed: {
+    /**
+     * An array of validation rules for the element.
+     * The rules returned depend on if we are saving as draft or if a response is required or not.
+     *
+     * @return {(function|object)[]}
+     */
+    validations() {
+      if (!this.required || this.isDraft) {
+        return [];
+      }
+      return [validation.required()];
     },
   },
 
+  mounted() {
+    // Confirm navigation away if user is currently editing.
+    window.addEventListener('beforeunload', this.unloadHandler);
+  },
+
   methods: {
+    /**
+     * Close the adder
+     */
+    adderClose() {
+      this.showAdder = false;
+    },
+
+    /**
+     * Open the adder
+     */
+    adderOpen() {
+      this.showAdder = true;
+    },
+
+    /**
+     * Update selected content items
+     *
+     * @param {Object} selection selected data returned from adder
+     */
+    adderUpdate(selection) {
+      this.selectedContent = selection.data;
+      this.selectedIds = selection.ids;
+      this.adderClose();
+    },
+
     /**
      * Save selected content
      */
     async confirmSelectedIds() {
       try {
         await this.saveContent();
-        this.showMutationSuccessNotification();
+        this.selectedIds = [];
       } catch (e) {
         this.showMutationErrorNotification();
       } finally {
         this.$emit('update');
       }
+    },
+
+    /**
+     * Remove item from selected content
+     *
+     * @param {Number} contentId ID of item to be removed
+     */
+    deleteContent(contentId) {
+      this.selectedContent = this.selectedContent.filter(
+        item => item.id !== contentId
+      );
+      this.selectedIds = this.selectedIds.filter(e => e !== contentId);
     },
 
     /**
@@ -132,20 +241,22 @@ export default {
     },
 
     /**
-     * Show a generic success toast.
+     * Displays a warning message if the user tries to navigate away without saving.
+     * @param {Event} e
+     * @returns {String|void}
      */
-    showMutationSuccessNotification() {
-      notify({
-        message: this.$str('success', 'core'),
-        type: 'success',
-      });
-    },
-
-    /**
-     * Delete content from list
-     */
-    deleteContent(event) {
-      this.$emit('delete-content', event);
+    unloadHandler(e) {
+      if (!this.selectedIds.length) {
+        return;
+      }
+      // For older browsers that still show custom message.
+      const discardUnsavedChanges = this.$str(
+        'unsaved_changes_warning',
+        'mod_perform'
+      );
+      e.preventDefault();
+      e.returnValue = discardUnsavedChanges;
+      return discardUnsavedChanges;
     },
   },
 };
@@ -153,16 +264,37 @@ export default {
 
 <style lang="scss">
 .tui-linkedReviewSelectedContent {
-  &__itemGroup {
+  & > * + * {
     margin-top: var(--gap-4);
+  }
 
-    &-item {
-      margin-top: var(--gap-2);
+  &__items {
+    & > * + * {
+      margin-top: var(--gap-4);
     }
   }
 
-  &__confirm {
-    margin-top: var(--gap-4);
+  &__item {
+    & > * + * {
+      margin-top: var(--gap-4);
+    }
+
+    &-card {
+      max-width: 1200px;
+      background: var(--color-neutral-3);
+    }
+
+    &-cardContent {
+      width: 100%;
+      padding: var(--gap-4);
+    }
+
+    &-cardActions {
+      display: flex;
+      align-items: flex-start;
+      width: var(--gap-9);
+      margin-top: var(--gap-2);
+    }
   }
 }
 </style>
@@ -170,9 +302,12 @@ export default {
 <lang-strings>
 {
   "core": [
-    "delete",
     "error",
-    "success"
+    "remove"
+  ],
+  "mod_perform": [
+    "confirm_selection",
+    "unsaved_changes_warning"
   ]
 }
 </lang-strings>

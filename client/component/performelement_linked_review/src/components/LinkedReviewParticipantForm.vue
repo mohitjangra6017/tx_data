@@ -28,9 +28,15 @@
           selectedContent.items.length === 0 &&
           participantInstanceId
       "
+      :is-draft="isDraft"
       :is-external-participant="isExternalParticipant"
-      :participant-can-answer="participantCanAnswer"
+      :can-show-adder="canSelectContent"
+      :core-relationship="element.data.selection_relationships_display"
       :participant-instance-id="participantInstanceId"
+      :preview-component="
+        getComponent(element.data.components.participant_content)
+      "
+      :required="element.is_required"
       :section-element-id="sectionElement.id"
       :settings="contentSettings"
       :user-id="userId"
@@ -61,7 +67,10 @@
           class="tui-linkedReviewParticipantForm__item"
         >
           <!-- Card summary of selected content item-->
-          <Card class="tui-linkedReviewParticipantForm__item-card">
+          <Card
+            class="tui-linkedReviewParticipantForm__item-card"
+            :no-border="true"
+          >
             <div class="tui-linkedReviewParticipantForm__item-cardContent">
               <component
                 :is="getComponent(element.data.components.participant_content)"
@@ -71,6 +80,10 @@
                 :settings="contentSettings"
               />
             </div>
+            <div
+              v-if="!fromPrint"
+              class="tui-linkedReviewParticipantForm__item-cardActions"
+            />
           </Card>
 
           <!-- Display for each respondable question within the group -->
@@ -159,6 +172,7 @@ export default {
     activeSectionIsClosed: Boolean,
     anonymousResponses: Boolean,
     checkboxGroupId: String,
+    coreRelationshipId: [String, Number],
     element: Object,
     error: String,
     fromPrint: Boolean,
@@ -199,6 +213,14 @@ export default {
   computed: {
     userId() {
       return parseInt(this.subjectUser.id);
+    },
+
+    canSelectContent() {
+      return (
+        this.coreRelationshipId == this.element.data.selection_relationships &&
+        !this.fromPrint &&
+        !this.isExternalParticipant
+      );
     },
   },
 
@@ -324,6 +346,13 @@ export default {
     &-cardContent {
       width: 100%;
       padding: var(--gap-4);
+    }
+
+    &-cardActions {
+      display: flex;
+      align-items: flex-start;
+      width: var(--gap-9);
+      margin-top: var(--gap-2);
     }
   }
 

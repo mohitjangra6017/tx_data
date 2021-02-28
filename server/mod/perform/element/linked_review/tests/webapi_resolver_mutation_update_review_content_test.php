@@ -47,9 +47,6 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
     public function test_resolve_mutation_successful(): void {
         [$activity, $section, $element, $section_element] = $this->create_activity_with_section_and_review_element();
         [$user1, $subject_instance, $participant_instance1] = $this->create_participant_in_section($activity, $section);
-        [$user2, $subject_instance, $participant_instance2] = $this->create_participant_in_section(
-            $activity, $section, $subject_instance, relationship::load_by_idnumber(constants::RELATIONSHIP_MANAGER)->id
-        );
         $content_ids = $this->create_competency_assignments($user1->id);
         self::setUser($user1);
 

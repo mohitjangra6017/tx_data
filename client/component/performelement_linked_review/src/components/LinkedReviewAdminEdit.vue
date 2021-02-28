@@ -27,7 +27,7 @@
       @update="handleSubmit"
     >
       <FormRow
-        :label="$str('content_type', 'performelement_linked_review')"
+        :label="$str('review_type', 'performelement_linked_review')"
         :required="true"
       >
         <FormSelect
@@ -37,34 +37,6 @@
           :options="contentTypes"
           :validations="v => [v.required()]"
         />
-      </FormRow>
-
-      <FormRow
-        :label="
-          $str(
-            'content_selection_relationships',
-            'performelement_linked_review'
-          )
-        "
-        :required="true"
-      >
-        <FormCheckboxGroup
-          :validations="v => [v.required()]"
-          name="selection_relationships"
-        >
-          <Checkbox
-            v-for="relationship in coreRelationships"
-            :key="relationship.id"
-            :value="relationship.id"
-            :checked="
-              selectionRelationships.some(
-                relationship_id => relationship_id === relationship.id
-              )
-            "
-          >
-            {{ relationship.name }}
-          </Checkbox>
-        </FormCheckboxGroup>
       </FormRow>
 
       <!-- For additional custom fields based on selected content type -->
@@ -77,6 +49,27 @@
           ref="typeSettings"
         />
       </FormScope>
+
+      <FormRow
+        :label="$str('selection_participant', 'performelement_linked_review')"
+        :helpmsg="
+          $str('participant_selection_help', 'performelement_linked_review')
+        "
+        :required="true"
+      >
+        <FormRadioGroup
+          :validations="v => [v.required()]"
+          name="selection_relationships"
+        >
+          <Radio
+            v-for="relationship in coreRelationships"
+            :key="relationship.id"
+            :value="relationship.id"
+          >
+            {{ relationship.name }}
+          </Radio>
+        </FormRadioGroup>
+      </FormRow>
     </PerformAdminCustomElementEdit>
   </div>
 </template>
@@ -84,7 +77,14 @@
 <script>
 import PerformAdminCustomElementEdit from 'mod_perform/components/element/PerformAdminCustomElementEdit';
 import FormScope from 'tui/components/reform/FormScope';
-import { FormCheckboxGroup, FormRow, FormSelect } from 'tui/components/uniform';
+import {
+  FormCheckboxGroup,
+  FormRadioGroup,
+  FormRow,
+  FormSelect,
+} from 'tui/components/uniform';
+import Radio from 'tui/components/form/Radio';
+
 // GraphQL
 import contentTypesQuery from 'performelement_linked_review/graphql/content_types';
 import Checkbox from 'tui/components/form/Checkbox';
@@ -93,10 +93,12 @@ export default {
   components: {
     Checkbox,
     FormCheckboxGroup,
+    FormRadioGroup,
     FormRow,
     FormScope,
     FormSelect,
     PerformAdminCustomElementEdit,
+    Radio,
   },
 
   inheritAttrs: false,
@@ -116,10 +118,7 @@ export default {
       contentTypes: [
         {
           id: null,
-          label: this.$str(
-            'please_select_content_type',
-            'performelement_linked_review'
-          ),
+          label: this.$str('select_type', 'performelement_linked_review'),
         },
       ],
       initialValues: Object.assign(
@@ -152,10 +151,7 @@ export default {
         return [
           {
             id: null,
-            label: this.$str(
-              'please_select_content_type',
-              'performelement_linked_review'
-            ),
+            label: this.$str('select_type', 'performelement_linked_review'),
           },
         ].concat(types);
       },
@@ -164,14 +160,14 @@ export default {
 
   computed: {
     /**
-     * The core relationships linked with the section.
+     * The core relationships linked with the section, excludes external relationship.
      *
      * @return {Array}
      */
     coreRelationships() {
-      return this.section.section_relationships.map(
-        section_relationship => section_relationship.core_relationship
-      );
+      return this.section.section_relationships
+        .map(x => x.core_relationship)
+        .filter(({ idnumber }) => idnumber != 'perform_external');
     },
 
     /**
@@ -207,6 +203,11 @@ export default {
      * @param values {Object}
      */
     handleSubmit(values) {
+      // In order to make it extendable, convert the value to array
+      values.data.selection_relationships = [
+        values.data.selection_relationships[0],
+      ];
+
       let data = Object.assign({}, values);
       this.$emit('update', data);
     },
@@ -241,9 +242,10 @@ export default {
 <lang-strings>
   {
     "performelement_linked_review": [
-      "content_selection_relationships",
-      "content_type",
-      "please_select_content_type"
+      "selection_participant",
+      "review_type",
+      "participant_selection_help",
+      "select_type"
     ]
   }
 </lang-strings>

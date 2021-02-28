@@ -23,7 +23,7 @@
 
 $string['answer_text'] = 'Answer text {$a}';
 $string['error_answer_required'] = 'Answer is required';
-$string['name'] = 'Multiple choice: single-select';
+$string['name'] = 'Multiple choice: Single-select';
 $string['option_required_error'] = 'Option field cannot be left blank';
 $string['options'] = 'Options';
 $string['pluginname'] = 'Multiple choice single select element';

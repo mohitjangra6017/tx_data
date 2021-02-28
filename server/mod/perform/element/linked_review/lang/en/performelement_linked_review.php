@@ -21,9 +21,12 @@
  * @package performelement_linked_review
  */
 
-$string['name'] = 'Linked Review (TBD)';
-$string['pluginname'] = 'Linked Review element (TBD)';
-$string['content_type'] = 'Content type';
-$string['content_selection_relationships'] = 'Content selection relationships';
-$string['please_select_content_type'] = 'Please select a content type';
+$string['name'] = 'Review items';
+$string['participant_selection_help'] = 'Only \'Responding participants\' or \'View-only participants\' added for this section are available as participants to select items to review. 
+External participants are not able to select items.';
+$string['pluginname'] = 'Linked items element';
+$string['review_type'] = 'Review type';
 $string['section_relationship_used_in_linked_review'] = "A relationship cannot be removed, because it is being referenced in a question:";
+$string['select_type'] = 'Select type';
+$string['selection_participant'] = 'Selection participant';
+

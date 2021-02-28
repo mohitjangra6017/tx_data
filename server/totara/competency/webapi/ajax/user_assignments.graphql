@@ -5,9 +5,22 @@ query totara_competency_user_assignments(
     items {
       id
       competency {
+        id
         display_name
+        description
+      }
+      assignment {
+        scale: assignment_specific_scale {
+          id
+          values {
+            id
+            name
+            proficient
+          }
+        }
       }
       my_value {
+        id
         name
         proficient
       }

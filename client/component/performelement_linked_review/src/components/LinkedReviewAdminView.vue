@@ -18,7 +18,7 @@
 
 <template>
   <div class="tui-linkedReviewAdminView">
-    <Card class="tui-linkedReviewAdminView__card">
+    <Card class="tui-linkedReviewAdminView__card" :no-border="true">
       <Component :is="getTypeComponent()" />
     </Card>
 
@@ -69,8 +69,8 @@ export default {
      *
      */
     respondableElementPlugins() {
-      if (this.reportPreview) {
-        return null;
+      if (this.reportPreview || this.activityState.code != 0) {
+        return [];
       }
       return this.elementPlugins.filter(
         elementPlugin =>
@@ -105,6 +105,7 @@ export default {
   &__card {
     flex-direction: column;
     padding: var(--gap-4);
+    background: var(--color-neutral-3);
   }
 }
 </style>
