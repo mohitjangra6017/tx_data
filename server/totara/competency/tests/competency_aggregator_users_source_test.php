@@ -21,6 +21,7 @@
  * @package totara_competency
  */
 
+use core\orm\collection;
 use core\orm\query\builder;
 use totara_competency\aggregation_users_table;
 use totara_competency\competency_aggregator_user_source;
@@ -76,15 +77,14 @@ class totara_competency_competency_aggregator_users_source_testcase extends \adv
         // Now we should get one result as we have an assignment for user1 only
         // And we don't query for users of the control_competency
         $users = $source->get_users_to_reaggregate($data->competency->id);
-        $this->assertCount(1, $users);
-        $this->assertEquals(
-            (object)[
+        $expected = [
+            [
                 'user_id' => $user1->id,
                 'assignment_id' => $assignment1->id,
                 'achievement' => null
             ],
-            $users->first()
-        );
+        ];
+        $this->verify_reaggregate_users($expected, $users);
 
         $assignment2 = $assignment_generator->create_user_assignment($data->competency->id, $user2->id);
         (new expand_task($GLOBALS['DB']))->expand_all();
@@ -99,25 +99,19 @@ class totara_competency_competency_aggregator_users_source_testcase extends \adv
 
         // We should get two results as we have an assignment for user1 and user2
         $users = $source->get_users_to_reaggregate($data->competency->id);
-        $this->assertCount(2, $users);
-
-        $users = $users->to_array();
-        $this->assertContainsEquals(
+        $expected = [
             [
                 'user_id' => $user1->id,
                 'assignment_id' => $assignment1->id,
                 'achievement' => $achievement
             ],
-            $users
-        );
-        $this->assertContainsEquals(
             [
                 'user_id' => $user2->id,
                 'assignment_id' => $assignment2->id,
                 'achievement' => null
             ],
-            $users
-        );
+        ];
+        $this->verify_reaggregate_users($expected, $users);
     }
 
     public function test_get_users_to_reaggregate_learn_only() {
@@ -215,15 +209,14 @@ class totara_competency_competency_aggregator_users_source_testcase extends \adv
         // Now we should get one result as we have an assignment for user1 only
         // And we don't query for users of the control_competency
         $users = $source->get_users_to_reaggregate($data->competency->id);
-        $this->assertCount(1, $users);
-        $this->assertEquals(
-            (object)[
+        $expected = [
+            [
                 'user_id' => $user1->id,
                 'assignment_id' => $assignment1->id,
                 'achievement' => null
             ],
-            $users->first()
-        );
+        ];
+        $this->verify_reaggregate_users($expected, $users);
 
         $sink = $this->redirectEvents();
 
@@ -252,25 +245,19 @@ class totara_competency_competency_aggregator_users_source_testcase extends \adv
         // We should get two results as both, user1 and user2, are "assigned" to the competency
         // either via course completion or via learning plan
         $users = $source->get_users_to_reaggregate($data->competency->id);
-        $this->assertCount(2, $users);
-
-        $users = $users->to_array();
-        $this->assertContainsEquals(
+        $expected = [
             [
                 'user_id' => $user1->id,
                 'assignment_id' => $assignment1->id,
                 'achievement' => $achievement
             ],
-            $users
-        );
-        $this->assertContainsEquals(
             [
                 'user_id' => $user2->id,
                 'assignment_id' => $assignment2->id,
                 'achievement' => null
             ],
-            $users
-        );
+        ];
+        $this->verify_reaggregate_users($expected, $users);
     }
 
     protected function queue(int $competency_id, int $user_id, int $has_changed) {
@@ -358,4 +345,20 @@ class totara_competency_competency_aggregator_users_source_testcase extends \adv
         return $data;
     }
 
+    private function verify_reaggregate_users(array $expected, collection $actual): void {
+        $this->assertCount(count($expected), $actual);
+        foreach ($expected as $idx => $expected_item) {
+            foreach ($actual as $actual_item) {
+                if ($expected_item['user_id'] == $actual_item->user_id
+                    && $expected_item['assignment_id'] == $actual_item->assignment->id
+                    && $expected_item['achievement'] == $actual_item->achievement
+                ) {
+                    unset($expected[$idx]);
+                    break;
+                }
+            }
+        }
+
+        $this->assertEmpty($expected);
+    }
 }
