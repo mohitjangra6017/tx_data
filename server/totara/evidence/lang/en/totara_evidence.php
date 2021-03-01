@@ -109,6 +109,7 @@ $string['notification_type_hidden'] = 'Evidence type "{$a}" is now hidden';
 $string['notification_type_updated'] = 'Evidence type "{$a}" was updated';
 $string['notification_type_visible'] = 'Evidence type "{$a}" is now visible';
 $string['page_title_create_item'] = 'New {$a} evidence item';
+$string['perform_review_evidence_missing'] = 'This evidence item no longer exists';
 $string['pluginname'] = 'Evidence';
 $string['record_of_learning'] = 'Record of Learning';
 $string['report_message_list_types_other'] = 'To view another user\'s evidence bank, click "Evidence bank" under Miscellaneous in their profile.';

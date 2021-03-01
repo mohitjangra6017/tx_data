@@ -335,6 +335,7 @@ $string['or'] = 'or';
 $string['overall_rating_calc'] = 'Overall rating calculation';
 $string['overview'] = 'Overview';
 $string['pathtype'] = 'Path type';
+$string['perform_review_competency_missing'] = 'This competency no longer exists';
 $string['perform_show_rating'] = 'Show rating';
 $string['perform_show_rating_disabled'] = 'Disabled';
 $string['perform_show_rating_enabled'] = 'Enabled';

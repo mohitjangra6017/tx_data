@@ -18,7 +18,7 @@
 -->
 
 <template>
-  <div class="tui-linkedReviewViewCompetency">
+  <div v-if="content" class="tui-linkedReviewViewCompetency">
     <h4 class="tui-linkedReviewViewCompetency__title">
       <a v-if="!fromPrint && !preview" :href="competencyUrl">
         {{ content.competency.display_name }}
@@ -95,6 +95,10 @@
       </div>
     </div>
   </div>
+
+  <div v-else class="tui-linkedReviewViewCompetencyMissing">
+    {{ $str('perform_review_competency_missing', 'totara_competency') }}
+  </div>
 </template>
 
 <script>
@@ -116,7 +120,6 @@ export default {
   props: {
     content: {
       type: Object,
-      required: false,
     },
     createdAt: String,
     fromPrint: Boolean,
@@ -166,6 +169,7 @@ export default {
     "totara_competency": [
       "achievement_level",
       "not_proficient",
+      "perform_review_competency_missing",
       "proficient",
       "rating_scale",
       "reason_assigned"

@@ -21,7 +21,13 @@
 -->
 
 <template>
-  <div>Showing Evidence ID: {{ content && content.id }}</div>
+  <div v-if="content" class="tui-linkedReviewViewEvidence">
+    Showing Evidence ID: {{ content && content.id }}
+  </div>
+
+  <div v-else class="tui-linkedReviewViewEvidenceMissing">
+    {{ $str('perform_review_evidence_missing', 'totara_evidence') }}
+  </div>
 </template>
 
 <script>
@@ -29,8 +35,23 @@ export default {
   props: {
     content: {
       type: Object,
-      required: true,
     },
   },
 };
 </script>
+
+<lang-strings>
+{
+  "totara_evidence": [
+    "perform_review_evidence_missing"
+  ]
+}
+</lang-strings>
+
+<style lang="scss">
+.tui-linkedReviewViewEvidence {
+  & > * + * {
+    margin-top: var(--gap-4);
+  }
+}
+</style>
