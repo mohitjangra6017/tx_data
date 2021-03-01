@@ -45,9 +45,8 @@ class element_deletion_validation  implements query_resolver, has_middleware {
         $data = null;
 
         if (!empty($hook->get_reasons())) {
-            $first_reason = $hook->get_first_reason();
-            $description = $first_reason->get_description();
-            $data = $first_reason->get_data();
+            $description = $hook->get_reasons()['is_referenced_by_element']->get_description();
+            $data = $hook->get_reasons()['is_referenced_by_element']->get_data();
         }
 
         return [

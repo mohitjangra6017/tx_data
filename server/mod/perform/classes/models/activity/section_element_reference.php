@@ -29,7 +29,6 @@ use core\orm\collection;
 use core\orm\entity\model;
 use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\entity\activity\section as section_entity;
-use mod_perform\models\activity\section_element;
 use mod_perform\entity\activity\section_element as section_element_entity;
 use mod_perform\entity\activity\section_element_reference as section_element_reference_entity;
 
@@ -141,76 +140,74 @@ class section_element_reference extends model {
     }
 
     /**
-     * Get sections which are referencing elements in a specific activity
+     * Get section elements which are referencing elements in a specific activity
      *
      * @param int $source_activity_id
-     * @return collection|section_entity[]
+     * @return collection
      */
-    public static function get_sections_that_reference_activity(int $source_activity_id): collection {
-        return section_entity::repository()
-            ->with('activity')
-            ->as('referencing_section')
-            ->join([section_element_entity::TABLE, 'referencing_section_element'], 'referencing_section_element.section_id', 'referencing_section.id')
+    public static function get_section_elements_that_reference_activity(int $source_activity_id): collection {
+        return section_element_entity::repository()
+            ->with('section.activity')
+            ->with('element')
+            ->as('referencing_section_element')
             ->join([section_element_reference_entity::TABLE, 'ser'], 'ser.referencing_element_id', 'referencing_section_element.element_id')
             ->join([section_element_entity::TABLE, 'source_section_element'], 'source_section_element.id', 'ser.source_section_element_id')
             ->join([section_entity::TABLE, 'source_section'], 'source_section.id', 'source_section_element.section_id')
             ->where('source_section.activity_id', $source_activity_id)
             ->get()
-            ->sort(Closure::fromCallable([__CLASS__, 'activity_sections_sort_callback']))
-            ->map_to(section::class);
+            ->sort(Closure::fromCallable([__CLASS__, 'activity_section_elements_sort_callback']))
+            ->map_to(section_element::class);
     }
 
     /**
-     * Get sections which are referencing elements in a specific section
+     * Get section elements which are referencing elements in a specific section
      *
      * @param int $source_section_id
      * @return collection
-     * @throws coding_exception
      */
-    public static function get_sections_that_reference_section(int $source_section_id): collection {
-        return section_entity::repository()
-            ->with('activity')
-            ->as('referencing_section')
-            ->join([section_element_entity::TABLE, 'referencing_section_element'], 'referencing_section_element.section_id', 'referencing_section.id')
+    public static function get_section_elements_that_reference_section(int $source_section_id): collection {
+        return section_element_entity::repository()
+            ->with('section.activity')
+            ->with('element')
+            ->as('referencing_section_element')
             ->join([section_element_reference_entity::TABLE, 'ser'], 'ser.referencing_element_id', 'referencing_section_element.element_id')
             ->join([section_element_entity::TABLE, 'source_section_element'], 'source_section_element.id', 'ser.source_section_element_id')
             ->where('source_section_element.section_id', $source_section_id)
             ->get()
-            ->sort(Closure::fromCallable([__CLASS__, 'activity_sections_sort_callback']))
-            ->map_to(section::class);
+            ->sort(Closure::fromCallable([__CLASS__, 'activity_section_elements_sort_callback']))
+            ->map_to(section_element::class);
     }
 
     /**
-     * Get sections which are referencing a specific section element
+     * Get section elements which are referencing a specific section element
      *
      * @param int $section_element_id source section element id
      * @return collection
-     * @throws coding_exception
      */
-    public static function get_referenced_sections_by_source_section_element(int $section_element_id): collection {
-        return section_entity::repository()
-            ->with('activity')
-            ->as('referencing_section')
-            ->join([section_element_entity::TABLE, 'referencing_section_element'], 'referencing_section_element.section_id', 'referencing_section.id')
+    public static function get_referenced_section_elements_by_source_section_element(int $section_element_id): collection {
+        return section_element_entity::repository()
+            ->with('section.activity')
+            ->with('element')
+            ->as('referencing_section_element')
             ->join([section_element_reference_entity::TABLE, 'ser'], 'ser.referencing_element_id', 'referencing_section_element.element_id')
             ->where('ser.source_section_element_id', $section_element_id)
             ->get()
-            ->sort(Closure::fromCallable([__CLASS__, 'activity_sections_sort_callback']))
-            ->map_to(section::class);
+            ->sort(Closure::fromCallable([__CLASS__, 'activity_section_elements_sort_callback']))
+            ->map_to(section_element::class);
     }
 
     /**
      * Sort activities and sections by name
      *
-     * @param section_entity $first
-     * @param section_entity $second
+     * @param section_element_entity $first
+     * @param section_element_entity $second
      * @return int
      */
-    private static function activity_sections_sort_callback(section_entity $first, section_entity $second): int {
-        $first_activity_name = strtolower(trim($first->activity->name));
-        $first_section_name = strtolower(trim($first->title));
-        $second_activity_name = strtolower(trim($second->activity->name));
-        $second_section_name = strtolower(trim($second->title));
+    private static function activity_section_elements_sort_callback(section_element_entity $first, section_element_entity $second): int {
+        $first_activity_name = strtolower(trim($first->section->activity->name));
+        $first_section_name = strtolower(trim($first->section->title));
+        $second_activity_name = strtolower(trim($second->section->activity->name));
+        $second_section_name = strtolower(trim($second->section->title));
 
         if ($first_activity_name !== $second_activity_name) {
             return strcmp($first_activity_name, $second_activity_name);

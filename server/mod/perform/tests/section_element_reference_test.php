@@ -209,4 +209,26 @@ abstract class section_element_reference_testcase extends advanced_testcase {
         );
     }
 
+    protected function tearDown(): void {
+        $this->source_activity = null;
+        $this->referencing_redisplay_activity = null;
+        $this->source_section = null;
+        $this->referencing_aggregation_section = null;
+        $this->referencing_redisplay_section = null;
+        $this->source_element = null;
+        $this->referencing_aggregation_element = null;
+        $this->referencing_redisplay_element = null;
+        $this->source_section_element = null;
+        $this->referencing_aggregation_section_element = null;
+        $this->referencing_redisplay_section_element = null;
+        $this->redisplay_section_element_reference = null;
+        $this->aggregation_section_element_reference = null;
+        $this->self_reference_activity = null;
+        $this->self_reference_section = null;
+        $this->self_reference_referencing_element = null;
+        $this->self_reference_source_element = null;
+        $this->self_reference_source_section_element = null;
+        $this->self_reference_referencing_section_element = null;
+        $this->self_reference_section_element_reference = null;
+    }
 }

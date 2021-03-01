@@ -42,15 +42,15 @@ class section_element_deletion_check extends deletion_check_base {
      */
     public static function can_delete(pre_section_element_deleted $hook): void {
         $section_element_id = $hook->get_section_element_id();
-        $sections = section_element_reference::get_referenced_sections_by_source_section_element($section_element_id);
+        $section_elements = section_element_reference::get_referenced_section_elements_by_source_section_element($section_element_id);
 
-        $can_delete = $sections->count() < 1;
+        $can_delete = $section_elements->count() < 1;
 
         if (!$can_delete) {
             $hook->add_reason(
-                'is_referenced_by_redisplay_element',
-                get_string('modal_can_not_delete_element_message', 'performelement_redisplay'),
-                self::get_data($sections)
+                'is_referenced_by_element',
+                get_string('modal_can_not_delete_element_message', 'mod_perform'),
+                self::get_data($section_elements)
             );
         }
     }

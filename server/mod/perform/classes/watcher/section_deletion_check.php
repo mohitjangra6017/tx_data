@@ -25,6 +25,7 @@ namespace mod_perform\watcher;
 
 use coding_exception;
 use mod_perform\hook\pre_section_deleted;
+use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\section_element_reference;
 use mod_perform\models\activity\section;
 
@@ -43,18 +44,18 @@ class section_deletion_check extends deletion_check_base {
      */
     public static function can_delete(pre_section_deleted $hook): void {
         $section_id = $hook->get_section_id();
-        $other_sections = section_element_reference::get_sections_that_reference_section($section_id)
-            ->filter(function (section $section) use ($section_id) {
-                return $section->get_id() !== $section_id;
+        $referencing_section_elements = section_element_reference::get_section_elements_that_reference_section($section_id)
+            ->filter(function (section_element $section_element) use ($section_id) {
+                return $section_element->section->get_id() !== $section_id;
             });
 
-        $can_delete = $other_sections->count() < 1;
+        $can_delete = $referencing_section_elements->count() < 1;
 
         if (!$can_delete) {
             $hook->add_reason(
-                'is_referenced_by_redisplay_element',
-                get_string('modal_can_not_delete_section_message', 'performelement_redisplay'),
-                self::get_data($other_sections)
+                'is_referenced_by_element',
+                get_string('modal_can_not_delete_section_message', 'mod_perform'),
+                self::get_data($referencing_section_elements)
             );
         }
     }

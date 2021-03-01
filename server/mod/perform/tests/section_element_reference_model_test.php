@@ -174,43 +174,46 @@ class section_element_reference_model_testcase extends section_element_reference
     public function test_get_sections_by_source_activity_id(): void {
         $this->create_test_data();
 
-        $sections = section_element_reference::get_sections_that_reference_activity($this->source_activity->id);
+        $section_elements = section_element_reference::get_section_elements_that_reference_activity($this->source_activity->id);
 
-        $this->assert_activity_sections_that_reference($sections);
+        $this->assert_activity_sections_that_reference($section_elements);
     }
 
     public function test_get_sections_by_source_section_id(): void {
         $this->create_test_data();
 
-        $sections = section_element_reference::get_sections_that_reference_section($this->source_section->id);
+        $section_elements = section_element_reference::get_section_elements_that_reference_section($this->source_section->id);
 
-        $this->assert_activity_sections_that_reference($sections);
+        $this->assert_activity_sections_that_reference($section_elements);
     }
 
     public function test_get_sections_by_source_section_element_id(): void {
         $this->create_test_data();
 
-        $sections = section_element_reference::get_referenced_sections_by_source_section_element($this->source_section_element->id);
+        $section_elements = section_element_reference::get_referenced_section_elements_by_source_section_element($this->source_section_element->id);
 
-        $this->assert_activity_sections_that_reference($sections);
+        $this->assert_activity_sections_that_reference($section_elements);
     }
 
     /**
      * Assert returns activity sections with correct order
      *
-     * @param collection|section[] $sections
+     * @param collection|section_element[] $section_elements
      */
-    private function assert_activity_sections_that_reference(collection $sections): void {
-        self::assertNotContains($this->source_section->title, $sections->pluck('title'));
+    private function assert_activity_sections_that_reference(collection $section_elements): void {
+        $section_titles = $section_elements->map(function (section_element $section_element) {
+            return $section_element->section->title;
+        });
+        self::assertNotContains($this->source_section->title, $section_titles);
 
-        $sections = $sections->all(false);
-        self::assertCount(2, $sections);
+        $section_elements = $section_elements->all(false);
+        self::assertCount(2, $section_elements);
 
-        self::assertEquals($this->referencing_redisplay_activity->name, $sections[0]->activity->name);
-        self::assertEquals($this->referencing_redisplay_section->title, $sections[0]->get_display_title());
+        self::assertEquals($this->referencing_redisplay_activity->name, $section_elements[0]->section->activity->name);
+        self::assertEquals($this->referencing_redisplay_section->title, $section_elements[0]->section->get_display_title());
 
         // Aggregation elements source and referencing elements must be from the same activity.
-        self::assertEquals($this->source_activity->name, $sections[1]->activity->name);
-        self::assertEquals($this->referencing_aggregation_section->title, $sections[1]->get_display_title());
+        self::assertEquals($this->source_activity->name, $section_elements[1]->section->activity->name);
+        self::assertEquals($this->referencing_aggregation_section->title, $section_elements[1]->section->get_display_title());
     }
 }

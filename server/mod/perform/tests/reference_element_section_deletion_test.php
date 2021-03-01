@@ -65,14 +65,13 @@ class mod_perform_reference_element_section_deletion_testcase extends section_el
         $description = $result['reason']['description'];
         $result_data = $result['reason']['data'];
 
-        self::assertEquals('This section cannot be deleted, because it contains questions that are being referenced in a response redisplay element in:', $description);
+        self::assertEquals('This section cannot be deleted, because it contains questions that are being referenced by other elements:', $description);
 
         // Check data with correct order.
         self::assertCount(2, $result_data);
 
-        self::assertEquals('referencing_redisplay_activity : referencing_redisplay_section', $result_data[0]);
-        self::assertEquals('source_activity : referencing_aggregation_section', $result_data[1]);
-
+        self::assertEquals('referencing_redisplay_activity : referencing_redisplay_section (Response redisplay)', $result_data[0]);
+        self::assertEquals('source_activity : referencing_aggregation_section (Response aggregation)', $result_data[1]);
     }
 
     public function test_query_validation_redisplay_same_section(): void {

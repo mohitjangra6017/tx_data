@@ -132,7 +132,7 @@ Feature: Manage performance activity redisplay element.
     And I open the dropdown menu in the tui datatable row with "First Activity" "Name"
     And I click on "Delete" "link" in the ".tui-dataTableRow:nth-child(4)" "css_element"
     Then I should see "Cannot delete activity" in the tui modal
-    And I should see "This activity cannot be deleted, because it contains questions that are being referenced in a response redisplay element in:" in the tui modal
+    And I should see "This activity cannot be deleted, because it contains questions that are being referenced by other elements:" in the tui modal
     And I should see "Redisplay Activity" in the tui modal
     And I should see "Redisplay Activity-2" in the tui modal
     And I should see "The first section" in the tui modal
@@ -144,7 +144,7 @@ Feature: Manage performance activity redisplay element.
     When I click on ".tui-dropdown" "css_element" in the "1" activity section
     And I click on "Delete" "link" in the "1" activity section
     Then I should see "Cannot delete section" in the tui modal
-    And I should see "This section cannot be deleted, because it contains questions that are being referenced in a response redisplay element in:" in the tui modal
+    And I should see "This section cannot be deleted, because it contains questions that are being referenced by other elements:" in the tui modal
     And I should see "Redisplay Activity" in the tui modal
     And I should see "Redisplay Activity-2" in the tui modal
     And I should see "The first section" in the tui modal
@@ -156,7 +156,7 @@ Feature: Manage performance activity redisplay element.
     And I click on the Actions button for question "1-1 Favourite position?"
     And I click on "Delete" option in the dropdown menu
     Then I should see "Cannot delete question element" in the tui modal
-    And I should see "This question cannot be deleted, because it is being referenced in a response redisplay element in:" in the tui modal
+    And I should see "This question cannot be deleted, because it is being referenced by other elements:" in the tui modal
     And I should see "Redisplay Activity" in the tui modal
     And I should see "Redisplay Activity-2" in the tui modal
     And I should see "The first section" in the tui modal

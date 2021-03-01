@@ -65,11 +65,11 @@ class mod_perform_reference_element_activity_deletion_testcase extends section_e
         $description = $result['reason']['description'];
         $result_data = $result['reason']['data'];
 
-        $this->assertEquals('This activity cannot be deleted, because it contains questions that are being referenced in a response redisplay element in:', $description);
+        $this->assertEquals('This activity cannot be deleted, because it contains questions that are being referenced by other elements:', $description);
 
         // Note the aggregation element is not a problem because it is in the same activity.
         self::assertCount(1, $result_data);
-        self::assertEquals('referencing_redisplay_activity : referencing_redisplay_section', $result_data[0]);
+        self::assertEquals('referencing_redisplay_activity : referencing_redisplay_section (Response redisplay)', $result_data[0]);
     }
 
     public function test_query_validation_redisplay_same_activity(): void {

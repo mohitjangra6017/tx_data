@@ -25,6 +25,7 @@ namespace mod_perform\watcher;
 
 use coding_exception;
 use mod_perform\hook\pre_activity_deleted;
+use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\section_element_reference;
 use mod_perform\models\activity\section;
 
@@ -43,18 +44,18 @@ class activity_deletion_check extends deletion_check_base {
      */
     public static function can_delete(pre_activity_deleted $hook): void {
         $activity_id = $hook->get_activity_id();
-        $sections_from_other_activities = section_element_reference::get_sections_that_reference_activity($activity_id)
-            ->filter(function (section $section) use ($activity_id) {
-                return (int)$section->activity_id !== $activity_id;
+        $section_elements_from_other_activities = section_element_reference::get_section_elements_that_reference_activity($activity_id)
+            ->filter(function (section_element $section_element) use ($activity_id) {
+                return (int)$section_element->section->activity_id !== $activity_id;
             });
 
-        $can_delete = $sections_from_other_activities->count() < 1;
+        $can_delete = $section_elements_from_other_activities->count() < 1;
 
         if (!$can_delete) {
             $hook->add_reason(
-                'is_referenced_by_redisplay_element',
-                get_string('modal_can_not_delete_activity_message', 'performelement_redisplay'),
-                self::get_data($sections_from_other_activities)
+                'is_referenced_by_element',
+                get_string('modal_can_not_delete_activity_message', 'mod_perform'),
+                self::get_data($section_elements_from_other_activities)
             );
         }
     }
