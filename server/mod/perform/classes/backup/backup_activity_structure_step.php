@@ -194,6 +194,20 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
             ]
         );
 
+        $element_linked_review_content_responses = new backup_nested_element('element_linked_review_content_responses');
+        $element_linked_review_content_response = new backup_nested_element(
+            'element_linked_review_content_response',
+            ['id'],
+            [
+                'linked_review_content_id',
+                'element_id',
+                'participant_instance_id',
+                'response_data',
+                'created_at',
+                'updated_at',
+            ]
+        );
+
         $tracks = new backup_nested_element('tracks');
         $track = new backup_nested_element(
             'track',
@@ -536,6 +550,8 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
 
             $section_element->add_child($element_linked_review_contents);
             $element_linked_review_contents->add_child($element_linked_review_content);
+            $element_linked_review_content->add_child($element_linked_review_content_responses);
+            $element_linked_review_content_responses->add_child($element_linked_review_content_response);
 
             $track->add_child($track_user_assignments);
             $track_user_assignments->add_child($track_user_assignment);
@@ -564,6 +580,10 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
             $element_linked_review_content->set_source_table(
                 'perform_element_linked_review_content',
                 ['section_element_id' => backup::VAR_PARENTID]
+            );
+            $element_linked_review_content_response->set_source_table(
+                'perform_element_linked_review_content_response',
+                ['linked_review_content_id' => backup::VAR_PARENTID]
             );
 
             $element_response->set_source_table(

@@ -26,6 +26,7 @@ namespace performelement_linked_review\entity;
 use core\entity\user;
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
+use core\orm\entity\relations\has_many;
 use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\section_element;
 use mod_perform\entity\activity\subject_instance;
@@ -44,6 +45,7 @@ use mod_perform\entity\activity\subject_instance;
  * @property-read user $selector
  * @property-read subject_instance $subject_instance
  * @property-read section_element $section_element
+ * @property-read linked_review_content_response $responses
  *
  * @package performelement_linked_reivew\entity
  */
@@ -88,4 +90,14 @@ class linked_review_content extends entity {
     public function section_element(): belongs_to {
         return $this->belongs_to(section_element::class, 'section_element_id');
     }
+
+    /**
+     * The responses to this linked content.
+     *
+     * @return has_many
+     */
+    public function responses(): has_many {
+        return $this->has_many(linked_review_content_response::class, 'linked_review_content_id');
+    }
+
 }
