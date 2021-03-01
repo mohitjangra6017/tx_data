@@ -48,6 +48,71 @@ conf = {
             "description",
         )
     },
+    "lang_config": {
+        "ar": {"name": "Arabic", "models": ()},
+        "bg": {"name": "Bulgarian", "models": ()},
+        "cs": {"name": "Czech", "models": ()},
+        "da": {"name": "Danish", "models": ()},
+        "de": {
+            "name": "German",
+            "models": (
+                "de_core_news_md",
+                "de_core_news_sm",
+            ),
+        },
+        "el": {"name": "Greek", "models": ()},
+        "en": {
+            "name": "English",
+            "models": (
+                "en_core_web_md",
+                "en_core_web_sm",
+            ),
+        },
+        "es": {
+            "name": "Spanish",
+            "models": (
+                "es_core_news_md",
+                "es_core_news_sm",
+            ),
+        },
+        "et": {"name": "Estonian", "models": ()},
+        "fa": {"name": "Persian", "models": ()},
+        "fi": {"name": "Finnish", "models": ()},
+        "fr": {"name": "French", "models": ()},
+        "he": {"name": "Hebrew", "models": ()},
+        "hi": {"name": "Hindi", "models": ()},
+        "hr": {"name": "Croatian", "models": ()},
+        "hu": {"name": "Hungarian", "models": ()},
+        "it": {
+            "name": "Italian",
+            "models": (
+                "it_core_news_md",
+                "it_core_news_sm",
+            ),
+        },
+        "ja": {"name": "Japanese", "models": ()},
+        "lt": {"name": "Lithuanian", "models": ()},
+        "lv": {"name": "Latvian", "models": ()},
+        "nl": {
+            "name": "Dutch",
+            "models": (
+                "nl_core_news_md",
+                "nl_core_news_sm",
+            ),
+        },
+        "no": {"name": "Norwegian", "models": ()},
+        "pl": {"name": "Polish", "models": ()},
+        "pt": {"name": "Portuguese", "models": ()},
+        "ro": {"name": "Romanian", "models": ()},
+        "ru": {"name": "Russian", "models": ()},
+        "sk": {"name": "Slovak", "models": ()},
+        "sl": {"name": "Slovenian", "models": ()},
+        "sr": {"name": "Serbian", "models": ()},
+        "sv": {"name": "Swedish", "models": ()},
+        "th": {"name": "Thai", "models": ()},
+        "tr": {"name": "Turkish", "models": ()},
+        "zh": {"name": "Chinese", "models": ()},
+    },
 }
 
 

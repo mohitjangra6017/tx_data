@@ -142,7 +142,10 @@ class GenerateData:
         description = [lorem.paragraph() for _ in range(len(self.item_id))]
 
         data = {
-            "lang": lang, "city": city, "country": country, "description": description
+            "lang": lang,
+            "city": city,
+            "country": country,
+            "description": description,
         }
 
         cfg = Config()

@@ -17,7 +17,6 @@ Please contact [licensing@totaralearning.com] for more information.
 """
 
 import json
-import langid
 import os
 import pandas as pd
 from lightfm.data import Dataset
@@ -35,17 +34,14 @@ class DataLoader:
 
     def __init__(
         self,
-        nl_libs=None,
         users_spread_hor=("assignments",),
         users_expand_dict=("competencies_scale",),
         users_concat=("description",),
+        tenant="0",
+        data_home="",
     ):
         """
         Class constructor method
-        :param nl_libs: Full path to the directory containing the language processing
-            resources e.g., stopwords of different languages, lemmatizing resources,
-            etc.
-        :type nl_libs: str
         :param users_spread_hor: Columns from the users provided data that will need to
             be spread horizontally
         :type users_spread_hor: tuple
@@ -56,11 +52,17 @@ class DataLoader:
         :param users_concat: Columns from the users data that need to be concatenated to
             create a documents for text processing
         :type users_concat: tuple
+        :param tenant: The tenant whose data is to be processed and transformed
+        :type tenant: str
+        :param data_home: The directory where the data files of the Recommender engine
+            are found and saved
+        :type data_home: PosixPath object
         """
-        self.nl_libs = nl_libs
         self.users_spread_hor = users_spread_hor
         self.users_spread_dict = users_expand_dict
         self.users_concat = users_concat
+        self.tenant = tenant
+        self.data_home = data_home
 
     @staticmethod
     def __get_interactions(interactions_df=None):
@@ -240,22 +242,16 @@ class DataLoader:
                     lambda row: " ".join(row.values.astype(str)), axis=1
                 )
                 users_data.drop(labels=list(self.users_concat), axis=1, inplace=True)
-
-                stopwords_file = os.path.join(self.nl_libs, "stopwords-iso.json")
-                with open(stopwords_file) as json_file:
-                    stopwords_list = json.load(json_file)
+                text_preprocessor = PreProcessors()
                 processed_document = []
                 for doc in users_data.document:
-                    # Predict language of the document
-                    lang = langid.classify(doc)
-                    # Pick stopwords list of the predicted language
-                    stopwords = stopwords_list.get(lang[0])
                     # Cleanup the document and remove stopwords from it using the
                     # Preprocessors class
-                    new_doc = PreProcessors(stopwords=stopwords).preprocess_docs(
-                        raw_doc=doc
-                    )
+                    new_doc = text_preprocessor.preprocess_docs(raw_doc=doc)
                     processed_document.append(new_doc)
+
+                # Remove the models object from memory
+                del text_preprocessor
 
                 # Convert the list of documents into a matrix of TF-IDF features
                 tf = TfidfVectorizer()
@@ -294,6 +290,12 @@ class DataLoader:
             "user_ids": user_ids,
         }
 
+        with open(
+            file=os.path.join(self.data_home, f"processed_user_data_{self.tenant}.txt"),
+            mode="w",
+        ) as writer:
+            writer.write(json.dumps(users_features_data))
+
         return users_processed_data
 
     def __get_items(self, items_data=None, query="mf"):
@@ -327,22 +329,17 @@ class DataLoader:
         item_type_map = self.__get_items_attr(dataframe=items_data[type_cols])
 
         if query == "hybrid":
-            # Retrieve stopwords list.
-            stopwords_file = os.path.join(self.nl_libs, "stopwords-iso.json")
-            with open(stopwords_file) as json_file:
-                stopwords_list = json.load(json_file)
+            text_preprocessor = PreProcessors()
             processed_document = []
             for doc in items_data.document:
-                # Predict language of the document
-                lang = langid.classify(doc)
-                # Pick stopwords list of the predicted language
-                stopwords = stopwords_list.get(lang[0])
                 # Cleanup the document and remove stopwords from it using the
                 # Preprocessors class
-                new_doc = PreProcessors(stopwords=stopwords).preprocess_docs(
-                    raw_doc=doc
-                )
+
+                new_doc = text_preprocessor.preprocess_docs(raw_doc=doc)
                 processed_document.append(new_doc)
+
+            # Remove the models object from memory
+            del text_preprocessor
 
             # Convert the list of documents into a matrix of TF-IDF features
             tf = TfidfVectorizer()
@@ -403,6 +400,12 @@ class DataLoader:
             "item_ids": item_ids,
             "item_type_map": item_type_map,
         }
+
+        with open(
+            file=os.path.join(self.data_home, f"processed_item_data_{self.tenant}.txt"),
+            mode="w",
+        ) as writer:
+            writer.write(json.dumps(items_features_data))
 
         return items_processed_data
 

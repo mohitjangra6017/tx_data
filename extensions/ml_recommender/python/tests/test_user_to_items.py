@@ -43,11 +43,13 @@ class TestUserToItems(unittest.TestCase):
             users_expand_dict=cfg.get_property(property_name="expand_dict")["users"],
             users_concat=cfg.get_property(property_name="concat")["users"],
         )
-        processed_data = data_loader.load_data(
-            interactions_df=data_generator.get_interactions(),
-            users_data=data_generator.get_users(),
-            items_data=data_generator.get_items(),
-        )
+
+        with patch("subroutines.data_loader.open"):
+            processed_data = data_loader.load_data(
+                interactions_df=data_generator.get_interactions(),
+                users_data=data_generator.get_users(),
+                items_data=data_generator.get_items(),
+            )
         self.model = Mock()
         self.mock_predictions = np.random.rand(10)
         self.model.predict.return_value = self.mock_predictions

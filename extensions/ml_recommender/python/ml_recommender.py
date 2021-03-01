@@ -53,8 +53,6 @@ def run_modelling_process():
     item_result_count = args.result_count_item
 
     # -------------------------------------------------------
-    # Set path for the natural language processing libraries
-    nl_libs = os.path.join(os.path.dirname(__file__), "totara")
     # Get list of the tenants
     data_reader = DataReader(data_home=data_home)
     tenants = data_reader.read_tenants().tenants.tolist()
@@ -83,10 +81,11 @@ def run_modelling_process():
         i2u_file_path = os.path.join(data_home, f"i2u_{tenant}.csv")
         # Process the tenant's data from data_home directory and read into the memory
         d_loader = DataLoader(
-            nl_libs=nl_libs,
             users_spread_hor=cfg.get_property("spread_hor")["users"],
             users_expand_dict=cfg.get_property("expand_dict")["users"],
             users_concat=cfg.get_property("concat")["users"],
+            tenant=tenant,
+            data_home=data_home,
         )
         t1 = time.time()
         interactions_df = data_reader.read_interactions_file(tenant=tenant)

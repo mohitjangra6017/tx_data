@@ -16,10 +16,10 @@ Please contact [licensing@totaralearning.com] for more information.
 @package ml_recommender
 """
 
-import os
 import pandas as pd
 import random
 import unittest
+from unittest.mock import patch
 from scipy.sparse import coo_matrix, csr_matrix
 
 from config import Config
@@ -41,11 +41,8 @@ class TestDataLoader(unittest.TestCase):
         self.interactions = data_obj.get_interactions()
         self.items_data = data_obj.get_items()
         self.users_data = data_obj.get_users()
-        nl_libs = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "totara"
-        )
+
         self.data_loader = DataLoader(
-            nl_libs=nl_libs,
             users_spread_hor=cfg.get_property("spread_hor")["users"],
             users_expand_dict=cfg.get_property("expand_dict")["users"],
             users_concat=cfg.get_property("concat")["users"],
@@ -85,7 +82,8 @@ class TestDataLoader(unittest.TestCase):
         competency_cols = [col for col in transformed_df.columns if "competency" in col]
         self.assertTrue(len(competency_cols) > 0)
 
-    def test_get_users(self):
+    @patch("subroutines.data_loader.open")
+    def test_get_users(self, mock_open):
         """
         This method tests if the `__get_users` method of the `DataLoader` class returns
         a dictionary object, which has the users `users_features_data`, `features_list`,
@@ -127,6 +125,7 @@ class TestDataLoader(unittest.TestCase):
                 self.assertIsInstance(
                     random.choice(users_transformed_data["features_list"]), str
                 )
+            mock_open.assert_called()
 
     def test_create_feature_dict(self):
         """
@@ -186,7 +185,8 @@ class TestDataLoader(unittest.TestCase):
         self.assertIsInstance(computed_items_attr, dict)
         self.assertEqual(test_items_df.shape[0], len(computed_items_attr))
 
-    def test_get_items(self):
+    @patch("subroutines.data_loader.open")
+    def test_get_items(self, mock_open):
         """
         This method tests if the `__get_items` method of the `DataLoader` class returns
         a dictionary, which has the items `items_features_data`, `features_list`,
@@ -239,8 +239,10 @@ class TestDataLoader(unittest.TestCase):
                 self.assertIsInstance(
                     random.choice(items_transformed_data["features_list"]), str
                 )
+            mock_open.assert_called()
 
-    def test_transform_data(self):
+    @patch("subroutines.data_loader.open")
+    def test_transform_data(self, mock_open):
         """
         This method tests that the `__transform_data` method of the `DataLoader` class
         returns a dictionary object containing the correct items of correct shapes as
@@ -265,8 +267,10 @@ class TestDataLoader(unittest.TestCase):
             )
             self.assertIsInstance(transformed_data["items_data"], dict)
             self.assertIsInstance(transformed_data["users_data"], dict)
+            mock_open.assert_called()
 
-    def test_load_data(self):
+    @patch("subroutines.data_loader.open")
+    def test_load_data(self, mock_open):
         """
         This method tests if the `load_data` method of the `DataLoader` class returns a
         dictionary containing the correct elements, with the correct types and shapes
@@ -305,3 +309,4 @@ class TestDataLoader(unittest.TestCase):
             else:
                 self.assertIsInstance(loaded_data["user_features"], csr_matrix)
                 self.assertIsInstance(loaded_data["item_features"], csr_matrix)
+            mock_open.assert_called()
