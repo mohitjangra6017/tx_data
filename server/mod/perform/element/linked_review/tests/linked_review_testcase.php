@@ -23,11 +23,15 @@
 
 use core\orm\query\builder;
 use mod_perform\constants;
+use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\subject_instance;
 use mod_perform\models\activity\activity;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\section;
+use mod_perform\models\activity\section_element;
 use mod_perform\testing\generator as perform_generator;
+use performelement_linked_review\entity\linked_review_content_response;
+use performelement_linked_review\models\linked_review_content;
 use totara_competency\expand_task;
 use totara_competency\testing\generator as competency_generator;
 use totara_core\relationship\relationship;
@@ -70,6 +74,45 @@ abstract class linked_review_testcase extends advanced_testcase {
         ]));
         $section_element = $this->perform_generator()->create_section_element($section, $element);
         return [$activity, $section, $element, $section_element];
+    }
+
+    protected function create_child_elements(section $section, element $parent_element, array $element_types = []): array {
+        if (empty($element_types)) {
+            $element_types = ['short_text'];
+        }
+
+        $child_elements = [];
+        $child_section_elements = [];
+        foreach ($element_types as $i => $element_type) {
+            $child_element = element::create(
+                $parent_element->get_context(),
+                $element_type,
+                "Child element $i",
+                '',
+                null,
+                null,
+                $parent_element->id
+            );
+            $child_section_elements[] = section_element::create($section, $child_element, $i);
+            $child_elements[] = $child_element;
+        }
+
+        return [$child_elements, $child_section_elements];
+    }
+
+    protected function create_content_response(
+        participant_instance $participant_instance,
+        linked_review_content $lined_review_content,
+        element $child_element,
+        string $response_data = null
+    ): linked_review_content_response {
+        $response = new linked_review_content_response();
+        $response->linked_review_content_id = $lined_review_content->id;
+        $response->element_id = $child_element->id;
+        $response->participant_instance_id = $participant_instance->id;
+        $response->response_data = $response_data ?? json_encode("Response");
+        $response->save();
+        return $response;
     }
 
     protected function create_participant_in_section(

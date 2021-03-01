@@ -40,6 +40,7 @@ use mod_perform\models\activity\participant_source;
 use mod_perform\models\activity\section_element;
 use moodle_exception;
 use performelement_linked_review\entity\linked_review_content as linked_review_content_entity;
+use performelement_linked_review\entity\linked_review_content_response;
 use performelement_linked_review\linked_review;
 
 /**
@@ -201,10 +202,16 @@ class linked_review_content extends model {
     }
 
     /**
-     * Unlink this.
+     * Delete this and all corresponding responses.
      */
     public function delete(): void {
-        $this->entity->delete();
+        builder::get_db()->transaction(function () {
+            linked_review_content_response::repository()
+                ->where('linked_review_content_id', $this->id)
+                ->delete();
+
+            $this->entity->delete();
+        });
     }
 
     /**
