@@ -25,25 +25,30 @@ namespace performelement_redisplay\watcher;
 
 use coding_exception;
 use core\collection;
+use core\format;
+use core\webapi\formatter\field\string_field_formatter;
+use mod_perform\models\activity\section;
 
 abstract class deletion_check_base {
 
     /**
      * Concat section name with the activity name it belongs to
      *
-     * @param collection $sections
+     * @param collection|section[] $sections
      * @return array
      * @throws coding_exception
      */
     protected static function get_data(collection $sections) {
         $data = [];
         foreach ($sections as $section) {
+            $formatter = new string_field_formatter(format::FORMAT_PLAIN, $section->activity->get_context());
+
             $data[] = get_string(
                 'activity_name_with_section_name',
                 'performelement_redisplay',
                 (object) [
-                    'activity_name' => $section->activity->name,
-                    'section_name' => $section->display_title,
+                    'activity_name' => $formatter->format($section->activity->name),
+                    'section_name' => $formatter->format($section->display_title),
                 ]
             );
         }

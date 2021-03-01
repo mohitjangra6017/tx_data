@@ -187,7 +187,7 @@ class section_element_response extends model implements section_element_response
     public function get_response_data_formatted_lines(): array {
         $element_plugin = $this->get_element()->get_element_plugin();
 
-        if (!$element_plugin instanceof respondable_element_plugin) {
+        if (!$element_plugin->get_is_respondable()) {
             return [];
         }
 
@@ -262,7 +262,7 @@ class section_element_response extends model implements section_element_response
     public function validate_response($is_draft_validation = false): bool {
         $element_plugin = $this->get_element()->get_element_plugin();
 
-        if (!$element_plugin instanceof respondable_element_plugin) {
+        if (!$element_plugin->get_is_respondable()) {
             return true;
         }
 
@@ -293,7 +293,7 @@ class section_element_response extends model implements section_element_response
             $this->entity->save();
 
             $element_plugin = $this->get_element()->get_element_plugin();
-            if ($element_plugin instanceof respondable_element_plugin) {
+            if ($element_plugin->get_is_respondable()) {
                 $element_plugin->post_response_submission($this);
                 $this->entity->save();
             }

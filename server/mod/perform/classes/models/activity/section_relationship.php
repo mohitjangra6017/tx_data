@@ -29,6 +29,7 @@ use core\orm\query\builder;
 use mod_perform\constants;
 use mod_perform\entity\activity\section_relationship as section_relationship_entity;
 use mod_perform\hook\pre_section_relationship_deleted;
+use mod_perform\section_relationship_deletion_exception;
 use totara_core\relationship\relationship as core_relationship_model;
 
 /**
@@ -135,6 +136,7 @@ class section_relationship extends model {
      * @param int $section_id
      * @param int $core_relationship_id
      * @return bool
+     * @throws section_relationship_deletion_exception
      */
     public static function delete_with_properties(int $section_id, int $core_relationship_id): bool {
         $section = section::load_by_id($section_id);
@@ -154,7 +156,8 @@ class section_relationship extends model {
             $reasons = $hook->get_reasons();
 
             if (!empty($reasons)) {
-                throw new coding_exception($hook->get_first_reason()->get_description());
+                $reason = $hook->get_first_reason();
+                throw new section_relationship_deletion_exception($reason->get_description(), $reason);
             }
             $section_relationship_entity->delete();
         }

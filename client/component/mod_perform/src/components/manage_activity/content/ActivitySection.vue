@@ -622,9 +622,13 @@ export default {
 
       try {
         const savedSection = await this.save();
-        this.updateTitle(savedSection.section.title);
-        this.updateSection(savedSection);
-        this.$emit('mutation-success');
+        if (savedSection) {
+          this.updateTitle(savedSection.section.title);
+          this.updateSection(savedSection);
+          this.$emit('mutation-success');
+        } else {
+          this.resetSectionChanges();
+        }
       } catch (e) {
         this.displayedParticipants = this.getParticipantsFromSection(
           this.section
@@ -653,7 +657,18 @@ export default {
       });
 
       const result = resultData.mod_perform_update_section_settings;
+
+      if (result.validation_info && !result.validation_info.can_delete) {
+        this.modalTitle = result.validation_info.title;
+        this.modalDescription = result.validation_info.reason.description;
+        this.modalData = result.validation_info.reason.data;
+        this.showCanNotDeleteModal();
+
+        return null;
+      }
+
       this.savedSection = result.section;
+
       return result;
     },
 

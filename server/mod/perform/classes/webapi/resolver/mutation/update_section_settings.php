@@ -24,13 +24,16 @@
 namespace mod_perform\webapi\resolver\mutation;
 
 use coding_exception;
+use core\orm\query\builder;
 use core\orm\query\exceptions\record_not_found_exception;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_advanced_feature;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
+use mod_perform\hook\dto\pre_deleted_dto;
 use mod_perform\models\activity\activity;
 use mod_perform\models\activity\section;
+use mod_perform\section_relationship_deletion_exception;
 use mod_perform\webapi\middleware\require_activity;
 use mod_perform\webapi\middleware\require_manage_capability;
 
@@ -56,11 +59,53 @@ class update_section_settings implements mutation_resolver, has_middleware {
             throw new coding_exception('Can\'t update section settings on an active activity.');
         }
 
-        if (isset($input['title'])) {
-            $section->update_title($input['title']);
+        $transaction = builder::get_db()->start_delegated_transaction();
+        try {
+            if (isset($input['title'])) {
+                $section->update_title($input['title']);
+            }
+
+            $result = ['section' => $section->update_relationships($input['relationships'])];
+
+            $transaction->allow_commit();
+        } catch (section_relationship_deletion_exception $exception) {
+            // We don't want the changes to be saved and return a proper validation info result
+            $transaction->rollback();
+
+            $result = self::handle_validation_error($section, $exception);
         }
 
-        return ['section' => $section->update_relationships($input['relationships'])];
+        return $result;
+    }
+
+    /**
+     * Creates result based on validation error
+     *
+     * @param section $section
+     * @param section_relationship_deletion_exception $exception
+     * @return array
+     */
+    private static function handle_validation_error(section $section, section_relationship_deletion_exception $exception): array {
+        $description = '';
+        $data = null;
+        if ($exception->get_additional_data() instanceof pre_deleted_dto) {
+            $description = $exception->get_additional_data()->get_description();
+            $data = $exception->get_additional_data()->get_data();
+        }
+
+        $validation_result = [
+            'title' => get_string('modal_can_not_delete_relationship_title', 'mod_perform'),
+            'can_delete' => false,
+            'reason' => [
+                "description" => $description,
+                "data" => $data
+            ],
+        ];
+
+        return [
+            'section' => section::load_by_id($section->id),
+            'validation_info' => $validation_result
+        ];
     }
 
     /**

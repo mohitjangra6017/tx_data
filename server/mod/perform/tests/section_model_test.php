@@ -23,8 +23,8 @@
  */
 
 use mod_perform\constants;
-use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\section;
+use mod_perform\models\activity\section_element;
 use mod_perform\state\activity\active;
 use mod_perform\state\activity\draft;
 
@@ -267,6 +267,68 @@ class mod_perform_section_model_testcase extends mod_perform_relationship_testca
             'required_question_count' => 0,
             'optional_question_count' => 0,
             'other_element_count' => 0
+        ];
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_get_section_element_stats_including_children() {
+        self::setAdminUser();
+        $perform_generator = $this->perform_generator();
+        $activity = $perform_generator->create_activity_in_container();
+        $section1 = $perform_generator->create_section($activity);
+        $section2 = $perform_generator->create_section($activity);
+
+        $element1 = $perform_generator->create_element([
+            'title' => 'element one',
+            'is_required' => true,
+        ]);
+        $element2 = $perform_generator->create_element([
+            'title' => 'element two',
+            'is_required' => true,
+        ]);
+        $element3 = $perform_generator->create_element([
+            'title' => 'element three'
+        ]);
+        $element4 = $perform_generator->create_element([
+            'title' => 'element three',
+            'plugin_name' => 'static_content'
+        ]);
+        $element5 = $perform_generator->create_element([
+            'title' => 'element three'
+        ]);
+        $element6 = $perform_generator->create_element([
+            'title' => 'element three',
+            'plugin_name' => 'static_content'
+        ]);
+
+        $child_element1 = $perform_generator->create_element([
+            'title' => 'child element 1',
+            'parent' => $element1->id,
+            'is_required' => true
+        ]);
+        $child_element2 = $perform_generator->create_element([
+            'title' => 'child element 2',
+            'plugin_name' => 'static_content',
+            'parent' => $element2->id,
+        ]);
+        $child_element3 = $perform_generator->create_element([
+            'title' => 'child element 3',
+            'parent' => $element2->id,
+        ]);
+
+        section_element::create($section1, $element1, 1);
+        section_element::create($section1, $element2, 2);
+        section_element::create($section1, $element3, 3);
+        section_element::create($section1, $element4, 4);
+        section_element::create($section2, $element5, 1);
+        section_element::create($section2, $element6, 2);
+
+        //check element counts after create
+        $result = $section1->get_section_elements_summary();
+        $expected = (object)[
+            'required_question_count' => 3,
+            'optional_question_count' => 2,
+            'other_element_count' => 2
         ];
         $this->assertEquals($expected, $result);
     }

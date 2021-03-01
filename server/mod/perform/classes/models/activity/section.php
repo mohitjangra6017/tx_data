@@ -34,6 +34,7 @@ use mod_perform\hook\dto\pre_deleted_dto;
 use mod_perform\hook\pre_section_deleted;
 use mod_perform\models\activity\helpers\section_element_manager;
 use mod_perform\models\response\participant_section;
+use mod_perform\section_relationship_deletion_exception;
 use stdClass;
 
 /**
@@ -239,6 +240,7 @@ class section extends model {
      *
      * @return section
      * @throws coding_exception|\Throwable
+     * @throws section_relationship_deletion_exception
      */
     public function update_relationships(array $relationship_updates): self {
         if ($this->is_section_deleted()) {

@@ -75,6 +75,7 @@
     </Droppable>
 
     <ContentAddElementButton
+      v-if="!isActive"
       :element-plugins="addableElementPlugins"
       :for-child-elements="true"
       @add-element-item="addElement"
@@ -126,6 +127,12 @@ export default {
       // New child element list for unsaved elements
       newElements: [],
     };
+  },
+
+  computed: {
+    isActive() {
+      return this.activityState.name === 'ACTIVE';
+    },
   },
 
   watch: {

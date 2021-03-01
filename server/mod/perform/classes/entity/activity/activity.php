@@ -94,13 +94,15 @@ class activity extends entity {
      * @return has_many
      */
     public function sections_ordered_with_respondable_element_count(): has_many {
-        $elements = element_plugin::get_element_plugins(false, true);
-        $non_respondable_plugins = array_keys($elements);
+        $elements = element_plugin::get_element_plugins(true, false);
+        $respondable_plugins = array_keys($elements);
 
         $sub_query = builder::table('perform_section_element', 'se');
         $sub_query->select_raw('se.section_id AS section_id, COUNT(se.id) AS count')
             ->join([element::TABLE, 'e'], 'se.element_id', 'e.id')
-            ->where_not_in('e.plugin_name', $non_respondable_plugins)
+            ->left_join([element::TABLE, 'e2'], 'e.id', 'e2.parent')
+            ->where_in('e.plugin_name', $respondable_plugins)
+            ->or_where_in('e2.plugin_name', $respondable_plugins)
             ->group_by('se.section_id');
 
         $table = new table($sub_query);

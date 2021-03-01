@@ -1481,7 +1481,7 @@ final class generator extends \core\testing\component_generator {
             foreach ($section_elements as $section_element) {
                 $element_type = $section_element->element->plugin_name;
                 $element_plugin = \mod_perform\models\activity\element_plugin::load_by_plugin($element_type);
-                if (!($element_plugin instanceof \mod_perform\models\activity\respondable_element_plugin)) {
+                if (!$element_plugin->get_is_respondable()) {
                     // Don't create responses for non-respondable elements.
                     continue;
                 }

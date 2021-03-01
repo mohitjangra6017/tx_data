@@ -26,4 +26,4 @@ $string['pluginname'] = 'Linked Review element (TBD)';
 $string['content_type'] = 'Content type';
 $string['content_selection_relationships'] = 'Content selection relationships';
 $string['please_select_content_type'] = 'Please select a content type';
-$string['section_relationship_used_in_linked_review'] = 'Relationship used in a section element';
+$string['section_relationship_used_in_linked_review'] = "A relationship cannot be removed, because it is being referenced in a question:";

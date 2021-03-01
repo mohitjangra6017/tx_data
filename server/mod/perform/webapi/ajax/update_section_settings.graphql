@@ -28,5 +28,13 @@ mutation mod_perform_update_section_settings(
         other_element_count
       }
     }
+    validation_info {
+      can_delete
+      reason {
+        data
+        description
+      }
+      title
+    }
   }
 }

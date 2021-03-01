@@ -22,6 +22,8 @@
 
 namespace performelement_linked_review\watcher;
 
+use core\format;
+use core\webapi\formatter\field\string_field_formatter;
 use mod_perform\entity\activity\element;
 use mod_perform\entity\activity\section_element;
 use mod_perform\hook\pre_section_relationship_deleted;
@@ -35,11 +37,15 @@ class section_relationship_deletion_check {
 
         foreach ($linked_review_elements as $linked_review_element) {
             $element_data = json_decode($linked_review_element->element->data);
+
+            $formatter = new string_field_formatter(format::FORMAT_PLAIN, $section_relationship->section->activity->get_context());
+            $title = $formatter->format($linked_review_element->element->title);
+
             if (in_array($section_relationship->core_relationship_id, $element_data->selection_relationships)) {
                 $hook->add_reason(
                     'section_relationship_used_in_linked_review',
                     get_string('section_relationship_used_in_linked_review', 'performelement_linked_review'),
-                    [$linked_review_element->element->title]
+                    [$title]
                 );
             }
         }

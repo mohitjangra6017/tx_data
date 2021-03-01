@@ -205,4 +205,14 @@ class linked_review extends respondable_element_plugin {
     public function supports_child_elements(): bool {
         return true;
     }
+
+    /**
+     * A linked review element is always required
+     *
+     * @return bool
+     */
+    public function is_response_required_enabled(): bool {
+        return false;
+    }
+
 }

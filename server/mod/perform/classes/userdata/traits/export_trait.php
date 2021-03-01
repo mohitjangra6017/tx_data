@@ -90,7 +90,7 @@ trait export_trait {
         // Convert response data into actual answer.
         /** @var respondable_element_plugin $element_plugin */
         $element_plugin = element_plugin::load_by_plugin($record['element_type']);
-        if ($element_plugin instanceof respondable_element_plugin) {
+        if ($element_plugin->get_is_respondable()) {
             $record['response_data'] = $element_plugin->decode_response($record['response_data'], $record['element_data']);
         }
 

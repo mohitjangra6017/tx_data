@@ -44,7 +44,7 @@ class child_element_manager {
     /**
      * Get children elements.
      *
-     * @return collection|null
+     * @return collection|element[]|null
      */
     public function get_children_elements(): collection {
         /** @var collection $children_elements*/

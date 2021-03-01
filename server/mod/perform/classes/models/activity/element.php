@@ -145,7 +145,7 @@ class element extends model {
      * @return bool
      */
     public function get_is_respondable(): bool {
-        return $this->get_element_plugin() instanceof respondable_element_plugin;
+        return $this->get_element_plugin()->get_is_respondable();
     }
 
     /**

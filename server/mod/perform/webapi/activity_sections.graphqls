@@ -236,6 +236,11 @@ Mutation return type including a section
 """
 type mod_perform_section_result {
   section: mod_perform_section!
+  """
+  This field returns some information about potentially failed validation checks
+  when trying to update the section, i.e. removing a relationship fails
+  """
+  validation_info: mod_perform_deletion_check
 }
 
 """

@@ -90,17 +90,29 @@ class section_element_manager {
         $optional_count = 0;
         $required_count = 0;
 
-        foreach ($this->get_section_elements() as $section_element) {
-            $is_required = $section_element->element->is_required;
-            $element = $section_element->element;
+        $count_element = function (element $element) use (&$other_element_count, &$optional_count, &$required_count) {
+            $is_required = $element->is_required;
             if (!$element->is_respondable) {
-                $other_element_count ++;
+                $other_element_count++;
             } else {
                 if ($is_required) {
                     $required_count++;
                 } else {
                     $optional_count++;
                 }
+            }
+        };
+
+        foreach ($this->get_section_elements() as $section_element) {
+            $count_element($section_element->element);
+
+            $child_elements = $section_element
+                ->get_element()
+                ->get_child_element_manager()
+                ->get_children_elements();
+
+            foreach ($child_elements as $child_element) {
+                $count_element($child_element);
             }
         }
 

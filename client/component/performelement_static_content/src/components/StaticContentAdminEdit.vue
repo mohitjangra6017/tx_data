@@ -44,7 +44,7 @@
             :usage-identifier="{
               component: 'performelement_static_content',
               area: 'content',
-              instanceId: elementId,
+              instanceId: actualElementId,
             }"
             variant="performelement_static_content-content"
             :file-item-id="initialValues.draftId"
@@ -103,13 +103,19 @@ export default {
     };
   },
 
+  computed: {
+    actualElementId() {
+      return this.elementId && !isNaN(this.elementId) ? this.elementId : null;
+    },
+  },
+
   async mounted() {
     if (this.rawData && this.rawData.wekaDoc) {
       this.initialValues.wekaDoc = WekaValue.fromDoc(
         JSON.parse(this.rawData.wekaDoc)
       );
     }
-    if (this.sectionId && this.elementId) {
+    if (this.sectionId && this.actualElementId) {
       await this.$_loadExistingDraftId();
     } else {
       await this.$_loadNewDraftId();

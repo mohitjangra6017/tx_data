@@ -49,7 +49,7 @@ export default {
   props: {
     reviewUrl: {
       required: true,
-      type: Boolean,
+      type: String,
     },
     isClosed: {
       required: true,

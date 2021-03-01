@@ -74,7 +74,8 @@ export default {
       }
       return this.elementPlugins.filter(
         elementPlugin =>
-          elementPlugin.plugin_config.is_respondable &&
+          // For now don't include the redisplay question, see TL-29708
+          elementPlugin.plugin_name !== 'redisplay' &&
           elementPlugin.plugin_name !== 'linked_review'
       );
     },
