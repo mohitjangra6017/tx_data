@@ -1702,7 +1702,15 @@ function format_text_email($text, $format) {
             $editor = \core\json_editor\json_editor::default();
             $html_content = $editor->to_html($text);
 
-            return html_to_text(core_text::entities_to_utf8($html_content));
+            // Here is the problem with using html_to_text: it will try to strip out all the unknown encoded
+            // text from the html_content that we produced. Hence we will have some sort of removed encoded character
+            // that was done by {@see s()}. Therefore, we will try to decoded those single quote and double quotes
+            // before hand to keep those things stayed.
+            // Note that we do not want to use decode any html special chars on purpose because this will enable
+            // security vulnerabilities: &lt;script&gt; will become <script> and `html_to_text`
+            $html_content = str_replace(['&#039;', '&#034;'], ['\'', '"'], $html_content);
+
+            return html_to_text($html_content);
             break;
 
         case FORMAT_MOODLE:
