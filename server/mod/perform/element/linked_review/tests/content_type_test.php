@@ -21,7 +21,7 @@
  * @package performelement_linked_review
  */
 
-require_once(__DIR__ . '/linked_review_testcase.php');
+require_once(__DIR__ . '/base_linked_review_testcase.php');
 
 use mod_perform\constants;
 use performelement_linked_review\content_type_factory;
@@ -33,7 +33,7 @@ use totara_core\relationship\relationship;
  * @group perform
  * @group perform_element
  */
-class performelement_linked_review_content_type_testcase extends linked_review_testcase {
+class performelement_linked_review_content_type_testcase extends performelement_linked_review_base_linked_review_testcase {
 
     public function test_identifiers_are_unique(): void {
         $content_types = content_type_factory::get_all();
@@ -91,15 +91,15 @@ class performelement_linked_review_content_type_testcase extends linked_review_t
             $this->markTestSkipped('Test requires totara_competency');
         }
 
-        $subject_relationship_id = relationship::load_by_idnumber(constants::RELATIONSHIP_SUBJECT)->id;
-        $manager_relationship_id = relationship::load_by_idnumber(constants::RELATIONSHIP_MANAGER)->id;
+        $subject_relationship = relationship::load_by_idnumber(constants::RELATIONSHIP_SUBJECT);
+        $manager_relationship = relationship::load_by_idnumber(constants::RELATIONSHIP_MANAGER);
 
         $element1_input_data = [
             'content_type' => 'totara_competency',
             'content_type_settings' => [
                 'show_rating' => false,
             ],
-            'selection_relationships' => [$subject_relationship_id],
+            'selection_relationships' => [$subject_relationship->id],
         ];
         $element1 = $this->create_element($element1_input_data);
         $element1_output_data = json_decode($element1->data, true);
@@ -109,7 +109,20 @@ class performelement_linked_review_content_type_testcase extends linked_review_t
             'content_type_settings' => [
                 'show_rating' => false,
             ],
-            'selection_relationships' => [$subject_relationship_id],
+            'selection_relationships' => [$subject_relationship->id],
+            'selection_relationships_display' => [
+                [
+                    'id' => $subject_relationship->id,
+                    'name' => $subject_relationship->name
+                ],
+            ],
+            'content_type_display' => 'Competencies',
+            'content_type_settings_display' => [
+                [
+                    'title' => 'Show rating',
+                    'value' => 'Disabled',
+                ]
+            ]
         ], $element1_output_data);
 
         $element2_input_data = [
@@ -117,7 +130,7 @@ class performelement_linked_review_content_type_testcase extends linked_review_t
             'content_type_settings' => [
                 'show_rating' => true,
             ],
-            'selection_relationships' => [$manager_relationship_id],
+            'selection_relationships' => [$manager_relationship->id],
         ];
         $element2 = $this->create_element($element2_input_data);
         $element2_output_data = json_decode($element2->data, true);
@@ -127,7 +140,20 @@ class performelement_linked_review_content_type_testcase extends linked_review_t
             'content_type_settings' => [
                 'show_rating' => true,
             ],
-            'selection_relationships' => [$manager_relationship_id],
+            'selection_relationships' => [$manager_relationship->id],
+            'selection_relationships_display' => [
+                [
+                    'id' => $manager_relationship->id,
+                    'name' => $manager_relationship->name
+                ],
+            ],
+            'content_type_display' => 'Competencies',
+            'content_type_settings_display' => [
+                [
+                    'title' => 'Show rating',
+                    'value' => 'Enabled',
+                ]
+            ]
         ], $element2_output_data);
     }
 

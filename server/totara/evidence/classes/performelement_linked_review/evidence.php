@@ -80,6 +80,15 @@ class evidence extends content_type {
     }
 
     /**
+     * @param array $settings
+     * @return array
+     */
+    public static function get_display_settings(array $settings): array {
+        return [];
+    }
+
+
+    /**
      * @inheritDoc
      */
     public static function get_participant_content_component(): string {

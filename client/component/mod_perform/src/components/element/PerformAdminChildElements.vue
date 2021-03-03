@@ -197,7 +197,7 @@ export default {
      * @param {Number} id child element id
      */
     canDrag(id) {
-      return this.getChildState(id) === 'view';
+      return this.getChildState(id) === 'view' && !this.isActive;
     },
 
     /**

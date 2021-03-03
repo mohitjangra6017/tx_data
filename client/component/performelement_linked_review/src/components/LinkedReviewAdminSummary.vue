@@ -47,15 +47,33 @@ export default {
     title: String,
   },
 
-  data() {
-    return {
-      extraFields: [
+  computed: {
+    extraFields() {
+      let fields = [
         {
-          title: this.$str('evidence_type', 'performelement_linked_review'),
-          value: this.data.evidenceType,
+          title: this.$str('content_type', 'performelement_linked_review'),
+          value: this.data.content_type_display,
         },
-      ],
-    };
+        {
+          title: this.$str(
+            'content_selection_relationships',
+            'performelement_linked_review'
+          ),
+          value: this.data.selection_relationships_display[0]['name'],
+        },
+      ];
+
+      if (this.data.content_type_settings_display) {
+        this.data.content_type_settings_display.forEach(value => {
+          fields.push({
+            title: value.title,
+            value: value.value,
+          });
+        });
+      }
+
+      return fields;
+    },
   },
 };
 </script>
@@ -63,7 +81,8 @@ export default {
 <lang-strings>
   {
     "performelement_linked_review": [
-      "evidence_type"
+      "content_selection_relationships",
+      "content_type"
     ]
   }
 </lang-strings>

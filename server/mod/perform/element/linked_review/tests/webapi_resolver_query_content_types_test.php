@@ -21,7 +21,7 @@
  * @package performelement_linked_review
  */
 
-require_once(__DIR__ . '/linked_review_testcase.php');
+require_once(__DIR__ . '/base_linked_review_testcase.php');
 
 use performelement_linked_review\content_type;
 use performelement_linked_review\content_type_factory;
@@ -34,7 +34,7 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
  * @group perform
  * @group perform_element
  */
-class performelement_linked_review_query_content_types_testcase extends linked_review_testcase {
+class performelement_linked_review_query_content_types_testcase extends performelement_linked_review_base_linked_review_testcase {
 
     private const QUERY = 'performelement_linked_review_content_types';
 

@@ -21,26 +21,20 @@
  * @package performelement_linked_review
  */
 
-require_once(__DIR__ . '/linked_review_testcase.php');
+require_once(__DIR__ . '/base_linked_review_testcase.php');
 
-use core\collection;
 use core\orm\query\exceptions\record_not_found_exception;
-use core\webapi\execution_context;
 use mod_perform\constants;
 use mod_perform\models\activity\participant_instance;
-use mod_perform\models\activity\section_relationship;
 use performelement_linked_review\models\linked_review_content;
-use performelement_linked_review\webapi\resolver\query\base_content_items;
 use totara_competency\models\assignment;
-use totara_core\relationship\relationship;
-use totara_webapi\graphql;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
  * @group perform
  * @group perform_element
  */
-class performelement_linked_review_webapi_resolver_query_content_items_testcase extends linked_review_testcase {
+class performelement_linked_review_webapi_resolver_query_content_items_testcase extends performelement_linked_review_base_linked_review_testcase {
 
     use webapi_phpunit_helper;
 

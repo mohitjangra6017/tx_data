@@ -25,13 +25,13 @@ use mod_perform\constants;
 use performelement_linked_review\models\linked_review_content;
 use totara_core\relationship\relationship;
 
-require_once(__DIR__ . '/linked_review_testcase.php');
+require_once(__DIR__ . '/base_linked_review_testcase.php');
 
 /**
  * @group perform
  * @group perform_element
  */
-class performelement_linked_review_deletion_testcase extends linked_review_testcase {
+class performelement_linked_review_deletion_testcase extends performelement_linked_review_base_linked_review_testcase {
 
     public function test_activity_deletion(): void {
         global $DB;

@@ -22,7 +22,7 @@
  * @package performelement_linked_review
  */
 
-require_once(__DIR__ . '/linked_review_testcase.php');
+require_once(__DIR__ . '/base_linked_review_testcase.php');
 
 use core\collection;
 use mod_perform\constants;
@@ -38,7 +38,7 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
  * @group perform
  * @group perform_element
  */
-class performelement_linked_review_webapi_resolver_mutation_update_linked_review_content_testcase extends linked_review_testcase {
+class performelement_linked_review_webapi_resolver_mutation_update_linked_review_content_testcase extends performelement_linked_review_base_linked_review_testcase {
 
     private const MUTATION = 'performelement_linked_review_update_linked_review_content';
 

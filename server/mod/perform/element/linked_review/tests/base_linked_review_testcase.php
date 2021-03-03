@@ -40,7 +40,7 @@ use totara_core\relationship\relationship;
  * @group perform
  * @group perform_element
  */
-abstract class linked_review_testcase extends advanced_testcase {
+abstract class performelement_linked_review_base_linked_review_testcase extends advanced_testcase {
 
     /**
      * @var perform_generator $perform_generator

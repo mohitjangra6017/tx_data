@@ -122,6 +122,7 @@ class element extends model {
         $entity->is_required  = $is_required;
         $entity->parent  = $parent;
         $entity->sort_order = $sort_order;
+        self::clean($entity);
         self::validate($entity);
         $entity->save();
         $model = self::load_by_entity($entity);
@@ -275,14 +276,26 @@ class element extends model {
         bool $is_required = null,
         string $identifier = ''
     ) {
+
         $this->entity->title = $title;
         $this->entity->data = $data;
         $this->entity->is_required = $is_required;
         $element_identifier = element_identifier::fetch_or_create_identifier($identifier);
         $this->entity->identifier_id = $element_identifier ? $element_identifier->id : null;
+        self::clean($this->entity);
         self::validate($this->entity);
         $this->entity->save();
         element::post_update($this);
+    }
+
+    /**
+     * Clean the data to make sure all invalid keys are removed
+     *
+     * @param element_entity $entity
+     */
+    protected static function clean(element_entity $entity): void {
+        $element_plugin = element_plugin::load_by_plugin($entity->plugin_name);
+        $element_plugin->clean_element($entity);
     }
 
     /**

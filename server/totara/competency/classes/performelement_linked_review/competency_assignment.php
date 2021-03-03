@@ -84,6 +84,20 @@ class competency_assignment extends content_type {
     }
 
     /**
+     * @param array $settings
+     * @return array
+     */
+    public static function get_display_settings(array $settings): array {
+        $rating_setting = !empty($settings['show_rating'])
+            ? get_string('perform_show_rating_enabled', 'totara_competency')
+            : get_string('perform_show_rating_disabled', 'totara_competency');
+
+        return [
+            get_string('perform_show_rating', 'totara_competency') => $rating_setting
+        ];
+    }
+
+    /**
      * @inheritDoc
      */
     public static function get_content_picker_component(): string {

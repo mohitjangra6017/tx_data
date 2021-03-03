@@ -265,7 +265,16 @@ abstract class element_plugin {
      *
      * @param element_entity $element
      */
-    public function validate_element(element_entity $element) {
+    public function validate_element(element_entity $element): void {
+    }
+
+    /**
+     * When an element is about to be saved in a section, clean the data and remove
+     * everything which shouldn't be in there
+     *
+     * @param element_entity $element
+     */
+    public function clean_element(element_entity $element): void {
     }
 
     /**

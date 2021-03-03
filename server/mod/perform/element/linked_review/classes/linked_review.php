@@ -29,6 +29,7 @@ use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\respondable_element_plugin;
 use totara_core\entity\relationship;
+use totara_core\relationship\relationship as relationship_model;
 
 class linked_review extends respondable_element_plugin {
 
@@ -80,7 +81,7 @@ class linked_review extends respondable_element_plugin {
     /**
      * @inheritDoc
      */
-    public function validate_element(element_entity $element) {
+    public function validate_element(element_entity $element): void {
         parent::validate_element($element);
 
         $data = json_decode($element->data, true);
@@ -134,12 +135,28 @@ class linked_review extends respondable_element_plugin {
     /**
      * @inheritDoc
      */
+    public function clean_element(element_entity $element): void {
+        parent::clean_element($element);
+
+        $data = json_decode($element->data, true);
+
+        unset($data['components']);
+        unset($data['selection_relationships_display']);
+        unset($data['content_type_display']);
+        unset($data['content_type_settings_display']);
+
+        $element->data = json_encode($data, JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function post_create(element $element): void {
         $data = json_decode($element->data, true);
 
         $data = $this->set_content_type_and_settings($data);
 
-        $element->set_data(json_encode($data));
+        $element->set_data(json_encode($data, JSON_UNESCAPED_SLASHES));
     }
 
     /**
@@ -166,14 +183,37 @@ class linked_review extends respondable_element_plugin {
 
         $content_type = content_type_factory::get_class_name_from_identifier($data['content_type']);
 
-        $components = [
-            'admin_settings' => $content_type::get_admin_settings_component(),
-            'admin_view' => $content_type::get_admin_view_component(),
-            'content_picker' => $content_type::get_content_picker_component(),
-            'participant_content' => $content_type::get_participant_content_component(),
+        $relationships = [];
+        if (!empty($data['selection_relationships'])) {
+            foreach ($data['selection_relationships'] as $relationship_id) {
+                $relationships[] = [
+                    'id' => $relationship_id,
+                    'name' => relationship_model::load_by_id($relationship_id)->get_name()
+                ];
+            }
+        }
+
+        $human_readable_settings = [];
+        foreach ($content_type::get_display_settings($data['content_type_settings'] ?? []) as $name => $value) {
+            $human_readable_settings[] = [
+                'title' => $name,
+                'value' => $value,
+            ];
+        }
+
+        $additional_data = [
+            'selection_relationships_display' => $relationships,
+            'content_type_display' => $content_type::get_display_name(),
+            'content_type_settings_display' => $human_readable_settings,
+            'components' => [
+                'admin_settings' => $content_type::get_admin_settings_component(),
+                'admin_view' => $content_type::get_admin_view_component(),
+                'content_picker' => $content_type::get_content_picker_component(),
+                'participant_content' => $content_type::get_participant_content_component(),
+            ]
         ];
 
-        return json_encode(array_merge($data, ['components' => $components]));
+        return json_encode(array_merge($data, $additional_data), JSON_UNESCAPED_SLASHES);
     }
 
     /**

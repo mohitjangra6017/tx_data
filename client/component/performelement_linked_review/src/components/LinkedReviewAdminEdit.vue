@@ -208,7 +208,6 @@ export default {
      */
     handleSubmit(values) {
       let data = Object.assign({}, values);
-      delete data.data.components;
       this.$emit('update', data);
     },
 

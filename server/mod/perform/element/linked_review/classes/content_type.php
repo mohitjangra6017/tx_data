@@ -104,6 +104,21 @@ abstract class content_type {
     abstract public static function get_available_settings(): array;
 
     /**
+     * Returns the settings in a human readable form. The key is the display name of the setting and the value is human readable form of the value
+     *
+     * @example
+     *
+     * [
+     *     'Is rating enabled?' => 'Yes',
+     *     'Final rating participant' => 'Manager'
+     * ]
+     *
+     * @param array $settings
+     * @return array
+     */
+    abstract public static function get_display_settings(array $settings): array;
+
+    /**
      * The component path of the vue component for picking the content items.
      *
      * @return string

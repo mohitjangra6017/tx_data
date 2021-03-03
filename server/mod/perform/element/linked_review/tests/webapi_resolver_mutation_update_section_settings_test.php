@@ -22,23 +22,19 @@
  */
 
 use mod_perform\constants;
-use mod_perform\entity\activity\section as section_entity;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\section;
-use mod_perform\state\activity\active;
 use mod_perform\state\activity\draft;
-use totara_core\advanced_feature;
-use totara_core\relationship\relationship;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-require_once(__DIR__ . '/linked_review_testcase.php');
+require_once(__DIR__ . '/base_linked_review_testcase.php');
 
 /**
  * @coversDefaultClass \mod_perform\webapi\resolver\mutation\update_section_settings
  *
  * @group perform
  */
-class performelement_linked_review_webapi_resolver_mutation_update_section_settings_testcase extends linked_review_testcase {
+class performelement_linked_review_webapi_resolver_mutation_update_section_settings_testcase extends performelement_linked_review_base_linked_review_testcase {
 
     private const MUTATION = 'mod_perform_update_section_settings';
     private const TYPE = 'mod_perform_section';

@@ -76,7 +76,10 @@ abstract class respondable_element_plugin extends element_plugin {
         return $is_empty_answer && $element->is_required && !$is_draft_validation;
     }
 
-    public function validate_element(element_entity $element) {
+    /**
+     * @inheritDoc
+     */
+    public function validate_element(element_entity $element): void {
         // All respondable elements require a title.
         if (empty(trim($element->title))) {
             throw new coding_exception('Respondable elements must include a title');
