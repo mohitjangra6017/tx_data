@@ -1258,4 +1258,111 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
         );
     }
 
+    public function test_results_are_ordered(): void {
+        self::setAdminUser();
+
+        $generator = \mod_perform\testing\generator::instance();
+
+        $subject_user = user::logged_in();
+        $subject_user_id = $subject_user->id;
+
+        $subject_instance = $generator->create_subject_instance([
+            'subject_is_participating' => true,
+            'subject_user_id' => $subject_user_id,
+            'other_participant_id' => null,
+            'include_questions' => false,
+            'update_participant_sections_status' => 'complete',
+        ]);
+
+        $activity = new activity($subject_instance->activity());
+
+        $section = $generator->create_section($activity, ['title' => 'Part one']);
+
+        // Always create both the manager and appraiser section_relationships
+        $manager_section_relationship = $generator->create_section_relationship(
+            $section,
+            [
+                'relationship' => constants::RELATIONSHIP_MANAGER
+            ]
+        );
+        $appraiser_section_relationship = $generator->create_section_relationship(
+            $section,
+            [
+                'relationship' => constants::RELATIONSHIP_APPRAISER
+            ]
+        );
+        $subject_section_relationship = $generator->create_section_relationship(
+            $section,
+            ['relationship' => constants::RELATIONSHIP_SUBJECT],
+            true
+        );
+
+        $element = $generator->create_element(['title' => 'Question one']);
+        $generator->create_section_element($section, $element);
+
+        $relationships = [
+            constants::RELATIONSHIP_APPRAISER,
+            constants::RELATIONSHIP_APPRAISER,
+            constants::RELATIONSHIP_MANAGER,
+            constants::RELATIONSHIP_MANAGER,
+            constants::RELATIONSHIP_MANAGER,
+        ];
+        foreach ($relationships as $relationship_class_name) {
+            if ($relationship_class_name === constants::RELATIONSHIP_MANAGER) {
+                $core_relationship_id = $manager_section_relationship->core_relationship_id;
+            } else {
+                $core_relationship_id = $appraiser_section_relationship->core_relationship_id;
+            }
+
+            $participant_user = self::getDataGenerator()->create_user();
+            $generator->create_participant_instance_and_section(
+                $activity,
+                $participant_user,
+                $subject_instance->id,
+                $section,
+                $core_relationship_id
+            );
+        }
+
+        $subject_section = $generator->create_participant_instance_and_section(
+            $activity,
+            $subject_user->get_record(),
+            $subject_instance->id,
+            $section,
+            $subject_section_relationship->core_relationship_id
+        );
+
+        $data_provider = new participant_section_with_responses(participant_section::load_by_id($subject_section->id));
+
+        /** @var section_element_response $section_element_response */
+        $section_element_response = $data_provider->build()->section_element_responses->first();
+
+        // The correct number of groups.
+        self::assertCount(2, $section_element_response->other_responder_groups);
+
+        // The first group is manager, comes before appraiser.
+        /** @var responder_group $first_responder_group */
+        $first_responder_group = $section_element_response->other_responder_groups->first();
+        self::assertEquals('Manager', $first_responder_group->get_relationship_name());
+
+        // The participant ids within the group are sorted.
+        $previous_id = 0;
+        foreach ($first_responder_group->get_responses() as $response) {
+            self::assertGreaterThan($previous_id, $response->participant_instance->id);
+            $previous_id = $response->participant_instance->id;
+        }
+
+        // The second group is appraiser, comes after manager.
+        /** @var responder_group $last_responder_group */
+        $last_responder_group = $section_element_response->other_responder_groups->last();
+        self::assertEquals('Appraiser', $last_responder_group->get_relationship_name());
+
+        // The participant ids within the group are sorted.
+        $previous_id = 0;
+        foreach ($last_responder_group->get_responses() as $response) {
+            self::assertGreaterThan($previous_id, $response->participant_instance->id);
+            $previous_id = $response->participant_instance->id;
+        }
+    }
+
 }

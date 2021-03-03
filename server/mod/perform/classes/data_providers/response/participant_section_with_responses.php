@@ -40,6 +40,7 @@ use mod_perform\models\response\participant_section;
 use mod_perform\models\response\responder_group;
 use mod_perform\models\response\section_element_response;
 use mod_perform\state\participant_section\complete as participant_section_complete;
+use totara_core\entity\relationship as relationship_entity;
 use totara_core\relationship\relationship;
 
 class participant_section_with_responses {
@@ -187,6 +188,9 @@ class participant_section_with_responses {
             // because we need to handle the case where the same user is both a manager and appraiser to the subject.
             ->where('pi.id', '!=', $this->participant_section->participant_instance_id)
             ->where('ps.section_id', $this->participant_section->section_id)
+            ->left_join([relationship_entity::TABLE, 'cr'], 'core_relationship_id', 'cr.id')
+            ->order_by('cr.sort_order')
+            ->order_by('id')
             ->get();
     }
 
