@@ -84,6 +84,7 @@
                   $emit('create-custom-notification', {
                     eventClassName: notifiableEvent.class_name,
                     scheduleTypes: notifiableEvent.valid_schedules,
+                    recipients: notifiableEvent.recipients,
                   })
                 "
               />
@@ -124,7 +125,7 @@
                 </Cell>
 
                 <Cell align="start">
-                  {{ $str('recipient', 'totara_notification') }}
+                  {{ notificationPreference.recipient.name }}
                 </Cell>
 
                 <Cell align="start">
@@ -142,7 +143,8 @@
                       $emit(
                         'edit-notification',
                         notificationPreference,
-                        notifiableEvent.valid_schedules
+                        notifiableEvent.valid_schedules,
+                        notifiableEvent.recipients
                       )
                     "
                   />
@@ -185,7 +187,12 @@ export default {
       default: () => [],
       validator(prop) {
         return prop.every(preference => {
-          return 'component' in preference && 'events' in preference;
+          return (
+            'component' in preference &&
+            'events' in preference &&
+            'recipients' in preference &&
+            'plugin_name' in preference
+          );
         });
       },
     },

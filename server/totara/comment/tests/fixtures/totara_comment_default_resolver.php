@@ -159,4 +159,16 @@ final class totara_comment_default_resolver extends resolver {
         $context = context_system::instance();
         return $context->id;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_owner_id_from_instance(string $area, int $instance_id): ?int {
+        $callback = static::$callbacks[__FUNCTION__] ?? null;
+        if (is_callable($callback)) {
+            $closure = \Closure::fromCallable($callback);
+            return $closure->__invoke($instance_id, $area);
+        }
+        return 0;
+    }
 }

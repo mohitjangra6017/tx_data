@@ -39,6 +39,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
         /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_built_in_notification_for_component();
+        $notification_generator->include_mock_recipient();
     }
 
     /**
@@ -117,6 +118,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
             [
                 'body' => 'Course body',
                 'subject' => 'Course subject',
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -178,7 +180,10 @@ class totara_notification_send_message_with_preferences_testcase extends advance
         $category_built_in = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
             $context_category->id,
-            ['body' => 'Category body']
+            [
+                'body' => 'Category body',
+                'recipient' => totara_notification_mock_recipient::class
+            ]
         );
 
         $event = new totara_notification_mock_notifiable_event($context_course->id);
@@ -246,6 +251,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
                 'subject' => 'Custom category subject',
                 'title' => 'Custom category title',
                 'body_format' => FORMAT_MOODLE,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -254,13 +260,19 @@ class totara_notification_send_message_with_preferences_testcase extends advance
         $category_built_in = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
             $context_category->id,
-            ['body' => 'Built in category body']
+            [
+                'body' => 'Built in category body',
+                'recipient' => totara_notification_mock_recipient::class
+            ]
         );
 
         $notification_generator->create_overridden_notification_preference(
             $category_built_in,
             $context_course->id,
-            ['subject' => 'Built in course subject']
+            [
+                'subject' => 'Built in course subject',
+                'recipient' => totara_notification_mock_recipient::class
+            ]
         );
 
         $event = new totara_notification_mock_notifiable_event($context_course->id);

@@ -37,6 +37,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->include_mock_notifiable_event();
+        $generator->include_mock_recipient();
     }
 
     /**
@@ -60,6 +61,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 5,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -123,6 +125,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_after_event::identifier(),
                 'schedule_offset' => 10,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -179,6 +182,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 6,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -219,6 +223,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 6,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -277,6 +282,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -311,6 +317,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -345,6 +352,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -380,6 +388,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -418,6 +427,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 

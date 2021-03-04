@@ -28,6 +28,8 @@ use lang_string;
 use totara_comment\comment;
 use totara_comment\entity\comment as entity;
 use totara_comment\resolver_factory;
+use totara_comment\totara_notification\recipient\comment_author;
+use totara_comment\totara_notification\recipient\owner;
 use totara_notification\event\notifiable_event;
 use totara_notification\placeholder\placeholder_option;
 use core_user\totara_notification\placeholder\user;
@@ -138,7 +140,7 @@ final class comment_created extends base implements interaction_event, notifiabl
      */
     public function get_notification_event_data(): array {
         return [
-            'comment_id' => $this->objectid,
+            'comment_id' => $this->objectid
         ];
     }
 
@@ -153,7 +155,10 @@ final class comment_created extends base implements interaction_event, notifiabl
      * @return array
      */
     public static function get_notification_available_recipients(): array {
-        return [];
+        return [
+            comment_author::class,
+            owner::class,
+        ];
     }
 
     /**

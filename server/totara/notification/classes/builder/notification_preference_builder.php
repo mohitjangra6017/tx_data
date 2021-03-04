@@ -171,6 +171,14 @@ class notification_preference_builder {
     }
 
     /**
+     * @param string|null $recipient
+     * @return void
+     */
+    public function set_recipient(?string $recipient): void {
+        $this->record_data['recipient'] = $recipient;
+    }
+
+    /**
      * Parameter should safe us from modifying data via references.
      * Note that this function is set out to be static, because we would not want this function to
      * interact with any instance's data of the class at all. Treat it like a helper function
@@ -258,7 +266,15 @@ class notification_preference_builder {
             if (!isset($record_data['notification_class_name']) && !isset($record_data['ancestor_id'])) {
                 // When the notification preference is for the custom, meaning that when the notification_class_name
                 // is not provided. Hence the fields below will be required by the business logic.
-                $required_fields = ['body', 'body_format', 'subject', 'title', 'schedule_offset', 'subject_format'];
+                $required_fields = [
+                    'body',
+                    'body_format',
+                    'subject',
+                    'title',
+                    'schedule_offset',
+                    'subject_format',
+                    'recipient'
+                ];
 
                 foreach ($required_fields as $required_field) {
                     if (!isset($record_data[$required_field]) || '' === $record_data[$required_field]) {
@@ -275,7 +291,12 @@ class notification_preference_builder {
             $notification_preference = notification_preference::from_entity($entity);
 
             if ($notification_preference->is_custom_notification() && !$notification_preference->has_parent()) {
-                $text_fields = ['body', 'subject', 'title'];
+                $text_fields = [
+                    'body',
+                    'subject',
+                    'title',
+                    'recipient'
+                ];
 
                 foreach ($text_fields as $field) {
                     if (array_key_exists($field, $this->record_data) && empty($record_data[$field])) {

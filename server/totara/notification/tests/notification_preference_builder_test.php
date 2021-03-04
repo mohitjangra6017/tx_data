@@ -37,6 +37,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_notifiable_event();
         $notification_generator->include_mock_built_in_notification();
+        $notification_generator->include_mock_recipient();
     }
 
     /**
@@ -152,7 +153,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
 
         $builder = new notification_preference_builder(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id
+            context_system::instance()->id,
         );
 
         $builder->set_title('title');
@@ -161,6 +162,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $builder->set_body_format(FORMAT_PLAIN);
         $builder->set_subject_format(FORMAT_PLAIN);
         $builder->set_schedule_offset(0);
+        $builder->set_recipient(totara_notification_mock_recipient::class);
 
         $preference = $builder->save();
         self::assertTrue($DB->record_exists(notification_preference::TABLE, ['id' => $preference->get_id()]));
@@ -217,6 +219,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'title' => 'First title',
                 'schedule_offset' => 0,
                 'subject_format' => FORMAT_PLAIN,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -268,6 +271,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'body_format' => FORMAT_PLAIN,
                 'title' => 'title',
                 'schedule_offset' => 0,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -296,6 +300,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'This is title',
                 'schedule_offset' => 0,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -330,6 +335,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'This is title',
                 'schedule_offset' => 0,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -364,6 +370,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'This is title',
                 'schedule_offset' => 0,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -398,6 +405,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'This is title',
                 'schedule_offset' => 0,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -432,6 +440,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'This is title',
                 'schedule_offset' => 0,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -493,7 +502,8 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_category = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_other_cat->id
+            $context_other_cat->id,
+            ['recipient' => totara_notification_mock_recipient::class]
         );
 
         // Now start create an overridden of the custom category, but at a different context.

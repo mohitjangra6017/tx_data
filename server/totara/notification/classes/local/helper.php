@@ -26,6 +26,7 @@ use coding_exception;
 use core_component;
 use totara_notification\event\notifiable_event;
 use totara_notification\notification\built_in_notification;
+use totara_notification\recipient\recipient;
 use totara_notification\resolver\notifiable_event_resolver;
 use totara_notification_mock_notifiable_event;
 use totara_notification_mock_notifiable_event_resolver;
@@ -192,7 +193,8 @@ class helper {
             throw new coding_exception("Event class name is an invalid notifiable event");
         }
 
-        return call_user_func([$event_class_name, 'get_notification_title']);
+        /** @var notifiable_event $event_class_name */
+        return $event_class_name::get_notification_title();
     }
 
     /**
@@ -212,5 +214,44 @@ class helper {
         }
 
         return $plugin_name;
+    }
+
+    /**
+     * @param string $event_class_name
+     * @return array
+     */
+    public static function get_component_of_recipients(string $event_class_name): array {
+        if (!self::is_valid_notifiable_event($event_class_name)) {
+            throw new coding_exception("Event class name is an invalid notifiable event");
+        }
+
+        /** @var notifiable_event $event_class_name */
+        $recipients = $event_class_name::get_notification_available_recipients();
+        if (count($recipients) == 0) {
+            throw new coding_exception("{$event_class_name} need to define recipient");
+        }
+
+        return $recipients;
+    }
+
+    /**
+     * @param string $recipient_class
+     * @return bool
+     */
+    public static function is_valid_recipient_class(string $recipient_class): bool {
+        if (!class_exists($recipient_class)) {
+            return false;
+        }
+
+        if (is_a($recipient_class, recipient::class, true)) {
+            return true;
+        }
+
+        $interfaces = class_implements($recipient_class);
+        if (!is_array($interfaces)) {
+            return false;
+        }
+
+        return in_array(recipient::class, $interfaces);
     }
 }

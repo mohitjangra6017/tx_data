@@ -42,6 +42,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_notifiable_event();
         $notification_generator->add_mock_built_in_notification_for_component();
+        $notification_generator->include_mock_recipient();
     }
 
     /**
@@ -287,6 +288,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'title' => 'This is title',
                 'schedule_type' => schedule_on_event::identifier(),
                 'schedule_offset' => 0,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -513,7 +515,8 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_category = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_other_cat->id
+            $context_other_cat->id,
+            ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $this->expectException(coding_exception::class);
@@ -532,7 +535,8 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'subject' => 'This is new subject',
                 'title' => 'This is title',
                 'body_format' => FORMAT_MOODLE,
-                'subject_format' => FORMAT_PLAIN
+                'subject_format' => FORMAT_PLAIN,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
     }
@@ -548,7 +552,8 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_custom = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id
+            context_system::instance()->id,
+            ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $context_course = context_course::instance($course->id);
@@ -557,7 +562,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $notification_generator->create_overridden_notification_preference(
             $system_custom,
             $context_course->id,
-            ['subject' => 'Course subject']
+            ['subject' => 'Course subject',]
         );
 
         // Try to create another custom with the graphql.

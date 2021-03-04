@@ -75,12 +75,13 @@ class totara_notification_webapi_get_notification_preference_testcase extends ad
         /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
+        $notification_generator->include_mock_recipient();
 
         // Create an overridden at the course level.
         $course_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
             context_course::instance($course->id)->id,
-            ['subject' => 'Course subject']
+            ['subject' => 'Course subject', 'recipient' => totara_notification_mock_recipient::class]
         );
 
         $this->setAdminUser();
@@ -128,7 +129,7 @@ class totara_notification_webapi_get_notification_preference_testcase extends ad
         $category_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
             $context_category->id,
-            ['body' => 'Category body']
+            ['body' => 'Category body', 'recipient' => totara_notification_mock_recipient::class]
         );
 
         $second_result = $this->execute_graphql_operation(

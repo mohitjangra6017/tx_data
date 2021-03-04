@@ -134,6 +134,12 @@ class create_notification_preference implements mutation_resolver, has_middlewar
         }
         $builder->set_schedule_offset($raw_schedule_offset);
 
+        if (isset($args['recipient']) && !helper::is_valid_recipient_class($args['recipient'])) {
+            throw new coding_exception("{$args['recipient']} is not predefined recipient class");
+        }
+
+        $builder->set_recipient($args['recipient'] ?? null);
+
         return $builder->save();
     }
 

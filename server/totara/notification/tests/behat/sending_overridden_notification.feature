@@ -21,23 +21,30 @@ Feature: Sending overridden notification
     And I click on "Totara comment details" "button"
     And I click on "New comment created details" "button"
     And I click on "Edit notification Comment created" "button"
-    And the "Subject" "field" should be disabled
-    When I click on the "Enable customising field subject" tui toggle button
-    Then the "Subject" "field" should be enabled
+    Then the "Recipient" "field" should be disabled
+
+    When I click on the "Enable customising field recipient" tui toggle button
+    Then the "Recipient" "field" should be enabled
+    And  I set the field with xpath "//select[@class='tui-select__input']" to "Owner"
+    And I click on the "Enable customising field subject" tui toggle button
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Overridden subject at system"
     And I click on "Save" "button"
     And I log out
+
+    # Make the comment
     And I log in as "two"
     And I view article "Test Article 1"
     And I follow "Comments"
-    And I should not see "This is comment"
-    And I set the weka editor with css ".tui-commentForm__editor" to "This is comment"
-    When I click on "Post" "button"
+    Then I should not see "This is comment"
+    When I set the weka editor with css ".tui-commentForm__editor" to "This is comment"
+    And I click on "Post" "button"
     Then I should see "This is comment"
     And I log out
+
+    # Check the notification
     And I log in as "admin"
     And I reset the email sink
-    When I trigger cron
+    And I trigger cron
     Then the following emails should not have been sent:
       | To              | Subject         | Body                               |
       | one@example.com | Comment created | A new comment created on your item |

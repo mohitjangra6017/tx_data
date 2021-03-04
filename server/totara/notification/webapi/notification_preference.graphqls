@@ -20,6 +20,10 @@ type totara_notification_notification_preference {
   """
   overridden_subject: Boolean!
   """
+  Whether the field 'recipient' is overridden
+  """
+  overridden_recipient: Boolean!
+  """
   Human readable event's name.
   """
   event_name: String!
@@ -74,6 +78,10 @@ type totara_notification_notification_preference {
   Human readable label of the active schedule_type.
   """
   schedule_label: String
+  """
+  The recipient details of the notification.
+  """
+  recipient: totara_notification_recipient!
 }
 
 """
@@ -99,6 +107,7 @@ type totara_notification_notification_preference_value {
   title: String!
   schedule_offset: Int!
   schedule_type: totara_notification_schedule_type!
+  recipient: totara_notification_recipient!
 }
 
 extend type Mutation {
@@ -122,6 +131,10 @@ extend type Mutation {
     schedule_offset: param_integer
     schedule_type: param_text
     subject_format: param_integer
+    """
+    The class_name of recipient for the custom notification
+    """
+    recipient: param_text
   ): totara_notification_notification_preference!
 
   """
@@ -141,6 +154,7 @@ extend type Mutation {
     schedule_offset: param_integer
     schedule_type: param_text
     subject_format: param_integer
+    recipient: param_text
   ): totara_notification_notification_preference!
 
   """

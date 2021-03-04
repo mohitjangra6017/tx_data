@@ -40,6 +40,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->include_mock_notifiable_event();
+        $generator->include_mock_recipient();
     }
 
     /**
@@ -95,7 +96,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
 
         self::assertEquals($system_built_in->get_subject(), $sent_message->subject);
         self::assertEquals($system_built_in->get_body(), $sent_message->fullmessage);
-        self::assertEquals($system_built_in->get_body_format(), $sent_message->fullmessageformat);
+        self::assertEquals(FORMAT_PLAIN, $sent_message->fullmessageformat);
 
         self::assertObjectHasAttribute('useridto', $sent_message);
         self::assertEquals($user_one->id, $sent_message->useridto);
@@ -128,6 +129,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
                 'body' => 'System body',
                 'body_format' => FORMAT_PLAIN,
                 'subject_format' => FORMAT_PLAIN,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -222,7 +224,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         self::assertNotEquals(mock_built_in::get_default_subject()->out(), $sent_message->subject);
         self::assertEquals($system_built_in->get_subject(), $sent_message->subject);
         self::assertEquals($system_built_in->get_body(), $sent_message->fullmessage);
-        self::assertEquals($system_built_in->get_body_format(), $sent_message->fullmessageformat);
+        self::assertEquals(FORMAT_PLAIN, $sent_message->fullmessageformat);
 
         self::assertObjectHasAttribute('useridto', $sent_message);
         self::assertEquals($user_one->id, $sent_message->useridto);
@@ -295,7 +297,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         self::assertEquals($system_built_in->get_body(), $sent_message->fullmessage);
         self::assertNotEquals('This is overridden body', $sent_message->fullmessage);
         self::assertEquals(mock_built_in::get_default_body()->out(), $sent_message->fullmessage);
-        self::assertEquals($system_built_in->get_body_format(), $sent_message->fullmessageformat);
+        self::assertEquals(FORMAT_PLAIN, $sent_message->fullmessageformat);
 
         self::assertObjectHasAttribute('useridto', $sent_message);
         self::assertEquals($user_one->id, $sent_message->useridto);
@@ -324,7 +326,10 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $course_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
             $context_course->id,
-            ['subject' => 'Course subject']
+            [
+                'subject' => 'Course subject',
+                'recipient' => totara_notification_mock_recipient::class,
+            ]
         );
 
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
@@ -354,9 +359,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
 
         self::assertEquals($system_built_in->get_body(), $sent_message->fullmessage);
         self::assertEquals($course_overridden->get_body(), $sent_message->fullmessage);
-
-        self::assertEquals($system_built_in->get_body_format(), $sent_message->fullmessageformat);
-        self::assertEquals($course_overridden->get_body_format(), $sent_message->fullmessageformat);
+        self::assertEquals(FORMAT_PLAIN, $sent_message->fullmessageformat);
 
         self::assertObjectHasAttribute('useridto', $sent_message);
         self::assertEquals($user_one->id, $sent_message->useridto);
@@ -385,6 +388,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
                 'body' => 'System custom body',
                 'subject_format' => FORMAT_PLAIN,
                 'body_format' => FORMAT_PLAIN,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -392,7 +396,10 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $course_custom_overridden = $notification_generator->create_overridden_notification_preference(
             $system_custom,
             $context_course->id,
-            ['body' => 'Course custom body']
+            [
+                'body' => 'Course custom body',
+                'recipient' => totara_notification_mock_recipient::class,
+            ]
         );
 
         self::assertNotEquals($system_custom->get_body(), $course_custom_overridden->get_body());
@@ -464,6 +471,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
             [
                 'subject' => 'Category subject',
                 'body' => 'Category body',
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -476,7 +484,10 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $course_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
             $context_course->id,
-            ['subject' => 'Course subject']
+            [
+                'subject' => 'Course subject',
+                'recipient' => totara_notification_mock_recipient::class,
+            ]
         );
 
         self::assertNotEquals($category_overridden->get_subject(), $course_overridden->get_subject());
@@ -520,9 +531,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         self::assertEquals($course_overridden->get_body(), $sent_message->fullmessage);
         self::assertEquals('Category body', $sent_message->fullmessage);
 
-        self::assertEquals($system_built_in->get_body_format(), $sent_message->fullmessageformat);
-        self::assertEquals($category_overridden->get_body_format(), $sent_message->fullmessageformat);
-        self::assertEquals($course_overridden->get_body_format(), $sent_message->fullmessageformat);
+        self::assertEquals(FORMAT_PLAIN, $sent_message->fullmessageformat);
 
         self::assertObjectHasAttribute('useridto', $sent_message);
         self::assertEquals($user_one->id, $sent_message->useridto);
@@ -557,6 +566,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
                 'title' => 'Course one title',
                 'body_format' => FORMAT_MOODLE,
                 'subject_format' => FORMAT_PLAIN,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -568,6 +578,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
                 'body' => 'Course two body',
                 'title' => 'Course two title',
                 'body_format' => FORMAT_HTML,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -606,8 +617,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
 
         self::assertNotEquals($course_two_custom->get_body_format(), $sent_message->fullmessageformat);
         self::assertNotEquals(FORMAT_HTML, $sent_message->fullmessageformat);
-        self::assertEquals($course_one_custom->get_body_format(), $sent_message->fullmessageformat);
-        self::assertEquals(FORMAT_MOODLE, $sent_message->fullmessageformat);
+        self::assertEquals(FORMAT_PLAIN, $sent_message->fullmessageformat);
 
         self::assertObjectHasAttribute('useridto', $sent_message);
         self::assertEquals($user_one->id, $sent_message->useridto);
@@ -643,6 +653,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
                 'body' => 'Course one body',
                 'title' => 'Course one title',
                 'body_format' => FORMAT_MOODLE,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -689,6 +700,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
             [
                 'body' => 'Course one body',
                 'subject' => 'Course one subject',
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 

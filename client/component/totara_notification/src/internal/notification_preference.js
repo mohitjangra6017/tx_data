@@ -25,6 +25,7 @@ export const NOTIFICATION_PREFERENCE_KEYS = [
   'schedule_type',
   'schedule_offset',
   'subject_format',
+  'recipient',
 ];
 
 export const SCHEDULE_TYPES = {
@@ -52,6 +53,19 @@ export function validatePreferenceProp(extraKeys = []) {
 }
 
 /**
+ * Validator function for the notification recipients props.
+ *
+ * @return {Function}
+ */
+export function validateAvailableRecipientsProp() {
+  return prop => {
+    return prop.every(recipient => {
+      return 'class_name' in recipient && 'name' in recipient;
+    });
+  };
+}
+
+/**
  *
  * @param {Object} extraAttributes
  * @return {Object}
@@ -67,6 +81,7 @@ export function getDefaultNotificationPreference(extraAttributes = {}) {
     title: null,
     schedule_type: SCHEDULE_TYPES.ON_EVENT,
     schedule_offset: null,
+    recipient: null,
   };
 
   return () => {

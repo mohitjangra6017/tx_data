@@ -70,8 +70,14 @@ class totara_notification_mock_built_in_notification extends built_in_notificati
     /**
      * @return string
      */
-    public static function get_recipient_name(): string {
-        return notification_preference::CUSTOM_RECIPIENT_NAME;
+    public static function get_recipient_class_name(): string {
+        global $CFG;
+        $event_class = totara_notification_mock_recipient::class;
+
+        if (!class_exists($event_class)) {
+            require_once("{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_recipient.php");
+        }
+        return $event_class;
     }
 
     /**

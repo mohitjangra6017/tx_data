@@ -7,6 +7,7 @@ mutation totara_notification_update_notification_preference(
   $schedule_type: param_text
   $schedule_offset: param_integer
   $subject_format: param_integer
+  $recipient: param_text
 ) {
   notification_preference: totara_notification_update_notification_preference(
     id: $id
@@ -17,6 +18,7 @@ mutation totara_notification_update_notification_preference(
     schedule_type: $schedule_type
     schedule_offset: $schedule_offset
     subject_format: $subject_format
+    recipient: $recipient
   ) {
     __typename
     title
@@ -24,10 +26,11 @@ mutation totara_notification_update_notification_preference(
     ancestor_id
     body(format: RAW)
     body_format
-    overridden_body
-    overridden_subject
     subject(format: RAW)
     subject_format
+    overridden_body
+    overridden_subject
+    overridden_recipient
     title
     event_name
     event_class_name
@@ -39,6 +42,10 @@ mutation totara_notification_update_notification_preference(
     schedule_type
     schedule_label
     overridden_schedule
+    recipient {
+      class_name
+      name
+    }
     parent_value {
       __typename
       subject(format: RAW)
@@ -48,6 +55,10 @@ mutation totara_notification_update_notification_preference(
       schedule_offset
       schedule_type
       subject_format
+      recipient {
+        class_name
+        name
+      }
     }
   }
 }

@@ -127,6 +127,7 @@ final class generator extends component_generator {
      * + body_format: Int
      * + subject: String
      * + subject_format: Int
+     * + recipient: String
      *
      * @param array    $data
      * @param int|null $context_id
@@ -202,6 +203,7 @@ final class generator extends component_generator {
         $builder->set_subject_format($data['subject_format'] ?? null);
         $builder->set_title($data['title'] ?? null);
         $builder->set_schedule_offset($data['schedule_offset'] ?? null);
+        $builder->set_recipient($data['recipient'] ?? null);
 
         return $builder->save();
     }
@@ -234,7 +236,8 @@ final class generator extends component_generator {
             'body' => $overridden_data['body'] ?? null,
             'subject' => $overridden_data['subject'] ?? null,
             'body_format' => $overridden_data['body_format'] ?? null,
-            'subject_format' => $overridden_data['subject_format'] ?? null
+            'subject_format' => $overridden_data['subject_format'] ?? null,
+            'recipient' => $overridden_data['recipient'] ?? null,
         ];
 
         if (!$preference->has_parent()) {
@@ -362,6 +365,22 @@ final class generator extends component_generator {
     public function include_mock_collection_placeholder(): void {
         $fixture_directory = self::fixtures_location();
         require_once("{$fixture_directory}/totara_notification_mock_collection_placeholder.php");
+    }
+
+    /**
+     * @return void
+     */
+    public function include_mock_recipient(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_mock_recipient.php");
+    }
+
+    /**
+     * @return void
+     */
+    public function include_mock_owner(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_mock_owner.php");
     }
 
     /**

@@ -17,22 +17,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
- * @package totara_notification
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @package totara_comment
  */
-defined('MOODLE_INTERNAL') || die();
+namespace totara_comment\totara_notification\recipient;
 
-use totara_comment\event\comment_soft_deleted;
-use totara_notification\observer\notifiable_event_observer;
-use totara_comment\event\comment_created;
+use totara_comment\comment;
+use totara_notification\recipient\recipient;
 
-$observers = [
-    [
-        'eventname' => comment_created::class,
-        'callback' => [notifiable_event_observer::class, 'watch_notifiable_event']
-    ],
-    [
-        'eventname' => comment_soft_deleted::class,
-        'callback' => [notifiable_event_observer::class, 'watch_notifiable_event']
-    ],
-];
+/**
+ * Class author is for somebody who create resource
+ */
+final class comment_author implements recipient {
+    /**
+     * @inheritDoc
+     */
+    public static function get_name(): string {
+        return get_string('comment_author', 'totara_comment');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_user_ids(array $data): array {
+        $comment = comment::from_id($data['comment_id']);
+        return [$comment->get_userid()];
+    }
+}

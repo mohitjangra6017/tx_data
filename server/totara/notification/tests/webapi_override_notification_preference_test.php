@@ -37,6 +37,7 @@ class totara_notification_webapi_override_notification_preference_testcase exten
         /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_built_in_notification_for_component();
+        $notification_generator->include_mock_recipient();
     }
 
     /**
@@ -92,6 +93,7 @@ class totara_notification_webapi_override_notification_preference_testcase exten
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_HTML,
                 'body' => 'This is body',
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 

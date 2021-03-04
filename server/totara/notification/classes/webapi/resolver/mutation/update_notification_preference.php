@@ -31,6 +31,7 @@ use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\local\schedule_helper;
+use totara_notification\local\helper;
 use totara_notification\model\notification_preference;
 
 class update_notification_preference implements mutation_resolver, has_middleware {
@@ -105,6 +106,16 @@ class update_notification_preference implements mutation_resolver, has_middlewar
                 );
             }
             $builder->set_schedule_offset($offset);
+        }
+
+        if (array_key_exists('recipient', $args)) {
+            $recipient = ('' === $args['recipient']) ? null : $args['recipient'];
+
+            if (!is_null($recipient) && !helper::is_valid_recipient_class($recipient)) {
+                throw new coding_exception("{$recipient} is not predefined recipient class");
+            }
+
+            $builder->set_recipient($recipient);
         }
 
         return $builder->save();

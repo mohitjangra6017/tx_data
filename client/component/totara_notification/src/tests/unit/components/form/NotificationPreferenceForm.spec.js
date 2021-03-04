@@ -27,6 +27,12 @@ const props = {
   eventClassName: 'eventClassName',
   contextId: 1,
   validScheduleTypes: [SCHEDULE_TYPES.ON_EVENT],
+  availableRecipients: [
+    {
+      class_name: 'test_class',
+      name: 'test',
+    },
+  ],
 };
 
 describe('NotificationPreferenceForm', () => {

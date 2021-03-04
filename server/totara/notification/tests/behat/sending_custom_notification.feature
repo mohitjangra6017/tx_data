@@ -15,34 +15,45 @@ Feature: Sending custom notifications to user
     And I log out
 
   Scenario: Sending notifications to user on created comment should included the custom notification
-    Given I log in as "admin"
+    When I log in as "admin"
     And I navigate to system notifications page
     And I click on "Totara comment details" "button"
     And I click on "New comment created details" "button"
     And I click on "Create notification" "button"
+    And I set the field with xpath "//select[@class='tui-select__input']" to "Owner"
     And I set the field "Name" to "Custom notification one"
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test custom notification subject"
     And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Test custom notification body"
-    When I click on "Save" "button"
+    And I click on "Save" "button"
     Then I should see "Custom notification one"
-    And I log out
+
+    When I log out
     And I log in as "one"
     And I view article "Test Article 1"
     And I follow "Comments"
     And I should not see "This is comment"
     And I set the weka editor with css ".tui-commentForm__editor" to "This is comment"
-    When I click on "Post" "button"
+    And I click on "Post" "button"
     Then I should see "This is comment"
-    And I log out
+
+    When I log out
     And I log in as "admin"
     And I reset the email sink
-    When I trigger cron
-    Then the message "Test custom notification subject" contains "custom notification body" for "admin" user
+    And I trigger cron
+    Then the message "Test custom notification subject" contains "Test custom notification body" for "admin" user
     And the following emails should have been sent:
       | To                 | Subject                          | Body                          |
       | moodle@example.com | Test custom notification subject | Test custom notification body |
     # Note that moodle@example.com is the default email for admin. We will be sure that this
     # value will stay forever.
+
+    # Comment author will not receive the notification
+    When I am on site homepage
+    And I log out
+    And I log in as "one"
+    And I click on ".popover-region-notifications" "css_element"
+    Then I should not see "Comment created"
+    And I should not see "Test custom notification subject"
 
   Scenario: Sending notification to user on created comment should not use the overridden value at lower context
     Given I log in as "admin"
@@ -50,6 +61,7 @@ Feature: Sending custom notifications to user
     And I click on "Totara comment details" "button"
     And I click on "New comment created details" "button"
     And I click on "Create notification" "button"
+    And I set the field with xpath "//select[@class='tui-select__input']" to "Owner"
     And I set the field "Name" to "Custom notification one"
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Custom notification subject"
     And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Custom notification body"
@@ -57,13 +69,17 @@ Feature: Sending custom notifications to user
     And the following "courses" exist:
       | fullname | shortname | format |
       | Course 1 | c101      | topics |
-
     And I navigate to notifications page of "course" "c101"
     And I click on "Totara comment details" "button"
+
     When I click on "New comment created details" "button"
     Then I should see "Custom notification one"
     And I click on "Edit notification Custom notification one" "button"
-    And the "Subject" "field" should be disabled
+    And "Enable customising field recipient" "button" should exist
+
+    When I click on the "Enable customising field recipient" tui toggle button
+    Then the "Recipient" "field" should be enabled
+
     When I click on the "Enable customising field subject" tui toggle button
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Custom notification at course context"
     And I click on "Save" "button"
@@ -73,11 +89,13 @@ Feature: Sending custom notifications to user
     And I follow "Comments"
     And I should not see "This is comment"
     And I set the weka editor with css ".tui-commentForm__editor" to "This is comment"
+
     When I click on "Post" "button"
     Then I should see "This is comment"
     And I log out
     And I log in as "admin"
     And I reset the email sink
+
     When I trigger cron
     Then the following emails should not have been sent:
       | To                 | Subject                               | Body                     |
@@ -86,3 +104,49 @@ Feature: Sending custom notifications to user
     And the following emails should have been sent:
       | To                 | Subject                     | Body                     |
       | moodle@example.com | Custom notification subject | Custom notification body |
+
+  Scenario: Sending notifications to comment author
+    Given I log in as "admin"
+    And I navigate to system notifications page
+    And I click on "Totara comment details" "button"
+    And I click on "New comment created details" "button"
+    And I click on "Create notification" "button"
+    And I set the field with xpath "//select[@class='tui-select__input']" to "Comment author"
+    And I set the field "Name" to "Custom notification one"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test custom notification subject"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Test custom notification body"
+    And I click on "Save" "button"
+    And I log out
+
+    Given I log in as "one"
+    And I view article "Test Article 1"
+    And I follow "Comments"
+    And I set the weka editor with css ".tui-commentForm__editor" to "This is comment"
+    And I click on "Post" "button"
+    And I log out
+
+    When I log in as "admin"
+    And I reset the email sink
+    And I trigger cron
+    Then the following emails should not have been sent:
+      | To                 | Subject                          | Body                          |
+      | moodle@example.com | Test custom notification subject | Test custom notification body |
+    And the following emails should have been sent:
+      | To                 | Subject                          | Body                               |
+      | moodle@example.com | Comment created                  | A new comment created on your item |
+      | one@example.com    | Test custom notification subject | Test custom notification body      |
+
+    # Resource owner should received the built-in notification but not the custom one
+    When I am on site homepage
+    And I click on ".popover-region-notifications" "css_element"
+    And I click on "View full notification" "link" in the ".popover-region-notifications" "css_element"
+    Then I should see "Comment created"
+    And I should not see "Test custom notification subject"
+
+    # Comment author will receive the custom notification
+    When I log out
+    And I log in as "one"
+    And I click on ".popover-region-notifications" "css_element"
+    And I click on "View full notification" "link" in the ".popover-region-notifications" "css_element"
+    Then I should see "Test custom notification subject"
+    And I should not see "Comment created"

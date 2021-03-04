@@ -94,7 +94,8 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
                 'body' =>
                     'Hello [owner:firstname], a user [author:fullname] had make your item '.
                     'to this his/her timezone [author:timezone]',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -172,7 +173,8 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
             [
                 'subject' => 'Hello [author:firstname], a new notification for you',
                 'body' => 'Hello [author:fullname], user [commenter:fullname] had created a new comemnt in your code',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -315,7 +317,8 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
                             placeholder::create_node_from_key_and_label('user_two:lastname', 'User\'s last name')
                         ])
                     ])
-                )
+                ),
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 

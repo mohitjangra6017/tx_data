@@ -1,3 +1,14 @@
+type totara_notification_recipient {
+  """
+  The class name of recipient
+  """
+  class_name: String
+  """
+  The human readerable name of the recipient
+  """
+  name: String
+}
+
 type totara_notification_notifiable_event {
   """
   The component name where this notifiable event belongs to.
@@ -19,6 +30,10 @@ type totara_notification_notifiable_event {
   Collection of schedule types valid for this type of notifiable event.
   """
   valid_schedules: [totara_notification_schedule_type!]!
+  """
+  The recipients for notifiable event name.
+  """
+  recipients: [totara_notification_recipient!]!
   """
   Returning all the notification preferences that are associated with this very notifiable event.
   """

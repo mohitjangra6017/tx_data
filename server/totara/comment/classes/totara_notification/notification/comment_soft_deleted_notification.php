@@ -17,51 +17,52 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author Johannes Cilliers <johannes.cilliers@totaralearning.com>
  * @package totara_comment
  */
+
 namespace totara_comment\totara_notification\notification;
 
 use lang_string;
-use totara_comment\event\comment_created;
-use totara_comment\totara_notification\recipient\owner;
+use totara_comment\event\comment_soft_deleted;
+use totara_comment\totara_notification\recipient\comment_author;
 use totara_notification\notification\built_in_notification;
 use totara_notification\schedule\schedule_on_event;
 
-final class comment_created_notification extends built_in_notification {
+final class comment_soft_deleted_notification extends built_in_notification {
     /**
      * @return string
      */
     public static function get_event_class_name(): string {
-        return comment_created::class;
+        return comment_soft_deleted::class;
     }
 
     /**
      * @return string
      */
     public static function get_title(): string {
-        return get_string('comment_created', 'totara_comment');
+        return get_string('comment_soft_deleted', 'totara_comment');
     }
 
     /**
      * @return string
      */
     public static function get_recipient_class_name(): string {
-        return owner::class;
+        return comment_author::class;
     }
 
     /**
      * @return lang_string
      */
     public static function get_default_body(): lang_string {
-        return new lang_string('notification_comment_created_body', 'totara_comment');
+        return new lang_string('notification_comment_soft_deleted_body', 'totara_comment');
     }
 
     /**
      * @return lang_string
      */
     public static function get_default_subject(): lang_string {
-        return new lang_string('comment_created', 'totara_comment');
+        return new lang_string('comment_soft_deleted', 'totara_comment');
     }
 
     /**

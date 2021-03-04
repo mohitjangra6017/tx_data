@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author Johannes Cilliers <johannes.cilliers@totaralearning.com>
  * @package totara_comment
  */
 namespace totara_comment\totara_notification\resolver;
@@ -28,16 +28,15 @@ use totara_comment\totara_notification\recipient\owner;
 use totara_notification\recipient\recipient;
 use totara_notification\resolver\notifiable_event_resolver;
 
-class comment_created extends notifiable_event_resolver {
-
+class comment_soft_deleted extends notifiable_event_resolver {
     /**
      * @param string $recipient_class
      * @return int[]
      */
     public function get_recipient_ids(string $recipient_class): array {
         $valid_recipient_classes = [
+            owner::class,
             comment_author::class,
-            owner::class
         ];
 
         if (!in_array($recipient_class, $valid_recipient_classes)) {

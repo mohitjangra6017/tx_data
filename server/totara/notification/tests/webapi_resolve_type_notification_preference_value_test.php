@@ -46,6 +46,7 @@ class totara_notification_webapi_resolve_type_notification_preference_value_test
         /** @var generator $notification_generator */
         $notification_generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_notifiable_event();
+        $notification_generator->include_mock_recipient();
 
         $custom_notification = $notification_generator->create_notification_preference(
             mock_event::class,
@@ -56,6 +57,7 @@ class totara_notification_webapi_resolve_type_notification_preference_value_test
                 'body_format' => FORMAT_MOODLE,
                 'subject' => 'This is custom subject',
                 'subject_format' => FORMAT_MOODLE,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -156,6 +158,7 @@ class totara_notification_webapi_resolve_type_notification_preference_value_test
             [
                 'subject_format' => FORMAT_PLAIN,
                 'subject' => 'This is subject',
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -204,6 +207,7 @@ class totara_notification_webapi_resolve_type_notification_preference_value_test
             [
                 'body_format' => FORMAT_PLAIN,
                 'body' => 'This is body',
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 

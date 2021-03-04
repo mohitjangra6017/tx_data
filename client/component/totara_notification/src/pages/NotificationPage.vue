@@ -46,6 +46,7 @@
           "
           :title="modal.title"
           :valid-schedule-types="targetScheduleTypes"
+          :available-recipients="targetAvailableRecipients"
           @form-submit="handleFormSubmit"
         />
       </ModalPresenter>
@@ -100,12 +101,13 @@ export default {
       update({ notifiable_events }) {
         let result = {};
         notifiable_events.forEach(notifiable_event => {
-          const { component, plugin_name } = notifiable_event;
+          const { component, plugin_name, recipients } = notifiable_event;
           if (!result[component]) {
             result[component] = {
               component: component,
               plugin_name: plugin_name,
               events: [],
+              recipients: recipients,
             };
           }
 
@@ -128,6 +130,7 @@ export default {
       targetEventClassName: null,
       targetPreference: null,
       targetScheduleTypes: [],
+      targetAvailableRecipients: [],
     };
   },
 
@@ -154,8 +157,13 @@ export default {
     /**
      * @param {String} eventClassName
      * @param {Array} scheduleTypes
+     * @param {Array} recipients
      */
-    handleCreateCustomNotification({ eventClassName, scheduleTypes }) {
+    handleCreateCustomNotification({
+      eventClassName,
+      scheduleTypes,
+      recipients,
+    }) {
       this.modal.title = this.$str(
         'create_custom_notification_title',
         'totara_notification'
@@ -165,16 +173,19 @@ export default {
 
       this.targetEventClassName = eventClassName;
       this.targetScheduleTypes = scheduleTypes;
+      this.targetAvailableRecipients = recipients;
     },
 
     /**
      * @param {Object} oldPreference
      * @param scheduleTypes
+     * @param {Array} recipients
      */
-    async handleEditNotification(oldPreference, scheduleTypes) {
+    async handleEditNotification(oldPreference, scheduleTypes, recipients) {
       this.targetPreference = await this.getOverriddenPreference(oldPreference);
       this.targetEventClassName = this.targetPreference.event_class_name;
       this.targetScheduleTypes = scheduleTypes;
+      this.targetAvailableRecipients = recipients;
 
       this.modal.title = this.$str('edit_notification', 'totara_notification');
       this.modal.open = true;
@@ -223,6 +234,7 @@ export default {
      * @param {String} schedule_type
      * @param {Number} schedule_offset
      * @param {Number} subject_format
+     * @param {String} recipient
      */
     async createCustomNotification({
       subject,
@@ -233,6 +245,7 @@ export default {
       schedule_type,
       schedule_offset,
       subject_format,
+      recipient,
     }) {
       await this.$apollo.mutate({
         mutation: createCustomNotification,
@@ -246,6 +259,7 @@ export default {
           context_id: this.contextId,
           schedule_type,
           schedule_offset,
+          recipient,
         },
         update: (
           proxy,
@@ -366,6 +380,7 @@ export default {
      * @param {String} schedule_type
      * @param {Number} schedule_offset
      * @param {Number} subject_format
+     * @param {String} recipient
      */
     async updateNotification({
       subject,
@@ -375,6 +390,7 @@ export default {
       schedule_type,
       schedule_offset,
       subject_format,
+      recipient,
     }) {
       if (!this.targetPreference) {
         throw new Error('Cannot run update while target preference is empty');
@@ -396,6 +412,7 @@ export default {
               : undefined,
           schedule_type,
           schedule_offset,
+          recipient,
         },
         update: (
           proxy,

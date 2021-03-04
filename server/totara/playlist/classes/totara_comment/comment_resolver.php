@@ -122,4 +122,19 @@ final class comment_resolver extends resolver {
 
         throw new \coding_exception("Invalid area that is not supported yet");
     }
+
+    /**
+     * @param string $area
+     * @param int    $instance_id
+     *
+     * @return int|null
+     */
+    public function get_owner_id_from_instance(string $area, int $instance_id): ?int {
+        if (!$this->is_valid_area($area)) {
+            throw new coding_exception("Not supported area by component '{$this->component}'");
+        }
+
+        $playlist = playlist::from_id($instance_id);
+        return $playlist->get_userid();
+    }
 }

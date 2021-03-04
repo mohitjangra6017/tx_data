@@ -111,6 +111,9 @@ class notification_preference_value implements type_resolver {
             case 'schedule_type':
                 return schedule_helper::get_schedule_identifier($source->get_scheduled_offset());
 
+            case 'recipient':
+                return $source->get_recipient();
+
             default:
                 throw new coding_exception(
                     "Invalid field '{$field}' is not yet supported"

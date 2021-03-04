@@ -52,12 +52,11 @@ abstract class built_in_notification {
     abstract public static function get_title(): string;
 
     /**
-     * Returning the recipient's name. Please make sure that the recipient's name
-     * is matched with whatever the notifiable event's resolver can resolve.
+     * Return the recipient class name.
      *
      * @return string
      */
-    abstract public static function get_recipient_name(): string;
+    abstract public static function get_recipient_class_name(): string;
 
     /**
      * @return lang_string

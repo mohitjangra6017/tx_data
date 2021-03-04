@@ -33,15 +33,6 @@ use totara_notification\notification\built_in_notification;
  */
 class notification_preference {
     /**
-     * This is a temporary custom recipient name that we are using as a
-     * place holder for any custom notification preference.
-     *
-     * Note that this will be removed once recipient's name/class name is done.
-     * @var string
-     */
-    public const CUSTOM_RECIPIENT_NAME = 'custom_recipient_name';
-
-    /**
      * This is a threshold for number of times that the code is trying to do DB look up.
      * It is quite a reasonable number to do DB look up, as the level of cascading should not exceeding
      * 5 level down.
@@ -228,7 +219,7 @@ class notification_preference {
      * + @see built_in_notification::get_default_subject()
      * + @see built_in_notification::get_default_body()
      * + @see built_in_notification::get_title()
-     * + @see built_in_notification::get_recipient_name()
+     * + @see built_in_notification::get_recipient_class_name()
      * + @see built_in_notification::get_default_body_format()
      * + @see built_in_notification::get_default_subject_format()
      * + @see built_in_notification::get_default_schedule_offset()
@@ -251,10 +242,10 @@ class notification_preference {
             'body' => 'get_default_body',
             'subject' => 'get_default_subject',
             'title' => 'get_title',
-            'recipient' => 'get_recipient_name',
-            'body_format' => 'get_default_body_format',
             'schedule_offset' => 'get_default_schedule_offset',
-            'subject_format' => 'get_default_subject_format'
+            'subject_format' => 'get_default_subject_format',
+            'recipient' => 'get_recipient_class_name',
+            'body_format' => 'get_default_body_format',
         ];
 
         if (!isset($map_methods[$attribute_name])) {
@@ -357,14 +348,20 @@ class notification_preference {
     }
 
     /**
+     * Get recipient class name
+     *
      * @return string
      */
     public function get_recipient(): string {
-        if ($this->is_custom_notification()) {
-            // This is for temporary.
-            return self::CUSTOM_RECIPIENT_NAME;
+        if (!is_null($this->entity->recipient)) {
+            return $this->entity->recipient;
         }
 
+        if ($this->has_parent()) {
+            return $this->parent->get_recipient();
+        }
+
+        // Get default recipient for built_in_notification
         return $this->get_property_from_built_in_notification('recipient');
     }
 
@@ -425,6 +422,13 @@ class notification_preference {
         // We check for null as 0 is a valid answer and empty would
         // incorrectly handle on_event methods
         return $this->entity->schedule_offset !== null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_overridden_recipient(): bool {
+        return !empty($this->entity->recipient);
     }
 
     /**

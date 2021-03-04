@@ -53,6 +53,7 @@ class totara_notification_notification_queue_manager_testcaase extends advanced_
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
         $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
+        $notification_generator->include_mock_recipient();
 
         // Create a valid queue.
         $valid_queue = new notification_queue();
@@ -67,7 +68,8 @@ class totara_notification_notification_queue_manager_testcaase extends advanced_
         // create the preference then delete it.
         $custom_preference = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_user->id
+            $context_user->id,
+            ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $invalid_queue = new notification_queue();

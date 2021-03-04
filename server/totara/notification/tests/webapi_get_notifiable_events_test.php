@@ -23,6 +23,7 @@
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use totara_notification_mock_notifiable_event as mock_event;
 use totara_notification\local\helper;
+use totara_notification\testing\generator as totara_notification_generator;
 
 /**
  * Note that this test is about testing the persist query rather than
@@ -41,8 +42,13 @@ class totara_notification_webapi_get_notifiable_events_testcase extends advanced
         /** @var totara_notification_generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->add_mock_notifiable_event_for_component();
+        $generator->include_mock_recipient();
 
         $context_system = context_system::instance();
+
+        totara_notification_mock_notifiable_event::set_notification_available_recipients([
+            totara_notification_mock_recipient::class,
+        ]);
 
         // Create a custom notification for the mock notifiable event and check if it is included
         // when calling to the query.
@@ -52,8 +58,10 @@ class totara_notification_webapi_get_notifiable_events_testcase extends advanced
             [
                 'title' => 'Custom title',
                 'subject' => 'Custom subject',
+                'subject_format' => FORMAT_MOODLE,
                 'body' => 'Custom body',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -111,8 +119,13 @@ class totara_notification_webapi_get_notifiable_events_testcase extends advanced
         /** @var totara_notification_generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_notifiable_event_for_component();
+        $notification_generator->include_mock_recipient();
 
         $context_system = context_system::instance();
+
+        totara_notification_mock_notifiable_event::set_notification_available_recipients([
+            totara_notification_mock_recipient::class,
+        ]);
 
         // Create a custom notification for the mock notifiable event and check if it is included
         // when calling to the query.
@@ -122,8 +135,10 @@ class totara_notification_webapi_get_notifiable_events_testcase extends advanced
             [
                 'title' => 'Custom title',
                 'subject' => 'Custom subject',
+                'subject_format' => FORMAT_MOODLE,
                 'body' => 'Custom body',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -186,6 +201,11 @@ class totara_notification_webapi_get_notifiable_events_testcase extends advanced
         /** @var totara_notification_generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_notifiable_event_for_component();
+        $notification_generator->include_mock_recipient();
+
+        totara_notification_mock_notifiable_event::set_notification_available_recipients([
+            totara_notification_mock_recipient::class,
+        ]);
 
         // Create a custom notification for the mock notifiable event and check if it is included
         // when calling to the query.
@@ -195,8 +215,10 @@ class totara_notification_webapi_get_notifiable_events_testcase extends advanced
             [
                 'title' => 'Custom title',
                 'subject' => 'Custom subject',
+                'subject_format' => FORMAT_MOODLE,
                 'body' => 'Custom body',
-                'body_format' => FORMAT_MOODLE
+                'body_format' => FORMAT_MOODLE,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 

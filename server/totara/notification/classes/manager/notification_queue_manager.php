@@ -138,8 +138,8 @@ class notification_queue_manager {
             $event_data
         );
 
-        $recipient_name = $preference->get_recipient();
-        $recipient_ids = $resolver->get_recipient_ids($recipient_name);
+        $recipient = $preference->get_recipient();
+        $recipient_ids = $resolver->get_recipient_ids($recipient);
 
         $engine = $resolver->get_placeholder_engine();
 
@@ -170,8 +170,11 @@ class notification_queue_manager {
         $default_message->notification = 1;
         $default_message->fullmessage = $engine->replace(format_text_email($body_text, $body_format));
         $default_message->fullmessagehtml = $engine->replace(format_text($body_text, $body_format));
-        $default_message->fullmessageformat = $body_format;
         $default_message->subject = $engine->replace(content_to_text($subject_text, $subject_format));
+
+        // Set message format to FORMAT_PLAIN as the fullmessage column is only storing processed plain
+        // text instead of the raw content
+        $default_message->fullmessageformat = FORMAT_PLAIN;
 
         // Static data - which can be tweaked later on.
         $default_message->contexturl = '';

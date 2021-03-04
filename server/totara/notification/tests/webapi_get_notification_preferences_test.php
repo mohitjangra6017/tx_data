@@ -39,6 +39,7 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
         /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->add_mock_built_in_notification_for_component();
+        $generator->include_mock_recipient();
     }
 
     /**
@@ -53,7 +54,8 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_notification = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_course->id
+            $context_course->id,
+            ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $this->setAdminUser();
@@ -92,12 +94,14 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_one_notification = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_course->id
+            $context_course->id,
+            ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $custom_two_notification = $notification_generator->create_notification_preference(
             $first_event,
-            $context_course->id
+            $context_course->id,
+            ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $this->setAdminUser();
@@ -140,12 +144,14 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_one_notification = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_course->id
+            $context_course->id,
+            ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $custom_two_notification = $notification_generator->create_notification_preference(
             $first_event,
-            $context_course->id
+            $context_course->id,
+            ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $this->setAdminUser();
@@ -192,12 +198,14 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_course->id
+            $context_course->id,
+            ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $custom_two_notification = $notification_generator->create_notification_preference(
             $first_event,
-            $context_course->id
+            $context_course->id,
+            ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $this->setAdminUser();

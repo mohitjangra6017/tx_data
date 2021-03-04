@@ -24,6 +24,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['create_notification'] = 'Create notification';
 $string['create_notification_for_event'] = 'Create notification for event {$a}';
+$string['create_notification_select_placeholder'] = 'Select...';
 $string['create_custom_notification_title'] = 'Create notification';
 $string['delivery_channels'] = 'Delivery channels';
 $string['disable'] = 'Disable notification';
@@ -34,6 +35,7 @@ $string['enabled'] = 'Enabled';
 $string['enable_custom_body'] = 'Enable customising field body';
 $string['enable_custom_schedule'] = 'Enable customising field schedule';
 $string['enable_custom_subject'] = 'Enable customising field subject';
+$string['enable_custom_recipient'] = 'Enable customising field recipient';
 $string['error_cannot_create_custom_notification'] = "Cannot create the custom notification";
 $string['error_cannot_update_notification'] = "Cannot update the notification";
 $string['invalid_input'] = 'Invalid value';

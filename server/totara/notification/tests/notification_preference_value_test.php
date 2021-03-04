@@ -68,10 +68,12 @@ class totara_notification_notification_preference_value_testcase extends advance
         /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->include_mock_notifiable_event();
+        $generator->include_mock_recipient();
 
         $preference = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id
+            context_system::instance()->id,
+            ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $preference_value = notification_preference_value::from_parent_notification_preference($preference);

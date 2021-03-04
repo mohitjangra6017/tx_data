@@ -26,6 +26,27 @@
     @submit="submitForm"
   >
     <FormRow
+      :label="$str('recipient', 'totara_notification')"
+      :required="!parentValue"
+    >
+      <template v-slot="{ id }">
+        <ToggleSwitch
+          v-if="showCustomCheckBoxes"
+          :aria-label="$str('enable_custom_recipient', 'totara_notification')"
+          :value="customisation.recipient"
+          @input="customisation.recipient = $event"
+        />
+        <FormSelect
+          :aria-labelledby="id"
+          name="recipient"
+          :options="recipientOptions"
+          :disabled="showCustomCheckBoxes && !customisation.recipient"
+          :validations="v => [v.required()]"
+        />
+      </template>
+    </FormRow>
+
+    <FormRow
       v-slot="{ id }"
       :label="$str('notification_title_label', 'totara_notification')"
       :required="!parentValue || !parentValue.title || parentValue.title === ''"
@@ -244,6 +265,7 @@ import {
   FormRadioGroup,
   FormRadioWithInput,
   FormText,
+  FormSelect,
   Uniform,
 } from 'tui/components/uniform';
 import FormRow from 'tui/components/form/FormRow';
@@ -258,6 +280,7 @@ import {
   getDefaultNotificationPreference,
   SCHEDULE_TYPES,
   validatePreferenceProp,
+  validateAvailableRecipientsProp,
 } from '../../internal/notification_preference';
 import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
 
@@ -308,6 +331,9 @@ function createFormValues(currentPreference, parentValue) {
       [SCHEDULE_TYPES.ON_EVENT]: 0,
       type: 'number',
     },
+    recipient: currentPreference.recipient
+      ? currentPreference.recipient.class_name
+      : null,
   };
 
   // Set the default offset values (it involves a little bit of looking at schedule_type).
@@ -371,6 +397,7 @@ export default {
     Radio,
     RadioNumberInput,
     FormRadioWithInput,
+    FormSelect,
   },
 
   props: {
@@ -400,6 +427,12 @@ export default {
       type: Array,
       required: true,
     },
+
+    availableRecipients: {
+      type: Array,
+      required: true,
+      validator: validateAvailableRecipientsProp(),
+    },
   },
 
   data() {
@@ -410,6 +443,8 @@ export default {
           this.preference.overridden_subject || Boolean(!this.parentValue),
         schedule:
           this.preference.overridden_schedule || Boolean(!this.parentValue),
+        recipient:
+          this.preference.overridden_recipient || Boolean(!this.parentValue),
       },
       errors: null,
       formInitialValues: createFormValues(this.preference, this.parentValue),
@@ -480,6 +515,24 @@ export default {
      */
     showScheduleAfterEvent() {
       return this.validScheduleTypes.indexOf(SCHEDULE_TYPES.AFTER_EVENT) >= 0;
+    },
+
+    recipientOptions() {
+      const options = this.availableRecipients.map(recipient => {
+        return { id: recipient.class_name, label: recipient.name };
+      });
+
+      return this.preference.recipient
+        ? options
+        : [
+            {
+              id: null,
+              label: this.$str(
+                'create_notification_select_placeholder',
+                'totara_notification'
+              ),
+            },
+          ].concat(options);
     },
   },
 
@@ -602,6 +655,7 @@ export default {
         schedule_offset: !this.customisation.schedule
           ? null
           : formValue.schedule_offset[formValue.schedule_type.value],
+        recipient: formValue.recipient,
       };
 
       this.$emit('submit', parameters);
@@ -665,6 +719,7 @@ export default {
 <lang-strings>
 {
   "totara_notification": [
+    "create_notification_select_placeholder",
     "notification_body_label",
     "notification_title_label",
     "notification_schedule_label",
@@ -676,7 +731,10 @@ export default {
     "schedule_form_label_before_event",
     "schedule_form_label_on_event",
     "schedule_label_before_event",
-    "schedule_label_after_event"
+    "schedule_label_after_event",
+    "enable_custom_body",
+    "enable_custom_recipient",
+    "recipient"
   ],
   "totara_core": [
     "save"

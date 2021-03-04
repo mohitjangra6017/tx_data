@@ -72,6 +72,9 @@ class notifiable_event implements type_resolver {
             case 'valid_schedules':
                 return schedule_helper::get_available_schedules_for_event($source);
 
+            case 'recipients':
+                return helper::get_component_of_recipients($source);
+
             default:
                 throw new coding_exception("The field '{$field}' is not yet supported");
         }

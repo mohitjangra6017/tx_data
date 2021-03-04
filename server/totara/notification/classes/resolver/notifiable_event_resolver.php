@@ -26,6 +26,7 @@ use totara_notification\local\helper;
 use totara_notification\notification\built_in_notification;
 use totara_notification\placeholder\template_engine\engine;
 use totara_notification\placeholder\template_engine\square_bracket\engine as square_bracket_engine;
+use totara_notification\recipient\recipient;
 
 /**
  * Given that the {@see built_in_notification} is the default configuration that used to define the message, delivery channels,
@@ -66,10 +67,19 @@ abstract class notifiable_event_resolver {
      * Note that the current behavior is for prototyping only, the API will sure be changed,
      * hence no unit tests for this function.
      *
-     * @param string $recipient_name
+     * @param string $recipient_class
      * @return int[]
      */
-    abstract public function get_recipient_ids(string $recipient_name): array;
+    public function get_recipient_ids(string $recipient_class): array {
+        if (!helper::is_valid_recipient_class($recipient_class)) {
+            throw new coding_exception(
+                "Invalid recipient class passed to the notifiable event resolver"
+            );
+        }
+
+        /** @var recipient $recipient */
+        return $recipient::get_user_ids($this->event_data);
+    }
 
     /**
      * Get the placeholder engine instance. It can either be square bracket

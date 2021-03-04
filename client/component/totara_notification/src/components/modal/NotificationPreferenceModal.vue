@@ -38,6 +38,7 @@
         :parent-value="parentValue"
         :valid-schedule-types="validScheduleTypes"
         :event-class-name="eventClassName"
+        :available-recipients="availableRecipients"
         @submit="handleSubmit"
         @cancel="$emit('request-close')"
       />
@@ -52,6 +53,7 @@ import NotificationPreferenceForm from 'totara_notification/components/form/Noti
 import {
   getDefaultNotificationPreference,
   validatePreferenceProp,
+  validateAvailableRecipientsProp,
 } from '../../internal/notification_preference';
 
 export default {
@@ -99,6 +101,12 @@ export default {
     validScheduleTypes: {
       type: Array,
       required: true,
+    },
+
+    availableRecipients: {
+      type: Array,
+      required: true,
+      validator: validateAvailableRecipientsProp(),
     },
   },
 

@@ -48,12 +48,14 @@ class notification_preference_formatter extends formatter {
         $record->event_class_name = $notification_preference->get_event_class_name();
         $record->overridden_body = $notification_preference->is_overridden_body();
         $record->overridden_subject = $notification_preference->is_overridden_subject();
+        $record->overridden_recipient = $notification_preference->is_overridden_recipient();
         $record->ancestor_id = $notification_preference->get_ancestor_id();
         $record->is_custom = $notification_preference->is_custom_notification();
         $record->context_id = $notification_preference->get_context_id();
         $record->schedule_offset = $notification_preference->get_schedule_offset();
         $record->overridden_schedule = $notification_preference->is_overridden_schedule();
         $record->subject_format = $notification_preference->get_subject_format();
+        $record->recipient = $notification_preference->get_recipient();
 
         parent::__construct($record, $context);
     }
@@ -147,10 +149,12 @@ class notification_preference_formatter extends formatter {
             'overridden_body' => null,
             'overridden_subject' => null,
             'overridden_schedule' => null,
+            'overridden_recipient' => null,
             'ancestor_id' => null,
             'event_class_name' => null,
             'is_custom' => null,
-            'context_id' => null
+            'context_id' => null,
+            'recipient' => null,
         ];
     }
 }

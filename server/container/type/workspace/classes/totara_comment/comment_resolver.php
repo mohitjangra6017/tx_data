@@ -22,8 +22,10 @@
  */
 namespace container_workspace\totara_comment;
 
+use coding_exception;
 use container_workspace\discussion\discussion;
 use container_workspace\workspace;
+use context_course;
 use core_container\factory;
 use totara_comment\comment;
 use totara_comment\resolver;
@@ -130,11 +132,11 @@ final class comment_resolver extends resolver {
         if (discussion::AREA == $area) {
             $workspace_id = $DB->get_field('workspace_discussion', 'course_id', ['id' => $instance_id]);
 
-            $context = \context_course::instance($workspace_id);
+            $context = context_course::instance($workspace_id);
             return $context->id;
         }
 
-        throw new \coding_exception(
+        throw new coding_exception(
             "Cannot find the context base on instance id '{$instance_id}' and area '{$area}'"
         );
     }
@@ -179,7 +181,7 @@ final class comment_resolver extends resolver {
             return $workspace_interactor->is_joined();
         }
 
-        throw new \coding_exception("Invalid area that is not supported yet");
+        throw new coding_exception("Invalid area that is not supported yet");
     }
 
     /**
@@ -199,7 +201,7 @@ final class comment_resolver extends resolver {
             return $workspace_interactor->can_view_discussions();
         }
 
-        throw new \coding_exception("Invalid area that is not supported yet");
+        throw new coding_exception("Invalid area that is not supported yet");
     }
 
     /**
@@ -235,6 +237,24 @@ final class comment_resolver extends resolver {
             return $workspace_interactor->can_view_discussions();
         }
 
-        throw new \coding_exception("Invalid area that is not supported yet");
+        throw new coding_exception("Invalid area that is not supported yet");
+    }
+
+    /**
+     * Returns the owner's id of the instance given $area and $instance_id.
+     * Note that if the instance does not have owner, return NULL instead.
+     *
+     * @param string $area
+     * @param int    $instance_id
+     *
+     * @return int|null
+     */
+    public function get_owner_id_from_instance(string $area, int $instance_id): ?int {
+        if (discussion::AREA !== $area) {
+            throw new coding_exception("Not supported area by component '{$this->component}'");
+        }
+
+        $discussion = discussion::from_id($instance_id);
+        return $discussion->get_user_id();
     }
 }

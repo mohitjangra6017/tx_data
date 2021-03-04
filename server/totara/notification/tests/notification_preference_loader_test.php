@@ -36,6 +36,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         $generator->add_mock_built_in_notification_for_component();
 
         $generator->include_mock_notifiable_event();
+        $generator->include_mock_recipient();
     }
 
     /**
@@ -78,6 +79,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
                 'subject' => 'my name',
                 'body' => 'body',
                 'body_format' => FORMAT_MOODLE,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -125,6 +127,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
                 'subject' => 'body',
                 'title' => 'title',
                 'body_format' => FORMAT_JSON_EDITOR,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -137,6 +140,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
                 'subject' => 'ioko',
                 'title' => 'category title',
                 'body_format' => FORMAT_HTML,
+                'recipient' => totara_notification_mock_recipient::class
             ]
         );
 
@@ -241,7 +245,10 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         $system_custom = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
             context_system::instance()->id,
-            ['body' => 'Custom body',]
+            [
+                'body' => 'Custom body',
+                'recipient' => totara_notification_mock_recipient::class,
+            ]
         );
 
         // Create overridden of system built in at course context.

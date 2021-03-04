@@ -7,6 +7,10 @@ query totara_notification_notifiable_events($context_id: param_integer!) {
     plugin_name
     name
     component
+    recipients {
+      class_name
+      name
+    }
     notification_preferences(context_id: $context_id) {
       __typename
       title
@@ -14,10 +18,11 @@ query totara_notification_notifiable_events($context_id: param_integer!) {
       ancestor_id
       body(format: RAW)
       body_format
-      overridden_body
-      overridden_subject
       subject(format: RAW)
       subject_format
+      overridden_body
+      overridden_subject
+      overridden_recipient
       title
       event_name
       event_class_name
@@ -29,6 +34,10 @@ query totara_notification_notifiable_events($context_id: param_integer!) {
       schedule_type
       schedule_label
       overridden_schedule
+      recipient {
+        class_name
+        name
+      }
       parent_value {
         __typename
         subject(format: RAW)
@@ -38,6 +47,10 @@ query totara_notification_notifiable_events($context_id: param_integer!) {
         schedule_offset
         schedule_type
         subject_format
+        recipient {
+          class_name
+          name
+        }
       }
     }
     valid_schedules

@@ -47,6 +47,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_notifiable_event();
         $notification_generator->add_mock_built_in_notification_for_component();
+        $notification_generator->include_mock_recipient();
     }
 
     /**
@@ -120,6 +121,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
                 'subject' => 'This is custom subject',
                 'body_format' => FORMAT_MOODLE,
                 'subject_format' => FORMAT_PLAIN,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -167,6 +169,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
                 'body' => 'This is custom body',
                 'subject' => 'This is custom subject',
                 'body_format' => FORMAT_MOODLE,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -214,6 +217,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
                 'body' => 'This is custom body',
                 'subject' => 'This is custom subject',
                 'body_format' => FORMAT_MOODLE,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -369,6 +373,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
                 'subject' => 'Custom subject',
                 'subject_format' => FORMAT_PLAIN,
                 'title' => 'Custom title',
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -410,6 +415,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
                 'title' => 'Custom title',
                 'schedule_offset' => 0,
                 'subject_format' => FORMAT_PLAIN,
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -487,6 +493,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
             [
                 'body_format' => FORMAT_PLAIN,
                 'body' => 'This is body',
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -519,5 +526,52 @@ class totara_notification_webapi_update_notification_preference_testcase extends
 
         self::assertNotEquals('This is body', $preference->get_body());
         self::assertEquals($updated_body, $preference->get_body());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_notification_preference_with_valid_recipient(): void {
+        $this->setAdminUser();
+        $system_built_in = notification_preference_loader::get_built_in(
+            totara_notification_mock_built_in_notification::class
+        );
+
+        // Run the mutation.
+        try {
+            $this->resolve_graphql_mutation(
+                $this->get_graphql_name(update_notification_preference::class),
+                [
+                    'id' => $system_built_in->get_id(),
+                    'recipient' => totara_notification_mock_recipient::class,
+                ]
+            );
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_notification_preference_with_invalid_recipient(): void {
+        $this->setAdminUser();
+        $system_built_in = notification_preference_loader::get_built_in(
+            totara_notification_mock_built_in_notification::class
+        );
+
+        // Run the mutation.
+        try {
+            $this->resolve_graphql_mutation(
+                $this->get_graphql_name(update_notification_preference::class),
+                [
+                    'id' => $system_built_in->get_id(),
+                    'recipient' => 'totara_non\\existent\\recipient\\class',
+                ]
+            );
+            $this->fail('Exception is expected but not thrown');
+        } catch (Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Coding error detected, it must be fixed by a programmer: totara_non\existent\recipient\class is not predefined recipient class');
+        }
     }
 }

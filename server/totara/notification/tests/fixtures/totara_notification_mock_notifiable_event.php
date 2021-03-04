@@ -48,6 +48,11 @@ class totara_notification_mock_notifiable_event implements notifiable_event {
     public $timecreated;
 
     /**
+     * @var array
+     */
+    private static $available_recipients = null;
+
+    /**
      * totara_notification_mock_notifiable_event constructor.
      *
      * @param int $context_id
@@ -71,7 +76,19 @@ class totara_notification_mock_notifiable_event implements notifiable_event {
      * @return array
      */
     public static function get_notification_available_recipients(): array {
-        return [];
+        // Return set available recipients.
+        if (!is_null(static::$available_recipients)) {
+            return static::$available_recipients;
+        }
+
+        // Return default available recipients.
+        return [
+            totara_notification_mock_recipient::class
+        ];
+    }
+
+    public static function set_notification_available_recipients(array $available_recipients) {
+        static::$available_recipients = $available_recipients;
     }
 
     /**
