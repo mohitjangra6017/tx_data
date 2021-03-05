@@ -4233,6 +4233,12 @@ class settings_navigation extends navigation_node {
             $coursenode->add(get_string('remindersmenuitem', 'totara_coursecatalog'), $url, self::TYPE_SETTING, null, null, new pix_icon('i/email', ''));
         }
 
+        if (has_capability('moodle/course:update', $coursecontext)) {
+            // Add the course notifications link.
+            $url = new moodle_url('/totara/notification/notification_preference.php', array('context_id' => $coursecontext->id, 'component' => 'core_course', 'area' => 'core_course', 'item_id' => $course->id));
+            $coursenode->add(get_string('notifications', 'admin'), $url, self::TYPE_SETTING, null, null, new \core\output\flex_icon('notification-non-filled'));
+        }
+        
         // add enrol nodes
         enrol_add_course_navigation($coursenode, $course);
 

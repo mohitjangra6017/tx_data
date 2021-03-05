@@ -73,4 +73,3 @@ msnid,core
 sitebackpackverify,core_badges
 editsettings,core_badges
 preferences,core_badges
-notifications,core_admin

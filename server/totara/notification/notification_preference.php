@@ -17,14 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
  * @author Alvin Smith <alvin.smith@totaralearning.com>
  * @package totara_notification
  */
 
 use totara_core\extended_context;
 use totara_tui\output\component;
-use totara_notification\model\notification_preference;
 
 global $CFG, $OUTPUT, $PAGE;
 
@@ -39,33 +37,26 @@ $item_id = optional_param('item_id', extended_context::NATURAL_CONTEXT_ITEM_ID, 
 
 $extended_context = extended_context::make_with_id($context_id, $component, $area, $item_id);
 $context = $extended_context->get_context();
-
-if (CONTEXT_SYSTEM == $context->contextlevel) {
-    // If it is under the context system, we will redirect the user to the admin page
-    // rather than use this page. Because this page must only be used for lower context purpose.
-    // Note: in the future we might want to do sort of component,area and instance id check as well
-    redirect(new moodle_url("/totara/notification/notifications.php"));
-}
-if (CONTEXT_COURSE == $context->contextlevel) {
-    redirect(new moodle_url("/totara/notification/notification_preference.php",
-        [
-            'context_id' => $context_id,
-            'component' => $component,
-            'area' => $area,
-            'item_id' => $item_id,
-        ]
-    ));
-}
-
-require_login();
-if (!notification_preference::can_manage($extended_context)) {
-    throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
-}
-
 $PAGE->set_context($context);
 
+// Check the context level
+if ($context->contextlevel === CONTEXT_COURSE) {
+    $courseid = $context->instanceid;
+    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+        print_error('invalidcourseid');
+    }
+
+    require_login($course);
+    require_capability('moodle/course:update', $context);
+
+    $PAGE->set_course($course);
+} else {
+    print_error('context id is not matching any context level');
+}
+
 $params = ['context_id' => $extended_context->get_context_id()];
-$url = new moodle_url("/totara/notification/context_notifications.php", $params);
+$url = new moodle_url("/totara/notification/notification_preference.php", $params);
+
 if (!$extended_context->is_natural_context()) {
     $url->params([
         'component' => $extended_context->get_component(),
@@ -73,14 +64,18 @@ if (!$extended_context->is_natural_context()) {
         'item_id' => $extended_context->get_item_id()
     ]);
 }
+
 $PAGE->set_url($url);
 
-$PAGE->set_pagelayout('noblocks');
+$title = get_string('notifications', 'totara_notification');
+$PAGE->set_title($title);
+
+$PAGE->set_pagelayout('admin');
 
 $tui = new component(
     'totara_notification/pages/NotificationPage',
     [
-        'title' => get_string('notifications', 'totara_notification'),
+        'title' => $title,
         'contextId' => $extended_context->get_context_id(),
         'extendedContext' => array(
             'component' => $extended_context->get_component(),

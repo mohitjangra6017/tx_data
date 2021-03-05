@@ -202,7 +202,7 @@ export default {
           context_id: this.contextId,
           component: this.extendedContext.component,
           area: this.extendedContext.area,
-          itemId: this.extendedContext.itemId,
+          item_id: this.extendedContext.itemId,
         },
       };
     },
@@ -298,36 +298,61 @@ export default {
           id: notificationPreference.id,
         },
         update: proxy => {
-          const { resolvers } = proxy.readQuery({
+          let { resolvers } = proxy.readQuery({
             query: getEventResolvers,
             variables: this.queryVariables,
           });
 
           const {
-            component,
+            extended_context,
+            id,
             resolver_class_name: className,
           } = notificationPreference;
+          const { component } = extended_context;
+
+          resolvers = Object.assign([], resolvers);
+          resolvers = resolvers.map(resolver => {
+            const { notification_preferences: preferences } = resolver;
+            const components = preferences.map(
+              preference =>
+                preference.extended_context &&
+                preference.extended_context.component
+            );
+            if (
+              components.includes(component) &&
+              resolver.class_name === className
+            ) {
+              resolver = Object.assign({}, resolver);
+              resolver.notification_preferences = preferences.filter(
+                preference => preference.id !== id
+              );
+              return resolver;
+            }
+            return resolver;
+          });
 
           proxy.writeQuery({
             query: getEventResolvers,
             variables: { context_id: this.contextId },
-            data: {
-              resolvers: resolvers.map(resolver => {
-                if (
-                  resolver.component === component &&
-                  resolver.class_name === className
-                ) {
-                  resolver = Object.assign({}, resolver);
-                  const { notification_preferences: preferences } = resolver;
-
-                  resolver.notification_preferences = preferences.filter(
-                    preference => preference.id !== notificationPreference.id
-                  );
-                }
-                return resolver;
-              }),
-            },
+            data: { resolvers: resolvers },
           });
+
+          let result = {};
+          resolvers.forEach(resolver => {
+            const { component, plugin_name, recipients } = resolver;
+            if (!result[component]) {
+              result[component] = {
+                component: component,
+                plugin_name: plugin_name,
+                resolvers: [],
+                recipients: recipients,
+              };
+            }
+
+            result[component].resolvers.push(resolver);
+          });
+
+          this.eventResolvers = Object.values(result);
         },
       });
     },

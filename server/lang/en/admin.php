@@ -809,6 +809,7 @@ $string['none'] = 'None';
 $string['nonewsettings'] = 'No new settings were added during this upgrade.';
 $string['nonexistentbookmark'] = 'The bookmark you requested does not exist.';
 $string['nosupportedlogstore'] = 'No supported logstore found';
+$string['notifications'] = 'Notifications';
 $string['maxtimelimit'] = 'Maximum time limit';
 $string['maxtimelimit_desc'] = 'To restrict the maximum PHP execution time that Totara will allow without any output being displayed, enter a value in seconds here. 0 means that Totara default restrictions are used. If you have a front-end server with its own time limit, set this value lower to receive PHP errors in logs. Does not apply to CLI scripts.';
 $string['noreplyaddress'] = 'No-reply address';
@@ -1391,8 +1392,3 @@ $string['loginpasswordautocomplete_help'] = 'If enabled, users are not allowed t
  * @deprecated since Totara 13.0
  */
 $string['taskcreatecontexts'] = 'Create missing contexts';
-
-/*
- * @deprecated since Totara 14.0
- */
-$string['notifications'] = 'Notifications';

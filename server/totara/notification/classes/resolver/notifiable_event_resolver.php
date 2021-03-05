@@ -181,4 +181,24 @@ abstract class notifiable_event_resolver {
      * @return placeholder_option[]
      */
     abstract public static function get_notification_available_placeholder_options(): array;
+
+    /*
+     * Indicates whether the resolver supports the given context.
+     * By default, resolvers support the system context.
+     * Override this function to support other contexts.
+     *
+     * @param extended_context $extend_context
+     * @return bool
+     */
+    public static function supports_context(extended_context $extend_context): bool {
+        $context = $extend_context->get_context();
+
+        if (!$extend_context->is_natural_context()) {
+            return false;
+        }
+        if ($context->context_level === CONTEXT_SYSTEM) {
+            return true;
+        }
+        return false;
+    }
 }

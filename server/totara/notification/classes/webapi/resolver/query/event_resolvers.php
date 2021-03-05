@@ -59,8 +59,8 @@ class event_resolvers implements query_resolver, has_middleware {
             $ec->set_relevant_context($context);
         }
 
-        $component = empty($extended_context->get_component()) ? null : $extended_context->get_component();
-        return notifiable_event_resolver_factory::get_resolver_classes($component);
+        return notifiable_event_resolver_factory::get_resolver_classes($extended_context);
+
     }
 
     /**
