@@ -48,6 +48,10 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
         [$activity, $section, $element, $section_element] = $this->create_activity_with_section_and_review_element();
         [$user1, $subject_instance, $participant_instance1] = $this->create_participant_in_section($activity, $section);
         $content_ids = $this->create_competency_assignments($user1->id);
+
+        $content_type = json_decode($element->data, true)['content_type'] ?? null;
+        $this->assertNotEmpty(trim($content_type));
+
         self::setUser($user1);
 
         $args = [
@@ -70,6 +74,7 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
             $this->assertEquals($section_element->id, $content->section_element_id);
             $this->assertEquals($participant_instance1->subject_instance_id, $content->subject_instance_id);
             $this->assertContainsEquals($content->content_id, $content_ids);
+            $this->assertEquals($content->content_type, $content_type);
             $this->assertGreaterThan(0, $content->created_at);
         }
     }

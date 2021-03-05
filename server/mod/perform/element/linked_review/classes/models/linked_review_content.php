@@ -62,7 +62,7 @@ class linked_review_content extends model {
     protected $entity;
 
     /**
-     * Actucal content which can be json encoded
+     * Actual content which can be json encoded
      *
      * @var mixed
      */
@@ -78,6 +78,7 @@ class linked_review_content extends model {
     protected $entity_attribute_whitelist = [
         'id',
         'content_id',
+        'content_type',
         'section_element_id',
         'subject_instance_id',
         'selector',
@@ -162,8 +163,18 @@ class linked_review_content extends model {
 
         $participant_instance = participant_instance_model::load_by_id($participant_instance_id);
 
+        $element = section_element::load_by_id($section_element_id)->element;
+        $element_data = json_decode($element->data, true);
+        $element_plugin = $element->element_plugin;
+
+        $content_type = $element_data['content_type'] ?? null;
+        if (!$element_plugin instanceof linked_review || !$content_type) {
+            throw new coding_exception('element plugin is not a linked_review type');
+        }
+
         $entity = new linked_review_content_entity();
         $entity->content_id = $content_id;
+        $entity->content_type = $content_type;
         $entity->section_element_id = $section_element_id;
         $entity->subject_instance_id = $participant_instance->subject_instance_id;
         $entity->selector_id = $participant_instance->participant_id;

@@ -11,6 +11,7 @@
         <FIELD NAME="subject_instance_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="selector_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="content_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="content_type" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="created_at" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
@@ -21,6 +22,7 @@
       </KEYS>
       <INDEXES>
         <INDEX NAME="content_id" UNIQUE="false" FIELDS="content_id"/>
+        <INDEX NAME="content_type_id" UNIQUE="false" FIELDS="content_type, content_id"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="perform_element_linked_review_content_response" COMMENT="Responses for sub-elements to the specified content">

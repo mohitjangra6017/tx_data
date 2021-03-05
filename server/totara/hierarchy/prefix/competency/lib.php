@@ -34,6 +34,8 @@ use hierarchy_competency\event\competency_updated;
 use totara_competency\entity\competency_achievement as competency_achievement_entity;
 use totara_competency\pathway;
 use totara_core\advanced_feature;
+use performelement_linked_review\entity\linked_review_content as linked_review_entity;
+use totara_competency\performelement_linked_review\competency_assignment;
 
 require_once("{$CFG->dirroot}/totara/hierarchy/lib.php");
 require_once("{$CFG->dirroot}/totara/hierarchy/prefix/competency/evidenceitem/type/abstract.php");
@@ -70,6 +72,73 @@ class competency extends hierarchy {
         'ANY' => competency::AGGREGATION_METHOD_ANY,
         'OFF' => competency::AGGREGATION_METHOD_OFF,
     ];
+
+    private const PERFORM_LINKED_COUNT_KEY = 'perform_linked';
+
+    /**
+     * Convenience method to see if the Perform linked review question plugin is
+     * active.
+     *
+     * @return bool true if the plugin is active.
+     */
+    private function is_perform_linked_review_active(): bool {
+        $plugin = core_component::get_plugin_directory('performelement', 'linked_review');
+        return !empty($plugin);
+    }
+
+    /**
+     * Determines the perform link review question count for the given competency
+     * assignments.
+     *
+     * @param int[] $content_ids target competency assignment ids. If this is not
+     *        provided, a zero count will be returned provided the perform
+     *        linked review plugin is available.
+     *
+     * @return array a [self::PERFORM_LINKED_COUNT_KEY => count] array or an
+     *         empty array if the count could not be calculated.
+     */
+    private function get_perform_linked_count(array $content_ids): array {
+        if (!$this->is_perform_linked_review_active()) {
+            return [];
+        }
+
+        $count = 0;
+        if ($content_ids) {
+            $content_type = competency_assignment::get_identifier();
+            $count = linked_review_entity::repository()
+                ->get_content_count_for_type($content_type, $content_ids);
+        }
+
+        return [self::PERFORM_LINKED_COUNT_KEY => $count];
+    }
+
+    /**
+     * Creates a message about a Perform linked review question count.
+     *
+     * @param array $raw raw data from which to extract the perform linked element
+     *        count. The count should be under the self::PERFORM_LINKED_COUNT_KEY
+     *        key.
+     *
+     * @return array a [self::PERFORM_LINKED_COUNT_KEY => message with count]
+     *         array if the count is to be shown or an empty array otherwise;
+     */
+    private function get_perform_review_count_message(array $raw): array {
+        if (!$this->is_perform_linked_review_active()) {
+            return [];
+        }
+
+        $count = (int)$raw[self::PERFORM_LINKED_COUNT_KEY] ?? -1;
+        $perform_enabled = advanced_feature::is_enabled('performance_activities');
+
+        if ($count > 0
+            || ($count === 0 && $perform_enabled)
+        ) {
+            $message = get_string('delete_competency_perform_links', 'totara_hierarchy', $count);
+            return [self::PERFORM_LINKED_COUNT_KEY => $message];
+        }
+
+        return [];
+    }
 
     /**
      * Get template
@@ -987,7 +1056,19 @@ class competency extends hierarchy {
             // Count competency assignments
             [$in_sql, $in_params] = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED);
             // TODO TL-23039 create a proper API method to not have a hard dependency on the assignment table here
-            $data['assignments'] = $DB->count_records_select('totara_competency_assignments', "competency_id {$in_sql}", $in_params);
+            $competency_assignments = $DB->get_records_select(
+                'totara_competency_assignments',
+                "competency_id {$in_sql}",
+                $in_params,
+                '',
+                'id'
+            );
+            $data['assignments'] = count($competency_assignments);
+
+            // Associated performance review elements. Note perform competency review elements
+            // record the competency assignment ids, not the competency ids themselves.
+            $content_ids = array_keys($competency_assignments);
+            $data = array_merge($data, $this->get_perform_linked_count($content_ids));
 
             // number of comp_relations records
             [$ids1sql, $ids1params] = sql_sequence('id1', $ids);
@@ -1000,6 +1081,8 @@ class competency extends hierarchy {
             $data['evidence'] = 0;
             $data['assignments'] = 0;
             $data['related'] = 0;
+
+            $data = array_merge($data, $this->get_perform_linked_count([]));
         }
 
         return $data;
@@ -1043,9 +1126,19 @@ class competency extends hierarchy {
         // Count the number of assignments of a competency and its descendants
         [$in_sql, $in_params] = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED);
         // TODO TL-23039 create a proper API method to not have a hard dependency on the assignment table here
-        $data['assignments'] = $DB->count_records_select('totara_competency_assignments', "competency_id {$in_sql}", $in_params);
+        $competency_assignments = $DB->get_records_select(
+            'totara_competency_assignments',
+            "competency_id {$in_sql}",
+            $in_params,
+            '',
+            'id'
+        );
+        $data['assignments'] = count($competency_assignments);
 
-        return $data;
+        // Associated performance review elements. Note perform competency review elements
+        // record the competency assignment ids, not the competency ids themselves.
+        $content_ids = array_keys($competency_assignments);
+        return array_merge($data, $this->get_perform_linked_count($content_ids));
     }
 
     /**
@@ -1059,12 +1152,16 @@ class competency extends hierarchy {
         $messages = parent::prepare_delete_message($id);
         $data = $this->get_all_related_data($id);
 
-        return array_merge($messages, [
-            'user_achievement' => get_string('delete_competency_user_achievements', 'totara_hierarchy', $data['user_achievement']),
-            'assignments' => get_string('delete_competency_assignments', 'totara_hierarchy', $data['assignments']),
-            'evidence' => get_string('delete_competency_evidence_items', 'totara_hierarchy', $data['evidence']),
-            'related' => get_string('delete_competency_related_links', 'totara_hierarchy', $data['related']),
-        ]);
+        return array_merge(
+            $messages,
+            [
+                'user_achievement' => get_string('delete_competency_user_achievements', 'totara_hierarchy', $data['user_achievement']),
+                'assignments' => get_string('delete_competency_assignments', 'totara_hierarchy', $data['assignments']),
+                'evidence' => get_string('delete_competency_evidence_items', 'totara_hierarchy', $data['evidence']),
+                'related' => get_string('delete_competency_related_links', 'totara_hierarchy', $data['related']),
+            ],
+            $this->get_perform_review_count_message($data)
+        );
     }
 
     /**
@@ -1102,12 +1199,16 @@ class competency extends hierarchy {
     public function prepare_framework_delete_message($framework) {
         $data = $this->get_framework_related_data($framework->id);
 
-        return array_merge(parent::prepare_framework_delete_message($framework), [
-            'user_achievement' => get_string('delete_competency_user_achievements', 'totara_hierarchy', $data['user_achievement']),
-            'assignments' => get_string('delete_competency_assignments', 'totara_hierarchy', $data['assignments']),
-            'evidence' => get_string('delete_competency_evidence_items', 'totara_hierarchy', $data['evidence']),
-            'related' => get_string('delete_competency_related_links', 'totara_hierarchy', $data['related']),
-        ]);
+        return array_merge(
+            parent::prepare_framework_delete_message($framework),
+            [
+                'user_achievement' => get_string('delete_competency_user_achievements', 'totara_hierarchy', $data['user_achievement']),
+                'assignments' => get_string('delete_competency_assignments', 'totara_hierarchy', $data['assignments']),
+                'evidence' => get_string('delete_competency_evidence_items', 'totara_hierarchy', $data['evidence']),
+                'related' => get_string('delete_competency_related_links', 'totara_hierarchy', $data['related']),
+            ],
+            $this->get_perform_review_count_message($data)
+        );
     }
 
     /**

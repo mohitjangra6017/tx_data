@@ -62,5 +62,43 @@ function xmldb_performelement_linked_review_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2021030100, 'performelement', 'linked_review');
     }
 
+    if ($oldversion < 2021030300) {
+        $table = new xmldb_table('perform_element_linked_review_content');
+        $content_type_field = new xmldb_field('content_type', XMLDB_TYPE_CHAR, '100', null, true, null, null, 'content_id');
+
+        if (!$dbman->field_exists($table, $content_type_field)) {
+            $dbman->add_field($table, $content_type_field);
+        }
+        $index = new xmldb_index('content_type_id', XMLDB_INDEX_NOTUNIQUE, ['content_type', 'content_id']);
+
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        upgrade_plugin_savepoint(true, 2021030300, 'performelement', 'linked_review');
+    }
+
+    if ($oldversion < 2021030301) {
+        $records = $DB->get_records_sql("
+            SELECT lc.id, e.data
+            FROM {perform_element_linked_review_content} lc
+            JOIN {perform_section_element} se on se.id = lc.section_element_id
+            JOIN {perform_element} e on e.id = se.element_id
+        ");
+
+        foreach ($records as $record) {
+            $decoded_content = json_decode($record->data, true);
+
+            $DB->set_field(
+                'perform_element_linked_review_content',
+                'content_type',
+                $decoded_content['content_type'],
+                ['id' => $record->id]
+            );
+        }
+
+        upgrade_plugin_savepoint(true, 2021030301, 'performelement', 'linked_review');
+    }
+
     return true;
 }

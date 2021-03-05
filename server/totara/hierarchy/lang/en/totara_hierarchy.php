@@ -433,6 +433,7 @@ $string['delete_competency_in_framework'] = 'All competencies in framework: <str
 $string['delete_competency_item_confirmation'] = 'Confirm competency deletion';
 $string['delete_competency_item_proceed'] = 'Do you want to proceed with deleting this competency?';
 $string['delete_competency_item_title'] = 'This will permanently delete the <strong>"{$a->fullname}"</strong> competency and the following associated data:';
+$string['delete_competency_perform_links'] = 'Links to performance activities: <strong>{$a}</strong>';
 $string['delete_competency_related_links'] = 'Links to related competencies: <strong>{$a}</strong>';
 $string['delete_competency_user_achievements'] = 'User status records: <strong>{$a}</strong>';
 $string['delete_goal_bulk_confirmation'] = 'Confirm bulk goal deletion';
