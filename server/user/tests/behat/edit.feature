@@ -40,14 +40,14 @@ Feature: Basic editing of users
       | user1    | First     | User     | user1@example.com |
     And I log in as "user1"
     And I follow "Preferences" in the user menu
-    And I should see "Notification preferences"
+    And I should see "Legacy notification preferences"
     And I follow "Edit profile"
     And I set the following fields to these values:
       | First name | Prvni    |
       | Surname    | Uzivatel |
     When I press "Update profile"
     Then I should see "Prvni Uzivatel"
-    And I should see "Notification preferences"
+    And I should see "Legacy notification preferences"
 
   Scenario: Cancel editing of  own user info from preferences
     Given the following "users" exist:
@@ -55,11 +55,11 @@ Feature: Basic editing of users
       | user1    | First     | User     | user1@example.com |
     And I log in as "user1"
     And I follow "Preferences" in the user menu
-    And I should see "Notification preferences"
+    And I should see "Legacy notification preferences"
     And I follow "Edit profile"
     And I set the following fields to these values:
       | First name | Prvni    |
       | Surname    | Uzivatel |
     When I press "Cancel"
     Then I should see "First User"
-    And I should see "Notification preferences"
+    And I should see "Legacy notification preferences"

@@ -22,7 +22,7 @@ Feature: Message Totara AirNotifier preferences
     When I navigate to "Plugins > Message outputs > Default message outputs" in site administration
     Then I should see "Totara AirNotifier"
     When I open the notification popover
-    And I follow "Notification preferences"
+    And I follow "Legacy notification preferences"
     Then I should see "Totara AirNotifier"
 
   Scenario: Admin requests an appcode from Totara

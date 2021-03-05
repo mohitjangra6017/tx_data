@@ -13,5 +13,5 @@ Feature: Notification popover preferences
   Scenario: User navigates to preferences page
     Given I log in as "user1"
     And I open the notification popover
-    When I follow "Notification preferences"
-    Then I should see "Notification preferences"
+    When I follow "Legacy notification preferences"
+    Then I should see "Legacy notification preferences"

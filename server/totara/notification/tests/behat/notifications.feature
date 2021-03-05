@@ -1,6 +1,6 @@
 @totara @totara_notification @javascript @vuejs
 Feature: Notifications page
-  As an notifications administrator
+  As a notifications administrator
   I need to be able to view notifications and manage notifications
   so they can be available to users.
 

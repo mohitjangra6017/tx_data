@@ -95,15 +95,10 @@ class notifiable_event_factory {
     public static function get_notifiable_events(?string $component = null): array {
         $classes_map = self::get_map();
         if (!empty($component)) {
-            return isset($classes_map[$component]) ? $classes_map[$component] :  [];
+            return $classes_map[$component] ?? [];
         }
 
-        $return_classes = [];
-        foreach ($classes_map as $component => $event_classes) {
-            $return_classes = array_merge($return_classes, $event_classes);
-        }
-
-        return $return_classes;
+        return array_merge(...array_values($classes_map));
     }
 
     /**

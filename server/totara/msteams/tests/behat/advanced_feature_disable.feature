@@ -15,7 +15,7 @@ Feature: Microsoft Teams settings pages will not show if the feature is disabled
 
     # Feature on
     When I open the notification popover
-    And I follow "Notification preferences"
+    And I follow "Legacy notification preferences"
     Then I should see "Microsoft Teams"
 
     When I navigate to "Default message outputs" node in "Site administration > Plugins > Message outputs"
@@ -31,7 +31,7 @@ Feature: Microsoft Teams settings pages will not show if the feature is disabled
 #    When I set the following administration settings values:
 #      | enabletotara_msteams | Disable |
 #    And I open the notification popover
-#    And I follow "Notification preferences"
+#    And I follow "Legacy notification preferences"
 #    Then I should not see "Microsoft Teams"
 #
 #    When I navigate to "Default message outputs" node in "Site administration > Plugins > Message outputs"

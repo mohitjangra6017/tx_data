@@ -48,6 +48,7 @@ $string['notification_schedule_label'] = 'Schedule';
 $string['notification_subject_label'] = 'Subject';
 $string['notification_title_label'] = 'Name';
 $string['pluginname'] = 'Centralised notification';
+$string['preferences_page_title'] = 'Notification preferences';
 $string['process_event_queue_task'] = 'Queue event scheduled task';
 $string['process_notification_queue_task'] = 'Queue notification scheduled task';
 $string['recipient'] = 'Recipient';

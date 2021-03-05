@@ -78,7 +78,7 @@ Feature: auth_approved: signup workflow
       | whitelist    | example.com, example.org                |
     And I log in as "itmgr"
     And I follow "Preferences" in the user menu
-    And I click on "Notification preferences" "link" in the "#page-content" "css_element"
+    And I click on "Legacy notification preferences" "link" in the "#page-content" "css_element"
     And I click on "//td[@data-processor-name='popup']//label[@title='When you are logged into Totara']" "xpath_element" in the "New unconfirmed request notification" "table_row"
     And I wait until the page is ready
     And I click on "//td[@data-processor-name='popup']//label[@title='When you are not logged into Totara']" "xpath_element" in the "New unconfirmed request notification" "table_row"
@@ -151,7 +151,7 @@ Feature: auth_approved: signup workflow
       | mgr freeform | true                                    |
     And I log in as "finmgr"
     And I follow "Preferences" in the user menu
-    And I click on "Notification preferences" "link" in the "#page-content" "css_element"
+    And I click on "Legacy notification preferences" "link" in the "#page-content" "css_element"
     And I click on "//td[@data-processor-name='popup']//label[@title='When you are logged into Totara']" "xpath_element" in the "New unconfirmed request notification" "table_row"
     And I wait until the page is ready
     And I click on "//td[@data-processor-name='popup']//label[@title='When you are not logged into Totara']" "xpath_element" in the "New unconfirmed request notification" "table_row"
@@ -243,7 +243,7 @@ Feature: auth_approved: signup workflow
       | mgr freeform | false                                   |
     And I log in as "salesmgr"
     And I follow "Preferences" in the user menu
-    And I click on "Notification preferences" "link" in the "#page-content" "css_element"
+    And I click on "Legacy notification preferences" "link" in the "#page-content" "css_element"
     And I click on "//td[@data-processor-name='popup']//label[@title='When you are logged into Totara']" "xpath_element" in the "New unconfirmed request notification" "table_row"
     And I wait until the page is ready
     And I click on "//td[@data-processor-name='popup']//label[@title='When you are not logged into Totara']" "xpath_element" in the "New unconfirmed request notification" "table_row"
@@ -333,7 +333,7 @@ Feature: auth_approved: signup workflow
       | mgr freeform | true                                    |
     And I log in as "vp"
     And I follow "Preferences" in the user menu
-    And I click on "Notification preferences" "link" in the "#page-content" "css_element"
+    And I click on "Legacy notification preferences" "link" in the "#page-content" "css_element"
     And I click on "//td[@data-processor-name='popup']//label[@title='When you are logged into Totara']" "xpath_element" in the "New unconfirmed request notification" "table_row"
     And I wait until the page is ready
     And I click on "//td[@data-processor-name='popup']//label[@title='When you are not logged into Totara']" "xpath_element" in the "New unconfirmed request notification" "table_row"
