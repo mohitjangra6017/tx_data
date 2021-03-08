@@ -97,7 +97,7 @@ class performelement_linked_review_content_type_testcase extends performelement_
         $element1_input_data = [
             'content_type' => 'totara_competency',
             'content_type_settings' => [
-                'show_rating' => false,
+                // 'show_rating' => false,
             ],
             'selection_relationships' => [$subject_relationship->id],
         ];
@@ -107,7 +107,7 @@ class performelement_linked_review_content_type_testcase extends performelement_
         $this->assertEquals([
             'content_type' => 'totara_competency',
             'content_type_settings' => [
-                'show_rating' => false,
+                // 'show_rating' => false,
             ],
             'selection_relationships' => [$subject_relationship->id],
             'selection_relationships_display' => [
@@ -118,17 +118,17 @@ class performelement_linked_review_content_type_testcase extends performelement_
             ],
             'content_type_display' => 'Competencies',
             'content_type_settings_display' => [
-                [
-                    'title' => 'Show rating',
-                    'value' => 'Disabled',
-                ]
+                // [
+                //     'title' => 'Show rating',
+                //     'value' => 'Disabled',
+                // ]
             ]
         ], $element1_output_data);
 
         $element2_input_data = [
             'content_type' => 'totara_competency',
             'content_type_settings' => [
-                'show_rating' => true,
+                // 'show_rating' => true,
             ],
             'selection_relationships' => [$manager_relationship->id],
         ];
@@ -138,7 +138,7 @@ class performelement_linked_review_content_type_testcase extends performelement_
         $this->assertEquals([
             'content_type' => 'totara_competency',
             'content_type_settings' => [
-                'show_rating' => true,
+                // 'show_rating' => true,
             ],
             'selection_relationships' => [$manager_relationship->id],
             'selection_relationships_display' => [
@@ -149,10 +149,10 @@ class performelement_linked_review_content_type_testcase extends performelement_
             ],
             'content_type_display' => 'Competencies',
             'content_type_settings_display' => [
-                [
-                    'title' => 'Show rating',
-                    'value' => 'Enabled',
-                ]
+                // [
+                //     'title' => 'Show rating',
+                //     'value' => 'Enabled',
+                // ]
             ]
         ], $element2_output_data);
     }
@@ -189,7 +189,7 @@ class performelement_linked_review_content_type_testcase extends performelement_
                 'data' => [
                     'content_type' => 'totara_competency',
                     'content_type_settings' => [
-                        'show_rating' => false,
+                        // 'show_rating' => false,
                     ],
                     'selection_relationships' => [],
                 ],
@@ -199,7 +199,7 @@ class performelement_linked_review_content_type_testcase extends performelement_
                 'data' => [
                     'content_type' => 'totara_competency',
                     'content_type_settings' => [
-                        'show_rating' => false,
+                        // 'show_rating' => false,
                     ],
                     'selection_relationships' => ['-1'],
                 ],

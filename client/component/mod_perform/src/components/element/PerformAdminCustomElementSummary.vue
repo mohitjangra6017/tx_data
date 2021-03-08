@@ -66,6 +66,19 @@
     </div>
 
     <div
+      v-if="identifier"
+      class="tui-performAdminCustomElementSummary__section"
+    >
+      <h4 class="tui-performAdminCustomElementSummary__section-title">
+        {{ $str('reporting_identifier', 'mod_perform') }}
+      </h4>
+
+      <div class="tui-performAdminCustomElementSummary__section-value">
+        {{ identifier }}
+      </div>
+    </div>
+
+    <div
       v-if="settings.is_respondable"
       class="tui-performAdminCustomElementSummary__section"
     >
@@ -82,19 +95,6 @@
             'mod_perform'
           )
         }}
-      </div>
-    </div>
-
-    <div
-      v-if="identifier"
-      class="tui-performAdminCustomElementSummary__section"
-    >
-      <h4 class="tui-performAdminCustomElementSummary__section-title">
-        {{ $str('reporting_identifier', 'mod_perform') }}
-      </h4>
-
-      <div class="tui-performAdminCustomElementSummary__section-value">
-        {{ identifier }}
       </div>
     </div>
 

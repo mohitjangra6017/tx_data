@@ -185,25 +185,28 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
         $display_settings = competency_assignment::get_display_settings([]);
 
         $this->assertEquals(
-            ['Show rating' => 'Disabled'],
+            [],
+            // ['Show rating' => 'Disabled'],
             $display_settings
         );
 
         $display_settings = competency_assignment::get_display_settings([
-            'show_rating' => false
+            // 'show_rating' => false
         ]);
 
         $this->assertEquals(
-            ['Show rating' => 'Disabled'],
+            [],
+            // ['Show rating' => 'Disabled'],
             $display_settings
         );
 
         $display_settings = competency_assignment::get_display_settings([
-            'show_rating' => true
+            // 'show_rating' => true
         ]);
 
         $this->assertEquals(
-            ['Show rating' => 'Enabled'],
+            [],
+            // ['Show rating' => 'Enabled'],
             $display_settings
         );
     }

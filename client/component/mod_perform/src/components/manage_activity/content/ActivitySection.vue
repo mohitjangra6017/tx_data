@@ -658,6 +658,8 @@ export default {
 
       const result = resultData.mod_perform_update_section_settings;
 
+      this.savedSection = result.section;
+
       if (result.validation_info && !result.validation_info.can_delete) {
         this.modalTitle = result.validation_info.title;
         this.modalDescription = result.validation_info.reason.description;
@@ -666,8 +668,6 @@ export default {
 
         return null;
       }
-
-      this.savedSection = result.section;
 
       return result;
     },

@@ -51,12 +51,12 @@ export default {
     extraFields() {
       let fields = [
         {
-          title: this.$str('content_type', 'performelement_linked_review'),
+          title: this.$str('review_type', 'performelement_linked_review'),
           value: this.data.content_type_display,
         },
         {
           title: this.$str(
-            'content_selection_relationships',
+            'selection_participant',
             'performelement_linked_review'
           ),
           value: this.data.selection_relationships_display[0]['name'],
@@ -81,8 +81,8 @@ export default {
 <lang-strings>
   {
     "performelement_linked_review": [
-      "content_selection_relationships",
-      "content_type"
+      "selection_participant",
+      "review_type"
     ]
   }
 </lang-strings>

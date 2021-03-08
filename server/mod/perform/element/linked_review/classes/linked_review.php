@@ -246,13 +246,4 @@ class linked_review extends respondable_element_plugin {
         return true;
     }
 
-    /**
-     * A linked review element is always required
-     *
-     * @return bool
-     */
-    public function is_response_required_enabled(): bool {
-        return false;
-    }
-
 }

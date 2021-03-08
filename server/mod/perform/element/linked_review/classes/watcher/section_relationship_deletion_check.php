@@ -44,7 +44,11 @@ class section_relationship_deletion_check {
             if (in_array($section_relationship->core_relationship_id, $element_data->selection_relationships)) {
                 $hook->add_reason(
                     'section_relationship_used_in_linked_review',
-                    get_string('section_relationship_used_in_linked_review', 'performelement_linked_review'),
+                    get_string(
+                        'section_relationship_used_in_linked_review',
+                        'performelement_linked_review',
+                        $hook->get_section_relationship()->core_relationship->get_name()
+                    ),
                     [$title]
                 );
             }

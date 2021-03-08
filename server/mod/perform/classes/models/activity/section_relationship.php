@@ -30,6 +30,7 @@ use mod_perform\constants;
 use mod_perform\entity\activity\section_relationship as section_relationship_entity;
 use mod_perform\hook\pre_section_relationship_deleted;
 use mod_perform\section_relationship_deletion_exception;
+use totara_core\relationship\relationship;
 use totara_core\relationship\relationship as core_relationship_model;
 
 /**
@@ -147,6 +148,7 @@ class section_relationship extends model {
         $section_relationship_entities = section_relationship_entity::repository()
             ->where('section_id', $section_id)
             ->where('core_relationship_id', $core_relationship_id)
+            ->with('core_relationship')
             ->get()
             ->all();
 

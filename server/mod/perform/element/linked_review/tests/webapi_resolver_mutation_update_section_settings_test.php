@@ -87,8 +87,8 @@ class performelement_linked_review_webapi_resolver_mutation_update_section_setti
         /** @var section $actual_section */
         $actual_section = $result['section'];
 
-        // Nothing changed
-        $this->assertEquals($section->title, $actual_section->title);
+        // Title changed but not the relationships
+        $this->assertEquals('my new title', $actual_section->title);
         $this->assertEquals(
             $section->get_section_relationships()->count(),
             $actual_section->get_section_relationships()->count()
@@ -96,10 +96,10 @@ class performelement_linked_review_webapi_resolver_mutation_update_section_setti
 
         $this->assertEquals(
             [
-                'title' => 'Cannot update section',
+                'title' => 'Cannot remove participant(s)',
                 'can_delete' => false,
                 'reason' => [
-                    'description' => 'A relationship cannot be removed, because it is being referenced in a question:',
+                    'description' => 'One or more participant(s) cannot be removed from this section because they are referenced in the following question(s):',
                     'data' => [
                         $element->title
                     ]

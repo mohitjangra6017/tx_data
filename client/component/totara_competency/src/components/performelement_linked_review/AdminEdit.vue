@@ -17,21 +17,24 @@
 -->
 
 <template>
-  <FormRow>
-    <FormCheckbox name="show_rating">
-      {{ $str('show_manual_rating', 'totara_competency') }}
-      Show manual ratings
-    </FormCheckbox>
-  </FormRow>
+  <div>
+    <!--  TODO: Implement final rating setting, leaving this here as an example for now-->
+    <!--<FormRow>
+      <FormCheckbox name="show_rating">
+        {{ $str('show_manual_rating', 'totara_competency') }}
+        Show manual ratings
+      </FormCheckbox>
+    </FormRow>-->
+  </div>
 </template>
 
 <script>
-import { FormCheckbox, FormRow } from 'tui/components/uniform';
+// import { FormCheckbox, FormRow } from 'tui/components/uniform';
 
 export default {
   components: {
-    FormCheckbox,
-    FormRow,
+    // FormCheckbox,
+    // FormRow,
   },
 
   inheritAttrs: false,

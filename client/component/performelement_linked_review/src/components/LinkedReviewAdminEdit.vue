@@ -130,8 +130,7 @@ export default {
         {
           rawTitle: this.rawTitle,
           identifier: this.identifier,
-          // The linked review question is always required
-          responseRequired: true,
+          responseRequired: this.isRequired,
         }
       ),
       selectedTypeId: this.rawData.content_type || null,

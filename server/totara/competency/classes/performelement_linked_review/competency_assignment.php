@@ -77,9 +77,9 @@ class competency_assignment extends content_type {
      * @inheritDoc
      */
     public static function get_available_settings(): array {
-        // TODO: This is a placeholder, we need to work out what settings we actually want in the future.
         return [
-            'show_rating' => true,
+            // TODO implement final rating settings, leaving this here as an example for now
+            // 'show_rating' => true,
         ];
     }
 
@@ -88,13 +88,14 @@ class competency_assignment extends content_type {
      * @return array
      */
     public static function get_display_settings(array $settings): array {
-        $rating_setting = !empty($settings['show_rating'])
-            ? get_string('perform_show_rating_enabled', 'totara_competency')
-            : get_string('perform_show_rating_disabled', 'totara_competency');
+        $display_settings = [];
 
-        return [
-            get_string('perform_show_rating', 'totara_competency') => $rating_setting
-        ];
+        // TODO implement final rating settings, leaving this here as an example for now
+        // if (!empty($settings['show_rating'])) {
+        //     $display_settings[get_string('perform_show_rating', 'totara_competency')] = get_string('yes', 'core');
+        // }
+
+        return $display_settings;
     }
 
     /**

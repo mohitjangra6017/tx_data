@@ -26,7 +26,7 @@ $string['participant_selection_help'] = 'Only \'Responding participants\' or \'V
 External participants are not able to select items.';
 $string['pluginname'] = 'Linked items element';
 $string['review_type'] = 'Review type';
-$string['section_relationship_used_in_linked_review'] = "A relationship cannot be removed, because it is being referenced in a question:";
+$string['section_relationship_used_in_linked_review'] = 'One or more participant(s) cannot be removed from this section because they are referenced in the following question(s):';
 $string['select_type'] = 'Select type';
 $string['selection_participant'] = 'Selection participant';
 

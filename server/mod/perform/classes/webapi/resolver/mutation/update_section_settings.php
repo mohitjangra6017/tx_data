@@ -59,12 +59,13 @@ class update_section_settings implements mutation_resolver, has_middleware {
             throw new coding_exception('Can\'t update section settings on an active activity.');
         }
 
+        // We want the title be updated even if the relationship could not be updated
+        if (isset($input['title'])) {
+            $section->update_title($input['title']);
+        }
+
         $transaction = builder::get_db()->start_delegated_transaction();
         try {
-            if (isset($input['title'])) {
-                $section->update_title($input['title']);
-            }
-
             $result = ['section' => $section->update_relationships($input['relationships'])];
 
             $transaction->allow_commit();
