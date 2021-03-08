@@ -70,7 +70,7 @@ class course_item_helper_testcase extends advanced_testcase {
     public function test_course_completions_updated_no_item() {
         $data = $this->setup_data();
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         course_item_helper::course_completions_updated([$data->users[1]->id => [$data->courses[1]->id]]);
@@ -84,7 +84,7 @@ class course_item_helper_testcase extends advanced_testcase {
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
         $criterion = $criteria_generator->create_coursecompletion(['courseids' => [$data->courses[1]->id]]);
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         course_item_helper::course_completions_updated([$data->users[1]->id => [$data->courses[1]->id]]);
@@ -102,7 +102,7 @@ class course_item_helper_testcase extends advanced_testcase {
             3 => $criteria_generator->create_coursecompletion(['courseids' => [$data->courses[2]->id, $data->courses[3]->id]])
         ];
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         course_item_helper::course_completions_updated([$data->users[1]->id => [$data->courses[1]->id]]);
@@ -135,9 +135,9 @@ class course_item_helper_testcase extends advanced_testcase {
     }
 
     public function test_course_deleted_not_used() {
-        /** @var phpunit_event_sink $hook_sink */
+        /** @var \core_phpunit\event_sink $hook_sink */
         $event_sink = $this->redirectEvents();
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         $data = $this->setup_data();
@@ -173,9 +173,9 @@ class course_item_helper_testcase extends advanced_testcase {
     }
 
     public function test_course_deleted_with_items() {
-        /** @var phpunit_event_sink $hook_sink */
+        /** @var \core_phpunit\event_sink $hook_sink */
         $event_sink = $this->redirectEvents();
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         $data = $this->setup_data();
@@ -222,9 +222,9 @@ class course_item_helper_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/backup/util/interfaces/checksumable.class.php');
         require_once($CFG->dirroot . '/backup/backup.class.php');
 
-        /** @var phpunit_event_sink $hook_sink */
+        /** @var \core_phpunit\event_sink $hook_sink */
         $event_sink = $this->redirectEvents();
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         $data = $this->setup_data();
@@ -277,9 +277,9 @@ class course_item_helper_testcase extends advanced_testcase {
     }
 
     public function test_settings_changed() {
-        /** @var phpunit_event_sink $hook_sink */
+        /** @var \core_phpunit\event_sink $hook_sink */
         $event_sink = $this->redirectEvents();
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         $data = $this->setup_data();
@@ -341,9 +341,9 @@ class course_item_helper_testcase extends advanced_testcase {
     }
 
     public function test_global_setting_changed() {
-        /** @var phpunit_event_sink $hook_sink */
+        /** @var \core_phpunit\event_sink $hook_sink */
         $event_sink = $this->redirectEvents();
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         set_config('enablecompletion', 1);
@@ -460,7 +460,7 @@ class course_item_helper_testcase extends advanced_testcase {
         $criterion1 = $criteria_generator->create_coursecompletion(['courseids' => [$data->courses[1]->id]]);
         $criterion2 = $criteria_generator->create_coursecompletion(['courseids' => [$data->courses[2]->id]]);
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         // No records
@@ -515,7 +515,7 @@ class course_item_helper_testcase extends advanced_testcase {
             }
         }
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         course_item_helper::course_completions_reset($data->courses[2]->id);
@@ -548,10 +548,10 @@ class course_item_helper_testcase extends advanced_testcase {
 
 
     /**
-     * @param phpunit_hook_sink $sink
+     * @param \core_phpunit\hook_sink $sink
      * @param array $expected_user_criteria_ids
      */
-    private function verify_achievement_changed_hook(phpunit_hook_sink $sink, array $expected_user_criteria_ids) {
+    private function verify_achievement_changed_hook(\core_phpunit\hook_sink $sink, array $expected_user_criteria_ids) {
         $hooks = $sink->get_hooks();
         $this->assertEquals(1, count($hooks));
         /** @var criteria_achievement_changed $hook */
@@ -563,10 +563,10 @@ class course_item_helper_testcase extends advanced_testcase {
     }
 
     /**
-     * @param phpunit_hook_sink $sink
+     * @param \core_phpunit\hook_sink $sink
      * @param array $expected_criteria_ids
      */
-    private function verify_validity_changed_hook(phpunit_hook_sink $sink, array $expected_criteria_ids) {
+    private function verify_validity_changed_hook(\core_phpunit\hook_sink $sink, array $expected_criteria_ids) {
         $hooks = $sink->get_hooks();
         $this->assertEquals(1, count($hooks));
         /** @var criteria_validity_changed $hook */

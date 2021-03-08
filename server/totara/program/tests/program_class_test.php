@@ -44,7 +44,7 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
 
     private $plan_generator;
 
-    /** @var phpunit_message_sink $messagesink */
+    /** @var \core_phpunit\message_sink $messagesink */
     private $messagesink;
 
     private $orgframe, $posframe;

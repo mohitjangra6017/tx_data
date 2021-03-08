@@ -47,7 +47,7 @@ class totara_core_courselib_testcase extends advanced_testcase {
     /** @var \mod_facetoface\testing\generator $facetoface_generator */
     private $facetoface_generator;
 
-    /** @var phpunit_message_sink $messagesink */
+    /** @var \core_phpunit\message_sink $messagesink */
     private $messagesink;
 
     private $user1, $user2, $user3, $user4, $user5, $user6;

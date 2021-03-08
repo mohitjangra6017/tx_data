@@ -916,15 +916,6 @@ class core_event_testcase extends advanced_testcase {
         } catch (moodle_exception $ex) {
             $this->assertInstanceOf(coding_exception::class, $ex);
         }
-
-        try {
-            $eventcontext = phpunit_event_mock::testable_get_event_context($event);
-            phpunit_event_mock::testable_set_event_context($event, null);
-            $this->assertEventContextNotUsed($event);
-            $this->fail('coding_exception expected');
-        } catch (moodle_exception $ex) {
-            $this->assertInstanceOf(coding_exception::class, $ex);
-        }
     }
 
     /**

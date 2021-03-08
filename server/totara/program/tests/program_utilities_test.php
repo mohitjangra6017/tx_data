@@ -25,7 +25,6 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
-require_once($CFG->dirroot . '/lib/phpunit/classes/advanced_testcase.php');
 require_once($CFG->dirroot . '/totara/program/classes/utils.php');
 require_once($CFG->dirroot . '/totara/program/program.class.php');
 

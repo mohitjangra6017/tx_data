@@ -53,7 +53,7 @@ abstract class mod_perform_notification_testcase extends advanced_testcase {
     /** @var \mod_perform\testing\generator */
     protected $perfgen;
 
-    /** @var phpunit_message_sink */
+    /** @var \core_phpunit\message_sink */
     private $sink;
 
     /** @var boolean */

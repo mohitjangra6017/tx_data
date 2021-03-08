@@ -17,22 +17,21 @@
 /**
  * phpmailer message sink.
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2013 Andrew Nicols
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace core_phpunit;
 
 /**
  * phpmailer message sink.
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2013 Andrew Nicols
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class phpunit_phpmailer_sink {
+class phpmailer_sink {
     /**
      * @var array of records which would have been sent by phpmailer.
      */
@@ -44,13 +43,13 @@ class phpunit_phpmailer_sink {
      * Use if you do not want message redirected any more.
      */
     public function close() {
-        phpunit_util::stop_phpmailer_redirection();
+        internal_util::stop_phpmailer_redirection();
     }
 
     /**
      * To be called from phpunit_util only!
      *
-     * @param stdClass $message record from messages table
+     * @param \stdClass $message record from messages table
      */
     public function add_message($message) {
         /* Number messages from 0. */

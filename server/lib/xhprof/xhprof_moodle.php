@@ -644,7 +644,7 @@ function profiling_export_generate(array $runids, $tmpdir) {
     $release = $CFG->release;
     $version = $CFG->version;
     $dbtype = $CFG->dbtype;
-    $githash = phpunit_util::get_git_hash();
+    $githash = \core_phpunit\internal_util::get_git_hash();
     $date = time();
 
     // Create the xml output and writer for the main file.

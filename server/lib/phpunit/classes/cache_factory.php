@@ -18,18 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Petr Skoda <petr.skoda@totaralearning.com>
- * @package @core
+ * @package core_phpunit
  */
+
+namespace core_phpunit;
 
 defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
 require_once("$CFG->dirroot/cache/lib.php");
 require_once(__DIR__ . '/cache.php');
 
 /**
  * Fast PHPUnit cache factory.
  */
-class phpunit_cache_factory extends cache_factory {
+class cache_factory extends \cache_factory {
     protected $alldefinitions;
     protected $primedcaches;
 
@@ -44,7 +47,7 @@ class phpunit_cache_factory extends cache_factory {
         $configuration = array();
         require("$CFG->dataroot/muc/config.php");
         foreach ($configuration['definitions'] as $id => $def) {
-            $this->alldefinitions[$id] = cache_definition::load($id, $def);
+            $this->alldefinitions[$id] = \cache_definition::load($id, $def);
         }
 
         $this->definitions = $this->alldefinitions;
@@ -56,15 +59,15 @@ class phpunit_cache_factory extends cache_factory {
      *
      * This is used by the static make methods.
      *
-     * @param cache_definition $definition
-     * @return cache_loader
+     * @param \cache_definition $definition
+     * @return \cache_loader
      */
-    public function create_cache(cache_definition $definition) {
+    public function create_cache(\cache_definition $definition) {
         $loader = null;
         if ($definition->has_data_source()) {
             $loader = $definition->get_data_source();
         }
-        return new phpunit_cache($definition, $loader);
+        return new cache($definition, $loader);
     }
 
     /**
@@ -72,11 +75,11 @@ class phpunit_cache_factory extends cache_factory {
      */
     public function purged_all_stores() {
         foreach ($this->cachesfromdefinitions as $cache) {
-            /** @var phpunit_cache $cache */
+            /** @var cache $cache */
             $cache->purge();
         }
         foreach ($this->cachesfromparams as $cache) {
-            /** @var phpunit_cache $cache */
+            /** @var cache $cache */
             $cache->purge();
         }
     }
@@ -109,7 +112,7 @@ class phpunit_cache_factory extends cache_factory {
         \core\event\manager::get_all_observers();
 
         // Cache the GraphQL schema - this will be hit numerous times and can't be changed during a run.
-        $method = new ReflectionMethod(\totara_webapi\server::class, 'prepare_schema');
+        $method = new \ReflectionMethod(\totara_webapi\server::class, 'prepare_schema');
         $method->setAccessible(true);
         $method->invoke(null, \totara_webapi\graphql::TYPE_DEV);
 
@@ -131,7 +134,7 @@ class phpunit_cache_factory extends cache_factory {
             $this->cachesfromdefinitions = array();
         } else {
             foreach ($this->cachesfromdefinitions as $id => $cache) {
-                /** @var phpunit_cache $cache */
+                /** @var cache $cache */
                 if ($cache->phpunitmodified) {
                     if (isset($this->primedcaches[$id])) {
                         $cache->phpunitcache = $this->primedcaches[$id];

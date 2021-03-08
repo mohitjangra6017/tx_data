@@ -318,12 +318,12 @@ abstract class wiki_testcase extends advanced_testcase {
     /**
      * Filter only the required events by event component & target.
      *
-     * @param phpunit_event_sink $sink
+     * @param \core_phpunit\event_sink $sink
      * @param string $target Target of the event to filter
      * @param string $component Component to filter
      * @return array
      */
-    protected function filter_events(phpunit_event_sink $sink, $target, $component = 'mod_wiki') : array {
+    protected function filter_events(\core_phpunit\event_sink $sink, $target, $component = 'mod_wiki') : array {
         return array_filter($sink->get_events(), function($event) use ($target, $component) {
             /** @var $event \core\event\base */
             return $event->target == $target && $event->component == $component;

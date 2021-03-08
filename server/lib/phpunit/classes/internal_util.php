@@ -17,23 +17,21 @@
 /**
  * Utility class.
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__.'/../../testing/classes/util.php');
+namespace core_phpunit;
 
 /**
  * Collection of utility methods.
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class phpunit_util extends testing_util {
+final class internal_util {
     /**
      * @var int last value of db writes counter, used for db resetting
      */
@@ -45,16 +43,16 @@ class phpunit_util extends testing_util {
     /** @var array list of debugging messages triggered during the last test execution */
     protected static $debuggings = array();
 
-    /** @var phpunit_message_sink alternative target for moodle messaging */
+    /** @var message_sink alternative target for moodle messaging */
     protected static $messagesink = null;
 
-    /** @var phpunit_phpmailer_sink alternative target for phpmailer messaging */
+    /** @var phpmailer_sink alternative target for phpmailer messaging */
     protected static $phpmailersink = null;
 
-    /** @var phpunit_event_sink alternative target for moodle messaging */
+    /** @var event_sink alternative target for moodle messaging */
     protected static $eventsink = null;
 
-    /** @var phpunit_hook_sink alternative target for hooks */
+    /** @var hook_sink alternative target for hooks */
     protected static $hooksink = null;
 
     /**
@@ -62,8 +60,230 @@ class phpunit_util extends testing_util {
      */
     protected static $datarootskipondrop = array('.', '..', 'lock');
 
-    /** @var phpunit_cache_factory $cachefactory */
+    /** @var cache_factory $cachefactory */
     protected static $cachefactory;
+
+    /**
+     * Does this site (db and dataroot) appear to be used for production?
+     * We try very hard to prevent accidental damage done to production servers!!
+     *
+     * @static
+     * @return bool
+     */
+    public static function is_test_site() {
+        global $DB, $CFG;
+
+        if (!file_exists($CFG->dataroot . '/phpunittestdir.txt')) {
+            // this is already tested in bootstrap script,
+            // but anyway presence of this file means the dataroot is for testing
+            return false;
+        }
+
+        $tables = $DB->get_tables(false);
+        if ($tables) {
+            if (!$DB->get_manager()->table_exists('config')) {
+                return false;
+            }
+            // A direct database request must be used to avoid any possible caching of an older value.
+            $dbhash = $DB->get_field('config', 'value', array('name' => 'phpunittest'));
+            if (!$dbhash) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns whether test database and dataroot were created using the current version codebase
+     *
+     * @return bool
+     */
+    public static function is_test_data_updated() {
+        global $DB, $CFG;
+
+        $versionshashfile = $CFG->dataroot . '/phpunit/versionshash.txt';
+
+        if (!file_exists($versionshashfile)) {
+            return false;
+        }
+
+        $hash = \core_component::get_all_versions_hash();
+        $oldhash = file_get_contents($versionshashfile);
+
+        if ($hash !== $oldhash) {
+            return false;
+        }
+
+        // A direct database request must be used to avoid any possible caching of an older value.
+        $dbhash = $DB->get_field('config', 'value', array('name' => 'phpunittest'));
+        if ($hash !== $dbhash) {
+            return false;
+        }
+
+        $snapshothash = $DB->get_manager()->snapshot_get_config_value('phpunittest');
+        if ($hash !== $snapshothash) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Stores the version hash in both database and dataroot
+     */
+    protected static function store_versions_hash() {
+        global $CFG;
+
+        $hash = \core_component::get_all_versions_hash();
+
+        // add test db flag
+        set_config('phpunittest', $hash);
+
+        // hash all plugin versions - helps with very fast detection of db structure changes
+        $hashfile = $CFG->dataroot . '/phpunit/versionshash.txt';
+        file_put_contents($hashfile, $hash);
+        testing_fix_file_permissions($hashfile);
+    }
+
+    /**
+     * Purge dataroot directory
+     * @static
+     * @return void
+     */
+    public static function reset_dataroot() {
+        global $CFG;
+
+        // Totara: do not clear stat cache here, we do not want to slow down phpunit.
+
+        $datarootskiponreset = array('.', '..', '.htaccess', 'filedir', 'trashdir', 'temp', 'cache', 'localcache');
+        $datarootskiponreset[] = 'phpunit';
+        $datarootskiponreset[] = 'phpunittestdir.txt';
+
+        // Clean up the dataroot folder.
+        $files = scandir($CFG->dataroot);
+        foreach ($files as $item) {
+            if (in_array($item, $datarootskiponreset)) {
+                continue;
+            }
+            if (is_dir("$CFG->dataroot/$item")) {
+                remove_dir("$CFG->dataroot/$item", false);
+            } else {
+                unlink("$CFG->dataroot/$item");
+            }
+        }
+
+        // Totara: there is no need to purge the file dir during tests!
+
+        // Reset the cache and temp dirs if not empty.
+        if (!file_exists("$CFG->dataroot/temp")) {
+            make_temp_directory('');
+        } else if (count(scandir("$CFG->dataroot/temp")) > 2) {
+            remove_dir("$CFG->dataroot/temp", true);
+        }
+        if (!file_exists("$CFG->dataroot/cache")) {
+            make_cache_directory('');
+        } else if (count(scandir("$CFG->dataroot/cache")) > 2) {
+            remove_dir("$CFG->dataroot/cache", true);
+        }
+        if (!file_exists("$CFG->dataroot/localcache")) {
+            make_localcache_directory('');
+        } else if (count(scandir("$CFG->dataroot/cache")) > 2) {
+            remove_dir("$CFG->dataroot/localcache", true);
+        }
+    }
+
+    /**
+     * Drop the whole test database
+     * @static
+     * @param bool $displayprogress
+     */
+    protected static function drop_database($displayprogress = false) {
+        global $DB, $CFG;
+
+        $tables = $DB->get_tables(false);
+        if (isset($tables['config'])) {
+            // config always last to prevent problems with interrupted drops!
+            unset($tables['config']);
+            $tables['config'] = 'config';
+        }
+
+        if ($displayprogress) {
+            echo "Dropping tables:\n";
+        }
+
+        // Totara: drop the snapshot stuff first.
+        $DB->get_manager()->snapshot_drop();
+        $dbfamily = $DB->get_dbfamily();
+        $prefix = $DB->get_prefix();
+
+        $dotsonline = 0;
+        if ($dbfamily === 'mssql') {
+            // Totara: MS SQL does not have DROP with CASCADE, so delete all foreign keys first.
+            $sql = "SELECT constraint_name
+                      FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+                     WHERE table_name = :name AND constraint_name LIKE :fk ESCAPE '\\'";
+            $params = ['fk' => str_replace('_', '\\_', $prefix) . '%' . '\\_fk'];
+            foreach ($tables as $tablename) {
+                $params['name'] = $prefix.$tablename;
+                $fks = $DB->get_fieldset_sql($sql, $params);
+                foreach ($fks as $fk) {
+                    $DB->change_database_structure("ALTER TABLE \"{$prefix}{$tablename}\" DROP CONSTRAINT {$fk}");
+                }
+            }
+        }
+        if ($dbfamily === 'mysql') {
+            // Totara: MySQL does not have DROP with CASCADE, so delete all foreign keys first.
+            $sql = "SELECT constraint_name
+                      FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                     WHERE table_name = :name AND unique_constraint_schema = :database AND constraint_name LIKE :fk ESCAPE '\\\\'";
+            $params = ['fk' => str_replace('_', '\\_', $prefix) . '%' . '\\_fk', 'database' => $CFG->dbname];
+            foreach ($tables as $tablename) {
+                $params['name'] = $prefix.$tablename;
+                $fks = $DB->get_fieldset_sql($sql, $params);
+                foreach ($fks as $fk) {
+                    $DB->change_database_structure("ALTER TABLE \"{$prefix}{$tablename}\" DROP FOREIGN KEY {$fk}");
+                }
+            }
+        }
+        foreach ($tables as $tablename) {
+            // Totara: do not use DDL here, we need to get rid of circular foreign keys and potentially other stuff.
+            if ($dbfamily === 'mssql') {
+                $DB->change_database_structure("DROP TABLE \"{$prefix}{$tablename}\"", [$tablename]);
+            } else {
+                $DB->change_database_structure("DROP TABLE \"{$prefix}{$tablename}\" CASCADE", [$tablename]);
+            }
+
+            if ($dotsonline == 60) {
+                if ($displayprogress) {
+                    echo "\n";
+                }
+                $dotsonline = 0;
+            }
+            if ($displayprogress) {
+                echo '.';
+            }
+            $dotsonline += 1;
+        }
+        if ($displayprogress) {
+            echo "\n";
+        }
+    }
+
+    /**
+     * Drops the test framework dataroot
+     * @static
+     */
+    protected static function drop_dataroot() {
+        global $CFG;
+
+        remove_dir($CFG->dataroot, true);
+    }
+
+    public static function acquire_lock(): void {
+        require_once(__DIR__ . '/../../testing/classes/test_lock.php');
+        \test_lock::acquire('phpunit');
+    }
 
     /**
      * Reset contents of all database tables to initial values, reset caches, etc.
@@ -175,8 +395,8 @@ class phpunit_util extends testing_util {
         $COURSE = $SITE;
 
         // reinitialise following globals
-        $OUTPUT = new bootstrap_renderer();
-        $PAGE = new moodle_page();
+        $OUTPUT = new \bootstrap_renderer();
+        $PAGE = new \moodle_page();
         $FULLME = null;
         $ME = null;
         $SCRIPT = null;
@@ -190,26 +410,26 @@ class phpunit_util extends testing_util {
         get_string_manager()->reset_caches(true);
         reset_text_filters_cache(true);
         events_get_handlers('reset');
-        core_text::reset_caches();
+        \core_text::reset_caches();
         get_message_processors(false, true, true);
-        filter_manager::reset_caches();
-        core_filetypes::reset_caches();
+        \filter_manager::reset_caches();
+        \core_filetypes::reset_caches();
         \core\orm\entity\buffer::clear();
         \core_useragent::phpunit_reset(); // Totara: Make sure useragent tests are properly isolated.
         if (class_exists('prog_messages_manager', false)) {
             // Program messages exists, reset its caches just in case they have been used.
-            prog_messages_manager::reset_cache();
+            \prog_messages_manager::reset_cache();
         }
         if (class_exists('rb_source_appraisal_detail', false)) {
             // Appraisal detail report source class exists, reset its caches just in case they have been used.
-            rb_source_appraisal_detail::reset_cache();
+            \rb_source_appraisal_detail::reset_cache();
         }
         \totara_catalog\cache_handler::reset_all_caches();
 
         \core_search\manager::clear_static();
-        core_user::reset_caches();
+        \core_user::reset_caches();
         if (class_exists('core_media_manager', false)) {
-            core_media_manager::reset_caches();
+            \core_media_manager::reset_caches();
         }
 
         // Reset static unit test options.
@@ -218,7 +438,7 @@ class phpunit_util extends testing_util {
         }
 
         // Reset internal users.
-        core_user::reset_internal_users();
+        \core_user::reset_internal_users();
 
         // Totara specific resets.
         \totara_core\hook\manager::phpunit_reset();
@@ -236,26 +456,24 @@ class phpunit_util extends testing_util {
         // Check if report builder has been loaded and if so reset the source object cache.
         // Don't autoload here - it won't work.
         if (class_exists('reportbuilder', false)) {
-            reportbuilder::reset_caches();
-            reportbuilder::reset_source_object_cache();
+            \reportbuilder::reset_caches();
+            \reportbuilder::reset_source_object_cache();
 
             // Reset source object helpers, these cache data used to create columms and filters.
             \totara_customfield\report_builder_field_loader::reset();
             \core_tag\report_builder_tag_loader::reset();
         }
 
-        //TODO MDL-25290: add more resets here and probably refactor them to new core function
-
         // Reset course and module caches.
         if (class_exists('format_base')) {
             // If file containing class is not loaded, there is no cache there anyway.
-            format_base::reset_course_cache(0);
+            \format_base::reset_course_cache(0);
         }
         get_fast_modinfo(0, 0, true);
 
         // Reset other singletons.
         if (class_exists('core_plugin_manager')) {
-            core_plugin_manager::reset_caches(true);
+            \core_plugin_manager::reset_caches(true);
         }
         if (class_exists('\core\update\checker')) {
             \core\update\checker::reset_caches(true);
@@ -263,12 +481,12 @@ class phpunit_util extends testing_util {
 
         // Clear static cache within restore.
         if (class_exists('restore_section_structure_step')) {
-            restore_section_structure_step::reset_caches();
+            \restore_section_structure_step::reset_caches();
         }
 
         // Clear static cache within restore.
         if (class_exists('restore_section_structure_step')) {
-            restore_section_structure_step::reset_caches();
+            \restore_section_structure_step::reset_caches();
         }
 
         // Clear core_link mock url
@@ -287,22 +505,22 @@ class phpunit_util extends testing_util {
             // Any file caches that happened to be within the data root will have already been clearer (because we just deleted cache)
             // and now we will purge any other caches as well.  This must be done before the cache_factory::reset() as that
             // removes all definitions of caches and purge does not have valid caches to operate on.
-            cache_helper::purge_all();
+            \cache_helper::purge_all();
             // Reset the cache API so that it recreates it's required directories as well.
-            cache_factory::reset();
+            \cache_factory::reset();
         }
 
         // restore original config once more in case resetting of caches changed CFG
         $CFG = self::get_global_backup('CFG');
 
         // inform data generator
-        self::get_data_generator()->reset();
+        \core\testing\generator::instance()->reset();
 
         // fix PHP settings
         error_reporting($CFG->debug);
 
         // Reset the date/time class.
-        core_date::phpunit_reset();
+        \core_date::phpunit_reset();
 
         // Make sure the time locale is consistent - that is Australian English.
         setlocale(LC_TIME, $localename);
@@ -312,7 +530,7 @@ class phpunit_util extends testing_util {
 
         // verify db writes just in case something goes wrong in reset
         if (self::$lastdbwrites != $DB->perf_get_writes()) {
-            error_log('Unexpected DB writes in phpunit_util::reset_all_data()');
+            error_log('Unexpected DB writes in \core_phpunit\internal_util::reset_all_data()');
             self::$lastdbwrites = $DB->perf_get_writes();
         }
 
@@ -322,10 +540,6 @@ class phpunit_util extends testing_util {
 
         // Reset the user access controller.
         \core_user\access_controller::clear_instance_cache();
-
-        if (class_exists('http_message_sink')) {
-            http_message_sink::clear();
-        }
 
         (new \core\hook\phpunit_reset())->execute();
 
@@ -347,9 +561,7 @@ class phpunit_util extends testing_util {
             return false;
         }
 
-        if (!parent::reset_database()) {
-            return false;
-        }
+        $DB->get_manager()->snapshot_rollback();
 
         self::$lastdbwrites = $DB->perf_get_writes();
 
@@ -374,7 +586,7 @@ class phpunit_util extends testing_util {
 
         if (empty($CFG->altcacheconfigpath) and !defined('TEST_CACHE_USING_ALT_CACHE_CONFIG_PATH')) {
             require_once(__DIR__ . '/cache_factory.php');
-            self::$cachefactory = new phpunit_cache_factory();
+            self::$cachefactory = new cache_factory();
         }
 
         // refresh data in all tables, clear caches, etc.
@@ -397,7 +609,9 @@ class phpunit_util extends testing_util {
         if (defined('PHPUNIT_PARATEST') and PHPUNIT_PARATEST) {
             return;
         }
-        echo self::get_site_info();
+        require_once(__DIR__ . '/../../testing/classes/util.php');
+
+        echo \testing_util::get_site_info();
     }
 
     /**
@@ -427,7 +641,7 @@ class phpunit_util extends testing_util {
      * Is this site initialised to run unit tests?
      *
      * @static
-     * @return int array errorcode=>message, 0 means ok
+     * @return array errorcode=>message, 0 means ok
      */
     public static function testing_ready_problem() {
         global $DB;
@@ -578,7 +792,7 @@ class phpunit_util extends testing_util {
         $DB->get_manager()->reset_all_sequences($offsetstart, 1000);
 
         // Store database data and structure.
-        self::store_database_state();
+        $DB->get_manager()->snapshot_create();
     }
 
     /**
@@ -611,7 +825,7 @@ class phpunit_util extends testing_util {
         $data = str_replace('../../server/', $CFG->srcroot . '/server/', $data);
 
         $suites = '';
-        $subsystems = core_component::get_core_subsystems();
+        $subsystems = \core_component::get_core_subsystems();
         ksort($subsystems);
         $subsystems = array_merge(
             ['core' => $CFG->libdir],
@@ -633,10 +847,10 @@ class phpunit_util extends testing_util {
 
         $suites = '';
 
-        $plugintypes = core_component::get_plugin_types();
+        $plugintypes = \core_component::get_plugin_types();
         ksort($plugintypes);
         foreach ($plugintypes as $type=>$unused) {
-            $plugs = core_component::get_plugin_list($type);
+            $plugs = \core_component::get_plugin_list($type);
             ksort($plugs);
             foreach ($plugs as $plug=>$fullplug) {
                 if (!file_exists("$fullplug/tests/")) {
@@ -676,6 +890,7 @@ class phpunit_util extends testing_util {
      */
     public static function build_component_config_files() {
         global $CFG;
+        require_once(__DIR__ . '/../../testing/classes/tests_finder.php');
 
         $template = '
         <testsuites>
@@ -702,7 +917,7 @@ class phpunit_util extends testing_util {
         $ftemplate = preg_replace('|<!--All core suites.*</testsuites>|s', '<!--@component_suite@-->', $ftemplate);
 
         // Gets all the components with tests
-        $components = tests_finder::get_components_with_tests('phpunit');
+        $components = \tests_finder::get_components_with_tests('phpunit');
 
         // Create the corresponding phpunit.xml file for each component
         foreach ($components as $cname => $cpath) {
@@ -749,7 +964,7 @@ class phpunit_util extends testing_util {
         foreach ($backtrace as $bt) {
             if (isset($bt['object']) and is_object($bt['object'])
                     && $bt['object'] instanceof \PHPUnit\Framework\TestCase) {
-                $debug = new stdClass();
+                $debug = new \stdClass();
                 $debug->message = $message;
                 $debug->level   = $level;
                 $debug->from    = $from;
@@ -807,13 +1022,13 @@ class phpunit_util extends testing_util {
      * Note: Do not call directly from tests,
      *       use $sink = $this->redirectMessages() instead.
      *
-     * @return phpunit_message_sink
+     * @return message_sink
      */
     public static function start_message_redirection() {
         if (self::$messagesink) {
             self::stop_message_redirection();
         }
-        self::$messagesink = new phpunit_message_sink();
+        self::$messagesink = new message_sink();
         return self::$messagesink;
     }
 
@@ -841,8 +1056,7 @@ class phpunit_util extends testing_util {
     /**
      * To be called from messagelib.php only!
      *
-     * @param stdClass $message record from messages table
-     * @return bool true means send message, false means message "sent" to sink.
+     * @param \stdClass $message record from messages table
      */
     public static function message_sent($message) {
         if (self::$messagesink) {
@@ -856,14 +1070,14 @@ class phpunit_util extends testing_util {
      * Note: Do not call directly from tests,
      *       use $sink = $this->redirectEmails() instead.
      *
-     * @return phpunit_phpmailer_sink
+     * @return phpmailer_sink
      */
     public static function start_phpmailer_redirection() {
         if (self::$phpmailersink) {
             // If an existing mailer sink is active, just clear it.
             self::$phpmailersink->clear();
         } else {
-            self::$phpmailersink = new phpunit_phpmailer_sink();
+            self::$phpmailersink = new phpmailer_sink();
         }
         return self::$phpmailersink;
     }
@@ -892,8 +1106,7 @@ class phpunit_util extends testing_util {
     /**
      * To be called from messagelib.php only!
      *
-     * @param stdClass $message record from messages table
-     * @return bool true means send message, false means message "sent" to sink.
+     * @param \stdClass $message record from messages table
      */
     public static function phpmailer_sent($message) {
         if (self::$phpmailersink) {
@@ -908,13 +1121,13 @@ class phpunit_util extends testing_util {
      * Note: Do not call directly from tests,
      *       use $sink = $this->redirectEvents() instead.
      *
-     * @return phpunit_event_sink
+     * @return event_sink
      */
     public static function start_event_redirection() {
         if (self::$eventsink) {
             self::stop_event_redirection();
         }
-        self::$eventsink = new phpunit_event_sink();
+        self::$eventsink = new event_sink();
         return self::$eventsink;
     }
 
@@ -946,7 +1159,6 @@ class phpunit_util extends testing_util {
      *
      * @private
      * @param \core\event\base $event record from event_read table
-     * @return bool true means send event, false means event "sent" to sink.
      */
     public static function event_triggered(\core\event\base $event) {
         if (self::$eventsink) {
@@ -961,13 +1173,13 @@ class phpunit_util extends testing_util {
      * Note: Do not call directly from tests,
      *       use $sink = $this->redirectHooks() instead.
      *
-     * @return phpunit_hook_sink
+     * @return hook_sink
      */
     public static function start_hook_redirection() {
         if (self::$hooksink) {
             self::stop_hook_redirection();
         }
-        self::$hooksink = new phpunit_hook_sink();
+        self::$hooksink = new hook_sink();
         return self::$hooksink;
     }
 
@@ -1018,23 +1230,6 @@ class phpunit_util extends testing_util {
             return 'English_Australia.1252';
         } else {
             return 'en_AU.UTF-8';
-        }
-    }
-
-    /**
-     * Executes all adhoc tasks in the queue. Useful for testing asynchronous behaviour.
-     *
-     * @return void
-     */
-    public static function run_all_adhoc_tasks() {
-        $now = time();
-        while (($task = \core\task\manager::get_next_adhoc_task($now)) !== null) {
-            try {
-                $task->execute();
-                \core\task\manager::adhoc_task_complete($task);
-            } catch (Exception $e) {
-                \core\task\manager::adhoc_task_failed($task);
-            }
         }
     }
 

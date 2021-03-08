@@ -18,23 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Petr Skoda <petr.skoda@totaralearning.com>
- * @package @core
+ * @package core_phpunit
  */
+
+namespace core_phpunit;
+
+use coding_exception;
 
 defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
 require_once("$CFG->dirroot/cache/lib.php");
 
 /**
  * Fast PHPUnit cache.
  */
-class phpunit_cache implements cache_loader {
-    /** @var cache_definition  */
+class cache implements \cache_loader {
+    /** @var \cache_definition  */
     protected $definition;
 
     /**
      * The data source to use if we need to load data.
-     * @var cache_data_source
+     * @var \cache_data_source
      */
     protected $datasource = null;
 
@@ -54,10 +59,10 @@ class phpunit_cache implements cache_loader {
      * Constructs a new cache instance.
      *
      *
-     * @param cache_definition $definition The definition for the cache instance.
-     * @param cache_data_source $datasource the data source if there is one and there
+     * @param \cache_definition $definition The definition for the cache instance.
+     * @param \cache_data_source $datasource the data source if there is one and there
      */
-    public function __construct(cache_definition $definition, cache_data_source $datasource = null) {
+    public function __construct(\cache_definition $definition, \cache_data_source $datasource = null) {
         $this->definition = $definition;
         $this->datasource = $datasource;
     }
@@ -93,7 +98,7 @@ class phpunit_cache implements cache_loader {
             $result = false;
         } else {
             $data = $this->phpunitcache[$key]['data'];
-            if ($data instanceof cache_cached_object) {
+            if ($data instanceof \cache_cached_object) {
                 $result = $data->restore_object();
             } else if ($this->phpunitcache[$key]['serialized']) {
                 $result = unserialize($data);
@@ -173,8 +178,8 @@ class phpunit_cache implements cache_loader {
      */
     public function set($key, $data) {
         $cachedobject = false;
-        if (is_object($data) && $data instanceof cacheable_object) {
-            $data = new cache_cached_object($data);
+        if (is_object($data) && $data instanceof \cacheable_object) {
+            $data = new \cache_cached_object($data);
             $cachedobject = true;
         }
         if ($cachedobject or is_scalar($data) or $this->definition->uses_simple_data()) {
@@ -333,7 +338,7 @@ class phpunit_cache implements cache_loader {
     }
 
     /**
-     * @return cache_definition
+     * @return \cache_definition
      */
     public function get_definition() {
         return $this->definition;

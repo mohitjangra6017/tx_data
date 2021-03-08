@@ -827,9 +827,9 @@ abstract class base implements \IteratorAggregate, context_aware {
             }
         }
 
-        if (PHPUNIT_TEST and \phpunit_util::is_redirecting_events()) {
+        if (PHPUNIT_TEST and \core_phpunit\internal_util::is_redirecting_events()) {
             $this->dispatched = true;
-            \phpunit_util::event_triggered($this);
+            \core_phpunit\internal_util::event_triggered($this);
             return;
         }
 

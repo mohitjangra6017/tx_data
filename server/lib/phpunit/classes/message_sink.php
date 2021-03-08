@@ -17,22 +17,21 @@
 /**
  * Message sink.
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace core_phpunit;
 
 /**
  * Message sink.
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class phpunit_message_sink {
+class message_sink {
     /** @var array of records from messages table */
     protected $messages = array();
 
@@ -42,13 +41,13 @@ class phpunit_message_sink {
      * Use if you do not want message redirected any more.
      */
     public function close() {
-        phpunit_util::stop_message_redirection();
+        internal_util::stop_message_redirection();
     }
 
     /**
-     * To be called from phpunit_util only!
+     * To be called from internal_util only!
      *
-     * @param stdClass $message record from messages table
+     * @param \stdClass $message record from messages table
      */
     public function add_message($message) {
         /* Number messages from 0. */

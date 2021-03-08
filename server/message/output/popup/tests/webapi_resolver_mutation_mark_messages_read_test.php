@@ -41,7 +41,7 @@ class message_popup_webapi_resolver_mutation_mark_messages_read_testcase extends
     use message_popup_test_helper;
 
     /**
-     * @var phpunit_message_sink|null
+     * @var \core_phpunit\message_sink|null
      */
     private $messagesink;
 

@@ -35,7 +35,7 @@ require_once($CFG->dirroot . '/totara/program/program_message.class.php');
 class totara_program_message_testcase extends advanced_testcase {
 
     /**
-     * @var phpunit_message_sink
+     * @var \core_phpunit\message_sink
      */
     private $messagesink;
 

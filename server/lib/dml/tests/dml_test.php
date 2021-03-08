@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class core_dml_testcase extends database_driver_testcase {
+class core_dml_testcase extends \core_phpunit\database_driver_testcase {
 
     protected function tearDown(): void {
         $this->prefix = null;

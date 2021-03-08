@@ -30,7 +30,6 @@ use context_course;
 use context_coursecat;
 use context_module;
 use context_system;
-use phpunit_util;
 use totara_userdata\userdata\export;
 use totara_userdata\userdata\target_user;
 

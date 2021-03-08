@@ -200,7 +200,7 @@ function message_send($eventdata) {
         $tabledata->timecreated = $eventdata->timecreated;
     }
 
-    if (PHPUNIT_TEST and class_exists('phpunit_util')) {
+    if (PHPUNIT_TEST) {
         // Add some more tests to make sure the normal code can actually work.
         $componentdir = core_component::get_component_directory($eventdata->component);
         if (!$componentdir or !is_dir($componentdir)) {
@@ -217,7 +217,7 @@ function message_send($eventdata) {
         unset($componentdir);
         unset($messageproviders);
         // Now ask phpunit if it wants to catch this message.
-        if (phpunit_util::is_redirecting_messages()) {
+        if (\core_phpunit\internal_util::is_redirecting_messages()) {
             $messageid = $DB->insert_record($table, $tabledata);
             $message = $DB->get_record($table, array('id' => $messageid));
 
@@ -240,7 +240,7 @@ function message_send($eventdata) {
             // Unit tests need this detail.
             $message->notification = $eventdata->notification;
 
-            phpunit_util::message_sent($message);
+            \core_phpunit\internal_util::message_sent($message);
             return $messageid;
         }
     }

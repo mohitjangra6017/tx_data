@@ -88,7 +88,7 @@ class criteria_linkedcourses_course_observer_testcase extends advanced_testcase 
     public function test_course_completed_no_criterion() {
         $data = $this->setup_data(0);
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         /** @var completion_completion $completion */
@@ -106,7 +106,7 @@ class criteria_linkedcourses_course_observer_testcase extends advanced_testcase 
             ['id' => $data->courses[1]->id, 'linktype' => linked_courses::LINKTYPE_MANDATORY],
         ]);
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         /** @var completion_completion $completion */
@@ -126,7 +126,7 @@ class criteria_linkedcourses_course_observer_testcase extends advanced_testcase 
             ['id' => $data->courses[2]->id, 'linktype' => linked_courses::LINKTYPE_MANDATORY],
         ]);
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         /** @var completion_completion $completion */
@@ -148,7 +148,7 @@ class criteria_linkedcourses_course_observer_testcase extends advanced_testcase 
             ['id' => $data->courses[2]->id, 'linktype' => linked_courses::LINKTYPE_MANDATORY],
         ]);
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         /**
@@ -195,7 +195,7 @@ class criteria_linkedcourses_course_observer_testcase extends advanced_testcase 
         $this->create_item_records($data->courses[2]->id, $data->users[2]->id, 1);
 
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         course_completion_reset::create_from_course($data->courses[1])->trigger();
@@ -219,10 +219,10 @@ class criteria_linkedcourses_course_observer_testcase extends advanced_testcase 
 
 
     /**
-     * @param phpunit_hook_sink $sink
+     * @param \core_phpunit\hook_sink $sink
      * @param array $expected_user_criteria_ids
      */
-    private function verify_achievement_changed_hook(phpunit_hook_sink $sink, array $expected_user_criteria_ids) {
+    private function verify_achievement_changed_hook(\core_phpunit\hook_sink $sink, array $expected_user_criteria_ids) {
         $hooks = $sink->get_hooks();
         $this->assertEquals(1, count($hooks));
         /** @var criteria_achievement_changed $hook */

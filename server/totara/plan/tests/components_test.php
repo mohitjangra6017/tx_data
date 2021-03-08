@@ -32,7 +32,7 @@ global $CFG;
  * @group totara_evidence
  */
 class totara_plan_components_testcase extends advanced_testcase {
-    /** @var phpunit_message_sink $messagesink */
+    /** @var \core_phpunit\message_sink $messagesink */
     private $messagesink;
 
     /** @var \core\testing\generator */

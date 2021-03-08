@@ -72,7 +72,7 @@ class quiz_report_statistics_from_steps_testcase extends mod_quiz_attempt_walkth
     /**
      * Create a quiz add questions to it, walk through quiz attempts and then check results.
      *
-     * @param phpunit_DataSet_Table[] of data read from csv file "questionsXX.csv",
+     * @param \core_phpunit\DataSet_Table[] of data read from csv file "questionsXX.csv",
      *                                                                                  "stepsXX.csv" and "resultsXX.csv".
      * @dataProvider get_data_for_walkthrough
      */
@@ -95,7 +95,7 @@ class quiz_report_statistics_from_steps_testcase extends mod_quiz_attempt_walkth
     /**
      * Check actual question stats are the same as that found in csv file.
      *
-     * @param $qstats         phpunit_DataSet_Table data from csv file.
+     * @param $qstats         \core_phpunit\DataSet_Table data from csv file.
      * @param $questionstats  \core_question\statistics\questions\all_calculated_for_qubaid_condition Calculated stats.
      */
     protected function check_question_stats($qstats, $questionstats) {
@@ -361,7 +361,7 @@ class quiz_report_statistics_from_steps_testcase extends mod_quiz_attempt_walkth
     /**
      * Check the question stats and the response counts used in the statistics report. If the appropriate files exist in fixtures/.
      *
-     * @param phpunit_DataSet_Table[] $csvdata Data loaded from csv files for this test.
+     * @param \core_phpunit\DataSet_Table[] $csvdata Data loaded from csv files for this test.
      * @param string $whichattempts
      * @param string $whichtries
      * @param \core\dml\sql_join $groupstudentsjoins

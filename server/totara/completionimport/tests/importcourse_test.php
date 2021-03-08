@@ -439,10 +439,10 @@ class totara_completionimport_importcourse_testcase extends completionimport_adv
 
     /**
      * Verify the triggered bulk_course_completionimport events
-     * @param phpunit_event_sink $sink
+     * @param \core_phpunit\event_sink $sink
      * @param array $expected_payloads
      */
-    private function verify_bulk_import_events(phpunit_event_sink $sink, array $expected_payloads) {
+    private function verify_bulk_import_events(\core_phpunit\event_sink $sink, array $expected_payloads) {
         $classname = bulk_course_completionimport::class;
         $events = $sink->get_events();
         $actual_events = array_filter($events, function ($event) use ($classname) {

@@ -759,6 +759,12 @@ $cache = '.var_export($cache, true).';
                 self::load_classes($plugintype.'_'.$pluginname, "$fulldir/classes");
             }
         }
+
+        // PHPUnit stuff must not be used in normal production code.
+        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
+            self::load_classes('core_phpunit', "$CFG->dirroot/lib/phpunit/classes");
+        }
+
         ksort(self::$classmap);
     }
 

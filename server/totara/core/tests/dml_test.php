@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Tests for Totara functionality added to DML database drivers.
  */
-class totara_core_dml_testcase extends database_driver_testcase {
+class totara_core_dml_testcase extends \core_phpunit\database_driver_testcase {
     protected $olddboptions = null;
 
     public function tearDown(): void {

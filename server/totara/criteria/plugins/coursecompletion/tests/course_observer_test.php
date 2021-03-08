@@ -74,7 +74,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
     public function test_course_completed_no_item() {
         $data = $this->setup_data();
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         /** @var completion_completion $completion */
@@ -102,7 +102,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
         $criterion = $criteria_generator->create_coursecompletion(['courseids' => [$data->courses[1]->id]]);
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         /** @var completion_completion $completion */
@@ -125,7 +125,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
             3 => $criteria_generator->create_coursecompletion(['courseids' => [$data->courses[2]->id, $data->courses[3]->id]])
         ];
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         /** @var completion_completion $completion */
@@ -139,7 +139,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
     public function test_bulk_course_completions_imported() {
         $data = $this->setup_data();
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         /** @var \totara_criteria\testing\generator $criteria_generator */
@@ -188,7 +188,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
         /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         $criteria = [
@@ -222,7 +222,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
         /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         $criteria = [
@@ -267,7 +267,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
         /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         // Delete the course first to ensure the criteria's valid attribute is set correctly
@@ -332,7 +332,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
         /** @var \totara_criteria\testing\generator $criteria_generator */
         $criteria_generator = $this->getDataGenerator()->get_plugin_generator('totara_criteria');
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         $criteria = [
@@ -394,7 +394,7 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
         $this->create_item_records($data->courses[4]->id, $data->users[3]->id, 0);
         $this->create_item_records($data->courses[4]->id, $data->users[4]->id, 1);
 
-        /** @var phpunit_hook_sink $hook_sink */
+        /** @var \core_phpunit\hook_sink $hook_sink */
         $hook_sink = $this->redirectHooks();
 
         course_completion_reset::create_from_course($data->courses[1])->trigger();
@@ -423,10 +423,10 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
 
 
     /**
-     * @param phpunit_hook_sink $sink
+     * @param \core_phpunit\hook_sink $sink
      * @param array $expected_user_criteria_ids
      */
-    private function verify_achievement_changed_hook(phpunit_hook_sink $sink, array $expected_user_criteria_ids) {
+    private function verify_achievement_changed_hook(\core_phpunit\hook_sink $sink, array $expected_user_criteria_ids) {
         $hooks = $sink->get_hooks();
         $this->assertEquals(1, count($hooks));
         /** @var criteria_achievement_changed $hook */
@@ -438,10 +438,10 @@ class criteria_coursecompletion_course_observer_testcase extends advanced_testca
     }
 
     /**
-     * @param phpunit_hook_sink $sink
+     * @param \core_phpunit\hook_sink $sink
      * @param array $expected_criteria_ids
      */
-    private function verify_validity_changed_hook(phpunit_hook_sink $sink, array $expected_criteria_ids) {
+    private function verify_validity_changed_hook(\core_phpunit\hook_sink $sink, array $expected_criteria_ids) {
         $hooks = $sink->get_hooks();
         $this->assertEquals(1, count($hooks));
         /** @var criteria_validity_changed $hook */

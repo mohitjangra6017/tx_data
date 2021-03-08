@@ -44,7 +44,7 @@ class mod_facetoface_seminar_hook_testcase extends advanced_testcase {
     /** @var stdClass */
     private $f2f;
 
-    /** @var phpunit_hook_sink */
+    /** @var \core_phpunit\hook_sink */
     private $sink;
 
     public function setUp(): void {

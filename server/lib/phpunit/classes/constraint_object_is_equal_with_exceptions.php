@@ -17,24 +17,23 @@
 /**
  * Constraint that checks a simple object with an isEqual constrain, allowing for exceptions to be made for some fields.
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2015 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace core_phpunit;
 
 /**
  * Constraint that checks a simple object with an isEqual constrain, allowing for exceptions to be made for some fields.
  *
  * NOTE: this used to extend \PHPUnit\Framework\Constraint\IsEqual which is now final, so let's ignore the copy/pasting here.
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2015 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class phpunit_constraint_object_is_equal_with_exceptions extends \PHPUnit\Framework\Constraint\Constraint {
+class constraint_object_is_equal_with_exceptions extends \PHPUnit\Framework\Constraint\Constraint {
     /**
      * @var mixed
      */

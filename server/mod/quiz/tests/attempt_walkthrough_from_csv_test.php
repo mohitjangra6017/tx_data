@@ -64,7 +64,7 @@ class mod_quiz_attempt_walkthrough_from_csv_testcase extends advanced_testcase {
      * directory.
      *
      * @param array $quizsettings of settings read from csv file quizzes.csv
-     * @param phpunit_DataSet_Table[] $csvdata of data read from csv file "questionsXX.csv",
+     * @param \core_phpunit\DataSet_Table[] $csvdata of data read from csv file "questionsXX.csv",
      *                                                                                  "stepsXX.csv" and "resultsXX.csv".
      * @dataProvider get_data_for_walkthrough
      */
@@ -148,7 +148,7 @@ class mod_quiz_attempt_walkthrough_from_csv_testcase extends advanced_testcase {
      * Create quiz, simulate attempts and check results (if resultsXX.csv exists).
      *
      * @param array $quizsettings Quiz overrides for this quiz.
-     * @param phpunit_DataSet_Table[] $csvdata Data loaded from csv files for this test.
+     * @param \core_phpunit\DataSet_Table[] $csvdata Data loaded from csv files for this test.
      */
     protected function create_quiz_simulate_attempts_and_check_results($quizsettings, $csvdata) {
         $this->resetAfterTest(true);
@@ -179,7 +179,7 @@ class mod_quiz_attempt_walkthrough_from_csv_testcase extends advanced_testcase {
      *
      * @param string $setname
      * @param string $test
-     * @return phpunit_DataSet_Table
+     * @return \core_phpunit\DataSet_Table
      */
     protected function load_csv_data_file($setname, $test='') {
         $files = array($setname => $this->get_full_path_of_csv_file($setname, $test));
@@ -235,7 +235,7 @@ class mod_quiz_attempt_walkthrough_from_csv_testcase extends advanced_testcase {
     }
 
     /**
-     * @param $steps phpunit_DataSet_Table the step data from the csv file.
+     * @param $steps \core_phpunit\DataSet_Table the step data from the csv file.
      * @return array attempt no as in csv file => the id of the quiz_attempt as stored in the db.
      */
     protected function walkthrough_attempts($steps) {
@@ -296,7 +296,7 @@ class mod_quiz_attempt_walkthrough_from_csv_testcase extends advanced_testcase {
     }
 
     /**
-     * @param $results phpunit_DataSet_Table the results data from the csv file.
+     * @param $results \core_phpunit\DataSet_Table the results data from the csv file.
      * @param $attemptids array attempt no as in csv file => the id of the quiz_attempt as stored in the db.
      */
     protected function check_attempts_results($results, $attemptids) {

@@ -56,7 +56,7 @@ abstract class totara_appraisal_messages_testcase extends appraisal_testcase {
      *      - [\totara_appraisal\testing\generator] generator: appraisal generator.
      *      - [array[string=>mixed]] restores: system configuration values to be
      *        restored after the test.
-     *      - [phpunit_phpmailer_sink] sink: email sink.
+     *      - [\core_phpunit\phpmailer_sink] sink: email sink.
      *      - [array] tasks: cron tasks
      *      - [array] subjects: message subjects.
      */

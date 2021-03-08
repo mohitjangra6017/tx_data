@@ -291,10 +291,10 @@ class totara_competency_min_proficiency_override_for_assignments_testcase extend
     }
 
     /**
-     * @param phpunit_event_sink $sink
+     * @param \core_phpunit\event_sink $sink
      * @param int[] $expected_assignment_ids
      */
-    private function verify_events(phpunit_event_sink $sink, array $expected_assignment_ids): void {
+    private function verify_events(\core_phpunit\event_sink $sink, array $expected_assignment_ids): void {
         $events = $sink->get_events();
 
         self::assertCount(count($expected_assignment_ids), $events);

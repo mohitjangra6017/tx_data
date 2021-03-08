@@ -114,12 +114,12 @@ class mod_perform_participant_section_availability_testcase extends state_testca
     }
 
     /**
-     * @param phpunit_event_sink $sink
+     * @param \core_phpunit\event_sink $sink
      * @param participant_section $participant_section
      * @param int $user_id
      */
     private function assert_section_availability_closed_event(
-        phpunit_event_sink $sink,
+        \core_phpunit\event_sink $sink,
         participant_section $participant_section,
         int $user_id
     ): void {

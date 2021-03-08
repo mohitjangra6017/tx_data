@@ -17,15 +17,16 @@
 /**
  * PHPUnit autoloader for Moodle.
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2013 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace core_phpunit;
+
+use ReflectionClass;
+
 /**
- * Class phpunit_autoloader.
- *
  * Please notice that phpunit testcases obey frankenstyle naming rules,
  * that is full component prefix + _testcase postfix. The files are expected
  * in tests directory inside each component. There are some extra tests
@@ -33,16 +34,15 @@
  *
  * Examples:
  *
- * vendor/bin/phpunit core_component_testcase
  * vendor/bin/phpunit lib/tests/component_test.php
- * vendor/bin/phpunit core_component_testcase lib/tests/component_test.php
  *
- * @package    core
- * @category   phpunit
+ * @deprecated since Totara 14.0
+ *
+ * @package    core_phpunit
  * @copyright  2013 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class phpunit_autoloader implements \PHPUnit\Runner\TestSuiteLoader {
+class testcase_autoloader implements \PHPUnit\Runner\TestSuiteLoader {
 
     public function load(string $suiteClassFile): ReflectionClass {
         // NOTE: This is a temporary hack before we rename all testcase files to match class names!

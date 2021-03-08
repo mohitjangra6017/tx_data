@@ -17,22 +17,21 @@
 /**
  * Event sink.
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2013 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace core_phpunit;
 
 /**
  * Event redirection sink.
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2013 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class phpunit_event_sink {
+class event_sink {
     /** @var \core\event\base[] array of events */
     protected $events = array();
 
@@ -42,7 +41,7 @@ class phpunit_event_sink {
      * Use if you do not want event redirected any more.
      */
     public function close() {
-        phpunit_util::stop_event_redirection();
+        internal_util::stop_event_redirection();
     }
 
     /**

@@ -23,7 +23,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class totara_core_ddl_testcase extends database_driver_testcase {
+class totara_core_ddl_testcase extends \core_phpunit\database_driver_testcase {
     public function test_unique_nullable_index_one_field() {
         $DB = $this->tdb;
         $dbman = $DB->get_manager();

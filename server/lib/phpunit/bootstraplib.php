@@ -19,8 +19,7 @@
  *
  * Note: these functions must be self contained and must not rely on any other library or include
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

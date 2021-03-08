@@ -476,9 +476,9 @@ class mod_perform_subject_instance_creation_service_testcase extends advanced_te
      * Passing false for $no_hooks enables testing the service in connection with any watchers for hooks
      *
      * @param bool $no_hooks set to false to let hooks execute
-     * @return phpunit_hook_sink|null
+     * @return \core_phpunit\hook_sink|null
      */
-    protected function generate_instances(bool $no_hooks = true): ?phpunit_hook_sink {
+    protected function generate_instances(bool $no_hooks = true): ?\core_phpunit\hook_sink {
         // We do not want any side effects, just testing the creation of subject instances
         $sink = $no_hooks ? $this->redirectHooks() : null;
 

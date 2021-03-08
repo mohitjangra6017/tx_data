@@ -27,16 +27,112 @@ defined('MOODLE_INTERNAL') || die();
 
 
 /**
- * Test advanced_testcase extra features.
- *
- * Totara: resetAfterTest() is deprecated and transactions are not used for state reset.
+ * Test testcase features.
  *
  * @package    core
  * @category   phpunit
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class core_phpunit_advanced_testcase extends advanced_testcase {
+class core_phpunit_testcase_testcase extends \core_phpunit\testcase {
+
+    /**
+     * Tests that bootstrapping has occurred correctly
+     * @return void
+     */
+    public function test_bootstrap() {
+        global $CFG;
+        // The use of httpswwwroot is deprecated, but we are still setting it for backwards compatibility.
+        $this->assertTrue(isset($CFG->httpswwwroot));
+        $this->assertEquals($CFG->httpswwwroot, $CFG->wwwroot);
+        $this->assertEquals('https://www.example.com/moodle', $CFG->wwwroot);
+        // Totara: test instance separation
+        $this->assertEquals(PHPUNIT_INSTANCE, substr($CFG->prefix, -(strlen(PHPUNIT_INSTANCE))));
+        $this->assertEquals(PHPUNIT_INSTANCE, substr($CFG->dataroot, -(strlen(PHPUNIT_INSTANCE))));
+    }
+
+    /**
+     * This is just a verification if I understand the PHPUnit assert docs right --skodak
+     * @return void
+     */
+    public function test_assert_behaviour() {
+        // Arrays.
+        $a = array('a', 'b', 'c');
+        $b = array('a', 'c', 'b');
+        $c = array('a', 'b', 'c');
+        $d = array('a', 'b', 'C');
+        $this->assertNotEquals($a, $b);
+        $this->assertNotEquals($a, $d);
+        $this->assertEquals($a, $c);
+        $this->assertEqualsCanonicalizing($a, $b);
+
+        // Objects.
+        $a = new stdClass();
+        $a->x = 'x';
+        $a->y = 'y';
+        $b = new stdClass(); // Switched order.
+        $b->y = 'y';
+        $b->x = 'x';
+        $c = $a;
+        $d = new stdClass();
+        $d->x = 'x';
+        $d->y = 'y';
+        $d->z = 'z';
+        $this->assertEquals($a, $b);
+        $this->assertNotSame($a, $b);
+        $this->assertEquals($a, $c);
+        $this->assertSame($a, $c);
+        $this->assertNotEquals($a, $d);
+
+        // String comparison.
+        $this->assertEquals(1, '1');
+        $this->assertEquals(null, '');
+
+        if (version_compare(PHP_VERSION, '8.0', '<')) {
+            $this->assertNotEquals(1, '1 ');
+        } else {
+            $this->assertEquals(1, '1 ');
+        }
+        $this->assertNotEquals(0, '');
+        $this->assertNotEquals(null, '0');
+        $this->assertNotEquals(array(), '');
+
+        // Other comparison.
+        $this->assertEquals(null, null);
+        $this->assertEquals(false, null);
+        $this->assertEquals(0, null);
+
+        // Emptiness.
+        $this->assertEmpty(0);
+        $this->assertEmpty(0.0);
+        $this->assertEmpty('');
+        $this->assertEmpty('0');
+        $this->assertEmpty(false);
+        $this->assertEmpty(null);
+        $this->assertEmpty(array());
+
+        $this->assertNotEmpty(1);
+        $this->assertNotEmpty(0.1);
+        $this->assertNotEmpty(-1);
+        $this->assertNotEmpty(' ');
+        $this->assertNotEmpty('0 ');
+        $this->assertNotEmpty(true);
+        $this->assertNotEmpty(array(null));
+        $this->assertNotEmpty(new stdClass());
+    }
+
+    /**
+     * Make sure there are no sloppy Windows line endings
+     * that would break our tests.
+     */
+    public function test_lineendings() {
+        $string = <<<STRING
+a
+b
+STRING;
+        $this->assertSame("a\nb", $string, 'Make sure all project files are checked out with unix line endings.');
+
+    }
 
     public function test_debugging() {
         global $CFG;
@@ -538,10 +634,10 @@ class core_phpunit_advanced_testcase extends advanced_testcase {
         $this->assertEquals(1, $sink->count());
 
         // Test if sink is terminated after reset.
-        $this->assertTrue(phpunit_util::is_redirecting_messages());
+        $this->assertTrue(\core_phpunit\internal_util::is_redirecting_messages());
 
         self::resetAllData();
-        $this->assertFalse(phpunit_util::is_redirecting_messages());
+        $this->assertFalse(\core_phpunit\internal_util::is_redirecting_messages());
     }
 
     public function test_set_timezone() {
@@ -679,59 +775,6 @@ class core_phpunit_advanced_testcase extends advanced_testcase {
         $en = '%A, %d %B %Y, %I:%M %p';
         $dateformat = get_string('strftimedaydatetime', 'langconfig');
         $this->assertSame($en, $dateformat);
-    }
-
-    /**
-     * Test deprecated method works as expected: functionality is proxied to new methods and debug message is issued
-     */
-    public function test_deprecated_set_expected_exception() {
-        $this->setExpectedException(coding_exception::class, 'this is a message');
-
-        $this->assertEquals('this is a message', $this->getExpectedExceptionMessage());
-        $this->assertEquals(coding_exception::class, $this->getExpectedException());
-        $this->assertDebuggingCalled('PHPUnits setExpectedException() method was removed in PHPUnit 6 and is deprecated since Totara 13; use expectException() instead.');
-
-        throw new coding_exception('this is a message');
-    }
-
-    /**
-     * Test deprecated method works as expected: functionality is proxied to new methods and debug message is issued
-     */
-    public function test_deprecated_set_expected_exception_with_code() {
-        $this->setExpectedException(\Exception::class, 'this is a message', 123);
-
-        $this->assertEquals(123, $this->getExpectedExceptionCode());
-        $this->assertDebuggingCalled('PHPUnits setExpectedException() method was removed in PHPUnit 6 and is deprecated since Totara 13; use expectException() instead.');
-
-        throw new \Exception('this is a message', 123);
-    }
-
-        /**
-     * Test deprecated method works as expected: functionality is proxied to new methods and debug message is issued
-     */
-    public function test_deprecated_set_expected_exception_regex() {
-        $this->setExpectedExceptionRegExp(coding_exception::class, '/this is a message/');
-
-        $this->assertEquals('/this is a message/', $this->getExpectedExceptionMessageRegExp());
-        $this->assertEquals(coding_exception::class, $this->getExpectedException());
-        $this->assertDebuggingCalled('PHPUnits setExpectedExceptionRegExp() method was removed in PHPUnit 6 and is deprecated since Totara 13; use expectExceptionMessageMatches() instead.');
-
-        throw new coding_exception('this is a message');
-    }
-
-    /**
-     * Test deprecated method works as expected: functionality is proxied to new methods and debug message is issued
-     */
-    public function test_has_performed_expectations_on_output() {
-        $string = 'my expected output string';
-        $this->expectOutputString($string);
-
-        $this->assertTrue($this->hasPerformedExpectationsOnOutput());
-        $this->assertTrue($this->hasExpectationOnOutput());
-
-        echo $string;
-
-        $this->assertDebuggingCalled('PHPUnits hasPerformedExpectationsOnOutput() method was removed in PHPUnit 6 and is deprecated since Totara 13; use hasExpectationOnOutput() instead.');
     }
 
     public function test_default_environment() {

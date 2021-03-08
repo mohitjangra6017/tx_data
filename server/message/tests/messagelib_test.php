@@ -38,7 +38,7 @@ require_once($CFG->dirroot . '/message/lib.php');
  */
 class core_message_messagelib_testcase extends advanced_testcase {
 
-    /** @var phpunit_message_sink keep track of messages. */
+    /** @var \core_phpunit\message_sink keep track of messages. */
     protected $messagesink = null;
 
     protected function tearDown(): void {

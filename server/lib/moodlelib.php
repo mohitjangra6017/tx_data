@@ -1702,7 +1702,7 @@ function get_users_from_config($value, $capability, $includeadmins = true) {
  * Invalidates browser caches and cached data in temp.
  *
  * IMPORTANT - If you are adding anything here to do with the cache directory you should also have a look at
- * {@link phpunit_util::reset_dataroot()}
+ * {@link \core_phpunit\internal_util::reset_dataroot()}
  *
  * @return void
  */

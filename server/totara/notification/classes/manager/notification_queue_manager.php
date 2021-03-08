@@ -210,11 +210,11 @@ class notification_queue_manager {
             $notification->save();
             $message->savedmessageid = $notification->id;
 
-            if (defined('PHPUNIT_TEST') && PHPUNIT_TEST && class_exists('phpunit_util')) {
+            if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
                 // For  unit tests purpose only.
 
-                if (phpunit_util::is_redirecting_messages()) {
-                    phpunit_util::message_sent($message);
+                if (\core_phpunit\internal_util::is_redirecting_messages()) {
+                    \core_phpunit\internal_util::message_sent($message);
                     return;
                 }
             }

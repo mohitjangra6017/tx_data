@@ -14,7 +14,7 @@
     stopOnIncomplete="false"
     stopOnSkipped="false"
     beStrictAboutOutputDuringTests="true"
-    testSuiteLoaderClass="phpunit_autoloader"
+    testSuiteLoaderClass="core_phpunit\testcase_autoloader"
     beStrictAboutTestsThatDoNotTestAnything="false"
 >
     <php>

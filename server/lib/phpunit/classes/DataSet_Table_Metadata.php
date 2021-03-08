@@ -15,36 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Moodle PHPUnit integration
- *
- * @package    core
- * @category   phpunit
- * @copyright  2012 Petr Skoda {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- * Advanced PHPUnit test case customised for Moodle.
- *
- * @deprecated since Totara 14.0
+ * Array based data iterator.
  *
  * @package    core_phpunit
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class advanced_testcase extends \core_phpunit\testcase {
-}
+
+namespace core_phpunit;
 
 /**
- * The simplest PHPUnit test case customised for Moodle
- *
- * It is intended for isolated tests that do not modify database or any globals.
- *
- * @deprecated since Totara 14.0
- *
- * @package    core_phpunit
- * @copyright  2012 Petr Skoda {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Data set table metadata
  */
-abstract class basic_testcase extends \core_phpunit\testcase {
+final class DataSet_Table_Metadata {
+    /** @var array */
+    protected $columns;
+
+    public function __construct(array $columns) {
+        $this->columns = $columns;
+    }
+
+    public function getColumns() {
+        return $this->columns;
+    }
 }

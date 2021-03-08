@@ -31,8 +31,6 @@ use mod_facetoface\signup;
 use mod_facetoface\room_helper;
 use mod_facetoface\signup_status;
 
-require_once($CFG->dirroot . '/lib/phpunit/classes/advanced_testcase.php');
-
 class mod_facetoface_renderer_testcase extends advanced_testcase {
 
     /** @var \core\testing\generator $data_generator */

@@ -77,8 +77,8 @@ abstract class manager {
         // Intercept the hook if redirecting was turned on in PHPUnit
         // No need to run the rest of the function as we don't want
         // to execute the hook in this case just store it in the sink
-        if (PHPUNIT_TEST and \phpunit_util::is_redirecting_hooks()) {
-            \phpunit_util::hook_executed($hook);
+        if (PHPUNIT_TEST and \core_phpunit\internal_util::is_redirecting_hooks()) {
+            \core_phpunit\internal_util::hook_executed($hook);
             return;
         }
 

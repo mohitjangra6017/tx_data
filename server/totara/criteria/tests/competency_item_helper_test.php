@@ -157,10 +157,10 @@ class totara_criteria_competency_item_helper_testcase extends advanced_testcase 
     /**
      * Verify the executed hook
      *
-     * @param phpunit_hook_sink $sink
+     * @param \core_phpunit\hook_sink $sink
      * @param array $expected_criteria_ids
      */
-    private function verify_hook(phpunit_hook_sink $sink, array $expected_criteria_ids) {
+    private function verify_hook(\core_phpunit\hook_sink $sink, array $expected_criteria_ids) {
         $this->assertSame(1, $sink->count());
         $hooks = $sink->get_hooks();
         /** @var criteria_achievement_changed $hook */

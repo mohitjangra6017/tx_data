@@ -206,13 +206,13 @@ class mod_perform_participant_section_progress_testcase extends state_testcase {
     /**
      * Assert that the "participant section was update" event was fired
      *
-     * @param phpunit_event_sink $sink
+     * @param \core_phpunit\event_sink $sink
      * @param participant_section $participant_section
      * @param int $user_id
      * @param string $previous_progress_status
      */
     private function assert_participant_section_updated_event(
-        phpunit_event_sink $sink,
+        \core_phpunit\event_sink $sink,
         participant_section $participant_section,
         int $user_id,
         string $previous_progress_status

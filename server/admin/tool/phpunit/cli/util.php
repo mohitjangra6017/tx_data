@@ -131,31 +131,31 @@ Example:
 }
 
 if ($diag) {
-    list($errorcode, $message) = phpunit_util::testing_ready_problem();
+    list($errorcode, $message) = \core_phpunit\internal_util::testing_ready_problem();
     if ($errorcode) {
         phpunit_bootstrap_error($errorcode, $message);
     }
     exit(0);
 
 } else if ($buildconfig) {
-    if (phpunit_util::build_config_file()) {
+    if (\core_phpunit\internal_util::build_config_file()) {
         exit(0);
     } else {
         phpunit_bootstrap_error(PHPUNIT_EXITCODE_CONFIGWARNING, 'Can not create main /phpunit.xml configuration file, verify srcroot permissions');
     }
 
 } else if ($buildcomponentconfigs) {
-    phpunit_util::build_component_config_files();
+    \core_phpunit\internal_util::build_component_config_files();
     exit(0);
 
 } else if ($drop) {
     // make sure tests do not run in parallel
-    test_lock::acquire('phpunit');
-    phpunit_util::drop_site(true);
+    \core_phpunit\internal_util::acquire_lock();
+    \core_phpunit\internal_util::drop_site(true);
     // note: we must stop here because $CFG is messed up and we can not reinstall, sorry
     exit(0);
 
 } else if ($install) {
-    phpunit_util::install_site();
+    \core_phpunit\internal_util::install_site();
     exit(0);
 }

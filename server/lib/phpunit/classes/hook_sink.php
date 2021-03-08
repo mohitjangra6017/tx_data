@@ -18,13 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Fabian Derschatta <fabian.derschatta@totaralearning.com>
- * @package phpunit
+ * @package core_phpunit
  */
+
+namespace core_phpunit;
 
 /**
  * Hook redirection sink.
  */
-class phpunit_hook_sink {
+class hook_sink {
 
     /** @var \totara_core\hook\base[] array of hooks */
     protected $hooks = array();
@@ -35,7 +37,7 @@ class phpunit_hook_sink {
      * Use if you do not want hooks redirected any more.
      */
     public function close() {
-        phpunit_util::stop_hook_redirection();
+        internal_util::stop_hook_redirection();
     }
 
     /**

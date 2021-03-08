@@ -122,10 +122,10 @@ class mock_curl extends curl {
             throw new coding_exception('no more mocks');
         }
         [$expected_url, $expected_options, $info, $response] = array_shift($this->mocks);
-        base_testcase::assertSame($expected_url, $url, "requested URL do not match");
+        \core_phpunit\testcase::assertSame($expected_url, $url, "requested URL do not match");
         foreach ($expected_options as $name => $value) {
-            base_testcase::assertArrayHasKey($name, $options, "requested options do not have key");
-            base_testcase::assertSame($value, $options[$name], "requested options do not match");
+            \core_phpunit\testcase::assertArrayHasKey($name, $options, "requested options do not have key");
+            \core_phpunit\testcase::assertSame($value, $options[$name], "requested options do not match");
         }
         $this->info = array_merge(['http_code' => 200], $info);
         return $response;

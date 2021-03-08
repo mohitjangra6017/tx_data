@@ -20,8 +20,7 @@
  *
  * Exit codes: {@see phpunit_bootstrap_error()}
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -48,7 +47,6 @@ if (ini_get('opcache.enable') and strtolower(ini_get('opcache.enable')) !== 'off
 
 require_once(__DIR__.'/bootstraplib.php');
 require_once(__DIR__.'/../testing/lib.php');
-require_once(__DIR__.'/classes/autoloader.php');
 require_once(__DIR__.'/../init.php');
 
 if (isset($_SERVER['REMOTE_ADDR'])) {
@@ -94,9 +92,6 @@ $CFG->jsrev = 1;
 // Totara: Make sure the dataroot is ready.
 umask(0);
 
-// load test case stub classes and other stuff
-require_once("$CFG->dirroot/lib/phpunit/lib.php");
-
 require("$CFG->dirroot/lib/setup.php");
 
 raise_memory_limit(MEMORY_HUGE);
@@ -105,17 +100,21 @@ error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', '1');
 ini_set('log_errors', '1');
 
+// Load old stuff without autoloading.
+require_once(__DIR__.'/classes/testcase_autoloader.php');
+require_once(__DIR__.'/lib.php');
+
 if (PHPUNIT_UTIL) {
     return;
 }
 
 // is database and dataroot ready for testing?
-list($errorcode, $message) = phpunit_util::testing_ready_problem();
+list($errorcode, $message) = \core_phpunit\internal_util::testing_ready_problem();
 // print some version info
-phpunit_util::bootstrap_moodle_info();
+\core_phpunit\internal_util::bootstrap_moodle_info();
 if ($errorcode) {
     phpunit_bootstrap_error($errorcode, $message);
 }
 
 // prepare for the first test run - store fresh globals, reset database and dataroot, etc.
-phpunit_util::bootstrap_init();
+\core_phpunit\internal_util::bootstrap_init();

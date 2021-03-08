@@ -17,12 +17,15 @@
 /**
  * Array based data iterator.
  *
- * @package    core
- * @category   phpunit
+ * @package    core_phpunit
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace core_phpunit;
+
+use Iterator, ArrayAccess, Countable, ArrayIterator;
+use Exception, Error;
 
 /**
  * Based on array iterator code from PHPUnit documentation by Sebastian Bergmann
@@ -33,8 +36,8 @@
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class phpunit_ArrayDataSet implements Iterator, ArrayAccess, Countable {
-    /** @var phpunit_DataSet_Table[] */
+final class ArrayDataSet implements Iterator, ArrayAccess, Countable {
+    /** @var DataSet_Table[] */
     protected $tables = array();
 
     /** @var ArrayIterator */
@@ -51,7 +54,7 @@ final class phpunit_ArrayDataSet implements Iterator, ArrayAccess, Countable {
             } else {
                 $rows = $data;
             }
-            $this->tables[$tablename] = new phpunit_DataSet_Table($rows);
+            $this->tables[$tablename] = new DataSet_Table($rows);
         }
 
         $this->iterator = new ArrayIterator($this->tables);
@@ -62,7 +65,7 @@ final class phpunit_ArrayDataSet implements Iterator, ArrayAccess, Countable {
     }
 
     public function getTableMetaData(string $tablename) {
-        return new phpunit_DataSet_Table_Metadata(array_keys($this->tables[$tablename][0]));
+        return new DataSet_Table_Metadata(array_keys($this->tables[$tablename][0]));
     }
 
     public function getIterator() {
@@ -73,7 +76,7 @@ final class phpunit_ArrayDataSet implements Iterator, ArrayAccess, Countable {
         return $this->tables;
     }
 
-    public function getTable(string $tablename): phpunit_DataSet_Table {
+    public function getTable(string $tablename): DataSet_Table {
         return $this->tables[$tablename];
     }
 
@@ -197,91 +200,5 @@ final class phpunit_ArrayDataSet implements Iterator, ArrayAccess, Countable {
             }
         }
         return new self($array);
-    }
-}
-
-/**
- * Data set table class
- */
-final class phpunit_DataSet_Table implements Iterator, ArrayAccess, Countable {
-    /** @var array */
-    protected $rows;
-
-    /** @var ArrayIterator */
-    protected $iterator;
-
-    public function __construct(array $rows) {
-        $this->rows = $rows;
-        $this->iterator = new ArrayIterator($this->rows);
-    }
-
-    public function getRowCount(): int {
-        return count($this->rows);
-    }
-
-    public function getRow(int $rowno): array {
-        return $this->rows[$rowno];
-    }
-
-    public function getValue(int $row, int $column) {
-        $row = $this->getRow($row);
-        $columname = array_keys($row)[$column];
-        return $row[$columname];
-    }
-
-    public function count() {
-        return count($this->rows);
-    }
-
-    public function current() {
-        return $this->iterator->current();
-    }
-
-    public function next() {
-        $this->iterator->next();
-    }
-
-    public function key() {
-        return $this->iterator->key();
-    }
-
-    public function valid() {
-        return $this->iterator->valid();
-    }
-
-    public function rewind() {
-        $this->iterator->rewind();
-    }
-
-    public function offsetExists($offset) {
-        return array_key_exists($offset, $this->rows);
-    }
-
-    public function offsetGet($offset) {
-        return $this->rows[$offset];
-    }
-
-    public function offsetSet($offset, $value) {
-        throw new Exception('Cannot modify dataset tables');
-    }
-
-    public function offsetUnset($offset) {
-        throw new Exception('Cannot modify dataset tables');
-    }
-}
-
-/**
- * Data set table metadata
- */
-final class phpunit_DataSet_Table_Metadata {
-    /** @var array */
-    protected $columns;
-
-    public function __construct(array $columns) {
-        $this->columns = $columns;
-    }
-
-    public function getColumns() {
-        return $this->columns;
     }
 }

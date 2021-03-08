@@ -279,12 +279,12 @@ $useconfigcache = true;
 if (PHPUNIT_TEST and !PHPUNIT_UTIL) {
     $useconfigcache = false;
     // make sure tests do not run in parallel
-    test_lock::acquire('phpunit');
+    \core_phpunit\internal_util::acquire_lock();
     $dbhash = null;
     try {
         if ($dbhash = $DB->get_field('config', 'value', array('name'=>'phpunittest'))) {
             // reset DB tables
-            phpunit_util::reset_database();
+            \core_phpunit\internal_util::reset_database();
         }
     } catch (Throwable $e) {
         if ($dbhash) {

@@ -144,13 +144,6 @@ abstract class mod_facetoface_virtualmeeting_testcase extends advanced_testcase 
         parent::tearDown();
     }
 
-    public static function setUser($user = null) {
-        if ($user instanceof user) {
-            $user = $user->get_record();
-        }
-        parent::setUser($user);
-    }
-
     /**
      * @param array|stdClass $record
      * @param array $options

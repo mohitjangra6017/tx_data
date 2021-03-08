@@ -129,7 +129,7 @@ class moodle_phpmailer extends \PHPMailer\PHPMailer\PHPMailer {
     public function postSend() {
         // Now ask phpunit if it wants to catch this message.
         if (PHPUNIT_TEST) {
-            if (!phpunit_util::is_redirecting_phpmailer()) {
+            if (!\core_phpunit\internal_util::is_redirecting_phpmailer()) {
                 debugging('Unit tests must not send real emails! Use $this->redirectEmails()');
                 return true;
             }
@@ -147,7 +147,7 @@ class moodle_phpmailer extends \PHPMailer\PHPMailer\PHPMailer {
                 $mail->replytoname = $replyto[1];
             }
 
-            phpunit_util::phpmailer_sent($mail);
+            \core_phpunit\internal_util::phpmailer_sent($mail);
             return true;
         } else {
             return parent::postSend();

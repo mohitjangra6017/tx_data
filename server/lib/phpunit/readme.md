@@ -37,7 +37,7 @@ Execute tests
 How to add more tests?
 ----------------------
 1. create `tests/` directory in your add-on
-2. add test file, for example `local/mytest/tests/my_test.php` file with `local_my_testcase` class that extends `basic_testcase` or `advanced_testcase`
+2. add test file, for example `local/mytest/tests/my_test.php` file with `local_my_testcase` class that extends `\core_phpunit\testcase`
 3. add some test_*() methods
 4. execute `php test/phpunit/phpunit.php init` to get the plugin tests included in main phpunit.xml configuration file
 5. execute your new test case `php test/phpunit/phpunit.php run local/mytest/tests/my_test.php`

@@ -57,7 +57,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
     private $program1, $program2;
     private $user1, $user2, $user3, $user4, $user5, $user6;
     private $manager, $managerja;
-    /** @var phpunit_message_sink */
+    /** @var \core_phpunit\message_sink */
     private $sink;
 
     protected function tearDown(): void {

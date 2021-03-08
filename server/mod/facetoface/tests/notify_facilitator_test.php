@@ -65,7 +65,7 @@ class mod_facetoface_notify_facilitator_testcase extends advanced_testcase {
     /** @var stdClass[] */
     private $sessiondates;
 
-    /** @var phpunit_message_sink */
+    /** @var \core_phpunit\message_sink */
     private $sink;
 
     public function setUp(): void {

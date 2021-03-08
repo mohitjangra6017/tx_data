@@ -414,9 +414,9 @@ class tool_monitor_eventobservers_testcase extends advanced_testcase {
     /**
      * Verify that task was scheduled and a message was sent as expected.
      *
-     * @param phpunit_message_sink $msgsink Message sink
+     * @param \core_phpunit\message_sink $msgsink Message sink
      */
-    protected function verify_processed_data(phpunit_message_sink $msgsink) {
+    protected function verify_processed_data(\core_phpunit\message_sink $msgsink) {
         global $DB, $USER;
 
         $recordexists = $DB->count_records('task_adhoc', array('component' => 'tool_monitor'));
@@ -433,9 +433,9 @@ class tool_monitor_eventobservers_testcase extends advanced_testcase {
     /**
      * Verify that a message was not sent.
      *
-     * @param phpunit_message_sink $msgsink Message sink
+     * @param \core_phpunit\message_sink $msgsink Message sink
      */
-    protected function verify_message_not_sent_yet(phpunit_message_sink $msgsink) {
+    protected function verify_message_not_sent_yet(\core_phpunit\message_sink $msgsink) {
         $msgs = $msgsink->get_messages();
         $this->assertCount(0, $msgs);
         $msgsink->clear();

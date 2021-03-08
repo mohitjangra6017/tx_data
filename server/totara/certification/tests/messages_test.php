@@ -60,7 +60,7 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
 
     private $user1, $user2;
 
-    /* @var phpunit_message_sink $sink */
+    /* @var \core_phpunit\message_sink $sink */
     private $sink;
 
     /* @var \totara_program\testing\generator $programgenerator */
