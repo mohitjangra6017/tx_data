@@ -23,9 +23,7 @@
   <div
     v-else
     class="tui-dataTable"
-    :class="{
-      'tui-dataTable--archived': archived,
-    }"
+    :class="{ 'tui-dataTable--archived': archived }"
     role="table"
   >
     <HeaderRow :empty="!$slots['header-row']">
@@ -91,6 +89,7 @@
               :draggable="draggableRows"
               :dragging="dragging"
               :expanded="id == expanded"
+              :stealth-expanded="stealthExpanded"
               v-bind="attrs"
             >
               <Cell
@@ -122,6 +121,8 @@
         <ExpandedRow
           v-if="expandableRows && id == expanded"
           :key="id + ' expand'"
+          :stealth="stealthExpanded"
+          :indent-contents="indentExpandedContents"
           @close="updateExpandedRow()"
         >
           <slot name="expand-content" :row="row" />
@@ -131,6 +132,8 @@
       <ExpandedRow
         v-if="expandableRows && groupMode && groupId == expandedGroup"
         :key="groupId + ' expand'"
+        :stealth="stealthExpanded"
+        :indent-contents="indentExpandedContents"
         @close="updateExpandedGroup()"
       >
         <slot name="group-expand-content" :group="group" />
@@ -170,6 +173,10 @@ export default {
   props: {
     // Table is displaying archived content
     archived: Boolean,
+    // Expanded Rows are displayed indented
+    indentExpandedContents: Boolean,
+    // Table has stealth expanded rows
+    stealthExpanded: Boolean,
     // Hide last border bottom
     borderBottomHidden: Boolean,
     // Hide separator border between rows

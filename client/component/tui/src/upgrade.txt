@@ -3,6 +3,8 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* Updated Table component to allow indent and sleath version of Expanded Rows
+  * Template and SCSS changes
 * Added closeable prop to Popover.vue component
 * Added closeable prop to PopoverFrame.vue component
 * Added closeablePopover prop to LabelledButtonTrigger.vue component

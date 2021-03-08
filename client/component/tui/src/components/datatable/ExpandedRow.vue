@@ -17,7 +17,14 @@
 -->
 
 <template>
-  <div class="tui-dataTableExpandableRow" @keydown.esc="$emit('close')">
+  <div
+    class="tui-dataTableExpandableRow"
+    :class="{
+      'tui-dataTableExpandableRow--stealth': stealth,
+      'tui-dataTableExpandableRow--indented': indentContents,
+    }"
+    @keydown.esc="$emit('close')"
+  >
     <div class="tui-dataTableExpandableRow__placement">
       <div class="tui-dataTableExpandableRow__content">
         <slot />
@@ -29,6 +36,11 @@
 <script>
 export default {
   components: {},
+
+  props: {
+    stealth: Boolean,
+    indentContents: Boolean,
+  },
 };
 </script>
 
@@ -40,6 +52,19 @@ export default {
   border: var(--border-width-thin) solid var(--datatable-expanded-border-color);
   border-top: none;
   box-shadow: var(--shadow-2);
+
+  &--indented {
+    // width of expand button * 2
+    padding-left: calc(var(--gap-9) * 2);
+  }
+
+  &--stealth {
+    border: none;
+    box-shadow: none;
+    &__content {
+      padding: 0;
+    }
+  }
 
   &__content {
     padding: var(--gap-3);

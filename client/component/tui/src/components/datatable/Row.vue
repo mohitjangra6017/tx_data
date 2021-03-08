@@ -32,6 +32,7 @@
       'tui-dataTableRow--borderSeparatorOff': borderSeparatorHidden,
       'tui-dataTableRow--hoverOff': hoverOff,
       'tui-dataTableRow--expanded': expanded,
+      'tui-dataTableRow--stealthExpanded': stealthExpanded,
     }"
     role="row"
   >
@@ -53,6 +54,7 @@ export default {
     draggable: Boolean,
     dragging: Boolean,
     expanded: Boolean,
+    stealthExpanded: Boolean,
   },
 };
 </script>
@@ -185,6 +187,12 @@ export default {
       var(--datatable-expanded-border-color);
     border-bottom: none;
     box-shadow: var(--shadow-2);
+  }
+
+  &--stealthExpanded {
+    border-right: none;
+    border-left: none;
+    box-shadow: none;
   }
 }
 

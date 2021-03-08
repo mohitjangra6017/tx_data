@@ -25,6 +25,8 @@
         :expandable-rows="true"
         :border-bottom-hidden="hideBottomBorder"
         :border-top-hidden="hideTopBorder"
+        :stealth-expanded="stealthExpanded"
+        :indent-expanded-contents="indentExpandedContents"
       >
         <template v-slot:header-row>
           <ExpandCell :header="true" />
@@ -43,8 +45,36 @@
         </template>
 
         <template v-slot:expand-content="{ row }">
-          <h3>{{ row.title }}</h3>
-          Expanded row content
+          <Table
+            :color-odd-rows="colorOddRows"
+            :data="dummyData"
+            :expandable-rows="true"
+            :border-bottom-hidden="hideBottomBorder"
+            :border-top-hidden="hideTopBorder"
+            :stealth-expanded="stealthExpanded"
+            :indent-expanded-contents="indentExpandedContents"
+          >
+            <template v-slot:header-row>
+              <ExpandCell :header="true" />
+              <HeaderCell size="16" valign="center">col 1</HeaderCell>
+            </template>
+
+            <template v-slot:row="{ row, expand, expandState }">
+              <ExpandCell
+                :aria-label="row.title"
+                :expand-state="expandState"
+                @click="expand()"
+              />
+              <Cell size="16" column-header="col 1" valign="center">
+                {{ row.title }}
+              </Cell>
+            </template>
+
+            <template v-slot:expand-content="{ row }">
+              <h3>{{ row.title }}</h3>
+              Expanded row content
+            </template>
+          </Table>
         </template>
       </Table>
     </SamplesExample>
@@ -66,6 +96,20 @@
 
       <FormRow label="Hide bottom border">
         <RadioGroup v-model="hideBottomBorder" :horizontal="true">
+          <Radio :value="true">True</Radio>
+          <Radio :value="false">False</Radio>
+        </RadioGroup>
+      </FormRow>
+
+      <FormRow label="Hide shadows on expanded rows">
+        <RadioGroup v-model="stealthExpanded" :horizontal="true">
+          <Radio :value="true">True</Radio>
+          <Radio :value="false">False</Radio>
+        </RadioGroup>
+      </FormRow>
+
+      <FormRow label="Indent expanded contents">
+        <RadioGroup v-model="indentExpandedContents" :horizontal="true">
           <Radio :value="true">True</Radio>
           <Radio :value="false">False</Radio>
         </RadioGroup>
@@ -130,10 +174,13 @@ export default {
       colorOddRows: false,
       hideBottomBorder: false,
       hideTopBorder: false,
+      stealthExpanded: false,
+      indentExpandedContents: false,
       codeTemplate: `<Table
   :color-odd-rows="true"
   :data="dummyData"
   :expandable-rows="true"
+  :stealth-expanded="stealthExpanded"
 >
   <!-- Header content -->
   <template v-slot:header-row>
