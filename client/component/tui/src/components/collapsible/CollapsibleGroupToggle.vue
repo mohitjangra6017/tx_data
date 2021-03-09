@@ -17,33 +17,29 @@
 -->
 
 <template>
-  <div class="tui-collapsibleGroupToggle">
-    <ButtonIcon
+  <div
+    class="tui-collapsibleGroupToggle"
+    :class="{ 'tui-collapsibleGroupToggle--alignEnd': alignEnd }"
+  >
+    <Button
       :aria-expanded="allExpanded.toString()"
-      :aria-label="$str(allExpanded ? 'collapseall' : 'expandall', 'core')"
       class="tui-collapsibleGroupToggle__button"
       :styleclass="{
-        transparent: true,
+        transparent: transparent,
+        small: true,
       }"
       :text="$str(allExpanded ? 'collapseall' : 'expandall', 'core')"
       @click="toggleAllFilters()"
-    >
-      <CollapseIcon v-if="allExpanded" size="200" />
-      <ExpandIcon v-else size="200" />
-    </ButtonIcon>
+    />
   </div>
 </template>
 
 <script>
-import ButtonIcon from 'tui/components/buttons/ButtonIcon';
-import CollapseIcon from 'tui/components/icons/Collapse';
-import ExpandIcon from 'tui/components/icons/Expand';
+import Button from 'tui/components/buttons/Button';
 
 export default {
   components: {
-    ButtonIcon,
-    CollapseIcon,
-    ExpandIcon,
+    Button,
   },
 
   props: {
@@ -53,6 +49,14 @@ export default {
     value: {
       required: true,
       type: Object,
+    },
+    alignEnd: {
+      type: Boolean,
+      default: true,
+    },
+    transparent: {
+      type: Boolean,
+      default: true,
     },
   },
 
@@ -109,7 +113,7 @@ export default {
 <style lang="scss">
 .tui-collapsibleGroupToggle {
   display: flex;
-  &__button {
+  &--alignEnd &__button {
     margin-left: auto;
   }
 }

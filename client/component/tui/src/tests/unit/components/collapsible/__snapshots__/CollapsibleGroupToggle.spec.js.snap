@@ -2,20 +2,15 @@
 
 exports[`collapsibleGroupToggle matches snapshot 1`] = `
 <div
-  class="tui-collapsibleGroupToggle"
+  class="tui-collapsibleGroupToggle tui-collapsibleGroupToggle--alignEnd"
   label="hello"
 >
-  <buttonicon-stub
+  <button-stub
     ariaexpanded="false"
-    arialabel="fff"
     class="tui-collapsibleGroupToggle__button"
     styleclass="[object Object]"
     text="fff"
     type="button"
-  >
-    <expandicon-stub
-      size="200"
-    />
-  </buttonicon-stub>
+  />
 </div>
 `;

@@ -22,7 +22,11 @@
     once.
 
     <SamplesExample>
-      <CollapsibleGroupToggle v-model="expanded" />
+      <CollapsibleGroupToggle
+        v-model="expanded"
+        :transparent="transparent"
+        :align-end="alignEnd"
+      />
 
       <Collapsible v-model="expanded.first" label="ABC">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -74,6 +78,18 @@
           <Radio :value="false">False</Radio>
         </RadioGroup>
       </FormRow>
+      <FormRow label="Button transparent">
+        <RadioGroup v-model="transparent" :horizontal="true">
+          <Radio :value="true">True</Radio>
+          <Radio :value="false">False</Radio>
+        </RadioGroup>
+      </FormRow>
+      <FormRow label="Align to end">
+        <RadioGroup v-model="alignEnd" :horizontal="true">
+          <Radio :value="true">True</Radio>
+          <Radio :value="false">False</Radio>
+        </RadioGroup>
+      </FormRow>
     </SamplesPropCtl>
 
     <SamplesCode>
@@ -113,8 +129,14 @@ export default {
         third: false,
       },
       label: 'Heading',
+      transparent: true,
+      alignEnd: true,
 
-      codeTemplate: `<CollapsibleGroupToggle v-model="expanded" />
+      codeTemplate: `<CollapsibleGroupToggle
+  v-model="expanded"
+  :transparent="transparent"
+  :alignEnd="true"
+/>
 <Collapsible v-model="expanded.first" label="ABC">...</Collapsible>
 <Collapsible v-model="expanded.second" label="DEF">...</Collapsible>
 <Collapsible v-model="expanded.third" label="GHI">...</Collapsible>`,
