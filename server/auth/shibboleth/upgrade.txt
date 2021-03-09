@@ -3,6 +3,10 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* The 'Data modification API' (convert_data) setting can no longer be configured to use files located within the
+  current site data directory ($CFG->dataroot), as it exposes the site to security risks.
+
+
 === 13.0 ===
 
 * Attribute names are now validated in order to ensure that reserved $_SERVER variables have not been used.
