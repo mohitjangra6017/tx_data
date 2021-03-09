@@ -43,14 +43,14 @@ Feature: User sees virtual meeting status
     And I am on "Virtual seminar" seminar homepage
     And I click on the seminar event action "Edit event" in row "#1"
     And I click on "Virtual Room Uno" "link" in the "Christmas" "table_row"
-    And I set the field "Add virtual room link" to "PoC App"
+    And I set the field "Add virtual room link" to "Fake Dev App"
     And I click on "OK" "button_exact" in the "[aria-describedby='editcustomroom0-dialog']" "css_element"
     And I click on "Select rooms" "link" in the "Troll" "table_row"
     And I click on "Create" "link_exact" in the "[aria-describedby='selectrooms1-dialog']" "css_element"
     And I set the following fields to these values:
       | Name                  | Virtual Room Dos |
       | Capacity              | 100              |
-      | Add virtual room link | PoC App          |
+      | Add virtual room link | Fake Dev App     |
     And I click on "OK" "button_exact" in the "[aria-describedby='editcustomroom1-dialog']" "css_element"
     And I press "Save changes"
     Then I should not see "Editing event in"

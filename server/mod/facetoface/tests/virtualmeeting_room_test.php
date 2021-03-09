@@ -39,6 +39,7 @@ use mod_facetoface\task\manage_virtualmeetings_adhoc_task as adhoc_task;
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ * @group virtualmeeting
  * @covers mod_facetoface\room_virtualmeeting
  * @covers mod_facetoface\room_dates_virtualmeeting
  */

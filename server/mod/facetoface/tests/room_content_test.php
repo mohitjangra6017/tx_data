@@ -36,8 +36,8 @@ use mod_facetoface\signup_status;
 use totara_core\entity\virtual_meeting as virtual_meeting_entity;
 use totara_core\http\clients\simple_mock_client;
 use totara_core\virtualmeeting\plugin\provider\provider;
-use totara_core\virtualmeeting\poc\poc_factory;
 use totara_core\virtualmeeting\virtual_meeting as virtual_meeting_model;
+use virtualmeeting_poc_app\poc_factory;
 
 /**
  * @covers mod_facetoface\detail\room_content
@@ -263,6 +263,7 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
     private static function sanitise_card(array $input): array {
         global $CFG;
         $output = [];
+        $url_regexp = '@^' . preg_quote($CFG->wwwroot, '@').'/integrations/virtualmeeting/poc_[a-z_]+/meet.php\?.*(host=\d)@';
         foreach ($input as $key => $value) {
             if (!in_array($key, ['heading', 'subtitle', 'simple', 'inactive', 'has_buttons', 'buttons', 'detailsection', 'instruction', 'copy', 'preview', 'button', 'multibutton'])) {
                 continue;
@@ -281,15 +282,11 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
                     )
                 ];
             } else if ($key == 'copy') {
-                if (strpos($value['url'], $CFG->wwwroot.'/totara/core/classes/virtualmeeting/poc/meet.php') === 0) {
-                    $value['url'] = preg_replace('/^.+meet\\.php\?.*(host=\d)/', 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?$1', $value['url']);
-                }
+                $value['url'] = preg_replace($url_regexp, 'https://virtualmeeting.example.com/meet.php?$1', $value['url']);
                 unset($value['icon']['context']);
             } else if (($key == 'multibutton' || $key == 'buttons') && is_array($value)) {
                 foreach ($value as $child => $x) {
-                    if (strpos($value[$child]['url'], $CFG->wwwroot.'/totara/core/classes/virtualmeeting/poc/meet.php') === 0) {
-                        $value[$child]['url'] = preg_replace('/^.+meet\\.php\?.*(host=\d)/', 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?$1', $value[$child]['url']);
-                    }
+                    $value[$child]['url'] = preg_replace($url_regexp, 'https://virtualmeeting.example.com/meet.php?$1', $value[$child]['url']);
                 }
             }
             $output[$key] = $value;
@@ -684,6 +681,9 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
         $this->assertEquals($unavailable, $this->visit_card_from_dashboard($session, $room, $this->pariah));
     }
 
+    /**
+     * @group virtualmeeting
+     */
     public function test_render_card_of_virtual_meeting_on_manage() {
         $room = $this->add_virtualmeeting('Virtual meeting room', $this->session_present);
         $this->assertNull($this->visit_card_from_manage($room, $this->site_admin));
@@ -697,6 +697,9 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
         $this->assertNull($this->visit_card_from_manage($room, $this->pariah));
     }
 
+    /**
+     * @group virtualmeeting
+     */
     public function test_render_card_of_ghost_virtual_meeting_on_dashboard() {
         $unavailable = [
             'heading' => 'Virtual room is unavailable',
@@ -767,6 +770,9 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
         $this->assertEquals($unavailable, $this->visit_card_from_dashboard($session, $room, $this->pariah));
     }
 
+    /**
+     * @group virtualmeeting
+     */
     public function test_render_card_of_zombie_virtual_meeting_on_dashboard() {
         $unavailable = [
             'heading' => 'Virtual room is unavailable',
@@ -836,16 +842,19 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
         $this->assertEquals($unavailable, $this->visit_card_from_dashboard($session, $room, $this->pariah));
     }
 
+    /**
+     * @group virtualmeeting
+     */
     public function test_render_card_of_available_virtual_meeting_on_dashboard() {
         $available = [
-            'heading' => 'Virtual room: PoC App',
+            'heading' => 'Virtual room: Fake Dev App',
             'simple' => true,
             'inactive' => false,
             'has_buttons' => true,
             'buttons' => [
                 [
                     'text' => 'Go to room',
-                    'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                    'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
                     'style' => 'primary',
                     'hint' => "Go to 'Virtual meeting room'",
                 ],
@@ -856,7 +865,7 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
                 'icon' => [
                     'template' => 'core/flex_icon',
                 ],
-                'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
             ],
         ];
         $unavailable = [
@@ -885,14 +894,14 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
             ],
         ];
         $joinable = [
-            'heading' => 'Virtual room: PoC App',
+            'heading' => 'Virtual room: Fake Dev App',
             'simple' => false,
             'inactive' => false,
             'has_buttons' => true,
             'buttons' => [
                 [
                     'text' => 'Join now',
-                    'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                    'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
                     'style' => 'primary',
                     'hint' => "Join 'Virtual meeting room' now",
                 ],
@@ -912,7 +921,7 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
                 'icon' => [
                     'template' => 'core/flex_icon',
                 ],
-                'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
             ],
         ];
 
@@ -1016,16 +1025,19 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
         $this->assertEquals($unavailable, $this->visit_card_from_dashboard($session, $room, $this->pariah));
     }
 
+    /**
+     * @group virtualmeeting
+     */
     public function test_render_card_of_hostable_virtual_meeting_on_dashboard() {
         $available = [
-            'heading' => 'Virtual room: PoC App',
+            'heading' => 'Virtual room: Fake Dev App',
             'simple' => true,
             'inactive' => false,
             'has_buttons' => true,
             'buttons' => [
                 [
                     'text' => 'Go to room',
-                    'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                    'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
                     'style' => 'primary',
                     'hint' => "Go to 'Virtual meeting room'",
                 ],
@@ -1036,24 +1048,24 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
                 'icon' => [
                     'template' => 'core/flex_icon',
                 ],
-                'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
             ],
         ];
         $hostable = [
-            'heading' => 'Virtual room: PoC App',
+            'heading' => 'Virtual room: Fake Dev App',
             'simple' => true,
             'inactive' => false,
             'has_buttons' => true,
             'buttons' => [
                 [
                     'text' => 'Host meeting',
-                    'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=1',
+                    'url' => 'https://virtualmeeting.example.com/meet.php?host=1',
                     'style' => 'primary',
                     'hint' => "Start meeting as host of 'Virtual meeting room'",
                 ],
                 [
                     'text' => 'Join as attendee',
-                    'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                    'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
                     'hint' => "Join 'Virtual meeting room' as attendee",
                 ],
             ],
@@ -1063,7 +1075,7 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
                 'icon' => [
                     'template' => 'core/flex_icon',
                 ],
-                'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
             ],
         ];
         $unavailable = [
@@ -1092,14 +1104,14 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
             ],
         ];
         $joinable = [
-            'heading' => 'Virtual room: PoC App',
+            'heading' => 'Virtual room: Fake Dev App',
             'simple' => false,
             'inactive' => false,
             'has_buttons' => true,
             'buttons' => [
                 [
                     'text' => 'Join now',
-                    'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                    'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
                     'style' => 'primary',
                     'hint' => "Join 'Virtual meeting room' now",
                 ],
@@ -1119,7 +1131,7 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
                 'icon' => [
                     'template' => 'core/flex_icon',
                 ],
-                'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
             ],
         ];
 
@@ -1223,16 +1235,19 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
         $this->assertEquals($unavailable, $this->visit_card_from_dashboard($session, $room, $this->pariah));
     }
 
+    /**
+     * @group virtualmeeting
+     */
     public function test_render_card_based_on_virtual_meeting_status() {
         $available = [
-            'heading' => 'Virtual room: PoC App',
+            'heading' => 'Virtual room: Fake Dev App',
             'simple' => true,
             'inactive' => false,
             'has_buttons' => true,
             'buttons' => [
                 [
                     'text' => 'Go to room',
-                    'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                    'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
                     'style' => 'primary',
                     'hint' => "Go to 'Virtual meeting room'",
                 ],
@@ -1242,7 +1257,7 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
                 'icon' => [
                     'template' => 'core/flex_icon',
                 ],
-                'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
             ],
         ];
         $waitable = [
@@ -1262,14 +1277,14 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
             'inactive' => true,
         ];
         $joinable = [
-            'heading' => 'Virtual room: PoC App',
+            'heading' => 'Virtual room: Fake Dev App',
             'simple' => false,
             'inactive' => false,
             'has_buttons' => true,
             'buttons' => [
                 [
                     'text' => 'Join now',
-                    'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                    'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
                     'style' => 'primary',
                     'hint' => "Join 'Virtual meeting room' now",
                 ],
@@ -1289,7 +1304,7 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
                 'icon' => [
                     'template' => 'core/flex_icon',
                 ],
-                'url' => 'https://example.com/totara/core/classes/virtualmeeting/poc/meet.php?host=0',
+                'url' => 'https://virtualmeeting.example.com/meet.php?host=0',
             ],
         ];
 
@@ -1387,6 +1402,9 @@ class mod_facetoface_room_content_testcase extends advanced_testcase {
         $this->assertEquals($unavailable, $this->visit_card_from_dashboard($this->session_present, $room_cannot_delete, $this->pariah));
     }
 
+    /**
+     * @group virtualmeeting
+     */
     public function test_render_banner_based_on_virtual_meeting_status() {
         $retryable = [
             'message' => 'Failed to update the virtual room. <a href="https://example.com/mod/facetoface/events/edit.php?backtoallsessions=1">Please click to assign the room again.</a>',

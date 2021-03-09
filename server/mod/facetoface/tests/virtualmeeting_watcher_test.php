@@ -44,6 +44,7 @@ global $CFG;
 require_once("{$CFG->dirroot}/mod/facetoface/lib.php");
 
 /**
+ * @group virtualmeeting
  * @covers mod_facetoface\watcher\virtualmeeting_watcher
  */
 class mod_facetoface_virtual_meeting_watcher_testcase extends advanced_testcase {

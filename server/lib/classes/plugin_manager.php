@@ -1358,7 +1358,7 @@ class core_plugin_manager {
             ),
 
             'virtualmeeting' => array(
-                'msteams', 'zoom'
+                'msteams', 'poc_app', 'poc_user', 'zoom'
             ),
 
             'message' => array(

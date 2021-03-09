@@ -39,6 +39,9 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once("{$CFG->dirroot}/mod/facetoface/lib.php");
 
+/**
+ * Base test case for seminar virtual meeting.
+ */
 abstract class mod_facetoface_virtualmeeting_testcase extends advanced_testcase {
     /** @var mod_facetoface_generator */
     protected $semgen;

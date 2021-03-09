@@ -49,6 +49,9 @@ require_once($CFG->dirroot.'/mod/facetoface/db/upgradelib.php');
  * Test facetoface upgradelib related functions
  */
 class mod_facetoface_upgradelib_testcase extends advanced_testcase {
+    /**
+     * @group virtualmeeting
+     */
     public function test_facetoface_upgradelib_upgrade_existing_virtual_meetings(): void {
         /** @var mod_facetoface_generator */
         $f2fgen = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');

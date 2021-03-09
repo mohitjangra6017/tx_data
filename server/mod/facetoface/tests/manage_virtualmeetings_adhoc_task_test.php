@@ -29,13 +29,14 @@ use mod_facetoface\room_virtualmeeting;
 use totara_core\virtualmeeting\virtual_meeting as virtualmeeting_model;
 use mod_facetoface\seminar_event_helper;
 use mod_facetoface\task\manage_virtualmeetings_adhoc_task as adhoc_task;
-use totara_core\virtualmeeting\poc\poc_factory;
+use virtualmeeting_poc_app\poc_factory;
 
 defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/virtualmeeting_testcase.php');
 
 /**
  * Test the manage_virtualmeetings_adhoc_task task.
+ * @group virtualmeeting
  * @covers mod_facetoface\task\manage_virtualmeetings_adhoc_task
  */
 class mod_facetoface_manage_virtualmeetings_adhoc_task_testcase extends mod_facetoface_virtualmeeting_testcase {
