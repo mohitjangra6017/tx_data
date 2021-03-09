@@ -9,7 +9,7 @@ Feature: Notifications delivery channels
     And I navigate to system notifications page
     Then I should see "Totara comment"
 
-    When I click on "Totara comment details" "button"
+    When I click on "Totara comment" "button"
     Then I should see "New comment create"
     And I should see "Delivery channels"
     And I should see "Site notifications; Mobile app notifications; Tasks; Alerts; Email; Microsoft Teams"
@@ -47,7 +47,7 @@ Feature: Notifications delivery channels
     When I navigate to "Notifications" node in "Course administration"
     Then I should see "Notifications"
 
-    When I click on "Totara comment details" "button"
+    When I click on "Totara comment" "button"
     Then I should see "New comment create"
     And I should see "Delivery channels"
     And I should see "Site notifications; Mobile app notifications; Tasks; Alerts; Email; Microsoft Teams"

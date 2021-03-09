@@ -18,9 +18,10 @@ Feature: Sending custom notifications to user
   Scenario: Sending notifications to user on created comment should included the custom notification
     When I log in as "admin"
     And I navigate to system notifications page
-    And I click on "Totara comment details" "button"
+    And I click on "Totara comment" "button"
     And I click on "New comment created details" "button"
-    And I click on "Create notification" "button"
+    When I click on "Actions for New comment created event" "button"
+    And I click on "Create notification" "link"
     And I set the field with xpath "//select[@class='tui-select__input']" to "Owner"
     And I set the field "Name" to "Custom notification one"
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test custom notification subject"
@@ -62,9 +63,10 @@ Feature: Sending custom notifications to user
   Scenario: Sending notification to user on created comment should not use the overridden value at lower context
     Given I log in as "admin"
     And I navigate to system notifications page
-    And I click on "Totara comment details" "button"
+    And I click on "Totara comment" "button"
     And I click on "New comment created details" "button"
-    And I click on "Create notification" "button"
+    When I click on "Actions for New comment created event" "button"
+    And I click on "Create notification" "link"
     And I set the field with xpath "//select[@class='tui-select__input']" to "Owner"
     And I set the field "Name" to "Custom notification one"
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Custom notification subject"
@@ -77,11 +79,13 @@ Feature: Sending custom notifications to user
       | fullname | shortname | format |
       | Course 1 | c101      | topics |
     And I navigate to notifications page of "course" "c101"
-    And I click on "Totara comment details" "button"
+    And I click on "Totara comment" "button"
 
     When I click on "New comment created details" "button"
     Then I should see "Custom notification one"
-    And I click on "Edit notification Custom notification one" "button"
+    When I click on "Actions for Custom notification one" "button"
+    Then I should see "Edit"
+    And I click on "Edit" "link" in the ".tui-dataTableRows .tui-dataTableRow:nth-of-type(2)" "css_element"
     And "Enable customising field recipient" "button" should exist
 
     When I click on the "Enable customising field recipient" tui toggle button
@@ -115,9 +119,10 @@ Feature: Sending custom notifications to user
   Scenario: Sending notifications to comment author
     Given I log in as "admin"
     And I navigate to system notifications page
-    And I click on "Totara comment details" "button"
+    And I click on "Totara comment" "button"
     And I click on "New comment created details" "button"
-    And I click on "Create notification" "button"
+    When I click on "Actions for New comment created event" "button"
+    And I click on "Create notification" "link"
     And I set the field with xpath "//select[@class='tui-select__input']" to "Comment author"
     And I set the field "Name" to "Custom notification one"
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test custom notification subject"

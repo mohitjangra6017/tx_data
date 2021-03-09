@@ -17,49 +17,41 @@
 -->
 
 <template>
-  <div class="tui-notificationTable">
-    <Table
-      :data="eventResolvers"
-      :expandable-rows="true"
-      :expand-multiple-rows="true"
-      :hover-off="true"
-    >
-      <template v-slot:header-row>
-        <ExpandCell :header="true" />
-      </template>
-
-      <template v-slot:row="{ row, expand, expandState }">
-        <ExpandCell
-          :aria-label="row.plugin_name"
-          :expand-state="expandState"
-          @click="expand()"
-        />
-        <Cell>
-          {{ row.plugin_name }}
-        </Cell>
-      </template>
-
-      <template v-slot:expand-content="{ row }">
+  <div>
+    <CollapsibleGroupToggle
+      v-model="expanded"
+      :align-end="false"
+      :transparent="false"
+    />
+    <div class="tui-notificationTable">
+      <Collapsible
+        v-for="eventResolver in eventResolvers"
+        :key="eventResolver.component"
+        v-model="expanded[eventResolver.component]"
+        :label="eventResolver.plugin_name"
+        :indent-contents="true"
+      >
         <Table
-          :data="row.resolvers"
+          :data="eventResolver.resolvers"
           :expandable-rows="true"
           :expand-multiple-rows="true"
-          :border-top-hidden="true"
           :border-bottom-hidden="true"
           :hover-off="true"
+          :indent-expanded-contents="true"
+          :stealth-expanded="true"
         >
           <template v-slot:header-row>
             <ExpandCell :header="true" />
-            <HeaderCell>
+            <HeaderCell size="4">
               {{ $str('notifiable_events', 'totara_notification') }}
             </HeaderCell>
-            <HeaderCell>
+            <HeaderCell size="4">
               {{ $str('delivery_channels', 'totara_notification') }}
             </HeaderCell>
-            <HeaderCell align="start">
+            <HeaderCell align="start" size="2">
               {{ $str('status', 'core') }}
             </HeaderCell>
-            <HeaderCell>
+            <HeaderCell size="1">
               <span class="sr-only">
                 {{ $str('actions', 'core') }}
               </span>
@@ -72,20 +64,20 @@
               :expand-state="expandState"
               @click="expand()"
             />
-            <Cell v-else />
-            <Cell>
+            <ExpandCell v-else :empty="true" />
+            <Cell size="4">
               {{ resolver.name }}
             </Cell>
-            <Cell>
+            <Cell size="4">
               {{
                 display_delivery_channels(resolver.default_delivery_channels)
               }}
             </Cell>
-            <Cell align="start">
+            <Cell align="start" size="2">
               <!-- Toggle Switch goes here !!! -->
               {{ $str('enabled', 'totara_notification') }}
             </Cell>
-            <Cell align="end">
+            <Cell align="end" size="1">
               <NotifiableEventAction
                 :resolver-name="resolver.name"
                 :show-delivery-preference-option="showDeliveryPreferenceOption"
@@ -112,48 +104,50 @@
               :data="resolver.notification_preferences"
               :expandable-rows="false"
               :expand-multiple-rows="true"
-              :border-top-hidden="true"
-              :border-bottom-hidden="true"
               :hover-off="true"
               :get-id="(unused, index) => index"
+              :indent-expanded-contents="true"
+              :stealth-expanded="true"
             >
               <template v-slot:header-row>
-                <HeaderCell align="start">
+                <ExpandCell :header="true" />
+                <HeaderCell align="start" size="4">
                   {{ $str('notifications', 'totara_notification') }}
                 </HeaderCell>
-                <HeaderCell align="start">
+                <HeaderCell align="start" size="4">
                   {{ $str('recipient', 'totara_notification') }}
                 </HeaderCell>
-                <HeaderCell align="start">
+                <HeaderCell align="start" size="3">
                   {{ $str('schedule', 'totara_notification') }}
                 </HeaderCell>
-                <HeaderCell align="start">
+                <HeaderCell align="start" size="2">
                   {{ $str('status', 'core') }}
                 </HeaderCell>
-                <HeaderCell>
+                <HeaderCell size="1">
                   <span class="sr-only">
                     {{ $str('actions', 'core') }}
                   </span>
                 </HeaderCell>
               </template>
               <template v-slot:row="{ row: notificationPreference }">
-                <Cell align="start">
+                <ExpandCell :empty="true" />
+                <Cell align="start" size="4">
                   {{ notificationPreference.title }}
                 </Cell>
 
-                <Cell align="start">
+                <Cell align="start" size="4">
                   {{ notificationPreference.recipient.name }}
                 </Cell>
 
-                <Cell align="start">
+                <Cell align="start" size="3">
                   {{ notificationPreference.schedule_label }}
                 </Cell>
 
-                <Cell align="start">
+                <Cell align="start" size="2">
                   {{ $str('enabled', 'totara_notification') }}
                 </Cell>
 
-                <Cell align="end">
+                <Cell align="end" size="1">
                   <NotificationAction
                     :preference-title="notificationPreference.title"
                     :is-deletable="
@@ -177,12 +171,14 @@
             </Table>
           </template>
         </Table>
-      </template>
-    </Table>
+      </Collapsible>
+    </div>
   </div>
 </template>
 
 <script>
+import Collapsible from 'tui/components/collapsible/Collapsible';
+import CollapsibleGroupToggle from 'tui/components/collapsible/CollapsibleGroupToggle';
 import Cell from 'tui/components/datatable/Cell';
 import ExpandCell from 'tui/components/datatable/ExpandCell';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
@@ -192,11 +188,13 @@ import NotifiableEventAction from 'totara_notification/components/action/Notifia
 
 export default {
   components: {
-    NotificationAction,
-    HeaderCell,
+    Collapsible,
+    CollapsibleGroupToggle,
     Cell,
-    Table,
     ExpandCell,
+    HeaderCell,
+    Table,
+    NotificationAction,
     NotifiableEventAction,
   },
 
@@ -222,6 +220,15 @@ export default {
     },
 
     showDeliveryPreferenceOption: Boolean,
+  },
+
+  data() {
+    const expanded = {};
+    this.eventResolvers.forEach(
+      eventResolver => (expanded[eventResolver.component] = false)
+    );
+
+    return { expanded };
   },
 
   methods: {
@@ -257,3 +264,15 @@ export default {
   ]
 }
 </lang-strings>
+
+<style lang="scss">
+.tui-notificationTable {
+  margin-top: var(--gap-4);
+}
+
+.tui-collapsible {
+  &__header {
+    --collapsible-header-border-color: var(--color-neutral-1);
+  }
+}
+</style>

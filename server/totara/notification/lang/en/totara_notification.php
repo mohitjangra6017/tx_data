@@ -22,6 +22,9 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+$string['actions_for'] = 'Actions for {$a}';
+$string['actions_for_event'] = 'Actions for {$a} event';
+$string['actions_for_notification'] = 'Actions for {$a} notification';
 $string['cachedef_notifiable_resolver_map'] = 'Notificaon resolver map cache';
 $string['create_notification'] = 'Create notification';
 $string['create_notification_for_event'] = 'Create notification for event {$a}';
@@ -30,6 +33,7 @@ $string['create_custom_notification_title'] = 'Create notification';
 $string['delivery_channels'] = 'Delivery channels';
 $string['delete_confirm_title'] = "Delete notification: {\$a}";
 $string['delete_confirm_message'] = 'Are you sure? Deleting this notification will remove its instances in other contexts, such as categories and courses. This action cannot be undone.';
+$string['delete_notification_name'] = "Delete notification {\$a}";
 $string['delete_success'] = 'Successfully deleted notification';
 $string['delivery_preferences'] = 'Delivery preferences';
 $string['delivery_preferences_for_event'] = 'Update delivery preferences for event {$a}';
@@ -53,7 +57,7 @@ $string['error_cannot_update_notification'] = "Cannot update the notification";
 $string['invalid_input'] = 'Invalid value';
 $string['messaging_and_notification'] = 'Messaging and notifications';
 $string['no_available_data_for_key'] = '<no available data for {$a}>';
-$string['notifiable_events'] = 'Notifiable triggers';
+$string['notifiable_events'] = 'Notification triggers';
 $string['notifications'] = "Notifications";
 $string['notification:managenotifications'] = "Manage notifications";
 $string['notification_body_label'] = 'Body';
@@ -65,7 +69,6 @@ $string['notification_status_label'] = 'Status';
 $string['notification_subject_label'] = 'Subject';
 $string['notification_title_label'] = 'Name';
 $string['notification_trigger'] = 'Notification trigger: {$a}';
-$string['more_actions_for'] = 'More actions for {$a}';
 $string['pluginname'] = 'Centralised notification';
 $string['preferences_page_title'] = 'Notification preferences';
 $string['process_event_queue_task'] = 'Queue event scheduled task';

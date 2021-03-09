@@ -5,16 +5,23 @@ Feature: Overridden notifications at lower context
     Given I log in as "admin"
     And I navigate to system notifications page
 
-    When I click on "Totara comment details" "button"
+    When I click on "Totara comment" "button"
     Then I should see "New comment created"
     And "New comment created details" "button" should exist
-    And "Create notification" "button" should exist
+    And "Actions for New comment created event" "button" should exist
+
+    When I click on "Actions for New comment created event" "button"
+    Then I should see "Create notification"
+    And "Create notification" "link" should exist
 
     When I click on "New comment created details" "button"
     Then I should see "Comment created"
-    And "Edit notification Comment created" "button" should exist
 
-    When I click on "Edit notification Comment created" "button"
+    When I click on "Actions for Comment created" "button"
+    Then I should see "Edit"
+    And "Edit" "link" should exist
+
+    When I click on "Edit" "link"
     Then I should not see "Overridden subject at system"
     And I should not see "Overridden body at system"
     And "Enable customising field recipient" "button" should exist
@@ -47,7 +54,8 @@ Feature: Overridden notifications at lower context
     # Hence we are going to have to use the checkbox's field name.
     And I click on the "enabled[value]" tui checkbox
     And I click on "Save" "button"
-    And I click on "Edit notification Comment created" "button"
+    And I click on "Actions for Comment created" "button"
+    Then I click on "Edit" "link"
     Then the "Recipient" "field" should be enabled
     And the "On notification trigger event" "field" should be enabled
     And the "Days after" "field" should be enabled
@@ -68,7 +76,8 @@ Feature: Overridden notifications at lower context
     And I should not see "Overridden body at system"
 
     When I click on "Save" "button"
-    And I click on "Edit notification Comment created" "button"
+    And I click on "Actions for Comment created" "button"
+    And I click on "Edit" "link"
     Then I should not see "Overridden subject at system"
     And I should not see "Overridden body at system"
     And the field "Number" does not match value "3"

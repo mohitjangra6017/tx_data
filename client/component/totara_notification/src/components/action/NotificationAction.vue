@@ -17,24 +17,12 @@
 -->
 <template>
   <div class="tui-notificationAction">
-    <div>
-      <!-- This is to fix between block drop down. Which help to align buttons correctly -->
-      <ButtonIcon
-        :styleclass="{ small: true, transparentNoPadding: true }"
-        :aria-label="
-          $str('edit_notification_name', 'totara_notification', preferenceTitle)
-        "
-        @click="$emit('edit-notification')"
-      >
-        <EditIcon />
-      </ButtonIcon>
-    </div>
     <Dropdown>
       <template v-slot:trigger="{ toggle, isOpen }">
         <ButtonIcon
           :aria-expanded="isOpen ? 'true' : 'false'"
           :aria-label="
-            $str('more_actions_for', 'totara_notification', preferenceTitle)
+            $str('actions_for', 'totara_notification', preferenceTitle)
           "
           :styleclass="{ small: true, transparentNoPadding: true }"
           @click="toggle"
@@ -43,11 +31,26 @@
         </ButtonIcon>
       </template>
 
-      <DropdownItem @click="$emit('edit-notification')">
+      <DropdownItem
+        :aria-label="
+          $str('edit_notification_name', 'totara_notification', preferenceTitle)
+        "
+        @click="$emit('edit-notification')"
+      >
         <!-- Edit the notification -->
         {{ $str('edit', 'core') }}
       </DropdownItem>
-      <DropdownItem v-if="isDeletable" @click="$emit('delete-notification')">
+      <DropdownItem
+        v-if="isDeletable"
+        :aria-label="
+          $str(
+            'delete_notification_name',
+            'totara_notification',
+            preferenceTitle
+          )
+        "
+        @click="$emit('delete-notification')"
+      >
         <!-- Delete the notification -->
         {{ $str('delete', 'core') }}
       </DropdownItem>
@@ -60,17 +63,14 @@ import Dropdown from 'tui/components/dropdown/Dropdown';
 import ButtonIcon from 'tui/components/buttons/ButtonIcon';
 import MoreIcon from 'tui/components/buttons/MoreIcon';
 import DropdownItem from 'tui/components/dropdown/DropdownItem';
-import EditIcon from 'tui/components/icons/Edit';
 
 export default {
   components: {
     Dropdown,
     ButtonIcon,
     MoreIcon,
-    EditIcon,
     DropdownItem,
   },
-
   props: {
     preferenceTitle: {
       type: String,
@@ -92,7 +92,7 @@ export default {
     ],
     "totara_notification": [
       "edit_notification_name",
-      "more_actions_for"
+      "actions_for"
     ]
   }
 </lang-strings>

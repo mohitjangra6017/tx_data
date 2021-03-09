@@ -12,10 +12,12 @@ Feature: Course notifications node
     When I navigate to "Notifications" node in "Course administration"
     Then I should see "Notifications"
 
-    When I click on "Totara comment details" "button"
+    When I click on "Totara comment" "button"
     Then I should see "New comment created"
 
-    When I click on "Create notification" "button"
+    When I click on "Actions for New comment created event" "button"
+    Then I should see "Create notification"
+    And I click on "Create notification" "link"
     Then I should see "Create notification" in the ".tui-modalContent__header-title" "css_element"
 
     When I click on "Close" "button"
@@ -37,7 +39,9 @@ Feature: Course notifications node
     And I should see "Comment author"
 
     #Update custom notification
-    When I click on "Edit notification Test custom notification name" "button"
+    When I click on "Actions for Test custom notification name" "button"
+    Then I should see "Edit"
+    And I click on "Edit" "link"
     Then I should see "Edit notification"
 
     When I set the field "Name" to "New notification name"
@@ -50,18 +54,18 @@ Feature: Course notifications node
 
   Scenario: Course notification link can see based on user role and capability
     Given the following "users" exist:
-      | username | firstname | lastname | email |
-      | teacher1 | Teacher | 1 | teacher1@example.com |
-      | teacher2 | Teacher | 2 | teacher2@example.com |
-      | student1 | Student | 1 | student1@example.com |
+      | username | firstname | lastname | email                |
+      | teacher1 | Teacher   | 1        | teacher1@example.com |
+      | teacher2 | Teacher   | 2        | teacher2@example.com |
+      | student1 | Student   | 1        | student1@example.com |
     And the following "courses" exist:
       | fullname | shortname | format |
-      | Course 1 | C1 | topics |
+      | Course 1 | C1        | topics |
     And the following "course enrolments" exist:
-      | user | course | role |
-      | teacher1 | C1 | editingteacher |
-      | teacher2 | C1 | teacher |
-      | student1 | C1 | student |
+      | user     | course | role           |
+      | teacher1 | C1     | editingteacher |
+      | teacher2 | C1     | teacher        |
+      | student1 | C1     | student        |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
     When I navigate to "Notifications" node in "Course administration"
@@ -76,8 +80,8 @@ Feature: Course notifications node
     Then I should not see "Notifications"
     And I log out
     And the following "permission overrides" exist:
-      | capability                              | permission | role           | contextlevel | reference |
-      | totara/notification:managenotifications | Allow      | teacher        | System       |           |
+      | capability                              | permission | role    | contextlevel | reference |
+      | totara/notification:managenotifications | Allow      | teacher | System       |           |
     And I log in as "teacher2"
     And I am on "Course 1" course homepage
     When I navigate to "Notifications" node in "Course administration"

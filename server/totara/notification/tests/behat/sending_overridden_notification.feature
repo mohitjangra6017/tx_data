@@ -19,9 +19,11 @@ Feature: Sending overridden notification
   Scenario: Sending overridden built-in notification to user on created comment
     Given I log in as "admin"
     And I navigate to system notifications page
-    And I click on "Totara comment details" "button"
+    And I click on "Totara comment" "button"
     And I click on "New comment created details" "button"
-    And I click on "Edit notification Comment created" "button"
+    When I click on "Actions for Comment created" "button"
+    And I click on "Edit" "link"
+    # And I click on "Edit" "link" in the ".tui-dataTableRows .tui-dataTableRow:nth-of-type(2)" "css_element"
     Then the "Recipient" "field" should be disabled
 
     When I click on the "Enable customising field recipient" tui toggle button

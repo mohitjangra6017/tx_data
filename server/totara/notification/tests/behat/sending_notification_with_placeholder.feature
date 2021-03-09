@@ -19,9 +19,10 @@ Feature: Sending notification with placeholders
   Scenario: Sending overridden built-in notification to user on created comment with placeholder
     Given I log in as "admin"
     And I navigate to system notifications page
-    And I click on "Totara comment details" "button"
+    And I click on "Totara comment" "button"
     And I click on "New comment created details" "button"
-    And I click on "Edit notification Comment created" "button"
+    When I click on "Actions for Comment created" "button"
+    And I click on "Edit" "link"
     And I click on the "Enable customising field subject" tui toggle button
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to ""
     And I activate the weka editor with css ".tui-notificationPreferenceForm__subjectEditor"
@@ -46,7 +47,7 @@ Feature: Sending notification with placeholders
     And I should see "Item owner's Surname"
     And I should see "Item owner's Full name"
     When I click on "Item owner's Full name" "link"
-     # They are concatenated string with <span\> for the placeholder - hence this is the only to
+    # They are concatenated string with <span\> for the placeholder - hence this is the only to
     # check for the value in weka editor.
     Then I should see "Hello user " in the ".tui-notificationPreferenceForm__bodyEditor" "css_element"
     And I should see "Item owner's Full name" in the ".tui-notificationPreferenceForm__bodyEditor" "css_element"

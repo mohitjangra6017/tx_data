@@ -17,24 +17,15 @@
 -->
 <template>
   <div class="tui-notifiableEventAction">
-    <!-- Quick add button icon -->
-    <div>
-      <!-- This is to fix between block drop down. Which help to align buttons correctly. -->
-      <ButtonIcon
-        :styleclass="{ small: true, transparentNoPadding: true }"
-        :aria-label="$str('create_notification', 'totara_notification')"
-        @click="$emit('create-custom-notification')"
-      >
-        <AddIcon :size="300" />
-      </ButtonIcon>
-    </div>
     <!-- Drop down button -->
     <Dropdown>
       <template v-slot:trigger="{ toggle, isOpen }">
         <ButtonIcon
           :styleclass="{ small: true, transparentNoPadding: true }"
           :aria-expanded="isOpen ? 'true' : 'false'"
-          :aria-label="$str('more', 'core')"
+          :aria-label="
+            $str('actions_for_event', 'totara_notification', resolverName)
+          "
           @click="toggle"
         >
           <MoreIcon :size="300" />
@@ -75,7 +66,6 @@ import Dropdown from 'tui/components/dropdown/Dropdown';
 import DropdownItem from 'tui/components/dropdown/DropdownItem';
 import ButtonIcon from 'tui/components/buttons/ButtonIcon';
 import MoreIcon from 'tui/components/buttons/MoreIcon';
-import AddIcon from 'tui/components/icons/Add';
 
 export default {
   components: {
@@ -83,7 +73,6 @@ export default {
     Dropdown,
     ButtonIcon,
     MoreIcon,
-    AddIcon,
   },
 
   props: {
@@ -99,10 +88,8 @@ export default {
 
 <lang-strings>
   {
-    "core": [
-      "more"
-    ],
     "totara_notification": [
+      "actions_for_event",
       "create_notification",
       "create_notification_for_event",
       "delivery_preferences",
