@@ -17,13 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_notification\placeholder\option;
 
-class totara_notification_placeholder_option_testcase extends advanced_testcase {
+class totara_notification_placeholder_option_testcase extends testcase {
     /**
      * @return void
      */
@@ -32,7 +33,7 @@ class totara_notification_placeholder_option_testcase extends advanced_testcase 
             'sometext+',
             'sometext~',
             'text+x',
-            'bolobala:'
+            'bolobala:',
         ];
 
         foreach ($invalid_keys as $invalid_key) {
@@ -61,7 +62,7 @@ class totara_notification_placeholder_option_testcase extends advanced_testcase 
             'data_101:111_cc',
             'cc_11',
             '189u',
-            '1892:90_kp'
+            '1892:90_kp',
         ];
 
         foreach ($valid_keys as $valid_key) {

@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\loader\notification_preference_loader;
@@ -28,25 +29,25 @@ use totara_notification\model\notification_preference as model;
 use totara_notification\schedule\schedule_on_event;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\mutation\create_notification_preference;
+use totara_notification_mock_built_in_notification as mock_built_in;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-/**
- * @group totara_notification
- */
-class totara_notification_webapi_create_notification_preference_testcase extends advanced_testcase {
+class totara_notification_webapi_create_notification_preference_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**
      * @return void
      */
     protected function setUp(): void {
-        $generator = self::getDataGenerator();
+        $generator = generator::instance();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
-        $notification_generator->include_mock_notifiable_event();
-        $notification_generator->add_mock_built_in_notification_for_component();
-        $notification_generator->include_mock_recipient();
+        $generator->include_mock_notifiable_event_resolver();
+        $generator->include_mock_recipient();
+        $generator->include_mock_built_in_notification();
+
+        $generator->add_notifiable_event_resolver(mock_resolver::class);
+        $generator->add_mock_built_in_notification_for_component(mock_built_in::class);
     }
 
     /**
@@ -59,18 +60,17 @@ class totara_notification_webapi_create_notification_preference_testcase extends
 
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
-
-        $system_built_in = notification_preference_loader::get_built_in(
-            totara_notification_mock_built_in_notification::class
-        );
+        $system_built_in = notification_preference_loader::get_built_in(mock_built_in::class);
 
         /** @var model $notification_preference */
         $notification_preference = $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
                 'ancestor_id' => $system_built_in->get_id(),
-                'context_id' => context_course::instance($course->id)->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'extended_context' => [
+                    'context_id' => context_course::instance($course->id)->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
                 'body' => 'This is overridden body',
             ]
         );
@@ -104,17 +104,17 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $this->setUser($user_one);
 
         $course = $generator->create_course();
-        $system_built_in = notification_preference_loader::get_built_in(
-            totara_notification_mock_built_in_notification::class
-        );
+        $system_built_in = notification_preference_loader::get_built_in(mock_built_in::class);
 
         /** @var model $overridden_preference */
         $overridden_preference = $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
                 'ancestor_id' => $system_built_in->get_id(),
-                'context_id' => context_course::instance($course->id)->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'extended_context' => [
+                    'context_id' => context_course::instance($course->id)->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
                 'body' => 'This is overridden body',
             ]
         );
@@ -149,8 +149,10 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
-                'context_id' => context_course::instance($course->id)->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'extended_context' => [
+                    'context_id' => context_course::instance($course->id)->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'This is title',
                 'subject' => 'This is subject',
@@ -176,8 +178,10 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
-                'context_id' => context_course::instance($course->id)->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'extended_context' => [
+                    'context_id' => context_course::instance($course->id)->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
                 'body' => 'This is body',
                 'title' => 'This is title',
                 'subject' => 'This is subject',
@@ -203,8 +207,10 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
-                'context_id' => context_course::instance($course->id)->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'extended_context' => [
+                    'context_id' => context_course::instance($course->id)->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
                 'body' => 'This is body',
                 'body_format' => FORMAT_PLAIN,
                 'title' => 'This is title',
@@ -230,8 +236,10 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
-                'context_id' => context_course::instance($course->id)->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'extended_context' => [
+                    'context_id' => context_course::instance($course->id)->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
                 'body' => 'This is body',
                 'title' => 'This is title',
                 'body_format' => FORMAT_MOODLE,
@@ -257,8 +265,10 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
-                'context_id' => context_course::instance($course->id)->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'extended_context' => [
+                    'context_id' => context_course::instance($course->id)->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
                 'body' => 'This is body',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
@@ -283,8 +293,10 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $notification_preference = $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
-                'context_id' => context_system::instance()->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'extended_context' => [
+                    'context_id' => context_system::instance()->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
                 'body' => 'This is body',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_HTML,
@@ -292,7 +304,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'title' => 'This is title',
                 'schedule_type' => schedule_on_event::identifier(),
                 'schedule_offset' => 0,
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -315,16 +327,16 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $category_id = $DB->get_field('course_categories', 'id', ['issystem' => 0], MUST_EXIST);
         $context_category = context_coursecat::instance($category_id);
 
-        $system_built_in = notification_preference_loader::get_built_in(
-            totara_notification_mock_built_in_notification::class
-        );
+        $system_built_in = notification_preference_loader::get_built_in(mock_built_in::class);
 
         /** @var model $overridden_preference */
         $overridden_preference = $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
-                'context_id' => $context_category->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'extended_context' => [
+                    'context_id' => $context_category->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
                 'ancestor_id' => $system_built_in->get_id(),
             ]
         );
@@ -338,7 +350,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 entity::TABLE,
                 [
                     'context_id' => $context_category->id,
-                    'event_class_name' => totara_notification_mock_notifiable_event::class,
+                    'resolver_class_name' => mock_resolver::class,
                 ]
             )
         );
@@ -348,8 +360,10 @@ class totara_notification_webapi_create_notification_preference_testcase extends
             $this->resolve_graphql_mutation(
                 $this->get_graphql_name(create_notification_preference::class),
                 [
-                    'context_id' => $context_category->id,
-                    'event_class_name' => totara_notification_mock_notifiable_event::class,
+                    'extended_context' => [
+                        'context_id' => $context_category->id,
+                    ],
+                    'resolver_class_name' => mock_resolver::class,
                     'ancestor_id' => $system_built_in->get_id(),
                 ]
             );
@@ -379,7 +393,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 entity::TABLE,
                 [
                     'context_id' => $context_system->id,
-                    'notification_class_name' => totara_notification_mock_built_in_notification::class,
+                    'notification_class_name' => mock_built_in::class,
                 ]
             )
         );
@@ -388,8 +402,10 @@ class totara_notification_webapi_create_notification_preference_testcase extends
             $this->resolve_graphql_mutation(
                 $this->get_graphql_name(create_notification_preference::class),
                 [
-                    'context_id' => $context_system->id,
-                    'event_class_name' => totara_notification_mock_notifiable_event::class,
+                    'extended_context' => [
+                        'context_id' => $context_system->id,
+                    ],
+                    'resolver_class_name' => mock_resolver::class,
                     'ancestor_id' => 42,
                 ]
             );
@@ -412,16 +428,16 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
 
-        $system_built_in = notification_preference_loader::get_built_in(
-            totara_notification_mock_built_in_notification::class
-        );
+        $system_built_in = notification_preference_loader::get_built_in(mock_built_in::class);
 
         /** @var model $notification_preference */
         $notification_preference = $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
-                'context_id' => context_course::instance($course->id)->id,
-                'event_class_name' => '\\totara_notification_mock_notifiable_event',
+                'extended_context' => [
+                    'context_id' => context_course::instance($course->id)->id,
+                ],
+                'resolver_class_name' => '\\totara_notification_mock_notifiable_event_resolver',
                 'ancestor_id' => $system_built_in->get_id(),
                 'body' => 'Overridden body',
             ]
@@ -445,18 +461,20 @@ class totara_notification_webapi_create_notification_preference_testcase extends
     /**
      * @return void
      */
-    public function test_create_a_custom_notification_with_invalid_event_name(): void {
+    public function test_create_a_custom_notification_with_invalid_resolver_name(): void {
         $this->setAdminUser();
         $context = context_system::instance();
 
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("The event class name is not a notifiable event");
+        $this->expectExceptionMessage("The resolver class is not a notifiable event resolver");
 
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
-                'event_class_name' => 'hello_world',
-                'context_id' => $context->id,
+                'resolver_class_name' => 'hello_world',
+                'extended_context' => [
+                    'context_id' => $context->id,
+                ],
             ]
         );
     }
@@ -473,8 +491,10 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
-                'context_id' => context_system::instance()->id,
+                'extended_context' => [
+                    'context_id' => context_system::instance()->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
                 'body_format' => 42,
             ]
         );
@@ -492,8 +512,10 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
-                'context_id' => context_system::instance()->id,
+                'resolver_class_name' => mock_resolver::class,
+                'extended_context' => [
+                    'context_id' => context_system::instance()->id,
+                ],
                 'subject_format' => 42,
             ]
         );
@@ -514,10 +536,9 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $context_other_cat = context_coursecat::instance($other_category->id);
         $context_course = context_course::instance($misc_course->id);
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
         $custom_category = $notification_generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context($context_other_cat),
             ['recipient' => totara_notification_mock_recipient::class]
         );
@@ -531,8 +552,10 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
-                'context_id' => $context_course->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'extended_context' => [
+                    'context_id' => $context_course->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
                 'ancestor_id' => $custom_category->get_id(),
                 'body' => 'This is new body',
                 'subject' => 'This is new subject',
@@ -551,10 +574,9 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
         $system_custom = $notification_generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             ['recipient' => totara_notification_mock_recipient::class]
         );
@@ -578,11 +600,13 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
             [
-                'context_id' => $context_course->id,
+                'extended_context' => [
+                    'context_id' => $context_course->id,
+                ],
                 'ancestor_id' => $system_custom->get_id(),
                 'subject' => 'New Subject',
                 'body' => 'New body',
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'resolver_class_name' => mock_resolver::class,
                 'body_format' => FORMAT_MOODLE,
                 'subject_format' => FORMAT_PLAIN,
             ]

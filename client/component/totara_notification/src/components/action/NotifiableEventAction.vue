@@ -46,7 +46,7 @@
           $str(
             'create_notification_for_event',
             'totara_notification',
-            eventName
+            resolverName
           )
         "
         @click="$emit('create-custom-notification')"
@@ -74,7 +74,7 @@ export default {
   },
 
   props: {
-    eventName: {
+    resolverName: {
       type: String,
       required: true,
     },

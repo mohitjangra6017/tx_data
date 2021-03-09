@@ -28,14 +28,12 @@ use totara_notification\entity\notification_preference;
 use totara_notification\model\notification_preference_value as model;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\type\notification_preference_value;
-use totara_notification_mock_notifiable_event as mock_event;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 use totara_core\extended_context;
 use totara_webapi\phpunit\webapi_phpunit_helper;
+use core_phpunit\testcase;
 
-/**
- * @group totara_notification
- */
-class totara_notification_webapi_resolve_type_notification_preference_value_testcase extends advanced_testcase {
+class totara_notification_webapi_resolve_type_notification_preference_value_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**
@@ -49,11 +47,11 @@ class totara_notification_webapi_resolve_type_notification_preference_value_test
     protected function setUp(): void {
         /** @var generator $notification_generator */
         $notification_generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
-        $notification_generator->include_mock_notifiable_event();
+        $notification_generator->include_mock_notifiable_event_resolver();
         $notification_generator->include_mock_recipient();
 
         $custom_notification = $notification_generator->create_notification_preference(
-            mock_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'This is custom title',
@@ -150,14 +148,12 @@ class totara_notification_webapi_resolve_type_notification_preference_value_test
      */
     public function test_resolve_field_subject_with_format_json_editor_as_content_format_and_raw_as_format(): void {
         global $DB;
-
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
 
         // First we will create a preference record that has subject_format as FORMAT_PLAIN so that it will not get
         // to convert the subject into a json document content.
         $preference = $generator->create_notification_preference(
-            mock_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'subject_format' => FORMAT_PLAIN,
@@ -199,14 +195,12 @@ class totara_notification_webapi_resolve_type_notification_preference_value_test
      */
     public function test_resolve_field_body_with_format_json_editor_as_content_format_and_raw_as_format(): void {
         global $DB;
-
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
 
         // First we will create a preference record that has body_format as FORMAT_PLAIN so that it will not get
         // to convert the body into a json document content.
         $preference = $generator->create_notification_preference(
-            mock_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'body_format' => FORMAT_PLAIN,

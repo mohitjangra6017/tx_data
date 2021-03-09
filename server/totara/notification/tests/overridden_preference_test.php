@@ -17,28 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 
 use container_course\course;
+use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\testing\generator;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 
-/**
- * @group totara_notification
- */
-class totara_notification_overridden_preference_testcase extends advanced_testcase {
+class totara_notification_overridden_preference_testcase extends testcase {
     /**
      * @return void
      */
     public function test_get_inherit_of_system(): void {
-        $generator = self::getDataGenerator();
+        $notification_generator = generator::instance();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->include_mock_recipient();
         $notification_generator->include_mock_owner();
         $notification_generator->add_mock_built_in_notification_for_component();
@@ -78,17 +75,15 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
      */
     public function test_overridden_from_custom_with_two_level(): void {
         global $DB;
-        $generator = self::getDataGenerator();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
         $notification_generator->include_mock_notifiable_event();
         $notification_generator->include_mock_recipient();
         $notification_generator->include_mock_owner();
 
         // Create the top level custom.
         $first_custom = $notification_generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'System body',
@@ -149,9 +144,8 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
      */
     public function test_overridden_from_built_in_with_three_level(): void {
         $generator = self::getDataGenerator();
+        $notification_generator = generator::instance();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
         $notification_generator->include_mock_recipient();
         $notification_generator->include_mock_owner();
@@ -168,7 +162,7 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
             $extended_context_category,
             [
                 'body' => 'Category body',
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -180,7 +174,7 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
             $extended_context_course,
             [
                 'subject' => 'Course subject',
-                'recipient' => totara_notification_mock_owner::class
+                'recipient' => totara_notification_mock_owner::class,
             ]
         );
 

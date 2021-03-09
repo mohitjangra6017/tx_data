@@ -14,11 +14,12 @@ query totara_notification_notification_preference($id: param_integer!) {
     overridden_subject
     overridden_recipient
     title
-    event_name
-    event_class_name
+    resolver_class_name
+    resolver_name
+    resolver_component
     is_custom
     parent_id
-    schedule_offset
+    schedule_offset(unit: DAY)
     schedule_type
     schedule_label
     overridden_schedule
@@ -26,7 +27,6 @@ query totara_notification_notification_preference($id: param_integer!) {
       class_name
       name
     }
-    component
     extended_context {
       component
       context_id
@@ -39,7 +39,7 @@ query totara_notification_notification_preference($id: param_integer!) {
       body(format: RAW)
       body_format
       title
-      schedule_offset
+      schedule_offset(unit: DAY)
       schedule_type
       subject_format
       recipient {

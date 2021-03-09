@@ -21,14 +21,12 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\entity\notification_queue;
 use totara_notification\testing\generator;
 
-/**
- * @group totara_notification
- */
-class totara_notification_notification_queue_repository_testcase extends advanced_testcase {
+class totara_notification_notification_queue_repository_testcase extends testcase {
     /**
      * @return void
      */

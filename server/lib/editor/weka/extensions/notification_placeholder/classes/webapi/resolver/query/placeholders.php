@@ -27,9 +27,9 @@ use core\webapi\execution_context;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
-use totara_notification\event\notifiable_event;
 use totara_notification\placeholder\placeholder_option;
-use totara_notification\webapi\middleware\validate_event_class_name;
+use totara_notification\resolver\notifiable_event_resolver;
+use totara_notification\webapi\middleware\validate_resolver_class_name;
 
 /**
  * A resolver for query weka_notification_placeholder_placeholders
@@ -46,16 +46,15 @@ class placeholders implements query_resolver, has_middleware {
             $ec->set_relevant_context($context);
         }
 
-        $event_class_name = $args['event_class_name'];
-
         // Empty string pattern will yield the whole list of available placeholders.
         $pattern = $args['pattern'] ?? '';
+        $resolver_class_name = $args['resolver_class_name'];
 
         /**
-         * @see notifiable_event::get_notification_available_placeholder_options()
+         * @see notifiable_event_resolver::get_notification_available_placeholder_options()
          * @var placeholder_option[] $placeholder_options
          */
-        $placeholder_options = call_user_func([$event_class_name, 'get_notification_available_placeholder_options']);
+        $placeholder_options = call_user_func([$resolver_class_name, 'get_notification_available_placeholder_options']);
         $options = [];
 
         foreach ($placeholder_options as $placeholder_option) {
@@ -72,7 +71,7 @@ class placeholders implements query_resolver, has_middleware {
     public static function get_middleware(): array {
         return [
             new require_login(),
-            new validate_event_class_name('event_class_name', true)
+            new validate_resolver_class_name('resolver_class_name', true)
         ];
     }
 }

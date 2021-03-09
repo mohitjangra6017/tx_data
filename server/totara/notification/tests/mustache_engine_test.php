@@ -21,23 +21,23 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
+use totara_notification\placeholder\option;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\placeholder\template_engine\mustache\engine as mustache_engine;
 use totara_notification\testing\generator;
 use totara_notification_mock_collection_placeholder as collection_placeholder;
 use totara_notification_mock_invalid_placeholder as invalid_placeholder;
-use totara_notification_mock_notifiable_event as mock_event;
+use totara_notification_mock_notifiable_event_resolver as mock_event_resolver;
 use totara_notification_mock_single_placeholder as single_placeholder;
-use totara_notification\placeholder\option;
 
-class totara_notification_mustache_engine_testcase extends advanced_testcase {
+class totara_notification_mustache_engine_testcase extends testcase {
     /**
      * @return void
      */
     protected function setUp(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
-        $generator->include_mock_notifiable_event();
+        $generator = generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
     }
 
     /**
@@ -50,9 +50,7 @@ class totara_notification_mustache_engine_testcase extends advanced_testcase {
         $user = $generator->create_user();
         $user->fullname = fullname($user);
 
-
-        /** @var generator $notification_generator */
-        $notification_generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
         $notification_generator->include_mock_single_placeholder();
 
         single_placeholder::add_options(
@@ -62,7 +60,7 @@ class totara_notification_mustache_engine_testcase extends advanced_testcase {
             option::create('email', 'Email'),
         );
 
-        mock_event::add_placeholder_options(
+        mock_event_resolver::add_placeholder_options(
             placeholder_option::create(
                 'user',
                 single_placeholder::class,
@@ -74,7 +72,7 @@ class totara_notification_mustache_engine_testcase extends advanced_testcase {
         );
 
         $user_data = get_object_vars($user);
-        $engine = mustache_engine::create(mock_event::class, $user_data);
+        $engine = mustache_engine::create(mock_event_resolver::class, $user_data);
 
         // Normal rendering - this is the main behaviour from content parsing, which we are expecting
         // the content to be something like this.
@@ -101,21 +99,18 @@ class totara_notification_mustache_engine_testcase extends advanced_testcase {
      */
     public function test_instantiate_invalid_instance(): void {
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("The event class name is not a valid notifiable event");
-        $engine = mustache_engine::create('invalid_class', []);
+        $this->expectExceptionMessage("The resolver class is not a valid notifiable event resolver");
+        mustache_engine::create('invalid_class', []);
     }
 
     /**
      * @return void
      */
     public function test_rendering_invalid_placeholder(): void {
-        $generator = self::getDataGenerator();
-
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
         $notification_generator->include_mock_invalid_placeholder();
 
-        mock_event::add_placeholder_options(
+        mock_event_resolver::add_placeholder_options(
             placeholder_option::create(
                 'random',
                 invalid_placeholder::class,
@@ -126,7 +121,7 @@ class totara_notification_mustache_engine_testcase extends advanced_testcase {
             )
         );
 
-        $engine = mustache_engine::create(mock_event::class, []);
+        $engine = mustache_engine::create(mock_event_resolver::class, []);
 
         // We still able to render the content. However since the context variables are
         // not provided by placeholder (AKA invalid_placeholder) - then debugging is called.
@@ -150,11 +145,10 @@ class totara_notification_mustache_engine_testcase extends advanced_testcase {
         $user_two = $generator->create_user();
         $user_two->fullname = fullname($user_two);
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
         $notification_generator->include_mock_collection_placeholder();
 
-        mock_event::add_placeholder_options(
+        mock_event_resolver::add_placeholder_options(
             placeholder_option::create(
                 'users',
                 collection_placeholder::class,
@@ -175,10 +169,10 @@ class totara_notification_mustache_engine_testcase extends advanced_testcase {
         );
 
         $engine = mustache_engine::create(
-            mock_event::class,
+            mock_event_resolver::class,
             [
                 'user_one' => $user_one->id,
-                'user_two' => $user_two->id
+                'user_two' => $user_two->id,
             ]
         );
 

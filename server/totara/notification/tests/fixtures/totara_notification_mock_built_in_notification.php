@@ -17,11 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 
-use totara_notification\model\notification_preference;
 use totara_notification\notification\built_in_notification;
 use totara_notification\schedule\schedule_on_event;
 
@@ -49,15 +48,16 @@ class totara_notification_mock_built_in_notification extends built_in_notificati
     /**
      * @return string
      */
-    public static function get_event_class_name(): string {
+    public static function get_resolver_class_name(): string {
         global $CFG;
-        $event_class = totara_notification_mock_notifiable_event::class;
 
-        if (!class_exists($event_class)) {
-            require_once("{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event.php");
+        if (!class_exists('totara_notification_mock_notifiable_event_resolver')) {
+            require_once(
+            "{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event_resolver.php"
+            );
         }
 
-        return totara_notification_mock_notifiable_event::class;
+        return totara_notification_mock_notifiable_event_resolver::class;
     }
 
     /**

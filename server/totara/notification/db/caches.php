@@ -17,22 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
- * @package core
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @package totara_notification
  */
-namespace core\event\abstraction;
+defined('MOODLE_INTERNAL') || die();
 
-use context;
-
-/**
- * A core abstraction interface which is mainly used for event.
- *
- * @since Totara 14.0
- */
-interface context_aware {
-    /**
-     * Returning the context of an event.
-     * @return context
-     */
-    public function get_context();
-}
+$definitions = [
+    'notifiable_resolver_map' => [
+        'mode' => cache_store::MODE_REQUEST,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'staticacceleration' => false
+    ]
+];

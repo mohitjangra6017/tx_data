@@ -1,14 +1,8 @@
-query totara_notification_notifiable_events(
-  $context_id: param_integer!
-  $component: param_component
-  $area: param_text
-  $item_id: param_integer
+query totara_notification_event_resolvers(
+  $extended_context: totara_notification_extended_context_input!
 ) {
-  notifiable_events: totara_notification_notifiable_events(
-    context_id: $context_id
-    component: $component
-    area: $area
-    item_id: $item_id
+  resolvers: totara_notification_event_resolvers(
+    extended_context: $extended_context
   ) {
     __typename
     class_name
@@ -19,12 +13,7 @@ query totara_notification_notifiable_events(
       class_name
       name
     }
-    notification_preferences(
-      context_id: $context_id
-      component: $component
-      area: $area
-      item_id: $item_id
-    ) {
+    notification_preferences(extended_context: $extended_context) {
       __typename
       title
       id
@@ -37,11 +26,12 @@ query totara_notification_notifiable_events(
       overridden_subject
       overridden_recipient
       title
-      event_name
-      event_class_name
+      resolver_class_name
+      resolver_name
+      resolver_component
       is_custom
       parent_id
-      schedule_offset
+      schedule_offset(unit: DAY)
       schedule_type
       schedule_label
       overridden_schedule
@@ -49,7 +39,6 @@ query totara_notification_notifiable_events(
         class_name
         name
       }
-      component
       extended_context {
         component
         context_id
@@ -62,7 +51,7 @@ query totara_notification_notifiable_events(
         body(format: RAW)
         body_format
         title
-        schedule_offset
+        schedule_offset(unit: DAY)
         schedule_type
         subject_format
         recipient {

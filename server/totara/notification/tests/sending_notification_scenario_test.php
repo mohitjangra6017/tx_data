@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_preference;
@@ -32,17 +33,15 @@ use totara_notification\observer\notifiable_event_observer;
 use totara_notification\testing\generator;
 use totara_notification_mock_built_in_notification as mock_built_in;
 use totara_notification_mock_notifiable_event as mock_event;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 
-/**
- * @group totara_notification
- */
-class totara_notification_sending_notification_scenario_testcase extends advanced_testcase {
+class totara_notification_sending_notification_scenario_testcase extends testcase {
     /**
      * @return void
      */
     protected function setUp(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
         $generator->include_mock_notifiable_event();
         $generator->include_mock_recipient();
     }
@@ -69,8 +68,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $user_one = $generator->create_user();
         $course = $generator->create_course();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
         $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
 
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
@@ -120,12 +118,11 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $user_one = $generator->create_user();
         $course = $generator->create_course();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
         $system_custom = $notification_generator->create_notification_preference(
-            mock_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'System custom',
@@ -385,7 +382,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
         $system_custom = $notification_generator->create_notification_preference(
-            mock_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'subject' => 'System custom subject',
@@ -562,7 +559,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
         $course_one_custom = $notification_generator->create_notification_preference(
-            mock_event::class,
+            mock_resolver::class,
             extended_context::make_with_context($context_course_one),
             [
                 'subject' => 'Course one subject',
@@ -575,7 +572,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         );
 
         $course_two_custom = $notification_generator->create_notification_preference(
-            mock_event::class,
+            mock_resolver::class,
             extended_context::make_with_context($context_course_two),
             [
                 'subject' => 'Course two subject',
@@ -650,7 +647,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
         $course_one_custom = $notification_generator->create_notification_preference(
-            mock_event::class,
+            mock_resolver::class,
             extended_context::make_with_context($context_course_one),
             [
                 'subject' => 'Course one subject',

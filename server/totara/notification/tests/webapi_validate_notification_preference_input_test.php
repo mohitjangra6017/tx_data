@@ -21,16 +21,14 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_notification\schedule\schedule_after_event;
 use totara_notification\schedule\schedule_before_event;
 use totara_notification\schedule\schedule_on_event;
-use totara_webapi\phpunit\webapi_phpunit_helper;
 use totara_notification\webapi\resolver\mutation\validate_notification_preference_input;
+use totara_webapi\phpunit\webapi_phpunit_helper;
 
-/**
- * @group totara_notification
- */
-class totara_notification_webapi_validate_notification_preference_input_testcase extends advanced_testcase {
+class totara_notification_webapi_validate_notification_preference_input_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**

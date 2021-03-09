@@ -23,15 +23,13 @@
 
 namespace totara_notification\schedule;
 
+use coding_exception;
+use totara_notification\local\schedule_helper;
+
 /**
  * Represents notifications that can be delayed and scheduled after a particular event.
  */
 class schedule_after_event implements notification_schedule {
-    /**
-     * Number of seconds in a day
-     */
-    const SECONDS_IN_DAYS = 86400;
-
     /**
      * Maximum number of days available for offsets
      */
@@ -41,15 +39,15 @@ class schedule_after_event implements notification_schedule {
      * Calculate the timestamp based on the number of days provided.
      *
      * @param int $event_timestamp
-     * @param int $offset
+     * @param int $offset           The timestamp in seconds unit.
      * @return int
      */
     public static function calculate_timestamp(int $event_timestamp, int $offset): int {
         if ($offset <= 0) {
-            throw new \coding_exception('Schedule after event must have a offset greater than zero');
+            throw new coding_exception('Schedule after event must have a offset greater than zero');
         }
 
-        return $event_timestamp + (self::SECONDS_IN_DAYS * $offset);
+        return $event_timestamp + $offset;
     }
 
     /**
@@ -57,6 +55,9 @@ class schedule_after_event implements notification_schedule {
      * @return string
      */
     public static function get_label(int $offset): string {
+        // Convert it to days, as the offset is stored under seconds unit.
+        $offset = (int) ($offset / DAYSECS);
+
         if ($offset === 1) {
             return get_string('schedule_label_after_event_singular', 'totara_notification', $offset);
         }
@@ -76,9 +77,10 @@ class schedule_after_event implements notification_schedule {
      */
     public static function default_value(?int $days_offset = null): int {
         if ($days_offset === null || $days_offset <= 0) {
-            throw new \coding_exception('Schedule After Event must have had a days_offset provided');
+            throw new coding_exception('Schedule After Event must have had a days_offset provided');
         }
-        return $days_offset;
+
+        return schedule_helper::days_to_seconds($days_offset);
     }
 
     /**

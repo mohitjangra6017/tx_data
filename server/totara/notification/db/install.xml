@@ -14,7 +14,6 @@
         <FIELD NAME="area" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The area property of the extended context"/>
         <FIELD NAME="item_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The item_id property of the extended context"/>
         <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="event_time" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Base time any schedules are calculated from. Defaults to the time_created if not specified."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -22,7 +21,6 @@
       </KEYS>
       <INDEXES>
         <INDEX NAME="event_name_index" UNIQUE="false" FIELDS="event_name"/>
-        <INDEX NAME="event_time_index" UNIQUE="false" FIELDS="event_time"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="notification_queue" COMMENT="A table to queue all the notifications to be sending out to the outputs">
@@ -47,7 +45,7 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="ancestor_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="This is to keep track of the original notification (built-in or custom) which is being overridden. Note that intermediate overrides may exist."/>
-        <FIELD NAME="event_class_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The notifiable event class name"/>
+        <FIELD NAME="resolver_class_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The notifiable event resolver class name"/>
         <FIELD NAME="notification_class_name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The notification class name. If it is null, then it is a custom notification"/>
         <FIELD NAME="context_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The real context id component of the extended context of where the event occurred"/>
         <FIELD NAME="component" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The component property of the extended context"/>
@@ -60,14 +58,14 @@
         <FIELD NAME="body" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a custom notification then it is required, otherwise null to fallback to the default defined in ancestor notification"/>
         <FIELD NAME="body_format" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The format text of a body"/>
         <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="schedule_offset" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="Offset in days. Negative = before event, Positive = after event, 0 = on event. Null = inherit from parent."/>
+        <FIELD NAME="schedule_offset" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Offset in seconds. Negative = before event, Positive = after event, 0 = on event. Null = inherit from parent."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="context_id_key" TYPE="foreign" FIELDS="context_id" REFTABLE="context" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="event_class_name_index" UNIQUE="false" FIELDS="event_class_name"/>
+        <INDEX NAME="resolver_class_name_index" UNIQUE="false" FIELDS="resolver_class_name"/>
         <INDEX NAME="notification_class_name_index" UNIQUE="false" FIELDS="notification_class_name"/>
         <INDEX NAME="title_index" UNIQUE="false" FIELDS="title"/>
       </INDEXES>

@@ -19,7 +19,7 @@
 <template>
   <div class="tui-notificationTable">
     <Table
-      :data="notifiableEvents"
+      :data="eventResolvers"
       :expandable-rows="true"
       :expand-multiple-rows="true"
       :hover-off="true"
@@ -41,7 +41,7 @@
 
       <template v-slot:expand-content="{ row }">
         <Table
-          :data="row.events"
+          :data="row.resolvers"
           :expandable-rows="true"
           :expand-multiple-rows="true"
           :border-top-hidden="true"
@@ -65,16 +65,16 @@
               </span>
             </HeaderCell>
           </template>
-          <template v-slot:row="{ expand, expandState, row: notifiableEvent }">
+          <template v-slot:row="{ expand, expandState, row: resolver }">
             <ExpandCell
-              v-if="notifiableEvent.notification_preferences.length"
-              :aria-label="notifiableEvent.name"
+              v-if="resolver.notification_preferences.length"
+              :aria-label="resolver.name"
               :expand-state="expandState"
               @click="expand()"
             />
             <Cell v-else />
             <Cell>
-              {{ notifiableEvent.name }}
+              {{ resolver.name }}
             </Cell>
             <Cell>
               {{ $str('delivery_channels', 'totara_notification') }}
@@ -85,21 +85,21 @@
             </Cell>
             <Cell align="end">
               <NotifiableEventAction
-                :event-name="notifiableEvent.name"
+                :resolver-name="resolver.name"
                 @create-custom-notification="
                   $emit('create-custom-notification', {
-                    eventClassName: notifiableEvent.class_name,
-                    scheduleTypes: notifiableEvent.valid_schedules,
-                    recipients: notifiableEvent.recipients,
+                    resolverClassName: resolver.class_name,
+                    scheduleTypes: resolver.valid_schedules,
+                    recipients: resolver.recipients,
                   })
                 "
               />
             </Cell>
           </template>
 
-          <template v-slot:expand-content="{ row: notifiableEvent }">
+          <template v-slot:expand-content="{ row: resolver }">
             <Table
-              :data="notifiableEvent.notification_preferences"
+              :data="resolver.notification_preferences"
               :expandable-rows="false"
               :expand-multiple-rows="true"
               :border-top-hidden="true"
@@ -154,8 +154,8 @@
                       $emit(
                         'edit-notification',
                         notificationPreference,
-                        notifiableEvent.valid_schedules,
-                        notifiableEvent.recipients
+                        resolver.valid_schedules,
+                        resolver.recipients
                       )
                     "
                     @delete-notification="
@@ -196,14 +196,14 @@ export default {
       required: true,
     },
 
-    notifiableEvents: {
+    eventResolvers: {
       type: Array,
       default: () => [],
       validator(prop) {
         return prop.every(preference => {
           return (
             'component' in preference &&
-            'events' in preference &&
+            'resolvers' in preference &&
             'recipients' in preference &&
             'plugin_name' in preference
           );

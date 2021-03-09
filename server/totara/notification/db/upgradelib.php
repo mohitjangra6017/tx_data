@@ -38,7 +38,7 @@ use totara_notification\notification\built_in_notification;
  * sync up with the database.
  *
  * Here are the list of static function that we are trying to invoke:
- * + @see built_in_notification::get_event_class_name()
+ * + @see built_in_notification::get_resolver_class_name()
  *
  * Note: PLEASE DO NOT DELETE THIS FUNCTION EVEN WHEN IT IS NOT USED IN upgrade.php FILE !!!
  *
@@ -57,10 +57,10 @@ function totara_notification_sync_built_in_notification(?string $component = nul
     }
 
     foreach ($notification_classes as $notification_class) {
-        $event_name = call_user_func([$notification_class, 'get_event_class_name']);
+        $resolver_class_name = call_user_func([$notification_class, 'get_resolver_class_name']);
         $search_params = [
             'context_id' => $context_system->id,
-            'event_class_name' => $event_name,
+            'resolver_class_name' => $resolver_class_name,
             'notification_class_name' => $notification_class,
         ];
 
@@ -70,7 +70,7 @@ function totara_notification_sync_built_in_notification(?string $component = nul
         }
 
         $record = new stdClass();
-        $record->event_class_name = $event_name;
+        $record->resolver_class_name = $resolver_class_name;
         $record->context_id = $context_system->id;
         $record->component = extended_context::NATURAL_CONTEXT_COMPONENT;
         $record->area = extended_context::NATURAL_CONTEXT_AREA;

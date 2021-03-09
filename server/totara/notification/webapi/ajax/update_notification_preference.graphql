@@ -32,11 +32,12 @@ mutation totara_notification_update_notification_preference(
     overridden_subject
     overridden_recipient
     title
-    event_name
-    event_class_name
+    resolver_class_name
+    resolver_name
+    resolver_component
     is_custom
     parent_id
-    schedule_offset
+    schedule_offset(unit: DAY)
     schedule_type
     schedule_label
     overridden_schedule
@@ -44,7 +45,6 @@ mutation totara_notification_update_notification_preference(
       class_name
       name
     }
-    component
     extended_context {
       component
       context_id
@@ -57,7 +57,7 @@ mutation totara_notification_update_notification_preference(
       body(format: RAW)
       body_format
       title
-      schedule_offset
+      schedule_offset(unit: DAY)
       schedule_type
       subject_format
       recipient {

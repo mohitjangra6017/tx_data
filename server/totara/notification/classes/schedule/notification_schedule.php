@@ -41,6 +41,7 @@ interface notification_schedule {
 
     /**
      * Return the specific human-readable label for the specific schedule instance.
+     * Note that the $offset is in seconds unit.
      *
      * @param int $offset
      * @return string

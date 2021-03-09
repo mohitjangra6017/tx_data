@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\entity\notification_preference;
 use totara_notification\entity\notification_queue;
@@ -31,10 +32,8 @@ use totara_notification\testing\generator;
 
 /**
  * This tes is indirectly cover {@see notification_queue_manager}
- *
- * @group totara_notification
  */
-class totara_notification_process_notification_queue_task_testcase extends advanced_testcase {
+class totara_notification_process_notification_queue_task_testcase extends testcase {
     /**
      * @return void
      */

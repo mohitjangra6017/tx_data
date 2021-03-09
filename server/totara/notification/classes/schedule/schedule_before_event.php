@@ -23,15 +23,13 @@
 
 namespace totara_notification\schedule;
 
+use coding_exception;
+use totara_notification\local\schedule_helper;
+
 /**
  * Represents notifications that can be delayed and scheduled after a particular event.
  */
 class schedule_before_event implements notification_schedule {
-    /**
-     * Number of seconds in a day
-     */
-    const SECONDS_IN_DAYS = 86400;
-
     /**
      * Maximum number of days available for offsets
      */
@@ -42,15 +40,15 @@ class schedule_before_event implements notification_schedule {
      * The expectation here is the $offset is a negative value, but is intentionally not checked for.
      *
      * @param int $event_timestamp
-     * @param int $offset
+     * @param int $offset The offset time in seconds unit.
      * @return int
      */
     public static function calculate_timestamp(int $event_timestamp, int $offset): int {
         if ($offset >= 0) {
-            throw new \coding_exception('Schedule before event must have a negative offset');
+            throw new coding_exception('Schedule before event must have a negative offset');
         }
 
-        return $event_timestamp + (self::SECONDS_IN_DAYS * $offset);
+        return $event_timestamp + $offset;
     }
 
     /**
@@ -59,9 +57,11 @@ class schedule_before_event implements notification_schedule {
      */
     public static function get_label(int $offset): string {
         // Before event will have a negative offset, we need to make it positive for display.
-        if ($offset < 0) {
-            $offset *= -1;
-        }
+        $offset = abs($offset);
+
+        // Convert it to days, as the unit is seconds.
+        $offset = (int) ($offset / DAYSECS);
+
         if ($offset === 1) {
             return get_string('schedule_label_before_event_singular', 'totara_notification', $offset);
         }
@@ -82,8 +82,11 @@ class schedule_before_event implements notification_schedule {
      */
     public static function default_value(?int $days_offset = null): int {
         if ($days_offset === null || $days_offset <= 0) {
-            throw new \coding_exception('Schedule Before Event must have had a days_offset provided');
+            throw new coding_exception('Schedule Before Event must have had a days_offset provided');
         }
+
+        $days_offset = schedule_helper::days_to_seconds($days_offset);
+
         // Must be a negative value
         return $days_offset * -1;
     }
@@ -91,7 +94,7 @@ class schedule_before_event implements notification_schedule {
     /**
      * Validate the provided offset. Returns a simple true or false message.
      *
-     * @param int|null $offset
+     * @param int|null $offset  The value is in days unit.
      * @return bool
      */
     public static function validate_offset(?int $offset = null): bool {

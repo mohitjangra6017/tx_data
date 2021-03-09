@@ -24,18 +24,10 @@ namespace totara_comment\event;
 
 use core\event\base;
 use core_ml\event\interaction_event;
-use lang_string;
 use totara_comment\comment;
 use totara_comment\entity\comment as entity;
-use totara_comment\resolver_factory;
-use totara_comment\totara_notification\recipient\comment_author;
-use totara_comment\totara_notification\recipient\owner;
-use totara_core\extended_context;
 use totara_notification\event\notifiable_event;
-use totara_notification\placeholder\placeholder_option;
-use core_user\totara_notification\placeholder\user;
-use totara_notification\schedule\schedule_after_event;
-use totara_notification\schedule\schedule_on_event;
+use totara_core\extended_context;
 
 /**
  * Class comment_created
@@ -150,73 +142,5 @@ final class comment_created extends base implements interaction_event, notifiabl
      */
     public function get_notification_extended_context(): extended_context {
         return extended_context::make_with_context($this->get_context());
-    }
-
-    /**
-     * @return string
-     */
-    public static function get_notification_title(): string {
-        return get_string('notification_comment_created', 'totara_comment');
-    }
-
-    /**
-     * @return array
-     */
-    public static function get_notification_available_recipients(): array {
-        return [
-            comment_author::class,
-            owner::class,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public static function get_notification_available_schedules(): array {
-        return [
-            schedule_on_event::class,
-            schedule_after_event::class,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public static function get_notification_default_delivery_channels(): array {
-        return [];
-    }
-
-    /**
-     * @return placeholder_option[]
-     */
-    public static function get_notification_available_placeholder_options(): array {
-        return [
-            placeholder_option::create(
-                'item_owner',
-                user::class,
-                new lang_string('item_owner_placeholder_group', 'totara_comment'),
-                function (array $event_data): user {
-                    $comment = comment::from_id($event_data['comment_id']);
-                    $resolver = resolver_factory::create_resolver($comment->get_component());
-
-                    $owner_id = $resolver->get_owner_id_from_instance(
-                        $comment->get_area(),
-                        $comment->get_instanceid()
-                    );
-
-                    return user::from_id($owner_id);
-                }
-            ),
-
-            placeholder_option::create(
-                'commenter',
-                user::class,
-                new lang_string('commenter_placeholder_group', 'totara_comment'),
-                function (array $event_data): user {
-                    $comment = comment::from_id($event_data['comment_id']);
-                    return user::from_id($comment->get_userid());
-                }
-            )
-        ];
     }
 }

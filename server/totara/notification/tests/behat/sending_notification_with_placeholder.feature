@@ -1,5 +1,6 @@
 @totara @totara_notification @javascript @vuejs @engage_article
 Feature: Sending notification with placeholders
+
   Background:
     Given I log in as "admin"
     And the following "users" exist:

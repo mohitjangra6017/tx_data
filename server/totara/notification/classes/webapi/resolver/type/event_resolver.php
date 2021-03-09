@@ -30,14 +30,15 @@ use totara_core\extended_context;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\helper;
 use totara_notification\local\schedule_helper;
+use totara_notification\resolver\resolver_helper;
 
 /**
- * Type resolver for totara_notification_notifiable_event.
+ * Type resolver for totara_notification_event_resolver.
  */
-class notifiable_event implements type_resolver {
+class event_resolver implements type_resolver {
     /**
      * Note that at this point we are going to use $source as the notifiable event class name
-     * to resolve the field's value of a totara_notification_notifiable_event graphql type.
+     * to resolve the field's value of a totara_notification_event_resolver graphql type.
      *
      * Ideally the $source should be a model of notifiable_event, however it had not  yet
      * been implemented and will be done in TL-29288 & TL-29289
@@ -49,42 +50,45 @@ class notifiable_event implements type_resolver {
      * @return mixed|null
      */
     public static function resolve(string $field, $source, array $args, execution_context $ec) {
-        if (!is_string($source) || !helper::is_valid_notifiable_event($source)) {
+        if (!is_string($source) || !resolver_helper::is_valid_event_resolver($source)) {
             throw new coding_exception("Invalid source passed to the resolver");
         }
 
         switch ($field) {
             case 'component':
-                return helper::get_component_of_event_class_name($source);
+                return resolver_helper::get_component_of_resolver_class_name($source);
 
             case 'plugin_name':
-                return helper::get_human_readable_plugin_name($source);
+                return resolver_helper::get_human_readable_plugin_name($source);
 
             case 'class_name':
                 return (string) $source;
 
             case 'name':
-                return helper::get_human_readable_event_name($source);
+                return resolver_helper::get_human_readable_resolver_name($source);
 
             case 'notification_preferences':
-                if (isset($args['context_id'])) {
-                    $context_id = $args['context_id'];
-                } else if (isset($ec->get_relevant_context()->id)) {
-                    $context_id = $ec->get_relevant_context()->id;
-                } else {
-                    $context_id = context_system::instance()->id;
+                $extended_context_args = $args['extended_context'] ?? [];
+
+                // Default extended context.
+                $extended_context = extended_context::make_system();
+
+                if (isset($extended_context_args['context_id'])) {
+                    $extended_context = extended_context::make_with_id(
+                        $extended_context_args['context_id'],
+                        $extended_context_args['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
+                        $extended_context_args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
+                        $extended_context_args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
+                    );
+                } else if ($ec->has_relevant_context()) {
+                    $context = $ec->get_relevant_context();
+                    $extended_context = extended_context::make_with_context($context);
                 }
 
-                $extended_context = extended_context::make_with_id(
-                    $context_id,
-                    $args['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
-                    $args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
-                    $args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
-                );
                 return notification_preference_loader::get_notification_preferences($extended_context, $source);
 
             case 'valid_schedules':
-                return schedule_helper::get_available_schedules_for_event($source);
+                return schedule_helper::get_available_schedules_for_resolver($source);
 
             case 'recipients':
                 return helper::get_component_of_recipients($source);

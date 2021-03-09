@@ -21,41 +21,48 @@
  * @author  Nathan Lewis <nathan.lewis@totaralearning.com>
  * @package totara_core
  */
-
 namespace totara_core;
 
+use coding_exception;
 use context;
+use context_system;
 use totara_core\identifier\component_area;
 use totara_core\identifier\instance_identifier;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Convenience class to hold a Totara component, item and context combination.
  */
 final class extended_context {
+    /**
+     * Empty component for natural context.
+     * @var string
+     */
+    public const NATURAL_CONTEXT_COMPONENT = '';
 
-    const NATURAL_CONTEXT_COMPONENT = '';
-    const NATURAL_CONTEXT_AREA = '';
-    const NATURAL_CONTEXT_ITEM_ID = 0;
+    /**
+     * Empty area for natural context.
+     * @var string
+     */
+    public const NATURAL_CONTEXT_AREA = '';
+
+    /**
+     * Empty item's id for natural context.
+     * @var int
+     */
+    public const NATURAL_CONTEXT_ITEM_ID = 0;
 
     /**
      * @var instance_identifier
      */
-    private $identifier = null;
-
-    /**
-     * @var context
-     */
-    private $context = null;
+    private $identifier;
 
     /**
      * Factory method to create an instance.
      *
      * @param context $context
-     * @param string $component
-     * @param string $area
-     * @param int $item_id
+     * @param string  $component
+     * @param string  $area
+     * @param int     $item_id
      *
      * @return extended_context the object instance.
      */
@@ -65,28 +72,21 @@ final class extended_context {
         string $area = self::NATURAL_CONTEXT_AREA,
         int $item_id = self::NATURAL_CONTEXT_ITEM_ID
     ): extended_context {
-        if ($component !== self::NATURAL_CONTEXT_COMPONENT ||
-            $area !== self::NATURAL_CONTEXT_AREA ||
-            $item_id !== self::NATURAL_CONTEXT_ITEM_ID
-        ) {
-            if ($component === self::NATURAL_CONTEXT_COMPONENT ||
-                $area === self::NATURAL_CONTEXT_AREA ||
-                $item_id === self::NATURAL_CONTEXT_ITEM_ID
-            ) {
-                throw new \coding_exception('Extended contexts must either provide component, area AND item ID, or none of these');
-            }
-        }
-
-        return new extended_context($context, $component, $area, $item_id);
+        return static::make_with_id(
+            $context->id,
+            $component,
+            $area,
+            $item_id
+        );
     }
 
     /**
      * Factory method to create an instance.
      *
-     * @param int $context_id
+     * @param int    $context_id
      * @param string $component
      * @param string $area
-     * @param int $item_id
+     * @param int    $item_id
      *
      * @return extended_context the object instance.
      */
@@ -104,48 +104,39 @@ final class extended_context {
                 $area === self::NATURAL_CONTEXT_AREA ||
                 $item_id === self::NATURAL_CONTEXT_ITEM_ID
             ) {
-                throw new \coding_exception('Extended contexts must either provide component, area AND item ID, or none of these');
+                throw new coding_exception('Extended contexts must either provide component, area AND item ID, or none of these');
             }
         }
 
-        return new extended_context($context_id, $component, $area, $item_id);
+        return new extended_context(
+            new instance_identifier(
+                new component_area($component, $area),
+                $item_id,
+                $context_id
+            )
+        );
     }
 
     /**
-     * Default constructor.
-     *
-     * @param context|int $context_or_id either a context object or a context id
-     * @param string $component if this is a sub-context, the component, e.g. "mod_facetoface"
-     * @param string $area if this is a sub-context, the area the item, e.g. "event"
-     * @param int $item_id if this is a sub-context, the id of the item, e.g. an event id
+     * @return extended_context
      */
-    private function __construct(
-        $context_or_id,
-        string $component,
-        string $area,
-        int $item_id
-    ) {
-        if (is_subclass_of($context_or_id, context::class)) {
-            $this->context = $context_or_id;
-            $context_or_id = $this->context->id;
-        } else if (!is_int($context_or_id)) {
-            throw new \coding_exception('Extended context constructor requires natural context or context id');
-        }
+    public static function make_system(): extended_context {
+        $context = context_system::instance();
+        return static::make_with_context($context);
+    }
 
-        $this->identifier = new instance_identifier(
-            new component_area(
-                $component,
-                $area
-            ),
-            $item_id,
-            $context_or_id
-        );
+    /**
+     * extended_context constructor.
+     * @param instance_identifier $identifier
+     */
+    private function __construct(instance_identifier $identifier) {
+        $this->identifier = $identifier;
     }
 
     /**
      * Returns the object state for var_dump().
      *
-     * @return array[string=>mixed] a list of attributes to show.
+     * @return array [string=>mixed] a list of attributes to show.
      */
     public function __debugInfo(): array {
         return [
@@ -177,10 +168,8 @@ final class extended_context {
      * @return context
      */
     public function get_context(): context {
-        if (is_null($this->context)) {
-            $this->context = context::instance_by_id($this->get_context_id());
-        }
-        return $this->context;
+        $context_id = $this->identifier->get_context_id();
+        return context::instance_by_id($context_id);
     }
 
     /**

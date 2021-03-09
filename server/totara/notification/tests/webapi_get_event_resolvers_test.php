@@ -17,14 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 
 use totara_core\extended_context;
-use totara_notification_mock_notifiable_event as mock_event;
-use totara_notification\local\helper;
+use core_phpunit\testcase;
+use totara_notification\resolver\resolver_helper;
 use totara_notification\testing\generator as totara_notification_generator;
+use totara_notification_mock_notifiable_event_resolver as mock_event_resolver;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
@@ -33,31 +34,29 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
  * only giving us the list of event class name.
  * Once we are upgrading the resolver to actually do DB look ups then it would be
  * the right time to have a test for the resolver.
- *
- * @group totara_notification
  */
-class totara_notification_webapi_get_notifiable_events_testcase extends advanced_testcase {
+class totara_notification_webapi_get_event_resolvers_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**
      * @return void
      */
-    public function test_get_notifiable_events_at_system_context(): void {
-        /** @var totara_notification\testing\generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
-        $generator->add_mock_notifiable_event_for_component();
+    public function test_get_event_resolvers_at_system_context(): void {
+        $generator = totara_notification_generator::instance();
         $generator->include_mock_recipient();
+        $generator->include_mock_notifiable_event_resolver();
+        $generator->add_notifiable_event_resolver(mock_event_resolver::class);
 
         $context_system = context_system::instance();
 
-        totara_notification_mock_notifiable_event::set_notification_available_recipients([
+        mock_event_resolver::set_notification_available_recipients([
             totara_notification_mock_recipient::class,
         ]);
 
         // Create a custom notification for the mock notifiable event and check if it is included
         // when calling to the query.
         $custom_notification = $generator->create_notification_preference(
-            mock_event::class,
+            mock_event_resolver::class,
             extended_context::make_with_context($context_system),
             [
                 'title' => 'Custom title',
@@ -71,43 +70,43 @@ class totara_notification_webapi_get_notifiable_events_testcase extends advanced
 
         $this->setAdminUser();
         $result = $this->execute_graphql_operation(
-            'totara_notification_notifiable_events',
-            ['context_id' => $context_system->id]
+            'totara_notification_event_resolvers',
+            ['extended_context' => ['context_id' => $context_system->id],],
         );
 
         self::assertEmpty($result->errors);
         self::assertNotEmpty($result->data);
         self::assertIsArray($result->data);
-        self::assertArrayHasKey('notifiable_events', $result->data);
+        self::assertArrayHasKey('resolvers', $result->data);
 
-        $notifiable_events = $result->data['notifiable_events'];
-        self::assertIsArray($notifiable_events);
+        $resolvers = $result->data['resolvers'];
+        self::assertIsArray($resolvers);
 
         // There are mock custom event, along side with all of the other events
         // from the system.
-        self::assertGreaterThan(1, count($notifiable_events));
-        $mock_events = array_filter(
-            $notifiable_events,
-            function (array $notifiable_event): bool {
-                return $notifiable_event['class_name'] === mock_event::class;
+        self::assertGreaterThan(1, count($resolvers));
+        $mock_resolvers = array_filter(
+            $resolvers,
+            function (array $resolver): bool {
+                return $resolver['class_name'] === mock_event_resolver::class;
             }
         );
 
-        self::assertCount(1, $mock_events);
-        $mock_event = reset($mock_events);
+        self::assertCount(1, $mock_resolvers);
+        $mock_resolver = reset($mock_resolvers);
 
-        self::assertArrayHasKey('name', $mock_event);
+        self::assertArrayHasKey('name', $mock_resolver);
         self::assertEquals(
-            helper::get_human_readable_event_name(mock_event::class),
-            $mock_event['name']
+            resolver_helper::get_human_readable_resolver_name(mock_event_resolver::class),
+            $mock_resolver['name']
         );
 
-        self::assertArrayHasKey('notification_preferences', $mock_event);
-        self::assertIsArray($mock_event['notification_preferences']);
+        self::assertArrayHasKey('notification_preferences', $mock_resolver);
+        self::assertIsArray($mock_resolver['notification_preferences']);
 
         // There should have only custom notification for this event at the system context.
-        self::assertCount(1, $mock_event['notification_preferences']);
-        $preference = reset($mock_event['notification_preferences']);
+        self::assertCount(1, $mock_resolver['notification_preferences']);
+        $preference = reset($mock_resolver['notification_preferences']);
 
         self::assertIsArray($preference);
         self::assertArrayHasKey('id', $preference);
@@ -118,23 +117,21 @@ class totara_notification_webapi_get_notifiable_events_testcase extends advanced
      * @return void
      */
     public function test_get_notifiable_events_at_lower_context(): void {
-        $generator = self::getDataGenerator();
-
-        /** @var totara_notification\testing\generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
-        $notification_generator->add_mock_notifiable_event_for_component();
+        $notification_generator = totara_notification_generator::instance();
+        $notification_generator->include_mock_notifiable_event_resolver();
         $notification_generator->include_mock_recipient();
+        $notification_generator->add_notifiable_event_resolver(mock_event_resolver::class);
 
         $context_system = context_system::instance();
 
-        totara_notification_mock_notifiable_event::set_notification_available_recipients([
+        mock_event_resolver::set_notification_available_recipients([
             totara_notification_mock_recipient::class,
         ]);
 
         // Create a custom notification for the mock notifiable event and check if it is included
         // when calling to the query.
         $custom_notification = $notification_generator->create_notification_preference(
-            mock_event::class,
+            mock_event_resolver::class,
             extended_context::make_with_context($context_system),
             [
                 'title' => 'Custom title',
@@ -147,48 +144,49 @@ class totara_notification_webapi_get_notifiable_events_testcase extends advanced
         );
 
         // Create a course and fetch the notifiable_events at this course context.
+        $generator = self::getDataGenerator();
         $course = $generator->create_course();
         $context_course = context_course::instance($course->id);
 
         $this->setAdminUser();
         $result = $this->execute_graphql_operation(
-            'totara_notification_notifiable_events',
-            ['context_id' => $context_course->id]
+            'totara_notification_event_resolvers',
+            ['extended_context' => ['context_id' => $context_course->id],],
         );
 
         self::assertEmpty($result->errors);
         self::assertNotEmpty($result->data);
         self::assertIsArray($result->data);
-        self::assertArrayHasKey('notifiable_events', $result->data);
+        self::assertArrayHasKey('resolvers', $result->data);
 
-        $notifiable_events = $result->data['notifiable_events'];
-        self::assertIsArray($notifiable_events);
+        $resolvers = $result->data['resolvers'];
+        self::assertIsArray($resolvers);
 
         // There are mock custom event, along side with all of the other events
         // from the system.
-        self::assertGreaterThan(1, count($notifiable_events));
-        $mock_events = array_filter(
-            $notifiable_events,
-            function (array $notifiable_event): bool {
-                return $notifiable_event['class_name'] === mock_event::class;
+        self::assertGreaterThan(1, count($resolvers));
+        $mock_resolvers = array_filter(
+            $resolvers,
+            function (array $resolver): bool {
+                return $resolver['class_name'] === mock_event_resolver::class;
             }
         );
 
-        self::assertCount(1, $mock_events);
-        $mock_event = reset($mock_events);
+        self::assertCount(1, $mock_resolvers);
+        $mock_resolver = reset($mock_resolvers);
 
-        self::assertArrayHasKey('name', $mock_event);
+        self::assertArrayHasKey('name', $mock_resolver);
         self::assertEquals(
-            helper::get_human_readable_event_name(mock_event::class),
-            $mock_event['name']
+            resolver_helper::get_human_readable_resolver_name(mock_event_resolver::class),
+            $mock_resolver['name']
         );
 
-        self::assertArrayHasKey('notification_preferences', $mock_event);
-        self::assertIsArray($mock_event['notification_preferences']);
+        self::assertArrayHasKey('notification_preferences', $mock_resolver);
+        self::assertIsArray($mock_resolver['notification_preferences']);
 
         // There should have only custom notification for this event at the system context.
-        self::assertCount(1, $mock_event['notification_preferences']);
-        $preference = reset($mock_event['notification_preferences']);
+        self::assertCount(1, $mock_resolver['notification_preferences']);
+        $preference = reset($mock_resolver['notification_preferences']);
 
         self::assertIsArray($preference);
         self::assertArrayHasKey('id', $preference);
@@ -202,19 +200,19 @@ class totara_notification_webapi_get_notifiable_events_testcase extends advanced
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
 
-        /** @var totara_notification\testing\generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
-        $notification_generator->add_mock_notifiable_event_for_component();
+        $notification_generator = totara_notification_generator::instance();
         $notification_generator->include_mock_recipient();
+        $notification_generator->include_mock_notifiable_event_resolver();
+        $notification_generator->add_notifiable_event_resolver(mock_event_resolver::class);
 
-        totara_notification_mock_notifiable_event::set_notification_available_recipients([
+        mock_event_resolver::set_notification_available_recipients([
             totara_notification_mock_recipient::class,
         ]);
 
         // Create a custom notification for the mock notifiable event and check if it is included
         // when calling to the query.
         $custom_notification = $notification_generator->create_notification_preference(
-            mock_event::class,
+            mock_event_resolver::class,
             extended_context::make_with_context(context_course::instance($course->id)),
             [
                 'title' => 'Custom title',
@@ -228,44 +226,44 @@ class totara_notification_webapi_get_notifiable_events_testcase extends advanced
 
         $this->setAdminUser();
         $result = $this->execute_graphql_operation(
-            'totara_notification_notifiable_events',
-            ['context_id' => context_system::instance()->id]
+            'totara_notification_event_resolvers',
+            ['extended_context' => ['context_id' => context_system::instance()->id],],
         );
 
         self::assertEmpty($result->errors);
         self::assertNotEmpty($result->data);
         self::assertIsArray($result->data);
-        self::assertArrayHasKey('notifiable_events', $result->data);
+        self::assertArrayHasKey('resolvers', $result->data);
 
-        $notifiable_events = $result->data['notifiable_events'];
-        self::assertIsArray($notifiable_events);
+        $resolvers = $result->data['resolvers'];
+        self::assertIsArray($resolvers);
 
         // There are mock custom event, along side with all of the other events
         // from the system.
-        self::assertGreaterThan(1, count($notifiable_events));
-        $mock_events = array_filter(
-            $notifiable_events,
+        self::assertGreaterThan(1, count($resolvers));
+        $mock_resolvers = array_filter(
+            $resolvers,
             function (array $notifiable_event): bool {
-                return $notifiable_event['class_name'] === mock_event::class;
+                return $notifiable_event['class_name'] === mock_event_resolver::class;
             }
         );
 
-        self::assertCount(1, $mock_events);
-        $mock_event = reset($mock_events);
+        self::assertCount(1, $mock_resolvers);
+        $mock_resolver = reset($mock_resolvers);
 
-        self::assertArrayHasKey('name', $mock_event);
+        self::assertArrayHasKey('name', $mock_resolver);
         self::assertEquals(
-            helper::get_human_readable_event_name(mock_event::class),
-            $mock_event['name']
+            resolver_helper::get_human_readable_resolver_name(mock_event_resolver::class),
+            $mock_resolver['name']
         );
 
-        self::assertArrayHasKey('notification_preferences', $mock_event);
-        self::assertIsArray($mock_event['notification_preferences']);
-        self::assertEmpty($mock_event['notification_preferences']);
+        self::assertArrayHasKey('notification_preferences', $mock_resolver);
+        self::assertIsArray($mock_resolver['notification_preferences']);
+        self::assertEmpty($mock_resolver['notification_preferences']);
 
-        foreach ($notifiable_events as $event_notifiable) {
-            self::assertArrayHasKey('notification_preferences', $event_notifiable);
-            $preferences = $event_notifiable['notification_preferences'];
+        foreach ($resolvers as $resolver) {
+            self::assertArrayHasKey('notification_preferences', $resolver);
+            $preferences = $resolver['notification_preferences'];
 
             self::assertIsArray($preferences);
             foreach ($preferences as $preference) {

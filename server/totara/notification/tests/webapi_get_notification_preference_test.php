@@ -17,21 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 
 use core\orm\query\exceptions\record_not_found_exception;
+use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\model\notification_preference as model;
-use totara_notification\webapi\resolver\query\notification_preference;
 use totara_notification\testing\generator;
+use totara_notification\webapi\resolver\query\notification_preference;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-/**
- * @group totara_notification
- */
-class totara_notification_webapi_get_notification_preference_testcase extends advanced_testcase {
+class totara_notification_webapi_get_notification_preference_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**

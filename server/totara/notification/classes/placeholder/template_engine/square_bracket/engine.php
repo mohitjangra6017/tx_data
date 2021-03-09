@@ -23,11 +23,12 @@
 namespace totara_notification\placeholder\template_engine\square_bracket;
 
 use coding_exception;
-use totara_notification\local\helper;
 use totara_notification\placeholder\key_helper;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\placeholder\template_engine\engine as engine_interface;
 use totara_notification\placeholder\template_engine\mustache\engine as mustache_engine;
+use totara_notification\resolver\notifiable_event_resolver;
+use totara_notification\resolver\resolver_helper;
 
 class engine implements engine_interface {
     /**
@@ -37,33 +38,33 @@ class engine implements engine_interface {
     private $event_data;
 
     /**
-     * The notifiable event class name.
+     * The notifiable event resolver class name.
      * @var string
      */
-    private $event_class_name;
+    private $resolver_class_name;
 
     /**
      * engine constructor.
-     * @param string $event_class_name
+     * @param string $resolver_class_name
      * @param array  $event_data
      */
-    private function __construct(string $event_class_name, array $event_data) {
-        $this->event_class_name = $event_class_name;
+    private function __construct(string $resolver_class_name, array $event_data) {
+        $this->resolver_class_name = $resolver_class_name;
         $this->event_data = $event_data;
     }
 
     /**
-     * @param string $event_class_name
+     * @param string $resolver_class_name
      * @param array  $event_data
      *
      * @return engine
      */
-    public static function create(string $event_class_name, array $event_data): engine {
-        if (!helper::is_valid_notifiable_event($event_class_name)) {
-            throw new coding_exception("The event class name is not a valid notifiable event");
+    public static function create(string $resolver_class_name, array $event_data): engine {
+        if (!resolver_helper::is_valid_event_resolver($resolver_class_name)) {
+            throw new coding_exception("The resolver class name is not a valid notifiable event resolver");
         }
 
-        return new static($event_class_name, $event_data);
+        return new static($resolver_class_name, $event_data);
     }
 
     /**
@@ -84,10 +85,10 @@ class engine implements engine_interface {
      */
     private function get_map_placeholder_options(): array {
         /**
-         * @see notifiable_event::get_notification_available_placeholder_options()
+         * @see notifiable_event_resolver::get_notification_available_placeholder_options()
          * @var placeholder_option[] $placeholder_options
          */
-        $placeholder_options = call_user_func([$this->event_class_name, 'get_notification_available_placeholder_options']);
+        $placeholder_options = call_user_func([$this->resolver_class_name, 'get_notification_available_placeholder_options']);
         $map_placeholders = [];
 
         foreach ($placeholder_options as $placeholder_option) {
@@ -201,7 +202,7 @@ class engine implements engine_interface {
 
         $string = str_replace($search, $replace, $string);
 
-        $mustache_engine = mustache_engine::create($this->event_class_name, $this->event_data);
+        $mustache_engine = mustache_engine::create($this->resolver_class_name, $this->event_data);
         return $mustache_engine->render($string, $only_keys);
     }
 }

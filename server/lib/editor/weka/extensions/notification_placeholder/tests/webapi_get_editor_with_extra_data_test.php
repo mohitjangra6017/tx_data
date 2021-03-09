@@ -25,17 +25,17 @@ use core\editor\variant_name;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use weka_notification_placeholder\extension;
 use totara_notification\testing\generator;
-use totara_notification_mock_notifiable_event as mock_event;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
+use core_phpunit\testcase;
 
-class weka_notification_placeholder_webapi_get_editor_with_extra_data_testcase extends advanced_testcase {
+class weka_notification_placeholder_webapi_get_editor_with_extra_data_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**
      * @return void
      */
     public function test_fetch_editor_with_extra_extension(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
         $generator->include_mock_notifiable_event();
 
         $this->setAdminUser();
@@ -48,7 +48,7 @@ class weka_notification_placeholder_webapi_get_editor_with_extra_data_testcase e
                 'extra_extensions' => json_encode([
                     [
                         'name' => extension::get_extension_name(),
-                        'options' => ['event_class_name' => mock_event::class]
+                        'options' => ['resolver_class_name' => mock_resolver::class]
                     ]
                 ]),
             ]
@@ -77,7 +77,7 @@ class weka_notification_placeholder_webapi_get_editor_with_extra_data_testcase e
         );
 
         self::assertStringContainsString(
-            mock_event::class,
+            mock_resolver::class,
             $options
         );
     }

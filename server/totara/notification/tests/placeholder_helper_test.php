@@ -22,11 +22,12 @@
  */
 
 use core\entity\user;
+use core_phpunit\testcase;
 use totara_notification\placeholder\placeholder_helper;
 use totara_notification\testing\generator;
 use totara_notification_mock_single_placeholder as single_placeholder;
 
-class totara_notification_placeholder_helper_testcase extends advanced_testcase {
+class totara_notification_placeholder_helper_testcase extends testcase {
     /**
      * @return void
      */

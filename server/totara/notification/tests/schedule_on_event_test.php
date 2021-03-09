@@ -21,12 +21,13 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_notification\schedule\schedule_on_event;
 
 /**
  * Test cases covering the totara_notification\schedule\schedule_on_event class
  */
-class totara_notification_schedule_on_event_test extends advanced_testcase {
+class totara_notification_schedule_on_event_test extends testcase {
 
     /**
      * Check that timestamps are calculated correctly.
@@ -69,7 +70,7 @@ class totara_notification_schedule_on_event_test extends advanced_testcase {
             ['5', false],
         ];
 
-        foreach ($test_cases as list($value, $expected_result)) {
+        foreach ($test_cases as [$value, $expected_result]) {
             self::assertEquals($expected_result, schedule_on_event::validate_offset($value), $value);
         }
     }

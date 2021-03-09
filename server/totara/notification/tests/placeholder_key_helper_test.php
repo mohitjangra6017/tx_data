@@ -17,12 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+
+use core_phpunit\testcase;
 use totara_notification\placeholder\key_helper;
 
-class totara_notification_placeholder_key_helper_testcase extends advanced_testcase {
+class totara_notification_placeholder_key_helper_testcase extends testcase {
     /**
      * @return void
      */
@@ -45,7 +47,7 @@ class totara_notification_placeholder_key_helper_testcase extends advanced_testc
 
         $invalid_keys = [
             'hi', 'hello_world', 'kaboom~', 'test:test~', 'test:test-test',
-            'doctor:fake_+021', 'any:other(invalid_stuff)'
+            'doctor:fake_+021', 'any:other(invalid_stuff)',
         ];
 
         foreach ($invalid_keys as $invalid_key) {

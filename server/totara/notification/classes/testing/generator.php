@@ -32,19 +32,20 @@ use ReflectionClass;
 use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_preference as entity;
-use totara_notification\event\notifiable_event;
 use totara_notification\factory\built_in_notification_factory;
-use totara_notification\factory\notifiable_event_factory;
+use totara_notification\factory\notifiable_event_resolver_factory;
 use totara_notification\local\helper;
 use totara_notification\model\notification_preference;
 use totara_notification\notification\built_in_notification;
 use totara_notification\task\process_notification_queue_task;
 use totara_notification_mock_built_in_notification;
 use totara_notification_mock_lang_string;
-use totara_notification_mock_notifiable_event;
 use totara_notification_mock_notifiable_event_resolver;
 use totara_notification_test_progress_trace;
 
+/**
+ * @method static generator instance()
+ */
 final class generator extends component_generator {
     /**
      * @return string
@@ -108,13 +109,13 @@ final class generator extends component_generator {
         $property->setAccessible(false);
 
         /**
-         * @see built_in_notification::get_event_class_name()
-         * @var string $event_name
+         * @see built_in_notification::get_resolver_class_name()
+         * @var string $resolver_class_name
          */
-        $event_name = call_user_func([$notification_class_name, 'get_event_class_name']);
+        $resolver_class_name = call_user_func([$notification_class_name, 'get_resolver_class_name']);
 
         return $this->create_notification_preference(
-            $event_name,
+            $resolver_class_name,
             extended_context::make_with_context(context_system::instance()),
             ['notification_class_name' => $notification_class_name]
         );
@@ -129,20 +130,21 @@ final class generator extends component_generator {
      * + subject: String
      * + subject_format: Int
      * + recipient: String
+     * + schedule_offset: Int
      *
-     * @param array $data
+     * @param array                 $data
      * @param extended_context|null $extended_context
-     * @param string $event_name
+     * @param string                $resolver_class_name
      *
      * @return notification_preference
      */
     public function create_notification_preference(
-        string $event_name,
+        string $resolver_class_name,
         ?extended_context $extended_context = null,
         array $data = []
     ): notification_preference {
         $extended_context = $extended_context ?? extended_context::make_with_context(context_system::instance());
-        $builder = new notification_preference_builder($event_name, $extended_context);
+        $builder = new notification_preference_builder($resolver_class_name, $extended_context);
 
         if (!empty($data['notification_name'])) {
             // Temporary to fix any tests that still preference to the old code.
@@ -223,8 +225,8 @@ final class generator extends component_generator {
      * The attribute 'title' from $overridden_data will be ignored from this function.
      *
      * @param notification_preference $preference
-     * @param extended_context $extended_context
-     * @param array $overridden_data
+     * @param extended_context        $extended_context
+     * @param array                   $overridden_data
      * @return notification_preference
      */
     public function create_overridden_notification_preference(
@@ -253,52 +255,55 @@ final class generator extends component_generator {
         }
 
         return $this->create_notification_preference(
-            $preference->get_event_class_name(),
+            $preference->get_resolver_class_name(),
             $extended_context,
             $record_data
         );
     }
 
     /**
-     * @param string|null $event_name
-     * @param string      $component
-     *
-     * @return void
+     * @param string $resolver_class_name
+     * @param string $component
      */
-    public function add_mock_notifiable_event_for_component(?string $event_name = null,
-                                                            string $component = 'totara_notification'): void {
-        if (empty($event_name)) {
-            $this->include_mock_notifiable_event();
-            $event_name = totara_notification_mock_notifiable_event::class;
-        }
+    public function add_notifiable_event_resolver(string $resolver_class_name, string $component = 'totara_notification'): void {
+        notifiable_event_resolver_factory::load_map();
+        $cache = notifiable_event_resolver_factory::get_cache_loader();
 
-        $reflection_class = new ReflectionClass(notifiable_event_factory::class);
-
-        /** @see notifiable_event_factory::get_map() */
-        $method = $reflection_class->getMethod('get_map');
-        $method->setAccessible(true);
-
-        $map = $method->invoke(null);
-        $method->setAccessible(false);
-
-        if (!helper::is_valid_notifiable_event($event_name)) {
-            throw new coding_exception(
-                "Expecting the event class to implement interface " . notifiable_event::class
-            );
-        }
-
+        $map = $cache->get(notifiable_event_resolver_factory::MAP_KEY, MUST_EXIST);
         if (!isset($map[$component])) {
             $map[$component] = [];
         }
 
-        $map[$component][] = $event_name;
+        $map[$component][] = $resolver_class_name;
+        $cache->set(
+            notifiable_event_resolver_factory::MAP_KEY,
+            $map
+        );
+    }
 
-        /** @see notifiable_event_factory::$event_classes */
-        $property = $reflection_class->getProperty('event_classes');
-        $property->setAccessible(true);
+    /**
+     * Purging the notifiable events within the system. If $component is provided,
+     * then we are purging for specific component only. Otherwise all the resovlers.
+     *
+     * @param string|null $component
+     * @return void
+     */
+    public function purge_notifiable_event_resolvers(?string $component = null): void {
+        notifiable_event_resolver_factory::load_map();
+        $cache = notifiable_event_resolver_factory::get_cache_loader();
 
-        $property->setValue($map);
-        $property->setAccessible(false);
+        $map = $cache->get(notifiable_event_resolver_factory::MAP_KEY, MUST_EXIST);
+        if (empty($component)) {
+            $map = [];
+        } else {
+            // Purge for specific $component only
+            $map[$component] = [];
+        }
+
+        $cache->set(
+            notifiable_event_resolver_factory::MAP_KEY,
+            $map
+        );
     }
 
     /**
@@ -391,6 +396,46 @@ final class generator extends component_generator {
     }
 
     /**
+     * @return void
+     */
+    public function include_mock_scheduled_aware_notifiable_event_resolver(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_mock_scheduled_aware_event_resolver.php");
+    }
+
+    /**
+     * @return void
+     */
+    public function include_mock_scheduled_event_with_on_event(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_mock_scheduled_event_with_on_event.php");
+    }
+
+    /**
+     * @return void
+     */
+    public function include_mock_scheduled_event_with_on_event_resolver(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_mock_scheduled_event_with_on_event_resolver.php");
+    }
+
+    /**
+     * @return void
+     */
+    public function include_mock_scheduled_built_in_notification(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_mock_scheduled_built_in_notification.php");
+    }
+
+    /**
+     * @return void
+     */
+    public function include_invalid_notifiable_event_resolver(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_invalid_notifiable_event_resolver.php");
+    }
+
+    /**
      * @param lang_string $body
      * @return void
      */
@@ -457,5 +502,41 @@ final class generator extends component_generator {
 
         $property->setValue($task, $due_time);
         $property->setAccessible(false);
+    }
+
+    /**
+     * Remove the built_in notification classes from the factory, and
+     * remove all the preference records from database.
+     *
+     * Note - please do not call to this function outside of the unit tests.
+     *
+     * @return void
+     */
+    public function purge_built_in_notifications(): void {
+        global $DB;
+        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
+            throw new coding_exception('Cannot execute the function out of unit test environment');
+        }
+
+        $reflection_class = new ReflectionClass(built_in_notification_factory::class);
+        $method = $reflection_class->getMethod('get_map');
+
+        // Reset the maps to empty values.
+        $method->setAccessible(true);
+        $map = $method->invoke(null);
+        foreach ($map as $component => $items) {
+            $map[$component] = [];
+        }
+
+        $static_map = $reflection_class->getProperty('built_in_notification_classes');
+        $static_map->setAccessible(true);
+        $static_map->setValue($map);
+
+        // Reset the variable and function to not be accessible.
+        $static_map->setAccessible(false);
+        $method->setAccessible(false);
+
+        // Delete everything from the database.
+        $DB->execute('TRUNCATE TABLE "ttr_notification_preference"');
     }
 }

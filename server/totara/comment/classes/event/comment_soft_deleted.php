@@ -25,12 +25,8 @@ namespace totara_comment\event;
 use core\event\base;
 use totara_comment\comment;
 use totara_comment\entity\comment as entity;
-use totara_comment\totara_notification\recipient\comment_author;
-use totara_core\extended_context;
 use totara_notification\event\notifiable_event;
-use totara_notification\placeholder\placeholder_option;
-use totara_notification\schedule\schedule_after_event;
-use totara_notification\schedule\schedule_on_event;
+use totara_core\extended_context;
 
 /**
  * For comment soft deleted.
@@ -91,48 +87,10 @@ final class comment_soft_deleted extends base implements notifiable_event {
     /**
      * @inheritDoc
      */
-    public static function get_notification_title(): string {
-        return get_string('notification_comment_soft_deleted', 'totara_comment');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function get_notification_available_recipients(): array {
-        return [comment_author::class];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function get_notification_available_schedules(): array {
-        return [
-            schedule_on_event::class,
-            schedule_after_event::class,
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function get_notification_default_delivery_channels(): array {
-        return [];
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function get_notification_event_data(): array {
         return [
             'comment_id' => $this->objectid
         ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function get_notification_available_placeholder_options(): array {
-        return [];
     }
 
     /**

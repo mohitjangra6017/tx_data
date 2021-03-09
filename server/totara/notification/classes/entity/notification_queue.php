@@ -32,11 +32,10 @@ use totara_notification\repository\notification_queue_repository;
  *
  * @property int    $id
  * @property string $event_data         A json encoded string of data to help building a notification.
- * @property-read int    $context_id
- * @property-read string $component
- * @property-read string $area
- * @property-read int    $item_id
- * @property extended_context $extended_context
+ * @property int    $context_id
+ * @property string $component
+ * @property string $area
+ * @property int    $item_id
  * @property int    $time_created
  * @property int    $scheduled_time
  * @property int    $notification_preference_id

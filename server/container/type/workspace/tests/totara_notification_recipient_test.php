@@ -17,66 +17,77 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Johannes Cilliers <johannes.cilliers@totaralearning.com>
- * @package engage_article
+ * @author  Johannes Cilliers <johannes.cilliers@totaralearning.com>
+ * @package container_workspace
  */
 
-use engage_article\totara_engage\resource\article;
+use container_workspace\discussion\discussion;
+use container_workspace\discussion\discussion_helper;
+use container_workspace\member\member;
+use container_workspace\testing\generator as workspace_generator;
+use container_workspace\workspace;
+use core\json_editor\node\paragraph;
+use core_phpunit\testcase;
 use totara_comment\comment_helper;
-use totara_comment\event\comment_created;
 use totara_comment\totara_notification\recipient\owner;
+use totara_comment\totara_notification\resolver\comment_created;
 use totara_core\extended_context;
-use totara_engage\access\access;
 use totara_notification\model\notification_preference as notification_preference_model;
 use totara_notification\task\process_event_queue_task;
 use totara_notification\task\process_notification_queue_task;
 use totara_notification\testing\generator as notification_generator;
-use engage_article\testing\generator as article_generator;
-use totara_topic\testing\generator as topic_generator;
 
-class engage_article_notification_recipient_testcase extends advanced_testcase {
+class container_workspace_totara_notification_recipient_testcase extends testcase {
 
     /**
      * @return void
      */
-    public function test_resource_owner_recipient(): void {
-        // Create notification preference with a mock recipient that will resolve
+    public function test_discussion_owner_recipient(): void {
+        // Create notification preference with owner recipient that will resolve
         // to user one's ID.
-        /** @var notification_preference_model $notification_preference */
         $this->create_notification_preference(
             comment_created::class,
-            owner::class,
+            owner::class
         );
 
         $generator = $this->getDataGenerator();
         $user_one = $generator->create_user();
         $user_two = $generator->create_user();
-
-        // Set admin as active user.
-        $this->setAdminUser();
-
-        /** @var topic_generator $topic_generator */
-        $topic_generator = $generator->get_plugin_generator('totara_topic');
-        $topic = $topic_generator->create_topic();
+        $user_three = $generator->create_user();
 
         // Set user one as active user.
         $this->setUser($user_one);
 
-        /** @var article_generator $article_generator */
-        $article_generator = $generator->get_plugin_generator('engage_article');
-        $article = $article_generator->create_article([
-            'access' => access::PUBLIC,
-            'topics' => [$topic->get_id()],
-        ]);
+        // Create workspace.
+        /** @var workspace_generator $workspace_generator */
+        $workspace_generator = $generator->get_plugin_generator('container_workspace');
+        $workspace = $workspace_generator->create_workspace();
 
+        // Set user two as active user.
+        $this->setUser($user_two);
+        member::join_workspace($workspace, $user_two->id);
+
+        // Create discussion.
+        $discussion = discussion_helper::create_discussion(
+            $workspace,
+            json_encode([
+                'type' => 'doc',
+                'content' => [paragraph::create_json_node_from_text("This is the discussion")],
+            ]),
+            null,
+            FORMAT_JSON_EDITOR
+        );
+
+        // Create comment as user_three in discussion.
+        member::join_workspace($workspace, $user_three->id);
         comment_helper::create_comment(
-            article::get_resource_type(),
-            article::COMMENT_AREA,
-            $article->get_id(),
+            workspace::get_type(),
+            discussion::AREA,
+            $discussion->get_id(),
             'This is content',
             FORMAT_PLAIN,
             null,
-            $user_two->id
+            $user_three->id
         );
 
         // Redirect messages.
@@ -99,7 +110,7 @@ class engage_article_notification_recipient_testcase extends advanced_testcase {
             $this->user_message_exists(
                 $messages,
                 "A new comment created on your item\n",
-                $article->get_userid()
+                $user_two->id
             ),
             'Notification message not found for user'
         );
@@ -109,14 +120,14 @@ class engage_article_notification_recipient_testcase extends advanced_testcase {
             $this->user_message_exists(
                 $messages,
                 'Notification preference body for [' . comment_created::class . ',' . owner::class . ']',
-                $article->get_userid()
+                $user_two->id
             ),
             'Notification message not found for user'
         );
     }
 
     /**
-     * @param array $messages
+     * @param array  $messages
      * @param string $full_message
      * @param string $to_user_id
      *
@@ -131,27 +142,30 @@ class engage_article_notification_recipient_testcase extends advanced_testcase {
         return false;
     }
 
-    private function get_generator() {
-        /** @var generator $generator */
-        return $this->getDataGenerator()->get_plugin_generator('totara_notification');
+    /**
+     * @return notification_generator
+     */
+    private function get_generator(): notification_generator {
+        return notification_generator::instance();
     }
 
     /**
-     * @param string $event_class
+     * @param string $resolver_class
      * @param string $recipient_class
      *
-     * @return mixed
+     * @return notification_preference_model
      */
-    private function create_notification_preference(string $event_class, string $recipient_class) {
+    private function create_notification_preference(string $resolver_class,
+                                                    string $recipient_class): notification_preference_model {
         return $this->get_generator()->create_notification_preference(
-            $event_class,
+            $resolver_class,
             extended_context::make_with_context(context_system::instance()),
             [
-                'body' => "Notification preference body for [{$event_class},{$recipient_class}]",
+                'body' => "Notification preference body for [{$resolver_class},{$recipient_class}]",
                 'subject' => 'Notification preference subject',
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'Notification preference title',
-                'recipient' => $recipient_class
+                'recipient' => $recipient_class,
             ]
         );
     }

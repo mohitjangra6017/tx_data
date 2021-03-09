@@ -23,27 +23,105 @@
 namespace totara_comment\totara_notification\resolver;
 
 use coding_exception;
+use stdClass;
+use totara_comment\comment;
+use totara_comment\resolver_factory;
 use totara_comment\totara_notification\recipient\comment_author;
 use totara_comment\totara_notification\recipient\owner;
-use totara_notification\recipient\recipient;
+use totara_core\extended_context;
+use totara_notification\model\notification_event_data;
+use totara_notification\resolver\abstraction\scheduled_event_resolver;
 use totara_notification\resolver\notifiable_event_resolver;
+use totara_notification\schedule\schedule_after_event;
+use totara_notification\schedule\schedule_on_event;
+use totara_comment\event\comment_soft_deleted as comment_soft_deleted_event;
 
-class comment_soft_deleted extends notifiable_event_resolver {
+class comment_soft_deleted extends notifiable_event_resolver implements scheduled_event_resolver {
     /**
-     * @param string $recipient_class
-     * @return int[]
+     * @return int
      */
-    public function get_recipient_ids(string $recipient_class): array {
-        $valid_recipient_classes = [
-            owner::class,
-            comment_author::class,
-        ];
+    public function get_fixed_event_time(): ?int {
+        $comment_id = $this->event_data['comment_id'];
+        $comment = comment::from_id($comment_id);
 
-        if (!in_array($recipient_class, $valid_recipient_classes)) {
-            throw new coding_exception("Invalid recipient class");
+        $time_deleted = $comment->get_time_soft_deleted();
+        if (empty($time_deleted)) {
+            throw new coding_exception("Cannot resolve the event time of a soft deleted comment");
         }
 
-        /** @var recipient $recipient_class */
-        return $recipient_class::get_user_ids($this->event_data);
+        return $time_deleted;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_notification_title(): string {
+        return get_string('notification_comment_soft_deleted', 'totara_comment');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_notification_available_recipients(): array {
+        return [
+            comment_author::class,
+            owner::class,
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_notification_available_schedules(): array {
+        return [
+            schedule_on_event::class,
+            schedule_after_event::class,
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_notification_default_delivery_channels(): array {
+        return [];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_notification_available_placeholder_options(): array {
+        return [];
+    }
+
+    /**
+     * @param int $min_time
+     * @param int $max_time
+     *
+     * @return notification_event_data[]
+     */
+    public static function get_scheduled_events(int $min_time, int $max_time): array {
+        global $DB;
+        $sql = '
+            SELECT * FROM "ttr_totara_comment" c
+            WHERE c.timedeleted IS NOT NULL AND c.timedeleted >= :min_time 
+            AND c.timedeleted < :max_time
+        ';
+
+        $records = $DB->get_records_sql($sql, ['min_time' => $min_time, 'max_time' => $max_time]);
+        return array_map(
+            function (stdClass $record): notification_event_data {
+                $comment = comment::from_record($record);
+                $resolver = resolver_factory::create_resolver($comment->get_component());
+
+                $context_id = $resolver->get_context_id($comment->get_instanceid(), $comment->get_area());
+                $event = comment_soft_deleted_event::from_comment($comment, $context_id);
+
+                return new notification_event_data(
+                    extended_context::make_with_id($context_id),
+                    $event->get_notification_event_data()
+                );
+            },
+            $records
+        );
     }
 }

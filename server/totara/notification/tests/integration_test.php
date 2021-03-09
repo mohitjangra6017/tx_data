@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_notification\entity\notifiable_event_queue;
 use totara_notification\entity\notification_queue;
 use totara_notification\observer\notifiable_event_observer;
@@ -30,22 +31,17 @@ use totara_notification\testing\generator;
 
 /**
  * Test case where we are integrating everything and use mocks data.
- *
- * @group totara_notification
  */
-class totara_notification_integration_testcase extends advanced_testcase {
+class totara_notification_integration_testcase extends testcase {
     /**
      * @return void
      */
     protected function setUp(): void {
-        $generator = self::getDataGenerator();
+        $generator = generator::instance();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
-
-        $notification_generator->include_mock_notifiable_event();
-        $notification_generator->include_mock_built_in_notification();
-        $notification_generator->add_mock_built_in_notification_for_component();
+        $generator->include_mock_notifiable_event();
+        $generator->include_mock_built_in_notification();
+        $generator->add_mock_built_in_notification_for_component();
     }
 
     /**
@@ -54,10 +50,9 @@ class totara_notification_integration_testcase extends advanced_testcase {
     public function test_with_mock(): void {
         global $DB;
         $generator = self::getDataGenerator();
-        $user_one = $generator->create_user();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $user_one = $generator->create_user();
+        $notification_generator = generator::instance();
 
         // Mask the recipient ids to be sent to.
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);

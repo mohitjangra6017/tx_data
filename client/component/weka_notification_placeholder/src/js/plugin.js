@@ -26,10 +26,10 @@ export const REGEX = new RegExp(`\\[([a-z_:]+]?)?`, 'ig');
 /**
  *
  * @param {Editor} editor
- * @param {String} eventClassName
+ * @param {String} resolverClassName
  * @return {Plugin}
  */
-export default function(editor, eventClassName) {
+export default function(editor, resolverClassName) {
   const key = new PluginKey('placeholders');
   let suggestion = new Suggestion(editor);
 
@@ -65,7 +65,7 @@ export default function(editor, eventClassName) {
                 };
               },
               props: {
-                eventClassName: eventClassName,
+                resolverClassName: resolverClassName,
                 contextId: editor.identifier.contextId,
                 pattern: ammendedText,
               },

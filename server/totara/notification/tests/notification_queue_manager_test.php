@@ -22,22 +22,19 @@
  */
 
 use totara_core\extended_context;
+use core_phpunit\testcase;
 use totara_notification\entity\notification_queue;
 use totara_notification\manager\notification_queue_manager;
 use totara_notification\testing\generator;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 
-/**
- * @group totara_notification
- */
-class totara_notification_notification_queue_manager_testcase extends advanced_testcase {
+class totara_notification_notification_queue_manager_testcaase extends testcase {
     /**
      * @return void
      */
     protected function setUp(): void {
-        $generator = self::getDataGenerator();
-
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
+        $notification_generator->include_mock_notifiable_event_resolver();
         $notification_generator->add_mock_built_in_notification_for_component();
     }
 
@@ -49,11 +46,9 @@ class totara_notification_notification_queue_manager_testcase extends advanced_t
 
         $generator = self::getDataGenerator();
         $user_one = $generator->create_user();
-
         $context_user = context_user::instance($user_one->id);
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
         $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
@@ -71,7 +66,7 @@ class totara_notification_notification_queue_manager_testcase extends advanced_t
         // Create an invalid queue. To create an invalid record, we need to first
         // create the preference then delete it.
         $custom_preference = $notification_generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context($context_user),
             ['recipient' => totara_notification_mock_recipient::class]
         );

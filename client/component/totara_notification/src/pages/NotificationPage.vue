@@ -24,7 +24,7 @@
   >
     <template v-if="!$apollo.loading" v-slot:content>
       <NotificationTable
-        :notifiable-events="notifiableEvents"
+        :event-resolvers="eventResolvers"
         :context-id="parseInt(contextId)"
         class="tui-notificationPage__table"
         @create-custom-notification="handleCreateCustomNotification"
@@ -40,7 +40,7 @@
       >
         <NotificationPreferenceModal
           :context-id="contextId"
-          :event-class-name="targetEventClassName"
+          :resolver-class-name="targetResolverClassName"
           :preference="targetPreference || undefined"
           :parent-value="
             targetPreference ? targetPreference.parent_value : null
@@ -76,7 +76,7 @@ import DeleteConfirmationModal from 'tui/components/modal/ConfirmationModal';
 import { notify } from 'tui/notifications';
 
 // GraphQL queries.
-import getNotifiableEvents from 'totara_notification/graphql/notifiable_events';
+import getEventResolvers from 'totara_notification/graphql/event_resolvers';
 import createCustomNotification from 'totara_notification/graphql/create_custom_notification_preference';
 import overrideNotification from 'totara_notification/graphql/override_notification_preference';
 import updateNotification from 'totara_notification/graphql/update_notification_preference';
@@ -104,31 +104,59 @@ export default {
       type: [Number, String],
       required: true,
     },
+    extendedContext: {
+      type: Object,
+      default() {
+        // Just return empty object by default.
+        return {};
+      },
+      validate(prop) {
+        if (
+          !('component' in prop) ||
+          !('area' in prop) ||
+          !('itemId' in prop)
+        ) {
+          return false;
+        }
+
+        if (prop.component !== '' || prop.area !== '' || prop.itemId != 0) {
+          // We only accept all the fields to have value. Not either of the fields.
+          return prop.component !== '' && prop.area !== '' && prop.itemId != 0;
+        }
+
+        return true;
+      },
+    },
   },
 
   apollo: {
-    notifiableEvents: {
-      query: getNotifiableEvents,
+    eventResolvers: {
+      query: getEventResolvers,
       variables() {
         return {
-          context_id: this.contextId,
+          extended_context: {
+            context_id: this.contextId,
+            component: this.extendedContext.component,
+            area: this.extendedContext.area,
+            item_id: this.extendedContext.itemId,
+          },
         };
       },
 
-      update({ notifiable_events }) {
+      update({ resolvers }) {
         let result = {};
-        notifiable_events.forEach(notifiable_event => {
-          const { component, plugin_name, recipients } = notifiable_event;
+        resolvers.forEach(resolver => {
+          const { component, plugin_name, recipients } = resolver;
           if (!result[component]) {
             result[component] = {
               component: component,
               plugin_name: plugin_name,
-              events: [],
+              resolvers: [],
               recipients: recipients,
             };
           }
 
-          result[component].events.push(notifiable_event);
+          result[component].resolvers.push(resolver);
         });
 
         return Object.values(result);
@@ -138,7 +166,7 @@ export default {
 
   data() {
     return {
-      notifiableEvents: {},
+      eventResolvers: [],
       modal: {
         open: false,
         title: '',
@@ -148,7 +176,7 @@ export default {
         open: false,
       },
       deleting: false,
-      targetEventClassName: null,
+      targetResolverClassName: null,
       targetDeletePreference: null,
       targetPreference: null,
       targetScheduleTypes: [],
@@ -168,6 +196,16 @@ export default {
       }
       return title;
     },
+    queryVariables() {
+      return {
+        extended_context: {
+          context_id: this.contextId,
+          component: this.extendedContext.component,
+          area: this.extendedContext.area,
+          itemId: this.extendedContext.itemId,
+        },
+      };
+    },
   },
 
   methods: {
@@ -178,7 +216,7 @@ export default {
      */
     resetState() {
       // Reset the target event class name.
-      this.targetEventClassName = null;
+      this.targetResolverClassName = null;
 
       // Then the target preference.
       this.targetPreference = null;
@@ -191,12 +229,12 @@ export default {
     },
 
     /**
-     * @param {String} eventClassName
+     * @param {String} resolverClassName
      * @param {Array} scheduleTypes
      * @param {Array} recipients
      */
     handleCreateCustomNotification({
-      eventClassName,
+      resolverClassName,
       scheduleTypes,
       recipients,
     }) {
@@ -207,19 +245,19 @@ export default {
       this.modal.open = true;
       this.modal.state = MODAL_STATE_CREATE;
 
-      this.targetEventClassName = eventClassName;
+      this.targetResolverClassName = resolverClassName;
       this.targetScheduleTypes = scheduleTypes;
       this.targetAvailableRecipients = recipients;
     },
 
     /**
      * @param {Object} oldPreference
-     * @param scheduleTypes
+     * @param {Array} scheduleTypes
      * @param {Array} recipients
      */
     async handleEditNotification(oldPreference, scheduleTypes, recipients) {
       this.targetPreference = await this.getOverriddenPreference(oldPreference);
-      this.targetEventClassName = this.targetPreference.event_class_name;
+      this.targetResolverClassName = this.targetPreference.resolver_class_name;
       this.targetScheduleTypes = scheduleTypes;
       this.targetAvailableRecipients = recipients;
 
@@ -260,35 +298,33 @@ export default {
           id: notificationPreference.id,
         },
         update: proxy => {
-          const { notifiable_events: notifiableEvents } = proxy.readQuery({
-            query: getNotifiableEvents,
-            variables: { context_id: this.contextId },
+          const { resolvers } = proxy.readQuery({
+            query: getEventResolvers,
+            variables: this.queryVariables,
           });
 
           const {
             component,
-            event_class_name: className,
+            resolver_class_name: className,
           } = notificationPreference;
 
           proxy.writeQuery({
-            query: getNotifiableEvents,
+            query: getEventResolvers,
             variables: { context_id: this.contextId },
             data: {
-              notifiable_events: notifiableEvents.map(notifiableEvent => {
+              resolvers: resolvers.map(resolver => {
                 if (
-                  notifiableEvent.component === component &&
-                  notifiableEvent.class_name === className
+                  resolver.component === component &&
+                  resolver.class_name === className
                 ) {
-                  notifiableEvent = Object.assign({}, notifiableEvent);
-                  const {
-                    notification_preferences: preferences,
-                  } = notifiableEvent;
+                  resolver = Object.assign({}, resolver);
+                  const { notification_preferences: preferences } = resolver;
 
-                  notifiableEvent.notification_preferences = preferences.filter(
+                  resolver.notification_preferences = preferences.filter(
                     preference => preference.id !== notificationPreference.id
                   );
                 }
-                return notifiableEvent;
+                return resolver;
               }),
             },
           });
@@ -342,44 +378,45 @@ export default {
      * @param {String} body
      * @param {String} title
      * @param {Number} body_format
-     * @param {String} event_class_name
+     * @param {String} resolver_class_name
      * @param {String} schedule_type
      * @param {Number} schedule_offset
      * @param {Number} subject_format
      * @param {String} recipient
-     * @param {Object} extended_context
      */
     async createCustomNotification({
       subject,
       body,
       title,
       body_format,
-      event_class_name,
+      resolver_class_name,
       schedule_type,
       schedule_offset,
       subject_format,
       recipient,
-      extended_context,
     }) {
-      const { item_id, area, component, context_id } = extended_context;
-      let variables = {
+      const variables = {
         body,
         subject,
         title,
         body_format,
-        event_class_name,
+        resolver_class_name,
         subject_format,
-        context_id: context_id ? context_id : this.contextId,
+        context_id: this.contextId,
         schedule_type,
         schedule_offset,
         recipient,
       };
 
       // When area, component and item id are all set together, we pass them to mutation.
-      if (!!area && !!component && !!item_id) {
-        variables.area = area;
-        variables.component = component;
-        variables.item_id = item_id;
+      if (
+        !!this.extendedContext.area &&
+        !!this.extendedContext.component &&
+        !!this.extendedContext.itemId
+      ) {
+        variables.extended_context_area = this.extendedContext.area;
+        variables.extended_context_component = this.extendedContext.component;
+        variables.extended_context_item_id = this.extendedContext.itemId;
       }
 
       await this.$apollo.mutate({
@@ -389,36 +426,35 @@ export default {
           proxy,
           { data: { notification_preference: notificationPreference } }
         ) => {
-          const { notifiable_events: notifiableEvents } = proxy.readQuery({
-            query: getNotifiableEvents,
-            variables: { context_id: this.contextId },
+          const { resolvers } = proxy.readQuery({
+            query: getEventResolvers,
+            variables: this.queryVariables,
           });
 
           const {
-            component,
-            event_class_name: className,
+            resolver_component,
+            resolver_class_name: className,
           } = notificationPreference;
 
           proxy.writeQuery({
-            query: getNotifiableEvents,
-            variables: { context_id: this.contextId },
+            query: getEventResolvers,
+            variables: this.queryVariables,
             data: {
-              notifiable_events: notifiableEvents.map(notifiableEvent => {
+              resolvers: resolvers.map(resolver => {
                 if (
-                  notifiableEvent.component === component &&
-                  notifiableEvent.class_name === className
+                  resolver.component === resolver_component &&
+                  resolver.class_name === className
                 ) {
-                  notifiableEvent = Object.assign({}, notifiableEvent);
+                  resolver = Object.assign({}, resolver);
 
-                  const {
-                    notification_preferences: preferences,
-                  } = notifiableEvent;
-                  notifiableEvent.notification_preferences = [
+                  const { notification_preferences: preferences } = resolver;
+
+                  resolver.notification_preferences = [
                     notificationPreference,
                   ].concat(preferences);
                 }
 
-                return notifiableEvent;
+                return resolver;
               }),
             },
           });
@@ -443,7 +479,10 @@ export default {
         mutation: overrideNotification,
         variables: {
           context_id: this.contextId,
-          event_class_name: oldPreference.event_class_name,
+          resolver_class_name: oldPreference.resolver_class_name,
+          extended_context_component: this.extendedContext.component,
+          extended_context_area: this.extendedContext.area,
+          extended_context_item_id: this.extendedContext.itemId,
           ancestor_id: oldPreference.ancestor_id
             ? oldPreference.ancestor_id
             : oldPreference.id,
@@ -452,32 +491,30 @@ export default {
           proxy,
           { data: { notification_preference: overriddenPreference } }
         ) => {
-          const { notifiable_events: notifiableEvents } = proxy.readQuery({
-            query: getNotifiableEvents,
-            variables: { context_id: this.contextId },
+          const { resolvers } = proxy.readQuery({
+            query: getEventResolvers,
+            variables: this.queryVariables,
           });
 
           const {
-            component,
-            event_class_name: className,
+            resolver_component,
+            resolver_class_name: className,
             parent_id: parentId,
           } = overriddenPreference;
 
           proxy.writeQuery({
-            query: getNotifiableEvents,
-            variables: { context_id: this.contextId },
+            query: getEventResolvers,
+            variables: this.queryVariables,
             data: {
-              notifiable_events: notifiableEvents.map(notifiableEvent => {
+              resolvers: resolvers.map(resolver => {
                 if (
-                  notifiableEvent.component === component &&
-                  notifiableEvent.class_name === className
+                  resolver.component === resolver_component &&
+                  resolver.class_name === className
                 ) {
-                  notifiableEvent = Object.assign({}, notifiableEvent);
-                  const {
-                    notification_preferences: preferences,
-                  } = notifiableEvent;
+                  resolver = Object.assign({}, resolver);
+                  const { notification_preferences: preferences } = resolver;
 
-                  notifiableEvent.notification_preferences = preferences.map(
+                  resolver.notification_preferences = preferences.map(
                     oldPreference => {
                       return oldPreference.id == parentId
                         ? overriddenPreference
@@ -486,7 +523,7 @@ export default {
                   );
                 }
 
-                return notifiableEvent;
+                return resolver;
               }),
             },
           });
@@ -542,28 +579,30 @@ export default {
           proxy,
           { data: { notification_preference: updatedPreference } }
         ) => {
-          const { notifiable_events: notifiableEvents } = proxy.readQuery({
-            query: getNotifiableEvents,
-            variables: { context_id: this.contextId },
+          const { resolvers } = proxy.readQuery({
+            query: getEventResolvers,
+            variables: this.queryVariables,
           });
 
-          const { component, event_class_name: className } = updatedPreference;
+          const {
+            resolver_component,
+            resolver_class_name: className,
+          } = updatedPreference;
 
           proxy.writeQuery({
-            query: getNotifiableEvents,
-            variables: { context_id: this.contextId },
+            query: getEventResolvers,
+            variables: this.queryVariables,
             data: {
-              notifiable_events: notifiableEvents.map(notifiableEvent => {
+              resolvers: resolvers.map(resolver => {
                 if (
-                  notifiableEvent.component === component &&
-                  notifiableEvent.class_name === className
+                  resolver.component === resolver_component &&
+                  resolver.class_name === className
                 ) {
-                  notifiableEvent = Object.assign({}, notifiableEvent);
+                  resolver = Object.assign({}, resolver);
 
-                  const {
-                    notification_preferences: preferences,
-                  } = notifiableEvent;
-                  notifiableEvent.notification_preferences = preferences.map(
+                  const { notification_preferences: preferences } = resolver;
+
+                  resolver.notification_preferences = preferences.map(
                     oldPreference => {
                       return oldPreference.id == updatedPreference.id
                         ? updatedPreference
@@ -572,7 +611,7 @@ export default {
                   );
                 }
 
-                return notifiableEvent;
+                return resolver;
               }),
             },
           });

@@ -23,14 +23,11 @@
 namespace totara_notification\local;
 
 use coding_exception;
-use core_component;
-use totara_core\extended_context;
 use totara_notification\event\notifiable_event;
 use totara_notification\notification\built_in_notification;
 use totara_notification\recipient\recipient;
 use totara_notification\resolver\notifiable_event_resolver;
-use totara_notification_mock_notifiable_event;
-use totara_notification_mock_notifiable_event_resolver;
+use totara_notification\resolver\resolver_helper;
 
 class helper {
     /**
@@ -49,43 +46,6 @@ class helper {
     }
 
     /**
-     * @param string $event_class_name
-     * @return string
-     */
-    public static function get_component_of_event_class_name(string $event_class_name): string {
-        $event_class_name = ltrim($event_class_name, '\\');
-        if (!self::is_valid_notifiable_event($event_class_name)) {
-            throw new coding_exception('The event class name is not a notifiable event');
-        }
-
-        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
-            $mock_class = 'totara_notification_mock_notifiable_event';
-            if (class_exists($mock_class) && $mock_class === $event_class_name) {
-                return 'totara_notification';
-            }
-        }
-
-        $parts = explode('\\', $event_class_name);
-        $component = reset($parts);
-
-        $component = clean_param($component, PARAM_COMPONENT);
-        $component_directory = null;
-
-        if (!empty($component)) {
-            // If it is a valid component within the system, its directory must had been
-            // exist, and should be a valid dir path. Otherwise, its directory will not appear
-            // from the result.
-            $component_directory = core_component::get_component_directory($component);
-        }
-
-        if (empty($component) || empty($component_directory)) {
-            throw new coding_exception("Cannot find the component from the event class name");
-        }
-
-        return $component;
-    }
-
-    /**
      * @param string $built_in_notification_class_name
      * @return bool
      */
@@ -98,141 +58,21 @@ class helper {
     }
 
     /**
-     * @param string $event_class_name
-     * @param extended_context $extended_context
-     * @param array $event_data
-     *
-     * @return notifiable_event_resolver
+     * @param string $resolver_class_name
+     * @return array
      */
-    public static function get_resolver_from_notifiable_event(
-        string $event_class_name,
-        extended_context $extended_context,
-        array $event_data
-    ): notifiable_event_resolver {
-        global $CFG;
-        if (!helper::is_valid_notifiable_event($event_class_name)) {
-            throw new coding_exception("Event class name is an invalid notifiable event");
-        }
-
-        $event_class_name = ltrim($event_class_name, '\\');
-
-        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
-            // We are in test environment. Check that if the event class name is equal
-            // to the mock event notifiable event or not.
-            if ('totara_notification_mock_notifiable_event' === $event_class_name) {
-                require_once(
-                    "{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event_resolver.php"
-                );
-
-                return new totara_notification_mock_notifiable_event_resolver($extended_context, $event_data);
-            }
-        }
-
-        $parts = explode("\\", $event_class_name);
-
-        $component = reset($parts);
-        $resolver_name = end($parts);
-
-        $resolver_classname = "{$component}\\totara_notification\\resolver\\{$resolver_name}";
-        if (!class_exists($resolver_classname)) {
-            throw new coding_exception(
-                "Cannot find the resolver for notifiable event '{$event_class_name}'"
-            );
+    public static function get_component_of_recipients(string $resolver_class_name): array {
+        if (!resolver_helper::is_valid_event_resolver($resolver_class_name)) {
+            throw new coding_exception("Resolver class is an invalid notifiable event resolver");
         }
 
         /**
-         * This is metadata programming, which we are going to invoke the construction of
-         * {@see notifiable_event_resolver::__construct()}
+         * @see notifiable_event_resolver::get_notification_available_recipients()
+         * @var string[] $recipients
          */
-        return new $resolver_classname($extended_context, $event_data);
-    }
-
-    /**
-     * @param string $resolver_class_name
-     * @return string
-     */
-    public static function get_notifiable_event_from_resolver(string $resolver_class_name): string {
-        global $CFG;
-
-        if (!is_subclass_of($resolver_class_name, notifiable_event_resolver::class)) {
-            throw new coding_exception("The resolver class name is not a child of " . notifiable_event_resolver::class);
-        }
-
-        $resolver_class_name = ltrim($resolver_class_name, '\\');
-        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
-            // We are in test environment. Check that if the resolver class name is equal
-            // to the mock event notifiable resolver or not.
-            if ('totara_notification_mock_notifiable_event_resolver' === $resolver_class_name) {
-                require_once(
-                    "{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event.php"
-                );
-
-                return totara_notification_mock_notifiable_event::class;
-            }
-        }
-
-        $parts = explode("\\", $resolver_class_name);
-        $component = reset($parts);
-        $event_name = end($parts);
-
-        $notifiable_event_class_name = "{$component}\\event\\{$event_name}";
-        if (!self::is_valid_notifiable_event($notifiable_event_class_name)) {
-            throw new coding_exception(
-                "Cannot find the resolver for notifiable event '{$resolver_class_name}'"
-            );
-        }
-
-        return $notifiable_event_class_name;
-    }
-
-    /**
-     * We are invoking the function {@see notifiable_event::get_notification_title()} to get
-     * the human readable name
-     *
-     * @param string $event_class_name
-     * @return string
-     */
-    public static function get_human_readable_event_name(string $event_class_name): string {
-        if (!self::is_valid_notifiable_event($event_class_name)) {
-            throw new coding_exception("Event class name is an invalid notifiable event");
-        }
-
-        /** @var notifiable_event $event_class_name */
-        return $event_class_name::get_notification_title();
-    }
-
-    /**
-     * @param string $event_class_name
-     * @return string
-     */
-    public static function get_human_readable_plugin_name(string $event_class_name): string {
-        $component = self::get_component_of_event_class_name($event_class_name);
-
-        if (get_string_manager()->string_exists('pluginname', $component)) {
-            $plugin_name = get_string('pluginname', $component);
-        } else {
-            // If component dose not define pluginname in langstring, we just fallback to the name of component, then
-            // put debugging here to let dev know they need to define the pluginname for each plugin.
-            $plugin_name = $component;
-            debugging("pluginnanme need to be defined in langstring for the {$plugin_name}", DEBUG_DEVELOPER);
-        }
-
-        return $plugin_name;
-    }
-
-    /**
-     * @param string $event_class_name
-     * @return array
-     */
-    public static function get_component_of_recipients(string $event_class_name): array {
-        if (!self::is_valid_notifiable_event($event_class_name)) {
-            throw new coding_exception("Event class name is an invalid notifiable event");
-        }
-
-        /** @var notifiable_event $event_class_name */
-        $recipients = $event_class_name::get_notification_available_recipients();
+        $recipients = call_user_func([$resolver_class_name, 'get_notification_available_recipients']);
         if (count($recipients) == 0) {
-            throw new coding_exception("{$event_class_name} need to define recipient");
+            throw new coding_exception("Class {$resolver_class_name} need to define recipient");
         }
 
         return $recipients;
@@ -243,19 +83,6 @@ class helper {
      * @return bool
      */
     public static function is_valid_recipient_class(string $recipient_class): bool {
-        if (!class_exists($recipient_class)) {
-            return false;
-        }
-
-        if (is_a($recipient_class, recipient::class, true)) {
-            return true;
-        }
-
-        $interfaces = class_implements($recipient_class);
-        if (!is_array($interfaces)) {
-            return false;
-        }
-
-        return in_array(recipient::class, $interfaces);
+        return is_a($recipient_class, recipient::class, true);
     }
 }

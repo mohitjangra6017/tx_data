@@ -18,7 +18,7 @@
 
 <template>
   <div class="tui-preferencesTable">
-    <Table :data="notifiableEvents" :expandable-rows="true" :hover-off="true">
+    <Table :data="eventResolvers" :expandable-rows="true" :hover-off="true">
       <template v-slot:header-row>
         <HeaderCell>
           {{ $str('notifications', 'totara_notification') }}
@@ -41,7 +41,7 @@
 
       <template v-slot:expand-content="{ row }">
         <Table
-          :data="row.events"
+          :data="row.resolvers"
           :expandable-rows="true"
           :border-top-hidden="true"
           :border-bottom-hidden="true"
@@ -81,14 +81,14 @@ export default {
       required: true,
     },
 
-    notifiableEvents: {
+    eventResolvers: {
       type: Array,
       default: () => [],
       validator(prop) {
         return prop.every(preference => {
           return (
             'component' in preference &&
-            'events' in preference &&
+            'resolvers' in preference &&
             'recipients' in preference &&
             'plugin_name' in preference
           );

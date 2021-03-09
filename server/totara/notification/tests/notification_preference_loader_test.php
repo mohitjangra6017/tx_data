@@ -22,25 +22,24 @@
  */
 
 use container_course\course;
+use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\model\notification_preference;
 use totara_notification\testing\generator;
+use totara_notification_mock_built_in_notification as mock_built_in;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 
-/**
- * @group totara_notification
- */
-class totara_notification_notification_preference_loader_testcase extends advanced_testcase {
+class totara_notification_notification_preference_loader_testcase extends testcase {
     /**
      * @return void
      */
     protected function setUp(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
         $generator->add_mock_built_in_notification_for_component();
 
-        $generator->include_mock_notifiable_event();
         $generator->include_mock_recipient();
+        $generator->include_mock_notifiable_event_resolver();
     }
 
     /**
@@ -50,11 +49,8 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
-        $mock_preference = notification_preference_loader::get_built_in(
-            totara_notification_mock_built_in_notification::class
-        );
+        $notification_generator = generator::instance();
+        $mock_preference = notification_preference_loader::get_built_in(mock_built_in::class);
 
         // Create at course category level.
         $context_category = context_coursecat::instance($course->category);
@@ -76,14 +72,14 @@ class totara_notification_notification_preference_loader_testcase extends advanc
 
         // Mock one custom record at system context for an event that we are going to fetch notifications for.
         $custom_preference = $notification_generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'kaboom',
                 'subject' => 'my name',
                 'body' => 'body',
                 'body_format' => FORMAT_MOODLE,
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -92,7 +88,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         // and one that is a custom one that we created at this course level.
         $preferences = notification_preference_loader::get_notification_preferences(
             extended_context::make_with_context($context_course),
-            totara_notification_mock_notifiable_event::class
+            mock_resolver::class
         );
 
         self::assertCount(2, $preferences);
@@ -124,27 +120,27 @@ class totara_notification_notification_preference_loader_testcase extends advanc
 
         // Create a custom notification at the top level.
         $system_custom = $notification_generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'data',
                 'subject' => 'body',
                 'title' => 'title',
                 'body_format' => FORMAT_JSON_EDITOR,
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
         // Create a custom notification at the category level, but different from  the system  one.
         $category_custom = $notification_generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_coursecat::instance($course->category)),
             [
                 'body' => 'daa',
                 'subject' => 'ioko',
                 'title' => 'category title',
                 'body_format' => FORMAT_HTML,
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -152,14 +148,12 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         $override_course = $notification_generator->create_overridden_notification_preference(
             $system_custom,
             extended_context::make_with_context($course->get_context()),
-            [
-                'body' => 'override body kjo!',
-            ]
+            ['body' => 'override body kjo!']
         );
 
         $preferences = notification_preference_loader::get_notification_preferences(
             extended_context::make_with_context($course->get_context()),
-            totara_notification_mock_notifiable_event::class
+            mock_resolver::class
         );
 
         // There should have 3 preferences:
@@ -167,7 +161,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         // + One custom at category context
         // + And one mock at the system context.
         self::assertCount(3, $preferences);
-        $mock_preference = notification_preference_loader::get_built_in(totara_notification_mock_built_in_notification::class);
+        $mock_preference = notification_preference_loader::get_built_in(mock_built_in::class);
 
         foreach ($preferences as $preference) {
             self::assertContainsEquals(
@@ -198,9 +192,8 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         $context_course = $course->get_context();
         $context_category = $context_course->get_parent_context();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
-        $system_built_in = notification_preference_loader::get_built_in(totara_notification_mock_built_in_notification::class);
+        $notification_generator = generator::instance();
+        $system_built_in = notification_preference_loader::get_built_in(mock_built_in::class);
 
         // Override this system built in at the category level.
         $category_built_in = $notification_generator->create_overridden_notification_preference(
@@ -213,7 +206,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         // Start loading the preferences.
         $preferences = notification_preference_loader::get_notification_preferences(
             extended_context::make_with_context($context_course),
-            totara_notification_mock_notifiable_event::class
+            mock_resolver::class
         );
 
         // There should only have one preference, as the course context should fall back to the category level.
@@ -230,7 +223,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         $result = notification_preference_loader::get_built_in('this_is_random');
         self::assertNull($result);
 
-        $exist_preference = notification_preference_loader::get_built_in(totara_notification_mock_built_in_notification::class);
+        $exist_preference = notification_preference_loader::get_built_in(mock_built_in::class);
         self::assertNotNull($exist_preference);
     }
 
@@ -247,7 +240,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         /** @var generator $notification_generator */
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_custom = $notification_generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'Custom body',
@@ -256,9 +249,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         );
 
         // Create overridden of system built in at course context.
-        $system_built_in = notification_preference_loader::get_built_in(
-            totara_notification_mock_built_in_notification::class
-        );
+        $system_built_in = notification_preference_loader::get_built_in(mock_built_in::class);
 
         $context_course = context_course::instance($course->id);
         $system_overridden = $notification_generator->create_overridden_notification_preference(

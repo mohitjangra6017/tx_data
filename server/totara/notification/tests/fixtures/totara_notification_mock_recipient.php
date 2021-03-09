@@ -17,13 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang liu <Qingyang.liu@totaralearning.com>
+ * @author  Qingyang liu <Qingyang.liu@totaralearning.com>
  * @package totara_notification
  */
 
 use totara_notification\recipient\recipient;
 
 class totara_notification_mock_recipient implements recipient {
+    /**
+     * The key to set to the array event data.
+     * @var string
+     */
+    public const RECIPIENT_IDS_KEY = 'recipient_ids';
+
     /**
      * @return string
      */
@@ -35,7 +41,11 @@ class totara_notification_mock_recipient implements recipient {
      * @inheritDoc
      */
     public static function get_user_ids(array $data): array {
-        return [];
-    }
+        if (!isset($data[static::RECIPIENT_IDS_KEY])) {
+            return [];
+        }
 
+        // Let the php native to evaluate the data type at key RECIPIENT_IDS_KEY
+        return $data[static::RECIPIENT_IDS_KEY];
+    }
 }

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 namespace totara_notification\webapi\resolver\mutation;
@@ -36,6 +36,7 @@ use totara_notification\entity\notification_preference as entity;
 use totara_notification\local\helper;
 use totara_notification\local\schedule_helper;
 use totara_notification\model\notification_preference;
+use totara_notification\webapi\middleware\validate_resolver_class_name;
 
 class create_notification_preference implements mutation_resolver, has_middleware {
     /**
@@ -46,39 +47,31 @@ class create_notification_preference implements mutation_resolver, has_middlewar
     public static function resolve(array $args, execution_context $ec): notification_preference {
         global $DB;
 
+        // Default to context system if none is provided.
+        $context_id = $args['extended_context']['context_id'] ?? context_system::instance()->id;
         $extended_context = extended_context::make_with_id(
-            $args['context_id'],
-            $args['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
-            $args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
-            $args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
+            $context_id,
+            $args['extended_context']['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
+            $args['extended_context']['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
+            $args['extended_context']['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
         );
 
         // Note: TL-29488 will try to add capability check and advanced feature check to this resolver.
-
-        if ($extended_context->get_context_id() != context_system::instance()->id &&
-            !$ec->has_relevant_context()
-        ) {
-            $ec->set_relevant_context($extended_context->get_context());
+        $context = $extended_context->get_context();
+        if (CONTEXT_SYSTEM != $context->contextlevel && !$ec->has_relevant_context()) {
+            $ec->set_relevant_context($context);
         }
 
-        $event_name = ltrim($args['event_class_name'], '\\');
-        if (!helper::is_valid_notifiable_event($event_name)) {
-            throw new coding_exception(
-                "The event class name is not a notifiable event"
-            );
-        }
-
+        $resolver_class_name = $args['resolver_class_name'];
         $builder = new notification_preference_builder(
-            $event_name,
+            $resolver_class_name,
             $extended_context
         );
 
         $title = $args['title'] ?? null;
 
         if (isset($args['ancestor_id'])) {
-            if ($extended_context->is_natural_context() &&
-                $extended_context->get_context_id() == context_system::instance()->id
-            ) {
+            if ($extended_context->is_natural_context() && CONTEXT_SYSTEM == $context->contextlevel) {
                 // Note that this part is also done in the builder as well.
                 throw new coding_exception(
                     "Cannot create a notification at context system with the ancestor's id set"
@@ -124,7 +117,6 @@ class create_notification_preference implements mutation_resolver, has_middlewar
                 );
             }
 
-
             $builder->set_ancestor_id($args['ancestor_id']);
             $builder->set_notification_class_name($notification_class_name);
         }
@@ -152,7 +144,6 @@ class create_notification_preference implements mutation_resolver, has_middlewar
         }
 
         $builder->set_recipient($args['recipient'] ?? null);
-
         return $builder->save();
     }
 
@@ -165,7 +156,8 @@ class create_notification_preference implements mutation_resolver, has_middlewar
             new clean_content_format('body_format'),
             new clean_content_format('subject_format'),
             new clean_editor_content('body', 'body_format', false),
-            new clean_editor_content('subject', 'subject_format', false)
+            new clean_editor_content('subject', 'subject_format', false),
+            new validate_resolver_class_name('resolver_class_name', true),
         ];
     }
 }

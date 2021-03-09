@@ -66,7 +66,7 @@ class PlaceholderExtension extends BaseExtension {
 
   plugins() {
     return [
-      notificationPlaceholder(this.editor, this.options.event_class_name),
+      notificationPlaceholder(this.editor, this.options.resolver_class_name),
     ];
   }
 }

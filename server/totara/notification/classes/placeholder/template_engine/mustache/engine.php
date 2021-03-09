@@ -25,13 +25,13 @@ namespace totara_notification\placeholder\template_engine\mustache;
 use coding_exception;
 use Mustache_Autoloader;
 use Mustache_Engine as core_mustache_engine;
-use totara_notification\event\notifiable_event;
-use totara_notification\local\helper;
 use totara_notification\placeholder\abstraction\collection_placeholder;
 use totara_notification\placeholder\abstraction\single_placeholder;
 use totara_notification\placeholder\option;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\placeholder\template_engine\engine as engine_interface;
+use totara_notification\resolver\notifiable_event_resolver;
+use totara_notification\resolver\resolver_helper;
 
 /**
  * We are using mustache engine to render the whole template with placeholder
@@ -39,10 +39,10 @@ use totara_notification\placeholder\template_engine\engine as engine_interface;
  */
 class engine implements engine_interface {
     /**
-     * The notifiable event class name.
+     * The notifiable event resolver class name.
      * @var string
      */
-    private $event_class_name;
+    private $resolver_class_name;
 
     /**
      * The generic notifiable event data.
@@ -52,26 +52,26 @@ class engine implements engine_interface {
 
     /**
      * mustache_engine constructor.
-     * @param string $event_class_name
+     * @param string $resolver_class_name
      * @param array  $event_data
      */
-    protected function __construct(string $event_class_name, array $event_data) {
-        $this->event_class_name = $event_class_name;
+    protected function __construct(string $resolver_class_name, array $event_data) {
+        $this->resolver_class_name = $resolver_class_name;
         $this->event_data = $event_data;
     }
 
     /**
-     * @param string $event_class_name
+     * @param string $resolver_class_name
      * @param array  $event_data
      *
      * @return engine
      */
-    public static function create(string $event_class_name, array $event_data): engine {
-        if (!helper::is_valid_notifiable_event($event_class_name)) {
-            throw new coding_exception("The event class name is not a valid notifiable event");
+    public static function create(string $resolver_class_name, array $event_data): engine {
+        if (!resolver_helper::is_valid_event_resolver($resolver_class_name)) {
+            throw new coding_exception("The resolver class is not a valid notifiable event resolver");
         }
 
-        return new static($event_class_name, $event_data);
+        return new static($resolver_class_name, $event_data);
     }
 
     /**
@@ -91,10 +91,10 @@ class engine implements engine_interface {
      */
     protected function get_map_variables(array $provided_only_keys = []): array {
         /**
-         * @see notifiable_event::get_notification_available_placeholder_options()
+         * @see notifiable_event_resolver::get_notification_available_placeholder_options()
          * @var placeholder_option[] $placeholder_options
          */
-        $placeholder_options = call_user_func([$this->event_class_name, 'get_notification_available_placeholder_options']);
+        $placeholder_options = call_user_func([$this->resolver_class_name, 'get_notification_available_placeholder_options']);
         $map_variables = [];
 
         foreach ($placeholder_options as $placeholder_option) {

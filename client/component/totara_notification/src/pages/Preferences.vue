@@ -24,7 +24,7 @@
   >
     <template v-if="!$apollo.loading" v-slot:content>
       <PreferencesTable
-        :notifiable-events="notifiableEvents"
+        :event-resolvers="eventResolvers"
         :context-id="parseInt(contextId)"
         class="tui-preferences__table"
       />
@@ -36,7 +36,7 @@ import Layout from 'tui/components/layouts/LayoutOneColumn';
 import PreferencesTable from 'totara_notification/components/table/PreferencesTable';
 
 // GraphQL queries.
-import getNotifiableEvents from 'totara_notification/graphql/notifiable_events';
+import getEventResolvers from 'totara_notification/graphql/event_resolvers';
 
 export default {
   components: {
@@ -56,27 +56,29 @@ export default {
   },
 
   apollo: {
-    notifiableEvents: {
-      query: getNotifiableEvents,
+    eventResolvers: {
+      query: getEventResolvers,
       variables() {
         return {
-          context_id: this.contextId,
+          extended_context: {
+            context_id: this.contextId,
+          },
         };
       },
 
-      update({ notifiable_events }) {
+      update({ resolvers }) {
         let result = {};
-        notifiable_events.forEach(notifiable_event => {
-          const { component, plugin_name } = notifiable_event;
+        resolvers.forEach(resolver => {
+          const { component, plugin_name } = resolver;
           if (!result[component]) {
             result[component] = {
               component: component,
               plugin_name: plugin_name,
-              events: [],
+              resolvers: [],
             };
           }
 
-          result[component].events.push(notifiable_event);
+          result[component].resolvers.push(resolver);
         });
 
         return Object.values(result);
@@ -86,7 +88,7 @@ export default {
 
   data() {
     return {
-      notifiableEvents: {},
+      eventResolvers: [],
     };
   },
 };

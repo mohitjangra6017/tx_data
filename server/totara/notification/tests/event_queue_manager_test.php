@@ -21,27 +21,23 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\entity\notifiable_event_queue;
 use totara_notification\entity\notification_queue;
 use totara_notification\manager\event_queue_manager;
 use totara_notification\testing\generator;
 
-/**
- * @group totara_notification
- */
-class totara_notification_event_queue_manager_testcase extends advanced_testcase {
+class totara_notification_event_queue_manager_testcase extends testcase {
     /**
      * @return void
      */
     protected function setUp(): void {
-        $generator = self::getDataGenerator();
+        $generator = generator::instance();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
-        $notification_generator->include_mock_notifiable_event();
-
-        $notification_generator->add_mock_built_in_notification_for_component();
+        $generator->include_mock_notifiable_event();
+        $generator->include_mock_notifiable_event_resolver();
+        $generator->add_mock_built_in_notification_for_component();
     }
 
     /**
@@ -60,7 +56,6 @@ class totara_notification_event_queue_manager_testcase extends advanced_testcase
         $valid_queue->set_extended_context(extended_context::make_with_context($context_user));
         $valid_queue->set_decoded_event_data(['message' => 'data']);
         $valid_queue->event_name = totara_notification_mock_notifiable_event::class;
-        $valid_queue->event_time = time();
         $valid_queue->save();
 
         // Create an invalid queue.
@@ -68,15 +63,13 @@ class totara_notification_event_queue_manager_testcase extends advanced_testcase
         $invalid_queue->set_extended_context(extended_context::make_with_context($context_user));
         $invalid_queue->set_decoded_event_data(['boom' => 'kaboom']);
         $invalid_queue->event_name = 'anima_martin_garrix';
-        $invalid_queue->event_time = time();
         $invalid_queue->save();
 
         // There should be two queues within database.
         self::assertEquals(2, $DB->count_records(notifiable_event_queue::TABLE));
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
         $trace = $notification_generator->get_test_progress_trace();
 
         // Process the queue.

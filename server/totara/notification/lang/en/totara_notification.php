@@ -22,6 +22,7 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+$string['cachedef_notifiable_resolver_map'] = 'Notificaon resolver map cache';
 $string['create_notification'] = 'Create notification';
 $string['create_notification_for_event'] = 'Create notification for event {$a}';
 $string['create_notification_select_placeholder'] = 'Select...';
@@ -56,6 +57,7 @@ $string['pluginname'] = 'Centralised notification';
 $string['preferences_page_title'] = 'Notification preferences';
 $string['process_event_queue_task'] = 'Queue event scheduled task';
 $string['process_notification_queue_task'] = 'Queue notification scheduled task';
+$string['process_scheduled_event_task'] = 'Queue scheduled event task';
 $string['recipient'] = 'Recipient';
 $string['required'] = 'Required';
 $string['schedule'] = 'Schedule';

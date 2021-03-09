@@ -27,6 +27,8 @@ use core_component;
 use totara_notification\event\notifiable_event;
 use totara_notification\local\helper;
 use totara_notification\notification\built_in_notification;
+use totara_notification\resolver\notifiable_event_resolver;
+use totara_notification\resolver\resolver_helper;
 
 /**
  * Factory class to create the customized notification based on the component.
@@ -119,30 +121,28 @@ final class built_in_notification_factory {
     }
 
     /**
-     * @param string $event_classname
-     * @return string[]
+     * Returns all the event class names that are built for the resolver (given by $resolver_class_name)
+     *
+     * @param string $resolver_class_name
+     * @return array
      */
-    public static function get_notification_classes_of_notifiable_event(string $event_classname): array {
-        if (!helper::is_valid_notifiable_event($event_classname)) {
+    public static function get_notification_classes_of_event_resolver(string $resolver_class_name): array {
+        if (!resolver_helper::is_valid_event_resolver($resolver_class_name)) {
             throw new coding_exception(
-                "Expecting the argument event class name to implement interface " . notifiable_event::class
+                "Expecting the argument resolver class name to extend the class " . notifiable_event_resolver::class
             );
         }
 
         $notification_classes = self::get_notification_classes();
-        $result = [];
+        $resolver_class_name = ltrim($resolver_class_name, '\\');
 
-        foreach ($notification_classes as $notification_class) {
-            /**
-             * @var string $event_name
-             * @see built_in_notification::get_event_class_name()
-             */
-            $event_name = call_user_func([$notification_class, 'get_event_class_name']);
-            if ($event_name === $event_classname) {
-                $result[] = $notification_class;
+        return array_filter(
+            $notification_classes,
+            function (string $built_in_class) use ($resolver_class_name): bool {
+                /** @see built_in_notification::get_resolver_class_name() */
+                $built_in_resolver_class_name = call_user_func([$built_in_class, 'get_resolver_class_name']);
+                return $built_in_resolver_class_name === $resolver_class_name;
             }
-        }
-
-        return $result;
+        );
     }
 }

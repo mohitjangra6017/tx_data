@@ -11,6 +11,6 @@ extend type Query {
   weka_notification_placeholder_placeholders(
     context_id: param_integer!
     pattern: param_text
-    event_class_name: param_text!
+    resolver_class_name: param_text!
   ): [weka_notification_placeholder_placeholder!]!
 }

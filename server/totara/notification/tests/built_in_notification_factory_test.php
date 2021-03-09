@@ -21,15 +21,14 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_core\event\menuitem_created;
 use totara_notification\factory\built_in_notification_factory;
 use totara_notification\notification\built_in_notification;
 use totara_notification\testing\generator;
+use totara_notification_mock_notifiable_event_resolver as resolver;
 
-/**
- * @group totara_notification
- */
-class totara_notification_built_in_notification_factory_testcase extends advanced_testcase {
+class totara_notification_built_in_notification_factory_testcase extends testcase {
     /**
      * @return void
      */
@@ -47,16 +46,12 @@ class totara_notification_built_in_notification_factory_testcase extends advance
      * @return void
      */
     public function test_get_notification_of_an_event_name(): void {
-        $generator = self::getDataGenerator();
+        $generator = generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
+        $generator->include_mock_built_in_notification();
+        $generator->add_mock_built_in_notification_for_component();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
-        $notification_generator->include_mock_notifiable_event();
-        $notification_generator->add_mock_built_in_notification_for_component();
-
-        $result = built_in_notification_factory::get_notification_classes_of_notifiable_event(
-            totara_notification_mock_notifiable_event::class
-        );
+        $result = built_in_notification_factory::get_notification_classes_of_event_resolver(resolver::class);
 
         self::assertCount(1, $result);
         $first_element = reset($result);
@@ -70,10 +65,11 @@ class totara_notification_built_in_notification_factory_testcase extends advance
     public function test_get_notification_of_an_non_implemented_event_name(): void {
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage(
-            "Expecting the argument event class name to implement interface totara_notification\\event\\notifiable_event"
+            "Expecting the argument resolver class name to extend the class " .
+            "totara_notification\\resolver\\notifiable_event_resolver"
         );
 
-        built_in_notification_factory::get_notification_classes_of_notifiable_event(menuitem_created::class);
+        built_in_notification_factory::get_notification_classes_of_event_resolver(menuitem_created::class);
     }
 
     /**
@@ -82,9 +78,10 @@ class totara_notification_built_in_notification_factory_testcase extends advance
     public function test_get_notification_of_an_non_existed_event_name(): void {
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage(
-            "Expecting the argument event class name to implement interface totara_notification\\event\\notifiable_event"
+            "Expecting the argument resolver class name to extend the class " .
+            "totara_notification\\resolver\\notifiable_event_resolver"
         );
 
-        built_in_notification_factory::get_notification_classes_of_notifiable_event('martin_garrix_classname');
+        built_in_notification_factory::get_notification_classes_of_event_resolver('martin_garrix_classname');
     }
 }

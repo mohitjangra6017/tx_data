@@ -22,20 +22,18 @@
  */
 
 use totara_core\extended_context;
+use core_phpunit\testcase;
 use totara_notification\model\notification_preference_value;
-use totara_notification_mock_built_in_notification as mock_built_in;
 use totara_notification\testing\generator;
+use totara_notification_mock_built_in_notification as mock_built_in;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 
-/**
- * @group totara_notification
- */
-class totara_notification_notification_preference_value_testcase extends advanced_testcase {
+class totara_notification_notification_preference_value_testcase extends testcase {
     /**
      * @return void
      */
     public function test_instantiate_from_built_in(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
         $generator->include_mock_built_in_notification();
 
         $preference_value = notification_preference_value::from_built_in_notification(mock_built_in::class);
@@ -69,13 +67,12 @@ class totara_notification_notification_preference_value_testcase extends advance
      * @return void
      */
     public function test_instiantiate_from_preference_instance(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
-        $generator->include_mock_notifiable_event();
+        $generator = generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
         $generator->include_mock_recipient();
 
         $preference = $generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             ['recipient' => totara_notification_mock_recipient::class]
         );

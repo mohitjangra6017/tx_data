@@ -21,12 +21,14 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
+use totara_notification\local\schedule_helper;
 use totara_notification\schedule\schedule_after_event;
 
 /**
  * Test cases covering the totara_notification\schedule\schedule_after_event class
  */
-class totara_notification_schedule_after_event_test extends advanced_testcase {
+class totara_notification_schedule_after_event_test extends testcase {
 
     /**
      * Check that timestamps are calculated correctly.
@@ -35,16 +37,16 @@ class totara_notification_schedule_after_event_test extends advanced_testcase {
         // Use a fixed timestamp for our tests
         $base_timestamp = 584217720;
 
-        $result = schedule_after_event::calculate_timestamp($base_timestamp, 5);
-        self::assertEquals(584649720, $result, "Offset +5");
+        $result = schedule_after_event::calculate_timestamp($base_timestamp, schedule_helper::days_to_seconds(5));
+        self::assertEquals(584649720, $result, "Offset +5 days");
 
-        $result = schedule_after_event::calculate_timestamp($base_timestamp, 26);
-        self::assertEquals(586464120, $result, "Offset +26");
+        $result = schedule_after_event::calculate_timestamp($base_timestamp, schedule_helper::days_to_seconds(26));
+        self::assertEquals(586464120, $result, "Offset +26 days");
 
         // Check for the exception
         self::expectExceptionMessage('Schedule after event must have a offset greater than zero');
         self::expectException(\coding_exception::class);
-        schedule_after_event::calculate_timestamp($base_timestamp, -10);
+        schedule_after_event::calculate_timestamp($base_timestamp, schedule_helper::days_to_seconds(-10));
     }
 
     /**
@@ -54,12 +56,12 @@ class totara_notification_schedule_after_event_test extends advanced_testcase {
         // Assert the singular & double come back correctly
         $this->assertEquals(
             get_string('schedule_label_after_event_singular', 'totara_notification', 1),
-            schedule_after_event::get_label(1),
+            schedule_after_event::get_label(schedule_helper::days_to_seconds(1)),
         );
 
         $this->assertEquals(
             get_string('schedule_label_after_event', 'totara_notification', 5),
-            schedule_after_event::get_label(5),
+            schedule_after_event::get_label(schedule_helper::days_to_seconds(5)),
         );
     }
 
@@ -68,7 +70,7 @@ class totara_notification_schedule_after_event_test extends advanced_testcase {
      */
     public function test_default_value() {
         $result = schedule_after_event::default_value(10);
-        self::assertEquals(10, $result);
+        self::assertEquals(10 * DAYSECS, $result);
 
         self::expectExceptionMessage('Schedule After Event must have had a days_offset provided');
         self::expectException(\coding_exception::class);
@@ -87,7 +89,7 @@ class totara_notification_schedule_after_event_test extends advanced_testcase {
             ['5', true],
         ];
 
-        foreach ($test_cases as list($value, $expected_result)) {
+        foreach ($test_cases as [$value, $expected_result]) {
             self::assertEquals($expected_result, schedule_after_event::validate_offset($value), $value);
         }
     }

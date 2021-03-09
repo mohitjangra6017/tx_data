@@ -24,32 +24,67 @@ namespace totara_notification\local;
 
 use coding_exception;
 use core_component;
+use totara_notification\resolver\abstraction\scheduled_event_resolver;
+use totara_notification\resolver\resolver_helper;
 use totara_notification\schedule\notification_schedule;
 use totara_notification\schedule\schedule_after_event;
 use totara_notification\schedule\schedule_before_event;
 use totara_notification\schedule\schedule_on_event;
 
 class schedule_helper {
-
+    /**
+     * @var array|null
+     */
     private static $schedule_types;
+
+    /**
+     * The unit string in days.
+     * @var string
+     */
+    public const DAY = 'DAY';
+
+    /**
+     * The unit string in seconds.
+     * @var string
+     */
+    public const SECOND = 'SECOND';
 
     /**
      * Return the results of get_notification_available_schedules for the specific event
      *
-     * @param string $event_class_name
-     * @return array
+     * @param string $resolver_class_name
+     * @return string[]
      */
-    public static function get_available_schedules_for_event(string $event_class_name): array {
-        if (!helper::is_valid_notifiable_event($event_class_name)) {
-            throw new coding_exception("Event class name is an invalid notifiable event");
-        }
-
-        $valid_schedules = call_user_func([$event_class_name, 'get_notification_available_schedules']);
+    public static function get_available_schedules_for_resolver(string $resolver_class_name): array {
+        $valid_schedules = static::get_valid_schedule_classes_for_resolver($resolver_class_name);
         $identifiers = [];
+
         foreach ($valid_schedules as $valid_schedule) {
+            /** @see notification_schedule::identifier() */
             $identifiers[] = call_user_func([$valid_schedule, 'identifier']);
         }
+
         return $identifiers;
+    }
+
+    /**
+     * Returning an array of concrete class name for notification schedule
+     *
+     * @param string $resolver_class_name
+     * @return string[]
+     */
+    public static function get_valid_schedule_classes_for_resolver(string $resolver_class_name): array {
+        if (!resolver_helper::is_valid_event_resolver($resolver_class_name)) {
+            throw new coding_exception('Resolver class is not a valid resolver');
+        }
+
+        if (resolver_helper::is_valid_scheduled_event_resolver($resolver_class_name)) {
+            /** @see scheduled_event_resolver::get_notification_available_schedules */
+            return call_user_func([$resolver_class_name, 'get_notification_available_schedules']);
+        }
+
+        // By default, all the notifiable resolver event should only support on_event .
+        return [schedule_on_event::class];
     }
 
     /**
@@ -99,12 +134,17 @@ class schedule_helper {
     }
 
     /**
-     * @param int $days_offset
+     * Passing the $offset as in the second units, this function will try to
+     * convert it into the human readable string label.
+     *
+     * @param int $offset
      * @return string
      */
-    public static function get_human_readable_schedule_label(int $days_offset): string {
-        $schedule_class_name = self::get_schedule_class_from_offset($days_offset);
-        return call_user_func([$schedule_class_name, 'get_label'], $days_offset);
+    public static function get_human_readable_schedule_label(int $offset): string {
+        $schedule_class_name = self::get_schedule_class_from_offset($offset);
+
+        /** @see notification_schedule::get_label() */
+        return call_user_func([$schedule_class_name, 'get_label'], $offset);
     }
 
     /**
@@ -119,38 +159,53 @@ class schedule_helper {
     }
 
     /**
-     * Helper that forces a raw offset to a FE-friendly value.
-     *
-     * @param int $raw_offset
-     * @return int
-     */
-    public static function get_schedule_offset(int $raw_offset): int {
-        return $raw_offset < 0 ? $raw_offset * -1 : $raw_offset;
-    }
-
-    /**
      * Proxy to the scheduled event calculate function
      *
      * @param int $event_timestamp
-     * @param int $days_offset
+     * @param int $offset           The offset time in seconds UNIT
+     *
      * @return int
      */
-    public static function calculate_schedule_timestamp(int $event_timestamp, int $days_offset): int {
-        $schedule_class_name = self::get_schedule_class_from_offset($days_offset);
-        return call_user_func([$schedule_class_name, 'calculate_timestamp'], $event_timestamp, $days_offset);
+    public static function calculate_schedule_timestamp(int $event_timestamp, int $offset): int {
+        $schedule_class_name = self::get_schedule_class_from_offset($offset);
+        return call_user_func([$schedule_class_name, 'calculate_timestamp'], $event_timestamp, $offset);
     }
 
     /**
      * Based on the provided schedule type, convert the schedule_offset into a form
      * that can be stored in the database.
      *
-     * @param string $schedule_type
-     * @param int $schedule_offset
+     * Note: it is converting from DAYS unit into SECONDS unit.
+     *
+     * @param string    $schedule_type
+     * @param int       $schedule_offset    The schedule offset is in days UNIT.
+     *
      * @return int
      */
     public static function convert_schedule_offset_for_storage(string $schedule_type, int $schedule_offset): int {
         // Based on the provided type, find the actual class for it.
         $class = self::get_schedule_class_from_type($schedule_type);
+
+        /** @see notification_schedule::default_value() */
         return call_user_func([$class, 'default_value'], $schedule_offset);
+    }
+
+    /**
+     * Note that the function does not convert any negative number
+     * to a positive number magically.
+     *
+     * @param int $days
+     * @return int
+     */
+    public static function days_to_seconds(int $days): int {
+        return ($days * DAYSECS);
+    }
+
+    /**
+     * @param int $schedule_offset
+     * @return bool
+     */
+    public static function is_on_event(int $schedule_offset): bool {
+        return 0 === $schedule_offset;
     }
 }

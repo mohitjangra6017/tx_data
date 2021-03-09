@@ -21,26 +21,24 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\testing\generator;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-/**
- * @group totara_notification
- */
-class totara_notification_webapi_override_notification_preference_testcase extends advanced_testcase {
+class totara_notification_webapi_override_notification_preference_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**
      * @return void
      */
     protected function setUp(): void {
-        $generator = self::getDataGenerator();
+        $notification_generator = generator::instance();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
         $notification_generator->add_mock_built_in_notification_for_component();
         $notification_generator->include_mock_recipient();
+        $notification_generator->include_mock_notifiable_event_resolver();
     }
 
     /**
@@ -56,7 +54,7 @@ class totara_notification_webapi_override_notification_preference_testcase exten
             'totara_notification_override_notification_preference',
             [
                 'context_id' => context_course::instance($course->id)->id,
-                'event_class_name' => totara_notification_mock_built_in_notification::class,
+                'resolver_class_name' => mock_resolver::class,
             ]
         );
 
@@ -91,12 +89,12 @@ class totara_notification_webapi_override_notification_preference_testcase exten
             'totara_notification_override_notification_preference',
             [
                 'context_id' => $context_course->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'resolver_class_name' => mock_resolver::class,
                 'ancestor_id' => $system_built_in->get_id(),
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_HTML,
                 'body' => 'This is body',
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -132,16 +130,16 @@ class totara_notification_webapi_override_notification_preference_testcase exten
 
         self::assertArrayHasKey('extended_context', $notification_preference);
 
-        self::assertArrayHasKey('event_name', $notification_preference);
+        self::assertArrayHasKey('resolver_name', $notification_preference);
         self::assertEquals(
-            totara_notification_mock_notifiable_event::get_notification_title(),
-            $notification_preference['event_name']
+            totara_notification_mock_notifiable_event_resolver::get_notification_title(),
+            $notification_preference['resolver_name']
         );
 
-        self::assertArrayHasKey('event_class_name', $notification_preference);
+        self::assertArrayHasKey('resolver_class_name', $notification_preference);
         self::assertEquals(
-            totara_notification_mock_built_in_notification::get_event_class_name(),
-            $notification_preference['event_class_name']
+            totara_notification_mock_built_in_notification::get_resolver_class_name(),
+            $notification_preference['resolver_class_name']
         );
     }
 }

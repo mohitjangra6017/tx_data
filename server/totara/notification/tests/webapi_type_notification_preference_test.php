@@ -21,16 +21,13 @@
  * @package totara_notification
  */
 
-use totara_notification\local\helper;
 use totara_notification\model\notification_preference as model;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\type\notification_preference;
 use totara_webapi\phpunit\webapi_phpunit_helper;
+use core_phpunit\testcase;
 
-/**
- * @group totara_notification
- */
-class totara_notification_webapi_type_notification_preference_testcase extends advanced_testcase {
+class totara_notification_webapi_type_notification_preference_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**
@@ -49,9 +46,10 @@ class totara_notification_webapi_type_notification_preference_testcase extends a
      * @return void
      */
     protected function setUp(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
         $generator->include_mock_notifiable_event();
+        $generator->include_mock_notifiable_event_resolver();
+
         $this->system_built_in = $generator->add_mock_built_in_notification_for_component();
     }
 
@@ -119,20 +117,6 @@ class totara_notification_webapi_type_notification_preference_testcase extends a
     /**
      * @return void
      */
-    public function test_resolve_component(): void {
-        self::assertEquals(
-            helper::get_component_of_event_class_name($this->system_built_in->get_event_class_name()),
-            $this->resolve_graphql_type(
-                $this->get_graphql_name(notification_preference::class),
-                'component',
-                $this->system_built_in,
-            )
-        );
-    }
-
-    /**
-     * @return void
-     */
     public function test_resolve_extended_context(): void {
         self::assertEquals(
             $this->system_built_in->get_extended_context(),
@@ -160,12 +144,12 @@ class totara_notification_webapi_type_notification_preference_testcase extends a
     /**
      * @return void
      */
-    public function test_resolve_event_name(): void {
+    public function test_resolve_resolver_component_name(): void {
         self::assertEquals(
-            totara_notification_mock_notifiable_event::get_notification_title(),
+            'totara_notification',
             $this->resolve_graphql_type(
                 $this->get_graphql_name(notification_preference::class),
-                'event_name',
+                'resolver_component',
                 $this->system_built_in
             )
         );
@@ -174,12 +158,26 @@ class totara_notification_webapi_type_notification_preference_testcase extends a
     /**
      * @return void
      */
-    public function test_resolve_event_class_name(): void {
+    public function test_resolve_resolver_name(): void {
         self::assertEquals(
-            totara_notification_mock_notifiable_event::class,
+            totara_notification_mock_notifiable_event_resolver::get_notification_title(),
             $this->resolve_graphql_type(
                 $this->get_graphql_name(notification_preference::class),
-                'event_class_name',
+                'resolver_name',
+                $this->system_built_in
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_resolve_resolver_class_name(): void {
+        self::assertEquals(
+            totara_notification_mock_notifiable_event_resolver::class,
+            $this->resolve_graphql_type(
+                $this->get_graphql_name(notification_preference::class),
+                'resolver_class_name',
                 $this->system_built_in
             )
         );

@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\entity\notifiable_event_queue;
 use totara_notification\entity\notification_queue;
@@ -31,18 +32,13 @@ use totara_notification\testing\generator;
 
 /**
  * This test is indirectly cover {@see event_queue_manager}
- *
- * @group totara_notification
  */
-class totara_notification_process_event_task_testcase extends advanced_testcase {
+class totara_notification_process_event_task_testcase extends testcase {
     /**
      * @return void
      */
     protected function setUp(): void {
-        $generator = self::getDataGenerator();
-
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
         $notification_generator->include_mock_notifiable_event();
     }
 
@@ -67,7 +63,6 @@ class totara_notification_process_event_task_testcase extends advanced_testcase 
         $event_queue = new notifiable_event_queue();
         $event_queue->event_name = totara_notification_mock_notifiable_event::class;
         $event_queue->set_decoded_event_data($data);
-        $event_queue->event_time = time();
         $event_queue->set_extended_context(extended_context::make_with_context($context_system));
         $event_queue->save();
 
@@ -119,7 +114,6 @@ class totara_notification_process_event_task_testcase extends advanced_testcase 
         // Create mock event first.
         $event_queue = new notifiable_event_queue();
         $event_queue->event_name = totara_notification_mock_notifiable_event::class;
-        $event_queue->event_time = time();
         $event_queue->set_decoded_event_data([]);
         $event_queue->set_extended_context(extended_context::make_with_context($context_system));
         $event_queue->save();
@@ -149,7 +143,6 @@ class totara_notification_process_event_task_testcase extends advanced_testcase 
         // Create mock event first.
         $event_queue = new notifiable_event_queue();
         $event_queue->event_name = 'martin_garrix_anima_event';
-        $event_queue->event_time = time();
         $event_queue->set_decoded_event_data([]);
         $event_queue->set_extended_context(extended_context::make_with_context($context_system));
         $event_queue->save();

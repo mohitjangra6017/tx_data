@@ -45,17 +45,17 @@ class notification_preference_loader {
      *   that we want the ancestor's id to be unique and it should be ordering the context from bottom up (descendant).
      *
      * @param extended_context $extended_context
-     * @param string|null $event_class_name If the parameter is not provided, then we are assuming to load all of notification
-     *                                      preferences..
-     * @param bool $at_context_only         The parameter will narrow down the list of notification preferences overridden or
-     *                                      created at specific given context only.
+     * @param string|null      $resolver_class_name If the parameter is not provided, then we are assuming to load all
+     *                                              of notification preferences..
+     * @param bool             $at_context_only     The parameter will narrow down the list of notification preferences
+     *                                              overridden or created at specific given context only.
      *
      * @return model[]
      */
     public static function get_notification_preferences(extended_context $extended_context,
-                                                        ?string $event_class_name = null,
+                                                        ?string $resolver_class_name = null,
                                                         bool $at_context_only = false): array {
-        $event_class_name = ltrim($event_class_name, '\\');
+        $resolver_class_name = ltrim($resolver_class_name, '\\');
 
         // Get all the notifications at a specific contexts for the event first.
         $current_context_builder = builder::table(entity::TABLE, 'np');
@@ -68,9 +68,9 @@ class notification_preference_loader {
         $current_context_builder->map_to([static::class, 'create_preference']);
 
         $current_context_builder->when(
-            !empty($event_class_name),
-            function (builder $inner_builder) use ($event_class_name): void {
-                $inner_builder->where('event_class_name', $event_class_name);
+            !empty($resolver_class_name),
+            function (builder $inner_builder) use ($resolver_class_name): void {
+                $inner_builder->where('resolver_class_name', $resolver_class_name);
             }
         );
 
@@ -91,9 +91,9 @@ class notification_preference_loader {
         $upper_context_builder->where_in('context_id', $context_ids);
 
         $upper_context_builder->when(
-            !empty($event_class_name),
-            function (builder $inner_builder) use ($event_class_name) {
-                $inner_builder->where('event_class_name', $event_class_name);
+            !empty($resolver_class_name),
+            function (builder $inner_builder) use ($resolver_class_name) {
+                $inner_builder->where('resolver_class_name', $resolver_class_name);
             }
         );
 
@@ -101,9 +101,9 @@ class notification_preference_loader {
         $sub_upper_ancestor->select('bnp.ancestor_id AS id');
         $sub_upper_ancestor->where_not_null('bnp.ancestor_id');
         $sub_upper_ancestor->when(
-            !empty($event_class_name),
-            function (builder $inner_builder) use ($event_class_name) {
-                $inner_builder->where('bnp.event_class_name', $event_class_name);
+            !empty($resolver_class_name),
+            function (builder $inner_builder) use ($resolver_class_name) {
+                $inner_builder->where('bnp.resolver_class_name', $resolver_class_name);
             }
         );
 
@@ -154,11 +154,11 @@ class notification_preference_loader {
         //  SELECT bnp.ancestor_id as id
         //  FROM phpunit_00notification_preference "bnp"
         //  WHERE bnp.ancestor_id IS NOT NULL
-        //  AND bnp.event_class_name = $1
+        //  AND bnp.resolver_class_name = $1
         //  AND bnp.context_id IN ($2, $3)
         // ) "ancestor" ON np.id = ancestor.id
         // WHERE "np".context_id IN ($4, $5)
-        //  AND "np".event_class_name = $6
+        //  AND "np".resolver_class_name = $6
         //  AND (ancestor.id IS NULL AND (np.id NOT IN ($8) OR np.ancestor_id NOT IN ($9)))
         //
         // ===== End of SQL =====
@@ -185,7 +185,7 @@ class notification_preference_loader {
      * Find built in notification preference at given context. Default to context system
      * if it is not provided.
      *
-     * @param string   $notification_class_name
+     * @param string                $notification_class_name
      * @param extended_context|null $extended_context
      *
      * @return model|null

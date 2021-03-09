@@ -22,9 +22,10 @@
  */
 
 use core\json_editor\formatter\default_formatter;
+use core_phpunit\testcase;
 use totara_notification\json_editor\node\placeholder;
 
-class totara_notification_json_editor_node_placeholder_testcase extends advanced_testcase {
+class totara_notification_json_editor_node_placeholder_testcase extends testcase {
     /**
      * @return void
      */
@@ -148,7 +149,7 @@ class totara_notification_json_editor_node_placeholder_testcase extends advanced
                 'type' => placeholder::get_type(),
                 'attrs' => [
                     'key' => 'hello:hello',
-                    'label' => /** @lang text */'<script>alert("boom")</script>'
+                    'label' => /** @lang text */ '<script>alert("boom")</script>',
                 ],
             ])
         );
@@ -158,15 +159,15 @@ class totara_notification_json_editor_node_placeholder_testcase extends advanced
                 'type' => placeholder::get_type(),
                 'attrs' => [
                     'key' => 'hello:hello',
-                    'label' => 'Abc'
-                ]
+                    'label' => 'Abc',
+                ],
             ],
             placeholder::clean_raw_node([
                 'type' => placeholder::get_type(),
                 'attrs' => [
                     'key' => '[hello:hello]',
-                    'label' => 'Abc'
-                ]
+                    'label' => 'Abc',
+                ],
             ])
         );
     }
@@ -182,8 +183,8 @@ class totara_notification_json_editor_node_placeholder_testcase extends advanced
             'type' => placeholder::get_type(),
             'attrs' => [
                 'key' => '[hello+:hello+]',
-                'label' => 'Abc'
-            ]
+                'label' => 'Abc',
+            ],
         ]);
     }
 
@@ -194,58 +195,58 @@ class totara_notification_json_editor_node_placeholder_testcase extends advanced
         $formatter = new default_formatter();
 
         self::assertEquals(
-            /** @lang text */'<span data-key="key:doctor" data-label="Doctor">[key:doctor]</span>',
+        /** @lang text */ '<span data-key="key:doctor" data-label="Doctor">[key:doctor]</span>',
             (placeholder::from_node([
                 'type' => placeholder::get_type(),
                 'attrs' => [
                     'key' => 'key:doctor',
                     'label' => 'Doctor',
-                ]
+                ],
             ]))->to_html($formatter)
         );
 
         self::assertEquals(
-            /** @lang text */'<span data-key="key:doctor_what" data-label="Doctor">[key:doctor_what]</span>',
+        /** @lang text */ '<span data-key="key:doctor_what" data-label="Doctor">[key:doctor_what]</span>',
             (placeholder::from_node([
                 'type' => placeholder::get_type(),
                 'attrs' => [
                     'key' => 'key:doctor_what',
                     'label' => 'Doctor',
-                ]
+                ],
             ]))->to_html($formatter)
         );
 
         self::assertEquals(
-            /** @lang text */'<span data-key="key:doctor" data-label="Doctor">[key:doctor]</span>',
+        /** @lang text */ '<span data-key="key:doctor" data-label="Doctor">[key:doctor]</span>',
             (placeholder::from_node([
                 'type' => placeholder::get_type(),
                 'attrs' => [
                     'key' => '[key:doctor]',
                     'label' => 'Doctor',
-                ]
+                ],
             ]))->to_html($formatter)
         );
 
         self::assertEquals(
-            /** @lang text */'<span data-key="key:doctor" data-label="Doctor">[key:doctor]</span>',
+        /** @lang text */ '<span data-key="key:doctor" data-label="Doctor">[key:doctor]</span>',
             (placeholder::from_node([
                 'type' => placeholder::get_type(),
                 'attrs' => [
                     'key' => 'key+:doctor@*(*+()',
                     'label' => 'Doctor',
-                ]
+                ],
             ]))->to_html($formatter)
         );
 
-        $xss = s(/** @lang text */'<script>alert("Doctor")</script>');
+        $xss = s(/** @lang text */ '<script>alert("Doctor")</script>');
         self::assertEquals(
             '<span data-key="key:doctor" data-label="' . $xss . '">[key:doctor]</span>',
             (placeholder::from_node([
                 'type' => placeholder::get_type(),
                 'attrs' => [
                     'key' => 'key:doctor',
-                    'label' => /** @lang text */'<script>alert("Doctor")</script>',
-                ]
+                    'label' => /** @lang text */ '<script>alert("Doctor")</script>',
+                ],
             ]))->to_html($formatter)
         );
     }

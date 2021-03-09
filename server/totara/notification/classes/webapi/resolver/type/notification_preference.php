@@ -27,9 +27,10 @@ use context_system;
 use core\format;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
-use totara_notification\local\helper;
+use totara_notification\local\schedule_helper;
 use totara_notification\model\notification_preference as model;
 use totara_notification\model\notification_preference_value as model_value;
+use totara_notification\resolver\resolver_helper;
 use totara_notification\webapi\formatter\notification_preference_formatter;
 
 class notification_preference implements type_resolver {
@@ -45,9 +46,9 @@ class notification_preference implements type_resolver {
             throw new coding_exception("Expected notification preference model");
         }
 
-        if ('component' === $field) {
-            $event_class_name = $source->get_event_class_name();
-            return helper::get_component_of_event_class_name($event_class_name);
+        if ('resolver_component' === $field) {
+            $resolver_class_name = $source->get_resolver_class_name();
+            return resolver_helper::get_component_of_resolver_class_name($resolver_class_name);
         } else if ('parent_id' === $field) {
             $parent = $source->get_parent();
             return (null === $parent) ? null : $parent->get_id();
@@ -81,15 +82,16 @@ class notification_preference implements type_resolver {
         // our model will try to look up DB for its parent, unless its parent is already
         // fetched in the model itself.
         $formatter = new notification_preference_formatter($source, $context);
-        $format = $args['format'] ?? null;
+        $format = null;
 
         if (in_array($field, ['body', 'subject'])) {
             // For these fields, we are defaulting the format to format raw.
             // Because we would want these fields to be formatted as raw content
             // when the format argument is not provided.
-            $format = format::FORMAT_RAW;
+            $format = $args['format'] ?? format::FORMAT_RAW;
+        } else if ('schedule_offset' === $field) {
+            $format = $args['unit'] ?? schedule_helper::SECOND;
         }
-
 
         return $formatter->format($field, $format);
     }

@@ -21,30 +21,53 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_notification\local\schedule_helper;
 use totara_notification\schedule\schedule_after_event;
 use totara_notification\schedule\schedule_before_event;
 use totara_notification\schedule\schedule_on_event;
-use totara_notification_mock_notifiable_event as mock_notifiable_event;
+use totara_notification\testing\generator;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
+use totara_notification_mock_scheduled_aware_event_resolver as mock_scheduled_resolver;
 
-class totara_notification_local_schedule_helper_testcase extends advanced_testcase {
+class totara_notification_local_schedule_helper_testcase extends testcase {
     /**
      * @return void
      */
-    public function test_get_available_schedules_for_event(): void {
+    protected function setUp(): void {
+        $generator = generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
+        $generator->include_mock_scheduled_aware_notifiable_event_resolver();
+    }
+
+
+    /**
+     * @return void
+     */
+    public function test_get_available_schedules_for_notifiable_event_resolver(): void {
+        $expected = ['ON_EVENT'];
+
+        $schedules = schedule_helper::get_available_schedules_for_resolver(mock_resolver::class);
+        self::assertSame($expected, $schedules);
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage('Resolver class is not a valid resolver');
+
+        schedule_helper::get_available_schedules_for_resolver('invalid_event');
+    }
+
+    /**
+     * @return void
+     */
+    public function test_get_available_schedules_for_scheduled_aware_event(): void {
         $expected = [
-            'ON_EVENT',
             'BEFORE_EVENT',
             'AFTER_EVENT',
         ];
 
-        $schedules = schedule_helper::get_available_schedules_for_event(mock_notifiable_event::class);
+
+        $schedules = schedule_helper::get_available_schedules_for_resolver(mock_scheduled_resolver::class);
         self::assertSame($expected, $schedules);
-
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage('Event class name is an invalid notifiable event');
-
-        schedule_helper::get_available_schedules_for_event('invalid_event');
     }
 
     /**
@@ -87,15 +110,15 @@ class totara_notification_local_schedule_helper_testcase extends advanced_testca
      */
     public function test_get_human_readable_schedule_label(): void {
         $test_cases = [
-            -1 => get_string('schedule_label_before_event_singular', 'totara_notification', 1),
-            -5 => get_string('schedule_label_before_event', 'totara_notification', 5),
+            (-1 * DAYSECS) => get_string('schedule_label_before_event_singular', 'totara_notification', 1),
+            (-5 * DAYSECS) => get_string('schedule_label_before_event', 'totara_notification', 5),
             0 => get_string('schedule_label_on_event', 'totara_notification', 0),
-            1 => get_string('schedule_label_after_event_singular', 'totara_notification', 1),
-            5 => get_string('schedule_label_after_event', 'totara_notification', 5),
+            (1 * DAYSECS) => get_string('schedule_label_after_event_singular', 'totara_notification', 1),
+            (5 * DAYSECS) => get_string('schedule_label_after_event', 'totara_notification', 5),
         ];
 
         foreach ($test_cases as $offset => $expected) {
-            self::assertSame($expected, schedule_helper::get_human_readable_schedule_label($offset));
+            self::assertSame($expected, schedule_helper:: get_human_readable_schedule_label($offset));
         }
     }
 
@@ -117,28 +140,13 @@ class totara_notification_local_schedule_helper_testcase extends advanced_testca
     /**
      * @return void
      */
-    public function test_get_schedule_offset(): void {
-        $test_cases = [
-            -5 => 5,
-            0 => 0,
-            5 => 5,
-        ];
-
-        foreach ($test_cases as $offset => $expected) {
-            self::assertSame($expected, schedule_helper::get_schedule_offset($offset));
-        }
-    }
-
-    /**
-     * @return void
-     */
     public function test_calculate_schedule_timestamp(): void {
         $base_timestamp = 1614732640;
 
         $test_cases = [
-            -5 => 1614300640,
-            0 => 1614732640,
-            5 => 1615164640,
+            (-5 * DAYSECS) => 1614300640,
+            (0 * DAYSECS) => 1614732640,
+            (5 * DAYSECS) => 1615164640,
         ];
 
         foreach ($test_cases as $offset => $expected) {
@@ -151,9 +159,9 @@ class totara_notification_local_schedule_helper_testcase extends advanced_testca
      */
     public function test_convert_schedule_offset_for_storage(): void {
         $test_cases = [
-            -5 => ['BEFORE_EVENT', 5],
+            -(5 * DAYSECS) => ['BEFORE_EVENT', 5],
             0 => ['ON_EVENT', 0],
-            5 => ['AFTER_EVENT', 5],
+            (5 * DAYSECS) => ['AFTER_EVENT', 5],
         ];
 
         foreach ($test_cases as $expected => $test_data) {
@@ -164,8 +172,22 @@ class totara_notification_local_schedule_helper_testcase extends advanced_testca
     /**
      * @return void
      */
-    protected function setUp(): void {
-        global $CFG;
-        require_once("{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event.php");
+    public function test_convert_days_to_seconds(): void {
+        self::assertEquals((24 * 60 * 60 * 5), schedule_helper::days_to_seconds(5));
+        self::assertEquals((24 * 60 * 60 * -5), schedule_helper::days_to_seconds(-5));
+
+        // This assertion will fail if we turn on strict_type, but php native
+        // without strict_type will cast the decimal number to integer.
+        self::assertEquals((24 * 60 * 60 * 42), schedule_helper::days_to_seconds(42.01));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_check_schedule_status(): void {
+        self::assertFalse(schedule_helper::is_on_event(1));
+        self::assertFalse(schedule_helper::is_on_event(2));
+        self::assertFalse(schedule_helper::is_on_event(3));
+        self::assertTrue(schedule_helper::is_on_event(0));
     }
 }

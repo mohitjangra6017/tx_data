@@ -22,11 +22,13 @@
  */
 namespace totara_notification\webapi\resolver\mutation;
 
+use coding_exception;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_login;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
 use totara_notification\local\schedule_helper;
+use totara_notification\schedule\notification_schedule;
 
 /**
  * Mutation to validate the notification preference input data from user.
@@ -47,6 +49,8 @@ class validate_notification_preference_input implements mutation_resolver, has_m
         $body = $args['body'] ?? '';
         $subject = $args['subject'] ?? '';
         $schedule_type = $args['schedule_type'] ?? '';
+
+        // Note that the schedule_offset that we are getting from external is in days UNIT.
         $schedule_offset = $args['schedule_offset'] ?? '';
 
         $result = [];
@@ -83,6 +87,10 @@ class validate_notification_preference_input implements mutation_resolver, has_m
             try {
                 $schedule_class = schedule_helper::get_schedule_class_from_type($schedule_type);
                 if ($schedule_class) {
+                    /**
+                     * @see notification_schedule::validate_offset()
+                     * @var bool $offset_valid
+                     */
                     $offset_valid = call_user_func([$schedule_class, 'validate_offset'], $schedule_offset);
                     if (!$offset_valid) {
                         $result[] = [
@@ -91,7 +99,7 @@ class validate_notification_preference_input implements mutation_resolver, has_m
                         ];
                     }
                 }
-            } catch (\coding_exception $exception) {
+            } catch (coding_exception $exception) {
                 $result[] = [
                     'field_name' => 'schedule_type',
                     'error_message' => get_string('invalid_input', 'totara_notification'),

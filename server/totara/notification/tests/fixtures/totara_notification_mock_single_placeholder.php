@@ -37,7 +37,7 @@ class totara_notification_mock_single_placeholder implements single_placeholder 
 
     /**
      * totara_notification_mock_placeholder constructor.
-     * @param array $data   A hash map of key and value.
+     * @param array $data A hash map of key and value.
      */
     public function __construct(array $data) {
         $this->map_data = $data;

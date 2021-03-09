@@ -37,7 +37,7 @@
         :preference="preference"
         :parent-value="parentValue"
         :valid-schedule-types="validScheduleTypes"
-        :event-class-name="eventClassName"
+        :resolver-class-name="resolverClassName"
         :available-recipients="availableRecipients"
         @submit="handleSubmit"
         @cancel="$emit('request-close')"
@@ -93,7 +93,7 @@ export default {
       },
     },
 
-    eventClassName: {
+    resolverClassName: {
       type: String,
       required: true,
     },
@@ -112,8 +112,8 @@ export default {
 
   methods: {
     handleSubmit(formValue) {
-      if (this.eventClassName) {
-        formValue.event_class_name = this.eventClassName;
+      if (this.resolverClassName) {
+        formValue.resolver_class_name = this.resolverClassName;
       }
 
       this.$emit('form-submit', formValue);

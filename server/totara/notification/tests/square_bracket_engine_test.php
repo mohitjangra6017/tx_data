@@ -21,22 +21,22 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_notification\placeholder\option;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\placeholder\template_engine\square_bracket\engine;
 use totara_notification\testing\generator;
-use totara_notification_mock_notifiable_event as mock_notifiable_event;
+use totara_notification_mock_notifiable_event_resolver as mock_notifiable_event_resolver;
 use totara_notification_mock_single_placeholder as mock_placeholder;
 
-class totara_notification_square_bracket_engine_testcase extends advanced_testcase {
+class totara_notification_square_bracket_engine_testcase extends testcase {
     /**
      * @return void
      */
     protected function setUp(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
         $generator->include_mock_single_placeholder();
-        $generator->include_mock_notifiable_event();
+        $generator->include_mock_notifiable_event_resolver();
     }
 
     /**
@@ -87,15 +87,14 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
      * @return void
      */
     public function test_replace_text(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
 
         mock_placeholder::set_options(
             option::create('firstname', 'First name'),
             option::create('lastname', 'Last name'),
         );
 
-        mock_notifiable_event::add_placeholder_options(
+        mock_notifiable_event_resolver::add_placeholder_options(
             placeholder_option::create(
                 'user',
                 mock_placeholder::class,
@@ -107,7 +106,7 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
         );
 
         $engine = engine::create(
-            mock_notifiable_event::class,
+            mock_notifiable_event_resolver::class,
             [
                 'firstname' => 'Martin',
                 'lastname' => 'Garrix',
@@ -134,7 +133,7 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
      */
     public function test_get_map_matches(): void {
         $text = "The new [course:fullname] had added to the new program [program:shortname]";
-        $engine = engine::create(mock_notifiable_event::class, []);
+        $engine = engine::create(mock_notifiable_event_resolver::class, []);
 
         $ref_class = new ReflectionClass($engine);
         $method = $ref_class->getMethod('get_map_matches');
@@ -143,11 +142,11 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
         $result = $method->invokeArgs($engine, [$text]);
         $expected_map = [
             'course' => [
-                'fullname' => '[course:fullname]'
+                'fullname' => '[course:fullname]',
             ],
             'program' => [
-                'shortname' => '[program:shortname]'
-            ]
+                'shortname' => '[program:shortname]',
+            ],
         ];
 
         self::assertEquals($expected_map, $result);
@@ -159,7 +158,7 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
      */
     public function test_get_map_matches_with_invalid_key(): void {
         $text = "The new [course:fullname] had added to the new program [program:short~name]";
-        $engine = engine::create(mock_notifiable_event::class, []);
+        $engine = engine::create(mock_notifiable_event_resolver::class, []);
 
         $ref_class = new ReflectionClass($engine);
         $method = $ref_class->getMethod('get_map_matches');
@@ -168,7 +167,7 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
         $result = $method->invokeArgs($engine, [$text]);
         $expected_map = [
             'course' => [
-                'fullname' => '[course:fullname]'
+                'fullname' => '[course:fullname]',
             ],
         ];
 
@@ -183,7 +182,7 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
 
         mock_placeholder::add_options(option::create('fullname', 'Full name'));
-        mock_notifiable_event::add_placeholder_options(
+        mock_notifiable_event_resolver::add_placeholder_options(
             placeholder_option::create(
                 'course',
                 mock_placeholder::class,
@@ -195,7 +194,7 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
         );
 
         $text = "The new [course:fullname] had added to the new program [program:shortname] and an invalid [program:+shortname]";
-        $engine = engine::create(mock_notifiable_event::class,  ['fullname' => 'Full name']);
+        $engine = engine::create(mock_notifiable_event_resolver::class, ['fullname' => 'Full name']);
 
         self::assertEquals(
             "The new Full name had added to the new program [program:shortname] and an invalid [program:+shortname]",
@@ -217,7 +216,7 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
             option::create('shortname', 'shortname')
         );
 
-        mock_notifiable_event::add_placeholder_options(
+        mock_notifiable_event_resolver::add_placeholder_options(
             placeholder_option::create(
                 'course',
                 mock_placeholder::class,
@@ -230,10 +229,10 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
 
         $text = "The new [course:idnumber] has a full name as [course:fullname] and short name as [course:shortname]";
         $engine = engine::create(
-            mock_notifiable_event::class,
+            mock_notifiable_event_resolver::class,
             [
                 'fullname' => 'Full name',
-                'shortname' => 'Short name'
+                'shortname' => 'Short name',
             ]
         );
 
@@ -255,7 +254,7 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
         $notification_generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
 
         mock_placeholder::add_options(option::create('firstname', 'First name'));
-        mock_notifiable_event::add_placeholder_options(
+        mock_notifiable_event_resolver::add_placeholder_options(
             placeholder_option::create(
                 'user',
                 mock_placeholder::class,
@@ -267,14 +266,12 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
         );
 
         $engine = engine::create(
-            mock_notifiable_event::class,
-            [
-                'firstname' => /** @lang text */'<script>alert("doom bringer")</script>'
-            ]
+            mock_notifiable_event_resolver::class,
+            ['firstname' => /** @lang text */ '<script>alert("doom bringer")</script>']
         );
 
         self::assertNotEquals(
-            /** @lang text */'Hello <script>alert("doom")</script>',
+        /** @lang text */ 'Hello <script>alert("doom")</script>',
             $engine->replace(
                 "Hello [user:firstname]"
             )
@@ -283,7 +280,7 @@ class totara_notification_square_bracket_engine_testcase extends advanced_testca
         // Mustache engine is escaping `<script/>` tag - hence we should be safe from xss. Unless we would want to strip out
         // the <script/> tag from the user's value.
         self::assertEquals(
-            s(/** @lang text */'Hello <script>alert("doom bringer")</script>'),
+            s(/** @lang text */ 'Hello <script>alert("doom bringer")</script>'),
             $engine->replace(
                 "Hello [user:firstname]"
             )

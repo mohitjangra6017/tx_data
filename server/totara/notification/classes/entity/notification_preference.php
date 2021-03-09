@@ -31,13 +31,12 @@ use totara_notification\repository\notification_preference_repository;
  *
  * @property int         $id
  * @property int|null    $ancestor_id
- * @property string      $event_class_name
+ * @property string      $resolver_class_name
  * @property string      $notification_class_name
- * @property-read int    $context_id
- * @property-read string $component
- * @property-read string $area
- * @property-read int    $item_id
- * @property extended_context $extended_context
+ * @property int         $context_id
+ * @property string      $component
+ * @property string      $area
+ * @property int         $item_id
  * @property string|null $title
  * @property string|null $recipient
  * @property string|null $subject

@@ -106,7 +106,16 @@ class notification_preference_value implements type_resolver {
                 return $source->get_title();
 
             case 'schedule_offset':
-                return schedule_helper::get_schedule_offset($source->get_scheduled_offset());
+                $format = $args['unit'] ?? schedule_helper::SECOND;
+                $offset = $source->get_scheduled_offset();
+
+                // Convert into positive number, as before event is resulting into a negative number.
+                $offset = abs($offset);
+                if (schedule_helper::DAY === $format) {
+                    $offset = $offset / DAYSECS;
+                }
+
+                return $offset;
 
             case 'schedule_type':
                 return schedule_helper::get_schedule_identifier($source->get_scheduled_offset());

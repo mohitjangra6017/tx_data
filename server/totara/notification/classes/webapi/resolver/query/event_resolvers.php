@@ -28,25 +28,39 @@ use core\webapi\execution_context;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
 use core\webapi\middleware\require_login;
-use totara_notification\factory\notifiable_event_factory;
+use totara_notification\factory\notifiable_event_resolver_factory;
+use totara_core\extended_context;
 
-class notifiable_events implements query_resolver, has_middleware {
+class event_resolvers implements query_resolver, has_middleware {
     /**
      * @param array             $args
      * @param execution_context $ec
      * @return string[]
      */
     public static function resolve(array $args, execution_context $ec): array {
-        // Note: for now we are returning a list of notifiable_event class within the system.
+        // Note: for now we are returning a list of notifiable_event_resolver classes within the system.
         // However for future development, we might just do sort of DB looks up to get all the notifiable
         // event within configuration within the system
-        $context = $args['context_id'] ? context::instance_by_id($args['context_id']) : context_system::instance();
-        if (CONTEXT_SYSTEM !== $context->contextlevel && !$ec->has_relevant_context()) {
+        $context = context_system::instance();
+        $extended_context_args = $args['extended_context'];
+
+        if (isset($extended_context_args['context_id'])) {
+            $context = context::instance_by_id($args['extended_context']['context_id']);
+        }
+
+        $extended_context = extended_context::make_with_context(
+            $context,
+            $extended_context_args['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
+            $extended_context_args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
+            $extended_context_args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
+        );
+
+        if (CONTEXT_SYSTEM != $context->contextlevel && !$ec->has_relevant_context()) {
             $ec->set_relevant_context($context);
         }
 
-        $component = $args['component'] ?? null;
-        return notifiable_event_factory::get_notifiable_events($component);
+        $component = empty($extended_context->get_component()) ? null : $extended_context->get_component();
+        return notifiable_event_resolver_factory::get_resolver_classes($component);
     }
 
     /**

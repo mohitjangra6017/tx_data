@@ -17,13 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 defined('MOODLE_INTERNAL') || die();
 
 use totara_notification\task\process_event_queue_task;
 use totara_notification\task\process_notification_queue_task;
+use totara_notification\task\process_scheduled_event_task;
 
 $tasks = [
     [
@@ -33,7 +34,7 @@ $tasks = [
         'hour' => ' *',
         'day' => '*',
         'dayofweek' => '*',
-        'month' => '*'
+        'month' => '*',
     ],
     [
         'classname' => process_notification_queue_task::class,
@@ -42,6 +43,16 @@ $tasks = [
         'hour' => ' *',
         'day' => '*',
         'dayofweek' => '*',
+        'month' => '*',
+    ],
+    [
+        // Make it run at 11:00 pm every day
+        'classname' => process_scheduled_event_task::class,
+        'blocking' => 0,
+        'minute' => '0',
+        'hour' => '23',
+        'day' => '*',
+        'dayofweek' => '*',
         'month' => '*'
-    ]
+    ],
 ];

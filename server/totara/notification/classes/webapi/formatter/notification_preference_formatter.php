@@ -28,9 +28,9 @@ use core\webapi\formatter\field\string_field_formatter;
 use core\webapi\formatter\field\text_field_formatter;
 use core\webapi\formatter\formatter;
 use stdClass;
-use totara_notification\local\helper;
 use totara_notification\local\schedule_helper;
 use totara_notification\model\notification_preference as model;
+use totara_notification\resolver\resolver_helper;
 
 class notification_preference_formatter extends formatter {
     /**
@@ -45,7 +45,7 @@ class notification_preference_formatter extends formatter {
         $record->title = $notification_preference->get_title();
         $record->subject = $notification_preference->get_subject();
         $record->body_format = $notification_preference->get_body_format();
-        $record->event_class_name = $notification_preference->get_event_class_name();
+        $record->resolver_class_name = $notification_preference->get_resolver_class_name();
         $record->overridden_body = $notification_preference->is_overridden_body();
         $record->overridden_subject = $notification_preference->is_overridden_subject();
         $record->overridden_recipient = $notification_preference->is_overridden_recipient();
@@ -64,11 +64,11 @@ class notification_preference_formatter extends formatter {
      * @return mixed|null
      */
     protected function get_field(string $field) {
-        if ($field === 'event_name') {
+        if ($field === 'resolver_name') {
             // Convert the event_name into an event_class_name so that
             // we can give back the value of event_class_name and it will
             // try to convert the event_class_name into a human readable event name.
-            $field = 'event_class_name';
+            $field = 'resolver_class_name';
         }
         if ($field === 'schedule_label' || $field === 'schedule_type') {
             // Convert the schedule fields back into the schedule_offset, and calculate
@@ -84,7 +84,7 @@ class notification_preference_formatter extends formatter {
      * @return bool
      */
     protected function has_field(string $field): bool {
-        if ('event_name' === $field || 'schedule_label' === $field || 'schedule_type' === $field) {
+        if ('resolver_name' === $field || 'schedule_label' === $field || 'schedule_type' === $field) {
             return true;
         }
 
@@ -133,11 +133,18 @@ class notification_preference_formatter extends formatter {
             },
             'subject_format' => null,
             'body_format' => null,
-            'event_name' => function (string $event_class_name): string {
-                return helper::get_human_readable_event_name($event_class_name);
+            'resolver_name' => function (string $resolver_class_name): string {
+                return resolver_helper::get_human_readable_resolver_name($resolver_class_name);
             },
-            'schedule_offset' => function (int $offset): int {
-                return schedule_helper::get_schedule_offset($offset);
+            'schedule_offset' => function (int $offset, $unit): int {
+                // Convert the offset from negative number.
+                $offset = abs($offset);
+
+                if (schedule_helper::DAY === $unit) {
+                    $offset = $offset / DAYSECS;
+                }
+
+                return $offset;
             },
             'schedule_type' => function (int $offset): string {
                 return schedule_helper::get_schedule_identifier($offset);
@@ -150,7 +157,7 @@ class notification_preference_formatter extends formatter {
             'overridden_schedule' => null,
             'overridden_recipient' => null,
             'ancestor_id' => null,
-            'event_class_name' => null,
+            'resolver_class_name' => null,
             'is_custom' => null,
             'recipient' => null,
         ];

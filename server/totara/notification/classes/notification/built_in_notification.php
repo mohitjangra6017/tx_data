@@ -31,13 +31,13 @@ use lang_string;
  */
 abstract class built_in_notification {
     /**
-     * Returning the event name which this notification is belonging to.
+     * Returning the event resolver class name which this notification is belonging to.
      * It is a one-to-many relationship, meaning that one event can produce multiple
      * notifications (like the children of this one).
      *
      * @return string
      */
-    abstract public static function get_event_class_name(): string;
+    abstract public static function get_resolver_class_name(): string;
 
     /**
      * Returning the notification's title.
@@ -70,6 +70,8 @@ abstract class built_in_notification {
 
     /**
      * Returns the schedule offset value, translated for storage.
+     * Note: it must be in seconds unit.
+     *
      * @return int
      */
     abstract public static function get_default_schedule_offset(): int;

@@ -42,12 +42,12 @@ class notification_preference_builder {
 
     /**
      * notification_preference_builder constructor.
-     * @param string $event_class_name
+     * @param string $resolver_class_name
      * @param extended_context $extended_context
      */
-    public function __construct(string $event_class_name, extended_context $extended_context) {
+    public function __construct(string $resolver_class_name, extended_context $extended_context) {
         $this->record_data = [
-            'event_class_name' => $event_class_name,
+            'resolver_class_name' => $resolver_class_name,
             'context_id' => $extended_context->get_context_id(),
             'component' => $extended_context->get_component(),
             'area' => $extended_context->get_area(),
@@ -71,7 +71,7 @@ class notification_preference_builder {
      */
     public static function from_exist_model(notification_preference $notification_preference): notification_preference_builder {
         $builder = new static(
-            $notification_preference->get_event_class_name(),
+            $notification_preference->get_resolver_class_name(),
             $notification_preference->get_extended_context()
         );
 
@@ -200,7 +200,7 @@ class notification_preference_builder {
         if (isset($record_data['ancestor_id'])) {
             // If the ancestor's id is set, we should check whether this notification preference
             // is created within system context or not.
-            if (is_null($extended_context->get_parent())) {
+            if (CONTEXT_SYSTEM == $extended_context->get_context()->contextlevel) {
                 throw new coding_exception(
                     "The ancestor's id should not be set when the context is in system"
                 );
@@ -220,6 +220,7 @@ class notification_preference_builder {
             // preference that we are trying to create.
             $ancestor_context_path = $ancestor_extended_context->get_context()->path; // The ancestor must be a natural context.
             $current_context_path = $extended_context->get_context()->path; // May or may not be the same as the extended context.
+
             if (0 !== stripos($current_context_path, $ancestor_context_path)) {
                 // If the current context path does not contain the ancestor context path at the
                 // start of the string then we are overriding a notification preference that reference

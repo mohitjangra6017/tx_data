@@ -21,25 +21,23 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\schedule\schedule_after_event;
 use totara_notification\schedule\schedule_before_event;
 use totara_notification\testing\generator;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-/**
- * @group totara_notification
- */
-class totara_notification_webapi_create_custom_notification_preference_testcase extends advanced_testcase {
+class totara_notification_webapi_create_custom_notification_preference_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**
      * @return void
      */
     protected function setUp(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
-        $generator->include_mock_notifiable_event();
+        $generator = generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
         $generator->include_mock_recipient();
     }
 
@@ -56,7 +54,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
             'totara_notification_create_custom_notification_preference',
             [
                 'context_id' => $context->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'resolver_class_name' => mock_resolver::class,
                 'body' => 'This is body',
                 'body_format' => FORMAT_MOODLE,
                 'subject' => 'This is subject',
@@ -64,7 +62,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 5,
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -92,6 +90,20 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertEquals(FORMAT_MOODLE, $notification_preference['body_format']);
 
         self::assertArrayHasKey('extended_context', $notification_preference);
+        $extended_context = $notification_preference['extended_context'];
+        self::assertIsArray($extended_context);
+
+        self::assertArrayHasKey('component', $extended_context);
+        self::assertEquals('', $extended_context['component']);
+
+        self::assertArrayHasKey('area', $extended_context);
+        self::assertEquals('', $extended_context['area']);
+
+        self::assertArrayHasKey('item_id', $extended_context);
+        self::assertEquals(0, $extended_context['item_id']);
+
+        self::assertArrayHasKey('context_id', $extended_context);
+        self::assertEquals($context->id, $extended_context['context_id']);
 
         self::assertArrayHasKey('is_custom', $notification_preference);
         self::assertTrue($notification_preference['is_custom']);
@@ -101,6 +113,12 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
 
         self::assertArrayHasKey('schedule_offset', $notification_preference);
         self::assertEquals(5, $notification_preference['schedule_offset']);
+
+        self::assertArrayHasKey('resolver_class_name', $notification_preference);
+        self::assertEquals(mock_resolver::class, $notification_preference['resolver_class_name']);
+
+        self::assertArrayHasKey('resolver_component', $notification_preference);
+        self::assertEquals('totara_notification', $notification_preference['resolver_component']);
     }
 
     /**
@@ -119,7 +137,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
             'totara_notification_create_custom_notification_preference',
             [
                 'context_id' => $context_course->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'resolver_class_name' => mock_resolver::class,
                 'body' => 'First body',
                 'body_format' => FORMAT_HTML,
                 'subject' => 'First subject',
@@ -127,7 +145,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_after_event::identifier(),
                 'schedule_offset' => 10,
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -155,6 +173,20 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertEquals(FORMAT_HTML, $notification_preference['body_format']);
 
         self::assertArrayHasKey('extended_context', $notification_preference);
+        $extended_context = $notification_preference['extended_context'];
+        self::assertIsArray($extended_context);
+
+        self::assertArrayHasKey('component', $extended_context);
+        self::assertEquals('', $extended_context['component']);
+
+        self::assertArrayHasKey('area', $extended_context);
+        self::assertEquals('', $extended_context['area']);
+
+        self::assertArrayHasKey('item_id', $extended_context);
+        self::assertEquals(0, $extended_context['item_id']);
+
+        self::assertArrayHasKey('context_id', $extended_context);
+        self::assertEquals($context_course->id, $extended_context['context_id']);
 
         self::assertArrayHasKey('is_custom', $notification_preference);
         self::assertTrue($notification_preference['is_custom']);
@@ -164,6 +196,12 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
 
         self::assertArrayHasKey('schedule_offset', $notification_preference);
         self::assertEquals(10, $notification_preference['schedule_offset']);
+
+        self::assertArrayHasKey('resolver_class_name', $notification_preference);
+        self::assertEquals(mock_resolver::class, $notification_preference['resolver_class_name']);
+
+        self::assertArrayHasKey('resolver_component', $notification_preference);
+        self::assertEquals('totara_notification', $notification_preference['resolver_component']);
     }
 
     /**
@@ -175,7 +213,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
             'totara_notification_create_custom_notification_preference',
             [
                 'context_id' => 42,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'resolver_class_name' => mock_resolver::class,
                 'title' => 'custom title',
                 'body' => 'custom body',
                 'subject' => 'custom subject',
@@ -183,7 +221,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 6,
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -215,7 +253,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         $result = $this->execute_graphql_operation(
             'totara_notification_create_custom_notification_preference',
             [
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'resolver_class_name' => mock_resolver::class,
                 'context_id' => $context_system->id,
                 'title' => 'This is custom',
                 'body' => 'This is body',
@@ -224,7 +262,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 6,
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -252,6 +290,20 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertEquals(FORMAT_MOODLE, $notification_preference['body_format']);
 
         self::assertArrayHasKey('extended_context', $notification_preference);
+        $extended_context = $notification_preference['extended_context'];
+        self::assertIsArray($extended_context);
+
+        self::assertArrayHasKey('component', $extended_context);
+        self::assertEquals('', $extended_context['component']);
+
+        self::assertArrayHasKey('area', $extended_context);
+        self::assertEquals('', $extended_context['area']);
+
+        self::assertArrayHasKey('item_id', $extended_context);
+        self::assertEquals(0, $extended_context['item_id']);
+
+        self::assertArrayHasKey('context_id', $extended_context);
+        self::assertEquals($context_system->id, $extended_context['context_id']);
 
         self::assertArrayHasKey('is_custom', $notification_preference);
         self::assertTrue($notification_preference['is_custom']);
@@ -261,6 +313,12 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
 
         self::assertArrayHasKey('schedule_offset', $notification_preference);
         self::assertEquals(6, $notification_preference['schedule_offset']);
+
+        self::assertArrayHasKey('resolver_class_name', $notification_preference);
+        self::assertEquals(mock_resolver::class, $notification_preference['resolver_class_name']);
+
+        self::assertArrayHasKey('resolver_component', $notification_preference);
+        self::assertEquals('totara_notification', $notification_preference['resolver_component']);
     }
 
     /**
@@ -273,7 +331,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         $result = $this->execute_graphql_operation(
             'totara_notification_create_custom_notification_preference',
             [
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'resolver_class_name' => mock_resolver::class,
                 'context_id' => $context_system->id,
                 'title' => 'ddd',
                 'body' => /** @lang text */ '<input type="text" value="cc"/>',
@@ -282,7 +340,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -308,7 +366,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         $result = $this->execute_graphql_operation(
             'totara_notification_create_custom_notification_preference',
             [
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'resolver_class_name' => mock_resolver::class,
                 'context_id' => $context_system->id,
                 'title' => 'ddd',
                 'body' => 'cccd',
@@ -317,7 +375,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -343,7 +401,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         $result = $this->execute_graphql_operation(
             'totara_notification_create_custom_notification_preference',
             [
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'resolver_class_name' => mock_resolver::class,
                 'context_id' => $context_system->id,
                 'title' => /** @lang text */ '<input type="text" value="cc"/>',
                 'body' => 'cccd',
@@ -352,7 +410,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -379,7 +437,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         $result = $this->execute_graphql_operation(
             'totara_notification_create_custom_notification_preference',
             [
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'resolver_class_name' => mock_resolver::class,
                 'context_id' => $context_system->id,
                 'title' => 'This is title',
                 'body' => /** @lang text */ '<script type="javascript">alert(1)</script>',
@@ -388,7 +446,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -418,7 +476,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         $result = $this->execute_graphql_operation(
             'totara_notification_create_custom_notification_preference',
             [
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'resolver_class_name' => mock_resolver::class,
                 'context_id' => $context_system->id,
                 'title' => 'This is title',
                 'body' => 'This is body',
@@ -427,7 +485,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 2,
-                'recipient' => totara_notification_mock_recipient::class
+                'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
@@ -463,7 +521,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
             'totara_notification_create_custom_notification_preference',
             [
                 'context_id' => $context_course->id,
-                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'resolver_class_name' => mock_resolver::class,
                 'body' => 'First body',
                 'body_format' => FORMAT_HTML,
                 'subject' => 'First subject',
@@ -472,9 +530,9 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'schedule_type' => schedule_after_event::identifier(),
                 'schedule_offset' => 10,
                 'recipient' => totara_notification_mock_recipient::class,
-                'area' => 'test_area',
-                'component' => 'totara_notification',
-                'item_id' => 1
+                'extended_context_area' => 'test_area',
+                'extended_context_component' => 'totara_notification',
+                'extended_context_item_id' => 1,
             ]
         );
 
@@ -502,6 +560,20 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertEquals(FORMAT_HTML, $notification_preference['body_format']);
 
         self::assertArrayHasKey('extended_context', $notification_preference);
+        $extended_context = $notification_preference['extended_context'];
+        self::assertIsArray($extended_context);
+
+        self::assertArrayHasKey('component', $extended_context);
+        self::assertEquals('totara_notification', $extended_context['component']);
+
+        self::assertArrayHasKey('area', $extended_context);
+        self::assertEquals('test_area', $extended_context['area']);
+
+        self::assertArrayHasKey('item_id', $extended_context);
+        self::assertEquals(1, $extended_context['item_id']);
+
+        self::assertArrayHasKey('context_id', $extended_context);
+        self::assertEquals($context_course->id, $extended_context['context_id']);
 
         self::assertArrayHasKey('is_custom', $notification_preference);
         self::assertTrue($notification_preference['is_custom']);
@@ -512,8 +584,8 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertArrayHasKey('schedule_offset', $notification_preference);
         self::assertEquals(10, $notification_preference['schedule_offset']);
 
-        self::assertArrayHasKey('component', $notification_preference);
-        self::assertEquals('totara_notification', $notification_preference['component']);
+        self::assertArrayHasKey('resolver_component', $notification_preference);
+        self::assertEquals('totara_notification', $notification_preference['resolver_component']);
 
         self::assertArrayHasKey('extended_context', $notification_preference);
         self::assertEquals($context_course->id, $notification_preference['extended_context']['context_id']);

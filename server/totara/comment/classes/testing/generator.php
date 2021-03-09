@@ -28,11 +28,13 @@ use core\json_editor\node\paragraph;
 use totara_comment\comment;
 use totara_comment\comment_helper;
 use core\json_editor\helper\document_helper;
+use core\testing\component_generator;
 
 /**
  * Generator class for totara comment
+ * @method static generator instance()
  */
-final class generator extends \core\testing\component_generator {
+final class generator extends component_generator {
     /**
      * @var array
      */

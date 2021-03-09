@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notifiaction
  */
 namespace totara_notification\manager;
@@ -31,10 +31,10 @@ use null_progress_trace;
 use phpunit_util;
 use progress_trace;
 use stdClass;
-use totara_notification\entity\notification_queue;
 use totara_notification\entity\notification_preference as preference_entity;
+use totara_notification\entity\notification_queue;
 use totara_notification\model\notification_preference;
-use totara_notification\local\helper;
+use totara_notification\resolver\resolver_helper;
 
 class notification_queue_manager {
     /**
@@ -132,8 +132,8 @@ class notification_queue_manager {
         $preference = notification_preference::from_id($queue->notification_preference_id);
         $event_data = $queue->get_decoded_event_data();
 
-        $resolver = helper::get_resolver_from_notifiable_event(
-            $preference->get_event_class_name(),
+        $resolver = resolver_helper::instantiate_resolver_from_class(
+            $preference->get_resolver_class_name(),
             $queue->get_extended_context(),
             $event_data
         );
@@ -166,7 +166,7 @@ class notification_queue_manager {
         }
 
         // Constructing a default message that will be sent for multiple users.
-        $default_message  = new stdClass();
+        $default_message = new stdClass();
         $default_message->notification = 1;
         $default_message->fullmessage = $engine->replace(format_text_email($body_text, $body_format));
         $default_message->fullmessagehtml = $engine->replace(format_text($body_text, $body_format));

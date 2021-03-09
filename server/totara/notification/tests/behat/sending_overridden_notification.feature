@@ -1,18 +1,19 @@
 @totara @totara_notification @javascript @vuejs @engage_article
 Feature: Sending overridden notification
+
   Background:
     Given I log in as "admin"
     And the following "users" exist:
-    | firstname | lastname | username | email           |
-    | User      | One      | one      | one@example.com |
-    | User      | Two      | two      | two@example.com |
+      | firstname | lastname | username | email           |
+      | User      | One      | one      | one@example.com |
+      | User      | Two      | two      | two@example.com |
     And the following "topics" exist in "totara_topic" plugin:
-    | name   |
-    | Topic1 |
+      | name   |
+      | Topic1 |
 
     And the following "articles" exist in "engage_article" plugin:
-    | name           | username | content | access | topics |
-    | Test Article 1 | one      | blah    | PUBLIC | Topic1 |
+      | name           | username | content | access | topics |
+      | Test Article 1 | one      | blah    | PUBLIC | Topic1 |
     And I log out
 
   Scenario: Sending overridden built-in notification to user on created comment

@@ -24,32 +24,34 @@
 use core\json_editor\helper\document_helper;
 use core\json_editor\node\paragraph;
 use core\json_editor\node\text;
+use core_phpunit\testcase;
 use core_user\totara_notification\placeholder\user;
 use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\json_editor\node\placeholder;
 use totara_notification\loader\notification_preference_loader;
+use totara_notification\local\schedule_helper;
 use totara_notification\model\notification_preference as model;
 use totara_notification\placeholder\placeholder_option;
+use totara_notification\schedule\schedule_after_event;
+use totara_notification\schedule\schedule_before_event;
+use totara_notification\schedule\schedule_on_event;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\mutation\update_notification_preference;
+use totara_notification_mock_built_in_notification as mock_built_in;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-/**
- * @group totara_notification
- */
-class totara_notification_webapi_update_notification_preference_testcase extends advanced_testcase {
+class totara_notification_webapi_update_notification_preference_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**
      * @return void
      */
     protected function setUp(): void {
-        $generator = self::getDataGenerator();
+        $notification_generator = generator::instance();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
-        $notification_generator->include_mock_notifiable_event();
+        $notification_generator->include_mock_notifiable_event_resolver();
         $notification_generator->add_mock_built_in_notification_for_component();
         $notification_generator->include_mock_recipient();
     }
@@ -58,9 +60,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
      * @return void
      */
     public function test_update_notification_preference_without_title(): void {
-        $system_built_in = notification_preference_loader::get_built_in(
-            totara_notification_mock_built_in_notification::class
-        );
+        $system_built_in = notification_preference_loader::get_built_in(mock_built_in::class);
 
         self::assertNotEquals('Newly updated body', $system_built_in->get_body());
         self::assertNotEquals('Newly updated subject', $system_built_in->get_subject());
@@ -114,10 +114,9 @@ class totara_notification_webapi_update_notification_preference_testcase extends
     public function test_update_notification_preference_of_non_overridden_custom_with_title(): void {
         $this->setAdminUser();
 
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
         $custom_notification = $generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'This is custom title',
@@ -163,10 +162,9 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         $generator = self::getDataGenerator();
         $course = $generator->create_course();
 
-        /** @var generator $notification_generator */
-        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
         $system_custom = $notification_generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'This is custom title',
@@ -211,10 +209,9 @@ class totara_notification_webapi_update_notification_preference_testcase extends
     public function test_update_notification_preference_of_non_overridden_custom_with_reset_title(): void {
         $this->setAdminUser();
 
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
         $custom_notification = $generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'This is custom title',
@@ -242,8 +239,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
      * @return void
      */
     public function test_reset_notification_preference_body_with_empty_string(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
         $generator->add_string_body_to_mock_built_in_notification('This is built-in body');
 
         $this->setAdminUser();
@@ -281,8 +277,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
      * @return void
      */
     public function test_reset_notification_preference_subject_with_empty_string(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
         $generator->add_string_subject_to_mock_built_in_notification('This is built-in subject');
 
         $this->setAdminUser();
@@ -365,11 +360,10 @@ class totara_notification_webapi_update_notification_preference_testcase extends
      */
     public function test_update_notification_preference_without_providing_fields(): void {
         $this->setAdminUser();
+        $generator = generator::instance();
 
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification = $generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'Custom body',
@@ -406,11 +400,10 @@ class totara_notification_webapi_update_notification_preference_testcase extends
      */
     public function test_update_notification_preference_for_schedule(): void {
         $this->setAdminUser();
+        $generator = generator::instance();
 
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification = $generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'Custom body',
@@ -433,41 +426,41 @@ class totara_notification_webapi_update_notification_preference_testcase extends
             [
                 'id' => $notification->get_id(),
                 'schedule_offset' => 10,
-                'schedule_type' => \totara_notification\schedule\schedule_after_event::identifier(),
+                'schedule_type' => schedule_after_event::identifier(),
             ]
         );
 
         $notification->refresh();
 
         self::assertNotEquals(0, $notification->get_schedule_offset());
-        self::assertEquals(10, $notification->get_schedule_offset());
+        self::assertEquals(schedule_helper::days_to_seconds(10), $notification->get_schedule_offset());
 
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(update_notification_preference::class),
             [
                 'id' => $notification->get_id(),
                 'schedule_offset' => 5,
-                'schedule_type' => \totara_notification\schedule\schedule_before_event::identifier(),
+                'schedule_type' => schedule_before_event::identifier(),
             ]
         );
 
         $notification->refresh();
 
-        self::assertNotEquals(10, $notification->get_schedule_offset());
-        self::assertEquals(-5, $notification->get_schedule_offset());
+        self::assertNotEquals(schedule_helper::days_to_seconds(10), $notification->get_schedule_offset());
+        self::assertEquals(schedule_helper::days_to_seconds(-5), $notification->get_schedule_offset());
 
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(update_notification_preference::class),
             [
                 'id' => $notification->get_id(),
                 'schedule_offset' => 0,
-                'schedule_type' => \totara_notification\schedule\schedule_on_event::identifier(),
+                'schedule_type' => schedule_on_event::identifier(),
             ]
         );
 
         $notification->refresh();
 
-        self::assertNotEquals(-5, $notification->get_schedule_offset());
+        self::assertNotEquals(schedule_helper::days_to_seconds(-5), $notification->get_schedule_offset());
         self::assertEquals(0, $notification->get_schedule_offset());
     }
 
@@ -475,11 +468,10 @@ class totara_notification_webapi_update_notification_preference_testcase extends
      * @return void
      */
     public function test_update_custom_notification_body_with_format_json_editor(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
         $context_system = context_system::instance();
 
-        totara_notification_mock_notifiable_event::add_placeholder_options(
+        totara_notification_mock_notifiable_event_resolver::add_placeholder_options(
             placeholder_option::create(
                 'user',
                 user::class,
@@ -492,7 +484,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         );
 
         $preference = $generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'body_format' => FORMAT_PLAIN,
@@ -537,9 +529,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
      */
     public function test_update_notification_preference_with_valid_recipient(): void {
         $this->setAdminUser();
-        $system_built_in = notification_preference_loader::get_built_in(
-            totara_notification_mock_built_in_notification::class
-        );
+        $system_built_in = notification_preference_loader::get_built_in(mock_built_in::class);
 
         // Run the mutation.
         try {
@@ -560,9 +550,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
      */
     public function test_update_notification_preference_with_invalid_recipient(): void {
         $this->setAdminUser();
-        $system_built_in = notification_preference_loader::get_built_in(
-            totara_notification_mock_built_in_notification::class
-        );
+        $system_built_in = notification_preference_loader::get_built_in(mock_built_in::class);
 
         // Run the mutation.
         try {
@@ -575,7 +563,11 @@ class totara_notification_webapi_update_notification_preference_testcase extends
             );
             $this->fail('Exception is expected but not thrown');
         } catch (Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Coding error detected, it must be fixed by a programmer: totara_non\existent\recipient\class is not predefined recipient class');
+            self::assertEquals(
+                $e->getMessage(),
+                'Coding error detected, it must be fixed by a programmer: ' .
+                'totara_non\existent\recipient\class is not predefined recipient class'
+            );
         }
     }
 }

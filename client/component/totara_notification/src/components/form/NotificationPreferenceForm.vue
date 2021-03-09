@@ -99,7 +99,7 @@
               {
                 name: 'weka_notification_placeholder_extension',
                 options: {
-                  event_class_name: eventClassName,
+                  resolver_class_name: resolverClassName,
                 },
               },
             ]"
@@ -232,7 +232,7 @@
               {
                 name: 'weka_notification_placeholder_extension',
                 options: {
-                  event_class_name: eventClassName,
+                  resolver_class_name: resolverClassName,
                 },
               },
             ]"
@@ -401,7 +401,7 @@ export default {
   },
 
   props: {
-    eventClassName: {
+    resolverClassName: {
       type: String,
       required: true,
     },
@@ -635,6 +635,8 @@ export default {
         return;
       }
 
+      // NOTE: Do NOT pass the preference extended context variables to the form, it has
+      // nothing to do with the form's values, and it MUST be controlled by the page.
       const parameters = {
         title: formValue.title.value,
         subject: !this.customisation.subject
@@ -656,12 +658,6 @@ export default {
           ? null
           : formValue.schedule_offset[formValue.schedule_type.value],
         recipient: formValue.recipient,
-        extended_context: {
-          component: this.preference.extended_context.component,
-          area: this.preference.extended_context.area,
-          item_id: this.preference.extended_context.item_id,
-          context_id: this.preference.extended_context.context_id,
-        },
       };
 
       this.$emit('submit', parameters);

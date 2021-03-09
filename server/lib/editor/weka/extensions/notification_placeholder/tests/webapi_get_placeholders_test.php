@@ -24,7 +24,7 @@
 use totara_notification\placeholder\option;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\testing\generator;
-use totara_notification_mock_notifiable_event as mock_event;
+use totara_notification_mock_notifiable_event_resolver as mock_event_resolver;
 use totara_notification_mock_single_placeholder as mock_placeholder;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use weka_notification_placeholder\webapi\resolver\query\placeholders;
@@ -40,12 +40,13 @@ class weka_notification_placeholders_webapi_get_placeholders_testcase extends ad
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $generator->include_mock_notifiable_event();
         $generator->include_mock_single_placeholder();
+        $generator->include_mock_notifiable_event_resolver();
     }
 
     /**
      * @return void
      */
-    public function test_get_placeholders_of_an_event_with_empty_pattern(): void {
+    public function test_get_placeholders_of_a_resolver_with_empty_pattern(): void {
         /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
 
@@ -59,7 +60,7 @@ class weka_notification_placeholders_webapi_get_placeholders_testcase extends ad
             throw new coding_exception("Do not call to this function in unit tests");
         };
 
-        mock_event::add_placeholder_options(
+        mock_event_resolver::add_placeholder_options(
             placeholder_option::create(
                 'user_one',
                 mock_placeholder::class,
@@ -83,7 +84,7 @@ class weka_notification_placeholders_webapi_get_placeholders_testcase extends ad
             $this->get_graphql_name(placeholders::class),
             [
                 'context_id' => $context_system->id,
-                'event_class_name' => mock_event::class,
+                'resolver_class_name' => mock_event_resolver::class,
                 'pattern' => '',
             ]
         );
@@ -112,7 +113,7 @@ class weka_notification_placeholders_webapi_get_placeholders_testcase extends ad
             $this->get_graphql_name(placeholders::class),
             [
                 'context_id' => $context_system->id,
-                'event_class_name' => mock_event::class,
+                'resolver_class_name' => mock_event_resolver::class,
                 'pattern' => 'user_one',
             ]
         );
@@ -137,7 +138,7 @@ class weka_notification_placeholders_webapi_get_placeholders_testcase extends ad
             $this->get_graphql_name(placeholders::class),
             [
                 'context_id' => $context_system->id,
-                'event_class_name' => mock_event::class,
+                'resolver_class_name' => mock_event_resolver::class,
                 'pattern' => 'key_one',
             ]
         );
@@ -161,18 +162,18 @@ class weka_notification_placeholders_webapi_get_placeholders_testcase extends ad
     /**
      * @return void
      */
-    public function test_fetch_query_with_invalid_event_class_name(): void {
+    public function test_fetch_query_with_invalid_rever_class_name(): void {
         $this->setAdminUser();
         $context_system = context_system::instance();
 
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage('The event class name is not a notifiable event');
+        $this->expectExceptionMessage('The resolver class is not a notifiable event resolver');
 
         $this->resolve_graphql_query(
             $this->get_graphql_name(placeholders::class),
             [
                 'context_id' => $context_system->id,
-                'event_class_name' => 'somebody_else',
+                'resolver_class_name' => 'somebody_else',
                 'pattern' => '',
             ]
         );

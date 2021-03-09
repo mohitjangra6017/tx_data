@@ -17,16 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+
+use core_phpunit\testcase;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\factory\built_in_notification_factory;
 
-/**
- * @group totara_notification
- */
-class totara_notification_add_built_in_notification_testcase extends advanced_testcase {
+class totara_notification_add_built_in_notification_testcase extends testcase {
     /**
      * @return void
      */

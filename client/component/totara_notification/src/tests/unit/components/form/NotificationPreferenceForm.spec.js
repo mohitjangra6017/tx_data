@@ -24,7 +24,7 @@ import { SCHEDULE_TYPES } from '../../../../internal/notification_preference';
 let wrapper;
 
 const props = {
-  eventClassName: 'eventClassName',
+  resolverClassName: 'eventClassName',
   contextId: 1,
   validScheduleTypes: [SCHEDULE_TYPES.ON_EVENT],
   availableRecipients: [

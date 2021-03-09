@@ -24,14 +24,13 @@
 use core\event\base;
 use totara_comment\comment_helper;
 use totara_comment\testing\generator as comment_generator;
-use totara_notification\testing\generator as notification_generator;
 use totara_notification\event\notifiable_event;
+use totara_notification\testing\generator as notification_generator;
+use totara_notification_mock_notifiable_event_resolver as mock_event_resolver;
 use totara_webapi\phpunit\webapi_phpunit_helper;
+use core_phpunit\testcase;
 
-/**
- * @group totara_notification
- */
-class totara_notification_notifiable_event_testcase extends advanced_testcase {
+class totara_notification_notifiable_event_testcase extends testcase {
 
     use webapi_phpunit_helper;
 
@@ -42,8 +41,7 @@ class totara_notification_notifiable_event_testcase extends advanced_testcase {
         $generator = $this->getDataGenerator();
         $actor = $generator->create_user();
 
-        /** @var comment_generator $comment_generator */
-        $comment_generator = $generator->get_plugin_generator('totara_comment');
+        $comment_generator = comment_generator::instance();
 
         $context_user = context_user::instance($actor->id);
         $comment_generator->add_context_for_default_resolver($context_user);
@@ -85,23 +83,26 @@ class totara_notification_notifiable_event_testcase extends advanced_testcase {
      * @return void
      */
     public function test_notifiable_event_with_empty_recipients(): void {
-        /** @var notification_generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
-        $generator->include_mock_notifiable_event();
+        $generator = notification_generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
 
         // Set recipients to an empty array.
-        totara_notification_mock_notifiable_event::set_notification_available_recipients([]);
+        mock_event_resolver::set_notification_available_recipients([]);
 
         // Run the mutation.
         try {
             $this->resolve_graphql_type(
-                'totara_notification_notifiable_event',
+                'totara_notification_event_resolver',
                 'recipients',
-                totara_notification_mock_notifiable_event::class
+                totara_notification_mock_notifiable_event_resolver::class
             );
             $this->fail('Exception is expected but not thrown');
         } catch (Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Coding error detected, it must be fixed by a programmer: totara_notification_mock_notifiable_event need to define recipient');
+            $this->assertEquals(
+                $e->getMessage(),
+                'Coding error detected, it must be fixed by a programmer: ' .
+                'Class totara_notification_mock_notifiable_event_resolver need to define recipient'
+            );
         }
     }
 }

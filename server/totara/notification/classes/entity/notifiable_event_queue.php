@@ -32,16 +32,13 @@ use totara_notification\repository\notifiable_event_queue_repository;
  *
  * @property int    $id
  * @property string $event_name
- * @property string $event_data     A json string, please use {@see notifiable_event_queue::get_decoded_event_data()} for a
- *                                  decoded version of this attribute. Note that the result returned will be an array.
+ * @property string $event_data     A json string, please use {@see notifiable_event_queue::get_decoded_event_data()}
+ *                                  for a decoded version of this attribute. Note that the result returned will be an array.
  * @property int    $time_created
- * @property int    $event_time
- *
- * @property-read int $context_id
- * @property-read string $component
- * @property-read string $area
- * @property-read int $item_id
- * @property extended_context $extended_context
+ * @property int    $context_id
+ * @property string $component
+ * @property string $area
+ * @property int    $item_id
  *
  * @method static notifiable_event_queue_repository repository()
  */

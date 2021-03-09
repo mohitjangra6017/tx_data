@@ -27,7 +27,9 @@ use coding_exception;
 use lang_string;
 use totara_core\extended_context;
 use totara_notification\entity\notification_preference as entity;
+use totara_notification\local\schedule_helper;
 use totara_notification\notification\built_in_notification;
+use totara_notification\schedule\time_window;
 
 /**
  * A model class for notification preference.
@@ -203,8 +205,8 @@ class notification_preference {
     /**
      * @return string
      */
-    public function get_event_class_name(): string {
-        return $this->entity->event_class_name;
+    public function get_resolver_class_name(): string {
+        return $this->entity->resolver_class_name;
     }
 
     /**
@@ -459,5 +461,37 @@ class notification_preference {
      */
     public function exists(): bool {
         return $this->entity->exists();
+    }
+
+    /**
+     * Checking whether the time now exceeding the scheduled time calculated from the event_time.
+     *
+     * @param int         $event_time           The epoch time - in seconds
+     * @param time_window $current_time_window  The current time window of time_now and the last cron time.
+     *
+     * @return bool
+     */
+    public function is_in_time_window(int $event_time, time_window $current_time_window): bool {
+        $time_now = $current_time_window->get_max_time();
+        $last_cron_time = $current_time_window->get_min_time();
+
+        // Schedule offset is already in seconds unit.
+        $schedule_offset = $this->get_schedule_offset();
+
+        // Max time is the time_now minus the schedule offset.
+        $max_time = $time_now - $schedule_offset;
+
+        // Min time is the last cron time minus the schedule offset.
+        $min_time = $last_cron_time - $schedule_offset;
+
+        return $min_time <= $event_time && $event_time < $max_time;
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_on_event(): bool {
+        $schedule_offset = $this->get_schedule_offset();
+        return schedule_helper::is_on_event($schedule_offset);
     }
 }

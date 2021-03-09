@@ -21,12 +21,14 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
+use totara_notification\local\schedule_helper;
 use totara_notification\schedule\schedule_before_event;
 
 /**
  * Test cases covering the totara_notification\schedule\schedule_before_event class
  */
-class totara_notification_schedule_before_event_test extends advanced_testcase {
+class totara_notification_schedule_before_event_test extends testcase {
 
     /**
      * Check that timestamps are calculated correctly.
@@ -35,11 +37,11 @@ class totara_notification_schedule_before_event_test extends advanced_testcase {
         // Use a fixed timestamp for our tests
         $base_timestamp = 584217720;
 
-        $result = schedule_before_event::calculate_timestamp($base_timestamp, -6);
-        self::assertEquals(583699320, $result, "Offset -6");
+        $result = schedule_before_event::calculate_timestamp($base_timestamp, schedule_helper::days_to_seconds(-6));
+        self::assertEquals(583699320, $result, "Offset -6 days");
 
-        $result = schedule_before_event::calculate_timestamp($base_timestamp, -9);
-        self::assertEquals(583440120, $result, "Offset -9");
+        $result = schedule_before_event::calculate_timestamp($base_timestamp, schedule_helper::days_to_seconds(-9));
+        self::assertEquals(583440120, $result, "Offset -9 days");
 
         // Check for the exception
         self::expectExceptionMessage('Schedule before event must have a negative offset');
@@ -55,12 +57,12 @@ class totara_notification_schedule_before_event_test extends advanced_testcase {
         // Assert the singular & double come back correctly
         $this->assertEquals(
             get_string('schedule_label_before_event_singular', 'totara_notification', 1),
-            schedule_before_event::get_label(-1),
+            schedule_before_event::get_label(schedule_helper::days_to_seconds(-1)),
         );
 
         $this->assertEquals(
             get_string('schedule_label_before_event', 'totara_notification', 5),
-            schedule_before_event::get_label(-5),
+            schedule_before_event::get_label(schedule_helper::days_to_seconds(-5)),
         );
     }
 
@@ -69,7 +71,7 @@ class totara_notification_schedule_before_event_test extends advanced_testcase {
      */
     public function test_default_value() {
         $result = schedule_before_event::default_value(10);
-        self::assertEquals(-10, $result);
+        self::assertEquals(-10 * DAYSECS, $result);
 
         self::expectExceptionMessage('Schedule Before Event must have had a days_offset provided');
         self::expectException(\coding_exception::class);
@@ -88,7 +90,7 @@ class totara_notification_schedule_before_event_test extends advanced_testcase {
             ['5', true],
         ];
 
-        foreach ($test_cases as list($value, $expected_result)) {
+        foreach ($test_cases as [$value, $expected_result]) {
             self::assertEquals($expected_result, schedule_before_event::validate_offset($value), $value);
         }
     }

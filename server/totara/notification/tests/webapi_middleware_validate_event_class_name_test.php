@@ -24,11 +24,12 @@
 use core\webapi\execution_context;
 use core\webapi\resolver\payload;
 use core\webapi\resolver\result;
+use core_phpunit\testcase;
 use totara_notification\testing\generator;
 use totara_notification\webapi\middleware\validate_event_class_name;
 use totara_notification_mock_notifiable_event as mock_event;
 
-class totara_notification_webapi_middleware_validate_event_class_name_testcase extends advanced_testcase {
+class totara_notification_webapi_middleware_validate_event_class_name_testcase extends testcase {
     /**
      * @return void
      */

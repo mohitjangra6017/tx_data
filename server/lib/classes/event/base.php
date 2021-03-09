@@ -16,8 +16,6 @@
 
 namespace core\event;
 
-use core\event\abstraction\context_aware;
-
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -55,7 +53,7 @@ defined('MOODLE_INTERNAL') || die();
  * @property-read mixed $other array or scalar, can not contain objects
  * @property-read int $timecreated
  */
-abstract class base implements \IteratorAggregate, context_aware {
+abstract class base implements \IteratorAggregate {
 
     /**
      * Other level.

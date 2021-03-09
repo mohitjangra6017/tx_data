@@ -24,13 +24,13 @@ type totara_notification_notification_preference {
   """
   overridden_recipient: Boolean!
   """
-  Human readable event's name.
+  Human readable event resolver's name.
   """
-  event_name: String!
+  resolver_name: String!
   """
-  The class name of notifiable event which this notification is created for.
+  The class name of notifiable event resolver which this notification is created for.
   """
-  event_class_name: String!
+  resolver_class_name: String!
   """
   The ancestor of this very notification's preference.
   If the value of this field is null, meaning that the notification is sitting
@@ -41,7 +41,7 @@ type totara_notification_notification_preference {
   The comment that this notification is sitting in. Mainly it will be
   computed from the notifiable event that the notification is for.
   """
-  component: String!
+  resolver_component: String!
   """
   Whether this notification preference is a custom notification or not.
   """
@@ -60,7 +60,7 @@ type totara_notification_notification_preference {
   Number of days before/after/on the event the schedule should be adjusted for.
   Always a positive number, meaning is derived from the schedule_type field.
   """
-  schedule_offset: Int!
+  schedule_offset(unit: totara_notification_schedule_offset_unit!): Int!
   """
   The type of schedule that's in play.
   """
@@ -109,9 +109,32 @@ type totara_notification_extended_context {
   """
   area: String!
   """
-  The item id of component
+  The item id of the instance within area of component.
   """
   item_id: Int!
+}
+
+"""
+An input type to pass down the extended context which can be reused in queries or mutations.
+"""
+input totara_notification_extended_context_input {
+  """
+  The context ID of the notification. Which it SHOULD always required.
+  However, if it is left empty, system is falling back to the context system.
+  """
+  context_id: param_integer
+  """
+  In a non-natural context, the component to which the context relates
+  """
+  component: param_component
+  """
+  The area of component
+  """
+  area: param_area
+  """
+  The item id of the instance within area of component.
+  """
+  item_id: param_integer
 }
 
 """
@@ -127,7 +150,7 @@ type totara_notification_notification_preference_value {
   subject(format: core_format = RAW): String!
   subject_format: Int!
   title: String!
-  schedule_offset: Int!
+  schedule_offset(unit: totara_notification_schedule_offset_unit!): Int!
   schedule_type: totara_notification_schedule_type!
   recipient: totara_notification_recipient!
 }
@@ -135,15 +158,16 @@ type totara_notification_notification_preference_value {
 extend type Mutation {
   totara_notification_create_notification_preference(
     """
-    The event's name that this notification preference is
+    The event resolver's name that this notification preference is
     set for MUST be provided.
     """
-    event_class_name: param_text!
-    "Context's id MUST be provided"
-    context_id: param_integer!
-    component: param_component
-    area: param_text
-    item_id: param_integer
+    resolver_class_name: param_text!
+    """
+    Extended context MUST be provided, in order to create the notification preference
+    within that context. Note that the context's id for this extended_context can be fallback
+    to the context system if none is provided.
+    """
+    extended_context: totara_notification_extended_context_input!
     """
     If ancestor_id is provided, then we would know that this notification preference
     is overriding one of the notification preference at under context.
@@ -223,17 +247,16 @@ extend type Query {
   """
   totara_notification_notification_preferences(
     """
-    If the context's id does not provided, then it will beusing the system context.
+    Extended context MUST be provided, in order to create the notification preference
+    within that context. Note that the context's id for this extended_context can be fallback
+    to the context system if none is provided.
     """
-    context_id: param_integer!
-    component: param_component
-    area: param_text
-    item_id: param_integer
+    extended_context: totara_notification_extended_context_input!
     """
     If this parameter is provided, we are fetching only the notification preferences that are listening to
     this event only.
     """
-    event_class_name: param_text
+    resolver_class_name: param_text
     """
     Whether we want the list of notification preferences at the specific context only,
     or the list that is a mix of overridden and non-overridden (higher context).

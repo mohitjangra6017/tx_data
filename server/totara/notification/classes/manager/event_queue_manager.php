@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 namespace totara_notification\manager;
@@ -27,10 +27,11 @@ use core\orm\query\builder;
 use null_progress_trace;
 use progress_trace;
 use totara_notification\entity\notifiable_event_queue;
-use totara_notification\entity\notification_queue;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\helper;
-use totara_notification\local\schedule_helper;
+use totara_notification\local\notification_queue_helper;
+use totara_notification\model\notification_event_data;
+use totara_notification\resolver\resolver_helper;
 
 class event_queue_manager {
     /**
@@ -67,25 +68,26 @@ class event_queue_manager {
                     continue;
                 }
 
+                $resolver_class_name = resolver_helper::get_resolver_class_name_from_notifiable_event($queue->event_name);
                 $preferences = notification_preference_loader::get_notification_preferences(
                     $queue->get_extended_context(),
-                    $queue->event_name
+                    $resolver_class_name
                 );
 
-                foreach ($preferences as $notification_preference) {
-                    // Note: this is where we are checking whether the notification's preference
-                    // is set to be disabled or not, so that we can queue up the resource. Furthermore,
-                    // it is also worth to check any sort of legitimate of the target record/item. -
-                    // this is sort of message for the next ver.
-                    $notification_queue = new notification_queue();
-                    $notification_queue->notification_preference_id = $notification_preference->get_id();
-                    $notification_queue->set_extended_context($queue->get_extended_context());
-                    $notification_queue->event_data = $queue->event_data;
-                    $notification_queue->scheduled_time = schedule_helper::calculate_schedule_timestamp(
-                        $queue->event_time,
-                        $notification_preference->get_schedule_offset()
+                foreach ($preferences as $preference) {
+                    if (!$preference->is_on_event()) {
+                        // Skip those notification preference that are not set for on event.
+                        continue;
+                    }
+
+                    notification_queue_helper::create_queue_from_preference(
+                        $preference,
+                        new notification_event_data(
+                            $queue->get_extended_context(),
+                            $queue->get_decoded_event_data()
+                        ),
+                        $queue->time_created
                     );
-                    $notification_queue->save();
                 }
 
                 $queue->delete();

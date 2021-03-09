@@ -25,10 +25,9 @@ namespace totara_notification\watcher;
 use core\hook\phpunit_reset;
 use ReflectionProperty;
 use totara_notification\factory\built_in_notification_factory;
-use totara_notification\factory\notifiable_event_factory;
 use totara_notification_mock_built_in_notification;
-use totara_notification_mock_notifiable_event;
 use totara_notification_mock_notifiable_event_resolver;
+use totara_notification_mock_scheduled_built_in_notification;
 use totara_notification_mock_single_placeholder;
 
 class phpunit_reset_watcher {
@@ -45,22 +44,21 @@ class phpunit_reset_watcher {
      */
     public static function watch_phpunit_reset(phpunit_reset $hook): void {
         self::reset_built_in_notification_factory();
-        self::reset_notifiable_event_factory();
 
         if (class_exists('totara_notification_mock_notifiable_event_resolver')) {
-            totara_notification_mock_notifiable_event_resolver::clear_callbacks();
+            totara_notification_mock_notifiable_event_resolver::clear();
         }
 
         if (class_exists('totara_notification_mock_built_in_notification')) {
             totara_notification_mock_built_in_notification::clear();
         }
 
-        if (class_exists('totara_notification_mock_notifiable_event')) {
-            totara_notification_mock_notifiable_event::clear();
-        }
-
         if (class_exists('totara_notification_mock_single_placeholder')) {
             totara_notification_mock_single_placeholder::clear();
+        }
+
+        if (class_exists('totara_notification_mock_scheduled_built_in_notification')) {
+            totara_notification_mock_scheduled_built_in_notification::clear();
         }
     }
 
@@ -75,27 +73,6 @@ class phpunit_reset_watcher {
         $property = new ReflectionProperty(
             built_in_notification_factory::class,
             'built_in_notification_classes'
-        );
-
-        $property->setAccessible(true);
-        $property->setValue(null);
-
-        // Remove the accessible of the property.
-        $property->setAccessible(false);
-    }
-
-    /**
-     * Expecting this will function will throw an exception on event when the property does
-     * not exist. Though, we are doing nothing here, as we would want the test to fail anyway.
-     *
-     * A helper to reset value of {@see notifiable_event_factory::$event_classes}
-     *
-     * @retunr void
-     */
-    private static function reset_notifiable_event_factory(): void {
-        $property = new ReflectionProperty(
-            notifiable_event_factory::class,
-            'event_classes'
         );
 
         $property->setAccessible(true);

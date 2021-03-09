@@ -22,7 +22,6 @@
  */
 namespace totara_notification\webapi\resolver\query;
 
-use context;
 use context_system;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_login;
@@ -56,11 +55,11 @@ class notification_preferences implements query_resolver, has_middleware {
             $ec->set_relevant_context($extended_context->get_context());
         }
 
-        $event_class_name = $args['event_class_name'] ?? null;
+        $resolver_class_name = $args['resolver_class_name'] ?? null;
 
         return notification_preference_loader::get_notification_preferences(
             $extended_context,
-            $event_class_name,
+            $resolver_class_name,
             $args['at_context_only'] ?? false
         );
     }

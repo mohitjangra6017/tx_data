@@ -283,6 +283,13 @@ final class comment {
     }
 
     /**
+     * @return int|null
+     */
+    public function get_time_soft_deleted(): ?int {
+        return $this->entity->timedeleted;
+    }
+
+    /**
      * @return string
      */
     public function get_component(): string {

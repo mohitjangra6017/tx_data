@@ -34,15 +34,15 @@ class extension extends base_extension implements specific_custom_extension {
     /**
      * @var string|null
      */
-    private $event_class_name;
+    private $resolver_class_name;
 
     /**
      * extension constructor.
-     * @param string|null $event_class_name
+     * @param string|null $resolver_class_name
      */
-    public function __construct(?string $event_class_name = null) {
+    public function __construct(?string $resolver_class_name = null) {
         parent::__construct();
-        $this->event_class_name = $event_class_name;
+        $this->resolver_class_name = $resolver_class_name;
     }
 
     /**
@@ -51,11 +51,11 @@ class extension extends base_extension implements specific_custom_extension {
      */
     public function set_options(array $options): void {
         parent::set_options($options);
-        if (array_key_exists('event_class_name', $options)) {
+        if (array_key_exists('resolver_class_name', $options)) {
             // Note that we skip the validation of event_class_name on purpose
             // here. Because the query to fetch the placeholders provided by the
             // notifiable event class name will validate it.
-            $this->event_class_name = $options['event_class_name'];
+            $this->resolver_class_name = $options['resolver_class_name'];
         }
     }
 
@@ -71,7 +71,7 @@ class extension extends base_extension implements specific_custom_extension {
      */
     public function get_js_parameters(): array {
         $data = parent::get_js_parameters();
-        $data['event_class_name'] = $this->event_class_name;
+        $data['resolver_class_name'] = $this->resolver_class_name;
 
         return $data;
     }

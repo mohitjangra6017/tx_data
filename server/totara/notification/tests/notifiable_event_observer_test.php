@@ -17,22 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
-use totara_notification\observer\notifiable_event_observer;
-use totara_notification\entity\notifiable_event_queue;
 
-/**
- * @group totara_notification
- */
-class totara_notification_notifiable_event_observer_testcase extends advanced_testcase {
+use core_phpunit\testcase;
+use totara_notification\entity\notifiable_event_queue;
+use totara_notification\observer\notifiable_event_observer;
+use totara_notification\testing\generator;
+
+class totara_notification_notifiable_event_observer_testcase extends testcase {
     /**
      * @return void
      */
     protected function setUp(): void {
-        global $CFG;
-        require_once("{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event.php");
+        $generator = generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
     }
 
     /**

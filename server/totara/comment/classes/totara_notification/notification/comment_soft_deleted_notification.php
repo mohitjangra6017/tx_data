@@ -24,7 +24,7 @@
 namespace totara_comment\totara_notification\notification;
 
 use lang_string;
-use totara_comment\event\comment_soft_deleted;
+use totara_comment\totara_notification\resolver\comment_soft_deleted;
 use totara_comment\totara_notification\recipient\comment_author;
 use totara_notification\notification\built_in_notification;
 use totara_notification\schedule\schedule_on_event;
@@ -33,7 +33,7 @@ final class comment_soft_deleted_notification extends built_in_notification {
     /**
      * @return string
      */
-    public static function get_event_class_name(): string {
+    public static function get_resolver_class_name(): string {
         return comment_soft_deleted::class;
     }
 

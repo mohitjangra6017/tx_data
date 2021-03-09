@@ -24,8 +24,9 @@
 use core\json_editor\helper\document_helper;
 use core\json_editor\node\paragraph;
 use core\json_editor\node\text;
+use core_phpunit\testcase;
 
-class totara_notification_format_text_email_testcase extends advanced_testcase {
+class totara_notification_format_text_email_testcase extends testcase {
     /**
      * @return void
      */
@@ -33,13 +34,13 @@ class totara_notification_format_text_email_testcase extends advanced_testcase {
         $document = document_helper::json_encode_document(
             document_helper::create_document_from_content_nodes([
                 paragraph::create_json_node_with_content_nodes([
-                    text::create_json_node_from_text(/** @lang text */'<div>This is the text</div>')
-                ])
+                    text::create_json_node_from_text(/** @lang text */ '<div>This is the text</div>'),
+                ]),
             ])
         );
 
         $text = format_text_email($document, FORMAT_JSON_EDITOR);
-        self::assertEquals(/** @lang text */'<div>This is the text</div>', trim($text));
+        self::assertEquals(/** @lang text */ '<div>This is the text</div>', trim($text));
     }
 
     /**
@@ -49,8 +50,8 @@ class totara_notification_format_text_email_testcase extends advanced_testcase {
         $document = document_helper::json_encode_document(
             document_helper::create_document_from_content_nodes([
                 paragraph::create_json_node_with_content_nodes([
-                    text::create_json_node_from_text('This is the text\'s')
-                ])
+                    text::create_json_node_from_text('This is the text\'s'),
+                ]),
             ])
         );
 
@@ -70,13 +71,13 @@ class totara_notification_format_text_email_testcase extends advanced_testcase {
         $document = document_helper::json_encode_document(
             document_helper::create_document_from_content_nodes([
                 paragraph::create_json_node_with_content_nodes([
-                    text::create_json_node_from_text(/** @lang text */'<script>alert("doom")</script>')
-                ])
+                    text::create_json_node_from_text(/** @lang text */ '<script>alert("doom")</script>'),
+                ]),
             ])
         );
 
         $text = format_text_email($document, FORMAT_JSON_EDITOR);
-        self::assertEquals(/** @lang text */'<script>alert("doom")</script>', trim($text));
+        self::assertEquals(/** @lang text */ '<script>alert("doom")</script>', trim($text));
     }
 
     /**
@@ -86,8 +87,8 @@ class totara_notification_format_text_email_testcase extends advanced_testcase {
         $document = document_helper::json_encode_document(
             document_helper::create_document_from_content_nodes([
                 paragraph::create_json_node_with_content_nodes([
-                    text::create_json_node_from_text('&lt;script>&gt;alert("doom")&lt;/script&gt;')
-                ])
+                    text::create_json_node_from_text('&lt;script>&gt;alert("doom")&lt;/script&gt;'),
+                ]),
             ])
         );
 

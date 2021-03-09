@@ -21,17 +21,11 @@
  * @package totara_notification
  */
 
-use totara_comment\totara_notification\resolver\comment_created as resolver;
-use totara_core\extended_context;
-use totara_notification\factory\notifiable_event_factory;
+use core_phpunit\testcase;
 use totara_notification\local\helper;
-use totara_notification\resolver\notifiable_event_resolver;
 use totara_notification\testing\generator;
 
-/**
- * @group totara_notification
- */
-class totara_notification_local_helper_testcase extends advanced_testcase {
+class totara_notification_local_helper_testcase extends testcase {
     /**
      * @return void
      */
@@ -57,57 +51,6 @@ class totara_notification_local_helper_testcase extends advanced_testcase {
     /**
      * @return void
      */
-    public function test_get_resolver_from_invalid_event(): void {
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage('Event class name is an invalid notifiable event');
-
-        helper::get_resolver_from_notifiable_event(
-            'hello_world',
-            extended_context::make_with_context(context_system::instance()),
-            []
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function test_get_resolver_with_trailing_slash(): void {
-        $events = notifiable_event_factory::get_notifiable_events();
-        $events = array_map(
-            function (string $event_class_name): string {
-                return "\\{$event_class_name}";
-            },
-            $events
-        );
-
-        foreach ($events as $event) {
-            self::assertEquals(0, stripos($event, '\\'));
-            $resolver = helper::get_resolver_from_notifiable_event(
-                $event,
-                extended_context::make_with_context(context_system::instance()),
-                []
-            );
-
-            self::assertInstanceOf(notifiable_event_resolver::class, $resolver);
-        }
-    }
-
-    /**
-     * @return void
-     */
-    public function test_phpunit_get_resolver_from_valid_event(): void {
-        $resolver = helper::get_resolver_from_notifiable_event(
-            totara_notification_mock_notifiable_event::class,
-            extended_context::make_with_context(context_system::instance()),
-            ['user_data' => false]
-        );
-
-        self::assertInstanceOf(notifiable_event_resolver::class, $resolver);
-    }
-
-    /**
-     * @return void
-     */
     public function test_check_built_in_notification(): void {
         /** @var generator $generator */
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
@@ -125,84 +68,5 @@ class totara_notification_local_helper_testcase extends advanced_testcase {
                 '\\totara_notification_mock_built_in_notification'
             )
         );
-    }
-
-    /**
-     * @return void
-     */
-    public function test_get_invalid_component_name_from_event_name(): void {
-        global $CFG;
-        require_once("{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_invalid_notifiable_event.php");
-
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("Cannot find the component from the event class name");
-
-        helper::get_component_of_event_class_name(totara_notification_invalid_notifiable_event::class);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_get_component_name_from_invalid_event_name(): void {
-        global $CFG;
-        require_once("{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_invalid_notifiable_event.php");
-
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("The event class name is not a notifiable event");
-
-        helper::get_component_of_event_class_name('anima_martin_garrix');
-    }
-
-    /**
-     * @return void
-     */
-    public function test_get_component_from_mock_with_trailing(): void {
-        self::assertEquals(
-            'totara_notification',
-            helper::get_component_of_event_class_name('\\totara_notification_mock_notifiable_event')
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function test_get_notifiable_event_from_invalid_resolver(): void {
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage(
-            'The resolver class name is not a child of ' . notifiable_event_resolver::class
-        );
-
-        helper::get_notifiable_event_from_resolver('something_meaningful');
-    }
-
-    /**
-     * @return void
-     */
-    public function test_get_notifiable_event_from_valid_resolver(): void {
-        $event_class_name = helper::get_notifiable_event_from_resolver(resolver::class);
-        self::assertTrue(helper::is_valid_notifiable_event($event_class_name));
-    }
-
-    /**
-     * @return void
-     */
-    public function test_get_notifiable_event_from_a_valid_resolver_but_yield_invalid_event_class(): void {
-        $mock_resolver = new class(extended_context::make_with_context(context_system::instance()), []) extends notifiable_event_resolver {
-            /**
-             * @param string $recipient_name
-             * @return int[]
-             */
-            public function get_recipient_ids(string $recipient_name): array {
-                return [];
-            }
-        };
-
-        $class_name = get_class($mock_resolver);
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage(
-            "Cannot find the resolver for notifiable event '{$class_name}'"
-        );
-
-        helper::get_notifiable_event_from_resolver($class_name);
     }
 }

@@ -21,12 +21,13 @@
  * @package totara_notification
  */
 
+use core_phpunit\testcase;
 use totara_notification\placeholder\option;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\testing\generator;
 use totara_notification_mock_single_placeholder as mock_placeholder;
 
-class totara_notification_placeholder_group_option_testcase extends advanced_testcase {
+class totara_notification_placeholder_group_option_testcase extends testcase {
     /**
      * @return void
      */
@@ -64,7 +65,7 @@ class totara_notification_placeholder_group_option_testcase extends advanced_tes
                     'object:random_three_key',
                     'object:random_four_key',
                     'object:random_five_key',
-                    'object:random_six_key'
+                    'object:random_six_key',
                 ]
             );
         }

@@ -31,7 +31,7 @@ describe('NotificationPreferenceModal', () => {
       propsData: {
         title: 'Modal title',
         contextId: 1,
-        eventClassName: 'eventClassName',
+        resolverClassName: 'eventClassName',
         validScheduleTypes: [SCHEDULE_TYPES.ON_EVENT],
         availableRecipients: [
           {
@@ -51,7 +51,7 @@ describe('NotificationPreferenceModal', () => {
     expect(wrapper.emitted('form-submit')).toEqual([
       [
         {
-          event_class_name: 'eventClassName',
+          resolver_class_name: 'eventClassName',
         },
       ],
     ]);
@@ -66,7 +66,7 @@ describe('NotificationPreferenceModal', () => {
       [
         {
           another: 'value',
-          event_class_name: 'eventClassName',
+          resolver_class_name: 'eventClassName',
         },
       ],
     ]);

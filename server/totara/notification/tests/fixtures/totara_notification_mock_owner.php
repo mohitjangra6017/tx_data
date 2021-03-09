@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author  Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_notification
  */
+
 use totara_notification\recipient\recipient;
 
 class totara_notification_mock_owner implements recipient {

@@ -46,7 +46,6 @@ final class notifiable_event_observer {
 
         $queue = new notifiable_event_queue();
         $queue->event_name = get_class($event);
-        $queue->event_time = $event_data['event_time'] ?? $event->timecreated;
         $queue->set_decoded_event_data($event_data);
         $queue->set_extended_context($event->get_notification_extended_context());
 

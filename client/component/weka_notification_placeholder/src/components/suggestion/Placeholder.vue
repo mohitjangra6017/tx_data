@@ -68,7 +68,7 @@ export default {
       type: [Number, String],
       required: true,
     },
-    eventClassName: {
+    resolverClassName: {
       type: String,
       required: true,
     },
@@ -92,7 +92,7 @@ export default {
         return {
           pattern: this.pattern,
           context_id: this.contextId,
-          event_class_name: this.eventClassName,
+          resolver_class_name: this.resolverClassName,
         };
       },
     },

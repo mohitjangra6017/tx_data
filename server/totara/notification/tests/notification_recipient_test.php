@@ -22,7 +22,7 @@
  */
 
 use totara_comment\comment_helper;
-use totara_comment\event\comment_soft_deleted;
+use totara_comment\totara_notification\resolver\comment_soft_deleted;
 use totara_comment\totara_notification\recipient\comment_author;
 use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
@@ -31,8 +31,10 @@ use totara_notification\model\notification_preference as notification_preference
 use totara_notification\task\process_event_queue_task;
 use totara_notification\task\process_notification_queue_task;
 use totara_notification\testing\generator as notification_generator;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
+use core_phpunit\testcase;
 
-class totara_notification_notification_recipient_testcase extends advanced_testcase {
+class totara_notification_notification_recipient_testcase extends testcase {
 
     /**
      * @return void
@@ -40,9 +42,8 @@ class totara_notification_notification_recipient_testcase extends advanced_testc
     public function test_mock_recipient(): void {
         // Create notification preference with a mock recipient that will resolve
         // to user one's ID.
-        /** @var notification_preference_model $notification_preference */
         $notification_preference = $this->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             totara_notification_mock_recipient::class,
         );
 
@@ -51,9 +52,7 @@ class totara_notification_notification_recipient_testcase extends advanced_testc
         $user_two = $generator->create_user();
         $context_user = context_user::instance($user_two->id);
 
-        /** @var notification_generator $notification_generator */
         $notification_generator = $this->get_generator();
-        $notification_generator->include_mock_notifiable_event();
         $notification_generator->add_string_subject_to_mock_built_in_notification('Recipient');
         $notification_generator->add_string_body_to_mock_built_in_notification('Test');
 
@@ -62,7 +61,7 @@ class totara_notification_notification_recipient_testcase extends advanced_testc
 
         // Adding queue to process.
         $queue = new notification_queue_entity();
-        $queue->context_id = $context_user->id;
+        $queue->set_extended_context(extended_context::make_with_context($context_user));
         $queue->scheduled_time = 15;
         $queue->event_data = json_encode(['message' => 'my_name']);
         $queue->notification_preference_id = $notification_preference->get_id();
@@ -85,7 +84,6 @@ class totara_notification_notification_recipient_testcase extends advanced_testc
     public function test_comment_author_recipient(): void {
         // Create notification preference with a mock recipient that will resolve
         // to user one's ID.
-        /** @var notification_preference_model $notification_preference */
         $this->create_notification_preference(
             comment_soft_deleted::class,
             comment_author::class
@@ -228,23 +226,26 @@ class totara_notification_notification_recipient_testcase extends advanced_testc
         return false;
     }
 
-    private function get_generator() {
-        /** @var generator $generator */
-        return $this->getDataGenerator()->get_plugin_generator('totara_notification');
+    /**
+     * @return notification_generator
+     */
+    private function get_generator(): notification_generator {
+        return notification_generator::instance();
     }
 
     /**
-     * @param string $event_class
+     * @param string $resolver_class
      * @param string $recipient_class
      *
-     * @return mixed
+     * @return notification_preference_model
      */
-    private function create_notification_preference(string $event_class, string $recipient_class) {
+    private function create_notification_preference(string $resolver_class,
+                                                    string $recipient_class): notification_preference_model {
         return $this->get_generator()->create_notification_preference(
-            $event_class,
+            $resolver_class,
             extended_context::make_with_context(context_system::instance()),
             [
-                'body' => "Notification preference body for [{$event_class},{$recipient_class}]",
+                'body' => "Notification preference body for [{$resolver_class},{$recipient_class}]",
                 'subject' => 'Notification preference subject',
                 'body_format' => FORMAT_MOODLE,
                 'title' => 'Notification preference title',

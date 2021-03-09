@@ -257,5 +257,96 @@ function xmldb_totara_notification_upgrade($old_version) {
         upgrade_plugin_savepoint(true, 2021012006, 'totara', 'notification');
     }
 
+    if ($old_version < 2021031200) {
+        $table = new xmldb_table('notifiable_event_queue');
+
+        // Define field event_time to be dropped from notifiable_event_queue.
+        $index = new xmldb_index('event_time_index', XMLDB_INDEX_NOTUNIQUE, array('event_time'));
+
+        // Conditionally launch drop index event_time_index.
+        if ($db_manager->index_exists($table, $index)) {
+            $db_manager->drop_index($table, $index);
+        }
+
+        // Define field event_time to be dropped from notifiable_event_queue.
+        $field = new xmldb_field('event_time');
+
+        // Conditionally launch drop field event_time.
+        if ($db_manager->field_exists($table, $field)) {
+            $db_manager->drop_field($table, $field);
+        }
+
+        // Notification savepoint reached.
+        upgrade_plugin_savepoint(true, 2021031200, 'totara', 'notification');
+    }
+
+    if ($old_version < 2021031201) {
+        // Changing precision of field schedule_offset on table notification_preference to (10).
+        $table = new xmldb_table('notification_preference');
+        $field = new xmldb_field('schedule_offset', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'time_created');
+
+        // Launch change of precision for field schedule_offset.
+        $db_manager->change_field_precision($table, $field);
+
+        // Convert all the old schedule offset into the seconds.
+        $records = $DB->get_records_sql('
+            SELECT id, schedule_offset FROM "ttr_notification_preference" 
+            WHERE schedule_offset IS NOT NULL
+        ');
+
+        foreach ($records as $record) {
+            $record->schedule_offset = $record->schedule_offset * DAYSECS;
+            $DB->update_record('notification_preference', $record);
+        }
+
+        upgrade_plugin_savepoint(true, 2021031201, 'totara', 'notification');
+    }
+
+    if ($old_version < 2021031202) {
+        // Convert all the `event_class_name` related field into `resolver_class_name` field, in table
+        // notification_preference.
+        $table = new xmldb_table('notification_preference');
+        $old_index = new xmldb_index('event_class_name_index', XMLDB_INDEX_NOTUNIQUE, array('event_class_name'));
+
+        // Conditionally launch drop index event_class_name_index.
+        if ($db_manager->index_exists($table, $old_index)) {
+            $db_manager->drop_index($table, $old_index);
+        }
+
+        $field = new xmldb_field('event_class_name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'ancestor_id');
+        $db_manager->rename_field($table, $field, 'resolver_class_name');
+
+        // Add the new index for field resolver_class_name.
+        $new_index = new xmldb_index('resolver_class_name_index', XMLDB_INDEX_NOTUNIQUE, array('resolver_class_name'));
+        if (!$db_manager->index_exists($table, $new_index)) {
+            $db_manager->add_index($table, $new_index);
+        }
+
+        // Update after resolve the field name.
+        $event_classes = $DB->get_fieldset_sql('SELECT DISTINCT resolver_class_name FROM "ttr_notification_preference"');
+
+        foreach ($event_classes as $event_cls) {
+            $event_cls = ltrim($event_cls, '\\');
+            $parts = explode('\\', $event_cls);
+
+            $component = reset($parts);
+            $name = end($parts);
+
+            $resolver_class_name = "{$component}\\totara_notification\\resolver\\{$name}";
+            $DB->execute(
+                '
+                    UPDATE "ttr_notification_preference" SET resolver_class_name = :resolver_class_name 
+                    WHERE resolver_class_name = :old_event_name
+                ',
+                [
+                    'resolver_class_name' => $resolver_class_name,
+                    'old_event_name' => $event_cls
+                ]
+            );
+        }
+
+        upgrade_plugin_savepoint(true, 2021031202, 'totara', 'notification');
+    }
+
     return true;
 }

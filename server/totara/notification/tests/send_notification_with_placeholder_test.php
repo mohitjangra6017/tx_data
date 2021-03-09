@@ -24,7 +24,10 @@
 use core\json_editor\helper\document_helper;
 use core\json_editor\node\paragraph;
 use core\json_editor\node\text;
+use core_phpunit\testcase;
+use totara_core\extended_context;
 use core_user\totara_notification\placeholder\user;
+use totara_notification\entity\notifiable_event_queue;
 use totara_notification\entity\notification_queue;
 use totara_notification\json_editor\node\placeholder;
 use totara_notification\manager\event_queue_manager;
@@ -33,18 +36,18 @@ use totara_notification\observer\notifiable_event_observer;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\testing\generator;
 use totara_notification_mock_notifiable_event as mock_notifiable_event;
-use totara_notification\entity\notifiable_event_queue;
-use totara_core\extended_context;
+use totara_notification_mock_notifiable_event_resolver as mock_notifiable_event_resolver;
 
-class totara_notification_send_notification_with_placeholder_testcase extends advanced_testcase {
+class totara_notification_send_notification_with_placeholder_testcase extends testcase {
     /**
      * @return void
      */
     protected function setUp(): void {
-        /** @var generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $generator = generator::instance();
+
         $generator->include_mock_notifiable_event();
         $generator->include_mock_single_placeholder();
+        $generator->include_mock_notifiable_event_resolver();
     }
 
     /**
@@ -65,7 +68,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $context_system = context_system::instance();
 
-        mock_notifiable_event::add_placeholder_options(
+        mock_notifiable_event_resolver::add_placeholder_options(
             placeholder_option::create(
                 'owner',
                 user::class,
@@ -87,13 +90,13 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
 
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
         $notification_generator->create_notification_preference(
-            mock_notifiable_event::class,
+            mock_notifiable_event_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'This is custom notification',
                 'subject' => 'A notification for [owner:firstname]',
                 'body' =>
-                    'Hello [owner:firstname], a user [author:fullname] had make your item '.
+                    'Hello [owner:firstname], a user [author:fullname] had make your item ' .
                     'to this his/her timezone [author:timezone]',
                 'body_format' => FORMAT_MOODLE,
                 'recipient' => totara_notification_mock_recipient::class,
@@ -104,7 +107,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
             $context_system->id,
             [
                 'owner_id' => $user_one->id,
-                'author_id' => $user_two->id
+                'author_id' => $user_two->id,
             ]
         );
 
@@ -169,7 +172,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
 
         $custom_notification = $notification_generator->create_notification_preference(
-            mock_notifiable_event::class,
+            mock_notifiable_event_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'subject' => 'Hello [author:firstname], a new notification for you',
@@ -188,7 +191,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
             ['body' => 'User [commenter:fullname] had created a new comment in [author:firstname]\'s code']
         );
 
-        mock_notifiable_event::add_placeholder_options(
+        mock_notifiable_event_resolver::add_placeholder_options(
             placeholder_option::create(
                 'author',
                 user::class,
@@ -213,7 +216,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
             $context_course->id,
             [
                 'author_id' => $user_one->id,
-                'commenter_id' => $user_two->id
+                'commenter_id' => $user_two->id,
             ]
         );
 
@@ -295,7 +298,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
 
         $context_system = context_system::instance();
         $notification_generator->create_notification_preference(
-            mock_notifiable_event::class,
+            mock_notifiable_event_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
                 'subject_format' => FORMAT_JSON_EDITOR,
@@ -303,8 +306,8 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
                     document_helper::create_document_from_content_nodes([
                         paragraph::create_json_node_with_content_nodes([
                             text::create_json_node_from_text('Hello '),
-                            placeholder::create_node_from_key_and_label('user_one:firstname', 'User\'s first name')
-                        ])
+                            placeholder::create_node_from_key_and_label('user_one:firstname', 'User\'s first name'),
+                        ]),
                     ])
                 ),
                 'body_format' => FORMAT_JSON_EDITOR,
@@ -315,15 +318,15 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
                             text::create_json_node_from_text('User\'s two full name from first name and last name is '),
                             placeholder::create_node_from_key_and_label('user_two:firstname', 'User\'s first name'),
                             text::create_json_node_from_text(' '),
-                            placeholder::create_node_from_key_and_label('user_two:lastname', 'User\'s last name')
-                        ])
+                            placeholder::create_node_from_key_and_label('user_two:lastname', 'User\'s last name'),
+                        ]),
                     ])
                 ),
                 'recipient' => totara_notification_mock_recipient::class,
             ]
         );
 
-        mock_notifiable_event::add_placeholder_options(
+        mock_notifiable_event_resolver::add_placeholder_options(
             placeholder_option::create(
                 'user_one',
                 user::class,
@@ -344,7 +347,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
 
         $event = new mock_notifiable_event($context_system->id, [
             'user_one_id' => $user_one->id,
-            'user_two_id' => $user_two->id
+            'user_two_id' => $user_two->id,
         ]);
 
         self::assertEquals(0, $DB->count_records(notifiable_event_queue::TABLE));
@@ -397,13 +400,13 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
             implode(
                 '',
                 [
-                    /** @lang text */"<p>Boom user</p>",
-                    /** @lang text */"<p>User&#039;s two full name from first name and last name is ",
-                    /** @lang text */'<span data-key="user_two:firstname" data-label="User&#039;s first name">',
-                    /** @lang text */"{$user_two->firstname}</span> ",
-                    /** @lang text */'<span data-key="user_two:lastname" data-label="User&#039;s last name">',
-                    /** @lang text */"{$user_two->lastname}</span>",
-                    /** @lang text */"</p>"
+                    /** @lang text */ "<p>Boom user</p>",
+                    /** @lang text */ "<p>User&#039;s two full name from first name and last name is ",
+                    /** @lang text */ '<span data-key="user_two:firstname" data-label="User&#039;s first name">',
+                    /** @lang text */ "{$user_two->firstname}</span> ",
+                    /** @lang text */ '<span data-key="user_two:lastname" data-label="User&#039;s last name">',
+                    /** @lang text */ "{$user_two->lastname}</span>",
+                    /** @lang text */ "</p>",
                 ]
             ),
             $message->fullmessagehtml

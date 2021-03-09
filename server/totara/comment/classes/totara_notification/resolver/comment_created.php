@@ -22,29 +22,134 @@
  */
 namespace totara_comment\totara_notification\resolver;
 
-use coding_exception;
+use context;
+use core_user\totara_notification\placeholder\user;
+use lang_string;
+use stdClass;
+use totara_comment\comment;
+use totara_comment\resolver_factory;
 use totara_comment\totara_notification\recipient\comment_author;
 use totara_comment\totara_notification\recipient\owner;
-use totara_notification\recipient\recipient;
+use totara_core\extended_context;
+use totara_notification\model\notification_event_data;
+use totara_notification\placeholder\placeholder_option;
+use totara_notification\resolver\abstraction\scheduled_event_resolver;
 use totara_notification\resolver\notifiable_event_resolver;
+use totara_notification\schedule\schedule_after_event;
+use totara_notification\schedule\schedule_on_event;
+use totara_comment\event\comment_created as comment_created_event;
 
-class comment_created extends notifiable_event_resolver {
+class comment_created extends notifiable_event_resolver implements scheduled_event_resolver {
+    /**
+     * Returns the comment's created time.
+     * @return int|null
+     */
+    public function get_fixed_event_time(): ?int {
+        $comment_id = $this->event_data['comment_id'];
+        $comment = comment::from_id($comment_id);
+
+        return $comment->get_timecreated();
+    }
 
     /**
-     * @param string $recipient_class
-     * @return int[]
+     * @return string
      */
-    public function get_recipient_ids(string $recipient_class): array {
-        $valid_recipient_classes = [
+    public static function get_notification_title(): string {
+        return get_string('notification_comment_created', 'totara_comment');
+    }
+
+    /**
+     * @return array
+     */
+    public static function get_notification_available_recipients(): array {
+        return [
             comment_author::class,
-            owner::class
+            owner::class,
         ];
+    }
 
-        if (!in_array($recipient_class, $valid_recipient_classes)) {
-            throw new coding_exception("Invalid recipient class");
-        }
+    /**
+     * @return array
+     */
+    public static function get_notification_available_schedules(): array {
+        return [
+            schedule_on_event::class,
+            schedule_after_event::class,
+        ];
+    }
 
-        /** @var recipient $recipient_class */
-        return $recipient_class::get_user_ids($this->event_data);
+    /**
+     * @return array
+     */
+    public static function get_notification_default_delivery_channels(): array {
+        return [];
+    }
+
+    /**
+     * @return placeholder_option[]
+     */
+    public static function get_notification_available_placeholder_options(): array {
+        return [
+            placeholder_option::create(
+                'item_owner',
+                user::class,
+                new lang_string('item_owner_placeholder_group', 'totara_comment'),
+                function (array $event_data): user {
+                    $comment = comment::from_id($event_data['comment_id']);
+                    $resolver = resolver_factory::create_resolver($comment->get_component());
+
+                    $owner_id = $resolver->get_owner_id_from_instance(
+                        $comment->get_area(),
+                        $comment->get_instanceid()
+                    );
+
+                    return user::from_id($owner_id);
+                }
+            ),
+
+            placeholder_option::create(
+                'commenter',
+                user::class,
+                new lang_string('commenter_placeholder_group', 'totara_comment'),
+                function (array $event_data): user {
+                    $comment = comment::from_id($event_data['comment_id']);
+                    return user::from_id($comment->get_userid());
+                }
+            ),
+        ];
+    }
+
+    /**
+     * @param int $min_time
+     * @param int $max_time
+     * @return notification_event_data[]
+     */
+    public static function get_scheduled_events(int $min_time, int $max_time): array {
+        global $DB;
+        $sql = '
+            SELECT * FROM "ttr_totara_comment" c WHERE
+            c.timecreated >= :min_time AND c.timecreated < :max_time
+            AND c.timedeleted IS NULL
+        ';
+
+        $records = $DB->get_records_sql($sql, ['min_time' => $min_time, 'max_time' => $max_time]);
+        return array_map(
+            function (stdClass $record): notification_event_data {
+                $comment = comment::from_record($record);
+
+                $comment_resolver = resolver_factory::create_resolver($comment->get_component());
+                $context_id = $comment_resolver->get_context_id($comment->get_instanceid(), $comment->get_area());
+
+                // Construct the event so that we can get the right event_data to pass down to the
+                // scheduled event processor.
+                $event = comment_created_event::from_comment($comment, context::instance_by_id($context_id));
+
+                return new notification_event_data(
+                    extended_context::make_with_id($context_id),
+                    $event->get_notification_event_data()
+                );
+            },
+            $records
+        );
     }
 }

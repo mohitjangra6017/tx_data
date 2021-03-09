@@ -17,19 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang.liu <qingyang.liu@totaralearning.com>
+ * @author  Qingyang.liu <qingyang.liu@totaralearning.com>
  * @package totara_notification
  */
 
-use totara_webapi\phpunit\webapi_phpunit_helper;
+use core_phpunit\testcase;
 use totara_notification\model\notification_preference as model;
 use totara_notification\testing\generator;
-use totara_core\extended_context;
+use totara_webapi\phpunit\webapi_phpunit_helper;
 
-/**
- * @group totara_notification
- */
-class totara_notification_webapi_type_extended_context_testcase extends advanced_testcase {
+class totara_notification_webapi_type_extended_context_testcase extends testcase {
     use webapi_phpunit_helper;
 
     /**
