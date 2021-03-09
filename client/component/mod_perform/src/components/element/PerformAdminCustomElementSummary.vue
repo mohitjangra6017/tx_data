@@ -50,6 +50,11 @@
     >
       <h4 class="tui-performAdminCustomElementSummary__section-title">
         {{ field.title }}
+        <HelpIcon
+          v-if="field.helpmsg"
+          :helpmsg="field.helpmsg"
+          :title="field.title"
+        />
       </h4>
 
       <div class="tui-performAdminCustomElementSummary__section-value">
@@ -79,7 +84,7 @@
     </div>
 
     <div
-      v-if="settings.is_respondable"
+      v-if="settings.displays_responses"
       class="tui-performAdminCustomElementSummary__section"
     >
       <h4 class="tui-performAdminCustomElementSummary__section-title">
@@ -110,6 +115,7 @@
 
 <script>
 import Button from 'tui/components/buttons/Button';
+import HelpIcon from 'tui/components/form/HelpIcon';
 
 // Utils
 import tui from 'tui/tui';
@@ -117,6 +123,7 @@ import tui from 'tui/tui';
 export default {
   components: {
     Button,
+    HelpIcon,
   },
 
   props: {

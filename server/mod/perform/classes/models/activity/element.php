@@ -31,6 +31,7 @@ use core\orm\entity\model;
 use core\orm\query\builder;
 use mod_perform\entity\activity\element as element_entity;
 use mod_perform\entity\activity\section_element as section_element_entity;
+use mod_perform\models\activity\helpers\displays_responses;
 use mod_perform\models\activity\helpers\child_element_manager;
 
 /**
@@ -73,6 +74,7 @@ class element extends model {
         'context',
         'element_plugin',
         'is_respondable',
+        'displays_responses',
         'identifier',
         'data',
         'element_identifier',
@@ -148,6 +150,15 @@ class element extends model {
      */
     public function get_is_respondable(): bool {
         return $this->get_element_plugin() instanceof respondable_element_plugin;
+    }
+
+    /**
+     * Does this element display responses.
+     *
+     * @return bool
+     */
+    public function get_displays_responses(): bool {
+        return $this->get_element_plugin() instanceof displays_responses;
     }
 
     /**
@@ -266,7 +277,7 @@ class element extends model {
      *
      * @param int $sort_order
      */
-    public function update_sort_order(int $sort_order) {
+    public function update_sort_order(int $sort_order): void {
         if ($this->parent === null) {
             throw new coding_exception("Can not update sort order of element without a parent.");
         }
@@ -300,7 +311,7 @@ class element extends model {
     }
 
     /*
-     * Update the raw eleemnt settings data.
+     * Update the raw element settings data.
      */
     public function update_data(string $data): element {
         $this->entity->data = $data;

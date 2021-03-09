@@ -177,7 +177,6 @@ export default {
     MoreButton,
     SettingsIcon,
   },
-
   props: {
     activityState: Object,
     activityId: Number,

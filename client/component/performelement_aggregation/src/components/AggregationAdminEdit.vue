@@ -16,240 +16,228 @@
 -->
 
 <template>
-  <div class="tui-redisplayAdminEdit">
+  <div class="tui-aggregationAdminEdit">
     <PerformAdminCustomElementEdit
-      ref="redisplayUniform"
       :initial-values="initialValues"
       :settings="settings"
       validation-mode="auto"
-      @change="updateOptionValues"
       @cancel="$emit('display')"
-      @update="saveRedisplayElement"
+      @update="$emit('update', getElementForUpdate($event))"
     >
-      THIS IS AGG QUESTION
       <FormRow
         v-slot="{ labelId }"
-        :label="$str('source_activity_value', 'performelement_redisplay')"
-        :helpmsg="
-          $str('source_activity_value_help', 'performelement_redisplay')
-        "
-        :required="true"
+        :label="$str('questions_to_aggregate', 'performelement_aggregation')"
+        required
       >
-        <Loader
-          :loading="$apollo.queries.activities.loading"
-          class="tui-redisplayAdminEdit__loader tui-redisplayAdminEdit__loader--charLength-25"
-        >
-          <FormSelect
-            :aria-labelledby="labelId"
-            :options="activityOptions"
-            :disabled="$apollo.queries.activities.loading"
-            name="activityId"
-            char-length="25"
-            :validations="v => [v.required()]"
-          />
+        <Loader :loading="loading">
+          <FieldArray
+            v-slot="{ items, push, remove }"
+            path="sourceSectionElementIds"
+            :validate="sourceSectionElementsValidation"
+          >
+            <Repeater
+              :rows="items"
+              :min-rows="2"
+              :delete-icon="true"
+              :aria-labelledby="labelId"
+              @add="push()"
+              @remove="(item, i) => remove(i)"
+            >
+              <template v-slot="{ index }">
+                <FormSelect
+                  :aria-label="
+                    $str(
+                      'aggregate_question_n',
+                      'performelement_aggregation',
+                      index + 1
+                    )
+                  "
+                  :options="activityAggregatableElementOptions"
+                  :name="[index, 'value']"
+                  :validations="v => [v.required()]"
+                />
+              </template>
+              <template v-slot:add>
+                <ButtonIcon
+                  :aria-label="
+                    $str('add_question', 'performelement_aggregation')
+                  "
+                  :styleclass="{ small: true }"
+                  :text="$str('add_question', 'performelement_aggregation')"
+                  @click="push(createEmptyRepeaterValue(questionCounter++))"
+                >
+                  <AddIcon />
+                </ButtonIcon>
+              </template>
+            </Repeater>
+          </FieldArray>
         </Loader>
       </FormRow>
 
       <FormRow
-        v-if="selectedActivityId"
         v-slot="{ labelId }"
-        :label="
-          $str('source_question_element_value', 'performelement_redisplay')
-        "
-        :helpmsg="
-          $str('source_question_element_value_help', 'performelement_redisplay')
-        "
-        :required="true"
+        :label="$str('calculations_to_display', 'performelement_aggregation')"
+        required
       >
-        <Loader
-          :loading="$apollo.loading || loadingSectionElements"
-          class="tui-redisplayAdminEdit__loader tui-redisplayAdminEdit__loader--charLength-25"
+        <FormCheckboxGroup
+          :validations="v => [v.required()]"
+          name="calculations"
         >
-          <FormSelect
-            v-if="selectedActivityElementOptions"
+          <Checkbox
+            v-for="calculationOption in calculationOptions"
+            :key="calculationOption.plugin"
+            :value="calculationOption.plugin"
+          >
+            {{ calculationOption.name }}
+          </Checkbox>
+        </FormCheckboxGroup>
+      </FormRow>
+
+      <FormRow
+        v-slot="{ labelId }"
+        :label="$str('excluded_values', 'performelement_aggregation')"
+        :helpmsg="
+          $str('excluded_values_help_text', 'performelement_aggregation')
+        "
+      >
+        <FieldArray v-slot="{ items, push, remove }" path="excludedValues">
+          <Repeater
+            :rows="items"
+            :min-rows="1"
+            :delete-icon="true"
             :aria-labelledby="labelId"
-            name="sourceSectionElementId"
-            char-length="25"
-            :disabled="$apollo.loading"
-            :options="selectedActivityElementOptions"
-            :validations="v => [v.required()]"
-          />
-        </Loader>
+            @add="push()"
+            @remove="(item, i) => remove(i)"
+          >
+            <template v-slot="{ index }">
+              <FormNumber
+                :aria-label="
+                  $str(
+                    'excluded_value_n',
+                    'performelement_aggregation',
+                    index + 1
+                  )
+                "
+                :name="[index, 'value']"
+                char-length="4"
+              />
+            </template>
+            <template v-slot:add>
+              <ButtonIcon
+                :aria-label="
+                  $str('add_excluded_value', 'performelement_aggregation')
+                "
+                :styleclass="{ small: true }"
+                @click="push(createEmptyRepeaterValue(excludedValuesCounter++))"
+              >
+                <AddIcon />
+              </ButtonIcon>
+            </template>
+          </Repeater>
+        </FieldArray>
       </FormRow>
     </PerformAdminCustomElementEdit>
   </div>
 </template>
 
 <script>
-import { FormRow, FormSelect } from 'tui/components/uniform';
+import {
+  FormRow,
+  FormSelect,
+  FieldArray,
+  FormNumber,
+  FormCheckboxGroup,
+} from 'tui/components/uniform';
+import Checkbox from 'tui/components/form/Checkbox';
 import Loader from 'tui/components/loading/Loader';
+import Repeater from 'tui/components/form/Repeater';
+import AddIcon from 'tui/components/icons/Add';
+import ButtonIcon from 'tui/components/buttons/ButtonIcon';
 import PerformAdminCustomElementEdit from 'mod_perform/components/element/PerformAdminCustomElementEdit';
-import sourceActivitiesQuery from 'performelement_redisplay/graphql/source_activities';
-import sourceActivityQuestionElementsQuery from 'performelement_redisplay/graphql/source_activity_question_elements';
+import aggregatableQuestionElementsQuery from 'performelement_aggregation/graphql/aggregatable_question_elements';
 
 export default {
   components: {
+    Checkbox,
+    FormCheckboxGroup,
     FormRow,
     FormSelect,
+    FormNumber,
+    Repeater,
+    FieldArray,
+    AddIcon,
+    ButtonIcon,
     Loader,
     PerformAdminCustomElementEdit,
   },
-
   inheritAttrs: false,
-
   props: {
     identifier: String,
-    isRequired: Boolean,
     rawData: Object,
     rawTitle: String,
     settings: Object,
     data: Object,
     currentActivityId: Number,
   },
-
   data() {
+    const initialValues = {
+      sourceSectionElementIds: this.createValuesForRepeater(
+        this.rawData.sourceSectionElementIds,
+        false
+      ),
+      calculations: this.rawData.calculations,
+      excludedValues: this.createValuesForRepeater(
+        this.rawData.excludedValues,
+        true
+      ),
+      identifier: this.identifier,
+      rawTitle: this.rawTitle,
+    };
+
     return {
-      initialValues: {
-        activityId: this.rawData.activityId || null,
-        sourceSectionElementId: this.rawData.sourceSectionElementId || null,
-        identifier: this.identifier,
-        rawTitle: this.rawTitle,
-        responseRequired: this.isRequired,
-      },
-      activities: [],
-      selectedActivityElementOptions: [],
-      selectedActivityId: this.rawData.activityId || null,
-      loadingSectionElements: false,
+      loading: false,
+      initialValues,
+      questionCounter: initialValues.sourceSectionElementIds.length,
+      excludedValuesCounter: initialValues.excludedValues.length,
     };
   },
-
   computed: {
-    /**
-     * Restructure activity data to display options in a select list
-     *
-     */
-    activityOptions() {
-      let defaultOption = {
-        id: null,
-        label: this.$str('select_activity', 'performelement_redisplay'),
-      };
+    activityAggregatableElementOptions() {
+      const sections = this.rawData.aggregatableSections;
 
-      let options = this.activities.map(activity => {
-        return {
-          id: activity.id,
-          label: this.getActivityStatusLabel(activity),
-        };
-      });
-
-      options.unshift(defaultOption);
-
-      return options;
-    },
-  },
-
-  apollo: {
-    activities: {
-      query: sourceActivitiesQuery,
-      update(data) {
-        return data.mod_perform_activities;
-      },
-    },
-  },
-
-  mounted() {
-    if (!this.rawData.activityId) {
-      return;
-    }
-    // Get section element options if existing selected activity ID
-    this.fetchSourceSectionElements(this.rawData.activityId);
-  },
-
-  methods: {
-    /**
-     * Update option values for element ID based on user input for activity ID
-     *
-     * @param {Object} values
-     */
-    updateOptionValues(values) {
-      if (values.activityId === this.selectedActivityId) {
-        return;
-      }
-
-      if (!values || !values.activityId) {
-        this.selectedActivityId = null;
-        this.selectedActivityElementOptions = [];
-        return;
-      }
-
-      this.selectedActivityId = values.activityId;
-      this.resetQuestionElementFormValue();
-      this.fetchSourceSectionElements(values.activityId);
-    },
-
-    /**
-     * Fetch source section element data for selected activity & restructure result data
-     * for compatibility with a select component
-     *
-     * @param {Number} activityId
-     */
-    fetchSourceSectionElements(activityId) {
-      this.loadingSectionElements = true;
-      this.$apollo
-        .query({
-          query: sourceActivityQuestionElementsQuery,
-          variables: { input: { activity_id: activityId } },
-          fetchPolicy: 'network-only',
-        })
-        .then(data => {
-          this.processSectionElements(data);
-          this.loadingSectionElements = false;
-        });
-    },
-
-    /**
-     * Process the section elements to select options.
-     *
-     * @param {Object} data
-     */
-    processSectionElements(data) {
-      let groups =
-        data.data.performelement_redisplay_source_activity_question_elements
-          .sections;
       let elementOptions;
 
-      if (groups.length === 0) {
-        this.selectedActivityElementOptions = [
+      if (!sections || sections.length === 0) {
+        return [
           {
             id: null,
             label: this.$str(
               'no_available_questions',
-              'performelement_redisplay'
+              'performelement_aggregation'
             ),
           },
         ];
-
-        return;
       }
 
       // If there are multiple groups
-      if (groups.length > 1) {
-        elementOptions = groups.map(group => {
+      if (sections.length > 1) {
+        elementOptions = sections.map(group => {
           return {
             label: group.title,
-            options: group.respondable_section_elements.map(sectionElement => {
+            options: group.aggregatable_section_elements.map(sectionElement => {
               return {
                 id: sectionElement.id,
-                label: this.getElementLabel(sectionElement.element),
+                label: sectionElement.element.title,
               };
             }),
           };
         });
       } else {
-        elementOptions = groups[0].respondable_section_elements.map(
+        elementOptions = sections[0].aggregatable_section_elements.map(
           sectionElement => {
             return {
               id: sectionElement.id,
-              label: this.getElementLabel(sectionElement.element),
+              label: sectionElement.element.title,
             };
           }
         );
@@ -257,69 +245,139 @@ export default {
 
       let defaultOption = {
         id: null,
-        label: this.$str('select_question_element', 'performelement_redisplay'),
+        label: this.$str(
+          'select_question_element',
+          'performelement_aggregation'
+        ),
       };
 
       elementOptions.unshift(defaultOption);
-      this.selectedActivityElementOptions = elementOptions;
+      return elementOptions;
+    },
+    calculationOptions() {
+      return [
+        { plugin: 'average', name: 'Average' },
+        { plugin: 'median', name: 'Median' },
+      ];
+      // return this.rawData.calculationOptions;
+    },
+  },
+  created() {
+    if (!this.rawData.aggregatableSections) {
+      this.fetchAggregatableSectionElements();
+    }
+  },
+  methods: {
+    /**
+     * Fetch available source section elements,
+     * should only be called on new element creation because this
+     * information is available on the element.raw_data.
+     */
+    async fetchAggregatableSectionElements() {
+      this.loading = true;
+
+      const result = await this.$apollo.query({
+        query: aggregatableQuestionElementsQuery,
+        variables: { input: { activity_id: this.currentActivityId } },
+        fetchPolicy: 'network-only',
+      });
+
+      this.$set(
+        this.rawData,
+        'aggregatableSections',
+        result.data.performelement_aggregation_aggregatable_question_elements
+          .sections
+      );
+
+      this.loading = false;
     },
 
     /**
-     * Get activity status and append to the select option label
-     *
-     * @param {Object} activityItem
-     * @return {String}
+     * Convert the element data to a format for persisting.
      */
-    getActivityStatusLabel(activityItem) {
-      let activityStatus = activityItem.state_details.display_name;
+    getElementForUpdate(element) {
+      element.data.sourceSectionElementIds = element.data.sourceSectionElementIds.map(
+        option => option.value
+      );
 
-      if (this.currentActivityId === parseInt(activityItem.id)) {
-        activityStatus = this.$str(
-          'current_activity',
-          'performelement_redisplay'
-        );
+      element.data.excludedValues = element.data.excludedValues.map(
+        option => option.value
+      );
+
+      return element;
+    },
+
+    /**
+     * Convert source section element ids in to a format for the repeater component.
+     * @param values {number[]|undefined}
+     * @param singleEmpty {boolean}
+     * @return {{name: number, value: (null|string|number)}[]}
+     */
+    createValuesForRepeater(values, singleEmpty) {
+      if (!values) {
+        values = [];
       }
 
-      return this.$str(
-        'activity_name_with_status',
-        'performelement_redisplay',
-        {
-          activity_name: activityItem.name,
-          activity_status: activityStatus,
-        }
-      );
-    },
-
-    /**
-     * Get Element option label
-     *
-     * @param {Object} element
-     * @return {String}
-     */
-    getElementLabel(element) {
-      return this.$str('source_element_option', 'performelement_redisplay', {
-        element_title: element.title,
-        element_plugin_name: element.element_plugin.name,
+      const forRepeater = values.map((id, index) => {
+        return {
+          name: index,
+          value: id,
+        };
       });
+
+      if (forRepeater.length === 0) {
+        forRepeater.push(this.createEmptyRepeaterValue(forRepeater.length));
+      }
+
+      if (forRepeater.length === 1 && !singleEmpty) {
+        forRepeater.push(this.createEmptyRepeaterValue(forRepeater.length));
+      }
+
+      return forRepeater;
     },
 
     /**
-     * Clear the source question element value in the uniform
-     *
+     * Create an empty object in to a format for the repeater component.
+     * @param name {number}
+     * @returns {{name: number, value: null}}
      */
-    resetQuestionElementFormValue() {
-      this.$refs.redisplayUniform.update('sourceSectionElementId', null);
+    createEmptyRepeaterValue(name) {
+      return {
+        name,
+        value: null,
+      };
     },
 
     /**
-     * Save redisplay element.
+     * Validation rule to ensure the same question is not selected more than once.
      *
-     * @param {Object} event
+     * @param items {{name: number, value: number|string}[]}
+     * @return {{value: string|null}[]}
      */
-    saveRedisplayElement(event) {
-      delete event.data.activityId;
-      event.data.sourceSectionElementIds = [event.data.sourceSectionElementId];
-      this.$emit('update', event);
+    sourceSectionElementsValidation(items) {
+      const message = this.$str(
+        'duplicate_questions_validation_error',
+        'performelement_aggregation'
+      );
+
+      const isDuplicate = itemToCheck => {
+        // Exclude empty values, these are to be handled by the individual required validation.
+        if (!itemToCheck.value) {
+          return;
+        }
+
+        return items.some(
+          item =>
+            item.name !== itemToCheck.name &&
+            Number(item.value) === Number(itemToCheck.value)
+        );
+      };
+
+      return items.map(item => {
+        return {
+          value: isDuplicate(item) ? message : null,
+        };
+      });
     },
   },
 };
@@ -327,25 +385,20 @@ export default {
 
 <lang-strings>
   {
-    "performelement_redisplay": [
-      "activity_name_with_status",
-      "current_activity",
+    "performelement_aggregation": [
+      "add_excluded_value",
+      "add_question",
+      "aggregate_question_n",
+      "calculations_to_display",
+      "duplicate_questions_validation_error",
+      "excluded_value_n",
+      "excluded_values",
+      "excluded_values",
+      "excluded_values_help_text",
       "no_available_questions",
-      "select_activity",
-      "select_question_element",
-      "source_activity_value",
-      "source_activity_value_help",
-      "source_element_option",
-      "source_question_element_value",
-      "source_question_element_value_help"
+      "questions_for_response_aggregation",
+      "questions_to_aggregate",
+      "select_question_element"
     ]
   }
 </lang-strings>
-
-<style lang="scss">
-.tui-redisplayAdminEdit {
-  &__loader {
-    @include tui-char-length-classes();
-  }
-}
-</style>

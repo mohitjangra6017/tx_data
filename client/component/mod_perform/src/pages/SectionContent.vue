@@ -878,14 +878,6 @@ export default {
      */
     updateSectionElementData(data) {
       const elements = data.map(item => {
-        // Don't reset the element data if it is being edited.
-        const existingElement = this.sectionElements.find(
-          element => element.id === item.id
-        );
-        if (existingElement && this.isEditing(existingElement)) {
-          return existingElement;
-        }
-
         return Object.assign({}, item, {
           element: Object.assign({}, item.element, {
             type: item.element.element_plugin,

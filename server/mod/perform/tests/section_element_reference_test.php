@@ -137,7 +137,11 @@ abstract class section_element_reference_testcase extends advanced_testcase {
 
         $this->referencing_aggregation_element = $perform_generator->create_element([
             'plugin_name' => 'aggregation',
-            'data' => json_encode([aggregation::SOURCE_SECTION_ELEMENT_IDS => [$this->source_section_element->id]], JSON_THROW_ON_ERROR),
+            'data' => json_encode([
+                aggregation::SOURCE_SECTION_ELEMENT_IDS => [$this->source_section_element->id],
+                aggregation::EXCLUDED_VALUES => [],
+                aggregation::CALCULATIONS => ['average'],
+            ], JSON_THROW_ON_ERROR),
         ]);
 
         $this->referencing_redisplay_element = $perform_generator->create_element([

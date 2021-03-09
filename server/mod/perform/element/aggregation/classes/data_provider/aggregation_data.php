@@ -22,26 +22,68 @@
 
 namespace performelement_aggregation\data_provider;
 
-use coding_exception;
+use core\collection;
+use mod_perform\data_providers\activity\sections as sections_provider;
 use mod_perform\entity\activity\section_element_reference as section_element_reference_entity;
-use mod_perform\models\activity\section_element_reference;
+use mod_perform\entity\activity\element;
+use mod_perform\models\activity\section;
 use performelement_aggregation\aggregation;
 
 /**
  * Data provider class that adds extra information into the reference elements JSON data.
-*/
+ */
 class aggregation_data {
+
+    /**
+     * @string The serialized key for all possible aggregatable sections.
+     */
+    public const AGGREGATABLE_SECTIONS = 'aggregatableSections';
+
+    /**
+     * @var array Keyed by activity id
+     */
+    public static $aggregatable_section_cache = [];
 
     /**
      * Add the source section element ids back into the json element data/settings.
      *
-     * @param int $aggregation_element_id
+     * @param element $element
      * @return array
-     * @throws coding_exception
      */
-    public function include_extra_info(int $aggregation_element_id): array {
-        $element_settings = [];
+    public function include_extra_info(element $element): array {
+        $extra = [
+            self::AGGREGATABLE_SECTIONS => $this->get_aggregatable_sections($element),
+            aggregation::SOURCE_SECTION_ELEMENT_IDS => $this->get_source_section_element_ids($element->id),
+        ];
 
+        $original = json_decode($element->data, true, 512, JSON_THROW_ON_ERROR);
+
+        return array_merge($original, $extra);
+    }
+
+    /**
+     * @param element $element
+     * @return collection|section[]
+     */
+    private function get_aggregatable_sections(element $element): collection {
+        $activity_id = $element->section_element->section->activity_id;
+
+        if (array_key_exists($activity_id, static::$aggregatable_section_cache)) {
+            return static::$aggregatable_section_cache[$activity_id];
+        }
+
+        $aggregatable_sections = (new sections_provider())->get_sections_with_aggregatable_section_elements($activity_id);
+
+        static::$aggregatable_section_cache[$activity_id] = $aggregatable_sections;
+
+        return $aggregatable_sections;
+    }
+
+    /**
+     * @param int $aggregation_element_id
+     * @return int[]
+     */
+    private function get_source_section_element_ids(int $aggregation_element_id): array {
         /** @var section_element_reference_entity[] $section_element_reference */
         $section_element_references = section_element_reference_entity::repository()
             ->where('referencing_element_id', $aggregation_element_id)
@@ -49,12 +91,10 @@ class aggregation_data {
             ->get();
 
         if (count($section_element_references) === 0) {
-            return $element_settings;
+            return [];
         }
 
-        $element_settings[aggregation::SOURCE_SECTION_ELEMENT_IDS] = $section_element_references->pluck('source_section_element_id');
-
-        return $element_settings;
+        return $section_element_references->pluck('source_section_element_id');
     }
 
 }

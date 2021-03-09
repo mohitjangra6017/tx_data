@@ -36,7 +36,7 @@ class performelement_aggregation_webapi_resolver_query_aggregatable_question_ele
 
     use webapi_phpunit_helper;
 
-    public function test_get_question_elements_for_activity_shows_only_sections_with_respondable_elements(): void {
+    public function test_get_question_elements_for_activity_shows_only_sections_with_aggregatable_elements(): void {
         self::setAdminUser();
 
         $perform_generator = \mod_perform\testing\generator::instance();

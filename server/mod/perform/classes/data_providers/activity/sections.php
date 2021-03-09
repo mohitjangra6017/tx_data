@@ -26,6 +26,7 @@ use core\collection;
 use core\orm\entity\repository;
 use core\orm\query\builder;
 use mod_perform\entity\activity\element;
+use mod_perform\entity\activity\section;
 use mod_perform\entity\activity\section as section_entity;
 use mod_perform\entity\activity\section_element;
 use mod_perform\models\activity\element_plugin;
@@ -51,14 +52,14 @@ class sections {
      * Get sections of an activity with aggregatable section elements.
      *
      * @param int $activity_id
-     * @return collection
+     * @return collection|section[]
      */
     public function get_sections_with_aggregatable_section_elements(int $activity_id): collection {
         $aggregatable_plugins = element_plugin::get_aggregatable_element_plugins();
-        $repository = $this->sections_for_plugin_names($activity_id, array_keys($aggregatable_plugins));
-        return $repository->with('aggregatable_section_elements.element')
-            ->get()
-            ->map_to(section_model::class);
+
+        return $this->sections_for_plugin_names($activity_id, array_keys($aggregatable_plugins))
+            ->with('aggregatable_section_elements.element')
+            ->get();
     }
 
     /**

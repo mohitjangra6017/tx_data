@@ -26,9 +26,8 @@ namespace mod_perform\entity\activity;
 use core\collection;
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
-use core\orm\entity\relations\has_one;
+use mod_perform\models\activity\element_plugin;
 use core\orm\entity\relations\has_many;
-use performelement_redisplay\entity\element_aggregation_relationship;
 
 /**
  * Element entity
@@ -45,6 +44,7 @@ use performelement_redisplay\entity\element_aggregation_relationship;
  * @property int|null $parent element parent.
  * @property int|null $sort_order element sort_order in parent parent.
  * @property-read element_identifier $element_identifier
+ * @property-read section_element $section_element
  * @property-read collection|element[] $children
  * @property-read element $parent_element
  *
@@ -93,7 +93,7 @@ class element extends entity {
      * @return has_many
      */
     public function children(): has_many {
-        return $this->has_many(element::class, 'parent')->order_by('sort_order');
+        return $this->has_many(__CLASS__, 'parent')->order_by('sort_order');
     }
 
     /**
@@ -102,6 +102,21 @@ class element extends entity {
      * @return belongs_to
      */
     public function parent_element(): belongs_to {
-        return $this->belongs_to(element::class, 'parent');
+        return $this->belongs_to(__CLASS__, 'parent');
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function to_array(): array {
+        $attributes =  parent::to_array();
+
+        // Required by Redisplay and Aggregation admin which loads data encoded in element.data (not gql directly).
+        $attributes['element_plugin'] = [
+            'name' => element_plugin::load_by_plugin($this->plugin_name)->get_name(),
+        ];
+
+        return $attributes;
+    }
+
 }

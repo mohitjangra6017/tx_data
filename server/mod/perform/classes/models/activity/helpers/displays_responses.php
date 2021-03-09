@@ -46,4 +46,16 @@ interface displays_responses {
      */
     public function get_participant_response_component(): string;
 
+    /**
+     * Return true if element response required enabled
+     *
+     * @return bool
+     */
+    public function is_response_required_enabled(): bool;
+
+    /**
+     * @return bool
+     */
+    public function is_title_required(): bool;
+
 }

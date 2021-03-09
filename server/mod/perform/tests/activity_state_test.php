@@ -303,7 +303,11 @@ class mod_perform_activity_state_testcase extends advanced_testcase {
         $source_section_element = $generator->create_section_element($section1, $element);
         $generator->create_element(['plugin_name' => numeric_rating_scale::get_plugin_name()]);
 
-        $aggregation_data = [aggregation::SOURCE_SECTION_ELEMENT_IDS => [$source_section_element->id]];
+        $aggregation_data = [
+            aggregation::SOURCE_SECTION_ELEMENT_IDS => [$source_section_element->id],
+            aggregation::EXCLUDED_VALUES => [],
+            aggregation::CALCULATIONS => ['average'],
+        ];
         $aggregation_element = $generator->create_element(array(
             'plugin_name' => aggregation::get_plugin_name(),
             'data' => json_encode($aggregation_data, JSON_THROW_ON_ERROR),

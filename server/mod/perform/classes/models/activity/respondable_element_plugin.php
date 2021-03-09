@@ -190,9 +190,7 @@ abstract class respondable_element_plugin extends element_plugin implements disp
     }
 
     /**
-     * Return true if element response required enabled
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function is_response_required_enabled(): bool {
         return true;

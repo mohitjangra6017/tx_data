@@ -1667,7 +1667,12 @@ class behat_mod_perform extends behat_base {
             case 'Static content':
                 $this->fill_static_content_admin_form_settings();
                 break;
+            case 'Response aggregation':
+                // This must come AFTER (in terms of order, from calling method) the rating scale elements, so we can use them as source elements.
+                $this->fill_aggregation_admin_form_settings();
+                break;
             case 'Response redisplay':
+                // This must come AFTER (in terms of order, from calling method) any other element, so we can use them one as a  source element.
                 $this->fill_redisplay_admin_form_settings();
                 break;
             case 'Review items':
@@ -1751,6 +1756,25 @@ class behat_mod_perform extends behat_base {
 
     private function fill_static_content_admin_form_settings(): void {
         $this->execute('behat_weka::i_set_the_weka_editor_with_css_to', [self::ADMIN_FORM_STATIC_CONTENT_WEKA, 'static content']);
+    }
+
+    private function fill_aggregation_admin_form_settings(): void {
+        /** @var behat_forms $behat_forms */
+        $behat_forms = behat_context_helper::get('behat_forms');
+
+        /** @var behat_totara_tui $behat_totara_tui */
+        $behat_totara_tui = behat_context_helper::get('behat_totara_tui');
+
+        $behat_forms->i_set_the_following_fields_to_these_values(new TableNode([
+            ['sourceSectionElementIds[0][value]', 'Rating scale: Custom'],
+            ['sourceSectionElementIds[1][value]', 'Rating scale: Numeric'],
+        ]));
+
+        $behat_totara_tui->i_click_the_tui_checkbox_in_the_group( 'average', 'calculations');
+
+        $behat_forms->i_set_the_following_fields_to_these_values(new TableNode([
+            ['excludedValues[1][value]', '1'],
+        ]));
     }
 
     private function fill_redisplay_admin_form_settings(): void {

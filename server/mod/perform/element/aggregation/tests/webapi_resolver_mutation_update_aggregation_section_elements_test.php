@@ -21,10 +21,12 @@
  * @package mod_perform
  */
 
+use mod_perform\entity\activity\section as section_entity;
 use mod_perform\models\activity\section;
 use mod_perform\models\activity\section_element;
 use mod_perform\testing\generator;
 use performelement_aggregation\aggregation;
+use performelement_aggregation\data_provider\aggregation_data;
 use performelement_numeric_rating_scale\numeric_rating_scale;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
@@ -82,6 +84,8 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
                         'identifier' => 'agg-element',
                         'data' => json_encode([
                             aggregation::SOURCE_SECTION_ELEMENT_IDS => [$source_section_element->id],
+                            aggregation::EXCLUDED_VALUES => [],
+                            aggregation::CALCULATIONS => ['average'],
                         ], JSON_THROW_ON_ERROR),
                         'is_required' => false,
                         'sort_order' => 3,
@@ -98,9 +102,21 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
             $aggregation_section_element
         ] = $this->assert_correct_elements_returned($result);
 
+        $source_section_entity = new section_entity($source_section_element->section_id);
+
+        $all_data = json_decode($aggregation_section_element->get_element()->get_data(), true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertCount(1, $all_data[aggregation_data::AGGREGATABLE_SECTIONS]);
+        self::assertEquals($all_data[aggregation_data::AGGREGATABLE_SECTIONS][0]['id'], $source_section_entity->id);
+        unset($all_data[aggregation_data::AGGREGATABLE_SECTIONS]);
+
         self::assertEquals(
-            [aggregation::SOURCE_SECTION_ELEMENT_IDS => [$source_section_element->id]],
-            json_decode($aggregation_section_element->get_element()->get_data(), true, 512, JSON_THROW_ON_ERROR)
+            [
+                aggregation::SOURCE_SECTION_ELEMENT_IDS => [$source_section_element->id],
+                aggregation::EXCLUDED_VALUES => [],
+                aggregation::CALCULATIONS => ['average'],
+            ],
+            $all_data
         );
 
         $args = [
@@ -117,6 +133,8 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
                                 $other_rating_scale_section_element->id, // <-- Specifically placed first.
                                 $source_section_element->id,
                             ],
+                            aggregation::EXCLUDED_VALUES => [],
+                            aggregation::CALCULATIONS => ['average'],
                         ], JSON_THROW_ON_ERROR),
                         'is_required' => false,
                         'sort_order' => 3,
@@ -133,14 +151,22 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
             $aggregation_section_element
         ] = $this->assert_correct_elements_returned($result);
 
+        $all_data = json_decode($aggregation_section_element->get_element()->get_data(), true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertCount(1, $all_data[aggregation_data::AGGREGATABLE_SECTIONS]);
+        self::assertEquals($all_data[aggregation_data::AGGREGATABLE_SECTIONS][0]['id'], $source_section_entity->id);
+        unset($all_data[aggregation_data::AGGREGATABLE_SECTIONS]);
+
         self::assertEquals(
             [
                 aggregation::SOURCE_SECTION_ELEMENT_IDS => [
                     $other_rating_scale_section_element->id, // <-- Still specifically placed first.
                     $source_section_element->id,
                 ],
+                aggregation::EXCLUDED_VALUES => [],
+                aggregation::CALCULATIONS => ['average'],
             ],
-            json_decode($aggregation_section_element->get_element()->get_data(), true, 512, JSON_THROW_ON_ERROR)
+            $all_data
         );
     }
 
@@ -165,9 +191,14 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
         if ($include_aggregation_element) {
             $aggregation_section_element = $section_elements[2];
             self::assertEquals('Aggregation element', $aggregation_section_element->get_element()->title);
-            self::assertNull(
-                $aggregation_section_element->get_element()->get_raw_data(),
-                'No data should be persisted for aggregation elements'
+
+            // The section element ids are never saved in the json data field, this is to prevent them falling out of sync when cloning.
+            self::assertEquals(
+                [
+                    aggregation::EXCLUDED_VALUES => [],
+                    aggregation::CALCULATIONS => ['average'],
+                ],
+                json_decode($aggregation_section_element->get_element()->get_raw_data(), true, 512, JSON_THROW_ON_ERROR)
             );
         }
 

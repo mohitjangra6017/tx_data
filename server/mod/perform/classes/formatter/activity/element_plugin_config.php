@@ -23,17 +23,21 @@
 namespace mod_perform\formatter\activity;
 
 use core\webapi\formatter\formatter;
+use mod_perform\models\activity\helpers\displays_responses;
+use mod_perform\models\activity\respondable_element_plugin;
 
 /**
  * Class element_plugin
  *
  * @package mod_perform\formatter\activity
+ * @property-read element_plugin $object
  */
 class element_plugin_config extends formatter {
 
     protected function get_map(): array {
         return [
             'is_respondable' => null, // not formatted, because this is element type
+            'displays_responses' => null,
             'has_title' => null, // not formatted, because this is element title field
             'has_reporting_id' => null, // not formatted, because this is element reporting id field
             'title_text' => null, // not formatted, because this is lang string
@@ -43,15 +47,17 @@ class element_plugin_config extends formatter {
     }
 
     protected function get_field(string $field) {
-        $is_respondable = $this->object->get_is_respondable();
-        if (!$is_respondable &&
-            in_array($field, ['has_reporting_id', 'is_response_required_enabled'])
+        if (!$this->object instanceof displays_responses &&
+            in_array($field, ['has_reporting_id', 'is_response_required_enabled'], true)
         ) {
             return false;
         }
+
         switch ($field) {
             case 'is_respondable':
-                return $is_respondable;
+                return $this->object instanceof respondable_element_plugin; // false for derived_response_element_plugin.
+           case 'displays_responses':
+                return $this->object instanceof displays_responses;
             case 'has_title':
                 return $this->object->has_title();
             case 'has_reporting_id':

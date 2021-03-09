@@ -72,18 +72,31 @@ class performelement_aggregation_aggregation_testcase extends section_element_re
     }
 
     public function validation_errors_provider(): array {
-        $must_be_set_message = aggregation::SOURCE_SECTION_ELEMENT_IDS .' must be specified in the element data field';
+        $source_section_elements_must_be_set_message = aggregation::SOURCE_SECTION_ELEMENT_IDS .' must be an array specified in the element data field';
+        $excluded_values_must_be_set_message = aggregation::EXCLUDED_VALUES .' must be an array specified in the element data field';
+        $calculations_must_be_set_message = aggregation::CALCULATIONS .' must be an array specified in the element data field';
 
         return [
-            'Empty array data' => [
-                [], $must_be_set_message,
+            'Empty source section element ids' => [
+                [
+                    aggregation::CALCULATIONS => ['average'],
+                    aggregation::EXCLUDED_VALUES => [],
+                ], $source_section_elements_must_be_set_message,
             ],
-            'Null source section element id' => [
-                [aggregation::SOURCE_SECTION_ELEMENT_IDS => null],
-                $must_be_set_message,
+            'Null source section element ids' => [
+                [
+                    aggregation::CALCULATIONS => ['average'],
+                    aggregation::EXCLUDED_VALUES => [],
+                    aggregation::SOURCE_SECTION_ELEMENT_IDS => null
+                ],
+                $source_section_elements_must_be_set_message,
             ],
             "Source section element id doesn't exist" => [
-                [aggregation::SOURCE_SECTION_ELEMENT_IDS => [-1]],
+                [
+                    aggregation::CALCULATIONS => ['average'],
+                    aggregation::EXCLUDED_VALUES => [],
+                    aggregation::SOURCE_SECTION_ELEMENT_IDS => [-1]]
+                ,
                 'Not all supplied source section elements exist',
             ],
             "Source section element id doesn't belong to the same activity" => [
@@ -94,7 +107,11 @@ class performelement_aggregation_aggregation_testcase extends section_element_re
                     $element = $generator->create_element(['plugin_name' => numeric_rating_scale::get_plugin_name()]);
                     $section_element_in_another_activity = $generator->create_section_element($section, $element);
 
-                    return [aggregation::SOURCE_SECTION_ELEMENT_IDS => [$section_element_in_another_activity->id]];
+                    return [
+                        aggregation::CALCULATIONS => ['average'],
+                        aggregation::EXCLUDED_VALUES => [],
+                        aggregation::SOURCE_SECTION_ELEMENT_IDS => [$section_element_in_another_activity->id],
+                    ];
                 },
                 'Source section elements must be from the same activity as a referencing aggregation element',
             ],
@@ -105,9 +122,30 @@ class performelement_aggregation_aggregation_testcase extends section_element_re
                         ->where('id', $this->source_element->id)
                         ->update(['plugin_name' => short_text::get_plugin_name()]);
 
-                    return [aggregation::SOURCE_SECTION_ELEMENT_IDS => [$this->referencing_redisplay_section_element->id]];
+                    return [
+                        aggregation::CALCULATIONS => ['average'],
+                        aggregation::EXCLUDED_VALUES => [],
+                        aggregation::SOURCE_SECTION_ELEMENT_IDS => [$this->referencing_redisplay_section_element->id]
+                    ];
                 },
                 'The supplied source section elements are not all aggregatable',
+            ],
+            'Null excluded values' => [
+                [aggregation::EXCLUDED_VALUES => null],
+                $excluded_values_must_be_set_message,
+            ],
+            'Non numeric excluded values' => [
+                [aggregation::EXCLUDED_VALUES => ['abc']], aggregation::EXCLUDED_VALUES . ' must be numeric.',
+            ],
+            'Null calculations' => [
+                [
+                    aggregation::CALCULATIONS => null,
+                    aggregation::EXCLUDED_VALUES => []
+                ],
+                $calculations_must_be_set_message,
+            ],
+            'Empty array calculations' => [
+                [aggregation::CALCULATIONS => [], aggregation::EXCLUDED_VALUES => []], aggregation::CALCULATIONS . ' must have at least one value',
             ],
         ];
     }

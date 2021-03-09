@@ -661,8 +661,9 @@ class behat_totara_tui extends behat_base {
      * @Then /^I click on the "([^"]*)" tui checkbox$/
      * @Then /^I click on the "([^"]*)" tui checkbox in the "([^"]*)" "([^"]*)"$/
      * @param string $name
-     * @param string $parent_locator
-     * @param string $parent_selector
+     * @param string|null $parent_locator
+     * @param string|null $parent_selector
+     * @throws ExpectationException
      */
     public function i_click_the_tui_checkbox(string $name, string $parent_locator = null, string $parent_selector = null): void {
         behat_hooks::set_step_readonly(false);
@@ -727,11 +728,28 @@ class behat_totara_tui extends behat_base {
     }
 
     /**
+     * @When /^I click on the "([^"]*)" tui checkbox in the "([^"]*)" tui checkbox group$/
+     * @param string $name
+     * @param string $value Can be the value or label
+     */
+    public function i_click_the_tui_checkbox_in_the_group(string $value, string $name): void {
+        behat_hooks::set_step_readonly(false);
+
+        $radio = $this->find('css', "[name='{$name}'][value='{$value}']");
+
+        $label = $radio->getParent()->find('css', 'label');
+
+        $label->click();
+    }
+
+    /**
      * Click a hidden element.
      *
      * In some cases with custom tui form elements the actual <input> HTML element is hidden, so behat can't interact with it.
      * This function is a workaround for this, instead we manually click the element via running some JS in the browser.
      * This isn't ideal, but it works. Replace if there is a better solution.
+     *
+     * The proper solution is to just click the label (like you do in a real web browser)...
      *
      * @param NodeElement $input_element
      */

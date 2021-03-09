@@ -64,7 +64,7 @@ abstract class derived_responses_element_plugin extends element_plugin implement
      * @inheritDoc
      */
     public function get_title_text(): string {
-        return get_string('question_title', 'mod_perform');
+        return get_string('element_title', 'mod_perform');
     }
 
     /**
@@ -72,6 +72,22 @@ abstract class derived_responses_element_plugin extends element_plugin implement
      */
     public function is_title_required(): bool {
         return true;
+    }
+
+    /**
+     * Return true if element has reporting id
+     *
+     * @return bool
+     */
+    public function has_reporting_id(): bool {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function is_response_required_enabled(): bool {
+        return false;
     }
 
 }

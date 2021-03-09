@@ -27,6 +27,7 @@ use core\webapi\middleware\require_advanced_feature;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
 use mod_perform\data_providers\activity\sections as sections_provider;
+use mod_perform\models\activity\section;
 use mod_perform\webapi\middleware\require_activity;
 use mod_perform\webapi\middleware\require_manage_capability;
 
@@ -36,11 +37,15 @@ use mod_perform\webapi\middleware\require_manage_capability;
 class aggregatable_question_elements implements query_resolver, has_middleware {
 
     /**
-     * @inheritDoc
+     * @param array $args
+     * @param execution_context $ec
+     * @return section[]
      */
-    public static function resolve(array $args, execution_context $ec) {
+    public static function resolve(array $args, execution_context $ec): array {
         return [
-            'sections' => (new sections_provider())->get_sections_with_aggregatable_section_elements($args['input']['activity_id']),
+            'sections' => (new sections_provider())
+                ->get_sections_with_aggregatable_section_elements($args['input']['activity_id'])
+                ->map_to(section::class),
         ];
     }
 

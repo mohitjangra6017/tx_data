@@ -17,7 +17,6 @@
 
 <template>
   <div class="tui-redisplayAdminSummary">
-    THIS IS AGG QUESTION
     <PerformAdminCustomElementSummary
       :extra-fields="extraFields"
       :identifier="identifier"
@@ -36,7 +35,6 @@ export default {
   components: {
     PerformAdminCustomElementSummary,
   },
-
   props: {
     data: Object,
     identifier: String,
@@ -44,46 +42,78 @@ export default {
     settings: Object,
     title: String,
     type: Object,
-    currentActivityId: Number,
   },
+  computed: {
+    extraFields() {
+      const extraFields = [
+        {
+          title: this.$str(
+            'questions_for_response_aggregation',
+            'performelement_aggregation'
+          ),
+          options: this.sectionElementsForAggregation.map(sectionElement => {
+            return {
+              value: `${sectionElement.element.title} (${sectionElement.element.element_plugin.name})`,
+            };
+          }),
+        },
+        {
+          title: this.$str(
+            'calculations_to_display',
+            'performelement_aggregation'
+          ),
+          options: this.calculationsToDisplay.map(calculation => {
+            return { value: calculation };
+          }),
+        },
+      ];
 
-  data() {
-    return {
-      extraFields: [],
-    };
-  },
+      if (this.hasExcludedValues) {
+        extraFields.push({
+          title: this.$str('excluded_values', 'performelement_aggregation'),
+          helpmsg: this.$str(
+            'excluded_values_help_text',
+            'performelement_aggregation'
+          ),
+          options: this.excludedValues.map(calculation => {
+            return { value: calculation };
+          }),
+        });
+      }
 
-  mounted() {
-    this.extraFields = [
-      {
-        title: this.$str('source_activity_value', 'performelement_redisplay'),
-        value: this.$str(
-          'activity_name_with_status',
-          'performelement_redisplay',
-          {
-            activity_name: this.data.activityName,
-            activity_status: this.getActivityStatus(),
-          }
-        ),
-      },
-      {
-        title: this.$str(
-          'source_question_element_value',
-          'performelement_redisplay'
-        ),
-        value: this.$str('source_element_option', 'performelement_redisplay', {
-          element_title: this.data.elementTitle,
-          element_plugin_name: this.data.elementPluginName,
-        }),
-      },
-    ];
-  },
+      return extraFields;
+    },
+    sectionElementsForAggregation() {
+      return this.data.sourceSectionElementIds.map(id =>
+        this.aggregatableSectionElements.find(
+          sectionElement => Number(sectionElement.id) === Number(id)
+        )
+      );
+    },
+    aggregatableSectionElements() {
+      return this.data.aggregatableSections.reduce(
+        (aggregatable_elements, aggregatableSection) => [
+          ...aggregatable_elements,
+          ...aggregatableSection.aggregatable_section_elements,
+        ],
+        []
+      );
+    },
+    calculationsToDisplay() {
+      return ['Average'];
+    },
+    hasExcludedValues() {
+      return this.excludedValues.length > 0;
+    },
+    excludedValues() {
+      if (!this.data.excludedValues) {
+        return [];
+      }
 
-  methods: {
-    getActivityStatus() {
-      return parseInt(this.data.activityId) === this.currentActivityId
-        ? this.$str('current_activity', 'performelement_redisplay')
-        : this.data.activityStatus;
+      // Remove any empty entries.
+      return this.data.excludedValues.filter(
+        value => value !== null && value.trim() !== ''
+      );
     },
   },
 };
@@ -91,12 +121,11 @@ export default {
 
 <lang-strings>
   {
-    "performelement_redisplay": [
-      "activity_name_with_status",
-      "current_activity",
-      "source_activity_value",
-      "source_element_option",
-      "source_question_element_value"
+    "performelement_aggregation": [
+      "calculations_to_display",
+      "excluded_values",
+      "excluded_values_help_text",
+      "questions_for_response_aggregation"
     ]
   }
 </lang-strings>

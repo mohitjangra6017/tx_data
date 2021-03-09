@@ -46,6 +46,7 @@ export default {
       type: [String, Array],
       required: true,
     },
+    validate: Function,
   },
 
   created() {
@@ -190,7 +191,7 @@ export default {
 
     return h(
       'FormScope',
-      { props: { path: this.path } },
+      { props: { path: this.path, validate: this.validate } },
       this.$scopedSlots.default(Object.assign({ items }, this.arrayHelpers))
     );
   },

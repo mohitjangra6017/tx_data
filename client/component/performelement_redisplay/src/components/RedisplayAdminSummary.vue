@@ -36,7 +36,6 @@ export default {
   components: {
     PerformAdminCustomElementSummary,
   },
-
   props: {
     data: Object,
     identifier: String,
@@ -46,41 +45,39 @@ export default {
     type: Object,
     currentActivityId: Number,
   },
-
   data() {
     return {
-      extraFields: [],
+      extraFields: [
+        {
+          title: this.$str('source_activity_value', 'performelement_redisplay'),
+          value: this.$str(
+            'activity_name_with_status',
+            'performelement_redisplay',
+            {
+              activity_name: this.data.activityName,
+              activity_status: this.activityStatus,
+            }
+          ),
+        },
+        {
+          title: this.$str(
+            'source_question_element_value',
+            'performelement_redisplay'
+          ),
+          value: this.$str(
+            'source_element_option',
+            'performelement_redisplay',
+            {
+              element_title: this.data.elementTitle,
+              element_plugin_name: this.data.elementPluginName,
+            }
+          ),
+        },
+      ],
     };
   },
-
-  mounted() {
-    this.extraFields = [
-      {
-        title: this.$str('source_activity_value', 'performelement_redisplay'),
-        value: this.$str(
-          'activity_name_with_status',
-          'performelement_redisplay',
-          {
-            activity_name: this.data.activityName,
-            activity_status: this.getActivityStatus(),
-          }
-        ),
-      },
-      {
-        title: this.$str(
-          'source_question_element_value',
-          'performelement_redisplay'
-        ),
-        value: this.$str('source_element_option', 'performelement_redisplay', {
-          element_title: this.data.elementTitle,
-          element_plugin_name: this.data.elementPluginName,
-        }),
-      },
-    ];
-  },
-
-  methods: {
-    getActivityStatus() {
+  calculated: {
+    activityStatus() {
       return parseInt(this.data.activityId) === this.currentActivityId
         ? this.$str('current_activity', 'performelement_redisplay')
         : this.data.activityStatus;

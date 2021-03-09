@@ -27,6 +27,7 @@ use mod_perform\models\activity\section_element;
 use mod_perform\entity\activity\section_element as section_element_entity;
 use mod_perform\state\activity\draft;
 use performelement_aggregation\aggregation;
+use performelement_aggregation\data_provider\aggregation_data;
 
 /**
  * @group perform
@@ -57,10 +58,22 @@ class performelement_aggregation_aggregation_data_testcase extends advanced_test
         /* @type section_element_entity $aggregation_section_element_entity */
         $aggregation_section_element_entity = section_element_entity::repository()->find_or_fail($this->aggregation_section_element->id);
 
-        self::assertNull($aggregation_section_element_entity->element->data, 'Element should not save any json data (all data is in reference table)');
+        self::assertEquals(
+            [
+                aggregation::EXCLUDED_VALUES => [],
+                aggregation::CALCULATIONS => ['average'],
+            ],
+            json_decode($aggregation_section_element_entity->element->data, true, 512, JSON_THROW_ON_ERROR)
+        );
 
         // The order returned in the extra data matters here, it should be the same as the insertion order (id).
         self::assertEquals(array_column($this->source_section_elements, 'id'), $aggregation_data[aggregation::SOURCE_SECTION_ELEMENT_IDS]);
+
+        // Check the static cache was used.
+        $activity_id = $this->aggregation_section_element->section->activity_id;
+        self::assertEquals(aggregation_data::$aggregatable_section_cache[$activity_id]->to_array(), $aggregation_data[aggregation_data::AGGREGATABLE_SECTIONS]);
+
+        aggregation_data::$aggregatable_section_cache = [];
     }
 
     private function create_test_data(): void {
@@ -125,6 +138,8 @@ class performelement_aggregation_aggregation_data_testcase extends advanced_test
             'A2 Element',
             json_encode([
                 aggregation::SOURCE_SECTION_ELEMENT_IDS => $section_element_ids,
+                aggregation::EXCLUDED_VALUES => [],
+                aggregation::CALCULATIONS => ['average'],
             ], JSON_THROW_ON_ERROR)
         );
     }

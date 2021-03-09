@@ -244,7 +244,9 @@ class mod_perform_section_model_testcase extends mod_perform_relationship_testca
             'title' => 'aggregation element',
             'plugin_name' => aggregation::get_plugin_name(),
             'data' => json_encode([
-                aggregation::SOURCE_SECTION_ELEMENT_IDS => [$section_element1->id]
+                aggregation::SOURCE_SECTION_ELEMENT_IDS => [$section_element1->id],
+                aggregation::EXCLUDED_VALUES => [],
+                aggregation::CALCULATIONS => ['average'],
             ], JSON_THROW_ON_ERROR)
         ]);
 

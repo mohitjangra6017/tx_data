@@ -35,9 +35,20 @@ use performelement_aggregation\data_provider\aggregation_data;
 class aggregation extends derived_responses_element_plugin {
 
     /**
-     * @string The serialized key for a reference element's (with multiple sources) source section element ids.
+     * @string The serialized key for a the source section element ids, stored in the perform_section_element_reference table.
      */
     public const SOURCE_SECTION_ELEMENT_IDS = 'sourceSectionElementIds';
+
+    /**
+     * @string The serialized key for values to be excluded from calculations, stored in the perform_element.data field as json.
+     */
+    public const EXCLUDED_VALUES = 'excludedValues';
+
+    /**
+     * @string The serialized key for calculations to be run, stored in the perform_element.data field as json.
+     */
+    public const CALCULATIONS = 'calculations';
+
 
     /**
      * @inheritDoc
@@ -52,11 +63,35 @@ class aggregation extends derived_responses_element_plugin {
     public function validate_element(element_entity $element): void {
         $data = json_decode($element->data, true, 512, JSON_THROW_ON_ERROR);
 
+        if (!array_key_exists(self::EXCLUDED_VALUES, $data) || !is_array($data[self::EXCLUDED_VALUES])) {
+            throw new coding_exception(self::EXCLUDED_VALUES . ' must be an array specified in the element data field');
+        }
+
+        foreach ($data[self::EXCLUDED_VALUES] as $excluded_value) {
+            if (!is_numeric($excluded_value) && trim($excluded_value) !== '') {
+                throw new coding_exception(self::EXCLUDED_VALUES . ' must be numeric.');
+            }
+        }
+
+        if (!array_key_exists(self::CALCULATIONS, $data) || !is_array($data[self::CALCULATIONS])) {
+            throw new coding_exception(self::CALCULATIONS . ' must be an array specified in the element data field');
+        }
+
+        if (count($data[self::CALCULATIONS]) < 1) {
+            throw new coding_exception(self::CALCULATIONS . ' must have at least one value');
+        }
+
+        foreach ($data[self::CALCULATIONS] as $calculations) {
+            if (false === 'TODO jaron is plugin') {
+                throw new coding_exception(self::EXCLUDED_VALUES . ' must be valid calculation plugin names');
+            }
+        }
+
         if (!array_key_exists(self::SOURCE_SECTION_ELEMENT_IDS, $data) ||
             $data[self::SOURCE_SECTION_ELEMENT_IDS] === null ||
             count($data[self::SOURCE_SECTION_ELEMENT_IDS]) === 0
         ) {
-            throw new coding_exception(self::SOURCE_SECTION_ELEMENT_IDS . ' must be specified in the element data field');
+            throw new coding_exception(self::SOURCE_SECTION_ELEMENT_IDS . ' must be an array specified in the element data field');
         }
 
         $source_section_element_ids = array_unique($data[self::SOURCE_SECTION_ELEMENT_IDS]);
@@ -87,7 +122,7 @@ class aggregation extends derived_responses_element_plugin {
     }
 
     public function process_data(element_entity $element): ?string {
-        $modified_data = (new aggregation_data())->include_extra_info($element->id);
+        $modified_data = (new aggregation_data())->include_extra_info($element);
 
         return json_encode($modified_data, JSON_THROW_ON_ERROR);
     }
@@ -103,9 +138,7 @@ class aggregation extends derived_responses_element_plugin {
             section_element_reference::create($source_section_element_id, $element->id);
         }
 
-        // Strip this from the data, otherwise it can become incorrect if an element/activity is cloned.
-        // We can safely do this because all data for this type of element is saved in the section_element_reference table.
-        $element->clear_data();
+        $this->strip_section_element_references($element, $data);
     }
 
     /**
@@ -117,9 +150,7 @@ class aggregation extends derived_responses_element_plugin {
 
         section_element_reference::patch_multiple($source_section_element_id, $element->id);
 
-        // Strip this from the data, otherwise it can become incorrect if an element/activity is cloned.
-        // We can safely do this because all data for this type of element is saved in the section_element_reference table.
-        $element->clear_data();
+        $this->strip_section_element_references($element, $data);
     }
 
     protected function ensure_source_section_element_is_in_referencing_activity(element_entity $element, section_element $source_section_element): void {
@@ -145,6 +176,13 @@ class aggregation extends derived_responses_element_plugin {
 
     public function format_response_lines(?string $encoded_response_data, ?string $encoded_element_data): array {
         // TODO: Implement format_response_lines() method.
+    }
+
+    private function strip_section_element_references(element_model $element, array $data): void {
+        // Strip this from the data, otherwise it can become incorrect if an element/activity is cloned.
+        // We can safely do this because all data for this type of element is saved in the section_element_reference table.
+        unset($data[self::SOURCE_SECTION_ELEMENT_IDS]);
+        $element->update_data(json_encode($data, JSON_THROW_ON_ERROR));
     }
 
 }

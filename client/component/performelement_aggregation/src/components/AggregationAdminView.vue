@@ -16,85 +16,58 @@
 -->
 
 <template>
-  <div class="tui-redisplayAdminView">
-    THIS IS AGG QUESTION
-
-    <div v-if="data.activityName">
+  <div class="tui-aggregationAdminView">
+    <div v-if="hasExcludedValues">
       {{
-        $str('redisplayed_element_admin_preview', 'performelement_redisplay', {
-          activity_name: data.activityName,
-        })
+        $str(
+          'admin_view_blurb_with_exclusions',
+          'performelement_aggregation',
+          excludedValuesCsv
+        )
       }}
     </div>
-
-    <div class="tui-redisplayAdminView__cardArea">
-      <Card class="tui-redisplayAdminView__card">
-        <h4 v-if="data.elementTitle" class="tui-redisplayAdminView__card-title">
-          {{ data.elementTitle }}
-        </h4>
-        <div
-          v-if="data.relationships"
-          class="tui-redisplayAdminView__card-content"
-        >
-          {{ data.relationships }}
-        </div>
-      </Card>
+    <div v-else class="tui-aggregationAdminView__blurb">
+      {{ $str('admin_view_blurb', 'performelement_aggregation') }}
+    </div>
+    <div>
+      <template v-for="preview in aggregationTypesPreview">
+        {{ preview }}
+      </template>
     </div>
   </div>
 </template>
 
 <script>
-import Card from 'tui/components/card/Card';
-
 export default {
-  components: {
-    Card,
-  },
-
   inheritAttrs: false,
-
   props: {
     data: Object,
   },
-
-  data() {
-    return {
-      sectionElement: {},
-    };
-  },
-
   computed: {
-    activityName() {
-      if (
-        this.sectionElement.section &&
-        this.sectionElement.section.activity &&
-        this.sectionElement.section.activity.name
-      ) {
-        return this.sectionElement.section.activity.name;
+    hasExcludedValues() {
+      return this.excludedValues.length > 0;
+    },
+    excludedValuesCsv() {
+      return this.excludedValues.join(', ');
+    },
+    excludedValues() {
+      if (!this.data.excludedValues) {
+        return [];
       }
 
-      return null;
+      // Remove any empty entries.
+      return this.data.excludedValues.filter(
+        value => value !== null && value.trim() !== ''
+      );
     },
-    elementTitle() {
-      if (this.sectionElement.element && this.sectionElement.element.title) {
-        return this.sectionElement.element.title;
-      }
-      return null;
-    },
-    relationshipList() {
-      if (
-        this.sectionElement.section &&
-        this.sectionElement.section.section_relationships
-      ) {
-        let relationshipNames = this.sectionElement.section.section_relationships.map(
-          sectionRelationship => {
-            return sectionRelationship.core_relationship.name;
-          }
-        );
-        return relationshipNames.join(', ');
-      }
-
-      return null;
+    aggregationTypesPreview() {
+      return ['Average'].map(
+        name =>
+          `${name}: {${this.$str(
+            'calculated_value_preview_placeholder',
+            'performelement_aggregation'
+          )}}`
+      );
     },
   },
 };
@@ -102,30 +75,18 @@ export default {
 
 <lang-strings>
   {
-    "performelement_redisplay": [
-      "redisplayed_element_admin_preview"
+    "performelement_aggregation": [
+      "admin_view_blurb",
+      "admin_view_blurb_with_exclusions",
+      "calculated_value_preview_placeholder"
     ]
   }
 </lang-strings>
 
 <style lang="scss">
-.tui-redisplayAdminView {
-  &__cardArea {
-    margin: var(--gap-4) 0 0 var(--gap-8);
-  }
-
-  &__card {
-    flex-direction: column;
-    padding: var(--gap-4);
-
-    & > * + * {
-      margin-top: var(--gap-4);
-    }
-
-    &-title {
-      margin: 0;
-      @include tui-font-heading-label();
-    }
+.tui-aggregationAdminView {
+  > * + * {
+    margin-top: var(--gap-8);
   }
 }
 </style>
