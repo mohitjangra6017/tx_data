@@ -37,6 +37,7 @@ use totara_notification\factory\notifiable_event_resolver_factory;
 use totara_notification\local\helper;
 use totara_notification\model\notification_preference;
 use totara_notification\notification\built_in_notification;
+use totara_notification\resolver\notifiable_event_resolver;
 use totara_notification\task\process_notification_queue_task;
 use totara_notification_mock_built_in_notification;
 use totara_notification_mock_lang_string;
@@ -137,7 +138,7 @@ final class generator extends component_generator {
      *
      * @param array                 $data
      * @param extended_context|null $extended_context
-     * @param string                $resolver_class_name
+     * @param string|notifiable_event_resolver $resolver_class_name
      *
      * @return notification_preference
      */

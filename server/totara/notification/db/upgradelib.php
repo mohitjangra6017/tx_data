@@ -108,3 +108,99 @@ function totara_notification_add_extend_context_fields(string $table): void {
         $db_manager->add_field($table, $item_id_field);
     }
 }
+
+/**
+ * Migrates legacy notification preferences to new notifiable event configuration.
+ *
+ * New notifiable event default outputs come from legacy notification default outputs.
+ * New notification event status is NOT affected by legacy notification status.
+ *
+ * @param string $resolver_class_name
+ * @param string $provider_name
+ * @param string $provider_component
+ */
+function totara_notification_migrate_notifiable_event_prefs(
+    string $resolver_class_name,
+    string $provider_name,
+    string $provider_component
+) {
+    global $DB;
+
+    $name = 'message_provider_' . $provider_component . '_' . $provider_name;
+    $outputs_enabled_online = explode(',', get_config('message', $name . '_loggedin'));
+    $outputs_enabled_online = $outputs_enabled_online === false ? [] : $outputs_enabled_online;
+    $outputs_enabled_offline = explode(',', get_config('message', $name . '_loggedoff'));
+    $outputs_enabled_offline = $outputs_enabled_offline === false ? [] : $outputs_enabled_offline;
+    $outputs_enabled = array_unique(array_merge($outputs_enabled_offline, $outputs_enabled_online));
+
+    $record = $DB->get_record('notifiable_event_preference', [
+        'resolver_class_name' => ltrim($resolver_class_name, '\\'),
+        'context_id' => context_system::instance()->id,
+        'component' => extended_context::NATURAL_CONTEXT_COMPONENT,
+        'area' => extended_context::NATURAL_CONTEXT_AREA,
+        'item_id' => extended_context::NATURAL_CONTEXT_ITEM_ID,
+    ], 'id, default_delivery_channels');
+
+    $default_delivery_channels = ',' . implode(',', $outputs_enabled) . ',';
+
+    if (empty($record)) {
+        $record = [
+            'resolver_class_name' => ltrim($resolver_class_name, '\\'),
+            'context_id' => context_system::instance()->id,
+            'component' => extended_context::NATURAL_CONTEXT_COMPONENT,
+            'area' => extended_context::NATURAL_CONTEXT_AREA,
+            'item_id' => extended_context::NATURAL_CONTEXT_ITEM_ID,
+            'default_delivery_channels' => $default_delivery_channels,
+            'enabled' => 1, // TODO TL-30245 Remove this line of code, so that it stores NULL instead.
+        ];
+        $DB->insert_record('notifiable_event_preference', $record);
+    } else {
+        $record->default_delivery_channels = $default_delivery_channels;
+        $DB->update_record('notifiable_event_preference', $record);
+    }
+}
+
+/**
+ * Migrates legacy notification preferences to new notification preferences.
+ *
+ * New notification preference forced delivery is determined by legacy notification permissions.
+ * New notification preference status comes from legacy notification status.
+ * New notification user output preferences come from legacy notification user output preferences.
+ *
+ * @param int $notification_preference_id
+ * @param string $provider_name
+ * @param string $provider_component
+ */
+function totara_notification_migrate_notification_prefs(
+    int $notification_preference_id,
+    string $provider_name,
+    string $provider_component
+) {
+    global $DB;
+
+    // Normally we would only look at enabled and existing processors, but for migration we will take everything.
+    $processors = $DB->get_records('message_processors', null, 'name DESC', 'name, id, enabled');
+
+    // Migrate status.
+    $name = $provider_component . '_' . $provider_name . '_disabled';
+    $disabled = get_config('message', $name);
+
+    // Migrate permissions to forced delivery.
+    $forced_delivery_channels = [];
+    foreach ($processors as $processor) {
+        $name = $processor->name . '_provider_' . $provider_component . '_' . $provider_name . '_permitted';
+        $permitted = get_config('message', $name);
+        if ($permitted === 'forced') {
+            $forced_delivery_channels[] = $processor->name;
+        }
+    }
+
+    $record = $DB->get_record('notification_preference', [
+        'id' => $notification_preference_id,
+    ], 'id', MUST_EXIST);
+    $record->enabled = !$disabled;
+    $record->forced_delivery_channels = json_encode($forced_delivery_channels);
+    $DB->update_record('notification_preference', $record);
+
+    // Migrate user preferences
+}
