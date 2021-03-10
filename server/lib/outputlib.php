@@ -869,6 +869,8 @@ class theme_config {
 
         // Totara: TenantID in requests to styles files.
         $tenant = (!isloggedin() || empty($USER->tenantid)) ? 0 : $USER->tenantid;
+        // KINEO CCM - GLOTOT-1379
+        $tenant = $tenant ?: \core\theme\helper::get_prelogin_tenantid();
         $tenant = ($tenant === 0) ? 'notenant' : 'tenant_' . $tenant;
 
         if ($rev > -1) {
