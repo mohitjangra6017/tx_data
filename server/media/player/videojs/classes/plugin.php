@@ -74,6 +74,8 @@ class media_videojs_plugin extends core_media_player_native {
 
         // Totara: Only HTML5 players are supported.
 
+        $grow = !empty($options['grow']);
+
         // Build list of source tags.
         foreach ($urls as $url) {
             $extension = $mediamanager->get_extension($url);
@@ -167,7 +169,9 @@ class media_videojs_plugin extends core_media_player_native {
         // We do not do it in the width attributes of the video because it does not work well
         // together with responsive behavior.
         self::pick_video_size($width, $height);
-        if ($width) {
+        if ($grow) { 
+            $text = html_writer::div($text, null, ['class' => 'mediaplugin_grow_limit']);
+        } else if ($width) {
             $text = html_writer::div($text, null, ['style' => 'max-width:' . $this->dimension_to_css($width) . ';']);
         }
 
