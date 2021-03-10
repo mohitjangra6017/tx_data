@@ -60,9 +60,11 @@ Feature: Test Team menu item
     When I log in as "user001"
     Then I should not see "Team" in the totara menu
 
+  @javascript
   Scenario: I can disable Team for everybody
     Given I am on a totara site
     And I log in as "admin"
+    And I click on "[aria-label='Show admin menu window']" "css_element"
     And I should see "Team" in the ".totaraNav" "css_element"
     And I disable the "myteam" advanced feature
 
