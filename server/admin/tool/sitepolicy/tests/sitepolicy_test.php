@@ -129,7 +129,6 @@ class tool_sitepolicy_sitepolicy_test extends \advanced_testcase {
      * @dataProvider data_create_multiversion_policy_generator
      */
     public function test_get_sitepolicylist($debugkey, $options) {
-        $this->resetAfterTest();
 
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
@@ -165,7 +164,6 @@ class tool_sitepolicy_sitepolicy_test extends \advanced_testcase {
     public function test_get_switchversion() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -260,7 +258,6 @@ class tool_sitepolicy_sitepolicy_test extends \advanced_testcase {
     public function test_save_and_delete() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Verify no existing site_policies
         $rows = $DB->get_records('tool_sitepolicy_site_policy');
@@ -292,7 +289,6 @@ class tool_sitepolicy_sitepolicy_test extends \advanced_testcase {
      * Tests the creation of a new site policy.
      */
     public function test_create_new_policy_and_draft_version() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -344,7 +340,6 @@ class tool_sitepolicy_sitepolicy_test extends \advanced_testcase {
     public function test_create_new_policy_parameters() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);

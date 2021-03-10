@@ -213,7 +213,6 @@ class xml_output_test extends advanced_testcase {
     function test_file_xml_output() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $file = $CFG->tempdir . '/test/test_file_xml_output.txt';
         // Remove the test dir and any content

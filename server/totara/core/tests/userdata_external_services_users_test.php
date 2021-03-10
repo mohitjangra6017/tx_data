@@ -40,7 +40,6 @@ class totara_core_userdata_external_services_users_testcase extends advanced_tes
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest(true);
         list($user1, $user2) = $this->create_user_fixtures();
 
         // Get the expected data.
@@ -65,7 +64,6 @@ class totara_core_userdata_external_services_users_testcase extends advanced_tes
      * test if data is correctly counted
      */
     public function test_count() {
-        $this->resetAfterTest(true);
         list($user1, $user2) = $this->create_user_fixtures();
         $user3 = $this->getDataGenerator()->create_user();
 

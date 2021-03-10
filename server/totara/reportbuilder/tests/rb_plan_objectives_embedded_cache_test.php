@@ -149,7 +149,6 @@ class totara_reportbuilder_rb_plan_objectives_embedded_cache_testcase extends re
      * @dataProvider provider_use_cache
      */
     public function test_plan_objectives($usecache) {
-        $this->resetAfterTest();
         if ($usecache) {
             $this->enable_caching($this->report_builder_data['id']);
         }
@@ -210,7 +209,6 @@ class totara_reportbuilder_rb_plan_objectives_embedded_cache_testcase extends re
     }
 
     public function test_is_capable() {
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $shortname = $this->report_builder_data['shortname'];

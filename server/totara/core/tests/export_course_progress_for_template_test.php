@@ -41,7 +41,6 @@ class totara_core_export_course_progress_for_template_testcase extends externall
     public function test_export_for_template_not_tracked() {
         global $DB, $CFG, $PAGE;
 
-        $this->resetAfterTest(true);
 
         $CFG->enablecompletion = true;
         $student = $this->getDataGenerator()->create_user();
@@ -68,7 +67,6 @@ class totara_core_export_course_progress_for_template_testcase extends externall
     public function test_export_for_template_tracked_without_criteria() {
         global $DB, $CFG, $PAGE;
 
-        $this->resetAfterTest(true);
 
         $CFG->enablecompletion = true;
         $student = $this->getDataGenerator()->create_user();

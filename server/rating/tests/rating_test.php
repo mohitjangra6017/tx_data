@@ -50,7 +50,6 @@ class core_rating_testcase extends advanced_testcase {
         global $CFG;
         parent::setUp();
 
-        $this->resetAfterTest(true);
 
         $CFG->defaultfrontpageroleid = null;
     }

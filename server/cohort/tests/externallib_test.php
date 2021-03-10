@@ -38,7 +38,6 @@ class core_cohort_externallib_testcase extends externallib_advanced_testcase {
     public function test_create_cohorts() {
         global $USER, $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $contextid = context_system::instance()->id;
         $category = $this->getDataGenerator()->create_category();
@@ -109,7 +108,6 @@ class core_cohort_externallib_testcase extends externallib_advanced_testcase {
     public function test_delete_cohorts() {
         global $USER, $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $cohort1 = self::getDataGenerator()->create_cohort();
         $cohort2 = self::getDataGenerator()->create_cohort();
@@ -143,7 +141,6 @@ class core_cohort_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_cohorts() {
         global $USER, $CFG;
 
-        $this->resetAfterTest(true);
 
         $cohort1 = array(
             'contextid' => 1,
@@ -191,7 +188,6 @@ class core_cohort_externallib_testcase extends externallib_advanced_testcase {
     public function test_update_cohorts() {
         global $USER, $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $cohort1 = self::getDataGenerator()->create_cohort(array('visible' => 0));
 
@@ -238,7 +234,6 @@ class core_cohort_externallib_testcase extends externallib_advanced_testcase {
      * Verify handling of 'id' param.
      */
     public function test_update_cohorts_invalid_id_param() {
-        $this->resetAfterTest(true);
         $cohort = self::getDataGenerator()->create_cohort();
 
         $cohort1 = array(
@@ -270,7 +265,6 @@ class core_cohort_externallib_testcase extends externallib_advanced_testcase {
     public function test_update_cohorts_missing_dest() {
         global $USER, $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $category1 = self::getDataGenerator()->create_category(array(
             'name' => 'Test category 1'
@@ -312,7 +306,6 @@ class core_cohort_externallib_testcase extends externallib_advanced_testcase {
     public function test_update_cohorts_missing_src() {
         global $USER, $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $category1 = self::getDataGenerator()->create_category(array(
             'name' => 'Test category 1'
@@ -353,8 +346,6 @@ class core_cohort_externallib_testcase extends externallib_advanced_testcase {
      */
     public function test_add_cohort_members() {
         global $DB;
-
-        $this->resetAfterTest(true); // Reset all changes automatically after this test.
 
         $contextid = context_system::instance()->id;
 
@@ -406,8 +397,6 @@ class core_cohort_externallib_testcase extends externallib_advanced_testcase {
      */
     public function test_delete_cohort_members() {
         global $DB;
-
-        $this->resetAfterTest(true); // Reset all changes automatically after this test.
 
         $cohort1 = self::getDataGenerator()->create_cohort();
         $user1 = self::getDataGenerator()->create_user();

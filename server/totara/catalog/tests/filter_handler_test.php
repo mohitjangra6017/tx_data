@@ -40,7 +40,6 @@ class totara_catalog_filter_handler_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
         $this->filter_handler = filter_handler::instance();
     }
 

@@ -37,7 +37,6 @@ require_once($CFG->libdir.'/moodlelib.php');
 class core_string_manager_standard_testcase extends advanced_testcase {
 
     public function test_string_manager_instance() {
-        $this->resetAfterTest();
 
         $otherroot = __DIR__.'/fixtures/langtest';
         $stringman = testable_core_string_manager::instance($otherroot);
@@ -45,7 +44,6 @@ class core_string_manager_standard_testcase extends advanced_testcase {
     }
 
     public function test_get_language_dependencies() {
-        $this->resetAfterTest();
 
         $otherroot = __DIR__.'/fixtures/langtest';
         $stringman = testable_core_string_manager::instance($otherroot);
@@ -131,7 +129,6 @@ class core_string_manager_standard_testcase extends advanced_testcase {
     public function test_get_string_debug() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $otherroot = dirname(__FILE__).'/fixtures/langtest';
         $stringman = testable_core_string_manager::instance($otherroot);

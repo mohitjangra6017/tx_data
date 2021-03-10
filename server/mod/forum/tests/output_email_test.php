@@ -134,7 +134,6 @@ class mod_forum_output_email_testcase extends advanced_testcase {
      */
     public function test_postdate($globalconfig, $forumconfig, $postconfig, $discussionconfig, $expectation) {
         global $CFG, $DB;
-        $this->resetAfterTest(true);
 
         // Apply the global configuration.
         foreach ($globalconfig as $key => $value) {

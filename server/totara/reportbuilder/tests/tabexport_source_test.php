@@ -32,7 +32,6 @@ class totara_reportbuilder_tabexport_source_testcase extends advanced_testcase {
     public function test_source() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // We need permissions to view all reports.
 
         $admin = get_admin();

@@ -99,7 +99,6 @@ class mod_glossary_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_index_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -226,7 +225,6 @@ class mod_glossary_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_view_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -370,7 +368,6 @@ class mod_glossary_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_view_by_activity_id_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -514,7 +511,6 @@ class mod_glossary_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_show_entry_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -646,7 +642,6 @@ class mod_glossary_backup_activity_task_testcase extends advanced_testcase {
     public function test_coding_exception_is_not_thrown_when_course_cannot_find_glossary_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();

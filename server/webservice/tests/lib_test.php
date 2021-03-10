@@ -45,7 +45,6 @@ class webservice_test extends advanced_testcase {
         parent::setUp();
 
         // Since we change a config setting here in setUp, we'll always need to reset.
-        $this->resetAfterTest(true);
 
         // We always need enabled WS for this testcase.
         set_config('enablewebservices', '1');
@@ -57,7 +56,6 @@ class webservice_test extends advanced_testcase {
     public function test_init_service_class() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         // Set current user.
         $this->setAdminUser();

@@ -42,8 +42,6 @@ class restore_dbops_testcase extends advanced_testcase {
         global $DB;
         $dbman = $DB->get_manager(); // We are going to use database_manager services.
 
-        $this->resetAfterTest(true); // Playing with temp tables, better reset once finished.
-
         // Some variables and objects for testing.
         $restoreid = 'testrestoreid';
 

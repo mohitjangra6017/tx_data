@@ -88,7 +88,6 @@ class core_notes_userdata_notes_export_visible_testcase extends advanced_testcas
      */
     public function test_count_is_correct() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = \context_system::instance();
         /** @var \core_notes\testing\generator $notegenerator */
@@ -157,7 +156,6 @@ class core_notes_userdata_notes_export_visible_testcase extends advanced_testcas
      * Tests that the count limits course context to only notes in the course.
      */
     public function test_count_course_context_only_includes_notes_in_course() {
-        $this->resetAfterTest(true);
         $data = $this->get_data();
         $coursecontext = context_course::instance($data->courses[0]->id);
 
@@ -196,7 +194,6 @@ class core_notes_userdata_notes_export_visible_testcase extends advanced_testcas
      */
     public function test_count_works_on_deleted_users() {
         global $DB;
-        $this->resetAfterTest(true);
         $data = $this->get_data();
         $systemcontext = context_system::instance();
         list($allowedroles) = get_roles_with_cap_in_context($systemcontext, 'moodle/notes:view');
@@ -223,7 +220,6 @@ class core_notes_userdata_notes_export_visible_testcase extends advanced_testcas
      * Checks that count returns the expected value.
      */
     public function test_export_contains_correct_values() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
         list($roles) = get_roles_with_cap_in_context($systemcontext, 'moodle/notes:view');
@@ -245,7 +241,6 @@ class core_notes_userdata_notes_export_visible_testcase extends advanced_testcas
      * Tests that export does not include notes that are hidden to the user.
      */
     public function test_export_only_includes_visible() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -273,7 +268,6 @@ class core_notes_userdata_notes_export_visible_testcase extends advanced_testcas
      * Makes sure calling export doesnt create an error.
      */
     public function test_export_works_on_deleted_users() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -347,7 +341,6 @@ class core_notes_userdata_notes_export_visible_testcase extends advanced_testcas
         global $CFG;
         require_once($CFG->dirroot . '/notes/lib.php');
 
-        $this->resetAfterTest();
         $data = $this->get_category_data();
         $categorycontext = context_coursecat::instance($data->category->id);
         $subcategorycontext = context_coursecat::instance($data->subcategory->id);
@@ -374,7 +367,6 @@ class core_notes_userdata_notes_export_visible_testcase extends advanced_testcas
         global $CFG;
         require_once($CFG->dirroot . '/notes/lib.php');
 
-        $this->resetAfterTest();
         $data = $this->get_category_data();
         $categorycontext = context_coursecat::instance($data->category->id);
         $subcategorycontext = context_coursecat::instance($data->subcategory->id);

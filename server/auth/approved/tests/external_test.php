@@ -28,7 +28,6 @@ class auth_approved_external_testcase extends advanced_testcase {
     public function test_job_assignment_by_user_names() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
         /** @var \totara_hierarchy\testing\generator $hierarchygen */

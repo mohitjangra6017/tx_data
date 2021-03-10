@@ -34,7 +34,6 @@ class test_sync_schedule extends advanced_testcase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
     }
 
     protected function tearDown(): void {

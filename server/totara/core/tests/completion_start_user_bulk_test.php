@@ -82,7 +82,6 @@ class totara_core_completion_start_user_bulk_testcase extends advanced_testcase 
     public function test_completion_start_user_bulk() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Make sure the records are there.
         $this->assertEquals(2, $DB->count_records('course_completions', array('course' => $this->course1->id)));

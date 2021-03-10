@@ -47,7 +47,6 @@ class totara_job_job_assignment_testcase extends advanced_testcase {
      */
     public function setUp(): void {
         parent::setup();
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         for ($i = 1; $i <= 10; $i++) {

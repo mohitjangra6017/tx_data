@@ -40,7 +40,6 @@ class tool_monitor_subscription_manager_testcase extends advanced_testcase {
     public function test_count_rule_subscriptions() {
 
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         // Create users.
         $user1 = $this->getDataGenerator()->create_user();

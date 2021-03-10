@@ -100,7 +100,6 @@ class core_setuplib_testcase extends advanced_testcase {
     public function test_localcachedir() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         // Test default location - can not be modified in phpunit tests because we override everything in config.php.
         $this->assertSamePath("$CFG->dataroot/localcache", $CFG->localcachedir);
@@ -356,7 +355,6 @@ class core_setuplib_testcase extends advanced_testcase {
      */
     public function test_get_exception_info_link() {
         global $CFG, $SESSION;
-        $this->resetAfterTest();
 
         $httpswwwroot = str_replace('http:', 'https:', $CFG->wwwroot);
 

@@ -27,7 +27,6 @@
 class totara_reportbuilder_generator_testcase extends advanced_testcase {
     public function test_create_global_restriction() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_reportbuilder\testing\generator $reportgenerator */
         $reportgenerator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
@@ -79,7 +78,6 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
     public function test_assign_global_restriction_record() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \totara_reportbuilder\testing\generator $reportgenerator */
         $reportgenerator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
@@ -139,7 +137,6 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
     public function test_assign_global_restriction_user() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \totara_reportbuilder\testing\generator $reportgenerator */
         $reportgenerator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
@@ -202,7 +199,6 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
     public function test_create_saved_search() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
 
@@ -260,7 +256,6 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot . '/totara/reportbuilder/lib.php');
 
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
 
@@ -327,7 +322,6 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot . '/totara/reportbuilder/lib.php');
 
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
 
@@ -357,7 +351,6 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot . '/totara/reportbuilder/lib.php');
 
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
 
@@ -396,7 +389,6 @@ class totara_reportbuilder_generator_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot . '/totara/reportbuilder/lib.php');
 
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
 

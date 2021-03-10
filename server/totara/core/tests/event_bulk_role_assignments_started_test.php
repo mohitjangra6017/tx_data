@@ -25,7 +25,6 @@ defined('MOODLE_INTERNAL') || die();
 
 class totara_core_event_bulk_role_assignments_started_testcase extends advanced_testcase {
     public function test_event() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $context = context_course::instance($course->id);

@@ -46,7 +46,6 @@ class core_enrol_role_external_testcase extends externallib_advanced_testcase {
     public function test_assign_roles() {
         global $USER;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
 
@@ -95,7 +94,6 @@ class core_enrol_role_external_testcase extends externallib_advanced_testcase {
     public function test_unassign_roles() {
         global $USER;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
 

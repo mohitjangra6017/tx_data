@@ -27,7 +27,6 @@ class repository_opensesame_util_testcase extends advanced_testcase {
     public function test_add_package_to_bundle() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $pkg1 = array('zipfilename' => 'abc.zip', 'title' => 'abc',
             'expirationdate' => '',  'mobilecompatibility' => '', 'externalid' => 'xyz', 'description' => 'efg', 'duration' => '',

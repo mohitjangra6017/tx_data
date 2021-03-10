@@ -47,7 +47,6 @@ class totara_cohort_cross_dependency_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot . '/totara/cohort/lib.php');
 
-        $this->resetAfterTest();
 
         $cohort1 = $this->create_username_cohort('1', 'user1');
         $cohort2 = $this->create_username_cohort('2', 'user2');

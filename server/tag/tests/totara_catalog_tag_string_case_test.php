@@ -42,7 +42,6 @@ class core_tag_totara_catalog_tag_string_case_testcase extends advanced_testcase
         global $PAGE, $OUTPUT;
         $PAGE->set_url("/");
 
-        $this->resetAfterTest();
         static::setAdminUser();
 
         $gen = static::getDataGenerator();
@@ -91,7 +90,6 @@ class core_tag_totara_catalog_tag_string_case_testcase extends advanced_testcase
         global $PAGE, $OUTPUT;
         $PAGE->set_url("/");
 
-        $this->resetAfterTest();
         static::setAdminUser();
 
         $gen = static::getDataGenerator();

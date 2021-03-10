@@ -70,7 +70,6 @@ class enrol_lti_sync_members_testcase extends advanced_testcase {
     }
 
     public function setUp(): void {
-        $this->resetAfterTest();
 
         // Set this user as the admin.
         $this->setAdminUser();

@@ -35,7 +35,6 @@ class totara_feedback360_event_testcase extends feedback360_testcase {
      * Test the events thrown when a feedback360 is created, updated, and deleted.
      */
     public function test_feedback360_events() {
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         // Create a feedback to throw a creation event.
@@ -101,7 +100,6 @@ class totara_feedback360_event_testcase extends feedback360_testcase {
     public function test_request_events() {
         global $DB;
 
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         $user_assign = $this->getDataGenerator()->create_user();
@@ -168,7 +166,6 @@ class totara_feedback360_event_testcase extends feedback360_testcase {
     public function test_legacy_events() {
         global $DB;
 
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         // Set up some users.

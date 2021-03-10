@@ -103,7 +103,6 @@ class totara_quicklinks_userdata_test extends advanced_testcase {
      */
     public function test_export_quicklinks() {
 
-        $this->resetAfterTest();
 
         $data = $this->setupdata();
 
@@ -130,7 +129,6 @@ class totara_quicklinks_userdata_test extends advanced_testcase {
 
         require_once($CFG->dirroot . '/user/lib.php');
 
-        $this->resetAfterTest();
 
         $data = $this->setupdata();
 

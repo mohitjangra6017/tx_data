@@ -59,7 +59,6 @@ class totara_program_program_completion_testcase extends reportcache_advanced_te
      * Set up the users, certifications and completions.
      */
     public function setup_completions() {
-        $this->resetAfterTest(true);
 
         // Turn off certifications. This is to test that it doesn't interfere with program completion.
         set_config('enablecertifications', advanced_feature::DISABLED);

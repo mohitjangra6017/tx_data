@@ -152,7 +152,6 @@ class totara_program_rb_display_program_course_newline_date_testcase extends adv
      * Here we are saying we don't trust the database to get it right.
      */
     public function test_display_no_courses_forced_resort() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         self::force_resort_required(true);
 
@@ -176,7 +175,6 @@ class totara_program_rb_display_program_course_newline_date_testcase extends adv
      * The cache data should not be referenced as we trust the database order.
      */
     public function test_display_no_courses_forced_no_resort() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         self::force_resort_required(false);
 
@@ -199,7 +197,6 @@ class totara_program_rb_display_program_course_newline_date_testcase extends adv
      * Here we are saying we don't trust the database to get it right.
      */
     public function test_display_one_course_forced_resort() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         self::force_resort_required(true);
 
@@ -222,7 +219,6 @@ class totara_program_rb_display_program_course_newline_date_testcase extends adv
      * The cache data should not be referenced as we trust the database order.
      */
     public function test_display_one_course_forced_no_resort() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         self::force_resort_required(false);
 
@@ -247,7 +243,6 @@ class totara_program_rb_display_program_course_newline_date_testcase extends adv
      * @throws coding_exception
      */
     public function test_display_many_courses_forced_resort() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         self::force_resort_required(true);
 
@@ -304,7 +299,6 @@ class totara_program_rb_display_program_course_newline_date_testcase extends adv
      * @throws coding_exception
      */
     public function test_display_many_courses_forced_no_resort() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         self::force_resort_required(false);
 

@@ -38,7 +38,6 @@ class filter_glossary_filter_testcase extends advanced_testcase {
      */
     public function test_ampersands() {
         global $CFG;
-        $this->resetAfterTest(true);
 
         // Enable glossary filter at top level.
         filter_set_global_state('glossary', TEXTFILTER_ON);
@@ -84,7 +83,6 @@ class filter_glossary_filter_testcase extends advanced_testcase {
 
     public function test_filter() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         // Enable glossary filter at top level.
         filter_set_global_state('glossary', TEXTFILTER_ON);

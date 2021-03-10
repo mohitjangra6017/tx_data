@@ -39,7 +39,6 @@ class totara_reportbuilder_rb_cohort_associations_visible_embedded_testcase exte
     protected function setUp(): void {
         parent::setup();
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         // Create users.
         $this->user1 = $this->getDataGenerator()->create_user();

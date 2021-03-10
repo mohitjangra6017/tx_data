@@ -48,7 +48,6 @@ class dashboard_events_testcase extends advanced_testcase {
     protected function setUp(): void {
         global $USER;
 
-        $this->resetAfterTest();
 
         // The user we are going to test this on.
         $this->setAdminUser();

@@ -45,7 +45,6 @@ class mod_lesson_locallib_testcase extends advanced_testcase {
     public function test_duplicate_page() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
         $lessonmodule = $this->getDataGenerator()->create_module('lesson', array('course' => $course->id));

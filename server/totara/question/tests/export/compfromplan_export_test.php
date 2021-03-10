@@ -49,7 +49,6 @@ class totara_question_compfromplan_export_testcase extends advanced_testcase {
     public function test_get_items_with_items() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $questiontype = 'compfromplan';
 

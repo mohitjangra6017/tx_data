@@ -30,7 +30,6 @@ defined('MOODLE_INTERNAL') || die();
 class totara_userdata_task_export_testcase extends advanced_testcase {
     public function test_adhoc() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 

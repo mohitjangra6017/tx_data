@@ -41,7 +41,6 @@ class totara_program_core_pagelib_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
 
         // Make sure the themes are different, otherwise our testing is redundant.
         $this->assertNotEquals(theme_config::DEFAULT_THEME, $this->second_theme);

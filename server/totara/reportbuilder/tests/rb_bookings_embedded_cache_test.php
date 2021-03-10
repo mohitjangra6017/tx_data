@@ -213,7 +213,6 @@ class totara_reportbuilder_rb_bookings_embedded_cache_testcase extends reportcac
      * - Check bookings for fourth user (0)
      */
     public function test_bookings() {
-        $this->resetAfterTest();
         $usecache = false; // No content caching if content options present.
         $courseidalias = reportbuilder_get_extrafield_alias('course', 'courselink', 'course_id');
         $result = $this->get_report_result($this->report_builder_data['shortname'], array('userid' => $this->user1->id), $usecache);
@@ -231,7 +230,6 @@ class totara_reportbuilder_rb_bookings_embedded_cache_testcase extends reportcac
     }
 
     public function test_is_capable() {
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $shortname = $this->report_builder_data['shortname'];

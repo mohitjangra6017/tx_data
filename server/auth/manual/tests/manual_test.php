@@ -39,7 +39,6 @@ class auth_manual_manual_testcase extends advanced_testcase {
      * Test user_update_password method.
      */
     public function test_user_update_password() {
-        $this->resetAfterTest();
 
         /** @var auth_plugin_manual $authplugin */
         $authplugin = get_auth_plugin('manual');
@@ -59,7 +58,6 @@ class auth_manual_manual_testcase extends advanced_testcase {
      * Test test_password_expire method.
      */
     public function test_password_expire() {
-        $this->resetAfterTest();
 
         set_config('expiration', '1', 'auth_manual');
         set_config('expiration_warning', '2', 'auth_manual');

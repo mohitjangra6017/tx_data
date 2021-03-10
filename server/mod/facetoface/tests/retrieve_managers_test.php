@@ -56,7 +56,6 @@ class mod_facetoface_retrieve_managers_testcase extends advanced_testcase {
      * @return void
      */
     public function test_retrieving_managers_from_a_signupmanagerid(): void {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $seminarevent = $this->create_seminar_event();
@@ -99,7 +98,6 @@ class mod_facetoface_retrieve_managers_testcase extends advanced_testcase {
      * @return void
      */
     public function test_retrieving_managers_from_jobassignment(): void {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $seminarevent = $this->create_seminar_event();

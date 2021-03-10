@@ -193,7 +193,6 @@ class core_cache_administration_helper_testcase extends advanced_testcase {
      * Test the hash_key functionality.
      */
     public function test_hash_key() {
-        $this->resetAfterTest();
         set_debugging(DEBUG_ALL);
 
         // First with simplekeys

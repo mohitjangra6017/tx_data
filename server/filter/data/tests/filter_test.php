@@ -44,7 +44,6 @@ class filter_data_filter_testcase extends advanced_testcase {
      */
     public function test_filter() {
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         filter_manager::reset_caches();
 

@@ -34,7 +34,6 @@ defined('MOODLE_INTERNAL') || die();
 class totara_userdata_event_export_downloaded_testcase extends advanced_testcase {
     public function test_event() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 

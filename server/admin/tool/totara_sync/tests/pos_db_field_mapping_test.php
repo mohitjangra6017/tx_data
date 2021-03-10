@@ -87,7 +87,6 @@ class tool_totara_sync_pos_database_field_mapping_testcase extends totara_sync_d
     public function test_field_mapping_for_types() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->assertCount(0, $DB->get_records('pos'));
 

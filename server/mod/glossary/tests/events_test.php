@@ -36,7 +36,6 @@ defined('MOODLE_INTERNAL') || die();
 class glossary_event_testcase extends advanced_testcase {
 
     public function setUp(): void {
-        $this->resetAfterTest();
     }
 
     /**

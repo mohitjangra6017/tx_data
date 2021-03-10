@@ -113,7 +113,6 @@ class totara_reportbuilder_rb_catalogcourses_embedded_cache_testcase extends rep
      * - Course4 has no enabled customfield options
      */
     public function test_courses() {
-        $this->resetAfterTest();
 
         $cfgenerator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
         $cfids = $cfgenerator->create_multiselect('course', array('cf1' => array('op1cf1', 'op2cf1'),

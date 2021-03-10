@@ -116,7 +116,6 @@ class totara_reportbuilder_rb_catalogcertifications_embedded_cache_testcase exte
      * - Certification4 has no enabled customfield options
      */
     public function test_certifications() {
-        $this->resetAfterTest();
 
         /** @var \totara_customfield\testing\generator $cfgenerator */
         $cfgenerator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');

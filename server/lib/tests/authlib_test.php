@@ -34,7 +34,6 @@ class core_authlib_testcase extends advanced_testcase {
         global $CFG;
         require_once("$CFG->libdir/authlib.php");
 
-        $this->resetAfterTest();
 
         $oldlog = ini_get('error_log');
         ini_set('error_log', "$CFG->dataroot/testlog.log"); // Prevent standard logging.
@@ -117,7 +116,6 @@ class core_authlib_testcase extends advanced_testcase {
     public function test_authenticate_user_login() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $oldlog = ini_get('error_log');
         ini_set('error_log', "$CFG->dataroot/testlog.log"); // Prevent standard logging.

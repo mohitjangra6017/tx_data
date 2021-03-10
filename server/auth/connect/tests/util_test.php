@@ -37,7 +37,6 @@ class auth_connect_util_testcase extends advanced_testcase {
     }
 
     public function test_get_sep_url() {
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -50,7 +49,6 @@ class auth_connect_util_testcase extends advanced_testcase {
     }
 
     public function get_sso_request_url() {
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -63,7 +61,6 @@ class auth_connect_util_testcase extends advanced_testcase {
     }
 
     public function test_enable_registration() {
-        $this->resetAfterTest();
 
         $prev = get_config('auth_connect', 'setupsecret');
         $this->assertFalse($prev);
@@ -74,7 +71,6 @@ class auth_connect_util_testcase extends advanced_testcase {
     }
 
     public function test_cancel_registration() {
-        $this->resetAfterTest();
 
         util::enable_registration();
         $prev = get_config('auth_connect', 'setupsecret');
@@ -86,7 +82,6 @@ class auth_connect_util_testcase extends advanced_testcase {
     }
 
     public function test_get_setup_secret() {
-        $this->resetAfterTest();
 
         util::enable_registration();
         $prev = get_config('auth_connect', 'setupsecret');
@@ -96,7 +91,6 @@ class auth_connect_util_testcase extends advanced_testcase {
     }
 
     public function test_verify_setup_secret() {
-        $this->resetAfterTest();
 
         util::enable_registration();
         $prev = get_config('auth_connect', 'setupsecret');
@@ -144,7 +138,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_edit_server() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -164,7 +157,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_delete_server() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -269,7 +261,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_force_sso_logout() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -315,7 +306,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_sync_users() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -340,7 +330,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_sync_user() {
         global $DB, $USER;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         /** @var \auth_connect\testing\generator $generator */
@@ -382,7 +371,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_users_basic() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -614,7 +602,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
         require_once($CFG->libdir . '/authlib.php');
 
-        $this->resetAfterTest();
 
         // Verify default settings.
         $this->assertEquals(AUTH_REMOVEUSER_SUSPEND, get_config('auth_connect', 'removeuser'));
@@ -690,7 +677,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_user() {
         global $DB;
-        $this->resetAfterTest();
 
         set_config('syncpasswords', 0, 'totara_connect');
 
@@ -738,7 +724,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_user_with_password() {
         global $DB;
-        $this->resetAfterTest();
 
         set_config('syncpasswords', 1, 'totara_connect');
 
@@ -785,7 +770,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_user_migration() {
         global $DB;
-        $this->resetAfterTest();
 
         // Verify default settings.
         $this->assertSame('0', get_config('auth_connect', 'migrateusers'));
@@ -896,7 +880,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_sync_user_collections() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -923,7 +906,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_user_collections() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -963,7 +945,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_user_collection_cohort_properties() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -999,7 +980,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_user_collection_cohort_membership() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -1040,7 +1020,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_user_collection_course_properties() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -1076,7 +1055,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_user_collection_course_membership() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -1117,7 +1095,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_user_pictures() {
         global $DB;
-        $this->resetAfterTest();
 
         set_config('syncpasswords', 0, 'totara_connect');
         $fs = get_file_storage();
@@ -1199,7 +1176,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_users_profile_fields() {
         global $DB;
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -1324,7 +1300,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_user_jobs() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
@@ -1674,7 +1649,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_hierarchy_pos() {
         global $DB;
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -2146,7 +2120,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_hierarchy_pos_fields() {
         global $DB;
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -2355,7 +2328,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_hierarchy_org() {
         global $DB;
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -2797,7 +2769,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_hierarchy_org_fields() {
         global $DB;
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -3002,7 +2973,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_sync_positions() {
         global $DB;
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -3081,7 +3051,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_sync_organisations() {
         global $DB;
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -3158,7 +3127,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_update_local_user_embedded_preferences() {
         global $DB;
-        $this->resetAfterTest();
 
         set_config('syncpasswords', 0, 'totara_connect');
         $fs = get_file_storage();
@@ -3200,7 +3168,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_finish_sso() {
         global $DB, $SESSION, $USER;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -3302,7 +3269,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_create_sso_request() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -3395,7 +3361,6 @@ class auth_connect_util_testcase extends advanced_testcase {
 
     public function test_warn_if_not_https() {
         global $CFG;
-        $this->resetAfterTest();
 
         // No warning expected on HTTPS sites.
         $CFG->wwwroot = 'https://example.com/lms';

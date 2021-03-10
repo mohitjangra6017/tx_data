@@ -51,7 +51,6 @@ class totara_program_message_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
         $this->messagesink = $this->redirectMessages();
         $this->user1 = $this->getDataGenerator()->create_user();
         /** @var \totara_program\testing\generator $programgenerator */

@@ -48,7 +48,6 @@ class core_adhoc_task_testcase extends advanced_testcase {
      * Test basic adhoc task execution.
      */
     public function test_get_next_adhoc_task_now() {
-        $this->resetAfterTest(true);
 
         // Create an adhoc task.
         $task = new \core\task\adhoc_test_task();
@@ -68,7 +67,6 @@ class core_adhoc_task_testcase extends advanced_testcase {
      * Test adhoc task failure retry backoff.
      */
     public function test_get_next_adhoc_task_fail_retry() {
-        $this->resetAfterTest(true);
 
         // Create an adhoc task.
         $task = new \core\task\adhoc_test_task();
@@ -99,7 +97,6 @@ class core_adhoc_task_testcase extends advanced_testcase {
      * Test future adhoc task execution.
      */
     public function test_get_next_adhoc_task_future() {
-        $this->resetAfterTest(true);
 
         $now = time();
         // Create an adhoc task in future.
@@ -121,7 +118,6 @@ class core_adhoc_task_testcase extends advanced_testcase {
      * Test empty set of adhoc tasks
      */
     public function test_get_adhoc_tasks_empty_set() {
-        $this->resetAfterTest(true);
 
         $this->assertEquals([], \core\task\manager::get_adhoc_tasks('\\core\\task\\adhoc_test_task'));
     }
@@ -130,7 +126,6 @@ class core_adhoc_task_testcase extends advanced_testcase {
      * Test correct set of adhoc tasks is returned for class.
      */
     public function test_get_adhoc_tasks_result_set() {
-        $this->resetAfterTest(true);
 
         for ($i = 0; $i < 3; $i++) {
             $task = new \core\task\adhoc_test_task();
@@ -161,7 +156,6 @@ class core_adhoc_task_testcase extends advanced_testcase {
      * Test queue_adhoc_task "if not scheduled".
      */
     public function test_queue_adhoc_task_if_not_scheduled() {
-        $this->resetAfterTest(true);
         $user = \core_user::get_user_by_username('admin');
 
         // Schedule adhoc task.
@@ -227,7 +221,6 @@ class core_adhoc_task_testcase extends advanced_testcase {
      * too.
      */
     public function test_adhoc_task_user_empty() {
-        $this->resetAfterTest(true);
 
         // Create an adhoc task in future.
         $task = new \core\task\adhoc_test_task();
@@ -246,7 +239,6 @@ class core_adhoc_task_testcase extends advanced_testcase {
      * returned.
      */
     public function test_adhoc_task_user_set() {
-        $this->resetAfterTest(true);
 
         // Create an adhoc task in future.
         $task = new \core\task\adhoc_test_task();

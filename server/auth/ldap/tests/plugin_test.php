@@ -72,7 +72,6 @@ class auth_ldap_plugin_testcase extends advanced_testcase {
             $this->markTestSkipped('LDAP extension is not loaded.');
         }
 
-        $this->resetAfterTest();
 
         require_once($CFG->dirroot.'/auth/ldap/auth.php');
         require_once($CFG->libdir.'/ldaplib.php');
@@ -478,7 +477,6 @@ class auth_ldap_plugin_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot . '/auth/ldap/auth.php');
 
-        $this->resetAfterTest();
 
         $this->assertFalse(isloggedin());
         $user = $DB->get_record('user', array('username'=>'admin'));
@@ -541,7 +539,6 @@ class auth_ldap_plugin_testcase extends advanced_testcase {
             $this->markTestSkipped('LDAP extension is not loaded.');
         }
 
-        $this->resetAfterTest();
 
         require_once($CFG->dirroot.'/auth/ldap/auth.php');
         require_once($CFG->libdir.'/ldaplib.php');

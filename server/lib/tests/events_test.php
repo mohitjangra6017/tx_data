@@ -35,7 +35,6 @@ class core_events_testcase extends advanced_testcase {
      * This is executed before running any test in this file.
      */
     public function setUp(): void {
-        $this->resetAfterTest();
     }
 
     /**
@@ -266,7 +265,6 @@ class core_events_testcase extends advanced_testcase {
     }
 
     public function test_recent_capability_viewed() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -291,7 +289,6 @@ class core_events_testcase extends advanced_testcase {
     }
 
     public function test_user_profile_viewed() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user = $this->getDataGenerator()->create_user();
@@ -345,7 +342,6 @@ class core_events_testcase extends advanced_testcase {
      * There is no API associated with this event, so we will just test standard features.
      */
     public function test_grade_viewed() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user = $this->getDataGenerator()->create_user();

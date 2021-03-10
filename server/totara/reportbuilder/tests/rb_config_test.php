@@ -29,7 +29,6 @@ require_once($CFG->dirroot . '/totara/reportbuilder/lib.php');
 class totara_reportbuilder_rb_config_testcase extends advanced_testcase {
     public function test_set_methods() {
         global $USER;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $rbconfig = new rb_config();
@@ -68,7 +67,6 @@ class totara_reportbuilder_rb_config_testcase extends advanced_testcase {
 
     public function test_finalise() {
         global $USER;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $rbconfig = new rb_config();

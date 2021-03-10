@@ -42,7 +42,6 @@ class enrol_manual_lib_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once($CFG->dirroot.'/enrol/manual/locallib.php');
 
-        $this->resetAfterTest();
 
         /** @var $manplugin enrol_manual_plugin */
         $manplugin = enrol_get_plugin('manual');
@@ -205,7 +204,6 @@ class enrol_manual_lib_testcase extends advanced_testcase {
 
     public function test_expired() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var $manualplugin enrol_manual_plugin */
         $manualplugin = enrol_get_plugin('manual');
@@ -332,7 +330,6 @@ class enrol_manual_lib_testcase extends advanced_testcase {
 
     public function test_send_expiry_notifications() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         $trace = new null_progress_trace();
 
@@ -509,7 +506,6 @@ class enrol_manual_lib_testcase extends advanced_testcase {
      */
     public function test_send_expiry_notifications_manual_enrolment(int $expirynotify) {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         require_once($CFG->dirroot . '/enrol/editinstance_form.php');
 

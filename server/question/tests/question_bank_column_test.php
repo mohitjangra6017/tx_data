@@ -42,7 +42,6 @@ class question_bank_column_testcase extends advanced_testcase {
      *
      */
     public function test_column_header_multi_sort_no_tooltips() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $questionbank = new core_question\bank\view(
                 new question_edit_contexts(context_course::instance($course->id)),
@@ -76,7 +75,6 @@ class question_bank_column_testcase extends advanced_testcase {
      *
      */
     public function test_column_header_multi_sort_with_tooltips() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $questionbank = new core_question\bank\view(
                 new question_edit_contexts(context_course::instance($course->id)),

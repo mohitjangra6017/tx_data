@@ -43,7 +43,6 @@ class totara_hierarchy_create_type_customfield_testcase extends advanced_testcas
 
     protected function setUp(): void {
         parent::setup();
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();

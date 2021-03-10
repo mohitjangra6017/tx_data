@@ -42,7 +42,6 @@ class core_search_events_testcase extends advanced_testcase {
      */
     public function test_search_results_viewed() {
 
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);

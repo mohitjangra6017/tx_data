@@ -35,7 +35,6 @@ class tool_sitepolicy_localisedconsent_test extends \advanced_testcase {
     public function test_from_data() {
         global $DB;
 
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $sitepolicy = $generator->create_published_policy([]);
@@ -60,7 +59,6 @@ class tool_sitepolicy_localisedconsent_test extends \advanced_testcase {
     public function test_get_policy_options() {
         global $DB;
 
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [
@@ -114,7 +112,6 @@ class tool_sitepolicy_localisedconsent_test extends \advanced_testcase {
      */
     public function test_save_exeception_unsaved_localisedpolicy() {
 
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Localised policy must be saved before saving localised consent option');
 
@@ -136,7 +133,6 @@ class tool_sitepolicy_localisedconsent_test extends \advanced_testcase {
      */
     public function test_save_exeception_unsaved_consentoption() {
 
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Consent option must be saved before saving localised consent option');
 
@@ -159,7 +155,6 @@ class tool_sitepolicy_localisedconsent_test extends \advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $this->resetAfterTest();
         $sitepolicy = new sitepolicy();
         $sitepolicy->save();
         $version = policyversion::new_policy_draft($sitepolicy);
@@ -213,7 +208,6 @@ class tool_sitepolicy_localisedconsent_test extends \advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $options = [

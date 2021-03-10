@@ -63,7 +63,6 @@ require_once($CFG->dirroot . '/mod/lti/servicelib.php');
 class mod_lti_locallib_testcase extends advanced_testcase {
 
     public function test_split_custom_parameters() {
-        $this->resetAfterTest();
 
         $tool = new stdClass();
         $tool->enabledcapability = '';
@@ -203,7 +202,6 @@ class mod_lti_locallib_testcase extends advanced_testcase {
      */
     public function test_lti_buid_request_resource_link_id() {
         global $DB;
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         self::setUser($user);
@@ -253,7 +251,6 @@ class mod_lti_locallib_testcase extends advanced_testcase {
      * that the newlines in the description are correct.
      */
     public function test_lti_build_request_description() {
-        $this->resetAfterTest();
 
         self::setUser($this->getDataGenerator()->create_user());
         $course   = $this->getDataGenerator()->create_course();
@@ -352,7 +349,6 @@ class mod_lti_locallib_testcase extends advanced_testcase {
      * Tests for lti_build_content_item_selection_request().
      */
     public function test_lti_build_content_item_selection_request() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Create a tool proxy.
@@ -440,7 +436,6 @@ class mod_lti_locallib_testcase extends advanced_testcase {
      * Test for lti_build_content_item_selection_request() with nonexistent tool type ID parameter.
      */
     public function test_lti_build_content_item_selection_request_invalid_tooltype() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -455,7 +450,6 @@ class mod_lti_locallib_testcase extends advanced_testcase {
      * Test for lti_build_content_item_selection_request() with invalid media types parameter.
      */
     public function test_lti_build_content_item_selection_request_invalid_mediatypes() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -482,7 +476,6 @@ class mod_lti_locallib_testcase extends advanced_testcase {
      * Test for lti_build_content_item_selection_request() with invalid presentation targets parameter.
      */
     public function test_lti_build_content_item_selection_request_invalid_presentationtargets() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1017,7 +1010,6 @@ class mod_lti_locallib_testcase extends advanced_testcase {
     public function test_lti_build_standard_message_institution_name_set() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $CFG->mod_lti_institution_name = 'some institution name lols';
 
@@ -1043,7 +1035,6 @@ class mod_lti_locallib_testcase extends advanced_testcase {
      * Test lti_build_standard_message().
      */
     public function test_lti_build_standard_message_institution_name_not_set() {
-        $this->resetAfterTest();
 
         $course   = $this->getDataGenerator()->create_course();
         $instance = $this->getDataGenerator()->create_module('lti',
@@ -1067,7 +1058,6 @@ class mod_lti_locallib_testcase extends advanced_testcase {
      * Test lti_verify_jwt_signature().
      */
     public function test_lti_verify_jwt_signature() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1102,7 +1092,6 @@ MwIDAQAB
      * Test lti_verify_jwt_signature().
      */
     public function test_lti_verify_jwt_signature_with_lti2() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1130,7 +1119,6 @@ MwIDAQAB
      * Test lti_verify_jwt_signature().
      */
     public function test_lti_verify_jwt_signature_no_consumer_key() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1153,7 +1141,6 @@ MwIDAQAB
      * Test lti_verify_jwt_signature().
      */
     public function test_lti_verify_jwt_signature_no_public_key() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1215,7 +1202,6 @@ MwIDAQAB
      * Test lti_sign_jwt().
      */
     public function test_lti_sign_jwt() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1261,7 +1247,6 @@ MwIDAQAB
      * Test lti_convert_from_jwt()
      */
     public function test_lti_convert_from_jwt() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1300,7 +1285,6 @@ MwIDAQAB
      * Test lti_get_permitted_service_scopes().
      */
     public function test_lti_get_permitted_service_scopes() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1331,7 +1315,6 @@ MwIDAQAB
      * Test get_tool_type_config().
      */
     public function test_get_tool_type_config() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1365,7 +1348,6 @@ MwIDAQAB
     public function test_lti_new_access_token() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 

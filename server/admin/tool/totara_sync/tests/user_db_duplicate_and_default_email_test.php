@@ -43,7 +43,6 @@ class tool_totara_sync_user_db_duplicate_and_default_email extends totara_sync_d
 
         set_config('source_user', 'totara_sync_source_user_database', 'totara_sync');
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->create_external_db_table();

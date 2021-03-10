@@ -111,7 +111,6 @@ class totara_reportbuilder_rb_catalogprograms_embedded_cache_testcase extends re
      * - Program4 has no enabled customfield options
      */
     public function test_programs() {
-        $this->resetAfterTest();
 
         $cfgenerator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
         $cfids = $cfgenerator->create_multiselect('prog', array('cf1' => array('op<1> cf"1"', 'op[2]-cf[1]'),

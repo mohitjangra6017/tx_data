@@ -179,7 +179,6 @@ class tree_testcase extends \advanced_testcase {
         global $USER;
 
         // Setup.
-        $this->resetAfterTest();
         $info = new \core_availability\mock_info();
         $this->setAdminUser();
         $information = '';
@@ -690,7 +689,6 @@ class tree_testcase extends \advanced_testcase {
      */
     public function test_unique_sql_parameter_behaviour() {
         global $DB;
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator();
 
         // Create a test course with multiple groupings and groups and a student in each of them.
@@ -737,7 +735,6 @@ class tree_testcase extends \advanced_testcase {
      */
     public function test_get_user_list_sql() {
         global $DB;
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator();
 
         // Create a test course with 2 groups and users in each combination of them.

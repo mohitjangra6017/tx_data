@@ -76,7 +76,6 @@ class core_myprofilelib_testcase extends advanced_testcase {
         $this->user2 = $this->getDataGenerator()->create_user();
         $this->course = $this->getDataGenerator()->create_course();
         $this->tree = new \core_user\output\myprofile\tree();
-        $this->resetAfterTest();
     }
 
     /**

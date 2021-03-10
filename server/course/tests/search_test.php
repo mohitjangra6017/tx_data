@@ -49,7 +49,6 @@ class course_search_testcase extends advanced_testcase {
     }
 
     public function setUp(): void {
-        $this->resetAfterTest(true);
         set_config('enableglobalsearch', true);
 
         $this->mycoursesareaid = \core_search\manager::generate_areaid('core_course', 'mycourse');

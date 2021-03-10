@@ -36,7 +36,6 @@ global $CFG;
 class tool_uploadcourse_course_testcase extends advanced_testcase {
 
     public function test_proceed_without_prepare() {
-        $this->resetAfterTest(true);
         $mode = tool_uploadcourse_processor::MODE_CREATE_NEW;
         $updatemode = tool_uploadcourse_processor::UPDATE_NOTHING;
         $data = array();
@@ -48,7 +47,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
     }
 
     public function test_proceed_when_prepare_failed() {
-        $this->resetAfterTest(true);
         $mode = tool_uploadcourse_processor::MODE_CREATE_NEW;
         $updatemode = tool_uploadcourse_processor::UPDATE_NOTHING;
         $data = array();
@@ -61,7 +59,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
     }
 
     public function test_proceed_when_already_started() {
-        $this->resetAfterTest(true);
         $mode = tool_uploadcourse_processor::MODE_CREATE_NEW;
         $updatemode = tool_uploadcourse_processor::UPDATE_NOTHING;
         $data = array('shortname' => 'test', 'fullname' => 'New course', 'summary' => 'New', 'category' => 1);
@@ -73,7 +70,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
     }
 
     public function test_invalid_shortname() {
-        $this->resetAfterTest(true);
         $mode = tool_uploadcourse_processor::MODE_CREATE_NEW;
         $updatemode = tool_uploadcourse_processor::UPDATE_NOTHING;
         $data = array('shortname' => '<invalid>', 'fullname' => 'New course', 'summary' => 'New', 'category' => 1);
@@ -84,7 +80,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
 
     public function test_create() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Existing course.
         $c1 = $this->getDataGenerator()->create_course(array('shortname' => 'c1', 'summary' => 'Yay!'));
@@ -122,7 +117,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
 
     public function test_create_with_sections() {
         global $DB;
-        $this->resetAfterTest(true);
         $updatemode = tool_uploadcourse_processor::UPDATE_NOTHING;
         $defaultnumsections = get_config('moodlecourse', 'numsections');
 
@@ -152,7 +146,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
 
     public function test_delete() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
@@ -197,7 +190,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
 
     public function test_update() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $c1 = $this->getDataGenerator()->create_course(array('shortname' => 'c1'));
 
@@ -378,7 +370,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
 
     public function test_data_saved() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Create.
         $mode = tool_uploadcourse_processor::MODE_CREATE_NEW;
@@ -585,7 +576,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
 
     public function test_default_data_saved() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Create.
         $mode = tool_uploadcourse_processor::MODE_CREATE_NEW;
@@ -699,7 +689,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
 
     public function test_rename() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $c1 = $this->getDataGenerator()->create_course(array('shortname' => 'c1'));
         $c2 = $this->getDataGenerator()->create_course(array('shortname' => 'c2'));
@@ -794,7 +783,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
 
     public function test_restore_course() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $c1 = $this->getDataGenerator()->create_course();
@@ -838,7 +826,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
 
     public function test_restore_file() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $c1 = $this->getDataGenerator()->create_course();
@@ -886,7 +873,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
     }
 
     public function test_restore_invalid_file() {
-        $this->resetAfterTest();
 
         // Restore from a non-existing file should not be allowed.
         $mode = tool_uploadcourse_processor::MODE_CREATE_NEW;
@@ -913,7 +899,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
     }
 
     public function test_restore_invalid_course() {
-        $this->resetAfterTest();
 
         // Restore from an invalid file should not be allowed.
         $mode = tool_uploadcourse_processor::MODE_CREATE_NEW;
@@ -930,7 +915,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
      */
     public function test_reset() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $c1 = $this->getDataGenerator()->create_course();
         $c1ctx = context_course::instance($c1->id);
@@ -1022,7 +1006,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
 
     public function test_create_bad_category() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Ensure fails when category cannot be resolved upon creation.
         $mode = tool_uploadcourse_processor::MODE_CREATE_NEW;
@@ -1076,7 +1059,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
     }
 
     public function test_enrolment_data() {
-        $this->resetAfterTest(true);
 
         $mode = tool_uploadcourse_processor::MODE_CREATE_NEW;
         $updatemode = tool_uploadcourse_processor::UPDATE_ALL_WITH_DATA_ONLY;
@@ -1105,7 +1087,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
     }
 
     public function test_idnumber_problems() {
-        $this->resetAfterTest(true);
 
         $c1 = $this->getDataGenerator()->create_course(array('shortname' => 'sntaken', 'idnumber' => 'taken'));
         $c2 = $this->getDataGenerator()->create_course();
@@ -1156,7 +1137,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
     }
 
     public function test_generate_shortname() {
-        $this->resetAfterTest(true);
 
         $c1 = $this->getDataGenerator()->create_course(array('shortname' => 'taken'));
 
@@ -1209,7 +1189,6 @@ class tool_uploadcourse_course_testcase extends advanced_testcase {
 
     public function test_mess_with_frontpage() {
         global $SITE;
-        $this->resetAfterTest(true);
 
         // Updating the front page.
         $mode = tool_uploadcourse_processor::MODE_UPDATE_ONLY;

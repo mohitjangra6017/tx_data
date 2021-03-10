@@ -214,7 +214,6 @@ class totara_plan_userdata_plan_test extends advanced_testcase {
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Setup data.
         $data = $this->setupdata();
@@ -344,7 +343,6 @@ class totara_plan_userdata_plan_test extends advanced_testcase {
      * Test the export function
      */
     public function test_export() {
-        $this->resetAfterTest();
 
         $data = $this->setupdata();
 
@@ -489,7 +487,6 @@ class totara_plan_userdata_plan_test extends advanced_testcase {
      * Test the count function
      */
     public function test_count() {
-        $this->resetAfterTest();
 
         $data = $this->setupdata();
 

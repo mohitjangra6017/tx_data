@@ -35,7 +35,6 @@ class mod_wiki_generator_testcase extends advanced_testcase {
 
     public function test_create_instance() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -55,7 +54,6 @@ class mod_wiki_generator_testcase extends advanced_testcase {
 
     public function test_create_content() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -84,7 +82,6 @@ class mod_wiki_generator_testcase extends advanced_testcase {
 
     public function test_create_content_individual() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -257,7 +254,6 @@ class mod_wiki_generator_testcase extends advanced_testcase {
     protected function create_wiki() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \mod_wiki_generator $gen */
         $gen = $this->getDataGenerator()->get_plugin_generator('mod_wiki');

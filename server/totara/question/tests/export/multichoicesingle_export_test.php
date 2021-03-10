@@ -38,7 +38,6 @@ class totara_question_multichoicesingle_export_testcase extends advanced_testcas
     public function test_export_data_no_answer() {
         global $DB, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create some dummy scale data.
@@ -66,7 +65,6 @@ class totara_question_multichoicesingle_export_testcase extends advanced_testcas
     public function test_export_feedback360_data() {
         global $DB, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create some dummy scale data.
@@ -93,7 +91,6 @@ class totara_question_multichoicesingle_export_testcase extends advanced_testcas
     public function test_export_appraisal_data() {
         global $DB, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create some dummy scale data.

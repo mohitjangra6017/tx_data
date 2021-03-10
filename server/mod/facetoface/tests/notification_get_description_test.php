@@ -45,7 +45,6 @@ class mod_facetoface_notification_get_description_testcase extends advanced_test
      * @return void
      */
     public function test_get_condition_description_with_notification_map(): void {
-        $this->resetAfterTest(true);
 
         $seminar = $this->create_facetoface();
         $notification = new facetoface_notification(
@@ -66,7 +65,6 @@ class mod_facetoface_notification_get_description_testcase extends advanced_test
      * @return void
      */
     public function test_get_list_of_recipients_with_notification_map(): void {
-        $this->resetAfterTest(true);
         $seminar = $this->create_facetoface();
 
         $notification = new facetoface_notification(

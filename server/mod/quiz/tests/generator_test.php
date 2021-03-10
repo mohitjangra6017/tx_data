@@ -38,7 +38,6 @@ class mod_quiz_generator_testcase extends advanced_testcase {
     public function test_generator() {
         global $DB, $SITE;
 
-        $this->resetAfterTest(true);
 
         $this->assertEquals(0, $DB->count_records('quiz'));
 

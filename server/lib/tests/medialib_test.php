@@ -44,7 +44,6 @@ class core_medialib_testcase extends advanced_testcase {
         parent::setUp();
 
         // Reset $CFG and $SERVER.
-        $this->resetAfterTest();
 
         // "Install" a fake plugin for testing.
         set_config('version', '2016101400', 'media_test');

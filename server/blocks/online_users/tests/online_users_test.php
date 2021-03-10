@@ -59,7 +59,6 @@ class block_online_users_testcase extends advanced_testcase {
         $this->data = $generator->create_logged_in_users();
 
         // Confirm we have modified the site and requires reset.
-        $this->resetAfterTest(true);
     }
 
     /**

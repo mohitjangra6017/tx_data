@@ -630,7 +630,6 @@ class core_moodlelib_testcase extends advanced_testcase {
     public function test_clean_param_localurl() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         // External, invalid.
         $this->assertSame('', clean_param('funny:thing', PARAM_LOCALURL));
@@ -1047,7 +1046,6 @@ class core_moodlelib_testcase extends advanced_testcase {
 
     public function test_usergetdate() {
         global $USER, $CFG, $DB;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1086,7 +1084,6 @@ class core_moodlelib_testcase extends advanced_testcase {
     }
 
     public function test_mark_user_preferences_changed() {
-        $this->resetAfterTest();
         $otheruser = $this->getDataGenerator()->create_user();
         $otheruserid = $otheruser->id;
 
@@ -1099,7 +1096,6 @@ class core_moodlelib_testcase extends advanced_testcase {
 
     public function test_check_user_preferences_loaded() {
         global $DB;
-        $this->resetAfterTest();
 
         $otheruser = $this->getDataGenerator()->create_user();
         $otheruserid = $otheruser->id;
@@ -1146,7 +1142,6 @@ class core_moodlelib_testcase extends advanced_testcase {
 
     public function test_set_user_preference() {
         global $DB, $USER;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1251,7 +1246,6 @@ class core_moodlelib_testcase extends advanced_testcase {
 
     public function test_set_user_preference_for_current_user() {
         global $USER;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         set_user_preference('test_pref', 2);
@@ -1261,7 +1255,6 @@ class core_moodlelib_testcase extends advanced_testcase {
 
     public function test_unset_user_preference_for_current_user() {
         global $USER;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         set_user_preference('test_pref', 1);
@@ -1271,7 +1264,6 @@ class core_moodlelib_testcase extends advanced_testcase {
 
     public function test_get_extra_user_fields() {
         global $CFG, $USER, $DB;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1329,7 +1321,6 @@ class core_moodlelib_testcase extends advanced_testcase {
 
     public function test_get_extra_user_fields_sql() {
         global $CFG, $USER, $DB;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1422,7 +1413,6 @@ class core_moodlelib_testcase extends advanced_testcase {
 
     public function test_userdate() {
         global $USER, $CFG, $DB;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -1593,7 +1583,6 @@ class core_moodlelib_testcase extends advanced_testcase {
 
     public function test_make_timestamp() {
         global $USER, $CFG, $DB;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -2009,7 +1998,6 @@ class core_moodlelib_testcase extends advanced_testcase {
     public function test_delete_user() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         $CFG->authdeleteusers = 'full'; // Totara: test legacy Moodle delete
 
@@ -2148,7 +2136,6 @@ class core_moodlelib_testcase extends advanced_testcase {
     public function test_date_format_string() {
         global $CFG;
 
-        $this->resetAfterTest();
         $this->setTimezone(99, 'Australia/Perth');
 
         $tests = array(
@@ -2413,7 +2400,6 @@ class core_moodlelib_testcase extends advanced_testcase {
      */
     public function test_update_internal_user_password() {
         global $DB;
-        $this->resetAfterTest();
         $passwords = array('password', '1234', 'changeme', '****');
         foreach ($passwords as $password) {
             $user = $this->getDataGenerator()->create_user(array('auth'=>'manual'));
@@ -2458,7 +2444,6 @@ class core_moodlelib_testcase extends advanced_testcase {
      * the user table and fire event.
      */
     public function test_update_internal_user_password_no_cache() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user(array('auth' => 'cas'));
         $this->assertEquals(AUTH_PASSWORD_NOT_CACHED, $user->password);
@@ -2473,7 +2458,6 @@ class core_moodlelib_testcase extends advanced_testcase {
      * says not to cache it.  Then it should update.
      */
     public function test_update_internal_user_password_update_no_cache() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user(array('password' => 'test'));
         $this->assertNotEquals(AUTH_PASSWORD_NOT_CACHED, $user->password);
@@ -2489,7 +2473,6 @@ class core_moodlelib_testcase extends advanced_testcase {
     public function test_fullname() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         // Create a user to test the name display on.
         $record = array();
@@ -2634,7 +2617,6 @@ class core_moodlelib_testcase extends advanced_testcase {
     }
 
     public function test_get_all_user_name_fields() {
-        $this->resetAfterTest();
 
         // Additional names in an array.
         $testarray = array('firstnamephonetic' => 'firstnamephonetic',
@@ -2683,7 +2665,6 @@ class core_moodlelib_testcase extends advanced_testcase {
     }
 
     public function test_order_in_string() {
-        $this->resetAfterTest();
 
         // Return an array in an order as they are encountered in a string.
         $valuearray = array('second', 'firsthalf', 'first');
@@ -2707,7 +2688,6 @@ class core_moodlelib_testcase extends advanced_testcase {
     public function test_complete_user_login() {
         global $USER, $DB;
 
-        $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
         $this->setUser(0);
 
@@ -2746,7 +2726,6 @@ class core_moodlelib_testcase extends advanced_testcase {
      * Test require_logout.
      */
     public function test_require_logout() {
-        $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
 
@@ -2806,7 +2785,6 @@ class core_moodlelib_testcase extends advanced_testcase {
     public function test_generate_email_messageid($wwwroot, $msgids) {
         global $CFG;
 
-        $this->resetAfterTest();
         $CFG->wwwroot = $wwwroot;
 
         foreach ($msgids as $local => $final) {
@@ -2881,7 +2859,6 @@ class core_moodlelib_testcase extends advanced_testcase {
     public function test_email_should_be_diverted($divertallemailsto, $divertallemailsexcept, $addresses, $expected) {
         global $CFG;
 
-        $this->resetAfterTest();
         $CFG->divertallemailsto = $divertallemailsto;
         $CFG->divertallemailsexcept = $divertallemailsexcept;
 
@@ -2893,7 +2870,6 @@ class core_moodlelib_testcase extends advanced_testcase {
     public function test_email_to_user() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         // Totara: we do not want the default mail format see TL-7360 fix
         $user1 = $this->getDataGenerator()->create_user(array('mailformat' => 0, 'maildisplay' => 0));
@@ -3041,7 +3017,6 @@ class core_moodlelib_testcase extends advanced_testcase {
      */
     public function test_remove_course_contents() {
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();
@@ -3060,7 +3035,6 @@ class core_moodlelib_testcase extends advanced_testcase {
         global $USER, $CFG;
         require_once("$CFG->dirroot/lib/reminderlib.php");
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create the course.
@@ -3127,7 +3101,6 @@ class core_moodlelib_testcase extends advanced_testcase {
      * Test function username_load_fields_from_object().
      */
     public function test_username_load_fields_from_object() {
-        $this->resetAfterTest();
 
         // This object represents the information returned from an sql query.
         $userinfo = new stdClass();
@@ -3267,7 +3240,6 @@ class core_moodlelib_testcase extends advanced_testcase {
     public function test_getremoteaddr() {
         global $CFG;
 
-        $this->resetAfterTest();
         $CFG->getremoteaddrconf = GETREMOTEADDR_SKIP_HTTP_CLIENT_IP;
         $xforwardedfor = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : null;
 
@@ -3468,7 +3440,6 @@ class core_moodlelib_testcase extends advanced_testcase {
      */
     public function test_can_send_from_real_email_address($email, $display, $samecourse, $result) {
         global $DB;
-        $this->resetAfterTest();
 
         $fromuser = $this->getDataGenerator()->create_user();
         $touser = $this->getDataGenerator()->create_user();
@@ -3528,7 +3499,6 @@ class core_moodlelib_testcase extends advanced_testcase {
      */
     public function test_generate_email_processing_address() {
         global $CFG;
-        $this->resetAfterTest();
 
         $data = (object)[
             'id' => 42,
@@ -3759,7 +3729,6 @@ class core_moodlelib_testcase extends advanced_testcase {
      * Test for send_password_change_().
      */
     public function test_send_password_change_info() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
 

@@ -35,7 +35,6 @@ class core_antivirus_testcase extends advanced_testcase {
         // Use our special testable fixture plugin.
         $CFG->antiviruses = 'testable';
 
-        $this->resetAfterTest();
 
         // Create tempfile.
         $tempfolder = make_request_directory(false);

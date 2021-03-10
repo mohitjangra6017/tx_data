@@ -24,7 +24,6 @@
 class mod_glossary_search_entry_testcase extends advanced_testcase {
 
     public function test_search_entry() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -47,7 +46,6 @@ class mod_glossary_search_entry_testcase extends advanced_testcase {
     }
 
     public function test_search_entry_fulltext() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();

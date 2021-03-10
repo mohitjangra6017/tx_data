@@ -277,7 +277,6 @@ class qformat_gift_test extends question_testcase {
      *
      */
     public function test_import_multichoice($numberingstyle) {
-        $this->resetAfterTest(true);
 
         set_config('answernumbering', $numberingstyle, 'qtype_multichoice');
         $gift = "

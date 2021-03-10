@@ -91,7 +91,6 @@ class course_visibility_with_audience_test extends advanced_testcase {
     public function test_course_visibility_with_audience_visibility($audiencevisible, $visible, $showgrades, $expects_no_audience, $expects_yes_audience) {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         /** @var \core\testing\generator */
         $gen = $this->getDataGenerator();

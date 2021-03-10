@@ -85,7 +85,6 @@ class tool_totara_sync_comp_partial_sync_testcase extends advanced_testcase {
     public function setUp(): void {
         parent::setUp();
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         set_config('element_comp_enabled', 1, 'totara_sync');

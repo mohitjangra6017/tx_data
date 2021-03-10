@@ -44,7 +44,6 @@ class search_document_testcase extends advanced_testcase {
     protected $generator = null;
 
     public function setUp(): void {
-        $this->resetAfterTest();
         set_config('enableglobalsearch', true);
 
         // Set \core_search::instance to the mock_search_engine as we don't require the search engine to be working to test this.

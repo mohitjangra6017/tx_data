@@ -60,7 +60,6 @@ class totara_customfield_course_delete_testcase extends advanced_testcase {
      */
     public function test_customfield_deleted_on_event() {
         global $DB;
-        $this->resetAfterTest();
 
         // Assert that records exist.
         $before = $DB->get_records('course_info_data', array('courseid' => $this->course1->id));

@@ -111,7 +111,6 @@ class qtype_multichoice_test extends advanced_testcase {
      * @dataProvider get_question_saving_which
      */
     public function test_question_saving_two_of_four($which) {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $questiondata = test_question_maker::get_question_data('multichoice', $which);
@@ -177,7 +176,6 @@ class qtype_multichoice_test extends advanced_testcase {
     public function test_get_question_options() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create a complete, in DB question to use.

@@ -48,7 +48,6 @@ class totara_catalog_dataformatter_totara_icon_testcase extends dataformatter_te
      */
     public function test_totara_icon() {
         global $CFG;
-        $this->resetAfterTest();
         $context = context_system::instance();
 
         $df = new totara_icon('idfield', 'altfield', TOTARA_ICON_TYPE_COURSE);

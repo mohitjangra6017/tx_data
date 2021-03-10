@@ -88,7 +88,6 @@ class core_user_userdata_password_testcase extends \advanced_testcase {
             public $targetuser;
         };
 
-        $this->resetAfterTest(true);
 
         // Set up users with passwords.
         $data->user1 = $this->getDataGenerator()->create_user();

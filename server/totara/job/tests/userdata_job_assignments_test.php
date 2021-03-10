@@ -81,7 +81,6 @@ class totara_job_userdata_job_assignments_testcase extends \advanced_testcase {
             public $targetuser, $targetuser2;
         };
 
-        $this->resetAfterTest(true);
 
         // Set up users.
         $data->user1 = $this->getDataGenerator()->create_user(); // One managed by user2, one by user3.

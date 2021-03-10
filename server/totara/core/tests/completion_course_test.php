@@ -30,7 +30,6 @@ class totara_core_completion_course_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/completion/criteria/completion_criteria_activity.php');
         require_once($CFG->dirroot . '/mod/assign/externallib.php');
 
-        $this->resetAfterTest();
         set_config('enablecompletion', 1);
 
         $this->assertTrue(empty($CFG->completionexcludefailures));
@@ -80,7 +79,6 @@ class totara_core_completion_course_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/completion/criteria/completion_criteria_activity.php');
         require_once($CFG->dirroot . '/mod/assign/externallib.php');
 
-        $this->resetAfterTest();
         set_config('enablecompletion', 1);
 
         $CFG->completionexcludefailures = 1;

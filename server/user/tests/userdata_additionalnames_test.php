@@ -49,7 +49,6 @@ class core_user_userdata_additionalnames_testcase extends advanced_testcase {
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         /******************************
          * PREPARE USERS
@@ -158,7 +157,6 @@ class core_user_userdata_additionalnames_testcase extends advanced_testcase {
      * test if data is correctly counted
      */
     public function test_count() {
-        $this->resetAfterTest(true);
 
         // Set up users.
         // 4 names.
@@ -204,7 +202,6 @@ class core_user_userdata_additionalnames_testcase extends advanced_testcase {
      * test if data is correctly counted
      */
     public function test_export() {
-        $this->resetAfterTest(true);
 
         // Set up users.
         // 4 names.

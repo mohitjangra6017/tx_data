@@ -41,7 +41,6 @@ class totara_program_duedates_report_testcase extends reportcache_advanced_testc
         parent::setUp();
 
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $this->data_generator = $this->getDataGenerator();
         $this->program_generator = \totara_program\testing\generator::instance();

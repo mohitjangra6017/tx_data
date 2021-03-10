@@ -103,7 +103,6 @@ extends advanced_testcase {
      */
     protected function setUp(): void {
         parent::setup();
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();

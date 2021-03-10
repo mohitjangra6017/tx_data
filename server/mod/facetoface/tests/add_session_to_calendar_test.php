@@ -41,7 +41,6 @@ class mod_facetoface_add_session_to_calendar_testcase extends advanced_testcase 
 
     public function setUp(): void {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $this->facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
@@ -62,7 +61,6 @@ class mod_facetoface_add_session_to_calendar_testcase extends advanced_testcase 
     public function test_single_session_one_date() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $now = time();
@@ -88,7 +86,6 @@ class mod_facetoface_add_session_to_calendar_testcase extends advanced_testcase 
     public function test_multi_sessions_one_date_each() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $now = time();
@@ -120,7 +117,6 @@ class mod_facetoface_add_session_to_calendar_testcase extends advanced_testcase 
     public function test_single_session_multiple_dates() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $now = time();

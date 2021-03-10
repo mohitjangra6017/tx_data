@@ -47,7 +47,6 @@ class tool_monitor_rule_manager_testcase extends advanced_testcase {
      */
     public function test_add_rule() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
@@ -79,7 +78,6 @@ class tool_monitor_rule_manager_testcase extends advanced_testcase {
      */
     public function test_get_rule() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $monitorgenerator = $this->getDataGenerator()->get_plugin_generator('tool_monitor');
         $rule = $monitorgenerator->create_rule();
@@ -93,7 +91,6 @@ class tool_monitor_rule_manager_testcase extends advanced_testcase {
      */
     public function test_update_rule() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $monitorgenerator = $this->getDataGenerator()->get_plugin_generator('tool_monitor');
         $rule = $monitorgenerator->create_rule();
@@ -112,7 +109,6 @@ class tool_monitor_rule_manager_testcase extends advanced_testcase {
      */
     public function test_get_rules_by_courseid() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $monitorgenerator = $this->getDataGenerator()->get_plugin_generator('tool_monitor');
 
@@ -143,7 +139,6 @@ class tool_monitor_rule_manager_testcase extends advanced_testcase {
      */
     public function test_get_rules_by_plugin() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $monitorgenerator = $this->getDataGenerator()->get_plugin_generator('tool_monitor');
 
@@ -170,7 +165,6 @@ class tool_monitor_rule_manager_testcase extends advanced_testcase {
      */
     public function test_get_rules_by_event() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $monitorgenerator = $this->getDataGenerator()->get_plugin_generator('tool_monitor');
         $rule = $monitorgenerator->create_rule();

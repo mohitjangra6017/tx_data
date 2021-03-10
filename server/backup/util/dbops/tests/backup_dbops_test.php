@@ -50,7 +50,6 @@ class backup_dbops_testcase extends advanced_testcase {
         global $DB, $CFG;
         parent::setUp();
 
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $page = $this->getDataGenerator()->create_module('page', array('course'=>$course->id), array('section'=>3));
@@ -197,7 +196,6 @@ class backup_dbops_testcase extends advanced_testcase {
     public function test_annotate_files() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // A MODE_SAMESITE controller - should not include files
         $bc = new mock_backup_controller4dbops(backup::TYPE_1COURSE, $this->courseid, backup::FORMAT_MOODLE,
@@ -250,7 +248,6 @@ class backup_dbops_testcase extends advanced_testcase {
     public function test_move_annotations_to_final() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // A MODE_SAMESITE controller - should not include files
         $bc = new mock_backup_controller4dbops(backup::TYPE_1COURSE, $this->courseid, backup::FORMAT_MOODLE,

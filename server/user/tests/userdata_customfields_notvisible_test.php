@@ -75,7 +75,6 @@ class core_user_userdata_customfields_notvisible_testcase extends advanced_testc
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
@@ -182,7 +181,6 @@ class core_user_userdata_customfields_notvisible_testcase extends advanced_testc
      * test if data is correctly counted
      */
     public function test_count() {
-        $this->resetAfterTest(true);
 
         /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');
@@ -233,7 +231,6 @@ class core_user_userdata_customfields_notvisible_testcase extends advanced_testc
      * test if data is correctly counted
      */
     public function test_export() {
-        $this->resetAfterTest(true);
 
         /** @var \totara_core\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_core');

@@ -39,7 +39,6 @@ class delete_unconfirmed_users_task_test extends advanced_testcase {
     public function test_basic_operation() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $oldtime = time() - 14 * DAYSECS;
 

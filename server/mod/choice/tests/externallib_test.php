@@ -46,7 +46,6 @@ class mod_choice_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_choice_results() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
         $params = new stdClass();
@@ -158,7 +157,6 @@ class mod_choice_externallib_testcase extends externallib_advanced_testcase {
         $previewonly = 2;
         $expired = 3;
 
-        $this->resetAfterTest(true);
         $timenow = time();
         $timeopen = $timenow + (60 * 60 * 24 * 2);
         $timeclose = $timenow + (60 * 60 * 24 * 7);
@@ -262,7 +260,6 @@ class mod_choice_externallib_testcase extends externallib_advanced_testcase {
     public function test_submit_choice_response() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
         $params = new stdClass();
@@ -301,7 +298,6 @@ class mod_choice_externallib_testcase extends externallib_advanced_testcase {
     public function test_view_choice() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Setup test data.
         $course = $this->getDataGenerator()->create_course();
@@ -356,7 +352,6 @@ class mod_choice_externallib_testcase extends externallib_advanced_testcase {
      */
     public function test_get_choices_by_courses() {
         global $DB;
-        $this->resetAfterTest(true);
         // As admin.
         $this->setAdminUser();
         $course1 = self::getDataGenerator()->create_course();
@@ -422,7 +417,6 @@ class mod_choice_externallib_testcase extends externallib_advanced_testcase {
     public function test_delete_choice_responses() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
         $params = new stdClass();

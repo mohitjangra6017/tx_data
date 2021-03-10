@@ -61,7 +61,6 @@ class enrol_category_plugin_testcase extends advanced_testcase {
     public function test_utils() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
 
@@ -89,7 +88,6 @@ class enrol_category_plugin_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once($CFG->dirroot.'/enrol/category/locallib.php');
 
-        $this->resetAfterTest();
 
         // Setup a few courses and categories.
 
@@ -162,7 +160,6 @@ class enrol_category_plugin_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once($CFG->dirroot.'/enrol/category/locallib.php');
 
-        $this->resetAfterTest();
 
         // Setup a few courses and categories.
 
@@ -256,7 +253,6 @@ class enrol_category_plugin_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once($CFG->dirroot.'/enrol/category/locallib.php');
 
-        $this->resetAfterTest();
 
         $trace = new null_progress_trace();
 

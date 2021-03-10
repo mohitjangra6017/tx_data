@@ -58,7 +58,6 @@ class mod_facetoface_signup_helper_testcase extends advanced_testcase {
      * @return \stdClass containing seminar, user1, user2, event1, event2, signup1, signup2
      */
     protected function setup_compute_final_grade() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = new \stdClass();

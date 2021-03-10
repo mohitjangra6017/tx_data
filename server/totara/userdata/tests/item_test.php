@@ -92,7 +92,6 @@ class totara_userdata_item_testcase extends advanced_testcase {
     }
 
     public function test_is_compatible_context_level() {
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
 
@@ -134,7 +133,6 @@ class totara_userdata_item_testcase extends advanced_testcase {
     }
 
     public function test_execute_purge() {
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
         $user = $this->getDataGenerator()->create_user();
@@ -158,7 +156,6 @@ class totara_userdata_item_testcase extends advanced_testcase {
 
     public function test_execute_purge_with_transactions() {
         global $DB;
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
         $user = $this->getDataGenerator()->create_user();
@@ -192,7 +189,6 @@ class totara_userdata_item_testcase extends advanced_testcase {
     }
 
     public function test_execute_export() {
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
         $user = $this->getDataGenerator()->create_user();
@@ -215,7 +211,6 @@ class totara_userdata_item_testcase extends advanced_testcase {
     }
 
     public function test_execute_count() {
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
         $user = $this->getDataGenerator()->create_user();
@@ -234,7 +229,6 @@ class totara_userdata_item_testcase extends advanced_testcase {
 
     public function test_get_courses_context_join() {
         global $DB;
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
 
@@ -294,7 +288,6 @@ class totara_userdata_item_testcase extends advanced_testcase {
 
     public function test_get_activities_context_join() {
         global $DB;
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
 
@@ -365,7 +358,6 @@ class totara_userdata_item_testcase extends advanced_testcase {
 
     public function test_get_activities_join() {
         global $DB;
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
 

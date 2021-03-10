@@ -42,7 +42,6 @@ class totara_flavour_overview_setting_testcase extends advanced_testcase {
         global $CFG;
         require_once($CFG->libdir . '/adminlib.php');
         parent::setUp();
-        $this->resetAfterTest();
         // When/if we have a second core flavour we should convert our tests to use that instead of the test flavour.
         // The test flavour is available at TL-7812
         $this->testflavouravailable = file_exists("$CFG->dirroot/totara/flavour/flavours/test/classes/definition.php");

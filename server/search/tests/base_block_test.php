@@ -49,7 +49,6 @@ class base_block_testcase extends advanced_testcase {
     public function test_get_document_recordset() {
         global $DB, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create course and activity module.
@@ -254,7 +253,6 @@ class base_block_testcase extends advanced_testcase {
     public function test_get_doc_url() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create course and activity module.
         $generator = $this->getDataGenerator();
@@ -336,7 +334,6 @@ class base_block_testcase extends advanced_testcase {
     public function test_check_access() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create course and activity module.
         $generator = $this->getDataGenerator();

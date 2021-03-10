@@ -35,7 +35,6 @@ class mod_folder_generator_testcase extends advanced_testcase {
 
     public function test_create_instance() {
         global $DB, $USER;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();

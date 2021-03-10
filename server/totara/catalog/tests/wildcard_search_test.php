@@ -37,7 +37,6 @@ class totara_catalog_wildcard_search_testcase extends advanced_testcase {
      * @return void
      */
     public function test_wildcard_search_with_single_word_for_course(): void {
-        $this->resetAfterTest(true);
         $gen = static::getDataGenerator();
 
         $course1 = $gen->create_course(
@@ -136,7 +135,6 @@ class totara_catalog_wildcard_search_testcase extends advanced_testcase {
      * @return void
      */
     public function test_wildcard_search_with_single_word_for_program(): void {
-        $this->resetAfterTest(true);
         $gen = static::getDataGenerator();
 
         /** @var \totara_program\testing\generator $proggen */

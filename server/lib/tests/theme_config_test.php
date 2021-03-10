@@ -42,7 +42,6 @@ class core_theme_config_testcase extends advanced_testcase {
     public function test_svg_image_use() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         // The two required tests.
         $this->assertTrue(file_exists($CFG->dirroot.'/pix/i/test.svg'));
@@ -133,7 +132,6 @@ class core_theme_config_testcase extends advanced_testcase {
     public function test_devicedetectregex() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         // Check config currently empty.
         $this->assertEmpty(json_decode($CFG->devicedetectregex));

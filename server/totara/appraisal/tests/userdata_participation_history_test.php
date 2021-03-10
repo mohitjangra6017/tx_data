@@ -59,7 +59,6 @@ class totara_appraisal_userdata_participation_history_testcase extends appraisal
             public $userja1, $userja2, $managerja1, $managerja2;
         };
 
-        $this->resetAfterTest();
 
         // Set up users.
         $data->manager1 = $this->getDataGenerator()->create_user(); // This is the target user.

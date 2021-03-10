@@ -38,7 +38,6 @@ class tool_langimport_events_testcase extends advanced_testcase {
      */
     public function setUp(): void {
         $this->setAdminUser();
-        $this->resetAfterTest();
     }
 
     public function test_langpack_updated() {

@@ -40,7 +40,6 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
     private function setup_common() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $that = new class() {
             /** @var \core\testing\generator */
@@ -152,7 +151,6 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
      */
     public function test_get_user_progressinfo_single_courseset_single_course() {
 
-        $this->resetAfterTest(true);
         $that = $this->setup_common();
 
         // Add a course to the program in a single courseset
@@ -205,7 +203,6 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
      */
     public function test_get_user_progressinfo_single_courseset_multi_course_and() {
 
-        $this->resetAfterTest(true);
         $that = $this->setup_common();
 
         // Add courses to the program in a single courseset
@@ -272,7 +269,6 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
      */
     public function test_get_user_progressinfo_multiple_coursesets() {
 
-        $this->resetAfterTest(true);
         $that = $this->setup_common();
 
         // Add coursesets to the program
@@ -490,7 +486,6 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
      */
     public function test_get_user_progressinfo_one_course_multiple_coursesets() {
 
-        $this->resetAfterTest(true);
         $that = $this->setup_common();
 
         // Add coursesets to the program
@@ -583,7 +578,6 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
      */
     public function test_get_user_progressinfo_single_competency_courseset_all() {
 
-        $this->resetAfterTest(true);
         $that = $this->setup_common();
 
         // Create a competency based on courses 2 and 3.
@@ -647,7 +641,6 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
      * No user progress
      */
     public function test_get_user_progressinfo_single_competency_courseset_any() {
-        $this->resetAfterTest(true);
         $that = $this->setup_common();
 
         // Create a competency based on courses 2 and 3.
@@ -718,7 +711,6 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
     */
     public function test_program_progress_one_courseset_one_of() {
 
-        $this->resetAfterTest(true);
         $that = $this->setup_common();
 
         // Add courses to the program in a single courseset
@@ -791,7 +783,6 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
     */
     public function test_program_progress_one_courseset_all_of() {
 
-        $this->resetAfterTest(true);
         $that = $this->setup_common();
 
         // Add courses to the program in a single courseset
@@ -865,7 +856,6 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
     */
     public function test_program_progress_one_courseset_minimum_number() {
 
-        $this->resetAfterTest(true);
         $that = $this->setup_common();
 
         // Add courses to the program in a single courseset
@@ -976,7 +966,6 @@ class totara_program_progress_testcase extends reportcache_advanced_testcase {
      * Expected progress = ((0.5 + 0.75) + max(1, 0.25))/3 ==> 75%
      */
     public function test_program_progress_multi_courseset_competency() {
-        $this->resetAfterTest(true);
         $that = $this->setup_common();
 
         // Create a competency based on courses 7 and 8.

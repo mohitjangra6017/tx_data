@@ -51,7 +51,6 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
     }
 
     public function setUp(): void {
-        $this->resetAfterTest(true);
         parent::setUp();
         global $DB;
 
@@ -89,7 +88,6 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
      * for one course.
      */
     public function test_course_deleted() {
-        $this->resetAfterTest(true);
         global $DB;
 
         // Set up program1.
@@ -473,7 +471,6 @@ class totara_program_observer_testcase extends reportcache_advanced_testcase {
     public function test_course_started() {
         global $DB;
 
-        $this->resetAfterTest(true);
         set_config('enablecompletion', 1);
 
         $now = time();

@@ -42,7 +42,6 @@ class mod_book_lib_testcase extends advanced_testcase {
     public function test_export_contents() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course(array('enablecomment' => 1));
@@ -92,7 +91,6 @@ class mod_book_lib_testcase extends advanced_testcase {
         global $CFG, $DB;
 
         $CFG->enablecompletion = 1;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.
@@ -140,7 +138,6 @@ class mod_book_lib_testcase extends advanced_testcase {
     public function test_mod_book_get_tagged_chapters() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.

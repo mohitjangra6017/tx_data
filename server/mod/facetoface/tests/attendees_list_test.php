@@ -57,7 +57,6 @@ class mod_facetoface_attendees_list_testcase extends advanced_testcase {
         global $DB, $PAGE;
         $PAGE->set_url('/');
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $e = $this->create_seminar_event();
@@ -138,7 +137,6 @@ class mod_facetoface_attendees_list_testcase extends advanced_testcase {
         global $DB, $PAGE, $USER;
         $PAGE->set_url('/');
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $e = $this->create_seminar_event();

@@ -37,7 +37,6 @@ class tool_totara_sync_directory_check_testcase extends advanced_testcase {
         global $CFG;
 
         parent::setup();
-        $this->resetAfterTest(true);
 
         $this->filedir = $CFG->dataroot . '/totara_sync';
     }

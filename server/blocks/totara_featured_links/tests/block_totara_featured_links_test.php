@@ -55,7 +55,6 @@ class block_totara_featured_links_block_totara_featured_links_testcase extends t
     public function test_instance_delete() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $this->assertEquals(
             0,
@@ -109,7 +108,6 @@ class block_totara_featured_links_block_totara_featured_links_testcase extends t
      * Makes sure they are in the correct order
      */
     public function test_get_tiles() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $instance = $this->blockgenerator->create_instance();
@@ -142,7 +140,6 @@ class block_totara_featured_links_block_totara_featured_links_testcase extends t
      * Makes sure getting tiles in an empty block
      */
     public function test_get_tiles_empty_block() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $instance = $this->blockgenerator->create_instance();
@@ -157,7 +154,6 @@ class block_totara_featured_links_block_totara_featured_links_testcase extends t
 
     public function test_instance_copy() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
         $instance_1 = $this->blockgenerator->create_instance();
         $instance_2 = $this->blockgenerator->create_instance();

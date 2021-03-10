@@ -108,7 +108,6 @@ class core_calendar_externallib_testcase extends externallib_advanced_testcase {
         global $DB, $USER;
 
         $this->setAdminUser();
-        $this->resetAfterTest();
         $prevcount = count($DB->get_records("event"));
 
         // Create a few events and do asserts.
@@ -135,7 +134,6 @@ class core_calendar_externallib_testcase extends externallib_advanced_testcase {
     public function test_delete_calendar_events() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create a few stuff to test with.
@@ -265,7 +263,6 @@ class core_calendar_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_calendar_events() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create a few stuff to test with.
@@ -436,7 +433,6 @@ class core_calendar_externallib_testcase extends externallib_advanced_testcase {
     public function test_core_create_calendar_events() {
         global $DB, $USER, $SITE;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create a few stuff to test with.
@@ -513,7 +509,6 @@ class core_calendar_externallib_testcase extends externallib_advanced_testcase {
      * Test for deleting module events.
      */
     public function test_delete_calendar_events_for_modules() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
         $nexttime = time() + DAYSECS;

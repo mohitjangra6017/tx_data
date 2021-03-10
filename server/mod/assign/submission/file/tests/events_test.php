@@ -49,7 +49,6 @@ class assignsubmission_file_events_testcase extends advanced_testcase {
      * Test that the assessable_uploaded event is fired when a file submission has been made.
      */
     public function test_assessable_uploaded() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -113,7 +112,6 @@ class assignsubmission_file_events_testcase extends advanced_testcase {
      * Test that the submission_created event is fired when a file submission is saved.
      */
     public function test_submission_created() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -167,7 +165,6 @@ class assignsubmission_file_events_testcase extends advanced_testcase {
      * Test that the submission_updated event is fired when a file submission is saved when an existing submission already exists.
      */
     public function test_submission_updated() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');

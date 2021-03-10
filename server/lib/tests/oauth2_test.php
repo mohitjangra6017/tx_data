@@ -37,7 +37,6 @@ class core_oauth2_testcase extends advanced_testcase {
      * Tests the crud operations on oauth2 issuers.
      */
     public function test_create_and_delete_standard_issuers() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         \core\oauth2\api::create_standard_issuer('google');
         \core\oauth2\api::create_standard_issuer('facebook');
@@ -76,7 +75,6 @@ class core_oauth2_testcase extends advanced_testcase {
      * Tests we can list and delete each of the persistents related to an issuer.
      */
     public function test_getters() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $issuer = \core\oauth2\api::create_standard_issuer('microsoft');
 
@@ -139,7 +137,6 @@ class core_oauth2_testcase extends advanced_testcase {
      * @param int $expiresin The expected expiration time.
      */
     public function test_get_system_oauth_client($responsedata, $expiresin) {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $issuer = \core\oauth2\api::create_standard_issuer('microsoft');
@@ -178,7 +175,6 @@ class core_oauth2_testcase extends advanced_testcase {
      * Tests we can enable and disable an issuer.
      */
     public function test_enable_disable_issuer() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $issuer = \core\oauth2\api::create_standard_issuer('microsoft');
@@ -206,7 +202,6 @@ class core_oauth2_testcase extends advanced_testcase {
      * Test the alloweddomains for an issuer.
      */
     public function test_issuer_alloweddomains() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $issuer = \core\oauth2\api::create_standard_issuer('microsoft');

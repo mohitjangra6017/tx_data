@@ -58,7 +58,6 @@ class totara_cohort_operators_testcase extends reportcache_advanced_testcase {
         global $DB;
         parent::setup();
         set_config('enablecompletion', 1);
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $users = array();
@@ -127,7 +126,6 @@ class totara_cohort_operators_testcase extends reportcache_advanced_testcase {
 
     public function test_ruleset_operator() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add rule which username starts with user. It should match the 30 users.
@@ -158,7 +156,6 @@ class totara_cohort_operators_testcase extends reportcache_advanced_testcase {
 
     public function test_cohort_operator() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create ruleset 1. with rules that matches all users from spain(ES) that belongs to the "system" department

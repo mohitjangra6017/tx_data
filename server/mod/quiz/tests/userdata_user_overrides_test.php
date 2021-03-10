@@ -42,7 +42,6 @@ class mod_quiz_userdata_user_overrides_testcase extends advanced_testcase {
      * to be used in the tests
      */
     public function setup_fixtures() {
-        $this->resetAfterTest(true);
 
         $data = new class {
             /** @var target_user */

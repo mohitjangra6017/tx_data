@@ -61,7 +61,6 @@ class totara_plan_user_learning_item_testcase extends advanced_testcase {
     }
 
     public function setUp(): void {
-        $this->resetAfterTest(true);
         parent::setUp();
 
         $this->generator = $this->getDataGenerator();

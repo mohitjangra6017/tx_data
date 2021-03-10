@@ -55,7 +55,6 @@ class tool_totara_sync_jobassignment_csv_emptyfields_setting_testcase extends to
     protected function setUp(): void {
         parent::setUp();
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->source = new $this->sourcename();

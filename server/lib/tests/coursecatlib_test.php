@@ -42,7 +42,6 @@ class core_coursecatlib_testcase extends advanced_testcase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
         // Totara: Create a system category before every test to see if it throws anything off.
@@ -442,7 +441,6 @@ class core_coursecatlib_testcase extends advanced_testcase {
      * Test a categories ability to resort courses.
      */
     public function test_resort_courses() {
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
         $category = $generator->create_category();
 

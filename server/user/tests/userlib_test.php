@@ -55,7 +55,6 @@ class core_user_userlib_testcase extends advanced_testcase {
     public function test_user_get_user_details_courses() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create user and modify user profile.
         $user1 = $this->getDataGenerator()->create_user();
@@ -93,7 +92,6 @@ class core_user_userlib_testcase extends advanced_testcase {
     public function test_user_update_user() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create user and modify user profile.
         $user = $this->getDataGenerator()->create_user();
@@ -173,7 +171,6 @@ class core_user_userlib_testcase extends advanced_testcase {
     public function test_create_users() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $user = array(
             'username' => 'usernametest1',
@@ -264,7 +261,6 @@ class core_user_userlib_testcase extends advanced_testcase {
     public function test_create_user_invalid_username($username, $expectmessage) {
         global $CFG;
 
-        $this->resetAfterTest();
         $CFG->extendedusernamechars = false;
 
         $user = [
@@ -311,7 +307,6 @@ class core_user_userlib_testcase extends advanced_testcase {
         global $CFG;
         require_once($CFG->libdir . '/authlib.php');
 
-        $this->resetAfterTest();
         set_config('lockoutthreshold', 0); // Totara has 20 by default.
         $user = $this->getDataGenerator()->create_user();
         $this->assertEquals(0, get_user_preferences('login_failed_count_since_success', 0, $user));
@@ -338,7 +333,6 @@ class core_user_userlib_testcase extends advanced_testcase {
     public function test_user_add_password_history() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -412,7 +406,6 @@ class core_user_userlib_testcase extends advanced_testcase {
     public function test_user_is_previously_used_password() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -480,7 +473,6 @@ class core_user_userlib_testcase extends advanced_testcase {
     public function test_delete_of_hashes_on_user_delete() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -507,7 +499,6 @@ class core_user_userlib_testcase extends advanced_testcase {
      */
     public function test_user_list_view() {
 
-        $this->resetAfterTest();
 
         // Course without sections.
         $course = $this->getDataGenerator()->create_course();
@@ -536,7 +527,6 @@ class core_user_userlib_testcase extends advanced_testcase {
      */
     public function test_user_menu_custom_avatar_size() {
         global $PAGE;
-        $this->resetAfterTest(true);
 
         $testsize = 100;
 
@@ -558,7 +548,6 @@ class core_user_userlib_testcase extends advanced_testcase {
     public function test_user_can_view_profile() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         // Create five users.
         $user1 = $this->getDataGenerator()->create_user();
@@ -733,7 +722,6 @@ class core_user_userlib_testcase extends advanced_testcase {
     public function test_user_get_user_details_basic() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create user and modify user profile.
         $teacher = $this->getDataGenerator()->create_user();
@@ -785,7 +773,6 @@ class core_user_userlib_testcase extends advanced_testcase {
     public function test_user_get_user_details_missing_fields() {
         global $CFG;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser(); // We need capabilities to view the data.
         $user = self::getDataGenerator()->create_user([
                                                           'auth'       => 'auth_something',

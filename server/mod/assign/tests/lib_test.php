@@ -46,7 +46,6 @@ class mod_assign_lib_testcase extends advanced_testcase {
     public function test_assign_print_overview() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -152,7 +151,6 @@ class mod_assign_lib_testcase extends advanced_testcase {
      * Test that assign_print_overview does not return any assignments which are Open Offline.
      */
     public function test_assign_print_overview_open_offline() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
 
@@ -171,7 +169,6 @@ class mod_assign_lib_testcase extends advanced_testcase {
     }
 
     public function test_assign_get_recent_mod_activity() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -201,7 +198,6 @@ class mod_assign_lib_testcase extends advanced_testcase {
     public function test_assign_user_complete() {
         global $PAGE, $DB;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -222,7 +218,6 @@ class mod_assign_lib_testcase extends advanced_testcase {
      * Ensure that assign_user_outline fetches updated grades.
      */
     public function test_assign_user_outline() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -248,7 +243,6 @@ class mod_assign_lib_testcase extends advanced_testcase {
     public function test_assign_get_completion_state() {
         global $DB;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -280,7 +274,6 @@ class mod_assign_lib_testcase extends advanced_testcase {
     public function test_assign_refresh_events() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $duedate = time();
         $newduedate = $duedate + DAYSECS;

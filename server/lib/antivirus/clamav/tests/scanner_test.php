@@ -30,7 +30,6 @@ class antivirus_clamav_scanner_testcase extends advanced_testcase {
     protected $tempfile;
 
     protected function setUp(): void {
-        $this->resetAfterTest();
 
         // Create tempfile.
         $tempfolder = make_request_directory(false);

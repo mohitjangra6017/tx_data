@@ -310,7 +310,6 @@ class core_formslib_testcase extends advanced_testcase {
     }
 
     public function test_settype_debugging_url() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $mform = new formslib_settype_debugging_url();
         $this->assertDebuggingCalled("Did you remember to call setType() for 'urltest'? Defaulting to PARAM_RAW cleaning.");
@@ -584,7 +583,6 @@ class core_formslib_testcase extends advanced_testcase {
      */
     public function test_multiple_modgrade_fields() {
         global $CFG;
-        $this->resetAfterTest(true);
 
         $CFG->theme = 'ventura';
 
@@ -614,7 +612,6 @@ class core_formslib_testcase extends advanced_testcase {
      */
     public function test_persistantrreeze_element() {
         global $CFG;
-        $this->resetAfterTest(true);
         $CFG->theme = 'ventura';
 
         $form = new formslib_persistantrreeze_element();
@@ -644,7 +641,6 @@ class core_formslib_testcase extends advanced_testcase {
      * Ensure a validation can run at least once per object. See MDL-56259.
      */
     public function test_multiple_validation() {
-        $this->resetAfterTest(true);
 
         // It should be valid.
         formslib_multiple_validation_form::mock_submit(['somenumber' => '10']);

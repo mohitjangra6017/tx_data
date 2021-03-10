@@ -40,7 +40,6 @@ class totara_catalog_provider_testcase extends advanced_testcase {
 
         $this->setAdminUser();
         $DB->delete_records('catalog');
-        $this->resetAfterTest();
     }
 
     public function provider_object_type_data_provider() {

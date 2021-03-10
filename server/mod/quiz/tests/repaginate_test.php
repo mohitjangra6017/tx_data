@@ -85,7 +85,6 @@ class mod_quiz_repaginate_test extends advanced_testcase {
      */
     private function get_quiz_object() {
         global $SITE;
-        $this->resetAfterTest(true);
 
         // Make a quiz.
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');

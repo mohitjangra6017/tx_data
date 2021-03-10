@@ -36,7 +36,6 @@ class totara_catalog_catalog_storage_testcase extends advanced_testcase {
 
         parent::setUp();
         $DB->delete_records('catalog');
-        $this->resetAfterTest(true);
     }
 
     public function test_update_records() {

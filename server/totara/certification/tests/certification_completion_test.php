@@ -59,7 +59,6 @@ class totara_certification_certification_completion_testcase extends reportcache
      * Set up the users, certifications and completions.
      */
     public function setup_completions() {
-        $this->resetAfterTest(true);
 
         // Turn off programs. This is to test that it doesn't interfere with certification completion.
         set_config('enableprograms', advanced_feature::DISABLED);
@@ -2762,7 +2761,6 @@ class totara_certification_certification_completion_testcase extends reportcache
      * This fix function requires that the certification exists.
      */
     public function test_certif_fix_cert_completion_date() {
-        $this->resetAfterTest(true);
 
         $program_generator = \totara_program\testing\generator::instance();
 
@@ -3058,7 +3056,6 @@ class totara_certification_certification_completion_testcase extends reportcache
     public function test_certif_fix_expired_missing_timedue() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Expected record is certified, before window opens.
         $expectedcertcompletion = new stdClass();

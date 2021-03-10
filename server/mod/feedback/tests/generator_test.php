@@ -35,7 +35,6 @@ class mod_feedback_generator_testcase extends advanced_testcase {
 
     public function test_create_instance() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -55,7 +54,6 @@ class mod_feedback_generator_testcase extends advanced_testcase {
 
     public function test_create_item_info() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -74,7 +72,6 @@ class mod_feedback_generator_testcase extends advanced_testcase {
 
     public function test_create_item_label() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -99,7 +96,6 @@ class mod_feedback_generator_testcase extends advanced_testcase {
 
     public function test_create_item_multichoice() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -119,7 +115,6 @@ class mod_feedback_generator_testcase extends advanced_testcase {
 
     public function test_create_item_multichoicerated() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -140,7 +135,6 @@ class mod_feedback_generator_testcase extends advanced_testcase {
 
     public function test_create_item_numeric() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -160,7 +154,6 @@ class mod_feedback_generator_testcase extends advanced_testcase {
 
     public function test_create_item_textarea() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -180,7 +173,6 @@ class mod_feedback_generator_testcase extends advanced_testcase {
 
     public function test_create_item_textfield() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -200,7 +192,6 @@ class mod_feedback_generator_testcase extends advanced_testcase {
 
     public function test_create_item_pagebreak() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();

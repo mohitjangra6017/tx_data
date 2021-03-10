@@ -52,7 +52,6 @@ class totara_cohort_hierarchy_customfield_multiselect_testcase extends advanced_
     protected function setup_hierarchies() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $basic_generator = $this->getDataGenerator();

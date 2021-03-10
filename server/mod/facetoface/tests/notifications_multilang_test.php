@@ -403,7 +403,6 @@ class mod_facetoface_notifications_multilang_testcase extends advanced_testcase 
     private function seed_data() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $this->mock_languages();
 

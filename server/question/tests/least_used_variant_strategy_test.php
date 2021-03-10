@@ -60,7 +60,6 @@ class least_used_variant_strategy_testcase extends advanced_testcase {
 
     public function test_second_attempt_uses_other_dataset() {
         global $DB;
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();

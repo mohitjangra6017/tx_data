@@ -44,7 +44,6 @@ class question_previewlib_testcase extends advanced_testcase {
      * @return question_usage_by_activity
      */
     protected function prepare_question_data() {
-        $this->resetAfterTest(true);
 
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
 

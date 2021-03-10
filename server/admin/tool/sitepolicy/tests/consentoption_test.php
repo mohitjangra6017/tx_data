@@ -34,7 +34,6 @@ class tool_sitepolicy_consentoption_test extends \advanced_testcase {
      */
     public function test_from_data_unsaved_sitepolicy_exception() {
 
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Site policy must be saved before adding policy versions');
 
@@ -48,7 +47,6 @@ class tool_sitepolicy_consentoption_test extends \advanced_testcase {
      */
     public function test_from_data_unsaved_version_exception() {
 
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Version must be saved before adding consent options');
 
@@ -63,7 +61,6 @@ class tool_sitepolicy_consentoption_test extends \advanced_testcase {
      */
     public function test_from_data() {
 
-        $this->resetAfterTest();
 
         $sitepolicy = new sitepolicy();
         $sitepolicy->save();
@@ -82,7 +79,6 @@ class tool_sitepolicy_consentoption_test extends \advanced_testcase {
      * Test save error condition
      */
     public function test_save_exception_on_unsaved_sitepolicy() {
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Site policy must be saved before adding policy versions');
 
@@ -97,7 +93,6 @@ class tool_sitepolicy_consentoption_test extends \advanced_testcase {
      * Test save error condition
      */
     public function test_save_exception_on_unset_policyversion() {
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Version must be saved before saving the consent option');
 
@@ -111,7 +106,6 @@ class tool_sitepolicy_consentoption_test extends \advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $sitepolicy = new sitepolicy();
         $sitepolicy->save();
@@ -155,7 +149,6 @@ class tool_sitepolicy_consentoption_test extends \advanced_testcase {
     public function test_delete_exception_localised_consent() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage("Consent option can't be deleted while localised_consent or user_consent entries exist");
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
@@ -178,7 +171,6 @@ class tool_sitepolicy_consentoption_test extends \advanced_testcase {
     public function test_delete_exception_user_consent() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage("Consent option can't be deleted while localised_consent or user_consent entries exist");
 
@@ -208,7 +200,6 @@ class tool_sitepolicy_consentoption_test extends \advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $sitepolicy = new sitepolicy();
         $sitepolicy->save();

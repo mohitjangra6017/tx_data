@@ -63,7 +63,6 @@ class totara_customfield_program_delete_testcase extends advanced_testcase {
      */
     public function test_customfield_deleted_on_event() {
         global $DB;
-        $this->resetAfterTest();
 
         // Assert that records exist.
         $before = $DB->get_records('prog_info_data', array('programid' => $this->program1->id));
@@ -102,7 +101,6 @@ class totara_customfield_program_delete_testcase extends advanced_testcase {
      */
     public function test_customfield_upgrade_remove_deleted() {
         global $DB, $CFG;
-        $this->resetAfterTest();
         // Redirect events.
         $sink = $this->redirectEvents();
 

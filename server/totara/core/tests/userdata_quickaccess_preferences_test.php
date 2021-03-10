@@ -58,7 +58,6 @@ class totara_core_userdata_quickaccess_preferences_testcase extends advanced_tes
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $controluser = $this->getDataGenerator()->create_user();
         $activeuser = $this->getDataGenerator()->create_user();
@@ -127,7 +126,6 @@ class totara_core_userdata_quickaccess_preferences_testcase extends advanced_tes
     public function test_count() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $controluser = $this->getDataGenerator()->create_user();
         $activeuser = $this->getDataGenerator()->create_user();

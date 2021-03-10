@@ -58,7 +58,6 @@ class logstore_standard_userdata_log_testcase extends advanced_testcase {
     public function test_count_when_user_has_log_records() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->enable_standards_log();
 
         // init control user
@@ -83,7 +82,6 @@ class logstore_standard_userdata_log_testcase extends advanced_testcase {
      * test export when user has no log records
      */
     public function test_export_when_user_has_no_log_records() {
-        $this->resetAfterTest();
         $this->enable_standards_log();
 
         // init control user
@@ -104,7 +102,6 @@ class logstore_standard_userdata_log_testcase extends advanced_testcase {
      * test export when user has log records
      */
     public function test_export_when_user_has_log_records() {
-        $this->resetAfterTest();
         $this->enable_standards_log();
 
         // init control user
@@ -134,7 +131,6 @@ class logstore_standard_userdata_log_testcase extends advanced_testcase {
     public function test_purge_for_active_user() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->enable_standards_log();
 
         $activeuser = $this->getDataGenerator()->create_user();
@@ -174,7 +170,6 @@ class logstore_standard_userdata_log_testcase extends advanced_testcase {
     public function test_purge_for_suspended_user() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->enable_standards_log();
 
         $suspendeduser = $this->getDataGenerator()->create_user(['suspended' => 1]);
@@ -215,7 +210,6 @@ class logstore_standard_userdata_log_testcase extends advanced_testcase {
     public function test_purge_for_deleted_user() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->enable_standards_log();
 
         $deleteduser = $this->getDataGenerator()->create_user();
@@ -254,7 +248,6 @@ class logstore_standard_userdata_log_testcase extends advanced_testcase {
      * test purge when user has log records
      */
     public function test_purge_with_empty_log_records() {
-        $this->resetAfterTest();
         $this->enable_standards_log();
 
         $user = $this->getDataGenerator()->create_user();

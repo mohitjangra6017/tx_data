@@ -96,7 +96,6 @@ class role_completion_test extends appraisal_testcase {
      * @dataProvider is_roles_complete_data_provider
      */
     public function test_is_all_roles_complete(bool $param2) {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         /** @var appraisal $appraisal */
@@ -182,7 +181,6 @@ class role_completion_test extends appraisal_testcase {
     }
 
     public function test_is_all_roles_complete_check_unfilled_roles() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         /** @var appraisal $appraisal */

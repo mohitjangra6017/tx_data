@@ -184,7 +184,6 @@ class totara_core_weblib_testcase extends advanced_testcase {
 
     public function test_format_string() {
         global $CFG;
-        $this->resetAfterTest();
         $this->assertSame('hokus &#38; &#34;pokus&#34;', format_string('<b>hokus & "pokus"</b>', true));
         $this->assertSame('&#60;b&#62;hokus &#38; &#34;pokus&#34;&#60;/b&#62;', format_string('<b>hokus & "pokus"</b>', false));
         $this->assertSame('hokus &#38; &#34;pokus&#34;', format_string('<b>hokus & "pokus"</b>', true, ['escape' => false]));

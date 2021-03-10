@@ -30,7 +30,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class auth_connect_generator_testcase extends advanced_testcase {
     public function test_create_server() {
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -62,7 +61,6 @@ class auth_connect_generator_testcase extends advanced_testcase {
 
     public function test_migrate_user() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -83,7 +81,6 @@ class auth_connect_generator_testcase extends advanced_testcase {
 
     public function test_get_fake_server_user() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');

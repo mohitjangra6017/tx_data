@@ -42,7 +42,6 @@ class core_grade_lib_test extends advanced_testcase {
      * Test can_output_item.
      */
     public function test_can_output_item() {
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
 

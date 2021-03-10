@@ -40,7 +40,6 @@ class core_course_totara_catalog_course_format_feature_testcase extends \advance
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
     }
 
     /**

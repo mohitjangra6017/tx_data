@@ -43,7 +43,6 @@ class mod_forum_events_testcase extends advanced_testcase {
         // tests using these functions.
         \mod_forum\subscriptions::reset_forum_cache();
 
-        $this->resetAfterTest();
     }
 
     protected function tearDown(): void {

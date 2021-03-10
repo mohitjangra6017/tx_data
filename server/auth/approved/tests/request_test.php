@@ -178,7 +178,6 @@ class auth_approved_request_testcase extends advanced_testcase {
     }
 
     public function test_add_request() {
-        $this->resetAfterTest();
         $approver = $this->create_approver();
 
         $emailsink = $this->redirectEmails();
@@ -249,7 +248,6 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_update_request() {
         global $DB;
-        $this->resetAfterTest();
         $this->redirectEmails();
 
         $request = $this->create_request();
@@ -274,7 +272,6 @@ class auth_approved_request_testcase extends advanced_testcase {
     }
 
     public function test_send_message() {
-        $this->resetAfterTest();
 
         $request = $this->create_request();
 
@@ -308,7 +305,6 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_confirm_request() {
         global $DB;
-        $this->resetAfterTest();
 
         // We want an approver so that we can check his notification.
         $approver = $this->create_approver();
@@ -429,7 +425,6 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_confirm_request_already_approved() {
         global $DB;
-        $this->resetAfterTest();
         $this->redirectEmails();
         $request = $this->create_request();
         $token = $DB->get_field('auth_approved_request', 'confirmtoken', ['id' => $request->id]);
@@ -443,7 +438,6 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_confirm_request_already_rejected() {
         global $DB;
-        $this->resetAfterTest();
         $this->redirectEmails();
         $request = $this->create_request();
         $token = $DB->get_field('auth_approved_request', 'confirmtoken', ['id' => $request->id]);
@@ -457,7 +451,6 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_confirm_request_invalid_status() {
         global $DB;
-        $this->resetAfterTest();
         $this->redirectEmails();
         $request = $this->create_request();
         $token = $DB->get_field('auth_approved_request', 'confirmtoken', ['id' => $request->id]);
@@ -470,7 +463,6 @@ class auth_approved_request_testcase extends advanced_testcase {
     public function test_confirm_request_requireapproval_off() {
         global $DB;
 
-        $this->resetAfterTest();
         $approver = $this->create_approver();
 
         $emailsink = $this->redirectEmails();
@@ -578,7 +570,6 @@ class auth_approved_request_testcase extends advanced_testcase {
     public function test_confirm_request_domainwhitelist_match() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $approver = $this->create_approver();
 
@@ -683,7 +674,6 @@ class auth_approved_request_testcase extends advanced_testcase {
     }
 
     public function test_reject_request() {
-        $this->resetAfterTest();
 
         $request = $this->create_request();
 
@@ -754,7 +744,6 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_approve_request() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
@@ -857,7 +846,6 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_approve_request_invalid_email() {
         global $DB;
-        $this->resetAfterTest();
 
         $request = $this->create_request();
         $DB->set_field('auth_approved_request', 'email', 'fail', ['id' => $request->id]);
@@ -869,7 +857,6 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_validate_signup_form_data_email() {
         global $DB;
-        $this->resetAfterTest();
         $this->getDataGenerator()->create_user(['email' => 'exists@example.com']);
         $request = $this->create_request();
         $DB->set_field('auth_approved_request', 'email', 'request@example.com', ['id' => $request->id]);
@@ -951,7 +938,6 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_validate_signup_form_data_username() {
         global $DB;
-        $this->resetAfterTest();
         $this->getDataGenerator()->create_user(['username' => 'frank']);
         $request = $this->create_request();
         $DB->set_field('auth_approved_request', 'username', 'request', ['id' => $request->id]);
@@ -1009,7 +995,6 @@ class auth_approved_request_testcase extends advanced_testcase {
     }
 
     public function test_validate_signup_form_data_organisation() {
-        $this->resetAfterTest();
         /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_org_frame([]);
@@ -1060,7 +1045,6 @@ class auth_approved_request_testcase extends advanced_testcase {
     }
 
     public function test_validate_signup_form_data_position() {
-        $this->resetAfterTest();
         /** @var \totara_hierarchy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $framework = $generator->create_pos_frame([]);
@@ -1111,7 +1095,6 @@ class auth_approved_request_testcase extends advanced_testcase {
     }
 
     public function test_validate_signup_form_data_manager() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user(['username' => 'manager']);
         $job = \totara_job\job_assignment::create_default($user->id);
@@ -1188,7 +1171,6 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_valid_signup_positionid() {
         global $DB;
-        $this->resetAfterTest();
 
         [$frameworks, $hierarchies] = $this->hierarchy_data('pos', 10);
         $delimiter = 3;
@@ -1225,7 +1207,6 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_valid_signup_organisationid() {
         global $DB;
-        $this->resetAfterTest();
 
         [$frameworks, $hierarchies] = $this->hierarchy_data('org', 10);
         $delimiter = 5;
@@ -1262,7 +1243,6 @@ class auth_approved_request_testcase extends advanced_testcase {
 
     public function test_valid_signup_managerjaid() {
         global $DB;
-        $this->resetAfterTest();
 
         [$frameworks, $hierarchies] = $this->hierarchy_data('org', 10);
         $delimiter = 5;

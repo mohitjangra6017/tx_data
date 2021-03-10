@@ -110,7 +110,6 @@ class qtype_calculated_test extends advanced_testcase {
     }
 
     public function test_get_short_question_name() {
-        $this->resetAfterTest();
 
         // Enable multilang filter to on content and heading.
         filter_set_global_state('multilang', TEXTFILTER_ON);

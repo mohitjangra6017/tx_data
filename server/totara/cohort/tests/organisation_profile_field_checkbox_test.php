@@ -65,7 +65,6 @@ class totara_cohort_organisation_profile_field_checkbox_testcase extends advance
         global $DB;
 
         parent::setup();
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();

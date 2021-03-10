@@ -42,7 +42,6 @@ class core_message_testcase extends advanced_testcase {
      */
     public function test_get_eventobject_for_processor() {
         global $USER;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user = $this->getDataGenerator()->create_user();
@@ -132,7 +131,6 @@ class core_message_testcase extends advanced_testcase {
      */
     public function test_send_message() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user(array('maildisplay' => 1));
         $user2 = $this->getDataGenerator()->create_user();

@@ -79,7 +79,6 @@ class mod_facetoface_user_cancel_signup_testcase extends advanced_testcase {
      * @return void
      */
     public function test_user_cancel_should_supersede_the_attendance_status(): void {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $gen = $this->getDataGenerator();
@@ -127,7 +126,6 @@ class mod_facetoface_user_cancel_signup_testcase extends advanced_testcase {
     public function test_user_cancel_should_not_created_new_record(): void {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $gen = $this->getDataGenerator();

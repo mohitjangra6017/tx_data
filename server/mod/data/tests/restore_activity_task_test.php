@@ -40,7 +40,6 @@ class mod_data_restore_activity_task_testcase extends advanced_testcase {
     public function test_restore_decode_rules() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $restoreid = 89765;
         $www = $CFG->wwwroot;

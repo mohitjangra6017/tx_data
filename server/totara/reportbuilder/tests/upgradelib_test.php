@@ -45,7 +45,6 @@ class totara_reportbuilder_upgradelib_testcase extends advanced_testcase {
 
         parent::setUp();
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $this->user = $user = get_admin();
 

@@ -59,7 +59,6 @@ class course_visibility_icon_reflecting_in_search_test extends advanced_testcase
      */
     public function test_search_course_with_visibility_reflection(): void {
         global $PAGE, $CFG;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $PAGE->set_url("/");

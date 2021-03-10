@@ -46,7 +46,6 @@ class message_popup_externallib_testcase extends advanced_testcase {
      */
     public function setUp(): void {
         $this->messagesink = $this->redirectMessages();
-        $this->resetAfterTest();
     }
 
     /**
@@ -54,7 +53,6 @@ class message_popup_externallib_testcase extends advanced_testcase {
      * doesn't exist.
      */
     public function test_get_popup_notifications_no_user_exception() {
-        $this->resetAfterTest(true);
 
         $this->expectException('moodle_exception');
         $result = message_popup_external::get_popup_notifications(-2132131, false, 0, 0);
@@ -65,7 +63,6 @@ class message_popup_externallib_testcase extends advanced_testcase {
      * user.
      */
     public function test_get_popup_notifications_access_denied_exception() {
-        $this->resetAfterTest(true);
 
         $sender = $this->getDataGenerator()->create_user();
         $user = $this->getDataGenerator()->create_user();
@@ -79,7 +76,6 @@ class message_popup_externallib_testcase extends advanced_testcase {
      * get_popup_notifications should return notifications for the recipient.
      */
     public function test_get_popup_notifications_as_recipient() {
-        $this->resetAfterTest(true);
 
         $sender = $this->getDataGenerator()->create_user(array('firstname' => 'Sendy', 'lastname' => 'Sender'));
         $recipient = $this->getDataGenerator()->create_user(array('firstname' => 'Recipy', 'lastname' => 'Recipient'));
@@ -105,7 +101,6 @@ class message_popup_externallib_testcase extends advanced_testcase {
      * get_popup_notifications result set should work with limit and offset.
      */
     public function test_get_popup_notification_limit_offset() {
-        $this->resetAfterTest(true);
 
         $sender = $this->getDataGenerator()->create_user(array('firstname' => 'Sendy', 'lastname' => 'Sender'));
         $recipient = $this->getDataGenerator()->create_user(array('firstname' => 'Recipy', 'lastname' => 'Recipient'));
@@ -138,7 +133,6 @@ class message_popup_externallib_testcase extends advanced_testcase {
      * get_unread_popup_notification should throw an exception for an invalid user.
      */
     public function test_get_unread_popup_notification_count_invalid_user_exception() {
-        $this->resetAfterTest(true);
 
         $this->expectException('moodle_exception');
         $result = message_popup_external::get_unread_popup_notification_count(-2132131, 0);
@@ -149,7 +143,6 @@ class message_popup_externallib_testcase extends advanced_testcase {
      * non-logged in user.
      */
     public function test_get_unread_popup_notification_count_access_denied_exception() {
-        $this->resetAfterTest(true);
 
         $sender = $this->getDataGenerator()->create_user();
         $user = $this->getDataGenerator()->create_user();
@@ -163,7 +156,6 @@ class message_popup_externallib_testcase extends advanced_testcase {
      * Test get_unread_popup_notification_count.
      */
     public function test_get_unread_popup_notification_count() {
-        $this->resetAfterTest(true);
 
         $sender1 = $this->getDataGenerator()->create_user();
         $sender2 = $this->getDataGenerator()->create_user();

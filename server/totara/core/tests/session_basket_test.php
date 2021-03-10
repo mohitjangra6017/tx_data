@@ -38,7 +38,6 @@ class totara_core_session_basket_testcase extends advanced_testcase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
     }
 
     public function test_session_basket_add() {

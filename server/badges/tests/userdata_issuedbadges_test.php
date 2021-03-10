@@ -170,7 +170,6 @@ class core_badges_userdata_issuedbadges_testcase extends advanced_testcase {
      *
      */
     public function test_count_system_context() {
-        $this->resetAfterTest();
 
         $data = $this->prepare_test_data();
 
@@ -185,7 +184,6 @@ class core_badges_userdata_issuedbadges_testcase extends advanced_testcase {
      * Test purging badges in the system context.
      */
     public function test_purge_system_context() {
-        $this->resetAfterTest();
 
         $data = $this->prepare_test_data();
 
@@ -234,7 +232,6 @@ class core_badges_userdata_issuedbadges_testcase extends advanced_testcase {
      * Test purging badges in the system context for suspended users
      */
     public function test_purge_system_context_suspended_users() {
-        $this->resetAfterTest();
 
         $data = $this->prepare_test_data();
 
@@ -287,7 +284,6 @@ class core_badges_userdata_issuedbadges_testcase extends advanced_testcase {
      * Test purging badges in the system context for deleted users
      */
     public function test_purge_system_context_deleted_users() {
-        $this->resetAfterTest();
 
         $data = $this->prepare_test_data();
 
@@ -463,7 +459,6 @@ class core_badges_userdata_issuedbadges_testcase extends advanced_testcase {
      * Test exporting issued badges.
      */
     public function test_export() {
-        $this->resetAfterTest();
         $data = $this->prepare_test_data();
 
         $user1 = new target_user($data['users'][0]);
@@ -595,7 +590,6 @@ class core_badges_userdata_issuedbadges_testcase extends advanced_testcase {
      */
     public function test_export_suspended_users() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->prepare_test_data();
 
         $user1 = new target_user($data['users'][0]);
@@ -762,7 +756,6 @@ class core_badges_userdata_issuedbadges_testcase extends advanced_testcase {
      * Test exporting issued badges of deleted users
      */
     public function test_export_deleted_users() {
-        $this->resetAfterTest();
         $data = $this->prepare_test_data();
 
         $user1 = new target_user($data['users'][0]);

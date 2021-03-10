@@ -36,7 +36,6 @@ class core_notes_generator_testcase extends advanced_testcase {
     /** Test create_instance method */
     public function test_create_instance() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -57,7 +56,6 @@ class core_notes_generator_testcase extends advanced_testcase {
 
     /** Test Exceptions thrown by create_instance method */
     public function test_create_instance_exceptions() {
-        $this->resetAfterTest();
 
         $gen = $this->getDataGenerator()->get_plugin_generator('core_notes');
 

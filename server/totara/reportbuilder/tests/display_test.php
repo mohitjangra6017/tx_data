@@ -80,7 +80,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
 
         $syscontext = context_system::instance();
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // We need permissions to view all reports.
 
         $user = $this->getDataGenerator()->create_user();
@@ -314,7 +313,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
 
         set_config('enablecompletion', 1);
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // We need permissions to view all reports.
 
         $user1 = $this->getDataGenerator()->create_user(array('institution' => 'a'));
@@ -368,7 +366,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
 
         set_config('enablecompletion', 1);
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // We need permissions to view all reports.
 
         $user1 = $this->getDataGenerator()->create_user(array('institution' => 'a'));
@@ -417,7 +414,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
     }
 
     function test_yes_or_no() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.
@@ -454,7 +450,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
     }
 
     function test_nice_time() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.
@@ -481,7 +476,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
     }
 
     function test_nice_datetime_seconds() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.
@@ -510,7 +504,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
     function test_nice_datetime_in_timezone() {
         global $CFG;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.
@@ -561,7 +554,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
     function test_delimitedlist_date_in_timezone() {
         global $CFG;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.
@@ -612,7 +604,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
     function test_delimitedlist_datetime_in_timezone() {
         global $CFG;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.
@@ -663,7 +654,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
     function test_nice_two_datetime_in_timezone() {
         global $CFG;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.
@@ -759,7 +749,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
     }
 
     function test_round2() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.
@@ -810,7 +799,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
     }
 
     function test_percent() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.
@@ -882,7 +870,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
     }
 
     function test_delimitedlist_multi_to_newline() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.
@@ -913,7 +900,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
     }
 
     function test_delimitedlist_url_to_newline() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.
@@ -943,7 +929,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
     }
 
     function test_orderedlist_to_newline() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.
@@ -993,7 +978,6 @@ class totara_reportbuilder_display_testcase extends advanced_testcase {
     }
 
     function test_list_to_newline() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.

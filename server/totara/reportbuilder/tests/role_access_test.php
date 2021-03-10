@@ -43,7 +43,6 @@ class totara_reportbuilder_role_access_testcase extends advanced_testcase {
 
     public function test_new_report_defaults() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $managerrole = $DB->get_record('role', array('shortname' => 'manager'), '*', MUST_EXIST);
@@ -64,7 +63,6 @@ class totara_reportbuilder_role_access_testcase extends advanced_testcase {
 
     public function test_get_reports_plugins_access() {
         global $DB;
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
 
@@ -213,7 +211,6 @@ class totara_reportbuilder_role_access_testcase extends advanced_testcase {
 
     public function test_get_permitted_reports() {
         global $DB;
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
 
@@ -306,7 +303,6 @@ class totara_reportbuilder_role_access_testcase extends advanced_testcase {
 
     public function test_has_reports() {
         global $DB;
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
 

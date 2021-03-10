@@ -39,7 +39,6 @@ class core_notes_externallib_testcase extends externallib_advanced_testcase {
 
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
 
@@ -80,7 +79,6 @@ class core_notes_externallib_testcase extends externallib_advanced_testcase {
 
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
 
@@ -132,7 +130,6 @@ class core_notes_externallib_testcase extends externallib_advanced_testcase {
 
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
 
@@ -186,7 +183,6 @@ class core_notes_externallib_testcase extends externallib_advanced_testcase {
 
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
 
@@ -251,7 +247,6 @@ class core_notes_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_course_notes() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
         $CFG->enablenotes = true;
 
         // Take role definitions.
@@ -391,7 +386,6 @@ class core_notes_externallib_testcase extends externallib_advanced_testcase {
     public function test_view_notes() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
         $CFG->enablenotes = true;
 
         // Take role definitions.

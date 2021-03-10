@@ -82,7 +82,6 @@ class core_calendar_type_testcase extends advanced_testcase {
      */
     public function test_calendar_type_set() {
         // We want to reset the test data after this run.
-        $this->resetAfterTest();
 
         // Test setting it as the 'Test' calendar type.
         $this->set_calendar_type('test_example');
@@ -99,7 +98,6 @@ class core_calendar_type_testcase extends advanced_testcase {
      */
     public function test_calendar_type_core_functions() {
         // We want to reset the test data after this run.
-        $this->resetAfterTest();
 
         // Test that the core functions reproduce the same results as the Gregorian calendar.
         $this->core_functions_test('gregorian');
@@ -117,7 +115,6 @@ class core_calendar_type_testcase extends advanced_testcase {
         global $CFG;
 
         // We want to reset the test data after this run.
-        $this->resetAfterTest();
 
         $this->setTimezone('UTC');
 
@@ -173,7 +170,6 @@ class core_calendar_type_testcase extends advanced_testcase {
      */
     public function test_calendar_type_datetime_field_submission() {
         // We want to reset the test data after this run.
-        $this->resetAfterTest();
 
         // Create an array with the input values and expected values once submitted.
         $date = array();

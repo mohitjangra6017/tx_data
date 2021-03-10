@@ -52,7 +52,6 @@ class mod_forum_generator_testcase extends advanced_testcase {
     public function test_generator() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->assertEquals(0, $DB->count_records('forum'));
 
@@ -90,7 +89,6 @@ class mod_forum_generator_testcase extends advanced_testcase {
     public function test_create_discussion() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // User that will create the forum.
         $user = self::getDataGenerator()->create_user();
@@ -130,7 +128,6 @@ class mod_forum_generator_testcase extends advanced_testcase {
     public function test_create_post() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a bunch of users
         $user1 = self::getDataGenerator()->create_user();
@@ -175,7 +172,6 @@ class mod_forum_generator_testcase extends advanced_testcase {
     public function test_create_content() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a bunch of users
         $user1 = self::getDataGenerator()->create_user();

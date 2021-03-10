@@ -43,7 +43,6 @@ class mod_quiz_attempt_testcase extends advanced_testcase {
      * @return quiz_attempt the new quiz_attempt object
      */
     protected function create_quiz_and_attempt_with_layout($layout) {
-        $this->resetAfterTest(true);
 
         // Make a user to do the quiz.
         $user = $this->getDataGenerator()->create_user();

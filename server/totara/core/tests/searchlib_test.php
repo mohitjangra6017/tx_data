@@ -44,7 +44,6 @@ class totara_core_searchlib_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once("$CFG->dirroot/totara/core/searchlib.php");
 
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user(array('username' => 'prvni', 'firstname' => 'John'));
         $user2 = $this->getDataGenerator()->create_user(array('username' => 'druhy', 'firstname' => 'Prvni'));
@@ -101,7 +100,6 @@ class totara_core_searchlib_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once("$CFG->dirroot/totara/core/searchlib.php");
 
-        $this->resetAfterTest();
 
         $guest = guest_user();
         $admin = get_admin();

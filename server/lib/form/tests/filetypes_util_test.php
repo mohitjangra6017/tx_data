@@ -38,7 +38,6 @@ class core_form_filetypes_util_testcase extends advanced_testcase {
      */
     public function test_normalize_file_types() {
 
-        $this->resetAfterTest(true);
         $util = new core_form\filetypes_util();
 
         $this->assertSame(['.odt'], $util->normalize_file_types('.odt'));
@@ -70,7 +69,6 @@ class core_form_filetypes_util_testcase extends advanced_testcase {
      */
     public function test_looks_like_mimetype() {
 
-        $this->resetAfterTest(true);
         $util = new core_form\filetypes_util();
 
         $this->assertTrue($util->looks_like_mimetype('type/subtype'));
@@ -89,7 +87,6 @@ class core_form_filetypes_util_testcase extends advanced_testcase {
      */
     public function test_is_filetype_group() {
 
-        $this->resetAfterTest(true);
         $util = new core_form\filetypes_util();
 
         $audio = $util->is_filetype_group('audio');
@@ -107,7 +104,6 @@ class core_form_filetypes_util_testcase extends advanced_testcase {
      */
     public function test_describe_file_types() {
 
-        $this->resetAfterTest(true);
         $util = new core_form\filetypes_util();
 
         force_current_language('en');
@@ -165,7 +161,6 @@ class core_form_filetypes_util_testcase extends advanced_testcase {
      */
     public function test_expand() {
 
-        $this->resetAfterTest(true);
         $util = new core_form\filetypes_util();
 
         $this->assertSame([], $util->expand(''));
@@ -203,7 +198,6 @@ class core_form_filetypes_util_testcase extends advanced_testcase {
      */
     public function test_is_whitelisted() {
 
-        $this->resetAfterTest(true);
         $util = new core_form\filetypes_util();
 
         // These should be intuitively true.
@@ -246,7 +240,6 @@ class core_form_filetypes_util_testcase extends advanced_testcase {
      */
     public function test_get_not_whitelisted() {
 
-        $this->resetAfterTest(true);
         $util = new core_form\filetypes_util();
 
         $this->assertEmpty($util->get_not_whitelisted('txt', 'text/plain'));
@@ -269,7 +262,6 @@ class core_form_filetypes_util_testcase extends advanced_testcase {
      */
     public function test_data_for_browser() {
 
-        $this->resetAfterTest(true);
         $util = new core_form\filetypes_util();
 
         $data = $util->data_for_browser();

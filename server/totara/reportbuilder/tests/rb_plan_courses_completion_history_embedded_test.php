@@ -42,7 +42,6 @@ class totara_reportbuilder_rb_plan_courses_completion_history_embedded_testcase 
         parent::setup();
         set_config('enablecompletion', 1);
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         // Create users.
         $this->user1 = $this->getDataGenerator()->create_user();
@@ -65,7 +64,6 @@ class totara_reportbuilder_rb_plan_courses_completion_history_embedded_testcase 
     }
 
     public function test_is_capable() {
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $shortname = 'plan_courses_completion_history';

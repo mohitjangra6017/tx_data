@@ -47,7 +47,6 @@ class totara_userdata_export_testcase extends advanced_testcase {
      * Check that adding a file adds it to the files property and returns the correct data
      */
     public function test_add_file() {
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
 

@@ -51,7 +51,6 @@ class mod_wiki_lib_testcase extends advanced_testcase {
         global $CFG;
 
         $CFG->enablecompletion = COMPLETION_ENABLED;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.
@@ -95,7 +94,6 @@ class mod_wiki_lib_testcase extends advanced_testcase {
         global $CFG;
 
         $CFG->enablecompletion = COMPLETION_ENABLED;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.
@@ -139,7 +137,6 @@ class mod_wiki_lib_testcase extends advanced_testcase {
     public function test_wiki_user_can_edit() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.
@@ -205,7 +202,6 @@ class mod_wiki_lib_testcase extends advanced_testcase {
     public function test_wiki_user_can_edit_with_groups_collaborative() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.
@@ -300,7 +296,6 @@ class mod_wiki_lib_testcase extends advanced_testcase {
     public function test_wiki_user_can_edit_with_groups_individual() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.
@@ -401,7 +396,6 @@ class mod_wiki_lib_testcase extends advanced_testcase {
     public function test_wiki_get_visible_subwikis_without_groups() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.
@@ -479,7 +473,6 @@ class mod_wiki_lib_testcase extends advanced_testcase {
     public function test_wiki_get_visible_subwikis_with_groups_collaborative() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.
@@ -563,7 +556,6 @@ class mod_wiki_lib_testcase extends advanced_testcase {
     public function test_wiki_get_visible_subwikis_with_groups_individual() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.
@@ -658,7 +650,6 @@ class mod_wiki_lib_testcase extends advanced_testcase {
     public function test_mod_wiki_get_tagged_pages() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.

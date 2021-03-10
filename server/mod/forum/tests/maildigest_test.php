@@ -179,7 +179,6 @@ class mod_forum_maildigest_testcase extends advanced_testcase {
     public function test_set_maildigest() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $helper = $this->helper_setup_user_in_course();
         $user = $helper->user;
@@ -235,7 +234,6 @@ class mod_forum_maildigest_testcase extends advanced_testcase {
     public function test_get_user_digest_options_default() {
         global $USER, $DB;
 
-        $this->resetAfterTest(true);
 
         // Set up a basic user enrolled in a course.
         $helper = $this->helper_setup_user_in_course();
@@ -274,7 +272,6 @@ class mod_forum_maildigest_testcase extends advanced_testcase {
     public function test_get_user_digest_options_sorting() {
         global $USER, $DB;
 
-        $this->resetAfterTest(true);
 
         // Set up a basic user enrolled in a course.
         $helper = $this->helper_setup_user_in_course();
@@ -301,7 +298,6 @@ class mod_forum_maildigest_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/mod/forum/lib.php');
 
-        $this->resetAfterTest(true);
 
         $this->helper_force_digest_mail_times();
 
@@ -316,7 +312,6 @@ class mod_forum_maildigest_testcase extends advanced_testcase {
     public function test_cron_profile_single_mails() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Set up a basic user enrolled in a course.
         $userhelper = $this->helper_setup_user_in_course();
@@ -366,7 +361,6 @@ class mod_forum_maildigest_testcase extends advanced_testcase {
     public function test_cron_profile_digest_email() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         // Set up a basic user enrolled in a course.
         $userhelper = $this->helper_setup_user_in_course();
@@ -417,7 +411,6 @@ class mod_forum_maildigest_testcase extends advanced_testcase {
     public function test_cron_mixed_email_1() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         // Set up a basic user enrolled in a course.
         $userhelper = $this->helper_setup_user_in_course();
@@ -468,7 +461,6 @@ class mod_forum_maildigest_testcase extends advanced_testcase {
     public function test_cron_mixed_email_2() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         // Set up a basic user enrolled in a course.
         $userhelper = $this->helper_setup_user_in_course();
@@ -518,7 +510,6 @@ class mod_forum_maildigest_testcase extends advanced_testcase {
     public function test_cron_forum_digest_email() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         // Set up a basic user enrolled in a course.
         $userhelper = $this->helper_setup_user_in_course();

@@ -48,7 +48,6 @@ class totara_job_dialog_assign_manager_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setup();
-        $this->resetAfterTest();
 
         $this->data_generator = $this->getDataGenerator();
         for($i = 0; $i < $this->max_users; $i++) {

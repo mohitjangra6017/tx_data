@@ -79,7 +79,6 @@ class mod_forum_userdata_posts_testcase extends advanced_testcase {
 
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         // We must clear the subscription caches. This has to be done both before each test, and after in case of other
         // tests using these functions.

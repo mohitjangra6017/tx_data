@@ -49,7 +49,6 @@ class backup_plan_testcase extends advanced_testcase {
         global $DB, $CFG;
         parent::setUp();
 
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $page = $this->getDataGenerator()->create_module('page', array('course'=>$course->id), array('section'=>3));

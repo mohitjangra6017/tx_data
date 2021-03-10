@@ -48,7 +48,6 @@ class core_questionlib_testcase extends advanced_testcase {
      * This is executed before running any test in this file.
      */
     public function setUp(): void {
-        $this->resetAfterTest();
     }
 
     /**
@@ -263,7 +262,6 @@ class core_questionlib_testcase extends advanced_testcase {
      */
     public function test_question_category_delete_safe() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         list($category, $course, $quiz, $qcat, $questions) = $this->setup_quiz_and_questions();
@@ -291,7 +289,6 @@ class core_questionlib_testcase extends advanced_testcase {
      */
     public function test_question_delete_activity($feedback) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         list($category, $course, $quiz, $qcat, $questions) = $this->setup_quiz_and_questions();
@@ -317,7 +314,6 @@ class core_questionlib_testcase extends advanced_testcase {
      */
     public function test_question_delete_context() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         list($category, $course, $quiz, $qcat, $questions) = $this->setup_quiz_and_questions();
@@ -346,7 +342,6 @@ class core_questionlib_testcase extends advanced_testcase {
      */
     public function test_question_delete_course($feedback) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         list($category, $course, $quiz, $qcat, $questions) = $this->setup_quiz_and_questions('course');
@@ -374,7 +369,6 @@ class core_questionlib_testcase extends advanced_testcase {
      */
     public function test_question_delete_course_category($feedback) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         list($category, $course, $quiz, $qcat, $questions) = $this->setup_quiz_and_questions('category');
@@ -396,7 +390,6 @@ class core_questionlib_testcase extends advanced_testcase {
 
     public function test_question_remove_stale_questions_from_category() {
         global $DB;
-        $this->resetAfterTest(true);
         $dg = $this->getDataGenerator();
         $course = $dg->create_course();
         $quiz = $dg->create_module('quiz', ['course' => $course->id]);

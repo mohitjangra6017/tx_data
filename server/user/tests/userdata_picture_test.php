@@ -49,7 +49,6 @@ class core_user_userdata_picture_testcase extends advanced_testcase {
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create the users.
         $activeuser = $this->getDataGenerator()->create_user();
@@ -132,7 +131,6 @@ class core_user_userdata_picture_testcase extends advanced_testcase {
     public function test_count() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create the users.
         $activeuser = $this->getDataGenerator()->create_user();
@@ -179,7 +177,6 @@ class core_user_userdata_picture_testcase extends advanced_testcase {
     public function test_export() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create the users.
         $activeuser = $this->getDataGenerator()->create_user();

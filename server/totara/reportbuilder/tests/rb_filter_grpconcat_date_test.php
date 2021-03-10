@@ -34,7 +34,6 @@ class totara_reportbuilder_rb_filter_grpconcat_date_testcase extends advanced_te
     public function test_filter() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create four users.

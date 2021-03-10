@@ -153,7 +153,6 @@ class totara_job_webapi_resolver_mutation_create_assignment_testcase extends adv
     public function test_ajax_query() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user = $this->getDataGenerator()->create_user();

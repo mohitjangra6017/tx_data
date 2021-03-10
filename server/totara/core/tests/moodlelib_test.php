@@ -174,7 +174,6 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
      */
     public function test_setup_lang_from_browser() {
         global $SESSION, $USER, $CFG;
-        $this->resetAfterTest();
 
         $this->assertNotEmpty($CFG->autolang);
         $USER->lang = '';
@@ -228,7 +227,6 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
     public function test_delete_user() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user(array('idnumber' => 'abc'));
         $user2 = $this->getDataGenerator()->create_user(array('idnumber' => 'xyz'));
@@ -286,7 +284,6 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
 
     public function test_undelete_user_context() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         $CFG->authdeleteusers = 'partial';
 
@@ -321,7 +318,6 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
      */
     public function test_email_to_user() {
         global $DB, $CFG;
-        $this->resetAfterTest();
         $sink = $this->redirectEmails();
         $CFG->noemailever = 0;
 
@@ -395,7 +391,6 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
      * Test from in emails
      */
     public function test_email_to_user_from() {
-        $this->resetAfterTest();
 
         $noreplyaddress = 'mynoreply@example.com';
         $subject = 'My subject';
@@ -528,7 +523,6 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
      * Test from in emails with emailfromvia enabled.
      */
     public function test_email_to_user_from_with_via() {
-        $this->resetAfterTest();
 
         $noreplyaddress = 'mynoreply@example.com';
         $subject = 'My subject';
@@ -659,7 +653,6 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
 
     public function test_fullname() {
         global $CFG;
-        $this->resetAfterTest();
 
         $this->assertSame('language', $CFG->fullnamedisplay);
         $this->assertSame('language', $CFG->alternativefullnameformat);
@@ -733,7 +726,6 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
     }
 
     public function test_fullname_encoding() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user(['firstname' => 'Kres"\'tni', 'lastname' => 'Prij&meni']);
         $this->assertSame('Kres&#34;&#39;tni Prij&#38;meni', fullname($user));
@@ -1082,7 +1074,6 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
 
     public function test_user_not_fully_set_up_basic() {
         global $DB, $USER;
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
 
@@ -1164,7 +1155,6 @@ class totara_core_moodlelib_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/user/lib.php');
         require_once($CFG->dirroot . '/user/profile/lib.php');
 
-        $this->resetAfterTest();
 
         // Add a required, visible, unlocked custom field.
         $DB->insert_record('user_info_field', ['shortname' => 'house', 'name' => 'House', 'required' => 1,

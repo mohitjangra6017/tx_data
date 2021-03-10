@@ -38,7 +38,6 @@ class tool_sitepolicy_navbar_test extends \advanced_testcase {
     public function test_admin_gets_navbar() {
         global $CFG,$PAGE;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         /**
@@ -64,7 +63,6 @@ class tool_sitepolicy_navbar_test extends \advanced_testcase {
     public function test_user_gets_navbar() {
         global $CFG, $PAGE;
 
-        $this->resetAfterTest();
         $this->setUser($this->getDataGenerator()->create_user());
 
         /**
@@ -87,7 +85,6 @@ class tool_sitepolicy_navbar_test extends \advanced_testcase {
     public function test_no_policy_doesnt_get_navbar() {
         global $CFG,$PAGE;
 
-        $this->resetAfterTest();
         $this->setUser($this->getDataGenerator()->create_user());
 
         /**
@@ -114,7 +111,6 @@ class tool_sitepolicy_navbar_test extends \advanced_testcase {
     public function test_policy_agreed_does_get_navbar() {
         global $CFG,$PAGE;
 
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);

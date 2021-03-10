@@ -141,7 +141,6 @@ class qtype_match_test extends advanced_testcase {
 
 
     public function test_question_saving_foursubq() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $questiondata = test_question_maker::get_question_data('match');

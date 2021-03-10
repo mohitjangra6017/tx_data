@@ -221,7 +221,6 @@ class totara_core_flex_icon_testcase extends advanced_testcase {
 
     public function test_create_from_pix_url() {
         global $CFG, $PAGE;
-        $this->resetAfterTest();
 
         $url = 'http://www.example.com/moodle/theme/image.php/_s/ventura/forum/1/icon';
         $flexicon = flex_icon::create_from_pix_url($url);

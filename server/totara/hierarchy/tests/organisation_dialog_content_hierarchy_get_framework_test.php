@@ -133,7 +133,6 @@ class totara_hierarchy_organisation_dialog_content_hierarchy_get_framework_testc
      */
     public function test_get_organisation_and_framework(): void {
         global $USER;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $framework = $this->create_organisations();

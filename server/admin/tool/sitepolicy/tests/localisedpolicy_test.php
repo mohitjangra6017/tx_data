@@ -35,7 +35,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
     public function test_from_data() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $sitepolicy = new sitepolicy();
         $sitepolicy->save();
@@ -61,7 +60,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
      * Test from_version
      */
     public function test_from_version() {
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -108,7 +106,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
      * Test from_version
      */
     public function test_formatted_content() {
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -157,7 +154,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
      */
     public function test_save_exeception_other_primary() {
 
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Cannot save localised policy. Another primary localised policy already exists.');
 
@@ -177,7 +173,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
      */
     public function test_save_exeception_duplicate_language() {
 
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Cannot save localised policy. Another policy with this language and version already exists.');
 
@@ -198,7 +193,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $sitepolicy = new sitepolicy();
         $sitepolicy->save();
@@ -249,7 +243,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
     public function test_set_statements () {
         global $DB;
 
-        $this->resetAfterTest();
 
         $sitepolicy = new sitepolicy();
         $sitepolicy->save();
@@ -343,7 +336,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
     public function test_save_consentoptions() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $sitepolicy = new sitepolicy();
         $sitepolicy->save();
@@ -431,7 +423,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
      * Test get_statements
      */
     public function test_get_statements() {
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -473,7 +464,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
     public function test_delete_single_language_and_option() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -520,7 +510,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
     public function test_delete_multi_languages_and_options() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -575,7 +564,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Localised policy can\'t be deleted while user_consent entries exist');
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -616,7 +604,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
     public function test_clone_content() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -695,7 +682,6 @@ class tool_sitepolicy_localisedpolicy_test extends \advanced_testcase {
      */
     public function test_get_titles() {
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 

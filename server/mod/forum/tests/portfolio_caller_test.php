@@ -37,7 +37,6 @@ class mod_forum_portfolio_caller_testcase extends advanced_testcase {
     public function test_file_in_user_post_is_loaded() {
         global $CFG;
         require_once($CFG->dirroot . '/mod/forum/locallib.php');
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
@@ -82,7 +81,6 @@ class mod_forum_portfolio_caller_testcase extends advanced_testcase {
     public function test_file_not_in_user_post_not_loaded() {
         global $CFG;
         require_once($CFG->dirroot . '/mod/forum/locallib.php');
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();

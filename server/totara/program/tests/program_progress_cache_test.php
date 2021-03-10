@@ -271,7 +271,6 @@ class totara_program_program_progress_cache_testcase extends reportcache_advance
 
 
     public function test_mark_user_cache_stale() {
-        $this->resetAfterTest(true);
 
         $that = $this->setup_common();
 
@@ -350,7 +349,6 @@ class totara_program_program_progress_cache_testcase extends reportcache_advance
 
 
     public function test_mark_program_cache_stale() {
-        $this->resetAfterTest(true);
 
         $that = $this->setup_common();
 

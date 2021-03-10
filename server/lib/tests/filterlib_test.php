@@ -58,7 +58,6 @@ class core_filterlib_testcase extends advanced_testcase {
         global $DB;
         parent::setUp();
 
-        $this->resetAfterTest();
         $DB->delete_records('filter_active', array());
         $DB->delete_records('filter_config', array());
     }

@@ -37,7 +37,6 @@ class core_course_backup_with_history_completion_testcase extends advanced_testc
         require_once("{$CFG->dirroot}/course/lib.php");
         require_once("{$CFG->dirroot}/course/externallib.php");
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $gen = $this->getDataGenerator();
@@ -119,7 +118,6 @@ class core_course_backup_with_history_completion_testcase extends advanced_testc
         require_once("{$CFG->dirroot}/course/lib.php");
         require_once("{$CFG->dirroot}/course/externallib.php");
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $gen = $this->getDataGenerator();

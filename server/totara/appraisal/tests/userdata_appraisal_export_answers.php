@@ -57,7 +57,6 @@ abstract class totara_appraisal_userdata_appraisal_export_answers_testcase exten
             public $targetuser;
         };
 
-        $this->resetAfterTest();
 
         // Set up users.
         $data->manager = $this->getDataGenerator()->create_user();

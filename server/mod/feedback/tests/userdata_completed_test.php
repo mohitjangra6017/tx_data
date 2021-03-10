@@ -94,7 +94,6 @@ class mod_feedback_userdata_completed_testcase extends advanced_testcase {
         $data->targetuser2 = new target_user($data->learner2);
         $data->targetuser3 = new target_user($data->learner3);
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         return $data;

@@ -118,7 +118,6 @@ class core_user_editlib_testcase extends advanced_testcase {
     }
 
     public function test_useredit_get_return_url() {
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();

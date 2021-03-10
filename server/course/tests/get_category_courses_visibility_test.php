@@ -52,7 +52,6 @@ class get_category_courses_visibility_test extends advanced_testcase {
      */
     public function test_get_courses_visibility_with_audiencevisibility_settings($audiencevisibility, $visible, $expect) {
         global $CFG;
-        $this->resetAfterTest(true);
 
         $reset = false;
         if (empty($CFG->audiencevisibility)) {

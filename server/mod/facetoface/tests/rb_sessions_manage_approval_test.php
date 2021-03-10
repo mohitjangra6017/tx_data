@@ -49,7 +49,6 @@ class mod_facetoface_rb_sessions_manage_approval_testcase extends advanced_testc
      * Test that the approval link column option exist.
      */
     public function test_approvallink_column_options() {
-        $this->resetAfterTest();
 
         $src = reportbuilder::get_source_object('facetoface_sessions');
         $columnoptions = array();
@@ -64,7 +63,6 @@ class mod_facetoface_rb_sessions_manage_approval_testcase extends advanced_testc
      * Test that the default columns are correct.
      */
     public function test_default_columns() {
-        $this->resetAfterTest();
 
         $src = reportbuilder::get_source_object('facetoface_sessions');
         if (isset($src->defaultcolumns) && is_array($src->defaultcolumns)) {

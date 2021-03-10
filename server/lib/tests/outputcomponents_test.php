@@ -113,7 +113,6 @@ class core_outputcomponents_testcase extends advanced_testcase {
     }
 
     public function test_create_pix_icon() {
-        $this->resetAfterTest();
 
         $icon = new pix_icon('delete', 'hello');
         $this->assertEquals('hello', $icon->attributes['alt']);
@@ -139,7 +138,6 @@ class core_outputcomponents_testcase extends advanced_testcase {
     public function test_get_url() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         // Force SVG on so that we have predictable URL's.
         $CFG->svgicons = true;

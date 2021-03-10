@@ -42,7 +42,6 @@ class core_grade_report_graderlib_testcase extends advanced_testcase {
     public function test_process_data() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
 
@@ -110,7 +109,6 @@ class core_grade_report_graderlib_testcase extends advanced_testcase {
     }
 
     public function test_collapsed_preferences() {
-        $this->resetAfterTest(true);
 
         $emptypreferences = array('aggregatesonly' => array(), 'gradesonly' => array());
 
@@ -238,7 +236,6 @@ class core_grade_report_graderlib_testcase extends advanced_testcase {
      */
     public function test_get_right_rows() {
         global $USER, $DB;
-        $this->resetAfterTest(true);
 
         // Create manager and student on a course.
         $generator = $this->getDataGenerator();

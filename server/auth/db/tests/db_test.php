@@ -156,7 +156,6 @@ class auth_db_db_testcase extends advanced_testcase {
     public function test_plugin() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         // NOTE: It is strongly discouraged to create new tables in advanced_testcase classes,
         //       but there is no other simple way to test ext database enrol sync, so let's
@@ -449,7 +448,6 @@ class auth_db_db_testcase extends advanced_testcase {
     public function test_deleting_with_many_users() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->init_auth_database();
         $auth = get_auth_plugin('db');
         $auth->db_init();

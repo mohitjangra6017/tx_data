@@ -69,7 +69,6 @@ class block_current_learning_course_data_testcase extends block_current_learning
         $this->generator = $this->getDataGenerator();
         $this->program_generator = $this->generator->get_plugin_generator('totara_program');
 
-        $this->resetAfterTest();
         $CFG->enablecompletion = true;
 
         // Create some users.

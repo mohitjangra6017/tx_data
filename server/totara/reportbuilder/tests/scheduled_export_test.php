@@ -33,7 +33,6 @@ class totara_reportbuilder_scheduled_export_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once("$CFG->dirroot/totara/reportbuilder/lib.php");
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // We need permissions to access all reports.
 
         set_config('exporttofilesystem', '0', 'reportbuilder');
@@ -86,7 +85,6 @@ class totara_reportbuilder_scheduled_export_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once("$CFG->dirroot/totara/reportbuilder/lib.php");
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // We need permissions to access all reports.
 
         $testdir = make_writable_directory($CFG->dataroot . '/mytest');
@@ -245,7 +243,6 @@ class totara_reportbuilder_scheduled_export_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once("$CFG->dirroot/totara/reportbuilder/lib.php");
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // We need permissions to access all reports.
 
         $testdir = make_writable_directory($CFG->dataroot . '/mytest');
@@ -350,7 +347,6 @@ class totara_reportbuilder_scheduled_export_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once("$CFG->dirroot/totara/reportbuilder/lib.php");
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // We need permissions to access all reports.
 
         set_config('exporttofilesystem', '0', 'reportbuilder');
@@ -448,7 +444,6 @@ class totara_reportbuilder_scheduled_export_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once("$CFG->dirroot/totara/reportbuilder/lib.php");
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // We need permissions to access all reports.
 
         $testdir = make_writable_directory($CFG->dataroot . '/mytest');
@@ -529,7 +524,6 @@ class totara_reportbuilder_scheduled_export_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once("$CFG->dirroot/totara/reportbuilder/lib.php");
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // We need permissions to access all reports.
 
         $testdir = make_writable_directory($CFG->dataroot . '/mytest');
@@ -596,7 +590,6 @@ class totara_reportbuilder_scheduled_export_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once("$CFG->dirroot/totara/reportbuilder/lib.php");
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // We need permissions to access all reports.
 
         $testdir = make_writable_directory($CFG->dataroot . '/mytest');

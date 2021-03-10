@@ -40,7 +40,6 @@ class totara_program_totara_catalog_dataformatter_test extends dataformatter_tes
 
     public function test_image() {
         global $CFG;
-        $this->resetAfterTest();
 
         $context = context_system::instance();
 

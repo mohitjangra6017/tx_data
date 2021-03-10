@@ -42,7 +42,6 @@ class totara_appraisal_generator_testcase extends advanced_testcase {
     }
 
     public function setUp(): void {
-        $this->resetAfterTest();
 
         // All tests need the generator and an appraisal object.
         $this->appraisalgenerator = \totara_appraisal\testing\generator::instance();
@@ -50,7 +49,6 @@ class totara_appraisal_generator_testcase extends advanced_testcase {
     }
 
     public function test_create_appraisal() {
-        $this->resetAfterTest();
 
         // Retrieve the appraisal to verify it's been created as required.
         $verify = new appraisal($this->appraisal->id);
@@ -59,7 +57,6 @@ class totara_appraisal_generator_testcase extends advanced_testcase {
     }
 
     public function test_create_stage() {
-        $this->resetAfterTest();
 
         // Create a stage for the appraisal.
         $stage = $this->appraisalgenerator->create_stage($this->appraisal->id);
@@ -72,7 +69,6 @@ class totara_appraisal_generator_testcase extends advanced_testcase {
     }
 
     public function test_create_stage_with_role_completion_locks() {
-        $this->resetAfterTest();
 
         // Create some custom data for this test.
         $data = array ('locks' => array(appraisal::ROLE_LEARNER => 1, appraisal::ROLE_APPRAISER => 1));
@@ -93,7 +89,6 @@ class totara_appraisal_generator_testcase extends advanced_testcase {
     }
 
     public function test_create_page() {
-        $this->resetAfterTest();
 
         // Create a stage for the appraisal.
         $stage = $this->appraisalgenerator->create_stage($this->appraisal->id);
@@ -107,7 +102,6 @@ class totara_appraisal_generator_testcase extends advanced_testcase {
     }
 
     public function  test_create_question() {
-        $this->resetAfterTest();
 
         // Create a stage for the appraisal.
         $stage = $this->appraisalgenerator->create_stage($this->appraisal->id);
@@ -125,7 +119,6 @@ class totara_appraisal_generator_testcase extends advanced_testcase {
 
     public function test_assign_users_appraisal() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_cohort\testing\generator $cohortgenerator */
         $cohortgenerator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
@@ -148,7 +141,6 @@ class totara_appraisal_generator_testcase extends advanced_testcase {
     public function test_create_message() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         // Create a message for the appraisal.
         $message = $this->appraisalgenerator->create_message($this->appraisal->id);
@@ -208,7 +200,6 @@ class totara_appraisal_generator_testcase extends advanced_testcase {
 
     public function test_activate_appraisal() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_cohort\testing\generator $cohortgenerator */
         $cohortgenerator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
@@ -244,7 +235,6 @@ class totara_appraisal_generator_testcase extends advanced_testcase {
 
     public function test_create_large_appraisal() {
         global $DB;
-        $this->resetAfterTest();
 
         $cohortgenerator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
 

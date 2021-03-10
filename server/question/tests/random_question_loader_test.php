@@ -34,7 +34,6 @@ defined('MOODLE_INTERNAL') || die();
 class random_question_loader_testcase extends advanced_testcase {
 
     public function test_empty_category_gives_null() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();
@@ -51,7 +50,6 @@ class random_question_loader_testcase extends advanced_testcase {
     }
 
     public function test_descriptions_not_returned() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();
@@ -63,7 +61,6 @@ class random_question_loader_testcase extends advanced_testcase {
 
     public function test_hidden_questions_not_returned() {
         global $DB;
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();
@@ -75,7 +72,6 @@ class random_question_loader_testcase extends advanced_testcase {
     }
 
     public function test_cloze_subquestions_not_returned() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();
@@ -87,7 +83,6 @@ class random_question_loader_testcase extends advanced_testcase {
     }
 
     public function test_random_questions_not_returned() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
@@ -101,7 +96,6 @@ class random_question_loader_testcase extends advanced_testcase {
     }
 
     public function test_one_question_category_returns_that_q_then_null() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();
@@ -113,7 +107,6 @@ class random_question_loader_testcase extends advanced_testcase {
     }
 
     public function test_two_question_category_returns_both_then_null() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();
@@ -131,7 +124,6 @@ class random_question_loader_testcase extends advanced_testcase {
     }
 
     public function test_nested_categories() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat1 = $generator->create_question_category();
@@ -147,7 +139,6 @@ class random_question_loader_testcase extends advanced_testcase {
     }
 
     public function test_used_question_not_returned_until_later() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();
@@ -161,7 +152,6 @@ class random_question_loader_testcase extends advanced_testcase {
     }
 
     public function test_previously_used_question_not_returned_until_later() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();
@@ -183,7 +173,6 @@ class random_question_loader_testcase extends advanced_testcase {
     }
 
     public function test_empty_category_does_not_have_question_available() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();
@@ -194,7 +183,6 @@ class random_question_loader_testcase extends advanced_testcase {
     }
 
     public function test_descriptions_not_available() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();
@@ -206,7 +194,6 @@ class random_question_loader_testcase extends advanced_testcase {
     }
 
     public function test_existing_question_is_available_but_then_marked_used() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();

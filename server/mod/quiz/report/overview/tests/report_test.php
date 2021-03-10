@@ -56,7 +56,6 @@ class quiz_overview_report_testcase extends advanced_testcase {
      */
     public function test_report_sql($isdownloading) {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Create a course and a quiz.
         $generator = $this->getDataGenerator();
@@ -250,7 +249,6 @@ class quiz_overview_report_testcase extends advanced_testcase {
      * @param array $expected
      */
     public function test_get_bands_count_and_width($grade, $expected) {
-        $this->resetAfterTest(true);
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
         $quiz = $quizgenerator->create_instance(['course' => SITEID, 'grade' => $grade]);
         $this->assertEquals($expected, quiz_overview_report::get_bands_count_and_width($quiz));

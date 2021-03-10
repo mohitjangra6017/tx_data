@@ -32,7 +32,6 @@ class totara_reportbuilder_advanced_column_testcase extends advanced_testcase {
     public function test_aggregation() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $users = array();
@@ -212,7 +211,6 @@ class totara_reportbuilder_advanced_column_testcase extends advanced_testcase {
     public function test_transform() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $users = array();

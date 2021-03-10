@@ -88,7 +88,6 @@ class totara_reportbuilder_rb_jobassignment_cache_testcase extends reportcache_a
         }
 
         set_config('enablereportcaching', 1);
-        $this->resetAfterTest();
         $this->enable_caching($this->report_builder_data['id']);
         $this->assertSame(RB_CACHE_FLAG_OK, $this->get_report_cache_status($this->report_builder_data['id'], array()));
 

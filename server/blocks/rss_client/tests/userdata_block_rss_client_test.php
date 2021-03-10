@@ -51,7 +51,6 @@ class userdata_block_rss_client_test extends advanced_testcase {
     public function test_count_when_user_has_empty_rss_client_block() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // init control user
         $controluser = $this->getDataGenerator()->create_user();
@@ -75,7 +74,6 @@ class userdata_block_rss_client_test extends advanced_testcase {
     public function test_count_when_user_has_rss_client_block() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // init control user
         $controluser = $this->getDataGenerator()->create_user();
@@ -99,7 +97,6 @@ class userdata_block_rss_client_test extends advanced_testcase {
      * test export when user has no rss client block
      */
     public function test_export_when_user_has_no_rss_client_block() {
-        $this->resetAfterTest();
 
         // init control user
         $controluser = $this->getDataGenerator()->create_user();
@@ -118,7 +115,6 @@ class userdata_block_rss_client_test extends advanced_testcase {
      * test export when user has rss client block
      */
     public function test_export_when_user_has_rss_client_block() {
-        $this->resetAfterTest();
 
         // init control user
         $controluser = $this->getDataGenerator()->create_user();

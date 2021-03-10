@@ -40,7 +40,6 @@ class repository_url_lib_testcase extends advanced_testcase {
      * Check that the url escaper performs as expected
      */
     public function test_escape_url() {
-        $this->resetAfterTest();
 
         // Totara disables this in new installs.
         $urlplugin = new repository_type('url', array(), true);

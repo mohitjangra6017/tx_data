@@ -47,7 +47,6 @@ class mod_scorm_external_testcase extends externallib_advanced_testcase {
      */
     public function setUp(): void {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.
@@ -211,7 +210,6 @@ class mod_scorm_external_testcase extends externallib_advanced_testcase {
     public function test_mod_scorm_get_scorm_scoes() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create users.
         $student = self::getDataGenerator()->create_user();
@@ -351,7 +349,6 @@ class mod_scorm_external_testcase extends externallib_advanced_testcase {
     public function test_mod_scorm_get_scorm_user_data() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create users.
         $student1 = self::getDataGenerator()->create_user();
@@ -413,7 +410,6 @@ class mod_scorm_external_testcase extends externallib_advanced_testcase {
     public function test_mod_scorm_insert_scorm_tracks() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create users.
         $student = self::getDataGenerator()->create_user();
@@ -499,7 +495,6 @@ class mod_scorm_external_testcase extends externallib_advanced_testcase {
     public function test_mod_scorm_get_scorm_sco_tracks() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create users.
         $student = self::getDataGenerator()->create_user();
@@ -594,7 +589,6 @@ class mod_scorm_external_testcase extends externallib_advanced_testcase {
     public function test_mod_scorm_get_scorms_by_courses() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create users.
         $student = self::getDataGenerator()->create_user();

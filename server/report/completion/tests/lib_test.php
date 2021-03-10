@@ -37,7 +37,6 @@ class report_completion_lib_testcase extends advanced_testcase {
 
     public function setUp(): void {
         set_config('enablecompletion', true);
-        $this->resetAfterTest();
     }
 
     /**

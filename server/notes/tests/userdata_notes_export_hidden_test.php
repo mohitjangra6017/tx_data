@@ -87,7 +87,6 @@ class core_notes_userdata_notes_export_hidden_testcase extends advanced_testcase
      * regardless of course and published state.
      */
     public function test_count_is_correct() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
         /** @var \core_notes\testing\generator $notegenerator */
@@ -145,7 +144,6 @@ class core_notes_userdata_notes_export_hidden_testcase extends advanced_testcase
      * Tests that the count limits course context to only notes in the course.
      */
     public function test_count_course_context_only_includes_notes_in_course() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $coursecontext = context_course::instance($data->courses[0]->id);
 
@@ -188,7 +186,6 @@ class core_notes_userdata_notes_export_hidden_testcase extends advanced_testcase
      * All the visible notes will become hidden when the user is deleted.
      */
     public function test_count_works_on_deleted_users() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -204,7 +201,6 @@ class core_notes_userdata_notes_export_hidden_testcase extends advanced_testcase
      * Tests that the export functions contains the notes that are hidden to the user
      */
     public function test_export_contains_expected_values() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -219,7 +215,6 @@ class core_notes_userdata_notes_export_hidden_testcase extends advanced_testcase
      * Makes sure the export does not include visible notes
      */
     public function test_export_doesnt_include_visible_notes() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -243,7 +238,6 @@ class core_notes_userdata_notes_export_hidden_testcase extends advanced_testcase
      * Note this will contain all notes regardless of whether the user could see them or not
      */
     public function test_export_works_on_deleted_users() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -321,7 +315,6 @@ class core_notes_userdata_notes_export_hidden_testcase extends advanced_testcase
         global $CFG;
         require_once($CFG->dirroot . '/notes/lib.php');
 
-        $this->resetAfterTest();
         $data = $this->get_category_data();
         $categorycontext = context_coursecat::instance($data->category->id);
         $subcategorycontext = context_coursecat::instance($data->subcategory->id);
@@ -348,7 +341,6 @@ class core_notes_userdata_notes_export_hidden_testcase extends advanced_testcase
         global $CFG;
         require_once($CFG->dirroot . '/notes/lib.php');
 
-        $this->resetAfterTest();
         $data = $this->get_category_data();
         $categorycontext = context_coursecat::instance($data->category->id);
         $subcategorycontext = context_coursecat::instance($data->subcategory->id);

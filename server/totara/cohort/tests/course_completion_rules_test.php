@@ -94,7 +94,6 @@ class totara_cohort_course_completion_rules_testcase extends reportcache_advance
 
         parent::setup();
         set_config('enablecompletion', 1);
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Set totara_cohort generator.
@@ -206,7 +205,6 @@ class totara_cohort_course_completion_rules_testcase extends reportcache_advance
      */
     public function test_coursecompletion_date_rule($params, $courses, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Process listofids.
@@ -278,7 +276,6 @@ class totara_cohort_course_completion_rules_testcase extends reportcache_advance
      */
     public function test_coursecompletion_duration_rule($params, $courses, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Process listofids.
@@ -322,7 +319,6 @@ class totara_cohort_course_completion_rules_testcase extends reportcache_advance
      */
     public function test_coursecompletion_list($params, $listofcourses, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Process listofids.

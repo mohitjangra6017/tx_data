@@ -45,7 +45,6 @@ class completion_completion_criteria_duration_test extends advanced_testcase {
 
     protected function setUp(): void {
         parent::setup();
-        $this->resetAfterTest();
 
         $this->generator = $this->getDataGenerator();
         $this->completion_generator = $this->getDataGenerator()->get_plugin_generator('core_completion');
@@ -58,7 +57,6 @@ class completion_completion_criteria_duration_test extends advanced_testcase {
      * does not crash during review() when multiple enrolments exist on a course for a specific user.
      */
     public function test_completion_criteria_duration_get_timeenrolled() {
-        $this->resetAfterTest(true);
         global $DB;
 
         // Create multiple courses and one user.

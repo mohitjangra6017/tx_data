@@ -52,7 +52,6 @@ class message_received_search_testcase extends advanced_testcase {
      * @return void
      */
     public function setUp(): void {
-        $this->resetAfterTest(true);
         set_config('enableglobalsearch', true);
 
         $this->messagereceivedareaid = \core_search\manager::generate_areaid('core_message', 'message_received');

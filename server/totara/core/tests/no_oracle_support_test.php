@@ -27,7 +27,6 @@ class totara_core_no_oracle_support_testcase extends advanced_testcase {
     public function test_table_size() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $dbman = $DB->get_manager();
 

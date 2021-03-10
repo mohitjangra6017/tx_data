@@ -38,7 +38,6 @@ class totara_customfield_totara_catalog_filter_factory_testcase extends \advance
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
     }
 
     /**

@@ -52,7 +52,6 @@ class mod_facetoface_archive_testcase extends advanced_testcase {
     public function test_archive() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         // Ensure completion is enabled sitewide.
         $CFG->enablecompletion = true;

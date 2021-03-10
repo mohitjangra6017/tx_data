@@ -30,7 +30,6 @@ class totara_appraisal_current_stage_editor_testcase extends appraisal_testcase 
     public function test_get_stages_for_users() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $learner = $this->getDataGenerator()->create_user();
         $manager = $this->getDataGenerator()->create_user();
@@ -82,7 +81,6 @@ class totara_appraisal_current_stage_editor_testcase extends appraisal_testcase 
      * @return stdClass
      */
     public function setup_data_for_set_stage_for_role_assignment(): stdClass {
-        $this->resetAfterTest();
 
         set_config('totara_job_allowmultiplejobs', false);
 

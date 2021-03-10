@@ -143,7 +143,6 @@ class question_field_multichoice_test extends totara_question_testcase {
      * @return array
      */
     protected function prepare_multichoice_options(question_manager $man = null) {
-        $this->resetAfterTest();
         $storage = new question_storage_mock(1);
         $storage->answerfield = 'appraisalroleassignmentid';
         $storage->prefix = 'appraisal';

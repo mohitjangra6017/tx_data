@@ -104,7 +104,6 @@ class tool_sitepolicy_userdata_fields_testcase extends advanced_testcase {
     public function test_purge_author() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_sitepolicies();
@@ -147,7 +146,6 @@ class tool_sitepolicy_userdata_fields_testcase extends advanced_testcase {
     public function test_purge_publisher() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_sitepolicies();

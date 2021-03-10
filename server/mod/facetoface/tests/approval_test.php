@@ -58,7 +58,6 @@ class mod_facetoface_approval_testcase extends advanced_testcase {
      */
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
         $this->emailsink = $this->redirectEmails();
     }
 

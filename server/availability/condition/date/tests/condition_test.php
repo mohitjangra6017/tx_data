@@ -50,7 +50,6 @@ class availability_date_condition_testcase extends advanced_testcase {
      */
     public function test_in_tree() {
         global $SITE, $USER, $CFG;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Set server timezone for test. (Important as otherwise the timezone
@@ -183,7 +182,6 @@ class availability_date_condition_testcase extends advanced_testcase {
     public function test_get_description() {
         global $SITE, $CFG;
 
-        $this->resetAfterTest();
         $this->setTimezone('UTC');
 
         $modinfo = get_fast_modinfo($SITE);
@@ -244,7 +242,6 @@ class availability_date_condition_testcase extends advanced_testcase {
      */
     public function test_update_all_dates() {
         global $DB;
-        $this->resetAfterTest();
 
         // Create a course with 3 pages.
         $generator = $this->getDataGenerator();

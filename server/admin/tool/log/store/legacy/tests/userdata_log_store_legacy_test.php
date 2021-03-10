@@ -58,7 +58,6 @@ class logstore_legacy_userdata_log_testcase extends advanced_testcase {
     public function test_count_when_user_has_log_records() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->enable_legacy_log();
 
         // init control user
@@ -83,7 +82,6 @@ class logstore_legacy_userdata_log_testcase extends advanced_testcase {
      * test export when user has no log records
      */
     public function test_export_when_user_has_no_log_records() {
-        $this->resetAfterTest(true);
         $this->enable_legacy_log();
 
         // init control user
@@ -103,7 +101,6 @@ class logstore_legacy_userdata_log_testcase extends advanced_testcase {
      * test export when user has log records
      */
     public function test_export_when_user_has_log_records() {
-        $this->resetAfterTest();
         $this->enable_legacy_log();
 
         // init control user
@@ -133,7 +130,6 @@ class logstore_legacy_userdata_log_testcase extends advanced_testcase {
     public function test_purge_when_active_user_has_log_records() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->enable_legacy_log();
 
         // init users
@@ -175,7 +171,6 @@ class logstore_legacy_userdata_log_testcase extends advanced_testcase {
     public function test_purge_when_suspended_user_has_log_records() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->enable_legacy_log();
 
         // init users
@@ -217,7 +212,6 @@ class logstore_legacy_userdata_log_testcase extends advanced_testcase {
     public function test_purge_when_deleted_user_has_log_records() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->enable_legacy_log();
 
         // init users
@@ -258,7 +252,6 @@ class logstore_legacy_userdata_log_testcase extends advanced_testcase {
      * test purge when user has log records
      */
     public function test_purge_with_empty_log_records() {
-        $this->resetAfterTest();
         $this->enable_legacy_log();
 
         $user = $this->getDataGenerator()->create_user();

@@ -87,7 +87,6 @@ class core_notes_userdata_notes_purge_testcase extends advanced_testcase {
      */
     public function test_purge_removes_notes_on_a_user() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -102,7 +101,6 @@ class core_notes_userdata_notes_purge_testcase extends advanced_testcase {
      * Make sure purging doesnt remove other notes.
      */
     public function test_purge_doesnt_remove_other_notes() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -126,7 +124,6 @@ class core_notes_userdata_notes_purge_testcase extends advanced_testcase {
      * that only the notes in that course.
      */
     public function test_purge_course_context_only_removes_notes_in_course() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $coursecontext = context_course::instance($data->courses[0]->id);
         $systemcontext = context_system::instance();
@@ -155,7 +152,6 @@ class core_notes_userdata_notes_purge_testcase extends advanced_testcase {
      * Make sure count returns 0 after a purge.
      */
     public function test_count_zero_after_purge() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -184,7 +180,6 @@ class core_notes_userdata_notes_purge_testcase extends advanced_testcase {
      */
     public function test_count_is_correct() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = \context_system::instance();
         /** @var \core_notes\testing\generator $notegenerator */
@@ -230,7 +225,6 @@ class core_notes_userdata_notes_purge_testcase extends advanced_testcase {
      * Tests that the count limits course context to only notes in the course.
      */
     public function test_count_course_context_only_includes_notes_in_course() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $coursecontext = context_course::instance($data->courses[0]->id);
 
@@ -272,7 +266,6 @@ class core_notes_userdata_notes_purge_testcase extends advanced_testcase {
      * Assumes that the notes are not deleted when the user is deleted.
      */
     public function test_count_works_on_deleted_users() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -349,7 +342,6 @@ class core_notes_userdata_notes_purge_testcase extends advanced_testcase {
         global $CFG;
         require_once($CFG->dirroot . '/notes/lib.php');
 
-        $this->resetAfterTest();
         $data = $this->get_category_data();
         $categorycontext = context_coursecat::instance($data->category->id);
         $subcategorycontext = context_coursecat::instance($data->subcategory->id);
@@ -376,7 +368,6 @@ class core_notes_userdata_notes_purge_testcase extends advanced_testcase {
         global $CFG;
         require_once($CFG->dirroot . '/notes/lib.php');
 
-        $this->resetAfterTest();
         $data = $this->get_category_data();
         $categorycontext = context_coursecat::instance($data->category->id);
         $subcategorycontext = context_coursecat::instance($data->subcategory->id);

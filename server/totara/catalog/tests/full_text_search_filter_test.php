@@ -38,7 +38,6 @@ class totara_catalog_full_text_search_filter_testcase extends advanced_testcase 
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
         $this->full_text_search_filter = new full_text_search_filter();
     }
 

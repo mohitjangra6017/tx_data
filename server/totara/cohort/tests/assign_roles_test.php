@@ -57,7 +57,6 @@ class totara_cohort_assign_roles_testcase extends advanced_testcase {
     public function setUp(): void {
         global $DB;
         parent::setup();
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $users = array();
@@ -94,7 +93,6 @@ class totara_cohort_assign_roles_testcase extends advanced_testcase {
 
     public function test_assign_roles_to_cohort() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $roles = array();
@@ -158,7 +156,6 @@ class totara_cohort_assign_roles_testcase extends advanced_testcase {
 
     public function test_unassign_roles_to_cohort() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create the cohorts.

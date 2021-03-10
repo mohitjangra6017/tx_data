@@ -51,7 +51,6 @@ class core_badges_generator_testcase extends advanced_testcase {
      * Tests creation of badges via the badge generator.
      */
     public function test_create_badge() {
-        $this->resetAfterTest();
 
         /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
@@ -78,7 +77,6 @@ class core_badges_generator_testcase extends advanced_testcase {
      * Tests creation of badges via the badge generator.
      */
     public function test_create_badge_customised() {
-        $this->resetAfterTest();
 
         /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
@@ -135,7 +133,6 @@ class core_badges_generator_testcase extends advanced_testcase {
      * Tests creation of connectedbackpacks connections via the generator.
      */
     public function test_create_backpack_connection() {
-        $this->resetAfterTest();
 
         /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
@@ -156,7 +153,6 @@ class core_badges_generator_testcase extends advanced_testcase {
      * Tests adding manual criteria to existing badges.
      */
     public function test_add_manual_badge_criteria() {
-        $this->resetAfterTest();
 
         /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
@@ -189,7 +185,6 @@ class core_badges_generator_testcase extends advanced_testcase {
      * Tests manually issuing badges.
      */
     public function test_issue_badge_manually() {
-        $this->resetAfterTest();
 
         /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
@@ -220,7 +215,6 @@ class core_badges_generator_testcase extends advanced_testcase {
      * Test that badges cannot be issued without manual criteria.
      */
     public function test_issue_badge_without_criteria() {
-        $this->resetAfterTest();
 
         /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');
@@ -236,7 +230,6 @@ class core_badges_generator_testcase extends advanced_testcase {
      * Test that mocking external badges within the cache passes through the API correctly.
      */
     public function test_mock_external_badges_in_cache() {
-        $this->resetAfterTest();
 
         /** @var \core_badges\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_badges');

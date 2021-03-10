@@ -35,7 +35,6 @@ class totara_catalog_catalog_retrieval_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
     }
 
     public function test_alphabetical_sorting_enabled() {

@@ -82,7 +82,6 @@ class mod_url_lib_testcase extends advanced_testcase {
         global $CFG;
 
         $CFG->enablecompletion = 1;
-        $this->resetAfterTest();
 
         // Setup test data.
         $course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1));

@@ -24,7 +24,6 @@
 class auth_approved_generator_testcase extends advanced_testcase {
 
     public function test_username_required() {
-        $this->resetAfterTest();
 
         /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
@@ -44,7 +43,6 @@ class auth_approved_generator_testcase extends advanced_testcase {
     }
 
     public function test_password_required() {
-        $this->resetAfterTest();
 
         /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
@@ -63,7 +61,6 @@ class auth_approved_generator_testcase extends advanced_testcase {
     }
 
     public function test_email_required() {
-        $this->resetAfterTest();
 
         /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
@@ -82,7 +79,6 @@ class auth_approved_generator_testcase extends advanced_testcase {
     }
 
     public function test_firstname_required() {
-        $this->resetAfterTest();
 
         /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
@@ -101,7 +97,6 @@ class auth_approved_generator_testcase extends advanced_testcase {
     }
 
     public function test_surname_required() {
-        $this->resetAfterTest();
 
         /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
@@ -120,7 +115,6 @@ class auth_approved_generator_testcase extends advanced_testcase {
     }
 
     public function test_status_required() {
-        $this->resetAfterTest();
 
         /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
@@ -141,7 +135,6 @@ class auth_approved_generator_testcase extends advanced_testcase {
     public function test_create_signup_required_fields_pending() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
@@ -203,7 +196,6 @@ class auth_approved_generator_testcase extends advanced_testcase {
     public function test_create_signup_required_fields_approved() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
@@ -264,7 +256,6 @@ class auth_approved_generator_testcase extends advanced_testcase {
     public function test_create_signup_required_fields_rejected() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');
@@ -326,7 +317,6 @@ class auth_approved_generator_testcase extends advanced_testcase {
     public function test_create_signup_all_fields_pending() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \totara_hierarchy\testing\generator $hierarchies */
         $hierarchies = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
@@ -424,7 +414,6 @@ class auth_approved_generator_testcase extends advanced_testcase {
     public function test_create_signup_all_fields_approved() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \totara_hierarchy\testing\generator $hierarchies */
         $hierarchies = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
@@ -523,7 +512,6 @@ class auth_approved_generator_testcase extends advanced_testcase {
     public function test_create_signup_all_fields_rejected() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \totara_hierarchy\testing\generator $hierarchies */
         $hierarchies = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
@@ -622,7 +610,6 @@ class auth_approved_generator_testcase extends advanced_testcase {
     public function test_create_signup_with_approver() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \auth_approved\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_approved');

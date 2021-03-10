@@ -42,7 +42,6 @@ class block_current_learning_testcase extends block_current_learning_testcase_ba
     protected function setUp(): void {
         global $CFG, $DB;
 
-        $this->resetAfterTest(true);
         parent::setUp();
 
         $this->generator = $this->getDataGenerator();

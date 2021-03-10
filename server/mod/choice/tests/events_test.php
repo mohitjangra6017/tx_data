@@ -61,7 +61,6 @@ class mod_choice_events_testcase extends advanced_testcase {
     protected function setUp(): void {
         global $DB;
 
-        $this->resetAfterTest();
 
         $this->course = $this->getDataGenerator()->create_course();
         $this->choice = $this->getDataGenerator()->create_module('choice', array('course' => $this->course->id));
@@ -282,7 +281,6 @@ class mod_choice_events_testcase extends advanced_testcase {
     public function test_report_viewed() {
         global $USER;
 
-        $this->resetAfterTest();
 
         // Generate user data.
         $this->setAdminUser();
@@ -319,7 +317,6 @@ class mod_choice_events_testcase extends advanced_testcase {
     public function test_report_downloaded() {
         global $USER;
 
-        $this->resetAfterTest();
 
         // Generate user data.
         $this->setAdminUser();

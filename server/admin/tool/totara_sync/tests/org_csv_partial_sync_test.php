@@ -83,7 +83,6 @@ class tool_totara_sync_org_partial_sync_testcase extends advanced_testcase {
 
         parent::setUp();
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->filedir = $CFG->dataroot . '/totara_sync';

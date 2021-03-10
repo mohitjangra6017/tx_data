@@ -72,7 +72,6 @@ class core_blog_events_testcase extends advanced_testcase {
         global $DB;
         parent::setUp();
 
-        $this->resetAfterTest();
 
         // Create default course.
         $course = $this->getDataGenerator()->create_course(array('category' => 1, 'shortname' => 'ANON'));
@@ -121,7 +120,6 @@ class core_blog_events_testcase extends advanced_testcase {
         global $USER;
 
         $this->setAdminUser();
-        $this->resetAfterTest();
 
         // Create a blog entry for another user as Admin.
         $sink = $this->redirectEvents();
@@ -159,7 +157,6 @@ class core_blog_events_testcase extends advanced_testcase {
         global $USER;
 
         $this->setAdminUser();
-        $this->resetAfterTest();
         $sitecontext = context_system::instance();
 
         // Edit a blog entry as Admin.
@@ -194,7 +191,6 @@ class core_blog_events_testcase extends advanced_testcase {
         global $USER, $DB;
 
         $this->setAdminUser();
-        $this->resetAfterTest();
         $sitecontext = context_system::instance();
 
         // Delete a user blog entry as Admin.
@@ -230,7 +226,6 @@ class core_blog_events_testcase extends advanced_testcase {
         global $USER;
 
         $this->setAdminUser();
-        $this->resetAfterTest();
         $sitecontext = context_system::instance();
         $coursecontext = context_course::instance($this->courseid);
         $contextmodule = context_module::instance($this->cmid);
@@ -275,7 +270,6 @@ class core_blog_events_testcase extends advanced_testcase {
         global $USER;
 
         $this->setAdminUser();
-        $this->resetAfterTest();
         $sitecontext = context_system::instance();
         $coursecontext = context_course::instance($this->courseid);
         $contextmodule = context_module::instance($this->cmid);
@@ -327,7 +321,6 @@ class core_blog_events_testcase extends advanced_testcase {
      */
     public function test_blog_association_created_event_validations() {
 
-        $this->resetAfterTest();
 
          // Make sure associatetype validations work.
         try {

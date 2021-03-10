@@ -121,7 +121,6 @@ class totara_cohort_rendering_audience_testcase extends advanced_testcase {
     public function test_rendering_audience_rule_with_deleted_programs() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $programs = $this->create_programs();
@@ -163,7 +162,6 @@ class totara_cohort_rendering_audience_testcase extends advanced_testcase {
     public function test_rendering_audience_rule_with_deleted_courses() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $courses = $this->create_courses();
@@ -204,7 +202,6 @@ class totara_cohort_rendering_audience_testcase extends advanced_testcase {
     public function test_rendering_audience_rule_with_deleted_positions() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $positions = $this->create_positions(2);

@@ -32,7 +32,6 @@ class rb_course_sortorder_helper_testcase extends advanced_testcase {
      * An integration test of the complete operation of the class.
      */
     public function test_basic_operation() {
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
         /** @var \totara_program\testing\generator $prog_generator */
@@ -77,7 +76,6 @@ class rb_course_sortorder_helper_testcase extends advanced_testcase {
     }
 
     public function test_deleting_an_empty_program() {
-        $this->resetAfterTest();
 
         /** @var \totara_program\testing\generator $prog_generator */
         $prog_generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
@@ -97,7 +95,6 @@ class rb_course_sortorder_helper_testcase extends advanced_testcase {
     }
 
     public function test_get_order_on_multiple_programs() {
-        $this->resetAfterTest();
 
         /** @var \totara_program\testing\generator $prog_generator */
         $prog_generator = $this->getDataGenerator()->get_plugin_generator('totara_program');

@@ -41,7 +41,6 @@ class totara_cohort_userdata_set_membership_testcase extends advanced_testcase {
      * within the system.
      */
     public function test_with_no_data() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $user = $this->getDataGenerator()->create_user();

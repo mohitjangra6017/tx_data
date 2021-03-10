@@ -54,7 +54,6 @@ class totara_completionimport_csv_import_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
     }
 
     /**

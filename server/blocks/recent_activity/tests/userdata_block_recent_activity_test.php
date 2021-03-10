@@ -61,7 +61,6 @@ class userdata_block_recent_activity_test extends advanced_testcase {
     public function test_count_with_recent_activity_block() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // init control user
         $controluser = $this->getDataGenerator()->create_user();
@@ -85,7 +84,6 @@ class userdata_block_recent_activity_test extends advanced_testcase {
      * test export when user has no recent activity block
      */
     public function test_export_with_empty_recent_activity_block() {
-        $this->resetAfterTest();
 
         // init control user
         $controluser = $this->getDataGenerator()->create_user();
@@ -104,7 +102,6 @@ class userdata_block_recent_activity_test extends advanced_testcase {
      * test export when user has recent activity block
      */
     public function test_export_when_user_has_recent_activity_block() {
-        $this->resetAfterTest();
 
         // init control user
         $controluser = $this->getDataGenerator()->create_user();
@@ -133,7 +130,6 @@ class userdata_block_recent_activity_test extends advanced_testcase {
     public function test_purge_recent_activity_block_for_active_user() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $activeuser = $this->getDataGenerator()->create_user();
         $suspendeduser = $this->getDataGenerator()->create_user(['suspended' => 1]);
@@ -170,7 +166,6 @@ class userdata_block_recent_activity_test extends advanced_testcase {
     public function test_purge_for_suspended_user() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $suspendeduser = $this->getDataGenerator()->create_user(['suspended' => 1]);
         $activeuser = $this->getDataGenerator()->create_user();
@@ -207,7 +202,6 @@ class userdata_block_recent_activity_test extends advanced_testcase {
     public function test_purge_for_deleted_user() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $deleteduser = $this->getDataGenerator()->create_user();
         $activeuser = $this->getDataGenerator()->create_user();

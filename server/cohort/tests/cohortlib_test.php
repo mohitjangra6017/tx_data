@@ -42,7 +42,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
     public function test_cohort_add_cohort() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $cohort = new stdClass();
         $cohort->contextid = context_system::instance()->id;
@@ -81,7 +80,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
     public function test_cohort_add_cohort_event() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Setup cohort data structure.
         $cohort = new stdClass();
@@ -120,7 +118,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
     public function test_cohort_update_cohort() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $cohort = new stdClass();
         $cohort->contextid = context_system::instance()->id;
@@ -152,7 +149,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
     public function test_cohort_update_cohort_event() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Setup the cohort data structure.
         $cohort = new stdClass();
@@ -193,7 +189,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
     public function test_cohort_delete_cohort() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $cohort = $this->getDataGenerator()->create_cohort();
 
@@ -204,7 +199,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
 
     public function test_cohort_delete_cohort_event() {
 
-        $this->resetAfterTest();
 
         $cohort = $this->getDataGenerator()->create_cohort();
 
@@ -233,7 +227,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
     public function test_cohort_delete_category() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $category = $this->getDataGenerator()->create_category();
 
@@ -249,7 +242,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
     public function test_cohort_add_member() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $cohort = $this->getDataGenerator()->create_cohort();
         $user = $this->getDataGenerator()->create_user();
@@ -261,7 +253,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
 
     public function test_cohort_add_member_event() {
         global $USER;
-        $this->resetAfterTest();
 
         // Setup the data.
         $cohort = $this->getDataGenerator()->create_cohort();
@@ -293,7 +284,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
     public function test_cohort_remove_member() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $cohort = $this->getDataGenerator()->create_cohort();
         $user = $this->getDataGenerator()->create_user();
@@ -307,7 +297,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
 
     public function test_cohort_remove_member_event() {
         global $USER;
-        $this->resetAfterTest();
 
         // Setup the data.
         $cohort = $this->getDataGenerator()->create_cohort();
@@ -339,7 +328,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
     public function test_cohort_is_member() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $cohort = $this->getDataGenerator()->create_cohort();
         $user = $this->getDataGenerator()->create_user();
@@ -352,7 +340,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
     public function test_cohort_get_cohorts() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $category1 = $this->getDataGenerator()->create_category();
         $category2 = $this->getDataGenerator()->create_category();
@@ -411,7 +398,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
     public function test_cohort_get_all_cohorts() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $category1 = $this->getDataGenerator()->create_category();
         $category2 = $this->getDataGenerator()->create_category();
@@ -475,7 +461,6 @@ class core_cohort_cohortlib_testcase extends advanced_testcase {
     public function test_cohort_get_available_cohorts() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $category1 = $this->getDataGenerator()->create_category();
         $category2 = $this->getDataGenerator()->create_category();

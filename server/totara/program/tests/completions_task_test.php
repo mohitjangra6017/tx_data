@@ -130,7 +130,6 @@ class totara_program_completions_task_testcase extends advanced_testcase {
     public function test_task_with_programs() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
 
         $CFG->enablecompletion = true;
 
@@ -316,7 +315,6 @@ class totara_program_completions_task_testcase extends advanced_testcase {
     public function test_task_with_certifications() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
 
         $CFG->enablecompletion = true;
 
@@ -720,7 +718,6 @@ class totara_program_completions_task_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/lib/completionlib.php');
 
         $CFG->enablecompletion = true;
-        $this->resetAfterTest();
 
         // Create a couple of users.
         $users = [];

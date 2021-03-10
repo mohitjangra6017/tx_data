@@ -35,7 +35,6 @@ class core_tag_taglib_testcase extends advanced_testcase {
      * This is executed before running any test in this file.
      */
     public function setUp(): void {
-        $this->resetAfterTest();
     }
 
     /**
@@ -1122,7 +1121,6 @@ class core_tag_taglib_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/tag/lib.php');
 
-        $this->resetAfterTest(true);
 
         // Set up users with intertests. 'interest1' and 'generictag1' won't be deleted from the tag table, only tag_instance.
         $user1 = $this->getDataGenerator()->create_user(['interests' => ['interest1', 'interest2', 'generictag1']]);

@@ -55,7 +55,6 @@ class totara_customfield_multiselect_testcase extends advanced_testcase {
     }
 
     public function test_sync_data_preprocess() {
-        $this->resetAfterTest(true);
 
         //
         // Single item to be saved.

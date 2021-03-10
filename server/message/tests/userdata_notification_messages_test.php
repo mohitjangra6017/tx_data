@@ -54,7 +54,6 @@ class core_message_userdata_notification_messages_testcase extends userdata_mess
      * test if messages and according data are purged
      */
     public function test_purge() {
-        $this->resetAfterTest(true);
 
         // Set up users.
         $user1 = $this->getDataGenerator()->create_user();
@@ -128,7 +127,6 @@ class core_message_userdata_notification_messages_testcase extends userdata_mess
      * test if messages and according data are purged
      */
     public function test_count() {
-        $this->resetAfterTest(true);
 
         // Set up users.
         $user1 = $this->getDataGenerator()->create_user();
@@ -168,7 +166,6 @@ class core_message_userdata_notification_messages_testcase extends userdata_mess
      * test if messages and according data are exported
      */
     public function test_export() {
-        $this->resetAfterTest(true);
 
         // Set up users.
         $user1 = $this->getDataGenerator()->create_user();

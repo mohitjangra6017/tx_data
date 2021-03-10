@@ -65,7 +65,6 @@ class qtype_random_test extends advanced_testcase {
     }
 
     public function test_question_creation() {
-        $this->resetAfterTest();
         question_bank::get_qtype('random')->clear_caches_before_testing();
 
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');

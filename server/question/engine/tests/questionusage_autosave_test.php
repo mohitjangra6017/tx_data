@@ -41,7 +41,6 @@ require_once($CFG->dirroot . '/question/engine/tests/qbehaviour_walkthrough_test
 class question_usage_autosave_test extends qbehaviour_walkthrough_test_base {
 
     public function test_autosave_then_display() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category();
         $question = $generator->create_question('shortanswer', null,
@@ -86,7 +85,6 @@ class question_usage_autosave_test extends qbehaviour_walkthrough_test_base {
     }
 
     public function test_autosave_then_autosave_different_data() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category();
         $question = $generator->create_question('shortanswer', null,
@@ -145,7 +143,6 @@ class question_usage_autosave_test extends qbehaviour_walkthrough_test_base {
     }
 
     public function test_autosave_then_autosave_same_data() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category();
         $question = $generator->create_question('shortanswer', null,
@@ -210,7 +207,6 @@ class question_usage_autosave_test extends qbehaviour_walkthrough_test_base {
     }
 
     public function test_autosave_then_autosave_original_data() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category();
         $question = $generator->create_question('shortanswer', null,
@@ -270,7 +266,6 @@ class question_usage_autosave_test extends qbehaviour_walkthrough_test_base {
     }
 
     public function test_autosave_then_real_save() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category();
         $question = $generator->create_question('shortanswer', null,
@@ -326,7 +321,6 @@ class question_usage_autosave_test extends qbehaviour_walkthrough_test_base {
     }
 
     public function test_autosave_then_real_save_same() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category();
         $question = $generator->create_question('shortanswer', null,
@@ -382,7 +376,6 @@ class question_usage_autosave_test extends qbehaviour_walkthrough_test_base {
     }
 
     public function test_autosave_then_submit() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category();
         $question = $generator->create_question('shortanswer', null,
@@ -458,7 +451,6 @@ class question_usage_autosave_test extends qbehaviour_walkthrough_test_base {
         $DB2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $DB2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
 
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category();
         $question = $generator->create_question('shortanswer', null,
@@ -527,7 +519,6 @@ class question_usage_autosave_test extends qbehaviour_walkthrough_test_base {
         $DB2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $DB2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
 
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category();
         $question = $generator->create_question('shortanswer', null,
@@ -580,7 +571,6 @@ class question_usage_autosave_test extends qbehaviour_walkthrough_test_base {
     }
 
     public function test_autosave_with_wrong_seq_number_ignored() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category();
         $question = $generator->create_question('shortanswer', null,
@@ -627,7 +617,6 @@ class question_usage_autosave_test extends qbehaviour_walkthrough_test_base {
     }
 
     public function test_finish_with_unhandled_autosave_data() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category();
         $question = $generator->create_question('shortanswer', null,

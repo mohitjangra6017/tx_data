@@ -38,7 +38,6 @@ class totara_userdata_local_observer_testcase extends advanced_testcase {
 
     public function test_user_created() {
         global $DB;
-        $this->resetAfterTest();
 
         $activeuserdata = $this->getDataGenerator()->create_user(array(), array('noinsert' => true));
         $activeuserid = user_create_user($activeuserdata, false, true);
@@ -70,7 +69,6 @@ class totara_userdata_local_observer_testcase extends advanced_testcase {
 
     public function test_user_updated() {
         global $DB;
-        $this->resetAfterTest();
 
         $activeuserdata = $this->getDataGenerator()->create_user(array(), array('noinsert' => true));
         $activeuserid = user_create_user($activeuserdata, false, true);
@@ -108,7 +106,6 @@ class totara_userdata_local_observer_testcase extends advanced_testcase {
 
     public function test_user_suspended() {
         global $DB;
-        $this->resetAfterTest();
 
         $activeuserdata = $this->getDataGenerator()->create_user(array(), array('noinsert' => true));
         $activeuserid = user_create_user($activeuserdata, false, true);
@@ -130,7 +127,6 @@ class totara_userdata_local_observer_testcase extends advanced_testcase {
 
     public function test_user_suspended_with_purge() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -194,7 +190,6 @@ class totara_userdata_local_observer_testcase extends advanced_testcase {
 
     public function test_user_deleted() {
         global $DB;
-        $this->resetAfterTest();
 
         $activeuserdata = $this->getDataGenerator()->create_user(array(), array('noinsert' => true));
         $activeuserid = user_create_user($activeuserdata, false, true);
@@ -215,7 +210,6 @@ class totara_userdata_local_observer_testcase extends advanced_testcase {
 
     public function test_user_deleted_with_purge() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -279,7 +273,6 @@ class totara_userdata_local_observer_testcase extends advanced_testcase {
 
     public function test_user_undeleted() {
         global $DB;
-        $this->resetAfterTest();
 
         $activeuserdata = $this->getDataGenerator()->create_user(array(), array('noinsert' => true));
         $activeuserid = user_create_user($activeuserdata, false, true);

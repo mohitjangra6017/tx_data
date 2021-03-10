@@ -58,7 +58,6 @@ class mod_forum_external_testcase extends externallib_advanced_testcase {
     public function test_mod_forum_get_forums_by_courses() {
         global $USER, $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a user.
         $user = self::getDataGenerator()->create_user(array('trackforums' => 1));
@@ -187,7 +186,6 @@ class mod_forum_external_testcase extends externallib_advanced_testcase {
     public function test_mod_forum_get_forum_discussion_posts() {
         global $CFG, $PAGE;
 
-        $this->resetAfterTest(true);
 
         // Set the CFG variable to allow track forums.
         $CFG->forum_trackreadposts = true;
@@ -414,7 +412,6 @@ class mod_forum_external_testcase extends externallib_advanced_testcase {
     public function test_mod_forum_get_forum_discussion_posts_deleted() {
         global $CFG, $PAGE;
 
-        $this->resetAfterTest(true);
         $generator = self::getDataGenerator()->get_plugin_generator('mod_forum');
 
         // Create a course and enrol some users in it.
@@ -494,7 +491,6 @@ class mod_forum_external_testcase extends externallib_advanced_testcase {
     public function test_mod_forum_get_forum_discussion_posts_qanda() {
         global $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $record = new stdClass();
         $user1 = self::getDataGenerator()->create_user($record);
@@ -560,7 +556,6 @@ class mod_forum_external_testcase extends externallib_advanced_testcase {
     public function test_mod_forum_get_forum_discussions_paginated() {
         global $USER, $CFG, $DB, $PAGE;
 
-        $this->resetAfterTest(true);
 
         // Set the CFG variable to allow track forums.
         $CFG->forum_trackreadposts = true;
@@ -710,7 +705,6 @@ class mod_forum_external_testcase extends externallib_advanced_testcase {
      */
     public function test_mod_forum_get_forum_discussions_paginated_qanda() {
 
-        $this->resetAfterTest(true);
 
         // Create courses to add the modules.
         $course = self::getDataGenerator()->create_course();
@@ -755,7 +749,6 @@ class mod_forum_external_testcase extends externallib_advanced_testcase {
     public function test_add_discussion_post() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         $user = self::getDataGenerator()->create_user();
         $otheruser = self::getDataGenerator()->create_user();
@@ -889,7 +882,6 @@ class mod_forum_external_testcase extends externallib_advanced_testcase {
      */
     public function test_add_discussion() {
         global $CFG, $USER;
-        $this->resetAfterTest(true);
 
         // Create courses to add the modules.
         $course = self::getDataGenerator()->create_course();
@@ -1005,7 +997,6 @@ class mod_forum_external_testcase extends externallib_advanced_testcase {
     public function test_add_discussion_in_course_with_groups() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         // Create course to add the module.
         $course = self::getDataGenerator()->create_course(array('groupmode' => VISIBLEGROUPS, 'groupmodeforce' => 0));
@@ -1105,7 +1096,6 @@ class mod_forum_external_testcase extends externallib_advanced_testcase {
      */
     public function test_can_add_discussion() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Create courses to add the modules.
         $course = self::getDataGenerator()->create_course();

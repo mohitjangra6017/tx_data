@@ -38,7 +38,6 @@ class enrol_self_external_testcase extends externallib_advanced_testcase {
     public function test_get_instance_info() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Check if self enrolment plugin is enabled.
         $selfplugin = enrol_get_plugin('self');
@@ -115,8 +114,6 @@ class enrol_self_external_testcase extends externallib_advanced_testcase {
      */
     public function test_enrol_user() {
         global $DB;
-
-        self::resetAfterTest(true);
 
         $user = self::getDataGenerator()->create_user();
         self::setUser($user);

@@ -71,7 +71,6 @@ class core_grade_grading_manager_testcase extends advanced_testcase {
     public function test_set_and_get_grading_area() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         //sleep(2); // to make sure the microtime will always return unique values // No sleeping in tests!!! --skodak
         $areaname1 = 'area1-' . (string)microtime(true);

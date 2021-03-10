@@ -54,7 +54,6 @@ class totara_question_review_export_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot.'/totara/hierarchy/lib.php');
 
-        $this->resetAfterTest();
 
         $comp1 = $this->create_competency(111);
         $comp2 = $this->create_competency(222);
@@ -146,7 +145,6 @@ class totara_question_review_export_testcase extends advanced_testcase {
         require_once($CFG->dirroot.'/totara/hierarchy/lib.php');
         require_once($CFG->dirroot.'/totara/question/field/multichoice.class.php');
 
-        $this->resetAfterTest();
 
         // Set up the scale, which contains the subquestions.
         $scale = new stdClass();

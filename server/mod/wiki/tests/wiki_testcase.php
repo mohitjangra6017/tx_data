@@ -91,7 +91,6 @@ abstract class wiki_testcase extends advanced_testcase {
             }
         }
 
-        $this->resetAfterTest();
 
         return $data;
     }

@@ -152,7 +152,6 @@ class totara_catalog_external_testcase extends output_test_base {
      */
     public function test_get_details_template_data() {
         global $DB;
-        $this->resetAfterTest();
 
         $test_default_titles = [
             'course' => 'Test course 1',

@@ -98,7 +98,6 @@ class totara_completionimport_importcertification_testcase extends completionimp
         global $DB, $CFG;
 
         set_config('enablecompletion', 1);
-        $this->resetAfterTest(true);
 
         $program_generator = \totara_program\testing\generator::instance();
 
@@ -182,7 +181,6 @@ class totara_completionimport_importcertification_testcase extends completionimp
     public function test_completionimport_resolve_references() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $program_generator = \totara_program\testing\generator::instance();
@@ -335,7 +333,6 @@ class totara_completionimport_importcertification_testcase extends completionimp
     public function test_import_assignments() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         $program_generator = \totara_program\testing\generator::instance();
 
@@ -515,7 +512,6 @@ class totara_completionimport_importcertification_testcase extends completionimp
         $job_generator = \totara_job\testing\generator::instance();
 
         set_config('enablecompletion', 1);
-        $this->resetAfterTest(true);
 
         $this->csvdateformat = get_default_config('totara_completionimport_certification', 'csvdateformat', TCI_CSV_DATE_FORMAT);
         $this->csvdelimiter = get_default_config('totara_completionimport_certification', 'csvdelimiter', TCI_CSV_DELIMITER);

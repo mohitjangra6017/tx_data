@@ -27,7 +27,6 @@ class totara_core_date_legacy_testcase extends advanced_testcase {
     public function test_totara_date_parse_from_format() {
         global $USER;
 
-        $this->resetAfterTest();
 
         $timezones = core_date::get_list_of_timezones(null, true);
         $timezones = array_keys($timezones);

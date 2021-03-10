@@ -123,7 +123,6 @@ class tool_totara_sync_comp_csv_emptyfields_setting_testcase extends totara_sync
     public function setUp(): void {
         parent::setUp();
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // We set the default to not enable assignment

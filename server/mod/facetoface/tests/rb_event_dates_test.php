@@ -207,7 +207,6 @@ class mod_facetoface_rb_event_dates_testcase extends advanced_testcase {
 
         set_config('facetoface_displaysessiontimezones', 1);
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.
@@ -291,7 +290,6 @@ class mod_facetoface_rb_event_dates_testcase extends advanced_testcase {
 
         set_config('facetoface_displaysessiontimezones', 0);
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create report.

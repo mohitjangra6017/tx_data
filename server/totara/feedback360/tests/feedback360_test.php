@@ -28,7 +28,6 @@ require_once($CFG->dirroot.'/totara/feedback360/tests/feedback360_testcase.php')
 class totara_feedback360_feedback360_testcase extends feedback360_testcase {
 
     public function test_create() {
-        $this->resetAfterTest();
         $fdbck = new feedback360();
         $data = new stdClass();
         $data->name = 'Name';
@@ -44,7 +43,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
     }
 
     public function test_edit() {
-        $this->resetAfterTest();
         $fdbck = new feedback360();
         $data = new stdClass();
         $data->name = 'Name';
@@ -67,7 +65,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
     }
 
     public function test_delete() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         list($fdbck) = $this->prepare_feedback_with_users();
         list($fdbck2) = $this->prepare_feedback_with_users();
@@ -102,7 +99,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
 
     public function test_activate() {
         global $DB;
-        $this->resetAfterTest();
         list($fdbck) = $this->prepare_feedback_with_users();
         $fdbck->validate();
         $this->assertTrue(feedback360::is_draft($fdbck));
@@ -128,7 +124,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
     }
 
     public function test_validate() {
-        $this->resetAfterTest();
         // No questions.
         list($fdbckquest) = $this->prepare_feedback_with_users(array(), 0);
 
@@ -169,7 +164,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
 
     public function test_cancel_requests() {
         global $DB;
-        $this->resetAfterTest();
         list($fdbck, $users) = $this->prepare_feedback_with_users(2);
         $fdbck->activate();
         $respuser = $this->getDataGenerator()->create_user();
@@ -192,7 +186,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
 
     public function test_cancel_resp_assignment() {
         global $DB;
-        $this->resetAfterTest();
         list($fdbck, $users) = $this->prepare_feedback_with_users();
         $fdbck->activate();
         $respuser = $this->getDataGenerator()->create_user();
@@ -228,7 +221,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
 
     public function test_cancel_user_assignment() {
         global $DB;
-        $this->resetAfterTest();
         list($fdbck, $users) = $this->prepare_feedback_with_users(2);
         $fdbck->activate();
         $user1 = current($users);
@@ -258,7 +250,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
 
     public function test_anon_cancel_user_assignment() {
         global $DB;
-        $this->resetAfterTest();
         list($fdbck, $users) = $this->prepare_feedback_with_users(2, 1, true);
         $fdbck->activate();
         $user1 = current($users);
@@ -287,7 +278,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
     }
 
     public function test_duplicate() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         list($fdbck, $users) = $this->prepare_feedback_with_users();
         $fdbck->activate();
@@ -310,7 +300,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
     }
 
     public function test_has_user_assignment() {
-        $this->resetAfterTest();
         list($fdbck, $users) = $this->prepare_feedback_with_users();
         list($fdbck2) = $this->prepare_feedback_with_users();
         $justuser = $this->getDataGenerator()->create_user();
@@ -322,7 +311,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
     }
 
     public function test_get_manage_list() {
-        $this->resetAfterTest();
         list($fdbck1) = $this->prepare_feedback_with_users();
         $fdbck1->userid = 2;
         $fdbck1->save();
@@ -353,7 +341,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
     }
 
     public function test_fetch_questions() {
-        $this->resetAfterTest();
         list($fdbck1) = $this->prepare_feedback_with_users(array(), 3);
         list($fdbck2) = $this->prepare_feedback_with_users(array(), 0);
         $this->assertCount(3, $fdbck1->fetch_questions());
@@ -362,7 +349,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
 
     public function test_postupdate_answers() {
         global $DB;
-        $this->resetAfterTest();
         list($fdbck, $users, $quests) = $this->prepare_feedback_with_users(1, 2);
         $fdbck->activate();
         $user = current($users);
@@ -388,7 +374,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
 
     public function test_prepare_answers() {
         global $DB;
-        $this->resetAfterTest();
         list($fdbck, $users, $quests) = $this->prepare_feedback_with_users(1, 2);
         $fdbck->activate();
         $user = current($users);
@@ -415,7 +400,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
 
     public function test_save_answers() {
         global $DB;
-        $this->resetAfterTest();
         list($fdbck, $users, $quests) = $this->prepare_feedback_with_users(1, 2);
         $fdbck->activate();
         $user = current($users);
@@ -444,7 +428,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
 
     public function test_count_completed_answers() {
         global $DB;
-        $this->resetAfterTest();
         list($fdbck, $users, $quests) = $this->prepare_feedback_with_users(1, 2);
         $fdbck->activate();
         $user = current($users);
@@ -484,7 +467,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
 
 
     public function test_can_view() {
-        $this->resetAfterTest();
         list($fdbck, $users) = $this->prepare_feedback_with_users();
         list($fdbck2) = $this->prepare_feedback_with_users();
         $fdbck->activate();
@@ -514,7 +496,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
 
     public function test_cleanup_task() {
         global $DB;
-        $this->resetAfterTest();
 
         // Create feedback360 and activate it.
         list($fdbck, $users) = $this->prepare_feedback_with_users(5);
@@ -565,7 +546,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
      * Tests feedback360::validate_user_to_assignment_id().
      */
     public function test_validate_user_to_assignment_id() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $generator = $this->getDataGenerator();

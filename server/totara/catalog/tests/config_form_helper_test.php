@@ -42,7 +42,6 @@ class totara_catalog_config_form_helper_testcase extends config_base_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
     }
 
     /**

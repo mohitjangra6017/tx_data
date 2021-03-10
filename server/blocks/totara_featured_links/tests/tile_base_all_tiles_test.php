@@ -60,7 +60,6 @@ class block_totara_featured_links_tile_base_all_tiles_testcase extends test_help
      *
      */
     public function test_add() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $blockinstance = $this->blockgenerator->create_instance();
         foreach ($this->tile_types as $index => $tile_type) {
@@ -75,7 +74,6 @@ class block_totara_featured_links_tile_base_all_tiles_testcase extends test_help
      * Where the block id passed to the method is incorrect
      */
     public function test_add_no_id() {
-        $this->resetAfterTest();
         $this->blockgenerator->create_instance();
         foreach ($this->tile_types as $tile_type) {
             try {
@@ -100,7 +98,6 @@ class block_totara_featured_links_tile_base_all_tiles_testcase extends test_help
      * Also makes sure that you can't pass dumb stuff to it
      */
     public function test_get_content_form() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $blockinstance = $this->blockgenerator->create_instance();
         foreach ($this->tile_types as $tile_type) {
@@ -124,7 +121,6 @@ class block_totara_featured_links_tile_base_all_tiles_testcase extends test_help
      * Also makes sure that you can't pass dumb stuff to it
      */
     public function test_get_visibility_form() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $blockinstance = $this->blockgenerator->create_instance();
         foreach ($this->tile_types as $tile_type) {
@@ -162,7 +158,6 @@ class block_totara_featured_links_tile_base_all_tiles_testcase extends test_help
     public function test_render_content() {
         global $PAGE, $DB;
         $PAGE->set_url('/');
-        $this->resetAfterTest();
         $blockinstance = $this->blockgenerator->create_instance();
         foreach ($this->tile_types as $tile_type) {
             $tile = $this->blockgenerator->create_tile($blockinstance->id, $tile_type);

@@ -75,7 +75,6 @@ class enrol_ldap_testcase extends advanced_testcase {
             $this->markTestSkipped('LDAP extension is not loaded.');
         }
 
-        $this->resetAfterTest();
 
         require_once($CFG->dirroot.'/enrol/ldap/lib.php');
         require_once($CFG->libdir.'/ldaplib.php');
@@ -507,7 +506,6 @@ class enrol_ldap_testcase extends advanced_testcase {
      * @param string $expected The expected filter value
      */
     public function test_objectclass_fetch($usertype, $expected) {
-        $this->resetAfterTest();
         // Set the user type - this must be performed before the plugin is instantiated.
         set_config('user_type', $usertype, 'enrol_ldap');
 

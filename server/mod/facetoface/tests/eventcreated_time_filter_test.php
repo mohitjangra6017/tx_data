@@ -133,7 +133,6 @@ class mod_facetoface_eventcreated_time_filter_testcase extends advanced_testcase
 
     public function test_filter_seminar_session_by_eventtimecreated(): void {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         set_config('facetoface_hidecost', 1, null);

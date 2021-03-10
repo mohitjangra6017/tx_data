@@ -71,7 +71,6 @@ class totara_certification_messages_testcase extends reportcache_advanced_testca
 
         parent::setUp();
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Turn off programs. This is to test that it doesn't interfere with certification completion.

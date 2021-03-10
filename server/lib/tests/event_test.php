@@ -90,7 +90,6 @@ class core_event_testcase extends advanced_testcase {
 
     public function test_event_properties_guessing() {
         global $USER;
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $forum = $this->getDataGenerator()->create_module('forum', array('course' => $course->id));
@@ -464,7 +463,6 @@ class core_event_testcase extends advanced_testcase {
     public function test_rollback() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $observers = array(
             array(
@@ -523,7 +521,6 @@ class core_event_testcase extends advanced_testcase {
     public function test_rollback_nested() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $observers = array(
             array(
@@ -562,7 +559,6 @@ class core_event_testcase extends advanced_testcase {
     public function test_forced_rollback() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $observers = array(
             array(
@@ -603,7 +599,6 @@ class core_event_testcase extends advanced_testcase {
     public function test_deprecated() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $event = \core_tests\event\deprecated_event1::create();
         $this->assertDebuggingCalled('level property is deprecated, use edulevel property instead');
@@ -620,7 +615,6 @@ class core_event_testcase extends advanced_testcase {
     public function test_legacy() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         $observers = array(
             array(
@@ -703,7 +697,6 @@ class core_event_testcase extends advanced_testcase {
     }
 
     public function test_trigger_problems() {
-        $this->resetAfterTest(true);
 
         $event = \core_tests\event\unittest_executed::create(array('context'=>\context_system::instance(), 'other'=>array('sample'=>5, 'xx'=>10)));
         $event->trigger();
@@ -739,7 +732,6 @@ class core_event_testcase extends advanced_testcase {
     }
 
     public function test_bad_events() {
-        $this->resetAfterTest(true);
 
         try {
             $event = \core_tests\event\unittest_executed::create(array('other'=>array('sample'=>5, 'xx'=>10)));
@@ -802,7 +794,6 @@ class core_event_testcase extends advanced_testcase {
     }
 
     public function test_problematic_events() {
-        $this->resetAfterTest(true);
 
         $event1 = \core_tests\event\problematic_event1::create(array('context'=>\context_system::instance()));
         $this->assertDebuggingNotCalled();
@@ -852,7 +843,6 @@ class core_event_testcase extends advanced_testcase {
     public function test_record_snapshots() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $event = \core_tests\event\unittest_executed::create(array('context'=>\context_system::instance(), 'other'=>array('sample'=>1, 'xx'=>10)));
         $course1 = $DB->get_record('course', array('id'=>1));
@@ -996,7 +986,6 @@ and nothing else.";
      * to things like all course module view events, all comment created events, etc.
      */
     public function test_observe_parent_event() {
-        $this->resetAfterTest();
 
         // Ensure this has been reset prior to using it.
         \core_tests\event\unittest_observer::reset();

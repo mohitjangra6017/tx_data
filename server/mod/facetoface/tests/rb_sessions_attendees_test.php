@@ -91,7 +91,6 @@ class mod_facetoface_rb_sessions_attendees_testcase extends advanced_testcase {
      */
     public function test_attendees_filter() {
         global $DB;
-        $this->resetAfterTest();
         $shortname = 'facetoface_sessions';
 
         // Create report record.
@@ -136,7 +135,6 @@ class mod_facetoface_rb_sessions_attendees_testcase extends advanced_testcase {
      */
     public function test_cancellations_filter() {
         global $DB;
-        $this->resetAfterTest();
         $shortname = 'facetoface_cancellations';
 
         // Create report record.
@@ -181,7 +179,6 @@ class mod_facetoface_rb_sessions_attendees_testcase extends advanced_testcase {
      */
     public function test_waitlist_filter() {
         global $DB;
-        $this->resetAfterTest();
         $shortname = 'facetoface_waitlist';
 
         // Create report record.

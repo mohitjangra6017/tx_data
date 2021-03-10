@@ -76,7 +76,6 @@ class core_weblib_testcase extends advanced_testcase {
     public function test_format_string_static_caching_with_filters() {
         global $CFG;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
@@ -529,7 +528,6 @@ class core_weblib_testcase extends advanced_testcase {
 
     public function test_qualified_me() {
         global $PAGE, $FULLME, $CFG;
-        $this->resetAfterTest();
 
         $PAGE = new moodle_page();
 
@@ -619,7 +617,6 @@ class core_weblib_testcase extends advanced_testcase {
     public function test_set_debugging() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $this->assertEquals(DEBUG_DEVELOPER, $CFG->debug);
         $this->assertTrue($CFG->debugdeveloper);
@@ -696,7 +693,6 @@ EXPECTED;
 
     public function test_purify_html_ruby() {
 
-        $this->resetAfterTest();
 
         $ruby =
             "<p><ruby><rb>京都</rb><rp>(</rp><rt>きょうと</rt><rp>)</rp></ruby>は" .

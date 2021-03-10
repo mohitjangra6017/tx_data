@@ -51,7 +51,6 @@ class totara_userdata_local_util_testcase extends advanced_testcase {
 
     public function test_backup_user_context_id() {
         global $DB;
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $usercontext = context_user::instance($user->id);
@@ -99,7 +98,6 @@ class totara_userdata_local_util_testcase extends advanced_testcase {
 
     public function test_recover_user_context() {
         global $DB;
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $usercontext = context_user::instance($user->id);
@@ -116,7 +114,6 @@ class totara_userdata_local_util_testcase extends advanced_testcase {
 
     public function test_get_user_extras() {
         global $DB;
-        $this->resetAfterTest();
 
         $pasttime = (string)(time() - 1000);
 
@@ -199,7 +196,6 @@ class totara_userdata_local_util_testcase extends advanced_testcase {
 
     public function test_sync_totara_userdata_user_table() {
         global $DB;
-        $this->resetAfterTest();
 
         $pasttime = (string)(time() - 1000);
 

@@ -144,7 +144,6 @@ class totara_reportbuilder_rb_cohort_admin_embedded_cache_testcase extends repor
      *
      */
     public function test_cohort_admin() {
-        $this->resetAfterTest();
         $result = $this->get_report_result($this->report_builder_data['shortname'], array(), false);
         $this->assertCount(3, $result);
         $was = array();
@@ -169,7 +168,6 @@ class totara_reportbuilder_rb_cohort_admin_embedded_cache_testcase extends repor
 
     public function test_is_capable() {
         global $DB;
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $syscontext = context_system::instance();

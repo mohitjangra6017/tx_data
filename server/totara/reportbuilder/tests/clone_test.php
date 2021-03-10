@@ -30,7 +30,6 @@ class totara_reportbuilder_clone_testcase extends advanced_testcase {
     public function test_report_created_event() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $rid = $this->create_report('user', 'Test user report');

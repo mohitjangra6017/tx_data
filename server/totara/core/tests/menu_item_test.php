@@ -33,7 +33,6 @@ use totara_core\totara\menu\helper;
 class totara_core_menu_item_testcase extends advanced_testcase {
     public function test_constructor() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -60,7 +59,6 @@ class totara_core_menu_item_testcase extends advanced_testcase {
 
     public function test_create_instance() {
         global $DB;
-        $this->resetAfterTest();
 
         $records = $DB->get_records('totara_navigation', array());
         foreach ($records as $record) {
@@ -124,7 +122,6 @@ class totara_core_menu_item_testcase extends advanced_testcase {
 
     public function test_is_custom() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -158,7 +155,6 @@ class totara_core_menu_item_testcase extends advanced_testcase {
 
     public function test_is_container() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -191,7 +187,6 @@ class totara_core_menu_item_testcase extends advanced_testcase {
     }
 
     public function test_get_id() {
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'item';
@@ -207,7 +202,6 @@ class totara_core_menu_item_testcase extends advanced_testcase {
     }
 
     public function test_parentid() {
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -230,7 +224,6 @@ class totara_core_menu_item_testcase extends advanced_testcase {
     }
 
     public function test_set_parentid() {
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -257,7 +250,6 @@ class totara_core_menu_item_testcase extends advanced_testcase {
 
     public function test_get_title() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -361,7 +353,6 @@ class totara_core_menu_item_testcase extends advanced_testcase {
 
     public function test_get_name() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -388,7 +379,6 @@ class totara_core_menu_item_testcase extends advanced_testcase {
 
     public function test_get_parent() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -419,7 +409,6 @@ class totara_core_menu_item_testcase extends advanced_testcase {
 
     public function test_get_targetattr() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -477,7 +466,6 @@ class totara_core_menu_item_testcase extends advanced_testcase {
     public function test_replace_url_parameter_placeholders() {
         global $COURSE;
 
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();

@@ -41,7 +41,6 @@ class core_messageinbound_testcase extends advanced_testcase {
      * @dataProvider message_inbound_handler_trim_testprovider
      */
     public function test_messageinbound_handler_trim($file, $source, $expectedplain, $expectedhtml) {
-        $this->resetAfterTest();
 
         $mime = Horde_Mime_Part::parseMessage($source);
         if ($plainpartid = $mime->findBody('plain')) {

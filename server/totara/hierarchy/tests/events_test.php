@@ -99,7 +99,6 @@ class totara_hierarchy_events_testcase extends advanced_testcase {
 
     protected function setUp(): void {
         parent::setup();
-        $this->resetAfterTest(true);
         $datagen = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
 
         // Set up some variables for the tests.
@@ -685,7 +684,6 @@ class totara_hierarchy_events_testcase extends advanced_testcase {
     }
 
     public function test_evidence_events() {
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         // Available evidence types.

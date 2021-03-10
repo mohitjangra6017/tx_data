@@ -59,7 +59,6 @@ class totara_workflow_workflow_testcase extends advanced_testcase {
 
     public function test_can_access() {
         global $DB;
-        $this->resetAfterTest(true);
         $datagenerator = $this->getDataGenerator();
         $student = $datagenerator->create_user();
         $coursecreator = $datagenerator->create_user();
@@ -184,7 +183,6 @@ class totara_workflow_workflow_testcase extends advanced_testcase {
     }
 
     public function test_enabled() {
-        $this->resetAfterTest(true);
         $workflow = \core\workflow\core_course\coursecreate\standard::instance();
         $workflow->enable();
         $this->assertTrue($workflow->is_enabled());

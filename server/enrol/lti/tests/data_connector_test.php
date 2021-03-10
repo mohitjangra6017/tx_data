@@ -50,7 +50,6 @@ class enrol_lti_data_connector_testcase extends advanced_testcase {
      * This is executed before running any test in this file.
      */
     public function setUp(): void {
-        $this->resetAfterTest();
 
         // Set this user as the admin.
         $this->setAdminUser();

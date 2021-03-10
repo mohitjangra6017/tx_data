@@ -161,7 +161,6 @@ class qubaid_condition_testcase extends advanced_testcase {
 
     public function test_qubaid_only_finished() {
         global $DB;
-        $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course();
         $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id]);
         $qubaids = new qubaids_for_quiz($quiz->id, false, true);

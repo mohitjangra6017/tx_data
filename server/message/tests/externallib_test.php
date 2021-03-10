@@ -109,7 +109,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
 
         global $DB, $USER, $CFG;
 
-        $this->resetAfterTest(true);
 
         // Turn off all message processors (so nothing is really sent)
         require_once($CFG->dirroot . '/message/lib.php');
@@ -160,7 +159,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test create_contacts.
      */
     public function test_create_contacts() {
-        $this->resetAfterTest(true);
 
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
@@ -247,7 +245,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test delete_contacts.
      */
     public function test_delete_contacts() {
-        $this->resetAfterTest(true);
 
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
@@ -289,7 +286,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test block_contacts.
      */
     public function test_block_contacts() {
-        $this->resetAfterTest(true);
 
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
@@ -340,7 +336,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test unblock_contacts.
      */
     public function test_unblock_contacts() {
-        $this->resetAfterTest(true);
 
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
@@ -382,7 +377,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test get_contacts.
      */
     public function test_get_contacts() {
-        $this->resetAfterTest(true);
 
         $user1 = self::getDataGenerator()->create_user();
         $user_stranger = self::getDataGenerator()->create_user();
@@ -445,7 +439,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      */
     public function test_search_contacts() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
@@ -512,7 +505,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      */
     public function test_get_messages() {
         global $CFG, $DB;
-        $this->resetAfterTest(true);
 
         // This mark the messages as read!.
         $sink = $this->redirectMessages();
@@ -724,7 +716,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test get_blocked_users.
      */
     public function test_get_blocked_users() {
-        $this->resetAfterTest(true);
 
         $user1 = self::getDataGenerator()->create_user();
         $userstranger = self::getDataGenerator()->create_user();
@@ -769,7 +760,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test mark_message_read.
      */
     public function test_mark_message_read() {
-        $this->resetAfterTest(true);
 
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
@@ -829,7 +819,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test mark_notification_read.
      */
     public function test_mark_notification_read() {
-        $this->resetAfterTest(true);
 
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
@@ -891,7 +880,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      */
     public function test_delete_message() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
@@ -996,14 +984,12 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     }
 
     public function test_mark_all_notifications_as_read_invalid_user_exception() {
-        $this->resetAfterTest(true);
 
         $this->expectException('moodle_exception');
         core_message_external::mark_all_notifications_as_read(-2132131, 0);
     }
 
     public function test_mark_all_notifications_as_read_access_denied_exception() {
-        $this->resetAfterTest(true);
 
         $sender = $this->getDataGenerator()->create_user();
         $user = $this->getDataGenerator()->create_user();
@@ -1014,7 +1000,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     }
 
     public function test_mark_all_notifications_as_read_missing_from_user_exception() {
-        $this->resetAfterTest(true);
 
         $sender = $this->getDataGenerator()->create_user();
 
@@ -1026,7 +1011,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     public function test_mark_all_notifications_as_read() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $sender1 = $this->getDataGenerator()->create_user();
         $sender2 = $this->getDataGenerator()->create_user();
@@ -1061,7 +1045,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test get_user_notification_preferences
      */
     public function test_get_user_notification_preferences() {
-        $this->resetAfterTest(true);
 
         $user = self::getDataGenerator()->create_user();
         $this->setUser($user);
@@ -1104,7 +1087,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test get_user_notification_preferences permissions
      */
     public function test_get_user_notification_preferences_permissions() {
-        $this->resetAfterTest(true);
 
         $user = self::getDataGenerator()->create_user();
         $otheruser = self::getDataGenerator()->create_user();
@@ -1118,7 +1100,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests searching users in a course.
      */
     public function test_messagearea_search_users_in_course() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = new stdClass();
@@ -1182,7 +1163,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests searching users in course as another user.
      */
     public function test_messagearea_search_users_in_course_as_other_user() {
-        $this->resetAfterTest(true);
 
         // The person doing the search for another user.
         $this->setAdminUser();
@@ -1241,7 +1221,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests searching users in course as another user without the proper capabilities.
      */
     public function test_messagearea_search_users_in_course_as_other_user_without_cap() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -1264,7 +1243,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     public function test_messagearea_search_users_in_course_messaging_disabled() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         // Create some skeleton data just so we can call the WS..
         $user = self::getDataGenerator()->create_user();
@@ -1285,7 +1263,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests searching users.
      */
     public function test_messagearea_search_users() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = new stdClass();
@@ -1382,7 +1359,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests searching users as another user.
      */
     public function test_messagearea_search_users_as_other_user() {
-        $this->resetAfterTest(true);
 
         // The person doing the search.
         $this->setAdminUser();
@@ -1468,7 +1444,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests searching users as another user without the proper capabilities.
      */
     public function test_messagearea_search_users_as_other_user_without_cap() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -1488,7 +1463,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     public function test_messagearea_search_users_messaging_disabled() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         // Create some skeleton data just so we can call the WS.
         $user = self::getDataGenerator()->create_user();
@@ -1508,7 +1482,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests searching messages.
      */
     public function test_messagearea_search_messages() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -1565,7 +1538,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests searching messages as another user.
      */
     public function test_messagearea_search_messages_as_other_user() {
-        $this->resetAfterTest(true);
 
         // The person doing the search.
         $this->setAdminUser();
@@ -1622,7 +1594,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests searching messages as another user without the proper capabilities.
      */
     public function test_messagearea_search_messages_as_other_user_without_cap() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -1642,7 +1613,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     public function test_messagearea_search_messages_messaging_disabled() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         // Create some skeleton data just so we can call the WS.
         $user = self::getDataGenerator()->create_user();
@@ -1662,7 +1632,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving conversations.
      */
     public function test_messagearea_conversations() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -1739,7 +1708,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving conversations as another user.
      */
     public function test_messagearea_conversations_as_other_user() {
-        $this->resetAfterTest(true);
 
         // Set as admin.
         $this->setAdminUser();
@@ -1816,7 +1784,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving conversations as another user without the proper capabilities.
      */
     public function test_messagearea_conversations_as_other_user_without_cap() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -1836,7 +1803,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     public function test_messagearea_conversations_messaging_disabled() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         // Create some skeleton data just so we can call the WS.
         $user = self::getDataGenerator()->create_user();
@@ -1856,7 +1822,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving contacts.
      */
     public function test_messagearea_contacts() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -1939,7 +1904,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving contacts as another user.
      */
     public function test_messagearea_contacts_as_other_user() {
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
 
@@ -2021,7 +1985,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving contacts as another user without the proper capabilities.
      */
     public function test_messagearea_contacts_as_other_user_without_cap() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -2041,7 +2004,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     public function test_messagearea_contacts_messaging_disabled() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         // Create some skeleton data just so we can call the WS.
         $user = self::getDataGenerator()->create_user();
@@ -2061,7 +2023,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving messages.
      */
     public function test_messagearea_messages() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -2125,7 +2086,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving messages.
      */
     public function test_messagearea_messages_timefrom() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -2165,7 +2125,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving messages as another user.
      */
     public function test_messagearea_messages_as_other_user() {
-        $this->resetAfterTest(true);
 
         // Set as admin.
         $this->setAdminUser();
@@ -2229,7 +2188,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving messages as another user without the proper capabilities.
      */
     public function test_messagearea_messages_as_other_user_without_cap() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -2250,7 +2208,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     public function test_messagearea_messages_messaging_disabled() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         // Create some skeleton data just so we can call the WS.
         $user1 = self::getDataGenerator()->create_user();
@@ -2271,7 +2228,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving most recent message.
      */
     public function test_messagearea_get_most_recent_message() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -2304,7 +2260,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving most recent message as another user.
      */
     public function test_messagearea_get_most_recent_message_as_other_user() {
-        $this->resetAfterTest(true);
 
         // The person doing the search.
         $this->setAdminUser();
@@ -2337,7 +2292,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving most recent message as another user without the proper capabilities.
      */
     public function test_messagearea_get_most_recent_message_as_other_user_without_cap() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -2358,7 +2312,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     public function test_messagearea_get_most_recent_message_messaging_disabled() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         // Create some skeleton data just so we can call the WS.
         $user1 = self::getDataGenerator()->create_user();
@@ -2379,7 +2332,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving a user's profile.
      */
     public function test_messagearea_get_profile() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -2409,7 +2361,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving a user's profile as another user.
      */
     public function test_messagearea_profile_as_other_user() {
-        $this->resetAfterTest(true);
 
         // The person asking for the profile information.
         $this->setAdminUser();
@@ -2443,7 +2394,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Tests retrieving a user's profile as another user without the proper capabilities.
      */
     public function test_messagearea_profile_as_other_user_without_cap() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -2464,7 +2414,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     public function test_messagearea_profile_messaging_disabled() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         // Create some skeleton data just so we can call the WS.
         $user1 = self::getDataGenerator()->create_user();
@@ -2485,7 +2434,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test marking all message as read with an invalid user.
      */
     public function test_mark_all_messages_as_read_invalid_user_exception() {
-        $this->resetAfterTest(true);
 
         $this->expectException('moodle_exception');
         core_message_external::mark_all_messages_as_read(-2132131, 0);
@@ -2495,7 +2443,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test marking all message as read without proper access.
      */
     public function test_mark_all_messages_as_read_access_denied_exception() {
-        $this->resetAfterTest(true);
 
         $sender = $this->getDataGenerator()->create_user();
         $user = $this->getDataGenerator()->create_user();
@@ -2509,7 +2456,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test marking all message as read with missing from user.
      */
     public function test_mark_all_messages_as_read_missing_from_user_exception() {
-        $this->resetAfterTest(true);
 
         $sender = $this->getDataGenerator()->create_user();
 
@@ -2524,7 +2470,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     public function test_mark_all_messages_as_read() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $sender1 = $this->getDataGenerator()->create_user();
         $sender2 = $this->getDataGenerator()->create_user();
@@ -2551,7 +2496,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test getting unread conversation count.
      */
     public function test_get_unread_conversations_count() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -2591,7 +2535,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test getting unread conversation count as other user.
      */
     public function test_get_unread_conversations_count_as_other_user() {
-        $this->resetAfterTest(true);
 
         // The person wanting the conversation count.
         $this->setAdminUser();
@@ -2631,7 +2574,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test getting unread conversation count as other user without proper capability.
      */
     public function test_get_unread_conversations_count_as_other_user_without_cap() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -2651,7 +2593,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     public function test_delete_conversation() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -2703,7 +2644,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     public function test_delete_conversation_as_other_user() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
 
@@ -2752,7 +2692,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test deleting conversation as other user without proper capability.
      */
     public function test_delete_conversation_as_other_user_without_cap() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -2773,7 +2712,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
     public function test_delete_conversation_messaging_disabled() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();
@@ -2794,7 +2732,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test get message processor.
      */
     public function test_get_message_processor() {
-        $this->resetAfterTest(true);
 
         // Create a user.
         $user1 = self::getDataGenerator()->create_user();
@@ -2816,7 +2753,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test get_user_notification_preferences
      */
     public function test_get_user_message_preferences() {
-        $this->resetAfterTest(true);
 
         $user = self::getDataGenerator()->create_user();
         $this->setUser($user);
@@ -2857,7 +2793,6 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
      * Test get_user_message_preferences permissions
      */
     public function test_get_user_message_preferences_permissions() {
-        $this->resetAfterTest(true);
 
         $user = self::getDataGenerator()->create_user();
         $otheruser = self::getDataGenerator()->create_user();

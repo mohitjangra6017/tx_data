@@ -50,7 +50,6 @@ class core_course_totara_catalog_course_provider_testcase extends \advanced_test
     protected function setUp(): void {
         parent::setup();
         $this->setAdminUser();
-        $this->resetAfterTest();
         $this->provider = new course_provider();
         $this->course = $this->getDataGenerator()->create_course();
     }

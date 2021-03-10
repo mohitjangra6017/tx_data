@@ -173,7 +173,6 @@ class totara_reportbuilder_rb_findcourses_embedded_cache_testcase extends report
      * - Find courses with name 'Basics'
      */
     public function test_courses() {
-        $this->resetAfterTest();
 
         $result = $this->get_report_result($this->report_builder_data['shortname'], array(), false);
         $this->assertCount(4, $result);
@@ -197,7 +196,6 @@ class totara_reportbuilder_rb_findcourses_embedded_cache_testcase extends report
     public function test_courses_tags() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
         // Enable and create tags
         $CFG->usetags = true;
         $usecache = false;
@@ -242,7 +240,6 @@ class totara_reportbuilder_rb_findcourses_embedded_cache_testcase extends report
     public function test_all_filters() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
         $coursedata = array(
             'fullname' => 'Big course',
             'shortname' => 'bigcourse',
@@ -335,7 +332,6 @@ class totara_reportbuilder_rb_findcourses_embedded_cache_testcase extends report
     }
 
     public function test_is_capable() {
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $shortname = $this->report_builder_data['shortname'];

@@ -106,7 +106,6 @@ class totara_plan_add_comment_helper_testcase extends advanced_testcase {
         global $CFG;
         $CFG->block_online_users_timetosee = null;
 
-        $this->resetAfterTest(true);
 
         $user = $this->create_user(strtotime($lastaccess));
         $this->create_user_session($user);
@@ -126,7 +125,6 @@ class totara_plan_add_comment_helper_testcase extends advanced_testcase {
      * @see add_comment_helper::validate
      */
     public function test_validation(): void {
-        $this->resetAfterTest(true);
         $user = $this->create_user(time());
 
         $helper = new add_comment_helper($user);
@@ -233,7 +231,6 @@ class totara_plan_add_comment_helper_testcase extends advanced_testcase {
         global $CFG;
         $CFG->block_online_users_timetosee = null;
 
-        $this->resetAfterTest(true);
         $user = $this->create_user(strtotime($lastaccess));
         $this->create_user_session($user);
         $this->create_user_preferences($user, $preferrences);
@@ -261,7 +258,6 @@ class totara_plan_add_comment_helper_testcase extends advanced_testcase {
      * @throws ReflectionException
      */
     public function test_is_user_logged_off(): void {
-        $this->resetAfterTest(true);
 
         $time = time();
         $user = $this->create_user($time);
@@ -287,7 +283,6 @@ class totara_plan_add_comment_helper_testcase extends advanced_testcase {
     public function test_is_user_logged_off_with_checking_time_logic(): void {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $time = time();
         $user = $this->create_user($time);

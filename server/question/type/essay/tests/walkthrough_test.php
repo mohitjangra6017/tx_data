@@ -243,7 +243,6 @@ class qtype_essay_walkthrough_testcase extends qbehaviour_walkthrough_test_base 
     public function test_deferred_feedback_html_editor_with_files_attempt_on_last() {
         global $CFG, $USER, $PAGE;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         // Required to init a text editor.
         $PAGE->set_url('/');
@@ -367,7 +366,6 @@ class qtype_essay_walkthrough_testcase extends qbehaviour_walkthrough_test_base 
     public function test_deferred_feedback_html_editor_with_files_attempt_on_last_no_files_uploaded() {
         global $CFG, $USER, $PAGE;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         // Required to init a text editor.
         $PAGE->set_url('/');
@@ -442,7 +440,6 @@ class qtype_essay_walkthrough_testcase extends qbehaviour_walkthrough_test_base 
     public function test_deferred_feedback_plain_attempt_on_last() {
         global $CFG, $USER;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $usercontextid = context_user::instance($USER->id)->id;
 

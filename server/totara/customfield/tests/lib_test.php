@@ -30,7 +30,6 @@ class totara_customfield_lib_testcase extends advanced_testcase {
     public function test_customfield_get_record_by_id() {
         global $CFG;
         require_once($CFG->dirroot . '/totara/customfield/lib.php');
-        $this->resetAfterTest();
 
         /** @var \totara_customfield\testing\generator $cfgenerator */
         $cfgenerator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');
@@ -69,7 +68,6 @@ class totara_customfield_lib_testcase extends advanced_testcase {
     public function test_totara_customfield_set_hidden_by_id() {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/totara/customfield/lib.php');
-        $this->resetAfterTest();
 
         $tblprefix = 'facetoface_room';
         $shortname = 'location';

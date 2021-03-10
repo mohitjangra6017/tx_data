@@ -75,7 +75,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
         // Totara: we do not want instant completion events to mess up this test
         set_config('enablecompletion', 0);
 
-        $this->resetAfterTest();
         scorm_insert_track(2, $this->eventscorm->id, 1, 4, 'cmi.core.score.raw', 10);
         $sink = $this->redirectEvents();
         scorm_delete_attempt(2, $this->eventscorm, 4);
@@ -110,7 +109,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
      * There is no api involved so the best we can do is test legacy data by triggering event manually.
      */
     public function test_course_module_viewed_event() {
-        $this->resetAfterTest();
         $event = \mod_scorm\event\course_module_viewed::create(array(
             'objectid' => $this->eventscorm->id,
             'context' => context_module::instance($this->eventcm->id),
@@ -136,7 +134,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
      * There is no api involved so the best we can do is test legacy data by triggering event manually.
      */
     public function test_course_module_instance_list_viewed_event() {
-        $this->resetAfterTest();
         $event = \mod_scorm\event\course_module_instance_list_viewed::create(array(
             'context' => context_course::instance($this->eventcourse->id),
             'courseid' => $this->eventcourse->id
@@ -160,7 +157,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
      * There is no api involved so the best we can do is test legacy data by triggering event manually and test validations.
      */
     public function test_interactions_viewed_event() {
-        $this->resetAfterTest();
         $event = \mod_scorm\event\interactions_viewed::create(array(
             'relateduserid' => 5,
             'context' => context_module::instance($this->eventcm->id),
@@ -185,7 +181,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
      * Tests for interactions viewed validations.
      */
     public function test_interactions_viewed_event_validations() {
-        $this->resetAfterTest();
         try {
             \mod_scorm\event\interactions_viewed::create(array(
                 'context' => context_module::instance($this->eventcm->id),
@@ -215,7 +210,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
      * There is no api involved so the best we can do is test legacy data and validations by triggering event manually.
      */
     public function test_report_viewed_event() {
-        $this->resetAfterTest();
         $event = \mod_scorm\event\report_viewed::create(array(
              'context' => context_module::instance($this->eventcm->id),
              'courseid' => $this->eventcourse->id,
@@ -243,7 +237,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
      * There is no api involved so the best we can do is test legacy data and validations by triggering event manually.
      */
     public function test_sco_launched_event() {
-        $this->resetAfterTest();
         $event = \mod_scorm\event\sco_launched::create(array(
              'objectid' => 2,
              'context' => context_module::instance($this->eventcm->id),
@@ -279,7 +272,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
      * There is no api involved so the best we can do is test validations by triggering event manually.
      */
     public function test_tracks_viewed_event() {
-        $this->resetAfterTest();
         $event = \mod_scorm\event\tracks_viewed::create(array(
             'relateduserid' => 5,
             'context' => context_module::instance($this->eventcm->id),
@@ -304,7 +296,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
      * Tests for tracks viewed event validations.
      */
     public function test_tracks_viewed_event_validations() {
-        $this->resetAfterTest();
         try {
             \mod_scorm\event\tracks_viewed::create(array(
                 'context' => context_module::instance($this->eventcm->id),
@@ -347,7 +338,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
      * There is no api involved so the best we can do is test validations and legacy log by triggering event manually.
      */
     public function test_user_report_viewed_event() {
-        $this->resetAfterTest();
         $event = \mod_scorm\event\user_report_viewed::create(array(
             'relateduserid' => 5,
             'context' => context_module::instance($this->eventcm->id),
@@ -375,7 +365,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
         // Totara: we do not want instant completion events to mess up this test
         set_config('enablecompletion', 0);
 
-        $this->resetAfterTest();
         try {
             \mod_scorm\event\user_report_viewed::create(array(
                 'context' => context_module::instance($this->eventcm->id),
@@ -435,7 +424,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
      * @param string $cmivalue a valid CMI raw score value
      */
     public function test_scoreraw_submitted_event($cmielement, $cmivalue) {
-        $this->resetAfterTest();
         $event = \mod_scorm\event\scoreraw_submitted::create(array(
             'other' => array('attemptid' => '2', 'cmielement' => $cmielement, 'cmivalue' => $cmivalue),
             'objectid' => $this->eventscorm->id,
@@ -498,7 +486,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
      * @param string $excmessage the exception message when violating the validations rules
      */
     public function test_scoreraw_submitted_event_validations($cmielement, $cmivalue, $failmessage, $excmessage) {
-        $this->resetAfterTest();
         try {
             $data = array(
                 'context' => context_module::instance($this->eventcm->id),
@@ -556,7 +543,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
      * @param string $cmivalue a valid CMI status value
      */
     public function test_status_submitted_event($cmielement, $cmivalue) {
-        $this->resetAfterTest();
         $event = \mod_scorm\event\status_submitted::create(array(
             'other' => array('attemptid' => '2', 'cmielement' => $cmielement, 'cmivalue' => $cmivalue),
             'objectid' => $this->eventscorm->id,
@@ -626,7 +612,6 @@ class mod_scorm_event_testcase extends advanced_testcase {
      * @param string $excmessage the exception message when violating the validations rules
      */
     public function test_status_submitted_event_validations($cmielement, $cmivalue, $failmessage, $excmessage) {
-        $this->resetAfterTest();
         try {
             $data = array(
                 'context' => context_module::instance($this->eventcm->id),

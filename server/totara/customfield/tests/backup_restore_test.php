@@ -100,7 +100,6 @@ class totara_customfield_backup_restore_testcase extends advanced_testcase {
      * during backup/restore of course.
      */
     public function test_backup_restore_course_customfields() {
-        $this->resetAfterTest(true);
         global $DB;
 
         // Overall there should be 4 records in course_info_data.

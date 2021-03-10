@@ -32,7 +32,6 @@ class totara_reportbuilder_ignore_report_testcase extends advanced_testcase {
     public function test_ignored_reports() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Try as admin first.
 

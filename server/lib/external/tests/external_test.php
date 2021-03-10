@@ -34,7 +34,6 @@ class core_external_testcase extends externallib_advanced_testcase {
      * Test get_string
      */
     public function test_get_string() {
-        $this->resetAfterTest(true);
 
         $service = new stdClass();
         $service->name = 'Dummy Service';
@@ -102,7 +101,6 @@ class core_external_testcase extends externallib_advanced_testcase {
      * Test get_strings
      */
     public function test_get_strings() {
-        $this->resetAfterTest(true);
 
         $stringmanager = get_string_manager();
 
@@ -162,7 +160,6 @@ class core_external_testcase extends externallib_advanced_testcase {
      */
     public function test_get_component_strings() {
         global $USER;
-        $this->resetAfterTest(true);
 
         $stringmanager = get_string_manager();
 
@@ -183,7 +180,6 @@ class core_external_testcase extends externallib_advanced_testcase {
      * Test update_inplace_editable()
      */
     public function test_update_inplace_editable() {
-        $this->resetAfterTest(true);
 
         // Call service for component that does not have inplace_editable callback.
         try {
@@ -204,7 +200,6 @@ class core_external_testcase extends externallib_advanced_testcase {
 
     public function test_get_user_dates() {
         global $USER, $CFG, $DB;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 

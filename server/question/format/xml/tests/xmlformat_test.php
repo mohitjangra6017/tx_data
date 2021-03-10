@@ -1511,7 +1511,6 @@ END;
     }
 
     public function test_import_files_as_draft() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $xml = <<<END
@@ -1537,7 +1536,6 @@ END;
     }
 
     public function test_import_truefalse_wih_files() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $xml = '<question type="truefalse">

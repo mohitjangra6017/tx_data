@@ -36,7 +36,6 @@ class core_course_modlib_testcase extends advanced_testcase {
      */
     public function test_prepare_new_moduleinfo_data() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         $course = self::getDataGenerator()->create_course();
@@ -81,7 +80,6 @@ class core_course_modlib_testcase extends advanced_testcase {
      */
     public function test_get_moduleinfo_data() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $course = self::getDataGenerator()->create_course();
         $assignmodule = $DB->get_record('modules', array('name' => 'assign'), '*', MUST_EXIST);

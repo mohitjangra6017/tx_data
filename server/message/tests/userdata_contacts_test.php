@@ -56,7 +56,6 @@ class core_message_userdata_contacts_testcase extends userdata_messages_testcase
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Set up users.
         $activeuser = $this->getDataGenerator()->create_user();
@@ -125,7 +124,6 @@ class core_message_userdata_contacts_testcase extends userdata_messages_testcase
     public function test_count() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Set up users.
         $user1 = $this->getDataGenerator()->create_user();
@@ -155,7 +153,6 @@ class core_message_userdata_contacts_testcase extends userdata_messages_testcase
     public function test_export() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Set up users.
         $user1 = $this->getDataGenerator()->create_user();

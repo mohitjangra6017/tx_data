@@ -148,7 +148,6 @@ class totara_completionimport_lib_testcase extends advanced_testcase {
      * @dataProvider data_provider_date_formats
      */
     public function test_totara_completionimport_validate_date($csvdateformat, $completiondates, $expectedresults) {
-        $this->resetAfterTest(true);
 
         $this->assertEquals(count($completiondates), count($expectedresults));
 
@@ -165,7 +164,6 @@ class totara_completionimport_lib_testcase extends advanced_testcase {
      * false as it we don't want to move files without it.
      */
     public function test_move_sourcefile_noconfig() {
-        $this->resetAfterTest(true);
         global $CFG;
 
         // Config setting should be empty by default.
@@ -195,7 +193,6 @@ class totara_completionimport_lib_testcase extends advanced_testcase {
      * is in the directory given in the config setting. The function should return true.
      */
     public function test_move_sourcefile_configset_valid_no_subdir() {
-        $this->resetAfterTest(true);
         global $CFG;
 
         $dirpath = $CFG->dirroot . '/totara/completionimport/tests/fixtures/';
@@ -225,7 +222,6 @@ class totara_completionimport_lib_testcase extends advanced_testcase {
      * is in a subdirectory of the what's in the config setting. The function should return true.
      */
     public function test_move_sourcefile_configset_valid_in_subdir() {
-        $this->resetAfterTest(true);
         global $CFG;
 
         $dirpath = $CFG->dirroot . '/totara/completionimport/tests/fixtures/';
@@ -255,7 +251,6 @@ class totara_completionimport_lib_testcase extends advanced_testcase {
      * testing has a different path.
      */
     public function test_move_sourcefile_configset_invalid() {
-        $this->resetAfterTest(true);
         global $CFG;
 
         $dirpath = $CFG->dirroot . '/totara/completionimport/tests/fixtures/';
@@ -281,7 +276,6 @@ class totara_completionimport_lib_testcase extends advanced_testcase {
     public function test_totara_completionimport_resolve_course_references() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         $importtime = time();
@@ -389,7 +383,6 @@ class totara_completionimport_lib_testcase extends advanced_testcase {
     public function test_totara_completionimport_resolve_certification_references() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         $importtime = time();

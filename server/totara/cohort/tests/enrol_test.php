@@ -30,7 +30,6 @@ class totara_cohort_enrol_testcase extends advanced_testcase {
     public function test_role_updates() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $trace = new null_progress_trace();
 

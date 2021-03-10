@@ -83,7 +83,6 @@ class mod_facetoface_seminar_event_testcase extends advanced_testcase {
      */
     public function test_getting_status_of_event(int $time, array $sessiondates,
                                                  array $statuses): void {
-        $this->resetAfterTest();
         $gen = $this->getDataGenerator();
         $course = $gen->create_course();
 

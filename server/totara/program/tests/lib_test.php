@@ -95,7 +95,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_update_completion_progs_and_certs() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $program_generator = \totara_program\testing\generator::instance();
 
@@ -219,7 +218,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_update_completion_specific_prog() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $program_generator = \totara_program\testing\generator::instance();
 
@@ -440,7 +438,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_reset_course_set_completions() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $program_generator = \totara_program\testing\generator::instance();
 
@@ -553,7 +550,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_update_available_enrolments_with_one_program() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
         $program_generator = \totara_program\testing\generator::instance();
 
@@ -667,7 +663,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_update_available_enrolments_with_all_programs() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
         $program_generator = \totara_program\testing\generator::instance();
 
@@ -779,7 +774,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_update_available_enrolments_with_learning_plan() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
         $program_generator = \totara_program\testing\generator::instance();
         $plan_generator = \totara_plan\testing\generator::instance();
@@ -903,7 +897,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
      * Set up the users, programs and completions for testing the fixer.
      */
     public function setup_fix_completions() {
-        $this->resetAfterTest(true);
 
         $program_generator = \totara_program\testing\generator::instance();
 
@@ -1121,7 +1114,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     }
 
     public function test_prog_load_all_completions() {
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
         $program_generator = \totara_program\testing\generator::instance();
 
@@ -1173,7 +1165,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_conditionally_delete_completion() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
         /* @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $generator->get_plugin_generator('totara_plan');
@@ -1291,7 +1282,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_delete_completion() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
         $program_generator = \totara_program\testing\generator::instance();
 
@@ -1381,7 +1371,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
      * It does not exhaustively test that the correct progress is returned, e.g. based on course set progress.
      */
     public function test_prog_display_progress_assignment_with_program() {
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
         $program_generator = \totara_program\testing\generator::instance();
@@ -1434,7 +1423,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_display_progress_assignment_with_certification() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $now = time();
 
@@ -1586,7 +1574,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
      * Set up users, programs, certifications and assignments.
      */
     public function setup_completions() {
-        $this->resetAfterTest(true);
 
         $program_generator = \totara_program\testing\generator::instance();
 
@@ -2149,7 +2136,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_create_completion() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $program_generator = \totara_program\testing\generator::instance();
 
@@ -2245,7 +2231,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_create_courseset_completion() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generator_program = \totara_program\testing\generator::instance();
 
@@ -2358,7 +2343,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_find_missing_completions_with_learning_plans() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generator_program = \totara_program\testing\generator::instance();
 
@@ -2439,7 +2423,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_find_unassigned_incomplete_completions_with_learning_plans() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generator_program = \totara_program\testing\generator::instance();
 
@@ -2615,7 +2598,6 @@ class totara_program_lib_testcase extends reportcache_advanced_testcase {
     public function test_prog_get_required_programs() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $program_generator = \totara_program\testing\generator::instance();
 

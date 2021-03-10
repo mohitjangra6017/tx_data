@@ -99,7 +99,6 @@ class mod_lesson_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_index_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -226,7 +225,6 @@ class mod_lesson_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_view_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -370,7 +368,6 @@ class mod_lesson_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_edit_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -514,7 +511,6 @@ class mod_lesson_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_essay_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -658,7 +654,6 @@ class mod_lesson_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_report_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -802,7 +797,6 @@ class mod_lesson_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_mediafile_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -946,7 +940,6 @@ class mod_lesson_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_viewpage_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -1095,7 +1088,6 @@ class mod_lesson_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_editpage_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();

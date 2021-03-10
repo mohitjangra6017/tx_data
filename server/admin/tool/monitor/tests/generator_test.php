@@ -49,7 +49,6 @@ class tool_monitor_generator_testcase extends advanced_testcase {
      */
     public function test_create_rule() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();
 
@@ -70,7 +69,6 @@ class tool_monitor_generator_testcase extends advanced_testcase {
      */
     public function test_create_subscription() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
@@ -99,7 +97,6 @@ class tool_monitor_generator_testcase extends advanced_testcase {
      */
     public function test_create_event_entries() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
         $context = \context_system::instance();
 
         // Default data generator values.
@@ -117,7 +114,6 @@ class tool_monitor_generator_testcase extends advanced_testcase {
      */
     public function test_create_history() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
         $user = $this->getDataGenerator()->create_user();
         $monitorgenerator = $this->getDataGenerator()->get_plugin_generator('tool_monitor');
         $rule = $monitorgenerator->create_rule();

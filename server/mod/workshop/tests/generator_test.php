@@ -35,7 +35,6 @@ class mod_workshop_generator_testcase extends advanced_testcase {
 
     public function test_create_instance() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Totara: we disable this during install.
@@ -59,7 +58,6 @@ class mod_workshop_generator_testcase extends advanced_testcase {
 
     public function test_create_submission() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -81,7 +79,6 @@ class mod_workshop_generator_testcase extends advanced_testcase {
 
     public function test_create_assessment() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();

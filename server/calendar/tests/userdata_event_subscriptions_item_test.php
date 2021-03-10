@@ -102,7 +102,6 @@ class core_calendar_userdata_event_subscriptions_test extends advanced_testcase 
      */
     public function test_purge_removes_subscriptions() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -134,7 +133,6 @@ class core_calendar_userdata_event_subscriptions_test extends advanced_testcase 
      * No problems when the user has no subscriptions to purge.
      */
     public function test_purge_succeeds_when_no_subscriptions() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
         $user = $this->getDataGenerator()->create_user();
@@ -149,7 +147,6 @@ class core_calendar_userdata_event_subscriptions_test extends advanced_testcase 
      * Check count is 0 after purging the data.
      */
     public function test_count_zero_after_purge() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -180,7 +177,6 @@ class core_calendar_userdata_event_subscriptions_test extends advanced_testcase 
      * Check that the count returns the correct result.
      */
     public function test_count_correct_result() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -199,7 +195,6 @@ class core_calendar_userdata_event_subscriptions_test extends advanced_testcase 
      */
     public function test_purge_works_on_deleted_user() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -227,7 +222,6 @@ class core_calendar_userdata_event_subscriptions_test extends advanced_testcase 
      */
     public function test_count_works_on_deleted_user() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 

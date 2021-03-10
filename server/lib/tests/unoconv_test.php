@@ -75,7 +75,6 @@ class core_unoconv_testcase extends advanced_testcase {
             return $this->markTestSkipped();
         }
 
-        $this->resetAfterTest();
 
         $filerecord = array(
             'contextid' => context_system::instance()->id,

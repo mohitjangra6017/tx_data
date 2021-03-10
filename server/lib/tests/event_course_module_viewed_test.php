@@ -38,7 +38,6 @@ class core_event_course_module_viewed_testcase extends advanced_testcase {
      */
     public function test_event_attributes() {
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $record = new stdClass();
         $record->course = $course->id;

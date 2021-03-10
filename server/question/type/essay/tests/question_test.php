@@ -139,7 +139,6 @@ class qtype_essay_question_test extends advanced_testcase {
     }
 
     public function test_is_complete_response() {
-        $this->resetAfterTest(true);
 
         // Create a new logged-in user, so we can test responses with attachments.
         $user = $this->getDataGenerator()->create_user();

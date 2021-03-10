@@ -71,7 +71,6 @@ class mod_forum_userdata_ratings_testcase extends advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->resetAfterTest(true);
 
         // We must clear the subscription caches. This has to be done both before each test, and after in case of other
         // tests using these functions.

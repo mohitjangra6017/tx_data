@@ -58,7 +58,6 @@ class question_engine_data_mapper_testcase extends qbehaviour_walkthrough_test_b
     public function test_set_max_mark_in_attempts() {
 
         // Set up some things the tests will need.
-        $this->resetAfterTest();
         $dm = new question_engine_data_mapper();
 
         // Create the questions.
@@ -129,7 +128,6 @@ class question_engine_data_mapper_testcase extends qbehaviour_walkthrough_test_b
     }
 
     public function test_load_used_variants() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();

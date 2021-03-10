@@ -87,7 +87,6 @@ class totara_userdata_local_purge_testcase extends advanced_testcase {
 
     public function test_is_execution_pending() {
         global $DB;
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
 
@@ -140,7 +139,6 @@ class totara_userdata_local_purge_testcase extends advanced_testcase {
 
     public function test_purge_items() {
         global $DB;
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
 

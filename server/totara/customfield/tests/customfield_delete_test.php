@@ -61,7 +61,6 @@ class totara_customfield_delete_testcase extends advanced_testcase {
     public function test_customfield_delete() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $contextsystem = context_system::instance();
         // Assert that records exist.

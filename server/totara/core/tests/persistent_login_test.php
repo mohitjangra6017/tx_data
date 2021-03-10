@@ -33,7 +33,6 @@ defined('MOODLE_INTERNAL') || die();
 class totara_core_persistent_login_testcase extends advanced_testcase {
     public function test_get_cookie_name() {
         global $CFG;
-        $this->resetAfterTest();
 
         $name = persistent_login::get_cookie_name();
         $this->assertSame('TOTARAPL', $name);
@@ -50,7 +49,6 @@ class totara_core_persistent_login_testcase extends advanced_testcase {
 
     public function test_is_cookie_secure() {
         global $CFG;
-        $this->resetAfterTest();
 
         $CFG->wwwroot = 'http://www.xample.com/totara';
         $this->assertFalse(persistent_login::is_cookie_secure());
@@ -61,7 +59,6 @@ class totara_core_persistent_login_testcase extends advanced_testcase {
 
     public function test_kill() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -85,7 +82,6 @@ class totara_core_persistent_login_testcase extends advanced_testcase {
 
     public function test_kill_user() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -110,7 +106,6 @@ class totara_core_persistent_login_testcase extends advanced_testcase {
 
     public function test_kill_all() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -138,7 +133,6 @@ class totara_core_persistent_login_testcase extends advanced_testcase {
 
     public function test_session_timeout() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         $CFG->persistentloginenable = true;
 
@@ -180,7 +174,6 @@ class totara_core_persistent_login_testcase extends advanced_testcase {
 
     public function test_gc() {
         global $DB;
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();

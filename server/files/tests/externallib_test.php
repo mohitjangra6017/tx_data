@@ -40,7 +40,6 @@ class core_files_externallib_testcase extends advanced_testcase {
     public function test_upload() {
         global $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $context = context_user::instance($USER->id);
         $contextid = $context->id;
@@ -106,7 +105,6 @@ class core_files_externallib_testcase extends advanced_testcase {
     public function test_upload_param_component() {
         global $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $context = context_user::instance($USER->id);
         $contextid = $context->id;
@@ -131,7 +129,6 @@ class core_files_externallib_testcase extends advanced_testcase {
     public function test_upload_param_area() {
         global $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $context = context_user::instance($USER->id);
         $contextid = $context->id;
@@ -159,7 +156,6 @@ class core_files_externallib_testcase extends advanced_testcase {
     public function test_get_files() {
         global $USER, $DB;
 
-        $this->resetAfterTest();
 
         // Set the current user to be the administrator.
         $this->setAdminUser();

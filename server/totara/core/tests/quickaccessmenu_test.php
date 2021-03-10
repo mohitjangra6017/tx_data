@@ -103,7 +103,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
 
         // Needed because of capability checks.
         $this->setAdminUser();
-        $this->resetAfterTest();
 
         admin_get_root(true, false); // Force the admin tree to reload.
 
@@ -240,7 +239,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
             $this->markTestSkipped('Test is for standard distribution only.');
         }
 
-        $this->resetAfterTest();
 
         $roleid = $DB->get_field('role', 'id', ['shortname' => 'staffmanager']);
         $user = $this->getDataGenerator()->create_user();
@@ -265,7 +263,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
             $this->markTestSkipped('Test is for standard distribution only.');
         }
 
-        $this->resetAfterTest();
 
         $roleid = $DB->get_field('role', 'id', ['shortname' => 'coursecreator']);
         $user = $this->getDataGenerator()->create_user();
@@ -289,7 +286,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
             $this->markTestSkipped('Test is for standard distribution only.');
         }
 
-        $this->resetAfterTest();
 
         $roleid = $DB->get_field('role', 'id', ['shortname' => 'student']);
         $user = $this->getDataGenerator()->create_user();
@@ -306,7 +302,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
             $this->markTestSkipped('Test is for standard distribution only.');
         }
 
-        $this->resetAfterTest();
 
         $roleid = $this->getDataGenerator()->create_role();
         $user = $this->getDataGenerator()->create_user();
@@ -329,7 +324,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
             $this->markTestSkipped('Test is for standard distribution only.');
         }
 
-        $this->resetAfterTest();
 
         $roleid = $this->getDataGenerator()->create_role();
         $user = $this->getDataGenerator()->create_user();
@@ -935,7 +929,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
     public function test_helper_get_user_menu() {
         // Needed because of capability checks.
         $this->setAdminUser();
-        $this->resetAfterTest();
 
         admin_get_root(true, false); // Force the admin tree to reload.
         $user = get_admin();
@@ -983,7 +976,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
     }
 
     public function test_group_create_group() {
-        $this->resetAfterTest();
 
         // Create a user with at least one role that lets them see the top menu.
         $roleid = $this->getDataGenerator()->create_role();
@@ -1022,7 +1014,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
     }
 
     public function test_group_rename_group() {
-        $this->resetAfterTest();
 
         // Create a user with at least one role that lets them see the top menu.
         $roleid = $this->getDataGenerator()->create_role();
@@ -1050,7 +1041,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
     }
 
     public function test_group_remove_group() {
-        $this->resetAfterTest();
 
         // Create a user with at least one role that lets them see the top menu.
         $roleid = $this->getDataGenerator()->create_role();
@@ -1233,7 +1223,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
     }
 
     public function test_helper_change_group_order() {
-        $this->resetAfterTest();
 
         $method = new ReflectionMethod(helper::class, 'move_group_to_bottom');
         $method->setAccessible(true);
@@ -1334,7 +1323,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
     }
 
     public function test_item_construct_from_provider() {
-        $this->resetAfterTest();
 
         $item = item::from_provider('test', group::get(group::PLATFORM), new lang_string('yes'), 1500);
         self::assertInstanceOf(item::class, $item);
@@ -1387,7 +1375,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
     }
 
     public function test_item_construct_from_preference() {
-        $this->resetAfterTest();
 
         $item = item::from_preference('test', group::get(group::PLATFORM), new lang_string('yes'), 1500, true);
         self::assertInstanceOf(item::class, $item);
@@ -1425,7 +1412,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
     public function test_core_config_quickaccessmenu() {
         global $CFG;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $CFG->defaultquickaccessmenu = [
@@ -1458,7 +1444,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
     }
 
     public function test_core_admin_output_quickaccessmenu() {
-        $this->resetAfterTest();
 
         $roleid = $this->getDataGenerator()->create_role();
         $user = $this->getDataGenerator()->create_user();
@@ -1526,7 +1511,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
 
     public function test_helper_item_exists_in_user_menu() {
         $this->setAdminUser();
-        $this->resetAfterTest();
 
         $user = get_admin();
 
@@ -1561,7 +1545,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
 
     public function test_item_from_part_of_admin_tree_category() {
         $this->setAdminUser();
-        $this->resetAfterTest();
 
         $root = admin_get_root();
         $item = $root->locate('courses');
@@ -1572,7 +1555,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
 
     public function test_reset_for_user() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
         admin_get_root(true, false); // Force the admin tree to reload.
 
@@ -1595,7 +1577,6 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
     }
 
     public function test_duplicate_weight_in_groups() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         admin_get_root(true, false); // Force the admin tree to reload.
 

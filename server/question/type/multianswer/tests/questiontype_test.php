@@ -117,7 +117,6 @@ class qtype_multianswer_test extends advanced_testcase {
     }
 
     public function test_question_saving_twosubq() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $questiondata = test_question_maker::get_question_data('multianswer');

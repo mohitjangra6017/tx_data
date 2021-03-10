@@ -36,7 +36,6 @@ class core_question_generator_testcase extends advanced_testcase {
     public function test_create() {
         global $DB;
 
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $count = $DB->count_records('question_categories');

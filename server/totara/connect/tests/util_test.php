@@ -38,7 +38,6 @@ class totara_connect_util_testcase extends advanced_testcase {
     }
 
     public function test_get_sep_setup_url() {
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -59,7 +58,6 @@ class totara_connect_util_testcase extends advanced_testcase {
     }
 
     public function test_get_sep_url() {
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -80,7 +78,6 @@ class totara_connect_util_testcase extends advanced_testcase {
     }
 
     public function test_get_sso_finish_url() {
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -102,7 +99,6 @@ class totara_connect_util_testcase extends advanced_testcase {
 
     public function test_add_client() {
         global $DB;
-        $this->resetAfterTest();
 
         // Add some data.
 
@@ -251,7 +247,6 @@ class totara_connect_util_testcase extends advanced_testcase {
 
     public function test_edit_client() {
         global $DB;
-        $this->resetAfterTest();
 
         $cohort = $this->getDataGenerator()->create_cohort();
         $cohortb = $this->getDataGenerator()->create_cohort();
@@ -343,7 +338,6 @@ class totara_connect_util_testcase extends advanced_testcase {
 
     public function test_purge_deleted_client() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -417,7 +411,6 @@ class totara_connect_util_testcase extends advanced_testcase {
 
     public function test_add_client_cohort() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -440,7 +433,6 @@ class totara_connect_util_testcase extends advanced_testcase {
 
     public function test_remove_client_cohort() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -466,7 +458,6 @@ class totara_connect_util_testcase extends advanced_testcase {
 
     public function test_remove_client_course() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -492,7 +483,6 @@ class totara_connect_util_testcase extends advanced_testcase {
 
     public function test_add_client_course() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -515,7 +505,6 @@ class totara_connect_util_testcase extends advanced_testcase {
 
     public function test_remove_client_pos_framework() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -545,7 +534,6 @@ class totara_connect_util_testcase extends advanced_testcase {
 
     public function test_add_client_pos_framework() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -572,7 +560,6 @@ class totara_connect_util_testcase extends advanced_testcase {
 
     public function test_remove_client_org_framework() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -602,7 +589,6 @@ class totara_connect_util_testcase extends advanced_testcase {
 
     public function test_add_client_org_framework() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -628,7 +614,6 @@ class totara_connect_util_testcase extends advanced_testcase {
     }
 
     public function test_validate_sso_request_token() {
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -644,7 +629,6 @@ class totara_connect_util_testcase extends advanced_testcase {
     public function test_create_sso_session() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $cohort = $this->getDataGenerator()->create_cohort();
@@ -698,7 +682,6 @@ class totara_connect_util_testcase extends advanced_testcase {
     public function test_ignore_timeout_hook() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
         $CFG->enableconnectserver = '1';
 
         $user = $this->getDataGenerator()->create_user();
@@ -733,7 +716,6 @@ class totara_connect_util_testcase extends advanced_testcase {
     public function test_terminate_sso_session() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
         $CFG->enableconnectserver = '1';
 
         $user = $this->getDataGenerator()->create_user();
@@ -755,7 +737,6 @@ class totara_connect_util_testcase extends advanced_testcase {
     public function test_login_page_info() {
         global $CFG, $SESSION;
 
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -775,7 +756,6 @@ class totara_connect_util_testcase extends advanced_testcase {
 
     public function test_warn_if_not_https() {
         global $CFG;
-        $this->resetAfterTest();
 
         // No warning expected on HTTPS sites.
         $CFG->wwwroot = 'https://example.com/lms';
@@ -789,7 +769,6 @@ class totara_connect_util_testcase extends advanced_testcase {
     public function test_prepare_user_for_client() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $connectgenerator */
         $connectgenerator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -926,7 +905,6 @@ class totara_connect_util_testcase extends advanced_testcase {
     public function test_prepare_user_for_client_icons() {
         global $CFG, $DB;
         require_once("$CFG->dirroot/lib/gdlib.php");
-        $this->resetAfterTest();
 
         $client = $this->getDataGenerator()->get_plugin_generator('totara_connect')->create_client();
         $user = $this->getDataGenerator()->create_user(array('description' => 'test user'));

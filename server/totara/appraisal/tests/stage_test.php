@@ -91,7 +91,6 @@ class appraisal_stage_test extends appraisal_testcase {
     }
 
     public function test_stage_add() {
-        $this->resetAfterTest();
         $appraisal = appraisal::build(array('name' => 'Appraisal'));
         $data = new stdClass();
         $data->appraisalid = $appraisal->id;
@@ -114,7 +113,6 @@ class appraisal_stage_test extends appraisal_testcase {
     }
 
     public function test_stage_edit() {
-        $this->resetAfterTest();
         $appraisal = appraisal::build(array('name' => 'Appraisal'));
         $data = new stdClass();
         $data->appraisalid = $appraisal->id;
@@ -164,7 +162,6 @@ class appraisal_stage_test extends appraisal_testcase {
     }
 
     public function test_stage_delete() {
-        $this->resetAfterTest();
         $def = array('name' => 'Appraisal', 'stages' => array(
             array('name' => 'Stage 1'), array('name' => 'Stage 2')
         ));
@@ -177,7 +174,6 @@ class appraisal_stage_test extends appraisal_testcase {
     }
 
     public function test_stage_duplicate() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $time = time();
         $def = array('name' => 'Appraisal', 'stages' => array(
@@ -215,7 +211,6 @@ class appraisal_stage_test extends appraisal_testcase {
     }
 
     public function test_stage_locks() {
-        $this->resetAfterTest();
 
         list($appraisal, $users) = $this->prepare_appraisal_with_users($this->def);
         $appraisal->validate();
@@ -240,7 +235,6 @@ class appraisal_stage_test extends appraisal_testcase {
     }
 
     public function test_stage_complete_role() {
-        $this->resetAfterTest();
 
         list($appraisal, $users) = $this->prepare_appraisal_with_users($this->defmngr);
         $appraisal->validate();
@@ -268,7 +262,6 @@ class appraisal_stage_test extends appraisal_testcase {
     }
 
     public function test_stage_complete_user() {
-        $this->resetAfterTest();
 
         list($appraisal, $users) = $this->prepare_appraisal_with_users($this->defmngr);
         $appraisal->validate();
@@ -304,7 +297,6 @@ class appraisal_stage_test extends appraisal_testcase {
     }
 
     public function test_stage_get_list() {
-        $this->resetAfterTest();
         $defmngr = array('name' => 'Appraisal', 'stages' => array(
             array('name' => 'St1', 'timedue' => time() + 86400, 'pages' => array(
                 array('name' => 'Page', 'questions' => array(
@@ -337,7 +329,6 @@ class appraisal_stage_test extends appraisal_testcase {
     }
 
     public function test_stage_get_stages_for_roles() {
-        $this->resetAfterTest();
         // Prepare stages with different roles, and different rights of each role.
         $defmngr = array('name' => 'Appraisal', 'stages' => array(
             array('name' => 'St1', 'timedue' => time() + 86400, 'pages' => array(
@@ -393,7 +384,6 @@ class appraisal_stage_test extends appraisal_testcase {
     }
 
     public function test_stage_fetch_appraisal() {
-        $this->resetAfterTest();
         list($appraisal) = $this->prepare_appraisal_with_users($this->def);
 
         $stdclasses = appraisal_stage::fetch_appraisal($appraisal->id, false);
@@ -406,7 +396,6 @@ class appraisal_stage_test extends appraisal_testcase {
     }
 
     public function test_stage_is_overdue() {
-        $this->resetAfterTest();
         list($appraisal) = $this->prepare_appraisal_with_users($this->def);
         $map = $this->map($appraisal);
         $stage = new appraisal_stage($map['stages']['St1']);
@@ -421,7 +410,6 @@ class appraisal_stage_test extends appraisal_testcase {
     }
 
     public function test_stage_get_may_answer() {
-        $this->resetAfterTest();
         $defmngr = array('name' => 'Appraisal', 'stages' => array(
             array('name' => 'St1', 'timedue' => time() + 86400, 'locks' => array(appraisal::ROLE_LEARNER => 1), 'pages' => array(
                 array('name' => 'Page1', 'questions' => array(
@@ -463,7 +451,6 @@ class appraisal_stage_test extends appraisal_testcase {
     }
 
     public function test_stage_validate() {
-        $this->resetAfterTest();
         $def = array('name' => 'Appraisal', 'stages' => array(
             array('name' => 'St1', 'timedue' => 0, 'pages' => array(
                 array('name' => 'Page1', 'questions' => array(

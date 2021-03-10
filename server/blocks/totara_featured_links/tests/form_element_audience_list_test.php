@@ -49,7 +49,6 @@ class block_totara_featured_links_form_element_audience_list_testcase extends te
      * Test that the form element gets the right audience data from the data base
      */
     public function test_get_audience_data() {
-        $this->resetAfterTest();
         $audience1 = $this->getDataGenerator()->create_cohort();
         $instance = $this->blockgenerator->create_instance();
         $this->blockgenerator->create_default_tile($instance->id);

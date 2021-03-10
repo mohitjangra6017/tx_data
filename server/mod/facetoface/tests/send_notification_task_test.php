@@ -36,7 +36,6 @@ class mod_facetoface_send_notification_task_testcase extends mod_facetoface_face
      * Test simple run
      */
     public function test_send_notifications_task() {
-        $this->resetAfterTest();
         $cron = new \mod_facetoface\task\send_notifications_task();
         $cron->testing = true;
         $cron->execute();
@@ -48,7 +47,6 @@ class mod_facetoface_send_notification_task_testcase extends mod_facetoface_face
      */
     public function test_send_manual_notifications() {
         global $DB;
-        $this->resetAfterTest();
         $seed = $this->seed_data();
 
         $sink = $this->redirectEmails();
@@ -94,7 +92,6 @@ class mod_facetoface_send_notification_task_testcase extends mod_facetoface_face
      */
     public function test_send_scheduled_notifications() {
         global $DB;
-        $this->resetAfterTest();
         $seed = $this->seed_data();
 
         $sink = $this->redirectEmails();
@@ -146,7 +143,6 @@ class mod_facetoface_send_notification_task_testcase extends mod_facetoface_face
      */
     public function test_registration_ended() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $seed = $this->seed_data();
 
@@ -195,7 +191,6 @@ class mod_facetoface_send_notification_task_testcase extends mod_facetoface_face
      */
     public function test_remove_reservations_after_deadline () {
         global $DB;
-        $this->resetAfterTest();
 
         $seed = $this->seed_data();
 

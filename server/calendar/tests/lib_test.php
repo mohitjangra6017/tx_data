@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/calendar/lib.php');
 class core_calendar_lib_testcase extends advanced_testcase {
 
     protected function setUp(): void {
-        $this->resetAfterTest(true);
     }
 
     public function test_calendar_get_course_cached() {
@@ -201,7 +200,6 @@ class core_calendar_lib_testcase extends advanced_testcase {
      */
     public function test_delete_module_delete_events() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $user = $this->getDataGenerator()->create_user();
         // Create the course we will be using.

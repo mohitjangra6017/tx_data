@@ -117,7 +117,6 @@ class mod_feedback_events_testcase extends advanced_testcase {
      */
     public function test_response_deleted_event() {
         global $USER, $DB;
-        $this->resetAfterTest();
 
         // Create and delete a module.
         $sink = $this->redirectEvents();
@@ -187,7 +186,6 @@ class mod_feedback_events_testcase extends advanced_testcase {
      */
     public function test_response_deleted_event_exceptions() {
 
-        $this->resetAfterTest();
 
         $context = context_module::instance($this->eventcm->id);
 
@@ -210,7 +208,6 @@ class mod_feedback_events_testcase extends advanced_testcase {
      */
     public function test_response_submitted_event() {
         global $USER, $DB;
-        $this->resetAfterTest();
         $this->setUser($this->eventuser);
 
         // Create a temporary response, with anonymous set to yes.
@@ -292,7 +289,6 @@ class mod_feedback_events_testcase extends advanced_testcase {
      */
     public function test_response_submitted_event_exceptions() {
 
-        $this->resetAfterTest();
 
         $context = context_module::instance($this->eventcm->id);
 
@@ -346,7 +342,6 @@ class mod_feedback_events_testcase extends advanced_testcase {
      */
     public function test_delete_course() {
         global $DB;
-        $this->resetAfterTest();
         feedback_save_as_template($this->eventfeedback, 'my template', 0);
         $courseid = $this->eventcourse->id;
         $this->assertNotEmpty($DB->get_records('feedback_template', array('course' => $courseid)));

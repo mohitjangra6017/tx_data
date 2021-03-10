@@ -64,7 +64,6 @@ class totara_cohort_user_rules_testcase extends reportcache_advanced_testcase {
     public function setUp(): void {
         parent::setup();
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $userscreated = 0;
 
@@ -511,7 +510,6 @@ class totara_cohort_user_rules_testcase extends reportcache_advanced_testcase {
      */
     public function test_idnumber_text_rule($params, $listofvalues, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->cohort_generator->create_cohort_rule_params($this->ruleset, 'user', 'idnumber', $params, $listofvalues);
@@ -537,7 +535,6 @@ class totara_cohort_user_rules_testcase extends reportcache_advanced_testcase {
      */
     public function test_username_text_rule($params, $listofvalues, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create a username rule.
@@ -564,7 +561,6 @@ class totara_cohort_user_rules_testcase extends reportcache_advanced_testcase {
      */
     public function test_email_text_rule($params, $listofvalues, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create an email rule.
@@ -589,7 +585,6 @@ class totara_cohort_user_rules_testcase extends reportcache_advanced_testcase {
      */
     public function test_firstname_text_rule($params, $listofvalues, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create a firstname rule.
@@ -614,7 +609,6 @@ class totara_cohort_user_rules_testcase extends reportcache_advanced_testcase {
      */
     public function test_lastname_text_rule($params, $listofvalues, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create a lastname rule.
@@ -639,7 +633,6 @@ class totara_cohort_user_rules_testcase extends reportcache_advanced_testcase {
      */
     public function test_city_text_rule($params, $listofvalues, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create a city rule.
@@ -664,7 +657,6 @@ class totara_cohort_user_rules_testcase extends reportcache_advanced_testcase {
      */
     public function test_institution_text_rule($params, $listofvalues, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create an institution rule.
@@ -690,7 +682,6 @@ class totara_cohort_user_rules_testcase extends reportcache_advanced_testcase {
      */
     public function test_department_text_rule($params, $listofvalues, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a rule with department not equal to system. It should not match any of the users created.
@@ -717,7 +708,6 @@ class totara_cohort_user_rules_testcase extends reportcache_advanced_testcase {
      */
     public function test_time_created_date($params, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Exclude admin user from this cohort.

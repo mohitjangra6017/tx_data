@@ -43,7 +43,6 @@ class core_course_user_learning_item_testcase extends advanced_testcase {
     public function setUp(): void {
         global $DB;
 
-        $this->resetAfterTest(true);
         parent::setUp();
 
         $this->generator = $this->getDataGenerator();

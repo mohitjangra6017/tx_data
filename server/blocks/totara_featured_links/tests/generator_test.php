@@ -58,7 +58,6 @@ class block_totara_featured_links_generator_testcase extends test_helper {
      */
     public function test_create_default_tile() {
         global $DB;
-        $this->resetAfterTest();
         $blockinstance = $this->blockgenerator->create_instance();
         $tile = $this->blockgenerator->create_default_tile($blockinstance->id);
 

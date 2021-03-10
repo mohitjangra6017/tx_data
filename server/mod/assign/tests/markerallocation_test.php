@@ -42,7 +42,6 @@ class mod_assign_markerallocation_testcase extends advanced_testcase {
      * Create all the needed elements to test the difference between both functions.
      */
     public function test_markerusers() {
-        $this->resetAfterTest();
         global $DB;
 
         // Create a course, by default it is created with 5 sections.

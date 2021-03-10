@@ -69,7 +69,6 @@ class tool_totara_sync_elements_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/admin/tool/totara_sync/elements/user.php');
         require_once($CFG->dirroot . '/admin/tool/totara_sync/sources/source_user_csv.php');
 
-        $this->resetAfterTest();
         set_config('authdeleteusers', 'partial');
         set_config('csvsaveemptyfields', true, 'totara_sync_element_user');
 

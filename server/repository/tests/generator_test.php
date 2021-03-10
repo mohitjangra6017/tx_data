@@ -42,7 +42,6 @@ class core_repository_generator_testcase extends advanced_testcase {
      */
     public function test_create_type() {
         global $DB, $CFG;
-        $this->resetAfterTest(true);
 
         require_once("$CFG->dirroot/repository/lib.php");
         // Totara disables this in new installs.
@@ -88,7 +87,6 @@ class core_repository_generator_testcase extends advanced_testcase {
      */
     public function test_create_type_custom_options() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Single instances.
         // Note: for single instances repositories enablecourseinstances and enableuserinstances are forced set to 0.
@@ -148,7 +146,6 @@ class core_repository_generator_testcase extends advanced_testcase {
      */
     public function test_create_instance() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();

@@ -31,7 +31,6 @@ defined('MOODLE_INTERNAL') || die();
 class totara_connect_generator_testcase extends advanced_testcase {
     public function test_create_client() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');

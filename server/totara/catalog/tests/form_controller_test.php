@@ -41,7 +41,6 @@ class totara_catalog_form_controller_testcase extends config_base_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
     }
 
     private function get_expected_default_currentdata($form_key) {

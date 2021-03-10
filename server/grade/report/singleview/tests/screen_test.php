@@ -42,7 +42,6 @@ class gradereport_singleview_screen_testcase extends advanced_testcase {
         global $DB;
 
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $roleteacher = $DB->get_record('role', array('shortname' => 'teacher'), '*', MUST_EXIST);
 

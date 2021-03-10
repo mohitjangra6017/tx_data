@@ -35,7 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class core_session_manager_testcase extends advanced_testcase {
     public function test_start() {
-        $this->resetAfterTest();
         // Session must be started only once...
         \core\session\manager::start();
         $this->assertDebuggingCalled('Session was already started!', DEBUG_DEVELOPER);
@@ -43,7 +42,6 @@ class core_session_manager_testcase extends advanced_testcase {
 
     public function test_init_empty_session() {
         global $SESSION, $USER;
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
 
@@ -103,7 +101,6 @@ class core_session_manager_testcase extends advanced_testcase {
 
     public function test_set_user() {
         global $USER;
-        $this->resetAfterTest();
 
         $this->assertEquals(0, $USER->id);
 
@@ -124,7 +121,6 @@ class core_session_manager_testcase extends advanced_testcase {
 
     public function test_login_user() {
         global $USER;
-        $this->resetAfterTest();
 
         $this->assertEquals(0, $USER->id);
 
@@ -142,7 +138,6 @@ class core_session_manager_testcase extends advanced_testcase {
 
     public function test_terminate_current() {
         global $USER, $SESSION;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         \core\session\manager::terminate_current();
@@ -161,7 +156,6 @@ class core_session_manager_testcase extends advanced_testcase {
 
     public function test_write_close() {
         global $USER;
-        $this->resetAfterTest();
 
         // Just make sure no errors and $USER->id is kept
         $this->setAdminUser();
@@ -175,7 +169,6 @@ class core_session_manager_testcase extends advanced_testcase {
 
     public function test_session_exists() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $this->assertFalse(\core\session\manager::session_exists('abc'));
 
@@ -221,7 +214,6 @@ class core_session_manager_testcase extends advanced_testcase {
 
     public function test_touch_session() {
         global $DB;
-        $this->resetAfterTest();
 
         $sid = md5('hokus');
         $record = new \stdClass();
@@ -244,7 +236,6 @@ class core_session_manager_testcase extends advanced_testcase {
 
     public function test_kill_session() {
         global $DB, $USER;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $userid = $USER->id;
@@ -276,7 +267,6 @@ class core_session_manager_testcase extends advanced_testcase {
 
     public function test_kill_user_sessions() {
         global $DB, $USER;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $userid = $USER->id;
@@ -328,7 +318,6 @@ class core_session_manager_testcase extends advanced_testcase {
 
     public function test_apply_concurrent_login_limit() {
         global $DB;
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -451,7 +440,6 @@ class core_session_manager_testcase extends advanced_testcase {
 
     public function test_kill_all_sessions() {
         global $DB, $USER;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $userid = $USER->id;
@@ -484,7 +472,6 @@ class core_session_manager_testcase extends advanced_testcase {
 
     public function test_gc() {
         global $CFG, $DB, $USER;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $adminid = $USER->id;
@@ -557,7 +544,6 @@ class core_session_manager_testcase extends advanced_testcase {
      */
     public function test_loginas() {
         global $USER, $SESSION;
-        $this->resetAfterTest();
 
         // Set current user as Admin user and save it for later use.
         $this->setAdminUser();
@@ -616,7 +602,6 @@ class core_session_manager_testcase extends advanced_testcase {
     }
 
     public function test_is_loggedinas() {
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -630,7 +615,6 @@ class core_session_manager_testcase extends advanced_testcase {
     }
 
     public function test_get_realuser() {
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();

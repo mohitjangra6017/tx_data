@@ -44,7 +44,6 @@ class gradereport_overview_externallib_testcase extends externallib_advanced_tes
      */
     public function setUp(): void {
         global $DB;
-        $this->resetAfterTest(true);
 
         $s1grade1 = 80;
         $s1grade2 = 40;

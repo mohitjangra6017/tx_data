@@ -28,7 +28,6 @@ class totara_program_assignment_external_testcase extends advanced_testcase {
     private function basic_setup() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 
@@ -76,7 +75,6 @@ class totara_program_assignment_external_testcase extends advanced_testcase {
     public function test_ensure_user_can_manage_programs() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $setup = $this->basic_setup();
 
         $roleid = $this->getDataGenerator()->create_role();

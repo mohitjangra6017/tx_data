@@ -52,7 +52,6 @@ class totara_certification_observer_testcase extends reportcache_advanced_testca
 
         parent::setUp();
 
-        $this->resetAfterTest(true);
         $CFG->enablecompletion = true;
 
         $program_generator = \totara_program\testing\generator::instance();
@@ -105,7 +104,6 @@ class totara_certification_observer_testcase extends reportcache_advanced_testca
     }
 
     public function test_course_started() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $now = time();

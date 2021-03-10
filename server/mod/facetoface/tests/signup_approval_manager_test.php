@@ -113,7 +113,6 @@ class mod_facetoface_signup_approval_manager_testcase extends advanced_testcase 
      * @return void
      */
     public function test_declined_user_is_able_to_re_signup(): void {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $seminar = $this->create_facetoface();

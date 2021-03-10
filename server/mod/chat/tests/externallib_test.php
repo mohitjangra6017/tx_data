@@ -47,7 +47,6 @@ class mod_chat_external_testcase extends externallib_advanced_testcase {
     public function test_login_user() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Setup test data.
         $this->setAdminUser();
@@ -74,7 +73,6 @@ class mod_chat_external_testcase extends externallib_advanced_testcase {
     public function test_get_chat_users() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Setup test data.
         $this->setAdminUser();
@@ -118,7 +116,6 @@ class mod_chat_external_testcase extends externallib_advanced_testcase {
     public function test_send_get_chat_message() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Setup test data.
         $this->setAdminUser();
@@ -157,7 +154,6 @@ class mod_chat_external_testcase extends externallib_advanced_testcase {
     public function test_view_chat() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Setup test data.
         $this->setAdminUser();
@@ -224,7 +220,6 @@ class mod_chat_external_testcase extends externallib_advanced_testcase {
      */
     public function test_get_chats_by_courses() {
         global $DB, $USER, $CFG;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Set global chat method.

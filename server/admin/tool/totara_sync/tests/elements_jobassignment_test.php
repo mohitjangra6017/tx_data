@@ -103,7 +103,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_disallow_create_fullname() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -144,7 +143,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_create_fullname() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -180,7 +178,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_disallow_update_fullname() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -211,7 +208,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_update_fullname_no_totarasync() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -243,7 +239,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_update_fullname() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -282,7 +277,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_containsall_disallow_delete() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -316,7 +310,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_notcontainsall_disallow_delete() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -361,7 +354,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_notcontainsall_delete() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -408,7 +400,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_containsall_delete() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -445,7 +436,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_startdate_valid() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -473,7 +463,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_startdate_enddate_valid() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -504,7 +493,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_startdate_after_enddate() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -540,7 +528,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_enddate_only() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -569,7 +556,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_orgidnumber_exists() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -604,7 +590,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_orgidnumber_nonexisting() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -645,7 +630,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_appraiseridnumber_valid() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -677,7 +661,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_appraiseridnumber_no_matching() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -714,7 +697,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_self_assigned_as_appraiser() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -749,7 +731,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_empty_required_fields() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -800,7 +781,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_multiple_entries_for_job_assignment() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -838,7 +818,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_timemodified() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -1393,7 +1372,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_updateidnumbers_create_when_no_jobs() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -1418,7 +1396,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_updateidnumbers_update_first_job() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -1445,7 +1422,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_updateidnumbers_first_must_be_totarasync() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
 
@@ -1475,7 +1451,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_circular_management_structure() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
         $manager1 = $this->getDataGenerator()->create_user(array('idnumber' => 'manager1'));
@@ -1523,7 +1498,6 @@ class tool_totara_sync_elements_jobassignment_testcase extends advanced_testcase
 
     public function test_circular_management_structure_due_to_existing_assignments() {
         global $DB;
-        $this->resetAfterTest(true);
         $source = $this->prepare_source_table();
         $users = $this->create_test_users();
         $manager1 = $this->getDataGenerator()->create_user(array('idnumber' => 'manager1'));

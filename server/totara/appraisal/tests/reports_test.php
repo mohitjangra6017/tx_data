@@ -30,7 +30,6 @@ class test_appraisal_reports extends appraisal_testcase {
      * Test with no complete users.
      */
     public function test_get_active_with_stats_none_complete() {
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -63,7 +62,6 @@ class test_appraisal_reports extends appraisal_testcase {
      * Test with several complete users.
      */
     public function test_get_active_with_stats_completed() {
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -109,7 +107,6 @@ class test_appraisal_reports extends appraisal_testcase {
     public function test_get_active_with_stats_dynamic() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();

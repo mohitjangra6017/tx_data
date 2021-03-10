@@ -54,7 +54,6 @@ class tool_totara_sync_user_csv_testcase extends advanced_testcase {
 
         parent::setup();
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->filedir = $CFG->dataroot . '/totara_sync';
@@ -154,7 +153,6 @@ class tool_totara_sync_user_csv_testcase extends advanced_testcase {
     public function test_sync_changed_users() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $this->assertCount(2, $DB->get_records('user'));
         $this->assertCount(0, $DB->get_records('user', array('deleted' => 1)));
@@ -393,7 +391,6 @@ class tool_totara_sync_user_csv_testcase extends advanced_testcase {
     public function test_sync_all_users() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $this->assertCount(2, $DB->get_records('user'));
         $this->assertCount(0, $DB->get_records('user', array('deleted' => 1)));
@@ -638,7 +635,6 @@ class tool_totara_sync_user_csv_testcase extends advanced_testcase {
     public function test_csv_import_with_quotes() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $this->assertCount(2, $DB->get_records('user'));
         $this->assertCount(0, $DB->get_records('user', array('deleted' => 1)));
@@ -685,7 +681,6 @@ class tool_totara_sync_user_csv_testcase extends advanced_testcase {
     public function test_csv_mixed_case_usernames() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $this->assertCount(2, $DB->get_records('user'));
 
@@ -741,7 +736,6 @@ class tool_totara_sync_user_csv_testcase extends advanced_testcase {
     public function test_user_sync_disabled_setting() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $configcsv = $this->configcsv;
         foreach ($configcsv as $k => $v) {
@@ -805,7 +799,6 @@ class tool_totara_sync_user_csv_testcase extends advanced_testcase {
     public function test_csv_with_missing_idnumber() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         $this->assertCount(2, $DB->get_records('user'));
 
@@ -848,7 +841,6 @@ class tool_totara_sync_user_csv_testcase extends advanced_testcase {
 
         set_config('authdeleteusers', 'full');
 
-        $this->resetAfterTest();
 
         $this->assertSame(2, $DB->count_records('user', ['deleted' => '0']));
 
@@ -899,7 +891,6 @@ class tool_totara_sync_user_csv_testcase extends advanced_testcase {
     public function test_csv_with_emailstop() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $this->assertCount(2, $DB->get_records('user'));
 

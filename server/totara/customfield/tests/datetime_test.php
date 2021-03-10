@@ -68,7 +68,6 @@ class totara_customfield_datetime_testcase extends advanced_testcase {
      * Do a basic VALID test of the edit_validate_field function for the date/time custom field.
      */
     public function test_edit_validate_field_timestamp() {
-        $this->resetAfterTest(true);
 
         // Create the custom field object and validate the data.
         $formfield = new customfield_datetime ($this->datetime_id, $this->item_obj, $this->prefix, $this->tableprefix);
@@ -82,7 +81,6 @@ class totara_customfield_datetime_testcase extends advanced_testcase {
      * Test edit_validate_field function with some invalid date.
      */
     public function test_edit_validate_field_invalid() {
-        $this->resetAfterTest(true);
 
         $this->item_obj->customfield_datetime = 'abcde';
 
@@ -101,7 +99,6 @@ class totara_customfield_datetime_testcase extends advanced_testcase {
     public function test_edit_validate_field_year_range_lower() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Test a date that's earlier than the permitted lower year.
         $this->item_obj->customfield_datetime = '2014-12-31 11:59:59';
@@ -131,7 +128,6 @@ class totara_customfield_datetime_testcase extends advanced_testcase {
     public function test_edit_validate_field_year_range_upper() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Test a date that's later than the permitted upper year.
         $this->item_obj->customfield_datetime = '2031-01-01 00:00:01';
@@ -159,7 +155,6 @@ class totara_customfield_datetime_testcase extends advanced_testcase {
      * Test edit_validate_field function checking unique values.
      */
     public function test_edit_validate_field_unqiue() {
-        $this->resetAfterTest(true);
 
         $unique_value1 = '2020-12-25 15:00:00';
         $unique_value2 = '2020-12-31 23:00:00';
@@ -188,7 +183,6 @@ class totara_customfield_datetime_testcase extends advanced_testcase {
     }
 
     public function test_edit_save_data_timestamp() {
-        $this->resetAfterTest(true);
 
         // Create the custom field object and validate the data.
         $formfield = new customfield_datetime ($this->datetime_id, $this->item_obj, $this->prefix, $this->tableprefix);
@@ -199,7 +193,6 @@ class totara_customfield_datetime_testcase extends advanced_testcase {
     }
 
     public function test_edit_save_data_timestamp_invalid() {
-        $this->resetAfterTest(true);
 
         $this->item_obj->customfield_datetime = 'uvwxyz';
 
@@ -212,7 +205,6 @@ class totara_customfield_datetime_testcase extends advanced_testcase {
     }
 
     public function test_edit_save_data_timestamp_valid() {
-        $this->resetAfterTest(true);
 
         $this->item_obj->customfield_datetime = '30th June 2020';
 
@@ -227,7 +219,6 @@ class totara_customfield_datetime_testcase extends advanced_testcase {
 
     public function test_display_item_data_guessing() {
         global $CFG;
-        $this->resetAfterTest(true);
 
         // System timezone first with default admin timezone.
         $date = make_timestamp(2014, 1, 2, 10, 37, 0);

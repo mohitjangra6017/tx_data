@@ -86,7 +86,6 @@ class tool_totara_sync_element_run_sync_testcase extends advanced_testcase {
      * make sure emails do go out as per notification settings) and then return true.
      */
     public function test_successful_sync() {
-        $this->resetAfterTest();
         $element = $this->create_mock_element();
 
         $source = $this->getMockForAbstractClass(
@@ -162,7 +161,6 @@ class tool_totara_sync_element_run_sync_testcase extends advanced_testcase {
      * Test the operation of run_sync() when there are configuration errors for this element.
      */
     public function test_with_configuration_errors() {
-        $this->resetAfterTest();
         $element = $this->create_mock_element();
 
         $element->expects($this->any())
@@ -192,7 +190,6 @@ class tool_totara_sync_element_run_sync_testcase extends advanced_testcase {
      * to throw a totara_sync_exception.
      */
     public function test_sync_with_exception_thrown() {
-        $this->resetAfterTest();
         $element = $this->create_mock_element();
 
         $source = $this->getMockForAbstractClass(

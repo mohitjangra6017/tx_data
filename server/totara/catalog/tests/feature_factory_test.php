@@ -119,7 +119,6 @@ class totara_catalog_feature_factory_testcase extends advanced_testcase {
      * Check that customfield feature factories return features as expected for all supported customfields.
      */
     public function test_customfield_feature_factories() {
-        $this->resetAfterTest();
 
         $factories = $this->get_customfield_feature_factories();
         /** @var feature_factory $factory_course */

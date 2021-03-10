@@ -44,7 +44,6 @@ class totara_program_program_assignments_class_testcase extends advanced_testcas
 
     protected function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
 
         $this->data_generator = $this->getDataGenerator();
         $this->program_generator = \totara_program\testing\generator::instance();

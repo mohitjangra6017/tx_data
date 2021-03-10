@@ -51,7 +51,6 @@ class mod_quiz_attempt_walkthrough_testcase extends advanced_testcase {
     public function test_quiz_attempt_walkthrough() {
         global $SITE;
 
-        $this->resetAfterTest(true);
 
         // Make a quiz.
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
@@ -133,7 +132,6 @@ class mod_quiz_attempt_walkthrough_testcase extends advanced_testcase {
     public function test_quiz_with_random_question_attempt_walkthrough() {
         global $SITE;
 
-        $this->resetAfterTest(true);
         question_bank::get_qtype('random')->clear_caches_before_testing();
 
         $this->setAdminUser();

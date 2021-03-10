@@ -31,7 +31,6 @@ require_once($CFG->dirroot . '/totara/appraisal/tests/appraisal_testcase.php');
 class appraisal_event_test extends appraisal_testcase {
 
     public function test_appraisal_events() {
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         // Create an appraisal to throw a creation event.
@@ -93,7 +92,6 @@ class appraisal_event_test extends appraisal_testcase {
     }
 
     public function test_stage_events() {
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         // Create an appraisal to add the stage to.
@@ -165,7 +163,6 @@ class appraisal_event_test extends appraisal_testcase {
     }
 
     public function test_page_events() {
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         // Create an appraisal to add the stage to.
@@ -242,7 +239,6 @@ class appraisal_event_test extends appraisal_testcase {
     }
 
     public function test_question_events() {
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         // Set up an appraisal, stage, and page for the question.
@@ -321,7 +317,6 @@ class appraisal_event_test extends appraisal_testcase {
      *      - page_updated
      */
     public function test_legacy_events() {
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         // Set up an appraisal, stage, and page to edit.
@@ -396,7 +391,6 @@ class appraisal_event_test extends appraisal_testcase {
     }
 
     public function test_appraisal_stage_completed_event() {
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         $now = time();
@@ -482,7 +476,6 @@ class appraisal_event_test extends appraisal_testcase {
     }
 
     public function test_appraisal_role_stage_completed_event() {
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         $now = time();
@@ -555,7 +548,6 @@ class appraisal_event_test extends appraisal_testcase {
     }
 
     public function test_appraisal_role_page_saved_event() {
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         $now = time();

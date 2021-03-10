@@ -33,7 +33,6 @@ class filter_tex_mimetex_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
         global $CFG;
 
         // Skipping these tests as they will fail on some systems, e.g. CentOS, where the OS is

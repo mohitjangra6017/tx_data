@@ -1077,7 +1077,6 @@ class core_orm_query_builder_db_testcase extends advanced_testcase {
     }
 
     protected function create_tables() {
-        $this->resetAfterTest(true);
         return $this->create_cats_table()
             ->create_goods_table()
             ->create_sales_table();

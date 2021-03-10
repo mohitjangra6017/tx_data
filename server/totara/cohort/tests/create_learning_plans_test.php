@@ -49,7 +49,6 @@ class totara_cohort_create_learning_plans_testcase extends advanced_testcase {
 
         parent::setup();
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create some users.

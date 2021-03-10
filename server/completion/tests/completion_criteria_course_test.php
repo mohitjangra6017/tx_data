@@ -45,7 +45,6 @@ class completion_completion_criteria_course_test extends advanced_testcase {
 
     protected function setUp(): void {
         parent::setup();
-        $this->resetAfterTest();
 
         set_config('enablecompletion', '1');
 
@@ -62,7 +61,6 @@ class completion_completion_criteria_course_test extends advanced_testcase {
      * correct completion time.
      */
     public function test_completion_criteria_course_review_complete() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $course1 = $this->generator->create_course();
@@ -133,7 +131,6 @@ class completion_completion_criteria_course_test extends advanced_testcase {
      * course2 should not be completed after the call to review.
      */
     public function test_completion_criteria_course_review_incomplete() {
-        $this->resetAfterTest(true);
 
         $course1 = $this->generator->create_course();
         $this->completion_generator->enable_completion_tracking($course1);
@@ -186,7 +183,6 @@ class completion_completion_criteria_course_test extends advanced_testcase {
      * (when the aggregation method is set to all), should then be complete for the other course.
      */
     public function test_completion_criteria_course_review_multiple() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $course1a = $this->generator->create_course(array('enablecompletion' => 1));

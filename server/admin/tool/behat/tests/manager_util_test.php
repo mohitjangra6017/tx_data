@@ -98,7 +98,6 @@ class tool_behat_manager_util_testcase extends advanced_testcase {
     public function setUp(): void {
         global $CFG;
 
-        $this->resetAfterTest();
         $CFG->behat_wwwroot = 'http://example.com/behat';
     }
 

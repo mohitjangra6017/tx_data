@@ -33,7 +33,6 @@ class mod_facetoface_session_cancellation_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/mod/facetoface/lib.php');
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         /** @var \mod_facetoface\testing\generator $generator */
@@ -72,7 +71,6 @@ class mod_facetoface_session_cancellation_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/mod/facetoface/lib.php');
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         /** @var \mod_facetoface\testing\generator $generator */
@@ -103,7 +101,6 @@ class mod_facetoface_session_cancellation_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/mod/facetoface/lib.php');
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         /** @var \mod_facetoface\testing\generator $generator */

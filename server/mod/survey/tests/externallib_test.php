@@ -47,7 +47,6 @@ class mod_survey_external_testcase extends externallib_advanced_testcase {
      */
     public function setUp(): void {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $DB->set_field('modules', 'visible', '1', ['name' => 'survey']);

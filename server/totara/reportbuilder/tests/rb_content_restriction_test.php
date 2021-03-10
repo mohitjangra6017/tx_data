@@ -54,7 +54,6 @@ class totara_rb_content_restrictions_testcase extends advanced_testcase {
         global $DB;
         parent::setup();
         $this->setAdminUser();
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');

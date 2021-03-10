@@ -46,7 +46,6 @@ class core_calendar_ical_testcase extends advanced_testcase {
     }
 
     public function test_calendar_update_subscription() {
-        $this->resetAfterTest(true);
 
         $subscription = new stdClass();
         $subscription->eventtype = 'site';
@@ -81,7 +80,6 @@ class core_calendar_ical_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot . '/lib/bennu/bennu.inc.php');
 
-        $this->resetAfterTest(true);
 
         // Test for Microsoft Outlook 2010.
         $subscription = new stdClass();

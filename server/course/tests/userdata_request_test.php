@@ -75,7 +75,6 @@ class core_course_userdata_request_testcase extends advanced_testcase {
     }
 
     private function setup_data() {
-        $this->resetAfterTest(true);
 
         $data = new class() {
             /** @var stdClass */

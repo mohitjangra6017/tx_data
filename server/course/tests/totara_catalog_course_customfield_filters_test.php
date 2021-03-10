@@ -39,7 +39,6 @@ class core_course_totara_catalog_course_customfield_filters_testcase extends \ad
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
     }
 
     /**

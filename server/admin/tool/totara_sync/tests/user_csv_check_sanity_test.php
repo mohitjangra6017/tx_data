@@ -60,7 +60,6 @@ class tool_totara_sync_user_csv_check_sanity_testcase extends advanced_testcase 
 
         parent::setup();
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Retain idnumber when deleting users.

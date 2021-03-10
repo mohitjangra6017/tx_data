@@ -115,7 +115,6 @@ class totara_form_file_area_testcase extends advanced_testcase {
     }
 
     public function test_rewrite_links_to_draftarea() {
-        $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
         $usercontextid = \context_user::instance($user->id)->id;

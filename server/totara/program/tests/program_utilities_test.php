@@ -37,7 +37,6 @@ class totara_program_utils_testcase extends advanced_testcase {
      * @throws coding_exception
      */
     public function test_get_duration_num_and_period_values() {
-        $this->resetAfterTest(true);
 
         // Duration of zero should mean there is no minimum.
         $returned = \totara_program\utils::get_duration_num_and_period(0);

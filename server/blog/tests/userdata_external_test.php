@@ -66,7 +66,6 @@ class core_blog_userdata_external_testcase extends advanced_testcase {
     private function create_fixtures() {
         global $CFG, $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $fixtures = new class() {

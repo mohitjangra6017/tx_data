@@ -32,7 +32,6 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
      */
     public function test_export_essay() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
 
@@ -71,7 +70,6 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
      */
     public function test_export_matching() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user = $this->getDataGenerator()->create_user();
@@ -107,7 +105,6 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
      */
     public function test_export_multichoice_single() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
 
@@ -152,7 +149,6 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
      */
     public function test_export_multichoice_multi() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
 
@@ -210,7 +206,6 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
      */
     public function test_export_numerical() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
 
@@ -247,7 +242,6 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
      */
     public function test_export_shortanswer() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
 
@@ -284,7 +278,6 @@ class mod_lesson_pagetypes_export_test_testcase extends advanced_testcase {
      */
     public function test_export_truefalse() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
 

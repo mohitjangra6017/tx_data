@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/filter/mediaplugin/filter.php'); // Include the c
 class filter_mediaplugin_testcase extends advanced_testcase {
 
     function test_filter_mediaplugin_link() {
-        $this->resetAfterTest(true);
 
         $context = \context_system::instance();
 

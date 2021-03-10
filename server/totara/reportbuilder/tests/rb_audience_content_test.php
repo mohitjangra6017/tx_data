@@ -41,7 +41,6 @@ class totara_rb_audience_restrictions_testcase extends advanced_testcase {
     protected function setUp(): void {
         parent::setup();
         $this->setAdminUser();
-        $this->resetAfterTest();
     }
 
     protected function tearDown(): void {

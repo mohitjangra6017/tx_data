@@ -42,7 +42,6 @@ class availability_grade_condition_testcase extends advanced_testcase {
         global $USER, $CFG;
         require_once($CFG->dirroot . '/mod/assign/locallib.php');
 
-        $this->resetAfterTest();
         $CFG->enableavailability = true;
 
         // Make a test course and user.

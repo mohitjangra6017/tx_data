@@ -80,7 +80,6 @@ test
         global $CFG, $OUTPUT, $USER, $PAGE;
 
         // Must reset because of config and user modifications.
-        $this->resetAfterTest(true);
 
         // Test using an admin user at the root of Moodle; this way we don't have to create a test user with avatar.
         $this->setAdminUser();

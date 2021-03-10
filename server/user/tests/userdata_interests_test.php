@@ -71,7 +71,6 @@ class core_user_userdata_interests_testcase extends \advanced_testcase {
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Set up users with intertests. 'interest1' and 'generictag1' won't be deleted from the tag table, only tag_instance.
         $user1 = $this->getDataGenerator()->create_user(['interests' => ['interest1', 'interest2', 'generictag1']]);
@@ -114,7 +113,6 @@ class core_user_userdata_interests_testcase extends \advanced_testcase {
      * Test the count function.
      */
     public function test_count() {
-        $this->resetAfterTest(true);
 
         // Set up users with intertests. 'interest1' and 'generictag1' won't be deleted from the tag table, only tag_instance.
         $user = $this->getDataGenerator()->create_user(['interests' => ['interest1', 'interest2', 'generictag1']]);
@@ -133,7 +131,6 @@ class core_user_userdata_interests_testcase extends \advanced_testcase {
      * Test the export function. Make sure that the control data is not exported.
      */
     public function test_export() {
-        $this->resetAfterTest(true);
 
         // Set up users with intertests. 'interest1' and 'generictag1' won't be deleted from the tag table, only tag_instance.
         $user1 = $this->getDataGenerator()->create_user(['interests' => ['interest1', 'interest2', 'generictag1']]);

@@ -40,7 +40,6 @@ class totara_core_userdata_external_tokens_testcase extends advanced_testcase {
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest(true);
         list($user1, $user2) = $this->create_user_fixtures();
 
         // Get the expected data.
@@ -61,7 +60,6 @@ class totara_core_userdata_external_tokens_testcase extends advanced_testcase {
      * test if data is correctly exported
      */
     public function test_count() {
-        $this->resetAfterTest(true);
         list($user1, $user2) = $this->create_user_fixtures();
 
         $targetuser = new target_user($user1);

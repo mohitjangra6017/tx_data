@@ -34,7 +34,6 @@ class tool_totara_sync_events_testcase extends advanced_testcase {
      * Test set up.
      */
     public function setUp(): void {
-        $this->resetAfterTest(true);
     }
 
     /**

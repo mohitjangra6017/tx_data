@@ -48,7 +48,6 @@ class core_datalib_testcase extends advanced_testcase {
      */
     public function test_users_search_sql() {
         global $DB;
-        $this->resetAfterTest();
 
         // Set up test users.
         $user1 = array(
@@ -161,7 +160,6 @@ class core_datalib_testcase extends advanced_testcase {
 
     public function test_users_order_by_sql_search_no_extra_fields() {
         global $CFG, $DB;
-        $this->resetAfterTest(true);
 
         $CFG->showuseridentity = '';
 
@@ -177,7 +175,6 @@ class core_datalib_testcase extends advanced_testcase {
 
     public function test_users_order_by_sql_search_with_extra_fields_and_prefix() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $CFG->showuseridentity = 'email,idnumber';
         $this->setAdminUser();
@@ -196,7 +193,6 @@ class core_datalib_testcase extends advanced_testcase {
 
     public function test_get_admin() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $this->assertSame('2', $CFG->siteadmins); // Admin always has id 2 in new installs.
         $defaultadmin = get_admin();
@@ -228,7 +224,6 @@ class core_datalib_testcase extends advanced_testcase {
 
     public function test_get_admins() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $this->assertSame('2', $CFG->siteadmins); // Admin always has id 2 in new installs.
 
@@ -259,7 +254,6 @@ class core_datalib_testcase extends advanced_testcase {
 
     public function test_get_course() {
         global $DB, $PAGE, $SITE;
-        $this->resetAfterTest();
 
         // First test course will be current course ($COURSE).
         $course1obj = $this->getDataGenerator()->create_course(array('shortname' => 'FROGS'));
@@ -284,7 +278,6 @@ class core_datalib_testcase extends advanced_testcase {
 
     public function test_increment_revision_number() {
         global $DB;
-        $this->resetAfterTest();
 
         // Use one of the fields that are used with increment_revision_number().
         $course1 = $this->getDataGenerator()->create_course();
@@ -342,7 +335,6 @@ class core_datalib_testcase extends advanced_testcase {
     public function test_get_coursemodule_from_id() {
         global $CFG;
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // Some generators have bogus access control.
 
         $this->assertFileExists("$CFG->dirroot/mod/folder/lib.php");
@@ -408,7 +400,6 @@ class core_datalib_testcase extends advanced_testcase {
     public function test_get_coursemodule_from_instance() {
         global $CFG;
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // Some generators have bogus access control.
 
         $this->assertFileExists("$CFG->dirroot/mod/folder/lib.php");
@@ -474,7 +465,6 @@ class core_datalib_testcase extends advanced_testcase {
     public function test_get_coursemodules_in_course() {
         global $CFG;
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // Some generators have bogus access control.
 
         $this->assertFileExists("$CFG->dirroot/mod/folder/lib.php");
@@ -544,7 +534,6 @@ class core_datalib_testcase extends advanced_testcase {
     public function test_get_all_instances_in_courses() {
         global $CFG;
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // Some generators have bogus access control.
 
         $this->assertFileExists("$CFG->dirroot/mod/folder/lib.php");
@@ -601,7 +590,6 @@ class core_datalib_testcase extends advanced_testcase {
     public function test_get_all_instances_in_course() {
         global $CFG;
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // Some generators have bogus access control.
 
         $this->assertFileExists("$CFG->dirroot/mod/folder/lib.php");

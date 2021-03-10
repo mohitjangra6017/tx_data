@@ -36,7 +36,6 @@ class mod_scorm_userdata_scoes_track_testcase extends advanced_testcase {
     public function test_purge_scorm_module_not_visible() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $user = $this->getDataGenerator()->create_user();
@@ -203,7 +202,6 @@ class mod_scorm_userdata_scoes_track_testcase extends advanced_testcase {
     public function test_purge_track_system_context() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_scorm_data_for_multiple_contexts();
@@ -222,7 +220,6 @@ class mod_scorm_userdata_scoes_track_testcase extends advanced_testcase {
     public function test_purge_track_coursecat_context() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_scorm_data_for_multiple_contexts();
@@ -251,7 +248,6 @@ class mod_scorm_userdata_scoes_track_testcase extends advanced_testcase {
     public function test_purge_track_course_context() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_scorm_data_for_multiple_contexts();
@@ -281,7 +277,6 @@ class mod_scorm_userdata_scoes_track_testcase extends advanced_testcase {
     public function test_purge_track_module_context() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_scorm_data_for_multiple_contexts();
@@ -310,7 +305,6 @@ class mod_scorm_userdata_scoes_track_testcase extends advanced_testcase {
     public function test_export_count_other_tracks() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $user = $this->getDataGenerator()->create_user();
@@ -353,7 +347,6 @@ class mod_scorm_userdata_scoes_track_testcase extends advanced_testcase {
      * @throws dml_exception
      */
     public function test_export_track_system_context() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_scorm_data_for_multiple_contexts();
@@ -386,7 +379,6 @@ class mod_scorm_userdata_scoes_track_testcase extends advanced_testcase {
     }
 
     public function test_export_track_coursecat_context() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_scorm_data_for_multiple_contexts();
@@ -419,7 +411,6 @@ class mod_scorm_userdata_scoes_track_testcase extends advanced_testcase {
     public function test_export_track_course_context() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_scorm_data_for_multiple_contexts();
@@ -446,7 +437,6 @@ class mod_scorm_userdata_scoes_track_testcase extends advanced_testcase {
     }
 
     public function test_export_track_module_context() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_scorm_data_for_multiple_contexts();

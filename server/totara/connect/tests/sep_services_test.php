@@ -32,7 +32,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class totara_connect_sep_services_testcase extends advanced_testcase {
     public function test_get_api_version() {
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -59,7 +58,6 @@ class totara_connect_sep_services_testcase extends advanced_testcase {
 
     public function test_update_api_version() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_connect');
@@ -138,7 +136,6 @@ class totara_connect_sep_services_testcase extends advanced_testcase {
     }
 
     public function test_get_users() {
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -241,7 +238,6 @@ class totara_connect_sep_services_testcase extends advanced_testcase {
     }
 
     public function test_get_users_jobs() {
-        $this->resetAfterTest();
 
         /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
@@ -368,14 +364,12 @@ class totara_connect_sep_services_testcase extends advanced_testcase {
     }
 
     public function test_get_users_profile_fields() {
-        $this->resetAfterTest();
 
         // TODO
     }
 
     public function test_get_user_collections() {
         global $DB;
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -485,7 +479,6 @@ class totara_connect_sep_services_testcase extends advanced_testcase {
 
     public function test_get_positions() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
@@ -530,7 +523,6 @@ class totara_connect_sep_services_testcase extends advanced_testcase {
 
     public function test_get_organisations() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_hierarchy\testing\generator $hierarchygenerator */
         $hierarchygenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
@@ -575,7 +567,6 @@ class totara_connect_sep_services_testcase extends advanced_testcase {
 
     public function test_get_sso_user() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -730,7 +721,6 @@ class totara_connect_sep_services_testcase extends advanced_testcase {
 
     public function test_force_sso_logout() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -794,7 +784,6 @@ class totara_connect_sep_services_testcase extends advanced_testcase {
 
     public function test_delete_client() {
         global $DB;
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();

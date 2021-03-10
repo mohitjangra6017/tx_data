@@ -38,7 +38,6 @@ class mod_chat_events_testcase extends advanced_testcase {
 
     public function test_message_sent() {
         global $DB;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -102,7 +101,6 @@ class mod_chat_events_testcase extends advanced_testcase {
 
     public function test_sessions_viewed() {
         global $USER;
-        $this->resetAfterTest();
 
         // Not much can be tested here as the event is only triggered on a page load,
         // let's just check that the event contains the expected basic information.
@@ -138,7 +136,6 @@ class mod_chat_events_testcase extends advanced_testcase {
 
     public function test_course_module_instance_list_viewed() {
         global $USER;
-        $this->resetAfterTest();
 
         // Not much can be tested here as the event is only triggered on a page load,
         // let's just check that the event contains the expected basic information.
@@ -162,7 +159,6 @@ class mod_chat_events_testcase extends advanced_testcase {
     }
 
     public function test_course_module_viewed() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
         $chat = $this->getDataGenerator()->create_module('chat', array('course' => $course->id));

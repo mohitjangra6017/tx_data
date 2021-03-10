@@ -112,7 +112,6 @@ class section_util_test extends advanced_testcase {
      * @throws moodle_exception
      */
     public function test_load_cohort_availabilities(): void {
-        $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course(null,['createsections' => true]);
         $sectioninfo = get_fast_modinfo($course->id)->get_section_info($this->sectionnumber);
 
@@ -136,7 +135,6 @@ class section_util_test extends advanced_testcase {
      * @throws moodle_exception
      */
     public function test_load_cohort_availabilities_with_empty_result(): void {
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course(null, ['createsections' => true]);
         $sectioninfo = get_fast_modinfo($course->id)->get_section_info($this->sectionnumber);

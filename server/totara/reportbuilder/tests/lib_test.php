@@ -526,11 +526,9 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
 
         // db version of report
         $this->rb = reportbuilder::create($report->id);
-        $this->resetAfterTest(true);
     }
 
     public function test_reportbuilder_initialize_db_instance() {
-        $this->resetAfterTest(true);
 
         $rb = reportbuilder::create($this->rb->_id);
         // should create report builder object with the correct properties
@@ -541,7 +539,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
     }
 
     public function test_reportbuilder_initialize_embedded_instance() {
-        $this->resetAfterTest(true);
 
         $rb = reportbuilder::create_embedded($this->shortname);
         // should create embedded report builder object with the correct properties
@@ -552,7 +549,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
     }
 
     public function test_reportbuilder_old_constructor() {
-        $this->resetAfterTest(true);
 
         // Test generic report.
         $rb = new reportbuilder($this->rb->_id);
@@ -605,7 +601,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $this->assertEquals(array('user-fullname' => array(0 => array('operator' => 0, 'value' => 'a'))),
                 $SESSION->reportbuilder[$rb->get_uniqueid()]);
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_get_filters() {
@@ -631,7 +626,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $this->assertEquals('User\'s Fullname is empty',
                 current($filters)->get_label(array('operator' => 5, 'value' => '')));
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_get_columns() {
@@ -646,7 +640,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $this->assertEquals('namelink', current($columns)->value);
         $this->assertEquals('Participant', current($columns)->heading);
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_create_embedded_record() {
@@ -658,7 +651,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // there should be db records in the columns table
         $this->assertTrue((bool)$DB->get_records('report_builder_columns', array('reportid' => $newrb->_id)));
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_create_shortname() {
@@ -691,7 +683,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // Should append random hash at the end of the string, thus should be different from what we have in the db.
         $this->assertNotEquals('report_test', $existingname);
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_report_url() {
@@ -703,7 +694,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // an embedded report should return the embedded url (this page)
         $this->assertEquals($CFG->wwwroot . '/totara/plan/record/competencies.php', $rb2->report_url());
 
-        $this->resetAfterTest(true);
     }
 
 
@@ -724,7 +714,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // should return the expected embedded param
         $this->assertEquals(array($param), $rb->get_current_params());
 
-        $this->resetAfterTest(true);
     }
 
 
@@ -759,7 +748,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // should return true if accessmode is 1 and admin is only allowed role
         $this->assertTrue((bool)reportbuilder::is_capable($reportid, $userid));
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_get_param_restrictions() {
@@ -769,7 +757,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $restrictions = $rb->get_param_restrictions();
         $this->assertMatchesRegularExpression('(base.userid\s+=\s+:[a-z0-9]+)', $restrictions[0]);
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_get_content_restrictions() {
@@ -816,7 +803,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // Test we can actually display this report with these restrictions.
         $rb->display_table(true);
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_get_restriction_descriptions() {
@@ -858,7 +844,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $this->assertMatchesRegularExpression('/^The User is ".*"$/', $firstrestriction);
         $this->assertMatchesRegularExpression('/^The completion date occurred after/', $secondrestriction);
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_get_column_fields() {
@@ -874,7 +859,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $this->assertMatchesRegularExpression('/auser\.lastname/', current($columns));
         $this->assertMatchesRegularExpression('/user_namelink/', current($columns));
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_get_joins() {
@@ -913,7 +897,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // the strings should have the correct format
         $this->assertEquals($posjoin, current($joins2));
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_get_content_joins() {
@@ -923,7 +906,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // TODO test other options
         // can't do with competency evidence as no joins required
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_get_column_joins() {
@@ -944,7 +926,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // the strings should have the correct format
         $this->assertEquals($userjoin, current($columns));
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_get_filter_joins() {
@@ -970,7 +951,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $this->assertEquals($userjoin, current($joins));
         unset($SESSION->reportbuilder[$rb->get_uniqueid()]);
 
-        $this->resetAfterTest(true);
     }
 
     /**
@@ -1085,7 +1065,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // delete complex query from session
         unset($SESSION->$filtername);
 
-        $this->resetAfterTest(true);
     }
 
     // can't test the following functions as data and tables don't exist
@@ -1109,12 +1088,10 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // the bad sort key should have been deleted
         $this->assertEquals(1, $before - $after);
 
-        $this->resetAfterTest(true);
     }
 
     public function test_get_report_sort() {
         global $SESSION, $DB;
-        $this->resetAfterTest();
 
         unset($SESSION->flextable);
         $rb = reportbuilder::create($this->rb->_id);
@@ -1162,7 +1139,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $this->assertTrue(in_array('date', $contentoptions));
         $this->assertTrue(in_array('audience', $contentoptions));
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_get_filters_select() {
@@ -1173,7 +1149,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // the strings should have the correct format
         $this->assertEquals("User&#39;s Fullname", $options['User']['user-fullname']);
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_get_columns_select() {
@@ -1190,7 +1165,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         $this->assertFalse($options['All User\'s Job Assignments']['job_assignment-allpositionnames']->attributes['deprecated']);
         $this->assertTrue($options['All User\'s Job Assignments']['job_assignment-allpositionnames']->attributes['issubquery']);
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_delete_column() {
@@ -1206,7 +1180,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // should be one less column after successful delete operation
         $this->assertEquals($before - 1, $after);
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_delete_filter() {
@@ -1222,7 +1195,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // should be one less filter after successful delete operation
         $this->assertEquals($before - 1, $after);
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_move_column() {
@@ -1254,7 +1226,6 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // unmoved columns should stay the same
         $this->assertEquals($thirdbefore, $thirdafter);
 
-        $this->resetAfterTest(true);
     }
 
     function test_reportbuilder_move_filter() {
@@ -1287,11 +1258,9 @@ class totara_reportbuilder_lib_testcase extends advanced_testcase {
         // unmoved filters should stay the same
         $this->assertEquals($thirdbefore, $thirdafter);
 
-        $this->resetAfterTest(true);
     }
 
     public function test_reportbuilder_export_schduled_report() {
-        $this->resetAfterTest(true);
 
         $admin = get_admin();
         $this->setAdminUser();

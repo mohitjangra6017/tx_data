@@ -132,7 +132,6 @@ class core_course_restore_testcase extends advanced_testcase {
     }
 
     public function test_restore_existing_idnumber_in_new_course() {
-        $this->resetAfterTest();
 
         $dg = $this->getDataGenerator();
         $c1 = $dg->create_course(['idnumber' => 'ABC']);
@@ -145,7 +144,6 @@ class core_course_restore_testcase extends advanced_testcase {
 
     public function test_restore_non_existing_idnumber_in_new_course() {
         global $DB;
-        $this->resetAfterTest();
 
         $dg = $this->getDataGenerator();
         $c1 = $dg->create_course(['idnumber' => 'ABC']);
@@ -161,7 +159,6 @@ class core_course_restore_testcase extends advanced_testcase {
 
     public function test_restore_existing_idnumber_in_existing_course() {
         global $DB;
-        $this->resetAfterTest();
 
         $dg = $this->getDataGenerator();
         $c1 = $dg->create_course(['idnumber' => 'ABC']);
@@ -178,7 +175,6 @@ class core_course_restore_testcase extends advanced_testcase {
 
     public function test_restore_non_existing_idnumber_in_existing_course() {
         global $DB;
-        $this->resetAfterTest();
 
         $dg = $this->getDataGenerator();
         $c1 = $dg->create_course(['idnumber' => 'ABC']);
@@ -195,7 +191,6 @@ class core_course_restore_testcase extends advanced_testcase {
 
     public function test_restore_idnumber_in_existing_course_without_permissions() {
         global $DB;
-        $this->resetAfterTest();
         $dg = $this->getDataGenerator();
         $u1 = $dg->create_user();
 
@@ -219,7 +214,6 @@ class core_course_restore_testcase extends advanced_testcase {
 
     public function test_restore_course_info_in_new_course() {
         global $DB;
-        $this->resetAfterTest();
         $dg = $this->getDataGenerator();
 
         $c1 = $dg->create_course(['shortname' => 'SN', 'fullname' => 'FN', 'summary' => 'DESC', 'summaryformat' => FORMAT_MOODLE]);
@@ -235,7 +229,6 @@ class core_course_restore_testcase extends advanced_testcase {
 
     public function test_restore_course_info_in_existing_course() {
         global $DB;
-        $this->resetAfterTest();
         $dg = $this->getDataGenerator();
 
         $c1 = $dg->create_course(['shortname' => 'SN', 'fullname' => 'FN', 'summary' => 'DESC', 'summaryformat' => FORMAT_MOODLE]);
@@ -252,7 +245,6 @@ class core_course_restore_testcase extends advanced_testcase {
 
     public function test_restore_course_shortname_in_existing_course_without_permissions() {
         global $DB;
-        $this->resetAfterTest();
         $dg = $this->getDataGenerator();
         $u1 = $dg->create_user();
 
@@ -276,7 +268,6 @@ class core_course_restore_testcase extends advanced_testcase {
 
     public function test_restore_course_fullname_in_existing_course_without_permissions() {
         global $DB;
-        $this->resetAfterTest();
         $dg = $this->getDataGenerator();
         $u1 = $dg->create_user();
 
@@ -300,7 +291,6 @@ class core_course_restore_testcase extends advanced_testcase {
 
     public function test_restore_course_summary_in_existing_course_without_permissions() {
         global $DB;
-        $this->resetAfterTest();
         $dg = $this->getDataGenerator();
         $u1 = $dg->create_user();
 
@@ -326,7 +316,6 @@ class core_course_restore_testcase extends advanced_testcase {
     public function test_restore_course_completion_data() {
         global $DB;
 
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator();
         $completion_generator = $this->getDataGenerator()->get_plugin_generator('core_completion');
 
@@ -435,7 +424,6 @@ class core_course_restore_testcase extends advanced_testcase {
     public function test_restore_course_completion_history_data() {
         global $DB;
 
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator();
         $completion_generator = $this->getDataGenerator()->get_plugin_generator('core_completion');
 
@@ -533,7 +521,6 @@ class core_course_restore_testcase extends advanced_testcase {
     public function test_restore_custom_role_names() {
         global $DB;
 
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator();
 
         // Set up a course.

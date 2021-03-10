@@ -53,7 +53,6 @@ abstract class grade_base_testcase extends advanced_testcase {
         global $CFG;
         parent::setup();
 
-        $this->resetAfterTest(true);
 
         $CFG->grade_droplow = -1;
         $CFG->grade_keephigh = -1;

@@ -56,7 +56,6 @@ class core_blocklib_testcase extends advanced_testcase {
 
     protected function purge_blocks() {
         global $DB;
-        $this->resetAfterTest();
 
         $bis = $DB->get_records('block_instances');
         foreach ($bis as $instance) {
@@ -588,7 +587,6 @@ class core_blocklib_testcase extends advanced_testcase {
 return;
 
         $this->setAdminUser();
-        $this->resetAfterTest();
         $regionname = 'side-pre';
         $context = context_system::instance();
 
@@ -831,7 +829,6 @@ return;
      */
     public function test_block_add_block_ui_names_handling() {
         global $OUTPUT, $USER;
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         $USER->editing = true;

@@ -38,7 +38,6 @@ class repositorylib_testcase extends advanced_testcase {
     public function test_install_repository() {
         global $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $syscontext = context_system::instance();
         $repositorypluginname = 'boxnet';
@@ -65,7 +64,6 @@ class repositorylib_testcase extends advanced_testcase {
     public function test_get_unused_filename() {
         global $USER;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         $fs = get_file_storage();
@@ -119,7 +117,6 @@ class repositorylib_testcase extends advanced_testcase {
     public function test_draftfile_exists() {
         global $USER;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         $fs = get_file_storage();
@@ -158,7 +155,6 @@ class repositorylib_testcase extends advanced_testcase {
     }
 
     public function test_can_be_edited_by_user() {
-        $this->resetAfterTest(true);
 
         $syscontext = context_system::instance();
         $course = $this->getDataGenerator()->create_course();
@@ -238,7 +234,6 @@ class repositorylib_testcase extends advanced_testcase {
     }
 
     public function test_check_capability() {
-        $this->resetAfterTest(true);
 
         $syscontext = context_system::instance();
         $course1 = $this->getDataGenerator()->create_course();
@@ -465,7 +460,6 @@ class repositorylib_testcase extends advanced_testcase {
 
     function test_delete_all_for_context() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();

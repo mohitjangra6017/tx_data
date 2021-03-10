@@ -40,7 +40,6 @@ class tool_totara_sync_pos_database_testcase extends totara_sync_database_testca
 
         set_config('source_pos', 'totara_sync_source_pos_database', 'totara_sync');
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->create_external_db_table();
@@ -237,7 +236,6 @@ class tool_totara_sync_pos_database_testcase extends totara_sync_database_testca
     public function test_null_typeidnumber() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $posframework = $hierarchy_generator->create_framework('position');
@@ -294,7 +292,6 @@ class tool_totara_sync_pos_database_testcase extends totara_sync_database_testca
     public function test_empty_typeidnumber() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $posframework = $hierarchy_generator->create_framework('position');
@@ -351,7 +348,6 @@ class tool_totara_sync_pos_database_testcase extends totara_sync_database_testca
     public function test_empty_fields_in_types() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $posframework = $hierarchy_generator->create_framework('position');
@@ -431,7 +427,6 @@ class tool_totara_sync_pos_database_testcase extends totara_sync_database_testca
     public function test_null_fields_in_types() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $posframework = $hierarchy_generator->create_framework('position');

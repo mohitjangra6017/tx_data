@@ -154,7 +154,6 @@ class totara_hierarchy_positionassign_testcase extends advanced_testcase {
 
     public function test_assign_top_level_user() {
         global $DB;
-        $this->resetAfterTest();
 
         $user1ja = \totara_job\job_assignment::get_with_idnumber($this->user1->id, 'U1A1');
         $user2ja = \totara_job\job_assignment::get_with_idnumber($this->user2->id, 'U2A1');
@@ -189,7 +188,6 @@ class totara_hierarchy_positionassign_testcase extends advanced_testcase {
 
     public function test_assign_lower_level_user() {
         global $DB;
-        $this->resetAfterTest();
 
         $user1ja = \totara_job\job_assignment::get_with_idnumber($this->user1->id, 'U1A1');
         $user2ja = \totara_job\job_assignment::get_with_idnumber($this->user2->id, 'U2A1');

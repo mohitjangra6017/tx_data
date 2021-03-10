@@ -27,7 +27,6 @@ require_once("{$CFG->dirroot}/totara/cohort/lib.php");
 
 class totara_cohort_notify_users_testcase extends advanced_testcase {
     public function test_notify_users_when_cohort_change(): void {
-        $this->resetAfterTest();
 
         $gen = $this->getDataGenerator();
         /** @var \totara_cohort\testing\generator $cohortgen */
@@ -55,7 +54,6 @@ class totara_cohort_notify_users_testcase extends advanced_testcase {
     }
 
     public function test_notify_users_when_remove_members(): void {
-        $this->resetAfterTest(true);
 
         $gen = $this->getDataGenerator();
 

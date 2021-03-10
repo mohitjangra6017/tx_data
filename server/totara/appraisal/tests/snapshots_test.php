@@ -37,7 +37,6 @@ class appraisal_snapshots_test extends appraisal_testcase {
      */
     public function test_snapshots_deleted_when_learner_deleted() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $def = array('name' => 'Appraisal', 'stages' => array(
             array('name' => 'Stage', 'timedue' => time() + 86400, 'pages' => array(
@@ -109,7 +108,6 @@ class appraisal_snapshots_test extends appraisal_testcase {
      */
     public function test_snapshots_deleted_when_appraisal_deleted() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $def = array('name' => 'Appraisal', 'stages' => array(
             array('name' => 'Stage', 'timedue' => time() + 86400, 'pages' => array(

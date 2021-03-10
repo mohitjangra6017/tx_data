@@ -42,7 +42,6 @@ class totara_reportbuilder_rb_filter_multicheck_testcase extends advanced_testca
     public function setUp(): void {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');

@@ -31,7 +31,6 @@ class enrol_cohort_bulk_sync_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once("$CFG->dirroot/enrol/cohort/locallib.php");
 
-        $this->resetAfterTest();
 
         // Test other things work as expected.
 
@@ -117,7 +116,6 @@ class enrol_cohort_bulk_sync_testcase extends advanced_testcase {
         require_once("$CFG->dirroot/enrol/cohort/locallib.php");
         require_once("$CFG->dirroot/cohort/lib.php");
 
-        $this->resetAfterTest();
 
         // When events are redirected the observer does not sync the data immediately,
         // here we are testing manual sync via enrol_cohort_sync() function.
@@ -312,7 +310,6 @@ class enrol_cohort_bulk_sync_testcase extends advanced_testcase {
         require_once("$CFG->dirroot/enrol/cohort/locallib.php");
         require_once("$CFG->dirroot/cohort/lib.php");
 
-        $this->resetAfterTest();
 
         // When events are redirected the observer does not sync the data immediately,
         // here we are testing manual sync via enrol_cohort_sync() function.
@@ -502,7 +499,6 @@ class enrol_cohort_bulk_sync_testcase extends advanced_testcase {
         require_once("$CFG->dirroot/enrol/cohort/locallib.php");
         require_once("$CFG->dirroot/cohort/lib.php");
 
-        $this->resetAfterTest();
 
         // When events are redirected the observer does not sync the data immediately,
         // here we are testing manual sync via enrol_cohort_sync() function.
@@ -685,7 +681,6 @@ class enrol_cohort_bulk_sync_testcase extends advanced_testcase {
         require_once("$CFG->dirroot/enrol/cohort/locallib.php");
         require_once("$CFG->dirroot/cohort/lib.php");
 
-        $this->resetAfterTest();
 
         // When events are redirected the observer does not sync the data immediately,
         // here we are testing manual sync via enrol_cohort_sync() function.

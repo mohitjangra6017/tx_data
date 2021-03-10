@@ -44,7 +44,6 @@ class core_moodle_page_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
         $this->testpage = new testable_moodle_page();
     }
 

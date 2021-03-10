@@ -31,7 +31,6 @@ class totara_core_event_user_position_testcase extends advanced_testcase {
     public function test_job_assignment_updated_event() {
         global $DB;
 
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         $user = $this->getDataGenerator()->create_user();
@@ -75,7 +74,6 @@ class totara_core_event_user_position_testcase extends advanced_testcase {
     }
 
     public function test_job_assignment_viewed_event() {
-        $this->resetAfterTest();
         // Create user and course.
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
@@ -104,7 +102,6 @@ class totara_core_event_user_position_testcase extends advanced_testcase {
     }
 
     public function test_job_assignment_deleted_event() {
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         $user = $this->getDataGenerator()->create_user();

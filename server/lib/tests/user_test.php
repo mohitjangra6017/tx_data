@@ -35,7 +35,6 @@ class core_user_testcase extends advanced_testcase {
      * Setup test data.
      */
     protected function setUp(): void {
-        $this->resetAfterTest(true);
     }
 
     public function test_get_user() {
@@ -365,7 +364,6 @@ class core_user_testcase extends advanced_testcase {
      */
     public function test_get_property_default() {
         global $CFG;
-        $this->resetAfterTest();
 
         $country = core_user::get_property_default('country');
         $this->assertEquals($CFG->country, $country);

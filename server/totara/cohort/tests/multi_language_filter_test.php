@@ -52,7 +52,6 @@ class totara_cohort_multi_language_filter_testcase extends advanced_testcase {
     public function test_position_customfield_filter(string $lang, string $expected, array $unexpected): void {
         global $USER, $DB, $PAGE;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $USER->lang = $lang ;
 
@@ -133,7 +132,6 @@ class totara_cohort_multi_language_filter_testcase extends advanced_testcase {
     public function test_organisation_customfield_filter(string $lang, string $expected, array $unexpected): void {
         global $DB, $USER, $PAGE;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $USER->lang = $lang;
 

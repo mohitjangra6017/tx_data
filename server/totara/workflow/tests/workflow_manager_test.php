@@ -61,7 +61,6 @@ class totara_workflow_workflow_manager_testcase extends advanced_testcase {
 
     public function test_can_access() {
         global $DB;
-        $this->resetAfterTest(true);
         $datagenerator = $this->getDataGenerator();
         $student = $datagenerator->create_user();
         $coursecreator = $datagenerator->create_user();

@@ -30,7 +30,6 @@ require_once(__DIR__ . '/fixtures/store.php');
 class logstore_legacy_store_testcase extends advanced_testcase {
     public function test_log_writing() {
         global $DB;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $user1 = $this->getDataGenerator()->create_user();
@@ -280,7 +279,6 @@ class logstore_legacy_store_testcase extends advanced_testcase {
     public function test_cleanup_task() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create some records spread over various days; test multiple iterations in cleanup.
         $record = (object) array('time' => time());

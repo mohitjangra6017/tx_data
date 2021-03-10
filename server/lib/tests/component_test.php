@@ -444,7 +444,6 @@ class core_component_testcase extends advanced_testcase {
     }
 
     public function test_get_plugin_list_with_file() {
-        $this->resetAfterTest(true);
 
         // No extra reset here because core_component reset automatically.
 

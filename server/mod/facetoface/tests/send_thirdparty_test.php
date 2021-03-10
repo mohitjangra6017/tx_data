@@ -174,7 +174,6 @@ class mod_facetoface_send_thirdparty_testcase extends advanced_testcase {
      * @throws moodle_exception
      */
     public function test_sending_thirdparty_message(): void {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $this->set_up_test_environment();
 

@@ -37,7 +37,6 @@ class core_blog_userdata_blog_testcase extends advanced_testcase {
      * Gets the data for all the tests.
      */
     private function get_data(){
-        $this->resetAfterTest();
         $data = new class() {
             /** @var target_user $activeuser */
             public $activeuser;

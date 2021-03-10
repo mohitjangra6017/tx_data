@@ -27,7 +27,6 @@ class totara_core_event_user_suspended_testcase extends advanced_testcase {
     public function test_event() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $user->suspended = 1;

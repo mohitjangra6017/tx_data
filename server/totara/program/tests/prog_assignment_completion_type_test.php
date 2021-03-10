@@ -67,7 +67,6 @@ class totara_program_prog_assignment_completion_type_testcase extends reportcach
 
         parent::setup();
 
-        $this->resetAfterTest(true);
 
         $this->beforesetuptime = time();
         $this->waitForSecond();

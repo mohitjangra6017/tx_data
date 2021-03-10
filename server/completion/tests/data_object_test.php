@@ -47,7 +47,6 @@ class core_completion_data_object_testcase extends advanced_testcase {
      * Sets up the new completion data object test.
      */
     public function setUp(): void {
-        $this->resetAfterTest();
         $users = [
             ['username' => 'samh', 'firstname' => 'Sam', 'lastname' => 'Hemelryk', 'password' => 'samh',
                 'email' => 'sam.hemelryk@totaralearning.com'],

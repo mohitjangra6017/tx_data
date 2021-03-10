@@ -37,7 +37,6 @@ defined('MOODLE_INTERNAL') || die();
 class block_totara_featured_links_userdata_item_testcase extends test_helper {
 
     private function get_setup_data() {
-        $this->resetAfterTest();
         $data = new class() {
             /** @var target_user */
             public $user1, $user2;

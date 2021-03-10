@@ -34,7 +34,6 @@ class mod_feedback_lib_testcase extends advanced_testcase {
 
     public function test_feedback_get_completion_progress() {
         global $DB;
-        $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
         $feedback = $this->getDataGenerator()->create_module('feedback', ['course' => $course->id, 'completionsubmit' => '1']);
@@ -82,7 +81,6 @@ class mod_feedback_lib_testcase extends advanced_testcase {
      */
     public function test_feedback_refresh_events() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $timeopen = time();
@@ -128,7 +126,6 @@ class mod_feedback_lib_testcase extends advanced_testcase {
     public function test_check_updates_since() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
 

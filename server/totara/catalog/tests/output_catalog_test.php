@@ -62,7 +62,6 @@ class totara_catalog_output_catalog_testcase extends output_test_base {
      * Here we test some parameters that are processed within the create() method.
      */
     public function test_create_params() {
-        $this->resetAfterTest();
 
         // Default
         $params = $this->get_catalog_default_params();
@@ -100,7 +99,6 @@ class totara_catalog_output_catalog_testcase extends output_test_base {
      * Test created template data depending on view_options configuration.
      */
     public function test_create_view_options() {
-        $this->resetAfterTest();
         $config = config::instance();
         $config->update(['view_options' => 'list_only']);
 
@@ -138,7 +136,6 @@ class totara_catalog_output_catalog_testcase extends output_test_base {
      * Generate a course and test created template data.
      */
     public function test_create_results_count() {
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
         $generator->create_course();
@@ -167,7 +164,6 @@ class totara_catalog_output_catalog_testcase extends output_test_base {
      * Test get_item_templates() method.
      */
     public function test_get_item_templates() {
-        $this->resetAfterTest();
         $params = $this->get_catalog_default_params();
         $catalog = catalog::create(...$params);
         $rm = new ReflectionMethod(catalog::class, 'get_item_templates');
@@ -225,7 +221,6 @@ class totara_catalog_output_catalog_testcase extends output_test_base {
      * Test get_primary_region_template() method.
      */
     public function test_get_primary_region_template() {
-        $this->resetAfterTest();
         $params = $this->get_catalog_default_params();
         $catalog = catalog::create(...$params);
         $rm = new ReflectionMethod(catalog::class, 'get_primary_region_template');
@@ -264,7 +259,6 @@ class totara_catalog_output_catalog_testcase extends output_test_base {
      * Test get_panel_region_template() method.
      */
     public function test_get_panel_region_template() {
-        $this->resetAfterTest();
         $params = $this->get_catalog_default_params();
         $catalog = catalog::create(...$params);
         $rm = new ReflectionMethod(catalog::class, 'get_panel_region_template');
@@ -306,7 +300,6 @@ class totara_catalog_output_catalog_testcase extends output_test_base {
      * Test get_manage_buttons() method.
      */
     public function test_get_manage_buttons() {
-        $this->resetAfterTest();
         $params = $this->get_catalog_default_params();
         $catalog = catalog::create(...$params);
         $rm = new ReflectionMethod(catalog::class, 'get_manage_buttons');
@@ -367,7 +360,6 @@ class totara_catalog_output_catalog_testcase extends output_test_base {
      * Test get_order_by_options() method.
      */
     public function test_get_order_by_options() {
-        $this->resetAfterTest();
         $params = $this->get_catalog_default_params();
         $catalog = catalog::create(...$params);
         $rm = new ReflectionMethod(catalog::class, 'get_order_by_options');
@@ -398,7 +390,6 @@ class totara_catalog_output_catalog_testcase extends output_test_base {
      * Test get_debugging_data() method.
      */
     public function test_get_debugging_data() {
-        $this->resetAfterTest();
         $params = $this->get_catalog_default_params();
         $catalog = catalog::create(...$params);
         $rm = new ReflectionMethod(catalog::class, 'get_debugging_data');

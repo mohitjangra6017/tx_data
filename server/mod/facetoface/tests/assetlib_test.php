@@ -55,7 +55,6 @@ class mod_facetoface_assetlib_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
 
         $this->facetoface_generator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
         $this->customfield_generator = $this->getDataGenerator()->get_plugin_generator('totara_customfield');

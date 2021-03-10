@@ -113,7 +113,6 @@ class tool_sitepolicy_userdata_current_testcase extends advanced_testcase {
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_sitepolicies_with_user_consents();
@@ -141,7 +140,6 @@ class tool_sitepolicy_userdata_current_testcase extends advanced_testcase {
      * Test that only current version of policy user consent is exported and counted
      */
     public function test_export_count() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_sitepolicies_with_user_consents();

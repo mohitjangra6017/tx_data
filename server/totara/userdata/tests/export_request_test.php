@@ -72,7 +72,6 @@ class totara_userdata_export_request_testcase extends advanced_testcase {
      * test count when user has no export request
      */
     public function test_count_when_user_has_no_export_request() {
-        $this->resetAfterTest(true);
 
         $user = new target_user($this->getDataGenerator()->create_user());
         $result = export_request::execute_count($user, $this->systemcontext);
@@ -83,7 +82,6 @@ class totara_userdata_export_request_testcase extends advanced_testcase {
      * test count when user has export request
      */
     public function test_count_when_user_has_export_request() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $targetuser = new target_user($user);
@@ -97,7 +95,6 @@ class totara_userdata_export_request_testcase extends advanced_testcase {
      * test purge when user has export request
      */
     public function test_purge_when_user_has_export_request() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $targetuser = new target_user($user);
@@ -123,7 +120,6 @@ class totara_userdata_export_request_testcase extends advanced_testcase {
      * test purge when user has no export request
      */
     public function test_purge_when_user_has_no_export_request() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $targetuser = new target_user($user);

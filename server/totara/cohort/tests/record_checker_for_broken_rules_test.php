@@ -188,7 +188,6 @@ class totara_cohort_record_checker_for_broken_rules_testcase extends advanced_te
     public function test_cohort_broken_rule_checking_when_one_of_program_deleted() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $programs = $this->create_programs(2);
@@ -208,7 +207,6 @@ class totara_cohort_record_checker_for_broken_rules_testcase extends advanced_te
     public function test_cohort_broken_rule_checking_when_one_of_course_deleted() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $courses = $this->create_courses(5);
@@ -227,7 +225,6 @@ class totara_cohort_record_checker_for_broken_rules_testcase extends advanced_te
     public function test_cohort_broken_rule_with_deleted_course_and_deleted_program() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $programs = $this->create_programs(2);
@@ -250,7 +247,6 @@ class totara_cohort_record_checker_for_broken_rules_testcase extends advanced_te
     public function test_cohort_broken_rule_checking_when_one_of_positions_deleted() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $positions = $this->create_positions(2);
@@ -269,7 +265,6 @@ class totara_cohort_record_checker_for_broken_rules_testcase extends advanced_te
     public function test_cohort_broken_rule_checking_when_one_of_organisations_deleted() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $organisations = $this->create_organisations(2);

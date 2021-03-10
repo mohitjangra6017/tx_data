@@ -56,7 +56,6 @@ class core_comment_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_comments() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         $CFG->usecomments = true;
 

@@ -63,7 +63,6 @@ class totara_cohort_events_testcase extends advanced_testcase {
      */
     public function test_draft_events() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $sink = $this->redirectEvents();
 
@@ -108,7 +107,6 @@ class totara_cohort_events_testcase extends advanced_testcase {
      * Test enrolled course item events(add and delete).
      */
     public function test_enrolled_course_item_events() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $sink = $this->redirectEvents();
 
@@ -155,7 +153,6 @@ class totara_cohort_events_testcase extends advanced_testcase {
      * Test enrolled program item events(add and delete).
      */
     public function test_enrolled_program_item_events() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $sink = $this->redirectEvents();
 
@@ -200,7 +197,6 @@ class totara_cohort_events_testcase extends advanced_testcase {
      * Test enrolled certification item events(add and delete).
      */
     public function test_enrolled_certification_item_events() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $sink = $this->redirectEvents();
 
@@ -245,7 +241,6 @@ class totara_cohort_events_testcase extends advanced_testcase {
      * Test cohort update operator event.
      */
     public function test_cohort_update_operator_event() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $sink = $this->redirectEvents();
 
@@ -268,7 +263,6 @@ class totara_cohort_events_testcase extends advanced_testcase {
      */
     public function test_rule_events() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $sink = $this->redirectEvents();
 
@@ -314,7 +308,6 @@ class totara_cohort_events_testcase extends advanced_testcase {
      */
     public function test_rule_param_delete_event() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $sink = $this->redirectEvents();
 
@@ -355,7 +348,6 @@ class totara_cohort_events_testcase extends advanced_testcase {
      */
     public function test_ruleset_events() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $sink = $this->redirectEvents();
 
@@ -402,7 +394,6 @@ class totara_cohort_events_testcase extends advanced_testcase {
      * Test visible learning items added.
      */
     public function test_visible_learning_events() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $sink = $this->redirectEvents();
 

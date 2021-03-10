@@ -47,7 +47,6 @@ class mod_assign_search_testcase extends advanced_testcase {
     public function test_attach_files() {
         global $USER;
 
-        $this->resetAfterTest(true);
         set_config('enableglobalsearch', true);
 
         $assignareaid = \core_search\manager::generate_areaid('mod_assign', 'activity');

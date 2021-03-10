@@ -56,7 +56,6 @@ class totara_core_userdata_portfolios_testcase extends advanced_testcase {
             public $portfolios;
         };
 
-        $this->resetAfterTest(true);
 
         $data->users = [];
         for ($i = 0; $i < 3; $i++) {

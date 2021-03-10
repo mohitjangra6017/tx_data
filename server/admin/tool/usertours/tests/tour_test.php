@@ -676,7 +676,6 @@ class tool_usertours_tour_testcase extends advanced_testcase {
      */
     public function test_should_show_for_user($completiondate, $requesteddate, $updateddate, $expectation) {
         // Uses user preferences so we must be in a user context.
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $tour = $this->getMockBuilder(tour::class)
@@ -774,7 +773,6 @@ class tool_usertours_tour_testcase extends advanced_testcase {
      */
     public function test_get_tour_key($id, $getconfig, $setconfig, $willpersist, $userpref, $expectation) {
         // Uses user preferences so we must be in a user context.
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $tour = $this->getMockBuilder(tour::class)

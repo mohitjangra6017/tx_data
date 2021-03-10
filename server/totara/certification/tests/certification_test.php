@@ -103,7 +103,6 @@ class totara_certification_certification_testcase extends reportcache_advanced_t
      *      The core functionality of this option is tested in recertdates_test.
      */
     public function test_certification_recertification() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Turn off programs. This is to test that it doesn't interfere with certification completion.

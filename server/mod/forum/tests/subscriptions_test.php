@@ -99,7 +99,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_subscription_modes() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -148,7 +147,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_unsubscribable_forums() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -209,7 +207,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_forum_subscribe_toggle_as_other() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -396,7 +393,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
      * Test that a user unsubscribed from a forum is not subscribed to it's discussions by default.
      */
     public function test_forum_discussion_subscription_forum_unsubscribed() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -421,7 +417,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
      * Test that the act of subscribing to a forum subscribes the user to it's discussions by default.
      */
     public function test_forum_discussion_subscription_forum_subscribed() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -453,7 +448,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
      * Test that a user unsubscribed from a forum can be subscribed to a discussion.
      */
     public function test_forum_discussion_subscription_forum_unsubscribed_discussion_subscribed() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -487,7 +481,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
      * Test that a user subscribed to a forum can be unsubscribed from a discussion.
      */
     public function test_forum_discussion_subscription_forum_subscribed_discussion_unsubscribed() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -523,7 +516,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_forum_discussion_toggle_forum_subscribed() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -703,7 +695,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_forum_discussion_toggle_forum_unsubscribed() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -794,7 +785,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_fetch_subscribed_users_subscriptions() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum. where users are initially subscribed.
         $course = $this->getDataGenerator()->create_course();
@@ -832,7 +822,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_fetch_subscribed_users_forced() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum. where users are initially subscribed.
         $course = $this->getDataGenerator()->create_course();
@@ -854,7 +843,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_fetch_subscribed_users_discussion_subscriptions() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum. where users are initially subscribed.
         $course = $this->getDataGenerator()->create_course();
@@ -926,7 +914,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_force_subscribed_to_forum() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -958,7 +945,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_subscription_cache_prefill() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -993,7 +979,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_subscription_cache_fill() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -1024,7 +1009,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_discussion_subscription_cache_fill_for_course() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -1072,7 +1056,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_discussion_subscription_cache_prefill() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -1134,7 +1117,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_discussion_subscription_cache_fill() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -1193,7 +1175,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_forum_subscribe_toggle_as_other_repeat_subscriptions() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -1281,7 +1262,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
     public function test_is_subscribed_cm() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -1353,7 +1333,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
      * @dataProvider is_subscribable_provider
      */
     public function test_is_subscribable_logged_out($options) {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -1368,7 +1347,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
      */
     public function test_is_subscribable_is_guest($options) {
         global $DB;
-        $this->resetAfterTest(true);
 
         $guest = $DB->get_record('user', array('username'=>'guest'));
         $this->setUser($guest);
@@ -1406,7 +1384,6 @@ class mod_forum_subscriptions_testcase extends advanced_testcase {
      * @dataProvider is_subscribable_loggedin_provider
      */
     public function test_is_subscribable_loggedin($options, $expect) {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();

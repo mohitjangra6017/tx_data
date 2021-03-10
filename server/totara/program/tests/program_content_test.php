@@ -59,7 +59,6 @@ class totara_program_program_content_testcase extends advanced_testcase {
     }
 
     public function setUp(): void {
-        $this->resetAfterTest(true);
         parent::setUp();
         global $DB;
 
@@ -84,7 +83,6 @@ class totara_program_program_content_testcase extends advanced_testcase {
      * Tests the get_courseset_by_id method.
      */
     public function test_get_courseset_by_id() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $progcontent = new prog_content($this->program1->id);
@@ -170,7 +168,6 @@ class totara_program_program_content_testcase extends advanced_testcase {
      * Tests the delete_courseset_by_id method.
      */
     public function test_delete_courseset_by_id() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $progcontent = new prog_content($this->program1->id);

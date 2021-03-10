@@ -39,7 +39,6 @@ class totara_certification_totara_catalog_tag_filters_testcase extends \advanced
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
     }
 
     /**

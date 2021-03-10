@@ -30,7 +30,6 @@ class totara_reportbuilder_events_testcase extends advanced_testcase {
     use totara_reportbuilder\phpunit\report_testing;
 
     public function test_report_created_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $rid = $this->create_report('user', 'Test user report');
@@ -64,7 +63,6 @@ class totara_reportbuilder_events_testcase extends advanced_testcase {
     }
 
     public function test_report_updated_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $rid = $this->create_report('user', 'Test user report');
@@ -90,7 +88,6 @@ class totara_reportbuilder_events_testcase extends advanced_testcase {
     public function test_report_deleted_event() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $rid = $this->create_report('user', 'Test user report');
@@ -135,7 +132,6 @@ class totara_reportbuilder_events_testcase extends advanced_testcase {
     public function test_report_cloned_event() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $rid = $this->create_report('user', 'Test user report');
@@ -162,7 +158,6 @@ class totara_reportbuilder_events_testcase extends advanced_testcase {
     }
 
     public function test_report_viewed_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $rid = $this->create_report('user', 'Test user report');
@@ -185,7 +180,6 @@ class totara_reportbuilder_events_testcase extends advanced_testcase {
     }
 
     public function test_report_exported_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $rid = $this->create_report('user', 'Test user report');

@@ -56,7 +56,6 @@ class core_session_redis_testcase extends advanced_testcase {
             $this->markTestSkipped('Session test server not set. define: TEST_SESSION_REDIS_HOST');
         }
 
-        $this->resetAfterTest();
 
         $this->keyprefix = 'phpunit'.rand(1, 100000);
 

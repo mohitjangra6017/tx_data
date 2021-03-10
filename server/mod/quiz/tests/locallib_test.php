@@ -120,7 +120,6 @@ class mod_quiz_locallib_testcase extends advanced_testcase {
         global $CFG;
 
         $CFG->enablecompletion = 1;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.
@@ -159,7 +158,6 @@ class mod_quiz_locallib_testcase extends advanced_testcase {
     public function test_quiz_get_user_timeclose() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $basetimestamp = time(); // The timestamp we will base the enddates on.

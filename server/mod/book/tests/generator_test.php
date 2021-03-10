@@ -33,7 +33,6 @@ class mod_book_generator_testcase extends advanced_testcase {
 
     public function test_create_instance() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -51,7 +50,6 @@ class mod_book_generator_testcase extends advanced_testcase {
 
     public function test_create_chapter() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();

@@ -69,7 +69,6 @@ class search_solr_engine_testcase extends advanced_testcase {
     protected $engine = null;
 
     public function setUp(): void {
-        $this->resetAfterTest();
         set_config('enableglobalsearch', true);
 
         if (!function_exists('solr_get_version')) {

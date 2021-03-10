@@ -34,7 +34,6 @@ class totara_form_element_multiselect_testcase extends advanced_testcase {
         parent::setUp();
         require_once(__DIR__ . '/fixtures/test_form.php');
         test_form::phpunit_reset();
-        $this->resetAfterTest();
     }
 
     protected function tearDown(): void {

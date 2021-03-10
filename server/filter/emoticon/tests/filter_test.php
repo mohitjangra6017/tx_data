@@ -39,8 +39,6 @@ class filter_emoticon_filter_testcase extends advanced_testcase {
     public function test_filter_emoticon_formats() {
         global $PAGE;
 
-        $this->resetAfterTest(true); // We are modifying the config.
-
         $filter = new testable_filter_emoticon();
 
         // Verify texts not matching target formats aren't filtered.

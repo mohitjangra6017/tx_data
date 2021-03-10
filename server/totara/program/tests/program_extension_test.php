@@ -39,7 +39,6 @@ class totara_program_extension_testcase extends reportcache_advanced_testcase {
         global $DB, $CFG;
 
         parent::setUp();
-        $this->resetAfterTest(true);
         $CFG->enablecompletion = true;
 
         $job_generator = \totara_job\testing\generator::instance();

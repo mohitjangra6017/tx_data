@@ -59,7 +59,6 @@ class totara_appraisal_userdata_appraisal_testcase extends appraisal_testcase {
             public $fs;
         };
 
-        $this->resetAfterTest();
 
         // Set up users.
         $data->user1 = $this->getDataGenerator()->create_user();

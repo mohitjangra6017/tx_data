@@ -189,7 +189,6 @@ class core_calendar_userdata_events_testcase extends advanced_testcase {
      */
     public function test_purge_effects_events_that_are_created_by_a_module() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->get_data();
         $extradata = $this->make_course_module_events($data);
         $systemcontext = context_system::instance();
@@ -216,7 +215,6 @@ class core_calendar_userdata_events_testcase extends advanced_testcase {
      * seminars in a facetoface.
      */
     public function test_count_includes_events_from_course_modules() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
         $countbefore = events::execute_count($data->user1, $systemcontext);
@@ -233,7 +231,6 @@ class core_calendar_userdata_events_testcase extends advanced_testcase {
      */
     public function test_export_includes_event_from_course_modules() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -268,7 +265,6 @@ class core_calendar_userdata_events_testcase extends advanced_testcase {
      */
     public function test_purge_removes_only_users_event() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -312,7 +308,6 @@ class core_calendar_userdata_events_testcase extends advanced_testcase {
      */
     public function test_purge_works_on_deleted_user() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -348,7 +343,6 @@ class core_calendar_userdata_events_testcase extends advanced_testcase {
      * Test that the count is 0 after purge
      */
     public function test_count_zero_after_purge() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -369,7 +363,6 @@ class core_calendar_userdata_events_testcase extends advanced_testcase {
      * Test that the count returns the number of userevents for a user
      */
     public function test_count_returns_correct_value() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -391,7 +384,6 @@ class core_calendar_userdata_events_testcase extends advanced_testcase {
      * Test that the number of data items exported matches the count
      */
     public function test_count_matches_num_export_data() {
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -417,7 +409,6 @@ class core_calendar_userdata_events_testcase extends advanced_testcase {
      */
     public function test_count_works_on_deleted_user() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -439,7 +430,6 @@ class core_calendar_userdata_events_testcase extends advanced_testcase {
      */
     public function test_export_data_correct_values() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 
@@ -488,7 +478,6 @@ class core_calendar_userdata_events_testcase extends advanced_testcase {
      */
     public function test_export_works_on_deleted_user() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->get_data();
         $systemcontext = context_system::instance();
 

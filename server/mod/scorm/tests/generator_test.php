@@ -35,7 +35,6 @@ class mod_scorm_generator_testcase extends advanced_testcase {
 
     public function test_create_instance() {
         global $DB, $CFG, $USER;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();

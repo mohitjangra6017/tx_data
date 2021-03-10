@@ -63,7 +63,6 @@ class mod_scorm_validatepackage_testcase extends advanced_testcase {
     public function test_validate_package() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         $filename = "validscorm.zip";
         $file = $this->create_stored_file_from_path($CFG->dirroot.'/mod/scorm/tests/packages/'.$filename, file_archive::OPEN);

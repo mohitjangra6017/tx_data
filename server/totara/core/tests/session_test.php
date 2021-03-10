@@ -27,7 +27,6 @@ if (!defined('MOODLE_INTERNAL')) {
 class totara_core_session_testcase extends advanced_testcase {
     public function test_totara_queue() {
         global $SESSION;
-        $this->resetAfterTest();
 
         $queue_data = array(
             'key0' => 'data0',
@@ -86,7 +85,6 @@ class totara_core_session_testcase extends advanced_testcase {
     }
 
     public function test_totara_notifications() {
-        $this->resetAfterTest();
 
         // Test notifications without options.
         totara_set_notification('Foo'); // Deprecated.

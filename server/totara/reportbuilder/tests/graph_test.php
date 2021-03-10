@@ -65,7 +65,6 @@ class totara_reportbuilder_graph_testcase extends advanced_testcase {
 
     public function test_is_graphable() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user = $this->getDataGenerator()->create_user();
@@ -148,7 +147,6 @@ class totara_reportbuilder_graph_testcase extends advanced_testcase {
 
     public function test_graph_zero_data() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -219,7 +217,6 @@ class totara_reportbuilder_graph_testcase extends advanced_testcase {
 
     public function test_remove_empty_series() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user1 = $this->getDataGenerator()->create_user();

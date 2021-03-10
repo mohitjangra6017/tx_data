@@ -36,7 +36,6 @@ class example_data_formatter_testcase extends advanced_testcase {
 
         global $CFG;
 
-        $this->resetAfterTest();
         $this->initialthemedesignermode = $CFG->themedesignermode;
         theme_set_designer_mod(true);
 

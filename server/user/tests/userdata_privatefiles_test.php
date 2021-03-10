@@ -47,7 +47,6 @@ class core_user_userdata_privatefiles_testcase extends advanced_testcase {
      * test if data is correctly purged
      */
     public function test_purge() {
-        $this->resetAfterTest(true);
 
         // Create the users.
         $activeuser = new target_user($this->getDataGenerator()->create_user());
@@ -106,7 +105,6 @@ class core_user_userdata_privatefiles_testcase extends advanced_testcase {
      * test if data is correctly counted
      */
     public function test_count() {
-        $this->resetAfterTest(true);
 
         // Check if item is exportable.
         $this->assertTrue(privatefiles::is_exportable());
@@ -151,7 +149,6 @@ class core_user_userdata_privatefiles_testcase extends advanced_testcase {
      * test if data is correctly counted
      */
     public function test_export() {
-        $this->resetAfterTest(true);
 
         // Check if item is exportable.
         $this->assertTrue(privatefiles::is_exportable());

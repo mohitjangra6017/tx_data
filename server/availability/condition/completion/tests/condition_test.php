@@ -52,7 +52,6 @@ class availability_completion_condition_testcase extends advanced_testcase {
      */
     public function test_in_tree() {
         global $USER, $CFG;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -161,7 +160,6 @@ class availability_completion_condition_testcase extends advanced_testcase {
     public function test_usage() {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/mod/assign/locallib.php');
-        $this->resetAfterTest();
 
         // Create course with completion turned on.
         $CFG->enablecompletion = true;
@@ -345,7 +343,6 @@ class availability_completion_condition_testcase extends advanced_testcase {
      */
     public function test_completion_value_used() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         // Create course with completion turned on and some sections.
         $CFG->enablecompletion = true;

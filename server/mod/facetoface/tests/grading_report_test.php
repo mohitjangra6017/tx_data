@@ -47,7 +47,6 @@ class grading_report_testcase extends advanced_testcase {
     public function test_grading_report_by_simulating_add_users_in_attendance_page($first, $last) {
         global $DB, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $gen = $this->getDataGenerator();

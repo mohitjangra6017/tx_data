@@ -41,7 +41,6 @@ class totara_reportbuilder_userdata_global_report_restrictions_test extends adva
      */
     public function test_purge() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         /** @var \totara_reportbuilder\testing\generator $rbgen */

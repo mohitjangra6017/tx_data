@@ -37,7 +37,6 @@ class core_recordset_walk_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
     }
 
     public function test_no_data() {

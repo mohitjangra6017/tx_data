@@ -32,7 +32,6 @@ use totara_userdata\userdata\target_user;
 class totara_userdata_task_purge_manual_testcase extends advanced_testcase {
     public function test_adhoc() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 

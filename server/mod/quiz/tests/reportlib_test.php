@@ -92,7 +92,6 @@ class mod_quiz_reportlib_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/mod/quiz/attemptlib.php');
 
-        $this->resetAfterTest();
 
         $fakeattempt = new stdClass();
         $fakeattempt->userid = 123;

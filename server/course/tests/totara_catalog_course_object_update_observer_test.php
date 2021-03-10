@@ -44,7 +44,6 @@ class core_course_totara_catalog_course_object_update_observer_testcase extends 
     protected function setUp(): void {
         parent::setup();
         $this->setAdminUser();
-        $this->resetAfterTest();
         $this->course = $this->getDataGenerator()->create_course();
         $this->provider_active_task = new provider_active_task();
     }

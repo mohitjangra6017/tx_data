@@ -94,7 +94,6 @@ class core_mustache_template_finder_testcase extends advanced_testcase {
         global $CFG;
 
         // Roll back state changes.
-        $this->resetAfterTest();
 
         $CFG->themedir = '/foo/bar';
         $dirs = mustache_template_finder::get_template_directories_for_component('totara_core', 'ventura');

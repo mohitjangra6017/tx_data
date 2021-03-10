@@ -42,7 +42,6 @@ class wsdl_test extends \advanced_testcase {
      * Test generated WSDL with no added complex types nor functions.
      */
     public function test_minimum_wsdl() {
-        $this->resetAfterTest();
 
         $serviceclass = 'testserviceclass';
         $namespace = 'testnamespace';
@@ -90,7 +89,6 @@ class wsdl_test extends \advanced_testcase {
      * Test output WSDL with complex type added.
      */
     public function test_add_complex_type() {
-        $this->resetAfterTest();
 
         $classname = 'testcomplextype';
         $classattrs = array(
@@ -163,7 +161,6 @@ class wsdl_test extends \advanced_testcase {
      * Test output WSDL when registering a web service function.
      */
     public function test_register() {
-        $this->resetAfterTest();
 
         $serviceclass = 'testserviceclass';
         $namespace = 'testnamespace';
@@ -290,7 +287,6 @@ class wsdl_test extends \advanced_testcase {
      * Test output WSDL when registering a web service function with no input parameters.
      */
     public function test_register_without_input() {
-        $this->resetAfterTest();
 
         $serviceclass = 'testserviceclass';
         $namespace = 'testnamespace';
@@ -332,7 +328,6 @@ class wsdl_test extends \advanced_testcase {
      * Test output WSDL when registering a web service function with no output parameters.
      */
     public function test_register_without_output() {
-        $this->resetAfterTest();
 
         $serviceclass = 'testserviceclass';
         $namespace = 'testnamespace';

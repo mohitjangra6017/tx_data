@@ -36,7 +36,6 @@ class assignsubmission_onlinetext_events_testcase extends advanced_testcase {
      * Test that the assessable_uploaded event is fired when an online text submission is saved.
      */
     public function test_assessable_uploaded() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -83,7 +82,6 @@ class assignsubmission_onlinetext_events_testcase extends advanced_testcase {
      * Test that the submission_created event is fired when an onlinetext submission is saved.
      */
     public function test_submission_created() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -122,7 +120,6 @@ class assignsubmission_onlinetext_events_testcase extends advanced_testcase {
      * submission is saved and an existing submission already exists.
      */
     public function test_submission_updated() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');

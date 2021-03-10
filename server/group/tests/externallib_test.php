@@ -40,7 +40,6 @@ class core_group_externallib_testcase extends externallib_advanced_testcase {
     public function test_create_groups() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $course  = self::getDataGenerator()->create_course();
 
@@ -120,7 +119,6 @@ class core_group_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_groups() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
         $group1data = array();
@@ -184,7 +182,6 @@ class core_group_externallib_testcase extends externallib_advanced_testcase {
     public function test_delete_groups() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
         $group1data = array();
@@ -233,7 +230,6 @@ class core_group_externallib_testcase extends externallib_advanced_testcase {
     public function test_create_update_groupings() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
 
@@ -291,7 +287,6 @@ class core_group_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_groupings() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
 
@@ -368,7 +363,6 @@ class core_group_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_course_user_groups() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $student1 = self::getDataGenerator()->create_user();
         $student2 = self::getDataGenerator()->create_user();
@@ -459,7 +453,6 @@ class core_group_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_activity_allowed_groups() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generator = self::getDataGenerator();
 
@@ -551,7 +544,6 @@ class core_group_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_activity_groupmode() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generator = self::getDataGenerator();
 

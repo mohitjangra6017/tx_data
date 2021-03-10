@@ -65,7 +65,6 @@ class block_totara_featured_links_tile_meta_tile_testcase extends test_helper {
      */
     public function test_sortorder_with_subtiles() {
         global $DB;
-        $this->resetAfterTest();
         $data = $this->setup_block_with_subtiles();
         /** @var \block_totara_featured_links\testing\generator $blockgenerator */
         $blockgenerator = $this->getDataGenerator()->get_plugin_generator('block_totara_featured_links');
@@ -101,7 +100,6 @@ class block_totara_featured_links_tile_meta_tile_testcase extends test_helper {
      */
     public function test_clone() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
         $data = $this->setup_block_with_subtiles();
         /** @var \block_totara_featured_links\testing\generator $blockgenerator */
@@ -131,7 +129,6 @@ class block_totara_featured_links_tile_meta_tile_testcase extends test_helper {
      */
     public function test_clone_parentid_links_are_maintained() {
         global $DB;
-        $this->resetAfterTest();
         /** @var \block_totara_featured_links\testing\generator $featuredlinksgenerator */
         $featuredlinksgenerator = $this->getDataGenerator()->get_plugin_generator('block_totara_featured_links');
 

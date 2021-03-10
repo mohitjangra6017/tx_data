@@ -188,7 +188,6 @@ class core_externallib_testcase extends advanced_testcase {
     }
 
     public function test_external_format_string() {
-        $this->resetAfterTest();
         $settings = external_settings::get_instance();
         $currentraw = $settings->get_raw();
         $currentfilter = $settings->get_filter();
@@ -304,7 +303,6 @@ class core_externallib_testcase extends advanced_testcase {
      * Test external_api::get_context_from_params().
      */
     public function test_get_context_from_params() {
-        $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course();
         $realcontext = context_course::instance($course->id);
 
@@ -377,7 +375,6 @@ class core_externallib_testcase extends advanced_testcase {
         global $USER;
 
         // Call without correct context details.
-        $this->resetAfterTest(true);
         $course = self::getDataGenerator()->create_course();
         $this->expectException('invalid_parameter_exception');
         test_exernal_api::get_context_wrapper(array('roleid' => 3, 'userid' => $USER->id, 'instanceid' => $course->id));
@@ -413,7 +410,6 @@ class core_externallib_testcase extends advanced_testcase {
     }
 
     public function test_validate_courses() {
-        $this->resetAfterTest(true);
 
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
@@ -449,7 +445,6 @@ class core_externallib_testcase extends advanced_testcase {
      * Validate courses can re-use an array of prefetched courses.
      */
     public function test_validate_courses_prefetch() {
-        $this->resetAfterTest(true);
 
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
@@ -477,7 +472,6 @@ class core_externallib_testcase extends advanced_testcase {
     public function test_call_external_function() {
         global $PAGE, $COURSE;
 
-        $this->resetAfterTest(true);
 
         // Call some webservice functions and verify they are correctly handling $PAGE and $COURSE.
         // First test a function that calls validate_context outside a course.
@@ -585,7 +579,6 @@ class core_externallib_testcase extends advanced_testcase {
      * Test external_generate_token() with a permanent token.
      */
     public function test_external_generate_token_permanent() {
-        $this->resetAfterTest();
         global $DB;
 
         $user = $this->getDataGenerator()->create_user();

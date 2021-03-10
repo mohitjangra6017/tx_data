@@ -40,7 +40,6 @@ class media_vimeo_testcase extends advanced_testcase {
         parent::setUp();
 
         // Reset $CFG and $SERVER.
-        $this->resetAfterTest();
 
         // Consistent initial setup: all players disabled.
         \core\plugininfo\media::set_enabled_plugins('vimeo');

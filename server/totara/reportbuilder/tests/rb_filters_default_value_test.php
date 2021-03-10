@@ -39,7 +39,6 @@ class totara_reportbuilder_rb_filters_default_value_testcase extends advanced_te
      *
      */
     public function test_default_value() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Testing custom user report.

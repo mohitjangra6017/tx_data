@@ -32,7 +32,6 @@ class totara_core_basket_service_testcase extends advanced_testcase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
         $this->setAdminUser();
     }
 

@@ -32,7 +32,6 @@ defined('MOODLE_INTERNAL') || die();
 class totara_userdata_generator_testcase extends advanced_testcase {
     public function test_create_purge_type() {
         global $USER, $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -124,7 +123,6 @@ class totara_userdata_generator_testcase extends advanced_testcase {
 
     public function test_create_export_type() {
         global $USER, $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 

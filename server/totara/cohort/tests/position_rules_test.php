@@ -86,7 +86,6 @@ class totara_cohort_position_rules_testcase extends advanced_testcase {
         global $DB;
 
         parent::setup();
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->users = array();
@@ -165,7 +164,6 @@ class totara_cohort_position_rules_testcase extends advanced_testcase {
      */
     public function test_position_name_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a rule that matches users for the position posname1. It should match 7 users.
@@ -181,7 +179,6 @@ class totara_cohort_position_rules_testcase extends advanced_testcase {
      */
     public function test_position_idnumber_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a rule that matches users for the position pos1. It should match 7 users.
@@ -214,7 +211,6 @@ class totara_cohort_position_rules_testcase extends advanced_testcase {
      */
     public function test_position_date_rules($rulename, $params, $usercount, $sourcemembersmatched) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Process list of users that should match the data.
@@ -251,7 +247,6 @@ class totara_cohort_position_rules_testcase extends advanced_testcase {
      */
     public function test_position_type_rule() {
         global $DB, $USER;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create type of position.
@@ -289,7 +284,6 @@ class totara_cohort_position_rules_testcase extends advanced_testcase {
     public function test_jobassign_fullname_rule() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // First create four users.
@@ -346,7 +340,6 @@ class totara_cohort_position_rules_testcase extends advanced_testcase {
      */
     public function test_manager_rule($params, $managerids, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create some manager accounts.
@@ -440,7 +433,6 @@ class totara_cohort_position_rules_testcase extends advanced_testcase {
      */
     public function test_position_rule($params, $positions, $usercount, $sourcemembersmatched) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Process positions.

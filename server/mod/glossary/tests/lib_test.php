@@ -41,7 +41,6 @@ class mod_glossary_lib_testcase extends advanced_testcase {
         global $CFG;
         $origcompletion = $CFG->enablecompletion;
         $CFG->enablecompletion = true;
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $c1 = $this->getDataGenerator()->create_course(array('enablecompletion' => 1));
@@ -95,7 +94,6 @@ class mod_glossary_lib_testcase extends advanced_testcase {
     }
 
     public function test_glossary_entry_view() {
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
@@ -119,7 +117,6 @@ class mod_glossary_lib_testcase extends advanced_testcase {
     public function test_mod_glossary_get_tagged_entries() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.

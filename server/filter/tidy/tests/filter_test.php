@@ -41,7 +41,6 @@ class filter_tidy_filter_testcase extends advanced_testcase {
             $this->markTestSkipped('The tidy extension is not currently loaded, the filter will not do anything.');
         }
 
-        $this->resetAfterTest();
 
         // Prep the required structure.
         $learner = $this->getDataGenerator()->create_user();

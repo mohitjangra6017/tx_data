@@ -57,7 +57,6 @@ class totara_cohort_system_access_rules_testcase extends advanced_testcase {
         global $DB;
 
         parent::setup();
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Set totara_cohort generator.
@@ -113,7 +112,6 @@ class totara_cohort_system_access_rules_testcase extends advanced_testcase {
      */
     public function test_first_login_date($params, $usercount, $membersmatched) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Process members in cohort.
@@ -153,7 +151,6 @@ class totara_cohort_system_access_rules_testcase extends advanced_testcase {
      */
     public function test_last_login_date($params, $usercount, $membersmatched) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Process members in cohort.

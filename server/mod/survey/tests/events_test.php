@@ -37,7 +37,6 @@ class mod_survey_events_testcase extends advanced_testcase {
      * Setup.
      */
     public function setUp(): void {
-        $this->resetAfterTest();
     }
 
     /**

@@ -93,7 +93,6 @@ class mod_facetoface_attendance_helper_testcase extends advanced_testcase {
      * @return void
      */
     public function test_get_calculated_status(): void {
-        $this->resetAfterTest();
 
         $event = $this->get_seminar_event();
         $this->create_sessions($event);
@@ -154,7 +153,6 @@ class mod_facetoface_attendance_helper_testcase extends advanced_testcase {
         global $PAGE;
         $PAGE->set_url('/');
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $e = $this->get_seminar_event();
@@ -287,7 +285,6 @@ class mod_facetoface_attendance_helper_testcase extends advanced_testcase {
     public function test_taking_session_attendance(): void {
         global $USER, $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $gen = $this->getDataGenerator();
@@ -352,7 +349,6 @@ class mod_facetoface_attendance_helper_testcase extends advanced_testcase {
         global $PAGE;
         $PAGE->set_url('/');
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $e = $this->get_seminar_event();
@@ -405,7 +401,6 @@ class mod_facetoface_attendance_helper_testcase extends advanced_testcase {
         global $PAGE, $DB, $USER;
         $PAGE->set_url('/');
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $e = $this->get_seminar_event();

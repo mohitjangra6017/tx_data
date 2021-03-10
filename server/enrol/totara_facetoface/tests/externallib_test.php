@@ -51,7 +51,6 @@ class enrol_totara_facetoface_external_testcase extends externallib_advanced_tes
     public function test_get_instance_info() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // The plugin is disabled by default.
         $this->assertFalse(enrol_is_enabled('totara_facetoface'));

@@ -185,7 +185,6 @@ class totara_mobile_webapi_resolver_type_course_testcase extends advanced_testca
      */
     public function test_resolve_formatted_grademax() {
         global $CFG;
-        $this->resetAfterTest(true);
 
         list($users, $courses) = $this->create_faux_courses();
         $this->setAdminUser();
@@ -212,7 +211,6 @@ class totara_mobile_webapi_resolver_type_course_testcase extends advanced_testca
         global $CFG;
         require_once($CFG->libdir . '/grade/grade_item.php');
 
-        $this->resetAfterTest(true);
 
         list($users, $courses) = $this->create_faux_courses();
         $user = $users[0];

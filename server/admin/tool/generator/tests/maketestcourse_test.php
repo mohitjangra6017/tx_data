@@ -31,7 +31,6 @@ class tool_generator_maketestcourse_testcase extends advanced_testcase {
     public function test_make_xs_course() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $expectedshortname = 'TOOL_MAKELARGECOURSE_XS';
@@ -132,7 +131,6 @@ class tool_generator_maketestcourse_testcase extends advanced_testcase {
      */
     public function test_fixed_data_set() {
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create the S course (more sections and activities than XS).
@@ -173,7 +171,6 @@ class tool_generator_maketestcourse_testcase extends advanced_testcase {
      */
     public function test_filesize_limit() {
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Limit.

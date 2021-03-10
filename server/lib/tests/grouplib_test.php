@@ -33,7 +33,6 @@ defined('MOODLE_INTERNAL') || die();
 class core_grouplib_testcase extends advanced_testcase {
 
     public function test_groups_get_group_by_idnumber() {
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 
@@ -105,7 +104,6 @@ class core_grouplib_testcase extends advanced_testcase {
     }
 
     public function test_groups_get_grouping_by_idnumber() {
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 
@@ -180,7 +178,6 @@ class core_grouplib_testcase extends advanced_testcase {
     public function test_groups_get_members_ids_sql() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 
@@ -213,7 +210,6 @@ class core_grouplib_testcase extends advanced_testcase {
     }
 
     public function test_groups_get_group_by_name() {
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 
@@ -277,7 +273,6 @@ class core_grouplib_testcase extends advanced_testcase {
     }
 
     public function test_groups_get_grouping() {
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 
@@ -341,7 +336,6 @@ class core_grouplib_testcase extends advanced_testcase {
     }
 
     public function test_groups_get_course_data() {
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 
@@ -461,7 +455,6 @@ class core_grouplib_testcase extends advanced_testcase {
         global $CFG, $DB;
 
         $generator = $this->getDataGenerator();
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create a course category, course and groups.
@@ -644,7 +637,6 @@ class core_grouplib_testcase extends advanced_testcase {
     function test_groups_get_groupmode() {
         global $DB;
         $generator = $this->getDataGenerator();
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create a course with no groups forcing.
@@ -715,7 +707,6 @@ class core_grouplib_testcase extends advanced_testcase {
     public function test_groups_allgroups_course_menu() {
         global $SESSION;
 
-        $this->resetAfterTest();
 
         // Generate data.
         $course = $this->getDataGenerator()->create_course();
@@ -778,7 +769,6 @@ class core_grouplib_testcase extends advanced_testcase {
      */
     public function test_groups_ordering() {
         $generator = $this->getDataGenerator();
-        $this->resetAfterTest();
 
         // Create a course category and course.
         $cat = $generator->create_category(array('parent' => 0));
@@ -808,7 +798,6 @@ class core_grouplib_testcase extends advanced_testcase {
      * Tests for groups_get_user_groups() method.
      */
     public function test_groups_get_user_groups() {
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
 
         // Create courses.
@@ -951,7 +940,6 @@ class core_grouplib_testcase extends advanced_testcase {
         global $CFG, $DB;
 
         $generator = $this->getDataGenerator();
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create a course category, course and groups.
@@ -1393,7 +1381,6 @@ class core_grouplib_testcase extends advanced_testcase {
      * Tests for groups_get_groups_members() method.
      */
     public function test_groups_get_groups_members() {
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
 
         // Create courses.
@@ -1452,7 +1439,6 @@ class core_grouplib_testcase extends advanced_testcase {
      * Tests for groups_get_activity_shared_group_members() method.
      */
     public function test_groups_get_activity_shared_group_members() {
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
 
         // Create courses.

@@ -59,7 +59,6 @@ class totara_cohort_audience_member_rule_testcase extends advanced_testcase {
         global $DB;
 
         parent::setup();
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $users = array();
@@ -119,7 +118,6 @@ class totara_cohort_audience_member_rule_testcase extends advanced_testcase {
      */
     public function test_audience_member($incohortparam, $cohortidsparam, $usercount, $membersmatched) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $cohort3 = $this->cohort_generator->create_cohort(array('cohorttype' => cohort::TYPE_DYNAMIC));
@@ -157,7 +155,6 @@ class totara_cohort_audience_member_rule_testcase extends advanced_testcase {
      */
     public function test_audience_member_sync_job($incohortparam, $cohortidsparam, $usercount, $membersmatched) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $cohort3 = $this->cohort_generator->create_cohort(array('cohorttype' => cohort::TYPE_DYNAMIC));

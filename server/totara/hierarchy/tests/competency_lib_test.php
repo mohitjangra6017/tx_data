@@ -90,7 +90,6 @@ class totara_hierarchy_competency_lib_testcase extends advanced_testcase {
     }
 
     public function test_get_all_proficient_scale_values() {
-        $this->resetAfterTest();
         global $DB;
 
         // There will be a default scale created on install. That has one proficient value called Competent.
@@ -131,7 +130,6 @@ class totara_hierarchy_competency_lib_testcase extends advanced_testcase {
     }
 
     public function test_value_is_proficient() {
-        $this->resetAfterTest();
         global $DB;
 
         /** @var \totara_hierarchy\testing\generator $hierarchy_generator */

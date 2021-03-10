@@ -38,7 +38,6 @@ class mod_assign_portfolio_caller_testcase extends advanced_testcase {
      * Test an assignment file is loaded for a user who submitted it.
      */
     public function test_user_submission_file_is_loaded() {
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
@@ -88,7 +87,6 @@ class mod_assign_portfolio_caller_testcase extends advanced_testcase {
      * Test an assignment file is not loaded for a user that did not submit it.
      */
     public function test_different_user_submission_file_is_not_loaded() {
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();

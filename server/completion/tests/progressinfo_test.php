@@ -41,7 +41,6 @@ class core_completion_progressinfo_testcase extends externallib_advanced_testcas
     public function test_progressinfo_activities_only() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         $CFG->enablecompletion = true;
         $student = $this->getDataGenerator()->create_user();
@@ -86,7 +85,6 @@ class core_completion_progressinfo_testcase extends externallib_advanced_testcas
     public function test_progressinfo_multiple_criteria_types() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         $CFG->enablecompletion = true;
         $student = $this->getDataGenerator()->create_user();
@@ -701,7 +699,6 @@ class core_completion_progressinfo_testcase extends externallib_advanced_testcas
     public function test_course_completion_via_rpl_progress_calculation() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
         /** @var \core_completion\testing\generator $comp_generator */

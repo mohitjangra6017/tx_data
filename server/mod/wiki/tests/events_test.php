@@ -56,7 +56,6 @@ class mod_wiki_events_testcase extends advanced_testcase {
     public function setUp(): void {
         global $DB;
 
-        $this->resetAfterTest();
         // Create course and wiki.
         $this->course = $this->getDataGenerator()->create_course();
         $this->wiki = $this->getDataGenerator()->create_module('wiki', array('course' => $this->course->id));

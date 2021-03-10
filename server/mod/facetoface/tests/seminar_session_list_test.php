@@ -104,7 +104,6 @@ class mod_facetoface_seminar_session_list_testcase extends advanced_testcase {
      * @param array $result
      */
     public function test_calculate_session(array $times, int $currenttime, array $result): void {
-        $this->resetAfterTest();
 
         $event = $this->create_seminar_event();
         foreach ($times as $time) {

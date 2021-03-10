@@ -38,7 +38,6 @@ class core_event_course_module_instance_list_viewed_testcase extends advanced_te
      */
     public function test_event_attributes() {
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $context = context_course::instance($course->id);
 

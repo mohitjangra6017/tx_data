@@ -51,7 +51,6 @@ class totara_cohort_indirect_reports_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setup();
-        $this->resetAfterTest(true);
 
         // Set totara_cohort generator.
         $this->cohort_generator = \totara_cohort\testing\generator::instance();
@@ -108,7 +107,6 @@ class totara_cohort_indirect_reports_testcase extends advanced_testcase {
      */
     public function test_indirect_reports_rules($params, $listofvalues, $cohortmembers) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create users.

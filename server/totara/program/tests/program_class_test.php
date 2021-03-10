@@ -59,7 +59,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
 
     protected function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
         $this->messagesink = $this->redirectMessages();
 
         // Number of each assignment type to a program.
@@ -275,7 +274,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      * @dataProvider program_type
      */
     public function test_display_required_assignment_reason($type) {
-        $this->resetAfterTest(true);
 
         /** @var program $program1 */
         /** @var program $program2 */
@@ -373,7 +371,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      * @dataProvider program_type
      */
     public function test_display_completion_record_reason_required_assignments($type) {
-        $this->resetAfterTest(true);
 
         /** @var program $program1 */
         /** @var program $program2 */
@@ -414,7 +411,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
             return;
         }
 
-        $this->resetAfterTest(true);
 
         /** @var program $program1 */
         /** @var program $program2 */
@@ -453,7 +449,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      * @dataProvider program_type
      */
     public function test_display_completion_record_reason_deleted_suspended($type) {
-        $this->resetAfterTest(true);
         global $DB;
 
         /** @var program $program1 */
@@ -507,7 +502,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      *
      */
     public function test_display_completion_record_reason_unknown() {
-        $this->resetAfterTest(true);
         global $DB;
 
         // Create a program and a certification.
@@ -621,7 +615,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
     public function test_construction_from_id() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $detail = [
             'fullname' => 'Testing program construction from ID',
@@ -649,7 +642,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
     public function test_construction_from_object() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $detail = [
             'fullname' => 'Testing program fullname',
@@ -679,7 +671,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
     public function test_construction_from_incomplete_object() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $detail = [
             'fullname' => 'Testing program fullname',
@@ -701,7 +692,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
     public function test_construction_from_incorrect_object() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $detail = [
             'fullname' => 'Testing program fullname',
@@ -743,7 +733,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
     public function test_construction_without_student_role_id() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $detail = [
             'fullname' => 'Testing program construction from ID',
@@ -781,7 +770,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      */
     public function test_get_context() {
 
-        $this->resetAfterTest();
 
         $category = $this->data_generator->create_category();
         $detail = [
@@ -806,7 +794,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      * Tests the program_get_context() function.
      */
     public function test_program_get_context() {
-        $this->resetAfterTest();
 
         $category = $this->data_generator->create_category();
         $detail = [
@@ -835,7 +822,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      */
     public function test_get_content() {
 
-        $this->resetAfterTest();
 
         $courses = [];
         for ($i = 0; $i < 10; $i++) {
@@ -881,7 +867,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      */
     public function test_reset_assignments() {
 
-        $this->resetAfterTest();
 
         $job_generator = \totara_job\testing\generator::instance();
 
@@ -933,7 +918,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      */
     public function test_get_exceptionsmanager() {
 
-        $this->resetAfterTest();
 
         $detail = [
             'fullname' => 'Testing program fullname',
@@ -953,7 +937,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
     public function test_assigned_learners_are_enrollable_in_courses() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $job_generator = \totara_job\testing\generator::instance();
 
@@ -1062,7 +1045,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
         global $CFG;
         require_once($CFG->dirroot . '/enrol/locallib.php');
 
-        $this->resetAfterTest();
 
         $job_generator = \totara_job\testing\generator::instance();
 
@@ -1157,7 +1139,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
     public function test_unassign_learners_completion_records() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $job_generator = \totara_job\testing\generator::instance();
 
@@ -1322,7 +1303,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      * Test user_is_assigned with users who have been assigned through a plan.
      */
     public function test_user_is_assigned_through_plan() {
-        $this->resetAfterTest();
 
         $job_generator = \totara_job\testing\generator::instance();
 
@@ -1365,7 +1345,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      */
     public function test_get_all_programs_with_incomplete_users() {
 
-        $this->resetAfterTest();
 
         $job_generator = \totara_job\testing\generator::instance();
 
@@ -1418,7 +1397,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      * Test the assigned_to_users_required_learning method.
      */
     public function test_assigned_to_users_required_learning() {
-        $this->resetAfterTest();
 
         $job_generator = \totara_job\testing\generator::instance();
 
@@ -1452,7 +1430,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      */
     public function test_prog_is_accessible() {
 
-        $this->resetAfterTest();
 
         $job_generator = \totara_job\testing\generator::instance();
 
@@ -1503,7 +1480,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      * Test the user cannot enter a course through the program if the program is not available.
      */
     public function test_can_enter_course_with_unavailable_program() {
-        $this->resetAfterTest();
 
         $job_generator = \totara_job\testing\generator::instance();
 
@@ -1539,7 +1515,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      */
     public function test_get_progress() {
 
-        $this->resetAfterTest();
 
         $job_generator = \totara_job\testing\generator::instance();
 
@@ -1598,7 +1573,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      */
     public function test_get_program_learners() {
 
-        $this->resetAfterTest();
 
         $job_generator = \totara_job\testing\generator::instance();
 
@@ -1648,7 +1622,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
      */
     public function test_deprecated_is_program_methods() {
 
-        $this->resetAfterTest();
 
         $job_generator = \totara_job\testing\generator::instance();
 
@@ -1706,7 +1679,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
     public function test_delete() {
         global $USER, $DB;
 
-        $this->resetAfterTest();
         // We need the admin user for this test, as we need to work with learning plans.
         $this->setAdminUser();
 
@@ -1861,7 +1833,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
     public function test_delete_certification() {
         global $USER, $DB;
 
-        $this->resetAfterTest();
         // We need the admin user for this test, as we need to work with learning plans.
         $this->setAdminUser();
 
@@ -2204,7 +2175,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
 
         require_once($CFG->dirroot . '/files/externallib.php');
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $usercontext = context_user::instance($USER->id);
         $program = $this->program_generator->create_program();
@@ -2280,7 +2250,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
 
         require_once($CFG->dirroot . '/files/externallib.php');
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $usercontext = context_user::instance($USER->id);
         $certification = $this->program_generator->create_certification();
@@ -2421,7 +2390,6 @@ class totara_program_program_class_testcase extends reportcache_advanced_testcas
     }
 
     public function test_get_current_status() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         list($program1, $program2) = $this->get_program_objects('program');

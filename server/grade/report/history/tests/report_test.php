@@ -37,7 +37,6 @@ class gradereport_history_report_testcase extends advanced_testcase {
      * Create some grades.
      */
     public function test_query_db() {
-        $this->resetAfterTest();
 
         // Making the setup.
         $c1 = $this->getDataGenerator()->create_course();
@@ -169,7 +168,6 @@ class gradereport_history_report_testcase extends advanced_testcase {
      * Test the get users helper method.
      */
     public function test_get_users() {
-        $this->resetAfterTest();
 
         // Making the setup.
         $c1 = $this->getDataGenerator()->create_course();
@@ -223,7 +221,6 @@ class gradereport_history_report_testcase extends advanced_testcase {
      * Test the get graders helper method.
      */
     public function test_graders() {
-        $this->resetAfterTest();
 
         // Making the setup.
         $c1 = $this->getDataGenerator()->create_course();

@@ -174,7 +174,6 @@ class totara_feedback360_userdata_resp_assignment_testcase extends feedback360_t
      * Test the count function for the feedback360 user assignment userdata items.
      */
     public function test_resp_assignment_count() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $data = $this->create_resp_assignments();
@@ -198,7 +197,6 @@ class totara_feedback360_userdata_resp_assignment_testcase extends feedback360_t
      * Test the purge function for the feedback360 user assignment userdata items.
      */
     public function test_resp_assignment_export() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $data = $this->create_resp_assignments();
@@ -252,7 +250,6 @@ class totara_feedback360_userdata_resp_assignment_testcase extends feedback360_t
     public function test_resp_assignment_purge() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $data = $this->create_resp_assignments();

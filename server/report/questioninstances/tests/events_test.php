@@ -38,7 +38,6 @@ class report_questioninstances_events_testcase extends advanced_testcase {
      */
     public function setUp(): void {
         $this->setAdminUser();
-        $this->resetAfterTest();
     }
 
     /**

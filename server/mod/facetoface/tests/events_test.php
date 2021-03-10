@@ -45,7 +45,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
 
     public function setUp(): void {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $this->facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
@@ -57,7 +56,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_session_created_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $event = \mod_facetoface\event\session_created::create_from_session($this->session, $this->context);
@@ -73,7 +71,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_session_updated_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $event = \mod_facetoface\event\session_updated::create_from_session($this->session, $this->context);
@@ -90,7 +87,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_session_deleted_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $event = \mod_facetoface\event\session_deleted::create_from_session($this->session, $this->context);
@@ -107,7 +103,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_booking_cancelled_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create user.
@@ -125,7 +120,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_signup_status_updated_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create user.
@@ -156,7 +150,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     public function test_attendee_note_updated_event() {
         global $CFG;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $user1 = $this->getDataGenerator()->create_user();
 
@@ -186,7 +179,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_booking_requests_approved_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -207,7 +199,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_booking_requests_rejected_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -227,7 +218,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_attendance_updated_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $event = \mod_facetoface\event\attendance_updated::create_from_session($this->session, $this->context);
@@ -241,7 +231,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_attendees_viewed_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $event = \mod_facetoface\event\attendees_viewed::create_from_session($this->session, $this->context, 'cancellations');
@@ -263,7 +252,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_attendees_updated_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $event = \mod_facetoface\event\attendees_updated::create_from_session($this->session, $this->context);
@@ -280,7 +268,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     public function test_attendee_position_updated() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -315,7 +302,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     public function test_interest_declared() {
         global $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $interest = new \mod_facetoface\interest();
@@ -337,7 +323,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     public function test_interest_withdrawn() {
         global $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $interest = new \mod_facetoface\interest();
@@ -359,7 +344,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_interest_report_viewed() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $event = \mod_facetoface\event\interest_report_viewed::create_from_facetoface($this->facetoface, $this->context);
@@ -372,7 +356,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     public function test_job_assignment_deleted() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         set_config('facetoface_selectjobassignmentonsignupglobal', true);
@@ -428,7 +411,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_message_users_viewed_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $event = \mod_facetoface\event\message_users_viewed::create_from_session($this->session, $this->context, 'messageusers');
@@ -450,7 +432,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_message_sent_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $seminarevent = new \mod_facetoface\seminar_event($this->session->id);
@@ -474,7 +455,6 @@ class mod_facetoface_events_testcase extends advanced_testcase {
     }
 
     public function test_approval_required_viewed_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $event = \mod_facetoface\event\approval_required_viewed::create_from_session(

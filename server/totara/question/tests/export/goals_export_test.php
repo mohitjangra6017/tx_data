@@ -45,7 +45,6 @@ class totara_question_goals_export_testcase extends advanced_testcase {
     public function test_get_items_with_company_goals() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $questiontype = 'goals';
 
@@ -134,7 +133,6 @@ class totara_question_goals_export_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot . '/totara/hierarchy/prefix/goal/lib.php');
 
-        $this->resetAfterTest();
 
         $questiontype = 'goals';
 
@@ -209,7 +207,6 @@ class totara_question_goals_export_testcase extends advanced_testcase {
     public function test_get_items_with_mix() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $questiontype = 'goals';
 

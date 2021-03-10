@@ -58,7 +58,6 @@ class mod_data_lib_testcase extends advanced_testcase {
     public function test_data_delete_record() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create a record for deleting.
         $this->setAdminUser();
@@ -130,7 +129,6 @@ class mod_data_lib_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/comment/lib.php');
 
-        $this->resetAfterTest();
 
         // Create a record for deleting.
         $this->setAdminUser();
@@ -193,7 +191,6 @@ class mod_data_lib_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/comment/lib.php');
 
-        $this->resetAfterTest();
 
         // Create a record for deleting.
         $this->setAdminUser();
@@ -256,7 +253,6 @@ class mod_data_lib_testcase extends advanced_testcase {
      */
     public function test_data_user_can_manage_entry_return_true_with_capability() {
 
-        $this->resetAfterTest();
         $testdata = $this->create_user_test_data();
 
         $user = $testdata['user'];
@@ -280,7 +276,6 @@ class mod_data_lib_testcase extends advanced_testcase {
      */
     public function test_data_user_can_manage_entry_return_false_readonly() {
 
-        $this->resetAfterTest();
         $testdata = $this->create_user_test_data();
 
         $user = $testdata['user'];
@@ -312,7 +307,6 @@ class mod_data_lib_testcase extends advanced_testcase {
      */
     public function test_data_user_can_manage_entry_return_false_no_record() {
 
-        $this->resetAfterTest();
         $testdata = $this->create_user_test_data();
 
         $user = $testdata['user'];
@@ -343,7 +337,6 @@ class mod_data_lib_testcase extends advanced_testcase {
      */
     public function test_data_user_can_manage_entry_return_false_not_owned_record() {
 
-        $this->resetAfterTest();
         $testdata = $this->create_user_test_data();
 
         $user = $testdata['user'];
@@ -375,7 +368,6 @@ class mod_data_lib_testcase extends advanced_testcase {
      */
     public function test_data_user_can_manage_entry_return_true_data_no_approval() {
 
-        $this->resetAfterTest();
         $testdata = $this->create_user_test_data();
 
         $user = $testdata['user'];
@@ -409,7 +401,6 @@ class mod_data_lib_testcase extends advanced_testcase {
      */
     public function test_data_user_can_manage_entry_return_true_record_unapproved() {
 
-        $this->resetAfterTest();
         $testdata = $this->create_user_test_data();
 
         $user = $testdata['user'];
@@ -445,7 +436,6 @@ class mod_data_lib_testcase extends advanced_testcase {
      */
     public function test_data_user_can_manage_entry_return_manageapproved() {
 
-        $this->resetAfterTest();
         $testdata = $this->create_user_test_data();
 
         $user = $testdata['user'];
@@ -522,7 +512,6 @@ class mod_data_lib_testcase extends advanced_testcase {
     public function test_mod_data_rating_can_see_item_ratings() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Setup test data.
         $course = new stdClass();
@@ -647,7 +636,6 @@ class mod_data_lib_testcase extends advanced_testcase {
      */
     public function test_data_refresh_events() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $timeopen = time();
@@ -889,7 +877,6 @@ class mod_data_lib_testcase extends advanced_testcase {
         global $CFG;
 
         $CFG->enablecompletion = 1;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.
@@ -925,7 +912,6 @@ class mod_data_lib_testcase extends advanced_testcase {
     }
 
     public function test_mod_data_get_tagged_records() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.
@@ -957,7 +943,6 @@ class mod_data_lib_testcase extends advanced_testcase {
     public function test_mod_data_get_tagged_records_approval() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.
@@ -1014,7 +999,6 @@ class mod_data_lib_testcase extends advanced_testcase {
     public function test_mod_data_get_tagged_records_time() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.
@@ -1073,7 +1057,6 @@ class mod_data_lib_testcase extends advanced_testcase {
     public function test_mod_data_get_tagged_records_course_enrolment() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.
@@ -1127,7 +1110,6 @@ class mod_data_lib_testcase extends advanced_testcase {
     public function test_mod_data_get_tagged_records_course_groups() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.
@@ -1194,7 +1176,6 @@ class mod_data_lib_testcase extends advanced_testcase {
      */
     public function test_check_updates_since() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
         // Create user.

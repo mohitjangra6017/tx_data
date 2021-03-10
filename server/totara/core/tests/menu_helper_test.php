@@ -32,7 +32,6 @@ use totara_core\totara\menu\item;
 class totara_core_menu_helper_testcase extends advanced_testcase {
     public function test_get_unused_container_id() {
         global $DB;
-        $this->resetAfterTest();
 
         $id = helper::get_unused_container_id();
         $record = $DB->get_record('totara_navigation', array('id' => $id), '*', MUST_EXIST);
@@ -64,7 +63,6 @@ class totara_core_menu_helper_testcase extends advanced_testcase {
 
     public function test_add_default_items() {
         global $DB;
-        $this->resetAfterTest();
 
         $defaultitems = $DB->get_records_menu('totara_navigation', array(), 'classname ASC', 'classname AS c1, classname AS c2');
         $classes = \core_component::get_namespace_classes('totara\menu', 'totara_core\totara\menu\item', null, true);
@@ -79,7 +77,6 @@ class totara_core_menu_helper_testcase extends advanced_testcase {
     }
 
     public function test_add_custom_menu_item() {
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -139,7 +136,6 @@ class totara_core_menu_helper_testcase extends advanced_testcase {
     }
 
     public function test_update_menu_item() {
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -220,7 +216,6 @@ class totara_core_menu_helper_testcase extends advanced_testcase {
 
     public function test_is_item_deletable() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -256,7 +251,6 @@ class totara_core_menu_helper_testcase extends advanced_testcase {
 
     public function test_is_item_delete() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -295,7 +289,6 @@ class totara_core_menu_helper_testcase extends advanced_testcase {
 
     public function test_change_sortorder() {
         global $DB;
-        $this->resetAfterTest();
 
         $this->assertFalse(helper::change_sortorder(-10, true));
 
@@ -422,7 +415,6 @@ class totara_core_menu_helper_testcase extends advanced_testcase {
 
     public function test_change_visibility() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -482,7 +474,6 @@ class totara_core_menu_helper_testcase extends advanced_testcase {
 
     public function test_reset_menu() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -534,7 +525,6 @@ class totara_core_menu_helper_testcase extends advanced_testcase {
 
     public function test_create_parentid_form_options() {
         global $DB;
-        $this->resetAfterTest();
 
         $unusedcontainerid = helper::get_unused_container_id();
 
@@ -794,7 +784,6 @@ class totara_core_menu_helper_testcase extends advanced_testcase {
 
     public function test_get_admin_edit_rowid() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -820,7 +809,6 @@ class totara_core_menu_helper_testcase extends advanced_testcase {
 
     public function test_get_admin_edit_return_url() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->type = 'container';
@@ -851,7 +839,6 @@ class totara_core_menu_helper_testcase extends advanced_testcase {
 
     public function test_get_cache_revision() {
         global $CFG;
-        $this->resetAfterTest();
 
         $rev = helper::get_cache_revision();
         $this->assertIsInt($rev);
@@ -868,7 +855,6 @@ class totara_core_menu_helper_testcase extends advanced_testcase {
 
     public function test_bump_cache_revision() {
         global $CFG;
-        $this->resetAfterTest();
 
         $oldrev = helper::get_cache_revision();
 

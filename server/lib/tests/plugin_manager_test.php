@@ -247,7 +247,6 @@ class core_plugin_manager_testcase extends advanced_testcase {
 
     public function test_plugin_states() {
         global $CFG;
-        $this->resetAfterTest();
 
         // Any standard plugin that is ok.
         $this->assertFileExists("$CFG->dirroot/mod/assign", 'assign module is not present');

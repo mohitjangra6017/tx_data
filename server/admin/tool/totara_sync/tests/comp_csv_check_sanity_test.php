@@ -69,7 +69,6 @@ class tool_totara_sync_comp_csv_check_sanity_testcase extends totara_sync_csv_te
 
         parent::setUp();
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->source = new $this->sourcename();

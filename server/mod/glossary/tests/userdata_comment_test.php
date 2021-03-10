@@ -41,7 +41,6 @@ class mod_glossary_userdata_comment_test extends advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->resetAfterTest(true);
     }
 
     /**

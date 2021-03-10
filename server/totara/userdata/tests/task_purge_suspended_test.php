@@ -33,7 +33,6 @@ use totara_userdata\local\util;
 class totara_userdata_task_purge_suspended_testcase extends advanced_testcase {
     public function test_adhoc() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 

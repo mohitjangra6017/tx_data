@@ -48,7 +48,6 @@ class mod_facetoface_rendering_signup_testcase extends advanced_testcase {
         $PAGE->set_url("/");
 
         $this->setAdminUser();
-        $this->resetAfterTest();
 
         $gen = $this->getDataGenerator();
 

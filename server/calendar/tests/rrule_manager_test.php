@@ -54,7 +54,6 @@ class core_calendar_rrule_manager_testcase extends advanced_testcase {
      */
     protected function setUp(): void {
         global $DB;
-        $this->resetAfterTest();
 
         // Set our timezone based on the timezone in the RFC's samples (US/Eastern).
         $tz = 'US/Eastern';

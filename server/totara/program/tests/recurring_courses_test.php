@@ -52,7 +52,6 @@ class totara_program_recurring_courses_testcase extends reportcache_advanced_tes
     }
 
     public function test_copy_recurring_courses_task() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $generator = $this->getDataGenerator();

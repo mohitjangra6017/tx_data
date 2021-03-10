@@ -52,7 +52,6 @@ class core_scheduled_task_testcase extends advanced_testcase {
 
     public function test_get_next_scheduled_time() {
         global $CFG;
-        $this->resetAfterTest();
 
         $this->setTimezone('Europe/London');
 
@@ -125,7 +124,6 @@ class core_scheduled_task_testcase extends advanced_testcase {
         global $CFG, $USER;
 
         // The timezones used in this test are chosen because they do not use DST - that would break the test.
-        $this->resetAfterTest();
 
         $this->setTimezone('Asia/Kathmandu', 'Asia/Kathmandu');
 
@@ -147,7 +145,6 @@ class core_scheduled_task_testcase extends advanced_testcase {
     public function test_reset_scheduled_tasks_for_component() {
         global $DB;
 
-        $this->resetAfterTest(true);
         // Remember the defaults.
         $defaulttasks = \core\task\manager::load_scheduled_tasks_for_component('moodle');
         $initcount = count($defaulttasks);
@@ -218,7 +215,6 @@ class core_scheduled_task_testcase extends advanced_testcase {
      */
     public function test_reset_scheduled_tasks_for_component_delete() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $count = $DB->count_records('task_scheduled', array('component' => 'moodle'));
         $allcount = $DB->count_records('task_scheduled');
@@ -257,7 +253,6 @@ class core_scheduled_task_testcase extends advanced_testcase {
     public function test_get_next_scheduled_task() {
         global $DB;
 
-        $this->resetAfterTest(true);
         // Delete all existing scheduled tasks.
         $DB->delete_records('task_scheduled');
         // Add a scheduled task.
@@ -342,7 +337,6 @@ class core_scheduled_task_testcase extends advanced_testcase {
     public function test_get_broken_scheduled_task() {
         global $DB;
 
-        $this->resetAfterTest(true);
         // Delete all existing scheduled tasks.
         $DB->delete_records('task_scheduled');
         // Add a scheduled task.

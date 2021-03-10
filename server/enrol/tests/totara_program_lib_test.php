@@ -41,7 +41,6 @@ class enrol_totara_program_lib_testcase extends advanced_testcase {
     public function test_process_program_reassignments() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Enable the program enrolment plugin.
         $enabled = enrol_get_plugins(true);

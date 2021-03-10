@@ -115,7 +115,6 @@ class tool_sitepolicy_sitepolicy_generator_test extends \advanced_testcase {
     public function test_sitepolicy_generator($debugkey, $status, $options) {
         global $DB;
 
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         switch ($status) {
@@ -321,7 +320,6 @@ class tool_sitepolicy_sitepolicy_generator_test extends \advanced_testcase {
     public function test_create_multiversion_policy_generator($debugkey, $options) {
         global $DB;
 
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
         $sitepolicy = $generator->create_multiversion_policy($options);

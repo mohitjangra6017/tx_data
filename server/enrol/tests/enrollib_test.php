@@ -39,7 +39,6 @@ class core_enrollib_testcase extends advanced_testcase {
     public function test_enrol_get_all_users_courses() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         $studentrole = $DB->get_record('role', array('shortname'=>'student'));
         $this->assertNotEmpty($studentrole);
@@ -161,7 +160,6 @@ class core_enrollib_testcase extends advanced_testcase {
     public function test_enrol_user_sees_own_courses() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         $studentrole = $DB->get_record('role', array('shortname'=>'student'));
         $this->assertNotEmpty($studentrole);
@@ -258,7 +256,6 @@ class core_enrollib_testcase extends advanced_testcase {
     }
 
     public function test_enrol_get_shared_courses() {
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -291,7 +288,6 @@ class core_enrollib_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot . '/enrol/self/externallib.php');
 
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -348,7 +344,6 @@ class core_enrollib_testcase extends advanced_testcase {
     public function test_user_enrolment_created_event() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $studentrole = $DB->get_record('role', array('shortname'=>'student'));
         $this->assertNotEmpty($studentrole);
@@ -389,7 +384,6 @@ class core_enrollib_testcase extends advanced_testcase {
     public function test_user_enrolment_deleted_event() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $manualplugin = enrol_get_plugin('manual');
         $user = $this->getDataGenerator()->create_user();
@@ -431,7 +425,6 @@ class core_enrollib_testcase extends advanced_testcase {
     public function test_instance_events() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $selfplugin = enrol_get_plugin('self');
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
@@ -491,7 +484,6 @@ class core_enrollib_testcase extends advanced_testcase {
     public function test_core_enrol_get_all_user_enrolments_in_course() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
 
@@ -600,7 +592,6 @@ class core_enrollib_testcase extends advanced_testcase {
     public function test_enrollment_update_timemodified() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $datagen = $this->getDataGenerator();
 
         /** @var enrol_manual_plugin $manualplugin */
@@ -662,7 +653,6 @@ class core_enrollib_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user->id, $course1->id);
         $this->getDataGenerator()->enrol_user($user->id, $course2->id);
         $this->getDataGenerator()->enrol_user($user->id, $course3->id);
-        $this->resetAfterTest(true);
         $this->setUser($user);
 
         // By default this function should return all of the courses the user

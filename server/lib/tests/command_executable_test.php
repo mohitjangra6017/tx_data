@@ -48,7 +48,6 @@ class core_command_executable_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
         global $CFG;
 
         if (isset($CFG->pcntl_phpclipath)) {

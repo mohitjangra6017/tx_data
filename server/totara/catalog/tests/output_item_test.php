@@ -356,7 +356,6 @@ class totara_catalog_output_item_testcase extends advanced_testcase {
      * @param string $provider
      */
     public function test_create(array $config_changes, array $override_expected, array $expected_removed, string $provider) {
-        $this->resetAfterTest();
         config::instance()->update($config_changes);
 
         $item_data = $this->get_example_item_data($provider);
@@ -544,7 +543,6 @@ class totara_catalog_output_item_testcase extends advanced_testcase {
      * @param string $provider_name
      */
     public function test_get_required_dataholders(array $config_changes, array $expected, string $provider_name) {
-        $this->resetAfterTest();
         config::instance()->update($config_changes);
 
         $provider_handler = provider_handler::instance();

@@ -223,7 +223,6 @@ class core_ldaplib_testcase extends advanced_testcase {
      *
      */
     public function test_ldap_get_entries_moodle() {
-        $this->resetAfterTest();
 
         if (!defined('TEST_LDAPLIB_HOST_URL') or !defined('TEST_LDAPLIB_BIND_DN') or
                 !defined('TEST_LDAPLIB_BIND_PW') or !defined('TEST_LDAPLIB_DOMAIN')) {

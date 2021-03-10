@@ -222,7 +222,6 @@ class core_filelib_testcase extends advanced_testcase {
      * Test a curl basic request with security enabled.
      */
     public function test_curl_basics_with_security_helper() {
-        $this->resetAfterTest();
 
         // Test a request with a basic hostname filter applied.
         $testhtml = $this->getExternalTestFileUrl('/test.html');
@@ -538,7 +537,6 @@ class core_filelib_testcase extends advanced_testcase {
     }
 
     public function test_curl_file() {
-        $this->resetAfterTest();
         $testurl = $this->getExternalTestFileUrl('/test_file.php');
 
         $fs = get_file_storage();
@@ -636,7 +634,6 @@ class core_filelib_testcase extends advanced_testcase {
     public function test_prepare_draft_area() {
         global $USER, $DB;
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
@@ -747,7 +744,6 @@ class core_filelib_testcase extends advanced_testcase {
     public function test_delete_original_file_from_draft() {
         global $USER, $DB;
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
@@ -913,7 +909,6 @@ EOF;
      * Tests the get_mimetype_description function.
      */
     public function test_get_mimetype_description() {
-        $this->resetAfterTest();
 
         // Test example type (.doc).
         $this->assertEquals(get_string('application/msword', 'mimetypes'),
@@ -1098,7 +1093,6 @@ EOF;
     public function test_file_merge_files_from_draft_area_into_filearea() {
         global $USER, $CFG;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $fs = get_file_storage();
         $usercontext = context_user::instance($USER->id);
@@ -1203,7 +1197,6 @@ EOF;
     public function test_file_merge_files_from_draft_area_into_filearea_max_area_bytes() {
         global $USER;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $fs = get_file_storage();
 
@@ -1226,7 +1219,6 @@ EOF;
     public function test_file_merge_files_from_draft_area_into_filearea_max_file_bytes() {
         global $USER;
 
-        $this->resetAfterTest(true);
         // The admin has no restriction for max file uploads, so use a normal user.
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -1254,7 +1246,6 @@ EOF;
     public function test_file_merge_files_from_draft_area_into_filearea_max_files() {
         global $USER;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $fs = get_file_storage();
 

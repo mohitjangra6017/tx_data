@@ -26,7 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 class tool_task_events_testcase extends advanced_testcase {
 
     public function setUp(): void {
-        $this->resetAfterTest();
         $this->setAdminUser();
     }
 

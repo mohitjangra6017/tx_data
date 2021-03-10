@@ -30,7 +30,6 @@ require_once($CFG->dirroot.'/totara/appraisal/tests/appraisal_testcase.php');
 class totara_appraisal_appraisal_testcase extends appraisal_testcase {
 
     public function test_set_status() {
-        $this->resetAfterTest();
         $appraisal = new appraisal();
 
         $this->expectException('appraisal_exception');
@@ -38,7 +37,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     }
 
     public function test_set_status2() {
-        $this->resetAfterTest();
         $appraisal = new appraisal();
 
         $appraisal->set_status($appraisal::STATUS_ACTIVE);
@@ -46,7 +44,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     }
 
     public function test_set_status3() {
-        $this->resetAfterTest();
         $appraisal = new appraisal();
 
         $this->expectException('appraisal_exception');
@@ -54,7 +51,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     }
 
     public function test_appraisal_create() {
-        $this->resetAfterTest();
         $appraisal = new appraisal();
         $data = new stdClass();
         $data->name = 'Appraisal 1';
@@ -71,7 +67,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     }
 
     public function test_appraisal_edit() {
-        $this->resetAfterTest();
         $def = array('name' => 'Appraisal', 'description' => 'Description');
         $appraisal = appraisal::build($def);
 
@@ -89,7 +84,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     }
 
     public function test_appraisal_delete() {
-        $this->resetAfterTest();
         $wasappraisals = appraisal::fetch_all();
         $def1 = array('name' => 'Appraisal1');
         $def2 = array('name' => 'Appraisal2');
@@ -103,7 +97,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     }
 
     public function test_appraisal_duplicate() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $def = array('name' => 'Appraisal', 'description' => 'Description');
         $appraisal1 = appraisal::build($def);
@@ -120,7 +113,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
 
     public function test_appraisal_activate() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         list($appraisal1) = $this->prepare_appraisal_with_users();
@@ -147,7 +139,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     }
 
     public function test_appraisal_validate_wrong_status() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         list($appraisal) = $this->prepare_appraisal_with_users();
@@ -164,7 +155,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     }
 
     public function test_appraisal_validate_no_roles() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $def = array('name' => 'Appraisal', 'stages' => array(
             array('name' => 'Stage', 'timedue' => time() + 86400, 'pages' => array(
@@ -179,7 +169,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     }
 
     public function test_appraisal_answers() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         list($appraisal, $users) = $this->prepare_appraisal_with_users();
         $appraisal->validate();
@@ -201,7 +190,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     }
 
     public function test_appraisal_complete_user() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         list($appraisal, $users) = $this->prepare_appraisal_with_users();
         $appraisal->validate();
@@ -224,7 +212,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     }
 
     public function test_appraisal_complete() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         list($appraisal, $users) = $this->prepare_appraisal_with_users();
         $appraisal->validate();
@@ -252,7 +239,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     }
 
     public function test_appraisal_role_involved() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $def = array('name' => 'Appraisal', 'stages' => array(
@@ -288,7 +274,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     }
 
     public function test_appraisal_get_user_appraisal() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         list($appraisal1, $users1) = $this->prepare_appraisal_with_users();
         list($appraisal2) = $this->prepare_appraisal_with_users(array(), $users1);
@@ -565,7 +550,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
         global $DB;
 
         // Set up active appraisal.
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         /** @var appraisal $appraisal */
@@ -655,7 +639,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     public function test_auto_link_job_assignment_on_activate() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -719,7 +702,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     public function test_auto_link_job_assignment_on_dynamic_assignment() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -801,7 +783,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
         // Make sure allowmultiplejobs is ON, so no auto-linking of job assignments should happen to begin with.
         set_config('totara_job_allowmultiplejobs', 1);
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -918,7 +899,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
         global $DB;
 
         // Set up active appraisal.
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         list($appraisal) = $this->prepare_appraisal_with_users();
@@ -995,7 +975,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     public function test_activation_with_missing_roles() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Set up.
@@ -1065,7 +1044,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     public function test_active_appraisal_role_removal() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Set up appraisal.
@@ -1240,7 +1218,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     public function test_active_appraisal_role_reassignment() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Set up appraisal.
@@ -1405,7 +1382,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     public function test_active_appraisal_user_deletion() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Set up appraisal.
@@ -1554,7 +1530,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     public function test_single_stage_all_role_removal_after_learner_completion() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Set up appraisal.
@@ -1662,7 +1637,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     public function test_single_stage_some_role_removal_after_learner_completion() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Set up appraisal.
@@ -1781,7 +1755,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     public function test_multi_stage_all_role_removal_after_learner_completion() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Set up appraisal.
@@ -1901,7 +1874,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     public function test_multi_stage_some_role_removal_after_learner_completion() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Set up appraisal.
@@ -2022,7 +1994,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
 
     public function test_cleanup_task() {
         global $DB;
-        $this->resetAfterTest();
 
         // Create appraisal and activate it.
         list($appraisal, $users) = $this->prepare_appraisal_with_users();
@@ -2170,7 +2141,6 @@ class totara_appraisal_appraisal_testcase extends appraisal_testcase {
     public function test_missing_role_assignments() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Set up appraisal.

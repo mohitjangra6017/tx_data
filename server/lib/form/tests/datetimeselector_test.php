@@ -60,7 +60,6 @@ class core_form_datetimeselector_testcase extends advanced_testcase {
         global $CFG;
         parent::setUp();
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $this->setTimezone('Australia/Perth');

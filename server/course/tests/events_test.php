@@ -39,7 +39,6 @@ class core_course_events_testcase extends advanced_testcase {
     protected function setUp(): void {
         global $CFG;
         require_once($CFG->dirroot . '/course/lib.php');
-        $this->resetAfterTest();
     }
 
     /**

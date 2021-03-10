@@ -46,7 +46,6 @@ class assignsubmission_onlinetext_locallib_testcase extends advanced_testcase {
      * @param bool $expected The expected return value
      */
     public function test_submission_is_empty($submissiontext, $expected) {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -73,7 +72,6 @@ class assignsubmission_onlinetext_locallib_testcase extends advanced_testcase {
      * @param bool $expected The expected return value
      */
     public function test_new_submission_empty($submissiontext, $expected) {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');

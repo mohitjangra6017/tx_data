@@ -27,7 +27,6 @@ class repository_opensesame_events_testcase extends advanced_testcase {
     public function test_events() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $pkg = array('zipfilename' => 'abc.zip', 'title' => 'abc',
             'expirationdate' => '',  'mobilecompatibility' => '', 'externalid' => 'xyz', 'description' => 'efg', 'duration' => '',

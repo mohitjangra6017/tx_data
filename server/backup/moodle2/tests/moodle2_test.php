@@ -45,7 +45,6 @@ class core_backup_moodle2_testcase extends advanced_testcase {
     public function test_backup_availability() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $CFG->enableavailability = true;
         $CFG->enablecompletion = true;
@@ -120,7 +119,6 @@ class core_backup_moodle2_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/grade/querylib.php');
         require_once($CFG->libdir . '/completionlib.php');
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $CFG->enableavailability = true;
         $CFG->enablecompletion = true;
@@ -266,7 +264,6 @@ class core_backup_moodle2_testcase extends advanced_testcase {
     public function test_duplicate_availability() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $CFG->enableavailability = true;
         $CFG->enablecompletion = true;
@@ -333,7 +330,6 @@ class core_backup_moodle2_testcase extends advanced_testcase {
     public function test_restore_dates() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $CFG->enableavailability = true;
 
@@ -391,7 +387,6 @@ class core_backup_moodle2_testcase extends advanced_testcase {
     public function test_restore_frontpage() {
         global $DB, $CFG, $USER;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
 
@@ -561,7 +556,6 @@ class core_backup_moodle2_testcase extends advanced_testcase {
      */
     protected function prepare_for_enrolments_test($target, $additionalcaps = []) {
         global $CFG, $DB;
-        $this->resetAfterTest(true);
 
         // Turn off file logging, otherwise it can't delete the file (Windows).
         $CFG->backup_file_logger_level = backup::LOG_NONE;
@@ -813,7 +807,6 @@ class core_backup_moodle2_testcase extends advanced_testcase {
      */
     public function test_block_instance_times_backup() {
         global $DB;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
@@ -875,7 +868,6 @@ class core_backup_moodle2_testcase extends advanced_testcase {
     public function test_restore_search_index_requests() {
         global $DB, $CFG, $USER;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $CFG->enableglobalsearch = true;
 

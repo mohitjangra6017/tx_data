@@ -252,7 +252,6 @@ class core_enrol_externallib_testcase extends externallib_advanced_testcase {
 
         global $USER;
 
-        $this->resetAfterTest();
 
         // Create the course and the users.
         $course = $this->getDataGenerator()->create_course(array('groupmode' => $settings['coursegroupmode']));
@@ -361,7 +360,6 @@ class core_enrol_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_users_courses() {
         global $USER;
 
-        $this->resetAfterTest(true);
 
         $timenow = time();
         $coursedata1 = array(
@@ -431,7 +429,6 @@ class core_enrol_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_course_enrolment_methods() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Get enrolment plugins.
         $selfplugin = enrol_get_plugin('self');
@@ -508,7 +505,6 @@ class core_enrol_externallib_testcase extends externallib_advanced_testcase {
     public function get_enrolled_users_setup($capability) {
         global $USER;
 
-        $this->resetAfterTest(true);
 
         $return = new stdClass();
 
@@ -593,7 +589,6 @@ class core_enrol_externallib_testcase extends externallib_advanced_testcase {
     public function get_enrolled_users_with_capability_setup($capability) {
         global $USER, $DB;
 
-        $this->resetAfterTest(true);
 
         $return = new stdClass();
 

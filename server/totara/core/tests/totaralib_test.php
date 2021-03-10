@@ -57,7 +57,6 @@ class totara_core_totaralib_testcase extends advanced_testcase {
     }
 
     public function test_totara_create_icon_picker() {
-        $this->resetAfterTest();
 
         // Test with js.
         $mform = new MoodleQuickForm('mform', 'post', '');
@@ -96,7 +95,6 @@ class totara_core_totaralib_testcase extends advanced_testcase {
     }
 
     public function test_totara_get_sender_from_user_by_id(){
-        $this->resetAfterTest();
 
         $this->assertEquals('admin', totara_get_sender_from_user_by_id(core_user::SUPPORT_USER)->username);
         $this->assertEquals('admin', totara_get_sender_from_user_by_id(0)->username);
@@ -128,7 +126,6 @@ class totara_core_totaralib_testcase extends advanced_testcase {
      * that would not necessarily be a bad thing and the test could be updated.
      */
     public function test_totara_core_update_module_completion_data_manual_completion() {
-        $this->resetAfterTest(true);
         global $DB;
 
         set_config('enablecompletion', '1');
@@ -203,7 +200,6 @@ class totara_core_totaralib_testcase extends advanced_testcase {
      * Reaggregation of activity completion is done via totara_core_reaggregate_course_modules_completion().
      */
     public function test_totara_core_update_module_completion_data_viewed_completion() {
-        $this->resetAfterTest(true);
         global $DB;
 
         set_config('enablecompletion', '1');
@@ -282,7 +278,6 @@ class totara_core_totaralib_testcase extends advanced_testcase {
      * If completion is not enabled, data should not be deleted either.
      */
     public function test_totara_core_update_module_completion_data_unlock_delete_only() {
-        $this->resetAfterTest(true);
         global $DB;
 
         set_config('enablecompletion', '1');
@@ -365,7 +360,6 @@ class totara_core_totaralib_testcase extends advanced_testcase {
      * more specifically.
      */
     public function test_totara_reaggregate_course_modules_completion() {
-        $this->resetAfterTest(true);
         global $DB;
 
         set_config('enablecompletion', '1');
@@ -509,7 +503,6 @@ class totara_core_totaralib_testcase extends advanced_testcase {
     }
 
     public function test_totara_uncomplete_course_modules_completion() {
-        $this->resetAfterTest(true);
         global $DB;
 
         // We'll use this time in the past to determine whether things like timemodified were updated.

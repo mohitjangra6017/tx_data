@@ -46,7 +46,6 @@ class totara_core_observer_testcase extends advanced_testcase {
 
     protected function setUp(): void {
         parent::setup();
-        $this->resetAfterTest();
 
         set_config('enablecompletion', '1');
 
@@ -55,7 +54,6 @@ class totara_core_observer_testcase extends advanced_testcase {
     }
 
     public function test_course_criteria_review() {
-        $this->resetAfterTest(true);
 
         $course1 = $this->generator->create_course(array('enablecompletion' => 1));
         $course2 = $this->generator->create_course(array('enablecompletion' => 1));

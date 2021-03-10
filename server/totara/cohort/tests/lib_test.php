@@ -53,7 +53,6 @@ class totara_cohort_lib_testcase extends advanced_testcase {
         global $DB;
 
         parent::setUp();
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $generator = $this->getDataGenerator();
         $cohortgen = \totara_cohort\testing\generator::instance();

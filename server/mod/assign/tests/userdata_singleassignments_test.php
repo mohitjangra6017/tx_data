@@ -456,7 +456,6 @@ class mod_assign_userdata_singleassignments_testcase extends advanced_testcase {
     public function test_system_context_hidden_module() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $noofcourses = 3;
         $assignmentspercourse = 2;
@@ -488,7 +487,6 @@ class mod_assign_userdata_singleassignments_testcase extends advanced_testcase {
      * Test operations in the category context.
      */
     public function test_category_context() {
-        $this->resetAfterTest();
 
         $noofcourses = 3;
         $assignmentspercourse = 1;
@@ -516,7 +514,6 @@ class mod_assign_userdata_singleassignments_testcase extends advanced_testcase {
      * Test operations in the course context.
      */
     public function test_course_context() {
-        $this->resetAfterTest();
 
         $noofcourses = 3;
         $assignmentspercourse = 1;
@@ -544,7 +541,6 @@ class mod_assign_userdata_singleassignments_testcase extends advanced_testcase {
      * Test operations in the module context.
      */
     public function test_module_context() {
-        $this->resetAfterTest();
 
         $noofcourses = 1;
         $assignmentspercourse = 3;

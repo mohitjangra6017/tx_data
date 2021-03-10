@@ -39,7 +39,6 @@ require_once($CFG->dirroot.'/mod/book/tool/importhtml/locallib.php');
 class booktool_importhtml_locallib_testcase extends advanced_testcase {
 
     public function setUp(): void {
-        $this->resetAfterTest();
     }
 
     public function test_import_chapters_events() {

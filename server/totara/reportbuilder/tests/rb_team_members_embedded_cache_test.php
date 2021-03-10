@@ -107,7 +107,6 @@ class totara_reportbuilder_rb_team_members_embedded_cache_testcase extends repor
      * - Users1 has two members in team
      */
     public function test_team_members() {
-        $this->resetAfterTest();
         $usecache = false; // No content caching if content options present.
 
         $useridalias = reportbuilder_get_extrafield_alias('user', 'namewithlinks', 'email');
@@ -139,7 +138,6 @@ class totara_reportbuilder_rb_team_members_embedded_cache_testcase extends repor
     }
 
     public function test_is_capable() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Set up report and embedded object for is_capable checks.

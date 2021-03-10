@@ -33,7 +33,6 @@ class totara_gap_aspirational_test extends advanced_testcase {
      */
     public function test_totara_gap_can_edit_aspirational_position() {
         global $DB;
-        $this->resetAfterTest();
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
         $teacher = $this->getDataGenerator()->create_user();
@@ -76,7 +75,6 @@ class totara_gap_aspirational_test extends advanced_testcase {
      */
     public function test_totara_gap_get_aspirational_position() {
         global $DB;
-        $this->resetAfterTest();
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $fw = $hierarchy_generator->create_pos_frame(array());
 
@@ -104,7 +102,6 @@ class totara_gap_aspirational_test extends advanced_testcase {
      * Test aspirational position assignment in profile
      */
     public function test_totara_gap_assign_aspirational_position() {
-        $this->resetAfterTest();
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $fw = $hierarchy_generator->create_pos_frame(array());
 

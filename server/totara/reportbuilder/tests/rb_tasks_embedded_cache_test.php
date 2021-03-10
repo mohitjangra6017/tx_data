@@ -68,7 +68,6 @@ class totara_reportbuilder_rb_tasks_embedded_cache_testcase extends reportcache_
 
         $this->setAdminUser();
         parent::setup();
-        $this->resetAfterTest(true);
         $this->cleanup();
 
         // Common parts of test cases:
@@ -161,7 +160,6 @@ class totara_reportbuilder_rb_tasks_embedded_cache_testcase extends reportcache_
      * @dataProvider provider_use_cache
      */
     public function test_tasks($usecache) {
-        $this->resetAfterTest(true);
         if ($usecache) {
             $this->enable_caching($this->report_builder_data['id']);
         }
@@ -196,7 +194,6 @@ class totara_reportbuilder_rb_tasks_embedded_cache_testcase extends reportcache_
      * @dataProvider provider_use_cache
      */
     public function test_filters($usecache) {
-        $this->resetAfterTest(true);
         $this->loadDataSet($this->createArrayDataSet(array('report_builder_filters' => $this->report_builder_filters_data)));
 
         if ($usecache) {
@@ -209,7 +206,6 @@ class totara_reportbuilder_rb_tasks_embedded_cache_testcase extends reportcache_
     }
 
     public function test_is_capable() {
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $shortname = $this->report_builder_data['shortname'];

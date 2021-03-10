@@ -27,7 +27,6 @@ class totara_core_event_bulk_enrolments_ended_testcase extends advanced_testcase
     public function test_event() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $instance = $DB->get_record('enrol', array('courseid' => $course->id, 'enrol' =>'manual'), '*', MUST_EXIST);

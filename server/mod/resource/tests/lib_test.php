@@ -55,7 +55,6 @@ class mod_resource_lib_testcase extends advanced_testcase {
         global $CFG;
 
         $CFG->enablecompletion = 1;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.
@@ -98,7 +97,6 @@ class mod_resource_lib_testcase extends advanced_testcase {
     public function test_get_coursemodule_info() {
         global $DB, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create course.

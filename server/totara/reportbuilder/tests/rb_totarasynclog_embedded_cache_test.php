@@ -113,7 +113,6 @@ class totara_reportbuilder_rb_totarasynclog_embedded_cache_testcase extends repo
      * @dataProvider provider_use_cache
      */
     public function test_synclog($usecache) {
-        $this->resetAfterTest();
         if ($usecache) {
             $this->enable_caching($this->report_builder_data['id']);
         }
@@ -137,7 +136,6 @@ class totara_reportbuilder_rb_totarasynclog_embedded_cache_testcase extends repo
 
     public function test_is_capable() {
         global $DB;
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $syscontext = context_system::instance();

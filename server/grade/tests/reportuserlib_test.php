@@ -45,7 +45,6 @@ class core_grade_reportuserlib_testcase extends advanced_testcase {
         global $CFG, $USER, $DB;
 
         parent::setUp();
-        $this->resetAfterTest(true);
 
         $CFG->enableavailability = 1;
         $CFG->enablecompletion = 1;

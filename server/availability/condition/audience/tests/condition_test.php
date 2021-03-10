@@ -36,7 +36,6 @@ class availability_audience_condition_testcase extends advanced_testcase {
         global $CFG;
         require_once($CFG->dirroot . '/mod/assign/locallib.php');
 
-        $this->resetAfterTest();
         $CFG->enableavailability = true;
 
         $cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');

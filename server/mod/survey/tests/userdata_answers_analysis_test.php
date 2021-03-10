@@ -91,7 +91,6 @@ class mod_survey_userdata_answers_analysis_testcase extends externallib_advanced
         $data->targetuser2 = new target_user($data->learner2);
         $data->targetuser3 = new target_user($data->learner3);
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         return $data;

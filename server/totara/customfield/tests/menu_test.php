@@ -30,7 +30,6 @@ require_once($CFG->dirroot . '/totara/customfield/field/menu/field.class.php');
 
 class totara_customfield_menu_test extends advanced_testcase {
     public function test_save_load_data() {
-        $this->resetAfterTest(true);
 
         $prefix = 'course';
         $tableprefix = 'course';

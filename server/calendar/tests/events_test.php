@@ -67,7 +67,6 @@ class core_calendar_events_testcase extends advanced_testcase {
      */
     public function test_calendar_event_created() {
 
-        $this->resetAfterTest();
 
         // Catch the events.
         $sink = $this->redirectEvents();
@@ -116,7 +115,6 @@ class core_calendar_events_testcase extends advanced_testcase {
      * Tests for event validations related to calendar_event_created event.
      */
     public function test_calendar_event_created_validations() {
-        $this->resetAfterTest();
         $context = context_user::instance($this->user->id);
 
         // Test not setting other['repeatid'].
@@ -173,7 +171,6 @@ class core_calendar_events_testcase extends advanced_testcase {
      */
     public function test_calendar_event_updated() {
 
-        $this->resetAfterTest();
 
         // Create a calendar event.
         $record = new stdClass();
@@ -229,7 +226,6 @@ class core_calendar_events_testcase extends advanced_testcase {
      * Tests for event validations related to calendar_event_created event.
      */
     public function test_calendar_event_updated_validations() {
-        $this->resetAfterTest();
         $context = context_user::instance($this->user->id);
 
         // Test not setting other['repeatid'].
@@ -287,7 +283,6 @@ class core_calendar_events_testcase extends advanced_testcase {
     public function test_calendar_event_deleted() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create a calendar event.
         $record = new stdClass();
@@ -341,7 +336,6 @@ class core_calendar_events_testcase extends advanced_testcase {
      * Tests for event validations related to calendar_event_deleted event.
      */
     public function test_calendar_event_deleted_validations() {
-        $this->resetAfterTest();
         $context = context_user::instance($this->user->id);
 
         // Test not setting other['repeatid'].
@@ -399,7 +393,6 @@ class core_calendar_events_testcase extends advanced_testcase {
     public function test_calendar_subscription_created() {
         global $CFG;
         require_once($CFG->dirroot . '/calendar/lib.php');
-        $this->resetAfterTest(true);
 
         // Create a mock subscription.
         $subscription = new stdClass();
@@ -429,7 +422,6 @@ class core_calendar_events_testcase extends advanced_testcase {
     public function test_calendar_subscription_updated() {
         global $CFG;
         require_once($CFG->dirroot . '/calendar/lib.php');
-        $this->resetAfterTest(true);
 
         // Create a mock subscription.
         $subscription = new stdClass();
@@ -461,7 +453,6 @@ class core_calendar_events_testcase extends advanced_testcase {
     public function test_calendar_subscription_deleted() {
         global $CFG;
         require_once($CFG->dirroot . '/calendar/lib.php');
-        $this->resetAfterTest(true);
 
         // Create a mock subscription.
         $subscription = new stdClass();

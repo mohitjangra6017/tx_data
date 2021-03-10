@@ -47,7 +47,6 @@ class tool_totara_sync_user_csv_forcepasswordchange_testcase extends advanced_te
 
         parent::setup();
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $this->filedir = $CFG->dataroot . '/totara_sync';
@@ -168,7 +167,6 @@ class tool_totara_sync_user_csv_forcepasswordchange_testcase extends advanced_te
     public function test_sync_users_forcepasswordchange() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $config = array_merge($this->config, array('allow_update' => '1'));
         foreach ($config as $k => $v) {

@@ -129,7 +129,6 @@ class mod_facetoface_manage_reserve_testcase extends \advanced_testcase {
      * Check that facetoface_get_users_by_status returns correct results when include reserve is used.
      */
     public function test_facetoface_get_users_by_status_include_reserve() {
-        $this->resetAfterTest(true);
 
         $user1 = $this->getDataGenerator()->create_user();
         $manager = $this->getDataGenerator()->create_user();

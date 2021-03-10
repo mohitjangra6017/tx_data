@@ -54,7 +54,6 @@ class core_badges_badgeslib_testcase extends advanced_testcase {
 
     protected function setUp(): void {
         global $DB, $CFG;
-        $this->resetAfterTest(true);
         $CFG->enablecompletion = true;
 
         /** @var \core_badges\testing\generator $generator */

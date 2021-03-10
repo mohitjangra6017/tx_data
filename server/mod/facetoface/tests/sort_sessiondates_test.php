@@ -52,7 +52,6 @@ class mod_facetoface_sort_sessiondates_testcase extends advanced_testcase {
      * @return void
      */
     public function test_sort_sessiondates_with_associated_keys(): void {
-        $this->resetAfterTest(true);
         static::setAdminUser();
 
         $event = $this->create_seminar_event();

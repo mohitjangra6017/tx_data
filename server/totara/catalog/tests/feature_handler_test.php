@@ -44,7 +44,6 @@ class totara_catalog_feature_handler_testcase extends advanced_testcase {
      */
     public function test_get_all_features() {
         global $CFG;
-        $this->resetAfterTest();
 
         $features = feature_handler::instance()->get_all_features();
         $this->assertGreaterThanOrEqual(4, count($features));
@@ -95,7 +94,6 @@ class totara_catalog_feature_handler_testcase extends advanced_testcase {
      * Test get_current_feature() method.
      */
     public function test_get_current_feature() {
-        $this->resetAfterTest();
 
         // Default should be null (no active current feature).
         $current_feature = feature_handler::instance()->get_current_feature();

@@ -59,7 +59,6 @@ class tool_uploadcourse_helper_testcase extends advanced_testcase {
     }
 
     public function test_get_enrolment_data() {
-        $this->resetAfterTest(true);
         $data = array(
             'enrolment_1' => 'unknown',
             'enrolment_1_foo' => '1',
@@ -105,7 +104,6 @@ class tool_uploadcourse_helper_testcase extends advanced_testcase {
     }
 
     public function test_get_enrolment_plugins() {
-        $this->resetAfterTest(true);
         $actual = tool_uploadcourse_helper::get_enrolment_plugins();
         $this->assertSame(array_keys(enrol_get_plugins(false)), array_keys($actual));
         // This should be identical as cached.
@@ -118,7 +116,6 @@ class tool_uploadcourse_helper_testcase extends advanced_testcase {
         // Totara: missing dependencies
         require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $c1 = $this->getDataGenerator()->create_course();
@@ -224,7 +221,6 @@ class tool_uploadcourse_helper_testcase extends advanced_testcase {
     }
 
     public function test_get_role_names() {
-        $this->resetAfterTest(true);
 
         create_role('Villain', 'villain', 'The bad guys');
         $data = array(
@@ -254,7 +250,6 @@ class tool_uploadcourse_helper_testcase extends advanced_testcase {
     }
 
     public function test_increment_idnumber() {
-        $this->resetAfterTest(true);
 
         $c1 = $this->getDataGenerator()->create_course(array('idnumber' => 'C1'));
         $c2 = $this->getDataGenerator()->create_course(array('idnumber' => 'C2'));
@@ -266,7 +261,6 @@ class tool_uploadcourse_helper_testcase extends advanced_testcase {
     }
 
     public function test_increment_shortname() {
-        $this->resetAfterTest(true);
 
         $c1 = $this->getDataGenerator()->create_course(array('shortname' => 'C1'));
         $c2 = $this->getDataGenerator()->create_course(array('shortname' => 'C2'));
@@ -279,7 +273,6 @@ class tool_uploadcourse_helper_testcase extends advanced_testcase {
     }
 
     public function test_resolve_category() {
-        $this->resetAfterTest(true);
 
         $c1 = $this->getDataGenerator()->create_category(array('name' => 'First level'));
         $c2 = $this->getDataGenerator()->create_category(array('name' => 'Second level', 'parent' => $c1->id));
@@ -313,7 +306,6 @@ class tool_uploadcourse_helper_testcase extends advanced_testcase {
     }
 
     public function test_resolve_category_by_idnumber() {
-        $this->resetAfterTest(true);
 
         $c1 = $this->getDataGenerator()->create_category(array('idnumber' => 'C1'));
         $c2 = $this->getDataGenerator()->create_category(array('idnumber' => 'C2'));
@@ -328,7 +320,6 @@ class tool_uploadcourse_helper_testcase extends advanced_testcase {
     }
 
     public function test_resolve_category_by_path() {
-        $this->resetAfterTest(true);
 
         $cat1 = $this->getDataGenerator()->create_category(array('name' => 'Cat 1'));
         $cat1_1 = $this->getDataGenerator()->create_category(array('name' => 'Cat 1.1', 'parent' => $cat1->id));

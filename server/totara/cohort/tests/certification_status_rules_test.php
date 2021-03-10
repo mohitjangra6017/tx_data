@@ -64,7 +64,6 @@ class totara_cohort_certification_status_rules_testcase extends totara_cohort_ce
 
         parent::setup();
         set_config('enablecompletion', 1);
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->adminuser = $DB->get_record('user', ['username' => 'admin']);

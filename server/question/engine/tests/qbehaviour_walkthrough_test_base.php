@@ -42,7 +42,6 @@ abstract class qbehaviour_walkthrough_test_base extends question_testcase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
 
         $this->displayoptions = new question_display_options();
         $this->quba = question_engine::make_questions_usage_by_activity('unit_test',

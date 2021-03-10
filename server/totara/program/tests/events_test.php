@@ -52,14 +52,12 @@ class totara_program_events_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setup();
-        $this->resetAfterTest(true);
         $this->program_generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $this->program = $this->program_generator->create_program(array('fullname' => 'program1'));
         $this->user = $this->getDataGenerator()->create_user(array('fullname' => 'user1'));
     }
 
     public function test_program_assigned() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $event = \totara_program\event\program_assigned::create(
@@ -79,7 +77,6 @@ class totara_program_events_testcase extends advanced_testcase {
     }
 
     public function test_program_assignmentsupdated() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $assignments = $this->program->get_assignments();
@@ -107,7 +104,6 @@ class totara_program_events_testcase extends advanced_testcase {
     }
 
     public function test_program_completed() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $other = array('certifid' => isset($this->program->certifid) ? $this->program->certifid : 0);
@@ -131,7 +127,6 @@ class totara_program_events_testcase extends advanced_testcase {
     public function test_program_completionstateedited() {
         global $USER;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $other = array(
@@ -157,7 +152,6 @@ class totara_program_events_testcase extends advanced_testcase {
     }
 
     public function test_program_contentupdated() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $programcontent = $this->program->get_content();
@@ -180,7 +174,6 @@ class totara_program_events_testcase extends advanced_testcase {
     }
 
     public function test_program_courseset_completed() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add coursesets for program. I cannot use the add_courseset_to_program as it has become too slow to work with.
@@ -215,7 +208,6 @@ class totara_program_events_testcase extends advanced_testcase {
     }
 
     public function test_program_created() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $other = array('certifid' => 0);
@@ -237,7 +229,6 @@ class totara_program_events_testcase extends advanced_testcase {
     }
 
     public function test_program_deleted() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $other = array('certifid' => empty($this->program->certifid) ? 0 : $this->program->certifid);
@@ -259,7 +250,6 @@ class totara_program_events_testcase extends advanced_testcase {
     }
 
     public function test_program_unassigned() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $event = \totara_program\event\program_unassigned::create(
@@ -279,7 +269,6 @@ class totara_program_events_testcase extends advanced_testcase {
     }
 
     public function test_program_updated() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $other = array('certifid' => empty($this->program->certifid) ? 0 : $this->program->certifid);
@@ -295,7 +284,6 @@ class totara_program_events_testcase extends advanced_testcase {
     }
 
     public function test_program_viewed() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $other = array('section' => 'assignments');
@@ -313,7 +301,6 @@ class totara_program_events_testcase extends advanced_testcase {
 
     public function test_bulk_learner_assignments() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create a cohort and add it as assignment.
@@ -345,7 +332,6 @@ class totara_program_events_testcase extends advanced_testcase {
 
     public function test_bulk_future_assignments() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $cohort = $this->getDataGenerator()->create_cohort();
@@ -368,7 +354,6 @@ class totara_program_events_testcase extends advanced_testcase {
     }
 
     public function test_update_messages() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $event = \totara_program\event\update_messages::create_from_instance($this->program);

@@ -38,7 +38,6 @@ class core_event_user_password_updated_testcase extends advanced_testcase {
      * Test the event.
      */
     public function test_event() {
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $context1 = context_user::instance($user1->id);

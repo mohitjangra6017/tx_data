@@ -101,7 +101,6 @@ class mod_assign_base_testcase extends advanced_testcase {
     protected function setUp(): void {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1));
         $this->teachers = array();

@@ -57,7 +57,6 @@ class totara_program_user_learning_item_testcase extends advanced_testcase {
     public function setUp(): void {
         global $DB;
 
-        $this->resetAfterTest(true);
         parent::setUp();
 
         $this->generator = $this->getDataGenerator();
@@ -679,7 +678,6 @@ class totara_program_user_learning_item_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot . '/totara/program/program_courseset.class.php'); // Needed for the constants.
 
-        $this->resetAfterTest(true);
 
         // Setup program content.
         $progcontent = new prog_content($this->program1->id);
@@ -756,7 +754,6 @@ class totara_program_user_learning_item_testcase extends advanced_testcase {
 
     function test_process_coursesets_2() { // Remove this test case.
         $this->markTestSkipped('TODO temporary while debugging failing tests');
-        $this->resetAfterTest(true);
 
         // Setup program content.
         $progcontent = new prog_content($this->program1->id);
@@ -845,7 +842,6 @@ class totara_program_user_learning_item_testcase extends advanced_testcase {
     }
 
     function test_process_coursesets_3() {
-        $this->resetAfterTest(true);
 
         // Setup program content.
         $progcontent = new prog_content($this->program1->id);
@@ -923,7 +919,6 @@ class totara_program_user_learning_item_testcase extends advanced_testcase {
     function test_process_coursesets_4() {
         $this->markTestSkipped('TODO temporary while debugging failing tests');
 
-        $this->resetAfterTest(true);
 
         // Setup program content.
         $progcontent = new prog_content($this->program1->id);
@@ -1049,7 +1044,6 @@ class totara_program_user_learning_item_testcase extends advanced_testcase {
     }
 
     function test_process_coursesets_5() {
-        $this->resetAfterTest(true);
 
         // Setup program content.
         $progcontent = new prog_content($this->program1->id);
@@ -1137,7 +1131,6 @@ class totara_program_user_learning_item_testcase extends advanced_testcase {
 
     function test_process_coursesets_6() {
         $this->markTestSkipped('TODO temporary while debugging failing tests');
-        $this->resetAfterTest(true);
 
         // Setup program content.
         $progcontent = new prog_content($this->program1->id);
@@ -1221,7 +1214,6 @@ class totara_program_user_learning_item_testcase extends advanced_testcase {
     }
 
     function test_is_single_course_true() {
-        $this->resetAfterTest(true);
 
         // Setup program content.
         $progcontent = new prog_content($this->program1->id);
@@ -1256,7 +1248,6 @@ class totara_program_user_learning_item_testcase extends advanced_testcase {
     }
 
     function test_is_single_course_false() {
-        $this->resetAfterTest(true);
 
         // Setup program content.
         $progcontent = new prog_content($this->program1->id);

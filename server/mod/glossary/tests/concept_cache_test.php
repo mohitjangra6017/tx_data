@@ -37,7 +37,6 @@ class mod_glossary_concept_cache_testcase extends advanced_testcase {
      */
     public function test_concept_fetching() {
         global $CFG, $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $CFG->glossary_linkbydefault = 1;

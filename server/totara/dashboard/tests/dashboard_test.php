@@ -37,7 +37,6 @@ class totara_dashboard_dashboard_testcase extends advanced_testcase {
      */
     public function test_dashboard_create() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $cohorts_gen = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
         $cohorts = array($cohorts_gen->create_cohort()->id, $cohorts_gen->create_cohort()->id, $cohorts_gen->create_cohort()->id);
@@ -71,7 +70,6 @@ class totara_dashboard_dashboard_testcase extends advanced_testcase {
      * Test dashboard update
      */
     public function test_dashboard_edit() {
-        $this->resetAfterTest(true);
 
         $cohorts_gen = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
         $cohorts = array($cohorts_gen->create_cohort()->id, $cohorts_gen->create_cohort()->id, $cohorts_gen->create_cohort()->id);
@@ -113,7 +111,6 @@ class totara_dashboard_dashboard_testcase extends advanced_testcase {
         // Blocklib must be included for this.
         require_once($CFG->libdir . '/blocklib.php');
         // We have to reset as we add dashboards, cohorts and blocks.
-        $this->resetAfterTest();
 
         $cohorts_gen = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
         $cohorts = array($cohorts_gen->create_cohort()->id, $cohorts_gen->create_cohort()->id, $cohorts_gen->create_cohort()->id);
@@ -207,7 +204,6 @@ class totara_dashboard_dashboard_testcase extends advanced_testcase {
      * Check that they all received
      */
     public function test_manage_list() {
-        $this->resetAfterTest(true);
 
         $listbefore = totara_dashboard::get_manage_list();
         $cohorts_gen = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
@@ -240,7 +236,6 @@ class totara_dashboard_dashboard_testcase extends advanced_testcase {
      */
     public function test_user_copy() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $cohorts_gen = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
@@ -270,7 +265,6 @@ class totara_dashboard_dashboard_testcase extends advanced_testcase {
     public function test_get_user_dashboards() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create 3 users.
         $user1 = $this->getDataGenerator()->create_user();
@@ -348,7 +342,6 @@ class totara_dashboard_dashboard_testcase extends advanced_testcase {
      */
     public function test_user_reset() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $cohorts_gen = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
@@ -379,7 +372,6 @@ class totara_dashboard_dashboard_testcase extends advanced_testcase {
      */
     public function test_sorting() {
         global $DB;
-        $this->resetAfterTest(true);
         $DB->delete_records('totara_dashboard');
 
         $dashboard_gen = $this->getDataGenerator()->get_plugin_generator('totara_dashboard');
@@ -431,7 +423,6 @@ class totara_dashboard_dashboard_testcase extends advanced_testcase {
      */
     public function test_delete() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -506,7 +497,6 @@ class totara_dashboard_dashboard_testcase extends advanced_testcase {
      * Test that allowed for all dashboard can be access by users
      */
     public function test_allowed_all() {
-        $this->resetAfterTest(true);
 
         $dashboard = new totara_dashboard();
         $data = array(

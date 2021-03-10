@@ -44,7 +44,6 @@ class assign_events_testcase extends advanced_testcase {
      * Basic tests for the submission_created() abstract class.
      */
     public function test_base_event() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_assign');
@@ -71,7 +70,6 @@ class assign_events_testcase extends advanced_testcase {
      * Basic tests for the submission_created() abstract class.
      */
     public function test_submission_created() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_assign');
@@ -131,7 +129,6 @@ class assign_events_testcase extends advanced_testcase {
      * Basic tests for the submission_updated() abstract class.
      */
     public function test_submission_updated() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_assign');
@@ -188,7 +185,6 @@ class assign_events_testcase extends advanced_testcase {
     }
 
     public function test_extension_granted() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -229,7 +225,6 @@ class assign_events_testcase extends advanced_testcase {
     }
 
     public function test_submission_locked() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -264,7 +259,6 @@ class assign_events_testcase extends advanced_testcase {
     }
 
     public function test_identities_revealed() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -300,7 +294,6 @@ class assign_events_testcase extends advanced_testcase {
      */
     public function test_submission_status_viewed() {
         global $PAGE;
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -335,7 +328,6 @@ class assign_events_testcase extends advanced_testcase {
     }
 
     public function test_submission_status_updated() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -373,7 +365,6 @@ class assign_events_testcase extends advanced_testcase {
     }
 
     public function test_marker_updated() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -410,7 +401,6 @@ class assign_events_testcase extends advanced_testcase {
     }
 
     public function test_workflow_state_updated() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -534,7 +524,6 @@ class assign_events_testcase extends advanced_testcase {
     }
 
     public function test_submission_duplicated() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -572,7 +561,6 @@ class assign_events_testcase extends advanced_testcase {
     }
 
     public function test_submission_unlocked() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -607,7 +595,6 @@ class assign_events_testcase extends advanced_testcase {
     }
 
     public function test_submission_graded() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -748,7 +735,6 @@ class assign_events_testcase extends advanced_testcase {
     public function test_submission_viewed() {
         global $PAGE;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -796,7 +782,6 @@ class assign_events_testcase extends advanced_testcase {
     public function test_feedback_viewed() {
         global $DB, $PAGE;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -851,7 +836,6 @@ class assign_events_testcase extends advanced_testcase {
     public function test_grading_form_viewed() {
         global $PAGE;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -897,7 +881,6 @@ class assign_events_testcase extends advanced_testcase {
     public function test_grading_table_viewed() {
         global $PAGE;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -942,7 +925,6 @@ class assign_events_testcase extends advanced_testcase {
     public function test_submission_form_viewed() {
         global $PAGE;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -982,7 +964,6 @@ class assign_events_testcase extends advanced_testcase {
     public function test_submission_confirmation_form_viewed() {
         global $PAGE;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -1021,7 +1002,6 @@ class assign_events_testcase extends advanced_testcase {
      */
     public function test_reveal_identities_confirmation_page_viewed() {
         global $PAGE;
-        $this->resetAfterTest();
 
         // Set to the admin user so we have the permission to reveal identities.
         $this->setAdminUser();
@@ -1059,7 +1039,6 @@ class assign_events_testcase extends advanced_testcase {
      */
     public function test_statement_accepted() {
         // We want to be a student so we can submit assignments.
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -1147,7 +1126,6 @@ class assign_events_testcase extends advanced_testcase {
      * Test the batch_set_workflow_state_viewed event.
      */
     public function test_batch_set_workflow_state_viewed() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -1178,7 +1156,6 @@ class assign_events_testcase extends advanced_testcase {
      * Test the batch_set_marker_allocation_viewed event.
      */
     public function test_batch_set_marker_allocation_viewed() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -1212,7 +1189,6 @@ class assign_events_testcase extends advanced_testcase {
      * create and trigger the event and ensure the event data is returned as expected.
      */
     public function test_user_override_created() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $assign = $this->getDataGenerator()->get_plugin_generator('mod_assign')->create_instance(['course' => $course->id]);
@@ -1246,7 +1222,6 @@ class assign_events_testcase extends advanced_testcase {
      * create and trigger the event and ensure the event data is returned as expected.
      */
     public function test_group_override_created() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $assign = $this->getDataGenerator()->get_plugin_generator('mod_assign')->create_instance(['course' => $course->id]);
@@ -1280,7 +1255,6 @@ class assign_events_testcase extends advanced_testcase {
      * create and trigger the event and ensure the event data is returned as expected.
      */
     public function test_user_override_updated() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $assign = $this->getDataGenerator()->get_plugin_generator('mod_assign')->create_instance(['course' => $course->id]);
@@ -1314,7 +1288,6 @@ class assign_events_testcase extends advanced_testcase {
      * create and trigger the event and ensure the event data is returned as expected.
      */
     public function test_group_override_updated() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $assign = $this->getDataGenerator()->get_plugin_generator('mod_assign')->create_instance(['course' => $course->id]);
@@ -1346,7 +1319,6 @@ class assign_events_testcase extends advanced_testcase {
      */
     public function test_user_override_deleted() {
         global $DB;
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $assigninstance = $this->getDataGenerator()->create_module('assign', array('course' => $course->id));
@@ -1377,7 +1349,6 @@ class assign_events_testcase extends advanced_testcase {
      */
     public function test_group_override_deleted() {
         global $DB;
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $assigninstance = $this->getDataGenerator()->create_module('assign', array('course' => $course->id));

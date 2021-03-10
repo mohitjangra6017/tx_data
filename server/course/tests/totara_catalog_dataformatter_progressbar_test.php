@@ -41,7 +41,6 @@ class core_course_totara_catalog_dataformatter_progressbar_testcase extends data
 
     public function test_progressbar() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $CFG->enablecompletion = true;
         $context = context_system::instance();

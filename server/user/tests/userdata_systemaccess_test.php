@@ -49,7 +49,6 @@ class core_user_userdata_systemaccess_testcase extends advanced_testcase {
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $activeuser = $this->getDataGenerator()->create_user();
         $suspendeduser = $this->getDataGenerator()->create_user(['suspended' => 1]);
@@ -121,7 +120,6 @@ class core_user_userdata_systemaccess_testcase extends advanced_testcase {
     public function test_count() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $activeuser = $this->getDataGenerator()->create_user();
         $suspendeduser = $this->getDataGenerator()->create_user(['suspended' => 1]);
@@ -179,7 +177,6 @@ class core_user_userdata_systemaccess_testcase extends advanced_testcase {
     public function test_export() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Set up users.
         $activeuser = $this->getDataGenerator()->create_user();

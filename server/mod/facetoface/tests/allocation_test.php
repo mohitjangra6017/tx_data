@@ -30,7 +30,6 @@ class mod_facetoface_allocation_testcase extends advanced_testcase {
     public function test_notification_ical_attachement() {
         global $DB, $CFG;
         require_once("$CFG->dirroot/mod/facetoface/lib.php");
-        $this->resetAfterTest();
 
         /** @var \mod_facetoface\testing\generator $seminargenerator */
         $seminargenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');

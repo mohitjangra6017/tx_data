@@ -49,7 +49,6 @@ class mod_folder_search_testcase extends advanced_testcase {
     }
 
     public function setUp(): void {
-        $this->resetAfterTest(true);
         set_config('enableglobalsearch', true);
 
         $this->folderareaid = \core_search\manager::generate_areaid('mod_folder', 'activity');

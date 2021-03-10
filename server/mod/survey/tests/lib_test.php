@@ -55,7 +55,6 @@ class mod_survey_lib_testcase extends advanced_testcase {
         global $CFG;
 
         $CFG->enablecompletion = 1;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.
@@ -96,7 +95,6 @@ class mod_survey_lib_testcase extends advanced_testcase {
     public function test_survey_order_questions() {
         global $DB;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $survey = $this->getDataGenerator()->create_module('survey', array('course' => $course->id));
 
@@ -117,7 +115,6 @@ class mod_survey_lib_testcase extends advanced_testcase {
     public function test_survey_save_answers() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.

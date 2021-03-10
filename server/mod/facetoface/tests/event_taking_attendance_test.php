@@ -71,7 +71,6 @@ class mod_facetoface_event_taking_attendance_testcase extends advanced_testcase 
      * @return void
      */
     public function test_process_attendance_on_event_with_multiplesessions(): void {
-        $this->resetAfterTest();
         $event = $this->create_seminar_event();
 
         $gen = $this->getDataGenerator();
@@ -156,7 +155,6 @@ class mod_facetoface_event_taking_attendance_testcase extends advanced_testcase 
      * @dataProvider data_provider_grading_method
      */
     public function test_process_attendance_with_grading_method($grading_method, $states, $expected_state, $grades, $expected_grade) {
-        $this->resetAfterTest();
 
         if ($states !== null) {
             $this->assertCount(count($states), $grades);

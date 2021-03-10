@@ -48,7 +48,6 @@ class mod_facetoface_sessions_report_testcase extends advanced_testcase {
 
     protected function setUp(): void {
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $this->facetofacegenerator = $this->getDataGenerator()->get_plugin_generator('mod_facetoface');
@@ -59,7 +58,6 @@ class mod_facetoface_sessions_report_testcase extends advanced_testcase {
     public function test_session_timecreated() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $student = $this->getDataGenerator()->create_user();

@@ -70,7 +70,6 @@ class totara_completionimport_course_upload_testcase extends completionimport_ad
     public function test_course_singular_upload_empty() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         $filename = $CFG->dirroot . '/totara/completionimport/tests/fixtures/course_single_upload.csv';
         $importname = 'course';
@@ -101,7 +100,6 @@ class totara_completionimport_course_upload_testcase extends completionimport_ad
     public function test_course_singular_upload_existing() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         // Set up a dummy completion.
         $completiondata = new stdClass();

@@ -50,7 +50,6 @@ class core_backup_controller_testcase extends advanced_testcase {
     protected function setUp(): void {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $page = $this->getDataGenerator()->create_module('page', array('course'=>$course->id), array('section'=>3));

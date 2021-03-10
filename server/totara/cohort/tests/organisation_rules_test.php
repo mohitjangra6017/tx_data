@@ -85,7 +85,6 @@ class totara_cohort_organisation_rules_testcase extends advanced_testcase {
         global $DB;
 
         parent::setup();
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Set totara_cohort generator.
@@ -149,7 +148,6 @@ class totara_cohort_organisation_rules_testcase extends advanced_testcase {
 
     public function test_organisation_idnumber_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a rule that matches users for the organisation org1. It should match 7 users.
@@ -162,7 +160,6 @@ class totara_cohort_organisation_rules_testcase extends advanced_testcase {
 
     public function test_organisation_type_rule() {
         global $DB, $USER;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create type of organisation.
@@ -223,7 +220,6 @@ class totara_cohort_organisation_rules_testcase extends advanced_testcase {
     */
     public function test_organisation_rule($params, $organisations, $usercount, $membersmatched) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create some organisatiosn to make a hierarchy.

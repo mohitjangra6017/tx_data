@@ -111,7 +111,6 @@ class core_user_userdata_statistics_testcase extends advanced_testcase {
      */
     public function test_count_and_purge_data() {
         global $DB;
-        $this->resetAfterTest(true);
 
         list($user1, $user2, $user3, $total) = $this->presetup();
 

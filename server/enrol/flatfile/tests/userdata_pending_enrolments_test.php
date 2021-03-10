@@ -32,7 +32,6 @@ use totara_userdata\userdata\target_user;
 class enrol_flatfile_userdata_pending_enrolments_testcase extends advanced_testcase {
 
     public function test_with_no_data() {
-        $this->resetAfterTest(true);
 
         $user  = $this->getDataGenerator()->create_user();
 

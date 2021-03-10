@@ -33,7 +33,6 @@ class totara_catalog_object_update_observer_testcase extends advanced_testcase {
     public function test_process_with_register_for_update() {
         global $DB;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
 
         // Create course created event (without actually creating the course - it was created earlier).
@@ -68,7 +67,6 @@ class totara_catalog_object_update_observer_testcase extends advanced_testcase {
     public function test__process_with_register_for_delete() {
         global $DB;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
 
         // Create course deleted event (without actually deleting the course).
@@ -106,7 +104,6 @@ class totara_catalog_object_update_observer_testcase extends advanced_testcase {
     public function test_process_with_inactive_provider() {
         global $DB;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
 
         // Create course created event (without actually creating the course - it was created earlier).

@@ -45,7 +45,6 @@ class mod_quiz_events_testcase extends advanced_testcase {
      */
     protected function prepare_quiz_data($ispreview = false) {
 
-        $this->resetAfterTest(true);
 
         // Create a course
         $course = $this->getDataGenerator()->create_course();
@@ -241,7 +240,6 @@ class mod_quiz_events_testcase extends advanced_testcase {
      * create and trigger the event and ensure the event data is returned as expected.
      */
     public function test_edit_page_viewed() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -316,7 +314,6 @@ class mod_quiz_events_testcase extends advanced_testcase {
      * create and trigger the event and ensure the event data is returned as expected.
      */
     public function test_report_viewed() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -353,7 +350,6 @@ class mod_quiz_events_testcase extends advanced_testcase {
      * create and trigger the event and ensure the event data is returned as expected.
      */
     public function test_attempt_reviewed() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -391,7 +387,6 @@ class mod_quiz_events_testcase extends advanced_testcase {
      * create and trigger the event and ensure the event data is returned as expected.
      */
     public function test_attempt_summary_viewed() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -429,7 +424,6 @@ class mod_quiz_events_testcase extends advanced_testcase {
      * create and trigger the event and ensure the event data is returned as expected.
      */
     public function test_user_override_created() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -464,7 +458,6 @@ class mod_quiz_events_testcase extends advanced_testcase {
      * create and trigger the event and ensure the event data is returned as expected.
      */
     public function test_group_override_created() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -499,7 +492,6 @@ class mod_quiz_events_testcase extends advanced_testcase {
      * create and trigger the event and ensure the event data is returned as expected.
      */
     public function test_user_override_updated() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -536,7 +528,6 @@ class mod_quiz_events_testcase extends advanced_testcase {
      * create and trigger the event and ensure the event data is returned as expected.
      */
     public function test_group_override_updated() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -572,7 +563,6 @@ class mod_quiz_events_testcase extends advanced_testcase {
     public function test_user_override_deleted() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -604,7 +594,6 @@ class mod_quiz_events_testcase extends advanced_testcase {
     public function test_group_override_deleted() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -637,7 +626,6 @@ class mod_quiz_events_testcase extends advanced_testcase {
      * create and trigger the event and ensure the event data is returned as expected.
      */
     public function test_attempt_viewed() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();

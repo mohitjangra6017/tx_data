@@ -46,7 +46,6 @@ class mod_survey_search_testcase extends advanced_testcase {
     public function test_survey_indexing() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         require_once($CFG->dirroot . '/search/tests/fixtures/testable_core_search.php');
         testable_core_search::instance();

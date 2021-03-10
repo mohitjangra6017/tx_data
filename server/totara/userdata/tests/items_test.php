@@ -200,7 +200,6 @@ class totara_userdata_items_testcase extends advanced_testcase {
             return;
         }
 
-        $this->resetAfterTest();
 
         $this->setUser(null); // Use random user to make sure there is no access control!
 

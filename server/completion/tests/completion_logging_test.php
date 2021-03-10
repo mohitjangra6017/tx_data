@@ -37,7 +37,6 @@ class core_completion_completion_logging_testcase extends advanced_testcase {
     public function test_completion_completion_save() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course(array('enablecompletion' => COMPLETION_ENABLED));

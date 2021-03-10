@@ -33,7 +33,6 @@ class totara_reportbuilder_rb_source_course_completion_testcase extends advanced
         global $CFG, $DB;
 
         set_config('enablecompletion', 1);
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Make sure there bulk state is not carried over from other tests.

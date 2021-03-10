@@ -40,7 +40,6 @@ class backup_cron_helper_testcase extends advanced_testcase {
     public function test_next_automated_backup() {
         global $CFG;
 
-        $this->resetAfterTest();
         set_config('backup_auto_active', '1', 'backup');
 
         $this->setTimezone('Australia/Perth');
@@ -251,7 +250,6 @@ class backup_cron_helper_testcase extends advanced_testcase {
      * Test {@link backup_cron_automated_helper::get_backups_to_delete}.
      */
     public function test_get_backups_to_delete() {
-        $this->resetAfterTest();
         // Active only backup_auto_max_kept config to 2 days.
         set_config('backup_auto_max_kept', '2', 'backup');
         set_config('backup_auto_delete_days', '0', 'backup');
@@ -327,7 +325,6 @@ class backup_cron_helper_testcase extends advanced_testcase {
      * Test {@link backup_cron_automated_helper::is_course_modified}.
      */
     public function test_is_course_modified() {
-        $this->resetAfterTest();
 
         set_config('enabled_stores', 'logstore_standard', 'tool_log');
         set_config('buffersize', 0, 'logstore_standard');

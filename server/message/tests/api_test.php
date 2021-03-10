@@ -1393,7 +1393,6 @@ class core_message_api_testcase extends core_message_messagelib_testcase {
      * Tests counting unread conversations.
      */
     public function test_count_unread_conversations() {
-        $this->resetAfterTest(true);
 
         // Create some users.
         $user1 = self::getDataGenerator()->create_user();

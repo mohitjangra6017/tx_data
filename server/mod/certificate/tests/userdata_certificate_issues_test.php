@@ -104,7 +104,6 @@ class mod_certificate_userdata_certificate_issues_testcase extends advanced_test
             public $target_user2;
         };
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 

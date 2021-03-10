@@ -132,7 +132,6 @@ class totara_hierarchy_deleteitem_testcase extends advanced_testcase {
 
     public function test_ordering_after_delete() {
         global $DB;
-        $this->resetAfterTest();
 
         $hierarchy = new competency();
 
@@ -150,7 +149,6 @@ class totara_hierarchy_deleteitem_testcase extends advanced_testcase {
 
     public function test_ordering_after_delete2() {
         global $DB;
-        $this->resetAfterTest();
 
         $hierarchy = new competency();
 
@@ -167,7 +165,6 @@ class totara_hierarchy_deleteitem_testcase extends advanced_testcase {
 
     public function test_ordering_after_delete3() {
         global $DB;
-        $this->resetAfterTest();
 
         $hierarchy = new competency();
 
@@ -182,7 +179,6 @@ class totara_hierarchy_deleteitem_testcase extends advanced_testcase {
 
     public function test_ordering_after_delete4() {
         global $DB;
-        $this->resetAfterTest();
 
         $hierarchy = new competency();
 
@@ -198,7 +194,6 @@ class totara_hierarchy_deleteitem_testcase extends advanced_testcase {
 
     public function test_it_fired_correct_events_after_deleting_hierarchy_item() {
         global $DB;
-        $this->resetAfterTest();
 
         $hierarchy = new competency();
 

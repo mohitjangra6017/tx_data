@@ -89,7 +89,6 @@ class gradereport_user_externallib_testcase extends externallib_advanced_testcas
      */
     public function test_get_grades_table_teacher() {
 
-        $this->resetAfterTest(true);
 
         $s1grade = 80;
         $s2grade = 60;
@@ -122,7 +121,6 @@ class gradereport_user_externallib_testcase extends externallib_advanced_testcas
     public function test_get_grades_table_student() {
         global $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $s1grade = 80;
         $s2grade = 60;
@@ -149,7 +147,6 @@ class gradereport_user_externallib_testcase extends externallib_advanced_testcas
     public function test_get_grades_table_permissions() {
         global $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $s1grade = 80;
         $s2grade = 60;
@@ -172,7 +169,6 @@ class gradereport_user_externallib_testcase extends externallib_advanced_testcas
     public function test_view_grade_report() {
         global $USER;
 
-        $this->resetAfterTest(true);
 
         $s1grade = 80;
         $s2grade = 60;
@@ -219,7 +215,6 @@ class gradereport_user_externallib_testcase extends externallib_advanced_testcas
      */
     public function test_get_grade_items_teacher() {
 
-        $this->resetAfterTest(true);
 
         $s1grade = 80;
         $s2grade = 60;
@@ -297,7 +292,6 @@ class gradereport_user_externallib_testcase extends externallib_advanced_testcas
      */
     public function test_get_grade_items_student() {
 
-        $this->resetAfterTest(true);
 
         $s1grade = 80;
         $s2grade = 60;

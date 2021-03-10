@@ -29,7 +29,6 @@ class enrol_totara_facetoface_session_order_by_time_testcase extends advanced_te
 
     public function test_session_order_by_time() {
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $this->enable_plugin();
 

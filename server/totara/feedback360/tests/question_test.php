@@ -26,7 +26,6 @@ require_once($CFG->dirroot.'/totara/feedback360/tests/feedback360_testcase.php')
 
 class totara_feedback360_question_testcase extends feedback360_testcase {
     public function test_create() {
-        $this->resetAfterTest();
         list($fdbck) = $this->prepare_feedback_with_users(1, 0);
 
         $data = new stdClass();
@@ -51,7 +50,6 @@ class totara_feedback360_question_testcase extends feedback360_testcase {
     }
 
     public function test_edit() {
-        $this->resetAfterTest();
         list(, , $quests) = $this->prepare_feedback_with_users(1, 1);
         $quest = current($quests);
         $this->assertGreaterThan(0, $quest->id);
@@ -73,7 +71,6 @@ class totara_feedback360_question_testcase extends feedback360_testcase {
     }
 
     public function test_delete() {
-        $this->resetAfterTest();
         list($fdbck, , $quests) = $this->prepare_feedback_with_users(1, 3);
         $quest1 = current($quests);
         $quest2 = next($quests);
@@ -103,7 +100,6 @@ class totara_feedback360_question_testcase extends feedback360_testcase {
     }
 
     public function test_duplicate() {
-        $this->resetAfterTest();
         list(, , $quests) = $this->prepare_feedback_with_users();
         list($fdbck2) = $this->prepare_feedback_with_users();
         $quest = current($quests);
@@ -127,7 +123,6 @@ class totara_feedback360_question_testcase extends feedback360_testcase {
 
     public function test_user_can_view() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $oldlog = ini_get('error_log');
         ini_set('error_log', "$CFG->dataroot/testlog.log"); // Prevent standard logging.
@@ -176,7 +171,6 @@ class totara_feedback360_question_testcase extends feedback360_testcase {
     }
 
     public function test_reorder() {
-        $this->resetAfterTest();
         list(, , $quests) = $this->prepare_feedback_with_users(1, 3);
         $quest1 = current($quests);
         $quest2 = next($quests);

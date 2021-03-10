@@ -50,7 +50,6 @@ abstract class grade_testcase extends advanced_testcase {
     protected function scaffold() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $student = $DB->get_record('role', ['shortname' => 'student'])->id;
 

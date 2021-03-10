@@ -44,7 +44,6 @@ class core_event_grade_deleted_testcase extends advanced_testcase {
         global $CFG;
         require_once("$CFG->libdir/gradelib.php");
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();

@@ -56,7 +56,6 @@ class totara_cohort_user_custom_profile_field_date_testcase extends advanced_tes
     }
 
     public function setUp(): void {
-        $this->resetAfterTest();
         parent::setup();
 
         $this->cohort_generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
@@ -173,7 +172,6 @@ class totara_cohort_user_custom_profile_field_date_testcase extends advanced_tes
      * This tests the function get_sql_snippet() specifically in order to check that elements such as operators are used correctly.
      */
     public function test_get_sql_snippet() {
-        $this->resetAfterTest();
         $this->create_users();
 
         // Testing operators for before and after fixed date  in various combinations.
@@ -210,7 +208,6 @@ class totara_cohort_user_custom_profile_field_date_testcase extends advanced_tes
      */
     public function test_update_dynamic_cohort_members()
     {
-        $this->resetAfterTest();
         $this->create_users();
 
         $audience1 = $this->cohort_generator->create_cohort(array('cohorttype' => cohort::TYPE_DYNAMIC));

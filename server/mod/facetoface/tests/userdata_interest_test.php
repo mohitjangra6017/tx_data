@@ -55,7 +55,6 @@ class mod_facetoface_userdata_interest_testcase extends advanced_testcase {
     public function setUp(): void {
         parent::setUp();
 
-        $this->resetAfterTest();
 
         $this->user1 = $this->getDataGenerator()->create_user();
         $this->user2 = $this->getDataGenerator()->create_user();

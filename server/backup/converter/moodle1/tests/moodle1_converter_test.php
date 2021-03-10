@@ -115,7 +115,6 @@ class core_backup_moodle1_converter_testcase extends advanced_testcase {
     }
 
     public function test_stash_storage() {
-        $this->resetAfterTest(true);
         $converter = convert_factory::get_converter('moodle1', $this->tempdir);
         $converter->create_stash_storage();
 
@@ -171,7 +170,6 @@ class core_backup_moodle1_converter_testcase extends advanced_testcase {
     }
 
     public function test_get_stash_or_default() {
-        $this->resetAfterTest(true);
         $converter = convert_factory::get_converter('moodle1', $this->tempdir);
         $converter->create_stash_storage();
 
@@ -204,7 +202,6 @@ class core_backup_moodle1_converter_testcase extends advanced_testcase {
     }
 
     public function test_get_contextid() {
-        $this->resetAfterTest(true);
 
         $converter = convert_factory::get_converter('moodle1', $this->tempdir);
 
@@ -245,7 +242,6 @@ class core_backup_moodle1_converter_testcase extends advanced_testcase {
     }
 
     public function test_get_nextid() {
-        $this->resetAfterTest(true);
 
         $converter = convert_factory::get_converter('moodle1', $this->tempdir);
 
@@ -259,7 +255,6 @@ class core_backup_moodle1_converter_testcase extends advanced_testcase {
     }
 
     public function test_migrate_file() {
-        $this->resetAfterTest(true);
 
         // set-up the file manager
         $converter = convert_factory::get_converter('moodle1', $this->tempdir);
@@ -312,7 +307,6 @@ class core_backup_moodle1_converter_testcase extends advanced_testcase {
     }
 
     public function test_migrate_directory() {
-        $this->resetAfterTest(true);
 
         // Set-up the file manager.
         $converter = convert_factory::get_converter('moodle1', $this->tempdir);
@@ -360,7 +354,6 @@ class core_backup_moodle1_converter_testcase extends advanced_testcase {
     }
 
     public function test_migrate_directory_with_trailing_slash() {
-        $this->resetAfterTest(true);
 
         // Set-up the file manager.
         $converter = convert_factory::get_converter('moodle1', $this->tempdir);
@@ -557,7 +550,6 @@ as it is parsed from the backup file. <br /><br /><img border="0" width="110" vs
     public function test_question_bank_conversion() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         copy(
             "$CFG->dirroot/backup/converter/moodle1/tests/fixtures/questions.xml",
@@ -568,7 +560,6 @@ as it is parsed from the backup file. <br /><br /><img border="0" width="110" vs
     }
 
     public function test_convert_run_convert() {
-        $this->resetAfterTest(true);
         $converter = convert_factory::get_converter('moodle1', $this->tempdir);
         $converter->convert();
     }

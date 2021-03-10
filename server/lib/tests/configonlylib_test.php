@@ -69,7 +69,6 @@ class core_configonlylib_testcase extends advanced_testcase {
      * Test minimalistic getting of page parameters.
      */
     public function test_min_optional_param() {
-        $this->resetAfterTest();
 
         $_GET['foo'] = 'bar';
         $_GET['num'] = '1';
@@ -92,7 +91,6 @@ class core_configonlylib_testcase extends advanced_testcase {
     public function test_min_get_slash_argument() {
         global $CFG;
 
-        $this->resetAfterTest();
         $this->assertEquals('https://www.example.com/moodle', $CFG->wwwroot);
 
         $_SERVER = array();

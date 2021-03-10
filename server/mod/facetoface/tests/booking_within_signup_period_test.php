@@ -39,7 +39,6 @@ class mod_facetoface_booking_within_signup_period_testcase extends advanced_test
      */
     public function test_signup_registration_period_open() {
 
-        $this->resetAfterTest();
 
         ['learner2' => $learner2, 'course' => $course, 'seminarevent' => $seminarevent] = $this->prepare_data();
 
@@ -59,7 +58,6 @@ class mod_facetoface_booking_within_signup_period_testcase extends advanced_test
     public function test_teacher_signup_registration_period_open() {
         global $DB;
 
-        $this->resetAfterTest();
 
         ['learner2' => $learner2, 'course' => $course, 'seminarevent' => $seminarevent] = $this->prepare_data();
 
@@ -85,7 +83,6 @@ class mod_facetoface_booking_within_signup_period_testcase extends advanced_test
      */
     public function test_signup_registration_period_closed() {
 
-        $this->resetAfterTest();
 
         ['learner2' => $learner2, 'course' => $course, 'seminarevent' => $seminarevent] = $this->prepare_data();
 
@@ -105,7 +102,6 @@ class mod_facetoface_booking_within_signup_period_testcase extends advanced_test
     public function test_teacher_signup_registration_period_closed() {
         global $DB;
 
-        $this->resetAfterTest();
 
         ['learner2' => $learner2, 'course' => $course, 'seminarevent' => $seminarevent] = $this->prepare_data();
 
@@ -132,7 +128,6 @@ class mod_facetoface_booking_within_signup_period_testcase extends advanced_test
     public function test_teacher_signup_registration_period_closed_with_capability() {
         global $DB;
 
-        $this->resetAfterTest();
 
         ['learner2' => $learner2, 'course' => $course, 'seminarevent' => $seminarevent] = $this->prepare_data();
 

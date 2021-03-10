@@ -27,7 +27,6 @@ class totara_plan_generator_testcase extends advanced_testcase {
     public function test_create_learning_plan() {
         global $DB, $USER;
 
-        $this->resetAfterTest();
 
         /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
@@ -71,7 +70,6 @@ class totara_plan_generator_testcase extends advanced_testcase {
     public function test_add_learning_plan_competency() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
@@ -99,7 +97,6 @@ class totara_plan_generator_testcase extends advanced_testcase {
     public function test_create_learning_plan_objective() {
         global $DB, $USER;
 
-        $this->resetAfterTest();
 
         /** @var \totara_plan\testing\generator $plangenerator */
         $plangenerator = $this->getDataGenerator()->get_plugin_generator('totara_plan');

@@ -76,7 +76,6 @@ class enrol_meta_plugin_testcase extends advanced_testcase {
     public function test_sync() {
         global $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $metalplugin = enrol_get_plugin('meta');
         $manplugin = enrol_get_plugin('manual');
@@ -448,7 +447,6 @@ class enrol_meta_plugin_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot.'/group/lib.php');
 
-        $this->resetAfterTest(true);
 
         $metalplugin = enrol_get_plugin('meta');
 
@@ -544,7 +542,6 @@ class enrol_meta_plugin_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot.'/group/lib.php');
 
-        $this->resetAfterTest(true);
 
         $metalplugin = enrol_get_plugin('meta');
 
@@ -603,7 +600,6 @@ class enrol_meta_plugin_testcase extends advanced_testcase {
     public function test_user_enrolment_created_event() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $metaplugin = enrol_get_plugin('meta');
         $user1 = $this->getDataGenerator()->create_user();
@@ -640,7 +636,6 @@ class enrol_meta_plugin_testcase extends advanced_testcase {
     public function test_user_enrolment_deleted_event() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $metalplugin = enrol_get_plugin('meta');
         $user1 = $this->getDataGenerator()->create_user();
@@ -674,7 +669,6 @@ class enrol_meta_plugin_testcase extends advanced_testcase {
     public function test_user_enrolment_updated_event() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $metalplugin = enrol_get_plugin('meta');
         $user1 = $this->getDataGenerator()->create_user();
@@ -718,7 +712,6 @@ class enrol_meta_plugin_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/enrol/meta/locallib.php');
 
-        $this->resetAfterTest();
         // Create two courses.
         $course = $this->getDataGenerator()->create_course(array('fullname' => 'Mathematics'));
         $course2 = $this->getDataGenerator()->create_course(array('fullname' => 'Physics'));
@@ -756,7 +749,6 @@ class enrol_meta_plugin_testcase extends advanced_testcase {
     public function test_timeend() {
         global $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $timeinfuture = time() + DAYSECS;
         $timeinpast = time() - DAYSECS;

@@ -31,7 +31,6 @@ class core_files_mbz_packer_testcase extends advanced_testcase {
 
     public function test_archive_with_both_options() {
         global $CFG;
-        $this->resetAfterTest();
 
         // Get backup packer.
         $packer = get_file_packer('application/vnd.moodle.backup');
@@ -100,7 +99,6 @@ class core_files_mbz_packer_testcase extends advanced_testcase {
      */
     public function test_extract_to_pathname_returnvalue_successful($usezipbackups) {
         global $CFG;
-        $this->resetAfterTest();
 
         $packer = get_file_packer('application/vnd.moodle.backup');
 
@@ -123,7 +121,6 @@ class core_files_mbz_packer_testcase extends advanced_testcase {
      */
     public function test_extract_to_pathname_returnvalue_failure($usezipbackups) {
         global $CFG;
-        $this->resetAfterTest();
 
         $packer = get_file_packer('application/vnd.moodle.backup');
 

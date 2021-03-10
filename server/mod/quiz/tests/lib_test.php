@@ -94,7 +94,6 @@ class mod_quiz_lib_testcase extends advanced_testcase {
      */
     public function test_quiz_delete_instance() {
         global $SITE, $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Setup a quiz with 1 standard and 1 random question.
@@ -134,7 +133,6 @@ class mod_quiz_lib_testcase extends advanced_testcase {
      */
     public function test_quiz_get_completion_state() {
         global $CFG, $DB;
-        $this->resetAfterTest(true);
 
         // Enable completion before creating modules, otherwise the completion data is not written in DB.
         $CFG->enablecompletion = true;
@@ -230,7 +228,6 @@ class mod_quiz_lib_testcase extends advanced_testcase {
 
     public function test_quiz_get_user_attempts() {
         global $DB;
-        $this->resetAfterTest();
 
         $dg = $this->getDataGenerator();
         $quizgen = $dg->get_plugin_generator('mod_quiz');

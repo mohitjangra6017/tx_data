@@ -36,7 +36,6 @@ class totara_catalog_delete_searchmetadata_testcase extends advanced_testcase {
     public function test_delete_searchmetadata_via_observer_for_course(): void {
         global $DB;
 
-        $this->resetAfterTest(true);
         $gen = static::getDataGenerator();
 
         $course = $gen->create_course([], ['createsection' => true]);
@@ -70,7 +69,6 @@ class totara_catalog_delete_searchmetadata_testcase extends advanced_testcase {
     public function test_delete_search_metadata_via_observer_for_program(): void {
         global $DB;
 
-        $this->resetAfterTest(true);
         $gen = static::getDataGenerator();
 
         /** @var \totara_program\testing\generator $proggen */
@@ -106,7 +104,6 @@ class totara_catalog_delete_searchmetadata_testcase extends advanced_testcase {
     public function test_delete_search_metadata_via_observer_for_certification(): void {
         global $DB;
 
-        $this->resetAfterTest(true);
         $gen = static::getDataGenerator();
 
         /** @var \totara_program\testing\generator $proggen */

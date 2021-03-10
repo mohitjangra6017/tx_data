@@ -41,7 +41,6 @@ class workshopallocation_random_testcase extends advanced_testcase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Totara: we disable this during install.

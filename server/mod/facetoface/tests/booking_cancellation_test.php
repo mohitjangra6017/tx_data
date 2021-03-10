@@ -36,7 +36,6 @@ class mod_facetoface_booking_cancellation_testcase extends advanced_testcase {
      * Test that booking can be cancelled when event is in future and allows cancellations
      */
     public function test_simple_cancel() {
-        $this->resetAfterTest();
         /**
          * @var signup $signup1
          * @var signup $signup2
@@ -60,7 +59,6 @@ class mod_facetoface_booking_cancellation_testcase extends advanced_testcase {
      */
     public function test_cancel_past_event() {
         global $DB;
-        $this->resetAfterTest();
         /**
          * @var signup $signup1
          * @var signup $signup2
@@ -101,7 +99,6 @@ class mod_facetoface_booking_cancellation_testcase extends advanced_testcase {
      */
     public function test_cancel_event_not_allow_cancellations() {
         global $DB;
-        $this->resetAfterTest();
         /**
          * @var signup $signup1
          * @var signup $signup2
@@ -142,7 +139,6 @@ class mod_facetoface_booking_cancellation_testcase extends advanced_testcase {
      */
     public function test_cancel_past_event_not_allow_cancellations() {
         global $DB;
-        $this->resetAfterTest();
         /**
          * @var signup $signup1
          * @var signup $signup2

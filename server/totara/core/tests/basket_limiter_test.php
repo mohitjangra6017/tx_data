@@ -38,7 +38,6 @@ class totara_core_basket_limiter_testcase extends advanced_testcase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
         $this->basket = new basket('my_basket', new simple_adapter());
     }
 

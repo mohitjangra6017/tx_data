@@ -58,7 +58,6 @@ class backup_step_testcase extends advanced_testcase {
         global $DB, $CFG;
         parent::setUp();
 
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $page = $this->getDataGenerator()->create_module('page', array('course'=>$course->id), array('section'=>3));
@@ -114,7 +113,6 @@ class backup_step_testcase extends advanced_testcase {
      */
     public function test_restore_step_decrypt() {
 
-        $this->resetAfterTest(true);
 
         if (!function_exists('openssl_encrypt')) {
             $this->markTestSkipped('OpenSSL extension is not loaded.');

@@ -66,7 +66,6 @@ class enrol_paypal_userdata_transaction_information_testcase extends advanced_te
      * Create fixtures for our tests.
      */
     private function create_fixtures() {
-        $this->resetAfterTest(true);
 
         $fixtures = new class() {
             /** @var target_user */

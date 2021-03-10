@@ -48,7 +48,6 @@ class tool_totara_sync_user_csv_fasthash_testcase extends advanced_testcase {
 
         parent::setup();
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->filedir = $CFG->dataroot . '/totara_sync';
@@ -149,7 +148,6 @@ class tool_totara_sync_user_csv_fasthash_testcase extends advanced_testcase {
     public function test_fasthash_disabled() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
 
         // We need to import the password to check the hashing.
         foreach ($this->configcsv as $k => $v) {
@@ -186,7 +184,6 @@ class tool_totara_sync_user_csv_fasthash_testcase extends advanced_testcase {
     public function test_fasthash_enabled() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
 
         // We need to import the password to check the hashing.
         foreach ($this->configcsv as $k => $v) {

@@ -131,7 +131,6 @@ class mod_chat_format_message_testcase extends advanced_testcase {
     public function test_chat_format_message_manually($messagetext, $issystem, $willreturn,
             $expecttext, $refreshusers, $expectbeep) {
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $currentuser = $this->getDataGenerator()->create_user();

@@ -41,7 +41,6 @@ class core_course_totara_catalog_dataformatter_image_testcase extends dataformat
 
     public function test_image() {
         global $CFG;
-        $this->resetAfterTest();
 
         $context = context_system::instance();
 

@@ -52,7 +52,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_accesslib_clear_all_caches() {
         global $ACCESSLIB_PRIVATE;
 
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         load_all_capabilities();
@@ -118,7 +117,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_is_siteadmin() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         $users = $DB->get_records('user');
 
@@ -160,7 +158,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_is_enrolled() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Generate data.
         $user = $this->getDataGenerator()->create_user();
@@ -210,7 +207,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_isloggedin() {
         global $USER;
 
-        $this->resetAfterTest();
 
         $USER->id = 0;
         $this->assertFalse(isloggedin());
@@ -224,7 +220,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_isguestuser() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $guest = $DB->get_record('user', array('username'=>'guest'));
         $this->setUser(0);
@@ -259,7 +254,6 @@ class core_accesslib_testcase extends advanced_testcase {
      * Test context fetching.
      */
     public function test_get_context_info_array() {
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
         $user = $this->getDataGenerator()->create_user();
@@ -328,7 +322,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_has_coursecontact_role() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         $users = $DB->get_records('user');
 
@@ -463,7 +456,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_assign_capability() {
         global $DB, $USER;
 
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $syscontext = context_system::instance();
@@ -587,7 +579,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_unassign_capability() {
         global $DB, $USER;
 
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
         $frontcontext = context_course::instance(SITEID);
@@ -632,7 +623,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_role_assign() {
         global $DB, $USER;
 
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
@@ -693,7 +683,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_role_unassign() {
         global $DB, $USER;
 
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
@@ -742,7 +731,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_role_unassign_all() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
@@ -797,7 +785,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_roles_with_capability() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
         $frontcontext = context_course::instance(SITEID);
@@ -898,7 +885,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_all_roles() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $allroles = get_all_roles();
         $this->assertIsArray($allroles);
@@ -956,7 +942,6 @@ class core_accesslib_testcase extends advanced_testcase {
      * Test getting of roles with given archetype.
      */
     public function test_get_archetype_roles() {
-        $this->resetAfterTest();
 
         // New install should have 1 role for each archetype.
         $archetypes = get_role_archetypes();
@@ -983,7 +968,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_role_get_name() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $allroles = $DB->get_records('role');
         $teacher = $DB->get_record('role', array('shortname'=>'teacher'), '*', MUST_EXIST);
@@ -1031,7 +1015,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_role_fix_names() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $teacher = $DB->get_record('role', array('shortname'=>'teacher'), '*', MUST_EXIST);
         $student = $DB->get_record('role', array('shortname'=>'student'), '*', MUST_EXIST);
@@ -1238,7 +1221,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_assignable_roles() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $coursecontext = context_course::instance($course->id);
@@ -1352,7 +1334,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_assignable_roles_distinct_usercount() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
 
@@ -1385,7 +1366,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_switchable_roles() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $coursecontext = context_course::instance($course->id);
@@ -1444,7 +1424,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_overridable_roles() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $coursecontext = context_course::instance($course->id);
@@ -1612,7 +1591,6 @@ class core_accesslib_testcase extends advanced_testcase {
      */
     public function test_get_default_enrol_roles() {
         global $DB;
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $coursecontext = context_course::instance($course->id);
@@ -1644,7 +1622,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_role_users() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $systemcontext = context_system::instance();
         $studentrole = $DB->get_record('role', array('shortname'=>'student'), '*', MUST_EXIST);
@@ -1757,7 +1734,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_roles_used_in_context() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $systemcontext = context_system::instance();
         $teacherrole = $DB->get_record('role', array('shortname'=>'editingteacher'), '*', MUST_EXIST);
@@ -1797,7 +1773,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_user_roles_in_course() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         $teacherrole = $DB->get_record('role', array('shortname'=>'editingteacher'), '*', MUST_EXIST);
         $studentrole = $DB->get_record('role', array('shortname'=>'student'), '*', MUST_EXIST);
@@ -1858,7 +1833,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_user_roles() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         $teacherrole = $DB->get_record('role', array('shortname'=>'editingteacher'), '*', MUST_EXIST);
         $studentrole = $DB->get_record('role', array('shortname'=>'student'), '*', MUST_EXIST);
@@ -1894,7 +1868,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_has_capability_and_friends() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $coursecontext = context_course::instance($course->id);
@@ -2002,7 +1975,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_fake_capability() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $coursecontext = context_course::instance($course->id);
@@ -2051,7 +2023,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_fake_capability_assign() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $coursecontext = context_course::instance($course->id);
@@ -2074,7 +2045,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_fake_capability_unassign() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $coursecontext = context_course::instance($course->id);
@@ -2098,7 +2068,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_role_definition_caching() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Get some role ids.
         $authenticatedrole = $DB->get_record('role', array('shortname' => 'user'), '*', MUST_EXIST);
@@ -2165,7 +2134,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_user_capability_course() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
         $cap = 'moodle/course:view';
@@ -2362,7 +2330,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_guess_if_creator_will_have_course_capability() {
         global $DB, $CFG, $USER;
 
-        $this->resetAfterTest();
 
         $category = $this->getDataGenerator()->create_category();
         $course = $this->getDataGenerator()->create_course(array('category'=>$category->id));
@@ -2486,7 +2453,6 @@ class core_accesslib_testcase extends advanced_testcase {
      * Test require_capability() exceptions.
      */
     public function test_require_capability() {
-        $this->resetAfterTest();
 
         $syscontext = context_system::instance();
 
@@ -2522,7 +2488,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_enrolled_sql_different_course() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $context = context_course::instance($course->id);
@@ -2552,7 +2517,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_enrolled_sql_role_only() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $context = context_course::instance($course->id);
@@ -2580,7 +2544,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_enrolled_sql_multiple_enrolments() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $context = context_course::instance($course->id);
@@ -2739,7 +2702,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_enrolled_sql_course($users, $counts) {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $context = context_course::instance($course->id);
@@ -2803,7 +2765,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_permission_evaluation() {
         global $USER, $SITE, $CFG, $DB, $ACCESSLIB_PRIVATE;
 
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
 
@@ -3707,7 +3668,6 @@ class core_accesslib_testcase extends advanced_testcase {
      * Test that context_coursecat::get_capabilities returns capabilities relevant to all modules.
      */
     public function test_context_module_caps_returned_by_get_capabilities_in_course_cat_context() {
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
         $cat = $generator->create_category();
 
@@ -3724,7 +3684,6 @@ class core_accesslib_testcase extends advanced_testcase {
      * Test that context_course::get_capabilities returns capabilities relevant to all modules.
      */
     public function test_context_module_caps_returned_by_get_capabilities_in_course_context() {
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
         $cat = $generator->create_category();
         $course = $generator->create_course(['category' => $cat->id]);
@@ -3742,7 +3701,6 @@ class core_accesslib_testcase extends advanced_testcase {
      * Test that context_module::get_capabilities returns capabilities relevant to all modules.
      */
     public function test_context_module_caps_returned_by_get_capabilities_mod_context() {
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
         $cat = $generator->create_category();
         $course = $generator->create_course(['category' => $cat->id]);
@@ -3763,7 +3721,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_update_capabilities() {
         global $DB, $SITE;
 
-        $this->resetAfterTest(true);
 
         $froncontext = context_course::instance($SITE->id);
         $student = $DB->get_record('role', array('archetype'=>'student'));
@@ -3849,7 +3806,6 @@ class core_accesslib_testcase extends advanced_testcase {
      */
     public function test_reset_role_capabilities() {
         global $DB;
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
 
         // Create test course and user, enrol one in the other.
@@ -3884,7 +3840,6 @@ class core_accesslib_testcase extends advanced_testcase {
      */
     public function test_count_role_users() {
         global $DB;
-        $this->resetAfterTest(true);
         $generator = self::getDataGenerator();
         // Create a course in a category, and some users.
         $category = $generator->create_category();
@@ -3923,7 +3878,6 @@ class core_accesslib_testcase extends advanced_testcase {
      * Tests role_assign_bulk() with an array of user ids used for the $userids argument.
      */
     public function test_role_assign_bulk_userids() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $data_generator = $this->getDataGenerator();
@@ -3974,7 +3928,6 @@ class core_accesslib_testcase extends advanced_testcase {
      * Tests role_assign_bulk() with an array of objects for the $userids argument.
      */
     public function test_role_assign_bulk_userobjects() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $data_generator = $this->getDataGenerator();
@@ -4016,7 +3969,6 @@ class core_accesslib_testcase extends advanced_testcase {
      * The invalid user ids should be silently ignored so that the rest of the bulk insert still goes ahead.
      */
     public function test_role_assign_bulk_invaliduserids() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $data_generator = $this->getDataGenerator();
@@ -4048,7 +4000,6 @@ class core_accesslib_testcase extends advanced_testcase {
      * such as component name or timemodified when you don't want to use time().
      */
     public function test_role_assign_bulk_fulloptions() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $data_generator = $this->getDataGenerator();
@@ -4091,7 +4042,6 @@ class core_accesslib_testcase extends advanced_testcase {
     public function test_get_with_capability_sql() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $coursecontext = context_course::instance($course->id);
@@ -4144,7 +4094,6 @@ class core_accesslib_testcase extends advanced_testcase {
      */
     public function test_get_profile_roles() {
         global $DB;
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $coursecontext = context_course::instance($course->id);
@@ -4481,7 +4430,6 @@ class core_accesslib_testcase extends advanced_testcase {
      */
     public function test_get_has_capability_sql() {
         global $DB;
-        $this->resetAfterTest();
 
         $category1 = $this->getDataGenerator()->create_category();
         $category2 = $this->getDataGenerator()->create_category();

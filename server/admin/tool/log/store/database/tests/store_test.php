@@ -30,7 +30,6 @@ require_once(__DIR__ . '/fixtures/store.php');
 class logstore_database_store_testcase extends advanced_testcase {
     public function test_log_writing() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         $dbman = $DB->get_manager();
         $this->assertTrue($dbman->table_exists('logstore_standard_log'));
@@ -232,7 +231,6 @@ class logstore_database_store_testcase extends advanced_testcase {
      * Test method is_event_ignored.
      */
     public function test_is_event_ignored() {
-        $this->resetAfterTest();
 
         // Test guest filtering.
         set_config('logguests', 0, 'logstore_database');

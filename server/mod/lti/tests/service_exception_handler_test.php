@@ -70,7 +70,6 @@ class mod_lti_service_exception_handler_testcase extends advanced_testcase {
     public function test_handle_log() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $handler = new service_exception_handler(true);
 

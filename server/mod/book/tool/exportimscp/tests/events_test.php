@@ -37,7 +37,6 @@ global $CFG;
 class booktool_exportimscp_events_testcase extends advanced_testcase {
 
     public function setUp(): void {
-        $this->resetAfterTest();
     }
 
     public function test_book_exported() {

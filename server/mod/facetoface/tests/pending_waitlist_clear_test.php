@@ -34,7 +34,6 @@ class mod_facetoface_pending_waitlist_clear_testcase extends advanced_testcase {
      * @return void
      */
     public function test_getting_pending_waitlist_to_be_clear(): void {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $gen = $this->getDataGenerator();

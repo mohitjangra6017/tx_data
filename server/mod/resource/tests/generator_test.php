@@ -38,7 +38,6 @@ class mod_resource_generator_testcase extends advanced_testcase {
     public function test_generator() {
         global $DB, $SITE;
 
-        $this->resetAfterTest(true);
 
         // Must be a non-guest user to create resources.
         $this->setAdminUser();

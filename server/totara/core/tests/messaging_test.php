@@ -71,7 +71,6 @@ class totara_core_messaging_testcase extends advanced_testcase {
      */
     public function test_messages_from_no_reply() {
         global $USER, $CFG;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $noreplyaddress = 'no-reply@example.com';

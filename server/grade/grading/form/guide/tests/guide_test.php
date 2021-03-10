@@ -44,7 +44,6 @@ class gradingform_guide_testcase extends advanced_testcase {
     public function test_get_or_create_instance() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create fake areas.
         $fakearea = (object)array(

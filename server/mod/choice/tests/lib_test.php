@@ -49,7 +49,6 @@ class mod_choice_lib_testcase extends externallib_advanced_testcase {
     public function test_choice_view() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.
@@ -83,7 +82,6 @@ class mod_choice_lib_testcase extends externallib_advanced_testcase {
     public function test_choice_can_view_results() {
         global $DB, $USER;
 
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.
@@ -141,7 +139,6 @@ class mod_choice_lib_testcase extends externallib_advanced_testcase {
     public function test_choice_user_submit_response_validation() {
         global $USER;
 
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.
@@ -168,7 +165,6 @@ class mod_choice_lib_testcase extends externallib_advanced_testcase {
     public function test_choice_get_my_response() {
         global $USER;
 
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.
@@ -210,7 +206,6 @@ class mod_choice_lib_testcase extends externallib_advanced_testcase {
     public function test_choice_get_availability_status() {
         global $USER;
 
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.
@@ -273,7 +268,6 @@ class mod_choice_lib_testcase extends externallib_advanced_testcase {
      */
     public function test_choice_user_submit_response_no_multiple_no_limits() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
@@ -321,7 +315,6 @@ class mod_choice_lib_testcase extends externallib_advanced_testcase {
      */
     public function test_choice_user_submit_response_multiples_no_limits() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
@@ -372,7 +365,6 @@ class mod_choice_lib_testcase extends externallib_advanced_testcase {
      */
     public function test_choice_user_submit_response_no_multiples_limits() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
@@ -418,7 +410,6 @@ class mod_choice_lib_testcase extends externallib_advanced_testcase {
      */
     public function test_choice_user_submit_response_multiples_limits() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();

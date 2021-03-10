@@ -57,7 +57,6 @@ class tool_generator_maketestsite_testcase extends advanced_testcase {
      */
     public function test_shortnames_generation() {
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();

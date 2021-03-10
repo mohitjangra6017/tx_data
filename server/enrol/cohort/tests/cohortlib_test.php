@@ -43,7 +43,6 @@ class enrol_cohort_cohortlib_testcase extends advanced_testcase {
      */
     public function test_enrol_cohort_create_new_group() {
         global $DB;
-        $this->resetAfterTest();
         // Create a category.
         $category = $this->getDataGenerator()->create_category();
         // Create two courses.

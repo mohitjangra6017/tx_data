@@ -35,7 +35,6 @@ class mod_lesson_generator_testcase extends advanced_testcase {
 
     public function test_create_instance() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -55,7 +54,6 @@ class mod_lesson_generator_testcase extends advanced_testcase {
 
     public function test_create_content() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -76,7 +74,6 @@ class mod_lesson_generator_testcase extends advanced_testcase {
      */
     public function test_create_question_truefalse() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -101,7 +98,6 @@ class mod_lesson_generator_testcase extends advanced_testcase {
      */
     public function test_create_question_multichoice() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -126,7 +122,6 @@ class mod_lesson_generator_testcase extends advanced_testcase {
      */
     public function test_create_question_essay() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -151,7 +146,6 @@ class mod_lesson_generator_testcase extends advanced_testcase {
      */
     public function test_create_question_matching() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -176,7 +170,6 @@ class mod_lesson_generator_testcase extends advanced_testcase {
      */
     public function test_create_question_numeric() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -201,7 +194,6 @@ class mod_lesson_generator_testcase extends advanced_testcase {
      */
     public function test_create_question_shortanswer() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();

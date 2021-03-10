@@ -54,7 +54,6 @@ class block_totara_featured_links_external_testcase extends test_helper {
      */
     public function test_remove_tile() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $instance = $this->blockgenerator->create_instance();
@@ -85,7 +84,6 @@ class block_totara_featured_links_external_testcase extends test_helper {
 
     public function test_remove_tile_not_loggedin() {
         global $DB;
-        $this->resetAfterTest();
 
         $instance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($instance->id);
@@ -110,7 +108,6 @@ class block_totara_featured_links_external_testcase extends test_helper {
     }
 
     public function test_reorder_tiles() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $instance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($instance->id);

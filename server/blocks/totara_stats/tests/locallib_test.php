@@ -35,7 +35,6 @@ require_once($CFG->dirroot . '/blocks/totara_stats/locallib.php');
 class block_totara_stats_testcase extends advanced_testcase {
 
     public function test_totara_stats_manager_stats_without_staff() {
-        $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
 

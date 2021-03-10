@@ -120,7 +120,6 @@ class tool_totara_sync_pos_csv_emptyfields_setting_testcase extends totara_sync_
 
         parent::setUp();
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->source = new $this->sourcename();

@@ -35,7 +35,6 @@ class logstore_standard_store_testcase extends advanced_testcase {
 
     public function test_log_writing() {
         global $DB;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $user1 = $this->getDataGenerator()->create_user();
@@ -245,7 +244,6 @@ class logstore_standard_store_testcase extends advanced_testcase {
 
         $this->disable_gc();
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         set_config('enabled_stores', 'logstore_standard', 'tool_log');
@@ -299,7 +297,6 @@ class logstore_standard_store_testcase extends advanced_testcase {
     public function test_cleanup_task() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create some records spread over various days; test multiple iterations in cleanup.
         $ctx = context_course::instance(1);

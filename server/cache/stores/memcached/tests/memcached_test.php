@@ -76,7 +76,6 @@ class cachestore_memcached_test extends cachestore_tests {
             $this->markTestSkipped('Could not test cachestore_memcached. Requirements are not met.');
         }
 
-        $this->resetAfterTest(true);
 
         $definition = cache_definition::load_adhoc(cache_store::MODE_APPLICATION, 'cachestore_memcached', 'phpunit_test');
         $instance = new cachestore_memcached('Memcached Test', cachestore_memcached::unit_test_configuration());
@@ -167,7 +166,6 @@ class cachestore_memcached_test extends cachestore_tests {
             $this->markTestSkipped('Could not test cachestore_memcached. Requirements are not met.');
         }
 
-        $this->resetAfterTest(true);
 
         $testservers = explode("\n", trim(TEST_CACHESTORE_MEMCACHED_TESTSERVERS));
 

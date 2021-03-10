@@ -46,7 +46,6 @@ class totara_reportbuilder_external_testcase extends \advanced_testcase {
     public $rb_generator;
 
     protected function setUp(): void {
-        $this->resetAfterTest();
         $this->rb_generator = $this->getDataGenerator()->get_plugin_generator('totara_reportbuilder');
         parent::setup();
     }
@@ -225,7 +224,6 @@ class totara_reportbuilder_external_testcase extends \advanced_testcase {
     public function test_user_can_change_a_default() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $data = $this->create_data();
 

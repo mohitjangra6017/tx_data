@@ -29,7 +29,6 @@ defined('MOODLE_INTERNAL') || die();
 class totara_core_referrer_testcase extends advanced_testcase {
     public function test_get_local_referer() {
         global $CFG;
-        $this->resetAfterTest();
 
         $CFG->wwwroot = 'http://www.example.com';
 
@@ -122,7 +121,6 @@ class totara_core_referrer_testcase extends advanced_testcase {
 
     public function test_get_referrer_policy() {
         global $CFG;
-        $this->resetAfterTest();
 
         $this->assertEmpty($CFG->securereferrers);
 

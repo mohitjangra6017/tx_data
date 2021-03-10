@@ -57,7 +57,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
      * Tests the block_totara_featured_links\tile\base::get_tile_instance() method.
      */
     public function test_get_tile_instance() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // First up test with a real id.
@@ -76,7 +75,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
      */
     public function test_squash_ordering() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $blockinstance1 = $this->blockgenerator->create_instance();
@@ -174,15 +172,12 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
      * We are really just testing that it doesn't error!
      */
     public function test_squash_ordering_without_tiles() {
-        $this->resetAfterTest(); // Changing the database, we must reset.
-
         $blockinstance = $this->blockgenerator->create_instance();
         base::squash_ordering($blockinstance->id);
     }
 
     public function test_squash_ordering_of_subtiles() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
         /** @var \block_totara_featured_links\testing\generator $featuredlinksgenerator */
         $featuredlinksgenerator = $this->getDataGenerator()->get_plugin_generator('block_totara_featured_links');
@@ -230,7 +225,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
      */
     public function test_squash_ordering_with_duplicate_sort_values() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $blockinstance = $this->blockgenerator->create_instance();
@@ -280,7 +274,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
     }
 
     public function test_get_next_sortorder() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $base = $this->getMockForAbstractClass('\block_totara_featured_links\tile\base');
         $blockinstance = $this->blockgenerator->create_instance();
@@ -297,7 +290,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
 
     public function test_remove_tile() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
         $blockinstance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($blockinstance->id);
@@ -314,7 +306,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
 
     public function test_save() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
         $instance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($instance->id);
@@ -337,7 +328,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
 
     public function test_save_ordering() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
         $instance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($instance->id);
@@ -374,7 +364,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
 
     public function test_save_visibility () {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
         $blockinstance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($blockinstance->id);
@@ -416,7 +405,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
     }
 
     public function test_is_visible() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $blockinstance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($blockinstance->id);
@@ -428,7 +416,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
     }
 
     public function test_is_visible_preset() {
-        $this->resetAfterTest();
 
         $blockinstance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($blockinstance->id);
@@ -445,7 +432,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
 
     public function test_is_visible_audience() {
         global $USER;
-        $this->resetAfterTest();
         $this->setAdminUser();
         $blockinstance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($blockinstance->id);
@@ -469,7 +455,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
 
     public function test_is_visible_aggregation() {
         global $USER;
-        $this->resetAfterTest();
         $this->setAdminUser();
         $blockinstance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($blockinstance->id);
@@ -520,7 +505,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
     }
 
     public function test_get_visibility_form_data() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $blockinstance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($blockinstance->id);
@@ -534,7 +518,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
     public function test_export_form_template_add_tile() {
         global $PAGE;
         $PAGE->set_url(new \moodle_url('/'));
-        $this->resetAfterTest();
         $this->setAdminUser();
         $blockinstance = $this->blockgenerator->create_instance();
         $data = base::export_for_template_add_tile($blockinstance->id);
@@ -543,7 +526,6 @@ class block_totara_featured_links_tile_base_testcase extends test_helper {
 
     public function test_is_visibility_applicable() {
         global $DB, $USER;
-        $this->resetAfterTest();
         $this->setAdminUser();
         $blockinstance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($blockinstance->id);

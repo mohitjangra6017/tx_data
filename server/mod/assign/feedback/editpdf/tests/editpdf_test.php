@@ -83,7 +83,6 @@ class assignfeedback_editpdf_testcase extends advanced_testcase {
     }
 
     public function test_comments_quick_list() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
 
@@ -107,7 +106,6 @@ class assignfeedback_editpdf_testcase extends advanced_testcase {
     }
 
     public function test_page_editor() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -207,7 +205,6 @@ class assignfeedback_editpdf_testcase extends advanced_testcase {
 
     public function test_document_services() {
         $this->require_ghostscript();
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -343,7 +340,6 @@ class assignfeedback_editpdf_testcase extends advanced_testcase {
      * and false when not modified.
      */
     public function test_is_feedback_modified() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');

@@ -31,7 +31,6 @@ require_once($CFG->dirroot . '/totara/hierarchy/prefix/goal/lib.php');
 class totara_hierarchy_goal_user_assignments_testcase extends advanced_testcase {
 
     private function setup_common_data(): stdClass {
-        $this->resetAfterTest(true);
 
         $data = new stdClass();
 

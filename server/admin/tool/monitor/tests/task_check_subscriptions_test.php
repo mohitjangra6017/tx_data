@@ -49,7 +49,6 @@ class tool_monitor_task_check_subscriptions_testcase extends advanced_testcase {
     public function setUp(): void {
         global $DB;
         set_config('enablemonitor', 1, 'tool_monitor');
-        $this->resetAfterTest(true);
 
         // All tests defined herein need a user, course, rule and subscription, so set these up.
         $this->user = $this->getDataGenerator()->create_user();

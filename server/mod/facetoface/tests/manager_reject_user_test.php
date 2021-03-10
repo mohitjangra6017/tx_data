@@ -82,7 +82,6 @@ class mod_facetoface_manager_reject_user_testcase extends advanced_testcase {
      */
     public function test_booked_user_should_not_received_rejected_email(): void {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $f2f = $this->create_facetoface();

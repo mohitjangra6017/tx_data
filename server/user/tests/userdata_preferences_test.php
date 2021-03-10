@@ -49,7 +49,6 @@ class core_user_userdata_preferences_testcase extends advanced_testcase {
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $controluser = $this->getDataGenerator()->create_user();
         $activeuser = $this->getDataGenerator()->create_user();
@@ -164,7 +163,6 @@ class core_user_userdata_preferences_testcase extends advanced_testcase {
     public function test_count() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $controluser = $this->getDataGenerator()->create_user();
         $activeuser = $this->getDataGenerator()->create_user();
@@ -215,7 +213,6 @@ class core_user_userdata_preferences_testcase extends advanced_testcase {
     public function test_export() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $activeuser = $this->getDataGenerator()->create_user();
         $deleteduser = $this->getDataGenerator()->create_user(['deleted' => 1]);

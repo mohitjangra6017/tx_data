@@ -133,7 +133,6 @@ class core_exporter_testcase extends advanced_testcase {
     public function test_format_text() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $syscontext = context_system::instance();
         $coursecontext = context_course::instance($course->id);

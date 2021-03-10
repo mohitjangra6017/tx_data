@@ -37,7 +37,6 @@ require_once($CFG->dirroot . '/group/lib.php');
 class core_group_lib_testcase extends advanced_testcase {
 
     public function test_member_added_event() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -67,7 +66,6 @@ class core_group_lib_testcase extends advanced_testcase {
     }
 
     public function test_member_removed_event() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -96,7 +94,6 @@ class core_group_lib_testcase extends advanced_testcase {
     }
 
     public function test_group_created_event() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -117,7 +114,6 @@ class core_group_lib_testcase extends advanced_testcase {
     }
 
     public function test_grouping_created_event() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
@@ -142,7 +138,6 @@ class core_group_lib_testcase extends advanced_testcase {
     public function test_group_updated_event() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $group = $this->getDataGenerator()->create_group(array('courseid' => $course->id));
@@ -173,7 +168,6 @@ class core_group_lib_testcase extends advanced_testcase {
     public function test_group_updated_event_does_not_require_names() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $group = $this->getDataGenerator()->create_group(array('courseid' => $course->id));
@@ -202,7 +196,6 @@ class core_group_lib_testcase extends advanced_testcase {
     public function test_grouping_updated_event() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $grouping = $this->getDataGenerator()->create_grouping(array('courseid' => $course->id));
@@ -242,7 +235,6 @@ class core_group_lib_testcase extends advanced_testcase {
     public function test_grouping_updated_event_does_not_require_names() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $grouping = $this->getDataGenerator()->create_grouping(array('courseid' => $course->id));
@@ -280,7 +272,6 @@ class core_group_lib_testcase extends advanced_testcase {
     }
 
     public function test_group_deleted_event() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $group = $this->getDataGenerator()->create_group(array('courseid' => $course->id));
@@ -301,7 +292,6 @@ class core_group_lib_testcase extends advanced_testcase {
     }
 
     public function test_grouping_deleted_event() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $group = $this->getDataGenerator()->create_grouping(array('courseid' => $course->id));
@@ -323,7 +313,6 @@ class core_group_lib_testcase extends advanced_testcase {
 
     public function test_groups_delete_group_members() {
         global $DB;
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $user1 = $this->getDataGenerator()->create_user();
@@ -362,7 +351,6 @@ class core_group_lib_testcase extends advanced_testcase {
 
     public function test_groups_remove_member() {
         global $DB;
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $user1 = $this->getDataGenerator()->create_user();
@@ -392,7 +380,6 @@ class core_group_lib_testcase extends advanced_testcase {
 
     public function test_groups_delete_groupings_groups() {
         global $DB;
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
@@ -422,7 +409,6 @@ class core_group_lib_testcase extends advanced_testcase {
 
     public function test_groups_delete_groups() {
         global $DB;
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
@@ -453,7 +439,6 @@ class core_group_lib_testcase extends advanced_testcase {
 
     public function test_groups_delete_groupings() {
         global $DB;
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
@@ -478,7 +463,6 @@ class core_group_lib_testcase extends advanced_testcase {
 
     public function test_groups_create_autogroups () {
         global $DB;
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $group1 = $this->getDataGenerator()->create_group(array('courseid' => $course->id));

@@ -95,7 +95,6 @@ class totara_program_rb_source_program_overview_testcase extends reportcache_adv
      */
     public function test_load_overview() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $program_generator = \totara_program\testing\generator::instance();

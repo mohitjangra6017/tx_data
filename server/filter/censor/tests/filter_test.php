@@ -35,7 +35,6 @@ class filter_censor_filter_testcase extends advanced_testcase {
     }
 
     public function test_filter() {
-        $this->resetAfterTest();
 
         set_config('filter_censor_badwords', 'banana,biscuit');
 

@@ -43,7 +43,6 @@ class mod_facetoface_multiple_signups_testcase extends \advanced_testcase {
         global $DB;
 
         parent::setUp();
-        $this->resetAfterTest(true);
     }
 
     /**

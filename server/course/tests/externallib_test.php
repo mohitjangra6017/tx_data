@@ -54,7 +54,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
 
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Set the required capabilities by the external function
         $contextid = context_system::instance()->id;
@@ -131,7 +130,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_delete_categories() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Set the required capabilities by the external function
         $contextid = context_system::instance()->id;
@@ -184,7 +182,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_categories() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generatedcats = array();
         $category1data['idnumber'] = 'idnumbercat1';
@@ -314,7 +311,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_update_categories() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Set the required capabilities by the external function
         $contextid = context_system::instance()->id;
@@ -387,7 +383,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_create_course_numsections() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Set the required capabilities by the external function.
         $contextid = context_system::instance()->id;
@@ -421,7 +416,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_create_courses() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Enable course completion.
         set_config('enablecompletion', 1);
@@ -555,7 +549,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_delete_courses() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         // Admin can delete a course.
         $this->setAdminUser();
@@ -615,7 +608,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_courses () {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generatedcourses = array();
         $coursedata['idnumber'] = 'idnumbercourse1';
@@ -708,7 +700,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
      * Test get_courses without capability
      */
     public function test_get_courses_without_capability() {
-        $this->resetAfterTest(true);
 
         $course1 = $this->getDataGenerator()->create_course();
         $this->setUser($this->getDataGenerator()->create_user());
@@ -737,7 +728,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
 
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $generatedcourses = array();
         $coursedata1['fullname'] = 'FIRST COURSE';
@@ -874,7 +864,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_course_contents() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         list($course, $forumcm, $datacm, $pagecm, $labelcm, $urlcm) = $this->prepare_get_course_contents_test();
 
@@ -935,7 +924,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
      * Test get_course_contents excluding modules
      */
     public function test_get_course_contents_excluding_modules() {
-        $this->resetAfterTest(true);
 
         list($course, $forumcm, $datacm, $pagecm, $labelcm, $urlcm) = $this->prepare_get_course_contents_test();
 
@@ -956,7 +944,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
      * Test get_course_contents excluding contents
      */
     public function test_get_course_contents_excluding_contents() {
-        $this->resetAfterTest(true);
 
         list($course, $forumcm, $datacm, $pagecm, $labelcm, $urlcm) = $this->prepare_get_course_contents_test();
 
@@ -980,7 +967,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
      * Test get_course_contents filtering by section number
      */
     public function test_get_course_contents_section_number() {
-        $this->resetAfterTest(true);
 
         list($course, $forumcm, $datacm, $pagecm, $labelcm, $urlcm) = $this->prepare_get_course_contents_test();
 
@@ -998,7 +984,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
      * Test get_course_contents filtering by cmid
      */
     public function test_get_course_contents_cmid() {
-        $this->resetAfterTest(true);
 
         list($course, $forumcm, $datacm, $pagecm, $labelcm, $urlcm) = $this->prepare_get_course_contents_test();
 
@@ -1018,7 +1003,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
      * Test get_course_contents filtering by cmid and section
      */
     public function test_get_course_contents_section_cmid() {
-        $this->resetAfterTest(true);
 
         list($course, $forumcm, $datacm, $pagecm, $labelcm, $urlcm) = $this->prepare_get_course_contents_test();
 
@@ -1040,7 +1024,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
      * Test get_course_contents filtering by modname
      */
     public function test_get_course_contents_modname() {
-        $this->resetAfterTest(true);
 
         list($course, $forumcm, $datacm, $pagecm, $labelcm, $urlcm) = $this->prepare_get_course_contents_test();
 
@@ -1059,7 +1042,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
      * Test get_course_contents filtering by modname
      */
     public function test_get_course_contents_modid() {
-        $this->resetAfterTest(true);
 
         list($course, $forumcm, $datacm, $pagecm, $labelcm, $urlcm) = $this->prepare_get_course_contents_test();
 
@@ -1082,7 +1064,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
      * Test duplicate_course
      */
     public function test_duplicate_course() {
-        $this->resetAfterTest(true);
 
         // Create one course with three modules.
         $course  = self::getDataGenerator()->create_course();
@@ -1138,7 +1119,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
         // See MDL-39723 for more info.
         $origcourse = clone($COURSE);
 
-        $this->resetAfterTest(true);
 
         // Set the required capabilities by the external function.
         $contextid = context_system::instance()->id;
@@ -1379,7 +1359,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
         global $DB;
 
         // Ensure we reset the data after this test.
-        $this->resetAfterTest(true);
 
         // Create a user.
         $user = self::getDataGenerator()->create_user();
@@ -1479,7 +1458,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_import_course_empty() {
         global $USER;
 
-        $this->resetAfterTest(true);
 
         $course1  = self::getDataGenerator()->create_course();
         $forum = $this->getDataGenerator()->create_module('forum', array('course' => $course1->id, 'name' => 'Forum test'));
@@ -1526,7 +1504,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_import_course_filled() {
         global $USER;
 
-        $this->resetAfterTest(true);
 
         // Add forum and page to course1.
         $course1  = self::getDataGenerator()->create_course();
@@ -1577,7 +1554,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_import_course_blocksonly() {
         global $USER, $DB;
 
-        $this->resetAfterTest(true);
 
         // Add forum and page to course1.
         $course1  = self::getDataGenerator()->create_course();
@@ -1617,7 +1593,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
      */
     public function test_import_course_deletecontent() {
         global $USER;
-        $this->resetAfterTest(true);
 
         // Add forum and page to course1.
         $course1  = self::getDataGenerator()->create_course();
@@ -1664,7 +1639,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
      * Ensure import_course handles incorrect deletecontent option correctly.
      */
     public function test_import_course_invalid_deletecontent_option() {
-        $this->resetAfterTest(true);
 
         $course1  = self::getDataGenerator()->create_course();
         $course2  = self::getDataGenerator()->create_course();
@@ -1680,7 +1654,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
      */
     public function test_view_course() {
 
-        $this->resetAfterTest();
 
         // Course without sections.
         $course = $this->getDataGenerator()->create_course(array('numsections' => 5), array('createsections' => true));
@@ -1718,7 +1691,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_course_module() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         $course = self::getDataGenerator()->create_course();
@@ -1831,7 +1803,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_course_module_by_instance() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         $course = self::getDataGenerator()->create_course();
@@ -1901,7 +1872,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_activities_overview() {
         global $USER;
 
-        $this->resetAfterTest();
         $course1 = self::getDataGenerator()->create_course();
         $course2 = self::getDataGenerator()->create_course();
 
@@ -1944,7 +1914,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_user_navigation_options() {
         global $USER;
 
-        $this->resetAfterTest();
         $course1 = self::getDataGenerator()->create_course();
         $course2 = self::getDataGenerator()->create_course();
 
@@ -1998,7 +1967,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_user_administration_options() {
         global $USER;
 
-        $this->resetAfterTest();
         $course1 = self::getDataGenerator()->create_course();
         $course2 = self::getDataGenerator()->create_course();
 
@@ -2239,7 +2207,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
      * Test get_courses_by_field_invalid_theme_and_lang
      */
     public function test_get_courses_by_field_invalid_theme_and_lang() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $course = self::getDataGenerator()->create_course(array('theme' => 'kkt', 'lang' => 'kkl'));
@@ -2252,7 +2219,6 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
 
     public function test_check_updates() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create different types of activities.

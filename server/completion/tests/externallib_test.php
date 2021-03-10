@@ -47,7 +47,6 @@ class core_completion_externallib_testcase extends externallib_advanced_testcase
     public function test_update_activity_completion_status_manually() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         set_config('enablecompletion', 1);
         $user = $this->getDataGenerator()->create_user();
@@ -94,7 +93,6 @@ class core_completion_externallib_testcase extends externallib_advanced_testcase
     public function test_get_activities_completion_status() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         set_config('enablecompletion', 1);
         $student = $this->getDataGenerator()->create_user();
@@ -201,7 +199,6 @@ class core_completion_externallib_testcase extends externallib_advanced_testcase
         require_once($CFG->dirroot.'/completion/criteria/completion_criteria_role.php');
         require_once($CFG->dirroot.'/completion/criteria/completion_criteria_course.php');
 
-        $this->resetAfterTest(true);
 
         $CFG->enablecompletion = true;
         $student = $this->getDataGenerator()->create_user();
@@ -298,7 +295,6 @@ class core_completion_externallib_testcase extends externallib_advanced_testcase
         require_once($CFG->dirroot.'/completion/criteria/completion_criteria.php');
         require_once($CFG->dirroot.'/completion/criteria/completion_criteria_self.php');
 
-        $this->resetAfterTest(true);
 
         $CFG->enablecompletion = true;
         $student = $this->getDataGenerator()->create_user();

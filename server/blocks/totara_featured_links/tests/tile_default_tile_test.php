@@ -53,7 +53,6 @@ class block_totara_featured_links_tile_default_tile_testcase extends test_helper
      * Tests the logic for the accessibility text
      */
     public function test_get_accessibility_text() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $blockinstance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($blockinstance->id);
@@ -77,7 +76,6 @@ class block_totara_featured_links_tile_default_tile_testcase extends test_helper
      */
     public function test_tile_custom_save() {
         global $DB, $CFG;
-        $this->resetAfterTest();
         $this->setAdminUser();
         $instance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($instance->id);
@@ -132,7 +130,6 @@ class block_totara_featured_links_tile_default_tile_testcase extends test_helper
     public function test_tile_render_background() {
         global $CFG , $PAGE;
         $PAGE->set_url('/');
-        $this->resetAfterTest();
         $instance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($instance->id);
         $context = \context_block::instance($instance->id);
@@ -175,7 +172,6 @@ class block_totara_featured_links_tile_default_tile_testcase extends test_helper
         global $PAGE;
         $PAGE->set_url('/');
         $this->setAdminUser();
-        $this->resetAfterTest();
         $blockinstance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_default_tile($blockinstance->id);
         $data = new \stdClass();

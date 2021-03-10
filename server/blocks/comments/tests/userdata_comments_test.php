@@ -63,7 +63,6 @@ class block_comments_userdata_username_testcase extends advanced_testcase {
      * Create fixtures for our tests.
      */
     private function create_fixtures() {
-        $this->resetAfterTest(true);
 
         $fixtures = new class() {
             /** @var target_user */

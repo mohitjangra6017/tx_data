@@ -93,7 +93,6 @@ class totara_cohort_audience_member_authentication_rule_testcase extends advance
         int $numberofusers, int $numberofexpecteduser, array $listofauthtype, int $operation, array $ruleauthtype
     ): void {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Creating the number of users with the authentication type here

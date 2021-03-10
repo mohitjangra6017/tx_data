@@ -252,7 +252,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     }
 
     public function test_cron_message_includes_courseid() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -289,7 +288,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     }
 
     public function test_forced_subscription() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -330,7 +328,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     public function test_subscription_disabled() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -389,7 +386,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     }
 
     public function test_automatic() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -428,7 +424,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     }
 
     public function test_optional() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -450,7 +445,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     }
 
     public function test_automatic_with_unsubscribed_user() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -492,7 +486,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     }
 
     public function test_optional_with_subscribed_user() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -534,7 +527,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     }
 
     public function test_automatic_with_unsubscribed_discussion() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -579,7 +571,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     }
 
     public function test_optional_with_subscribed_discussion() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -634,7 +625,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     }
 
     public function test_automatic_with_subscribed_discussion_in_unsubscribed_forum() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -709,7 +699,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     }
 
     public function test_optional_with_unsubscribed_discussion_in_subscribed_forum() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -741,7 +730,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
      * they subscribed to the discussion.
      */
     public function test_forum_discussion_subscription_forum_unsubscribed_discussion_subscribed_after_post() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -785,7 +773,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     }
 
     public function test_forum_message_inbound_multiple_posts() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -848,7 +835,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     }
 
     public function test_long_subject() {
-        $this->resetAfterTest(true);
 
         // Create a course, with a forum.
         $course = $this->getDataGenerator()->create_course();
@@ -876,7 +862,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
      * Test inital email and reply email subjects
      */
     public function test_subjects() {
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
 
@@ -1058,7 +1043,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
     public function test_forum_post_email_templates($data) {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create the course, with the specified options.
         $options = array();

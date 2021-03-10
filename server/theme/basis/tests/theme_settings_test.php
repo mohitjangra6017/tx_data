@@ -32,7 +32,6 @@ class theme_basis_site_logo_testcase extends advanced_testcase {
         global $CFG, $SITE, $OUTPUT, $PAGE;
         $PAGE->theme->settings->logo = new moodle_url('/theme/image.php/_s/basis/totara_core/1/logo');
         $logoalt = 'Theme Logo';
-        $this->resetAfterTest();
         $expected = array(
             'siteurl' => $CFG->wwwroot .'/',
             'shortname' => $SITE->shortname,

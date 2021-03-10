@@ -36,7 +36,6 @@ defined('MOODLE_INTERNAL') || die();
 class core_date_legacy_testcase extends advanced_testcase {
     public function test_settings() {
         global $CFG;
-        $this->resetAfterTest();
 
         $this->assertNotEmpty($CFG->timezone);
 
@@ -49,7 +48,6 @@ class core_date_legacy_testcase extends advanced_testcase {
     public function test_get_user_timezone() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -138,7 +136,6 @@ class core_date_legacy_testcase extends advanced_testcase {
     public function test_make_timestamp() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         // There are quite a lot of problems, let's pick some less problematic zones for now.
         $timezones = array('Europe/Prague', 'Europe/London', 'Australia/Perth', 'Pacific/Auckland', 'America/New_York', '99');
@@ -183,7 +180,6 @@ class core_date_legacy_testcase extends advanced_testcase {
     public function test_usergetdate() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         // There are quite a lot of problems, let's pick some less problematic zones for now.
         $timezones = array('Europe/Prague', 'Europe/London', 'Australia/Perth', 'Pacific/Auckland', 'America/New_York', '99');
@@ -254,7 +250,6 @@ class core_date_legacy_testcase extends advanced_testcase {
     public function test_userdate() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $dates = array(
             array(2, 1, 0, 40, 40),
@@ -315,7 +310,6 @@ class core_date_legacy_testcase extends advanced_testcase {
 
     public function test_usertimezone() {
         global $USER;
-        $this->resetAfterTest();
 
         $this->setTimezone('Pacific/Auckland', 'Pacific/Auckland');
 

@@ -39,7 +39,6 @@ class core_availability_capability_checker_testcase extends advanced_testcase {
      */
     public function test_capability_checker() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         // Create a course with teacher and student.
         $generator = $this->getDataGenerator();

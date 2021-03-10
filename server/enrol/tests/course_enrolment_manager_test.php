@@ -119,7 +119,6 @@ class core_course_enrolment_manager_testcase extends advanced_testcase {
     public function test_get_total_users() {
         global $PAGE;
 
-        $this->resetAfterTest();
 
         // All users filtering.
         $manager = new course_enrolment_manager($PAGE, $this->course);
@@ -173,7 +172,6 @@ class core_course_enrolment_manager_testcase extends advanced_testcase {
     public function test_get_users() {
         global $PAGE;
 
-        $this->resetAfterTest();
 
         // All users filtering.
         $manager = new course_enrolment_manager($PAGE, $this->course);

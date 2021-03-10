@@ -33,7 +33,6 @@ class totara_core_quickaccessmenu_preference_helper_testcase extends advanced_te
 
     public function test_set_quickaccess_preference() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $otheruser = $this->getDataGenerator()->create_user();
@@ -75,7 +74,6 @@ class totara_core_quickaccessmenu_preference_helper_testcase extends advanced_te
 
     public function test_reset_for_user() {
         global $DB;
-        $this->resetAfterTest();
         $userid = get_admin()->id;
         $this->assertSame(0, $DB->count_records('quickaccess_preferences'));
         preference_helper::set_preference($userid, 'whatever', 'something');

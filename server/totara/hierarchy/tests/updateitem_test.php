@@ -53,7 +53,6 @@ class totara_hierarchy_updateitem_testcase extends advanced_testcase {
         $admin = get_admin();
         $userid = $admin->id;
 
-        $this->resetAfterTest(true);
 
         $this->frame1 = new stdClass();
         $this->frame1->fullname = 'Framework A';
@@ -141,7 +140,6 @@ class totara_hierarchy_updateitem_testcase extends advanced_testcase {
         $before[$org->id] = $this->org1->id;
         $this->assertEquals($before, $after);
 
-        $this->resetAfterTest(true);
     }
 
     public function test_invalid_new_parent_id() {

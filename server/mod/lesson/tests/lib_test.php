@@ -42,7 +42,6 @@ class mod_lesson_lib_testcase extends advanced_testcase {
     public function test_check_updates_since() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $course = new stdClass();
         $course->groupmode = SEPARATEGROUPS;

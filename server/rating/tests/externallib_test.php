@@ -45,7 +45,6 @@ class core_rating_externallib_testcase extends externallib_advanced_testcase {
      */
     public function setUp(): void {
         global $DB;
-        $this->resetAfterTest();
 
         $this->course = self::getDataGenerator()->create_course();
         $this->student1 = $this->getDataGenerator()->create_user();

@@ -42,7 +42,6 @@ class core_user_profilelib_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/user/profile/lib.php');
 
-        $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
 
         // Add a custom field of textarea type.
@@ -110,7 +109,6 @@ class core_user_profilelib_testcase extends advanced_testcase {
     public function test_profile_view() {
         global $USER;
 
-        $this->resetAfterTest();
 
         // Course without sections.
         $course = $this->getDataGenerator()->create_course();
@@ -156,7 +154,6 @@ class core_user_profilelib_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/user/lib.php');
         require_once($CFG->dirroot . '/user/profile/lib.php');
 
-        $this->resetAfterTest();
 
         // Add a required, visible, unlocked custom field.
         $DB->insert_record('user_info_field', ['shortname' => 'house', 'name' => 'House', 'required' => 1,

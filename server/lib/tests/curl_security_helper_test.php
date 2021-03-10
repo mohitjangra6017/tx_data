@@ -46,7 +46,6 @@ class core_curl_security_helper_testcase extends advanced_testcase {
      * @dataProvider curl_security_url_data_provider
      */
     public function test_curl_security_helper_url_is_blocked($dns, $url, $blockedhosts, $allowedports, $expected) {
-        $this->resetAfterTest(true);
         $helper = $this->getMockBuilder('\core\files\curl_security_helper')
                         ->setMethods(['get_host_list_by_name'])
                         ->getMock();
@@ -172,7 +171,6 @@ class core_curl_security_helper_testcase extends advanced_testcase {
      * @dataProvider curl_security_settings_data_provider
      */
     public function test_curl_security_helper_is_enabled($blockedhosts, $allowedports, $expected) {
-        $this->resetAfterTest(true);
         $helper = new \core\files\curl_security_helper();
         set_config('curlsecurityblockedhosts', $blockedhosts);
         set_config('curlsecurityallowedport', $allowedports);
@@ -204,7 +202,6 @@ class core_curl_security_helper_testcase extends advanced_testcase {
      * @dataProvider curl_security_host_data_provider
      */
     public function test_curl_security_helper_host_is_blocked($host, $blockedhosts, $expected) {
-        $this->resetAfterTest(true);
         $helper = new \core\files\curl_security_helper();
         set_config('curlsecurityblockedhosts', $blockedhosts);
         $this->assertEquals($expected, $this->callInternalMethod($helper, 'host_is_blocked', [$host]));
@@ -257,7 +254,6 @@ class core_curl_security_helper_testcase extends advanced_testcase {
      * @dataProvider curl_security_port_data_provider
      */
     public function test_curl_security_helper_port_is_blocked($port, $allowedports, $expected) {
-        $this->resetAfterTest(true);
         $helper = new \core\files\curl_security_helper();
         set_config('curlsecurityallowedport', $allowedports);
         $this->assertEquals($expected, $this->callInternalMethod($helper, 'port_is_blocked', [$port]));

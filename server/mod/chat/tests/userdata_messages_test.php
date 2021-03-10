@@ -333,7 +333,6 @@ class mod_chat_userdata_messages_test extends chat_testcase {
                 $this->errors('excessive_purge'));
         }
 
-        $this->resetAfterTest();
     }
 
     public function test_it_purges_chat_messages_for_course_category_context() {
@@ -365,7 +364,6 @@ class mod_chat_userdata_messages_test extends chat_testcase {
                 $this->errors('excessive_purge'));
         }
 
-        $this->resetAfterTest();
     }
 
     public function test_it_purges_chat_messages_for_course_context() {
@@ -399,7 +397,6 @@ class mod_chat_userdata_messages_test extends chat_testcase {
                 $this->errors('excessive_purge'));
         }
 
-        $this->resetAfterTest();
     }
 
     public function test_it_purges_chat_messages_for_module_context() {
@@ -435,7 +432,6 @@ class mod_chat_userdata_messages_test extends chat_testcase {
                 $this->errors('excessive_purge'));
         }
 
-        $this->resetAfterTest();
     }
 
     public function test_it_exports_chat_messages_for_system_context() {
@@ -455,7 +451,6 @@ class mod_chat_userdata_messages_test extends chat_testcase {
 
         $this->assertEquals(count($messages), $this->count_exported_messages($export), $this->errors('exported_count_wrong'));
 
-        $this->resetAfterTest();
     }
 
     public function test_it_exports_chat_messages_for_course_category_context() {
@@ -480,7 +475,6 @@ class mod_chat_userdata_messages_test extends chat_testcase {
 
         $this->assertEquals(count($messages), $this->count_exported_messages($export), $this->errors('exported_count_wrong'));
 
-        $this->resetAfterTest();
     }
 
     public function test_it_exports_chat_messages_for_course_context() {
@@ -505,7 +499,6 @@ class mod_chat_userdata_messages_test extends chat_testcase {
 
         $this->assertEquals(count($messages), $this->count_exported_messages($export), $this->errors('exported_count_wrong'));
 
-        $this->resetAfterTest();
     }
 
     public function test_it_exports_chat_messages_for_course_module_context() {
@@ -533,7 +526,6 @@ class mod_chat_userdata_messages_test extends chat_testcase {
 
         $this->assertEquals(count($messages), $this->count_exported_messages($export), $this->errors('exported_count_wrong'));
 
-        $this->resetAfterTest();
     }
 
     public function test_it_counts_chat_messages_for_system_context() {
@@ -544,7 +536,6 @@ class mod_chat_userdata_messages_test extends chat_testcase {
         $this->assertEquals($this->count_related_data('chat_messages', $context, $user),
             messages::execute_count($user, $context), $this->errors('count_does_not_match'));
 
-        $this->resetAfterTest();
     }
 
     public function test_it_counts_chat_messages_for_course_category_context() {
@@ -555,7 +546,6 @@ class mod_chat_userdata_messages_test extends chat_testcase {
         $this->assertEquals($this->count_related_data('chat_messages', $context, $user),
             messages::execute_count($user, $context), $this->errors('count_does_not_match'));
 
-        $this->resetAfterTest();
     }
 
     public function test_it_counts_chat_messages_for_course_context() {
@@ -566,7 +556,6 @@ class mod_chat_userdata_messages_test extends chat_testcase {
         $this->assertEquals($this->count_related_data('chat_messages', $context, $user),
             messages::execute_count($user, $context), $this->errors('count_does_not_match'));
 
-        $this->resetAfterTest();
     }
 
     public function test_it_counts_chat_messages_for_module_context() {
@@ -580,6 +569,5 @@ class mod_chat_userdata_messages_test extends chat_testcase {
         $this->assertEquals($this->count_related_data('chat_messages', $context, $user, $module->instance),
             messages::execute_count($user, $context), $this->errors('count_does_not_match'));
 
-        $this->resetAfterTest();
     }
 }

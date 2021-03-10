@@ -51,7 +51,6 @@ class core_block_externallib_testcase extends externallib_advanced_testcase {
 
         $PAGE->set_url('/admin/tool/phpunit/index.php');
 
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
@@ -88,7 +87,6 @@ class core_block_externallib_testcase extends externallib_advanced_testcase {
 
         $PAGE->set_url('/admin/tool/phpunit/index.php');
 
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
 
@@ -120,7 +118,6 @@ class core_block_externallib_testcase extends externallib_advanced_testcase {
 
         $PAGE->set_url('/admin/tool/phpunit/index.php');
 
-        $this->resetAfterTest(true);
 
         $CFG->defaultblocks_override = 'participants,search_forums,course_list:calendar_upcoming,recent_activity';
 

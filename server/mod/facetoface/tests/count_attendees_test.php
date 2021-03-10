@@ -52,7 +52,6 @@ class mod_facetoface_count_attendees_testcase extends advanced_testcase {
      * @return void
      */
     public function test_count_attendees(): void {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $e = $this->create_seminar_event();

@@ -45,7 +45,6 @@ class mod_quiz_attempt_overdue_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot.'/mod/quiz/cronlib.php');
 
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -323,7 +322,6 @@ class mod_quiz_attempt_overdue_testcase extends advanced_testcase {
     public function test_group_event_handlers() {
         global $DB,$CFG;
 
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -390,7 +388,6 @@ class mod_quiz_attempt_overdue_testcase extends advanced_testcase {
      * Test the functions quiz_create_attempt_handling_errors
      */
     public function test_quiz_create_attempt_handling_errors() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Make a quiz.

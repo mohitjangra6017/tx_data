@@ -32,7 +32,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class totara_userdata_local_export_type_testcase extends advanced_testcase {
     public function test_prepare_for_add() {
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -57,7 +56,6 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
     }
 
     public function test_prepare_for_update() {
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -76,7 +74,6 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
     }
 
     public function test_is_deletable() {
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -92,7 +89,6 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
 
     public function test_delete() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
         $type = $generator->create_export_type(array('allowself' => 1));
@@ -104,7 +100,6 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
 
     public function test_export_edit_add() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -144,7 +139,6 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
 
     public function test_export_edit_update() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -195,7 +189,6 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
 
     public function test_get_new_items() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -212,7 +205,6 @@ class totara_userdata_local_export_type_testcase extends advanced_testcase {
 
     public function test_trigger_self_export() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
         $type = $generator->create_export_type(array('allowself' => 1, 'items' => 'core_user-additionalnames'));

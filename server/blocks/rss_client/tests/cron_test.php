@@ -41,7 +41,6 @@ class block_rss_client_cron_testcase extends advanced_testcase {
      */
     public function test_skip() {
         global $DB, $CFG;
-        $this->resetAfterTest();
         // Create a RSS feed record with a skip until time set to the future.
         $record = (object) array(
             'userid' => 1,
@@ -73,7 +72,6 @@ class block_rss_client_cron_testcase extends advanced_testcase {
      */
     public function test_error() {
         global $DB, $CFG;
-        $this->resetAfterTest();
         $time = time();
         // A record that has failed before.
         $record = (object) array(

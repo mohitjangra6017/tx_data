@@ -40,7 +40,6 @@ class totara_message_update_messages_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/totara/message/lib.php');
 
-        $this->resetAfterTest();
 
         $this->assertSame(0, $DB->count_records('message'));
         $this->assertSame(0, $DB->count_records('message_metadata'));

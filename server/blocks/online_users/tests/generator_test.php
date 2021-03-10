@@ -38,7 +38,6 @@ class block_online_users_generator_testcase extends advanced_testcase {
     public function test_generator() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $beforeblocks = $DB->count_records('block_instances');
         $beforecontexts = $DB->count_records('context');

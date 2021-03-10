@@ -50,7 +50,6 @@ class enrol_flatfile_testcase extends advanced_testcase {
     }
 
     public function test_sync_nothing() {
-        $this->resetAfterTest();
 
         $this->disable_plugin();
         $flatfileplugin = enrol_get_plugin('flatfile');
@@ -63,7 +62,6 @@ class enrol_flatfile_testcase extends advanced_testcase {
 
     public function test_sync() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         /** @var enrol_flatfile_plugin $flatfileplugin  */
         $flatfileplugin = enrol_get_plugin('flatfile');
@@ -270,7 +268,6 @@ class enrol_flatfile_testcase extends advanced_testcase {
 
     public function test_notification() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         /** @var enrol_flatfile_plugin $flatfileplugin  */
         $flatfileplugin = enrol_get_plugin('flatfile');
@@ -355,7 +352,6 @@ class enrol_flatfile_testcase extends advanced_testcase {
 
     public function test_expired() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var enrol_flatfile_plugin $flatfileplugin  */
         $flatfileplugin = enrol_get_plugin('flatfile');
@@ -471,7 +467,6 @@ class enrol_flatfile_testcase extends advanced_testcase {
      */
     public function test_flatfile_sync_task() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $flatfileplugin = enrol_get_plugin('flatfile');
 

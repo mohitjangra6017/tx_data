@@ -1240,7 +1240,6 @@ class core_cache_cache_testcase extends advanced_testcase {
         if ((defined('TEST_CACHE_USING_ALT_CACHE_CONFIG_PATH') && TEST_CACHE_USING_ALT_CACHE_CONFIG_PATH) || !empty($CFG->altcacheconfigpath)) {
             $this->markTestSkipped('Skipped testing alt cache path as it is already being used.');
         }
-        $this->resetAfterTest();
         $CFG->altcacheconfigpath = $CFG->dataroot.'/cache/altcacheconfigpath';
         $instance = cache_config_testing::instance();
         $this->assertInstanceOf('cache_config', $instance);
@@ -1525,7 +1524,6 @@ class core_cache_cache_testcase extends advanced_testcase {
      * Test switching users with session caches.
      */
     public function test_session_cache_switch_user() {
-        $this->resetAfterTest(true);
         $cache = cache::make_from_params(cache_store::MODE_SESSION, 'phpunit', 'sessioncache');
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -1553,7 +1551,6 @@ class core_cache_cache_testcase extends advanced_testcase {
      * Test switching users with session caches.
      */
     public function test_session_cache_switch_user_application_mapping() {
-        $this->resetAfterTest(true);
         $instance = cache_config_testing::instance(true);
         $instance->phpunit_add_file_store('testfilestore');
         $instance->phpunit_add_definition('phpunit/testappsession', array(
@@ -1623,7 +1620,6 @@ class core_cache_cache_testcase extends advanced_testcase {
      * Test multiple session caches when switching user.
      */
     public function test_session_cache_switch_user_multiple() {
-        $this->resetAfterTest(true);
         $cache1 = cache::make_from_params(cache_store::MODE_SESSION, 'phpunit', 'sessioncache1');
         $cache2 = cache::make_from_params(cache_store::MODE_SESSION, 'phpunit', 'sessioncache2');
         $user1 = $this->getDataGenerator()->create_user();
@@ -2073,7 +2069,6 @@ class core_cache_cache_testcase extends advanced_testcase {
 
     public function test_performance_debug() {
         global $CFG;
-        $this->resetAfterTest(true);
         $CFG->perfdebug = 15;
 
         $instance = cache_config_testing::instance();
@@ -2224,7 +2219,6 @@ class core_cache_cache_testcase extends advanced_testcase {
 
     public function test_static_cache() {
         global $CFG;
-        $this->resetAfterTest(true);
         $CFG->perfdebug = 15;
 
         // Create cache store with static acceleration.
@@ -2257,7 +2251,6 @@ class core_cache_cache_testcase extends advanced_testcase {
 
     public function test_performance_debug_off() {
         global $CFG;
-        $this->resetAfterTest(true);
         $CFG->perfdebug = 7;
 
         $instance = cache_config_testing::instance();

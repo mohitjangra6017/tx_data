@@ -140,7 +140,6 @@ class totara_reportbuilder_rb_plan_courses_embedded_cache_testcase extends repor
      * - Check that user3 doesn't have any courses
      */
     public function test_plan_courses() {
-        $this->resetAfterTest();
         $courseidalias = reportbuilder_get_extrafield_alias('course', 'courselink', 'course_id');
         $result = $this->get_report_result($this->report_builder_data['shortname'], ['userid' => $this->user1->id], false);
         $this->assertCount(2, $result);
@@ -224,7 +223,6 @@ class totara_reportbuilder_rb_plan_courses_embedded_cache_testcase extends repor
     }
 
     public function test_is_capable() {
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $shortname = $this->report_builder_data['shortname'];

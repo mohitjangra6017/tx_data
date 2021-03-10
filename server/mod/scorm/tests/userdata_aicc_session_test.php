@@ -36,7 +36,6 @@ class mod_scorm_userdata_aicc_session_testcase extends advanced_testcase {
     public function test_purge_scorm_module_not_visible() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $user = $this->getDataGenerator()->create_user();
@@ -190,7 +189,6 @@ class mod_scorm_userdata_aicc_session_testcase extends advanced_testcase {
     public function test_purge_aicc_system_context() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_scorm_data_for_multiple_contexts();
@@ -206,7 +204,6 @@ class mod_scorm_userdata_aicc_session_testcase extends advanced_testcase {
     public function test_purge_aicc_coursecat_context() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_scorm_data_for_multiple_contexts();
@@ -232,7 +229,6 @@ class mod_scorm_userdata_aicc_session_testcase extends advanced_testcase {
     public function test_purge_aicc_course_context() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_scorm_data_for_multiple_contexts();
@@ -259,7 +255,6 @@ class mod_scorm_userdata_aicc_session_testcase extends advanced_testcase {
     public function test_purge_aicc_module_context() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_scorm_data_for_multiple_contexts();

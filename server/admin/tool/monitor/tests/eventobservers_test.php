@@ -50,7 +50,6 @@ class tool_monitor_eventobservers_testcase extends advanced_testcase {
         global $DB;
 
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
@@ -124,7 +123,6 @@ class tool_monitor_eventobservers_testcase extends advanced_testcase {
     public function test_flush() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create the necessary items for testing.
         $user = $this->getDataGenerator()->create_user();
@@ -223,7 +221,6 @@ class tool_monitor_eventobservers_testcase extends advanced_testcase {
 
         global $DB, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $msgsink = $this->redirectMessages();
 
@@ -359,7 +356,6 @@ class tool_monitor_eventobservers_testcase extends advanced_testcase {
     public function test_multiple_notification_not_sent() {
         global $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $messagesink = $this->redirectMessages();
 
@@ -447,7 +443,6 @@ class tool_monitor_eventobservers_testcase extends advanced_testcase {
     public function test_replace_placeholders() {
         global $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $msgsink = $this->redirectMessages();
 
@@ -521,7 +516,6 @@ class tool_monitor_eventobservers_testcase extends advanced_testcase {
         global $DB;
 
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();
@@ -576,7 +570,6 @@ class tool_monitor_eventobservers_testcase extends advanced_testcase {
         global $DB;
 
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course1 = $this->getDataGenerator()->create_course();

@@ -70,7 +70,6 @@ class tool_usertours_role_filter_testcase extends advanced_testcase {
     public function setUp(): void {
         global $DB;
 
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
 
         $this->course = $generator->create_course();

@@ -241,7 +241,6 @@ class tool_usertours_manager_testcase extends advanced_testcase {
      * @param   string  $expected   The name of the expected matching tour
      */
     public function test_get_matching_tours($alltours, $url, $expected) {
-        $this->resetAfterTest();
 
         foreach ($alltours as $tourconfig) {
             $tour = $this->helper_create_tour((object) $tourconfig);

@@ -103,7 +103,6 @@ class tool_uploadcourse_upload_course_with_coursetype_field_testcase extends adv
     public function test_procceed_data(): void {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $object = $this->get_tool_uploadcourse_course([

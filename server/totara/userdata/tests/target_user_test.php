@@ -32,7 +32,6 @@ defined('MOODLE_INTERNAL') || die();
 class totara_userdata_target_user_testcase extends advanced_testcase {
     public function test_instance() {
         global $DB;
-        $this->resetAfterTest();
 
         $activeuser = $this->getDataGenerator()->create_user();
         $suspendeduser = $this->getDataGenerator()->create_user(array('suspended' => 1));

@@ -45,7 +45,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     }
 
     public function test_forum_trigger_content_uploaded_event() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
@@ -95,7 +94,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     }
 
     public function test_forum_get_courses_user_posted_in() {
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -194,7 +192,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_tp_can_track_forums() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $useron = $this->getDataGenerator()->create_user(array('trackforums' => 1));
         $useroff = $this->getDataGenerator()->create_user(array('trackforums' => 0));
@@ -270,7 +267,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_tp_is_tracked() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $useron = $this->getDataGenerator()->create_user(array('trackforums' => 1));
         $useroff = $this->getDataGenerator()->create_user(array('trackforums' => 0));
@@ -389,7 +385,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_tp_get_course_unread_posts() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $useron = $this->getDataGenerator()->create_user(array('trackforums' => 1));
         $useroff = $this->getDataGenerator()->create_user(array('trackforums' => 0));
@@ -512,7 +507,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_tp_get_untracked_forums() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $useron = $this->getDataGenerator()->create_user(array('trackforums' => 1));
         $useroff = $this->getDataGenerator()->create_user(array('trackforums' => 0));
@@ -600,7 +594,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_auto_subscribe_on_create() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $usercount = 5;
         $course = $this->getDataGenerator()->create_course();
@@ -628,7 +621,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_forced_subscribe_on_create() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $usercount = 5;
         $course = $this->getDataGenerator()->create_course();
@@ -656,7 +648,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_optional_subscribe_on_create() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $usercount = 5;
         $course = $this->getDataGenerator()->create_course();
@@ -685,7 +676,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_disallow_subscribe_on_create() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $usercount = 5;
         $course = $this->getDataGenerator()->create_course();
@@ -714,7 +704,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_get_context() {
         global $DB, $PAGE;
 
-        $this->resetAfterTest();
 
         // Setup test data.
         $course = $this->getDataGenerator()->create_course();
@@ -797,7 +786,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
      */
     public function test_forum_get_neighbours() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $timenow = time();
         $timenext = $timenow;
@@ -1046,7 +1034,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
      */
     public function test_forum_get_neighbours_blog() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $timenow = time();
         $timenext = $timenow;
@@ -1235,7 +1222,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
      * Test getting the neighbour threads of a discussion.
      */
     public function test_forum_get_neighbours_with_groups() {
-        $this->resetAfterTest();
 
         $timenow = time();
         $timenext = $timenow;
@@ -1432,7 +1418,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
      * Test getting the neighbour threads of a blog-like forum with groups involved.
      */
     public function test_forum_get_neighbours_with_groups_blog() {
-        $this->resetAfterTest();
 
         $timenow = time();
         $timenext = $timenow;
@@ -1721,7 +1706,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
         global $CFG;
 
         $CFG->enablecompletion = 1;
-        $this->resetAfterTest();
 
         // Setup test data.
         $course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1));
@@ -1760,7 +1744,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
      * Test forum_discussion_view.
      */
     public function test_forum_discussion_view() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
 
@@ -1802,7 +1785,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
      * @return array Containing the created forum object, and the ids of the created discussions.
      */
     protected function create_multiple_discussions_with_replies($discussioncount, $replycount) {
-        $this->resetAfterTest();
 
         // Setup the content.
         $user = $this->getDataGenerator()->create_user();
@@ -1905,7 +1887,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_mod_forum_rating_can_see_item_ratings() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Setup test data.
         $course = new stdClass();
@@ -2005,7 +1986,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_get_discussions_with_groups() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create course to add the module.
         $course = self::getDataGenerator()->create_course(array('groupmode' => VISIBLEGROUPS, 'groupmodeforce' => 0));
@@ -2123,7 +2103,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_user_can_post_discussion() {
         global $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         // Create course to add the module.
         $course = self::getDataGenerator()->create_course(array('groupmode' => SEPARATEGROUPS, 'groupmodeforce' => 1));
@@ -2224,7 +2203,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_user_has_posted_discussion_no_groups() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
         $author = self::getDataGenerator()->create_user();
@@ -2256,7 +2234,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_user_has_posted_discussion_multiple_forums() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
         $author = self::getDataGenerator()->create_user();
@@ -2288,7 +2265,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_user_has_posted_discussion_multiple_groups() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
         $author = self::getDataGenerator()->create_user();
@@ -2341,7 +2317,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
      * Tests the mod_forum_myprofile_navigation() function.
      */
     public function test_mod_forum_myprofile_navigation() {
-        $this->resetAfterTest(true);
 
         // Set up the test.
         $tree = new \core_user\output\myprofile\tree();
@@ -2367,7 +2342,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_mod_forum_myprofile_navigation_as_guest() {
         global $USER;
 
-        $this->resetAfterTest(true);
 
         // Set up the test.
         $tree = new \core_user\output\myprofile\tree();
@@ -2390,7 +2364,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
      * Tests the mod_forum_myprofile_navigation() function as a user viewing another user's profile.
      */
     public function test_mod_forum_myprofile_navigation_different_user() {
-        $this->resetAfterTest(true);
 
         // Set up the test.
         $tree = new \core_user\output\myprofile\tree();
@@ -2412,7 +2385,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     }
 
     public function test_print_overview() {
-        $this->resetAfterTest();
         $course1 = self::getDataGenerator()->create_course();
         $course2 = self::getDataGenerator()->create_course();
 
@@ -2460,7 +2432,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     }
 
     public function test_print_overview_groups() {
-        $this->resetAfterTest();
         $course1 = self::getDataGenerator()->create_course();
         $group1 = $this->getDataGenerator()->create_group(array('courseid' => $course1->id));
         $group2 = $this->getDataGenerator()->create_group(array('courseid' => $course1->id));
@@ -2521,7 +2492,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
      * @dataProvider print_overview_timed_provider
      */
     public function test_print_overview_timed($config, $hasresult) {
-        $this->resetAfterTest();
         $course1 = self::getDataGenerator()->create_course();
 
         // Create an author user.
@@ -2575,7 +2545,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
      * @dataProvider print_overview_timed_provider
      */
     public function test_print_overview_timed_groups($config, $hasresult) {
-        $this->resetAfterTest();
         $course1 = self::getDataGenerator()->create_course();
         $group1 = $this->getDataGenerator()->create_group(array('courseid' => $course1->id));
         $group2 = $this->getDataGenerator()->create_group(array('courseid' => $course1->id));
@@ -2678,7 +2647,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_pinned_discussion_with_group() {
         global $SESSION;
 
-        $this->resetAfterTest();
         $course1 = $this->getDataGenerator()->create_course();
         $group1 = $this->getDataGenerator()->create_group(array('courseid' => $course1->id));
 
@@ -2808,7 +2776,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
 
         $CFG->forum_enabletimedposts = true;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
 
         // Create an user.
@@ -2880,7 +2847,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
 
         $CFG->forum_enabletimedposts = true;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
 
         // Create an user.
@@ -2961,7 +2927,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_get_unmailed_posts($discussiondata, $enabletimedposts, $expectedcount, $expectedreplycount) {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
 
         // Configure timed posts.
         $CFG->forum_enabletimedposts = $enabletimedposts;
@@ -3269,7 +3234,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_forum_update_post_keeps_discussions_usermodified() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Let there be light.
         $teacher = self::getDataGenerator()->create_user();
@@ -3362,7 +3326,6 @@ class mod_forum_lib_testcase extends advanced_testcase {
     public function test_mod_forum_get_tagged_posts() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.

@@ -30,7 +30,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class core_string_placeholders_general_testcase extends advanced_testcase {
     public function test_replace() {
-        $this->resetAfterTest();
 
         // Simple data.
 

@@ -47,7 +47,6 @@ class mod_book_external_testcase extends externallib_advanced_testcase {
     public function test_view_book() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         // Setup test data.
@@ -138,7 +137,6 @@ class mod_book_external_testcase extends externallib_advanced_testcase {
      */
     public function test_get_books_by_courses() {
         global $DB, $USER;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $course1 = self::getDataGenerator()->create_course();
         $bookoptions1 = array(

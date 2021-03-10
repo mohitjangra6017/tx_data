@@ -87,7 +87,6 @@ class mod_facetoface_user_switch_to_event_cancelled_testcase extends advanced_te
      * @return void
      */
     public function test_switch_state(): void {
-        $this->resetAfterTest();
 
         $e = $this->create_seminar_event();
         $this->create_sessions($e);

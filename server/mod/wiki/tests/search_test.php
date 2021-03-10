@@ -49,7 +49,6 @@ class mod_wiki_search_testcase extends advanced_testcase {
     }
 
     public function setUp(): void {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         set_config('enableglobalsearch', true);
 

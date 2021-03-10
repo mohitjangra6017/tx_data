@@ -45,7 +45,6 @@ class core_backup_encrypted_content_testscase extends advanced_testcase {
 
     public function test_encrypted_final_element() {
 
-        $this->resetAfterTest(true);
 
         // Some basic verifications.
         $efe = new encrypted_final_element('test', array('encrypted'));

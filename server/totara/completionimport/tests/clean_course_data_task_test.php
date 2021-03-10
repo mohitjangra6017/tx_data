@@ -54,7 +54,6 @@ class totara_completionimport_clean_course_data_task_testcase extends completion
         require_once($CFG->dirroot . '/totara/completionimport/lib.php');
 
         set_config('enablecompletion', 1);
-        $this->resetAfterTest(true);
 
         $importname = 'course';
         $pluginname = 'totara_completionimport_' . $importname;

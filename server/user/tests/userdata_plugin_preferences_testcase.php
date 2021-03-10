@@ -76,7 +76,6 @@ abstract class core_user_userdata_plugin_preferences_testcase extends advanced_t
 
     public function test_purge_of_active_users() {
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $usera = $generator->create_user(['username' => 'a']);
@@ -173,7 +172,6 @@ abstract class core_user_userdata_plugin_preferences_testcase extends advanced_t
 
     public function test_purge_of_suspended_users() {
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $usera = $generator->create_user(['username' => 'a']);
@@ -316,7 +314,6 @@ abstract class core_user_userdata_plugin_preferences_testcase extends advanced_t
     }
 
     public function test_purge_of_deleted_users() {
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $usera = $generator->create_user(['username' => 'a']);

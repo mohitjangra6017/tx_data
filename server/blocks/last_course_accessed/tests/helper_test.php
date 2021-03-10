@@ -40,7 +40,6 @@ class test_block_last_course_accessed extends advanced_testcase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
 
         // Change the default timezone to London. We can then safely shift the timezone
         // within the EU without having issues as all countries clocks change simultaneously.

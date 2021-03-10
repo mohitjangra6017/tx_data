@@ -42,7 +42,6 @@ class tool_usertours_cache_testcase extends advanced_testcase {
      * Test that get_enabled_tourdata does not return disabled tours.
      */
     public function test_get_enabled_tourdata_disabled() {
-        $this->resetAfterTest();
 
         $tour = $this->helper_create_tour((object)['enabled' => false]);
         $this->helper_create_step((object) ['tourid' => $tour->get_id()]);
@@ -55,7 +54,6 @@ class tool_usertours_cache_testcase extends advanced_testcase {
      * Test that get_enabled_tourdata does not return an enabled but empty tour.
      */
     public function test_get_enabled_tourdata_enabled_no_steps() {
-        $this->resetAfterTest();
 
         $this->helper_create_tour();
 
@@ -67,7 +65,6 @@ class tool_usertours_cache_testcase extends advanced_testcase {
      * Test that get_enabled_tourdata returns a tour with steps.
      */
     public function test_get_enabled_tourdata_enabled() {
-        $this->resetAfterTest();
 
         // Create two tours. Only the second has steps.
         $this->helper_create_tour();
@@ -86,7 +83,6 @@ class tool_usertours_cache_testcase extends advanced_testcase {
      * Test that get_enabled_tourdata returns tours in the correct sortorder
      */
     public function test_get_enabled_tourdata_enabled_sortorder() {
-        $this->resetAfterTest();
 
         $tour1 = $this->helper_create_tour();
         $this->helper_create_step((object) ['tourid' => $tour1->get_id()]);
@@ -109,7 +105,6 @@ class tool_usertours_cache_testcase extends advanced_testcase {
     public function test_get_enabled_tourdata_single_fetch() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $tour1 = $this->helper_create_tour();
         $this->helper_create_step((object) ['tourid' => $tour1->get_id()]);
@@ -198,7 +193,6 @@ class tool_usertours_cache_testcase extends advanced_testcase {
      * @param   array   $expected       An array containing the ordered names of the expected tours
      */
     public function test_get_matching_tourdata($tourconfigs, $targetmatch, $expected) {
-        $this->resetAfterTest();
         foreach ($tourconfigs as $tourconfig) {
             $tour = $this->helper_create_tour($tourconfig);
             $this->helper_create_step((object) ['tourid' => $tour->get_id()]);
@@ -219,7 +213,6 @@ class tool_usertours_cache_testcase extends advanced_testcase {
     public function test_notify_tour_change() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $tour1 = $this->helper_create_tour();
         $this->helper_create_step((object) ['tourid' => $tour1->get_id()]);
@@ -248,7 +241,6 @@ class tool_usertours_cache_testcase extends advanced_testcase {
      * Test that get_stepdata returns an empty array when no steps were found.
      */
     public function test_get_stepdata_no_steps() {
-        $this->resetAfterTest();
 
         $tour = $this->helper_create_tour((object)['enabled' => false]);
 
@@ -261,7 +253,6 @@ class tool_usertours_cache_testcase extends advanced_testcase {
      * Test that get_stepdata returns an empty array when no steps were found.
      */
     public function test_get_stepdata_correct_tour() {
-        $this->resetAfterTest();
 
         $tour1 = $this->helper_create_tour((object)['enabled' => false]);
         $this->helper_create_step((object) ['tourid' => $tour1->get_id()]);
@@ -286,7 +277,6 @@ class tool_usertours_cache_testcase extends advanced_testcase {
      * order will likely change the DB natural sorting.
      */
     public function test_get_stepdata_ordered_steps() {
-        $this->resetAfterTest();
 
         $tour = $this->helper_create_tour((object)['enabled' => false]);
         $steps = [];
@@ -317,7 +307,6 @@ class tool_usertours_cache_testcase extends advanced_testcase {
     public function test_get_stepdata_single_fetch() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $tour = $this->helper_create_tour();
         $this->helper_create_step((object) ['tourid' => $tour->get_id()]);
@@ -338,7 +327,6 @@ class tool_usertours_cache_testcase extends advanced_testcase {
     public function test_notify_step_change() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $tour = $this->helper_create_tour();
         $this->helper_create_step((object) ['tourid' => $tour->get_id()]);

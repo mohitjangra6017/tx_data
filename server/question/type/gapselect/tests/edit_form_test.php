@@ -83,7 +83,6 @@ class qtype_gapselect_edit_form_test extends advanced_testcase {
      */
     protected function get_form() {
         $this->setAdminUser();
-        $this->resetAfterTest();
 
         return new qtype_gapselect_edit_form_base_testable();
     }

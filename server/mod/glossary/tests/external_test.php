@@ -41,7 +41,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
      * Test get_glossaries_by_courses
      */
     public function test_get_glossaries_by_courses() {
-        $this->resetAfterTest(true);
 
         // As admin.
         $this->setAdminUser();
@@ -90,7 +89,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_view_glossary() {
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $c1 = $this->getDataGenerator()->create_course();
@@ -113,7 +111,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_view_glossary_without_permission() {
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $c1 = $this->getDataGenerator()->create_course();
@@ -138,7 +135,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_view_entry() {
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
@@ -191,7 +187,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_get_entries_by_letter() {
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
@@ -250,7 +245,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_get_entries_by_letter_with_parameters() {
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
@@ -297,7 +291,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
 
     public function test_get_entries_by_date() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
@@ -386,7 +379,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_get_categories() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
@@ -415,7 +407,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_get_entries_by_category() {
-        $this->resetAfterTest(true);
 
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
         $c1 = $this->getDataGenerator()->create_course();
@@ -496,7 +487,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_get_authors() {
-        $this->resetAfterTest(true);
 
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
         $c1 = $this->getDataGenerator()->create_course();
@@ -543,7 +533,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_get_entries_by_author() {
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
@@ -657,7 +646,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_get_entries_by_author_id() {
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
@@ -765,7 +753,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_get_entries_by_search() {
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
@@ -879,7 +866,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_get_entries_by_term() {
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
@@ -943,7 +929,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_get_entries_to_approve() {
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
@@ -1049,7 +1034,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_get_entry_by_id() {
-        $this->resetAfterTest(true);
 
         // Generate all the things.
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_glossary');
@@ -1113,7 +1097,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
 
     public function test_add_entry_without_optional_settings() {
         global $CFG, $DB;
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $glossary = $this->getDataGenerator()->create_module('glossary', array('course' => $course->id));
@@ -1138,7 +1121,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
 
     public function test_add_entry_with_aliases() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $glossary = $this->getDataGenerator()->create_module('glossary', array('course' => $course->id));
@@ -1165,7 +1147,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
 
     public function test_add_entry_in_categories() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $glossary = $this->getDataGenerator()->create_module('glossary', array('course' => $course->id));
@@ -1195,7 +1176,6 @@ class mod_glossary_external_testcase extends externallib_advanced_testcase {
 
     public function test_add_entry_with_attachments() {
         global $DB, $USER;
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $glossary = $this->getDataGenerator()->create_module('glossary', array('course' => $course->id));

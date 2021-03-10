@@ -78,7 +78,6 @@ class core_course_management_helper_test extends advanced_testcase {
      */
     public function test_action_category_hide_and_show() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $category = $generator->create_category();
@@ -239,7 +238,6 @@ class core_course_management_helper_test extends advanced_testcase {
      */
     public function test_action_category_hide_and_show_by_id() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $category = $generator->create_category();
@@ -397,7 +395,6 @@ class core_course_management_helper_test extends advanced_testcase {
      */
     public function test_action_category_move_courses_into() {
         global $DB, $CFG;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $cat1 = $generator->create_category();
@@ -534,7 +531,6 @@ class core_course_management_helper_test extends advanced_testcase {
      */
     public function test_action_category_movedown_and_moveup() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $parent = $generator->create_category();
@@ -673,7 +669,6 @@ class core_course_management_helper_test extends advanced_testcase {
      */
     public function test_action_category_resort_courses() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $category = $generator->create_category();
@@ -780,7 +775,6 @@ class core_course_management_helper_test extends advanced_testcase {
         $this->markTestSkipped('Unskip this test in TL-28468');
 
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $parent = $generator->create_category();
@@ -882,7 +876,6 @@ class core_course_management_helper_test extends advanced_testcase {
      * @see \core_course\management\helper::action_course_show
      */
     public function test_action_course_hide_show() {
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $category = $generator->create_category();
@@ -947,7 +940,6 @@ class core_course_management_helper_test extends advanced_testcase {
      * @see \core_course\management\helper::action_course_show_by_record
      */
     public function test_action_course_hide_show_by_record() {
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $category = $generator->create_category();
@@ -1011,7 +1003,6 @@ class core_course_management_helper_test extends advanced_testcase {
     public function test_action_course_movedown_and_moveup() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $category = $generator->create_category();
@@ -1119,7 +1110,6 @@ class core_course_management_helper_test extends advanced_testcase {
         $this->markTestSkipped('Unskip this test in TL-28468');
 
         global $PAGE;
-        $this->resetAfterTest(true);
 
         $PAGE->set_url(new moodle_url('/course/management.php'));
 
@@ -1153,7 +1143,6 @@ class core_course_management_helper_test extends advanced_testcase {
      * Tests fetching the course actions.
      */
     public function test_get_course_detail_actions() {
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $category = $generator->create_category();
@@ -1186,7 +1175,6 @@ class core_course_management_helper_test extends advanced_testcase {
      * Test fetching course details.
      */
     public function test_get_course_detail_array() {
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $category = $generator->create_category();
@@ -1222,7 +1210,6 @@ class core_course_management_helper_test extends advanced_testcase {
 
     public function test_move_courses_into_category() {
         global $DB, $CFG;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $cat1 = $generator->create_category();

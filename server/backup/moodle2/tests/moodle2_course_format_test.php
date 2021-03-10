@@ -46,7 +46,6 @@ class core_backup_moodle2_course_format_testcase extends advanced_testcase {
     public function test_course_format_options_restore() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $CFG->enableavailability = true;
         $CFG->enablecompletion = true;
@@ -79,7 +78,6 @@ class core_backup_moodle2_course_format_testcase extends advanced_testcase {
     public function test_course_format_options_import_myself() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $CFG->enableavailability = true;
         $CFG->enablecompletion = true;
@@ -117,7 +115,6 @@ class core_backup_moodle2_course_format_testcase extends advanced_testcase {
     public function test_course_format_options_restore_new_format() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create a source course using the test_cs2_options format.

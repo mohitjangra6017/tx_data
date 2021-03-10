@@ -83,7 +83,6 @@ class appraisal_page_test extends appraisal_testcase {
     }
 
     public function test_page_add() {
-        $this->resetAfterTest();
         $appraisal = appraisal::build(array('name' => 'Appraisal', 'stages' => array(array('name' => 'St1'))));
         $map = $this->map($appraisal);
         $data = new stdClass();
@@ -103,7 +102,6 @@ class appraisal_page_test extends appraisal_testcase {
     }
 
     public function test_page_edit() {
-        $this->resetAfterTest();
         $appraisal = appraisal::build($this->defmngr);
         $map = $this->map($appraisal);
 
@@ -123,7 +121,6 @@ class appraisal_page_test extends appraisal_testcase {
     }
 
     public function test_page_delete() {
-        $this->resetAfterTest();
         $appraisal = appraisal::build($this->defmngr);
         $map = $this->map($appraisal);
 
@@ -138,7 +135,6 @@ class appraisal_page_test extends appraisal_testcase {
     }
 
     public function test_page_reorder() {
-        $this->resetAfterTest();
         $appraisal = appraisal::build($this->defmngr);
         $map = $this->map($appraisal);
 
@@ -162,7 +158,6 @@ class appraisal_page_test extends appraisal_testcase {
     }
 
     public function test_page_move() {
-        $this->resetAfterTest();
 
         $appraisal = appraisal::build($this->def);
         $map = $this->map($appraisal);
@@ -175,7 +170,6 @@ class appraisal_page_test extends appraisal_testcase {
     }
 
     public function test_page_duplicate() {
-        $this->resetAfterTest();
         $appraisal = appraisal::build($this->def);
         $map = $this->map($appraisal);
 
@@ -191,7 +185,6 @@ class appraisal_page_test extends appraisal_testcase {
     }
 
     public function test_page_complete_role() {
-        $this->resetAfterTest();
         list($appraisal, $users) = $this->prepare_appraisal_with_users($this->defmngr);
         $appraisal->validate();
         $appraisal->activate();
@@ -217,7 +210,6 @@ class appraisal_page_test extends appraisal_testcase {
     }
 
     public function test_validate() {
-        $this->resetAfterTest();
         $def = array('name' => 'Appraisal', 'stages' => array(
             array('name' => 'St1', 'timedue' => time() + 86400, 'pages' => array(
                 array('name' => 'Page1', 'questions' => array())
@@ -232,7 +224,6 @@ class appraisal_page_test extends appraisal_testcase {
     }
 
     public function test_is_locked() {
-        $this->resetAfterTest();
 
         list($appraisal, $users) = $this->prepare_appraisal_with_users($this->def);
         $appraisal->validate();
@@ -257,7 +248,6 @@ class appraisal_page_test extends appraisal_testcase {
     }
 
     public function test_get_applicable_pages() {
-        $this->resetAfterTest();
         $defmngr = array('name' => 'Appraisal', 'stages' => array(
             array('name' => 'St1', 'timedue' => time() + 86400, 'locks' => array(appraisal::ROLE_LEARNER => 1), 'pages' => array(
                 array('name' => 'Page1', 'questions' => array(
@@ -305,7 +295,6 @@ class appraisal_page_test extends appraisal_testcase {
     }
 
     public function test_get_may_answer() {
-        $this->resetAfterTest();
         $defmngr = array('name' => 'Appraisal', 'stages' => array(
             array('name' => 'St1', 'timedue' => time() + 86400, 'locks' => array(appraisal::ROLE_LEARNER => 1), 'pages' => array(
                 array('name' => 'Page1', 'questions' => array(

@@ -39,7 +39,6 @@ class enrol_manual_externallib_testcase extends externallib_advanced_testcase {
     public function test_enrol_users() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $user = self::getDataGenerator()->create_user();
         $this->setUser($user);
@@ -124,7 +123,6 @@ class enrol_manual_externallib_testcase extends externallib_advanced_testcase {
     public function test_unenrol_user_single() {
         global $CFG, $DB;
         require_once($CFG->libdir . '/enrollib.php');
-        $this->resetAfterTest(true);
         // The user who perform the action.
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user); // Log this user in.
@@ -158,7 +156,6 @@ class enrol_manual_externallib_testcase extends externallib_advanced_testcase {
     public function test_unenrol_user_multiple() {
         global $CFG, $DB;
         require_once($CFG->libdir . '/enrollib.php');
-        $this->resetAfterTest(true);
         // The user who perform the action.
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user); // Log this user in.
@@ -197,7 +194,6 @@ class enrol_manual_externallib_testcase extends externallib_advanced_testcase {
     public function test_unenrol_user_error_no_capability() {
         global $CFG, $DB;
         require_once($CFG->libdir . '/enrollib.php');
-        $this->resetAfterTest(true);
         // The user who perform the action.
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user); // Log this user in.
@@ -244,7 +240,6 @@ class enrol_manual_externallib_testcase extends externallib_advanced_testcase {
     public function test_unenrol_user_error_not_exist() {
         global $CFG, $DB;
         require_once($CFG->libdir . '/enrollib.php');
-        $this->resetAfterTest(true);
         // The user who perform the action.
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user); // Log this user in.

@@ -35,7 +35,6 @@ class totara_catalog_provider_active_task_testcase extends advanced_testcase {
     protected function setUp(): void {
         parent::setup();
         $this->setAdminUser();
-        $this->resetAfterTest();
         $this->provider_active_task = new provider_active_task();
     }
 

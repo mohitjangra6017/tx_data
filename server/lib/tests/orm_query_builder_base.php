@@ -68,7 +68,6 @@ abstract class orm_query_builder_base extends advanced_testcase {
      */
     protected function create_table() {
 
-        $this->resetAfterTest(true);
 
         if ($this->db_man()->table_exists($this->table_name)) {
             return;
@@ -96,7 +95,6 @@ abstract class orm_query_builder_base extends advanced_testcase {
      */
     protected function create_another_table() {
 
-        $this->resetAfterTest(true);
 
         if ($this->db_man()->table_exists($this->another_table_name)) {
             return;

@@ -120,7 +120,6 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
         global $DB;
 
         parent::setup();
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $now = time();
@@ -349,7 +348,6 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
      */
     public function test_all_job_titles_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a rule that matches users who have the first two positions assigned across all of their job assignments.
@@ -379,7 +377,6 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
      */
     public function test_all_job_idnumber_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a rule that matches users who have the first two positions assigned across all of their job assignments.
@@ -409,7 +406,6 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
      */
     public function test_all_job_start_dates_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $now = time();
@@ -444,7 +440,6 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
      */
     public function test_all_job_end_dates_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $now = time();
@@ -479,7 +474,6 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
      */
     public function test_all_positions_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a rule that matches users who have all three positions assigned across all of their job assignments.
@@ -521,7 +515,6 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
      */
     public function test_all_position_names_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a rule that matches users who have the first two positions assigned across all of their job assignments.
@@ -551,7 +544,6 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
      */
     public function test_all_position_idnumbers_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a rule that matches users who have the first two positions assigned across all of their job assignments.
@@ -581,7 +573,6 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
      */
     public function test_all_position_assignment_dates_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $now = time();
@@ -616,7 +607,6 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
      */
     public function test_all_organisations_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a rule that matches users who have all three positions assigned across all of their job assignments.
@@ -658,7 +648,6 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
      */
     public function test_all_organisation_names_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a rule that matches users who have the first two positions assigned across all of their job assignments.
@@ -688,7 +677,6 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
      */
     public function test_all_organisation_idnumbers_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a rule that matches users who have the first two positions assigned across all of their job assignments.
@@ -718,7 +706,6 @@ class totara_cohort_multi_jobs_rules_testcase extends advanced_testcase {
      */
     public function test_all_managers_rule() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a rule that matches users who have all three positions assigned across all of their job assignments.

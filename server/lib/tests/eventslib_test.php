@@ -43,7 +43,6 @@ class core_eventslib_testcase extends advanced_testcase {
         eventslib_sample_function_handler('reset');
         eventslib_sample_handler_class::static_method('reset');
 
-        $this->resetAfterTest();
     }
 
     /**

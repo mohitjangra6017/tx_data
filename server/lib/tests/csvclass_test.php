@@ -47,7 +47,6 @@ class core_csvclass_testcase extends advanced_testcase {
 
     protected function setUp(): void {
 
-        $this->resetAfterTest();
 
         $csvdata = array();
         $csvdata[0][] = 'fullname';

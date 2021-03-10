@@ -41,7 +41,6 @@ class core_iplookup_geoplugin_testcase extends advanced_testcase {
             $this->markTestSkipped('PHPUNIT_LONGTEST is not defined');
         }
 
-        $this->resetAfterTest();
 
         $CFG->geoipfile = '';
     }

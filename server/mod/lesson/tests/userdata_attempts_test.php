@@ -40,7 +40,6 @@ class mod_lesson_userdata_attempts_testcase extends advanced_testcase {
     public function test_purge_attempts_module_not_visible() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $user = $this->getDataGenerator()->create_user();
@@ -229,7 +228,6 @@ class mod_lesson_userdata_attempts_testcase extends advanced_testcase {
     public function test_purge_attempts_system_context() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_lesson_data_for_multiple_contexts();
@@ -254,7 +252,6 @@ class mod_lesson_userdata_attempts_testcase extends advanced_testcase {
     public function test_purge_attempts_coursecat_context() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_lesson_data_for_multiple_contexts();
@@ -299,7 +296,6 @@ class mod_lesson_userdata_attempts_testcase extends advanced_testcase {
     public function test_purge_attempts_course_context() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_lesson_data_for_multiple_contexts();
@@ -345,7 +341,6 @@ class mod_lesson_userdata_attempts_testcase extends advanced_testcase {
     public function test_purge_attempts_module_context() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_lesson_data_for_multiple_contexts();
@@ -399,7 +394,6 @@ class mod_lesson_userdata_attempts_testcase extends advanced_testcase {
      * Test export of attempts in system context
      */
     public function test_export_attempts_system_context() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_lesson_data_for_multiple_contexts();
@@ -426,7 +420,6 @@ class mod_lesson_userdata_attempts_testcase extends advanced_testcase {
      * Test export of attempts in course category context
      */
     public function test_export_attempts_coursecat_context() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_lesson_data_for_multiple_contexts();
@@ -453,7 +446,6 @@ class mod_lesson_userdata_attempts_testcase extends advanced_testcase {
      * Test export of attempts in course context
      */
     public function test_export_attempts_course_context() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_lesson_data_for_multiple_contexts();
@@ -480,7 +472,6 @@ class mod_lesson_userdata_attempts_testcase extends advanced_testcase {
      * Test export of attempts in module context
      */
     public function test_export_attempts_module_context() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $that = $this->create_lesson_data_for_multiple_contexts();

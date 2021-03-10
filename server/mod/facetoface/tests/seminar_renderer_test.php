@@ -159,7 +159,6 @@ class mod_facetoface_seminar_renderer_testcase extends advanced_testcase {
     public function test_rendering_session_with_approval_type(int $approvaltype, string $displaytext): void {
         global $DB, $PAGE;
         $PAGE->set_url("/");
-        $this->resetAfterTest(true);
 
         // Creating users here
         $users = $this->create_users(1);
@@ -197,7 +196,6 @@ class mod_facetoface_seminar_renderer_testcase extends advanced_testcase {
     public function test_rendering_session_with_waitlist_enabled_and_capacity_is_full(): void {
         global $PAGE;
         $PAGE->set_url("/");
-        $this->resetAfterTest(true);
 
         // Setting user's session here
         $users = $this->create_users(1);

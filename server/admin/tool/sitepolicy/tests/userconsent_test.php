@@ -34,7 +34,6 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
      * Test save with and without consentoption
      */
     public function test_save_with_exception_no_consentoptionid() {
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Expected consentoptionid and language not set');
 
@@ -46,7 +45,6 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
      * Test save
      */
     public function test_save_exception_no_language() {
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Expected consentoptionid and language not set');
 
@@ -61,7 +59,6 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
     public function test_save() {
         global $DB, $USER;
 
-        $this->resetAfterTest();
 
         $userconsent = new userconsent();
         $userconsent->set_timeconsented(1523249171);
@@ -89,7 +86,6 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
      * Test get_unansweredpolicies when there is only a draft version
      */
     public function test_get_unansweredpolicies_draft() {
-        $this->resetAfterTest();
 
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
@@ -120,7 +116,6 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
      * Test get_unansweredpolicies when there are only archived versions
      */
     public function test_get_unansweredpolicies_archived() {
-        $this->resetAfterTest();
 
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
@@ -153,7 +148,6 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
     public function test_get_unansweredpolicies_published() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
@@ -256,7 +250,6 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
     public function test_has_user_consented() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
@@ -321,7 +314,6 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
     public function test_has_user_answered() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
@@ -464,7 +456,6 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
      * @dataProvider data_user_consent_language
      */
     public function test_get_user_consent_language($name, $options, $expectedlang) {
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -498,7 +489,6 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
      * Test get_userconsenttable
      */
     public function test_get_userconsenttable() {
-        $this->resetAfterTest();
 
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
@@ -536,7 +526,6 @@ class tool_sitepolicy_userconsent_test extends \advanced_testcase {
     public function test_has_consented_previous_version() {
         global $DB;
 
-        $this->resetAfterTest();
 
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');

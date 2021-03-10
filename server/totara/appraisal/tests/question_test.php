@@ -83,7 +83,6 @@ class appraisal_question_test extends appraisal_testcase {
         ));
     }
     public function test_question_create() {
-        $this->resetAfterTest();
         $appraisal = appraisal::build(array('name' => 'Appraisal', 'stages' => array(array('name' => 'St1', 'pages' => array(
             array('name' => 'Page1')
         )))));
@@ -111,7 +110,6 @@ class appraisal_question_test extends appraisal_testcase {
     }
 
     public function test_question_edit() {
-        $this->resetAfterTest();
         $appraisal = appraisal::build(array('name' => 'Appraisal', 'stages' => array(array('name' => 'St1', 'pages' => array(
             array('name' => 'Page1')
         )))));
@@ -148,7 +146,6 @@ class appraisal_question_test extends appraisal_testcase {
     }
 
     public function test_question_delete() {
-        $this->resetAfterTest();
         $appraisal = appraisal::build($this->def);
         $map = $this->map($appraisal);
         appraisal_question::delete($map['questions']['Text1']);
@@ -160,7 +157,6 @@ class appraisal_question_test extends appraisal_testcase {
     }
 
     public function test_question_duplicate() {
-        $this->resetAfterTest();
 
         $appraisal = appraisal::build($this->def);
         $map = $this->map($appraisal);
@@ -179,7 +175,6 @@ class appraisal_question_test extends appraisal_testcase {
     }
 
     public function test_question_reorder() {
-        $this->resetAfterTest();
 
         $appraisal = appraisal::build($this->def);
         $map = $this->map($appraisal);
@@ -204,7 +199,6 @@ class appraisal_question_test extends appraisal_testcase {
     }
 
     public function test_question_fetch_appraisal() {
-        $this->resetAfterTest();
         $appraisal = appraisal::build($this->defmngr);
         $map = $this->map($appraisal);
 
@@ -243,7 +237,6 @@ class appraisal_question_test extends appraisal_testcase {
     public function test_has_too_many_questions() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $appraisalgenerator = $this->getDataGenerator()->get_plugin_generator('totara_appraisal');
         $appraisal = $appraisalgenerator->create_appraisal();
@@ -303,7 +296,6 @@ class appraisal_question_test extends appraisal_testcase {
     }
 
     public function test_question_fetch_page_role() {
-        $this->resetAfterTest();
         list($appraisal, $users) = $this->prepare_appraisal_with_users($this->defmngr);
         $appraisal->validate();
         $appraisal->activate();
@@ -325,7 +317,6 @@ class appraisal_question_test extends appraisal_testcase {
     }
 
     public function test_user_can_view() {
-        $this->resetAfterTest();
         list($appraisal, $users) = $this->prepare_appraisal_with_users($this->defmngr);
         $appraisal->validate();
         $appraisal->activate();
@@ -351,7 +342,6 @@ class appraisal_question_test extends appraisal_testcase {
     }
 
     public function test_get_roles_involved() {
-        $this->resetAfterTest();
         $appraisal = appraisal::build($this->defmngr);
         $map = $this->map($appraisal);
         $quest1 = new appraisal_question($map['questions']['Text1']);
@@ -375,7 +365,6 @@ class appraisal_question_test extends appraisal_testcase {
     }
 
     public function test_move() {
-        $this->resetAfterTest();
 
         $appraisal = appraisal::build($this->def);
         $map = $this->map($appraisal);
@@ -388,7 +377,6 @@ class appraisal_question_test extends appraisal_testcase {
     }
 
     public function test_is_locked() {
-        $this->resetAfterTest();
 
         $def = array('name' => 'Appraisal', 'stages' => array(
             array('name' => 'St1', 'timedue' => time() + 86400, 'locks' => array(appraisal::ROLE_LEARNER => 1), 'pages' => array(

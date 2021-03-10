@@ -38,7 +38,6 @@ class mod_data_generator_testcase extends advanced_testcase {
     public function test_generator() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->assertEquals(0, $DB->count_records('data'));
 
@@ -74,7 +73,6 @@ class mod_data_generator_testcase extends advanced_testcase {
     public function test_create_field() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         $this->assertEquals(0, $DB->count_records('data'));
@@ -129,7 +127,6 @@ class mod_data_generator_testcase extends advanced_testcase {
     public function test_create_entry() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         $this->assertEquals(0, $DB->count_records('data'));

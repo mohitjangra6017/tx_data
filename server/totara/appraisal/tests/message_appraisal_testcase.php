@@ -34,7 +34,6 @@ abstract class totara_appraisal_messages_testcase extends appraisal_testcase {
      */
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
     }
 
     /**

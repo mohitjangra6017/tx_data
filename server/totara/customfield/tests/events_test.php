@@ -32,7 +32,6 @@ class customfield_events_testcase extends advanced_testcase {
 
     public function setUp(): void {
         global $DB;
-        $this->resetAfterTest();
 
     }
 

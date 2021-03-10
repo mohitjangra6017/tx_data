@@ -67,7 +67,6 @@ class qtype_calculatedsimple_test extends advanced_testcase {
 
 
     public function test_question_saving_sumwithvariants() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $questiondata = test_question_maker::get_question_data('calculatedsimple', 'sumwithvariants');

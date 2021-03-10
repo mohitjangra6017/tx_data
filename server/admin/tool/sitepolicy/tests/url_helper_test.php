@@ -196,7 +196,6 @@ class tool_sitepolicy_url_helper_test extends \advanced_testcase {
      * Returns a URL to view the site policy version that a user has submit their consent selection to.
      */
     public function test_user_sitepolicy_version_view() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
 

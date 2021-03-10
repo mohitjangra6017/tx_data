@@ -34,7 +34,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class totara_userdata_local_purge_type_testcase extends advanced_testcase {
     public function test_prepare_for_add() {
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -60,7 +59,6 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
     }
 
     public function test_prepare_for_update() {
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -80,7 +78,6 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
 
     public function test_is_deletable() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -125,7 +122,6 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
 
     public function test_delete() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
         $type = $generator->create_purge_type(array('userstatus' => target_user::STATUS_ACTIVE, 'allowmanual' => 1));
@@ -137,7 +133,6 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
 
     public function test_purge_edit_add() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -177,7 +172,6 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
 
     public function test_purge_edit_update() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -234,7 +228,6 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
 
     public function test_purge_edit_update_active() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -275,7 +268,6 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
 
     public function test_count_repurged_users() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -309,7 +301,6 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
 
     public function test_get_new_items() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -329,7 +320,6 @@ class totara_userdata_local_purge_type_testcase extends advanced_testcase {
 
     public function test_trigger_manual_purge() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
         $typeactive = $generator->create_purge_type(array('userstatus' => target_user::STATUS_ACTIVE, 'allowmanual' => 1, 'items' => 'core_user-additionalnames'));

@@ -41,7 +41,6 @@ class core_message_inbound_testcase extends advanced_testcase {
     public function setUp(): void {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         // Setup the default Inbound Message mailbox settings.
         $CFG->messageinbound_domain = 'example.com';

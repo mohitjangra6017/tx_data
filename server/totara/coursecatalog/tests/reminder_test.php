@@ -33,7 +33,6 @@ class totara_coursecatalog_reminder_testcase extends advanced_testcase {
      * Test that reminder substituion works correctly for course catalog
      */
     public function test_reminder_email_substitutions() {
-        $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user(['firstname' => 'Terry', 'lastname' => 'Craig']);
         $course = $this->getDataGenerator()->create_course();
         $message = (object)['period' => '5 days', 'deadline' => '2 weeks'];

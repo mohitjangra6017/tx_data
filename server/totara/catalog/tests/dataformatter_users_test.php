@@ -44,7 +44,6 @@ require_once($CFG->dirroot . "/totara/catalog/tests/dataformatter_test_base.php"
 class totara_catalog_dataformatter_users_testcase extends dataformatter_test_base {
 
     public function test_users() {
-        $this->resetAfterTest();
         $context = context_system::instance();
 
         $df = new users('useridsfieldname');

@@ -71,7 +71,6 @@ class totara_reportbuilder_rb_pastbookings_embedded_cache_testcase extends totar
     }
 
     public function test_is_capable() {
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $shortname = $this->report_builder_data['shortname'];

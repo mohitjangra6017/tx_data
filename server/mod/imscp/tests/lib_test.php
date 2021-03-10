@@ -42,7 +42,6 @@ class mod_imscp_lib_testcase extends advanced_testcase {
     public function test_export_contents() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
@@ -73,7 +72,6 @@ class mod_imscp_lib_testcase extends advanced_testcase {
         global $CFG;
 
         $CFG->enablecompletion = 1;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.

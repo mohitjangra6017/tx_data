@@ -29,7 +29,6 @@ class totara_core_event_reminder_updated_testcase extends advanced_testcase {
         global $USER, $CFG;
         require_once("$CFG->dirroot/lib/reminderlib.php");
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();

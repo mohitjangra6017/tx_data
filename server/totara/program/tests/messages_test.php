@@ -78,7 +78,6 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
 
         parent::setup();
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Turn off certifications. This is to test that it doesn't interfere with program completion.

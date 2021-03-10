@@ -27,7 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 class totara_core_event_module_completion_unlocked_testcase extends advanced_testcase {
 
     public function test_event() {
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();

@@ -48,7 +48,6 @@ class assignsubmission_comments_events_testcase extends advanced_testcase {
      * Test comment_created event.
      */
     public function test_comment_created() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -90,7 +89,6 @@ class assignsubmission_comments_events_testcase extends advanced_testcase {
      * Test comment_deleted event.
      */
     public function test_comment_deleted() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');

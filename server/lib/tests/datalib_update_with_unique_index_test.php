@@ -88,7 +88,6 @@ class datalib_update_with_unique_index_testcase extends advanced_testcase {
     public function test_reorder_rows() {
         global $DB;
         $dbman = $DB->get_manager();
-        $this->resetAfterTest();
 
         $table = new xmldb_table('test_table');
         $table->setComment("This is a test'n drop table. You can drop it safely");

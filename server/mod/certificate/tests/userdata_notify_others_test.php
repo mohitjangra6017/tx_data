@@ -105,7 +105,6 @@ class mod_certificate_userdata_notify_others_testcase extends advanced_testcase 
             public $target_user3;
         };
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 

@@ -40,7 +40,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_users() {
         global $USER, $CFG;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
 
@@ -181,7 +180,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_users_by_field() {
         global $USER, $CFG;
 
-        $this->resetAfterTest(true);
 
         $course = self::getDataGenerator()->create_course();
         $user1 = array(
@@ -330,7 +328,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     public function get_course_user_profiles_setup($capability) {
         global $USER, $CFG;
 
-        $this->resetAfterTest(true);
 
         $return = new stdClass();
 
@@ -379,7 +376,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     public function test_get_course_user_profiles() {
         global $USER, $CFG;
 
-        $this->resetAfterTest(true);
 
         $data = $this->get_course_user_profiles_setup('moodle/user:viewdetails');
 
@@ -399,7 +395,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
 
         global $USER, $CFG;
 
-        $this->resetAfterTest(true);
 
         $data = $this->get_course_user_profiles_setup('moodle/user:viewdetails');
 
@@ -444,7 +439,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     public function test_create_users() {
          global $USER, $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $user1 = array(
             'username' => 'usernametest1',
@@ -512,7 +506,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     public function test_create_users_invalid_parameter(array $data, $expectmessage) {
         global $USER, $CFG, $DB;
 
-        $this->resetAfterTest(true);
         $this->assignUserCapability('moodle/user:create', SYSCONTEXTID);
 
         $this->expectException('invalid_parameter_exception');
@@ -586,7 +579,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     public function test_delete_users() {
         global $USER, $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
@@ -617,7 +609,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     public function test_update_users() {
         global $USER, $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $wsuser = self::getDataGenerator()->create_user();
         self::setUser($wsuser);
@@ -734,7 +725,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
      */
     public function test_update_users_suspend() {
         global $DB;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $user = self::getDataGenerator()->create_user();
@@ -762,7 +752,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     public function test_update_users_duplicated_email() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $user1 = self::getDataGenerator()->create_user();
@@ -787,7 +776,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     public function test_add_user_private_files() {
         global $USER, $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $context = context_system::instance();
         $roleid = $this->assignUserCapability('moodle/user:manageownfiles', $context->id);
@@ -832,7 +820,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     public function test_add_user_device() {
         global $USER, $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $device = array(
                 'appid' => 'com.moodle.moodlemobile',
@@ -885,7 +872,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     public function test_remove_user_device() {
         global $USER, $CFG, $DB;
 
-        $this->resetAfterTest(true);
 
         $device = array(
                 'appid' => 'com.moodle.moodlemobile',
@@ -940,7 +926,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
     public function test_update_picture() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $user = self::getDataGenerator()->create_user();
         self::setUser($user);
@@ -992,7 +977,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
      */
     public function test_update_picture_disabled() {
         global $CFG;
-        $this->resetAfterTest(true);
         $CFG->disableuserimages = true;
 
         $this->setAdminUser();
@@ -1005,7 +989,6 @@ class core_user_externallib_testcase extends externallib_advanced_testcase {
      */
     public function test_agree_site_policy() {
         global $CFG, $DB, $USER;
-        $this->resetAfterTest(true);
 
         $user = self::getDataGenerator()->create_user();
         $this->setUser($user);

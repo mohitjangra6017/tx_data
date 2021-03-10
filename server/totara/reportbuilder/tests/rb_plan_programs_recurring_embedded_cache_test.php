@@ -71,7 +71,6 @@ class totara_reportbuilder_rb_plan_programs_recurring_embedded_cache_testcase ex
         parent::setup();
         set_config('enablecompletion', 1);
         $this->setAdminUser();
-        $this->resetAfterTest(true);
         $this->cleanup();
 
         $program_generator = \totara_program\testing\generator::instance();
@@ -198,7 +197,6 @@ class totara_reportbuilder_rb_plan_programs_recurring_embedded_cache_testcase ex
     }
 
     public function test_is_capable() {
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $shortname = $this->report_builder_data['shortname'];

@@ -27,7 +27,6 @@ defined('MOODLE_INTERNAL') || die;
 class tool_log_manager_testcase extends advanced_testcase {
     public function test_get_log_manager() {
         global $CFG;
-        $this->resetAfterTest();
 
         $manager = get_log_manager();
         $this->assertInstanceOf('core\log\manager', $manager);

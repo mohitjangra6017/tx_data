@@ -36,7 +36,6 @@ class core_user_email_bounce_counter_testcase extends advanced_testcase {
      */
     public function test_create_history_preference(): void {
         global $DB;
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $emailbouncecounter = new email_bounce_counter($user);
@@ -59,7 +58,6 @@ class core_user_email_bounce_counter_testcase extends advanced_testcase {
      */
     public function test_restore_history_preference(): void {
         global $DB;
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $preferences = ['email_bounce_count', 'email_send_count'];

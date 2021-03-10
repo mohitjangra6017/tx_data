@@ -52,7 +52,6 @@ class core_completionlib_testcase extends advanced_testcase {
     protected function mock_setup() {
         global $DB, $CFG, $USER;
 
-        $this->resetAfterTest();
 
         // NOTE: this mocking is totally idiotic and explodes like crazy!
 
@@ -67,7 +66,6 @@ class core_completionlib_testcase extends advanced_testcase {
     protected function setup_data() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         // Enable completion before creating modules, otherwise the completion data is not written in DB.
         set_config('enablecompletion', 1);
@@ -117,7 +115,6 @@ class core_completionlib_testcase extends advanced_testcase {
     }
 
     public function test_is_enabled_for_site() {
-        $this->resetAfterTest();
 
         // Config alone.
         set_config('enablecompletion', 1);
@@ -127,7 +124,6 @@ class core_completionlib_testcase extends advanced_testcase {
     }
 
     public function test_is_enabled_for_course() {
-        $this->resetAfterTest();
 
         set_config('enablecompletion', 1);
 
@@ -145,7 +141,6 @@ class core_completionlib_testcase extends advanced_testcase {
 
     public function test_is_enabled_for_module() {
         global $DB;
-        $this->resetAfterTest();
 
         set_config('enablecompletion', 1);
         $course = $this->getDataGenerator()->create_course(array('enablecompletion' => COMPLETION_ENABLED));
@@ -914,7 +909,6 @@ class core_completionlib_testcase extends advanced_testcase {
 
     public function test_get_activities() {
         global $CFG;
-        $this->resetAfterTest();
 
         // Enable completion before creating modules, otherwise the completion data is not written in DB.
         $CFG->enablecompletion = true;
@@ -955,7 +949,6 @@ class core_completionlib_testcase extends advanced_testcase {
 
     public function test_has_activities() {
         global $CFG;
-        $this->resetAfterTest();
 
         // Enable completion before creating modules, otherwise the completion data is not written in DB.
         $CFG->enablecompletion = true;
@@ -1084,7 +1077,6 @@ class core_completionlib_testcase extends advanced_testcase {
     public function test_delete_course_completion_data_including_rpl() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         // Create data, including controls.
         $user1 = $this->getDataGenerator()->create_user();
@@ -1155,7 +1147,6 @@ class core_completionlib_testcase extends advanced_testcase {
     public function test_delete_course_completion_data() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         // Create data, including controls.
         $user1 = $this->getDataGenerator()->create_user();
@@ -1268,7 +1259,6 @@ class core_completionlib_testcase extends advanced_testcase {
     public function test_course_completion_reset() {
         global $DB;
 
-        $this->resetAfterTest();
         set_config('enablecompletion', 1);
 
         $course1 = $this->getDataGenerator()->create_course(array('enablecompletion' => true));

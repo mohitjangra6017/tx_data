@@ -39,7 +39,6 @@ class mod_lti_generator_testcase extends advanced_testcase {
     public function test_generator() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->assertEquals(0, $DB->count_records('lti'));
 

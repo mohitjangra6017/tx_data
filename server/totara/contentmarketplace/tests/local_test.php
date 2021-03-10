@@ -42,7 +42,6 @@ class totara_contentmarketplace_local_testcase extends advanced_testcase {
      * @dataProvider money_provider
      */
     public function test_format_money($locale, $value, $currency, $expected) {
-        $this->resetAfterTest();
         $this->overrideLangString('locale', 'langconfig', $locale);
         $price = local::format_money($value, $currency);
         // Formatter may use different unicode spaces in each OS,
@@ -68,7 +67,6 @@ class totara_contentmarketplace_local_testcase extends advanced_testcase {
      * @dataProvider integer_provider
      */
     public function test_format_integer($locale, $integer, $expected) {
-        $this->resetAfterTest();
         $this->overrideLangString('locale', 'langconfig', $locale);
         $number = local::format_integer($integer);
         // Formatter may use different unicode spaces in each OS,
@@ -89,7 +87,6 @@ class totara_contentmarketplace_local_testcase extends advanced_testcase {
     }
 
     public function test_is_enabled() {
-        $this->resetAfterTest(true);
         set_config('enablecontentmarketplaces', 1);
         $this->assertTrue((bool)local::is_enabled());
         set_config('enablecontentmarketplaces', 0);

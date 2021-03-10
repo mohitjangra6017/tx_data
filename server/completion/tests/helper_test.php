@@ -38,7 +38,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_write_course_completion() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -186,7 +185,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_write_course_completion_history() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -304,7 +302,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_write_criteria_completion() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -440,7 +437,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_write_module_completion() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -615,7 +611,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_save_completion_log() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $timebefore = time();
         helper::save_completion_log(123, 234, 'abc', 345);  // Normal log.
@@ -648,7 +643,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_log_course_completion() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $this->assertEquals(0, $DB->count_records('course_completion_log'));
 
@@ -732,7 +726,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_log_course_completion_history() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $this->assertEquals(0, $DB->count_records('course_completion_log'));
 
@@ -796,7 +789,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_log_criteria_completion() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $this->assertEquals(0, $DB->count_records('course_completion_log'));
 
@@ -848,7 +840,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_log_course_module_completion() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
 
         $this->assertEquals(0, $DB->count_records('course_completion_log'));
 
@@ -901,7 +892,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_load_course_completion() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $courseid = 123;
         $userid = 234;
@@ -941,7 +931,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_load_course_completion_history() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $courseid = 123;
         $userid = 234;
@@ -972,7 +961,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_delete_course_completion() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $userids = array(123, 234, 345, 456);
         $courseids = array(567, 678, 789, 890);
@@ -1017,7 +1005,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_delete_course_completion_history() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $userids = array(123, 234, 345, 456);
         $courseids = array(567, 678, 789, 890);
@@ -1079,7 +1066,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_delete_criteria_completion() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $userids = array(123, 234, 345, 456);
         $courseids = array(567, 678, 789, 890);
@@ -1141,7 +1127,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_delete_module_completion() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $courseids = array(567, 678, 789, 890);
         $coursemoduleids = array();
@@ -1566,7 +1551,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_get_module_completion_errors($debugkey, $usestimecompleted, $cmc, $expectederrors) {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // To test that the errors are correct depending on whether the related module uses timemodified or
         // timecompleted to store the time completed, we need to set up the correct type of module.
@@ -1680,7 +1664,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     public function test_get_criteria_completion_errors($debugkey, $ismodulecriteria, $cccc, $expectederrors) {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // To test that the errors are correct depending on whether the criteria relates to a module, we need to
         // create a course completion criteria record.
@@ -1746,7 +1729,6 @@ class core_completion_helper_testcase extends advanced_testcase {
     }
 
     public function test_module_uses_timecompleted() {
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
 

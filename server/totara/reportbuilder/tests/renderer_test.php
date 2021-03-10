@@ -39,7 +39,6 @@ class totara_reportbuilder_renderer_testcase extends advanced_testcase {
     public function test_export_select() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $PAGE->set_url('/course/find.php');

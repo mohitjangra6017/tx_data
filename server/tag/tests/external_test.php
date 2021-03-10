@@ -36,7 +36,6 @@ class core_tag_external_testcase extends externallib_advanced_testcase {
      */
     public function test_update_tags() {
         global $DB;
-        $this->resetAfterTest();
         $context = context_system::instance();
 
         $originaltag = array(
@@ -154,7 +153,6 @@ class core_tag_external_testcase extends externallib_advanced_testcase {
         global $CFG, $DB, $PAGE;
         require_once($CFG->dirroot . '/lib/external/externallib.php');
 
-        $this->resetAfterTest(true);
         $tag = $this->getDataGenerator()->create_tag();
         $this->setUser($this->getDataGenerator()->create_user());
 

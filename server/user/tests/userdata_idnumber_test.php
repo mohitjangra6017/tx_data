@@ -49,7 +49,6 @@ class core_user_userdata_idnumber_testcase extends advanced_testcase {
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $activeuser = new target_user($this->getDataGenerator()->create_user(['idnumber' => 'user1']));
         $suspendeduser = new target_user($this->getDataGenerator()->create_user(['idnumber' => 'user2', 'suspended' => 1]));
@@ -73,7 +72,6 @@ class core_user_userdata_idnumber_testcase extends advanced_testcase {
      * test if data is correctly counted
      */
     public function test_count() {
-        $this->resetAfterTest(true);
 
         // Set up users.
         $user1 = $this->getDataGenerator()->create_user(['idnumber' => 'user1']);
@@ -93,7 +91,6 @@ class core_user_userdata_idnumber_testcase extends advanced_testcase {
      * test if data is correctly counted
      */
     public function test_export() {
-        $this->resetAfterTest(true);
 
         // Set up users.
         $user1 = $this->getDataGenerator()->create_user(['idnumber' => 'user1']);

@@ -68,7 +68,6 @@ class totara_core_task_send_reminder_messages_test extends reportcache_advanced_
         global $CFG, $DB;
 
         // We must reset after this test.
-        $this->resetAfterTest();
         // Completion must be enabled.
         $CFG->enablecompletion = true;
 

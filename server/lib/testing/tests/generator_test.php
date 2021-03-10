@@ -60,7 +60,6 @@ class core_test_generator_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once($CFG->dirroot.'/user/lib.php');
 
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
 
         $count = $DB->count_records('user');
@@ -155,7 +154,6 @@ class core_test_generator_testcase extends advanced_testcase {
     public function test_create() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
 
         $count = $DB->count_records('course_categories');
@@ -206,7 +204,6 @@ class core_test_generator_testcase extends advanced_testcase {
             $this->markTestSkipped('Can not find standard Page module');
         }
 
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
 
         $page = $generator->create_module('page', array('course'=>$SITE->id));
@@ -359,7 +356,6 @@ class core_test_generator_testcase extends advanced_testcase {
             $this->markTestSkipped('Can not find standard Online users block');
         }
 
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
 
         $page = $generator->create_block('online_users');
@@ -369,7 +365,6 @@ class core_test_generator_testcase extends advanced_testcase {
     public function test_enrol_user() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $selfplugin = enrol_get_plugin('self');
         $this->assertNotEmpty($selfplugin);
@@ -457,7 +452,6 @@ class core_test_generator_testcase extends advanced_testcase {
         global $DB, $CFG;
         require_once $CFG->libdir . '/grade/constants.php';
 
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
 

@@ -43,7 +43,6 @@ class totara_flavour_helper_testcase extends advanced_testcase {
         global $CFG;
         require_once($CFG->libdir . '/adminlib.php');
         parent::setUp();
-        $this->resetAfterTest();
         // When/if we have a second core flavour we should convert our tests to use that instead of the test flavour.
         // The test flavour is available at TL-7812
         $this->testflavouravailable = file_exists("$CFG->dirroot/totara/flavour/flavours/test/classes/definition.php");
@@ -343,7 +342,6 @@ class totara_flavour_helper_testcase extends advanced_testcase {
             return true; // Not needed but keeps it clear.
         }
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         helper::set_active_flavour('flavour_test');

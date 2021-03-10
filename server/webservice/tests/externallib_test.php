@@ -41,7 +41,6 @@ class core_webservice_externallib_testcase extends externallib_advanced_testcase
     public function test_get_site_info() {
         global $DB, $USER, $CFG;
 
-        $this->resetAfterTest(true);
 
         $maxbytes = 10485760;
         $userquota = 5242880;
@@ -159,7 +158,6 @@ class core_webservice_externallib_testcase extends externallib_advanced_testcase
      * Test get_site_info with values > PHP_INT_MAX. We check only userquota since maxbytes require PHP ini changes.
      */
     public function test_get_site_info_max_int() {
-        $this->resetAfterTest(true);
 
         self::setUser(self::getDataGenerator()->create_user());
 

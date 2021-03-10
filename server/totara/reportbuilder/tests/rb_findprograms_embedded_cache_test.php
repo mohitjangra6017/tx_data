@@ -98,7 +98,6 @@ class totara_reportbuilder_rb_findprograms_embedded_cache_testcase extends repor
      *
      */
     public function test_findprograms() {
-        $this->resetAfterTest();
         $usecache = false;
         $this->enable_caching($this->report_builder_data['id']);
 
@@ -117,7 +116,6 @@ class totara_reportbuilder_rb_findprograms_embedded_cache_testcase extends repor
     }
 
     public function test_is_capable() {
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $shortname = $this->report_builder_data['shortname'];

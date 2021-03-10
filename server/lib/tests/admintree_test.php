@@ -244,7 +244,6 @@ class core_admintree_testcase extends advanced_testcase {
      */
     public function test_admin_setting_configexecutable() {
         global $CFG;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $CFG->theme = 'ventura';
@@ -282,7 +281,6 @@ class core_admintree_testcase extends advanced_testcase {
      */
     public function test_config_logging() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $DB->delete_records('config_log', array());
@@ -379,7 +377,6 @@ class core_admintree_testcase extends advanced_testcase {
     }
 
     public function test_preventexecpath() {
-        $this->resetAfterTest();
 
         set_config('preventexecpath', 0);
         set_config('execpath', null, 'abc_cde');
@@ -460,7 +457,6 @@ class core_admintree_testcase extends advanced_testcase {
      * in lib/tests/curl_security_helper_test.php
      */
     public function test_mixedhostiplist() {
-        $this->resetAfterTest();
 
         $adminsetting = new admin_setting_configmixedhostiplist('abc_cde/hostiplist', 'some desc', '', '');
 

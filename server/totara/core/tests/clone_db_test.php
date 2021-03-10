@@ -26,7 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 class totara_core_clone_db_testcase extends advanced_testcase {
     public function test_totara_is_clone_db_configured() {
         global $CFG;
-        $this->resetAfterTest();
 
         $CFG->clone_dbname = null;
         $this->assertFalse(totara_is_clone_db_configured());
@@ -37,7 +36,6 @@ class totara_core_clone_db_testcase extends advanced_testcase {
 
     public function test_totara_get_clone_db() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $this->assertObjectNotHasAttribute('clone_dbname', $DB);
         $this->assertNull(totara_get_clone_db(true));

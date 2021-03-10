@@ -47,7 +47,6 @@ class mod_lti_external_testcase extends externallib_advanced_testcase {
      */
     public function setUp(): void {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.

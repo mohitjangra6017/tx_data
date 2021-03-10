@@ -109,7 +109,6 @@ class mod_certificate_userdata_certificate_issues_history_testcase extends advan
             public $target_user2;
         };
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 

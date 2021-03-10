@@ -32,7 +32,6 @@ use totara_core\totara\menu\helper;
 class totara_core_menu_totara_testcase extends advanced_testcase {
     public function test_totara_menu_reset_cache() {
         global $SESSION;
-        $this->resetAfterTest();
 
         $rev = helper::get_cache_revision();
         $SESSION->mymenu = array('test');
@@ -46,7 +45,6 @@ class totara_core_menu_totara_testcase extends advanced_testcase {
 
     public function test_totara_menu_reset_all_caches() {
         global $SESSION;
-        $this->resetAfterTest();
 
         $rev = helper::get_cache_revision();
         $SESSION->mymenu = array('test');
@@ -58,7 +56,6 @@ class totara_core_menu_totara_testcase extends advanced_testcase {
 
     public function test_totara_menu_reset_session_cache() {
         global $SESSION;
-        $this->resetAfterTest();
 
         $rev = helper::get_cache_revision();
         $SESSION->mymenu = array('test');
@@ -71,7 +68,6 @@ class totara_core_menu_totara_testcase extends advanced_testcase {
 
     public function test_totara_build_menu() {
         global $CFG, $USER, $SESSION, $DB, $PAGE;
-        $this->resetAfterTest();
 
         //have to set page url so menu comparisons for selected items don't fail
         $PAGE->set_url(new moodle_url($CFG->wwwroot . '/'));
@@ -339,7 +335,6 @@ class totara_core_menu_totara_testcase extends advanced_testcase {
 
     public function test_totara_menu_selected() {
         global $CFG, $PAGE, $FULLME;
-        $this->resetAfterTest();
 
         $PAGE->set_url('/xx'); //set junk URL so it doesn't match anything
         $FULLME = $CFG->wwwroot . '/index.php?redirect=0';
@@ -398,7 +393,6 @@ class totara_core_menu_totara_testcase extends advanced_testcase {
 
     public function test_totara_upgrade_menu() {
         global $DB;
-        $this->resetAfterTest();
 
         $rev = helper::get_cache_revision();
 

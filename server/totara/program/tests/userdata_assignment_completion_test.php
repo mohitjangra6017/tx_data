@@ -53,7 +53,6 @@ class totara_program_userdata_assignment_completion_test extends totara_program_
     public function test_count() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Set up users.
         $user1 = new target_user($this->getDataGenerator()->create_user());
@@ -119,7 +118,6 @@ class totara_program_userdata_assignment_completion_test extends totara_program_
      * Create fixtures to be used in the test cases.
      */
     protected function create_fixtures() {
-        $this->resetAfterTest(true);
 
         $fixtures = new class() {
             /** @var target_user */

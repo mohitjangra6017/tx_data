@@ -48,7 +48,6 @@ class mod_scorm_archive_testcase extends advanced_testcase {
     public function test_archive() {
         global $CFG, $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Enable site-wide completion setting.

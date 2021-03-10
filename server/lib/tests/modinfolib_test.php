@@ -37,7 +37,6 @@ class core_modinfolib_testcase extends advanced_testcase {
     public function test_section_info_properties() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
         $oldcfgenableavailability = $CFG->enableavailability;
         $oldcfgenablecompletion = $CFG->enablecompletion;
         set_config('enableavailability', 1);
@@ -105,7 +104,6 @@ class core_modinfolib_testcase extends advanced_testcase {
     public function test_cm_info_properties() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
         $oldcfgenableavailability = $CFG->enableavailability;
         $oldcfgenablecompletion = $CFG->enablecompletion;
         set_config('enableavailability', 1);
@@ -238,7 +236,6 @@ class core_modinfolib_testcase extends advanced_testcase {
     public function test_matching_cacherev() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
         $cache = cache::make('core', 'coursemodinfo');
 
@@ -332,7 +329,6 @@ class core_modinfolib_testcase extends advanced_testcase {
     public function test_course_modinfo_properties() {
         global $USER, $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Generate the course and some modules. Make one section hidden.
@@ -414,7 +410,6 @@ class core_modinfolib_testcase extends advanced_testcase {
     public function test_is_user_access_restricted_by_capability() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create a course and a mod_assign instance.
         $course = $this->getDataGenerator()->create_course();
@@ -472,7 +467,6 @@ class core_modinfolib_testcase extends advanced_testcase {
     public function test_cm_info_get_course_module_record() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         set_config('enableavailability', 1);
         set_config('enablecompletion', 1);
@@ -582,7 +576,6 @@ class core_modinfolib_testcase extends advanced_testcase {
     public function test_availability_property() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         // Create a course with two modules and three sections.
         $course = $this->getDataGenerator()->create_course(
@@ -626,7 +619,6 @@ class core_modinfolib_testcase extends advanced_testcase {
      * Tests for get_groups() method.
      */
     public function test_get_groups() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator();
 
         // Create courses.
@@ -690,7 +682,6 @@ class core_modinfolib_testcase extends advanced_testcase {
      */
     public function test_create() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         // Create a course and an activity.
         $generator = $this->getDataGenerator();
@@ -749,7 +740,6 @@ class core_modinfolib_testcase extends advanced_testcase {
      */
     public function test_get_course_and_cm_from_cmid() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         // Create a course and an activity.
         $generator = $this->getDataGenerator();
@@ -842,7 +832,6 @@ class core_modinfolib_testcase extends advanced_testcase {
      */
     public function test_get_course_and_cm_from_instance() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         // Create a course and an activity.
         $generator = $this->getDataGenerator();
@@ -922,7 +911,6 @@ class core_modinfolib_testcase extends advanced_testcase {
      */
     public function test_cm_info_get_icon_output_no_overrides() {
         global $OUTPUT;
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
@@ -950,7 +938,6 @@ class core_modinfolib_testcase extends advanced_testcase {
     public function test_cm_info_get_icon_output_when_overridden() {
         global $GLOBALS, $OUTPUT;
 
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();

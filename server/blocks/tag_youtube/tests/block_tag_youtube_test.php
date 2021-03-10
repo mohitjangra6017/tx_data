@@ -43,7 +43,6 @@ class core_block_tag_youtube_testcase extends advanced_testcase {
     public function test_after_install() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Assert that tag_youtube entry exists and that its visible attribute is set to 0 (disabled).
         $this->assertTrue($DB->record_exists('block', array('name' => 'tag_youtube', 'visible' => 0)));

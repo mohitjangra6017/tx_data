@@ -35,7 +35,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
      */
     public function test_new_policy_draft_exception_sitepolicy_not_saved() {
 
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Site policy must be saved before adding policy versions');
 
@@ -48,7 +47,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
      */
     public function test_new_policy_draft_exception_draft_exists() {
 
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Cannot create draft as it already exists');
         /** @var \tool_sitepolicy\testing\generator $generator */
@@ -64,7 +62,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_new_policy_draft_success() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -98,7 +95,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_save() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -145,7 +141,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_delete() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -201,7 +196,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_delete_exceptions() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('This version was published, so it cannot be deleted');
         /** @var \tool_sitepolicy\testing\generator $generator */
@@ -247,7 +241,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_delete_force() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -301,7 +294,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_from_policy_latest() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -405,7 +397,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
      * @throws \coding_exception
      */
     public function test_from_policy_latest_unsaved_sitepolicy() {
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Site policy must be saved before retrieving a version');
 
@@ -418,7 +409,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
      * @throws \coding_exception
      */
     public function test_from_policy_latest_invalid_status() {
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Invalid status passed');
 
@@ -432,7 +422,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
      */
     public function test_from_policy_latest_missing_versions() {
         global $DB;
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Policy don\'t have any versions, remove policy and create new');
 
@@ -545,7 +534,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
      **/
     public function test_get_versionlist($debugkey, $options) {
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -609,7 +597,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_get_versionlist_optionchanges() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -686,7 +673,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_get_summary() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -791,7 +777,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_is_complete() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -862,7 +847,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_archive() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -896,7 +880,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
  * Test archive cannot be executed if the version is not published.
  */
     public function test_archive_exception_if_not_published() {
-        $this->resetAfterTest();
         $this->expectException('coding_exception');
         $this->expectExceptionMessage('Cannot archive unpublished version');
 
@@ -914,7 +897,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     public function test_publish() {
         global $DB;
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -960,7 +942,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
      **/
     public function test_has_active($debugkey, $options) {
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -979,7 +960,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
      **/
     public function test_get_languages() {
 
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
 
@@ -1020,7 +1000,6 @@ class tool_sitepolicy_policyversion_test extends \advanced_testcase {
     }
 
     public function test_incomplete_language_translations() {
-        $this->resetAfterTest();
         /** @var \tool_sitepolicy\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('tool_sitepolicy');
         $options = [

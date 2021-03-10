@@ -41,7 +41,6 @@ class block_totara_featured_links_test_validators_testcase extends test_helper {
      * doesnt find an error
      */
     public function test_is_valid_course_valid_course() {
-        $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course();
 
         $this->run_validator_check(
@@ -56,7 +55,6 @@ class block_totara_featured_links_test_validators_testcase extends test_helper {
      * finds an error when there is no course id
      */
     public function test_is_valid_course_no_course() {
-        $this->resetAfterTest(true);
 
         $this->run_validator_check(
             new is_valid_course(),
@@ -70,7 +68,6 @@ class block_totara_featured_links_test_validators_testcase extends test_helper {
      * finds an error when the course is not visible to the user
      */
     public function test_is_valid_course_hidden_course() {
-        $this->resetAfterTest(true);
         global $DB;
         $course = $this->getDataGenerator()->create_course();
         $course->visible = 0;
@@ -88,7 +85,6 @@ class block_totara_featured_links_test_validators_testcase extends test_helper {
      * doesn't find an error on valid program
      */
     public function test_is_valid_program_valid_program() {
-        $this->resetAfterTest(true);
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $program = $programgenerator->create_program();
 
@@ -104,7 +100,6 @@ class block_totara_featured_links_test_validators_testcase extends test_helper {
      * finds an error when no program id is passed
      */
     public function test_is_valid_program_no_program() {
-        $this->resetAfterTest(true);
 
         $this->run_validator_check(
             new is_valid_program(),
@@ -118,7 +113,6 @@ class block_totara_featured_links_test_validators_testcase extends test_helper {
      * finds an error when the user cannot see the program
      */
     public function test_is_valid_program_hidden_program() {
-        $this->resetAfterTest(true);
         global $DB;
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $program = $programgenerator->create_program();
@@ -137,7 +131,6 @@ class block_totara_featured_links_test_validators_testcase extends test_helper {
      * finds an error when the program is actually a certification
      */
     public function test_is_valid_program_certification() {
-        $this->resetAfterTest(true);
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $certificationid = $programgenerator->create_certification()->id;
 
@@ -153,7 +146,6 @@ class block_totara_featured_links_test_validators_testcase extends test_helper {
      * does not find an error when a valid certification is passed
      */
     public function test_is_valid_certification_valid_certification() {
-        $this->resetAfterTest(true);
 
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $certificationid = $programgenerator->create_certification()->id;
@@ -170,7 +162,6 @@ class block_totara_featured_links_test_validators_testcase extends test_helper {
      * finds an error when no id is passed
      */
     public function test_is_valid_certification_valid_no_certification() {
-        $this->resetAfterTest(true);
 
         $this->run_validator_check(
             new is_valid_certification(),
@@ -184,7 +175,6 @@ class block_totara_featured_links_test_validators_testcase extends test_helper {
      * finds an error when the certification is hidden from the user
      */
     public function test_is_valid_certification_hidden() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
@@ -205,7 +195,6 @@ class block_totara_featured_links_test_validators_testcase extends test_helper {
      * finds and error when the certification is actually a program
      */
     public function test_is_valid_certification_program() {
-        $this->resetAfterTest(true);
 
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $program = $programgenerator->create_program();

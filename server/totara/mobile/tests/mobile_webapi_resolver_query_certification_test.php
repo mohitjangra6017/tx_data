@@ -37,7 +37,6 @@ class totara_mobile_webapi_resolver_query_certification_testcase extends advance
      * @return []
      */
     private function create_faux_certifications(array $users = []) {
-        $this->resetAfterTest();
 
         $users = [];
         $users[] = $this->getDataGenerator()->create_user();

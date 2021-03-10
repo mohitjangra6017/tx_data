@@ -47,7 +47,6 @@ class mod_folder_external_testcase extends externallib_advanced_testcase {
     public function test_view_folder() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         // Setup test data.
@@ -117,7 +116,6 @@ class mod_folder_external_testcase extends externallib_advanced_testcase {
     public function test_mod_folder_get_folders_by_courses() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $course1 = self::getDataGenerator()->create_course();
         $course2 = self::getDataGenerator()->create_course();

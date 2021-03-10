@@ -99,7 +99,6 @@ class mod_lti_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_index_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -226,7 +225,6 @@ class mod_lti_backup_activity_task_testcase extends advanced_testcase {
     public function test_encode_content_links_view_with_a_task() {
         global $CFG, $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();

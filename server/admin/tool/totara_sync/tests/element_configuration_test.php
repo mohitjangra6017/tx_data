@@ -79,7 +79,6 @@ class tool_totara_sync_element_configuration_testcase extends advanced_testcase 
      * Test for when saving a configuration to use default settings.
      */
     public function test_save_configuration_use_defaults() {
-        $this->resetAfterTest();
 
         $element = $this->create_mock_element();
 
@@ -108,7 +107,6 @@ class tool_totara_sync_element_configuration_testcase extends advanced_testcase 
      * Test for saving configuration when overriding the defaults.
      */
     public function test_save_configuration_not_use_defaults() {
-        $this->resetAfterTest();
 
         $element = $this->create_mock_element();
 
@@ -141,7 +139,6 @@ class tool_totara_sync_element_configuration_testcase extends advanced_testcase 
      * If no configuration for the element has been set, the default settings should be used.
      */
     public function test_use_defaults_by_default() {
-        $this->resetAfterTest();
         $element = $this->create_mock_element();
 
         $this->assertTrue($element->use_fileaccess_defaults());
@@ -153,7 +150,6 @@ class tool_totara_sync_element_configuration_testcase extends advanced_testcase 
      * Check that the default value for fileaccess is returned when configured that way.
      */
     public function test_get_fileaccess_when_default() {
-        $this->resetAfterTest();
         $element = $this->create_mock_element();
 
         // There will be a permission check in save_configuration.
@@ -178,7 +174,6 @@ class tool_totara_sync_element_configuration_testcase extends advanced_testcase 
      * Check that the overriding value for fileaccess is returned when configured that way.
      */
     public function test_get_fileaccess_when_overridden() {
-        $this->resetAfterTest();
         $element = $this->create_mock_element();
 
         // There will be a permission check in save_configuration.
@@ -204,7 +199,6 @@ class tool_totara_sync_element_configuration_testcase extends advanced_testcase 
      * Check that an exception is thrown when there is no available setting for fileaccess.
      */
     public function test_get_fileaccess_throws_exception() {
-        $this->resetAfterTest();
         $element = $this->create_mock_element();
 
         // There will be a permission check in save_configuration.
@@ -223,7 +217,6 @@ class tool_totara_sync_element_configuration_testcase extends advanced_testcase 
      * Check that the default value for filesdir is returned when configured that way.
      */
     public function test_get_filesdir_when_default() {
-        $this->resetAfterTest();
         $element = $this->create_mock_element();
 
         // There will be a permission check in save_configuration.
@@ -249,7 +242,6 @@ class tool_totara_sync_element_configuration_testcase extends advanced_testcase 
      * Check that the overriding value for filesdir is returned when configured that way.
      */
     public function test_get_filesdir_when_overridden() {
-        $this->resetAfterTest();
         $element = $this->create_mock_element();
 
         // There will be a permission check in save_configuration.
@@ -276,7 +268,6 @@ class tool_totara_sync_element_configuration_testcase extends advanced_testcase 
      * Check that an exception is thrown when there is no available setting for filesdir.
      */
     public function test_get_filesdir_throws_exception() {
-        $this->resetAfterTest();
         $element = $this->create_mock_element();
 
         // There will be a permission check in save_configuration.

@@ -46,7 +46,6 @@ class enrol_guest_external_testcase extends externallib_advanced_testcase {
     public function test_get_instance_info() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Check if guest enrolment plugin is enabled.
         $guestplugin = enrol_get_plugin('guest');

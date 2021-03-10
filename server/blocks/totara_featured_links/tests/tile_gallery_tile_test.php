@@ -58,7 +58,6 @@ class block_totara_featured_links_tile_gallery_tile_testcase extends test_helper
      */
     public function test_tile_custom_save() {
         global $DB;
-        $this->resetAfterTest();
         $instance = $this->blockgenerator->create_instance();
         $tile1 = $this->blockgenerator->create_gallery_tile($instance->id);
         $data = new \stdClass();
@@ -76,7 +75,6 @@ class block_totara_featured_links_tile_gallery_tile_testcase extends test_helper
      */
     public function test_get_subtiles() {
         global $DB;
-        $this->resetAfterTest();
 
         $instance = $this->blockgenerator->create_instance();
         $gallerytile = $this->blockgenerator->create_gallery_tile($instance->id);
@@ -112,7 +110,6 @@ class block_totara_featured_links_tile_gallery_tile_testcase extends test_helper
     public function test_render_hide_when_no_subtiles() {
         global $DB, $PAGE;
         $PAGE->set_url('/');
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $instance = $this->blockgenerator->create_instance();

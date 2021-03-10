@@ -31,7 +31,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class report_completion_rpl_testcase extends advanced_testcase {
     public function test_rpl_created() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();
@@ -78,7 +77,6 @@ class report_completion_rpl_testcase extends advanced_testcase {
     }
 
     public function test_rpl_deleted() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();

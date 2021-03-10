@@ -59,7 +59,6 @@ class qtype_ddmarker_test extends advanced_testcase {
     }
 
     public function test_save_question() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category(array());

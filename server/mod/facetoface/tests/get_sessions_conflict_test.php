@@ -54,7 +54,6 @@ class mod_facetoface_get_sessions_conflict_testcase extends advanced_testcase {
      * @return void
      */
     public function test_conflicting_sessions_for_user(): void {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $event1 = $this->create_seminar_event();

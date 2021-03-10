@@ -50,7 +50,6 @@ class enrol_paypal_testcase extends advanced_testcase {
     }
 
     public function test_sync_nothing() {
-        $this->resetAfterTest();
 
         $this->enable_plugin();
         $paypalplugin = enrol_get_plugin('paypal');
@@ -61,7 +60,6 @@ class enrol_paypal_testcase extends advanced_testcase {
 
     public function test_expired() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var enrol_paypal_plugin $paypalplugin  */
         $paypalplugin = enrol_get_plugin('paypal');

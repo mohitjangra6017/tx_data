@@ -53,7 +53,6 @@ class core_message_messagelib_testcase extends advanced_testcase {
      */
     public function setUp(): void {
         $this->messagesink = $this->redirectMessages();
-        $this->resetAfterTest();
     }
 
     /**

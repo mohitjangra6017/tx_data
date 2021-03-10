@@ -58,7 +58,6 @@ class totara_cohort_job_assignments_testcase extends totara_cohort_position_rule
      */
     public function test_has_direct_reports($params, $listofvalues, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create some manager accounts.
@@ -123,7 +122,6 @@ class totara_cohort_job_assignments_testcase extends totara_cohort_position_rule
      */
     public function test_has_temporary_reports($params, $listofvalues, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create some manager accounts.
@@ -205,7 +203,6 @@ class totara_cohort_job_assignments_testcase extends totara_cohort_position_rule
      */
     public function test_has_appraisees($params, $listofvalues, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create some appraiser accounts.

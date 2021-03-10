@@ -30,7 +30,6 @@ class totara_customfield_event_custom_field_created_testcase extends advanced_te
 
     public function setUp(): void {
         $this->setAdminUser();
-        $this->resetAfterTest();
     }
 
     /**

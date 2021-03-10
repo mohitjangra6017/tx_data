@@ -28,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
 class core_messagelib_testcase extends advanced_testcase {
 
     public function test_message_provider_disabled() {
-        $this->resetAfterTest();
 
         // Disable instantmessage provider.
         $disableprovidersetting = 'moodle_instantmessage_disable';
@@ -69,7 +68,6 @@ class core_messagelib_testcase extends advanced_testcase {
     public function test_message_get_providers_for_user() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
 
@@ -122,7 +120,6 @@ class core_messagelib_testcase extends advanced_testcase {
     public function test_message_get_providers_for_user_more() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create a course.
         $course = $this->getDataGenerator()->create_course();
@@ -402,7 +399,6 @@ class core_messagelib_testcase extends advanced_testcase {
 
     public function test_send_message() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user(array('maildisplay' => 1));
         $user2 = $this->getDataGenerator()->create_user();
@@ -750,7 +746,6 @@ class core_messagelib_testcase extends advanced_testcase {
     public function test_rollback() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -814,7 +809,6 @@ class core_messagelib_testcase extends advanced_testcase {
     public function test_rollback_nested() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -881,7 +875,6 @@ class core_messagelib_testcase extends advanced_testcase {
     public function test_forced_rollback() {
         global $DB;
 
-        $this->resetAfterTest();
         set_config('noemailever', 1);
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -923,7 +916,6 @@ class core_messagelib_testcase extends advanced_testcase {
 
     public function test_message_attachment_send() {
         global $CFG;
-        $this->resetAfterTest();
 
         // Set config setting to allow attachments.
         $CFG->allowattachments = true;

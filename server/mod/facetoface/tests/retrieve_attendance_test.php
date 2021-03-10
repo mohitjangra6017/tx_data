@@ -66,7 +66,6 @@ class mod_facetoface_retrieve_attendance_testcase extends advanced_testcase {
      * @return void
      */
     public function test_get_attendees(): void {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $event = $this->create_seminar_event();

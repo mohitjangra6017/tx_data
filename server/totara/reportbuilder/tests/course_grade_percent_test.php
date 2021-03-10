@@ -39,7 +39,6 @@ class totara_reportbuilder_course_grade_percent_testcase extends advanced_testca
      * @return stdClass
      */
     protected function setupdata() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $setupdata = new stdClass();

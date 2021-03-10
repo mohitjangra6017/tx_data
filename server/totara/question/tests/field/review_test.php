@@ -27,7 +27,6 @@ require_once($CFG->dirroot.'/totara/question/tests/question_testcase.php');
 
 class question_field_review_test extends totara_question_testcase {
     public function test_prepare_stub() {
-        $this->resetAfterTest();
         $storage = new question_storage_mock(1);
         $storage->answerfield = 'appraisalroleassignmentid';
         $storage->prefix = 'appraisal';
@@ -74,7 +73,6 @@ class question_field_review_test extends totara_question_testcase {
     }
 
     public function test_stub_exists() {
-        $this->resetAfterTest();
         $storage = new question_storage_mock(1);
         $storage->answerfield = 'appraisalroleassignmentid';
         $storage->prefix = 'appraisal';
@@ -94,7 +92,6 @@ class question_field_review_test extends totara_question_testcase {
     }
 
     public function test_get_grouped_items() {
-        $this->resetAfterTest();
         // Mock review question.
         $storage = new question_storage_mock(1);
         $storage->answerfield = 'appraisalroleassignmentid';

@@ -45,7 +45,6 @@ class core_notification_testcase extends advanced_testcase {
      */
     public function setUp(): void {
         global $PAGE, $SESSION;
-        $this->resetAfterTest(); //Totara: ignore Moodle SESSION hacks!
 
         parent::setUp();
         $PAGE = new moodle_page();

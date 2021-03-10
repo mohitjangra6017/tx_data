@@ -44,7 +44,6 @@ class backup_factories_testcase extends advanced_testcase {
         global $CFG;
         parent::setUp();
 
-        $this->resetAfterTest(true);
 
         $CFG->backup_error_log_logger_level = backup::LOG_NONE;
         $CFG->backup_output_indented_logger_level = backup::LOG_NONE;

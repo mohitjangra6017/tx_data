@@ -93,7 +93,6 @@ class tool_totara_sync_pos_csv_customfield_types_testcase extends advanced_testc
     public function test_checkbox_import() {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/totara/customfield/field/checkbox/define.class.php');
-        $this->resetAfterTest();
         $this->set_up_importing();
         $this->set_up_framework();
 
@@ -142,7 +141,6 @@ class tool_totara_sync_pos_csv_customfield_types_testcase extends advanced_testc
     public function test_datetime_import() {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/totara/customfield/field/datetime/define.class.php');
-        $this->resetAfterTest();
         $this->set_up_importing();
         $this->set_up_framework();
 
@@ -205,7 +203,6 @@ class tool_totara_sync_pos_csv_customfield_types_testcase extends advanced_testc
     public function test_file_import() {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/totara/customfield/field/file/define.class.php');
-        $this->resetAfterTest();
         $this->set_up_importing();
         $this->set_up_framework();
 
@@ -254,7 +251,6 @@ class tool_totara_sync_pos_csv_customfield_types_testcase extends advanced_testc
     public function test_location_import() {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/totara/customfield/field/location/define.class.php');
-        $this->resetAfterTest();
         $this->set_up_importing();
         $this->set_up_framework();
 
@@ -305,7 +301,6 @@ class tool_totara_sync_pos_csv_customfield_types_testcase extends advanced_testc
     public function test_menu_import() {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/totara/customfield/field/menu/define.class.php');
-        $this->resetAfterTest();
         $this->set_up_importing();
         $this->set_up_framework();
 
@@ -358,7 +353,6 @@ class tool_totara_sync_pos_csv_customfield_types_testcase extends advanced_testc
     public function test_multiselect_import() {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/totara/customfield/field/multiselect/define.class.php');
-        $this->resetAfterTest();
         $this->set_up_importing();
         $this->set_up_framework();
 
@@ -413,7 +407,6 @@ class tool_totara_sync_pos_csv_customfield_types_testcase extends advanced_testc
     public function test_text_import() {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/totara/customfield/field/text/define.class.php');
-        $this->resetAfterTest();
         $this->set_up_importing();
         $this->set_up_framework();
 
@@ -462,7 +455,6 @@ class tool_totara_sync_pos_csv_customfield_types_testcase extends advanced_testc
     public function test_textarea_import() {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/totara/customfield/field/textarea/define.class.php');
-        $this->resetAfterTest();
         $this->set_up_importing();
         $this->set_up_framework();
 

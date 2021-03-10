@@ -50,7 +50,6 @@ class core_calendar_calendar_information_testcase extends advanced_testcase {
     }
 
     protected function setUp(): void {
-        $this->resetAfterTest(true);
 
         $this->data_generator = $this->getDataGenerator();
         $this->facetoface_generator = $this->data_generator->get_plugin_generator('mod_facetoface');

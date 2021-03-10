@@ -49,7 +49,6 @@ class availability_grouping_condition_testcase extends advanced_testcase {
      */
     public function test_usage() {
         global $CFG, $USER;
-        $this->resetAfterTest();
         $CFG->enableavailability = true;
 
         // Erase static cache before test.
@@ -212,7 +211,6 @@ class availability_grouping_condition_testcase extends advanced_testcase {
      */
     public function test_filter_users() {
         global $DB, $CFG;
-        $this->resetAfterTest();
         $CFG->enableavailability = true;
 
         // Erase static cache before test.

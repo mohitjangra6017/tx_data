@@ -45,7 +45,6 @@ class totara_question_coursefromplan_export_testcase extends advanced_testcase {
     public function test_get_items_with_items() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $questiontype = 'coursefromplan';
 

@@ -129,7 +129,6 @@ class totara_reportbuilder_rb_cohort_associations_enrolled_embedded_cache_testca
      * @dataProvider provider_use_cache
      */
     public function test_cohort_associations_enrolled($usecache) {
-        $this->resetAfterTest();
         $this->create_enrol_cohort($this->cohort1->id, $this->course1->id);
 
         if ($usecache) {
@@ -146,7 +145,6 @@ class totara_reportbuilder_rb_cohort_associations_enrolled_embedded_cache_testca
 
     public function test_is_capable() {
         global $DB;
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $syscontext = context_system::instance();

@@ -44,7 +44,6 @@ class totara_certification_user_learning_item_testcase extends advanced_testcase
     }
 
     public function setUp(): void {
-        $this->resetAfterTest(true);
         parent::setUp();
 
         $this->generator = $this->getDataGenerator();
@@ -63,7 +62,6 @@ class totara_certification_user_learning_item_testcase extends advanced_testcase
     }
 
     function test_is_single_course_true() {
-        $this->resetAfterTest(true);
 
         // Setup certification content.
         $certcontent = new prog_content($this->certification1->id);
@@ -98,7 +96,6 @@ class totara_certification_user_learning_item_testcase extends advanced_testcase
     }
 
     function test_is_single_course_false() {
-        $this->resetAfterTest(true);
 
         // Setup certification content.
         $certcontent = new prog_content($this->certification1->id);

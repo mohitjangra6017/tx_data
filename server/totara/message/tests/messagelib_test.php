@@ -146,7 +146,6 @@ class messagelib_test extends advanced_testcase {
         global $CFG;
         $CFG->smtphosts = null;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $user = $GLOBALS['USER'];
 

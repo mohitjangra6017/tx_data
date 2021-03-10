@@ -56,7 +56,6 @@ class search_manager_testcase extends advanced_testcase {
 
     public function test_search_enabled() {
 
-        $this->resetAfterTest();
 
         // Disabled by default.
         $this->assertFalse(\core_search\manager::is_global_search_enabled());
@@ -71,7 +70,6 @@ class search_manager_testcase extends advanced_testcase {
     public function test_search_areas() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         set_config('enableglobalsearch', true);
 
@@ -106,7 +104,6 @@ class search_manager_testcase extends advanced_testcase {
 
     public function test_search_config() {
 
-        $this->resetAfterTest();
 
         $search = testable_core_search::instance();
 
@@ -165,7 +162,6 @@ class search_manager_testcase extends advanced_testcase {
      * Tests the get_last_indexing_duration method in the base area class.
      */
     public function test_get_last_indexing_duration() {
-        $this->resetAfterTest();
 
         $search = testable_core_search::instance();
 
@@ -191,7 +187,6 @@ class search_manager_testcase extends advanced_testcase {
     public function test_partial_indexing() {
         global $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create a course and a forum.
@@ -288,7 +283,6 @@ class search_manager_testcase extends advanced_testcase {
      * date).
      */
     public function test_future_documents() {
-        $this->resetAfterTest();
 
         // Create a course and a forum.
         $generator = $this->getDataGenerator();
@@ -340,7 +334,6 @@ class search_manager_testcase extends advanced_testcase {
     public function test_context_indexing() {
         global $USER;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create a course and two forums and a page.
@@ -441,7 +434,6 @@ class search_manager_testcase extends advanced_testcase {
     public function test_search_user_accesses() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $frontpage = $DB->get_record('course', array('id' => SITEID));
         $course1 = $this->getDataGenerator()->create_course();
@@ -542,7 +534,6 @@ class search_manager_testcase extends advanced_testcase {
      * @return void
      */
     public function test_search_user_accesses_blocks() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create course and add HTML block.
@@ -658,7 +649,6 @@ class search_manager_testcase extends advanced_testcase {
     public function test_request_index() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course1 = $this->getDataGenerator()->create_course();
         $course1ctx = context_course::instance($course1->id);
@@ -734,7 +724,6 @@ class search_manager_testcase extends advanced_testcase {
     public function test_process_index_requests() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $search = testable_core_search::instance();
 

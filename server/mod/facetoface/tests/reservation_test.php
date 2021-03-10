@@ -36,7 +36,6 @@ class mod_facetoface_reservation_testcase extends advanced_testcase {
      * Check that users deallocated correctly
      */
     public function test_facetoface_remove_allocations() {
-        $this->resetAfterTest(true);
 
         $manager = $this->getDataGenerator()->create_user();
         $user1 = $this->getDataGenerator()->create_user();

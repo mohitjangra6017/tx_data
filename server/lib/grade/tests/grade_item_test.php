@@ -682,7 +682,6 @@ class core_grade_item_testcase extends grade_base_testcase {
     public function sub_test_grade_item_fix_sortorder() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Each set is used for filling the db with fake data and will be representing the result of query:
         // "SELECT sortorder from {grade_items} WHERE courseid=? ORDER BY id".

@@ -67,7 +67,6 @@ class totara_program_update_learner_assignments_testcase extends reportcache_adv
 
         $this->updateassignmentsdateformat = get_string('datepickerlongyearparseformat', 'totara_core');
 
-        $this->resetAfterTest(true);
 
         $job_generator = \totara_job\testing\generator::instance();
 

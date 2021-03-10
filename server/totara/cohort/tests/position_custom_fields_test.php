@@ -61,7 +61,6 @@ class totara_cohort_position_custom_fields_testcase extends advanced_testcase {
         global $DB, $USER;
 
         parent::setup();
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -886,7 +885,6 @@ class totara_cohort_position_custom_fields_testcase extends advanced_testcase {
     public function test_position_custom_fields($customfieldtype, $param1, $defaulfieldvalue, $savefield, $savevalue, $rulepart1, $rulepart2, $paramname, $members) {
 
         global $DB;
-        $this->resetAfterTest(true);
         set_debugging(DEBUG_ALL);
         $this->setAdminUser();
 

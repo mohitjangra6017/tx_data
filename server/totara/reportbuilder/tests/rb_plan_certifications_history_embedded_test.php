@@ -41,7 +41,6 @@ class totara_reportbuilder_rb_plan_certifications_history_embedded_testcase exte
 
         parent::setup();
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         // Create users.
         $this->user1 = $this->getDataGenerator()->create_user();
@@ -64,7 +63,6 @@ class totara_reportbuilder_rb_plan_certifications_history_embedded_testcase exte
     }
 
     public function test_is_capable() {
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $shortname = 'plan_certifications_history';

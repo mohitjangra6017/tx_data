@@ -64,7 +64,6 @@ class totara_customfield_totara_catalog_dataformatters_testcase extends dataform
      * @param array $expected_suitable_types
      */
     public function test_customfield(string $classname, array $expected_suitable_types) {
-        $this->resetAfterTest();
 
         $context = context_system::instance();
 

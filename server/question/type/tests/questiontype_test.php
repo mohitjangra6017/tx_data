@@ -40,7 +40,6 @@ class question_type_testcase extends advanced_testcase {
     public static $includecoverage = array('question/type/questiontypebase.php');
 
     public function test_save_question_name() {
-        $this->resetAfterTest();
 
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category(array());
@@ -53,7 +52,6 @@ class question_type_testcase extends advanced_testcase {
     }
 
     public function test_save_question_zero_name() {
-        $this->resetAfterTest();
 
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category(array());

@@ -65,7 +65,6 @@ class mod_quiz_userdata_attempts_testcase extends advanced_testcase {
     public function test_purge_system() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
 
@@ -179,7 +178,6 @@ class mod_quiz_userdata_attempts_testcase extends advanced_testcase {
     public function test_purge_coursecat() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
 
@@ -238,7 +236,6 @@ class mod_quiz_userdata_attempts_testcase extends advanced_testcase {
     public function test_purge_course() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
 
@@ -297,7 +294,6 @@ class mod_quiz_userdata_attempts_testcase extends advanced_testcase {
     public function test_purge_module() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
 
@@ -406,7 +402,6 @@ class mod_quiz_userdata_attempts_testcase extends advanced_testcase {
      * test if data is correctly counted
      */
     public function test_count() {
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
 
@@ -510,7 +505,6 @@ class mod_quiz_userdata_attempts_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
         require_once($CFG->dirroot . '/question/type/essay/tests/helper.php');
 
-        $this->resetAfterTest(true);
 
         $activeuser = new target_user($this->getDataGenerator()->create_user());
         $controluser = new target_user($this->getDataGenerator()->create_user());

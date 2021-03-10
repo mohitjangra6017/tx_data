@@ -132,7 +132,6 @@ class mod_facetoface_notify_under_capacity_testcase extends advanced_testcase {
     public function test_sending_capacity_notification_email_with_eventdata_reset_for_multiple_recipients(): void {
         global $CFG, $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $studentrole = $DB->get_record("role", ['shortname' => 'student']);

@@ -83,7 +83,6 @@ class tool_monitor_userdata_subscriptions_testcase extends \advanced_testcase {
             public $rules;
         };
 
-        $this->resetAfterTest(true);
 
         // Create users.
         $data->user1 = $this->getDataGenerator()->create_user();

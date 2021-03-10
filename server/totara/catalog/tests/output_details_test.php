@@ -286,7 +286,6 @@ class totara_catalog_output_details_testcase extends output_test_base {
      * @param string $provider
      */
     public function test_create(array $config_changes, array $override_expected, array $expected_removed, string $provider) {
-        $this->resetAfterTest();
 
         $object_id = $this->create_object_for_provider($provider);
 
@@ -307,7 +306,6 @@ class totara_catalog_output_details_testcase extends output_test_base {
      */
     public function test_manage_link() {
         $this->setAdminUser();
-        $this->resetAfterTest();
 
         // Course
         $object_id = $this->create_object_for_provider('course');
@@ -515,7 +513,6 @@ class totara_catalog_output_details_testcase extends output_test_base {
      * @param string $provider_name
      */
     public function test_get_required_dataholders(array $config_changes, array $expected, string $provider_name) {
-        $this->resetAfterTest();
         config::instance()->update($config_changes);
 
         $provider_handler = provider_handler::instance();

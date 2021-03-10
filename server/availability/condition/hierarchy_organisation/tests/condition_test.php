@@ -35,7 +35,6 @@ class availability_hierarchy_organisation_condition_testcase extends advanced_te
     public function test_usage() {
         global $CFG;
 
-        $this->resetAfterTest();
         $CFG->enableavailability = true;
 
         $hierarchy_generator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');

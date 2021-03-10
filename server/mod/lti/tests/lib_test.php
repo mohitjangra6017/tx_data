@@ -55,7 +55,6 @@ class mod_lti_lib_testcase extends advanced_testcase {
         global $CFG;
 
         $CFG->enablecompletion = 1;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.
@@ -94,7 +93,6 @@ class mod_lti_lib_testcase extends advanced_testcase {
      * Test deleting LTI instance.
      */
     public function test_lti_delete_instance() {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course(array());

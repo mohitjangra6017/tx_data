@@ -61,7 +61,6 @@ class enrol_lti_tool_provider_testcase extends advanced_testcase {
      */
     public function setUp(): void {
         global $SESSION;
-        $this->resetAfterTest();
 
         manager::init_empty_session();
 

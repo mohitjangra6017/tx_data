@@ -37,7 +37,6 @@ class mod_facetoface_registration_closure_testcase extends advanced_testcase {
         $this->cfgemail = isset($CFG->noemailever) ? $CFG->noemailever : null;
         $CFG->noemailever = false;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $this->eventsink = $this->redirectEvents();

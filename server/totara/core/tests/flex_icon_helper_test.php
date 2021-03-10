@@ -32,7 +32,6 @@ defined('MOODLE_INTERNAL') || die();
 class totara_core_flex_icon_helper_testcase extends advanced_testcase {
     public function test_get_icons() {
         global $CFG;
-        $this->resetAfterTest();
 
         $icons = flex_icon_helper::get_icons($CFG->theme);
         $this->assertIsArray($icons);
@@ -47,7 +46,6 @@ class totara_core_flex_icon_helper_testcase extends advanced_testcase {
 
     public function test_get_ajax_data() {
         global $CFG;
-        $this->resetAfterTest();
 
         $icons = flex_icon_helper::get_icons($CFG->theme);
         $ajax = flex_icon_helper::get_ajax_data($CFG->theme);

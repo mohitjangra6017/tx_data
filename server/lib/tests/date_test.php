@@ -35,7 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class core_date_testcase extends advanced_testcase {
     public function test_get_default_php_timezone() {
-        $this->resetAfterTest();
 
         $origtz = core_date::get_default_php_timezone();
         $this->assertNotEmpty($origtz);
@@ -51,7 +50,6 @@ class core_date_testcase extends advanced_testcase {
     }
 
     public function test_normalise_timezone() {
-        $this->resetAfterTest();
 
         $this->setTimezone('Pacific/Auckland');
         $this->assertSame('Pacific/Auckland', core_date::normalise_timezone('Pacific/Auckland'));
@@ -140,7 +138,6 @@ class core_date_testcase extends advanced_testcase {
      * Sanity test for PHP stuff.
      */
     public function test_php_gmt_offsets() {
-        $this->resetAfterTest();
 
         $this->setTimezone('Pacific/Auckland', 'Pacific/Auckland');
 
@@ -167,7 +164,6 @@ class core_date_testcase extends advanced_testcase {
     }
 
     public function test_get_localised_timezone() {
-        $this->resetAfterTest();
 
         $this->setTimezone('Pacific/Auckland', 'Pacific/Auckland');
 
@@ -194,7 +190,6 @@ class core_date_testcase extends advanced_testcase {
     }
 
     public function test_get_list_of_timezones() {
-        $this->resetAfterTest();
 
         $this->setTimezone('Pacific/Auckland', 'Pacific/Auckland');
 
@@ -243,7 +238,6 @@ class core_date_testcase extends advanced_testcase {
 
     public function test_get_server_timezone() {
         global $CFG;
-        $this->resetAfterTest();
 
         $this->setTimezone('Pacific/Auckland', 'Pacific/Auckland');
         $this->assertSame('Pacific/Auckland', core_date::get_server_timezone());
@@ -267,7 +261,6 @@ class core_date_testcase extends advanced_testcase {
     }
 
     public function test_get_server_timezone_object() {
-        $this->resetAfterTest();
 
         $zones = core_date::get_list_of_timezones();
         foreach ($zones as $zone) {
@@ -280,7 +273,6 @@ class core_date_testcase extends advanced_testcase {
 
     public function test_set_default_server_timezone() {
         global $CFG;
-        $this->resetAfterTest();
 
         $this->setTimezone('Europe/Prague', 'Pacific/Auckland');
         unset($CFG->timezone);
@@ -406,7 +398,6 @@ class core_date_testcase extends advanced_testcase {
 
     public function test_get_user_timezone() {
         global $CFG, $USER;
-        $this->resetAfterTest();
 
         // Null parameter.
 
@@ -542,7 +533,6 @@ class core_date_testcase extends advanced_testcase {
 
     public function test_get_user_timezone_object() {
         global $CFG, $USER;
-        $this->resetAfterTest();
 
         $this->setTimezone('Pacific/Auckland');
         $CFG->forcetimezone = '99';

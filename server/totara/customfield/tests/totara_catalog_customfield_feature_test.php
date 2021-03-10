@@ -39,7 +39,6 @@ class totara_customfield_totara_catalog_feature_factory_testcase extends \advanc
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
     }
 
     /**

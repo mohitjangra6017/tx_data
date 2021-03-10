@@ -57,7 +57,6 @@ class core_files_tgz_packer_testcase extends advanced_testcase implements file_p
      */
     protected function prepare_file_list() {
         global $CFG;
-        $this->resetAfterTest(true);
 
         // Make array listing files to archive.
         $filelist = array();

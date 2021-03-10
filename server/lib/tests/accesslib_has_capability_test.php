@@ -80,7 +80,6 @@ class accesslib_has_capability_testcase extends \advanced_testcase {
      * @param   string $testcontexts
      */
     public function test_login_as_admin(string $loginascontext, array $testcontexts): void {
-        $this->resetAfterTest();
 
         $contexts = $this->get_test_data();
 
@@ -104,7 +103,6 @@ class accesslib_has_capability_testcase extends \advanced_testcase {
      * @param   string $testcontexts
      */
     public function test_login_as_user(string $loginascontext, array $testcontexts): void {
-        $this->resetAfterTest();
 
         $contexts = $this->get_test_data();
 

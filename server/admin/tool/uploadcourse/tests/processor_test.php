@@ -38,7 +38,6 @@ class tool_uploadcourse_processor_testcase extends advanced_testcase {
 
     public function test_basic() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $content = array(
             "shortname,fullname,summary",
@@ -64,7 +63,6 @@ class tool_uploadcourse_processor_testcase extends advanced_testcase {
 
     public function test_restore_template_course() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $c1 = $this->getDataGenerator()->create_course();
@@ -100,7 +98,6 @@ class tool_uploadcourse_processor_testcase extends advanced_testcase {
 
     public function test_restore_restore_file() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $content = array(
@@ -137,7 +134,6 @@ class tool_uploadcourse_processor_testcase extends advanced_testcase {
 
     public function test_shortname_template() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $content = array(
             "shortname,fullname,summary,idnumber",
@@ -161,7 +157,6 @@ class tool_uploadcourse_processor_testcase extends advanced_testcase {
     }
 
     public function test_empty_csv() {
-        $this->resetAfterTest(true);
 
         $content = array();
         $content = implode("\n", $content);
@@ -178,7 +173,6 @@ class tool_uploadcourse_processor_testcase extends advanced_testcase {
     }
 
     public function test_not_enough_columns() {
-        $this->resetAfterTest(true);
 
         $content = array(
             "shortname",
@@ -199,7 +193,6 @@ class tool_uploadcourse_processor_testcase extends advanced_testcase {
 
     public function test_preview() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $content = array(
             "shortname,fullname,summary",

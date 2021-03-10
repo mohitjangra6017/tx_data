@@ -38,7 +38,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_get_grades() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment.
         $coursedata['idnumber'] = 'idnumbercourse';
         $coursedata['fullname'] = 'Lightwork Course';
@@ -138,7 +137,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_get_assignments() {
         global $DB, $USER, $CFG;
 
-        $this->resetAfterTest(true);
 
         $category = self::getDataGenerator()->create_category(array(
             'name' => 'Test category'
@@ -301,7 +299,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_get_assignments_with_submissionstatement() {
         global $DB, $USER, $CFG;
 
-        $this->resetAfterTest(true);
 
         // Setup test data. Create 2 assigns, one with requiresubmissionstatement and the other without it.
         $course = $this->getDataGenerator()->create_course();
@@ -357,7 +354,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_get_submissions() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment.
         $coursedata['idnumber'] = 'idnumbercourse1';
         $coursedata['fullname'] = 'Lightwork Course 1';
@@ -441,7 +437,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_get_user_flags() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment.
         $coursedata['idnumber'] = 'idnumbercourse';
         $coursedata['fullname'] = 'Lightwork Course';
@@ -512,7 +507,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_get_user_mappings() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment.
         $coursedata['idnumber'] = 'idnumbercourse';
         $coursedata['fullname'] = 'Lightwork Course';
@@ -573,7 +567,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_lock_submissions() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment and users.
         $course = self::getDataGenerator()->create_course();
 
@@ -638,7 +631,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_unlock_submissions() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment and users.
         $course = self::getDataGenerator()->create_course();
 
@@ -708,7 +700,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_submit_for_grading() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment and users.
         $course = self::getDataGenerator()->create_course();
 
@@ -765,7 +756,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_save_user_extensions() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment and users.
         $course = self::getDataGenerator()->create_course();
 
@@ -837,7 +827,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_reveal_identities() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment and users.
         $course = self::getDataGenerator()->create_course();
 
@@ -878,7 +867,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_revert_submissions_to_draft() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         set_config('submissionreceipts', 0, 'assign');
         // Create a course and assignment and users.
         $course = self::getDataGenerator()->create_course();
@@ -932,7 +920,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_save_submission() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment and users.
         $course = self::getDataGenerator()->create_course();
 
@@ -1028,7 +1015,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_save_grade() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment and users.
         $course = self::getDataGenerator()->create_course();
 
@@ -1107,7 +1093,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_save_grades_with_advanced_grading() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment and users.
         $course = self::getDataGenerator()->create_course();
 
@@ -1266,7 +1251,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
         global $DB, $USER, $CFG;
         require_once($CFG->dirroot . '/group/lib.php');
 
-        $this->resetAfterTest(true);
         // Create a course and assignment and users.
         $course = self::getDataGenerator()->create_course();
 
@@ -1365,7 +1349,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_copy_previous_attempt() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment and users.
         $course = self::getDataGenerator()->create_course();
 
@@ -1448,7 +1431,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_set_user_flags() {
         global $DB, $USER;
 
-        $this->resetAfterTest(true);
         // Create a course and assignment.
         $coursedata['idnumber'] = 'idnumbercourse';
         $coursedata['fullname'] = 'Lightwork Course';
@@ -1534,7 +1516,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_view_grading_table_invalid_instance() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Setup test data.
         $course = $this->getDataGenerator()->create_course();
@@ -1553,7 +1534,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_view_grading_table_not_enrolled() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Setup test data.
         $course = $this->getDataGenerator()->create_course();
@@ -1575,7 +1555,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_view_grading_table_correct() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Setup test data.
         $course = $this->getDataGenerator()->create_course();
@@ -1614,7 +1593,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_view_grading_table_without_capability() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Setup test data.
         $course = $this->getDataGenerator()->create_course();
@@ -1648,7 +1626,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
         global $CFG;
 
         require_once($CFG->dirroot . '/mod/assign/adminlib.php');
-        $this->resetAfterTest(true);
 
         // Hide assignment file submissiong plugin.
         $pluginmanager = new assign_plugin_manager('assignsubmission');
@@ -1690,7 +1667,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_view_submission_status() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         // Setup test data.
@@ -1840,7 +1816,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
      * Test get_submission_status for a draft submission.
      */
     public function test_get_submission_status_in_draft_status() {
-        $this->resetAfterTest(true);
 
         list($assign, $instance, $student1, $student2, $teacher) = $this->create_submission_for_testing_status();
         $studentsubmission = $assign->get_user_submission($student1->id, true);
@@ -1896,7 +1871,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
      * Test get_submission_status for a submitted submission.
      */
     public function test_get_submission_status_in_submission_status() {
-        $this->resetAfterTest(true);
 
         list($assign, $instance, $student1, $student2, $teacher) = $this->create_submission_for_testing_status(true);
 
@@ -1926,7 +1900,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
      * Test get_submission_status using the teacher role.
      */
     public function test_get_submission_status_in_submission_status_for_teacher() {
-        $this->resetAfterTest(true);
 
         list($assign, $instance, $student1, $student2, $teacher) = $this->create_submission_for_testing_status(true);
 
@@ -1956,7 +1929,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_get_submission_status_in_reopened_status() {
         global $USER;
 
-        $this->resetAfterTest(true);
 
         list($assign, $instance, $student1, $student2, $teacher) = $this->create_submission_for_testing_status(true);
         $studentsubmission = $assign->get_user_submission($student1->id, true);
@@ -2047,7 +2019,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
      * Test access control for get_submission_status.
      */
     public function test_get_submission_status_access_control() {
-        $this->resetAfterTest(true);
 
         list($assign, $instance, $student1, $student2, $teacher) = $this->create_submission_for_testing_status();
 
@@ -2064,7 +2035,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
      * get_participant should throw an excaption if the requested assignment doesn't exist.
      */
     public function test_get_participant_no_assignment() {
-        $this->resetAfterTest(true);
 
         $this->expectException(moodle_exception::class);
         mod_assign_external::get_participant('-1', '-1', false);
@@ -2076,7 +2046,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
      */
     public function test_get_participant_no_view_capability() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $result = $this->create_assign_with_student_and_teacher();
         $assign = $result['assign'];
@@ -2098,7 +2067,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
      */
     public function test_get_participant_no_grade_capability() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $result = $this->create_assign_with_student_and_teacher();
         $assign = $result['assign'];
@@ -2122,7 +2090,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
      */
     public function test_get_participant_no_participant() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $result = $this->create_assign_with_student_and_teacher(array('blindmarking' => true));
         $student = $this->getDataGenerator()->create_user();
@@ -2141,7 +2108,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
      */
     public function test_get_participant_blind_marking() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $result = $this->create_assign_with_student_and_teacher(array('blindmarking' => true));
         $assign = $result['assign'];
@@ -2170,7 +2136,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
      */
     public function test_get_participant_no_user() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $result = $this->create_assign_with_student_and_teacher();
         $assignmodule = $result['assign'];
@@ -2224,7 +2189,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
      */
     public function test_get_participant_full_details() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $result = $this->create_assign_with_student_and_teacher();
         $assign = $result['assign'];
@@ -2255,7 +2219,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
     public function test_get_participant_group_submission() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $result = $this->create_assign_with_student_and_teacher(array(
             'assignsubmission_onlinetext_enabled' => 1,
@@ -2302,7 +2265,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
      */
     public function test_list_participants_user_info_with_special_characters() {
         global $CFG, $DB;
-        $this->resetAfterTest(true);
         $CFG->showuseridentity = 'idnumber,email,phone1,phone2,department,institution';
 
         $data = $this->create_assign_with_student_and_teacher();
@@ -2430,7 +2392,6 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
         global $CFG;
 
         $CFG->enablecompletion = 1;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         // Setup test data.

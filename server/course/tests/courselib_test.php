@@ -163,7 +163,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     private function create_specific_module_test($modulename) {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
 
@@ -439,7 +438,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     private function update_specific_module_test($modulename) {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
 
@@ -601,7 +599,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_create_course() {
         global $DB;
-        $this->resetAfterTest(true);
         $defaultcategory = $DB->get_field_select('course_categories', "MIN(id)", "parent=0");
 
         $course = new stdClass();
@@ -651,7 +648,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
     public function test_create_course_with_generator() {
         global $DB;
-        $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course();
 
         // Ensure default section is created.
@@ -835,7 +831,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_update_course() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $defaultcategory = $DB->get_field_select('course_categories', 'MIN(id)', 'parent = 0');
 
@@ -882,7 +877,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_update_course_section_time_modified() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create the course with sections.
         $course = $this->getDataGenerator()->create_course(array('numsections' => 10), array('createsections' => true));
@@ -904,7 +898,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
     public function test_course_add_cm_to_section() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Create course with 1 section.
         $course = $this->getDataGenerator()->create_course(
@@ -954,7 +947,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
     public function test_reorder_sections() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $this->getDataGenerator()->create_course(array('numsections'=>5), array('createsections'=>true));
         $course = $this->getDataGenerator()->create_course(array('numsections'=>10), array('createsections'=>true));
@@ -992,7 +984,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
     public function test_move_section_down() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $this->getDataGenerator()->create_course(array('numsections'=>5), array('createsections'=>true));
         $course = $this->getDataGenerator()->create_course(array('numsections'=>10), array('createsections'=>true));
@@ -1021,7 +1012,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
     public function test_move_section_up() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $this->getDataGenerator()->create_course(array('numsections'=>5), array('createsections'=>true));
         $course = $this->getDataGenerator()->create_course(array('numsections'=>10), array('createsections'=>true));
@@ -1050,7 +1040,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
     public function test_move_section_marker() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $this->getDataGenerator()->create_course(array('numsections'=>5), array('createsections'=>true));
         $course = $this->getDataGenerator()->create_course(array('numsections'=>10), array('createsections'=>true));
@@ -1092,7 +1081,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
     public function test_course_can_delete_section() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 
@@ -1154,7 +1142,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
     public function test_course_delete_section() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 
@@ -1215,7 +1202,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
     public function test_get_course_display_name_for_list() {
         global $CFG;
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course(array('shortname' => 'FROG101', 'fullname' => 'Introduction to pond life'));
 
@@ -1229,7 +1215,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_move_module_in_course() {
         global $DB;
 
-        $this->resetAfterTest(true);
         // Setup fixture
         $course = $this->getDataGenerator()->create_course(array('numsections'=>5), array('createsections' => true));
         $forum = $this->getDataGenerator()->create_module('forum', array('course'=>$course->id));
@@ -1291,7 +1276,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
     public function test_module_visibility() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         // Create course and modules.
         $course = $this->getDataGenerator()->create_course(array('numsections' => 5));
@@ -1314,7 +1298,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
     public function test_section_visibility_events() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course(array('numsections' => 1), array('createsections' => true));
         $sectionnumber = 1;
@@ -1340,7 +1323,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
     public function test_section_visibility() {
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         // Create course.
         $course = $this->getDataGenerator()->create_course(array('numsections' => 3), array('createsections' => true));
@@ -1444,7 +1426,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
     public function test_course_page_type_list() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Create a category.
         $category = new stdClass();
@@ -1590,7 +1571,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_moveto_module_between_hidden_sections() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course(array('numsections' => 4), array('createsections' => true));
         $forum = $this->getDataGenerator()->create_module('forum', array('course' => $course->id));
@@ -1672,7 +1652,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_moveto_module_in_same_section() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course(array('numsections' => 3), array('createsections' => true));
         $page = $this->getDataGenerator()->create_module('page', array('course' => $course->id));
@@ -1722,7 +1701,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_course_delete_module($type, $options) {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create course and modules.
@@ -1827,7 +1805,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_course_created_event() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Catch the events.
         $sink = $this->redirectEvents();
@@ -1896,7 +1873,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_course_updated_event() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create a course.
         $course = $this->getDataGenerator()->create_course();
@@ -1975,7 +1951,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      * Test that triggering a course_deleted event works as expected.
      */
     public function test_course_deleted_event() {
-        $this->resetAfterTest();
 
         // Create the course.
         $course = $this->getDataGenerator()->create_course();
@@ -2028,7 +2003,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_course_content_deleted_event() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create the course.
         $course = $this->getDataGenerator()->create_course();
@@ -2068,7 +2042,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      * Test that triggering a course_category_deleted event works as expected.
      */
     public function test_course_category_deleted_event() {
-        $this->resetAfterTest();
 
         // Create a category.
         $category = $this->getDataGenerator()->create_category();
@@ -2138,7 +2111,6 @@ class core_course_courselib_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
         require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
 
-        $this->resetAfterTest();
 
         // Set to admin user.
         $this->setAdminUser();
@@ -2184,7 +2156,6 @@ class core_course_courselib_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
         require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
 
-        $this->resetAfterTest();
 
         // Set to admin user.
         $this->setAdminUser();
@@ -2254,7 +2225,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_course_section_updated_event() {
         global $DB;
 
-        $this->resetAfterTest();
 
         // Create the course with sections.
         $course = $this->getDataGenerator()->create_course(array('numsections' => 10), array('createsections' => true));
@@ -2310,7 +2280,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_section_deleted_event() {
         global $USER, $DB;
-        $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
         // Create the course with sections.
@@ -2346,7 +2315,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_course_integrity_check() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course(array('numsections' => 1),
            array('createsections'=>true));
 
@@ -2468,7 +2436,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_module_created_event() {
         global $USER, $DB;
-        $this->resetAfterTest();
 
         // Create an assign module.
         $sink = $this->redirectEvents();
@@ -2526,7 +2493,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_module_created_event_exceptions() {
 
-        $this->resetAfterTest();
 
         // Generate data.
         $modinfo = $this->create_specific_module_test('assign');
@@ -2591,7 +2557,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_module_updated_event() {
         global $USER, $DB;
-        $this->resetAfterTest();
 
         // Update a forum module.
         $sink = $this->redirectEvents();
@@ -2633,7 +2598,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      * Tests for create_from_cm method.
      */
     public function test_course_module_create_from_cm() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create course and modules.
@@ -2678,7 +2642,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_module_updated_event_exceptions() {
 
-        $this->resetAfterTest();
 
         // Generate data.
         $modinfo = $this->create_specific_module_test('assign');
@@ -2743,7 +2706,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_module_deleted_event() {
         global $USER, $DB;
-        $this->resetAfterTest();
 
         // Create and delete a module.
         $sink = $this->redirectEvents();
@@ -2781,7 +2743,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_module_deleted_event_exceptions() {
 
-        $this->resetAfterTest();
 
         // Generate data.
         $modinfo = $this->create_specific_module_test('assign');
@@ -2852,7 +2813,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_course_change_sortorder_after_course() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $category = $generator->create_category();
@@ -2901,7 +2861,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_course_change_visibility() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $category = $generator->create_category();
@@ -2927,7 +2886,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_course_change_sortorder_by_one() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $category = $generator->create_category();
@@ -2981,7 +2939,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     }
 
     public function test_view_resources_list() {
-        $this->resetAfterTest();
 
         $course = self::getDataGenerator()->create_course();
         $coursecontext = context_course::instance($course->id);
@@ -3014,7 +2971,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_duplicate_module() {
         $this->setAdminUser();
-        $this->resetAfterTest();
         $course = self::getDataGenerator()->create_course();
         $res = self::getDataGenerator()->create_module('resource', array('course' => $course));
         $cm = get_coursemodule_from_id('resource', $res->cmid, 0, false, MUST_EXIST);
@@ -3039,7 +2995,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_empty_availability_settings() {
         global $DB;
         $this->setAdminUser();
-        $this->resetAfterTest();
 
         // Enable availability.
         set_config('enableavailability', 1);
@@ -3079,7 +3034,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
         $this->setUser($this->getDataGenerator()->create_user());
 
-        $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course();
         $forum = self::getDataGenerator()->create_module('forum', array('course' => $course->id, 'name' => 'forum name'));
 
@@ -3105,7 +3059,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_get_tagged_course_modules() {
         global $DB;
-        $this->resetAfterTest();
         $course3 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
         $course1 = $this->getDataGenerator()->create_course();
@@ -3218,7 +3171,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_get_user_navigation_options_for_frontpage() {
         global $CFG, $SITE, $DB;
-        $this->resetAfterTest();
         $context = context_system::instance();
         $course = clone $SITE;
         $this->setAdminUser();
@@ -3275,7 +3227,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_get_user_navigation_options_for_managers() {
         global $CFG;
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $context = context_course::instance($course->id);
         $this->setAdminUser();
@@ -3292,7 +3243,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_get_user_navigation_options_for_students() {
         global $DB, $CFG;
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $context = context_course::instance($course->id);
 
@@ -3326,7 +3276,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_get_user_administration_options_for_frontpage() {
         global $CFG, $SITE;
-        $this->resetAfterTest();
         $course = clone $SITE;
         $context = context_course::instance($course->id);
         $this->setAdminUser();
@@ -3359,7 +3308,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_get_user_administration_options_for_managers() {
         global $CFG;
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $context = context_course::instance($course->id);
         $this->setAdminUser();
@@ -3386,7 +3334,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_get_user_administration_options_for_students() {
         global $DB, $CFG;
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $context = context_course::instance($course->id);
 
@@ -3440,7 +3387,6 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function test_course_enddate($startdate, $enddate, $errorcode) {
 
-        $this->resetAfterTest(true);
 
         $record = array('startdate' => $startdate, 'enddate' => $enddate);
         try {
@@ -3507,7 +3453,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
         require_once($CFG->dirroot.'/completion/criteria/completion_criteria_date.php');
 
-        $this->resetAfterTest(true);
 
         $CFG->enablecompletion = true;
 
@@ -3612,7 +3557,6 @@ class core_course_courselib_testcase extends advanced_testcase {
     public function test_course_roles_reset() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 
@@ -3645,7 +3589,6 @@ class core_course_courselib_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/rating/lib.php');
         require_once($CFG->dirroot . '/comment/lib.php');
 
-        $this->resetAfterTest(true);
 
         $CFG->enablecompletion = true;
         $course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1));
@@ -3732,7 +3675,6 @@ class core_course_courselib_testcase extends advanced_testcase {
         // 'course_module_adhoc_deletion_recommended'. In core, is implemented by the course recyclebin, which will only return
         // true if the recyclebin plugin is enabled. To make sure async deletion occurs, this test force-enables the recyclebin.
         global $DB, $USER;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Ensure recyclebin is enabled.
@@ -3799,7 +3741,6 @@ class core_course_courselib_testcase extends advanced_testcase {
         // 'true' from the 'course_module_adhoc_deletion_recommended' hook.
         // In the case of core, only recyclebin implements this hook, and it will only return true if enabled, so disable it.
         global $DB, $USER;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         set_config('coursebinenable', false, 'tool_recyclebin');
 
@@ -3854,7 +3795,6 @@ class core_course_courselib_testcase extends advanced_testcase {
         // implementing the 'course_module_adhoc_deletion_recommended' hook. In core, is implemented by the course recyclebin,
         // which will only return true if the plugin is enabled. To make sure async deletion occurs, this test enables recyclebin.
         global $DB, $USER;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Ensure recyclebin is enabled.
@@ -3943,7 +3883,6 @@ class core_course_courselib_testcase extends advanced_testcase {
         // 'true' from the 'course_module_adhoc_deletion_recommended' hook.
         // In the case of core, only recyclebin implements this hook, and it will only return true if enabled, so disable it.
         global $DB, $USER;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         set_config('coursebinenable', false, 'tool_recyclebin');
 
@@ -4021,7 +3960,6 @@ class core_course_courselib_testcase extends advanced_testcase {
 
         set_config('enablecompletion', COMPLETION_ENABLED);
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create courses for testing.

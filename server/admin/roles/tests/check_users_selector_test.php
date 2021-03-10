@@ -35,7 +35,6 @@ class core_role_check_users_selector_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
 
         $this->course1 = $this->getDataGenerator()->create_course();
         $this->course2 = $this->getDataGenerator()->create_course();

@@ -37,7 +37,6 @@ class totara_completioneditor_install_testcase extends advanced_testcase {
     public function test_totara_completioneditor_install_log_existing_module_completions() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $cm = new stdClass();
         $cm->course = 123;
@@ -81,7 +80,6 @@ class totara_completioneditor_install_testcase extends advanced_testcase {
     public function test_totara_completioneditor_install_log_existing_criteria_completions() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $cccc = new stdClass();
         $cccc->userid = 111;
@@ -117,7 +115,6 @@ class totara_completioneditor_install_testcase extends advanced_testcase {
     public function test_totara_completioneditor_install_log_existing_history_completions() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $cch = new stdClass();
         $cch->courseid = 111;
@@ -147,7 +144,6 @@ class totara_completioneditor_install_testcase extends advanced_testcase {
     public function test_totara_completioneditor_install_log_existing_current_completions() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $cc = new stdClass();
         $cc->userid = 111;

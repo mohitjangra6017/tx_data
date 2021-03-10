@@ -144,7 +144,6 @@ class mod_facetoface_signup_approval_admin_testcase extends advanced_testcase {
     public function test_signup_is_not_changing_state_when_approval_type_change(): void {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $f2f = $this->get_facetoface();
@@ -183,7 +182,6 @@ class mod_facetoface_signup_approval_admin_testcase extends advanced_testcase {
     public function test_signup_is_changing_from_requested_admin_to_booked_when_approval_type_change(): void {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $f2f = $this->get_facetoface();

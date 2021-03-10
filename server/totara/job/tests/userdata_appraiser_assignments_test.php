@@ -78,7 +78,6 @@ class totara_job_userdata_appraiser_assignments_testcase extends \advanced_testc
             public $targetuser;
         };
 
-        $this->resetAfterTest(true);
 
         // Set up users.
         $data->user1 = $this->getDataGenerator()->create_user(); // One appraised by user2, one by user3.

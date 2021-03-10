@@ -109,7 +109,6 @@ class totara_core_totara_testcase extends advanced_testcase {
      */
     public function test_totara_is_item_visibility_hidden($audiencevisibilitysetting, $visible, $audiencevisibility, $expected) {
         global $CFG;
-        $this->resetAfterTest(true);
 
         // Create course.
         $record = array('visible' => $visible, 'audiencevisible' => $audiencevisibility);

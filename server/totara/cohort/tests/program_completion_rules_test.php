@@ -105,7 +105,6 @@ class totara_cohort_program_completion_rules_testcase extends reportcache_advanc
 
         parent::setup();
         set_config('enablecompletion', 1);
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Prevent random failures by using the same now timestamps for all test data.
@@ -268,7 +267,6 @@ class totara_cohort_program_completion_rules_testcase extends reportcache_advanc
      */
     public function test_programcompletion_date($params, $programs, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $now = time();
@@ -341,7 +339,6 @@ class totara_cohort_program_completion_rules_testcase extends reportcache_advanc
      */
     public function test_programcompletion_assigned_duration($params, $programs, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Process listofids.
@@ -382,7 +379,6 @@ class totara_cohort_program_completion_rules_testcase extends reportcache_advanc
      */
     public function test_programcompletion_started_duration($params, $programs, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Process listofids.
@@ -426,7 +422,6 @@ class totara_cohort_program_completion_rules_testcase extends reportcache_advanc
      */
     public function test_programcompletion_list($params, $programs, $usercount) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Process listofids.

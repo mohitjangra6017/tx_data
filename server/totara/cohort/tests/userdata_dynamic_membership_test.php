@@ -44,7 +44,6 @@ class totara_cohort_userdata_dynamic_membership_testcase extends advanced_testca
      * within the system.
      */
     public function test_with_no_data() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $user = $this->getDataGenerator()->create_user();
@@ -99,7 +98,6 @@ class totara_cohort_userdata_dynamic_membership_testcase extends advanced_testca
      * test for these.
      */
     public function test_with_rulesets() {
-        $this->resetAfterTest(true);
         global $CFG;
         require_once($CFG->dirroot . '/totara/cohort/lib.php');
 

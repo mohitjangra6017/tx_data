@@ -36,7 +36,6 @@ class totara_dashboard_item_testcase extends advanced_testcase {
     private function get_data() {
         global $CFG;
         require_once($CFG->dirroot . '/totara/dashboard/lib.php');
-        $this->resetAfterTest();
         $data = new class() {
             /** @var target_user */
             public $user1, $user2;
@@ -201,7 +200,6 @@ class totara_dashboard_item_testcase extends advanced_testcase {
     private function get_audience_data() {
         global $CFG;
         require_once($CFG->dirroot . '/totara/dashboard/lib.php');
-        $this->resetAfterTest();
         $data = new class() {
             /** @var stdClass */
             public $user;

@@ -64,7 +64,6 @@ class backup_structure_testcase extends advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->resetAfterTest(true);
 
         $this->contextid = 666; // Let's assume this is the context for the forum
         $this->fill_records(); // Add common stuff needed by various test methods

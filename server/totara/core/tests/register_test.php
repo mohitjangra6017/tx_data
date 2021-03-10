@@ -41,7 +41,6 @@ class totara_core_register_testcase extends advanced_testcase {
 
     public function test_is_registration_required() {
         global $CFG;
-        $this->resetAfterTest();
 
         unset_config('registrationenabled');
         unset_config('sitetype');
@@ -90,7 +89,6 @@ class totara_core_register_testcase extends advanced_testcase {
 
     public function test_get_registration_data() {
         global $CFG;
-        $this->resetAfterTest();
 
         unset_config('registrationenabled');
         unset_config('sitetype');
@@ -117,7 +115,6 @@ class totara_core_register_testcase extends advanced_testcase {
     }
 
     public function test_send_registration_data_email() {
-        $this->resetAfterTest();
 
         $sink = $this->redirectEmails();
         $data = get_registration_data();
@@ -133,7 +130,6 @@ class totara_core_register_testcase extends advanced_testcase {
 
     public function test_send_registration_data_task() {
         global $CFG;
-        $this->resetAfterTest();
 
         set_config('registrationenabled', 1);
         $this->setCurrentTimeStart();

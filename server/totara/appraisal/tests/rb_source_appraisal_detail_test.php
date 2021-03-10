@@ -50,7 +50,6 @@ class totara_appraisal_rb_source_appraisal_detail_testcase extends appraisal_tes
     public function test_report() {
         global $DB, $SESSION;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $users = array();
@@ -112,7 +111,6 @@ class totara_appraisal_rb_source_appraisal_detail_testcase extends appraisal_tes
     public function test_display_multichoice_name_cache() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $users = array();

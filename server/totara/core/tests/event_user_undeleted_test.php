@@ -25,7 +25,6 @@ defined('MOODLE_INTERNAL') || die();
 
 class totara_core_event_user_undeleted_testcase extends advanced_testcase {
     public function test_event() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
 
@@ -62,7 +61,6 @@ class totara_core_event_user_undeleted_testcase extends advanced_testcase {
     public function test_undelete_user() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
         $original = $DB->get_record('user', array('id' => $user->id));

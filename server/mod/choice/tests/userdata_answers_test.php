@@ -39,7 +39,6 @@ class mod_choice_userdata_answers_testcase extends advanced_testcase {
      * Runs the purge, export and count methods when no choice data exists in the system.
      */
     public function test_user_with_no_answers() {
-        $this->resetAfterTest(true);
         $course = $this->getDataGenerator()->create_course();
         $choice = $this->getDataGenerator()->create_module('choice', ['course' => $course->id]);
 

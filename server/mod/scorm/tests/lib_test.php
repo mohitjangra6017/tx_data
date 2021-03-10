@@ -244,7 +244,6 @@ class mod_scorm_lib_testcase extends externallib_advanced_testcase {
         global $CFG;
         $this->create_one_instance();
 
-        $this->resetAfterTest();
 
         $CFG->enablecompletion = true;
 

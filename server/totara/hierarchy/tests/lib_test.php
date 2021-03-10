@@ -402,7 +402,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertEquals($this->type2, $competency->get_type_by_id($this->type2->id));
         // false should be returned if the type doesn't exist
         $this->assertFalse((bool)$competency->get_type_by_id(999));
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_get_frameworks_all_missing_achievement_paths(): void {
@@ -694,7 +693,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $DB->delete_records('comp_type');
         // if no types exist should return false
         $this->assertFalse((bool)$competency->get_types());
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_get_custom_fields(): void {
@@ -721,7 +719,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
 
         //Empty array is returned for a non-existent item id
         $this->assertEquals(array(), $competency->get_custom_fields(9000));
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_get_item(): void {
@@ -733,7 +730,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertEquals($this->comp2, $competency->get_item($this->comp2->id));
         // should return false if the item doesn't exist
         $this->assertFalse((bool)$competency->get_item(999));
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_get_items(): void {
@@ -750,7 +746,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $DB->delete_records('comp');
         // if no items exist should return false
         $this->assertFalse((bool)$competency->get_items());
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_get_items_by_parent(): void {
@@ -770,7 +765,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         // if no items exist should return false for root items and parents
         $this->assertFalse((bool)$competency->get_items_by_parent());
         $this->assertFalse((bool)$competency->get_items_by_parent(1));
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_get_all_root_items(): void {
@@ -789,7 +783,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         // if no items exist should return false
         $this->assertFalse((bool)$competency->get_all_root_items());
         $this->assertFalse((bool)$nofwid->get_all_root_items());
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_get_item_descendants(): void {
@@ -814,7 +807,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertEquals(1, count($competency->get_item_descendants($this->comp2->id)));
         // should work the same for different frameworks
         $this->assertEquals(1, count($nofwid->get_item_descendants($this->comp3->id)));
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_get_hierarchy_item_adjacent_peer(): void {
@@ -825,7 +817,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertFalse((bool)$this->competency->get_hierarchy_item_adjacent_peer($this->comp1->id, HIERARCHY_ITEM_ABOVE));
         // should return false if item is not valid
         $this->assertFalse((bool)$this->competency->get_hierarchy_item_adjacent_peer(null));
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_make_hierarchy_list(): void {
@@ -852,7 +843,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $competency->make_hierarchy_list($list3);
         // should return empty list if no items found
         $this->assertEquals(array(), $list3);
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_get_item_lineage(): void {
@@ -880,7 +870,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         // NOTE function ignores fwid of current hierarchy object
         // not sure that this is correct behaviour
         $this->assertEquals('F2 Competency 1', current($competency->get_item_lineage($this->comp3->id))->fullname);
-        $this->resetAfterTest(true);
     }
 
     // skipped tests for the following display functions:
@@ -901,7 +890,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $visible = $DB->get_field('comp', 'visible', array('id' => $this->comp1->id));
         // item should be visible again
         $this->assertEquals(1, $visible);
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_hide_framework(): void {
@@ -916,13 +904,11 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $visible =  $DB->get_field('comp_framework', 'visible', array('id' => $this->frame1->id));
         // framework should be visible again
         $this->assertEquals(1, $visible);
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_framework_sortorder_offset(): void {
         $competency = $this->competency;
         $this->assertEquals(1002, $competency->get_framework_sortorder_offset());
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_move_framework(): void {
@@ -939,7 +925,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertEquals($f2_before, $f1_after);
         // a failed move should return false
         $this->assertFalse((bool)$competency->move_framework($this->frame2->id, true));
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_delete_hierarchy_item(): void {
@@ -955,7 +940,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertFalse((bool)$DB->get_records('comp_type_info_data', array('competencyid' => $this->comp2->id)));
         // non descendants in same framework should not be deleted
         $this->assertEquals(1, count($competency->get_items()));
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_delete_framework(): void {
@@ -969,7 +953,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertEquals(3, count($competency->get_types()));
         // the framework should have been deleted
         $this->assertFalse((bool)$DB->get_records('comp_framework', array('id' => 1)));
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_delete_type(): void {
@@ -985,7 +968,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $after = count($competency->get_types());
         // should have deleted the type
         $this->assertNotEquals($before, $after);
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_delete_type_metadata(): void {
@@ -997,7 +979,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         // should have deleted all fields for the type
         $this->assertFalse((bool)$DB->get_records('comp_type_info_field', array('typeid' => 2)));
 
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_get_item_data(): void {
@@ -1014,7 +995,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $result = current($competency->get_item_data($this->comp1, array('description')));
         $this->assertEquals('Description', $result['title']);
         $this->assertEquals('Competency Description 1', $result['value']);
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_get_max_depth(): void {
@@ -1025,7 +1005,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertEquals(2, $competency->get_max_depth());
         // should return null for framework with no depth levels
         $this->assertNull($nofwid->get_max_depth());
-        $this->resetAfterTest(true);
     }
 
     public function test_hierarchy_get_all_parents(): void {
@@ -1043,13 +1022,11 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $DB->delete_records('comp');
         // should return an empty array if no parents found
         $this->assertEquals(array(), $this->competency->get_all_parents());
-        $this->resetAfterTest(true);
     }
 
     public function test_get_short_prefix(): void {
         $shortprefix = hierarchy::get_short_prefix('competency');
         $this->assertEquals('comp', $shortprefix);
-        $this->resetAfterTest(true);
     }
 
     public function test_reorder_hierarchy_item(): void {
@@ -1061,7 +1038,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertTrue((bool)$competency->reorder_hierarchy_item($this->comp2->id, $this->comp4->id));
         $this->assertEquals('01.02', $DB->get_field('comp', 'sortthread', array('id' => $this->comp2->id)));
         $this->assertEquals('01.01', $DB->get_field('comp', 'sortthread', array('id' => $this->comp4->id)));
-        $this->resetAfterTest(true);
     }
 
     public function test_get_extra_fields(): void {
@@ -1076,7 +1052,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertNull($position->get_extrafields());
         $this->assertNull($organisation->get_extrafields());
 
-        $this->resetAfterTest(true);
     }
 
 
@@ -1087,7 +1062,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertEquals($updatedcomp2, $this->competency->update_hierarchy_item($updatedcomp2->id, $updatedcomp2));
         $this->assertEquals($updatedcomp2, $this->competency->get_item($this->comp2->id));
 
-        $this->resetAfterTest(true);
     }
 
     public function test_move_hierarchy_item(): void {
@@ -1095,7 +1069,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertTrue((bool)$this->competency->move_hierarchy_item($this->comp4, $this->comp4->frameworkid, $this->comp5->id));
         $this->assertEquals($this->comp5->id, $this->competency->get_item($this->comp4->id)->parentid);
 
-        $this->resetAfterTest(true);
     }
 
     public function test_get_unclassified_items(): void {
@@ -1106,7 +1079,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertEquals($this->comp4, $unclassified[$this->comp4->id]);
         $this->assertEquals($this->comp5, $unclassified[$this->comp5->id]);
 
-        $this->resetAfterTest(true);
     }
 
     public function test_get_item_stats(): void {
@@ -1120,7 +1092,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
 
         $this->assertDebuggingCalledCount(4);
 
-        $this->resetAfterTest(true);
     }
 
     public function test_get_related_data(): void {
@@ -1132,7 +1103,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertEquals('F2 Competency 1', $info['name']);
         $this->assertEquals(0, $info['children']);
 
-        $this->resetAfterTest(true);
     }
 
     public function test_get_all_related_data(): void {
@@ -1145,7 +1115,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertEquals(2, $info['children']);
         $this->assertEquals(3, $info['custom_fields']);
 
-        $this->resetAfterTest(true);
     }
 
     public function test_get_framework_related_data(): void {
@@ -1159,14 +1128,12 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertEquals(1, $info['children']);
         $this->assertEquals(0, $info['custom_fields']);
 
-        $this->resetAfterTest(true);
     }
 
     public function test_get_items_excluding_children(): void {
         $excluded = $this->competency->get_items_excluding_children(array($this->comp1->id, $this->comp2->id, $this->comp3->id, $this->comp4->id, $this->comp5->id));
         $this->assertEquals(array($this->comp1->id, $this->comp3->id, $this->comp5->id), $excluded);
 
-        $this->resetAfterTest(true);
     }
 
     public function test_is_child_of(): void {
@@ -1176,7 +1143,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertFalse((bool)$this->competency->is_child_of($this->comp4, $this->comp2->id));
         $this->assertFalse((bool)$this->competency->is_child_of($this->comp1, array(0, $this->comp1->id, $this->comp2->id, $this->comp3->id, $this->comp4->id, $this->comp5->id)));
 
-        $this->resetAfterTest(true);
     }
 
     public function test_get_parent_list(): void {
@@ -1203,7 +1169,6 @@ class totara_hierarchy_lib_testcase extends advanced_testcase {
         $this->assertEquals(array('0' => 'Top', $this->comp5->id => 'Competency 4'), $inctop);
         $this->assertEquals(array($this->comp5->id => 'Competency 4'), $noinctop);
 
-        $this->resetAfterTest(true);
     }
 
     private function verify_export_files_equal($exp_filename, $act_filename, $ignore = []): void {

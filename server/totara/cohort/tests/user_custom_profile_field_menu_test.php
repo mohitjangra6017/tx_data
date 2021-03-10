@@ -70,7 +70,6 @@ class totara_cohort_user_custom_profile_field_menu_testcase extends advanced_tes
         global $DB;
 
         parent::setup();
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();

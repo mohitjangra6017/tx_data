@@ -50,7 +50,6 @@ class info_testcase extends advanced_testcase {
         // Create a course and pages.
         $CFG->enableavailability = 0;
         $this->setAdminUser();
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
         $rec = array('course' => $course);
@@ -108,7 +107,6 @@ class info_testcase extends advanced_testcase {
 
         // Create a course.
         $this->setAdminUser();
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator();
         $course = $generator->create_course(
                 array('numsections' => 4), array('createsections' => true));
@@ -163,7 +161,6 @@ class info_testcase extends advanced_testcase {
     public function test_is_user_visible() {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/course/lib.php');
-        $this->resetAfterTest();
         $CFG->enableavailability = 0;
 
         // Create a course and some pages:
@@ -401,7 +398,6 @@ class info_testcase extends advanced_testcase {
     public function test_filter_user_list() {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/course/lib.php');
-        $this->resetAfterTest();
         $CFG->enableavailability = true;
 
         // Create a course with 2 sections and 2 pages and 3 users.

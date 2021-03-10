@@ -242,7 +242,6 @@ class totara_hierarchy_bulkadd_testcase extends advanced_testcase {
         $this->assertEquals(0, $item1->typeid);
         $this->assertEquals(1, $item2->typeid);
 
-        $this->resetAfterTest(true);
     }
 
     // test adding to an item in the middle of a hierarchy
@@ -305,7 +304,6 @@ class totara_hierarchy_bulkadd_testcase extends advanced_testcase {
         $this->assertEquals(0, $item1->typeid);
         $this->assertEquals(1, $item2->typeid);
 
-        $this->resetAfterTest(true);
     }
 
     // test adding to an item at the tip of a hierarchy
@@ -367,7 +365,6 @@ class totara_hierarchy_bulkadd_testcase extends advanced_testcase {
         $this->assertEquals(0, $item1->typeid);
         $this->assertEquals(1, $item2->typeid);
 
-        $this->resetAfterTest(true);
     }
 
 
@@ -431,7 +428,6 @@ class totara_hierarchy_bulkadd_testcase extends advanced_testcase {
         $this->assertEquals(0, $item1->typeid);
         $this->assertEquals(1, $item2->typeid);
 
-        $this->resetAfterTest(true);
     }
 
     /**
@@ -483,7 +479,6 @@ EOD;
         $item2b = $DB->get_record('org', array('fullname' => 'Item 2b'));
         $this->assertEquals($item2->id, $item2b->parentid);
 
-        $this->resetAfterTest(true);
     }
 
     /*
@@ -575,6 +570,5 @@ Item 5
         $this->assertEquals($expectedreturn, (bool)$items);
         $this->assertEquals($expectederror, $error);
 
-        $this->resetAfterTest(true);
     }
 }

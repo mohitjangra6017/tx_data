@@ -29,7 +29,6 @@ class calendartype_gregorian_structure_testcase extends advanced_testcase {
      * Totara: make sure order matches regular full date/time display format.
      */
     public function test_get_date_order() {
-        $this->resetAfterTest();
 
         $calendar = new \calendartype_gregorian\structure();
 

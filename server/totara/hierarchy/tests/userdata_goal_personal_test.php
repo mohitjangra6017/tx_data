@@ -130,7 +130,6 @@ class totara_hierarchy_userdata_goal_personal_testcase extends advanced_testcase
     public function test_personal_goal_count() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $data = $this->make_user_goals();
         $syscontext = \context_system::instance();
@@ -181,7 +180,6 @@ class totara_hierarchy_userdata_goal_personal_testcase extends advanced_testcase
 
         require_once($CFG->dirroot . '/totara/hierarchy/prefix/goal/lib.php');
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $data = $this->make_user_goals();
         $syscontext = \context_system::instance();
@@ -253,7 +251,6 @@ class totara_hierarchy_userdata_goal_personal_testcase extends advanced_testcase
     public function test_personal_goal_export_system () {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
         $data = $this->make_user_goals();
         $syscontext = \context_system::instance();

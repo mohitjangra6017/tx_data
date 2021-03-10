@@ -49,7 +49,6 @@ class totara_plan_components_testcase extends advanced_testcase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
         $this->messagesink = $this->redirectMessages();
         $this->data_generator = $this->getDataGenerator();
         $this->plan_generator = $this->data_generator->get_plugin_generator('totara_plan');
@@ -517,7 +516,6 @@ class totara_plan_components_testcase extends advanced_testcase {
      * @throws coding_exception
      */
     public function test_dp_component_program_assign_new_item_no_duedate() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $datagenerator = $this->getDataGenerator();
@@ -570,7 +568,6 @@ class totara_plan_components_testcase extends advanced_testcase {
      * @throws coding_exception
      */
     public function test_dp_component_program_assign_new_item_require_duedate() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $datagenerator = $this->getDataGenerator();
@@ -620,7 +617,6 @@ class totara_plan_components_testcase extends advanced_testcase {
      * The user's time due should be the program due date.
      */
     public function test_dp_component_program_assign_new_item_existing_completion() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $datagenerator = $this->getDataGenerator();

@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/totara/hierarchy/prefix/position/lib.php');
 class totara_hierarchy_position_lib_testcase extends advanced_testcase {
 
     public function test_get_user_positions() {
-        $this->resetAfterTest();
 
         $posgenerator = $this->getDataGenerator()->get_plugin_generator('totara_hierarchy');
         $posfwk = $posgenerator->create_framework('position');

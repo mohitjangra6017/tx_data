@@ -49,7 +49,6 @@ class enrol_cohort_sync_testcase extends advanced_testcase {
     public function test_handler_sync() {
         global $DB;
 
-        $this->resetAfterTest();
         $trace = new null_progress_trace();
 
         // Setup a few courses and categories.
@@ -265,7 +264,6 @@ class enrol_cohort_sync_testcase extends advanced_testcase {
 
     public function test_sync_course() {
         global $DB;
-        $this->resetAfterTest();
 
         $trace = new null_progress_trace();
 
@@ -482,7 +480,6 @@ class enrol_cohort_sync_testcase extends advanced_testcase {
     public function test_sync_all_courses() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $trace = new null_progress_trace();
 

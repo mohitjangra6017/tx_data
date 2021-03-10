@@ -40,7 +40,6 @@ class totara_core_accesslib_testcase extends advanced_testcase {
     public function test_role_unassign_all_bulk() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $student = $DB->get_record('role', array('shortname' => 'student'), '*', MUST_EXIST);
         $teacher = $DB->get_record('role', array('shortname' => 'editingteacher'), '*', MUST_EXIST);
@@ -133,7 +132,6 @@ class totara_core_accesslib_testcase extends advanced_testcase {
      */
     public function test_capability_move() {
         global $DB;
-        $this->resetAfterTest();
 
         update_capabilities('moodle');
         $this->assertDebuggingNotCalled();

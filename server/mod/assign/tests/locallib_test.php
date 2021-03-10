@@ -44,7 +44,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_return_links() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
 
         $assign = $this->create_instance($course);
@@ -56,7 +55,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_get_feedback_plugins() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
 
@@ -70,7 +68,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_get_submission_plugins() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
 
@@ -84,7 +81,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_is_blind_marking() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -171,7 +167,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
      * @param array $userprefs Array of user preferences and expected page sizes
      */
     public function test_get_assign_perpage($maxperpage, $userprefs) {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -194,7 +189,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_gradingtable_extension_due_date() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -253,7 +247,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_gradingtable_extension_date_calculation_for_lateness() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -315,7 +308,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_gradingtable_status_rendering() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -366,7 +358,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_gradingtable_group_submissions_rendering() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $group = $this->getDataGenerator()->create_group(['courseid' => $course->id]);
 
@@ -449,7 +440,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_show_intro() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
 
@@ -475,7 +465,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_has_submissions_or_grades() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -509,7 +498,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_delete_grades() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -535,7 +523,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_delete_instance() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -560,7 +547,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_reset_userdata() {
         global $DB;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -638,7 +624,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_plugin_settings() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -658,7 +643,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_update_calendar() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -735,7 +719,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_update_instance() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -758,7 +741,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_cannot_submit_empty() {
         global $PAGE;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -776,7 +758,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_cannot_submit_empty_no_submission() {
         global $PAGE;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -797,7 +778,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_can_submit_with_submission() {
         global $PAGE;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -829,7 +809,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
      * @param bool $expected The expected return value
      */
     public function test_new_submission_empty($data, $expected) {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -884,7 +863,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_list_participants() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -903,7 +881,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_list_participants_activeenrol() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -928,7 +905,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_list_participants_with_group_restriction() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -953,7 +929,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_get_participant_user_not_exist() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
 
         $assign = $this->create_instance($course);
@@ -961,7 +936,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_get_participant_not_enrolled() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $assign = $this->create_instance($course);
 
@@ -970,7 +944,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_get_participant_no_submission() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $assign = $this->create_instance($course);
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -984,7 +957,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_get_participant_granted_extension() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $assign = $this->create_instance($course);
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -1001,7 +973,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_get_participant_with_ungraded_submission() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $assign = $this->create_instance($course);
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -1020,7 +991,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_get_participant_with_graded_submission() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $assign = $this->create_instance($course);
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -1048,7 +1018,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
      * No active group and non-group submissions disallowed => 2 groups.
      */
     public function test_count_teams_no_active_non_group_allowed() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -1071,7 +1040,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
      * No active group and non group submissions allowed => 2 groups + the default one.
      */
     public function test_count_teams_non_group_allowed() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -1107,7 +1075,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
      * Active group => just selected one.
      */
     public function test_count_teams_no_active_group() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -1142,7 +1109,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
      * Active group => just selected one.
      */
     public function test_count_teams_groups_only() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $grouping = $this->getDataGenerator()->create_grouping(array('courseid' => $course->id));
@@ -1177,7 +1143,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_submit_to_default_group() {
         global $DB, $SESSION;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -1211,7 +1176,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_count_submissions_no_draft() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -1235,7 +1199,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_count_submissions_draft() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -1261,7 +1224,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_count_submissions_submitted() {
         global $SESSION;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -1285,7 +1247,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_count_submissions_graded() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -1313,7 +1274,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_count_submissions_graded_group() {
         global $SESSION;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -1346,7 +1306,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
 
     // TODO
     public function x_test_count_submissions_for_team() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -1426,7 +1385,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_get_grading_userid_list_only_active() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -1440,7 +1398,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_get_grading_userid_list_all() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -1455,7 +1412,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_cron() {
-        $this->resetAfterTest();
 
         // First run cron so there are no messages waiting to be sent (from other tests).
         cron_setup_user();
@@ -1487,7 +1443,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_cron_without_notifications() {
-        $this->resetAfterTest();
 
         // First run cron so there are no messages waiting to be sent (from other tests).
         cron_setup_user();
@@ -1518,7 +1473,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_cron_regraded() {
-        $this->resetAfterTest();
 
         // First run cron so there are no messages waiting to be sent (from other tests).
         cron_setup_user();
@@ -1560,7 +1514,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
      * Test delivery of grade notifications as controlled by marking workflow.
      */
     public function test_markingworkflow_cron() {
-        $this->resetAfterTest();
 
         // First run cron so there are no messages waiting to be sent (from other tests).
         cron_setup_user();
@@ -1654,7 +1607,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_is_graded() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -1675,7 +1627,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_can_grade() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -1700,7 +1651,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_can_view_submission() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -1739,7 +1689,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_update_submission() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -1761,7 +1710,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_update_submission_team() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -1803,7 +1751,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_update_submission_suspended() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -1825,7 +1772,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_update_submission_blind() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -1850,7 +1796,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_group_submissions_submit_for_marking_requireallteammemberssubmit() {
         global $PAGE;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -1904,7 +1849,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_group_submissions_submit_for_marking() {
         global $PAGE;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -1967,7 +1911,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_submissions_open() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -2016,7 +1959,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_get_graders() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -2033,7 +1975,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_get_graders_separate_groups() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -2068,7 +2009,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_get_notified_users() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $grouping = $this->getDataGenerator()->create_grouping(array('courseid' => $course->id));
@@ -2112,7 +2052,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_get_notified_users_in_grouping() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $grouping = $this->getDataGenerator()->create_grouping(array('courseid' => $course->id));
@@ -2163,7 +2102,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_group_members_only() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $grouping = $this->getDataGenerator()->create_grouping(array('courseid' => $course->id));
@@ -2221,7 +2159,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     }
 
     public function test_get_uniqueid_for_user() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -2243,7 +2180,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_show_student_summary() {
         global $CFG, $PAGE;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -2287,7 +2223,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_show_student_summary_with_feedback() {
         global $CFG, $PAGE;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -2359,7 +2294,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_attempt_reopen_method_manual() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -2455,7 +2389,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_attempt_reopen_method_untilpass() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -2529,7 +2462,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_attempt_reopen_method_untilpass_passing() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -2572,7 +2504,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_attempt_reopen_method_untilpass_no_passing_requirement() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -2618,7 +2549,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_markingworkflow() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -2720,7 +2650,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_markerallocation() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -2760,7 +2689,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_teacher_submit_for_student() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -2792,7 +2720,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_teacher_submit_for_student_with_capability() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'editingteacher');
@@ -2859,7 +2786,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_disable_submit_after_cutoff_date() {
         global $PAGE;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
 
@@ -2912,7 +2838,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_submission_comment_plugin_settings($globalenabled, $instanceconfig, $isenabled) {
         global $CFG;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
 
         $CFG->usecomments = $globalenabled;
@@ -2970,7 +2895,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
     public function test_feedback_comment_commentinline() {
         global $CFG;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -3043,7 +2967,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
      * @param   bool    $isenabled
      */
     public function test_feedback_plugin_settings($instanceconfig, $isenabled) {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
 
         $assign = $this->create_instance($course, $instanceconfig);
@@ -3076,7 +2999,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
      * Testing if gradebook feedback plugin is enabled.
      */
     public function test_is_gradebook_feedback_enabled() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -3101,7 +3023,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
      * Testing if gradebook feedback plugin is disabled.
      */
     public function test_is_gradebook_feedback_disabled() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -3124,7 +3045,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
      * Testing can_edit_submission.
      */
     public function test_can_edit_submission() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -3149,7 +3069,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
      * Testing can_edit_submission with the editothersubmission capability.
      */
     public function test_can_edit_submission_with_editothersubmission() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -3180,7 +3099,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
      * Testing can_edit_submission
      */
     public function test_can_edit_submission_separategroups() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
 
@@ -3218,7 +3136,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
      * Testing can_edit_submission
      */
     public function test_can_edit_submission_separategroups_with_editothersubmission() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
 
@@ -3270,7 +3187,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
     public function test_can_view_blind_details() {
         global $DB;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $manager = $this->getDataGenerator()->create_and_enrol($course, 'manager');
@@ -3301,7 +3217,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
      * Testing get_shared_group_members
      */
     public function test_get_shared_group_members() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
 
@@ -3354,7 +3269,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
      * Testing get_shared_group_members
      */
     public function test_get_shared_group_members_override() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
 
@@ -3417,7 +3331,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
     public function test_get_plugins_file_areas() {
         global $DB;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
 
@@ -3476,7 +3389,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
     public function test_override_exists() {
         global $DB;
 
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
 
@@ -3571,7 +3483,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
      * Test the quicksave grades processor
      */
     public function test_process_save_quick_grades() {
-        $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -3651,7 +3562,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
      * Test updating activity completion when submitting an assessment.
      */
     public function test_update_activity_completion_records_solitary_submission() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -3691,7 +3601,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
      * Test updating activity completion when submitting an assessment.
      */
     public function test_update_activity_completion_records_team_submission() {
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -3782,7 +3691,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
     public function test_fix_null_grades($grade, $gradebookvalue) {
         global $DB;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
@@ -3839,7 +3747,6 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
     public function test_grade_submission_override() {
         global $DB, $PAGE, $OUTPUT;
 
-        $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
         $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');

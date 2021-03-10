@@ -37,7 +37,6 @@ require_once($CFG->libdir . '/filelib.php');
 class core_filetypes_testcase extends advanced_testcase {
 
     public function test_add_type() {
-        $this->resetAfterTest();
 
         // Check the filetypes to be added do not exist yet (basically this
         // ensures we're testing the cache clear).
@@ -96,7 +95,6 @@ class core_filetypes_testcase extends advanced_testcase {
     }
 
     public function test_update_type() {
-        $this->resetAfterTest();
 
         // Check previous value for the MIME type of Word documents.
         $types = get_mimetypes_array();
@@ -153,7 +151,6 @@ class core_filetypes_testcase extends advanced_testcase {
     }
 
     public function test_delete_type() {
-        $this->resetAfterTest();
 
         // Filetype exists.
         $types = get_mimetypes_array();
@@ -183,7 +180,6 @@ class core_filetypes_testcase extends advanced_testcase {
     }
 
     public function test_revert_type_to_default() {
-        $this->resetAfterTest();
 
         // Delete and then revert.
         core_filetypes::delete_type('doc');
@@ -215,7 +211,6 @@ class core_filetypes_testcase extends advanced_testcase {
      */
     public function test_cleanup() {
         global $CFG;
-        $this->resetAfterTest();
 
         // The custom filetypes setting is empty to start with.
         $this->assertObjectNotHasAttribute('customfiletypes', $CFG);

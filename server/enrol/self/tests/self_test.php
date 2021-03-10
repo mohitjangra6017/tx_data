@@ -53,7 +53,6 @@ class enrol_self_testcase extends advanced_testcase {
 
     public function test_longtimnosee() {
         global $DB;
-        $this->resetAfterTest();
 
         $selfplugin = enrol_get_plugin('self');
         $manualplugin = enrol_get_plugin('manual');
@@ -153,7 +152,6 @@ class enrol_self_testcase extends advanced_testcase {
 
     public function test_expired() {
         global $DB;
-        $this->resetAfterTest();
 
         $selfplugin = enrol_get_plugin('self');
         $manualplugin = enrol_get_plugin('manual');
@@ -270,7 +268,6 @@ class enrol_self_testcase extends advanced_testcase {
 
     public function test_send_expiry_notifications() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         /** @var $selfplugin enrol_self_plugin */
         $selfplugin = enrol_get_plugin('self');
@@ -444,7 +441,6 @@ class enrol_self_testcase extends advanced_testcase {
 
     public function test_show_enrolme_link() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         /** @var $selfplugin enrol_self_plugin */
         $selfplugin = enrol_get_plugin('self');
@@ -575,7 +571,6 @@ class enrol_self_testcase extends advanced_testcase {
      */
     public function test_can_self_enrol() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         $selfplugin = enrol_get_plugin('self');
 
@@ -617,7 +612,6 @@ class enrol_self_testcase extends advanced_testcase {
      */
     public function test_enrol_self_check_group_enrolment_key() {
         global $DB;
-        self::resetAfterTest(true);
 
         // Test in course with groups.
         $course = self::getDataGenerator()->create_course(array('groupmode' => SEPARATEGROUPS, 'groupmodeforce' => 1));
@@ -654,7 +648,6 @@ class enrol_self_testcase extends advanced_testcase {
      */
     public function test_get_welcome_email_contact() {
         global $DB;
-        self::resetAfterTest(true);
 
         $user1 = $this->getDataGenerator()->create_user(['lastname' => 'Marsh']);
         $user2 = $this->getDataGenerator()->create_user(['lastname' => 'Victoria']);
@@ -735,7 +728,6 @@ class enrol_self_testcase extends advanced_testcase {
      * create a course.
      */
     public function test_restore_user_enrolment_default_instance() {
-        $this->resetAfterTest(true);
         global $DB;
 
         set_config('categorybinenable', 1, 'tool_recyclebin');
@@ -784,7 +776,6 @@ class enrol_self_testcase extends advanced_testcase {
      * course via that method.
      */
     public function test_restore_user_enrolment_enrolled_users() {
-        $this->resetAfterTest(true);
         global $DB;
 
         set_config('categorybinenable', 1, 'tool_recyclebin');

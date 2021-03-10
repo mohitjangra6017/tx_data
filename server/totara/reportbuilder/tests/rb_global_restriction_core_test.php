@@ -67,7 +67,6 @@ class totara_reportbuilder_rb_global_restriction_core_testcase extends advanced_
         global $CFG;
         parent::setUp();
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $CFG->enableglobalrestrictions = 1;

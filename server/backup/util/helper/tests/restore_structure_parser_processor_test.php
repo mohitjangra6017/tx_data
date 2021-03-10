@@ -45,7 +45,6 @@ class restore_structure_parser_processor_test extends advanced_testcase {
     public function setUp(): void {
         parent::setUp();
 
-        $this->resetAfterTest(true);
     }
 
     /**

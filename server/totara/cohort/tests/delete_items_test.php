@@ -57,7 +57,6 @@ class totara_cohort_delete_items_testcase extends advanced_testcase {
         global $DB;
 
         parent::setup();
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Set totara_cohort generator.
@@ -103,7 +102,6 @@ class totara_cohort_delete_items_testcase extends advanced_testcase {
 
     public function test_delete_rule_param() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Get the rule param of cohort 1.
@@ -126,7 +124,6 @@ class totara_cohort_delete_items_testcase extends advanced_testcase {
 
     public function test_delete_ruleset() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create a ruleset.
@@ -156,7 +153,6 @@ class totara_cohort_delete_items_testcase extends advanced_testcase {
 
     public function test_cancel_changes() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Add a new ruleset.

@@ -40,7 +40,6 @@ class totara_catalog_config_testcase extends config_base_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
     }
 
     public function defaults_data_provider() {

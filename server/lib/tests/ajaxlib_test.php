@@ -45,7 +45,6 @@ class core_ajaxlib_testcase extends advanced_testcase {
     }
 
     protected function helper_test_clean_output() {
-        $this->resetAfterTest();
 
         $result = ajax_capture_output();
 
@@ -57,7 +56,6 @@ class core_ajaxlib_testcase extends advanced_testcase {
     }
 
     protected function helper_test_dirty_output($expectexception = false) {
-        $this->resetAfterTest();
 
         // Keep track of the content we will output.
         $content = "Some example content";

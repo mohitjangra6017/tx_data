@@ -84,7 +84,6 @@ class question_engine_data_mapper_reporting_testcase extends qbehaviour_walkthro
         //
         // In the second useage, the student answers the short-answer question
         // wrongly, and leaves the essay blank.
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category();
         $this->sa = $generator->create_question('shortanswer', null,

@@ -305,7 +305,6 @@ class totara_hierarchy_moveitem_testcase extends advanced_testcase {
         $before[$moveorg->id] = $newparent;
         $this->assertEquals($before, $after);
 
-        $this->resetAfterTest(true);
     }
 
     function test_new_depthlevel() {
@@ -352,7 +351,6 @@ class totara_hierarchy_moveitem_testcase extends advanced_testcase {
         // everything else stays the same
         $this->assertEquals($before, $after);
 
-        $this->resetAfterTest(true);
     }
 
     function test_new_path() {
@@ -398,7 +396,6 @@ class totara_hierarchy_moveitem_testcase extends advanced_testcase {
         $before[$this->org4->id] = $before[$this->org2->id] . '/' . $this->org4->id;
         $this->assertEquals($before, $after);
         // everything else stays the same
-        $this->resetAfterTest(true);
     }
 
     function test_new_sortorder() {
@@ -447,7 +444,6 @@ class totara_hierarchy_moveitem_testcase extends advanced_testcase {
         $before[$this->org4->id] = '03.01.01.02';
         // displayed items and everything else stays the same
         $this->assertEquals($before, $after);
-        $this->resetAfterTest(true);
     }
 
     function test_moving_subtree() {
@@ -465,7 +461,6 @@ class totara_hierarchy_moveitem_testcase extends advanced_testcase {
         $before[$this->org13->id] = '01.02.01.01';
         // displaced items and everything else stays the same
         $this->assertEquals($before, $after);
-        $this->resetAfterTest(true);
     }
 
     // these moves should fail and nothing should change
@@ -505,6 +500,5 @@ class totara_hierarchy_moveitem_testcase extends advanced_testcase {
         $after = $DB->get_records_menu('org', array('frameworkid' => $moveorg->frameworkid), 'sortthread', 'id,sortthread');
         // everything stays the same
         $this->assertEquals($before, $after);
-        $this->resetAfterTest(true);
     }
 }

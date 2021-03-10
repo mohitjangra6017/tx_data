@@ -46,7 +46,6 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
      * Just a basic test to show that the data returned relates directly to the params provided.
      */
     public function test_get_all_progs_and_certs() {
-        $this->resetAfterTest(true);
 
         /** @var \totara_program\testing\generator $programgenerator */
         $programgenerator = $this->getDataGenerator()->get_plugin_generator('totara_program');
@@ -84,7 +83,6 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
     public function test_get_orphaned_criteria() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
@@ -135,7 +133,6 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
      * Make sure that get_current_completion_from_data gives the correct results under various circumstances.
      */
     public function test_get_current_completion_from_data() {
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1));
         $user = $this->getDataGenerator()->create_user();
@@ -263,7 +260,6 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
     public function test_get_module_and_criteria_from_data_cmc_only() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();
@@ -422,7 +418,6 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
     public function test_get_module_and_criteria_from_data_cccc_only() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();
@@ -499,7 +494,6 @@ class totara_completioneditor_course_editor_testcase extends advanced_testcase {
      * This tests when cmc and cccc data are provided - course completion criteria that is an activity.
      */
     public function test_get_module_and_criteria_from_data_both_at_once() {
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();

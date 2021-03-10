@@ -57,7 +57,6 @@ class availability_profile_condition_testcase extends advanced_testcase {
     public function setUp(): void {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         // Add a custom profile field type. The API for doing this is indescribably
         // horrid and tightly intertwined with the form UI, so it's best to add
@@ -420,7 +419,6 @@ class availability_profile_condition_testcase extends advanced_testcase {
      */
     public function test_filter_users() {
         global $DB, $CFG;
-        $this->resetAfterTest();
         $CFG->enableavailability = true;
 
         // Erase static cache before test.
@@ -467,7 +465,6 @@ class availability_profile_condition_testcase extends advanced_testcase {
      */
     public function test_get_user_list_sql() {
         global $DB, $CFG;
-        $this->resetAfterTest();
         $CFG->enableavailability = true;
 
         // Erase static cache before test.

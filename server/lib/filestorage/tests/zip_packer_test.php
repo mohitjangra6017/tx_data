@@ -412,7 +412,6 @@ class core_files_zip_packer_testcase extends advanced_testcase implements file_p
     public function test_close_archive() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         $archive = "$CFG->tempdir/archive.zip";
         $textfile = "$CFG->tempdir/textfile.txt";
@@ -479,7 +478,6 @@ class core_files_zip_packer_testcase extends advanced_testcase implements file_p
     public function test_open_archive() {
         global $CFG;
 
-        $this->resetAfterTest(true);
 
         $archive = "$CFG->tempdir/archive.zip";
 

@@ -44,7 +44,6 @@ class totara_reportbuilder_userdata_saved_search_public_test extends advanced_te
      */
     public function seed() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $gen = $this->getDataGenerator();
         /** @var \totara_reportbuilder\testing\generator $rbgen */
@@ -104,7 +103,6 @@ class totara_reportbuilder_userdata_saved_search_public_test extends advanced_te
      */
     public function test_purge() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $seed = (object)$this->seed();
 

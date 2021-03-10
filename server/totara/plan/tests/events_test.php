@@ -25,7 +25,6 @@ defined('MOODLE_INTERNAL') || die();
 
 class totara_plan_events_testcase extends advanced_testcase {
     public function test_plan_events() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
 
@@ -95,7 +94,6 @@ class totara_plan_events_testcase extends advanced_testcase {
     }
 
     public function test_component_events() {
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
 
@@ -145,7 +143,6 @@ class totara_plan_events_testcase extends advanced_testcase {
         global $CFG;
         require_once($CFG->dirroot . '/totara/plan/lib.php');
 
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
 
@@ -215,7 +212,6 @@ class totara_plan_events_testcase extends advanced_testcase {
 
     public function test_objective_scale_events() {
         global $DB;
-        $this->resetAfterTest();
 
         $scale = $DB->get_record('dp_objective_scale', array('id' => 1), '*', MUST_EXIST);
 
@@ -247,7 +243,6 @@ class totara_plan_events_testcase extends advanced_testcase {
 
     public function test_priority_scale_events() {
         global $DB;
-        $this->resetAfterTest();
 
         $scale = $DB->get_record('dp_priority_scale', array('id' => 1), '*', MUST_EXIST);
 
@@ -279,7 +274,6 @@ class totara_plan_events_testcase extends advanced_testcase {
 
     public function test_priority_template_events() {
         global $DB;
-        $this->resetAfterTest();
 
         $template = $DB->get_record('dp_template', array('id' => 1), '*', MUST_EXIST);
 

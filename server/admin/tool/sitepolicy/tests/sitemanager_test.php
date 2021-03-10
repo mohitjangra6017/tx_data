@@ -40,7 +40,6 @@ class tool_sitepolicy_sitemanager_testcase extends advanced_testcase {
      */
     public function test_sitepolicy_with_enablesitepolicies() {
         global $DB, $CFG;
-        $this->resetAfterTest(true);
 
         // enable site policies
         $CFG->enablesitepolicies = 1;
@@ -69,7 +68,6 @@ class tool_sitepolicy_sitemanager_testcase extends advanced_testcase {
      */
     public function test_sitepolicy_without_enablesitepolicies() {
         global $DB, $CFG;
-        $this->resetAfterTest(true);
 
         // disable site policies
         $CFG->enablesitepolicies = 0;

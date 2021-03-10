@@ -4569,7 +4569,6 @@ class mod_facetoface_lib_testcase extends mod_facetoface_facetoface_testcase {
             ),
         ));
 
-        $this->resetAfterTest(true);
     }
 
     public function test_save_session_dates() {

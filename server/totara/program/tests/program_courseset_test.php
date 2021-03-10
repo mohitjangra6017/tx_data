@@ -58,7 +58,6 @@ class totara_program_program_courseset_testcase extends advanced_testcase {
     }
 
     public function setUp(): void {
-        $this->resetAfterTest(true);
         parent::setUp();
         global $DB;
 
@@ -82,7 +81,6 @@ class totara_program_program_courseset_testcase extends advanced_testcase {
      * Tests the multi_course_set::get_courses method.
      */
     public function test_multi_course_set_get_courses() {
-        $this->resetAfterTest(true);
         global $DB;
 
         // Create the multi-course set. We define a unique id as otherwise it defines it's own random one.
@@ -137,7 +135,6 @@ class totara_program_program_courseset_testcase extends advanced_testcase {
      * checking for correct data before saving the course set.
      */
     public function test_multi_course_set_delete_course_presave() {
-        $this->resetAfterTest(true);
 
         // Create the multi-course set. We define a unique id as otherwise it defines it's own random one.
         $uniqueid = 'multiset';
@@ -194,7 +191,6 @@ class totara_program_program_courseset_testcase extends advanced_testcase {
      * checking for correct data after saving the course set.
      */
     public function test_multi_course_set_delete_course_postsave() {
-        $this->resetAfterTest(true);
 
         // Create the multi-course set. We define a unique id as otherwise it defines it's own random one.
         $uniqueid = 'multiset';
@@ -266,7 +262,6 @@ class totara_program_program_courseset_testcase extends advanced_testcase {
      * Tests the recurring_course_set::get_courses method.
      */
     public function test_recurring_courseset_get_courses() {
-        $this->resetAfterTest(true);
 
         $recurringcourseset = new recurring_course_set($this->program1->id);
         $recurringcourseset->course = $this->course2;
@@ -280,7 +275,6 @@ class totara_program_program_courseset_testcase extends advanced_testcase {
      * Tests the recurring_course_set::delete_course method.
      */
     public function test_recurring_courseset_delete_course() {
-        $this->resetAfterTest(true);
 
         $recurringcourseset = new recurring_course_set($this->program1->id);
         $recurringcourseset->course = $this->course2;
@@ -314,7 +308,6 @@ class totara_program_program_courseset_testcase extends advanced_testcase {
      * Tests the competency_course_set::get_courses method.
      */
     public function test_competency_courseset_get_courses() {
-        $this->resetAfterTest(true);
         global $DB;
 
         // We'll create a multi-course set as well as a competency course set in this test to ensure
@@ -386,7 +379,6 @@ class totara_program_program_courseset_testcase extends advanced_testcase {
      * Tests the competency_course_set::delete_course method.
      */
     public function test_competency_courseset_delete_course() {
-        $this->resetAfterTest(true);
 
         // We'll create a multi-course set as well as a competency course set in this test to ensure
         // no unwanted interactions occur.

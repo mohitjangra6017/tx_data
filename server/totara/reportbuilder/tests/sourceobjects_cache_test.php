@@ -34,7 +34,6 @@ class totara_reportbuilder_sourceobjects_cache_testcase extends advanced_testcas
         global $CFG;
         require_once("$CFG->dirroot/totara/reportbuilder/lib.php");
 
-        $this->resetAfterTest();
         $this->setAdminUser(); // We need permissions to access all reports.
 
         // Create two users and report.

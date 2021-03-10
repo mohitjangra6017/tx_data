@@ -32,7 +32,6 @@ class mod_facetoface_seminar_testcase extends \advanced_testcase {
      */
     protected function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
     }
 
     public function test_seminar_instance() {

@@ -38,7 +38,6 @@ defined('MOODLE_INTERNAL') || die();
 class core_sessionlib_testcase extends advanced_testcase {
     public function test_cron_setup_user() {
         global $PAGE, $USER, $SESSION, $SITE, $CFG;
-        $this->resetAfterTest();
 
         // NOTE: this function contains some static caches, let's reset first.
         cron_setup_user('reset');
@@ -237,7 +236,6 @@ class core_sessionlib_testcase extends advanced_testcase {
      */
     public function test_is_moodle_cookie_secure($config, $secure) {
         global $CFG;
-        $this->resetAfterTest();
         foreach ($config as $key => $value) {
             $CFG->$key = $value;
         }
@@ -246,7 +244,6 @@ class core_sessionlib_testcase extends advanced_testcase {
 
     public function test_sesskey() {
         global $USER;
-        $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
 
@@ -272,7 +269,6 @@ class core_sessionlib_testcase extends advanced_testcase {
     }
 
     public function test_confirm_sesskey() {
-        $this->resetAfterTest();
 
         $sesskey = sesskey();
 
@@ -294,7 +290,6 @@ class core_sessionlib_testcase extends advanced_testcase {
     }
 
     public function test_require_sesskey() {
-        $this->resetAfterTest();
 
         $sesskey = sesskey();
 

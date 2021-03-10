@@ -49,7 +49,6 @@ class mod_book_search_testcase extends advanced_testcase {
     }
 
     public function setUp(): void {
-        $this->resetAfterTest(true);
         set_config('enableglobalsearch', true);
 
         $this->bookchapterareaid = \core_search\manager::generate_areaid('mod_book', 'chapter');

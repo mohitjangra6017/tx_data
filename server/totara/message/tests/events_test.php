@@ -57,7 +57,6 @@ class totara_message_events_testcase extends advanced_testcase {
 
         parent::setup();
 
-        $this->resetAfterTest();
 
         $this->userfrom = get_admin();
         $this->userto   = $this->getDataGenerator()->create_user();

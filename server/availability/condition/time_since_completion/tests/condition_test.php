@@ -49,7 +49,6 @@ class availability_time_since_completion_condition_testcase extends advanced_tes
      */
     public function setup_data() {
         global $CFG;
-        $this->resetAfterTest();
 
         $data = new stdClass;
 
@@ -116,7 +115,6 @@ class availability_time_since_completion_condition_testcase extends advanced_tes
      */
     public function test_in_tree() {
         global $USER, $CFG, $DB;
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -298,7 +296,6 @@ class availability_time_since_completion_condition_testcase extends advanced_tes
     public function test_usage_completion_complete() {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/mod/assign/locallib.php');
-        $this->resetAfterTest();
 
         // Create course with completion turned on.
         $CFG->enablecompletion = true;
@@ -389,7 +386,6 @@ class availability_time_since_completion_condition_testcase extends advanced_tes
     public function test_usage_completion_complete_pass() {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/mod/assign/locallib.php');
-        $this->resetAfterTest();
 
         // Create course with completion turned on.
         $CFG->enablecompletion = true;
@@ -503,7 +499,6 @@ class availability_time_since_completion_condition_testcase extends advanced_tes
     public function test_usage_completion_complete_fail() {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/mod/assign/locallib.php');
-        $this->resetAfterTest();
 
         // Create course with completion turned on.
         $CFG->enablecompletion = true;
@@ -619,7 +614,6 @@ class availability_time_since_completion_condition_testcase extends advanced_tes
      * Test the get_description_time method.
      */
     public function test_get_description_time() {
-        $this->resetAfterTest();
 
         $conddata = array('cm' => 1, 'expectedcompletion' => COMPLETION_COMPLETE);
 

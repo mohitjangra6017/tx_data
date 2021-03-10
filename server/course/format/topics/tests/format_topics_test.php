@@ -38,7 +38,6 @@ class format_topics_testcase extends advanced_testcase {
 
     public function test_update_course_numsections() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
 
@@ -67,7 +66,6 @@ class format_topics_testcase extends advanced_testcase {
      */
     public function test_get_section_name() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Generate a course with 5 sections.
         $generator = $this->getDataGenerator();
@@ -91,7 +89,6 @@ class format_topics_testcase extends advanced_testcase {
      */
     public function test_get_section_name_customised() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Generate a course with 5 sections.
         $generator = $this->getDataGenerator();
@@ -123,7 +120,6 @@ class format_topics_testcase extends advanced_testcase {
      */
     public function test_get_default_section_name() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Generate a course with 5 sections.
         $generator = $this->getDataGenerator();
@@ -154,7 +150,6 @@ class format_topics_testcase extends advanced_testcase {
         global $CFG, $DB, $PAGE;
         require_once($CFG->dirroot . '/lib/external/externallib.php');
 
-        $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
         $course = $this->getDataGenerator()->create_course(array('numsections' => 5, 'format' => 'topics'),
@@ -188,7 +183,6 @@ class format_topics_testcase extends advanced_testcase {
         global $CFG, $DB, $PAGE;
         require_once($CFG->libdir . '/externallib.php');
 
-        $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course(array('numsections' => 5, 'format' => 'topics'),
             array('createsections' => true));
@@ -223,7 +217,6 @@ class format_topics_testcase extends advanced_testcase {
         global $CFG, $DB;
         $this->setAdminUser();
 
-        $this->resetAfterTest(true);
 
         require_once($CFG->dirroot . '/course/tests/fixtures/testable_course_edit_form.php');
 
@@ -259,7 +252,6 @@ class format_topics_testcase extends advanced_testcase {
      */
     public function test_get_view_url() {
         global $CFG;
-        $this->resetAfterTest();
 
         $linkcoursesections = $CFG->linkcoursesections;
 

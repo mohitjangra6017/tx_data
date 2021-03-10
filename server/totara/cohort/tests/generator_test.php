@@ -28,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class totara_cohort_generator_testcase extends advanced_testcase {
     public function test_disable_enrol_plugin_enrolment() {
-        $this->resetAfterTest();
 
         /** @var \totara_cohort\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
@@ -39,7 +38,6 @@ class totara_cohort_generator_testcase extends advanced_testcase {
     }
 
     public function test_enable_enrol_plugin_enrolment() {
-        $this->resetAfterTest();
 
         /** @var \totara_cohort\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
@@ -52,7 +50,6 @@ class totara_cohort_generator_testcase extends advanced_testcase {
 
     public function test_create_cohort_enrolment() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         /** @var \totara_cohort\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
@@ -92,7 +89,6 @@ class totara_cohort_generator_testcase extends advanced_testcase {
     }
 
     public function test_create_cohort_member() {
-        $this->resetAfterTest();
 
         /** @var \totara_cohort\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');
@@ -130,7 +126,6 @@ class totara_cohort_generator_testcase extends advanced_testcase {
 
     public function test_create_cohort() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \totara_cohort\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('totara_cohort');

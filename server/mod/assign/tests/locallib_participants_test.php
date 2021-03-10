@@ -32,7 +32,6 @@ require_once(__DIR__ . '/../locallib.php');
 class mod_assign_locallib_participants extends advanced_testcase {
     public function test_list_participants_blind_marking() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
 

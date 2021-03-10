@@ -77,7 +77,6 @@ class search_content_testcase extends \advanced_testcase {
         global $CFG, $USER, $DB;
         require_once($CFG->dirroot . '/search/tests/fixtures/testable_core_search.php');
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Create course and add HTML block.

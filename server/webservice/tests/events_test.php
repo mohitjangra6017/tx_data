@@ -36,7 +36,6 @@ defined('MOODLE_INTERNAL') || die();
 class core_webservice_events_testcase extends advanced_testcase {
 
     public function setUp(): void {
-        $this->resetAfterTest();
     }
 
     public function test_function_called() {

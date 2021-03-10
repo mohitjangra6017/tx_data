@@ -84,7 +84,6 @@ class auth_approved_userdata_approval_request_testcase extends advanced_testcase
     public function test_count() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $generator = $this->getDataGenerator();
         $user1 = $generator->create_user();
@@ -106,7 +105,6 @@ class auth_approved_userdata_approval_request_testcase extends advanced_testcase
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $request1 = $this->create_request(1);
         $request2 = $this->create_request(2);
@@ -131,7 +129,6 @@ class auth_approved_userdata_approval_request_testcase extends advanced_testcase
     public function test_export() {
         global $DB;
 
-        $this->resetAfterTest();
         $request = $this->create_request();
 
         $userid = \auth_approved\request::approve_request($request->id, 'A custom approval message', true);

@@ -60,7 +60,6 @@ class mod_data_userdata_entries_testcase extends advanced_testcase {
             public $target_user1, $target_user2;
         };
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
 

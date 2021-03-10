@@ -127,7 +127,6 @@ class mod_facetoface_seminar_waitlisted_testcase extends advanced_testcase {
      */
     public function test_number_of_waitlist_user(): void {
         global $USER;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->generate_data($USER);
@@ -145,7 +144,6 @@ class mod_facetoface_seminar_waitlisted_testcase extends advanced_testcase {
     public function test_waitlist_user_in_records(): void {
         global $USER;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $this->generate_data($USER);

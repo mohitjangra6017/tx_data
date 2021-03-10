@@ -43,14 +43,12 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
 
         $this->data_generator = $this->getDataGenerator();
     }
 
     public function test_edit() {
         global $DB;
-        $this->resetAfterTest();
         list($fdbck, $users) = $this->prepare_feedback_with_users();
         $fdbck->activate();
         $user = current($users);
@@ -81,7 +79,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
     }
 
     public function test_by_preview() {
-        $this->resetAfterTest();
         list($fdbck) = $this->prepare_feedback_with_users();
         $preview = feedback360_responder::by_preview($fdbck->id);
         $this->assertEquals($fdbck->id, $preview->feedback360id);
@@ -92,7 +89,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
     }
 
     public function test_by_user() {
-        $this->resetAfterTest();
         list($fdbck, $users) = $this->prepare_feedback_with_users();
         $user = current($users);
         $respuser = $this->getDataGenerator()->create_user();
@@ -113,7 +109,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
 
     public function test_by_email() {
         global $CFG, $DB;
-        $this->resetAfterTest();
 
         $oldlog = ini_get('error_log');
         ini_set('error_log', "$CFG->dataroot/testlog.log"); // Prevent standard logging.
@@ -152,7 +147,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
     }
 
     public function test_complete() {
-        $this->resetAfterTest();
         list($fdbck, $users) = $this->prepare_feedback_with_users();
         $user = current($users);
         $response = $this->assign_resp($fdbck, $user->id);
@@ -173,7 +167,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
     public function test_update_timedue() {
         global $DB;
 
-        $this->resetAfterTest();
         list($fdbck, $users) = $this->prepare_feedback_with_users();
         $user = current($users);
         $this->setCurrentTimeStart();
@@ -453,7 +446,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
      * has no existing requests.
      */
     public function test_sort_system_userids_empty_no_existing_users() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $user1 = $this->data_generator->create_user();
@@ -478,7 +470,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
      * has made no previous requests.
      */
     public function test_sort_system_userids_invalid_ids_only() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $user1 = $this->data_generator->create_user();
@@ -518,7 +509,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
      * has made no previous requests.
      */
     public function test_sort_system_userids_self_evaluation() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $user1 = $this->data_generator->create_user();
@@ -602,7 +592,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
      * - invalid users not added to new, the one which was already is kept.
      */
     public function test_sort_system_userids_full_sort() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $assignee = $this->data_generator->create_user();
@@ -713,7 +702,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
      * Tests feedback360_responder::get_system_users_by_assignment().
      */
     public function test_get_system_users_by_assignment() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $assignee = $this->data_generator->create_user();
@@ -776,7 +764,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
      * has no existing requests.
      */
     public function test_sort_responder_emails_empty_no_existing_users() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $user1 = $this->data_generator->create_user();
@@ -805,7 +792,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
      * - existing emails missing from the array added to $cancel
      */
     public function test_sort_responder_emails_full_sort() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $assignee = $this->data_generator->create_user();
@@ -883,7 +869,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
      * Tests feedback360_responder::get_emails_by_assignment().
      */
     public function test_get_emails_by_assignment() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $assignee = $this->data_generator->create_user();
@@ -946,7 +931,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
      * Tests feedback360_responder::validate_new_timedue_timestamp().
      */
     public function test_validate_new_timedue_timestamp() {
-        $this->resetAfterTest(true);
         global $DB;
 
         $user1 = $this->data_generator->create_user();

@@ -42,7 +42,6 @@ class mod_quiz_structure_testcase extends advanced_testcase {
      */
     protected function prepare_quiz_data() {
 
-        $this->resetAfterTest(true);
 
         // Create a course.
         $course = $this->getDataGenerator()->create_course();
@@ -721,7 +720,6 @@ class mod_quiz_structure_testcase extends advanced_testcase {
     public function test_quiz_removing_a_random_question_deletes_the_question() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $quizobj = $this->create_test_quiz(array(
@@ -959,7 +957,6 @@ class mod_quiz_structure_testcase extends advanced_testcase {
     public function test_quiz_get_random_questions_used_one_enough() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $qcat = $this->setup_questionbank(3);
@@ -984,7 +981,6 @@ class mod_quiz_structure_testcase extends advanced_testcase {
     public function test_quiz_get_random_questions_used_one_notenough() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $qcat = $this->setup_questionbank(3);
@@ -1009,7 +1005,6 @@ class mod_quiz_structure_testcase extends advanced_testcase {
     public function test_quiz_get_random_questions_used_many_enough_with_subs() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $qcat = $this->setup_questionbank(4);
@@ -1034,7 +1029,6 @@ class mod_quiz_structure_testcase extends advanced_testcase {
     public function test_quiz_get_random_questions_used_many_mixed() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $numtestcat = 4;
@@ -1073,7 +1067,6 @@ class mod_quiz_structure_testcase extends advanced_testcase {
     public function test_quiz_get_random_questions_used_sub_and_singleparent() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $numtestcat = 4;
@@ -1114,7 +1107,6 @@ class mod_quiz_structure_testcase extends advanced_testcase {
     public function test_quiz_get_random_questions_used_sub_and_parent_all_recurse() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $numtestcat = 4;
@@ -1151,7 +1143,6 @@ class mod_quiz_structure_testcase extends advanced_testcase {
     public function test_quiz_get_random_questions_used_sub_and_multi_parent() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $numtestcat = 4;
@@ -1193,7 +1184,6 @@ class mod_quiz_structure_testcase extends advanced_testcase {
     public function test_quiz_get_random_questions_with_and_without_subs() {
         global $DB;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $numtestcat = 4;

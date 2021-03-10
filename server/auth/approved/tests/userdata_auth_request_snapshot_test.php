@@ -84,7 +84,6 @@ class auth_approved_userdata_approval_request_testcase_snapshot extends advanced
     public function test_count() {
         global $DB;
 
-        $this->resetAfterTest();
 
         //Snapshot 1
         $request1 = $this->create_request(1);
@@ -116,7 +115,6 @@ class auth_approved_userdata_approval_request_testcase_snapshot extends advanced
     public function test_purge() {
         global $DB;
 
-        $this->resetAfterTest();
 
         $request1 = $this->create_request(1);
         $request2 = $this->create_request(2);
@@ -139,7 +137,6 @@ class auth_approved_userdata_approval_request_testcase_snapshot extends advanced
     public function test_export() {
         global $DB;
 
-        $this->resetAfterTest();
         $request = $this->create_request(1);
 
         $userid = \auth_approved\request::approve_request($request->id, 'A custom approval message', true);

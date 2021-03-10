@@ -43,7 +43,6 @@ class workshop_accumulative_strategy_testcase extends advanced_testcase {
      */
     protected function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Totara: we disable this during install.
@@ -136,7 +135,6 @@ class workshop_accumulative_strategy_testcase extends advanced_testcase {
     }
 
     public function test_calculate_peer_grade_one_scale_max() {
-        $this->resetAfterTest(true);
 
         // fixture set-up
         $scale11 = $this->getDataGenerator()->create_scale(array('scale'=>'E,D,C,B,A', 'id'=>11));
@@ -151,7 +149,6 @@ class workshop_accumulative_strategy_testcase extends advanced_testcase {
     }
 
     public function test_calculate_peer_grade_one_scale_min_with_scale_caching() {
-        $this->resetAfterTest(true);
 
         // fixture set-up
         $scale11 = $this->getDataGenerator()->create_scale(array('scale'=>'E,D,C,B,A', 'id'=>11));
@@ -166,7 +163,6 @@ class workshop_accumulative_strategy_testcase extends advanced_testcase {
     }
 
     public function test_calculate_peer_grade_two_scales_weighted() {
-        $this->resetAfterTest(true);
         // fixture set-up
         $scale13 = $this->getDataGenerator()->create_scale(array('scale'=>'Poor,Good,Excellent', 'id'=>13));
         $scale17 = $this->getDataGenerator()->create_scale(array('scale'=>'-,*,**,***,****,*****,******', 'id'=>17));
@@ -183,7 +179,6 @@ class workshop_accumulative_strategy_testcase extends advanced_testcase {
     }
 
     public function test_calculate_peer_grade_scale_exception() {
-        $this->resetAfterTest(true);
         // fixture set-up
         $scale13 = $this->getDataGenerator()->create_scale(array('scale'=>'Poor,Good,Excellent', 'id'=>13));
         $this->strategy->dimensions[1012] = (object)array('grade' => (-$scale13->id), 'weight' => 1);

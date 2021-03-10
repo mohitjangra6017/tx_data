@@ -52,7 +52,6 @@ class message_sent_search_testcase extends advanced_testcase {
      * @return void
      */
     protected function setUp(): void {
-        $this->resetAfterTest(true);
         set_config('enableglobalsearch', true);
 
         $this->messagesentareaid = \core_search\manager::generate_areaid('core_message', 'message_sent');

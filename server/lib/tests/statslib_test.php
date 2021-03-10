@@ -95,7 +95,6 @@ class core_statslib_testcase extends advanced_testcase {
         $this->generate_replacement_list();
 
         // Reset between tests.
-        $this->resetAfterTest();
     }
 
     /**
@@ -728,7 +727,6 @@ class core_statslib_testcase extends advanced_testcase {
     public function test_stats_get_report_options() {
         global $CFG, $DB;
 
-        $this->resetAfterTest();
 
         require_once($CFG->dirroot . '/course/lib.php');
 

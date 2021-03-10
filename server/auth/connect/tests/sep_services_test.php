@@ -32,7 +32,6 @@ defined('MOODLE_INTERNAL') || die();
 class auth_connect_sep_services_testcase extends advanced_testcase {
     public function test_validate_sso_request_token() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -68,7 +67,6 @@ class auth_connect_sep_services_testcase extends advanced_testcase {
 
     public function test_is_sso_user_active() {
         global $DB, $CFG;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');
@@ -127,7 +125,6 @@ class auth_connect_sep_services_testcase extends advanced_testcase {
 
     public function test_kill_sso_user() {
         global $DB;
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');

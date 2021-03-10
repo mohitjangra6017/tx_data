@@ -49,7 +49,6 @@ class mod_glossary_search_testcase extends advanced_testcase {
     }
 
     public function setUp(): void {
-        $this->resetAfterTest(true);
         set_config('enableglobalsearch', true);
 
         // Set \core_search::instance to the mock_search_engine as we don't require the search engine to be working to test this.

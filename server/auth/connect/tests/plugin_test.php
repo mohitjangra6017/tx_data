@@ -28,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class auth_connect_plugin_testcase extends advanced_testcase {
     public function test_edit_profile_url() {
-        $this->resetAfterTest();
 
         /** @var \auth_connect\testing\generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('auth_connect');

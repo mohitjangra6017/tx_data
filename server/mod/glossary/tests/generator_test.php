@@ -35,7 +35,6 @@ class mod_glossary_generator_testcase extends advanced_testcase {
 
     public function test_create_instance() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();
@@ -55,7 +54,6 @@ class mod_glossary_generator_testcase extends advanced_testcase {
 
     public function test_create_content() {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course();

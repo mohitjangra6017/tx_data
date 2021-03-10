@@ -58,7 +58,6 @@ class totara_reportbuilder_rb_alerts_embedded_cache_testcase extends reportcache
 
         parent::setup();
         $this->setAdminUser();
-        $this->resetAfterTest(true);
         $this->cleanup();
 
         // Common parts of test cases:
@@ -173,7 +172,6 @@ class totara_reportbuilder_rb_alerts_embedded_cache_testcase extends reportcache
     }
 
     public function test_is_capable() {
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $shortname = $this->report_builder_data['shortname'];

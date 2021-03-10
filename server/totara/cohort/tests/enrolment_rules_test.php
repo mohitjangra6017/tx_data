@@ -105,7 +105,6 @@ Program 2 - Course 1 and Course 2
 
         parent::setup();
         set_config('enablecompletion', 1);
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // Create users.
@@ -148,7 +147,6 @@ Program 2 - Course 1 and Course 2
 
     public function test_enrolment_rules() {
         global $DB;
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         // C1 AND C2 - should match 0 users.

@@ -39,7 +39,6 @@ class totara_plan_lib_testcase extends advanced_testcase {
         require_once($CFG->dirroot.'/totara/plan/lib.php');
         require_once($CFG->dirroot.'/totara/hierarchy/lib.php');
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $this->plangenerator = $this->getDataGenerator()->get_plugin_generator('totara_plan');
@@ -49,7 +48,6 @@ class totara_plan_lib_testcase extends advanced_testcase {
      * Test creating a learning plan and adding a course.
      */
     public function test_add_course_to_learning_plan() {
-        $this->resetAfterTest(true);
 
         // Create a learning plan.
         $plan = $this->plangenerator->create_learning_plan();
@@ -65,7 +63,6 @@ class totara_plan_lib_testcase extends advanced_testcase {
      */
     public function test_add_competency_to_learning_plan() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Create a learning plan.
         $plan = $this->plangenerator->create_learning_plan();
@@ -94,7 +91,6 @@ class totara_plan_lib_testcase extends advanced_testcase {
      */
     public function test_add_program_to_learning_plan() {
         global $DB;
-        $this->resetAfterTest(true);
 
         // Create a learning plan.
         $plan = $this->plangenerator->create_learning_plan();

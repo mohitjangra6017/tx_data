@@ -96,7 +96,6 @@ class totara_reportbuilder_user_link_display_testcase extends advanced_testcase 
         global $USER, $PAGE;
 
         $this->setAdminUser();
-        $this->resetAfterTest(true);
 
         $gen = $this->getDataGenerator();
         $course = $gen->create_course();

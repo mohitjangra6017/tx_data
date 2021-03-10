@@ -53,7 +53,6 @@ class enrol_imsenterprise_testcase extends advanced_testcase {
      * Setup required for all tests.
      */
     protected function setUp(): void {
-        $this->resetAfterTest(true);
         $this->imsplugin = enrol_get_plugin('imsenterprise');
         $this->set_test_config();
     }

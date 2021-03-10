@@ -52,7 +52,6 @@ class totara_catalog_hook_testcase extends advanced_testcase {
      * @return void
      */
     public function test_remove_learning_items_in_course_catalog_hook(): void {
-        $this->resetAfterTest(true);
 
         $this->create_courses(5);
         $courses = $this->create_courses();

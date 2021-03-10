@@ -98,7 +98,6 @@ class qtype_shortanswer_test extends advanced_testcase {
     }
 
     public function test_question_saving_frogtoad() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $questiondata = test_question_maker::get_question_data('shortanswer');
@@ -144,7 +143,6 @@ class qtype_shortanswer_test extends advanced_testcase {
     }
 
     public function test_question_saving_trims_answers() {
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $questiondata = test_question_maker::get_question_data('shortanswer');

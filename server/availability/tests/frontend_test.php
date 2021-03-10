@@ -374,7 +374,6 @@ class frontend_testcase extends advanced_testcase {
     public function test_frontend_functions($structure) {
         global $CFG;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $CFG->enableavailability = true;
@@ -486,7 +485,6 @@ class frontend_testcase extends advanced_testcase {
     public function test_report_validation_errors($depth_or_json, string $expected_exception) {
         global $CFG;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $CFG->enableavailability = true;

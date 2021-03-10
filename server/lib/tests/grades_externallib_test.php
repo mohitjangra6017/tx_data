@@ -208,7 +208,6 @@ class core_grades_external_testcase extends externallib_advanced_testcase {
     public function test_update_grades() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $assignmentname = 'The assignment';
         $student1rawgrade = 10;

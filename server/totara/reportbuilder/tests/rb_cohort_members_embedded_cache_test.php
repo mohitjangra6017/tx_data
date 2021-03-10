@@ -127,7 +127,6 @@ class totara_reportbuilder_rb_cohort_members_embedded_cache_testcase extends rep
      * @dataProvider provider_use_cache
      */
     public function test_cohort_members($usecache) {
-        $this->resetAfterTest();
         if ($usecache) {
             $this->enable_caching($this->report_builder_data['id']);
         }
@@ -157,7 +156,6 @@ class totara_reportbuilder_rb_cohort_members_embedded_cache_testcase extends rep
 
     public function test_is_capable() {
         global $DB;
-        $this->resetAfterTest();
 
         // Set up report and embedded object for is_capable checks.
         $syscontext = context_system::instance();

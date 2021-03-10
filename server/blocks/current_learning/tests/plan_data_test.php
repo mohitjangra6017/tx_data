@@ -59,7 +59,6 @@ class block_current_learning_plan_data_testcase extends block_current_learning_t
         $this->plan_generator = $this->generator->get_plugin_generator('totara_plan');
         $this->program_generator = $this->generator->get_plugin_generator('totara_program');
 
-        $this->resetAfterTest();
         $CFG->enablecompletion = true;
 
         // Create some users.

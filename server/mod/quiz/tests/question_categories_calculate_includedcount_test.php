@@ -36,7 +36,6 @@ class questionlib_question_categories_calculate_includedcount_testcase extends a
     public function test_no_parents() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $categories = array();
         for ($i = 1; $i <= 5; $i++) {
@@ -58,7 +57,6 @@ class questionlib_question_categories_calculate_includedcount_testcase extends a
     public function test_single_parents() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $categories = array();
         for ($i = 1; $i <= 5; $i++) {
@@ -85,7 +83,6 @@ class questionlib_question_categories_calculate_includedcount_testcase extends a
     public function test_multiple_parents() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $categories = array();
         for ($i = 1; $i <= 5; $i++) {

@@ -167,7 +167,6 @@ class totara_core_progressinfo_testcase extends \advanced_testcase {
      * Test progressinfo exception is thrown on duplicate criteria key
      */
     public function test_duplicate_criteria_execption() {
-        $this->resetAfterTest(true);
 
         $verify_info = progressinfo::from_data(progressinfo::AGGREGATE_ALL, 0, 0);
         $verify_info->add_criteria(4,
@@ -182,7 +181,6 @@ class totara_core_progressinfo_testcase extends \advanced_testcase {
      * Test invalid aggragation class exection
      */
     public function test_invalid_agg_class_execption() {
-        $this->resetAfterTest(true);
 
         $this->expectException('\coding_exception');
         $verify_info = progressinfo::from_data(progressinfo::AGGREGATE_ANY, 1, 0.55, 'customdata', 'notexistingclassname');

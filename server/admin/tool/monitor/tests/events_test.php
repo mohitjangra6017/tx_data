@@ -35,7 +35,6 @@ class tool_monitor_events_testcase extends advanced_testcase {
      */
     public function setUp(): void {
         set_config('enablemonitor', 1, 'tool_monitor');
-        $this->resetAfterTest();
     }
 
     /**

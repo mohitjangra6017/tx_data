@@ -76,7 +76,6 @@ class mod_workshop_events_testcase extends advanced_testcase {
      * This event is triggered in view.php and workshop/lib.php through the function workshop_cron().
      */
     public function test_phase_switched_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Add additional workshop information.
@@ -105,7 +104,6 @@ class mod_workshop_events_testcase extends advanced_testcase {
     }
 
     public function test_assessment_evaluated() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $cm = get_coursemodule_from_instance('workshop', $this->workshop->id, $this->course->id, false, MUST_EXIST);
@@ -131,7 +129,6 @@ class mod_workshop_events_testcase extends advanced_testcase {
     }
 
     public function test_assessment_reevaluated() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $cm = get_coursemodule_from_instance('workshop', $this->workshop->id, $this->course->id, false, MUST_EXIST);
@@ -163,7 +160,6 @@ class mod_workshop_events_testcase extends advanced_testcase {
      * There is no api involved so the best we can do is test legacy data by triggering event manually.
      */
     public function test_aggregate_grades_reset_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $event = \mod_workshop\event\assessment_evaluations_reset::create(array(
@@ -190,7 +186,6 @@ class mod_workshop_events_testcase extends advanced_testcase {
      * There is no api involved so the best we can do is test legacy data by triggering event manually.
      */
     public function test_instances_list_viewed_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $context = context_course::instance($this->course->id);
@@ -215,7 +210,6 @@ class mod_workshop_events_testcase extends advanced_testcase {
      * There is no api involved so the best we can do is test legacy data by triggering event manually.
      */
     public function test_submission_created_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user = $this->getDataGenerator()->create_user();
@@ -251,7 +245,6 @@ class mod_workshop_events_testcase extends advanced_testcase {
      * There is no api involved so the best we can do is test legacy data by triggering event manually.
      */
     public function test_submission_updated_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user = $this->getDataGenerator()->create_user();
@@ -287,7 +280,6 @@ class mod_workshop_events_testcase extends advanced_testcase {
      * There is no api involved so the best we can do is test legacy data by triggering event manually.
      */
     public function test_submission_viewed_event() {
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $user = $this->getDataGenerator()->create_user();

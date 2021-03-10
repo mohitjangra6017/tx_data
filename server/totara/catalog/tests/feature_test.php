@@ -177,7 +177,6 @@ class totara_catalog_feature_testcase extends advanced_testcase {
      */
     public function test_category_feature() {
         global $DB;
-        $this->resetAfterTest(true);
 
         $generator = $this->getDataGenerator();
         $c1 = $generator->create_category(['name' => 'First level 1']);

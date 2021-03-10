@@ -50,7 +50,6 @@ class core_user_userdata_private_keys_test extends advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->resetAfterTest(true);
     }
 
     /**

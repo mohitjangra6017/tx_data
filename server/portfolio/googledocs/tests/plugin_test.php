@@ -66,7 +66,6 @@ class portfolio_googledocs_plugin_testcase extends advanced_testcase {
      */
     public function test_enable() {
         global $DB;
-        $this->resetAfterTest();
         $instance = $this->enable_plugin();
         $record = $DB->get_record('portfolio_instance', ['plugin' => $this->pluginname]);
         $this->assertEquals($record->id, $instance->get('id'));
@@ -97,7 +96,6 @@ class portfolio_googledocs_plugin_testcase extends advanced_testcase {
      * Test submitting a form for editing an instance
      */
     public function test_edit_form() {
-        $this->resetAfterTest();
         $instance = $this->enable_plugin();
 
         $formdata = ['name' => 'New name', 'clientid' => 'CLIENT', 'secret' => 'SECRET'];

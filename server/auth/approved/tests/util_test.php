@@ -31,7 +31,6 @@ class auth_approved_util_testcase extends advanced_testcase {
     public function test_get_report_url() {
         global $CFG;
         require_once($CFG->dirroot . '/totara/reportbuilder/lib.php');
-        $this->resetAfterTest();
 
         $this->setAdminUser();
 
@@ -82,7 +81,6 @@ class auth_approved_util_testcase extends advanced_testcase {
 
     public function test_render_request_details_view() {
         // Yip, we need the database here.
-        $this->resetAfterTest();
 
         // Needed as we are using has_capability.
         $this->setAdminUser();

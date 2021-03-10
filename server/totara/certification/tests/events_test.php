@@ -51,7 +51,6 @@ class totara_certification_events_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setup();
-        $this->resetAfterTest(true);
         $this->program_generator = $this->getDataGenerator()->get_plugin_generator('totara_program');
         $this->program = $this->program_generator->create_program(array('fullname' => 'program1'));
         $this->user = $this->getDataGenerator()->create_user(array('fullname' => 'user1'));
@@ -60,7 +59,6 @@ class totara_certification_events_testcase extends advanced_testcase {
     public function test_certification_completionstateedited() {
         global $USER;
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $other = array(

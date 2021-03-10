@@ -35,7 +35,6 @@ class availability_language_condition_testcase extends advanced_testcase {
     public function test_usage() {
         global $CFG;
 
-        $this->resetAfterTest();
         $CFG->enableavailability = true;
 
         // Make a test course and user.

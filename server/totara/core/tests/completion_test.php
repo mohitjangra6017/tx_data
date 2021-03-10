@@ -47,7 +47,6 @@ class totara_core_completion_testcase extends advanced_testcase {
 
         parent::setUp();
 
-        $this->resetAfterTest();
 
         set_config('enablecompletion', 1);
 

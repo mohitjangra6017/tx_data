@@ -28,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class totara_core_webservice_testcase extends advanced_testcase {
     public function test_webservice_function_called() {
-        $this->resetAfterTest();
         $function = 'abc';
 
         $params = array(

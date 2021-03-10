@@ -35,7 +35,6 @@ class totara_reportbuilder_rb_global_restriction_testcase extends advanced_testc
 
     public function test_insert() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->name = 'Some restriction name';
@@ -88,7 +87,6 @@ class totara_reportbuilder_rb_global_restriction_testcase extends advanced_testc
 
     public function test_update() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->name = 'Some restriction name';
@@ -138,7 +136,6 @@ class totara_reportbuilder_rb_global_restriction_testcase extends advanced_testc
 
     public function test_delete() {
         global $DB;
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->name = 'Some restriction name 2';
@@ -159,7 +156,6 @@ class totara_reportbuilder_rb_global_restriction_testcase extends advanced_testc
     }
 
     public function test_activate_deactivate() {
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->name = 'Some restriction name';
@@ -179,7 +175,6 @@ class totara_reportbuilder_rb_global_restriction_testcase extends advanced_testc
     }
 
     public function test_down_up() {
-        $this->resetAfterTest();
 
         $data = new stdClass();
         $data->name = 'Some restriction name 1';
@@ -260,7 +255,6 @@ class totara_reportbuilder_rb_global_restriction_testcase extends advanced_testc
     }
 
     public function test_get_all() {
-        $this->resetAfterTest();
 
         // Prepare 5 restrictions.
         $restriction1 = new rb_global_restriction();
@@ -287,7 +281,6 @@ class totara_reportbuilder_rb_global_restriction_testcase extends advanced_testc
     }
 
     public function test_get_record_data() {
-        $this->resetAfterTest();
 
         // Create 3 users to assign: 1 to restricted users and 2 to restricted records.
         $user1 = $this->getDataGenerator()->create_user();

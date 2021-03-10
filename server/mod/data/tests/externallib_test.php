@@ -99,7 +99,6 @@ class mod_data_external_testcase extends externallib_advanced_testcase {
      */
     protected function setUp(): void {
         global $DB;
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         // Setup test data.
@@ -138,7 +137,6 @@ class mod_data_external_testcase extends externallib_advanced_testcase {
     public function test_mod_data_get_databases_by_courses() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         // Create users.
         $student = self::getDataGenerator()->create_user();

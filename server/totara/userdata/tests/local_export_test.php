@@ -59,7 +59,6 @@ class totara_userdata_local_export_testcase extends advanced_testcase {
 
     public function test_export_items() {
         global $DB;
-        $this->resetAfterTest();
 
         $fs = get_file_storage();
 
@@ -97,7 +96,6 @@ class totara_userdata_local_export_testcase extends advanced_testcase {
 
     public function test_get_result_file_record() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -131,7 +129,6 @@ class totara_userdata_local_export_testcase extends advanced_testcase {
 
     public function test_internal_cleanup() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -186,7 +183,6 @@ class totara_userdata_local_export_testcase extends advanced_testcase {
     }
 
     public function test_get_my_last_export() {
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 
@@ -213,7 +209,6 @@ class totara_userdata_local_export_testcase extends advanced_testcase {
 
     public function test_is_export_file_available() {
         global $DB;
-        $this->resetAfterTest();
 
         $generator = \totara_userdata\testing\generator::instance();
 

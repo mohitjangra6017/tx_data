@@ -255,7 +255,6 @@ class tool_totara_sync_hierarchy_db_customfield_processing_testcase extends tota
      */
     public function test_import_single_customfield($hierarchyshortname, $hierarchyfullname) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->set_up_importing($hierarchyshortname);
         $this->create_data_for_multiple_customfields($hierarchyshortname, $hierarchyfullname);
 
@@ -297,7 +296,6 @@ class tool_totara_sync_hierarchy_db_customfield_processing_testcase extends tota
      */
     function test_import_single_customfield_with_no_typeid($hierarchyshortname, $hierarchyfullname) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->set_up_importing($hierarchyshortname);
         $this->create_data_for_multiple_customfields($hierarchyshortname, $hierarchyfullname);
 
@@ -338,7 +336,6 @@ class tool_totara_sync_hierarchy_db_customfield_processing_testcase extends tota
      */
     public function test_import_single_customfield_with_incorrect_typeid($hierarchyshortname, $hierarchyfullname) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->set_up_importing($hierarchyshortname);
         $this->create_data_for_multiple_customfields($hierarchyshortname, $hierarchyfullname);
 
@@ -378,7 +375,6 @@ class tool_totara_sync_hierarchy_db_customfield_processing_testcase extends tota
      */
     public function test_import_customfields_including_duplicate_shortnames($hierarchyshortname, $hierarchyfullname) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->set_up_importing($hierarchyshortname);
         $this->create_data_for_multiple_customfields($hierarchyshortname, $hierarchyfullname);
 
@@ -443,7 +439,6 @@ class tool_totara_sync_hierarchy_db_customfield_processing_testcase extends tota
      */
     public function test_import_customfields_with_fieldmapping($hierarchyshortname, $hierarchyfullname) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->set_up_importing($hierarchyshortname);
         $this->create_data_for_multiple_customfields($hierarchyshortname, $hierarchyfullname);
 
@@ -515,7 +510,6 @@ class tool_totara_sync_hierarchy_db_customfield_processing_testcase extends tota
      */
     public function test_import_customfields_with_fieldmapping_value_in_incorrect_column($hierarchyshortname, $hierarchyfullname) {
         global $DB;
-        $this->resetAfterTest(true);
         $this->set_up_importing($hierarchyshortname);
         $this->create_data_for_multiple_customfields($hierarchyshortname, $hierarchyfullname);
 

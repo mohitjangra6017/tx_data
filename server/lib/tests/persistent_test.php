@@ -36,7 +36,6 @@ class core_persistent_testcase extends advanced_testcase {
 
     public function setUp(): void {
         $this->make_persistent_table();
-        $this->resetAfterTest();
     }
 
     /**

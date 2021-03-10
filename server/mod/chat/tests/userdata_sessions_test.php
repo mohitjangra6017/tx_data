@@ -118,7 +118,6 @@ class mod_chat_userdata_sessions_test extends chat_testcase {
         // Did touch what should not have been touched.
         $this->assertEquals($unrelated, $DB->count_records_sql($sql), $this->errors('excessive_purge'));
 
-        $this->resetAfterTest();
     }
 
     public function test_it_purges_chat_sessions_for_course_category_context() {
@@ -158,7 +157,6 @@ class mod_chat_userdata_sessions_test extends chat_testcase {
         // Did touch what should not have been touched.
         $this->assertEquals($unrelated, $DB->count_records_sql($countunrelatedsql), $this->errors('excessive_purge'));
 
-        $this->resetAfterTest();
     }
 
     public function test_it_purges_chat_sessions_for_course_context() {
@@ -195,7 +193,6 @@ class mod_chat_userdata_sessions_test extends chat_testcase {
         // Did not touch what should not have been touched.
         $this->assertEquals($unrelated, $DB->count_records_sql($countunrelatedsql), $this->errors('excessive_purge'));
 
-        $this->resetAfterTest();
     }
 
     public function test_it_purges_chat_sessions_for_module_context() {
@@ -237,6 +234,5 @@ class mod_chat_userdata_sessions_test extends chat_testcase {
         // Did not touch what should not have been touched.
         $this->assertEquals($unrelated, $DB->count_records_sql($countunrelatedsql), $this->errors('excessive_purge'));
 
-        $this->resetAfterTest();
     }
 }

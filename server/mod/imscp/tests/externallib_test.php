@@ -47,7 +47,6 @@ class mod_imscp_external_testcase extends externallib_advanced_testcase {
     public function test_view_imscp() {
         global $DB;
 
-        $this->resetAfterTest(true);
 
         $this->setAdminUser();
         // Setup test data.
@@ -117,7 +116,6 @@ class mod_imscp_external_testcase extends externallib_advanced_testcase {
      */
     public function test_get_imscps_by_courses() {
         global $DB, $USER;
-        $this->resetAfterTest(true);
         // As admin.
         $this->setAdminUser();
         $course1 = self::getDataGenerator()->create_course();

@@ -83,7 +83,6 @@ class core_upgradelib_testcase extends advanced_testcase {
     public function test_upgrade_fix_missing_root_folders_draft() {
         global $DB, $SITE;
 
-        $this->resetAfterTest(true);
 
         $user = $this->getDataGenerator()->create_user();
         $usercontext = context_user::instance($user->id);
@@ -131,7 +130,6 @@ class core_upgradelib_testcase extends advanced_testcase {
         global $CFG, $DB;
         require_once($CFG->libdir . '/gradelib.php');
         $initialminmax = $CFG->grade_minmaxtouse;
-        $this->resetAfterTest();
 
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
@@ -256,7 +254,6 @@ class core_upgradelib_testcase extends advanced_testcase {
     public function test_upgrade_extra_credit_weightoverride() {
         global $DB, $CFG;
 
-        $this->resetAfterTest(true);
 
         require_once($CFG->libdir . '/db/upgradelib.php');
 
@@ -324,7 +321,6 @@ class core_upgradelib_testcase extends advanced_testcase {
     public function test_upgrade_calculated_grade_items_freeze() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         require_once($CFG->libdir . '/db/upgradelib.php');
         // Totara: resolve dependencies for the test
@@ -457,7 +453,6 @@ class core_upgradelib_testcase extends advanced_testcase {
     function test_upgrade_calculated_grade_items_regrade() {
         global $DB, $CFG;
 
-        $this->resetAfterTest();
 
         require_once($CFG->libdir . '/db/upgradelib.php');
         // Totara: resolve dependencies for the test
@@ -548,7 +543,6 @@ class core_upgradelib_testcase extends advanced_testcase {
      */
     public function test_upgrade_course_letter_boundary() {
         global $CFG, $DB;
-        $this->resetAfterTest(true);
 
         require_once($CFG->libdir . '/db/upgradelib.php');
 
@@ -753,7 +747,6 @@ class core_upgradelib_testcase extends advanced_testcase {
     public function test_upgrade_letter_boundary_needs_freeze() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         require_once($CFG->libdir . '/db/upgradelib.php');
 

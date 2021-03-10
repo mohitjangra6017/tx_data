@@ -153,7 +153,6 @@ class mod_facetoface_cm_info_view_testcase extends advanced_testcase {
         global $USER, $CFG, $PAGE;
         $PAGE->set_url("{$CFG->wwwroot}/course");
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course([], ['createsections' => true]);
@@ -183,7 +182,6 @@ class mod_facetoface_cm_info_view_testcase extends advanced_testcase {
         global $USER, $CFG, $PAGE;
         $PAGE->set_url("/course/view.php");
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course([], ['createsections' => true]);
@@ -217,7 +215,6 @@ class mod_facetoface_cm_info_view_testcase extends advanced_testcase {
         $CFG->smtphosts = null;
         $PAGE->set_url("/course/view.php");
 
-        $this->resetAfterTest(true);
         $this->setAdminUser();
 
         $course = $this->getDataGenerator()->create_course([], ['creatsections' => true]);

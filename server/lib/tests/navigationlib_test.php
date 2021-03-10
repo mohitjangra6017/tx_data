@@ -343,7 +343,6 @@ class core_navigationlib_testcase extends advanced_testcase {
         $PAGE->set_url('/');
 
         // We need to reset after this test because we using the generator.
-        $this->resetAfterTest();
 
         $generator = self::getDataGenerator();
         $cat1 = $generator->create_category();
@@ -381,7 +380,6 @@ class core_navigationlib_testcase extends advanced_testcase {
         $PAGE->set_url('/');
 
         // We need to reset after this test because we using the generator.
-        $this->resetAfterTest();
 
         $generator = self::getDataGenerator();
         $cat1 = $generator->create_category();
@@ -469,7 +467,6 @@ class core_navigationlib_testcase extends advanced_testcase {
      */
     public function test_can_view_user_preferences() {
         global $PAGE, $DB, $SITE;
-        $this->resetAfterTest();
 
         $persontoview = $this->getDataGenerator()->create_user();
         $persondoingtheviewing = $this->getDataGenerator()->create_user();

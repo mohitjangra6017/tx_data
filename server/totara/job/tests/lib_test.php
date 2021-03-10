@@ -47,7 +47,6 @@ class totara_job_lib_testcase extends advanced_testcase {
 
     public function setUp(): void {
         parent::setup();
-        $this->resetAfterTest();
 
         // Engage allows several properties of users to become visible to all other users. To test that user
         // properties are hidden when appropritate, we need to disable engage.
@@ -159,7 +158,6 @@ class totara_job_lib_testcase extends advanced_testcase {
     public function test_totara_job_can_edit_job_assignments() {
         global $USER, $DB;
 
-        $this->resetAfterTest();
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
         $user3 = $this->getDataGenerator()->create_user();

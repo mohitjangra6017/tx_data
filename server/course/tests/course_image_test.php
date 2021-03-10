@@ -106,7 +106,6 @@ class totara_core_get_course_image_testcase extends advanced_testcase {
 
     public function test_course_get_image() {
         global $CFG, $OUTPUT;
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
 

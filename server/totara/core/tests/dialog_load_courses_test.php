@@ -33,7 +33,6 @@ class totara_core_dialog_load_courses_testcase extends advanced_testcase {
         require_once($CFG->dirroot . '/totara/core/dialogs/dialog_content_courses.class.php');
         require_once($CFG->dirroot . '/completion/criteria/completion_criteria_activity.php');
 
-        $this->resetAfterTest(true);
 
         // Ensure completion is enabled sitewide.
         $CFG->enablecompletion = true;

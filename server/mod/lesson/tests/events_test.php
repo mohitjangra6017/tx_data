@@ -49,7 +49,6 @@ class mod_lesson_events_testcase extends advanced_testcase {
      * This is executed before running any test in this file.
      */
     public function setUp(): void {
-        $this->resetAfterTest();
 
         $this->setAdminUser();
         $this->course = $this->getDataGenerator()->create_course();

@@ -151,7 +151,6 @@ class mod_quiz_attempt_walkthrough_from_csv_testcase extends advanced_testcase {
      * @param \core_phpunit\DataSet_Table[] $csvdata Data loaded from csv files for this test.
      */
     protected function create_quiz_simulate_attempts_and_check_results($quizsettings, $csvdata) {
-        $this->resetAfterTest(true);
         question_bank::get_qtype('random')->clear_caches_before_testing();
 
         $this->create_quiz($quizsettings, $csvdata['questions']);

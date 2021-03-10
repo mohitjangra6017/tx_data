@@ -32,7 +32,6 @@ require_once($CFG->dirroot . '/lib/adminlib.php');
 class totara_core_quickaccessmenu_external_testcase extends advanced_testcase {
 
     private function basic_setup() {
-        $this->resetAfterTest(true);
         $roleid = $this->getDataGenerator()->create_role();
         $user = $this->getDataGenerator()->create_user();
         $capabilities = [

@@ -132,7 +132,6 @@ class totara_clean_enrolments_plugins_task_testcase extends reportcache_advanced
     public function test_active_user_in_program() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $CFG->debug = 0;
 
@@ -167,7 +166,6 @@ class totara_clean_enrolments_plugins_task_testcase extends reportcache_advanced
     public function test_suspended_user_in_program() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $CFG->debug = 0;
 
@@ -208,7 +206,6 @@ class totara_clean_enrolments_plugins_task_testcase extends reportcache_advanced
     public function test_active_user_not_in_program() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $CFG->debug = 0;
 
@@ -246,7 +243,6 @@ class totara_clean_enrolments_plugins_task_testcase extends reportcache_advanced
     public function test_suspended_user_not_in_program() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $CFG->debug = 0;
 
@@ -289,7 +285,6 @@ class totara_clean_enrolments_plugins_task_testcase extends reportcache_advanced
     public function test_course_removed_from_program() {
         global $CFG;
 
-        $this->resetAfterTest();
 
         $CFG->debug = 0;
 

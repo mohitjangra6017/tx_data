@@ -116,7 +116,6 @@ class totara_catalog_dataholder_testcase extends advanced_testcase {
      * Check that customfield dataholder factories return dataholders as expected for all supported customfields.
      */
     public function test_customfield_dataholder_factories() {
-        $this->resetAfterTest();
 
         $factories = $this->get_customfield_dataholder_factories();
         /** @var dataholder_factory $factory_course */

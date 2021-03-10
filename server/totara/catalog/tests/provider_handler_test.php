@@ -48,7 +48,6 @@ class totara_catalog_provider_handler_testcase extends config_base_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest(true);
         $this->provider_handler = provider_handler::instance();
     }
 

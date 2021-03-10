@@ -36,7 +36,6 @@ class totara_core_access_testcase extends advanced_testcase {
         require_once("{$CFG->dirroot}/user/lib.php");
         require_once("{$CFG->dirroot}/course/lib.php");
 
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
 
         // Make sure the man is installed properly in tests.
@@ -141,7 +140,6 @@ class totara_core_access_testcase extends advanced_testcase {
 
     public function test_get_has_capability_sql() {
         global $DB;
-        $this->resetAfterTest(true);
         $generator = $this->getDataGenerator();
 
         // Create a context hierarchy.
@@ -317,7 +315,6 @@ class totara_core_access_testcase extends advanced_testcase {
      * Verify the contextidfield parameter is validated properly.
      */
     public function test_validate_contextidfield() {
-        $this->resetAfterTest(true);
 
         $method = new \ReflectionMethod('totara_core\access', 'validate_contextidfield');
         $method->setAccessible(true);

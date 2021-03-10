@@ -85,7 +85,6 @@ class totara_question_longtext_export_testcase extends advanced_testcase {
     public function test_export_files() {
         global $DB;
 
-        $this->resetAfterTest();
         $this->setAdminUser();
 
         $fs = \get_file_storage();

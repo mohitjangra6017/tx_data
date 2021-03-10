@@ -33,7 +33,6 @@ require_once($CFG->dirroot.'/grade/querylib.php');
 class core_grade_querylib_testcase extends advanced_testcase {
 
     public function test_grade_get_gradable_activities() {
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $data1 = $this->getDataGenerator()->create_module('data', array('assessed'=>1, 'scale'=>100, 'course'=>$course->id));
@@ -52,7 +51,6 @@ class core_grade_querylib_testcase extends advanced_testcase {
     }
 
     public function test_grade_get_grade_items_for_activity() {
-        $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
         $forum = $this->getDataGenerator()->create_module('forum', array('course'=>$course->id));

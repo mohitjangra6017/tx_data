@@ -31,7 +31,6 @@ require_once($CFG->libdir . '/outputrequirementslib.php');
 
 class core_outputrequirementslib_testcase extends advanced_testcase {
     public function test_string_for_js() {
-        $this->resetAfterTest();
 
         $page = new moodle_page();
         $page->requires->string_for_js('course', 'moodle', 1);
@@ -71,7 +70,6 @@ class core_outputrequirementslib_testcase extends advanced_testcase {
     public function test_jquery_plugin() {
         global $CFG, $PAGE;
 
-        $this->resetAfterTest();
 
         // With slasharguments on.
         $CFG->slasharguments = 1;

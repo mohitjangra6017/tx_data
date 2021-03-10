@@ -36,7 +36,6 @@ class auth_approved_bulk_testcase extends advanced_testcase {
     }
 
     public function test_get_actions_menu() {
-        $this->resetAfterTest();
         $this->setAdminUser();
         $expected = [
             'approve' => get_string('bulkactionapprove', 'auth_approved'),

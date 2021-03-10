@@ -31,7 +31,6 @@ defined('MOODLE_INTERNAL') || die();
 class totara_catalog_cache_handler_testcase extends advanced_testcase {
 
     public function test_reset_all_caches() {
-        $this->resetAfterTest();
 
         // Providers are enabled by default, so there is some data.
         $this->assertGreaterThan(1, count(\totara_catalog\local\feature_handler::instance()->get_all_features()));

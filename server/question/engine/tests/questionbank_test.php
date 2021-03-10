@@ -85,7 +85,6 @@ class question_bank_test extends advanced_testcase {
     }
 
     public function test_get_questions_from_categories_with_usage_counts() {
-        $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat = $generator->create_question_category();

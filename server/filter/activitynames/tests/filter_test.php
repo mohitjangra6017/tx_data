@@ -36,7 +36,6 @@ class filter_activitynames_filter_testcase extends advanced_testcase {
 
     public function test_filter() {
         global $CFG;
-        $this->resetAfterTest();
 
         // Prep the required structure.
         $learner = $this->getDataGenerator()->create_user();

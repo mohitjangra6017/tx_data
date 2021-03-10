@@ -185,7 +185,6 @@ class prog_enrolment_message_test extends advanced_testcase {
      * @throws dml_exception
      */
     public function test_format_message(): void {
-        $this->resetAfterTest(true);
 
         /**
          * @var \prog_enrolment_message $msgobj
@@ -211,7 +210,6 @@ class prog_enrolment_message_test extends advanced_testcase {
     public function test_send_message(): void {
         global $CFG;
         $CFG->smtphosts = null;
-        $this->resetAfterTest(true);
 
         /**
          * @var stdClass                $usr
