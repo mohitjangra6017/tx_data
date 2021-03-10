@@ -53,7 +53,6 @@ class totara_feedback360_email_preference_testcase extends feedback360_testcase 
     public function setUp(): void {
         parent::setUp();
 
-        $this->preventResetByRollback();
         $this->resetAfterTest();
 
         $this->emailsink = $this->redirectEmails();

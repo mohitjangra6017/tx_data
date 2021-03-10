@@ -128,7 +128,6 @@ class totara_feedback360_question_testcase extends feedback360_testcase {
     public function test_user_can_view() {
         global $CFG, $DB;
         $this->resetAfterTest();
-        $this->preventResetByRollback();
 
         $oldlog = ini_get('error_log');
         ini_set('error_log', "$CFG->dataroot/testlog.log"); // Prevent standard logging.

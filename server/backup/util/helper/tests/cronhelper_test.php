@@ -328,7 +328,6 @@ class backup_cron_helper_testcase extends advanced_testcase {
      */
     public function test_is_course_modified() {
         $this->resetAfterTest();
-        $this->preventResetByRollback();
 
         set_config('enabled_stores', 'logstore_standard', 'tool_log');
         set_config('buffersize', 0, 'logstore_standard');

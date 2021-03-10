@@ -63,7 +63,6 @@ extends advanced_testcase {
         parent::setup();
         $this->setAdminUser();
         $this->resetAfterTest(true);
-        $this->preventResetByRollback();
 
         $role_name = 'test manage scheduled report role';
         $this->context = context_system::instance();

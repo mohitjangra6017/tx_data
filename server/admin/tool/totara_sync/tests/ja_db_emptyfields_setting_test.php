@@ -51,7 +51,6 @@ class tool_totara_sync_jobassignment_db_emptyfields_setting_testcase extends tot
         set_config('source_jobassignment', 'totara_sync_source_jobassignment_database', 'totara_sync');
 
         $this->resetAfterTest(true);
-        $this->preventResetByRollback();
         $this->setAdminUser();
 
         $this->create_external_db_table();

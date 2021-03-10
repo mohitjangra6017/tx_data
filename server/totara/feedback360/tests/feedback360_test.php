@@ -445,7 +445,6 @@ class totara_feedback360_feedback360_testcase extends feedback360_testcase {
     public function test_count_completed_answers() {
         global $DB;
         $this->resetAfterTest();
-        $this->preventResetByRollback();
         list($fdbck, $users, $quests) = $this->prepare_feedback_with_users(1, 2);
         $fdbck->activate();
         $user = current($users);

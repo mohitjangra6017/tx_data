@@ -75,7 +75,6 @@ class message_sent_search_testcase extends advanced_testcase {
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
 
-        $this->preventResetByRollback();
         $sink = $this->redirectMessages();
 
         $message = new \core\message\message();
@@ -130,7 +129,6 @@ class message_sent_search_testcase extends advanced_testcase {
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
 
-        $this->preventResetByRollback();
         $sink = $this->redirectMessages();
 
         // Send first message.
@@ -212,7 +210,6 @@ class message_sent_search_testcase extends advanced_testcase {
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
 
-        $this->preventResetByRollback();
         $sink = $this->redirectMessages();
 
         $message = new \core\message\message();
@@ -259,7 +256,6 @@ class message_sent_search_testcase extends advanced_testcase {
         $user2 = self::getDataGenerator()->create_user();
         $user3 = self::getDataGenerator()->create_user();
 
-        $this->preventResetByRollback();
         $sink = $this->redirectMessages();
 
         $message = new \core\message\message();
@@ -328,7 +324,6 @@ class message_sent_search_testcase extends advanced_testcase {
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
 
-        $this->preventResetByRollback();
         $sink = $this->redirectMessages();
 
         $message = new \core\message\message();

@@ -31,7 +31,6 @@ class logstore_database_store_testcase extends advanced_testcase {
     public function test_log_writing() {
         global $DB, $CFG;
         $this->resetAfterTest();
-        $this->preventResetByRollback(); // Logging waits till the transaction gets committed.
 
         $dbman = $DB->get_manager();
         $this->assertTrue($dbman->table_exists('logstore_standard_log'));

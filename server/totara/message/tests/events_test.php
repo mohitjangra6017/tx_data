@@ -97,10 +97,6 @@ class totara_message_events_testcase extends advanced_testcase {
     public function test_alert_sent() {
         $this->setAdminUser();
 
-        // This test fails due to a transaction issue, preventing
-        // reset by rollback fixes this issue.
-        $this->preventResetByRollback();
-
         $sink = $this->redirectEvents();
         $result = tm_alert_send($this->messagedata);
 
@@ -122,10 +118,6 @@ class totara_message_events_testcase extends advanced_testcase {
         global $DB;
 
         $this->setAdminUser();
-
-        // This test fails due to a transaction issue, preventing
-        // reset by rollback fixes this issue.
-        $this->preventResetByRollback();
 
         $sink = $this->redirectEvents();
         $result = tm_task_send($this->messagedata);

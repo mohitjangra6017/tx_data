@@ -43,7 +43,6 @@ class tool_totara_sync_comp_database_testcase extends totara_sync_database_testc
         set_config('source_comp', 'totara_sync_source_comp_database', 'totara_sync');
 
         $this->resetAfterTest(true);
-        $this->preventResetByRollback();
         $this->setAdminUser();
 
         $this->create_external_db_table();

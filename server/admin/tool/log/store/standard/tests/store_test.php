@@ -36,7 +36,6 @@ class logstore_standard_store_testcase extends advanced_testcase {
     public function test_log_writing() {
         global $DB;
         $this->resetAfterTest();
-        $this->preventResetByRollback(); // Logging waits till the transaction gets committed.
 
         $this->setAdminUser();
         $user1 = $this->getDataGenerator()->create_user();
@@ -247,7 +246,6 @@ class logstore_standard_store_testcase extends advanced_testcase {
         $this->disable_gc();
 
         $this->resetAfterTest();
-        $this->preventResetByRollback();
         $this->setAdminUser();
 
         set_config('enabled_stores', 'logstore_standard', 'tool_log');

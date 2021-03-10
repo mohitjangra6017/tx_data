@@ -152,7 +152,6 @@ class tool_totara_sync_user_external_database_testcase extends advanced_testcase
         parent::setup();
 
         $this->resetAfterTest(true);
-        $this->preventResetByRollback();
         $this->setAdminUser();
 
         if (defined('TEST_SYNC_DB_TYPE') ||

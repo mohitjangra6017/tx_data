@@ -321,7 +321,6 @@ class core_statslib_testcase extends advanced_testcase {
         $this->assertEquals($day + DAYSECS, stats_get_start_from('daily'), 'Daily stats start time');
 
         // New log stores.
-        $this->preventResetByRollback();
 
         $this->assertFileExists("$CFG->dirroot/$CFG->admin/tool/log/store/standard/version.php");
         set_config('enabled_stores', 'logstore_standard', 'tool_log');
@@ -553,7 +552,6 @@ class core_statslib_testcase extends advanced_testcase {
         stats_temp_table_drop();
 
         // New log stores.
-        $this->preventResetByRollback();
         stats_temp_table_create();
 
         $course = $this->getDataGenerator()->create_course();

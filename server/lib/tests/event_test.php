@@ -391,8 +391,6 @@ class core_event_testcase extends advanced_testcase {
     public function test_external_buffer() {
         global $DB;
 
-        $this->preventResetByRollback();
-
         $observers = array(
 
             array(
@@ -467,7 +465,6 @@ class core_event_testcase extends advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        $this->preventResetByRollback();
 
         $observers = array(
             array(
@@ -566,7 +563,6 @@ class core_event_testcase extends advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        $this->preventResetByRollback();
 
         $observers = array(
             array(

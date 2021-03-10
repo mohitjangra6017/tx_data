@@ -162,8 +162,6 @@ class auth_db_db_testcase extends advanced_testcase {
         //       but there is no other simple way to test ext database enrol sync, so let's
         //       disable transactions are try to cleanup after the tests.
 
-        $this->preventResetByRollback();
-
         $this->init_auth_database();
 
         /** @var auth_plugin_db $auth */
@@ -452,7 +450,6 @@ class auth_db_db_testcase extends advanced_testcase {
         global $DB;
 
         $this->resetAfterTest(true);
-        $this->preventResetByRollback();
         $this->init_auth_database();
         $auth = get_auth_plugin('db');
         $auth->db_init();

@@ -29,7 +29,6 @@ class core_messagelib_testcase extends advanced_testcase {
 
     public function test_message_provider_disabled() {
         $this->resetAfterTest();
-        $this->preventResetByRollback();
 
         // Disable instantmessage provider.
         $disableprovidersetting = 'moodle_instantmessage_disable';
@@ -403,7 +402,6 @@ class core_messagelib_testcase extends advanced_testcase {
 
     public function test_send_message() {
         global $DB, $CFG;
-        $this->preventResetByRollback();
         $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user(array('maildisplay' => 1));
@@ -753,7 +751,6 @@ class core_messagelib_testcase extends advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        $this->preventResetByRollback();
 
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
@@ -885,7 +882,6 @@ class core_messagelib_testcase extends advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        $this->preventResetByRollback();
         set_config('noemailever', 1);
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -927,7 +923,6 @@ class core_messagelib_testcase extends advanced_testcase {
 
     public function test_message_attachment_send() {
         global $CFG;
-        $this->preventResetByRollback();
         $this->resetAfterTest();
 
         // Set config setting to allow attachments.

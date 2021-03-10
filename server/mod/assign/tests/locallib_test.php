@@ -1634,7 +1634,6 @@ class mod_assign_locallib_testcase extends advanced_testcase {
 
         // Now run cron and see that one message was sent.
         cron_setup_user();
-        $this->preventResetByRollback();
         $sink = $this->redirectEvents();
         $this->expectOutputRegex('/Done processing 1 assignment submissions/');
         assign::cron();

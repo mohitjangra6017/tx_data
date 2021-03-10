@@ -132,7 +132,6 @@ class core_message_testcase extends advanced_testcase {
      */
     public function test_send_message() {
         global $DB, $CFG;
-        $this->preventResetByRollback();
         $this->resetAfterTest();
 
         $user1 = $this->getDataGenerator()->create_user(array('maildisplay' => 1));

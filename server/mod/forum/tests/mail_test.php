@@ -42,9 +42,6 @@ class mod_forum_mail_testcase extends advanced_testcase {
 
         $helper = new stdClass();
 
-        // Messaging is not compatible with transactions...
-        $this->preventResetByRollback();
-
         // Catch all messages.
         $helper->messagesink = $this->redirectMessages();
         $helper->mailsink = $this->redirectEmails();

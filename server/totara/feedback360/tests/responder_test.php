@@ -113,7 +113,6 @@ class totara_feedback360_responder_testcase extends feedback360_testcase {
 
     public function test_by_email() {
         global $CFG, $DB;
-        $this->preventResetByRollback();
         $this->resetAfterTest();
 
         $oldlog = ini_get('error_log');

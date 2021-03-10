@@ -44,7 +44,6 @@ class mod_facetoface_multiple_signups_testcase extends \advanced_testcase {
 
         parent::setUp();
         $this->resetAfterTest(true);
-        $this->preventResetByRollback();
     }
 
     /**

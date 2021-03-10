@@ -59,7 +59,6 @@ class totara_reportbuilder_rb_alerts_embedded_cache_testcase extends reportcache
         parent::setup();
         $this->setAdminUser();
         $this->resetAfterTest(true);
-        $this->preventResetByRollback();
         $this->cleanup();
 
         // Common parts of test cases:

@@ -105,7 +105,6 @@ class tool_totara_sync_source_jobassignment_database_testcase extends advanced_t
         parent::setup();
 
         $this->resetAfterTest(true);
-        $this->preventResetByRollback();
         $this->setAdminUser();
 
         $this->create_external_jobassignment_table();

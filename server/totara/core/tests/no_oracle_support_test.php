@@ -28,7 +28,6 @@ class totara_core_no_oracle_support_testcase extends advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        $this->preventResetByRollback();
 
         $dbman = $DB->get_manager();
 

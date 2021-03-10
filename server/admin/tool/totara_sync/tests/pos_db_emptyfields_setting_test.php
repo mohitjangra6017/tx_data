@@ -41,7 +41,6 @@ class tool_totara_sync_pos_database_testcase extends totara_sync_database_testca
         set_config('source_pos', 'totara_sync_source_pos_database', 'totara_sync');
 
         $this->resetAfterTest(true);
-        $this->preventResetByRollback();
         $this->setAdminUser();
 
         $this->create_external_db_table();

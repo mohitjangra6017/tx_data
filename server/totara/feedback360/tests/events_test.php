@@ -101,7 +101,6 @@ class totara_feedback360_event_testcase extends feedback360_testcase {
     public function test_request_events() {
         global $DB;
 
-        $this->preventResetByRollback();
         $this->resetAfterTest();
         $sink = $this->redirectEvents();
 
@@ -169,7 +168,6 @@ class totara_feedback360_event_testcase extends feedback360_testcase {
     public function test_legacy_events() {
         global $DB;
 
-        $this->preventResetByRollback();
         $this->resetAfterTest();
         $sink = $this->redirectEvents();
 

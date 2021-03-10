@@ -34,7 +34,6 @@ class tool_totara_sync_source_jobassignment_csv_testcase extends advanced_testca
     public function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();
-        $this->preventResetByRollback();
 
         set_config('source_jobassignment', 'totara_sync_source_jobassignment_csv', 'totara_sync');
     }

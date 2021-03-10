@@ -458,10 +458,6 @@ class question_usage_autosave_test extends qbehaviour_walkthrough_test_base {
         $DB2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $DB2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
 
-        // Since we need to commit our transactions in a given order, close the
-        // standard unit test transaction.
-        $this->preventResetByRollback();
-
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category();
@@ -530,10 +526,6 @@ class question_usage_autosave_test extends qbehaviour_walkthrough_test_base {
         }
         $DB2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $DB2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
-
-        // Since we need to commit our transactions in a given order, close the
-        // standard unit test transaction.
-        $this->preventResetByRollback();
 
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
