@@ -107,17 +107,15 @@ Feature: Archive user assignments on competency details page and view archived a
     Then I should not see "Self-assigned"
 
   Scenario: View archived assignments
-    Given all assignments for the "comp2" competency are archived
+    Given all assignments for the "comp2" competency are archived at "yesterday"
     When I log in as "student"
     And I navigate to the competency profile details page for the "Comp 2" competency
     When I click on "Archived assignments" "button"
     Then I should see the tui datatable contains:
-      | Assignment        | Proficiency status |
-      | Directly assigned | Proficient         |
-      | Self-assigned     |                    |
-      | Legacy Assignment | Proficient         |
-    And I should see the current date in format "j F Y" in the ".tui-competencyDetailArchivedAssignments .tui-dataTableRows > div:nth-of-type(1) > div:nth-of-type(2)" "css_element"
-    And I should see the current date in format "j F Y" in the ".tui-competencyDetailArchivedAssignments .tui-dataTableRows > div:nth-of-type(2) > div:nth-of-type(2)" "css_element"
+      | Assignment        | Date archived        | Proficiency status |
+      | Directly assigned | ## -1 days ##j F Y## | Proficient         |
+      | Legacy Assignment | ## -1 days ##j F Y## | Proficient         |
+      | Self-assigned     | ## -1 days ##j F Y## |                    |
     When I click on "Show help for Proficiency status" "button"
     Then I should see "This rating was determined through methods which have been discontinued." in the tui popover
     And I should see "These include learning plans, course completion, or proficiency in child competencies, in previous versions of the system." in the tui popover

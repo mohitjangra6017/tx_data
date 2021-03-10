@@ -224,7 +224,6 @@ class behat_totara_competency extends behat_base {
     /**
      * Archive all assignments for a given competency.
      *
-     * @Given /^all assignments for the "(?P<competency_string>(?:[^"]|\\")*)" competency are archived$/
      * @Given /^all assignments for the "(?P<competency_string>(?:[^"]|\\")*)" competency are archived at "([^"]*)"$/
      * @param string $competency
      * @param string $date
