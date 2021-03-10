@@ -23,6 +23,7 @@
 namespace totara_notification\webapi\resolver\mutation;
 
 use coding_exception;
+use context_system;
 use core\webapi\execution_context;
 use core\webapi\middleware\clean_content_format;
 use core\webapi\middleware\clean_editor_content;
@@ -43,10 +44,12 @@ class update_notification_preference implements mutation_resolver, has_middlewar
     public static function resolve(array $args, execution_context $ec): notification_preference {
         // Note: TL-29488 will try to add capability check and advanced feature check to this resolver.
         $notification_preference = notification_preference::from_id($args['id']);
-        $context = $notification_preference->get_context();
+        $extended_context = $notification_preference->get_extended_context();
 
-        if (CONTEXT_SYSTEM != $context->contextlevel && !$ec->has_relevant_context()) {
-            $ec->set_relevant_context($context);
+        if ($extended_context->get_context_id() != context_system::instance()->id &&
+            !$ec->has_relevant_context()
+        ) {
+            $ec->set_relevant_context($extended_context->get_context());
         }
 
         $builder = notification_preference_builder::from_exist_model($notification_preference);

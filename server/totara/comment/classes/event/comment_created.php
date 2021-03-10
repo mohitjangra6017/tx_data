@@ -30,6 +30,7 @@ use totara_comment\entity\comment as entity;
 use totara_comment\resolver_factory;
 use totara_comment\totara_notification\recipient\comment_author;
 use totara_comment\totara_notification\recipient\owner;
+use totara_core\extended_context;
 use totara_notification\event\notifiable_event;
 use totara_notification\placeholder\placeholder_option;
 use core_user\totara_notification\placeholder\user;
@@ -142,6 +143,13 @@ final class comment_created extends base implements interaction_event, notifiabl
         return [
             'comment_id' => $this->objectid
         ];
+    }
+
+    /**
+     * @return extended_context
+     */
+    public function get_notification_extended_context(): extended_context {
+        return extended_context::make_with_context($this->get_context());
     }
 
     /**

@@ -22,11 +22,15 @@
  */
 
 use core\orm\query\exceptions\record_not_found_exception;
-use totara_webapi\phpunit\webapi_phpunit_helper;
+use totara_core\extended_context;
 use totara_notification\model\notification_preference as model;
 use totara_notification\webapi\resolver\query\notification_preference;
 use totara_notification\testing\generator;
+use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_webapi_get_notification_preference_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
@@ -80,7 +84,7 @@ class totara_notification_webapi_get_notification_preference_testcase extends ad
         // Create an overridden at the course level.
         $course_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            context_course::instance($course->id)->id,
+            extended_context::make_with_context(context_course::instance($course->id)),
             ['subject' => 'Course subject', 'recipient' => totara_notification_mock_recipient::class]
         );
 
@@ -128,7 +132,7 @@ class totara_notification_webapi_get_notification_preference_testcase extends ad
         $context_category = context_coursecat::instance($course->category);
         $category_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_category->id,
+            extended_context::make_with_context($context_category),
             ['body' => 'Category body', 'recipient' => totara_notification_mock_recipient::class]
         );
 

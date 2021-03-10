@@ -29,6 +29,7 @@ use core\json_editor\helper\document_helper;
 use core\testing\component_generator;
 use lang_string;
 use ReflectionClass;
+use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\event\notifiable_event;
@@ -114,7 +115,7 @@ final class generator extends component_generator {
 
         return $this->create_notification_preference(
             $event_name,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             ['notification_class_name' => $notification_class_name]
         );
     }
@@ -129,16 +130,19 @@ final class generator extends component_generator {
      * + subject_format: Int
      * + recipient: String
      *
-     * @param array    $data
-     * @param int|null $context_id
-     * @param string   $event_name
+     * @param array $data
+     * @param extended_context|null $extended_context
+     * @param string $event_name
      *
      * @return notification_preference
      */
-    public function create_notification_preference(string $event_name, ?int $context_id = null,
-                                                   array $data = []): notification_preference {
-        $context_id = $context_id ?? context_system::instance()->id;
-        $builder = new notification_preference_builder($event_name, $context_id);
+    public function create_notification_preference(
+        string $event_name,
+        ?extended_context $extended_context = null,
+        array $data = []
+    ): notification_preference {
+        $extended_context = $extended_context ?? extended_context::make_with_context(context_system::instance());
+        $builder = new notification_preference_builder($event_name, $extended_context);
 
         if (!empty($data['notification_name'])) {
             // Temporary to fix any tests that still preference to the old code.
@@ -151,7 +155,7 @@ final class generator extends component_generator {
             $repository = entity::repository();
             $entity = $repository->find_built_in(
                 $notification_class_name,
-                $context_id
+                $extended_context
             );
 
             if (null !== $entity) {
@@ -219,15 +223,18 @@ final class generator extends component_generator {
      * The attribute 'title' from $overridden_data will be ignored from this function.
      *
      * @param notification_preference $preference
-     * @param int                     $context_id
-     * @param array                   $overridden_data
+     * @param extended_context $extended_context
+     * @param array $overridden_data
      * @return notification_preference
      */
-    public function create_overridden_notification_preference(notification_preference $preference, int $context_id,
-                                                              array $overridden_data = []): notification_preference {
-        $current_context_id = $preference->get_context_id();
-        if ($current_context_id === $context_id) {
-            throw new coding_exception("Cannot create an overridden notification preference at the same context level");
+    public function create_overridden_notification_preference(
+        notification_preference $preference,
+        extended_context $extended_context,
+        array $overridden_data = []
+    ): notification_preference {
+        $current_extended_context = $preference->get_extended_context();
+        if ($current_extended_context->is_same($extended_context)) {
+            throw new coding_exception("Cannot create an overridden notification preference in the same context");
         }
 
         $record_data = [
@@ -247,7 +254,7 @@ final class generator extends component_generator {
 
         return $this->create_notification_preference(
             $preference->get_event_class_name(),
-            $context_id,
+            $extended_context,
             $record_data
         );
     }

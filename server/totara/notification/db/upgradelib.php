@@ -22,6 +22,7 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+use totara_core\extended_context;
 use totara_notification\factory\built_in_notification_factory;
 use totara_notification\notification\built_in_notification;
 
@@ -71,9 +72,39 @@ function totara_notification_sync_built_in_notification(?string $component = nul
         $record = new stdClass();
         $record->event_class_name = $event_name;
         $record->context_id = $context_system->id;
+        $record->component = extended_context::NATURAL_CONTEXT_COMPONENT;
+        $record->area = extended_context::NATURAL_CONTEXT_AREA;
+        $record->item_id = extended_context::NATURAL_CONTEXT_ITEM_ID;
         $record->notification_class_name = $notification_class;
         $record->time_created = time();
 
         $DB->insert_record('notification_preference', $record);
+    }
+}
+
+/**
+ * @param string $table
+ * @return void
+ */
+function totara_notification_add_extend_context_fields(string $table): void {
+    global $DB;
+
+    $db_manager = $DB->get_manager();
+
+    $table = new xmldb_table($table);
+    $component_field = new xmldb_field('component', XMLDB_TYPE_CHAR, '255', null, false,'', '');
+    $area_field = new xmldb_field('area', XMLDB_TYPE_CHAR, '255', null, false, null, '');
+    $item_id_field = new xmldb_field('item_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+
+    if (!$db_manager->field_exists($table, $component_field)) {
+        $db_manager->add_field($table, $component_field);
+    }
+
+    if (!$db_manager->field_exists($table, $area_field)) {
+        $db_manager->add_field($table, $area_field);
+    }
+
+    if (!$db_manager->field_exists($table, $item_id_field)) {
+        $db_manager->add_field($table, $item_id_field);
     }
 }

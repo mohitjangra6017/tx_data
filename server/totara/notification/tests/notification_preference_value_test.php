@@ -21,10 +21,14 @@
  * @package totara_notification
  */
 
+use totara_core\extended_context;
 use totara_notification\model\notification_preference_value;
 use totara_notification_mock_built_in_notification as mock_built_in;
 use totara_notification\testing\generator;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_notification_preference_value_testcase extends advanced_testcase {
     /**
      * @return void
@@ -72,7 +76,7 @@ class totara_notification_notification_preference_value_testcase extends advance
 
         $preference = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             ['recipient' => totara_notification_mock_recipient::class]
         );
 

@@ -22,10 +22,14 @@
  */
 
 use core\orm\query\exceptions\record_not_found_exception;
+use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_preference;
 use totara_notification\testing\generator;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_notification_preference_builder_testcase extends advanced_testcase {
     /**
      * @return void
@@ -46,7 +50,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     public function test_create_of_custom_notification_with_no_required_field_body(): void {
         $builder = new notification_preference_builder(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id
+            extended_context::make_with_context(context_system::instance())
         );
 
         $builder->set_title('title');
@@ -67,7 +71,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     public function test_create_of_custom_notification_with_no_required_field_title(): void {
         $builder = new notification_preference_builder(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id
+            extended_context::make_with_context(context_system::instance())
         );
 
         $builder->set_body('body');
@@ -88,7 +92,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     public function test_create_of_custom_notification_with_no_required_field_subject(): void {
         $builder = new notification_preference_builder(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id
+            extended_context::make_with_context(context_system::instance())
         );
 
         $builder->set_title('title');
@@ -109,7 +113,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     public function test_create_of_custom_notification_with_no_required_field_body_format(): void {
         $builder = new notification_preference_builder(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id
+            extended_context::make_with_context(context_system::instance())
         );
 
         $builder->set_title('title');
@@ -130,7 +134,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     public function test_create_of_custom_notification_with_no_required_field_subject_format(): void {
         $builder = new notification_preference_builder(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id
+            extended_context::make_with_context(context_system::instance())
         );
 
         $builder->set_title('title');
@@ -153,7 +157,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
 
         $builder = new notification_preference_builder(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance())
         );
 
         $builder->set_title('title');
@@ -176,7 +180,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
 
         $builder = new notification_preference_builder(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id
+            extended_context::make_with_context(context_system::instance())
         );
 
         $builder->set_notification_class_name(totara_notification_mock_built_in_notification::class);
@@ -191,7 +195,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     public function test_create_overridden_notification_at_system_context(): void {
         $built_in_builder = new notification_preference_builder(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id
+            extended_context::make_with_context(context_system::instance())
         );
 
         $built_in_builder->set_notification_class_name(totara_notification_mock_built_in_notification::class);
@@ -211,7 +215,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $first_custom = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'First body',
                 'subject' => 'First subject',
@@ -264,7 +268,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $custom = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'body',
                 'subject' => 'subject',
@@ -293,7 +297,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification_preference = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'This is body',
                 'subject' => 'This is subject',
@@ -328,7 +332,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification_preference = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'This is body',
                 'subject' => 'This is subject',
@@ -363,7 +367,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification_preference = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'This is body',
                 'subject' => 'This is subject',
@@ -398,7 +402,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification_preference = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'This is body',
                 'subject' => 'This is subject',
@@ -433,7 +437,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification_preference = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'This is body',
                 'subject' => 'This is subject',
@@ -502,14 +506,14 @@ class totara_notification_notification_preference_builder_testcase extends advan
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_category = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_other_cat->id,
+            extended_context::make_with_context($context_other_cat),
             ['recipient' => totara_notification_mock_recipient::class]
         );
 
         // Now start create an overridden of the custom category, but at a different context.
         $builder = new notification_preference_builder(
             totara_notification_mock_notifiable_event::class,
-            $context_course->id
+            extended_context::make_with_context($context_course)
         );
 
         // Override the custom category.
@@ -532,7 +536,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     public function test_create_of_custom_notification_with_empty_required_field_body(): void {
         $builder = new notification_preference_builder(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id
+            extended_context::make_with_context(context_system::instance())
         );
 
         $builder->set_body('');
@@ -553,7 +557,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     public function test_create_of_custom_notification_with_empty_required_field_title(): void {
         $builder = new notification_preference_builder(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id
+            extended_context::make_with_context(context_system::instance())
         );
 
         $builder->set_title('');
@@ -573,7 +577,7 @@ class totara_notification_notification_preference_builder_testcase extends advan
     public function test_create_of_custom_notification_with_empty_required_field_subject(): void {
         $builder = new notification_preference_builder(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id
+            extended_context::make_with_context(context_system::instance())
         );
 
         $builder->set_subject('');

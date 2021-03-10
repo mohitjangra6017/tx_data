@@ -22,10 +22,14 @@
  */
 
 use container_course\course;
+use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\testing\generator;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_overridden_preference_testcase extends advanced_testcase {
     /**
      * @return void
@@ -85,7 +89,7 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
         // Create the top level custom.
         $first_custom = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'System body',
                 'subject' => 'System subject',
@@ -98,11 +102,11 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
 
         // Create the category level custom from top level.
         $category_id = $DB->get_field('course_categories', 'id', ['issystem' => 0], MUST_EXIST);
-        $context_category = context_coursecat::instance($category_id);
+        $extended_context_category = extended_context::make_with_context(context_coursecat::instance($category_id));
 
         $second_custom = $notification_generator->create_overridden_notification_preference(
             $first_custom,
-            $context_category->id
+            $extended_context_category
         );
 
         $second_custom->refresh();
@@ -158,10 +162,10 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
         $course = course::from_record($course_record);
 
         // Create the category level which we are overriding the body only
-        $context_category = context_coursecat::instance($course->category);
+        $extended_context_category = extended_context::make_with_context(context_coursecat::instance($course->category));
         $category_built_in = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_category->id,
+            $extended_context_category,
             [
                 'body' => 'Category body',
                 'recipient' => totara_notification_mock_recipient::class
@@ -170,10 +174,10 @@ class totara_notification_overridden_preference_testcase extends advanced_testca
 
         // Create the coruse level notification preference which we are overriding
         // the title only.
-        $context_course = context_course::instance($course->id);
+        $extended_context_course = extended_context::make_with_context(context_course::instance($course->id));
         $course_built_in = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_course->id,
+            $extended_context_course,
             [
                 'subject' => 'Course subject',
                 'recipient' => totara_notification_mock_owner::class

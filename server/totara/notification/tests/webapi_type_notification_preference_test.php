@@ -21,11 +21,15 @@
  * @package totara_notification
  */
 
+use totara_notification\local\helper;
 use totara_notification\model\notification_preference as model;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\type\notification_preference;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_webapi_type_notification_preference_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
@@ -115,12 +119,26 @@ class totara_notification_webapi_type_notification_preference_testcase extends a
     /**
      * @return void
      */
-    public function test_resolve_context_id(): void {
+    public function test_resolve_component(): void {
         self::assertEquals(
-            $this->system_built_in->get_context_id(),
+            helper::get_component_of_event_class_name($this->system_built_in->get_event_class_name()),
             $this->resolve_graphql_type(
                 $this->get_graphql_name(notification_preference::class),
-                'context_id',
+                'component',
+                $this->system_built_in,
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_resolve_extended_context(): void {
+        self::assertEquals(
+            $this->system_built_in->get_extended_context(),
+            $this->resolve_graphql_type(
+                $this->get_graphql_name(notification_preference::class),
+                'extended_context',
                 $this->system_built_in,
             )
         );
@@ -135,20 +153,6 @@ class totara_notification_webapi_type_notification_preference_testcase extends a
                 $this->get_graphql_name(notification_preference::class),
                 'is_custom',
                 $this->system_built_in,
-            )
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function test_resolve_component_name(): void {
-        self::assertEquals(
-            'totara_notification',
-            $this->resolve_graphql_type(
-                $this->get_graphql_name(notification_preference::class),
-                'component',
-                $this->system_built_in
             )
         );
     }

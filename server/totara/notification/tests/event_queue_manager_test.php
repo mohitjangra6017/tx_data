@@ -21,11 +21,15 @@
  * @package totara_notification
  */
 
+use totara_core\extended_context;
 use totara_notification\entity\notifiable_event_queue;
 use totara_notification\entity\notification_queue;
 use totara_notification\manager\event_queue_manager;
 use totara_notification\testing\generator;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_event_queue_manager_testcase extends advanced_testcase {
     /**
      * @return void
@@ -53,7 +57,7 @@ class totara_notification_event_queue_manager_testcase extends advanced_testcase
 
         // Create a valid queue.
         $valid_queue = new notifiable_event_queue();
-        $valid_queue->context_id = $context_user->id;
+        $valid_queue->set_extended_context(extended_context::make_with_context($context_user));
         $valid_queue->set_decoded_event_data(['message' => 'data']);
         $valid_queue->event_name = totara_notification_mock_notifiable_event::class;
         $valid_queue->event_time = time();
@@ -61,7 +65,7 @@ class totara_notification_event_queue_manager_testcase extends advanced_testcase
 
         // Create an invalid queue.
         $invalid_queue = new notifiable_event_queue();
-        $invalid_queue->context_id = $context_user->id;
+        $invalid_queue->set_extended_context(extended_context::make_with_context($context_user));
         $invalid_queue->set_decoded_event_data(['boom' => 'kaboom']);
         $invalid_queue->event_name = 'anima_martin_garrix';
         $invalid_queue->event_time = time();

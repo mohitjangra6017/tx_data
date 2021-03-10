@@ -20,6 +20,8 @@
  * @author Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+
+use totara_core\extended_context;
 use totara_notification\event\notifiable_event;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\schedule\schedule_after_event;
@@ -128,10 +130,10 @@ class totara_notification_mock_notifiable_event implements notifiable_event {
     }
 
     /**
-     * @return context
+     * @return extended_context
      */
-    public function get_context() {
-        return context::instance_by_id($this->context_id);
+    public function get_notification_extended_context(): extended_context {
+        return extended_context::make_with_id($this->context_id);
     }
 
     /**

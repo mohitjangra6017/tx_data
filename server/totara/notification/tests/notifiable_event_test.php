@@ -28,6 +28,9 @@ use totara_notification\testing\generator as notification_generator;
 use totara_notification\event\notifiable_event;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_notifiable_event_testcase extends advanced_testcase {
 
     use webapi_phpunit_helper;

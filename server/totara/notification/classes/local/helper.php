@@ -24,6 +24,7 @@ namespace totara_notification\local;
 
 use coding_exception;
 use core_component;
+use totara_core\extended_context;
 use totara_notification\event\notifiable_event;
 use totara_notification\notification\built_in_notification;
 use totara_notification\recipient\recipient;
@@ -98,13 +99,16 @@ class helper {
 
     /**
      * @param string $event_class_name
-     * @param int    $context_id
-     * @param array  $event_data
+     * @param extended_context $extended_context
+     * @param array $event_data
      *
      * @return notifiable_event_resolver
      */
-    public static function get_resolver_from_notifiable_event(string $event_class_name,
-                                                              int $context_id, array $event_data): notifiable_event_resolver {
+    public static function get_resolver_from_notifiable_event(
+        string $event_class_name,
+        extended_context $extended_context,
+        array $event_data
+    ): notifiable_event_resolver {
         global $CFG;
         if (!helper::is_valid_notifiable_event($event_class_name)) {
             throw new coding_exception("Event class name is an invalid notifiable event");
@@ -120,7 +124,7 @@ class helper {
                     "{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event_resolver.php"
                 );
 
-                return new totara_notification_mock_notifiable_event_resolver($context_id, $event_data);
+                return new totara_notification_mock_notifiable_event_resolver($extended_context, $event_data);
             }
         }
 
@@ -140,7 +144,7 @@ class helper {
          * This is metadata programming, which we are going to invoke the construction of
          * {@see notifiable_event_resolver::__construct()}
          */
-        return new $resolver_classname($context_id, $event_data);
+        return new $resolver_classname($extended_context, $event_data);
     }
 
     /**

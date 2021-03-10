@@ -24,6 +24,7 @@ namespace totara_notification\event;
 
 use core\event\abstraction\context_aware;
 use totara_notification\placeholder\placeholder_option;
+use totara_core\extended_context;
 
 /**
  * An interface to help us integrating the centralised notification system's event with the
@@ -32,7 +33,7 @@ use totara_notification\placeholder\placeholder_option;
  * It provides all the available metadata (options) for a system admin to create a custom notification
  * for this very specific event or edit a built-in notification that come out-of-box.
  */
-interface notifiable_event extends context_aware {
+interface notifiable_event {
     /**
      * Returns the title for this notifiable event, which should be used
      * within the tree table of available notifiable events.
@@ -77,4 +78,13 @@ interface notifiable_event extends context_aware {
      * @return array
      */
     public function get_notification_event_data(): array;
+
+    /**
+     * Returns the extended context of where this event occurred. Note that this should almost certainly be
+     * either the same as the natural context (but wrapped in the extended context container class) or an
+     * extended context where the natural context is the immediate parent.
+     *
+     * @return extended_context
+     */
+    public function get_notification_extended_context(): extended_context;
 }

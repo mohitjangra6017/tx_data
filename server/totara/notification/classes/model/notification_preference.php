@@ -25,6 +25,7 @@ namespace totara_notification\model;
 use context;
 use coding_exception;
 use lang_string;
+use totara_core\extended_context;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\notification\built_in_notification;
 
@@ -131,10 +132,10 @@ class notification_preference {
             return;
         }
 
-        $context = context::instance_by_id($this->entity->context_id);
-        $parent_context = $context->get_parent_context();
+        $extended_context = $this->get_extended_context();
+        $parent_extended_context = $extended_context->get_parent();
 
-        if (null === $parent_context) {
+        if (null === $parent_extended_context) {
             // Nope, this context does not have a parent context.
             return;
         }
@@ -142,7 +143,7 @@ class notification_preference {
         $parent_entity = null;
         $trial = 0;
 
-        while (null === $parent_entity && !empty($parent_context)) {
+        while (null === $parent_entity && !empty($parent_extended_context)) {
             // As long as the parent context is still available, then we are
             // still able to find out the parent record of this very instance.
             $trial += 1;
@@ -153,7 +154,7 @@ class notification_preference {
 
             $repository = entity::repository();
 
-            if (CONTEXT_SYSTEM == $parent_context->contextlevel) {
+            if (is_null($parent_extended_context->get_parent())) {
                 // The parent's context is at the system. This is where we just fetch the parent's by this
                 // very preference's ancestor id rather than doing the fetch of the middle parent.
                 /** @var entity|null $parent_entity */
@@ -161,14 +162,14 @@ class notification_preference {
             } else {
                 // The parent' context is not system context. Hence we can do the look up for
                 // any sort of record look up in between this very context and the system context.
-                $parent_entity = $repository->find_by_context_id_and_ancestor_id(
-                    $parent_context->id,
+                $parent_entity = $repository->find_by_context_and_ancestor_id(
+                    $parent_extended_context,
                     $this->entity->ancestor_id
                 );
             }
 
             // Traverse up a parent context.
-            $parent_context = $parent_context->get_parent_context();
+            $parent_extended_context = $parent_extended_context->get_parent();
         }
 
         if (null !== $parent_entity) {
@@ -186,10 +187,10 @@ class notification_preference {
     }
 
     /**
-     * @return int
+     * @return extended_context
      */
-    public function get_context_id(): int {
-        return $this->entity->context_id;
+    public function get_extended_context(): extended_context {
+        return $this->entity->get_extended_context();
     }
 
     /**
@@ -429,13 +430,6 @@ class notification_preference {
      */
     public function is_overridden_recipient(): bool {
         return !empty($this->entity->recipient);
-    }
-
-    /**
-     * @return context
-     */
-    public function get_context(): context {
-        return context::instance_by_id($this->entity->context_id);
     }
 
     /**

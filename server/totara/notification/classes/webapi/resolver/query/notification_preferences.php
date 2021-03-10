@@ -28,6 +28,7 @@ use core\webapi\execution_context;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
+use totara_core\extended_context;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\model\notification_preference as model;
 
@@ -42,16 +43,23 @@ class notification_preferences implements query_resolver, has_middleware {
      * @return model[]
      */
     public static function resolve(array $args, execution_context $ec): array {
-        $context = !empty($args['context_id']) ? context::instance_by_id($args['context_id']) : context_system::instance();
+        $extended_context = extended_context::make_with_id(
+            $args['context_id'],
+            $args['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
+            $args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
+            $args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
+        );
 
-        if (CONTEXT_SYSTEM != $context->contextlevel && !$ec->has_relevant_context()) {
-            $ec->set_relevant_context($context);
+        if ($extended_context->get_context_id() != context_system::instance()->id &&
+            !$ec->has_relevant_context()
+        ) {
+            $ec->set_relevant_context($extended_context->get_context());
         }
 
         $event_class_name = $args['event_class_name'] ?? null;
 
         return notification_preference_loader::get_notification_preferences(
-            $context->id,
+            $extended_context,
             $event_class_name,
             $args['at_context_only'] ?? false
         );

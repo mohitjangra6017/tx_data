@@ -26,6 +26,7 @@ use coding_exception;
 use context_system;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
+use totara_core\extended_context;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\helper;
 use totara_notification\local\schedule_helper;
@@ -66,8 +67,21 @@ class notifiable_event implements type_resolver {
                 return helper::get_human_readable_event_name($source);
 
             case 'notification_preferences':
-                $context_id = $args['context_id'] ?? context_system::instance()->id;
-                return notification_preference_loader::get_notification_preferences($context_id, $source);
+                if (isset($args['context_id'])) {
+                    $context_id = $args['context_id'];
+                } else if (isset($ec->get_relevant_context()->id)) {
+                    $context_id = $ec->get_relevant_context()->id;
+                } else {
+                    $context_id = context_system::instance()->id;
+                }
+
+                $extended_context = extended_context::make_with_id(
+                    $context_id,
+                    $args['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
+                    $args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
+                    $args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
+                );
+                return notification_preference_loader::get_notification_preferences($extended_context, $source);
 
             case 'valid_schedules':
                 return schedule_helper::get_available_schedules_for_event($source);

@@ -22,7 +22,9 @@
  */
 namespace totara_notification\resolver;
 
+use coding_exception;
 use totara_notification\local\helper;
+use totara_core\extended_context;
 use totara_notification\notification\built_in_notification;
 use totara_notification\placeholder\template_engine\engine;
 use totara_notification\placeholder\template_engine\square_bracket\engine as square_bracket_engine;
@@ -41,9 +43,9 @@ use totara_notification\recipient\recipient;
  */
 abstract class notifiable_event_resolver {
     /**
-     * @var int
+     * @var extended_context
      */
-    protected $context_id;
+    protected $extended_context;
 
     /**
      * @var array
@@ -54,11 +56,11 @@ abstract class notifiable_event_resolver {
      * notifiable_event_resolver constructor.
      * Preventing any complicated construction.
      *
-     * @param int $context_id
+     * @param extended_context $extended_context
      * @param array $event_data
      */
-    final public function __construct(int $context_id, array $event_data) {
-        $this->context_id = $context_id;
+    final public function __construct(extended_context $extended_context, array $event_data) {
+        $this->extended_context = $extended_context;
         $this->event_data = $event_data;
     }
 

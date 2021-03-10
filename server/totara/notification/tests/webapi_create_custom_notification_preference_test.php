@@ -27,6 +27,9 @@ use totara_notification\schedule\schedule_before_event;
 use totara_notification\testing\generator;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_webapi_create_custom_notification_preference_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
@@ -88,8 +91,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertArrayHasKey('body_format', $notification_preference);
         self::assertEquals(FORMAT_MOODLE, $notification_preference['body_format']);
 
-        self::assertArrayHasKey('context_id', $notification_preference);
-        self::assertEquals($context->id, $notification_preference['context_id']);
+        self::assertArrayHasKey('extended_context', $notification_preference);
 
         self::assertArrayHasKey('is_custom', $notification_preference);
         self::assertTrue($notification_preference['is_custom']);
@@ -152,8 +154,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertArrayHasKey('body_format', $notification_preference);
         self::assertEquals(FORMAT_HTML, $notification_preference['body_format']);
 
-        self::assertArrayHasKey('context_id', $notification_preference);
-        self::assertEquals($context_course->id, $notification_preference['context_id']);
+        self::assertArrayHasKey('extended_context', $notification_preference);
 
         self::assertArrayHasKey('is_custom', $notification_preference);
         self::assertTrue($notification_preference['is_custom']);
@@ -250,8 +251,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertArrayHasKey('body_format', $notification_preference);
         self::assertEquals(FORMAT_MOODLE, $notification_preference['body_format']);
 
-        self::assertArrayHasKey('context_id', $notification_preference);
-        self::assertEquals($context_system->id, $notification_preference['context_id']);
+        self::assertArrayHasKey('extended_context', $notification_preference);
 
         self::assertArrayHasKey('is_custom', $notification_preference);
         self::assertTrue($notification_preference['is_custom']);
@@ -445,5 +445,80 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
 
         self::assertArrayHasKey('body', $notification_preference);
         self::assertEquals('This is body', $notification_preference['body']);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_custom_notification_with_extended_context(): void {
+        global $DB;
+
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $context_course = context_course::instance($course->id);
+        $this->setAdminUser();
+
+        $result = $this->execute_graphql_operation(
+            'totara_notification_create_custom_notification_preference',
+            [
+                'context_id' => $context_course->id,
+                'event_class_name' => totara_notification_mock_notifiable_event::class,
+                'body' => 'First body',
+                'body_format' => FORMAT_HTML,
+                'subject' => 'First subject',
+                'title' => 'First title',
+                'subject_format' => FORMAT_PLAIN,
+                'schedule_type' => schedule_after_event::identifier(),
+                'schedule_offset' => 10,
+                'recipient' => totara_notification_mock_recipient::class,
+                'area' => 'test_area',
+                'component' => 'totara_notification',
+                'item_id' => 1
+            ]
+        );
+
+        self::assertEmpty($result->errors);
+        self::assertNotEmpty($result->data);
+        self::assertIsArray($result->data);
+        self::assertArrayHasKey('notification_preference', $result->data);
+
+        $notification_preference = $result->data['notification_preference'];
+        self::assertIsArray($notification_preference);
+
+        self::assertArrayHasKey('id', $notification_preference);
+        self::assertTrue($DB->record_exists(entity::TABLE, ['id' => $notification_preference['id']]));
+
+        self::assertArrayHasKey('title', $notification_preference);
+        self::assertEquals('First title', $notification_preference['title']);
+
+        self::assertArrayHasKey('subject', $notification_preference);
+        self::assertEquals('First subject', $notification_preference['subject']);
+
+        self::assertArrayHasKey('body', $notification_preference);
+        self::assertEquals('First body', $notification_preference['body']);
+
+        self::assertArrayHasKey('body_format', $notification_preference);
+        self::assertEquals(FORMAT_HTML, $notification_preference['body_format']);
+
+        self::assertArrayHasKey('extended_context', $notification_preference);
+
+        self::assertArrayHasKey('is_custom', $notification_preference);
+        self::assertTrue($notification_preference['is_custom']);
+
+        self::assertArrayHasKey('schedule_type', $notification_preference);
+        self::assertEquals(schedule_after_event::identifier(), $notification_preference['schedule_type']);
+
+        self::assertArrayHasKey('schedule_offset', $notification_preference);
+        self::assertEquals(10, $notification_preference['schedule_offset']);
+
+        self::assertArrayHasKey('component', $notification_preference);
+        self::assertEquals('totara_notification', $notification_preference['component']);
+
+        self::assertArrayHasKey('extended_context', $notification_preference);
+        self::assertEquals($context_course->id, $notification_preference['extended_context']['context_id']);
+        self::assertEquals(1, $notification_preference['extended_context']['item_id']);
+        self::assertEquals('totara_notification', $notification_preference['extended_context']['component']);
+        self::assertEquals('test_area', $notification_preference['extended_context']['area']);
     }
 }

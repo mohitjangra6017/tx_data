@@ -25,6 +25,7 @@ use core\json_editor\helper\document_helper;
 use core\json_editor\node\paragraph;
 use core\json_editor\node\text;
 use core_user\totara_notification\placeholder\user;
+use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\json_editor\node\placeholder;
 use totara_notification\loader\notification_preference_loader;
@@ -34,6 +35,9 @@ use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\mutation\update_notification_preference;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_webapi_update_notification_preference_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
@@ -114,7 +118,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $custom_notification = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'This is custom title',
                 'body' => 'This is custom body',
@@ -163,7 +167,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_custom = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'This is custom title',
                 'body' => 'This is custom body',
@@ -176,7 +180,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         // Note that the generator's api allow us to set the title.
         $course_custom = $notification_generator->create_overridden_notification_preference(
             $system_custom,
-            context_course::instance($course->id)->id,
+            extended_context::make_with_context(context_course::instance($course->id)),
             [
                 'body' => 'course body',
                 'subject' => 'course subject',
@@ -211,7 +215,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $custom_notification = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'This is custom title',
                 'body' => 'This is custom body',
@@ -366,7 +370,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'Custom body',
                 'body_format' => FORMAT_MOODLE,
@@ -407,7 +411,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         $generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
         $notification = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'Custom body',
                 'body_format' => FORMAT_MOODLE,
@@ -489,7 +493,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
 
         $preference = $generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_system->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body_format' => FORMAT_PLAIN,
                 'body' => 'This is body',

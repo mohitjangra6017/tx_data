@@ -22,10 +22,14 @@
  */
 
 use container_course\course;
+use totara_core\extended_context;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\model\notification_preference;
 use totara_notification\testing\generator;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_notification_preference_loader_testcase extends advanced_testcase {
     /**
      * @return void
@@ -56,7 +60,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         $context_category = context_coursecat::instance($course->category);
         $category_preference = $notification_generator->create_overridden_notification_preference(
             $mock_preference,
-            $context_category->id,
+            extended_context::make_with_context($context_category),
             [
                 'title' => 'Kaboom',
                 'subject' => 'dada-di-da',
@@ -67,13 +71,13 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         $context_course = context_course::instance($course->id);
         $course_preference = $notification_generator->create_overridden_notification_preference(
             $mock_preference,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
         );
 
         // Mock one custom record at system context for an event that we are going to fetch notifications for.
         $custom_preference = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'kaboom',
                 'subject' => 'my name',
@@ -87,7 +91,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         // level and we should be able to see two preferences, one is the mock that we had overridden at the course level
         // and one that is a custom one that we created at this course level.
         $preferences = notification_preference_loader::get_notification_preferences(
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             totara_notification_mock_notifiable_event::class
         );
 
@@ -121,7 +125,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         // Create a custom notification at the top level.
         $system_custom = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'data',
                 'subject' => 'body',
@@ -134,7 +138,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         // Create a custom notification at the category level, but different from  the system  one.
         $category_custom = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_coursecat::instance($course->category)->id,
+            extended_context::make_with_context(context_coursecat::instance($course->category)),
             [
                 'body' => 'daa',
                 'subject' => 'ioko',
@@ -147,14 +151,14 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         // Create an override at the course level, which override from the system one.
         $override_course = $notification_generator->create_overridden_notification_preference(
             $system_custom,
-            $course->get_context()->id,
+            extended_context::make_with_context($course->get_context()),
             [
                 'body' => 'override body kjo!',
             ]
         );
 
         $preferences = notification_preference_loader::get_notification_preferences(
-            $course->get_context()->id,
+            extended_context::make_with_context($course->get_context()),
             totara_notification_mock_notifiable_event::class
         );
 
@@ -201,14 +205,14 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         // Override this system built in at the category level.
         $category_built_in = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_category->id,
+            extended_context::make_with_context($context_category),
             ['body' => 'Category body']
         );
 
         // Fetch the notification at the course context level.
         // Start loading the preferences.
         $preferences = notification_preference_loader::get_notification_preferences(
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             totara_notification_mock_notifiable_event::class
         );
 
@@ -244,7 +248,7 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_custom = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => 'Custom body',
                 'recipient' => totara_notification_mock_recipient::class,
@@ -259,11 +263,11 @@ class totara_notification_notification_preference_loader_testcase extends advanc
         $context_course = context_course::instance($course->id);
         $system_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_course->id
+            extended_context::make_with_context($context_course)
         );
 
         $preferences = notification_preference_loader::get_notification_preferences(
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             null,
             true
         );

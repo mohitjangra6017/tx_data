@@ -25,6 +25,9 @@ use totara_notification\loader\notification_preference_loader;
 use totara_notification\testing\generator;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_webapi_override_notification_preference_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
@@ -127,8 +130,7 @@ class totara_notification_webapi_override_notification_preference_testcase exten
         self::assertTrue($notification_preference['overridden_body']);
         self::assertTrue($notification_preference['overridden_subject']);
 
-        self::assertArrayHasKey('context_id', $notification_preference);
-        self::assertEquals($context_course->id, $notification_preference['context_id']);
+        self::assertArrayHasKey('extended_context', $notification_preference);
 
         self::assertArrayHasKey('event_name', $notification_preference);
         self::assertEquals(

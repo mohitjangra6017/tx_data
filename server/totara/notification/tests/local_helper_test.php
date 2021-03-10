@@ -22,11 +22,15 @@
  */
 
 use totara_comment\totara_notification\resolver\comment_created as resolver;
+use totara_core\extended_context;
 use totara_notification\factory\notifiable_event_factory;
 use totara_notification\local\helper;
 use totara_notification\resolver\notifiable_event_resolver;
 use totara_notification\testing\generator;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_local_helper_testcase extends advanced_testcase {
     /**
      * @return void
@@ -57,8 +61,11 @@ class totara_notification_local_helper_testcase extends advanced_testcase {
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage('Event class name is an invalid notifiable event');
 
-        $context = context_system::instance();
-        helper::get_resolver_from_notifiable_event('hello_world', $context->id, []);
+        helper::get_resolver_from_notifiable_event(
+            'hello_world',
+            extended_context::make_with_context(context_system::instance()),
+            []
+        );
     }
 
     /**
@@ -73,13 +80,11 @@ class totara_notification_local_helper_testcase extends advanced_testcase {
             $events
         );
 
-        $context = context_system::instance();
-
         foreach ($events as $event) {
             self::assertEquals(0, stripos($event, '\\'));
             $resolver = helper::get_resolver_from_notifiable_event(
                 $event,
-                $context->id,
+                extended_context::make_with_context(context_system::instance()),
                 []
             );
 
@@ -91,11 +96,9 @@ class totara_notification_local_helper_testcase extends advanced_testcase {
      * @return void
      */
     public function test_phpunit_get_resolver_from_valid_event(): void {
-        $context = context_system::instance();
-
         $resolver = helper::get_resolver_from_notifiable_event(
             totara_notification_mock_notifiable_event::class,
-            $context->id,
+            extended_context::make_with_context(context_system::instance()),
             ['user_data' => false]
         );
 
@@ -184,7 +187,7 @@ class totara_notification_local_helper_testcase extends advanced_testcase {
      * @return void
      */
     public function test_get_notifiable_event_from_a_valid_resolver_but_yield_invalid_event_class(): void {
-        $mock_resolver = new class(15, []) extends notifiable_event_resolver {
+        $mock_resolver = new class(extended_context::make_with_context(context_system::instance()), []) extends notifiable_event_resolver {
             /**
              * @param string $recipient_name
              * @return int[]
@@ -194,12 +197,12 @@ class totara_notification_local_helper_testcase extends advanced_testcase {
             }
         };
 
-        $clss_name = get_class($mock_resolver);
+        $class_name = get_class($mock_resolver);
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage(
-            "Cannot find the resolver for notifiable event '{$clss_name}'"
+            "Cannot find the resolver for notifiable event '{$class_name}'"
         );
 
-        helper::get_notifiable_event_from_resolver($clss_name);
+        helper::get_notifiable_event_from_resolver($class_name);
     }
 }

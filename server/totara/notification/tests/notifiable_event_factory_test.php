@@ -25,6 +25,9 @@ use totara_notification\event\notifiable_event;
 use totara_notification\factory\notifiable_event_factory;
 use totara_notification\testing\generator;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_notifiable_event_factory_testcase extends advanced_testcase {
     /**
      * @return void

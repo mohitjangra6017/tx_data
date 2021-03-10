@@ -656,6 +656,12 @@ export default {
           ? null
           : formValue.schedule_offset[formValue.schedule_type.value],
         recipient: formValue.recipient,
+        extended_context: {
+          component: this.preference.extended_context.component,
+          area: this.preference.extended_context.area,
+          item_id: this.preference.extended_context.item_id,
+          context_id: this.preference.extended_context.context_id,
+        },
       };
 
       this.$emit('submit', parameters);

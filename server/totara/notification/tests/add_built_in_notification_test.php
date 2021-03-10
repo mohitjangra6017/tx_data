@@ -23,6 +23,9 @@
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\factory\built_in_notification_factory;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_add_built_in_notification_testcase extends advanced_testcase {
     /**
      * @return void

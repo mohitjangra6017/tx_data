@@ -51,7 +51,6 @@ class notification_preference_formatter extends formatter {
         $record->overridden_recipient = $notification_preference->is_overridden_recipient();
         $record->ancestor_id = $notification_preference->get_ancestor_id();
         $record->is_custom = $notification_preference->is_custom_notification();
-        $record->context_id = $notification_preference->get_context_id();
         $record->schedule_offset = $notification_preference->get_schedule_offset();
         $record->overridden_schedule = $notification_preference->is_overridden_schedule();
         $record->subject_format = $notification_preference->get_subject_format();
@@ -153,7 +152,6 @@ class notification_preference_formatter extends formatter {
             'ancestor_id' => null,
             'event_class_name' => null,
             'is_custom' => null,
-            'context_id' => null,
             'recipient' => null,
         ];
     }

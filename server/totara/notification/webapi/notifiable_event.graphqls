@@ -39,6 +39,9 @@ type totara_notification_notifiable_event {
   """
   notification_preferences(
     context_id: param_integer
+    component: param_component
+    area: param_text
+    item_id: param_integer
   ): [totara_notification_notification_preference!]!
   #Note this is where all the configuration fields within the system should be added.
 }
@@ -52,5 +55,7 @@ extend type Query {
   totara_notification_notifiable_events(
     context_id: param_integer
     component: param_component
+    area: param_text
+    item_id: param_integer
   ): [totara_notification_notifiable_event!]!
 }

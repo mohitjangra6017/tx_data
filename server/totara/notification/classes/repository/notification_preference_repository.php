@@ -24,6 +24,7 @@ namespace totara_notification\repository;
 
 use context_system;
 use core\orm\entity\repository;
+use totara_core\extended_context;
 use totara_notification\entity\notification_preference;
 
 /**
@@ -31,15 +32,21 @@ use totara_notification\entity\notification_preference;
  */
 class notification_preference_repository extends repository {
     /**
-     * Return null if there is no record under context_id and ancestor_id. Otherwise entity record.
+     * Return null if there is no record under context and ancestor_id. Otherwise entity record.
      *
-     * @param int $context_id
+     * @param extended_context $extended_context
      * @param int $ancestor_id
      *
      * @return notification_preference|null
      */
-    public function find_by_context_id_and_ancestor_id(int $context_id, int $ancestor_id): ?notification_preference {
-        $this->builder->where('context_id', $context_id);
+    public function find_by_context_and_ancestor_id(
+        extended_context $extended_context,
+        int $ancestor_id
+    ): ?notification_preference {
+        $this->builder->where('context_id', $extended_context->get_context_id());
+        $this->builder->where('component', $extended_context->get_component());
+        $this->builder->where('area', $extended_context->get_area());
+        $this->builder->where('item_id', $extended_context->get_item_id());
         $this->builder->where('ancestor_id', $ancestor_id);
 
         /** @var notification_preference|null $entity */
@@ -52,17 +59,20 @@ class notification_preference_repository extends repository {
      * @return notification_preference|null
      */
     public function find_in_system_context(string $notification_class_name): ?notification_preference {
-        $context = context_system::instance();
-        return $this->find_built_in($notification_class_name, $context->id);
+        $extended_context = extended_context::make_with_context(context_system::instance());
+        return $this->find_built_in($notification_class_name, $extended_context);
     }
 
     /**
      * @param string $notification_class_name
-     * @param int    $context_id
+     * @param extended_context $extended_context
      * @return notification_preference|null
      */
-    public function find_built_in(string $notification_class_name, int $context_id): ?notification_preference {
-        $this->builder->where('context_id', $context_id);
+    public function find_built_in(string $notification_class_name, extended_context $extended_context): ?notification_preference {
+        $this->builder->where('context_id', $extended_context->get_context_id());
+        $this->builder->where('component', $extended_context->get_component());
+        $this->builder->where('area', $extended_context->get_area());
+        $this->builder->where('item_id', $extended_context->get_item_id());
         $this->builder->where('notification_class_name', ltrim($notification_class_name, '\\'));
 
         /** @var notification_preference|null $entity */

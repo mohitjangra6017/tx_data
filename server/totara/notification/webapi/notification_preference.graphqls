@@ -57,10 +57,6 @@ type totara_notification_notification_preference {
   """
   parent_value: totara_notification_notification_preference_value
   """
-  The context ID of the notification.
-  """
-  context_id: Int!
-  """
   Number of days before/after/on the event the schedule should be adjusted for.
   Always a positive number, meaning is derived from the schedule_type field.
   """
@@ -82,6 +78,10 @@ type totara_notification_notification_preference {
   The recipient details of the notification.
   """
   recipient: totara_notification_recipient!
+  """
+  The extended context of the notification.
+  """
+  extended_context: totara_notification_extended_context!
 }
 
 """
@@ -90,6 +90,28 @@ A type to hold the result of data validation.
 type totara_notification_notification_preference_validation_result {
   field_name: String!
   error_message: String!
+}
+
+"""
+A type to hold extended context.
+"""
+type totara_notification_extended_context {
+  """
+  The context ID of the notification.
+  """
+  context_id: Int!
+  """
+  In a non-natural context, the component to which the context relates
+  """
+  component: String!
+  """
+  The area of component
+  """
+  area: String!
+  """
+  The item id of component
+  """
+  item_id: Int!
 }
 
 """
@@ -119,6 +141,9 @@ extend type Mutation {
     event_class_name: param_text!
     "Context's id MUST be provided"
     context_id: param_integer!
+    component: param_component
+    area: param_text
+    item_id: param_integer
     """
     If ancestor_id is provided, then we would know that this notification preference
     is overriding one of the notification preference at under context.
@@ -193,7 +218,10 @@ extend type Query {
     """
     If the context's id does not provided, then it will beusing the system context.
     """
-    context_id: param_integer
+    context_id: param_integer!
+    component: param_component
+    area: param_text
+    item_id: param_integer
     """
     If this parameter is provided, we are fetching only the notification preferences that are listening to
     this event only.

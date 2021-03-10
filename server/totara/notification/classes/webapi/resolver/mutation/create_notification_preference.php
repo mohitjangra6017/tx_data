@@ -23,13 +23,14 @@
 namespace totara_notification\webapi\resolver\mutation;
 
 use coding_exception;
-use context;
+use context_system;
 use core\webapi\execution_context;
 use core\webapi\middleware\clean_content_format;
 use core\webapi\middleware\clean_editor_content;
 use core\webapi\middleware\require_login;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
+use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\local\helper;
@@ -44,12 +45,20 @@ class create_notification_preference implements mutation_resolver, has_middlewar
      */
     public static function resolve(array $args, execution_context $ec): notification_preference {
         global $DB;
-        $context = context::instance_by_id($args['context_id']);
+
+        $extended_context = extended_context::make_with_id(
+            $args['context_id'],
+            $args['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
+            $args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
+            $args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
+        );
 
         // Note: TL-29488 will try to add capability check and advanced feature check to this resolver.
 
-        if (CONTEXT_SYSTEM != $context->contextlevel && !$ec->has_relevant_context()) {
-            $ec->set_relevant_context($context);
+        if ($extended_context->get_context_id() != context_system::instance()->id &&
+            !$ec->has_relevant_context()
+        ) {
+            $ec->set_relevant_context($extended_context->get_context());
         }
 
         $event_name = ltrim($args['event_class_name'], '\\');
@@ -61,13 +70,15 @@ class create_notification_preference implements mutation_resolver, has_middlewar
 
         $builder = new notification_preference_builder(
             $event_name,
-            $context->id
+            $extended_context
         );
 
         $title = $args['title'] ?? null;
 
         if (isset($args['ancestor_id'])) {
-            if (CONTEXT_SYSTEM == $context->contextlevel) {
+            if ($extended_context->is_natural_context() &&
+                $extended_context->get_context_id() == context_system::instance()->id
+            ) {
                 // Note that this part is also done in the builder as well.
                 throw new coding_exception(
                     "Cannot create a notification at context system with the ancestor's id set"
@@ -100,14 +111,16 @@ class create_notification_preference implements mutation_resolver, has_middlewar
                 entity::TABLE,
                 [
                     'ancestor_id' => $args['ancestor_id'],
-                    'context_id' => $context->id
+                    'context_id' => $extended_context->get_context_id(),
+                    'component' => $extended_context->get_component(),
+                    'area' => $extended_context->get_area(),
+                    'item_id' => $extended_context->get_item_id(),
                 ]
             );
 
             if ($custom_existing) {
                 throw new coding_exception(
-                    "Cannot create another overridden notification ".
-                    "preference at context '{$context->get_context_name()}'"
+                    "Notification override already exists in the given context"
                 );
             }
 

@@ -29,6 +29,7 @@ use core\json_editor\node\paragraph;
 use totara_comment\comment_helper;
 use totara_comment\event\comment_created;
 use totara_comment\totara_notification\recipient\owner;
+use totara_core\extended_context;
 use totara_notification\model\notification_preference as notification_preference_model;
 use totara_notification\task\process_event_queue_task;
 use totara_notification\task\process_notification_queue_task;
@@ -155,7 +156,7 @@ class container_workspace_notification_recipient_testcase extends advanced_testc
     private function create_notification_preference(string $event_class, string $recipient_class) {
         return $this->get_generator()->create_notification_preference(
             $event_class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => "Notification preference body for [{$event_class},{$recipient_class}]",
                 'subject' => 'Notification preference subject',

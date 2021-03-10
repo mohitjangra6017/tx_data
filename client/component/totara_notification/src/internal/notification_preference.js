@@ -82,6 +82,12 @@ export function getDefaultNotificationPreference(extraAttributes = {}) {
     schedule_type: SCHEDULE_TYPES.ON_EVENT,
     schedule_offset: null,
     recipient: null,
+    extended_context: {
+      component: '',
+      area: '',
+      item_id: 0,
+      context_id: 0,
+    },
   };
 
   return () => {

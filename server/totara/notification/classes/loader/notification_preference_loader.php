@@ -22,9 +22,9 @@
  */
 namespace totara_notification\loader;
 
-use context;
 use context_system;
 use core\orm\query\builder;
+use totara_core\extended_context;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\model\notification_preference as model;
 
@@ -44,7 +44,7 @@ class notification_preference_loader {
      * + But we want to exclude those in between this very context and the top context (system context). This means
      *   that we want the ancestor's id to be unique and it should be ordering the context from bottom up (descendant).
      *
-     * @param int         $context_id
+     * @param extended_context $extended_context
      * @param string|null $event_class_name If the parameter is not provided, then we are assuming to load all of notification
      *                                      preferences..
      * @param bool $at_context_only         The parameter will narrow down the list of notification preferences overridden or
@@ -52,7 +52,7 @@ class notification_preference_loader {
      *
      * @return model[]
      */
-    public static function get_notification_preferences(int $context_id,
+    public static function get_notification_preferences(extended_context $extended_context,
                                                         ?string $event_class_name = null,
                                                         bool $at_context_only = false): array {
         $event_class_name = ltrim($event_class_name, '\\');
@@ -60,7 +60,10 @@ class notification_preference_loader {
         // Get all the notifications at a specific contexts for the event first.
         $current_context_builder = builder::table(entity::TABLE, 'np');
         $current_context_builder->select('*');
-        $current_context_builder->where('context_id', $context_id);
+        $current_context_builder->where('context_id', $extended_context->get_context_id());
+        $current_context_builder->where('component', $extended_context->get_component());
+        $current_context_builder->where('area', $extended_context->get_area());
+        $current_context_builder->where('item_id', $extended_context->get_item_id());
         $current_context_builder->results_as_arrays();
         $current_context_builder->map_to([static::class, 'create_preference']);
 
@@ -75,8 +78,7 @@ class notification_preference_loader {
 
         // Now start fetch the preferences in the context path that does not have overridden at this lower context.
         // Which means that any preferences that does not share the same ancestor's id or any ancestor preferences.
-        $context = context::instance_by_id($context_id);
-        $context_ids = $context->get_parent_context_ids();
+        $context_ids = $extended_context->get_context()->get_parent_context_ids();
 
         if (empty($context_ids) || $at_context_only) {
             // Either we are fetching the notification preferences at the given context ONLY.
@@ -184,15 +186,15 @@ class notification_preference_loader {
      * if it is not provided.
      *
      * @param string   $notification_class_name
-     * @param int|null $context_id
+     * @param extended_context|null $extended_context
      *
      * @return model|null
      */
-    public static function get_built_in(string $notification_class_name, ?int $context_id = null): ?model {
-        $context_id = $context_id ?? context_system::instance()->id;
+    public static function get_built_in(string $notification_class_name, ?extended_context $extended_context = null): ?model {
+        $extended_context = $extended_context ?? extended_context::make_with_context(context_system::instance());
 
         $repository = entity::repository();
-        $entity = $repository->find_built_in($notification_class_name, $context_id);
+        $entity = $repository->find_built_in($notification_class_name, $extended_context);
 
         if (null !== $entity) {
             return model::from_entity($entity);

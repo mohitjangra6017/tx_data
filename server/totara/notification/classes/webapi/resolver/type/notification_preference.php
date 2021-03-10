@@ -67,6 +67,8 @@ class notification_preference implements type_resolver {
             }
 
             return model_value::from_parent_notification_preference($parent);
+        } else if ('extended_context' === $field) {
+            return $source->get_extended_context();
         }
 
         $context = context_system::instance();

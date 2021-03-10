@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use totara_core\extended_context;
 use totara_notification\entity\notification_preference;
 use totara_notification\entity\notification_queue;
 use totara_notification\loader\notification_preference_loader;
@@ -30,6 +31,8 @@ use totara_notification\testing\generator;
 
 /**
  * This tes is indirectly cover {@see notification_queue_manager}
+ *
+ * @group totara_notification
  */
 class totara_notification_process_notification_queue_task_testcase extends advanced_testcase {
     /**
@@ -67,7 +70,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
 
         // Adding queue to process.
         $queue = new notification_queue();
-        $queue->context_id = $context_user->id;
+        $queue->set_extended_context(extended_context::make_with_context($context_user));
         $queue->scheduled_time = 15;
         $queue->event_data = json_encode(['message' => 'my_name']);
 
@@ -111,7 +114,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
 
         // Adding queue to process.
         $queue = new notification_queue();
-        $queue->context_id = context_system::instance()->id;
+        $queue->set_extended_context(extended_context::make_with_context(context_system::instance()));
         $queue->scheduled_time = 15;
         $queue->notification_preference_id = 42;
         $queue->event_data = json_encode(['message' => 'my_name']);
@@ -169,7 +172,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
 
         // Adding queue to process.
         $queue = new notification_queue();
-        $queue->context_id = $context_user->id;
+        $queue->set_extended_context(extended_context::make_with_context($context_user));
         $queue->scheduled_time = 10;
         $queue->notification_preference_id = $preference->id;
         $queue->event_data = json_encode(['message' => 'my_name']);
@@ -214,7 +217,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
 
         // Create a valid queue
         $valid_queue = new notification_queue();
-        $valid_queue->context_id = $context_user->id;
+        $valid_queue->set_extended_context(extended_context::make_with_context($context_user));
         $valid_queue->scheduled_time = 10;
         $valid_queue->notification_preference_id = $preference->get_id();
         $valid_queue->event_data = json_encode(['message' => 'bolobala']);
@@ -222,7 +225,7 @@ class totara_notification_process_notification_queue_task_testcase extends advan
 
         // Create an invalid queue
         $invalid_queue = new notification_queue();
-        $invalid_queue->context_id = $context_user->id;
+        $invalid_queue->set_extended_context(extended_context::make_with_context($context_user));
         $invalid_queue->scheduled_time = 10;
         $invalid_queue->notification_preference_id = 42;
         $invalid_queue->event_data = json_encode(['message' => 'this is an invalid queue']);

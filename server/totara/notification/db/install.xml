@@ -9,7 +9,10 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="event_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="It describes the event that occurred, as provided/required by the notifiable_event class"/>
         <FIELD NAME="event_data" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="A json string encoded of data. It contents the data of the notifiable_event"/>
-        <FIELD NAME="context_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="context_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The real context id component of the extended context of where the preference is defined"/>
+        <FIELD NAME="component" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The component property of the extended context"/>
+        <FIELD NAME="area" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The area property of the extended context"/>
+        <FIELD NAME="item_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The item_id property of the extended context"/>
         <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="event_time" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Base time any schedules are calculated from. Defaults to the time_created if not specified."/>
       </FIELDS>
@@ -27,7 +30,10 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="notification_preference_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="event_data" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="A json string encoded of data. It contents the data of the notifiable_event"/>
-        <FIELD NAME="context_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="context_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The real context id component of the extended context of where the preference is defined"/>
+        <FIELD NAME="component" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The component property of the extended context"/>
+        <FIELD NAME="area" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The area property of the extended context"/>
+        <FIELD NAME="item_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The item_id property of the extended context"/>
         <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="scheduled_time" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
@@ -43,7 +49,10 @@
         <FIELD NAME="ancestor_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="This is to keep track of the original notification (built-in or custom) which is being overridden. Note that intermediate overrides may exist."/>
         <FIELD NAME="event_class_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The notifiable event class name"/>
         <FIELD NAME="notification_class_name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The notification class name. If it is null, then it is a custom notification"/>
-        <FIELD NAME="context_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="context_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The real context id component of the extended context of where the event occurred"/>
+        <FIELD NAME="component" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The component property of the extended context"/>
+        <FIELD NAME="area" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The area property of the extended context"/>
+        <FIELD NAME="item_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The item_id property of the extended context"/>
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="This is required for custom notifications, but should be null for notification override records. The overridden of custom does not have to have value."/>
         <FIELD NAME="recipient" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a custom notification then this is required, otherwise null to fallback to the default defined in built in notification"/>
         <FIELD NAME="subject" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a custom notification then it is required, otherwise null to fallback to the default defined in ancestor notification"/>

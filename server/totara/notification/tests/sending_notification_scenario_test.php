@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_preference;
 use totara_notification\entity\notification_queue;
@@ -32,6 +33,9 @@ use totara_notification\testing\generator;
 use totara_notification_mock_built_in_notification as mock_built_in;
 use totara_notification_mock_notifiable_event as mock_event;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_sending_notification_scenario_testcase extends advanced_testcase {
     /**
      * @return void
@@ -122,7 +126,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
 
         $system_custom = $notification_generator->create_notification_preference(
             mock_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'System custom',
                 'subject' => 'System subject',
@@ -325,7 +329,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         // Create overridden at the course context.
         $course_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             [
                 'subject' => 'Course subject',
                 'recipient' => totara_notification_mock_recipient::class,
@@ -382,7 +386,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
         $system_custom = $notification_generator->create_notification_preference(
             mock_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'subject' => 'System custom subject',
                 'body' => 'System custom body',
@@ -395,7 +399,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $context_course = context_course::instance($course->id);
         $course_custom_overridden = $notification_generator->create_overridden_notification_preference(
             $system_custom,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             [
                 'body' => 'Course custom body',
                 'recipient' => totara_notification_mock_recipient::class,
@@ -467,7 +471,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
 
         $category_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_category->id,
+            extended_context::make_with_context($context_category),
             [
                 'subject' => 'Category subject',
                 'body' => 'Category body',
@@ -483,7 +487,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         // Create overridden at the course context.
         $course_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             [
                 'subject' => 'Course subject',
                 'recipient' => totara_notification_mock_recipient::class,
@@ -559,7 +563,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
 
         $course_one_custom = $notification_generator->create_notification_preference(
             mock_event::class,
-            $context_course_one->id,
+            extended_context::make_with_context($context_course_one),
             [
                 'subject' => 'Course one subject',
                 'body' => 'Course one body',
@@ -572,7 +576,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
 
         $course_two_custom = $notification_generator->create_notification_preference(
             mock_event::class,
-            $context_course_two->id,
+            extended_context::make_with_context($context_course_two),
             [
                 'subject' => 'Course two subject',
                 'body' => 'Course two body',
@@ -647,7 +651,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
 
         $course_one_custom = $notification_generator->create_notification_preference(
             mock_event::class,
-            $context_course_one->id,
+            extended_context::make_with_context($context_course_one),
             [
                 'subject' => 'Course one subject',
                 'body' => 'Course one body',
@@ -696,7 +700,7 @@ class totara_notification_sending_notification_scenario_testcase extends advance
         $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
         $course_one_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_course_one->id,
+            extended_context::make_with_context($context_course_one),
             [
                 'body' => 'Course one body',
                 'subject' => 'Course one subject',

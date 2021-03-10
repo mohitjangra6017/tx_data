@@ -23,6 +23,9 @@
 use totara_notification\observer\notifiable_event_observer;
 use totara_notification\entity\notifiable_event_queue;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_notifiable_event_observer_testcase extends advanced_testcase {
     /**
      * @return void

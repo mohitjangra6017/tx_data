@@ -30,6 +30,8 @@ use totara_notification\testing\generator;
 
 /**
  * Test case where we are integrating everything and use mocks data.
+ *
+ * @group totara_notification
  */
 class totara_notification_integration_testcase extends advanced_testcase {
     /**

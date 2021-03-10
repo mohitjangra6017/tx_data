@@ -23,6 +23,7 @@
 namespace totara_notification\observer;
 
 use core\event\base;
+use totara_core\extended_context;
 use totara_notification\event\notifiable_event;
 use totara_notification\entity\notifiable_event_queue;
 
@@ -47,7 +48,7 @@ final class notifiable_event_observer {
         $queue->event_name = get_class($event);
         $queue->event_time = $event_data['event_time'] ?? $event->timecreated;
         $queue->set_decoded_event_data($event_data);
-        $queue->context_id = $event->get_context()->id;
+        $queue->set_extended_context($event->get_notification_extended_context());
 
         $queue->save();
     }

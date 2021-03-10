@@ -235,6 +235,7 @@ export default {
      * @param {Number} schedule_offset
      * @param {Number} subject_format
      * @param {String} recipient
+     * @param {Object} extended_context
      */
     async createCustomNotification({
       subject,
@@ -246,21 +247,32 @@ export default {
       schedule_offset,
       subject_format,
       recipient,
+      extended_context,
     }) {
+      const { item_id, area, component, context_id } = extended_context;
+      let variables = {
+        body,
+        subject,
+        title,
+        body_format,
+        event_class_name,
+        subject_format,
+        context_id: context_id ? context_id : this.contextId,
+        schedule_type,
+        schedule_offset,
+        recipient,
+      };
+
+      // When area, component and item id are all set together, we pass them to mutation.
+      if (!!area && !!component && !!item_id) {
+        variables.area = area;
+        variables.component = component;
+        variables.item_id = item_id;
+      }
+
       await this.$apollo.mutate({
         mutation: createCustomNotification,
-        variables: {
-          body,
-          subject,
-          title,
-          body_format,
-          event_class_name,
-          subject_format,
-          context_id: this.contextId,
-          schedule_type,
-          schedule_offset,
-          recipient,
-        },
+        variables,
         update: (
           proxy,
           { data: { notification_preference: notificationPreference } }
@@ -307,7 +319,7 @@ export default {
      * @return {Object}
      */
     async getOverriddenPreference(oldPreference) {
-      if (oldPreference.context_id == this.contextId) {
+      if (oldPreference.extended_context.context_id == this.contextId) {
         return oldPreference;
       }
 

@@ -248,5 +248,14 @@ function xmldb_totara_notification_upgrade($old_version) {
         upgrade_plugin_savepoint(true, 2021012005, 'totara', 'notification');
     }
 
+    if ($old_version < 2021012006) {
+        totara_notification_add_extend_context_fields('notifiable_event_queue');
+        totara_notification_add_extend_context_fields('notification_queue');
+        totara_notification_add_extend_context_fields('notification_preference');
+
+        // Notification savepoint reached.
+        upgrade_plugin_savepoint(true, 2021012006, 'totara', 'notification');
+    }
+
     return true;
 }

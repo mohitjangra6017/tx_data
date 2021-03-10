@@ -24,6 +24,7 @@ namespace totara_notification\entity;
 
 use coding_exception;
 use core\orm\entity\entity;
+use totara_core\extended_context;
 use totara_notification\repository\notifiable_event_queue_repository;
 
 /**
@@ -33,9 +34,14 @@ use totara_notification\repository\notifiable_event_queue_repository;
  * @property string $event_name
  * @property string $event_data     A json string, please use {@see notifiable_event_queue::get_decoded_event_data()} for a
  *                                  decoded version of this attribute. Note that the result returned will be an array.
- * @property int    $context_id
  * @property int    $time_created
  * @property int    $event_time
+ *
+ * @property-read int $context_id
+ * @property-read string $component
+ * @property-read string $area
+ * @property-read int $item_id
+ * @property extended_context $extended_context
  *
  * @method static notifiable_event_queue_repository repository()
  */
@@ -80,5 +86,28 @@ class notifiable_event_queue extends entity {
      */
     public static function repository_class_name(): string {
         return notifiable_event_queue_repository::class;
+    }
+
+    /**
+     * @return extended_context
+     */
+    public function get_extended_context(): extended_context {
+        return extended_context::make_with_id(
+            $this->context_id,
+            $this->component,
+            $this->area,
+            $this->item_id
+        );
+    }
+
+    /**
+     * @param extended_context $extended_context
+     * @return void
+     */
+    public function set_extended_context(extended_context $extended_context): void {
+        $this->set_attribute('context_id', $extended_context->get_context_id());
+        $this->set_attribute('component', $extended_context->get_component());
+        $this->set_attribute('area', $extended_context->get_area());
+        $this->set_attribute('item_id', $extended_context->get_item_id());
     }
 }

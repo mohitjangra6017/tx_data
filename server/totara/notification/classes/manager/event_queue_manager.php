@@ -68,7 +68,7 @@ class event_queue_manager {
                 }
 
                 $preferences = notification_preference_loader::get_notification_preferences(
-                    $queue->context_id,
+                    $queue->get_extended_context(),
                     $queue->event_name
                 );
 
@@ -79,7 +79,7 @@ class event_queue_manager {
                     // this is sort of message for the next ver.
                     $notification_queue = new notification_queue();
                     $notification_queue->notification_preference_id = $notification_preference->get_id();
-                    $notification_queue->context_id = $queue->context_id;
+                    $notification_queue->set_extended_context($queue->get_extended_context());
                     $notification_queue->event_data = $queue->event_data;
                     $notification_queue->scheduled_time = schedule_helper::calculate_schedule_timestamp(
                         $queue->event_time,

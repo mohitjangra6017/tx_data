@@ -40,10 +40,10 @@ class notification_preference implements query_resolver, has_middleware {
     public static function resolve(array $args, execution_context $ec): model {
         // If the record does not exist, then exception will be thrown.
         $notification_preference = model::from_id($args['id']);
-        $context = $notification_preference->get_context();
+        $extended_context = $notification_preference->get_extended_context();
 
-        if (CONTEXT_SYSTEM != $context->contextlevel && !$ec->has_relevant_context()) {
-            $ec->set_relevant_context($context);
+        if ($extended_context->get_context_id() != \context_system::instance()->id && !$ec->has_relevant_context()) {
+            $ec->set_relevant_context($extended_context->get_context());
         }
 
         return $notification_preference;

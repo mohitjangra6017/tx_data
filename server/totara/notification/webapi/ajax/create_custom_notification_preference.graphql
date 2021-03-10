@@ -1,6 +1,9 @@
 # Mutation to create a new custom notification preference at specific context.
 mutation totara_notification_create_custom_notification_preference(
   $context_id: param_integer!
+  $component: param_component
+  $area: param_text
+  $item_id: param_integer
   $event_class_name: param_text!
   $title: param_text!
   $body: param_text!
@@ -13,6 +16,9 @@ mutation totara_notification_create_custom_notification_preference(
 ) {
   notification_preference: totara_notification_create_notification_preference(
     context_id: $context_id
+    component: $component
+    area: $area
+    item_id: $item_id
     event_class_name: $event_class_name
     title: $title
     body: $body
@@ -42,13 +48,18 @@ mutation totara_notification_create_custom_notification_preference(
     event_name
     event_class_name
     is_custom
-    component
     parent_id
-    context_id
     schedule_offset
     schedule_type
     schedule_label
     overridden_schedule
+    component
+    extended_context {
+      component
+      context_id
+      area
+      item_id
+    }
     parent_value {
       __typename
       subject(format: RAW)

@@ -24,6 +24,7 @@
 use totara_comment\comment_helper;
 use totara_comment\event\comment_soft_deleted;
 use totara_comment\totara_notification\recipient\comment_author;
+use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_queue as notification_queue_entity;
 use totara_notification\model\notification_preference as notification_preference_model;
@@ -189,7 +190,7 @@ class totara_notification_notification_recipient_testcase extends advanced_testc
         // Create the category level which we are overriding the body only - NOTE NO RECIPIENT
         $category_built_in = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_category->id,
+            extended_context::make_with_context($context_category),
             [
                 'body' => 'Category body',
             ]
@@ -197,7 +198,7 @@ class totara_notification_notification_recipient_testcase extends advanced_testc
 
         $course_built_in = $notification_generator->create_overridden_notification_preference(
             $category_built_in,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             [
                 'subject' => 'Subject',
                 'subject_format' => FORMAT_PLAIN
@@ -241,7 +242,7 @@ class totara_notification_notification_recipient_testcase extends advanced_testc
     private function create_notification_preference(string $event_class, string $recipient_class) {
         return $this->get_generator()->create_notification_preference(
             $event_class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body' => "Notification preference body for [{$event_class},{$recipient_class}]",
                 'subject' => 'Notification preference subject',

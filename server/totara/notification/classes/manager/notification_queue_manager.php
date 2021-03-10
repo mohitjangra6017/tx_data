@@ -134,7 +134,7 @@ class notification_queue_manager {
 
         $resolver = helper::get_resolver_from_notifiable_event(
             $preference->get_event_class_name(),
-            $queue->context_id,
+            $queue->get_extended_context(),
             $event_data
         );
 

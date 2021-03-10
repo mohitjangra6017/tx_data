@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use totara_core\extended_context;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\model\notification_preference as model;
@@ -29,6 +30,9 @@ use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\mutation\create_notification_preference;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_webapi_create_notification_preference_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
@@ -353,8 +357,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
             $this->fail("Expecting an exception to be thrown");
         } catch (coding_exception $e) {
             $this->assertStringContainsString(
-                "Cannot create another overridden notification " .
-                "preference at context '{$context_category->get_context_name()}'",
+                "Notification override already exists in the given context",
                 $e->getMessage()
             );
         }
@@ -515,7 +518,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_category = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_other_cat->id,
+            extended_context::make_with_context($context_other_cat),
             ['recipient' => totara_notification_mock_recipient::class]
         );
 
@@ -552,7 +555,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_custom = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             ['recipient' => totara_notification_mock_recipient::class]
         );
 
@@ -561,14 +564,14 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         // Override at the context course
         $notification_generator->create_overridden_notification_preference(
             $system_custom,
-            $context_course->id,
-            ['subject' => 'Course subject',]
+            extended_context::make_with_context($context_course),
+            ['subject' => 'Course subject']
         );
 
         // Try to create another custom with the graphql.
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage(
-            "Cannot create another overridden notification preference at context '{$context_course->get_context_name()}'"
+            "Notification override already exists in the given context"
         );
 
         $this->setAdminUser();

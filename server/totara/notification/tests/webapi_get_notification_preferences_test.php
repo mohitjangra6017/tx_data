@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use totara_core\extended_context;
 use totara_notification\factory\notifiable_event_factory;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\model\notification_preference as model;
@@ -29,6 +30,9 @@ use totara_notification\webapi\resolver\query\notification_preferences;
 use totara_notification_mock_built_in_notification as mock_built_in;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_webapi_get_notification_preferences_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
@@ -54,7 +58,7 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_notification = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             ['recipient' => totara_notification_mock_recipient::class]
         );
 
@@ -94,13 +98,13 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_one_notification = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $custom_two_notification = $notification_generator->create_notification_preference(
             $first_event,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             ['recipient' => totara_notification_mock_recipient::class]
         );
 
@@ -144,13 +148,13 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $custom_one_notification = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $custom_two_notification = $notification_generator->create_notification_preference(
             $first_event,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             ['recipient' => totara_notification_mock_recipient::class]
         );
 
@@ -198,13 +202,13 @@ class totara_notification_webapi_get_notification_preferences_testcase extends a
         $notification_generator = $generator->get_plugin_generator('totara_notification');
         $system_overridden = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             ['recipient' => totara_notification_mock_recipient::class]
         );
 
         $custom_two_notification = $notification_generator->create_notification_preference(
             $first_event,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             ['recipient' => totara_notification_mock_recipient::class]
         );
 

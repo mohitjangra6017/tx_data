@@ -21,9 +21,13 @@
  * @package totara_notification
  */
 
+use totara_core\extended_context;
 use totara_notification\entity\notification_queue;
 use totara_notification\testing\generator;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_notification_queue_repository_testcase extends advanced_testcase {
     /**
      * @return void
@@ -32,9 +36,9 @@ class totara_notification_notification_queue_repository_testcase extends advance
         global $DB;
 
         $queue = new notification_queue();
-        $queue->context_id = context_system::instance()->id;
         $queue->notification_preference_id = 42;
         $queue->set_decoded_event_data([]);
+        $queue->set_extended_context(extended_context::make_with_context(context_system::instance()));
         $queue->scheduled_time = 15;
         $queue->save();
 
@@ -59,9 +63,9 @@ class totara_notification_notification_queue_repository_testcase extends advance
         global $DB;
 
         $queue = new notification_queue();
-        $queue->context_id = context_system::instance()->id;
         $queue->notification_preference_id = 42;
         $queue->set_decoded_event_data([]);
+        $queue->set_extended_context(extended_context::make_with_context(context_system::instance()));
         $queue->scheduled_time = 15;
         $queue->save();
 
@@ -96,19 +100,19 @@ class totara_notification_notification_queue_repository_testcase extends advance
         $context_system = context_system::instance();
 
         $due_queue = new notification_queue();
-        $due_queue->context_id = $context_system->id;
         $due_queue->notification_preference_id = $system_built_in->get_id();
         $due_queue->scheduled_time = 15;
 
         $due_queue->set_decoded_event_data([]);
+        $due_queue->set_extended_context(extended_context::make_with_context($context_system));
         $due_queue->save();
 
         $non_due_queue = new notification_queue();
-        $non_due_queue->context_id = $context_system->id;
         $non_due_queue->notification_preference_id = $system_built_in->get_id();
         $non_due_queue->scheduled_time = 21;
 
         $non_due_queue->set_decoded_event_data([]);
+        $non_due_queue->set_extended_context(extended_context::make_with_context($context_system));
         $non_due_queue->save();
 
         $repository = notification_queue::repository();

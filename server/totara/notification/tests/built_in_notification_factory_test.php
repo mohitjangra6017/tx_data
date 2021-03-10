@@ -26,6 +26,9 @@ use totara_notification\factory\built_in_notification_factory;
 use totara_notification\notification\built_in_notification;
 use totara_notification\testing\generator;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_built_in_notification_factory_testcase extends advanced_testcase {
     /**
      * @return void

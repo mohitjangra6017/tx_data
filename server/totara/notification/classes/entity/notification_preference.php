@@ -23,6 +23,7 @@
 namespace totara_notification\entity;
 
 use core\orm\entity\entity;
+use totara_core\extended_context;
 use totara_notification\repository\notification_preference_repository;
 
 /**
@@ -32,7 +33,11 @@ use totara_notification\repository\notification_preference_repository;
  * @property int|null    $ancestor_id
  * @property string      $event_class_name
  * @property string      $notification_class_name
- * @property int         $context_id
+ * @property-read int    $context_id
+ * @property-read string $component
+ * @property-read string $area
+ * @property-read int    $item_id
+ * @property extended_context $extended_context
  * @property string|null $title
  * @property string|null $recipient
  * @property string|null $subject
@@ -60,5 +65,28 @@ class notification_preference extends entity {
      */
     public static function repository_class_name(): string {
         return notification_preference_repository::class;
+    }
+
+    /**
+     * @return extended_context
+     */
+    public function get_extended_context(): extended_context {
+        return extended_context::make_with_id(
+            $this->context_id,
+            $this->component,
+            $this->area,
+            $this->item_id
+        );
+    }
+
+    /**
+     * @param extended_context $extended_context
+     * @return void
+     */
+    public function set_extended_context(extended_context $extended_context): void {
+        $this->set_attribute('context_id', $extended_context->get_context_id());
+        $this->set_attribute('component', $extended_context->get_component());
+        $this->set_attribute('area', $extended_context->get_area());
+        $this->set_attribute('item_id', $extended_context->get_item_id());
     }
 }

@@ -25,33 +25,38 @@ namespace totara_notification\webapi\resolver\type;
 use coding_exception;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
-use totara_notification\local\helper;
-use \totara_notification\recipient\recipient as notification_recipient;
+use totara_core\extended_context as model;
 
 /**
- * Type resolver for totara_notification_recipient.
+ * Type resolver for totara_notification_extended_context.
  */
-final class recipient implements type_resolver {
+final class extended_context implements type_resolver {
     /**
      * @param string $field
-     * @param notification_recipient $source
+     * @param model $extended_context
      * @param array $args
      * @param execution_context $ec
      * @return mixed
      */
-    public static function resolve(string $field, $source, array $args, execution_context $ec) {
-        if (!helper::is_valid_recipient_class($source)) {
+    public static function resolve(string $field, $extended_context, array $args, execution_context $ec) {
+        if (!($extended_context instanceof model)) {
             throw new coding_exception(
-                "Invalid recipient passed to the resolver"
+                "Invalid extended context passed to the resolver"
             );
         }
 
         switch ($field) {
-            case 'name':
-                return $source::get_name();
+            case 'context_id':
+                return $extended_context->get_context_id();
 
-            case 'class_name':
-                return $source;
+            case 'component':
+                return $extended_context->get_component();
+
+            case 'item_id':
+                return $extended_context->get_item_id();
+
+            case 'area':
+                return $extended_context->get_area();
 
             default:
                 throw new coding_exception("The field '{$field}' had not yet supported");

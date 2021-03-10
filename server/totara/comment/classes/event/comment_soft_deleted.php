@@ -26,6 +26,7 @@ use core\event\base;
 use totara_comment\comment;
 use totara_comment\entity\comment as entity;
 use totara_comment\totara_notification\recipient\comment_author;
+use totara_core\extended_context;
 use totara_notification\event\notifiable_event;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\schedule\schedule_after_event;
@@ -132,5 +133,12 @@ final class comment_soft_deleted extends base implements notifiable_event {
      */
     public static function get_notification_available_placeholder_options(): array {
         return [];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_notification_extended_context(): extended_context {
+        return extended_context::make_with_context($this->get_context());
     }
 }

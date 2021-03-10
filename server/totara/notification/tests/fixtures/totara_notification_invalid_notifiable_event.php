@@ -20,6 +20,8 @@
  * @author Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+
+use totara_core\extended_context;
 use totara_notification\event\notifiable_event;
 
 /**
@@ -31,11 +33,9 @@ use totara_notification\event\notifiable_event;
  */
 class totara_notification_invalid_notifiable_event implements notifiable_event {
     /**
-     * @return context
+     * @var int
      */
-    public function get_context() {
-        return context_system::instance();
-    }
+    private $context_id;
 
     /**
      * @return string
@@ -77,5 +77,12 @@ class totara_notification_invalid_notifiable_event implements notifiable_event {
      */
     public function get_notification_event_data(): array {
         return [];
+    }
+
+    /**
+     * @return extended_context
+     */
+    public function get_notification_extended_context(): extended_context {
+        return extended_context::make_with_context($this->context_id);
     }
 }

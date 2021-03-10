@@ -24,6 +24,7 @@ namespace totara_notification\entity;
 
 use coding_exception;
 use core\orm\entity\entity;
+use totara_core\extended_context;
 use totara_notification\repository\notification_queue_repository;
 
 /**
@@ -31,7 +32,11 @@ use totara_notification\repository\notification_queue_repository;
  *
  * @property int    $id
  * @property string $event_data         A json encoded string of data to help building a notification.
- * @property int    $context_id
+ * @property-read int    $context_id
+ * @property-read string $component
+ * @property-read string $area
+ * @property-read int    $item_id
+ * @property extended_context $extended_context
  * @property int    $time_created
  * @property int    $scheduled_time
  * @property int    $notification_preference_id
@@ -82,5 +87,28 @@ class notification_queue extends entity {
      */
     public static function repository_class_name(): string {
         return notification_queue_repository::class;
+    }
+
+    /**
+     * @return extended_context
+     */
+    public function get_extended_context(): extended_context {
+        return extended_context::make_with_id(
+            $this->context_id,
+            $this->component,
+            $this->area,
+            $this->item_id
+        );
+    }
+
+    /**
+     * @param extended_context $extended_context
+     * @return void
+     */
+    public function set_extended_context(extended_context $extended_context): void {
+        $this->set_attribute('context_id', $extended_context->get_context_id());
+        $this->set_attribute('component', $extended_context->get_component());
+        $this->set_attribute('area', $extended_context->get_area());
+        $this->set_attribute('item_id', $extended_context->get_item_id());
     }
 }

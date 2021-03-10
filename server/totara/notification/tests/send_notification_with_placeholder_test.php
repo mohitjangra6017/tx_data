@@ -34,6 +34,7 @@ use totara_notification\placeholder\placeholder_option;
 use totara_notification\testing\generator;
 use totara_notification_mock_notifiable_event as mock_notifiable_event;
 use totara_notification\entity\notifiable_event_queue;
+use totara_core\extended_context;
 
 class totara_notification_send_notification_with_placeholder_testcase extends advanced_testcase {
     /**
@@ -87,7 +88,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
         $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
         $notification_generator->create_notification_preference(
             mock_notifiable_event::class,
-            $context_system->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'This is custom notification',
                 'subject' => 'A notification for [owner:firstname]',
@@ -169,7 +170,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
 
         $custom_notification = $notification_generator->create_notification_preference(
             mock_notifiable_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'subject' => 'Hello [author:firstname], a new notification for you',
                 'body' => 'Hello [author:fullname], user [commenter:fullname] had created a new comemnt in your code',
@@ -183,7 +184,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
 
         $notification_generator->create_overridden_notification_preference(
             $custom_notification,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             ['body' => 'User [commenter:fullname] had created a new comment in [author:firstname]\'s code']
         );
 
@@ -295,7 +296,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends ad
         $context_system = context_system::instance();
         $notification_generator->create_notification_preference(
             mock_notifiable_event::class,
-            $context_system->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'subject_format' => FORMAT_JSON_EDITOR,
                 'subject' => document_helper::json_encode_document(

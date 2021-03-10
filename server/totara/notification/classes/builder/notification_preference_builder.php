@@ -23,7 +23,7 @@
 namespace totara_notification\builder;
 
 use coding_exception;
-use context;
+use totara_core\extended_context;
 use totara_notification\model\notification_preference;
 use totara_notification\entity\notification_preference as entity;
 
@@ -43,12 +43,15 @@ class notification_preference_builder {
     /**
      * notification_preference_builder constructor.
      * @param string $event_class_name
-     * @param int    $context_id
+     * @param extended_context $extended_context
      */
-    public function __construct(string $event_class_name, int $context_id) {
+    public function __construct(string $event_class_name, extended_context $extended_context) {
         $this->record_data = [
             'event_class_name' => $event_class_name,
-            'context_id' => $context_id,
+            'context_id' => $extended_context->get_context_id(),
+            'component' => $extended_context->get_component(),
+            'area' => $extended_context->get_area(),
+            'item_id' => $extended_context->get_item_id(),
         ];
     }
 
@@ -69,7 +72,7 @@ class notification_preference_builder {
     public static function from_exist_model(notification_preference $notification_preference): notification_preference_builder {
         $builder = new static(
             $notification_preference->get_event_class_name(),
-            $notification_preference->get_context_id()
+            $notification_preference->get_extended_context()
         );
 
         $builder->record_data['id'] = $notification_preference->get_id();
@@ -187,24 +190,36 @@ class notification_preference_builder {
      * @return array
      */
     protected static function prepare_data_for_create_new(array $record_data): array {
-        $context = context::instance_by_id($record_data['context_id']);
+        $extended_context = extended_context::make_with_id(
+            $record_data['context_id'],
+            $record_data['component'],
+            $record_data['area'],
+            $record_data['item_id'],
+        );
 
         if (isset($record_data['ancestor_id'])) {
             // If the ancestor's id is set, we should check whether this notification preference
             // is created within system context or not.
-            if (CONTEXT_SYSTEM == $context->contextlevel) {
+            if (is_null($extended_context->get_parent())) {
                 throw new coding_exception(
                     "The ancestor's id should not be set when the context is in system"
                 );
             }
 
             $ancestor = notification_preference::from_id($record_data['ancestor_id']);
+            $ancestor_extended_context = $ancestor->get_extended_context();
+
+            // Check that the ancestor is a natural context - extended contexts can't have children contexts.
+            if (!$ancestor_extended_context->is_natural_context()) {
+                throw new coding_exception(
+                    "It is not possible for a non-natural context to have children, so all ancestors must be natural contexts"
+                );
+            }
 
             // Check if the context path of the ancestor is in the context path of this very notification
             // preference that we are trying to create.
-            $ancestor_context_path = $ancestor->get_context()->path;
-            $current_context_path = $context->path;
-
+            $ancestor_context_path = $ancestor_extended_context->get_context()->path; // The ancestor must be a natural context.
+            $current_context_path = $extended_context->get_context()->path; // May or may not be the same as the extended context.
             if (0 !== stripos($current_context_path, $ancestor_context_path)) {
                 // If the current context path does not contain the ancestor context path at the
                 // start of the string then we are overriding a notification preference that reference

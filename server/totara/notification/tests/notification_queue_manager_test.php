@@ -21,11 +21,15 @@
  * @package totara_notification
  */
 
+use totara_core\extended_context;
 use totara_notification\entity\notification_queue;
 use totara_notification\manager\notification_queue_manager;
 use totara_notification\testing\generator;
 
-class totara_notification_notification_queue_manager_testcaase extends advanced_testcase {
+/**
+ * @group totara_notification
+ */
+class totara_notification_notification_queue_manager_testcase extends advanced_testcase {
     /**
      * @return void
      */
@@ -60,7 +64,7 @@ class totara_notification_notification_queue_manager_testcaase extends advanced_
         $valid_queue->set_decoded_event_data(['message' => 'This is message']);
         $valid_queue->notification_preference_id = $system_built_in->get_id();
         $valid_queue->scheduled_time = 10;
-        $valid_queue->context_id = $context_user->id;
+        $valid_queue->set_extended_context(extended_context::make_with_context($context_user));
         $valid_queue->save();
 
 
@@ -68,7 +72,7 @@ class totara_notification_notification_queue_manager_testcaase extends advanced_
         // create the preference then delete it.
         $custom_preference = $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_user->id,
+            extended_context::make_with_context($context_user),
             ['recipient' => totara_notification_mock_recipient::class]
         );
 
@@ -76,7 +80,7 @@ class totara_notification_notification_queue_manager_testcaase extends advanced_
         $invalid_queue->set_decoded_event_data(['message' => 'This is invalid message']);
         $invalid_queue->notification_preference_id = $custom_preference->get_id();
         $invalid_queue->scheduled_time = 10;
-        $invalid_queue->context_id = $context_user->id;
+        $invalid_queue->set_extended_context(extended_context::make_with_context($context_user));
         $invalid_queue->save();
 
         $custom_preference->delete();

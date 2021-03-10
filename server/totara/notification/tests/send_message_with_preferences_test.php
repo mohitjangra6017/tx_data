@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use totara_core\extended_context;
 use totara_notification\entity\notifiable_event_queue;
 use totara_notification\entity\notification_queue;
 use totara_notification\loader\notification_preference_loader;
@@ -29,6 +30,9 @@ use totara_notification\task\process_event_queue_task;
 use totara_notification\task\process_notification_queue_task;
 use totara_notification\testing\generator;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_send_message_with_preferences_testcase extends advanced_testcase {
     /**
      * @return void
@@ -114,7 +118,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
 
         $course_built_in = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             [
                 'body' => 'Course body',
                 'subject' => 'Course subject',
@@ -179,7 +183,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
 
         $category_built_in = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_category->id,
+            extended_context::make_with_context($context_category),
             [
                 'body' => 'Category body',
                 'recipient' => totara_notification_mock_recipient::class
@@ -245,7 +249,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
         // Add a custom notification at course category's level.
         $notification_generator->create_notification_preference(
             totara_notification_mock_notifiable_event::class,
-            $context_category->id,
+            extended_context::make_with_context($context_category),
             [
                 'body' => 'Custom category body',
                 'subject' => 'Custom category subject',
@@ -259,7 +263,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
         $system_built_in = notification_preference_loader::get_built_in(totara_notification_mock_built_in_notification::class);
         $category_built_in = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
-            $context_category->id,
+            extended_context::make_with_context($context_category),
             [
                 'body' => 'Built in category body',
                 'recipient' => totara_notification_mock_recipient::class
@@ -268,7 +272,7 @@ class totara_notification_send_message_with_preferences_testcase extends advance
 
         $notification_generator->create_overridden_notification_preference(
             $category_built_in,
-            $context_course->id,
+            extended_context::make_with_context($context_course),
             [
                 'subject' => 'Built in course subject',
                 'recipient' => totara_notification_mock_recipient::class

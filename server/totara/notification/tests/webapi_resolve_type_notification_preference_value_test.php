@@ -29,8 +29,12 @@ use totara_notification\model\notification_preference_value as model;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\type\notification_preference_value;
 use totara_notification_mock_notifiable_event as mock_event;
+use totara_core\extended_context;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_webapi_resolve_type_notification_preference_value_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
@@ -50,7 +54,7 @@ class totara_notification_webapi_resolve_type_notification_preference_value_test
 
         $custom_notification = $notification_generator->create_notification_preference(
             mock_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'This is custom title',
                 'body' => 'This is custom body',
@@ -154,7 +158,7 @@ class totara_notification_webapi_resolve_type_notification_preference_value_test
         // to convert the subject into a json document content.
         $preference = $generator->create_notification_preference(
             mock_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'subject_format' => FORMAT_PLAIN,
                 'subject' => 'This is subject',
@@ -203,7 +207,7 @@ class totara_notification_webapi_resolve_type_notification_preference_value_test
         // to convert the body into a json document content.
         $preference = $generator->create_notification_preference(
             mock_event::class,
-            context_system::instance()->id,
+            extended_context::make_with_context(context_system::instance()),
             [
                 'body_format' => FORMAT_PLAIN,
                 'body' => 'This is body',
