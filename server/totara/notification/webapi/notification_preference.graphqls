@@ -200,6 +200,13 @@ extend type Mutation {
     schedule_type: String!
     schedule_offset: Int!
   ): [totara_notification_notification_preference_validation_result]!
+
+  """
+  Mutation to delete the notification preference, by the 'id' field.
+  """
+  totara_notification_delete_notification_preference(
+    id: param_integer!
+  ): Boolean!
 }
 
 extend type Query {

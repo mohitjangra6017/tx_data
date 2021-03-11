@@ -79,4 +79,13 @@ class notification_preference_repository extends repository {
         $entity = $this->builder->one();
         return $entity;
     }
+
+    /**
+     * delete custom notifications
+     *
+     * @param int $id
+     */
+    public function delete_custom(int $id): void {
+        $this->builder->or_where('id', $id)->or_where('ancestor_id', $id)->delete();
+    }
 }

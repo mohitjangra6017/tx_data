@@ -15,7 +15,7 @@ Feature: Notifications page
     When I click on "New comment created details" "button"
     Then I should see "Comment created"
 
-  Scenario: Admin is able to create/update custom notification
+  Scenario: Admin is able to create/update/delete custom notification
     Given I log in as "admin"
     And I navigate to system notifications page
     Then I should not see "comment created"
@@ -57,6 +57,14 @@ Feature: Notifications page
     Then I should see "New notification name"
     And I should see "12 days after"
     And I should see "Owner"
+
+    #Delete custom notification
+    When I click on "More actions for New notification name" "button"
+    And I click on "Delete" "link"
+    And I should see "Delete notification: New notification name"
+    And I should see "Are you sure? Deleting this notification will remove its instances in other contexts, such as categories and courses. This action cannot be undone."
+    And I click on "Delete" "button"
+    And I should see "Successfully deleted notification"
 
   Scenario: Admin is able to create custom notification in context notification page
     Given I log in as "admin"

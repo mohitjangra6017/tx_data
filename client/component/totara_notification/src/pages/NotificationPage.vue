@@ -29,6 +29,7 @@
         class="tui-notificationPage__table"
         @create-custom-notification="handleCreateCustomNotification"
         @edit-notification="handleEditNotification"
+        @delete-notification="confirmDeleteNotification"
       />
     </template>
     <template v-slot:modals>
@@ -50,6 +51,19 @@
           @form-submit="handleFormSubmit"
         />
       </ModalPresenter>
+
+      <DeleteConfirmationModal
+        :open="deleteModal.open"
+        :title="deleteNotificationTitle"
+        :confirm-button-text="$str('delete', 'core')"
+        :loading="deleting"
+        @confirm="deleteNotification"
+        @cancel="deleteModal.open = false"
+      >
+        <template>
+          <p>{{ $str('delete_confirm_message', 'totara_notification') }}</p>
+        </template>
+      </DeleteConfirmationModal>
     </template>
   </Layout>
 </template>
@@ -58,6 +72,7 @@ import Layout from 'tui/components/layouts/LayoutOneColumn';
 import NotificationTable from 'totara_notification/components/table/NotificationTable';
 import ModalPresenter from 'tui/components/modal/ModalPresenter';
 import NotificationPreferenceModal from 'totara_notification/components/modal/NotificationPreferenceModal';
+import DeleteConfirmationModal from 'tui/components/modal/ConfirmationModal';
 import { notify } from 'tui/notifications';
 
 // GraphQL queries.
@@ -65,6 +80,7 @@ import getNotifiableEvents from 'totara_notification/graphql/notifiable_events';
 import createCustomNotification from 'totara_notification/graphql/create_custom_notification_preference';
 import overrideNotification from 'totara_notification/graphql/override_notification_preference';
 import updateNotification from 'totara_notification/graphql/update_notification_preference';
+import deleteNotification from 'totara_notification/graphql/delete_notification_preference';
 
 const MODAL_STATE_CREATE = 'create';
 const MODAL_STATE_UPDATE = 'update';
@@ -75,6 +91,7 @@ export default {
     NotificationTable,
     ModalPresenter,
     NotificationPreferenceModal,
+    DeleteConfirmationModal,
   },
 
   props: {
@@ -127,11 +144,30 @@ export default {
         title: '',
         state: null,
       },
+      deleteModal: {
+        open: false,
+      },
+      deleting: false,
       targetEventClassName: null,
+      targetDeletePreference: null,
       targetPreference: null,
       targetScheduleTypes: [],
       targetAvailableRecipients: [],
     };
+  },
+
+  computed: {
+    deleteNotificationTitle() {
+      let title = '';
+      if (this.targetDeletePreference) {
+        title = this.$str(
+          'delete_confirm_title',
+          'totara_notification',
+          this.targetDeletePreference.title
+        );
+      }
+      return title;
+    },
   },
 
   methods: {
@@ -190,6 +226,82 @@ export default {
       this.modal.title = this.$str('edit_notification', 'totara_notification');
       this.modal.open = true;
       this.modal.state = MODAL_STATE_UPDATE;
+    },
+
+    /**
+     * Delete notifications
+     */
+    async deleteNotification() {
+      try {
+        await this.handleDeleteNotification(this.targetDeletePreference);
+        this.deleteModal.open = false;
+        notify({
+          type: 'success',
+          message: this.$str('delete_success', 'totara_notification'),
+        });
+      } catch (e) {
+        await notify({
+          type: 'error',
+          message: this.$str(
+            'error_cannot_delete_custom_notification',
+            'totara_notification'
+          ),
+        });
+      }
+    },
+
+    /**
+     * @param {Object} notificationPreference
+     */
+    async handleDeleteNotification(notificationPreference) {
+      await this.$apollo.mutate({
+        mutation: deleteNotification,
+        variables: {
+          id: notificationPreference.id,
+        },
+        update: proxy => {
+          const { notifiable_events: notifiableEvents } = proxy.readQuery({
+            query: getNotifiableEvents,
+            variables: { context_id: this.contextId },
+          });
+
+          const {
+            component,
+            event_class_name: className,
+          } = notificationPreference;
+
+          proxy.writeQuery({
+            query: getNotifiableEvents,
+            variables: { context_id: this.contextId },
+            data: {
+              notifiable_events: notifiableEvents.map(notifiableEvent => {
+                if (
+                  notifiableEvent.component === component &&
+                  notifiableEvent.class_name === className
+                ) {
+                  notifiableEvent = Object.assign({}, notifiableEvent);
+                  const {
+                    notification_preferences: preferences,
+                  } = notifiableEvent;
+
+                  notifiableEvent.notification_preferences = preferences.filter(
+                    preference => preference.id !== notificationPreference.id
+                  );
+                }
+                return notifiableEvent;
+              }),
+            },
+          });
+        },
+      });
+    },
+
+    /**
+     * @param {Object} deletePreference
+     */
+    confirmDeleteNotification(notificationPreference) {
+      this.targetDeletePreference = notificationPreference;
+      this.deleteModal.open = true;
     },
 
     /**
@@ -473,9 +585,16 @@ export default {
 
 <lang-strings>
   {
+    "core": [
+      "delete"
+    ],
     "totara_notification": [
       "create_custom_notification_title",
+      "delete_confirm_title",
+      "delete_confirm_message",
+      "delete_success",
       "error_cannot_create_custom_notification",
+      "error_cannot_delete_custom_notification",
       "edit_notification",
       "error_cannot_update_notification"
     ]

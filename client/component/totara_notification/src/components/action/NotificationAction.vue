@@ -33,7 +33,9 @@
       <template v-slot:trigger="{ toggle, isOpen }">
         <ButtonIcon
           :aria-expanded="isOpen ? 'true' : 'false'"
-          :aria-label="$str('more', 'core')"
+          :aria-label="
+            $str('more_actions_for', 'totara_notification', preferenceTitle)
+          "
           :styleclass="{ small: true, transparentNoPadding: true }"
           @click="toggle"
         >
@@ -44,6 +46,10 @@
       <DropdownItem @click="$emit('edit-notification')">
         <!-- Edit the notification -->
         {{ $str('edit', 'core') }}
+      </DropdownItem>
+      <DropdownItem v-if="isDeletable" @click="$emit('delete-notification')">
+        <!-- Delete the notification -->
+        {{ $str('delete', 'core') }}
       </DropdownItem>
     </Dropdown>
   </div>
@@ -70,6 +76,10 @@ export default {
       type: String,
       required: true,
     },
+    isDeletable: {
+      type: Boolean,
+      required: true,
+    },
   },
 };
 </script>
@@ -77,11 +87,12 @@ export default {
 <lang-strings>
   {
     "core": [
-      "more",
-      "edit"
+      "edit",
+      "delete"
     ],
     "totara_notification": [
-      "edit_notification_name"
+      "edit_notification_name",
+      "more_actions_for"
     ]
   }
 </lang-strings>

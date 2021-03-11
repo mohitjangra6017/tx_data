@@ -442,6 +442,21 @@ class notification_preference {
     /**
      * @return bool
      */
+    public function delete_custom(): bool {
+        if (!$this->is_custom_notification()) {
+            throw new coding_exception("Cannot delete non-custom notification");
+        }
+        if (!empty($this->entity->ancestor_id)) {
+            throw new coding_exception("Cannot delete notification override");
+        }
+        $repository = entity::repository();
+        $repository->delete_custom($this->entity->id);
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
     public function exists(): bool {
         return $this->entity->exists();
     }

@@ -146,6 +146,10 @@
                 <Cell align="end">
                   <NotificationAction
                     :preference-title="notificationPreference.title"
+                    :is-deletable="
+                      notificationPreference.is_custom &&
+                        notificationPreference.parent_id == null
+                    "
                     @edit-notification="
                       $emit(
                         'edit-notification',
@@ -153,6 +157,9 @@
                         notifiableEvent.valid_schedules,
                         notifiableEvent.recipients
                       )
+                    "
+                    @delete-notification="
+                      $emit('delete-notification', notificationPreference)
                     "
                   />
                 </Cell>
