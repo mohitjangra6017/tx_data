@@ -29,6 +29,7 @@ use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\helpers\child_element_config;
 use mod_perform\models\activity\helpers\element_clone_helper;
 use mod_perform\models\response\section_element_response;
+use mod_perform\rb\helper\element_plugin_response_report_builder;
 
 /**
  * Class element_plugin
@@ -381,5 +382,16 @@ abstract class element_plugin {
      */
     public function get_child_element_config(): child_element_config {
         return new child_element_config();
+    }
+
+    /**
+     * Can return an optional report builder helper to add or manipulate data on the response report.
+     *
+     * A plugin can override this method and provide its own helper.
+     *
+     * @return element_plugin_response_report_builder|null
+     */
+    public function get_response_report_builder_helper(): ?element_plugin_response_report_builder {
+        return null;
     }
 }

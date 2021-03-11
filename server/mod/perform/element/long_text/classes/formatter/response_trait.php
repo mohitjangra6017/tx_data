@@ -59,7 +59,15 @@ trait response_trait {
 
         if ($format === format::FORMAT_PLAIN) {
             // This correctly handles images/files and ensures they get converted to URLs
-            $value = content_to_text($value, FORMAT_JSON_EDITOR);
+            $value_with_urls = file_rewrite_pluginfile_urls(
+                $value,
+                'pluginfile.php',
+                $this->context->id,
+                long_text::get_response_files_component_name(),
+                long_text::get_response_files_filearea_name(),
+                $this->get_response_id()
+            );
+            $value = content_to_text($value_with_urls, FORMAT_JSON_EDITOR);
             $formatter->set_text_format(FORMAT_PLAIN);
         } else {
             $formatter->set_additional_options(['formatter' => 'totara_tui']);

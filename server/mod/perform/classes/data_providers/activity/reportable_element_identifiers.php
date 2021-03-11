@@ -24,6 +24,7 @@
 namespace mod_perform\data_providers\activity;
 
 use core\orm\collection;
+use core\orm\query\builder;
 use mod_perform\entity\activity\element_identifier as element_identifier_entity;
 use mod_perform\entity\activity\element;
 use mod_perform\entity\activity\section;
@@ -65,7 +66,14 @@ class reportable_element_identifiers {
             ->as('ei')
             ->select_raw('DISTINCT ei.*')
             ->join([element::TABLE, 'e'], 'e.identifier_id', 'ei.id')
-            ->join([section_element::TABLE, 'se'], 'se.element_id', 'e.id')
+            ->join([section_element::TABLE, 'se'], function (builder $builder) {
+                $builder->where(function (builder $builder) {
+                    $builder->where('e.parent', null)
+                        ->where_field('element_id', 'e.id');
+                })->or_where(function (builder $builder) {
+                    $builder->where_field('element_id', 'e.parent');
+                });
+            })
             ->join([section::TABLE, 's'], 's.id', 'se.section_id')
             ->where_in('s.activity_id', $activity_ids)
             ->get()

@@ -31,7 +31,7 @@ class element_type extends base {
     /**
      * Handles the display
      *
-     * @param int $element_id
+     * @param string $plugin_name
      * @param string $format
      * @param \stdClass $row
      * @param \rb_column $column
@@ -39,6 +39,10 @@ class element_type extends base {
      * @return string
      */
     public static function display($plugin_name, $format, \stdClass $row, \rb_column $column, \reportbuilder $report) {
+        if (empty($plugin_name)) {
+            return '';
+        }
+        
         $plugin = element_plugin::load_by_plugin($plugin_name);
         return $plugin->get_name();
     }

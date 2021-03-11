@@ -22,9 +22,17 @@
  */
 
 $string['name'] = 'Review items';
+$string['content_name'] = 'Review item name';
+$string['content_selected_at'] = 'Date selected';
+$string['content_selected_by'] = 'Selected by';
+$string['element_title'] = 'Linked review element title';
+$string['element_type'] = 'Linked review element type';
+$string['parent_element_title'] = 'Parent element text';
+$string['parent_element_type'] = 'Parent element type';
 $string['participant_selection_help'] = 'Only \'Responding participants\' or \'View-only participants\' added for this section are available as participants to select items to review. 
 External participants are not able to select items.';
 $string['pluginname'] = 'Linked items element';
+$string['rb_type_content'] = 'Content item';
 $string['review_type'] = 'Review type';
 $string['section_relationship_used_in_linked_review'] = 'One or more participant(s) cannot be removed from this section because they are referenced in the following question(s):';
 $string['select_type'] = 'Select type';

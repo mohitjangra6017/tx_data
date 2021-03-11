@@ -19,11 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Simon Coggins <simon.coggins@totaralearning.com>
+ * @author Fabian Derschatta <fabian.derschatta@totaralearning.com>
  * @package mod_perform
  *
  */
 
 use container_perform\perform as perform_container;
+use mod_perform\models\activity\element_plugin;
 use mod_perform\models\activity\participant_source;
 use mod_perform\rb\traits\activity_trait;
 use mod_perform\rb\traits\element_trait;
@@ -53,6 +55,26 @@ class rb_source_perform_response_base extends rb_base_source {
     private $default_context;
 
     /**
+     * Extra fields passed to the response column, can be extended by element plugins
+     *
+     * @var string[]
+     */
+    protected $response_extra_fields = [
+        'element_id' => "perform_element.id",
+        'element_type' => "perform_element.plugin_name",
+        'element_data' => "perform_element.data",
+        'element_context_id' => "perform_element.context_id",
+        'response_id' => "base.id",
+    ];
+
+    /**
+     * If an element plugin wants to override the response fields it needs to be added in this array
+     *
+     * @var array
+     */
+    protected $element_plugin_override_response = [];
+
+    /**
      * Constructor.
      *
      * @param mixed $groupid
@@ -60,8 +82,6 @@ class rb_source_perform_response_base extends rb_base_source {
      * @throws coding_exception
      */
     public function __construct($groupid, rb_global_restriction_set $globalrestrictionset = null) {
-        global $DB;
-
         if ($groupid instanceof rb_global_restriction_set) {
             throw new coding_exception('Wrong parameter orders detected during report source instantiation.');
         }
@@ -81,6 +101,9 @@ class rb_source_perform_response_base extends rb_base_source {
         $this->sourcesummary = get_string('sourcesummary', 'rb_source_perform_response_base');
         $this->sourcelabel = get_string('sourcelabel', 'rb_source_perform_response_base');
 
+        // We do have sourcejoins so make sure it's used by having a sourcewhere
+        $this->sourcewhere = '1 = 1';
+
         $this->usedcomponents[] = 'mod_perform';
         $this->base = "(
             SELECT es.*
@@ -95,6 +118,23 @@ class rb_source_perform_response_base extends rb_base_source {
             WHERE ppi.participant_source = " . participant_source::EXTERNAL . "
                 OR u.deleted = 0
         )";
+
+        // Element plugins can override data of certain fields to make sure the report displays specific information related to the element plugin
+        $plugins = element_plugin::get_element_plugins();
+        foreach ($plugins as $plugin) {
+            if (!$plugin->get_response_report_builder_helper()) {
+                continue;
+            }
+
+            $helper = $plugin->get_response_report_builder_helper();
+            $this->add_response_extra_fields($helper->get_response_extra_fields());
+            $this->set_element_plugin_override_title($plugin->get_plugin_name(), $helper->get_element_override_title());
+            $this->set_element_plugin_override_type($plugin->get_plugin_name(), $helper->get_element_override_type());
+            $this->set_element_plugin_override_identifier($plugin->get_plugin_name(), $helper->get_element_override_identifier());
+            $this->set_element_plugin_override_required($plugin->get_plugin_name(), $helper->get_element_override_required());
+            $this->set_element_plugin_override_response($plugin->get_plugin_name(), $helper->get_element_override_response());
+        }
+
         $this->columnoptions = $this->define_columnoptions();
         $this->filteroptions = $this->define_filteroptions();
 
@@ -148,7 +188,44 @@ class rb_source_perform_response_base extends rb_base_source {
         $this->defaultcolumns = $this->define_defaultcolumns();
         $this->defaultfilters = $this->define_defaultfilters();
 
+        // Element plugins can add columns/filters to make sure the report displays specific information related to the element plugin
+        foreach ($plugins as $plugin) {
+            if (!$plugin->get_response_report_builder_helper()) {
+                continue;
+            }
+
+            $helper = $plugin->get_response_report_builder_helper();
+            $this->usedcomponents = array_merge($this->usedcomponents, $helper->get_used_components());
+            $this->sourcejoins = array_merge($this->sourcejoins, $helper->get_additional_sourcejoins());
+            $this->columnoptions = array_merge($this->columnoptions, $helper->get_columns());
+            $this->filteroptions = array_merge($this->filteroptions, $helper->get_filters());
+            $this->joinlist = array_merge($this->joinlist, $helper->get_joins());
+        }
+
         parent::__construct();
+    }
+
+    /**
+     * Add extra fields for use in the response column
+     *
+     * @param array $extra_fields
+     */
+    protected function add_response_extra_fields(array $extra_fields) {
+        if (!empty($extra_fields)) {
+            $this->response_extra_fields = array_merge($this->response_extra_fields, $extra_fields);
+        }
+    }
+
+    /**
+     * Allows a plugin to override the response column field. This is part of the report builder sql statement.
+     *
+     * @param string $plugin_name
+     * @param string $response
+     */
+    protected function set_element_plugin_override_response(string $plugin_name, string $response) {
+        if (!empty($response)) {
+            $this->element_plugin_override_response[$plugin_name] = $response;
+        }
     }
 
     /**
@@ -177,22 +254,29 @@ class rb_source_perform_response_base extends rb_base_source {
      */
     protected function define_columnoptions() {
         global $DB;
+
+        // A plugin can override the response field, in this case build a CASE statement
+        // to make sure the plugin specific data is used
+        $default_response_field = 'base.response_data';
+        $response_field = $default_response_field;
+        if (!empty($this->element_plugin_override_response)) {
+            $response_field = "CASE ";
+            foreach ($this->element_plugin_override_response as $plugin_name => $override) {
+                $response_field .= " WHEN perform_element.plugin_name = '{$plugin_name}' THEN {$override}";
+            }
+            $response_field .= " ELSE {$default_response_field} END";
+        }
+
         $columnoptions = [
             new rb_column_option(
                 'response',
                 'response_data',
                 get_string('response_data', 'rb_source_perform_response_base'),
-                'base.response_data',
+                $response_field,
                 [
                     'joins' => ['perform_element'],
                     'displayfunc' => 'element_response',
-                    'extrafields' => [
-                        'element_id' => "perform_element.id",
-                        'element_type' => "perform_element.plugin_name",
-                        'element_data' => "perform_element.data",
-                        'element_context_id' => "perform_element.context_id",
-                        'response_id' => "base.id",
-                    ],
+                    'extrafields' => $this->response_extra_fields
                 ]
             ),
             // Column for sorting that combines activity name, section and element sorts, relationship and participant
@@ -268,26 +352,31 @@ class rb_source_perform_response_base extends rb_base_source {
      * @return array
      */
     public static function get_default_columns() {
-        return [
+        $default_columns = [
             [
                 'type' => 'activity',
                 'value' => 'name',
-                'heading' => get_string('activity_name', 'mod_perform'),
+                'heading' => get_string('activity_name', 'rb_source_perform_response'),
             ],
             [
-                'type' => 'activity',
-                'value' => 'type',
-                'heading' => get_string('activity_type', 'mod_perform'),
+                'type' => 'subject_user',
+                'value' => 'namelink',
+                'heading' => get_string('subject_name', 'rb_source_perform_response'),
             ],
             [
-                'type' => 'section',
-                'value' => 'title',
-                'heading' => get_string('section_title', 'mod_perform'),
+                'type' => 'participant_instance',
+                'value' => 'participant_name',
+                'heading' => get_string('participant_name', 'rb_source_perform_response'),
             ],
             [
-                'type' => 'element',
-                'value' => 'title',
-                'heading' => get_string('element_title', 'mod_perform'),
+                'type' => 'participant_instance',
+                'value' => 'relationship_name',
+                'heading' => get_string('participant_relationship_name', 'rb_source_perform_response'),
+            ],
+            [
+                'type' => 'participant_instance',
+                'value' => 'participant_email',
+                'heading' => get_string('participant_email', 'rb_source_perform_response'),
             ],
             [
                 'type' => 'element',
@@ -295,26 +384,39 @@ class rb_source_perform_response_base extends rb_base_source {
                 'heading' => get_string('element_identifier', 'mod_perform'),
             ],
             [
-                'type' => 'subject_user',
-                'value' => 'namelink',
-                'heading' => get_string('subject_user', 'mod_perform'),
+                'type' => 'element',
+                'value' => 'type',
+                'heading' => get_string('element_type', 'mod_perform'),
             ],
             [
-                'type' => 'participant_instance',
-                'value' => 'participant_name',
-                'heading' => get_string('participant_name', 'rb_source_perform_participation_participant_instance'),
+                'type' => 'element',
+                'value' => 'title',
+                'heading' => get_string('element_title', 'rb_source_perform_response'),
             ],
             [
                 'type' => 'response',
                 'value' => 'response_data',
-                'heading' => get_string('response_data', 'rb_source_perform_response_base'),
+                'heading' => get_string('element_response', 'rb_source_perform_response'),
             ],
             [
-                'type' => 'response',
-                'value' => 'default_sort',
-                'heading' => get_string('default_sort', 'mod_perform'),
+                'type' => 'participant_instance',
+                'value' => 'updated_at',
+                'heading' => get_string('section_submission_date', 'rb_source_perform_response'),
             ],
         ];
+
+        // Element plugins can add additional default columns
+        $plugins = element_plugin::get_element_plugins();
+        foreach ($plugins as $plugin) {
+            if (!$plugin->get_response_report_builder_helper()) {
+                continue;
+            }
+
+            $helper = $plugin->get_response_report_builder_helper();
+            $default_columns = array_merge($default_columns, $helper->get_default_columns());
+        }
+
+        return $default_columns;
     }
 
     /**
@@ -323,7 +425,20 @@ class rb_source_perform_response_base extends rb_base_source {
      * @return array
      */
     public static function get_default_filters() {
-        return [];
+        $default_filters = [];
+
+        // Element plugins can add additional default filters
+        $plugins = element_plugin::get_element_plugins();
+        foreach ($plugins as $plugin) {
+            if (!$plugin->get_response_report_builder_helper()) {
+                continue;
+            }
+
+            $helper = $plugin->get_response_report_builder_helper();
+            $default_filters = array_merge($default_filters, $helper->get_default_filters());
+        }
+
+        return $default_filters;
     }
 
     /**
@@ -364,12 +479,12 @@ class rb_source_perform_response_base extends rb_base_source {
             ),
             new rb_param_option(
                 'element_id',
-                'section_element.element_id',
-                'section_element'
+                $this->get_element_id_filter_column('perform_element.id'),
+                'perform_element'
             ),
             new rb_param_option(
                 'element_identifier',
-                'perform_element.identifier_id',
+                $this->get_element_identifier_filter_column('perform_element.identifier_id'),
                 'perform_element'
             ),
         ];

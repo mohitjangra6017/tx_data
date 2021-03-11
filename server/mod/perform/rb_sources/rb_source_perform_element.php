@@ -76,7 +76,8 @@ class rb_source_perform_element extends rb_base_source {
                 'section_element',
                 'INNER',
                 '{perform_section_element}',
-                'base.id = section_element.element_id',
+                '(base.parent IS NULL AND base.id = section_element.element_id) 
+                    OR (base.parent = section_element.element_id)',
                 REPORT_BUILDER_RELATION_ONE_TO_ONE
             )
         );
@@ -282,7 +283,7 @@ class rb_source_perform_element extends rb_base_source {
             ),
             new rb_param_option(
                 'element_id',
-                'section_element.element_id',
+                'base.id',
                 'section_element'
             ),
             new rb_param_option(

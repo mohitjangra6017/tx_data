@@ -43,7 +43,7 @@ final class content_type_factory {
      * Return a collection of all content type classes in the system.
      * Note that content_type class name strings are returned, and not actual instances.
      *
-     * @return string|content_type[]|collection
+     * @return string[]|content_type[]|collection
      */
     public static function get_all(): collection {
         if (!isset(static::$type_classes)) {
@@ -58,7 +58,7 @@ final class content_type_factory {
      * Return a collection of content type classes that are enabled and can be displayed.
      * Note that content_type class name strings are returned, and not actual instances.
      *
-     * @return string|content_type[]|collection
+     * @return string[]|content_type[]|collection
      */
     public static function get_all_enabled(): collection {
         return static::get_all()->filter(static function ($type) {

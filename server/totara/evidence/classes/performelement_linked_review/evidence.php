@@ -24,6 +24,7 @@
 namespace totara_evidence\performelement_linked_review;
 
 use performelement_linked_review\content_type;
+use performelement_linked_review\rb\helper\content_type_response_report;
 use totara_core\advanced_feature;
 use totara_evidence\entity\evidence_item;
 
@@ -107,5 +108,9 @@ class evidence extends content_type {
      */
     public function load_content_items(int $user_id, array $content_ids, int $created_at): array {
         return [];
+    }
+
+    public static function get_response_report_helper(): content_type_response_report {
+        return new response_report();
     }
 }

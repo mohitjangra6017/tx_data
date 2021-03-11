@@ -30,8 +30,10 @@ use mod_perform\models\activity\element;
 use mod_perform\models\activity\helpers\child_element_config as base_child_element_config;
 use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\models\response\section_element_response;
-use performelement_linked_review\helpers\content_element_response_builder;
-use performelement_linked_review\helpers\content_element_response_validator;
+use mod_perform\rb\helper\element_plugin_response_report_builder;
+use performelement_linked_review\helper\content_element_response_builder;
+use performelement_linked_review\helper\content_element_response_validator;
+use performelement_linked_review\rb\helper\response_report_builder;
 use totara_core\entity\relationship;
 use totara_core\relationship\relationship as relationship_model;
 
@@ -258,4 +260,10 @@ class linked_review extends respondable_element_plugin {
         return new child_element_config();
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function get_response_report_builder_helper(): ?element_plugin_response_report_builder {
+        return new response_report_builder();
+    }
 }

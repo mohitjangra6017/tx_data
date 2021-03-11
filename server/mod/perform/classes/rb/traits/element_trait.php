@@ -43,6 +43,41 @@ trait element_trait {
     protected $element_join = null;
 
     /**
+     * If an element plugin wants to override the id field it needs to be added in this array
+     *
+     * @var array
+     */
+    protected $element_plugin_override_id = [];
+
+    /**
+     * If an element plugin wants to override the title field it needs to be added in this array
+     *
+     * @var array
+     */
+    protected $element_plugin_override_title = [];
+
+    /**
+     * If an element plugin wants to override the type (aka plugin_name) field it needs to be added in this array
+     *
+     * @var array
+     */
+    protected $element_plugin_override_type = [];
+
+    /**
+     * If an element plugin wants to override the identifier field it needs to be added in this array
+     *
+     * @var array
+     */
+    protected $element_plugin_override_identifier = [];
+
+    /**
+     * If an element plugin wants to override the require field it needs to be added in this array
+     *
+     * @var array
+     */
+    protected $element_plugin_override_required = [];
+
+    /**
      * Add element info where element is the base table.
      *
      * @throws coding_exception
@@ -63,6 +98,66 @@ trait element_trait {
         $this->add_element_joins();
         $this->add_element_columns();
         $this->add_element_filters();
+    }
+
+    /**
+     * Allows a plugin to override the id column field. This is part of the report builder sql statement.
+     *
+     * @param string $plugin_name
+     * @param string $id
+     */
+    protected function set_element_plugin_override_id(string $plugin_name, string $id) {
+        if (!empty($id)) {
+            $this->element_plugin_override_id[$plugin_name] = $id;
+        }
+    }
+
+    /**
+     * Allows a plugin to override the title column field. This is part of the report builder sql statement.
+     *
+     * @param string $plugin_name
+     * @param string $title
+     */
+    protected function set_element_plugin_override_title(string $plugin_name, string $title) {
+        if (!empty($title)) {
+            $this->element_plugin_override_title[$plugin_name] = $title;
+        }
+    }
+
+    /**
+     * Allows a plugin to override the type column field. This is part of the report builder sql statement.
+     *
+     * @param string $plugin_name
+     * @param string $type
+     */
+    protected function set_element_plugin_override_type(string $plugin_name, string $type) {
+        if (!empty($type)) {
+            $this->element_plugin_override_type[$plugin_name] = $type;
+        }
+    }
+
+    /**
+     * Allows a plugin to override the idnumber column field. This is part of the report builder sql statement.
+     *
+     * @param string $plugin_name
+     * @param string $identifier
+     */
+    protected function set_element_plugin_override_identifier(string $plugin_name, string $identifier) {
+        if (!empty($identifier)) {
+            $this->element_plugin_override_identifier[$plugin_name] = $identifier;
+        }
+    }
+
+    /**
+     * Allows a plugin to override the required column field. This is part of the report builder sql statement.
+     *
+     * @param string $plugin_name
+     * @param string $required
+     */
+    protected function set_element_plugin_override_required(string $plugin_name, string $required) {
+        if (!empty($required)) {
+            $this->element_plugin_override_required[$plugin_name] = $required;
+        }
     }
 
     /**
@@ -122,27 +217,28 @@ trait element_trait {
             'element',
             'title',
             get_string('question_title', 'mod_perform'),
-            "{$join}.title",
+            $this->get_element_title_field("{$join}.title"),
             [
                 'joins' => [$join],
                 'dbdatatype' => 'text',
                 'outputformat' => 'text',
-                'displayfunc' => 'format_string'
+                'displayfunc' => 'format_string',
             ]
         );
 
         // Element identifier is known to end users as Reporting ID.
         $identifier_table_alias = "perform_element_identifier_{$join}";
+
         $this->columnoptions[] = new rb_column_option(
             'element',
             'identifier',
             get_string('element_identifier', 'mod_perform'),
-            "{$identifier_table_alias}.identifier",
+            $this->get_element_identifier_field("{$identifier_table_alias}.identifier"),
             [
                 'joins' => [$join, $identifier_table_alias],
                 'dbdatatype' => 'text',
                 'outputformat' => 'text',
-                'displayfunc' => 'format_string'
+                'displayfunc' => 'format_string',
             ]
         );
 
@@ -150,7 +246,7 @@ trait element_trait {
             'element',
             'is_required',
             get_string('element_is_required', 'mod_perform'),
-            "{$join}.is_required",
+            $this->get_element_required_field("{$join}.is_required"),
             [
                 'displayfunc' => 'yes_or_no',
                 'dbdatatype' => 'boolean',
@@ -162,13 +258,74 @@ trait element_trait {
             'element',
             'type',
             get_string('element_type', 'mod_perform'),
-            "{$join}.plugin_name",
+            $this->get_element_type_field("{$join}.plugin_name"),
             [
                 'joins' => [$join],
                 'displayfunc' => 'element_type',
             ]
         );
     }
+
+    /**
+     * Returns the field name for the title, which could be different on a per-plugin base
+     *
+     * @param string $default
+     * @return string
+     */
+    private function get_element_title_field(string $default): string {
+        return $this->build_conditional_field($this->element_plugin_override_title, $default);
+    }
+
+    /**
+     * Returns the field name for the type, which could be different on a per-plugin base
+     *
+     * @param string $default
+     * @return string
+     */
+    private function get_element_type_field(string $default): string {
+        return $this->build_conditional_field($this->element_plugin_override_type, $default);
+    }
+
+    /**
+     * Returns the field name for the identifier, which could be different on a per-plugin base
+     *
+     * @param string $default
+     * @return string
+     */
+    private function get_element_identifier_field(string $default): string {
+        return $this->build_conditional_field($this->element_plugin_override_identifier, $default);
+    }
+
+    /**
+     * Returns the field name for required, which could be different on a per-plugin base
+     *
+     * @param string $default
+     * @return string
+     */
+    private function get_element_required_field(string $default): string {
+        return $this->build_conditional_field($this->element_plugin_override_required, $default);
+    }
+
+    /**
+     * Depending on whether there's an override either builds a CASE statement or directly returns the default field
+     *
+     * @param array $override
+     * @param string $default
+     * @return string
+     */
+    private function build_conditional_field(array $override, string $default): string {
+        $field = $default;
+        if (!empty($override)) {
+            $field = "CASE ";
+            foreach ($override as $plugin_name => $override) {
+                $field .= " WHEN {$this->element_join}.plugin_name = '{$plugin_name}' THEN {$override}";
+            }
+            $field .= " ELSE {$default} END";
+        }
+
+        return $field;
+    }
+
 
     /**
      * Add filteroptions for elements to report.
@@ -212,5 +369,72 @@ trait element_trait {
         return array_map(function (element_plugin $element) {
             return $element->get_name();
         }, $respondable_elements);
+    }
+
+
+    /**
+     * Element plugins can add extend the element_id filter column. Currently the
+     * only achievable way is to create a COALESCE and therefore the order of plugins could
+     * make a difference to what column is used. Without greater changes to the structure this
+     * is currently the most practical but not 100% reliable way.
+     *
+     * @param string $default_column
+     * @return string
+     */
+    protected function get_element_id_filter_column(string $default_column): string {
+        $element_id_filter_columns = [];
+        $plugins = element_plugin::get_element_plugins();
+        foreach ($plugins as $plugin) {
+            if ($helper = $plugin->get_response_report_builder_helper()) {
+                $filter_column = $helper->get_element_id_filter_column();
+                if (!empty($filter_column)) {
+                    $element_id_filter_columns[] = $filter_column;
+                }
+            }
+        }
+
+        return $this->create_filter_coalesce($element_id_filter_columns, $default_column);
+    }
+
+    /**
+     * Element plugins can add extend the element_identifier filter column.
+     * See @see element_trait::get_element_id_filter_column() for more information
+     *
+     * @param string $default_column
+     * @return string
+     */
+    protected function get_element_identifier_filter_column(string $default_column): string {
+        $element_identifier_filter_columns = [];
+        $plugins = element_plugin::get_element_plugins();
+        foreach ($plugins as $plugin) {
+            if ($helper = $plugin->get_response_report_builder_helper()) {
+                $filter_column = $helper->get_element_identifier_filter_column();
+                if (!empty($filter_column)) {
+                    $element_identifier_filter_columns[] = $filter_column;
+                }
+            }
+        }
+
+        return $this->create_filter_coalesce($element_identifier_filter_columns, $default_column);
+    }
+
+    /**
+     * Build coalesce which we need for the filtering over multiple columns
+     *
+     * @param array $filter_columns
+     * @param string $default_column
+     * @return string
+     */
+    private function create_filter_coalesce(array $filter_columns, string $default_column): string {
+        $filter_by = $default_column;
+        if (!empty($filter_columns)) {
+            $filter_by = 'COALESCE(';
+            foreach ($filter_columns as $column) {
+                $filter_by .= "{$column}, ";
+            }
+            $filter_by .= "{$default_column})";
+        }
+
+        return $filter_by;
     }
 }

@@ -24,6 +24,7 @@
 namespace performelement_linked_review;
 
 use context;
+use performelement_linked_review\rb\helper\content_type_response_report;
 
 /**
  * This is the base class for all linked review content types.
@@ -149,5 +150,12 @@ abstract class content_type {
      * @return array the array needs to be keyed by the id of the item
      */
     abstract public function load_content_items(int $user_id, array $content_ids, int $created_at): array;
+
+    /**
+     * Returns helper for the content type needed for the response report
+     *
+     * @return content_type_response_report
+     */
+    abstract public static function get_response_report_helper(): content_type_response_report;
 
 }

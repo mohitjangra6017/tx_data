@@ -97,3 +97,4 @@ information provided here is intended especially for developers.
 * Deprecated mod_perform\data_providers\activity\activity::DEFAULT_SORTING use mod_perform\data_providers\activity\activity::SORT_BY_CREATION_DATE instead.
 * Abstract method \mod_perform\models\activity\element_plugin::validate_element() now has 'void' as return type. All child classes should be matched with the method signature
 * respondable_element_plugin::post_response_submission() has been deprecated, please use the \mod_perform\hook\post_element_response_submission hook instead.
+* A new pluggable system adds new columns related to the linked review element plugin to the "Performance activity response export" embedded report. To get those new columns the report needs to be either resetted or the new columns be added manually

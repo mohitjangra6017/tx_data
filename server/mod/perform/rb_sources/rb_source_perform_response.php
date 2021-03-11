@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Simon Coggins <simon.coggins@totaralearning.com>
+ * @author Fabian Derschatta <fabian.derschatta@totaralearning.com>
  * @package mod_perform
  *
  */
@@ -75,66 +76,6 @@ class rb_source_perform_response extends rb_source_perform_response_base {
         $restrictions = $this->create_course_visibility_restrictions($report, $restrictions);
 
         $report->set_post_config_restrictions($restrictions);
-    }
-
-    /**
-     * The default columns for this and embedded reports.
-     *
-     * @return array
-     */
-    public static function get_default_columns() {
-        return [
-            [
-                'type' => 'element',
-                'value' => 'identifier',
-                'heading' => get_string('element_identifier', 'mod_perform'),
-            ],
-            [
-                'type' => 'element',
-                'value' => 'type',
-                'heading' => get_string('element_type', 'mod_perform'),
-            ],
-            [
-                'type' => 'element',
-                'value' => 'title',
-                'heading' => get_string('element_title', 'rb_source_perform_response'),
-            ],
-            [
-                'type' => 'activity',
-                'value' => 'name',
-                'heading' => get_string('activity_name', 'rb_source_perform_response'),
-            ],
-            [
-                'type' => 'subject_user',
-                'value' => 'namelink',
-                'heading' => get_string('subject_name', 'rb_source_perform_response'),
-            ],
-            [
-                'type' => 'participant_instance',
-                'value' => 'participant_name',
-                'heading' => get_string('participant_name', 'rb_source_perform_response'),
-            ],
-            [
-                'type' => 'participant_instance',
-                'value' => 'relationship_name',
-                'heading' => get_string('participant_relationship_name', 'rb_source_perform_response'),
-            ],
-            [
-                'type' => 'participant_instance',
-                'value' => 'participant_email',
-                'heading' => get_string('participant_email', 'rb_source_perform_response'),
-            ],
-            [
-                'type' => 'response',
-                'value' => 'response_data',
-                'heading' => get_string('element_response', 'rb_source_perform_response'),
-            ],
-            [
-                'type' => 'participant_instance',
-                'value' => 'updated_at',
-                'heading' => get_string('section_submission_date', 'rb_source_perform_response'),
-            ],
-        ];
     }
 
 }

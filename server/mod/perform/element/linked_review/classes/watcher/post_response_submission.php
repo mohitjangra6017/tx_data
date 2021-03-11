@@ -24,7 +24,7 @@ namespace performelement_linked_review\watcher;
 
 use mod_perform\hook\post_element_response_submission;
 use mod_perform\hook\post_element_response_submission as post_element_response_submission_hook;
-use performelement_linked_review\helpers\content_element_response_submission;
+use performelement_linked_review\helper\content_element_response_submission;
 use performelement_linked_review\linked_review;
 
 /**

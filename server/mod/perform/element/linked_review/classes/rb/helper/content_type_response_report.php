@@ -15,14 +15,31 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
  * @package performelement_linked_review
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace performelement_linked_review\rb\helper;
 
-$plugin->version  = 2021031502;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020101200;       // Requires this Totara version.
-$plugin->component = 'performelement_linked_review'; // To check on upgrade, that module sits in correct place
+/**
+ * Content types have to implement this interface to make sure the right content name is displayed
+ */
+interface content_type_response_report {
+
+    /**
+     * Get joins to add for this particular content type
+     *
+     * @return array|\rb_join[]
+     */
+   public function get_content_joins(): array;
+
+    /**
+     * Get field name for the content to show (sql string)
+     *
+     * @return string
+     */
+   public function get_content_name_field(): string;
+
+}

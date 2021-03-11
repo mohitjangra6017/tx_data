@@ -25,6 +25,7 @@ namespace totara_competency\performelement_linked_review;
 
 use core\format;
 use performelement_linked_review\content_type;
+use performelement_linked_review\rb\helper\content_type_response_report;
 use totara_competency\data_providers\assignments;
 use totara_competency\entity\assignment;
 use totara_competency\entity\assignment as assignment_entity;
@@ -215,6 +216,13 @@ class competency_assignment extends content_type {
             ];
         }
         return $result;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_response_report_helper(): content_type_response_report {
+        return new response_report();
     }
 
 }

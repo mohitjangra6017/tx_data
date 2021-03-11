@@ -75,7 +75,7 @@ function xmldb_performelement_linked_review_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2021030100, 'performelement', 'linked_review');
     }
 
-    if ($oldversion < 2021030300) {
+    if ($oldversion < 2021031502) {
         $table = new xmldb_table('perform_element_linked_review_content');
         $content_type_field = new xmldb_field('content_type', XMLDB_TYPE_CHAR, '100', null, true, null, null, 'content_id');
 
@@ -88,10 +88,6 @@ function xmldb_performelement_linked_review_upgrade($oldversion) {
             $dbman->add_index($table, $index);
         }
 
-        upgrade_plugin_savepoint(true, 2021030300, 'performelement', 'linked_review');
-    }
-
-    if ($oldversion < 2021030301) {
         $records = $DB->get_records_sql("
             SELECT lc.id, e.data
             FROM {perform_element_linked_review_content} lc
@@ -101,16 +97,17 @@ function xmldb_performelement_linked_review_upgrade($oldversion) {
 
         foreach ($records as $record) {
             $decoded_content = json_decode($record->data, true);
-
-            $DB->set_field(
-                'perform_element_linked_review_content',
-                'content_type',
-                $decoded_content['content_type'],
-                ['id' => $record->id]
-            );
+            if (!empty($decoded_content['content_type'])) {
+                $DB->set_field(
+                    'perform_element_linked_review_content',
+                    'content_type',
+                    $decoded_content['content_type'],
+                    ['id' => $record->id]
+                );
+            }
         }
 
-        upgrade_plugin_savepoint(true, 2021030301, 'performelement', 'linked_review');
+        upgrade_plugin_savepoint(true, 2021031502, 'performelement', 'linked_review');
     }
 
     return true;

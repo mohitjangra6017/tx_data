@@ -55,6 +55,10 @@ trait response_formatter_trait {
             ->get_child_element_config()
             ->repeating_item_identifier;
 
+        if (empty($content_responses[$repeating_item_identifier])) {
+            return null;
+        }
+
         foreach ($content_responses[$repeating_item_identifier] as $content_id => &$content_response) {
             if (empty($content_response[$child_element_responses_identifier])) {
                 continue;

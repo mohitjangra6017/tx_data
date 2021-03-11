@@ -20,7 +20,7 @@
  * @author Kunle Odusan <kunle.odusan@totaralearning.com>
  */
 
-namespace performelement_linked_review\helpers;
+namespace performelement_linked_review\helper;
 
 /**
  * Base class for content element responses.
