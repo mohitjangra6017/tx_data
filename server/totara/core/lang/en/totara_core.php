@@ -886,6 +886,7 @@ $string['validation_invalid_max_length'] = 'Please enter no more than {$a->len} 
 $string['validation_invalid_min'] = 'Number must be {$a->min} or more';
 $string['validation_invalid_max'] = 'Number must be {$a->max} or less';
 $string['validation_invalid_color_value_hex'] = 'Value should begin with # followed by 6 valid hexadecimal code characters';
+$string['viewallx'] = 'View all {$a}';
 $string['viewchildren'] = 'View children';
 $string['viewmyteam'] = 'View My Team';
 $string['viewselected'] = 'View selected';
