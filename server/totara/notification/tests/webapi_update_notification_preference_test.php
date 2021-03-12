@@ -616,4 +616,104 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         self::assertInstanceOf(model::class, $preference);
         self::assertEquals($system_built_in->get_id(), $preference->get_id());
     }
+
+    /**
+     * @return void
+     */
+    public function test_update_custom_notification_preference_with_enabled_status(): void {
+        $generator = generator::instance();
+        $custom_notification = $generator->create_notification_preference(
+            mock_resolver::class,
+            extended_context::make_system(),
+            [
+                'recipient' => totara_notification_mock_recipient::class,
+                'enabled' => false
+            ]
+        );
+
+        self::assertFalse($custom_notification->get_enabled());
+        $this->setAdminUser();
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $custom_notification->get_id(),
+                'enabled' => true
+            ]
+        );
+
+        $custom_notification->refresh();
+        self::assertTrue($custom_notification->get_enabled());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_custom_notification_preference_with_enabled_status_and_without_parent(): void {
+        $generator = generator::instance();
+        $custom_notification = $generator->create_notification_preference(
+            mock_resolver::class,
+            extended_context::make_system(),
+            [
+                'recipient' => totara_notification_mock_recipient::class,
+                'enabled' => false
+            ]
+        );
+
+        self::assertFalse($custom_notification->get_enabled());
+        $this->setAdminUser();
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage(
+            "Cannot reset the field 'enabled' for custom notification that does not have parent(s)"
+        );
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $custom_notification->get_id(),
+                'enabled' => null
+            ]
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_custom_notification_preference_with_enabled_status_and_with_parent(): void {
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $notification_generator = generator::instance();
+        $system_notification = $notification_generator->create_notification_preference(
+            mock_resolver::class,
+            extended_context::make_system(),
+            [
+                'recipient' => totara_notification_mock_recipient::class,
+                'enabled' => false
+            ]
+        );
+
+        $course_notification = $notification_generator->create_overridden_notification_preference(
+            $system_notification,
+            extended_context::make_with_context(context_course::instance($course->id)),
+            ['enabled' => true]
+        );
+
+        self::assertFalse($system_notification->get_enabled());
+        self::assertTrue($course_notification->get_enabled());
+
+        $this->setAdminUser();
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $course_notification->get_id(),
+                'enabled' => null
+            ]
+        );
+        $system_notification->refresh();
+        $course_notification->refresh();
+
+        self::assertFalse($system_notification->get_enabled());
+        self::assertFalse($course_notification->get_enabled());
+    }
 }

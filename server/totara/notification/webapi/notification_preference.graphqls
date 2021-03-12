@@ -82,6 +82,14 @@ type totara_notification_notification_preference {
   The extended context of the notification.
   """
   extended_context: totara_notification_extended_context!
+  """
+  The enabled status of the notification.
+  """
+  enabled: Boolean
+  """
+  Whether the field 'enabled' is overridden
+  """
+  overridden_enabled: Boolean!
 }
 
 """
@@ -153,6 +161,7 @@ type totara_notification_notification_preference_value {
   schedule_offset(unit: totara_notification_schedule_offset_unit!): Int!
   schedule_type: totara_notification_schedule_type!
   recipient: totara_notification_recipient!
+  enabled: Boolean
 }
 
 extend type Mutation {
@@ -180,6 +189,7 @@ extend type Mutation {
     schedule_offset: param_integer
     schedule_type: param_text
     subject_format: param_integer
+    enabled: param_boolean
     """
     The class_name of recipient for the custom notification
     """
@@ -204,6 +214,7 @@ extend type Mutation {
     schedule_type: param_text
     subject_format: param_integer
     recipient: param_text
+    enabled: param_boolean
   ): totara_notification_notification_preference!
 
   """
@@ -223,6 +234,7 @@ extend type Mutation {
     subject: String!
     schedule_type: String!
     schedule_offset: Int!
+    enabled: Boolean
   ): [totara_notification_notification_preference_validation_result]!
 
   """

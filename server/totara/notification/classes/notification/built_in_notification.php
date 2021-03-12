@@ -105,4 +105,11 @@ abstract class built_in_notification {
     public static function get_default_subject_format(): int {
         return FORMAT_JSON_EDITOR;
     }
+
+    /**
+     * @return bool
+     */
+    public static function get_default_enabled(): bool {
+        return true;
+    }
 }

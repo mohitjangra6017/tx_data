@@ -421,5 +421,19 @@ function xmldb_totara_notification_upgrade($old_version) {
         upgrade_plugin_savepoint(true, 2021032306, 'totara', 'notification');
     }
 
+    if ($old_version < 2021032500) {
+        // Define field subject_format to be added to notification_preference.
+        $table = new xmldb_table('notification_preference');
+        $field = new xmldb_field('enabled', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'schedule_offset');
+
+        // Conditionally launch add field subject_format.
+        if (!$db_manager->field_exists($table, $field)) {
+            $db_manager->add_field($table, $field);
+        }
+
+        // Notification savepoint reached.
+        upgrade_plugin_savepoint(true, 2021032500, 'totara', 'notification');
+    }
+
     return true;
 }

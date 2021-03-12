@@ -21,9 +21,8 @@
  * @package totara_notification
  */
 
-
-use core_phpunit\testcase;
 use core\orm\query\builder;
+use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\loader\notification_preference_loader;
@@ -33,6 +32,7 @@ use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\mutation\create_notification_preference;
 use totara_notification_mock_built_in_notification as mock_built_in;
 use totara_notification_mock_notifiable_event_resolver as mock_resolver;
+use totara_notification_mock_recipient as mock_recipient;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 class totara_notification_webapi_create_notification_preference_testcase extends testcase {
@@ -117,6 +117,8 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_on_event::identifier(),
                 'schedule_offset' => 0,
+                'enabled' => true,
+                'recipient' => mock_recipient::class,
             ]
         );
     }
@@ -146,6 +148,8 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_on_event::identifier(),
                 'schedule_offset' => 0,
+                'enabled' => true,
+                'recipient' => mock_recipient::class,
             ]
         );
     }
@@ -175,6 +179,8 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'subject' => 'This is subject',
                 'schedule_type' => schedule_on_event::identifier(),
                 'schedule_offset' => 0,
+                'enabled' => true,
+                'recipient' => mock_recipient::class,
             ]
         );
     }
@@ -204,6 +210,8 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_on_event::identifier(),
                 'schedule_offset' => 0,
+                'enabled' => true,
+                'recipient' => mock_recipient::class,
             ]
         );
     }
@@ -233,6 +241,39 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_on_event::identifier(),
                 'schedule_offset' => 0,
+                'enabled' => true,
+                'recipient' => mock_recipient::class,
+            ]
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_custom_notification_with_missing_enabled_field(): void {
+        $this->setAdminUser();
+
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("The record data does not have required field 'enabled'");
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(create_notification_preference::class),
+            [
+                'extended_context' => [
+                    'context_id' => context_course::instance($course->id)->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
+                'body' => 'This is body',
+                'subject' => 'This is subject',
+                'body_format' => FORMAT_MOODLE,
+                'subject_format' => FORMAT_PLAIN,
+                'schedule_type' => schedule_on_event::identifier(),
+                'schedule_offset' => 0,
+                'title' => 'This is title',
+                'recipient' => mock_recipient::class
             ]
         );
     }
@@ -263,6 +304,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'schedule_type' => schedule_on_event::identifier(),
                 'schedule_offset' => 0,
                 'recipient' => totara_notification_mock_recipient::class,
+                'enabled' => true,
             ]
         );
 

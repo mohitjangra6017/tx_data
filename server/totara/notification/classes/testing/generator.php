@@ -131,6 +131,7 @@ final class generator extends component_generator {
      * + subject_format: Int
      * + recipient: String
      * + schedule_offset: Int
+     * + enabled: Boolean
      *
      * @param array                 $data
      * @param extended_context|null $extended_context
@@ -177,6 +178,7 @@ final class generator extends component_generator {
             $data['title'] = $data['title'] ?? 'This is title';
             $data['subject'] = $data['subject'] ?? 'This is a subject';
             $data['schedule_offset'] = $data['schedule_offset'] ?? 0;
+            $data['enabled'] = $data['enabled'] ?? true;
         }
 
         if (isset($data['body']) && isset($data['body_format'])) {
@@ -210,6 +212,7 @@ final class generator extends component_generator {
         $builder->set_title($data['title'] ?? null);
         $builder->set_schedule_offset($data['schedule_offset'] ?? null);
         $builder->set_recipient($data['recipient'] ?? null);
+        $builder->set_enabled($data['enabled'] ?? null);
 
         return $builder->save();
     }
@@ -247,6 +250,7 @@ final class generator extends component_generator {
             'body_format' => $overridden_data['body_format'] ?? null,
             'subject_format' => $overridden_data['subject_format'] ?? null,
             'recipient' => $overridden_data['recipient'] ?? null,
+            'enabled' => $overridden_data['enabled'] ?? null
         ];
 
         if (!$preference->has_parent()) {

@@ -28,6 +28,7 @@ use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_preference;
 use totara_notification\testing\generator;
 use totara_notification_mock_notifiable_event_resolver as mock_resolver;
+use totara_notification_mock_recipient as mock_recipient;
 
 class totara_notification_notification_preference_builder_testcase extends testcase {
     /**
@@ -54,6 +55,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_subject('subject');
         $builder->set_subject_format(FORMAT_PLAIN);
         $builder->set_schedule_offset(0);
+        $builder->set_enabled(true);
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("The record data does not have required field 'body'");
@@ -75,6 +77,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_subject('subject');
         $builder->set_subject_format(FORMAT_PLAIN);
         $builder->set_schedule_offset(0);
+        $builder->set_enabled(true);
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("The record data does not have required field 'title'");
@@ -96,6 +99,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_body_format(FORMAT_PLAIN);
         $builder->set_subject_format(FORMAT_PLAIN);
         $builder->set_schedule_offset(0);
+        $builder->set_enabled(true);
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("The record data does not have required field 'subject'");
@@ -117,6 +121,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_subject('subject');
         $builder->set_subject_format(FORMAT_PLAIN);
         $builder->set_schedule_offset(0);
+        $builder->set_enabled(true);
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("The record data does not have required field 'body_format'");
@@ -138,9 +143,34 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_subject('subject');
         $builder->set_body_format(FORMAT_PLAIN);
         $builder->set_schedule_offset(0);
+        $builder->set_enabled(true);
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("The record data does not have required field 'subject_format'");
+
+        $builder->save();
+    }
+
+
+    /**
+     * @return void
+     */
+    public function test_create_of_custom_notification_with_no_required_field_enabled(): void {
+        $builder = new notification_preference_builder(
+            mock_resolver::class,
+            extended_context::make_with_context(context_system::instance())
+        );
+
+        $builder->set_subject('Subject');
+        $builder->set_title('title');
+        $builder->set_body('body');
+        $builder->set_body_format(FORMAT_PLAIN);
+        $builder->set_subject_format(FORMAT_PLAIN);
+        $builder->set_recipient(mock_recipient::class);
+        $builder->set_schedule_offset(0);
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("The record data does not have required field 'enabled'");
 
         $builder->save();
     }
@@ -162,6 +192,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_body_format(FORMAT_PLAIN);
         $builder->set_subject_format(FORMAT_PLAIN);
         $builder->set_schedule_offset(0);
+        $builder->set_enabled(true);
         $builder->set_recipient(totara_notification_mock_recipient::class);
 
         $preference = $builder->save();

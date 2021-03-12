@@ -182,6 +182,14 @@ class notification_preference_builder {
     }
 
     /**
+     * @param bool|null $enabled
+     * @return void
+     */
+    public function set_enabled(?bool $enabled): void {
+        $this->record_data['enabled'] = $enabled;
+    }
+
+    /**
      * Parameter should safe us from modifying data via references.
      * Note that this function is set out to be static, because we would not want this function to
      * interact with any instance's data of the class at all. Treat it like a helper function
@@ -289,7 +297,8 @@ class notification_preference_builder {
                     'title',
                     'schedule_offset',
                     'subject_format',
-                    'recipient'
+                    'recipient',
+                    'enabled'
                 ];
 
                 foreach ($required_fields as $required_field) {
@@ -322,28 +331,22 @@ class notification_preference_builder {
                     }
                 }
 
-                $format_keys = [
+                // Special treatment for these keys', because the value of these fields
+                // can be set to zero or FALSE, which it can make the validation go wrong easily.
+                $special_keys = [
                     'body_format',
-                    'subject_format'
+                    'subject_format',
+                    'schedule_offset',
+                    'enabled'
                 ];
 
-                foreach ($format_keys as $format_key) {
-                    if (array_key_exists($format_key, $this->record_data) && null === $this->record_data[$format_key]) {
-                        // Special treatment for 'body_format', because the value of the field 'body_format'
-                        // can be set to zero, which it will make the validation go wrong easily.
+                foreach ($special_keys as $special_key) {
+                    if (array_key_exists($special_key, $this->record_data) && null === $this->record_data[$special_key]) {
                         throw new coding_exception(
-                            "Cannot reset the field '{$format_key}' for custom " .
+                            "Cannot reset the field '{$special_key}' for custom " .
                             "notification that does not have parent(s)"
                         );
                     }
-                }
-
-                if (array_key_exists('schedule_offset', $this->record_data) && null === $this->record_data['schedule_offset']) {
-                    // Like body_format, schedule_offset can be a valid 0 therefore we cannot use empty to check.
-                    throw new coding_exception(
-                        "Cannot reset the field 'schedule_offset' for custom " .
-                        "notification that does not have parent(s)"
-                    );
                 }
             }
         }

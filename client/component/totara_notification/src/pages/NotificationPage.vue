@@ -470,6 +470,7 @@ export default {
       schedule_offset,
       subject_format,
       recipient,
+      enabled,
     }) {
       const variables = {
         body,
@@ -482,6 +483,7 @@ export default {
         schedule_type,
         schedule_offset,
         recipient,
+        enabled,
       };
 
       // When area, component and item id are all set together, we pass them to mutation.
@@ -494,7 +496,6 @@ export default {
         variables.extended_context_component = this.extendedContext.component;
         variables.extended_context_item_id = this.extendedContext.itemId;
       }
-
       await this.$apollo.mutate({
         mutation: createCustomNotification,
         variables,
@@ -628,6 +629,7 @@ export default {
       schedule_offset,
       subject_format,
       recipient,
+      enabled,
     }) {
       if (!this.targetPreference) {
         throw new Error('Cannot run update while target preference is empty');
@@ -650,6 +652,7 @@ export default {
           schedule_type,
           schedule_offset,
           recipient,
+          enabled,
         },
         update: (
           proxy,

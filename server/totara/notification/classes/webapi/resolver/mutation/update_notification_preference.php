@@ -127,6 +127,10 @@ class update_notification_preference implements mutation_resolver, has_middlewar
             $builder->set_recipient($recipient);
         }
 
+        if (array_key_exists('enabled', $args)) {
+            $builder->set_enabled($args['enabled']);
+        }
+
         return $builder->save();
     }
 

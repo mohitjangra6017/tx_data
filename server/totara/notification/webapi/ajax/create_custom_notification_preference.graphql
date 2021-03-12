@@ -13,6 +13,7 @@ mutation totara_notification_create_custom_notification_preference(
   $schedule_offset: param_integer!
   $subject_format: param_integer!
   $recipient: param_text!
+  $enabled: param_boolean!
 ) {
   notification_preference: totara_notification_create_notification_preference(
     extended_context: {
@@ -30,6 +31,7 @@ mutation totara_notification_create_custom_notification_preference(
     schedule_offset: $schedule_offset
     subject_format: $subject_format
     recipient: $recipient
+    enabled: $enabled
   ) {
     __typename
     title
@@ -52,10 +54,12 @@ mutation totara_notification_create_custom_notification_preference(
     schedule_type
     schedule_label
     overridden_schedule
+    overridden_enabled
     recipient {
       class_name
       name
     }
+    enabled
     extended_context {
       component
       context_id

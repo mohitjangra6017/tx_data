@@ -68,17 +68,23 @@ class notification_preference_value {
     private $subject_format;
 
     /**
+     * @var bool|null
+     */
+    private $enabled;
+
+    /**
      * notification_preference_value constructor.
-     * @param string   $body
-     * @param string   $subject
-     * @param string   $title
-     * @param int      $schedule_offset
-     * @param string   $recipient
-     * @param int|null $body_format
-     * @param int|null $subject_format
+     * @param string    $body
+     * @param string    $subject
+     * @param string    $title
+     * @param int       $schedule_offset
+     * @param string    $recipient
+     * @param int|null  $body_format
+     * @param int|null  $subject_format
+     * @param bool|null $enabled
      */
     private function __construct(string $body, string $subject, string $title, int $schedule_offset, string $recipient,
-                                 ?int $body_format = null, ?int $subject_format = null) {
+                                 ?int $body_format = null, ?int $subject_format = null, ?bool $enabled = false) {
         $this->body = $body;
         $this->subject = $subject;
         $this->title = $title;
@@ -86,6 +92,7 @@ class notification_preference_value {
         $this->recipient = $recipient;
         $this->body_format = $body_format ?? FORMAT_MOODLE;
         $this->subject_format = $subject_format ?? FORMAT_JSON_EDITOR;
+        $this->enabled = $enabled;
     }
 
     /**
@@ -105,12 +112,14 @@ class notification_preference_value {
          * @see built_in_notification::get_default_subject_format()
          * @see built_in_notification::get_default_schedule_offset()
          * @see built_in_notification::get_recipient_class_name()
+         * @see built_in_notification::get_enabled()
          *
          * @var string      $built_in_class_name
          * @var lang_string $body
          * @var lang_string $subject
          * @var string      $title
          * @var int         $body_format
+         * @var bool        $enabled
          */
         $body = $built_in_class_name::get_default_body();
         $subject = $built_in_class_name::get_default_subject();
@@ -119,6 +128,7 @@ class notification_preference_value {
         $schedule_offset = $built_in_class_name::get_default_schedule_offset();
         $recipient = $built_in_class_name::get_recipient_class_name();
         $subject_format = $built_in_class_name::get_default_subject_format();
+        $enabled = $built_in_class_name::get_default_enabled();
 
         return new static(
             $body,
@@ -127,7 +137,8 @@ class notification_preference_value {
             $schedule_offset,
             $recipient,
             $body_format,
-            $subject_format
+            $subject_format,
+            $enabled
         );
     }
 
@@ -146,7 +157,8 @@ class notification_preference_value {
             $model->get_schedule_offset(),
             $model->get_recipient(),
             $model->get_body_format(),
-            $model->get_subject_format()
+            $model->get_subject_format(),
+            $model->get_enabled()
         );
     }
 
@@ -197,5 +209,12 @@ class notification_preference_value {
      */
     public function get_recipient(): string {
         return $this->recipient;
+    }
+
+    /**
+     * @return bool
+     */
+    public function get_enabled(): ?bool {
+        return $this->enabled;
     }
 }

@@ -244,6 +244,26 @@
       </template>
     </FormRow>
 
+    <FormRow
+      v-slot="{ id }"
+      :label="$str('notification_status_label', 'totara_notification')"
+    >
+      <ToggleSwitch
+        v-if="showCustomCheckBoxes"
+        :aria-label="$str('enable_custom_status', 'totara_notification')"
+        :value="customisation.enabled"
+        @input="customisation.enabled = $event"
+      />
+
+      <FormCheckbox
+        :id="id"
+        :name="['enabled', 'value']"
+        :disabled="showCustomCheckBoxes && !customisation.enabled"
+      >
+        {{ $str('enabled', 'totara_core') }}
+      </FormCheckbox>
+    </FormRow>
+
     <FormRow>
       <ButtonGroup class="tui-notificationPreferenceForm__buttonGroup">
         <Button
@@ -261,6 +281,7 @@
 
 <script>
 import {
+  FormCheckbox,
   FormField,
   FormRadioGroup,
   FormRadioWithInput,
@@ -334,6 +355,12 @@ function createFormValues(currentPreference, parentValue) {
     recipient: currentPreference.recipient
       ? currentPreference.recipient.class_name
       : null,
+    enabled: {
+      value:
+        !parentValue || currentPreference.overridden_enabled
+          ? currentPreference.enabled
+          : parentValue.enabled,
+    },
   };
 
   // Set the default offset values (it involves a little bit of looking at schedule_type).
@@ -385,6 +412,7 @@ function createFormValues(currentPreference, parentValue) {
 export default {
   components: {
     Uniform,
+    FormCheckbox,
     FormField,
     FormRow,
     FormText,
@@ -445,6 +473,8 @@ export default {
           this.preference.overridden_schedule || Boolean(!this.parentValue),
         recipient:
           this.preference.overridden_recipient || Boolean(!this.parentValue),
+        enabled:
+          this.preference.overridden_enabled || Boolean(!this.parentValue),
       },
       errors: null,
       formInitialValues: createFormValues(this.preference, this.parentValue),
@@ -658,6 +688,7 @@ export default {
           ? null
           : formValue.schedule_offset[formValue.schedule_type.value],
         recipient: formValue.recipient,
+        enabled: !this.customisation.enabled ? null : formValue.enabled.value,
       };
 
       this.$emit('submit', parameters);
@@ -725,6 +756,7 @@ export default {
     "notification_body_label",
     "notification_title_label",
     "notification_schedule_label",
+    "notification_status_label",
     "notification_subject_label",
     "enable_custom_schedule",
     "enable_custom_subject",
@@ -736,10 +768,12 @@ export default {
     "schedule_label_after_event",
     "enable_custom_body",
     "enable_custom_recipient",
+    "enable_custom_status",
     "recipient"
   ],
   "totara_core": [
-    "save"
+    "save",
+    "enabled"
   ],
   "core": [
     "required"

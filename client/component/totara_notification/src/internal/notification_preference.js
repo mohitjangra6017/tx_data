@@ -26,6 +26,7 @@ export const NOTIFICATION_PREFERENCE_KEYS = [
   'schedule_offset',
   'subject_format',
   'recipient',
+  'enabled',
 ];
 
 export const SCHEDULE_TYPES = {
@@ -99,6 +100,7 @@ export function getDefaultNotificationPreference(extraAttributes = {}) {
     schedule_type: SCHEDULE_TYPES.ON_EVENT,
     schedule_offset: null,
     recipient: null,
+    enabled: false,
   };
 
   return () => {

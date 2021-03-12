@@ -25,6 +25,9 @@ Feature: Sending custom notifications to user
     And I set the field "Name" to "Custom notification one"
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test custom notification subject"
     And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Test custom notification body"
+    # The status field that handled by TUI form. At this point it does not understand the label associated with it.
+    # Hence we are going to have to use the checkbox's field name.
+    And I click on the "enabled[value]" tui checkbox
     And I click on "Save" "button"
     Then I should see "Custom notification one"
 
@@ -66,6 +69,9 @@ Feature: Sending custom notifications to user
     And I set the field "Name" to "Custom notification one"
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Custom notification subject"
     And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Custom notification body"
+    # The status field that handled by TUI form. At this point it does not understand the label associated with it.
+    # Hence we are going to have to use the checkbox's field name.
+    And I click on the "enabled[value]" tui checkbox
     And I click on "Save" "button"
     And the following "courses" exist:
       | fullname | shortname | format |
@@ -116,6 +122,9 @@ Feature: Sending custom notifications to user
     And I set the field "Name" to "Custom notification one"
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test custom notification subject"
     And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Test custom notification body"
+    # The status field that handled by TUI form. At this point it does not understand the label associated with it.
+    # Hence we are going to have to use the checkbox's field name.
+    And I click on the "enabled[value]" tui checkbox
     And I click on "Save" "button"
     And I log out
 

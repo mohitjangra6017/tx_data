@@ -162,6 +162,11 @@ class scheduled_event_manager {
                     continue;
                 }
 
+                // Skip disabled preferences
+                if (!$preference->get_enabled()) {
+                    continue;
+                }
+
                 // Checking each preference regarding to the time sending.
                 if ($preference->is_in_time_window($fixed_event_time, $current_window)) {
                     // Fixed event time is within the time frame - therefore we can queue it.

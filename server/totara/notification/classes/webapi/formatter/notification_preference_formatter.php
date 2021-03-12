@@ -55,6 +55,8 @@ class notification_preference_formatter extends formatter {
         $record->overridden_schedule = $notification_preference->is_overridden_schedule();
         $record->subject_format = $notification_preference->get_subject_format();
         $record->recipient = $notification_preference->get_recipient();
+        $record->enabled = $notification_preference->get_enabled();
+        $record->overridden_enabled = $notification_preference->is_overridden_enabled();
 
         parent::__construct($record, $context);
     }
@@ -160,6 +162,8 @@ class notification_preference_formatter extends formatter {
             'resolver_class_name' => null,
             'is_custom' => null,
             'recipient' => null,
+            'enabled' => null,
+            'overridden_enabled' => null,
         ];
     }
 }

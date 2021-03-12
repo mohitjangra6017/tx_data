@@ -125,11 +125,14 @@ class create_notification_preference implements mutation_resolver, has_middlewar
             $builder->set_notification_class_name($notification_class_name);
         }
 
+        // Note: builder is able to validate the input data depending on the cases:
+        //       either create new custom notification preference or overridden record.
         $builder->set_title($args['title'] ?? null);
         $builder->set_body($args['body'] ?? null);
         $builder->set_subject($args['subject'] ?? null);
         $builder->set_body_format($args['body_format'] ?? null);
         $builder->set_subject_format($args['subject_format'] ?? null);
+        $builder->set_enabled($args['enabled'] ?? null);
 
         // Schedule works in a pair, but writes to a single value.
         $schedule_type = $args['schedule_type'] ?? null;

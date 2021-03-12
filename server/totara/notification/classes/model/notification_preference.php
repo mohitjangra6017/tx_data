@@ -226,6 +226,7 @@ class notification_preference {
      * + @see built_in_notification::get_default_body_format()
      * + @see built_in_notification::get_default_subject_format()
      * + @see built_in_notification::get_default_schedule_offset()
+     * + @see built_in_notification::get_default_enabled()
      *
      * @param string $attribute_name
      * @return mixed|null
@@ -249,6 +250,7 @@ class notification_preference {
             'subject_format' => 'get_default_subject_format',
             'recipient' => 'get_recipient_class_name',
             'body_format' => 'get_default_body_format',
+            'enabled' => 'get_default_enabled',
         ];
 
         if (!isset($map_methods[$attribute_name])) {
@@ -329,6 +331,23 @@ class notification_preference {
         }
 
         return $this->get_property_from_built_in_notification('title');
+    }
+
+    /**
+     * Is enabled?
+     *
+     * @return bool
+     */
+    public function get_enabled(): ?bool {
+        if (null !== $this->entity->enabled) {
+            return $this->entity->enabled;
+        }
+
+        if ($this->has_parent()) {
+            return $this->parent->get_enabled();
+        }
+
+        return $this->get_property_from_built_in_notification('enabled');
     }
 
     /**
@@ -432,6 +451,13 @@ class notification_preference {
      */
     public function is_overridden_recipient(): bool {
         return !empty($this->entity->recipient);
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_overridden_enabled(): bool {
+        return $this->entity->enabled !== null;
     }
 
     /**

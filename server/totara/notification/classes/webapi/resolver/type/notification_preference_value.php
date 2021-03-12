@@ -123,6 +123,9 @@ class notification_preference_value implements type_resolver {
             case 'recipient':
                 return $source->get_recipient();
 
+            case 'enabled':
+                return $source->get_enabled();
+
             default:
                 throw new coding_exception(
                     "Invalid field '{$field}' is not yet supported"

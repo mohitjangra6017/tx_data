@@ -8,6 +8,7 @@ mutation totara_notification_update_notification_preference(
   $schedule_offset: param_integer
   $subject_format: param_integer
   $recipient: param_text
+  $enabled: param_boolean
 ) {
   notification_preference: totara_notification_update_notification_preference(
     id: $id
@@ -19,6 +20,7 @@ mutation totara_notification_update_notification_preference(
     schedule_offset: $schedule_offset
     subject_format: $subject_format
     recipient: $recipient
+    enabled: $enabled
   ) {
     __typename
     title
@@ -41,6 +43,8 @@ mutation totara_notification_update_notification_preference(
     schedule_type
     schedule_label
     overridden_schedule
+    enabled
+    overridden_enabled
     recipient {
       class_name
       name
@@ -60,6 +64,7 @@ mutation totara_notification_update_notification_preference(
       schedule_offset(unit: DAY)
       schedule_type
       subject_format
+      enabled
       recipient {
         class_name
         name

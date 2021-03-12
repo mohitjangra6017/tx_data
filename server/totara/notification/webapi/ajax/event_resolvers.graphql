@@ -35,6 +35,8 @@ query totara_notification_event_resolvers(
       schedule_type
       schedule_label
       overridden_schedule
+      enabled
+      overridden_enabled
       recipient {
         class_name
         name
@@ -54,6 +56,7 @@ query totara_notification_event_resolvers(
         schedule_offset(unit: DAY)
         schedule_type
         subject_format
+        enabled
         recipient {
           class_name
           name

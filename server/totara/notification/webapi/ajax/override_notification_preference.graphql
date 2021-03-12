@@ -13,6 +13,7 @@ mutation totara_notification_override_notification_preference(
   $schedule_offset: param_integer
   $subject_format: param_integer
   $recipient: param_text
+  $enabled: param_boolean
 ) {
   notification_preference: totara_notification_create_notification_preference(
     extended_context: {
@@ -31,6 +32,7 @@ mutation totara_notification_override_notification_preference(
     schedule_offset: $schedule_offset
     subject_format: $subject_format
     recipient: $recipient
+    enabled: $enabled
   ) {
     __typename
     title
@@ -43,6 +45,8 @@ mutation totara_notification_override_notification_preference(
     overridden_body
     overridden_subject
     overridden_recipient
+    overridden_enabled
+    enabled
     title
     resolver_class_name
     resolver_name
@@ -72,6 +76,7 @@ mutation totara_notification_override_notification_preference(
       schedule_offset(unit: DAY)
       schedule_type
       subject_format
+      enabled
       recipient {
         class_name
         name
