@@ -199,7 +199,19 @@ final class link_media extends base_link implements block_node {
             case 'audio':
                 return html_writer::tag(
                     'div',
-                    html_writer::tag('audio', null, ['src' => $this->url, 'controls' => true])
+                    html_writer::tag('audio', null, ['src' => $info['url'], 'controls' => true])
+                );
+
+            case 'video':
+                return html_writer::tag(
+                    'div',
+                    html_writer::tag('video', null, [
+                        'src' => $info['url'],
+                        'controls' => true,
+                        'width' => $this->resolution['width'] ?? null,
+                        'height' => $this->resolution['height'] ?? null,
+                        'data-grow' => true,
+                    ])
                 );
 
             default:
@@ -242,17 +254,19 @@ final class link_media extends base_link implements block_node {
         if (preg_match('/^https?:\/\/(?:www\.)?youtube.com\/watch\?v=([a-zA-Z0-9_-]+)/', $url, $match) ||
             preg_match('/^https?:\/\/(?:www\.)?youtu.be\/([a-zA-Z0-9_-]+)/', $url, $match)
         ) {
+            // rely on filter API to turn it into a playable video
             return [
-                'type' => 'iframe',
-                'url' => 'https://www.youtube.com/embed/' . $match[1] . '?rel=0',
+                'type' => 'video',
+                'url' => 'https://www.youtube.com/watch?v=' . $match[1],
                 'image' => $this->image,
             ];
         }
 
         if (preg_match('/^https?:\/\/(?:www\.)?vimeo.com\/([0-9]+)/', $url, $match)) {
+            // rely on filter API to turn it into a playable video
             return [
-                'type' => 'iframe',
-                'url' => 'https://player.vimeo.com/video/' . $match[1] . '?portrait=0',
+                'type' => 'video',
+                'url' => 'https://vimeo.com/' . $match[1],
                 'image' => null, // Vimeo images come back mixed up currently
             ];
         }
