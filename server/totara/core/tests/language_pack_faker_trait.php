@@ -26,13 +26,13 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Trait providing functionality for faking a language pack.
  *
- * Can be used in test cases extending advanced_testcase.
+ * Can be used in test cases extending \core_phpunit\testcase.
  *
  * @package totara_core
  */
 trait language_pack_faker_trait {
 
-    abstract public function overrideLangString($string, $component, $value, $acceptnonexistentstring = false);
+    abstract public static function overrideLangString($string, $component, $value, $acceptnonexistentstring = false);
 
     /**
      * Create a fake language pack for testing.
@@ -60,7 +60,7 @@ trait language_pack_faker_trait {
         force_current_language($language_key);
         foreach ($customised_translations as $component => $translations) {
             foreach ($translations as $key => $value) {
-                $this->overrideLangString($key, $component, $value);
+                static::overrideLangString($key, $component, $value);
             }
         }
         // Empty string disables the current language forcing from above.
