@@ -9,4 +9,14 @@ information provided here is intended especially for developers.
 * Removed unused class totara_engage\generator\engage_generator
 * Added query totara_engage_user_contributions_count
 * Updated user_contribution_cards persistent query to include query totara_engage_user_contributions_count
-
+* Added optional second parameter to totara_engage\card\card::get_card_image
+* Added optional parameter "$theme_config" to the totara_engage\card\card::get_extra_data function needed
+  by the theme files.
+* Added second optional parameter "$theme_config" to the totara_engage\share\helper::format_recipients function needed
+  by the theme files.
+* Added abstract function "can_unshare_resources" to totara_engage\share\recipient\recipient class
+* Added optional "theme" parameter to the "image" field in the "totara_engage_card" type
+* Added optional "theme" parameter to the "extra" field in the "totara_engage_card" type
+* Added optional "theme" parameter to "totara_engage_shareto_recipients" query
+* Added optional "theme" parameter to "totara_engage_share_recipients" query
+* added optional "theme" parameter to "totara_engage_contribution_cards" query

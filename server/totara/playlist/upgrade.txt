@@ -1,6 +1,11 @@
 This files describes API changes in /totara/totara_playlist,
 information provided here is intended especially for developers.
 
+=== 14.0 ===
+
+--- Update to graphQL ---
+* added optional "theme" parameter to "totara_playlist_cards" query
+
 === 13.2 ===
 
 --- Update to graphQL ---
