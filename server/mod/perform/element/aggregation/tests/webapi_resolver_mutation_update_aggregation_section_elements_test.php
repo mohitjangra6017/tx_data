@@ -40,6 +40,8 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
     use webapi_phpunit_helper;
 
     public function test_create_and_update_aggregation_section_elements(): void {
+        aggregation_data::$aggregatable_section_cache = [];
+
         self::setAdminUser();
 
         $perform_generator = generator::instance();
@@ -168,6 +170,8 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
             ],
             $all_data
         );
+
+        aggregation_data::$aggregatable_section_cache = [];
     }
 
     /**

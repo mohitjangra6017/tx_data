@@ -28,7 +28,6 @@ use mod_perform\entity\activity\section_element_reference as section_element_ref
 use mod_perform\entity\activity\element;
 use mod_perform\models\activity\section;
 use performelement_aggregation\aggregation;
-use performelement_aggregation\calculations\average;
 
 /**
  * Data provider class that adds extra information into the reference elements JSON data.

@@ -21,6 +21,7 @@
  * @package mod_perform
  */
 
+use mod_perform\entity\activity\section_element_reference as section_element_reference_entity;
 use mod_perform\models\activity\activity;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\section;
@@ -157,12 +158,18 @@ abstract class section_element_reference_testcase extends advanced_testcase {
             $this->referencing_redisplay_section, $this->referencing_redisplay_element
         );
 
-        $this->aggregation_section_element_reference = section_element_reference::create(
-            $this->source_section_element->id, $this->referencing_aggregation_element->id
+        $this->aggregation_section_element_reference = section_element_reference::load_by_entity(
+            section_element_reference_entity::repository()
+                ->where('source_section_element_id', $this->source_section_element->id)
+                ->where('referencing_element_id', $this->referencing_aggregation_element->id)
+                ->one(true)
         );
 
-        $this->redisplay_section_element_reference = section_element_reference::create(
-            $this->source_section_element->id, $this->referencing_redisplay_element->id
+        $this->redisplay_section_element_reference = section_element_reference::load_by_entity(
+            section_element_reference_entity::repository()
+                ->where('source_section_element_id', $this->source_section_element->id)
+                ->where('referencing_element_id', $this->referencing_redisplay_element->id)
+                ->one(true)
         );
     }
 
@@ -203,9 +210,11 @@ abstract class section_element_reference_testcase extends advanced_testcase {
             $this->self_reference_referencing_element
         );
 
-        $this->self_reference_section_element_reference = section_element_reference::create(
-            $this->self_reference_source_section_element->id,
-            $this->self_reference_referencing_element->id
+        $this->self_reference_section_element_reference = section_element_reference::load_by_entity(
+            section_element_reference_entity::repository()
+                ->where('source_section_element_id', $this->self_reference_source_section_element->id)
+                ->where('referencing_element_id', $this->self_reference_referencing_element->id)
+                ->one(true)
         );
     }
 

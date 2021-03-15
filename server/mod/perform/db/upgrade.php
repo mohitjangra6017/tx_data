@@ -218,5 +218,14 @@ function xmldb_perform_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2021021800, 'perform');
     }
 
+    if ($oldversion < 2021031500) {
+        $table = new xmldb_table('perform_section_element_reference');
+        $index = new xmldb_index('source_referencing_pair', XMLDB_INDEX_UNIQUE, ['referencing_element_id', 'source_section_element_id']);
+
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+    }
+
     return true;
 }

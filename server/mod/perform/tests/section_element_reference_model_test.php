@@ -21,7 +21,9 @@
  * @package mod_perform
  */
 
+use container_perform\perform as perform_container;
 use core\orm\collection;
+use mod_perform\models\activity\element;
 use mod_perform\models\activity\section;
 use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\section_element_reference;
@@ -49,12 +51,14 @@ class section_element_reference_model_testcase extends section_element_reference
         $element = $perform_generator->create_element();
         $source_section_element = $perform_generator->create_section_element($source_section, $element);
 
-        $redisplay_element = $perform_generator->create_element(
-            [
-                'plugin_name' => 'redisplay',
-                'data' => json_encode([redisplay::SOURCE_SECTION_ELEMENT_ID => $source_section_element->id]),
-            ]
+        $redisplay_element = element::create(
+            context_coursecat::instance(perform_container::get_default_category_id()),
+            redisplay::get_plugin_name(),
+            'Redisplay',
+            '',
+            json_encode([redisplay::SOURCE_SECTION_ELEMENT_ID => $source_section_element->id], JSON_THROW_ON_ERROR),
         );
+
         $section_element_reference = section_element_reference::create($source_section_element->id, $redisplay_element->id);
 
         self::assertEquals($source_section_element->id, $section_element_reference->source_section_element_id);

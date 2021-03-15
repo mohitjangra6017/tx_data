@@ -66,9 +66,7 @@ class mod_perform_reference_element_clone_testcase extends section_element_refer
         $activity2 = $perform_generator->create_activity_in_container(['activity_name' => 'activity2']);
         $section2 = $perform_generator->create_section($activity2, ['title' => 'section2']);
         $element2 = $perform_generator->create_element(['plugin_name' => 'redisplay', 'data' => json_encode($redisplay_data)]);
-        $section_element2 = $perform_generator->create_section_element($section2, $element2);
-
-        section_element_reference::create($section_element1->id, $element2->id);
+        $perform_generator->create_section_element($section2, $element2);
 
         $section_element_references = $this->get_references_by_source_activity_id($activity1->id);
 
@@ -149,8 +147,8 @@ class mod_perform_reference_element_clone_testcase extends section_element_refer
         $redisplay_element = $perform_generator->create_element(
             ['plugin_name' => 'redisplay', 'data' => json_encode($redisplay_data, JSON_THROW_ON_ERROR)]
         );
-        $section_element2 = $perform_generator->create_section_element($section2, $redisplay_element);
-        section_element_reference::create($section_element1->id, $redisplay_element->id);
+
+        $perform_generator->create_section_element($section2, $redisplay_element);
 
         $section_element_references = $this->get_references_by_source_activity_id($activity1->id);
 
