@@ -23,6 +23,7 @@
         :color-odd-rows="colorOddRows"
         :data="dummyData"
         :expandable-rows="true"
+        :expand-multiple-rows="expandMultipleRows"
         :border-bottom-hidden="hideBottomBorder"
         :border-top-hidden="hideTopBorder"
         :stealth-expanded="stealthExpanded"
@@ -114,6 +115,13 @@
           <Radio :value="false">False</Radio>
         </RadioGroup>
       </FormRow>
+
+      <FormRow label="Expanded multiple rows">
+        <RadioGroup v-model="expandMultipleRows" :horizontal="true">
+          <Radio :value="true">True</Radio>
+          <Radio :value="false">False</Radio>
+        </RadioGroup>
+      </FormRow>
     </SamplesPropCtl>
 
     <SamplesCode>
@@ -176,6 +184,7 @@ export default {
       hideTopBorder: false,
       stealthExpanded: false,
       indentExpandedContents: false,
+      expandMultipleRows: false,
       codeTemplate: `<Table
   :color-odd-rows="true"
   :data="dummyData"

@@ -18,7 +18,12 @@
 
 <template>
   <div class="tui-notificationTable">
-    <Table :data="notifiableEvents" :expandable-rows="true" :hover-off="true">
+    <Table
+      :data="notifiableEvents"
+      :expandable-rows="true"
+      :expand-multiple-rows="true"
+      :hover-off="true"
+    >
       <template v-slot:header-row>
         <ExpandCell :header="true" />
       </template>
@@ -38,6 +43,7 @@
         <Table
           :data="row.events"
           :expandable-rows="true"
+          :expand-multiple-rows="true"
           :border-top-hidden="true"
           :border-bottom-hidden="true"
           :hover-off="true"
@@ -95,6 +101,7 @@
             <Table
               :data="notifiableEvent.notification_preferences"
               :expandable-rows="false"
+              :expand-multiple-rows="true"
               :border-top-hidden="true"
               :border-bottom-hidden="true"
               :hover-off="true"

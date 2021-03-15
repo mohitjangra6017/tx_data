@@ -106,7 +106,7 @@
                 :id="id"
                 name="row"
                 :expand="expand"
-                :expandState="expandableRows && id == expanded"
+                :expandState="isExpanded(id)"
                 :expand-group="expandGroup"
                 :first-in-group="groupIndex === 0"
                 :group-id="groupId"
@@ -119,7 +119,7 @@
         </component>
 
         <ExpandedRow
-          v-if="expandableRows && id == expanded"
+          v-if="isExpanded(id)"
           :key="id + ' expand'"
           :stealth="stealthExpanded"
           :indent-contents="indentExpandedContents"
@@ -201,6 +201,7 @@ export default {
     entireSelected: Boolean,
     // Enables the ability to have expandable rows
     expandableRows: Boolean,
+    expandMultipleRows: Boolean,
     getGroupId: {
       type: Function,
       default: (group, index) => ('id' in group ? group.id : index),
@@ -233,6 +234,7 @@ export default {
   data() {
     return {
       expanded: null,
+      expandedRows: [],
       expandedGroup: null,
     };
   },
@@ -253,7 +255,9 @@ export default {
           row,
           id,
           index,
-          expand: () => this.updateExpandedRow(id),
+          expand: () => {
+            this.updateExpandedRow(id);
+          },
         };
       });
     },
@@ -309,13 +313,40 @@ export default {
     },
 
     /**
+     * Calculate isExpanded for current row
+     *
+     * @param {Int} id
+     */
+    isExpanded(id) {
+      return this.expandMultipleRows
+        ? this.expandedRows.indexOf(id) !== -1
+        : this.expandableRows && id == this.expanded;
+    },
+
+    /**
      * set expanded to ID of expanded row
      *
      */
     updateExpandedRow(rowId) {
+      if (rowId === undefined) {
+        this.expanded = null;
+        this.expandedRows = [];
+        return;
+      }
+
+      if (this.expandMultipleRows) {
+        const indexOfRowId = this.expandedRows.indexOf(rowId);
+
+        if (indexOfRowId === -1) {
+          this.expandedRows.push(rowId);
+        } else {
+          this.expandedRows.splice(indexOfRowId, 1);
+        }
+        return;
+      }
+
       this.expandedGroup = null;
-      this.expanded =
-        rowId === undefined || this.expanded === rowId ? null : rowId;
+      this.expanded = this.expanded === rowId ? null : rowId;
     },
 
     /**

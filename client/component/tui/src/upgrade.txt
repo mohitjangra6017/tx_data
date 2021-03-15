@@ -2,7 +2,7 @@ This file describes API changes in /client/component/tui,
 information provided here is intended especially for developers.
 
 === 14.0 ===
-
+* Allowed multiple rows of Table to be expanded at once
   * Template changes
 * Allowed CollapsibleGroupToggle.vue to set transparency and alignment, removed chevron
 * Updated Table component to allow indent and stealth version of Expanded Rows
