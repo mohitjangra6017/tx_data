@@ -21,23 +21,22 @@
  * @package mod_perform
  */
 
-namespace mod_perform\observers;
+namespace performelement_aggregation\observers;
 
-use core\event\base;
 use mod_perform\event\participant_section_progress_updated;
 use mod_perform\entity\activity\participant_section as participant_section_entity;
-use mod_perform\models\activity\derived_responses_element_plugin;
 use mod_perform\state\participant_section\complete;
+use performelement_aggregation\aggregation_response_calculator;
 
-class participant_section_derived_responses {
+class participant_section_aggregation {
 
     /**
-     * When progress status of a participant section is updated
-     * update derived responses
+     * When progress status of a participant section is marked compete,
+     * or re-submitted (compete) update aggregation/calculations responses
      *
      * @param participant_section_progress_updated $event
      */
-    public static function update_derived_responses(participant_section_progress_updated $event) {
+    public static function update_aggregation_responses(participant_section_progress_updated $event): void {
         // Aggregation is only calculated for submitted sections
         $progress = $event->other['progress'];
         if ($progress !== complete::get_name()) {
@@ -46,6 +45,6 @@ class participant_section_derived_responses {
 
         /** @var participant_section_entity $participant_section */
         $source_participant_section = participant_section_entity::repository()->find_or_fail($event->objectid);
-        derived_responses_element_plugin::calculate_derived_response_for_participant_section($source_participant_section);
+        aggregation_response_calculator::calculate_responses_effected_by($source_participant_section);
     }
 }

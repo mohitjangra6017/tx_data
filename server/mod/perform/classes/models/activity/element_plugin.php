@@ -444,4 +444,5 @@ abstract class element_plugin {
     public function get_response_report_builder_helper(): ?element_plugin_response_report_builder {
         return null;
     }
+
 }

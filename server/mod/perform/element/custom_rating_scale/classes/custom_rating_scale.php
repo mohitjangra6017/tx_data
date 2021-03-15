@@ -97,12 +97,13 @@ class custom_rating_scale extends respondable_element_plugin {
     /**
      * @inheritDoc
      */
-    public function get_aggregatable_value(?string $encoded_response_data, ?string $encoded_element_data): ?int {
+    public function get_aggregatable_value(?string $encoded_response_data, ?string $encoded_element_data): ?float {
         $decoded_response = $this->decode_response($encoded_response_data, $encoded_element_data);
+
         if ($decoded_response === null) {
             return null;
         }
 
-        return (int)$decoded_response['score'];
+        return $decoded_response['score'];
     }
 }

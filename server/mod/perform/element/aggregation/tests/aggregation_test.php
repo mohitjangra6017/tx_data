@@ -43,6 +43,7 @@ class performelement_aggregation_aggregation_testcase extends section_element_re
         /** @var element_entity $referencing_element */
         $referencing_element = element_entity::repository()->find($this->referencing_aggregation_element->id);
 
+        $referencing_element->data = $aggregation->process_data($referencing_element);
         $aggregation->validate_element($referencing_element);
     }
 

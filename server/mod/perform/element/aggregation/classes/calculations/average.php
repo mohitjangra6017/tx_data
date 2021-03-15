@@ -37,8 +37,8 @@ class average extends calculation_method {
     /**
      * @inheritDoc
      */
-    public function aggregate(array $values) {
-        if (empty($values)) {
+    public function aggregate(array $values): float {
+        if (count($values) === 0) {
             return 0;
         }
         return array_sum($values) / count($values);

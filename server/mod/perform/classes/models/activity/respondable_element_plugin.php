@@ -244,4 +244,22 @@ abstract class respondable_element_plugin extends element_plugin implements disp
         return $file_plugins;
     }
 
+    /**
+     * Return the aggregatable value
+     * Aggregatable plugins should override
+     *
+     * @param string|null $encoded_response_data
+     * @param string|null $encoded_element_data
+     * @return float|null
+     */
+    public function get_aggregatable_value(?string $encoded_response_data, ?string $encoded_element_data): ?float {
+        if (!$this->get_is_aggregatable()) {
+            return null;
+        }
+
+        $decoded_response = $this->decode_response($encoded_response_data, $encoded_element_data);
+
+        return $decoded_response ?? null;
+    }
+
 }
