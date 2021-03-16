@@ -19,6 +19,9 @@ Feature: Manage Competency achievement paths
       | fw1         | Child2             | child2             | Second child                  | parent |
       | fw1         | Another            | another            | Some other                    |        |
       | single_item | Single item parent | Single item parent | Single item parent competency |        |
+    And the following "assignments" exist in "totara_competency" plugin:
+      | competency                | user_group_type | user_group |
+      | Single item parent        | user            | admin      |
     And the following "courses" exist:
       | fullname    | shortname | enablecompletion |
       | Course 1    | course1   | 1                |
@@ -128,25 +131,15 @@ Feature: Manage Competency achievement paths
 
     # Manage assignments page.
     When I click on "Manage competency assignments" "link"
-    Then I should see "No items to display"
+    Then I should see "Single item parent" in the "[data-tw-list-row=1]" "css_element"
+    And I should see "Achievement paths need review" in the "[data-tw-list-row=1]" "css_element"
 
     # Create assignments page.
     When I click on "Create assignments" "link_or_button"
     Then I should see "Single item parent" in the "[data-tw-list-row=5]" "css_element"
     And I should see "Achievement paths need review" in the "[data-tw-list-row=5]" "css_element"
-
-    # Assign a competency to the admin user.
-    When I click on ".tw-list__cell_select_label" "css_element"
-    And I click on "Assign" "link_or_button"
-    # Click on the expand icon of Add user groups.
-    And I click on "Expand" "link" in the ".tw-assignCompSave__assign_selector" "css_element"
-    And I click on "Individual users" "link"
-    And I click on ".tw-list__cell_select_label" "css_element"
-    And I click on "Save changes" "button" in the ".modal-container.show" "css_element"
-    And I click on "Create assignments" "button"
-    And I click on "Yes" "button"
-    Then I should see "Single item parent" in the "[data-tw-list-row=5]" "css_element"
-    And I should see "Achievement paths need review" in the "[data-tw-list-row=5]" "css_element"
+    # Purpose of test is to confirm that the warning is shown when creating assignments
+    # Not actually doing assignment to avoid intermittent failure on dropdown items
 
     # View only competency summary page.
     When I click on "Dashboard" "link"
@@ -189,8 +182,8 @@ Feature: Manage Competency achievement paths
 
     # Manage assignments page.
     When I click on "Manage competency assignments" "link"
-    Then I should see "Single item parent" in the "[data-tw-list-row=5]" "css_element"
-    And I should not see "Achievement paths need review" in the "[data-tw-list-row=5]" "css_element"
+    Then I should see "Single item parent" in the "[data-tw-list-row=1]" "css_element"
+    And I should not see "Achievement paths need review" in the "[data-tw-list-row=1]" "css_element"
 
     # Create assignments page.
     When I click on "Create assignments" "link_or_button"
