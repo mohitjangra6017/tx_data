@@ -38,7 +38,7 @@ Feature: Users are forced to get manager approval where required
   Scenario: Should be unable to enrol using seminar direct without a manager
     Given I log in as "student1"
     And I am on "Course 1" course homepage
-    And I should see "You can not enrol yourself in this course."
+    And I should see "Enrolment is disabled or inactive"
 
   Scenario: A user with a manager can request access, withdraw request and be granted access
     Given the following "position" frameworks exist:

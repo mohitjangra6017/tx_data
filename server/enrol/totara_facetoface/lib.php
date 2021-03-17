@@ -582,18 +582,24 @@ class enrol_totara_facetoface_plugin extends enrol_plugin {
             $output .= $this->render_seminars_with_interests($seminars);
         }
 
-        // If I already have a pending request, cannot ask again.
-        if (builder::table('enrol_totara_f2f_pending')
+        if (empty($output)) {
+            $output = $this->sessions_require_manager() ?
+                get_string('cannotenrol', 'enrol_totara_facetoface') :
+                get_string('cannotenrolnosessions', 'enrol_totara_facetoface');
+        } else {
+            // If I already have a pending request, cannot ask again.
+            if (builder::table('enrol_totara_f2f_pending')
                 ->where('enrolid', $instance->id)
                 ->where('userid', $USER->id)
                 ->exists()) {
-            $link = html_writer::link(
-                new moodle_url('/enrol/totara_facetoface/withdraw.php', ['eid' => $instance->id]),
-                get_string('withdrawpending', 'enrol_totara_facetoface'),
-                ['class' => 'btn btn-default']
-            );
-            $output .= html_writer::tag('p', get_string('cannotenrolalreadyrequested', 'enrol_totara_facetoface'));
-            $output .= html_writer::tag('p', $link);
+                $link = html_writer::link(
+                    new moodle_url('/enrol/totara_facetoface/withdraw.php', ['eid' => $instance->id]),
+                    get_string('withdrawpending', 'enrol_totara_facetoface'),
+                    ['class' => 'btn btn-default']
+                );
+                $output .= html_writer::tag('p', get_string('cannotenrolalreadyrequested', 'enrol_totara_facetoface'));
+                $output .= html_writer::tag('p', $link);
+            }
         }
 
         return $output;
@@ -610,7 +616,6 @@ class enrol_totara_facetoface_plugin extends enrol_plugin {
         global $DB;
 
         $course = $DB->get_record('course', array('id'=>$instance->courseid), '*', MUST_EXIST);
-
         if ($data = $form->get_data()) {
             if ($this->enrol_totara_facetoface($instance, $data, $course, null)) {
                 return true;
@@ -629,24 +634,18 @@ class enrol_totara_facetoface_plugin extends enrol_plugin {
     public function course_expand_get_form_hook($instance) {
         global $CFG;
 
-        require_once("$CFG->dirroot/enrol/totara_facetoface/signup_form.php");
-
         $enrolstatus = $this->can_self_enrol($instance);
 
         // Don't show enrolment instance form, if user can't enrol using it.
         if ($enrolstatus === true) {
-
             $settingautosignup = self::SETTING_AUTOSIGNUP;
             if ($instance->$settingautosignup) {
-                require_once("$CFG->dirroot/enrol/totara_facetoface/signup_form.php");
-
                 $enrolstatus = $this->can_self_enrol($instance);
-
                 // Don't show enrolment instance form, if user can't enrol using it.
                 if ($enrolstatus === true) {
+                    require_once("$CFG->dirroot/enrol/totara_facetoface/signup_form.php");
                     return new enrol_totara_facetoface_signup_form(null, $instance);
                 }
-
                 return $enrolstatus;
             } else {
                 return $this->render_facetoface_sessions($instance);
