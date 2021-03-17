@@ -125,6 +125,7 @@ export default {
         processor: [],
         submitHandler: [],
         element: [],
+        changeListener: [],
       },
 
       // form state
@@ -194,12 +195,11 @@ export default {
       if (path == null) {
         this.values = value;
       } else {
+        path = toPath(path);
         vueSet(this.values, path, value);
       }
-      this.$emit('change', this.values);
-      if (this.validationMode != 'submit') {
-        this.$_validate(path);
-      }
+
+      this.$_afterChange(path);
     },
 
     /**
@@ -239,7 +239,7 @@ export default {
     /**
      * Register (path, function) of specified type.
      *
-     * @param {('validator'|'processor'|'submitHandler')} type
+     * @param {('validator'|'processor'|'submitHandler'|'changeListener')} type
      * @param {(string|number|array|null)} path
      * @param {function} fn
      */
@@ -262,7 +262,7 @@ export default {
     /**
      * Unregister (path, function) of specified type.
      *
-     * @param {('validator'|'processor'|'submitHandler')} type
+     * @param {('validator'|'processor'|'submitHandler'|'changeListener')} type
      * @param {(string|number|array|null)} path
      * @param {function} fn
      */
@@ -290,9 +290,9 @@ export default {
      *
      * @param {string} type
      * @param {(string|number|array)} path
-     * @param {function} validator
+     * @param {function} fn
      * @param {(string|number|array)} oldPath
-     * @param {function} oldValidator
+     * @param {function} oldFn
      */
     updateRegistration(type, path, fn, oldPath, oldFn) {
       if (
@@ -369,9 +369,12 @@ export default {
     },
 
     /**
-     * Submit form.
+     * Attempt to submit form, returning form values if valid or null otherwise.
+     *
+     * @public
+     * @returns {Promise<object|null>}
      */
-    async submit() {
+    async trySubmit() {
       this.submitting = true;
 
       // wait for rerender
@@ -412,27 +415,68 @@ export default {
           handler(path === null ? values : get(values, path))
         );
 
-        this.$emit('submit', values);
+        return values;
       } else {
-        this.$_focusFirstInvalid();
+        return null;
       }
     },
 
     /**
-     * Focus first invalid field.
+     * Trigger submit of form, firing submit event if valid..
+     *
+     * Returns form values if valid or null otherwise.
+     *
+     * @public
+     * @returns {Promise<object|null>}
+     */
+    async submit() {
+      const values = await this.trySubmit();
+      if (values) {
+        this.$emit('submit', values);
+        return values;
+      } else {
+        this.focusFirstInvalid();
+        return null;
+      }
+    },
+
+    /**
+     * Focus the first invalid field.
+     *
+     * @public
+     * @returns {boolean} success
+     */
+    focusFirstInvalid() {
+      return this.$_focusFirstEl(path => get(this.mergedErrors, path));
+    },
+
+    /**
+     * Focus the first field.
+     *
+     * @public
+     */
+    focus() {
+      // find first field (by screen-space position in doucment)
+      this.$_focusFirstEl();
+    },
+
+    /**
+     * Focus first field meeting condition.
      *
      * @internal
+     * @param {((path: (string|number|array), getEl: Function) => boolean} [filter]
+     * @returns {boolean} success
      */
-    $_focusFirstInvalid() {
+    $_focusFirstEl(filter) {
       const rtl = isRtl();
       const isLeftBefore = rtl ? (a, b) => a > b : (a, b) => a < b;
 
-      // find first invalid field (by physical position in document)
+      // find first field (by screen-space position in document)
       let firstEl = null;
       let firstPos = null;
       this.registrations.element.forEach(([path, getEl]) => {
         const el = getEl();
-        if (el && get(this.mergedErrors, path)) {
+        if (el && (!filter || filter(path, getEl))) {
           const pos = getDocumentPosition(el);
           if (
             firstEl == null ||
@@ -452,17 +496,19 @@ export default {
         } else {
           firstEl.scrollIntoView({ behavior: 'smooth' });
         }
+        return true;
       }
+      return false;
     },
 
     /**
      * INTERNAL method for updating a slice of form state.
      *
-     * Do not use outside of totara_core.
+     * Do not use this method outside of Tui core forms code.
      *
      * @internal
      * @param {(string|number|array)} path
-     * @param {function} fn Callback. Called with { values, touched }, should return the same shaped object.
+     * @param {({ values, touched }) => { values, touched }} fn Callback. Called with { values, touched }, should return the same shaped object.
      */
     $_internalUpdateSliceState(path, fn) {
       const slice = path
@@ -479,7 +525,27 @@ export default {
         this.touched = result.touched;
       }
 
+      this.$_afterChange(toPath(path));
+    },
+
+    /**
+     * Handle after-change actions.
+     *
+     * @internal
+     * @param {array} path
+     */
+    $_afterChange(path) {
       this.$emit('change', this.values);
+
+      // run listeners for any parents, self, or children matching
+      const listeners = this.registrations.changeListener.filter(
+        ([listenerPath]) =>
+          listenerPath == null ||
+          arrayStartsWith(toPath(listenerPath), path) ||
+          arrayStartsWith(path, toPath(listenerPath))
+      );
+
+      listeners.forEach(([, handler]) => handler());
 
       if (this.validationMode != 'submit') {
         this.$_validate(path);
@@ -489,8 +555,8 @@ export default {
     /**
      * Check if two path-function entries are equal.
      *
-     * @param {function} a
-     * @param {function} b
+     * @param {[(string|number|array), function]} a
+     * @param {[(string|number|array), function]} b
      * @returns {bool}
      */
     $_pathFunctionEqual(a, b) {
@@ -537,7 +603,7 @@ export default {
      * Run validators for specified paths (called by queue).
      *
      * @internal
-     * @param {array} validatePaths
+     * @param {Array<(string|number|array)>} validatePaths
      */
     async $_validateInternal(validatePaths) {
       validatePaths = validatePaths.map(toPath);
@@ -739,6 +805,7 @@ export default {
     return this.$scopedSlots.default({
       getSubmitting: this.getSubmitting,
       handleSubmit: this.handleSubmit,
+      submit: this.submit,
       reset: this.reset,
     });
   },

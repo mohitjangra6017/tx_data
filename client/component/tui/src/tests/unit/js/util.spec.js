@@ -164,9 +164,18 @@ describe('get', () => {
     expect(get(obj, ['q'])).toBe(undefined);
     expect(get(obj, ['q', 'w'])).toBe(undefined);
     expect(get(obj, ['a', '0', 'b', 'c'])).toBe(3);
+    expect(get(obj, ['a', 0, 'b', 'c'])).toBe(3);
     expect(get(obj, ['d'])).toBe(4);
     expect(get(obj, ['e', 'f'])).toBe(obj.e.f);
     expect(get(obj, ['e', 'f', 'g'])).toBe(5);
+  });
+
+  it('takes bare string and array paths', () => {
+    const obj = { a: 1 };
+    expect(get(obj, 'a')).toBe(1);
+
+    const arr = [9, 8, 7];
+    expect(get(arr, 1)).toBe(8);
   });
 });
 
@@ -182,6 +191,16 @@ describe('set', () => {
     expect(Array.isArray(obj.d)).toBe(true);
     set(obj, ['e', '3', 'f'], 6);
     expect(obj.e[3].f).toBe(6);
+  });
+
+  it('takes bare string and array paths', () => {
+    const obj = {};
+    set(obj, 'a', 1);
+    expect(obj.a).toBe(1);
+
+    const arr = [];
+    set(arr, 1, 8);
+    expect(arr[1]).toBe(8);
   });
 });
 

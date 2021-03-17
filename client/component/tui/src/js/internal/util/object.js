@@ -112,11 +112,11 @@ function structuralCloneImpl(obj, deep, stack) {
  * Get the value of path at object.
  *
  * @param {object} object
- * @param {array} path Path of property to get, e.g. ['a', 2, 'q']
+ * @param {array|string|number} path Path of property to get, e.g. ['a', 2, 'q']
  * @returns {*} Value at path.
  */
 export function get(object, path) {
-  if (typeof path === 'string') {
+  if (typeof path === 'string' || typeof path === 'number') {
     return object[path];
   }
 
@@ -140,7 +140,7 @@ const setKey = (target, key, value) => {
  * Arrays are created for missing index properties and objects are created for other missing properties.
  *
  * @param {object} object Object to modify.
- * @param {array} path Path of property to set, e.g. ['a', 2, 'q']
+ * @param {array|string|number} path Path of property to set, e.g. ['a', 2, 'q']
  * @param {*} value
  * @returns {object}
  */
@@ -152,13 +152,13 @@ export function set(object, path, value) {
  * Base implementation for set and vue_util.set.
  *
  * @param {object} object Object to modify.
- * @param {array} path Path of property to set, e.g. ['a', 2, 'q']
+ * @param {array|string|number} path Path of property to set, e.g. ['a', 2, 'q']
  * @param {*} value
  * @param {*} setKey
  * @returns {object}
  */
 export function baseSet(object, path, value, setKey) {
-  if (typeof path === 'string') {
+  if (typeof path === 'string' || typeof path === 'number') {
     setKey(object, path, value);
     return;
   }

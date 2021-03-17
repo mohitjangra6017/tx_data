@@ -97,13 +97,34 @@ export default {
 
   methods: {
     /**
-     * Submit form.
+     * Trigger submit of form, firing submit event if valid..
+     *
+     * Returns form values if valid or null otherwise.
      *
      * @public
-     * @returns {Promise}
+     * @returns {Promise<object|null>}
      */
     submit() {
       return this.$refs.reform.submit();
+    },
+
+    /**
+     * Attempt to submit form, returning form values if valid or null otherwise.
+     *
+     * @public
+     * @returns {Promise<object|null>}
+     */
+    trySubmit() {
+      return this.$refs.reform.trySubmit();
+    },
+
+    /**
+     * Focus the first invalid field.
+     *
+     * @public
+     */
+    focusFirstInvalid() {
+      return this.$refs.reform.focusFirstInvalid();
     },
 
     /**
@@ -144,6 +165,15 @@ export default {
      */
     touch(path) {
       this.$refs.reform.touch(path);
+    },
+
+    /**
+     * Focus the form.
+     *
+     * @public
+     */
+    focus() {
+      this.$refs.reform.focus();
     },
   },
 };

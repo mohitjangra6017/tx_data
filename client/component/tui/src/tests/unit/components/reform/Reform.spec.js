@@ -462,4 +462,75 @@ describe('Reform', () => {
     scope.touch(['fields', 1, 'foo']);
     expect(scope.getTouched(['fields', 1, 'foo'])).toBe(true);
   });
+
+  it('allows attaching change listeners for paths', async () => {
+    const { scope } = createSimple();
+
+    const listenerA = jest.fn();
+    scope.register('changeListener', ['jack', 'foo'], listenerA);
+    expect(listenerA).not.toHaveBeenCalled();
+    scope.update(['jack', 'foo'], 'a');
+    expect(listenerA).toHaveBeenCalled();
+
+    const listenerB = jest.fn();
+    scope.register('changeListener', 'carl', listenerB);
+    expect(listenerB).not.toHaveBeenCalled();
+    scope.update(['carl', 'foo'], 'a');
+    expect(listenerB).toHaveBeenCalled();
+
+    const listenerC = jest.fn();
+    scope.register('changeListener', ['fred', 'foo'], listenerC);
+    expect(listenerC).not.toHaveBeenCalled();
+    scope.update(['fred'], { foo: 'a' });
+    expect(listenerC).toHaveBeenCalled();
+
+    const listenerD = jest.fn();
+    scope.register('changeListener', ['winston', 'foo'], listenerD);
+    expect(listenerD).not.toHaveBeenCalled();
+    scope.$_internalUpdateSliceState('winston', state => {
+      state.values = { foo: 'a' };
+      return state;
+    });
+    expect(listenerD).toHaveBeenCalled();
+
+    const listenerE = jest.fn();
+    scope.register('changeListener', 'archibald', listenerE);
+    expect(listenerE).not.toHaveBeenCalled();
+    scope.$_internalUpdateSliceState(['archibald', 'foo'], state => state);
+    expect(listenerE).toHaveBeenCalled();
+  });
+
+  it('lets you submit the form externally', async () => {
+    const submitHandler = jest.fn();
+
+    const { scope, vm } = createSimple(
+      { foo: 'bar' },
+      { listeners: { submit: submitHandler } }
+    );
+
+    scope.register('validator', 'foo', x =>
+      x == 'invalid' ? 'invalid' : null
+    );
+
+    let result;
+    [result] = await Promise.all([vm.trySubmit(), validateWait()]);
+    expect(result).toEqual({ foo: 'bar' });
+    expect(submitHandler).not.toHaveBeenCalled();
+
+    scope.update('foo', 'invalid');
+
+    [result] = await Promise.all([vm.trySubmit(), validateWait()]);
+    expect(result).toBe(null);
+    expect(submitHandler).not.toHaveBeenCalled();
+
+    [result] = await Promise.all([vm.submit(), validateWait()]);
+    expect(result).toBe(null);
+    expect(submitHandler).not.toHaveBeenCalled();
+
+    scope.update('foo', 'bar');
+
+    [result] = await Promise.all([vm.submit(), validateWait()]);
+    expect(result).toEqual({ foo: 'bar' });
+    expect(submitHandler).toHaveBeenCalled();
+  });
 });

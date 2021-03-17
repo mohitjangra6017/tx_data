@@ -247,6 +247,16 @@ input[type].tui-formInput {
     box-shadow: none;
   }
 
+  &[readonly] {
+    color: var(--form-input-text-color);
+    background: var(--form-input-bg-color);
+    border-color: var(--form-input-border-color);
+
+    &::placeholder {
+      color: var(--form-input-text-placeholder-color);
+    }
+  }
+
   &[disabled] {
     color: var(--form-input-text-color-disabled);
     background: var(--form-input-bg-color-disabled);

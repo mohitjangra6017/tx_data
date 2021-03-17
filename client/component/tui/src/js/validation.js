@@ -23,7 +23,7 @@ import { isIsoAfter, isIsoBefore, getValuesFromIso } from 'tui/date';
 // match browser email validation regex.
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
-const isEmpty = val =>
+export const isEmpty = val =>
   val === false ||
   val === null ||
   val === undefined ||

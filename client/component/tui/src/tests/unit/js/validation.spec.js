@@ -16,8 +16,26 @@
  * @module tui
  */
 
-import { v, fieldValidator } from 'tui/validation';
+import { isEmpty, v, fieldValidator } from 'tui/validation';
 import { langString } from 'tui/i18n';
+
+describe('isEmpty', () => {
+  it('returns true if a value is considered empty', () => {
+    expect(isEmpty(true)).toBe(false);
+    expect(isEmpty(false)).toBe(true);
+    expect(isEmpty(null)).toBe(true);
+    expect(isEmpty(undefined)).toBe(true);
+    expect(isEmpty(0)).toBe(false);
+    expect(isEmpty(1)).toBe(false);
+    expect(isEmpty(NaN)).toBe(true);
+    expect(isEmpty('hi')).toBe(false);
+    expect(isEmpty('0')).toBe(false);
+    expect(isEmpty('')).toBe(true);
+    expect(isEmpty('    ')).toBe(true);
+    expect(isEmpty([1])).toBe(false);
+    expect(isEmpty([])).toBe(true);
+  });
+});
 
 describe('built-in validators', () => {
   test('required', () => {

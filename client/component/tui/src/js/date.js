@@ -35,6 +35,8 @@ import {
   parseISO,
 } from 'date-fns';
 
+export { isExists, parseISO } from 'date-fns';
+
 /**
  * Get days of month array for select
  *

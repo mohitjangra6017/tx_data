@@ -51,7 +51,7 @@ export function getModelDef(component) {
  * Arrays are created for missing index properties and objects are created for other missing properties.
  *
  * @param {object} object Object to modify.
- * @param {array} path Path of property to set, e.g. ['a', 2, 'q']
+ * @param {array|string|number} path Path of property to set, e.g. ['a', 2, 'q']
  * @param {*} value
  * @returns {object}
  */
