@@ -23,6 +23,7 @@
 
 namespace totara_competency\webapi\resolver\query;
 
+use Exception;
 use coding_exception;
 use context_user;
 use core\entity\user;
@@ -47,7 +48,17 @@ class user_assignments implements query_resolver, has_middleware {
         // Set current user as default if there is no user_id provided
         $user_id = $args['input']['user_id'] ?? user::logged_in()->id;
 
-        self::require_view_capability($user_id, $ec);
+        try {
+            // In case the user does not have permission to view we return an empty result to not fail requests
+            self::require_view_capability($user_id, $ec);
+        } catch (Exception $e) {
+            return [
+                'item' => [],
+                'filters' => [],
+                'total' => 0,
+                'next_cursor' => '',
+            ];
+        }
 
         $status_filter = ['status' => assignment_entity::STATUS_ACTIVE];
         $query_filters = array_merge($status_filter, $args['input']['filters'] ?? []);

@@ -189,10 +189,12 @@ class totara_competency_webapi_resolver_query_user_assignments_testcase extends 
 
         unassign_capability('totara/competency:view_own_profile', $role_id);
 
-        $this->expectException(moodle_exception::class);
-        $this->expectExceptionMessageMatches('/View own competency profile/');
+        $result = $this->resolve_graphql_query(self::QUERY, []);
 
-        $this->resolve_graphql_query(self::QUERY, []);
+        $this->assertCount(0, $result['item']);
+        $this->assertCount(0, $result['filters']);
+        $this->assertEquals(0, $result['total']);
+        $this->assertEquals('', $result['next_cursor']);
     }
 
     public function test_require_view_other_capability() {
@@ -204,10 +206,12 @@ class totara_competency_webapi_resolver_query_user_assignments_testcase extends 
 
         unassign_capability('totara/competency:view_other_profile', $role_id);
 
-        $this->expectException(moodle_exception::class);
-        $this->expectExceptionMessageMatches('/View profile of other users/');
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user2->id));
 
-        $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user2->id));
+        $this->assertCount(0, $result['item']);
+        $this->assertCount(0, $result['filters']);
+        $this->assertEquals(0, $result['total']);
+        $this->assertEquals('', $result['next_cursor']);
     }
 
     /**

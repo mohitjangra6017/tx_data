@@ -21,6 +21,7 @@
  * @package performelement_linked_review
  */
 
+$string['can_not_select_content_message'] = 'These items have been selected by {$a->selector} {$a->relationship}.';
 $string['name'] = 'Review items';
 $string['content_name'] = 'Review item name';
 $string['content_selected_at'] = 'Date selected';

@@ -6,6 +6,7 @@ query performelement_linked_review_content_items(
       id
       content_id
       selector {
+        id
         fullname
       }
       content

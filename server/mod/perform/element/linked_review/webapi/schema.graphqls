@@ -49,6 +49,21 @@ input performelement_linked_review_content_items_input {
   token: String
 }
 
+"""
+Represents a user who selects content and related relationship
+"""
+type performelement_linked_review_content_update_check {
+  can_update: Boolean!
+  description(format: core_format = PLAIN): String
+}
+
+"""
+Represents a result for updating content
+"""
+type performelement_linked_review_update_linked_review_content_result {
+  validation_info: performelement_linked_review_content_update_check
+}
+
 extend type Query {
   """
   Get the available content types that can be selected.
@@ -68,8 +83,10 @@ extend type Query {
 extend type Mutation {
   """
   Update what content is linked to the activity.
+  Currently content can only be selected once.
+  If content already got selected by another user this will return the information who selected it.
   """
   performelement_linked_review_update_linked_review_content(
     input: performelement_linked_review_update_linked_content_input!
-  ): Boolean
+  ): performelement_linked_review_update_linked_review_content_result!
 }

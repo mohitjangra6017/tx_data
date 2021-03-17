@@ -274,6 +274,22 @@ class linked_review_content extends model {
     }
 
     /**
+     * Load linked review content by section element id and participant instance id
+     *
+     * @param int $section_element_id
+     * @param int $participant_instance_id
+     * @return collection
+     * @throws coding_exception
+     */
+    public static function load_by_section_element_and_participant_instance(int $section_element_id, int $participant_instance_id): collection {
+        $subject_instance_id = participant_instance_model::load_by_id($participant_instance_id)->subject_instance_id;
+        return linked_review_content_entity::repository()
+            ->where('section_element_id', $section_element_id)
+            ->where('subject_instance_id', $subject_instance_id)
+            ->get();
+    }
+
+    /**
      * Validate the values inputted when saving and throw errors if they are invalid.
      *
      * @param array $content_ids

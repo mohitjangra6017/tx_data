@@ -36,7 +36,7 @@
     :section-element-id="sectionElementId"
     :user-id="userId"
     @unsaved-plugin-change="$emit('unsaved-plugin-change', $event)"
-    @update="$emit('update')"
+    @update="$emit('update', $event)"
   >
     <template v-slot:content-preview="{ content }">
       <component :is="previewComponent" :content="getItemData(content)" />

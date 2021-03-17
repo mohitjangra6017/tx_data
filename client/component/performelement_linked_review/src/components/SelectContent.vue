@@ -205,12 +205,6 @@ export default {
         this.selectedIds = [];
       } catch (e) {
         this.showMutationErrorNotification();
-      } finally {
-        this.$emit('unsaved-plugin-change', {
-          key: this.id,
-          hasChanges: false,
-        });
-        this.$emit('update');
       }
     },
 
@@ -230,17 +224,29 @@ export default {
      * Save selected content in the repository
      */
     async saveContent() {
-      await this.$apollo.mutate({
-        mutation: updateReviewContentMutation,
-        variables: {
-          input: {
-            content_ids: this.selectedContent.map(content => content.id),
-            participant_instance_id: this.participantInstanceId,
-            section_element_id: this.sectionElementId,
+      await this.$apollo
+        .mutate({
+          mutation: updateReviewContentMutation,
+          variables: {
+            input: {
+              content_ids: this.selectedContent.map(content => content.id),
+              participant_instance_id: this.participantInstanceId,
+              section_element_id: this.sectionElementId,
+            },
           },
-        },
-        refetchAll: false, // Don't refetch all the data again
-      });
+          refetchAll: false, // Don't refetch all the data again
+        })
+        .then(({ data }) => {
+          this.$emit('unsaved-plugin-change', {
+            key: this.id,
+            hasChanges: false,
+          });
+          if (!data.data.validation_info.can_update) {
+            this.$emit('update', data.data.validation_info.description);
+          } else {
+            this.$emit('update');
+          }
+        });
     },
 
     /**
@@ -300,6 +306,9 @@ export default {
   ],
   "mod_perform": [
     "confirm_selection"
+  ],
+  "performelement_linked_review": [
+    "can_not_select_content_message"
   ]
 }
 </lang-strings>

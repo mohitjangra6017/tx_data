@@ -24,6 +24,15 @@
     :title="getActivityTitle()"
     :outer-first-loader="true"
   >
+    <template v-if="showBanner" v-slot:feedback-banner>
+      <NotificationBanner
+        type="info"
+        :dismissable="true"
+        :message="bannerMessage"
+        @dismiss="hideBanner()"
+      />
+    </template>
+
     <template v-slot:content-nav>
       <PageBackLink
         v-if="!isExternalParticipant && !viewOnlyReportMode"
@@ -187,7 +196,9 @@
                     :view-only="viewOnlyReportMode"
                     :subject-user="subjectUser"
                     :token="token"
+                    :current-user-id="currentUserId"
                     @unsaved-plugin-change="unsavedPluginChange"
+                    @showBanner="canShowBanner"
                   />
                 </div>
               </div>
@@ -302,6 +313,7 @@ import FormRow from 'tui/components/form/FormRow';
 import Layout from 'tui/components/layouts/LayoutOneColumn';
 import LayoutSidePanel from 'mod_perform/components/user_activities/layout/LayoutOneColumnSidePanelActivities';
 import Loader from 'tui/components/loading/Loader';
+import NotificationBanner from 'tui/components/notifications/NotificationBanner';
 import PageBackLink from 'tui/components/layouts/PageBackLink';
 import PageHeading from 'tui/components/layouts/PageHeading';
 import ParticipantUserHeader from 'mod_perform/components/user_activities/participant/ParticipantUserHeader';
@@ -337,6 +349,7 @@ export default {
     Layout,
     LayoutSidePanel,
     Loader,
+    NotificationBanner,
     PageBackLink,
     PageHeading,
     ParticipantUserHeader,
@@ -469,6 +482,8 @@ export default {
       isDraft: false,
       checkboxGroupId: this.$id('label'),
       unsavedPluginChanges: [],
+      showBanner: false,
+      bannerMessage: '',
     };
   },
   computed: {
@@ -491,8 +506,13 @@ export default {
       let relationshipId = null;
 
       if (this.activeParticipantSection.answerable_participant_instances) {
-        relationshipId = this.activeParticipantSection
-          .answerable_participant_instances[0].core_relationship.id;
+        let coreRelationship = this.activeParticipantSection.answerable_participant_instances.filter(
+          e => e.id == this.answeringAsParticipantId
+        );
+
+        if (coreRelationship !== 'undefined' && coreRelationship.length) {
+          relationshipId = coreRelationship[0].core_relationship.id;
+        }
       }
 
       return relationshipId;
@@ -1271,6 +1291,24 @@ export default {
     draftSubmit(handleSubmit) {
       this.isDraft = true;
       handleSubmit();
+    },
+
+    /**
+     * Show banner
+     *
+     * @param bannerMessage
+     */
+    canShowBanner(bannerMessage) {
+      this.showBanner = true;
+      this.bannerMessage = bannerMessage;
+    },
+
+    /**
+     * Hide banner
+     */
+    hideBanner() {
+      this.showBanner = false;
+      this.bannerMessage = null;
     },
   },
 };

@@ -30,6 +30,7 @@ use performelement_linked_review\entity\linked_review_content as linked_review_c
 use performelement_linked_review\testing\generator as linked_review_generator;
 use totara_core\advanced_feature;
 use totara_core\feature_not_available_exception;
+use totara_core\relationship\relationship;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
@@ -178,6 +179,78 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage('Not all the specified content IDs actually exist');
         $this->resolve_graphql_mutation(self::MUTATION, $args);
+    }
+
+    public function test_content_can_not_be_overridden() {
+        self::setAdminUser();
+
+        [$activity, $section, $element, $section_element] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$user1, $subject_instance, $participant_instance1] = linked_review_generator::instance()->create_participant_in_section(
+            [
+                'activity' => $activity,
+                'section' => $section,
+            ]
+        );
+        [$user2, $subject_instance2, $participant_instance2] = linked_review_generator::instance()->create_participant_in_section(
+            [
+                'activity' => $activity,
+                'section' => $section,
+                'subject_instance' => $subject_instance,
+            ]
+        );
+        $first_content_id = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
+        $last_content_id = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
+
+        // User1 selects contents
+        self::setUser($user1);
+
+        $args = [
+            'input' => [
+                'content_ids' => [$first_content_id],
+                'section_element_id' => $section_element->id,
+                'participant_instance_id' => $participant_instance1->id,
+            ],
+        ];
+
+        $this->assertEquals(0, linked_review_content_entity::repository()->count());
+
+        $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
+
+        /** @var linked_review_content_entity[]|collection $linked_content */
+        $linked_content = linked_review_content_entity::repository()->get();
+        foreach ($linked_content as $content) {
+            $this->assertEquals($section_element->id, $content->section_element_id);
+            $this->assertEquals($participant_instance1->subject_instance_id, $content->subject_instance_id);
+            $this->assertEquals($content->content_id, $first_content_id);
+        }
+
+        // User2 selects contents for the same section element and same subject instance
+        self::setUser($user2);
+        $args = [
+            'input' => [
+                'content_ids' => [$last_content_id],
+                'section_element_id' => $section_element->id,
+                'participant_instance_id' => $participant_instance2->id,
+            ],
+        ];
+
+        $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
+        $this->assertFalse($result['validation_info']['can_update']);
+
+        $expected_relationship_name = relationship::load_by_idnumber(constants::RELATIONSHIP_SUBJECT)->get_name();
+        $expected_message =  get_string(
+            'can_not_select_content_message', 'performelement_linked_review',
+            ['selector' => fullname($user1), 'relationship' => $expected_relationship_name]
+        );
+
+        $this->assertEquals($expected_message, $result['validation_info']['description']);
+
+        foreach ($linked_content as $content) {
+            $this->assertEquals($section_element->id, $content->section_element_id);
+            $this->assertEquals($participant_instance1->subject_instance_id, $content->subject_instance_id);
+            $this->assertEquals($content->content_id, $first_content_id);
+        }
     }
 
     public function test_feature_disabled(): void {

@@ -45,7 +45,7 @@
     <template v-else>
       <!-- Overview of who selected the content -->
       <div class="tui-linkedReviewParticipantForm__selectedBy">
-        <template v-if="selectedContent.items[0]">
+        <template v-if="showSelectedBy">
           {{
             $str('items_selected_by', 'mod_perform', {
               date: selectedContent.items[0].created_at_date,
@@ -53,7 +53,8 @@
             })
           }}
         </template>
-        <template v-else>
+
+        <template v-else-if="showItemNotSelected">
           {{ $str('no_items_selected', 'mod_perform') }}
         </template>
       </div>
@@ -131,7 +132,7 @@
                     :participant-can-answer="participantCanAnswer"
                     :subject-instance-id="subjectInstanceId"
                     :show-other-response="showOtherResponse"
-                    :view-only="viewOnlyReportMode"
+                    :view-only="viewOnly"
                     :token="token"
                   />
                 </ContentChildElementFormScope>
@@ -191,7 +192,8 @@ export default {
       required: true,
     },
     token: String,
-    viewOnlyReportMode: Boolean,
+    viewOnly: Boolean,
+    currentUserId: Number,
   },
 
   data() {
@@ -213,6 +215,20 @@ export default {
         !this.fromPrint &&
         !this.isExternalParticipant
       );
+    },
+
+    showSelectedBy() {
+      return (
+        this.coreRelationshipId ===
+          this.element.data.selection_relationships[0] &&
+        this.selectedContent.items[0] &&
+        this.selectedContent.items[0].selector &&
+        this.currentUserId != this.selectedContent.items[0].selector.id
+      );
+    },
+
+    showItemNotSelected() {
+      return this.viewOnly && this.selectedContent.items[0] === undefined;
     },
   },
 
@@ -414,7 +430,10 @@ export default {
     /**
      * Fetch the content display data after confirming the selection.
      */
-    refetch() {
+    refetch(canNotSelectContentMessage) {
+      if (canNotSelectContentMessage) {
+        this.$emit('showBanner', canNotSelectContentMessage);
+      }
       this.loading = true;
       this.$apollo.queries.selectedContent.refetch().then(() => {
         let elements = this.$refs['selected-content-item'];
