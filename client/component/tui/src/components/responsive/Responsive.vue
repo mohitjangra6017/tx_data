@@ -46,6 +46,17 @@ export default {
       type: Number,
       default: 200,
     },
+
+    /**
+     * Toggle to de/activate observing, can be used to fine-tune performance
+     * when multiple Responsive components are in use but not needed, or if
+     * the Responsive wrapper is conditionally switched off by a condition
+     * other than v-if
+     **/
+    pause: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -81,6 +92,16 @@ export default {
     },
   },
 
+  watch: {
+    pause: function(val) {
+      if (!val) {
+        this.on();
+      } else {
+        this.off();
+      }
+    },
+  },
+
   mounted() {
     // when mounted, create a resize observer to detect changes in dimensions,
     // this will facilitate responsiveness to a finer level than relying solely
@@ -108,7 +129,9 @@ export default {
       );
 
       this.resizeObserverRef = new ResizeObserver(resize);
-      this.resizeObserverRef.observe(this.$el);
+      if (!this.pause) {
+        this.on();
+      }
     }
   },
 
@@ -116,11 +139,23 @@ export default {
     // clean up ahead of garbage collection as there may be multiple Responsive
     // components on the page
     if (this.$el instanceof Element && this.resizeObserverRef) {
-      this.resizeObserverRef.unobserve(this.$el);
+      this.off();
     }
   },
 
   methods: {
+    /**
+     * Observation toggles, useful if we want to halt this component to make
+     * a performance savings, for example if there is a layout with nested
+     * <Responsive /> wrappers.
+     **/
+    on: function() {
+      this.resizeObserverRef.observe(this.$el);
+    },
+    off: function() {
+      this.resizeObserverRef.unobserve(this.$el);
+    },
+
     /**
      * Returns the `name` property of the breakpoint whose boundaries match the
      * width of the observed element. If no match is found, returns undefined.

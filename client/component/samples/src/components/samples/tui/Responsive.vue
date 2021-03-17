@@ -18,38 +18,54 @@
 
 <template>
   <div class="tui-responsive-example">
-    <Responsive
-      v-slot="slotProps"
-      :breakpoints="[
-        { name: 'small', boundaries: [0, 520] },
-        { name: 'medium', boundaries: [521, 768] },
-        { name: 'large', boundaries: [767, 1600] },
-      ]"
-      @responsive-resize="resize"
-    >
-      <div v-if="slotProps.currentBoundaryName === 'small'">
-        <p>Rendering for the <code>small</code> boundaryName</p>
-      </div>
-      <div v-if="slotProps.currentBoundaryName === 'medium'">
-        <p>Rendering for the <code>medium</code> boundaryName</p>
-      </div>
-      <div v-if="slotProps.currentBoundaryName === 'large'">
-        <p>Rendering for the <code>large</code> boundaryName</p>
-      </div>
+    <SamplesExample>
+      <Responsive
+        v-slot="slotProps"
+        :breakpoints="[
+          { name: 'small', boundaries: [0, 520] },
+          { name: 'medium', boundaries: [521, 768] },
+          { name: 'large', boundaries: [767, 1600] },
+        ]"
+        :pause="isPaused"
+        @responsive-resize="resize"
+      >
+        <p v-if="!isPaused">
+          <span v-if="slotProps.currentBoundaryName === 'small'">
+            <p>Rendering for the <code>small</code> boundaryName</p>
+          </span>
+          <span v-if="slotProps.currentBoundaryName === 'medium'">
+            <p>Rendering for the <code>medium</code> boundaryName</p>
+          </span>
+          <span v-if="slotProps.currentBoundaryName === 'large'">
+            <p>Rendering for the <code>large</code> boundaryName</p>
+          </span>
+        </p>
+        <p v-else>Resize observing is paused.</p>
 
-      <Grid :direction="gridProps.gridDirection">
-        <GridItem
-          :units="gridProps.gridItems[0].units"
-          :order="gridProps.gridItems[0].order"
-          >GridItem 1</GridItem
-        >
-        <GridItem
-          :units="gridProps.gridItems[1].units"
-          :order="gridProps.gridItems[1].order"
-          >GridItem 2</GridItem
-        >
-      </Grid>
-    </Responsive>
+        <Grid :direction="gridProps.gridDirection">
+          <GridItem
+            :units="gridProps.gridItems[0].units"
+            :order="gridProps.gridItems[0].order"
+            >GridItem 1</GridItem
+          >
+          <GridItem
+            :units="gridProps.gridItems[1].units"
+            :order="gridProps.gridItems[1].order"
+            >GridItem 2</GridItem
+          >
+        </Grid>
+      </Responsive>
+    </SamplesExample>
+
+    <SamplesPropCtl>
+      <FormRow v-slot="{}" label="Pause Responsive resizing">
+        <ToggleSwitch
+          id="toggle"
+          v-model="isPaused"
+          aria-label="Toggle Responsive resizing on or off"
+        />
+      </FormRow>
+    </SamplesPropCtl>
   </div>
 </template>
 
@@ -57,15 +73,24 @@
 import Grid from 'tui/components/grid/Grid';
 import GridItem from 'tui/components/grid/GridItem';
 import Responsive from 'tui/components/responsive/Responsive';
+import FormRow from 'tui/components/form/FormRow';
+import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
+import SamplesPropCtl from 'samples/components/sample_parts/misc/SamplesPropCtl';
+import SamplesExample from 'samples/components/sample_parts/misc/SamplesExample';
 
 export default {
   components: {
     Grid,
     GridItem,
     Responsive,
+    FormRow,
+    ToggleSwitch,
+    SamplesPropCtl,
+    SamplesExample,
   },
   data() {
     return {
+      isPaused: false,
       gridProps: {
         gridDirection: 'horizontal',
         gridItems: [{ units: 3 }, { units: 9 }],
@@ -114,12 +139,9 @@ export default {
 </script>
 <style lang="scss">
 .tui-responsive-example .tui-grid {
-  background-color: rgba(255, 0, 0, 0.2);
+  background-color: var(--color-secondary);
   * {
-    background-color: rgba(0, 255, 0, 0.2);
-  }
-  * * {
-    background-color: rgba(0, 0, 255, 0.2);
+    background-color: var(--color-state);
   }
 }
 </style>
