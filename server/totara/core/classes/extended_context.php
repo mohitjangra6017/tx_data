@@ -72,7 +72,7 @@ final class extended_context {
         string $area = self::NATURAL_CONTEXT_AREA,
         int $item_id = self::NATURAL_CONTEXT_ITEM_ID
     ): extended_context {
-        return static::make_with_id(
+        return self::make_with_id(
             $context->id,
             $component,
             $area,
@@ -122,7 +122,7 @@ final class extended_context {
      */
     public static function make_system(): extended_context {
         $context = context_system::instance();
-        return static::make_with_context($context);
+        return self::make_with_context($context);
     }
 
     /**
@@ -179,6 +179,14 @@ final class extended_context {
      */
     public function get_context_id(): int {
         return $this->identifier->get_context_id();
+    }
+
+    /**
+     * @return int
+     */
+    public function get_context_level(): int {
+        $context = $this->get_context();
+        return $context->contextlevel;
     }
 
     /**

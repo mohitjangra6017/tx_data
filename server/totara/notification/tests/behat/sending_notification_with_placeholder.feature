@@ -23,7 +23,7 @@ Feature: Sending notification with placeholders
     And I click on "New comment created details" "button"
     When I click on "Actions for Comment created" "button"
     And I click on "Edit" "link"
-    And I click on the "Enable customising field subject" tui toggle button
+    And I click on the "override_subject" tui checkbox
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to ""
     And I activate the weka editor with css ".tui-notificationPreferenceForm__subjectEditor"
     And I type "New comment from " in the weka editor
@@ -38,7 +38,7 @@ Feature: Sending notification with placeholders
     And I should see "Commenter's First name" in the ".tui-notificationPreferenceForm__subjectEditor" "css_element"
     And I should not see "Commenter's Surname"
     And I should not see "Commenter's Full name"
-    And I click on the "Enable customising field body" tui toggle button
+    And I click on the "override_body" tui checkbox
     And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to ""
     And I activate the weka editor with css ".tui-notificationPreferenceForm__bodyEditor"
     And I type "Hello user " in the weka editor

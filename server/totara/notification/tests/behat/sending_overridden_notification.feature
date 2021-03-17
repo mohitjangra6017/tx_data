@@ -26,10 +26,10 @@ Feature: Sending overridden notification
     # And I click on "Edit" "link" in the ".tui-dataTableRows .tui-dataTableRow:nth-of-type(2)" "css_element"
     Then the "Recipient" "field" should be disabled
 
-    When I click on the "Enable customising field recipient" tui toggle button
+    When I click on the "override_recipient" tui checkbox
     Then the "Recipient" "field" should be enabled
     And  I set the field with xpath "//select[@class='tui-select__input']" to "Owner"
-    And I click on the "Enable customising field subject" tui toggle button
+    And I click on the "override_subject" tui checkbox
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Overridden subject at system"
     And I click on "Save" "button"
     And I log out

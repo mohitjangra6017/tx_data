@@ -227,6 +227,7 @@ class notification_preference {
      * + @see built_in_notification::get_default_subject_format()
      * + @see built_in_notification::get_default_schedule_offset()
      * + @see built_in_notification::get_default_enabled()
+     * + @see built_in_notification::get_default_locked_delivery_channels()
      *
      * @param string $attribute_name
      * @return mixed|null
@@ -251,6 +252,7 @@ class notification_preference {
             'recipient' => 'get_recipient_class_name',
             'body_format' => 'get_default_body_format',
             'enabled' => 'get_default_enabled',
+            'locked_delivery_channels' => 'get_default_locked_delivery_channels',
         ];
 
         if (!isset($map_methods[$attribute_name])) {
@@ -538,5 +540,49 @@ class notification_preference {
         }
 
         return has_capability('totara/notification:managenotifications', $extended_context->get_context(), $userid);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function get_locked_delivery_channels(): array {
+        if (null !== $this->entity->locked_delivery_channels) {
+            return $this->entity->get_decoded_locked_delivery_channels();
+        }
+
+        if ($this->has_parent()) {
+            return $this->parent->get_locked_delivery_channels();
+        }
+
+        return $this->get_property_from_built_in_notification('locked_delivery_channels');
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_overridden_locked_delivery_channels(): bool {
+        $channels = $this->entity->locked_delivery_channels;
+
+        // We are using null, because empty array means that the notification
+        // preference does not want to force any.
+        return null !== $channels;
+    }
+
+    /**
+     * A function to check whether this notification preference is an overridden
+     * record or not.
+     *
+     * @return bool
+     */
+    public function is_an_overridden_record(): bool {
+        $ancestor_id = $this->get_ancestor_id();
+        if (!empty($ancestor_id)) {
+            return true;
+        }
+
+        // It does not have the ancestor's id. Therefore we gonna need to check whether it
+        // it is a custom notification or not. If it is not a custom notification, then we are
+        // overridding the system built in notification.
+        return !$this->is_custom_notification();
     }
 }

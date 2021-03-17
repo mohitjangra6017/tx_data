@@ -29,6 +29,9 @@ use core_phpunit\testcase;
 use core_user\totara_notification\placeholder\user;
 use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
+use totara_notification\entity\notification_preference as entity;
+use totara_notification\event\update_custom_notification_preference_event;
+use totara_notification\event\update_overridden_notification_preference_event;
 use totara_notification\json_editor\node\placeholder;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\schedule_helper;
@@ -470,7 +473,6 @@ class totara_notification_webapi_update_notification_preference_testcase extends
      */
     public function test_update_custom_notification_body_with_format_json_editor(): void {
         $generator = generator::instance();
-        $context_system = context_system::instance();
 
         totara_notification_mock_notifiable_event_resolver::add_placeholder_options(
             placeholder_option::create(
@@ -615,6 +617,224 @@ class totara_notification_webapi_update_notification_preference_testcase extends
 
         self::assertInstanceOf(model::class, $preference);
         self::assertEquals($system_built_in->get_id(), $preference->get_id());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_notification_preference_with_locked_delivery_channels(): void {
+        global $DB;
+
+        $this->setAdminUser();
+        $generator = generator::instance();
+
+        $custom_preference = $generator->create_notification_preference(
+            mock_resolver::class,
+            extended_context::make_system(),
+            ['locked_delivery_channels' => ['email', 'popup']]
+        );
+
+        self::assertEquals(
+            "[\"email\",\"popup\"]",
+            $DB->get_field(
+                entity::TABLE,
+                'locked_delivery_channels',
+                ['id' => $custom_preference->get_id()]
+            )
+        );
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $custom_preference->get_id(),
+                'locked_delivery_channels' => ['totara_task', 'totara_alert'],
+            ]
+        );
+
+        $locked_delivery_channels_field = $DB->get_field(
+            entity::TABLE,
+            'locked_delivery_channels',
+            ['id' => $custom_preference->get_id()]
+        );
+
+        self::assertNotEquals("[\"email\",\"popup\"]", $locked_delivery_channels_field);
+        self::assertEquals("[\"totara_task\",\"totara_alert\"]", $locked_delivery_channels_field);
+
+        $custom_preference->refresh();
+        self::assertEquals(
+            ['totara_task', 'totara_alert'],
+            $custom_preference->get_locked_delivery_channels()
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_notification_preference_with_invalid_locked_delivery_channels(): void {
+        $this->setAdminUser();
+        $generator = generator::instance();
+
+        $custom_preference = $generator->create_notification_preference(
+            mock_resolver::class,
+            extended_context::make_system()
+        );
+
+        try {
+            $this->resolve_graphql_mutation(
+                $this->get_graphql_name(update_notification_preference::class),
+                [
+                    'id' => $custom_preference->get_id(),
+                    'locked_delivery_channels' => ['email', 'giac', 'mo', 'hom', 'qua'],
+                ]
+            );
+
+            self::fail("Expect an exception to be thrown");
+        } catch (Throwable $e) {
+            self::assertInstanceOf(coding_exception::class, $e);
+            self::assertStringContainsString(
+                "The channel 'giac' is not a valid delivery channel class",
+                $e->getMessage()
+            );
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_notification_preference_with_valid_locked_delivery_channels_for_built_in(): void {
+        $generator = generator::instance();
+        $built_in = $generator->add_mock_built_in_notification_for_component();
+
+        $this->setAdminUser();
+        self::assertEquals([], $built_in->get_locked_delivery_channels());
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $built_in->get_id(),
+                'locked_delivery_channels' => ['email', 'msteams'],
+            ]
+        );
+
+        $built_in->refresh();
+        self::assertEquals(['email', 'msteams'], $built_in->get_locked_delivery_channels());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_built_in_should_yield_overridden_event(): void {
+        $generator = generator::instance();
+        $built_in = $generator->add_mock_built_in_notification_for_component();
+
+        $this->setAdminUser();
+        $event_sink = self::redirectEvents();
+
+        self::assertEquals(0, $event_sink->count());
+        self::assertEmpty($event_sink->get_events());
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $built_in->get_id(),
+                'subject' => 'boom',
+                'subject_format' => FORMAT_PLAIN,
+            ]
+        );
+
+        $events = $event_sink->get_events();
+        self::assertCount(1, $events);
+
+        $event = reset($events);
+        self::assertInstanceOf(update_overridden_notification_preference_event::class, $event);
+        self::assertArrayHasKey('overridden_fields', $event->other);
+        self::assertEquals(['subject', 'subject_format'], $event->other['overridden_fields']);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_custom_should_yield_update_custom_event(): void {
+        $generator = generator::instance();
+        $custom_preference = $generator->create_notification_preference(
+            mock_resolver::class,
+            extended_context::make_system(),
+            ['title' => 'Old title']
+        );
+
+        self::assertEquals('Old title', $custom_preference->get_title());
+
+        $this->setAdminUser();
+        $event_sink = self::redirectEvents();
+
+        self::assertEquals(0, $event_sink->count());
+        self::assertEmpty($event_sink->get_events());
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $custom_preference->get_id(),
+                'title' => 'New title',
+            ]
+        );
+
+        $events = $event_sink->get_events();
+        self::assertNotEmpty($events);
+        self::assertCount(1, $events);
+
+        $event = reset($events);
+        self::assertInstanceOf(update_custom_notification_preference_event::class, $event);
+
+        $custom_preference->refresh();
+        self::assertNotEquals('Old title', $custom_preference->get_title());
+        self::assertEquals('New title', $custom_preference->get_title());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_overridden_custom_record_at_lower_context_should_yield_update_overridden_event(): void {
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $notification_generator = generator::instance();
+        $system_custom = $notification_generator->create_notification_preference(
+            mock_resolver::class,
+            extended_context::make_system(),
+            []
+        );
+
+        $course_custom = $notification_generator->create_overridden_notification_preference(
+            $system_custom,
+            extended_context::make_with_context(context_course::instance($course->id)),
+            [
+                'subject' => 'Better subject',
+                'subject_format' => FORMAT_PLAIN,
+            ]
+        );
+
+        $event_sink = self::redirectEvents();
+        self::assertEquals(0, $event_sink->count());
+        self::assertEmpty($event_sink->get_events());
+
+        $this->setAdminUser();
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $course_custom->get_id(),
+                'body' => 'Boom',
+                'body_format' => FORMAT_PLAIN,
+            ]
+        );
+
+        $events = $event_sink->get_events();
+        self::assertCount(1, $events);
+        self::assertNotEmpty($events);
+
+        $event = reset($events);
+        self::assertInstanceOf(update_overridden_notification_preference_event::class, $event);
+        self::assertArrayHasKey('overridden_fields', $event->other);
+        self::assertEquals(['body', 'body_format'], $event->other['overridden_fields']);
     }
 
     /**

@@ -33,6 +33,15 @@ const props = {
       name: 'test',
     },
   ],
+  defaultDeliveryChannels: [
+    {
+      component: 'email',
+      label: 'Email',
+      is_enabled: true,
+      is_sub_delivery_channel: true,
+      parent_component: 'popup',
+    },
+  ],
 };
 
 describe('NotificationPreferenceForm', () => {

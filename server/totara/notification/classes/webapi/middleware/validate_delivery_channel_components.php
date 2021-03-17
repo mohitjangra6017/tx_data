@@ -27,9 +27,9 @@ use coding_exception;
 use core\webapi\middleware;
 use core\webapi\resolver\payload;
 use core\webapi\resolver\result;
-use totara_notification\local\helper;
+use totara_notification\delivery\channel_helper;
 
-class validate_event_class_name implements middleware {
+class validate_delivery_channel_components implements middleware {
     /**
      * @var string
      */
@@ -38,36 +38,44 @@ class validate_event_class_name implements middleware {
     /**
      * @var bool
      */
-    private $must_exist;
+    private $is_required;
 
     /**
-     * validate_event_class_name constructor.
+     * validate_delivery_channel_classes constructor.
      * @param string $payload_key
-     * @param bool   $must_exist
+     * @param bool   $is_required
      */
-    public function __construct(string $payload_key, bool $must_exist = false) {
+    public function __construct(string $payload_key, bool $is_required = false) {
         $this->payload_key = $payload_key;
-        $this->must_exist = $must_exist;
+        $this->is_required = $is_required;
     }
 
     /**
      * @param payload $payload
      * @param Closure $next
+     *
      * @return result
      */
     public function handle(payload $payload, Closure $next): result {
-        $event_class_name = $payload->get_variable($this->payload_key);
+        $channel_components = $payload->get_variable($this->payload_key);
+        if (null === $channel_components) {
+            if ($this->is_required) {
+                throw new coding_exception("The field '{$this->payload_key}' is required for validation");
+            }
 
-        if (empty($event_class_name)) {
-            if ($this->must_exist) {
+            return $next->__invoke($payload);
+        }
+
+        if (!is_array($channel_components)) {
+            throw new coding_exception("Expecting an array of channel component names");
+        }
+
+        foreach ($channel_components as $component) {
+            if (!channel_helper::is_valid_delivery_channel($component)) {
                 throw new coding_exception(
-                    "The payload does not have variable '{$this->payload_key}'"
+                    "The channel '{$component}' is not a valid delivery channel class"
                 );
             }
-        } else if (!helper::is_valid_notifiable_event($event_class_name)) {
-            throw new coding_exception(
-                "The event class name is not a notifiable event"
-            );
         }
 
         return $next->__invoke($payload);

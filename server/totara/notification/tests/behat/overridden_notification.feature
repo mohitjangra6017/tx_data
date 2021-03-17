@@ -24,25 +24,37 @@ Feature: Overridden notifications at lower context
     When I click on "Edit" "link"
     Then I should not see "Overridden subject at system"
     And I should not see "Overridden body at system"
-    And "Enable customising field recipient" "button" should exist
-    And "Enable customising field subject" "button" should exist
-    And "Enable customising field schedule" "button" should exist
-    And "Enable customising field body" "button" should exist
-    And "Enable customising notification status" "button" should exist
+    And "Enable customising field recipient" "checkbox" should exist
+    And "Enable customising field subject" "checkbox" should exist
+    And "Enable customising field schedule" "checkbox" should exist
+    And "Enable customising field body" "checkbox" should exist
+    And "Enable customising locked delivery channels" "checkbox" should exist
+    And "Enable customising notification status" "checkbox" should exist
     And the "Recipient" "field" should be disabled
     And the "Name" "field" should be disabled
     And the "On notification trigger event" "field" should be disabled
     And the "Days after" "field" should be disabled
     And the "Enabled" "field" should be disabled
+    And the "Lock channel Email" "checkbox" should be disabled
+    And the "Lock channel Site notifications" "checkbox" should be disabled
+    And the "Lock channel Microsoft Teams" "checkbox" should be disabled
+    And the "Lock channel Alerts" "checkbox" should be disabled
+    And the "Lock channel Tasks" "checkbox" should be disabled
 
-    When I click on the "Enable customising field recipient" tui toggle button
-    And I click on the "Enable customising field subject" tui toggle button
-    And I click on the "Enable customising field schedule" tui toggle button
-    And I click on the "Enable customising field body" tui toggle button
-    And I click on the "Enable customising notification status" tui toggle button
+    When I click on the "override_recipient" tui checkbox
+    And I click on the "override_subject" tui checkbox
+    And I click on the "override_schedule" tui checkbox
+    And I click on the "override_body" tui checkbox
+    And I click on the "override_locked_delivery_channels" tui checkbox
+    And I click on the "override_enabled" tui checkbox
     Then the "Recipient" "field" should be enabled
     And the "On notification trigger event" "field" should be enabled
     And the "Days after" "field" should be enabled
+    And the "Lock channel Email" "checkbox" should be enabled
+    And the "Lock channel Site notifications" "checkbox" should be enabled
+    And the "Lock channel Microsoft Teams" "checkbox" should be enabled
+    And the "Lock channel Alerts" "checkbox" should be enabled
+    And the "Lock channel Tasks" "checkbox" should be enabled
     And the "Enabled" "field" should be enabled
 
     When I set the field with xpath "//select[@class='tui-select__input']" to "Owner"
@@ -50,6 +62,8 @@ Feature: Overridden notifications at lower context
     And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Overridden body at system"
     And I click on the "Days after" tui radio
     And I set the field "Number" to "3"
+    And I click on the "lock_email" tui checkbox
+    And I click on the "lock_popup" tui checkbox
     # The status field that handled by TUI form. At this point it does not understand the label associated with it.
     # Hence we are going to have to use the checkbox's field name.
     And I click on the "enabled[value]" tui checkbox
@@ -64,16 +78,32 @@ Feature: Overridden notifications at lower context
     And I should see "Overridden subject at system"
     And I should see "Overridden body at system"
     And the field "Number" matches value "3"
+    And the field "Lock channel Email" matches value "email"
+    And the field "Lock channel Site notifications" matches value "popup"
+    And the field "Lock channel Microsoft Teams" does not match value "msteams"
+    And the field "Lock channel Alerts" does not match value "totara_alert"
+    And the field "Lock channel Tasks" does not match value "totara_task"
     # By default the notification preference is enabled, hence after click should result it to be disabled.
     And the field "Enabled" matches value "0"
 
-    When I click on the "Enable customising field recipient" tui toggle button
-    And I click on the "Enable customising field subject" tui toggle button
-    And I click on the "Enable customising field body" tui toggle button
-    And I click on the "Enable customising field schedule" tui toggle button
-    And I click on the "Enable customising notification status" tui toggle button
+    When I click on the "override_recipient" tui checkbox
+    And I click on the "override_subject" tui checkbox
+    And I click on the "override_body" tui checkbox
+    And I click on the "override_schedule" tui checkbox
+    And I click on the "override_locked_delivery_channels" tui checkbox
+    And I click on the "override_enabled" tui checkbox
     Then I should not see "Overridden subject at system"
     And I should not see "Overridden body at system"
+    And the "Lock channel Email" "checkbox" should be disabled
+    And the "Lock channel Site notifications" "checkbox" should be disabled
+    And the "Lock channel Microsoft Teams" "checkbox" should be disabled
+    And the "Lock channel Alerts" "checkbox" should be disabled
+    And the "Lock channel Tasks" "checkbox" should be disabled
+    And the field "Lock channel Email" does not match value "email"
+    And the field "Lock channel Site notifications" does not match value "popup"
+    And the field "Lock channel Microsoft Teams" does not match value "msteams"
+    And the field "Lock channel Alerts" does not match value "totara_alert"
+    And the field "Lock channel Tasks" does not match value "totara_task"
 
     When I click on "Save" "button"
     And I click on "Actions for Comment created" "button"
@@ -81,5 +111,15 @@ Feature: Overridden notifications at lower context
     Then I should not see "Overridden subject at system"
     And I should not see "Overridden body at system"
     And the field "Number" does not match value "3"
+    And the "Lock channel Email" "checkbox" should be disabled
+    And the "Lock channel Site notifications" "checkbox" should be disabled
+    And the "Lock channel Microsoft Teams" "checkbox" should be disabled
+    And the "Lock channel Alerts" "checkbox" should be disabled
+    And the "Lock channel Tasks" "checkbox" should be disabled
+    And the field "Lock channel Email" does not match value "email"
+    And the field "Lock channel Site notifications" does not match value "popup"
+    And the field "Lock channel Microsoft Teams" does not match value "msteams"
+    And the field "Lock channel Alerts" does not match value "totara_alert"
+    And the field "Lock channel Tasks" does not match value "totara_task"
     # Default of status is enabled.
     And the field "Enabled" matches value "1"

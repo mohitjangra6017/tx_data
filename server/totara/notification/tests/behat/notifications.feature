@@ -57,7 +57,7 @@ Feature: Notifications page
     #Update custom notification
     When I click on "Actions for Test custom notification" "button"
     Then I should see "Edit"
-    And I click on "Edit" "link" in the ".tui-dataTableRows .tui-dataTableRow:nth-of-type(2)" "css_element"
+    And I click on "Edit notification Test custom notification" "link"
     Then I should see "Edit notification"
 
     When I set the field "Name" to "New notification"
@@ -71,7 +71,7 @@ Feature: Notifications page
     #Delete custom notification
     When I click on "Actions for New notification" "button"
     Then I should see "Delete"
-    And I click on "Delete" "link" in the ".tui-dataTableRows .tui-dataTableRow:nth-of-type(2)" "css_element"
+    And I click on "Delete notification New notification" "link"
     And I should see "Delete notification: New notification"
     And I should see "Are you sure? Deleting this notification will remove its instances in other contexts, such as categories and courses. This action cannot be undone."
     And I click on "Delete" "button"

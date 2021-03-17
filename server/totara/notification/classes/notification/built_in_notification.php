@@ -77,6 +77,17 @@ abstract class built_in_notification {
     abstract public static function get_default_schedule_offset(): int;
 
     /**
+     * Returns the list of delivery channels by its component.
+     * By default nothing is locked. Extends this function at lower
+     * child class to have its own locked delivery channels.
+     *
+     * @return string[]
+     */
+    public static function get_default_locked_delivery_channels(): array {
+        return [];
+    }
+
+    /**
      * The function should only return the following values:
      * + @see FORMAT_MOODLE
      * + @see FORMAT_HTML

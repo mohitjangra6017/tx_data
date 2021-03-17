@@ -25,8 +25,11 @@ use core\orm\query\builder;
 use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\entity\notification_preference as entity;
+use totara_notification\event\create_custom_notification_preference_event;
+use totara_notification\event\create_override_notification_preference_event;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\model\notification_preference as model;
+use totara_notification\schedule\schedule_before_event;
 use totara_notification\schedule\schedule_on_event;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\mutation\create_notification_preference;
@@ -303,7 +306,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'title' => 'This is title',
                 'schedule_type' => schedule_on_event::identifier(),
                 'schedule_offset' => 0,
-                'recipient' => totara_notification_mock_recipient::class,
+                'recipient' => mock_recipient::class,
                 'enabled' => true,
             ]
         );
@@ -521,7 +524,6 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         );
     }
 
-
     /**
      * @return void
      */
@@ -540,7 +542,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $custom_category = $notification_generator->create_notification_preference(
             mock_resolver::class,
             extended_context::make_with_context($context_other_cat),
-            ['recipient' => totara_notification_mock_recipient::class]
+            ['recipient' => mock_recipient::class]
         );
 
         $this->expectException(coding_exception::class);
@@ -562,7 +564,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'title' => 'This is title',
                 'body_format' => FORMAT_MOODLE,
                 'subject_format' => FORMAT_PLAIN,
-                'recipient' => totara_notification_mock_recipient::class,
+                'recipient' => mock_recipient::class,
             ]
         );
     }
@@ -578,7 +580,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         $system_custom = $notification_generator->create_notification_preference(
             mock_resolver::class,
             extended_context::make_with_context(context_system::instance()),
-            ['recipient' => totara_notification_mock_recipient::class]
+            ['recipient' => mock_recipient::class]
         );
 
         $context_course = context_course::instance($course->id);
@@ -609,8 +611,154 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'resolver_class_name' => mock_resolver::class,
                 'body_format' => FORMAT_MOODLE,
                 'subject_format' => FORMAT_PLAIN,
+                'recipient' => mock_recipient::class,
             ]
         );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_custom_notification_that_has_locked_delivery_channels(): void {
+        $this->setAdminUser();
+
+        /** @var model $custom_preference */
+        $custom_preference = $this->resolve_graphql_mutation(
+            $this->get_graphql_name(create_notification_preference::class),
+            [
+                'extended_context' => [
+                    'context_id' => context_system::instance()->id,
+                ],
+                'subject' => 'New subject',
+                'body' => 'New body',
+                'resolver_class_name' => mock_resolver::class,
+                'body_format' => FORMAT_PLAIN,
+                'subject_format' => FORMAT_PLAIN,
+                'recipient' => mock_recipient::class,
+                'locked_delivery_channels' => ['email', 'popup'],
+                'title' => 'Custom title',
+                'schedule_offset' => 5,
+                'schedule_type' => schedule_before_event::identifier(),
+                'enabled' => true
+            ]
+        );
+
+        self::assertEquals(
+            ['email', 'popup'],
+            $custom_preference->get_locked_delivery_channels()
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_custom_notification_that_has_invalid_locked_delivery_channels(): void {
+        $this->setAdminUser();
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("The channel 'alan' is not a valid delivery channel");
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(create_notification_preference::class),
+            [
+                'extended_context' => [
+                    'context_id' => context_system::instance()->id,
+                ],
+                'subject' => 'New subject',
+                'body' => 'New body',
+                'resolver_class_name' => mock_resolver::class,
+                'body_format' => FORMAT_PLAIN,
+                'subject_format' => FORMAT_PLAIN,
+                'recipient' => mock_recipient::class,
+                'locked_delivery_channels' => ['alan'],
+                'title' => 'Custom title',
+                'schedule_offset' => 5,
+                'schedule_type' => schedule_before_event::identifier(),
+                'enabled' => true
+            ]
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_an_overriden_record_should_yield_an_overridden_event(): void {
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $notification_generator = generator::instance();
+        $custom_preference = $notification_generator->create_notification_preference(
+            mock_resolver::class,
+            extended_context::make_system(),
+            [
+                'body' => 'System body',
+                'body_format' => FORMAT_PLAIN
+            ]
+        );
+
+        $this->setAdminUser();
+        $event_sink = self::redirectEvents();
+
+        self::assertEquals(0, $event_sink->count());
+        self::assertEmpty($event_sink->get_events());
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(create_notification_preference::class),
+            [
+                'ancestor_id' => $custom_preference->get_id(),
+                'resolver_class_name' => mock_resolver::class,
+                'extended_context' => [
+                    'context_id' => context_course::instance($course->id)->id
+                ],
+                'subject' => 'This is course subject',
+                'subject_format' => FORMAT_PLAIN
+            ]
+        );
+
+        $events = $event_sink->get_events();
+        self::assertNotEmpty($events);
+        self::assertCount(1, $events);
+
+        $event = reset($events);
+        self::assertInstanceOf(create_override_notification_preference_event::class, $event);
+        self::assertArrayHasKey('overridden_fields', $event->other);
+        self::assertEquals(['subject', 'subject_format'], $event->other['overridden_fields']);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_a_custom_notification_record_should_yield_a_create_custom_event(): void {
+        $event_sink = self::redirectEvents();
+        self::assertEquals(0, $event_sink->count());
+        self::assertEmpty($event_sink->get_events());
+
+        $this->setAdminUser();
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(create_notification_preference::class),
+            [
+                'extended_context' => [
+                    'context_id' => context_system::instance()->id,
+                ],
+                'subject' => 'New subject',
+                'body' => 'New body',
+                'resolver_class_name' => mock_resolver::class,
+                'body_format' => FORMAT_PLAIN,
+                'subject_format' => FORMAT_PLAIN,
+                'recipient' => mock_recipient::class,
+                'locked_delivery_channels' => ['email'],
+                'title' => 'Custom title',
+                'schedule_offset' => 5,
+                'schedule_type' => schedule_before_event::identifier(),
+                'enabled' => true,
+            ]
+        );
+
+        $events = $event_sink->get_events();
+        self::assertNotEmpty($events);
+        self::assertCount(1, $events);
+
+        $event = reset($events);
+        self::assertInstanceOf(create_custom_notification_preference_event::class, $event);
     }
 
     public function test_user_cannot_create_notification_without_manage_capability(): void {

@@ -33,9 +33,12 @@ use core\webapi\resolver\has_middleware;
 use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_preference as entity;
+use totara_notification\event\create_custom_notification_preference_event;
+use totara_notification\event\create_override_notification_preference_event;
 use totara_notification\local\helper;
 use totara_notification\local\schedule_helper;
 use totara_notification\model\notification_preference;
+use totara_notification\webapi\middleware\validate_delivery_channel_components;
 use totara_notification\webapi\middleware\validate_resolver_class_name;
 
 class create_notification_preference implements mutation_resolver, has_middleware {
@@ -45,7 +48,7 @@ class create_notification_preference implements mutation_resolver, has_middlewar
      * @return notification_preference
      */
     public static function resolve(array $args, execution_context $ec): notification_preference {
-        global $DB;
+        global $DB, $USER;
 
         // Default to context system if none is provided.
         $context_id = $args['extended_context']['context_id'] ?? context_system::instance()->id;
@@ -74,7 +77,10 @@ class create_notification_preference implements mutation_resolver, has_middlewar
 
         $title = $args['title'] ?? null;
 
-        if (isset($args['ancestor_id'])) {
+        $overridding = isset($args['ancestor_id']);
+        $overridding_fields = [];
+
+        if ($overridding) {
             if ($extended_context->is_natural_context() && CONTEXT_SYSTEM == $context->contextlevel) {
                 // Note that this part is also done in the builder as well.
                 throw new coding_exception(
@@ -123,14 +129,22 @@ class create_notification_preference implements mutation_resolver, has_middlewar
 
             $builder->set_ancestor_id($args['ancestor_id']);
             $builder->set_notification_class_name($notification_class_name);
+
+            // Populate the list of overridding fields for logging into the event.
+            $override_able_fields = ['body', 'body_format', 'subject', 'subject_format'];
+            foreach ($override_able_fields as $field) {
+                if (isset($args[$field])) {
+                    $overridding_fields[] = $field;
+                }
+            }
         }
 
         // Note: builder is able to validate the input data depending on the cases:
         //       either create new custom notification preference or overridden record.
         $builder->set_title($args['title'] ?? null);
         $builder->set_body($args['body'] ?? null);
-        $builder->set_subject($args['subject'] ?? null);
         $builder->set_body_format($args['body_format'] ?? null);
+        $builder->set_subject($args['subject'] ?? null);
         $builder->set_subject_format($args['subject_format'] ?? null);
         $builder->set_enabled($args['enabled'] ?? null);
 
@@ -138,20 +152,51 @@ class create_notification_preference implements mutation_resolver, has_middlewar
         $schedule_type = $args['schedule_type'] ?? null;
         $schedule_offset = $args['schedule_offset'] ?? null;
         $raw_schedule_offset = null;
+
         if (null !== $schedule_type && null !== $schedule_offset) {
             $raw_schedule_offset = schedule_helper::convert_schedule_offset_for_storage(
                 $schedule_type,
                 $schedule_offset
             );
         }
+
         $builder->set_schedule_offset($raw_schedule_offset);
+        if ($overridding && null !== $raw_schedule_offset) {
+            $overridding_fields[] = 'schedule_offset';
+        }
 
         if (isset($args['recipient']) && !helper::is_valid_recipient_class($args['recipient'])) {
             throw new coding_exception("{$args['recipient']} is not predefined recipient class");
         }
 
         $builder->set_recipient($args['recipient'] ?? null);
-        return $builder->save();
+        if ($overridding && !empty($args['recipient'])) {
+            $overridding_fields[] = 'recipient';
+        }
+
+        $builder->set_locked_delivery_channels($args['locked_delivery_channels'] ?? null);
+        if ($overridding && !empty($args['locked_delivery_channels'])) {
+            $overridding_fields[] = 'locked_delivery_channels';
+        }
+
+        $preference = $builder->save();
+
+        // Triggers event, however depends on the properties of notification preference, we are going to trigger
+        // the different events. As the event is what we are logging the activity.
+        if (!$preference->is_an_overridden_record()) {
+            // We are creating a new custom notification preference within context.
+            $event = create_custom_notification_preference_event::from_preference($preference, $USER->id);
+        } else {
+            // Otherwise we are overriding the notification preference at a specific context.
+            $event = create_override_notification_preference_event::from_preference(
+                $preference,
+                $USER->id,
+                $overridding_fields
+            );
+        }
+
+        $event->trigger();
+        return $preference;
     }
 
     /**
@@ -165,6 +210,7 @@ class create_notification_preference implements mutation_resolver, has_middlewar
             new clean_editor_content('body', 'body_format', false),
             new clean_editor_content('subject', 'subject_format', false),
             new validate_resolver_class_name('resolver_class_name', true),
+            new validate_delivery_channel_components('locked_delivery_channels', false)
         ];
     }
 }

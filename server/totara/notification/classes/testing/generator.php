@@ -41,6 +41,7 @@ use totara_notification\task\process_notification_queue_task;
 use totara_notification_mock_built_in_notification;
 use totara_notification_mock_lang_string;
 use totara_notification_mock_notifiable_event_resolver;
+use totara_notification_mock_recipient;
 use totara_notification_test_progress_trace;
 
 /**
@@ -132,6 +133,7 @@ final class generator extends component_generator {
      * + recipient: String
      * + schedule_offset: Int
      * + enabled: Boolean
+     * + locked_delivery_channels: String[]
      *
      * @param array                 $data
      * @param extended_context|null $extended_context
@@ -169,6 +171,7 @@ final class generator extends component_generator {
         }
 
         if (empty($data['notification_class_name']) && empty($data['ancestor_id'])) {
+            $this->include_mock_recipient();
             // We are only giving the default value if the notification_class_name or the ancestor is not
             // appearing in the $data parameter.
             $data['body_format'] = $data['body_format'] ?? FORMAT_JSON_EDITOR;
@@ -179,6 +182,8 @@ final class generator extends component_generator {
             $data['subject'] = $data['subject'] ?? 'This is a subject';
             $data['schedule_offset'] = $data['schedule_offset'] ?? 0;
             $data['enabled'] = $data['enabled'] ?? true;
+            $data['recipient'] = $data['recipient'] ?? totara_notification_mock_recipient::class;
+            $data['locked_delivery_channels'] = $data['locked_delivery_channels'] ?? [];
         }
 
         if (isset($data['body']) && isset($data['body_format'])) {
@@ -213,6 +218,7 @@ final class generator extends component_generator {
         $builder->set_schedule_offset($data['schedule_offset'] ?? null);
         $builder->set_recipient($data['recipient'] ?? null);
         $builder->set_enabled($data['enabled'] ?? null);
+        $builder->set_locked_delivery_channels($data['locked_delivery_channels'] ?? null);
 
         return $builder->save();
     }
@@ -250,7 +256,8 @@ final class generator extends component_generator {
             'body_format' => $overridden_data['body_format'] ?? null,
             'subject_format' => $overridden_data['subject_format'] ?? null,
             'recipient' => $overridden_data['recipient'] ?? null,
-            'enabled' => $overridden_data['enabled'] ?? null
+            'enabled' => $overridden_data['enabled'] ?? null,
+            'locked_delivery_channels' => $overridden_data['locked_delivery_channels'] ?? null
         ];
 
         if (!$preference->has_parent()) {

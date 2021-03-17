@@ -32,6 +32,9 @@
       </template>
 
       <DropdownItem
+        :title="
+          $str('edit_notification_name', 'totara_notification', preferenceTitle)
+        "
         :aria-label="
           $str('edit_notification_name', 'totara_notification', preferenceTitle)
         "
@@ -42,6 +45,13 @@
       </DropdownItem>
       <DropdownItem
         v-if="isDeletable"
+        :title="
+          $str(
+            'delete_notification_name',
+            'totara_notification',
+            preferenceTitle
+          )
+        "
         :aria-label="
           $str(
             'delete_notification_name',
@@ -92,7 +102,8 @@ export default {
     ],
     "totara_notification": [
       "edit_notification_name",
-      "actions_for"
+      "actions_for",
+      "delete_notification_name"
     ]
   }
 </lang-strings>

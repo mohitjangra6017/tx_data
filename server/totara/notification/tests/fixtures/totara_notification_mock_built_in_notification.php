@@ -53,7 +53,7 @@ class totara_notification_mock_built_in_notification extends built_in_notificati
 
         if (!class_exists('totara_notification_mock_notifiable_event_resolver')) {
             require_once(
-            "{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event_resolver.php"
+                "{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_notifiable_event_resolver.php"
             );
         }
 

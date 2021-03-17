@@ -23,6 +23,8 @@
 
 use core_phpunit\testcase;
 use totara_core\extended_context;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
+use totara_notification\entity\notifiable_event_preference;
 use totara_notification\entity\notification_preference;
 use totara_notification\entity\notification_queue;
 use totara_notification\loader\notification_preference_loader;
@@ -316,5 +318,49 @@ class totara_notification_process_notification_queue_task_testcase extends testc
 
         // The invalid notification queue keep in the table for next run.
         self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
+    }
+
+    /**
+     * @covers totara_notification\manager\notification_queue_manager::filter_message_processors_by_delivery_channel
+     * @return void
+     */
+    public function test_filter_message_processors_without_locked_delivery_channels(): void {
+        $generator = generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
+
+        $extended_context = extended_context::make_system();
+
+        $entity = new notifiable_event_preference();
+        $entity->context_id = $extended_context->get_context_id();
+        $entity->resolver_class_name = mock_resolver::class;
+        $entity->component = $extended_context->get_component();
+        $entity->area = $extended_context->get_area();
+        $entity->item_id = $extended_context->get_item_id();
+        $entity->default_delivery_channels = ",email,";
+        $entity->enabled = true;
+        $entity->save();
+
+        $reflection_class = new ReflectionClass(notification_queue_manager::class);
+        $method = $reflection_class->getMethod('filter_message_processors_by_delivery_channel');
+        $method->setAccessible(true);
+
+        $message_processors = get_message_processors(false, true);
+        $manager = new notification_queue_manager();
+        $resolver = new mock_resolver(['expected_context_id' => $extended_context->get_context_id()]);
+
+        $first_result = $method->invokeArgs($manager, [$resolver, $message_processors]);
+        self::assertIsArray($first_result);
+        // Note that we cannot check for the exact same size, because the list of message processors can include
+        // the third parties plugins.
+        self::assertNotSameSize($message_processors, $first_result);
+        self::assertArrayHasKey('email', $first_result);
+
+        $second_result = $method->invokeArgs($manager, [$resolver, $message_processors, ['popup']]);
+        self::assertIsArray($second_result);
+        // Note that we cannot check for the exact same size, because the list of message processors can include
+        // the third parties plugins.
+        self::assertNotSameSize($message_processors, $second_result);
+        self::assertArrayHasKey('email', $second_result);
+        self::assertArrayHasKey('popup', $second_result);
     }
 }

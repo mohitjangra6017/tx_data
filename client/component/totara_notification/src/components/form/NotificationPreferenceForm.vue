@@ -25,27 +25,7 @@
     class="tui-notificationPreferenceForm"
     @submit="submitForm"
   >
-    <FormRow
-      :label="$str('recipient', 'totara_notification')"
-      :required="!parentValue"
-    >
-      <template v-slot="{ id }">
-        <ToggleSwitch
-          v-if="showCustomCheckBoxes"
-          :aria-label="$str('enable_custom_recipient', 'totara_notification')"
-          :value="customisation.recipient"
-          @input="customisation.recipient = $event"
-        />
-        <FormSelect
-          :aria-labelledby="id"
-          name="recipient"
-          :options="recipientOptions"
-          :disabled="showCustomCheckBoxes && !customisation.recipient"
-          :validations="v => [v.required()]"
-        />
-      </template>
-    </FormRow>
-
+    <!-- Start of title field -->
     <FormRow
       v-slot="{ id }"
       :label="$str('notification_title_label', 'totara_notification')"
@@ -64,66 +44,51 @@
         @input="resetErrorFieldTitle"
       />
     </FormRow>
+    <!-- End of title field -->
 
+    <!-- Start of recipient field -->
     <FormRow
-      :label="$str('notification_subject_label', 'totara_notification')"
-      :required="requiredSubject"
+      :label="$str('recipient', 'totara_notification')"
+      :required="!parentValue"
     >
       <template v-slot="{ id }">
-        <ToggleSwitch
+        <Checkbox
           v-if="showCustomCheckBoxes"
-          :aria-label="$str('enable_custom_subject', 'totara_notification')"
-          :value="customisation.subject"
-          :toggle-only="true"
-          @input="customisation.subject = $event"
-        />
-
-        <!-- We are only requiring the field subject if the parent does not have one -->
-        <FormField
-          v-slot="{ value, update }"
-          :name="['subject', 'value']"
-          :validate="validateSubjectEditor"
-          :disabled="showCustomCheckBoxes && !customisation.subject"
-          char-length="full"
+          :aria-label="$str('enable_custom_recipient', 'totara_notification')"
+          :checked="customisation.recipient"
+          :value="customisation.recipient ? '1' : '0'"
+          name="override_recipient"
+          @change="customisation.recipient = $event"
         >
-          <!-- We are only requiring the field body if the parent does not have one -->
-          <Editor
-            :id="id"
-            :value="value"
-            :context-id="contextId"
-            :usage-identifier="{
-              component: 'totara_notification',
-              area: 'notification_subject',
-            }"
-            :extra-extensions="[
-              {
-                name: 'weka_notification_placeholder_extension',
-                options: {
-                  resolver_class_name: resolverClassName,
-                },
-              },
-            ]"
-            class="tui-notificationPreferenceForm__subjectEditor"
-            variant="description"
-            :compact="true"
-            @input="updateSubjectEditor($event, update)"
-          />
-        </FormField>
+          {{ $str('override', 'totara_notification') }}
+        </Checkbox>
+        <FormSelect
+          :aria-labelledby="id"
+          name="recipient"
+          :options="recipientOptions"
+          :disabled="showCustomCheckBoxes && !customisation.recipient"
+          :validations="v => [v.required()]"
+        />
       </template>
     </FormRow>
+    <!-- End of recipient field -->
 
+    <!-- Start of schedule offset field -->
     <FormRow
       :label="$str('notification_schedule_label', 'totara_notification')"
       :required="!parentValue"
     >
       <template v-slot="{ id }">
-        <ToggleSwitch
+        <Checkbox
           v-if="showCustomCheckBoxes"
           :aria-label="$str('enable_custom_schedule', 'totara_notification')"
-          :value="customisation.schedule"
-          :toggle-only="true"
-          @input="customisation.schedule = $event"
-        />
+          :checked="customisation.schedule"
+          :value="customisation.schedule ? '1' : '0'"
+          name="override_schedule"
+          @change="customisation.schedule = $event"
+        >
+          {{ $str('override', 'totara_notification') }}
+        </Checkbox>
         <FormRadioGroup
           :aria-labelledby="id"
           :disabled="showCustomCheckBoxes && !customisation.schedule"
@@ -199,19 +164,112 @@
         </FormRadioGroup>
       </template>
     </FormRow>
+    <!-- End of schedule offset field -->
 
+    <!-- Start of delivery channel table/field -->
+    <FormRow :label="$str('delivery_label', 'totara_notification')">
+      <template v-slot="{ id }">
+        <Checkbox
+          v-if="showCustomCheckBoxes"
+          :value="customisation.lockedDeliveryChannels ? '1' : '0'"
+          name="override_locked_delivery_channels"
+          :checked="customisation.lockedDeliveryChannels"
+          :aria-label="
+            $str(
+              'enable_custom_locked_delivery_Channels',
+              'totara_notification'
+            )
+          "
+          @change="customisation.lockedDeliveryChannels = $event"
+        >
+          {{ $str('override', 'totara_notification') }}
+        </Checkbox>
+
+        <FormField :name="['locked_delivery_channels', 'value']">
+          <template v-slot="{ value, update }">
+            <LockDeliveryChannels
+              :aria-labelledby="id"
+              :default-delivery-channels="defaultDeliveryChannels"
+              :locked-delivery-channels="value"
+              :disabled="
+                showCustomCheckBoxes && !customisation.lockedDeliveryChannels
+              "
+              @update-locked-delivery-channels="update"
+            />
+          </template>
+        </FormField>
+      </template>
+    </FormRow>
+    <!-- End of delivery channel table/field -->
+
+    <!-- Start of the subject field -->
+    <FormRow
+      :label="$str('notification_subject_label', 'totara_notification')"
+      :required="requiredSubject"
+    >
+      <template v-slot="{ id }">
+        <Checkbox
+          v-if="showCustomCheckBoxes"
+          :aria-label="$str('enable_custom_subject', 'totara_notification')"
+          :checked="customisation.subject"
+          :value="customisation.subject ? '1' : '0'"
+          name="override_subject"
+          @change="customisation.subject = $event"
+        >
+          {{ $str('override', 'totara_notification') }}
+        </Checkbox>
+
+        <!-- We are only requiring the field subject if the parent does not have one -->
+        <FormField
+          v-slot="{ value, update }"
+          :name="['subject', 'value']"
+          :validate="validateSubjectEditor"
+          :disabled="showCustomCheckBoxes && !customisation.subject"
+          char-length="full"
+        >
+          <!-- We are only requiring the field body if the parent does not have one -->
+          <Editor
+            :id="id"
+            :value="value"
+            :context-id="contextId"
+            :usage-identifier="{
+              component: 'totara_notification',
+              area: 'notification_subject',
+            }"
+            :extra-extensions="[
+              {
+                name: 'weka_notification_placeholder_extension',
+                options: {
+                  resolver_class_name: resolverClassName,
+                },
+              },
+            ]"
+            class="tui-notificationPreferenceForm__subjectEditor"
+            variant="description"
+            :compact="true"
+            @input="updateSubjectEditor($event, update)"
+          />
+        </FormField>
+      </template>
+    </FormRow>
+    <!-- End of the subject field -->
+
+    <!-- Start of notification body field -->
     <FormRow
       :required="requiredBody"
       :label="$str('notification_body_label', 'totara_notification')"
     >
       <template v-slot="{ id }">
-        <ToggleSwitch
+        <Checkbox
           v-if="showCustomCheckBoxes"
           :aria-label="$str('enable_custom_body', 'totara_notification')"
-          :value="customisation.body"
-          :toggle-only="true"
-          @input="customisation.body = $event"
-        />
+          :checked="customisation.body"
+          :value="customisation.body ? '1' : '0'"
+          name="override_body"
+          @change="customisation.body = $event"
+        >
+          {{ $str('override', 'totara_notification') }}
+        </Checkbox>
         <FormField
           v-slot="{ value, update }"
           :name="['body', 'value']"
@@ -243,17 +301,23 @@
         </FormField>
       </template>
     </FormRow>
+    <!-- End of notification body field -->
 
+    <!-- Start of notification status field -->
     <FormRow
       v-slot="{ id }"
       :label="$str('notification_status_label', 'totara_notification')"
     >
-      <ToggleSwitch
+      <Checkbox
         v-if="showCustomCheckBoxes"
         :aria-label="$str('enable_custom_status', 'totara_notification')"
-        :value="customisation.enabled"
-        @input="customisation.enabled = $event"
-      />
+        :checked="customisation.enabled"
+        :value="customisation.enabled ? '1' : '0'"
+        name="override_enabled"
+        @change="customisation.enabled = $event"
+      >
+        {{ $str('override', 'totara_notification') }}
+      </Checkbox>
 
       <FormCheckbox
         :id="id"
@@ -263,6 +327,7 @@
         {{ $str('enabled', 'totara_core') }}
       </FormCheckbox>
     </FormRow>
+    <!-- End of notification status field -->
 
     <FormRow>
       <ButtonGroup class="tui-notificationPreferenceForm__buttonGroup">
@@ -302,8 +367,10 @@ import {
   SCHEDULE_TYPES,
   validatePreferenceProp,
   validateAvailableRecipientsProp,
+  validateDefaultDeliveryChannelsProp,
 } from '../../internal/notification_preference';
-import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
+import LockDeliveryChannels from 'totara_notification/components/form/field/LockDeliveryChannels';
+import Checkbox from 'tui/components/form/Checkbox';
 
 // GraphQL queries
 import validateNotificationPreferenceInput from 'totara_notification/graphql/validate_notification_preference_input';
@@ -360,6 +427,16 @@ function createFormValues(currentPreference, parentValue) {
         !parentValue || currentPreference.overridden_enabled
           ? currentPreference.enabled
           : parentValue.enabled,
+    },
+
+    // At the initial state, we keep it as empty array and the lower part of this function will
+    // populate the value of this field.
+    locked_delivery_channels: {
+      value:
+        !parentValue || currentPreference.locked_delivery_channels
+          ? currentPreference.locked_delivery_channels
+          : parentValue.locked_delivery_channels || [],
+      type: 'array',
     },
   };
 
@@ -420,12 +497,13 @@ export default {
     ButtonGroup,
     Button,
     Cancel,
-    ToggleSwitch,
     FormRadioGroup,
     Radio,
     RadioNumberInput,
     FormRadioWithInput,
     FormSelect,
+    LockDeliveryChannels,
+    Checkbox,
   },
 
   props: {
@@ -447,8 +525,11 @@ export default {
 
     preference: {
       type: Object,
-      validator: validatePreferenceProp(),
-      default: getDefaultNotificationPreference(),
+      validator: validatePreferenceProp(['body_content', 'subject_content']),
+      default: getDefaultNotificationPreference({
+        body_content: '',
+        subject_content: '',
+      }),
     },
 
     validScheduleTypes: {
@@ -460,6 +541,12 @@ export default {
       type: Array,
       required: true,
       validator: validateAvailableRecipientsProp(),
+    },
+
+    defaultDeliveryChannels: {
+      type: Array,
+      required: true,
+      validator: validateDefaultDeliveryChannelsProp(),
     },
   },
 
@@ -475,6 +562,9 @@ export default {
           this.preference.overridden_recipient || Boolean(!this.parentValue),
         enabled:
           this.preference.overridden_enabled || Boolean(!this.parentValue),
+        lockedDeliveryChannels:
+          this.preference.overridden_locked_delivery_channels ||
+          Boolean(!this.parentValue),
       },
       errors: null,
       formInitialValues: createFormValues(this.preference, this.parentValue),
@@ -606,6 +696,13 @@ export default {
             })
           );
         }
+
+        if (!toggle.lockedDeliveryChannels) {
+          preferenceForm.update(
+            ['locked_delivery_channels', 'value'],
+            this.parentValue.locked_delivery_channels || []
+          );
+        }
       },
     },
   },
@@ -689,6 +786,9 @@ export default {
           : formValue.schedule_offset[formValue.schedule_type.value],
         recipient: formValue.recipient,
         enabled: !this.customisation.enabled ? null : formValue.enabled.value,
+        locked_delivery_channels: !this.customisation.lockedDeliveryChannels
+          ? null
+          : formValue.locked_delivery_channels.value,
       };
 
       this.$emit('submit', parameters);
@@ -769,7 +869,10 @@ export default {
     "enable_custom_body",
     "enable_custom_recipient",
     "enable_custom_status",
-    "recipient"
+    "recipient",
+    "delivery_label",
+    "enable_custom_locked_delivery_Channels",
+    "override"
   ],
   "totara_core": [
     "save",

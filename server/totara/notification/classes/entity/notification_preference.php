@@ -46,6 +46,7 @@ use totara_notification\repository\notification_preference_repository;
  * @property int         $time_created
  * @property int         $schedule_offset
  * @property bool|null   $enabled
+ * @property string|null $locked_delivery_channels
  *
  * @method static notification_preference_repository repository()
  */
@@ -88,5 +89,35 @@ class notification_preference extends entity {
         $this->set_attribute('component', $extended_context->get_component());
         $this->set_attribute('area', $extended_context->get_area());
         $this->set_attribute('item_id', $extended_context->get_item_id());
+    }
+
+    /**
+     * Given the array of channel's identifier names. The function encodes that
+     * array of strings into a json string and save it to the field to be stored
+     * on the database.
+     *
+     * @param string[] $channels
+     * @return void
+     */
+    public function set_decoded_locked_delivery_channels(array $channels): void {
+        $json_string = json_encode($channels, JSON_THROW_ON_ERROR);
+        $this->set_attribute_raw('locked_delivery_channels', $json_string);
+    }
+
+    /**
+     * Return encoded json string of array of channel's identifier names .
+     * @return string[]
+     */
+    public function get_decoded_locked_delivery_channels(): array {
+        if (empty($this->locked_delivery_channels)) {
+            return [];
+        }
+
+        return json_decode(
+            $this->locked_delivery_channels,
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
     }
 }

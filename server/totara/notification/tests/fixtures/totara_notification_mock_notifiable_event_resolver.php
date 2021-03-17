@@ -53,7 +53,6 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
      */
     public static function set_recipient_ids_resolver(callable $recipient_ids_resolver): void {
         if (!isset(self::$recipient_ids_resolver)) {
-            // PHP-7.4 compatible - do not ask.
             self::$recipient_ids_resolver = null;
         }
 

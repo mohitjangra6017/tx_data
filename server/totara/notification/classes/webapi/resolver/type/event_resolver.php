@@ -98,7 +98,7 @@ class event_resolver implements type_resolver {
                 $extended_context = self::get_extended_context_from_args($args);
                 $system_context = extended_context::make_system();
                 if (!$extended_context->is_same($system_context)) {
-                    throw new \coding_exception('Delivery channels are only available in the system context');
+                    throw new coding_exception('Delivery channels are only available in the system context');
                 }
 
                 // Find the notifiable event preference record

@@ -126,6 +126,9 @@ class notification_preference_value implements type_resolver {
             case 'enabled':
                 return $source->get_enabled();
 
+            case 'locked_delivery_channels':
+                return $source->get_locked_delivery_channels();
+
             default:
                 throw new coding_exception(
                     "Invalid field '{$field}' is not yet supported"

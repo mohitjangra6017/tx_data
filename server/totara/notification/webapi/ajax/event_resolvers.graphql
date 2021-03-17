@@ -19,8 +19,10 @@ query totara_notification_event_resolvers(
       id
       ancestor_id
       body(format: RAW)
+      body_content: body(format: HTML)
       body_format
       subject(format: RAW)
+      subject_content: subject(format: HTML)
       subject_format
       overridden_body
       overridden_subject
@@ -37,6 +39,8 @@ query totara_notification_event_resolvers(
       overridden_schedule
       enabled
       overridden_enabled
+      overridden_locked_delivery_channels
+      locked_delivery_channels
       recipient {
         class_name
         name
@@ -57,6 +61,7 @@ query totara_notification_event_resolvers(
         schedule_type
         subject_format
         enabled
+        locked_delivery_channels
         recipient {
           class_name
           name

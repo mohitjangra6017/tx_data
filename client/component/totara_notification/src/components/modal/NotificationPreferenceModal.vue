@@ -39,6 +39,7 @@
         :valid-schedule-types="validScheduleTypes"
         :resolver-class-name="resolverClassName"
         :available-recipients="availableRecipients"
+        :default-delivery-channels="defaultDeliveryChannels"
         @submit="handleSubmit"
         @cancel="$emit('request-close')"
       />
@@ -54,6 +55,7 @@ import {
   getDefaultNotificationPreference,
   validatePreferenceProp,
   validateAvailableRecipientsProp,
+  validateDefaultDeliveryChannelsProp,
 } from '../../internal/notification_preference';
 
 export default {
@@ -82,7 +84,10 @@ export default {
     preference: {
       type: Object,
       validator: validatePreferenceProp(),
-      default: getDefaultNotificationPreference(),
+      default: getDefaultNotificationPreference({
+        body_content: '',
+        subject_content: '',
+      }),
     },
 
     parentValue: {
@@ -107,6 +112,12 @@ export default {
       type: Array,
       required: true,
       validator: validateAvailableRecipientsProp(),
+    },
+
+    defaultDeliveryChannels: {
+      type: Array,
+      required: true,
+      validator: validateDefaultDeliveryChannelsProp(),
     },
   },
 

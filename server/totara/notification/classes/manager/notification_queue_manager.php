@@ -25,13 +25,13 @@ namespace totara_notification\manager;
 use core\entity\notification;
 use core\json_editor\helper\document_helper;
 use core\orm\query\builder;
+use core\orm\query\exceptions\record_not_found_exception;
 use core_phpunit\internal_util;
 use core_user;
 use Exception;
 use null_progress_trace;
 use progress_trace;
 use stdClass;
-use core\orm\query\exceptions\record_not_found_exception;
 use totara_core\extended_context;
 use totara_notification\entity\notification_queue;
 use totara_notification\loader\delivery_channel_loader;
@@ -130,7 +130,12 @@ class notification_queue_manager {
 
         // Load the message processors & only show those that have been enabled
         $message_processors = get_message_processors(true, (defined('PHPUNIT_TEST') && PHPUNIT_TEST));
-        $message_processors = $this->filter_message_processors_by_delivery_channel($resolver, $message_processors);
+        $message_processors = $this->filter_message_processors_by_delivery_channel(
+            $resolver,
+            $message_processors,
+            $preference->get_locked_delivery_channels()
+        );
+
         if (empty($message_processors)) {
             // If there are no message processors enabled, there's nothing to send
             return;
@@ -144,10 +149,10 @@ class notification_queue_manager {
     /**
      * Dispatch the message to one recipient.
      *
-     * @param int $target_user_id
+     * @param int                     $target_user_id
      * @param notification_preference $preference
-     * @param engine $engine
-     * @param array $message_processors
+     * @param engine                  $engine
+     * @param array                   $message_processors
      */
     private function dispatch_to_target(
         int $target_user_id,
@@ -231,7 +236,13 @@ class notification_queue_manager {
         $message->savedmessageid = $notification->id;
 
         if (defined('PHPUNIT_TEST') && PHPUNIT_TEST && internal_util::is_redirecting_messages()) {
-            // For unit test purpose only.
+            // For unit test purpose only. We are adding more specific keys to the record, so that
+            // the tests can perform assertions against these fields.
+            $channels = array_keys($message_processors);
+
+            $message->totara_notification_delivery_channels = json_encode($channels);
+            $message->totara_notification_notification_preference_id = $preference->get_id();
+
             internal_util::message_sent($message);
             return;
         }
@@ -246,18 +257,30 @@ class notification_queue_manager {
      * Load the message processors for the resolver, filtering by delivery channel.
      *
      * @param notifiable_event_resolver $resolver
-     * @param array $message_processors
+     * @param array                     $message_processors
+     * @param array                     $locked_delivery_channels
      * @return array
      */
     private function filter_message_processors_by_delivery_channel(
         notifiable_event_resolver $resolver,
-        array $message_processors
+        array $message_processors,
+        array $locked_delivery_channels = []
     ): array {
         $extended_context = extended_context::make_system();
         $event_preference = $resolver->get_notifiable_event_preference($extended_context);
         // User-level overrides should be applied here
+
         $delivery_channels = $event_preference ? $event_preference->default_delivery_channels :
             delivery_channel_loader::get_for_event_resolver(get_class($resolver));
+
+        foreach ($locked_delivery_channels as $channel_name) {
+            if (!isset($delivery_channels[$channel_name])) {
+                debugging("Invalid channel '{$channel_name}' that is not found in delivery channels", DEBUG_DEVELOPER);
+                continue;
+            }
+
+            $delivery_channels[$channel_name]->set_enabled(true);
+        }
 
         // Drop any message processor that isn't marked as enabled.
         foreach ($delivery_channels as $delivery_channel) {

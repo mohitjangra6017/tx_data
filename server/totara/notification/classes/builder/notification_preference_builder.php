@@ -24,6 +24,8 @@ namespace totara_notification\builder;
 
 use coding_exception;
 use totara_core\extended_context;
+use totara_notification\delivery\channel\delivery_channel;
+use totara_notification\delivery\channel_helper;
 use totara_notification\model\notification_preference;
 use totara_notification\entity\notification_preference as entity;
 
@@ -164,7 +166,6 @@ class notification_preference_builder {
         $this->record_data['ancestor_id'] = $ancestor_id;
     }
 
-
     /**
      * @param string|null $notification_class_name
      * @return void
@@ -187,6 +188,29 @@ class notification_preference_builder {
      */
     public function set_enabled(?bool $enabled): void {
         $this->record_data['enabled'] = $enabled;
+    }
+
+    /**
+     * Passing $delivery_channels as null to tell the system that we are going to inherit from the
+     * parent notification preference.
+     *
+     * @param string[]|null $delivery_channels  An array of the delivery channel's identifier.
+     * @return void
+     */
+    public function set_locked_delivery_channels(?array $delivery_channels): void {
+        if (null !== $delivery_channels) {
+            // Start validating the delivery channels class name.
+
+            foreach ($delivery_channels as $identifier) {
+                if (!channel_helper::is_valid_delivery_channel($identifier)) {
+                    throw new coding_exception(
+                        "The delivery channel '{$identifier}' is not a valid delivery channel identifier"
+                    );
+                }
+            }
+        }
+
+        $this->record_data['locked_delivery_channels'] = $delivery_channels;
     }
 
     /**
@@ -349,6 +373,14 @@ class notification_preference_builder {
                     }
                 }
             }
+        }
+
+        if (isset($record_data['locked_delivery_channels'])) {
+            // Attribute 'forced_delivery_channels' is treated differently from the rest attributes.
+            $entity->set_decoded_locked_delivery_channels($record_data['locked_delivery_channels']);
+
+            // Remove the attribute from the record_data, so that we don't re-set it again.
+            unset($record_data['locked_delivery_channels']);
         }
 
         foreach ($record_data as $k => $v) {

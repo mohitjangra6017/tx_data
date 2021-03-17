@@ -39,6 +39,15 @@ describe('NotificationPreferenceModal', () => {
             name: 'test',
           },
         ],
+        defaultDeliveryChannels: [
+          {
+            component: 'email',
+            label: 'Email',
+            is_enabled: true,
+            parent_component: null,
+            is_sub_delivery_channel: false,
+          },
+        ],
       },
     });
   });

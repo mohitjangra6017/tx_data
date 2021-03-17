@@ -24,7 +24,6 @@ namespace totara_notification\webapi\formatter;
 
 use context;
 use core\json_editor\helper\document_helper;
-use core\webapi\formatter\field\string_field_formatter;
 use core\webapi\formatter\field\text_field_formatter;
 use core\webapi\formatter\formatter;
 use stdClass;
@@ -57,6 +56,8 @@ class notification_preference_formatter extends formatter {
         $record->recipient = $notification_preference->get_recipient();
         $record->enabled = $notification_preference->get_enabled();
         $record->overridden_enabled = $notification_preference->is_overridden_enabled();
+        $record->locked_delivery_channels = $notification_preference->get_locked_delivery_channels();
+        $record->overridden_locked_delivery_channels = $notification_preference->is_overridden_locked_delivery_channels();
 
         parent::__construct($record, $context);
     }
@@ -114,11 +115,16 @@ class notification_preference_formatter extends formatter {
                     $value = document_helper::create_json_string_document_from_text($value);
                 }
 
+                // Displaying with under totara_tui formatter/renderer.
+                $formatter->set_additional_options(['formatter' => 'totara_tui']);
                 $formatter->disabled_pluginfile_url_rewrite();
+
                 return $formatter->format($value);
             },
             'title' => null,
-            'subject' => function (?string $value, string_field_formatter $formatter) use ($that): string {
+            'subject' => function (?string $value, text_field_formatter $formatter) use ($that): string {
+                // Note: we are using text_field_formatter here because the subject is a content produced
+                // from editor, not a normal input string field.
                 if (empty($value)) {
                     return '';
                 }
@@ -130,6 +136,10 @@ class notification_preference_formatter extends formatter {
                     // json document content from a normal text.
                     $value = document_helper::create_json_string_document_from_text($value);
                 }
+
+                // Displaying with under totara_tui formatter/renderer.
+                $formatter->set_additional_options(['formatter' => 'totara_tui']);
+                $formatter->disabled_pluginfile_url_rewrite();
 
                 return $formatter->format($value);
             },
@@ -158,6 +168,8 @@ class notification_preference_formatter extends formatter {
             'overridden_subject' => null,
             'overridden_schedule' => null,
             'overridden_recipient' => null,
+            'overridden_locked_delivery_channels' => null,
+            'locked_delivery_channels' => null,
             'ancestor_id' => null,
             'resolver_class_name' => null,
             'is_custom' => null,

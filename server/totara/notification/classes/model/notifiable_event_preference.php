@@ -90,6 +90,13 @@ class notifiable_event_preference extends model {
         $entity->component = $extended_context->get_component();
         $entity->area = $extended_context->get_area();
         $entity->item_id = $extended_context->get_item_id();
+
+        if (CONTEXT_SYSTEM == $extended_context->get_context_level()) {
+            // We are at the system context, cant leave the field "enabled" to null.
+            // Default it to true.
+            $entity->enabled = true;
+        }
+
         $entity->save();
 
         return static::from_entity($entity);

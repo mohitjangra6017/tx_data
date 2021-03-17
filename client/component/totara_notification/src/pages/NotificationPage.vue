@@ -50,6 +50,7 @@
           :title="modal.title"
           :valid-schedule-types="targetScheduleTypes"
           :available-recipients="targetAvailableRecipients"
+          :default-delivery-channels="targetDefaultDeliveryChannels"
           @form-submit="handleFormSubmit"
         />
       </ModalPresenter>
@@ -77,7 +78,7 @@
           :context-id="contextId"
           :resolver-class-name="targetResolverClassName"
           :resolver-label="targetResolverLabel"
-          :default-delivery-channels="targetDeliveryChannels"
+          :default-delivery-channels="targetDefaultDeliveryChannels"
           :title="$str('delivery_preferences', 'totara_notification')"
           @form-submit="handleNotificationPreferenceSubmit"
         />
@@ -208,7 +209,7 @@ export default {
       targetPreference: null,
       targetScheduleTypes: [],
       targetAvailableRecipients: [],
-      targetDeliveryChannels: null,
+      targetDefaultDeliveryChannels: [],
       targetResolverLabel: null,
     };
   },
@@ -256,22 +257,24 @@ export default {
       // Reset the target schedule types
       this.targetScheduleTypes = [];
 
+      // Reset the target delivery channels
+      this.targetDefaultDeliveryChannels = [];
+
       // Reset the target label
       this.targetResolverLabel = null;
-
-      // Reset the target delivery channels
-      this.targetDeliveryChannels = [];
     },
 
     /**
      * @param {String} resolverClassName
      * @param {Array} scheduleTypes
      * @param {Array} recipients
+     * @param {Array} deliveryChannels
      */
     handleCreateCustomNotification({
       resolverClassName,
       scheduleTypes,
       recipients,
+      deliveryChannels,
     }) {
       this.modal.title = this.$str(
         'create_custom_notification_title',
@@ -283,18 +286,26 @@ export default {
       this.targetResolverClassName = resolverClassName;
       this.targetScheduleTypes = scheduleTypes;
       this.targetAvailableRecipients = recipients;
+      this.targetDefaultDeliveryChannels = deliveryChannels;
     },
 
     /**
      * @param {Object} oldPreference
      * @param {Array} scheduleTypes
      * @param {Array} recipients
+     * @param {Array} deliveryChannels
      */
-    async handleEditNotification(oldPreference, scheduleTypes, recipients) {
+    async handleEditNotification(
+      oldPreference,
+      scheduleTypes,
+      recipients,
+      deliveryChannels
+    ) {
       this.targetPreference = await this.getOverriddenPreference(oldPreference);
       this.targetResolverClassName = this.targetPreference.resolver_class_name;
       this.targetScheduleTypes = scheduleTypes;
       this.targetAvailableRecipients = recipients;
+      this.targetDefaultDeliveryChannels = deliveryChannels;
 
       this.modal.title = this.$str('edit_notification', 'totara_notification');
       this.modal.open = true;
@@ -313,7 +324,7 @@ export default {
     }) {
       this.targetResolverClassName = resolverClassName;
       this.targetResolverLabel = resolverLabel;
-      this.targetDeliveryChannels = defaultDeliveryChannels;
+      this.targetDefaultDeliveryChannels = defaultDeliveryChannels;
       this.deliveryPreferenceModal.open = true;
     },
 
@@ -459,6 +470,8 @@ export default {
      * @param {Number} schedule_offset
      * @param {Number} subject_format
      * @param {String} recipient
+     * @param {Boolean} enabled
+     * @param {Array}  locked_delivery_channels
      */
     async createCustomNotification({
       subject,
@@ -471,6 +484,7 @@ export default {
       subject_format,
       recipient,
       enabled,
+      locked_delivery_channels,
     }) {
       const variables = {
         body,
@@ -484,6 +498,7 @@ export default {
         schedule_offset,
         recipient,
         enabled,
+        locked_delivery_channels,
       };
 
       // When area, component and item id are all set together, we pass them to mutation.
@@ -496,6 +511,7 @@ export default {
         variables.extended_context_component = this.extendedContext.component;
         variables.extended_context_item_id = this.extendedContext.itemId;
       }
+
       await this.$apollo.mutate({
         mutation: createCustomNotification,
         variables,
@@ -619,6 +635,8 @@ export default {
      * @param {Number} schedule_offset
      * @param {Number} subject_format
      * @param {String} recipient
+     * @param {Boolean} enabled
+     * @param {String[]} locked_delivery_channels
      */
     async updateNotification({
       subject,
@@ -630,6 +648,7 @@ export default {
       subject_format,
       recipient,
       enabled,
+      locked_delivery_channels,
     }) {
       if (!this.targetPreference) {
         throw new Error('Cannot run update while target preference is empty');
@@ -653,6 +672,7 @@ export default {
           schedule_offset,
           recipient,
           enabled,
+          locked_delivery_channels,
         },
         update: (
           proxy,

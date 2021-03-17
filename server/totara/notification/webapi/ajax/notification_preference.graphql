@@ -7,8 +7,10 @@ query totara_notification_notification_preference($id: param_integer!) {
     id
     ancestor_id
     body(format: RAW)
+    body_content: body(format: HTML)
     body_format
     subject(format: RAW)
+    subject_content: subject(format: HTML)
     subject_format
     overridden_body
     overridden_subject
@@ -23,6 +25,8 @@ query totara_notification_notification_preference($id: param_integer!) {
     schedule_type
     schedule_label
     overridden_schedule
+    overridden_locked_delivery_channels
+    locked_delivery_channels
     enabled
     overridden_enabled
     recipient {
@@ -45,6 +49,7 @@ query totara_notification_notification_preference($id: param_integer!) {
       schedule_type
       subject_format
       enabled
+      locked_delivery_channels
       recipient {
         class_name
         name

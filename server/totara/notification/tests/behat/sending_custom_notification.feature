@@ -85,13 +85,13 @@ Feature: Sending custom notifications to user
     Then I should see "Custom notification one"
     When I click on "Actions for Custom notification one" "button"
     Then I should see "Edit"
-    And I click on "Edit" "link" in the ".tui-dataTableRows .tui-dataTableRow:nth-of-type(2)" "css_element"
-    And "Enable customising field recipient" "button" should exist
+    And I click on "Edit notification Custom notification one" "link"
+    And "override_recipient" "checkbox" should exist
 
-    When I click on the "Enable customising field recipient" tui toggle button
+    When I click on the "override_recipient" tui checkbox
     Then the "Recipient" "field" should be enabled
 
-    When I click on the "Enable customising field subject" tui toggle button
+    When I click on the "override_subject" tui checkbox
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Custom notification at course context"
     And I click on "Save" "button"
     And I log out

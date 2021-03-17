@@ -60,6 +60,7 @@
         <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="schedule_offset" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Offset in seconds. Negative = before event, Positive = after event, 0 = on event. Null = inherit from parent."/>
         <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Whether the notification is enabled. If this is a custom notification then it is required, otherwise null to fallback to the default define in ancester notification"/>
+        <FIELD NAME="locked_delivery_channels" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="A json string of which channels had been locked, null to fallback to the default defined in ancestor notification, or represents nothing is locked for custom notification"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

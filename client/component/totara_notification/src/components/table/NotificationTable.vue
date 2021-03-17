@@ -41,7 +41,7 @@
           :stealth-expanded="true"
         >
           <template v-slot:header-row>
-            <ExpandCell :header="true" />
+            <ExpandCell :hidden="true" :header="true" />
             <HeaderCell size="4">
               {{ $str('notifiable_events', 'totara_notification') }}
             </HeaderCell>
@@ -86,6 +86,7 @@
                     resolverClassName: resolver.class_name,
                     scheduleTypes: resolver.valid_schedules,
                     recipients: resolver.recipients,
+                    deliveryChannels: resolver.default_delivery_channels,
                   })
                 "
                 @update-delivery-preferences="
@@ -110,7 +111,6 @@
               :stealth-expanded="true"
             >
               <template v-slot:header-row>
-                <ExpandCell :header="true" />
                 <HeaderCell align="start" size="4">
                   {{ $str('notifications', 'totara_notification') }}
                 </HeaderCell>
@@ -130,7 +130,6 @@
                 </HeaderCell>
               </template>
               <template v-slot:row="{ row: notificationPreference }">
-                <ExpandCell :empty="true" />
                 <Cell align="start" size="4">
                   {{ notificationPreference.title }}
                 </Cell>
@@ -159,7 +158,8 @@
                         'edit-notification',
                         notificationPreference,
                         resolver.valid_schedules,
-                        resolver.recipients
+                        resolver.recipients,
+                        resolver.default_delivery_channels
                       )
                     "
                     @delete-notification="

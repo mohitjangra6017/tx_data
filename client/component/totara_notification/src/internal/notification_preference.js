@@ -27,6 +27,7 @@ export const NOTIFICATION_PREFERENCE_KEYS = [
   'subject_format',
   'recipient',
   'enabled',
+  'locked_delivery_channels',
 ];
 
 export const SCHEDULE_TYPES = {
@@ -77,7 +78,9 @@ export function validateDefaultDeliveryChannelsProp() {
       return (
         'component' in deliveryChannel &&
         'label' in deliveryChannel &&
-        'is_enabled' in deliveryChannel
+        'is_enabled' in deliveryChannel &&
+        'is_sub_delivery_channel' in deliveryChannel &&
+        'parent_component' in deliveryChannel
       );
     });
   };
@@ -101,6 +104,7 @@ export function getDefaultNotificationPreference(extraAttributes = {}) {
     schedule_offset: null,
     recipient: null,
     enabled: false,
+    locked_delivery_channels: [],
   };
 
   return () => {

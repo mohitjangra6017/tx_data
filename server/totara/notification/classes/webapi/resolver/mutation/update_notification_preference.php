@@ -17,13 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
 namespace totara_notification\webapi\resolver\mutation;
 
 use coding_exception;
-use context_system;
 use core\webapi\execution_context;
 use core\webapi\middleware\clean_content_format;
 use core\webapi\middleware\clean_editor_content;
@@ -31,9 +30,12 @@ use core\webapi\middleware\require_login;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
 use totara_notification\builder\notification_preference_builder;
-use totara_notification\local\schedule_helper;
+use totara_notification\event\update_custom_notification_preference_event;
+use totara_notification\event\update_overridden_notification_preference_event;
 use totara_notification\local\helper;
+use totara_notification\local\schedule_helper;
 use totara_notification\model\notification_preference;
+use totara_notification\webapi\middleware\validate_delivery_channel_components;
 
 class update_notification_preference implements mutation_resolver, has_middleware {
     /**
@@ -42,33 +44,46 @@ class update_notification_preference implements mutation_resolver, has_middlewar
      * @return notification_preference
      */
     public static function resolve(array $args, execution_context $ec): notification_preference {
+        global $USER;
+
         if (empty($args['id'])) {
             throw new coding_exception(get_string('error_preference_id_missing', 'totara_notification'));
         }
+
         $preference_id = $args['id'];
         $notification_preference = notification_preference::from_id($preference_id);
         $extended_context = $notification_preference->get_extended_context();
+        $context = $extended_context->get_context();
 
         if (!notification_preference::can_manage($notification_preference->get_extended_context())) {
             throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
         }
 
-        if ($extended_context->get_context_id() != context_system::instance()->id && !$ec->has_relevant_context()
-        ) {
-            $ec->set_relevant_context($extended_context->get_context());
+        if (CONTEXT_SYSTEM != $context->contextlevel && !$ec->has_relevant_context()) {
+            $ec->set_relevant_context($context);
         }
 
         $builder = notification_preference_builder::from_exist_model($notification_preference);
+        $is_overridding = $notification_preference->is_an_overridden_record();
+
+        // Records what fields had been overridding by the user actor in event log.
+        $overridding_fields = [];
 
         if (array_key_exists('body', $args)) {
             // Treating empty string as null, so that our builder can reset the
             // value of $body.
             $body = ('' === $args['body']) ? null : $args['body'];
             $builder->set_body($body);
+            if ($is_overridding && !empty($body)) {
+                $overridding_fields[] = 'body';
+            }
         }
 
         if (array_key_exists('body_format', $args)) {
             $builder->set_body_format($args['body_format']);
+            if ($is_overridding) {
+                $overridding_fields[] = 'body_format';
+            }
         }
 
         if (array_key_exists('subject', $args)) {
@@ -76,10 +91,17 @@ class update_notification_preference implements mutation_resolver, has_middlewar
             // reset the value of $subject.
             $subject = ('' === $args['subject']) ? null : $args['subject'];
             $builder->set_subject($subject);
+
+            if ($is_overridding && !empty($subject)) {
+                $overridding_fields[] = 'subject';
+            }
         }
 
         if (array_key_exists('subject_format', $args)) {
             $builder->set_subject_format($args['subject_format']);
+            if ($is_overridding) {
+                $overridding_fields[] = 'subject_format';
+            }
         }
 
         if (array_key_exists('title', $args)) {
@@ -115,6 +137,10 @@ class update_notification_preference implements mutation_resolver, has_middlewar
                 );
             }
             $builder->set_schedule_offset($offset);
+
+            if ($is_overridding && !empty($offset)) {
+                $overridding_fields[] = 'schedule_offset';
+            }
         }
 
         if (array_key_exists('recipient', $args)) {
@@ -125,13 +151,42 @@ class update_notification_preference implements mutation_resolver, has_middlewar
             }
 
             $builder->set_recipient($recipient);
+            if ($is_overridding && !empty($recipient)) {
+                $overridding_fields[] = 'recipient';
+            }
+        }
+
+        if (array_key_exists('locked_delivery_channels', $args)) {
+            $builder->set_locked_delivery_channels($args['locked_delivery_channels']);
+            if ($is_overridding && !empty($args['locked_delivery_channels'])) {
+                $overridding_fields[] = 'locked_delivery_channels';
+            }
         }
 
         if (array_key_exists('enabled', $args)) {
             $builder->set_enabled($args['enabled']);
+            if ($is_overridding && null !== $args['enabled']) {
+                $overridding_fields[] = 'enabled';
+            }
         }
 
-        return $builder->save();
+        $notification_preference = $builder->save();
+
+        if ($is_overridding) {
+            $event = update_overridden_notification_preference_event::from_preference(
+                $notification_preference,
+                $USER->id,
+                $overridding_fields
+            );
+        } else {
+            $event = update_custom_notification_preference_event::from_preference(
+                $notification_preference,
+                $USER->id
+            );
+        }
+
+        $event->trigger();
+        return $notification_preference;
     }
 
     /**
@@ -144,6 +199,7 @@ class update_notification_preference implements mutation_resolver, has_middlewar
             new clean_content_format('subject_format'),
             new clean_editor_content('body', 'body_format', false),
             new clean_editor_content('subject', 'subject_format', false),
+            new validate_delivery_channel_components('locked_delivery_channels', false),
         ];
     }
 }
