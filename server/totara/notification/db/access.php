@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * This file is part of Totara Learn
  *
- * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2020 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,21 +15,21 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author Samantha Jayasinghe <samantha.jayasinghe@totaralearning.com>
  * @package totara_notification
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$ADMIN->add('root', new admin_category('totara_notification', new lang_string('messaging_and_notification', 'totara_notification')));
-$ADMIN->add(
-    'totara_notification',
-    new admin_externalpage(
-        'notifications_setup',
-        new lang_string('notifications', 'totara_notification'),
-        new moodle_url('/totara/notification/notifications.php'),
-        ['totara/notification:managenotifications']
-    )
-);
+$capabilities = [
+    'totara/notification:managenotifications' => [
+        'riskbitmask'  => RISK_CONFIG | RISK_SPAM,
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes'   => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+];

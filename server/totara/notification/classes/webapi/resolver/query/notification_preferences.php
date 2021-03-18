@@ -23,6 +23,7 @@
 namespace totara_notification\webapi\resolver\query;
 
 use context_system;
+use coding_exception;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
@@ -48,6 +49,10 @@ class notification_preferences implements query_resolver, has_middleware {
             $args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
             $args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
         );
+
+        if (!model::can_manage($extended_context)) {
+            throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
+        };
 
         if ($extended_context->get_context_id() != context_system::instance()->id &&
             !$ec->has_relevant_context()

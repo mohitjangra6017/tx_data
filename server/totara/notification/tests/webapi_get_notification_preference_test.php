@@ -24,6 +24,7 @@
 use core\orm\query\exceptions\record_not_found_exception;
 use core_phpunit\testcase;
 use totara_core\extended_context;
+use core\orm\query\builder;
 use totara_notification\model\notification_preference as model;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\query\notification_preference;
@@ -171,5 +172,61 @@ class totara_notification_webapi_get_notification_preference_testcase extends te
 
         self::assertArrayHasKey('overridden_subject', $second_result_preference);
         self::assertTrue($second_result_preference['overridden_subject']);
+    }
+
+    public function test_user_cannot_get_notification_without_manage_capability(): void {
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $course = $this->getDataGenerator()->create_course();
+        $context_course = context_course::instance($course->id);
+        /** @var generator $notification_generator */
+        $notification_generator = $this->getDataGenerator()->get_plugin_generator('totara_notification');
+        $custom_notification = $notification_generator->create_notification_preference(
+            totara_notification_mock_notifiable_event::class,
+            extended_context::make_with_context($context_course),
+            ['recipient' => totara_notification_mock_recipient::class]
+        );
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("You are not allowed to manage notification preference");
+
+        $this->resolve_graphql_query(
+            $this->get_graphql_name(notification_preference::class),
+            [
+                'id' =>  $custom_notification->get_id(),
+            ]
+        );
+    }
+
+    public function test_user_can_get_notification_with_manage_capability(): void {
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $course = $this->getDataGenerator()->create_course();
+        $context_course = context_course::instance($course->id);
+
+        /** @var generator $notification_generator */
+        $notification_generator = $this->getDataGenerator()->get_plugin_generator('totara_notification');
+        $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
+        $notification_generator->include_mock_recipient();
+        $custom_notification = $notification_generator->create_overridden_notification_preference(
+            $system_built_in,
+            extended_context::make_with_context(context_course::instance($course->id)),
+            ['subject' => 'Course subject', 'recipient' => totara_notification_mock_recipient::class]
+        );
+
+        $role_id = builder::table('role')->where('shortname', 'user')->value('id');
+        assign_capability('totara/notification:managenotifications', CAP_ALLOW, $role_id, SYSCONTEXTID, true);
+
+        $fetched_preference = $this->resolve_graphql_query(
+            $this->get_graphql_name(notification_preference::class),
+            [
+                'id' =>  $custom_notification->get_id(),
+            ]
+        );
+
+        self::assertInstanceOf(model::class, $fetched_preference);
+        self::assertEquals($custom_notification->get_id(), $fetched_preference->get_id());
     }
 }

@@ -23,6 +23,7 @@
 
 use core_phpunit\testcase;
 use totara_core\extended_context;
+use core\orm\query\builder;
 use totara_notification\factory\notifiable_event_resolver_factory;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\model\notification_preference as model;
@@ -228,5 +229,53 @@ class totara_notification_webapi_get_notification_preferences_testcase extends t
         self::assertNotEquals($system_built_in->get_id(), $preference->get_id());
         self::assertNotEquals($custom_two_notification->get_id(), $preference->get_id());
         self::assertEquals($system_overridden->get_id(), $preference->get_id());
+    }
+
+    public function test_user_cannot_get_notifications_without_manage_capability(): void {
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $course = $this->getDataGenerator()->create_course();
+        $context_course = context_course::instance($course->id);
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("You are not allowed to manage notification preference");
+
+        $preferences = $this->resolve_graphql_query(
+            $this->get_graphql_name(notification_preferences::class),
+            [
+                'context_id' => $context_course->id,
+                'at_context_only' => true,
+            ]
+        );
+    }
+
+    public function test_user_can_get_notifications_with_manage_capability(): void {
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $course = $this->getDataGenerator()->create_course();
+        $context_course = context_course::instance($course->id);
+
+        /** @var generator $notification_generator */
+        $notification_generator = $this->getDataGenerator()->get_plugin_generator('totara_notification');
+        $custom_notification = $notification_generator->create_notification_preference(
+            totara_notification_mock_notifiable_event::class,
+            extended_context::make_with_context($context_course),
+            ['recipient' => totara_notification_mock_recipient::class]
+        );
+
+        $role_id = builder::table('role')->where('shortname', 'user')->value('id');
+        assign_capability('totara/notification:managenotifications', CAP_ALLOW, $role_id, SYSCONTEXTID, true);
+
+        $preferences = $this->resolve_graphql_query(
+            $this->get_graphql_name(notification_preferences::class),
+            [
+                'context_id' => $context_course->id,
+                'at_context_only' => true,
+            ]
+        );
+
+        self::assertCount(1, $preferences);
     }
 }

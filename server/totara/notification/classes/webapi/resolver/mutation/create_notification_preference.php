@@ -56,10 +56,14 @@ class create_notification_preference implements mutation_resolver, has_middlewar
             $args['extended_context']['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
         );
 
-        // Note: TL-29488 will try to add capability check and advanced feature check to this resolver.
         $context = $extended_context->get_context();
-        if (CONTEXT_SYSTEM != $context->contextlevel && !$ec->has_relevant_context()) {
-            $ec->set_relevant_context($context);
+        if (!notification_preference::can_manage($extended_context)) {
+            throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
+        }
+
+        if ($extended_context->get_context_id() != context_system::instance()->id && !$ec->has_relevant_context()
+        ) {
+            $ec->set_relevant_context($extended_context->get_context());
         }
 
         $resolver_class_name = $args['resolver_class_name'];

@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 use totara_tui\output\component;
+use totara_notification\model\notification_preference;
 
 global $CFG, $OUTPUT, $PAGE;
 
@@ -29,6 +30,7 @@ require_once($CFG->libdir.'/adminlib.php');
 
 $context_id = optional_param('context_id', null, PARAM_INT);
 $context = null === $context_id ? context_system::instance() : context::instance_by_id($context_id);
+$extended_context = extended_context::make_with_context($context);
 
 if (CONTEXT_SYSTEM == $context->contextlevel) {
     // If it is under the context system, we will redirect the user to the admin page
@@ -38,6 +40,9 @@ if (CONTEXT_SYSTEM == $context->contextlevel) {
 }
 
 require_login();
+if (!notification_preference::can_manage($extended_context)) {
+    throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
+}
 
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url("/totara/notification/context_notifications.php", ['context_id' => $context->id]));

@@ -21,7 +21,9 @@
  * @package totara_notification
  */
 
+use totara_core\extended_context;
 use totara_tui\output\component;
+use totara_notification\model\notification_preference;
 
 global $CFG, $OUTPUT, $PAGE;
 
@@ -30,10 +32,13 @@ require_once($CFG->libdir.'/adminlib.php');
 
 require_login();
 
-// Please note that this page is intended for admin only. If you want to manage the notification at
-// lower context, please use different page.
-$context = context_system::instance();
-$PAGE->set_context($context);
+//require manage capability to access this page
+$extended_context = extended_context::make_with_context(context_system::instance());
+if (!notification_preference::can_manage($extended_context)) {
+    throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
+}
+
+$PAGE->set_context($extended_context->get_context());
 $PAGE->set_url(new moodle_url('/totara/notification/notifications.php'));
 
 admin_externalpage_setup('notifications_setup', '', null, '', ['pagelayout' => 'noblocks']);
@@ -42,7 +47,7 @@ $tui = new component(
     'totara_notification/pages/NotificationPage',
     [
         'title' => get_string('notifications', 'totara_notification'),
-        'context-id' => $context->id
+        'context-id' => $extended_context->get_context_id()
     ]
 );
 

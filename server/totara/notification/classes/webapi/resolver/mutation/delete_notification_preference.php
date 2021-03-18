@@ -22,6 +22,7 @@
  */
 namespace totara_notification\webapi\resolver\mutation;
 
+use coding_exception;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_login;
 use core\webapi\mutation_resolver;
@@ -32,12 +33,19 @@ class delete_notification_preference implements mutation_resolver, has_middlewar
     /**
      * @param array             $args
      * @param execution_context $ec
+     * @return bool
      */
     public static function resolve(array $args, execution_context $ec): bool {
-        // Note: TL-29488 will try to add capability check and advanced feature check to this resolver.
-
+        if (empty($args['id'])) {
+            throw new coding_exception(get_string('error_preference_id_missing', 'totara_notification'));
+        }
         $notification_preference = notification_preference::from_id($args['id']);
-        return $notification_preference->delete_custom($args['id']);
+
+        if (!notification_preference::can_manage($notification_preference->get_extended_context())) {
+            throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
+        }
+
+        return $notification_preference->delete_custom();
     }
 
     /**

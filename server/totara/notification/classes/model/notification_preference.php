@@ -492,6 +492,25 @@ class notification_preference {
      */
     public function is_on_event(): bool {
         $schedule_offset = $this->get_schedule_offset();
+
         return schedule_helper::is_on_event($schedule_offset);
+    }
+
+    /**
+     * Checks whether the logged in (or given) user has the capability to manage notification preference.
+     *
+     * @param extended_context $extended_context
+     * @param int|null         $userid
+     *
+     * @return bool
+     */
+    public static function can_manage(extended_context $extended_context, int $userid = null): bool {
+        global $USER;
+
+        if (null === $userid) {
+            $userid = $USER->id;
+        }
+
+        return has_capability('totara/notification:managenotifications', $extended_context->get_context(), $userid);
     }
 }

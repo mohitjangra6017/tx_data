@@ -22,6 +22,7 @@
  */
 
 
+use core\orm\query\builder;
 use totara_core\extended_context;
 use totara_notification\webapi\resolver\mutation\delete_notification_preference;
 use totara_notification\entity\notification_preference as notification_preference_entity;
@@ -173,6 +174,57 @@ class totara_notification_webapi_delete_custom_notification_preference_testcase 
                 'id' => $custom_child_one->get_id(),
             ]
         );
-
     }
+
+    public function test_user_cannot_delete_without_manage_capability(): void {
+        $this->setAdminUser();
+        $notification_generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $custom_notification = $notification_generator->create_notification_preference(
+            totara_notification_mock_notifiable_event::class,
+            extended_context::make_with_context(context_system::instance()),
+            [
+                'recipient' => totara_notification_mock_recipient::class,
+            ]
+        );
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("You are not allowed to manage notification preference");
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(delete_notification_preference::class),
+            [
+                'id' => $custom_notification->get_id(),
+            ]
+        );
+    }
+
+    public function test_user_can_delete_with_manage_capability(): void {
+        $this->setAdminUser();
+        $notification_generator = self::getDataGenerator()->get_plugin_generator('totara_notification');
+        $custom_notification = $notification_generator->create_notification_preference(
+            totara_notification_mock_notifiable_event::class,
+            extended_context::make_with_context(context_system::instance()),
+            [
+                'recipient' => totara_notification_mock_recipient::class,
+            ]
+        );
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+        $role_id = builder::table('role')->where('shortname', 'user')->value('id');
+        assign_capability('totara/notification:managenotifications', CAP_ALLOW, $role_id, SYSCONTEXTID, true);
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(delete_notification_preference::class),
+            [
+                'id' => $custom_notification->get_id(),
+            ]
+        );
+
+        $this->assertNull(notification_preference_entity::repository()->find($custom_notification->get_id()));
+    }
+
 }

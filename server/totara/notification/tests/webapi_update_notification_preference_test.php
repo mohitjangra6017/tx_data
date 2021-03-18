@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use core\orm\query\builder;
 use core\json_editor\helper\document_helper;
 use core\json_editor\node\paragraph;
 use core\json_editor\node\text;
@@ -569,5 +570,50 @@ class totara_notification_webapi_update_notification_preference_testcase extends
                 'totara_non\existent\recipient\class is not predefined recipient class'
             );
         }
+    }
+
+    public function test_user_cannot_update_notification_without_manage_capability() {
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $system_built_in = notification_preference_loader::get_built_in(
+            totara_notification_mock_built_in_notification::class
+        );
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("You are not allowed to manage notification preference");
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $system_built_in->get_id(),
+                'body' => 'Newly updated body',
+                'subject' => 'Newly updated subject',
+            ]
+        );
+    }
+
+    public function test_user_can_update_notification_with_manage_capability() {
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $system_built_in = notification_preference_loader::get_built_in(
+            totara_notification_mock_built_in_notification::class
+        );
+
+        $role_id = builder::table('role')->where('shortname', 'user')->value('id');
+        assign_capability('totara/notification:managenotifications', CAP_ALLOW, $role_id, SYSCONTEXTID, true);
+
+        $preference = $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_notification_preference::class),
+            [
+                'id' => $system_built_in->get_id(),
+                'body' => 'Newly updated body',
+                'subject' => 'Newly updated subject',
+            ]
+        );
+
+        self::assertInstanceOf(model::class, $preference);
+        self::assertEquals($system_built_in->get_id(), $preference->get_id());
     }
 }

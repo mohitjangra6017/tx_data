@@ -22,6 +22,7 @@
  */
 
 use core_phpunit\testcase;
+use core\orm\query\builder;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\schedule\schedule_after_event;
 use totara_notification\schedule\schedule_before_event;
@@ -237,12 +238,6 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertStringContainsString("Can not find data record in database.", $first_error->message);
     }
 
-    /**
-     * Note: this test will become wrongly when capability is in place. However to fix this test, we
-     * need to convert the test to assert that random user is not able to create the notification preference.
-     *
-     * @return void
-     */
     public function test_create_custom_notification_as_normal_user(): void {
         global $DB;
         $generator = self::getDataGenerator();
@@ -250,6 +245,10 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
 
         $context_system = context_system::instance();
         $this->setUser($user_one);
+
+        $role_id = builder::table('role')->where('shortname', 'user')->value('id');
+        assign_capability('totara/notification:managenotifications', CAP_ALLOW, $role_id, SYSCONTEXTID, true);
+
         $result = $this->execute_graphql_operation(
             'totara_notification_create_custom_notification_preference',
             [
