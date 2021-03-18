@@ -3,6 +3,8 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* Updates in WorkspaceMenu.vue:
+  * Deprecated method "canCreate()" in favour of computed property "canCreateWorkspace"
 * Updated DiscussionWithCommentCard.vue to add prop "editor" for totara_comment CommentBox.vue
   * Template changes
 * Updated WorkspaceDiscussionForm.vue to replace props "component", "area" and "instance-id" with "usage-identifier" for editor_weka Weka.vue
