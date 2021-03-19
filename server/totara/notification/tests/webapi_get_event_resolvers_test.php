@@ -23,6 +23,8 @@
 
 use totara_core\extended_context;
 use core_phpunit\testcase;
+use totara_notification\entity\notifiable_event_preference as entity;
+use totara_notification\model\notifiable_event_preference;
 use totara_notification\resolver\resolver_helper;
 use totara_notification\testing\generator as totara_notification_generator;
 use totara_notification_mock_notifiable_event_resolver as mock_event_resolver;
@@ -111,6 +113,10 @@ class totara_notification_webapi_get_event_resolvers_testcase extends testcase {
         self::assertIsArray($preference);
         self::assertArrayHasKey('id', $preference);
         self::assertEquals($custom_notification->get_id(), $preference['id']);
+
+        self::assertArrayHasKey('status', $mock_resolver);
+        $status = $mock_resolver['status'];
+        self::assertTrue($status['is_enabled']);
     }
 
     /**
@@ -191,6 +197,10 @@ class totara_notification_webapi_get_event_resolvers_testcase extends testcase {
         self::assertIsArray($preference);
         self::assertArrayHasKey('id', $preference);
         self::assertEquals($custom_notification->get_id(), $preference['id']);
+
+        self::assertArrayHasKey('status', $mock_resolver);
+        $status = $mock_resolver['status'];
+        self::assertTrue($status['is_enabled']);
     }
 
     /**
@@ -271,5 +281,125 @@ class totara_notification_webapi_get_event_resolvers_testcase extends testcase {
                 self::assertNotEquals($custom_notification->get_id(), $preference['id']);
             }
         }
+
+        self::assertArrayHasKey('status', $mock_resolver);
+        $status = $mock_resolver['status'];
+        self::assertTrue($status['is_enabled']);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_get_notifiable_event_at_course_context_when_disabled_in_system_context(): void {
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $notification_generator = totara_notification_generator::instance();
+        $notification_generator->include_mock_recipient();
+        $notification_generator->include_mock_notifiable_event_resolver();
+        $notification_generator->add_notifiable_event_resolver(mock_event_resolver::class);
+
+        mock_event_resolver::set_notification_available_recipients([
+            totara_notification_mock_recipient::class,
+        ]);
+
+        $course_context = context_course::instance($course->id);
+
+        $this->setAdminUser();
+        $result = $this->execute_graphql_operation(
+            'totara_notification_event_resolvers',
+            ['extended_context' => ['context_id' => $course_context->id],],
+        );
+
+        self::assertEmpty($result->errors);
+        self::assertNotEmpty($result->data);
+        self::assertIsArray($result->data);
+        self::assertArrayHasKey('resolvers', $result->data);
+
+        $resolvers = $result->data['resolvers'];
+        self::assertIsArray($resolvers);
+
+        // There are mock custom event, along side with all of the other events
+        // from the system.
+        self::assertGreaterThan(1, count($resolvers));
+        $mock_resolvers = array_filter(
+            $resolvers,
+            function (array $resolver): bool {
+                return $resolver['class_name'] === mock_event_resolver::class;
+            }
+        );
+
+        self::assertCount(1, $mock_resolvers);
+        $mock_resolver = reset($mock_resolvers);
+
+        // Check the status of event before making any customisation
+        self::assertArrayHasKey('status', $mock_resolver);
+        $status = $mock_resolver['status'];
+        self::assertTrue($status['is_enabled']);
+
+        // Set notifiable event as disabled in system context
+        $system_context = \context_system::instance();
+
+        $extended_context = extended_context::make_with_context($system_context);
+
+        $notifiable_event_entity = entity::repository()->for_context(mock_event_resolver::class, $extended_context);
+        if (!$notifiable_event_entity) {
+            $notifiable_event = notifiable_event_preference::create(mock_event_resolver::class, $extended_context);
+        } else {
+            $notifiable_event = notifiable_event_preference::from_entity($notifiable_event_entity);
+        }
+
+        $notifiable_event->set_enabled(false);
+        $notifiable_event->save();
+
+        // Check that event is now disabled in system context
+        $result = $this->execute_graphql_operation(
+            'totara_notification_event_resolvers',
+            ['extended_context' => ['context_id' => $system_context->id],],
+        );
+
+        self::assertArrayHasKey('resolvers', $result->data);
+        $resolvers = $result->data['resolvers'];
+        self::assertIsArray($resolvers);
+
+        // Get the mock custom event
+        $mock_resolvers = array_filter(
+            $resolvers,
+            function (array $resolver): bool {
+                return $resolver['class_name'] === mock_event_resolver::class;
+            }
+        );
+
+        self::assertCount(1, $mock_resolvers);
+        $mock_resolver = reset($mock_resolvers);
+
+        self::assertArrayHasKey('status', $mock_resolver);
+        $status = $mock_resolver['status'];
+        self::assertFalse($status['is_enabled']);
+
+        // Now check that it is also disabled in course context
+        $result = $this->execute_graphql_operation(
+            'totara_notification_event_resolvers',
+            ['extended_context' => ['context_id' => $course_context->id],],
+        );
+
+        self::assertArrayHasKey('resolvers', $result->data);
+        $resolvers = $result->data['resolvers'];
+        self::assertIsArray($resolvers);
+
+        // Get the mock custom event
+        $mock_resolvers = array_filter(
+            $resolvers,
+            function (array $resolver): bool {
+                return $resolver['class_name'] === mock_event_resolver::class;
+            }
+        );
+
+        self::assertCount(1, $mock_resolvers);
+        $mock_resolver = reset($mock_resolvers);
+
+        self::assertArrayHasKey('status', $mock_resolver);
+        $status = $mock_resolver['status'];
+        self::assertFalse($status['is_enabled']);
     }
 }

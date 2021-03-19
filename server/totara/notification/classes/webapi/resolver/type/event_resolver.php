@@ -23,7 +23,6 @@
 namespace totara_notification\webapi\resolver\type;
 
 use coding_exception;
-use context_system;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
 use totara_core\extended_context;
@@ -40,7 +39,7 @@ class event_resolver implements type_resolver {
      * Note that at this point we are going to use $source as the notifiable event class name
      * to resolve the field's value of a totara_notification_event_resolver graphql type.
      *
-     * Ideally the $source should be a model of notifiable_event, however it had not  yet
+     * Ideally the $source should be a model of notifiable_event_preference, however it had not  yet
      * been implemented and will be done in TL-29288 & TL-29289
      *
      * @param string            $field
@@ -51,9 +50,8 @@ class event_resolver implements type_resolver {
      */
     public static function resolve(string $field, $source, array $args, execution_context $ec) {
         if (!is_string($source) || !resolver_helper::is_valid_event_resolver($source)) {
-            throw new coding_exception("Invalid source passed to the resolver");
+            throw new coding_exception("Invalid source passed to the resolver (event_resolver)");
         }
-
         switch ($field) {
             case 'component':
                 return resolver_helper::get_component_of_resolver_class_name($source);
@@ -92,6 +90,33 @@ class event_resolver implements type_resolver {
 
             case 'recipients':
                 return helper::get_component_of_recipients($source);
+
+            case 'status':
+                // Default extended context.
+                $extended_context = extended_context::make_system();
+
+                $resolver_class_name = $source;
+
+                if (isset($extended_context_args['context_id'])) {
+                    $extended_context = extended_context::make_with_id(
+                        $extended_context_args['context_id'],
+                        $extended_context_args['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
+                        $extended_context_args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
+                        $extended_context_args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
+                    );
+                } else if ($ec->has_relevant_context()) {
+                    $context = $ec->get_relevant_context();
+                    $extended_context = extended_context::make_with_context($context);
+                }
+
+                $is_enabled = helper::is_resolver_enabled_for_all_parent_contexts(
+                    $resolver_class_name,
+                    $extended_context
+                );
+
+                return [
+                    'is_enabled' => $is_enabled
+                ];
 
             default:
                 throw new coding_exception("The field '{$field}' is not yet supported");

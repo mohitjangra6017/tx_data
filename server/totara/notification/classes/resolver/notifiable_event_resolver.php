@@ -24,7 +24,9 @@ namespace totara_notification\resolver;
 
 use coding_exception;
 use totara_core\extended_context;
+use totara_notification\entity\notifiable_event_preference as pref_entity;
 use totara_notification\local\helper;
+use totara_notification\model\notifiable_event_preference;
 use totara_notification\notification\built_in_notification;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\placeholder\template_engine\engine;
@@ -37,8 +39,8 @@ use totara_notification\recipient\recipient;
  * business logic calculation to help construct the message, finding out the actual list of users and the time to send
  * the notifications out.
  *
- * The children of this class must be matching with the class that implement interface notifiable_event.
- * For example, if your notifiable_event class is 'totara_core\event\course_created' then the resolver class
+ * The children of this class must be matching with the class that implement interface notifiable_event_preference.
+ * For example, if your notifiable_event_preference class is 'totara_core\event\course_created' then the resolver class
  * that you are introduce should be 'totara_core\totara_notification\resolver\course_created'. The destination of the
  * class itself should follow the same namespace as above.
  *
@@ -124,6 +126,22 @@ abstract class notifiable_event_resolver {
     }
 
     /**
+     * Fetch the notifiable event preference if it exists.
+     *
+     * @param extended_context $extended_context
+     * @return notifiable_event_preference|null
+     */
+    public function get_notifiable_event_preference(extended_context $extended_context): ?notifiable_event_preference {
+        $pref_entity = pref_entity::repository()->for_context(static::class, $extended_context);
+
+        if ($pref_entity) {
+            return notifiable_event_preference::from_entity($pref_entity);
+        }
+
+        return null;
+    }
+
+    /**
      * This is to check whether the resolver has an event interface associated with it or not.
      * @return bool
      */
@@ -175,7 +193,7 @@ abstract class notifiable_event_resolver {
      */
     abstract public static function get_notification_available_placeholder_options(): array;
 
-    /*
+    /**
      * Indicates whether the resolver supports the given context.
      * By default, resolvers support the system context.
      * Override this function to support other contexts.

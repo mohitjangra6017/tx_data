@@ -61,5 +61,9 @@ query totara_notification_event_resolvers(
       }
     }
     valid_schedules
+    status(extended_context: $extended_context) {
+      __typename
+      is_enabled
+    }
   }
 }

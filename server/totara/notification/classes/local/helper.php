@@ -23,7 +23,10 @@
 namespace totara_notification\local;
 
 use coding_exception;
+use totara_core\extended_context;
+use totara_notification\entity\notifiable_event_preference as entity;
 use totara_notification\event\notifiable_event;
+use totara_notification\model\notifiable_event_preference;
 use totara_notification\notification\built_in_notification;
 use totara_notification\recipient\recipient;
 use totara_notification\resolver\notifiable_event_resolver;
@@ -84,5 +87,41 @@ class helper {
      */
     public static function is_valid_recipient_class(string $recipient_class): bool {
         return is_a($recipient_class, recipient::class, true);
+    }
+
+    /**
+     * Check the entire context tree (bottom to top) from this context to
+     * see if there are any disabled flags set.
+     *
+     * @param string $resolver_class_name
+     * @param extended_context $extended_context
+     * @return bool
+     */
+    public static function is_resolver_enabled_for_all_parent_contexts(
+        string $resolver_class_name,
+        extended_context $extended_context
+    ): bool {
+        // Start with the current level
+        $disabled_in_higher_context = false;
+        $parent_context = $extended_context;
+
+        // Check if the event has been disabled in a higher context?
+        while ($parent_context !== null) {
+            $notifiable_event_entity = entity::repository()->for_context($resolver_class_name, $parent_context);
+            if ($notifiable_event_entity) {
+                $notifiable_event = notifiable_event_preference::from_entity($notifiable_event_entity);
+                if (!$notifiable_event->enabled) {
+                    $disabled_in_higher_context = true;
+                    break;
+                }
+            }
+            $parent_context = $parent_context->get_parent();
+        }
+
+        if ($disabled_in_higher_context) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -378,5 +378,34 @@ function xmldb_totara_notification_upgrade($old_version) {
         upgrade_plugin_savepoint(true, 2021032304, 'totara', 'notification');
     }
 
+    if ($old_version < 2021032305) {
+        // Define table notifiable_event_preference to be created.
+        $table = new xmldb_table('notifiable_event_preference');
+
+        // Adding fields to table notifiable_event_preference.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('resolver_class_name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('context_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('area', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('item_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('enabled', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        // Adding keys to table notifiable_event_preference.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('context_id_key', XMLDB_KEY_FOREIGN, array('context_id'), 'context', array('id'));
+
+        // Adding indexes to table notifiable_event_preference.
+        $table->add_index('resolver_class_name_index', XMLDB_INDEX_NOTUNIQUE, array('resolver_class_name'));
+
+        // Conditionally launch create table for notifiable_event_preference.
+        if (!$db_manager->table_exists($table)) {
+            $db_manager->create_table($table);
+        }
+
+        // Notification savepoint reached.
+        upgrade_plugin_savepoint(true, 2021032305, 'totara', 'notification');
+    }
+
     return true;
 }

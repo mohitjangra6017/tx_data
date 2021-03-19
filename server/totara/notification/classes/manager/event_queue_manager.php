@@ -67,6 +67,14 @@ class event_queue_manager {
                     continue;
                 }
 
+                $resolver_class_name = $queue->resolver_class_name;
+                $extended_context = $queue->get_extended_context();
+
+                // Skip if this resolver is disabled here, or anywhere in a parent context
+                if (!helper::is_resolver_enabled_for_all_parent_contexts($resolver_class_name, $extended_context)) {
+                    continue;
+                }
+
                 $preferences = notification_preference_loader::get_notification_preferences(
                     $queue->get_extended_context(),
                     $queue->resolver_class_name

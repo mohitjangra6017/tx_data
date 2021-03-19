@@ -24,6 +24,12 @@ type totara_notification_event_resolver {
   """
   recipients: [totara_notification_recipient!]!
   """
+  Return the enabled status of the notifiable event.
+  """
+  status(
+    extended_context: totara_notification_extended_context_input
+  ): totara_notification_notifiable_event_status!
+  """
   Returning all the notification preferences that are associated with this very notifiable event.
   """
   notification_preferences(
@@ -33,6 +39,10 @@ type totara_notification_event_resolver {
     extended_context: totara_notification_extended_context_input!
   ): [totara_notification_notification_preference!]!
   #Note this is where all the configuration fields within the system should be added.
+}
+
+type totara_notification_notifiable_event_status {
+  is_enabled: Boolean!
 }
 
 extend type Query {
@@ -49,4 +59,22 @@ extend type Query {
     """
     extended_context: totara_notification_extended_context_input!
   ): [totara_notification_event_resolver!]!
+}
+
+extend type Mutation {
+  totara_notification_toggle_notifiable_event(
+    """
+    Notifiable event resolver class name
+    """
+    resolver_class_name: param_text!
+    """
+    Context to update enabled in.
+    Note: Only the system context is accepted currently.
+    """
+    extended_context: totara_notification_extended_context_input
+    """
+    Enabled status to set
+    """
+    is_enabled: param_boolean
+  ): totara_notification_event_resolver!
 }
