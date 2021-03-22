@@ -44,22 +44,25 @@ use mod_perform\state\activity\active;
 use mod_perform\state\activity\draft;
 use mod_perform\state\participant_instance\closed;
 use mod_perform\state\participant_instance\open;
+use mod_perform\testing\activity_generator_configuration;
+use mod_perform\testing\generator as perform_generator;
+use performelement_aggregation\aggregation;
+use performelement_aggregation\calculations\average;
+use totara_core\entity\relationship;
 
 /**
  * @group perform
  */
 class mod_perform_data_provider_participant_section_with_responses_testcase extends advanced_testcase {
 
-
     public function test_get_unanswered(): void {
         self::setAdminUser();
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
-        $generator->create_subject_instance([
+        $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
             'subject_user_id' => $subject->id,
             'other_participant_id' => user::logged_in()->id,
@@ -94,8 +97,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -114,7 +116,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
         $data_provider = new participant_section_with_responses($participant_section);
 
-        $responses =  $data_provider->build()->get_section_element_responses();
+        $responses = $data_provider->build()->get_section_element_responses();
         self::assertCount(2, $responses);
 
         // Set answers on each question.
@@ -123,7 +125,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
             $response->save();
         }
 
-        $responses =  $data_provider->build()->get_section_element_responses();
+        $responses = $data_provider->build()->get_section_element_responses();
         self::assertCount(2, $responses);
 
         // Should be an answer on each question.
@@ -137,8 +139,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -147,7 +148,6 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
             'include_questions' => true,
             'update_participant_sections_status' => 'draft',
         ]);
-
 
         $participant_section = new participant_section(
             participant_section_entity::repository()
@@ -158,7 +158,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
         $data_provider = new participant_section_with_responses($participant_section);
 
-        $main_responses =  $data_provider->build()->get_section_element_responses();
+        $main_responses = $data_provider->build()->get_section_element_responses();
         self::assertCount(2, $main_responses);
 
         // Set the manager's response on each question.
@@ -172,7 +172,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
             $manager_response_group = $other_responder_groups->first();
             self::assertEquals($manager_response_group->get_relationship_name(), 'Manager');
 
-            $manager_responses =  $manager_response_group->get_responses();
+            $manager_responses = $manager_response_group->get_responses();
             self::assertCount(1, $manager_responses);
 
             /** @var section_element_response $manager_response */
@@ -183,7 +183,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
             $manager_response->save();
         }
 
-        $main_responses =  $data_provider->build()->get_section_element_responses();
+        $main_responses = $data_provider->build()->get_section_element_responses();
         self::assertCount(2, $main_responses);
 
         // Set the manager's response on each question.
@@ -197,7 +197,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
             $manager_response_group = $other_responder_groups->first();
             self::assertEquals($manager_response_group->get_relationship_name(), 'Manager');
 
-            $manager_responses =  $manager_response_group->get_responses();
+            $manager_responses = $manager_response_group->get_responses();
             self::assertCount(1, $manager_responses);
 
             /** @var section_element_response $manager_response */
@@ -211,8 +211,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -231,7 +230,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
         $data_provider = new participant_section_with_responses($participant_section);
 
-        $main_responses =  $data_provider->build()->get_section_element_responses();
+        $main_responses = $data_provider->build()->get_section_element_responses();
         self::assertCount(2, $main_responses);
 
         // Set the manager's response on each question.
@@ -245,7 +244,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
             $manager_response_group = $other_responder_groups->first();
             self::assertEquals($manager_response_group->get_relationship_name(), 'Manager');
 
-            $manager_responses =  $manager_response_group->get_responses();
+            $manager_responses = $manager_response_group->get_responses();
             self::assertCount(1, $manager_responses);
 
             /** @var section_element_response $manager_response */
@@ -256,7 +255,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
             $manager_response->save();
         }
 
-        $main_responses =  $data_provider->build()->get_section_element_responses();
+        $main_responses = $data_provider->build()->get_section_element_responses();
         self::assertCount(2, $main_responses);
 
         // Set the manager's response on each question.
@@ -270,7 +269,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
             $manager_response_group = $other_responder_groups->first();
             self::assertEquals($manager_response_group->get_relationship_name(), 'Manager');
 
-            $manager_responses =  $manager_response_group->get_responses();
+            $manager_responses = $manager_response_group->get_responses();
             self::assertCount(1, $manager_responses);
 
             /** @var section_element_response $manager_response */
@@ -299,8 +298,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
     ): void {
         self::setAdminUser();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $subject_user = user::logged_in();
         $subject_user_id = $subject_user->id;
@@ -396,16 +394,26 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
     public function responder_group_population_provider(): array {
         return [
             'Two managers, one appraisers' => [
-                2, 1, [constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_APPRAISER]
+                2,
+                1,
+                [constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_APPRAISER]
             ],
             'Two managers, one appraisers - no visibility of other responses' => [
-                0, 0, [constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_APPRAISER], false
+                0,
+                0,
+                [constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_APPRAISER],
+                false
             ],
             'Two appraisers, one managers' => [
-                1, 2, [constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_APPRAISER, constants::RELATIONSHIP_APPRAISER]
+                1,
+                2,
+                [constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_APPRAISER, constants::RELATIONSHIP_APPRAISER]
             ],
             'Two appraisers, one managers - no visibility of other responses' => [
-                0, 0, [constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_APPRAISER, constants::RELATIONSHIP_APPRAISER], false
+                0,
+                0,
+                [constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_APPRAISER, constants::RELATIONSHIP_APPRAISER],
+                false
             ],
             'One manager, no appraiser' => [1, 0, [constants::RELATIONSHIP_MANAGER]],
             'One manager, no appraiser - no visibility of other responses' => [0, 0, [constants::RELATIONSHIP_MANAGER], false],
@@ -432,7 +440,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
         $elements_in_section = $participant_section->section->get_section_elements();
         $respondable_elements = $elements_in_section->filter(function ($section_element) {
-            /**@var section_element $section_element*/
+            /**@var section_element $section_element */
             return $section_element->element->is_respondable;
         });
 
@@ -450,7 +458,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
         self::setAdminUser();
 
         $data_generator = self::getDataGenerator();
-        /** @var \mod_perform\testing\generator $perform_generator */
+        /** @var perform_generator $perform_generator */
         $perform_generator = $data_generator->get_plugin_generator('mod_perform');
 
         /** @var activity $activity */
@@ -466,8 +474,8 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
         return participant_section::load_by_entity(
             participant_section_entity::repository()
-            ->order_by('id', 'desc')
-            ->get()->first()
+                ->order_by('id', 'desc')
+                ->get()->first()
         );
     }
 
@@ -478,8 +486,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
     public function test_responder_group_population_for_non_subject(string $fetching_as): void {
         self::setAdminUser();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $subject_user = user::logged_in();
         $subject_user_id = $subject_user->id;
@@ -670,8 +677,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
     public function test_responder_group_population_for_manager_where_there_is_another_manager(): void {
         self::setAdminUser();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $subject_user = user::logged_in();
         $subject_user_id = $subject_user->id;
@@ -770,17 +776,11 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
     /**
      * This simulates the case where within one job assignment a user has the same manager and appraiser.
-     *
-     * @param int $expected_manager_count
-     * @param int $expected_appraiser_count
-     * @param string[] $relationship_class_names
-     * @throws coding_exception
      */
     public function test_responder_group_population_same_user_is_manager_and_appraiser(): void {
         self::setAdminUser();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        $generator = perform_generator::instance();
 
         $subject_user = user::logged_in();
         $manager_appraiser_user = self::getDataGenerator()->create_user();
@@ -817,9 +817,101 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
         /** @var participant_instance $appraiser_participant_instance */
         $appraiser_participant_instance = $appraiser_responder_group->get_responses()->first()->get_participant_instance();
 
-
         self::assertEquals($manager_appraiser_user->id, $manager_participant_instance->participant_id);
         self::assertEquals($manager_appraiser_user->id, $appraiser_participant_instance->participant_id);
+
+        self::assertNotEquals(
+            $manager_participant_instance->get_id(),
+            $appraiser_participant_instance->get_id(),
+            'Manager and appraiser relationship should have separate participant instances'
+        );
+    }
+
+    /**
+     * This simulates the case where within one job assignment a user has the same manager and appraiser.
+     */
+    public function test_responder_group_population_same_user_is_manager_and_appraiser_derived_responder_groups(): void {
+        self::setAdminUser();
+
+        $generator = perform_generator::instance();
+
+        $subject_user = user::logged_in();
+        $manager_appraiser_user = self::getDataGenerator()->create_user();
+
+        [$subject_section] = $generator->create_section_with_combined_manager_appraiser($subject_user, $manager_appraiser_user);
+
+        $activity_entity = $subject_section->participant_instance->subject_instance->activity();
+
+        $aggregation_section = $generator->create_section(new activity($activity_entity), ['title' => 'Aggregation section']);
+
+        $subject_viewing_aggregation_section = $generator->create_participant_section(
+            new activity($activity_entity),
+            $subject_section->participant_instance,
+            false,
+            $aggregation_section
+        );
+
+        $generator->create_section_relationship_from_name(['section_name' => 'Aggregation section', 'relationship' => constants::RELATIONSHIP_SUBJECT]);
+
+        $generator->create_aggregation_in_activity(
+            $activity_entity->id,
+            2,
+            [1],
+            [
+                constants::RELATIONSHIP_MANAGER => [50],
+                constants::RELATIONSHIP_APPRAISER => [100],
+            ]
+        );
+
+        $this->set_participant_instance_availability($subject_section->participant_instance_id, closed::get_code());
+
+        $data_provider = new participant_section_with_responses(new participant_section($subject_viewing_aggregation_section->refresh()));
+
+        /** @var section_element_response $aggregation_element_response */
+        $aggregation_element_response = $data_provider->build()->get_section_element_responses()->first();
+
+        static::assertEquals('Subject', $aggregation_element_response->get_relationship_name());
+        static::assertNull($aggregation_element_response->get_response_data());
+
+        /** @var responder_group $manager_responder_group */
+        $manager_responder_group = $aggregation_element_response->get_other_responder_groups()->find(function (responder_group $group) {
+            return $group->get_relationship_name() === 'Manager';
+        });
+
+        /** @var responder_group $appraiser_responder_group */
+        $appraiser_responder_group = $aggregation_element_response->get_other_responder_groups()->find(function (responder_group $group) {
+            return $group->get_relationship_name() === 'Appraiser';
+        });
+
+        // There should always be two groups, viewing subject, manager and appraiser group.
+        self::assertCount(2, $aggregation_element_response->get_other_responder_groups());
+
+
+        // Confirming manager responses are correct.
+        /** @var participant_instance $manager_participant_instance */
+        $manager_participant_instance = $manager_responder_group->get_responses()->first()->get_participant_instance();
+
+        self::assertEquals($manager_appraiser_user->id, $manager_participant_instance->participant_id);
+        self::assertCount(1, $manager_responder_group->get_responses());
+
+        /** @var section_element_response $manager_aggregate_response */
+        $manager_aggregate_response = $manager_responder_group->get_responses()->first();
+        $manager_average = json_decode($manager_aggregate_response->response_data, true, 512, JSON_THROW_ON_ERROR)[average::get_name()];
+        self::assertEquals(50.00, $manager_average);
+        self::assertTrue($manager_aggregate_response->get_can_respond());
+
+        // Confirming appraiser responses are correct.
+        /** @var participant_instance $manager_participant_instance */
+        $appraiser_participant_instance = $appraiser_responder_group->get_responses()->first()->get_participant_instance();
+
+        self::assertEquals($manager_appraiser_user->id, $appraiser_participant_instance->participant_id);
+        self::assertCount(1, $appraiser_responder_group->get_responses());
+
+        /** @var section_element_response $appraiser_aggregate_response */
+        $appraiser_aggregate_response = $appraiser_responder_group->get_responses()->first();
+        $appraiser_average = json_decode($appraiser_aggregate_response->response_data, true, 512, JSON_THROW_ON_ERROR)[average::get_name()];
+        self::assertEquals(100.00, $appraiser_average);
+        self::assertTrue($appraiser_aggregate_response->get_can_respond());
 
         self::assertNotEquals(
             $manager_participant_instance->get_id(),
@@ -831,8 +923,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
     public function test_responder_group_population_for_anonymous_activity(): void {
         self::setAdminUser();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
+        $generator = perform_generator::instance();
 
         $subject_user = user::logged_in();
         $manager_appraiser_user = self::getDataGenerator()->create_user();
@@ -840,13 +931,13 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
         $subject_instance = $generator->create_subject_instance(
             [
-                'activity_name'            => 'anonymous activity',
+                'activity_name' => 'anonymous activity',
                 // The subject actually is participating, but we will create the instance below.
                 'subject_is_participating' => false,
-                'subject_user_id'          => $subject_user->id,
-                'other_participant_id'     => null,
-                'include_questions'        => false,
-                'anonymous_responses'      => 'true',
+                'subject_user_id' => $subject_user->id,
+                'other_participant_id' => null,
+                'include_questions' => false,
+                'anonymous_responses' => 'true',
                 'update_participant_sections_status' => 'complete',
             ]
         );
@@ -939,7 +1030,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
         $activity = $this->create_activity();
         $this->update_activity_visibility_condition($activity, none::VALUE);
 
-        $subject_participant_section = $this->get_subject_participant_section();
+        $subject_participant_section = $this->get_last_subject_participant_section();
         self::setUser($subject_participant_section->participant_instance->participant_id);
         $subject_participant_section_availabilities = [open::get_code(), closed::get_code()];
 
@@ -952,21 +1043,21 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
             $subject_participant_section->refresh();
 
             // all other participant_sections open.
-            $this->assert_responder_groups_are_not_empty($subject_participant_section);
+            $this->assert_correct_responder_groups($subject_participant_section);
 
             // Set 1 of the other participant_sections as closed.
-            $this->set_one_of_other_participant_instances_availability(
+            $this->set_manager_participant_instances_availability(
                 $subject_participant_section->participant_instance_id,
                 closed::get_code()
             );
-            $this->assert_responder_groups_are_not_empty($subject_participant_section);
+            $this->assert_correct_responder_groups($subject_participant_section);
 
             // Set all the other participant_sections as closed.
             $this->set_all_other_participant_instances_availability(
                 $subject_participant_section->participant_instance_id,
                 closed::get_code()
             );
-            $this->assert_responder_groups_are_not_empty($subject_participant_section);
+            $this->assert_correct_responder_groups($subject_participant_section);
         }
     }
 
@@ -982,7 +1073,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
         $activity = $this->create_activity();
         $this->update_activity_visibility_condition($activity, own_response::VALUE);
 
-        $subject_participant_section = $this->get_subject_participant_section();
+        $subject_participant_section = $this->get_last_subject_participant_section();
         $subject_participant_section_availabilities = [open::get_code(), closed::get_code()];
         self::setUser($subject_participant_section->participant_instance->participant_id);
 
@@ -997,16 +1088,16 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
             // all other participant_sections open.
             $subject_participant_instance->get_availability_state()::get_code() === open::get_code()
                 ? $this->assert_responder_groups_are_empty($subject_participant_section)
-                : $this->assert_responder_groups_are_not_empty($subject_participant_section);
+                : $this->assert_correct_responder_groups($subject_participant_section);
 
             // Set 1 of the other participant_sections as closed.
-            $this->set_one_of_other_participant_instances_availability(
+            $this->set_manager_participant_instances_availability(
                 $subject_participant_section->participant_instance_id,
                 closed::get_code()
             );
             $subject_participant_instance->get_availability_state()::get_code() === open::get_code()
                 ? $this->assert_responder_groups_are_empty($subject_participant_section)
-                : $this->assert_responder_groups_are_not_empty($subject_participant_section);
+                : $this->assert_correct_responder_groups($subject_participant_section);
 
             // Set all the other participant_sections as closed.
             $this->set_all_other_participant_instances_availability(
@@ -1015,7 +1106,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
             );
             $subject_participant_instance->get_availability_state()::get_code() === open::get_code()
                 ? $this->assert_responder_groups_are_empty($subject_participant_section)
-                : $this->assert_responder_groups_are_not_empty($subject_participant_section);
+                : $this->assert_correct_responder_groups($subject_participant_section);
         }
     }
 
@@ -1031,7 +1122,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
         $activity = $this->create_activity();
         $this->update_activity_visibility_condition($activity, all_responses::VALUE);
 
-        $subject_participant_section = $this->get_subject_participant_section();
+        $subject_participant_section = $this->get_last_subject_participant_section();
         self::setUser($subject_participant_section->participant_instance->participant_id);
 
         $availability = open::get_code();
@@ -1045,7 +1136,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
         $this->assert_responder_groups_are_empty($subject_participant_section);
 
         // Set 1 of the other participant_sections as closed.
-        $this->set_one_of_other_participant_instances_availability(
+        $this->set_manager_participant_instances_availability(
             $subject_participant_section->participant_instance_id,
             closed::get_code()
         );
@@ -1057,7 +1148,6 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
             closed::get_code()
         );
         $this->assert_responder_groups_are_empty($subject_participant_section);
-
 
         //test when subject participant section is closed.
         $availability = closed::get_code();
@@ -1071,7 +1161,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
         $this->assert_responder_groups_are_empty($subject_participant_section);
 
         // Set 1 of the other participant_sections as closed.
-        $this->set_one_of_other_participant_instances_availability(
+        $this->set_manager_participant_instances_availability(
             $subject_participant_section->participant_instance_id,
             closed::get_code()
         );
@@ -1082,11 +1172,11 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
             $subject_participant_section->participant_instance_id,
             closed::get_code()
         );
-        $this->assert_responder_groups_are_not_empty($subject_participant_section);
+        $this->assert_correct_responder_groups($subject_participant_section);
 
         // test when activity is anonymous
         $this->update_activity_anonymous_setting($activity, true);
-        $this->assert_responder_groups_are_not_empty($subject_participant_section);
+        $this->assert_correct_responder_groups($subject_participant_section, true);
     }
 
     /**
@@ -1099,7 +1189,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
         $selected_participant_section = participant_section::load_by_id($participant_section->id);
         $data_provider = new participant_section_with_responses($selected_participant_section);
         foreach ($data_provider->build()->get_section_element_responses() as $section_element_response) {
-            $this->assertTrue($section_element_response->get_other_responder_groups()->count() === 0);
+            $this->assertCount(0, $section_element_response->get_other_responder_groups());
         }
     }
 
@@ -1107,13 +1197,42 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
      * Confirms the responder groups are not empty.
      *
      * @param participant_section $participant_section
+     * @param bool $is_anonymous
      * @return void
      */
-    private function assert_responder_groups_are_not_empty(participant_section $participant_section): void {
+    private function assert_correct_responder_groups(participant_section $participant_section, $is_anonymous = false): void {
         $selected_participant_section = participant_section::load_by_id($participant_section->id);
         $data_provider = new participant_section_with_responses($selected_participant_section);
         foreach ($data_provider->build()->get_section_element_responses() as $section_element_response) {
-            $this->assertTrue($section_element_response->get_other_responder_groups()->count() > 0);
+            $group_names = $section_element_response->get_other_responder_groups()->map(function (responder_group $responder_group) {
+                return $responder_group->get_relationship_name();
+            })->all();
+
+
+            if ($section_element_response->get_section_element()->element->plugin_name === aggregation::get_plugin_name()) {
+                if ($is_anonymous) {
+                    self::assertEquals([
+                        'Anonymous',
+                    ], $group_names);
+                } else {
+                    // The special aggregate respondents", subject is replaced with "Your" because we are viewing as the subject.
+                    self::assertEquals([
+                        'Manager',
+                        'Appraiser',
+                    ], $group_names);
+                }
+            } else {
+                if ($is_anonymous) {
+                    self::assertEquals([
+                        'Anonymous',
+                    ], $group_names);
+                } else {
+                    // Just the standard "real" respondents, subject is excluded because we are viewing as the subject.
+                    self::assertEquals([
+                        'Appraiser',
+                    ], $group_names);
+                }
+            }
         }
     }
 
@@ -1122,16 +1241,17 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
      *
      * @return participant_section
      */
-    private function get_subject_participant_section(): participant_section {
-        $subject_instance = subject_instance::repository()->get()->first();
+    private function get_last_subject_participant_section(): participant_section {
+        /** @var subject_instance $subject_instance */
+        $subject_instance = subject_instance::repository()->one(true);
 
-        /**@var participant_instance_entity $subject_participant_instance*/
+        /**@var participant_instance_entity $subject_participant_instance */
         $subject_participant_instance = participant_instance_entity::repository()
             ->where('participant_source', participant_source::INTERNAL)
             ->where('participant_id', $subject_instance->subject_user_id)
-            ->get()
-            ->first();
-        return participant_section::load_by_entity($subject_participant_instance->participant_sections->first());
+            ->one(true);
+
+        return participant_section::load_by_entity($subject_participant_instance->participant_sections->last());
     }
 
     /**
@@ -1141,21 +1261,29 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
      * @throws coding_exception
      */
     private function create_activity(): activity {
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = self::getDataGenerator()->get_plugin_generator('mod_perform');
-        $activity_config = new \mod_perform\testing\activity_generator_configuration();
-        $activity_config->set_number_of_elements_per_section(2)
-            ->set_relationships_per_section(
-                [
-                    constants::RELATIONSHIP_SUBJECT,
-                    constants::RELATIONSHIP_MANAGER,
-                    constants::RELATIONSHIP_APPRAISER
-                ]
+        $generator = perform_generator::instance();
+        $activity_config = new activity_generator_configuration();
+        $activity_config->set_number_of_elements_per_section(1)
+            ->set_number_of_sections_per_activity(3)
+            ->set_relationships_for_section(1,
+                [constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_MANAGER]
+            )
+            ->set_relationships_for_section(2,
+                [constants::RELATIONSHIP_MANAGER]
+            )
+            ->set_relationships_for_section(3,
+                [constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_APPRAISER]
             )
             ->set_activity_status(active::get_code())
             ->set_number_of_users_per_user_group_type(1)
             ->enable_appraiser_for_each_subject_user()
-            ->enable_manager_for_each_subject_user();
+            ->enable_manager_for_each_subject_user()
+            ->add_aggregation(3, [1, 2, 3],
+                [
+                    constants::RELATIONSHIP_SUBJECT => [180, null, 20],
+                    constants::RELATIONSHIP_MANAGER => [50, 150, null],
+                    constants::RELATIONSHIP_APPRAISER => [null, null, null],
+                ]);
         $activities = $generator->create_full_activities($activity_config);
 
         return $activities->first();
@@ -1168,11 +1296,12 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
      * @param int $availability
      * @return void
      */
-    private function set_one_of_other_participant_instances_availability(int $participant_instance_id, int $availability): void {
+    private function set_manager_participant_instances_availability(int $participant_instance_id, int $availability): void {
         participant_instance_entity::repository()
+            ->join([relationship::TABLE, 'core_relationship'], 'core_relationship_id','core_relationship.id')
             ->where('id', '!=', $participant_instance_id)
-            ->get()
-            ->first()
+            ->where('core_relationship.idnumber', constants::RELATIONSHIP_MANAGER)
+            ->one(true)
             ->set_attribute('availability', $availability)
             ->update();
     }
@@ -1261,7 +1390,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
     public function test_results_are_ordered(): void {
         self::setAdminUser();
 
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $subject_user = user::logged_in();
         $subject_user_id = $subject_user->id;

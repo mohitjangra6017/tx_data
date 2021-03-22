@@ -131,6 +131,7 @@
         :title="sectionElement.element.title"
         :activity-context-id="activityContextId"
         :current-activity-id="activityId"
+        :extra-plugin-config-data="extraPluginConfigData"
         @child-update="$emit('child-update')"
         @display="$emit('display', sectionElement)"
         @display-read="$emit('display-read', sectionElement)"
@@ -193,6 +194,9 @@ export default {
     section: Object,
     sectionId: Number,
     activityContextId: [Number, String],
+    extraPluginConfigData: {
+      type: [Object, Array],
+    },
   },
 
   computed: {

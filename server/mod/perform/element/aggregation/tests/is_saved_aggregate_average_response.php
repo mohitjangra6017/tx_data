@@ -56,7 +56,11 @@ class is_saved_aggregate_average_response extends Constraint {
         $subject_aggregated_response = element_response::repository()
             ->where('participant_instance_id', $this->participant_instance->id)
             ->where('section_element_id', $this->aggregation_section_element->id)
-            ->one(true);
+            ->one(false);
+
+        if ($other === null) {
+            return $subject_aggregated_response === null;
+        }
 
         // attempting to prevent platform-dependent failures.
         // https://www.php.net/manual/en/language.types.float.php#:~:text=The%20size%20of%20a%20float,the%2064%20bit%20IEEE%20format).

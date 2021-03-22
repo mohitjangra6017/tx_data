@@ -26,6 +26,7 @@ use mod_perform\models\activity\section;
 use mod_perform\models\activity\section_element;
 use mod_perform\testing\generator;
 use performelement_aggregation\aggregation;
+use performelement_aggregation\calculations\average;
 use performelement_aggregation\data_provider\aggregation_data;
 use performelement_numeric_rating_scale\numeric_rating_scale;
 use totara_webapi\phpunit\webapi_phpunit_helper;
@@ -87,7 +88,7 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
                         'data' => json_encode([
                             aggregation::SOURCE_SECTION_ELEMENT_IDS => [$source_section_element->id],
                             aggregation::EXCLUDED_VALUES => [],
-                            aggregation::CALCULATIONS => ['average'],
+                            aggregation::CALCULATIONS => [average::get_name()],
                         ], JSON_THROW_ON_ERROR),
                         'is_required' => false,
                         'sort_order' => 3,
@@ -116,7 +117,7 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
             [
                 aggregation::SOURCE_SECTION_ELEMENT_IDS => [$source_section_element->id],
                 aggregation::EXCLUDED_VALUES => [],
-                aggregation::CALCULATIONS => ['average'],
+                aggregation::CALCULATIONS => [average::get_name()],
             ],
             $all_data
         );
@@ -136,7 +137,7 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
                                 $source_section_element->id,
                             ],
                             aggregation::EXCLUDED_VALUES => [],
-                            aggregation::CALCULATIONS => ['average'],
+                            aggregation::CALCULATIONS => [average::get_name()],
                         ], JSON_THROW_ON_ERROR),
                         'is_required' => false,
                         'sort_order' => 3,
@@ -166,7 +167,7 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
                     $source_section_element->id,
                 ],
                 aggregation::EXCLUDED_VALUES => [],
-                aggregation::CALCULATIONS => ['average'],
+                aggregation::CALCULATIONS => [average::get_name()],
             ],
             $all_data
         );
@@ -200,7 +201,7 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
             self::assertEquals(
                 [
                     aggregation::EXCLUDED_VALUES => [],
-                    aggregation::CALCULATIONS => ['average'],
+                    aggregation::CALCULATIONS => [average::get_name()],
                 ],
                 json_decode($aggregation_section_element->get_element()->get_raw_data(), true, 512, JSON_THROW_ON_ERROR)
             );

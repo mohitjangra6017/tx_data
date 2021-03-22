@@ -28,6 +28,7 @@ use mod_perform\constants;
 use mod_perform\data_providers\response\view_only_section_with_responses;
 use mod_perform\entity\activity\participant_section;
 use mod_perform\entity\activity\section;
+use mod_perform\models\activity\derived_responses_element_plugin;
 use mod_perform\models\activity\section as section_model;
 use mod_perform\entity\activity\section_element;
 use mod_perform\entity\activity\subject_instance;
@@ -38,6 +39,10 @@ use mod_perform\models\response\responder_group;
 use mod_perform\models\response\section_element_response;
 use mod_perform\models\response\view_only_element_response;
 use mod_perform\state\participant_section\complete;
+use mod_perform\testing\activity_generator_configuration;
+use mod_perform\testing\generator as perform_generator;
+use performelement_aggregation\aggregation;
+use performelement_aggregation\calculations\average;
 
 /**
  * @group perform
@@ -49,8 +54,7 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $subject_instance = $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -104,8 +108,7 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
         $subject = self::getDataGenerator()->create_user();
         $manager = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -114,13 +117,19 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
             'include_questions' => true,
         ]);
 
+        $generator->create_aggregation_in_activity($subject_instance->activity()->id,
+            1,
+            [1],
+            [
+                constants::RELATIONSHIP_SUBJECT => [50],
+                constants::RELATIONSHIP_MANAGER => [100],
+            ], $subject_complete);
+
         /** @var section $section */
         $section = section::repository()->one(true);
 
-        $data_provider = new view_only_section_with_responses($section, $subject_instance);
-
-        $responses = $data_provider->fetch()->get()->get_section_element_responses();
-        self::assertCount(2, $responses);
+        $responses = (new view_only_section_with_responses($section, $subject_instance))->fetch()->get()->get_section_element_responses();
+        self::assertCount(4, $responses);
 
         /** @var participant_instance_entity $subject_participant_instance */
         $subject_participant_instance = participant_instance_entity::repository()->where('participant_id', $subject->id)->one();
@@ -132,33 +141,49 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
                 $subject_participant_instance
             );
 
-            $section_element_response->set_response_data('answer: ' . $question_number);
-            $section_element_response->save();
+            $element_plugin = $section_element_response->get_element()->get_element_plugin();
+
+            if (!$element_plugin instanceof derived_responses_element_plugin && !$element_plugin->get_is_aggregatable()) {
+                $section_element_response->set_response_data('answer: ' . $question_number);
+                $section_element_response->save();
+            }
         }
 
         if ($subject_complete) {
             $this->complete_sections_for_user($subject);
         }
 
-        $responses = $data_provider->fetch()->get()->get_section_element_responses();
-        self::assertCount(2, $responses);
+        $responses = (new view_only_section_with_responses($section, $subject_instance))->fetch()->get()->get_section_element_responses();
+        self::assertCount(4, $responses);
 
         // Should be an answer on each question.
         foreach ($responses->all(false) as $question_number => $response) {
             $subject_responder_group = $this->get_subject_responder_group($response->get_other_responder_groups());
+            $manager_responder_group = $this->get_manager_responder_group($response->get_other_responder_groups());
+
+            /** @var section_element_response $manager_response */
+            $manager_response = $manager_responder_group->get_responses()->first();
+
             /** @var section_element_response $subject_response */
             $subject_response = $subject_responder_group->get_responses()->first();
 
             if ($subject_complete) {
-                self::assertEquals('answer: ' . $question_number, $subject_response->get_response_data());
+                $element_plugin = $subject_response->get_element()->get_element_plugin();
+
+                if ($element_plugin instanceof derived_responses_element_plugin) {
+                    self::assertEquals([average::get_name() => 50.00], json_decode($subject_response->get_response_data(), true, 512, JSON_THROW_ON_ERROR));
+                    self::assertEquals([average::get_name() => 100.00], json_decode($manager_response->get_response_data(), true, 512, JSON_THROW_ON_ERROR));
+                } else if ($element_plugin->get_is_aggregatable()) {
+                    self::assertEquals(50, json_decode($subject_response->get_response_data(), true, 512, JSON_THROW_ON_ERROR));
+                    self::assertEquals(100, json_decode($manager_response->get_response_data(), true, 512, JSON_THROW_ON_ERROR));
+                } else {
+                    self::assertEquals('answer: ' . $question_number, $subject_response->get_response_data());
+                    self::assertNull($manager_response->get_response_data());
+                }
             } else {
                 self::assertNull($subject_response->get_response_data());
+                self::assertNull($manager_response->get_response_data());
             }
-
-            $manager_responder_group = $this->get_manager_responder_group($response->get_other_responder_groups());
-            /** @var section_element_response $manager_response */
-            $manager_response = $manager_responder_group->get_responses()->first();
-            self::assertNull($manager_response->get_response_data());
         }
     }
 
@@ -168,8 +193,7 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
         $subject = self::getDataGenerator()->create_user();
         $manager = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -210,8 +234,7 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $subject_instance = $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -269,10 +292,9 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
     public function test_sibling_section_population(int $section_sort_order): void {
         self::setAdminUser();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
-        $config = new \mod_perform\testing\activity_generator_configuration();
+        $config = new activity_generator_configuration();
         $config->set_number_of_sections_per_activity(3);
 
         $generator->create_full_activities($config);
@@ -347,8 +369,7 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
     ): void {
         self::setAdminUser();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $subject_user = user::logged_in();
         $subject_user_id = $subject_user->id;
@@ -457,8 +478,7 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
     public function test_responder_group_population_same_user_is_manager_and_appraiser(): void {
         self::setAdminUser();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $subject_user = user::logged_in();
         $subject_user_id = $subject_user->id;
@@ -509,8 +529,7 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
     public function test_responder_group_population_for_anonymous_activity(): void {
         self::setAdminUser();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $subject_user = user::logged_in();
         $manager_appraiser_user = self::getDataGenerator()->create_user();
@@ -569,6 +588,15 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
             $subject_section_relationship->core_relationship_id
         );
 
+        $generator->create_aggregation_in_activity($subject_instance->activity()->id,
+            1,
+            [1],
+            [
+                constants::RELATIONSHIP_SUBJECT => [null],
+                constants::RELATIONSHIP_MANAGER => [50],
+                constants::RELATIONSHIP_APPRAISER => [100],
+            ]);
+
         /** @var section $section */
         $section = section::repository()->one(true);
 
@@ -584,6 +612,24 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
 
         // There should always one group.
         self::assertCount(1, $first_element_response->get_other_responder_groups());
+
+        // No specific groups.
+        self::assertNull($subject_responder_group);
+        self::assertNull($manager_responder_group);
+        self::assertNull($appraiser_responder_group);
+
+        // anonymous group contains all data
+        self::assertCount(3, $anonymous_responder_group->get_responses());
+
+        /** @var view_only_element_response $aggregate_element_response */
+        $aggregate_element_response = $data_provider->fetch()->get()->get_section_element_responses()->last();
+
+        self::assertInstanceOf(aggregation::class, $aggregate_element_response->get_element()->get_element_plugin());
+
+        $subject_responder_group = $this->get_manager_responder_group($aggregate_element_response->get_other_responder_groups());
+        $manager_responder_group = $this->get_manager_responder_group($aggregate_element_response->get_other_responder_groups());
+        $appraiser_responder_group = $this->get_appraiser_responder_group($aggregate_element_response->get_other_responder_groups());
+        $anonymous_responder_group = $this->get_anonymous_responder_group($aggregate_element_response->get_other_responder_groups());
 
         // No specific groups.
         self::assertNull($subject_responder_group);

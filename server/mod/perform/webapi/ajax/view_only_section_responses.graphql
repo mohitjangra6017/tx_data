@@ -46,6 +46,7 @@ fragment mod_perform_view_only_section_responses_element_data on mod_perform_ele
   data
   is_required
   is_respondable
+  displays_responses
   element_plugin {
     participant_form_component
     participant_response_component

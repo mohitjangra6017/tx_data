@@ -31,6 +31,7 @@ use mod_perform\models\activity\element;
 use mod_perform\models\activity\element as element_model;
 use mod_perform\models\activity\section_element_reference;
 use performelement_aggregation\data_provider\aggregation_data;
+use stdClass;
 
 class aggregation extends derived_responses_element_plugin {
 
@@ -81,8 +82,8 @@ class aggregation extends derived_responses_element_plugin {
             throw new coding_exception(self::CALCULATIONS . ' must have at least one value');
         }
 
-        foreach ($data[self::CALCULATIONS] as $calculations) {
-            if (false === 'TODO jaron is plugin') {
+        foreach ($data[self::CALCULATIONS] as $calculation_method) {
+            if (!calculation_method::is_valid_method_name($calculation_method)) {
                 throw new coding_exception(self::EXCLUDED_VALUES . ' must be valid calculation plugin names');
             }
         }
@@ -121,10 +122,28 @@ class aggregation extends derived_responses_element_plugin {
         return self::GROUP_OTHER;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function process_data(element_entity $element): ?string {
         $modified_data = (new aggregation_data())->include_extra_info($element);
 
         return json_encode($modified_data, JSON_THROW_ON_ERROR);
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function get_extra_config_data(): array {
+        return [
+            self::CALCULATIONS => array_map(function (calculation_method $calculation_method) {
+                return [
+                    'name' => $calculation_method->get_name(),
+                    'label' => $calculation_method->get_label(),
+                ];
+            }, calculation_method::get_aggregation_calculation_methods()),
+        ];
     }
 
     /**
@@ -175,8 +194,34 @@ class aggregation extends derived_responses_element_plugin {
     }
 
     public function format_response_lines(?string $encoded_response_data, ?string $encoded_element_data): array {
-        // TODO: Implement format_response_lines() method.
-        return [];
+        $data = $this->decode_response($encoded_response_data, $encoded_element_data);
+
+        if (!$data) {
+            return [];
+        }
+
+        $formatted = [];
+        foreach ($data as $calculation => $value) {
+            if (!calculation_method::is_valid_method_name($calculation)) {
+                continue;
+            }
+
+            $a = new stdClass();
+            $a->label = calculation_method::load_by_method($calculation)->get_label();
+            $a->value = format_float($value, 2);
+
+            $formatted[] = get_string('aggregated_response_display', 'performelement_aggregation', $a);
+        }
+
+        return $formatted;
+    }
+
+    public function decode_response(?string $encoded_response_data, ?string $encoded_element_data): ?array {
+        if ($encoded_response_data === null) {
+            return null;
+        }
+
+        return json_decode($encoded_response_data, true, 512, JSON_THROW_ON_ERROR);
     }
 
     private function strip_section_element_references(element_model $element, array $data): void {

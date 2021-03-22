@@ -48,7 +48,7 @@ class all_answers_complete extends condition {
             return $section_element_entity->element->is_respondable;
         });
 
-        if (count($respondable_elements) != count($section_element_responses)) {
+        if (count($respondable_elements) !== count($section_element_responses)) {
             return false;
         }
 

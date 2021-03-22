@@ -133,7 +133,7 @@ class participant_instance extends model {
     /**
      * Gets collection of participant sections.
      *
-     * @return collection
+     * @return collection|participant_section[]
      */
     public function get_participant_sections(): collection {
         return $this->entity->participant_sections->map_to(participant_section::class);

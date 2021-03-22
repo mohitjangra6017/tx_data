@@ -459,7 +459,6 @@ export default {
       activeParticipantSection: {},
       completionSaveSuccess: false,
       errors: null,
-      hasOtherResponse: false,
       hasUnsavedChanges: false,
       initialValues: null,
       isSaving: false,
@@ -487,6 +486,16 @@ export default {
     };
   },
   computed: {
+    /*
+     * Do any of the questions have other reponses
+     */
+    hasOtherResponse() {
+      // We must check every question, because relationships can differ per question.
+      return this.sectionElements.some(
+        sectionElement => sectionElement.other_responder_groups.length > 0
+      );
+    },
+
     /**
      * Are we showing view-only (report) version,
      * this is the form not from perspective of any one participant, but as someone reviewing all other responses.
@@ -570,28 +579,42 @@ export default {
      * Apply dynamic filtering and sorting to section elements.
      */
     cleanedSectionElements() {
-      return this.sectionElements.map(sectionElement => {
-        const cleanSectionElement = Object.assign({}, sectionElement);
+      return this.sectionElements
+        .map(sectionElement => {
+          const cleanSectionElement = Object.assign({}, sectionElement);
 
-        if (
-          this.activity.anonymous_responses &&
-          cleanSectionElement.other_responder_groups.length > 0
-        ) {
-          // Push all missing responses to the end.
-          const sortedAnonGroup = this.sortMissingAnswersToEnd(
-            cleanSectionElement.other_responder_groups[0]
+          if (
+            this.activity.anonymous_responses &&
+            cleanSectionElement.other_responder_groups.length > 0
+          ) {
+            // Push all missing responses to the end.
+            const sortedAnonGroup = this.sortMissingAnswersToEnd(
+              cleanSectionElement.other_responder_groups[0]
+            );
+
+            cleanSectionElement.other_responder_groups = [sortedAnonGroup];
+          } else if (this.selectedRelationshipFilter) {
+            // Apply relationship filter.
+            cleanSectionElement.other_responder_groups = cleanSectionElement.other_responder_groups.filter(
+              group =>
+                group.relationship_name === this.selectedRelationshipFilter
+            );
+          }
+
+          return cleanSectionElement;
+        })
+        .filter(cleanSectionElement => {
+          if (!cleanSectionElement.displays_responses) {
+            return true;
+          }
+
+          // If the viewing participant (can_respond), or no one else (other_responder_groups) can't respond to the element,
+          // filter it out. Note other_responder_groups is altered by the selectedRelationshipFilter.
+          return (
+            cleanSectionElement.can_respond ||
+            cleanSectionElement.other_responder_groups.length > 0
           );
-
-          cleanSectionElement.other_responder_groups = [sortedAnonGroup];
-        } else if (this.selectedRelationshipFilter) {
-          // Apply relationship filter.
-          cleanSectionElement.other_responder_groups = cleanSectionElement.other_responder_groups.filter(
-            group => group.relationship_name === this.selectedRelationshipFilter
-          );
-        }
-
-        return cleanSectionElement;
-      });
+        });
     },
 
     /**
@@ -673,8 +696,9 @@ export default {
         : this.participantSections;
     },
 
-    /*
+    /**
      * Get the participant instance we are currently answering as.
+     * @return {object|null}
      */
     answeringAs() {
       if (
@@ -800,7 +824,9 @@ export default {
               this.getElementDetails(item.element)
             ),
             sort_order: item.sort_order,
+            can_respond: item.can_respond,
             is_respondable: item.element.is_respondable,
+            displays_responses: item.element.displays_responses,
             // We need to handle the absence of response data in the view-only report mode
             // in this mode the actor doesn't have "response_data" directly,
             // all responses are grouped under "other_responder_groups".
@@ -820,7 +846,7 @@ export default {
         }
 
         result.section_element_responses
-          .filter(item => item.element.is_respondable)
+          .filter(item => item.element.displays_responses)
           .forEach(item => {
             this.initialValues.sectionElements[
               item.section_element_id
@@ -829,7 +855,6 @@ export default {
               JSON.parse(item.response_data_raw)
             );
 
-            this.hasOtherResponse = item.other_responder_groups.length > 0;
             item.other_responder_groups.forEach(group => {
               if (group.responses.length > 0 && item.response_data) {
                 this.showOtherResponse = true;
@@ -865,6 +890,7 @@ export default {
         id: element.id,
         is_required: element.is_required,
         is_respondable: element.is_respondable,
+        displays_responses: element.displays_responses,
         title: element.title,
         element_plugin: element.element_plugin,
         identifier: element.identifier,
@@ -1208,6 +1234,9 @@ export default {
         if (this.selectedSectionId) {
           params.section_id = this.selectedSectionId;
         }
+      } else if (this.isExternalParticipant) {
+        params.token = this.token;
+        params.participant_section_id = this.selectedParticipantSectionId;
       } else {
         params.participant_section_id = this.selectedParticipantSectionId;
       }

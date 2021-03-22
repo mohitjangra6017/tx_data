@@ -43,7 +43,7 @@ class participant_section_aggregation {
             return;
         }
 
-        /** @var participant_section_entity $participant_section */
+        /** @var participant_section_entity $source_participant_section */
         $source_participant_section = participant_section_entity::repository()->find_or_fail($event->objectid);
         aggregation_response_calculator::calculate_responses_effected_by($source_participant_section);
     }

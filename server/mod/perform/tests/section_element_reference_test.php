@@ -29,6 +29,7 @@ use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\section_element_reference;
 use mod_perform\testing\generator as perform_generator;
 use performelement_aggregation\aggregation;
+use performelement_aggregation\calculations\average;
 use performelement_numeric_rating_scale\numeric_rating_scale;
 use performelement_redisplay\redisplay;
 
@@ -141,7 +142,7 @@ abstract class section_element_reference_testcase extends advanced_testcase {
             'data' => json_encode([
                 aggregation::SOURCE_SECTION_ELEMENT_IDS => [$this->source_section_element->id],
                 aggregation::EXCLUDED_VALUES => [],
-                aggregation::CALCULATIONS => ['average'],
+                aggregation::CALCULATIONS => [average::get_name()],
             ], JSON_THROW_ON_ERROR),
         ]);
 

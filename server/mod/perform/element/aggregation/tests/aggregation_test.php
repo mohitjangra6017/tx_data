@@ -24,6 +24,7 @@
 use mod_perform\testing\generator as perform_generator;
 use mod_perform\entity\activity\element as element_entity;
 use performelement_aggregation\aggregation;
+use performelement_aggregation\calculations\average;
 use performelement_numeric_rating_scale\numeric_rating_scale;
 use performelement_short_text\short_text;
 
@@ -80,13 +81,13 @@ class performelement_aggregation_aggregation_testcase extends section_element_re
         return [
             'Empty source section element ids' => [
                 [
-                    aggregation::CALCULATIONS => ['average'],
+                    aggregation::CALCULATIONS => [average::get_name()],
                     aggregation::EXCLUDED_VALUES => [],
                 ], $source_section_elements_must_be_set_message,
             ],
             'Null source section element ids' => [
                 [
-                    aggregation::CALCULATIONS => ['average'],
+                    aggregation::CALCULATIONS => [average::get_name()],
                     aggregation::EXCLUDED_VALUES => [],
                     aggregation::SOURCE_SECTION_ELEMENT_IDS => null
                 ],
@@ -94,7 +95,7 @@ class performelement_aggregation_aggregation_testcase extends section_element_re
             ],
             "Source section element id doesn't exist" => [
                 [
-                    aggregation::CALCULATIONS => ['average'],
+                    aggregation::CALCULATIONS => [average::get_name()],
                     aggregation::EXCLUDED_VALUES => [],
                     aggregation::SOURCE_SECTION_ELEMENT_IDS => [-1]]
                 ,
@@ -109,7 +110,7 @@ class performelement_aggregation_aggregation_testcase extends section_element_re
                     $section_element_in_another_activity = $generator->create_section_element($section, $element);
 
                     return [
-                        aggregation::CALCULATIONS => ['average'],
+                        aggregation::CALCULATIONS => [average::get_name()],
                         aggregation::EXCLUDED_VALUES => [],
                         aggregation::SOURCE_SECTION_ELEMENT_IDS => [$section_element_in_another_activity->id],
                     ];
@@ -124,7 +125,7 @@ class performelement_aggregation_aggregation_testcase extends section_element_re
                         ->update(['plugin_name' => short_text::get_plugin_name()]);
 
                     return [
-                        aggregation::CALCULATIONS => ['average'],
+                        aggregation::CALCULATIONS => [average::get_name()],
                         aggregation::EXCLUDED_VALUES => [],
                         aggregation::SOURCE_SECTION_ELEMENT_IDS => [$this->referencing_redisplay_section_element->id]
                     ];

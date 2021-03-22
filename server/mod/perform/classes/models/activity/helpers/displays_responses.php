@@ -40,6 +40,15 @@ interface displays_responses {
     public function format_response_lines(?string $encoded_response_data, ?string $encoded_element_data): array;
 
     /**
+     * Pull the answer text string out of the encoded json data.
+     *
+     * @param string|null $encoded_response_data
+     * @param string|null $encoded_element_data
+     * @return string|string[]|null
+     */
+    public function decode_response(?string $encoded_response_data, ?string $encoded_element_data);
+
+    /**
      * This method return element's user form vue component name.
      *
      * @return string

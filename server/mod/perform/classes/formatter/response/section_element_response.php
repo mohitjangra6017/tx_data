@@ -40,6 +40,7 @@ class section_element_response extends entity_model_formatter {
             'section_element_id' => null,
             'element' => null,
             'sort_order' => null,
+            'can_respond' => null,
             'response_data' => function ($value, $format) {
                 $formatter = element_response_formatter::get_instance($this->object->element, $format);
 

@@ -42,6 +42,7 @@ export default {
     settings: Object,
     title: String,
     type: Object,
+    extraPluginConfigData: Object,
   },
   computed: {
     extraFields() {
@@ -100,7 +101,12 @@ export default {
       );
     },
     calculationsToDisplay() {
-      return ['Average'];
+      const options = this.extraPluginConfigData.calculations;
+
+      return this.data.calculations.map(
+        chosenCalculation =>
+          options.find(option => option.name === chosenCalculation).label
+      );
     },
     hasExcludedValues() {
       return this.excludedValues.length > 0;

@@ -30,14 +30,18 @@ use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\participant_instance as participant_instance_entity;
 use mod_perform\entity\activity\participant_instance_repository;
 use mod_perform\entity\activity\participant_section as participant_section_entity;
-use mod_perform\entity\activity\section;
+use mod_perform\models\response\participant_section;
+use mod_perform\entity\activity\section as section_entity;
+use mod_perform\models\activity\section;
 use mod_perform\entity\activity\section_element as section_element_entity;
 use mod_perform\entity\activity\section_relationship;
-use mod_perform\entity\activity\subject_instance;
+use mod_perform\entity\activity\subject_instance as subject_instance_entity;
+use mod_perform\models\activity\subject_instance;
+use mod_perform\models\activity\derived_responses_element_plugin;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\participant_instance as participant_instance_model;
+use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\models\activity\section_element;
-use mod_perform\models\response\participant_section as participant_section;
 use mod_perform\models\response\responder_group;
 use mod_perform\models\response\section_element_response;
 use mod_perform\models\response\view_only_element_response;
@@ -47,14 +51,14 @@ use totara_core\relationship\relationship as core_relationship_model;
 class view_only_section_with_responses {
 
     /**
-     * @var section
+     * @var section_entity
      */
     protected $section_entity;
 
     /**
-     * @var subject_instance
+     * @var subject_instance_entity
      */
-    protected $subject_instance;
+    protected $subject_instance_entity;
 
     /**
      * @var view_only_section
@@ -82,12 +86,17 @@ class view_only_section_with_responses {
     protected $existing_responses;
 
     /**
-     * @param section $section_entity
-     * @param subject_instance $subject_instance
+     * @var derived_responder_group
      */
-    public function __construct(section $section_entity, subject_instance $subject_instance) {
+    protected $derived_responder_group_provider;
+
+    /**
+     * @param section_entity $section_entity
+     * @param subject_instance_entity $subject_instance_entity
+     */
+    public function __construct(section_entity $section_entity, subject_instance_entity $subject_instance_entity) {
         $this->section_entity = $section_entity;
-        $this->subject_instance = $subject_instance;
+        $this->subject_instance_entity = $subject_instance_entity;
     }
 
     /**
@@ -165,7 +174,7 @@ class view_only_section_with_responses {
                 participant_instance_repository::add_user_not_deleted_filter($repository, 'pi');
             })
             ->where('ps.section_id', $this->section_entity->id)
-            ->where('pi.subject_instance_id', $this->subject_instance->id)
+            ->where('pi.subject_instance_id', $this->subject_instance_entity->id)
             ->where_raw('pi.core_relationship_id = sr.core_relationship_id')
             ->where('sr.can_answer', true)
             ->get();
@@ -197,10 +206,10 @@ class view_only_section_with_responses {
     }
 
     /**
-     * @return collection|section[]
+     * @return collection|section_entity[]
      */
     protected function fetch_sibling_sections(): collection {
-        return section::repository()
+        return section_entity::repository()
             ->as('s')
             ->where('activity_id', $this->section_entity->activity_id)
             ->order_by('sort_order')
@@ -235,13 +244,21 @@ class view_only_section_with_responses {
      */
     protected function build_section_element_responses(): collection {
         return $this->section_elements->map(function (section_element_entity $section_element) {
+            $other_responder_groups = new collection();
+
+            $element_plugin = element::load_by_entity($section_element->element)->get_element_plugin();
+
             // Don't return peoples "responses" for non-respondable elements.
-            if (element::load_by_entity($section_element->element)->get_is_respondable()) {
+            if ($element_plugin instanceof respondable_element_plugin) {
                 $other_responder_groups = $this->build_responder_groups_for_section_element(
                     $section_element
                 );
-            } else {
-                $other_responder_groups = new collection();
+            }
+
+            if ($element_plugin instanceof derived_responses_element_plugin) {
+                $other_responder_groups = $this->get_derived_responder_group_provider()->build_for(
+                    new section_element($section_element)
+                );
             }
 
             return new view_only_element_response($section_element, $other_responder_groups);
@@ -317,25 +334,37 @@ class view_only_section_with_responses {
      * and return null for participant sections that have a progress status other than "COMPLETE".
      *
      * @param section_element_entity $section_element
-     * @param participant_section_entity $participant_section
+     * @param participant_section_entity $participant_section_entity
      * @return mixed|null
      */
     protected function find_non_draft_element_response(
         section_element_entity $section_element,
-        participant_section_entity $participant_section
+        participant_section_entity $participant_section_entity
     ): ?element_response_entity {
-        $participant_section_model = new participant_section($participant_section);
+        $participant_section = new participant_section($participant_section_entity);
 
-        if (!$participant_section_model->is_complete()) {
+        if (!$participant_section->is_complete()) {
             return null;
         }
 
         return $this->existing_responses->find(
-            function (element_response_entity $response) use ($section_element, $participant_section) {
+            function (element_response_entity $response) use ($section_element, $participant_section_entity) {
                 return (int) $response->section_element_id === (int) $section_element->id
-                    && (int) $response->participant_instance_id === (int) $participant_section->participant_instance_id;
+                    && (int) $response->participant_instance_id === (int) $participant_section_entity->participant_instance_id;
             }
         );
+    }
+
+    private function get_derived_responder_group_provider(): derived_responder_group {
+        if ($this->derived_responder_group_provider === null) {
+            $this->derived_responder_group_provider = derived_responder_group::for_view_only_section(
+                new section($this->section_entity),
+                new subject_instance($this->subject_instance_entity),
+                $this->is_anonymous_responses()
+            );
+        }
+
+        return $this->derived_responder_group_provider;
     }
 
 }

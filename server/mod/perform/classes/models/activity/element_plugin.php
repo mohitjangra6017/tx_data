@@ -23,13 +23,10 @@
 
 namespace mod_perform\models\activity;
 
-use coding_exception;
 use core_component;
 use mod_perform\entity\activity\element as element_entity;
-use mod_perform\models\activity\helpers\child_element_config;
+use mod_perform\models\activity\helpers\displays_responses;
 use mod_perform\models\activity\helpers\element_clone_helper;
-use mod_perform\models\response\section_element_response;
-use mod_perform\rb\helper\element_plugin_response_report_builder;
 
 /**
  * Class element_plugin
@@ -73,7 +70,6 @@ abstract class element_plugin {
 
         $out = [];
         foreach ($elements as $plugin_name => $plugin_path) {
-            /** @var element_plugin $element_plugin */
             $element_plugin = self::load_by_plugin($plugin_name);
 
             if ($get_respondable && $element_plugin->get_is_respondable()) {
@@ -87,6 +83,42 @@ abstract class element_plugin {
     }
 
     /**
+     *
+     * @return element_plugin[]|displays_responses[]
+     */
+    final public static function get_derived_responses_plugins(): array {
+        $elements = static::get_element_plugins();
+
+        return array_filter($elements, static function (self $element_plugin) {
+            return $element_plugin instanceof derived_responses_element_plugin;
+        });
+    }
+
+    /**
+     *
+     * @return element_plugin[]|displays_responses[]
+     */
+    final public static function get_displays_responses_plugins(): array {
+        $elements = static::get_element_plugins();
+
+        return array_filter($elements, static function (self $element_plugin) {
+            return $element_plugin instanceof displays_responses;
+        });
+    }
+
+    /**
+     *
+     * @return element_plugin[]|displays_responses[]
+     */
+    final public static function get_does_not_display_responses_plugins(): array {
+        $elements = static::get_element_plugins();
+
+        return array_filter($elements, static function (self $element_plugin) {
+            return !$element_plugin instanceof displays_responses;
+        });
+    }
+
+    /**
      * Get all aggregatable element plugins.
      *
      * Returns array of elements, keyed by plugin_name, value is instance of element model.
@@ -94,12 +126,11 @@ abstract class element_plugin {
      * @return element_plugin[]
      */
     final public static function get_aggregatable_element_plugins(): array {
-        $elements = \core_component::get_plugin_list('performelement');
+        $elements = static::get_element_plugins();
 
-        return array_filter($elements, static function (string $plugin_name) {
-            $element_plugin = self::load_by_plugin($plugin_name);
+        return array_filter($elements, static function (self $element_plugin) {
             return $element_plugin->get_is_aggregatable();
-        }, ARRAY_FILTER_USE_KEY);
+        });
     }
 
     /**
@@ -118,16 +149,6 @@ abstract class element_plugin {
      */
     final public function get_name(): string {
         return get_string('name', 'performelement_' . $this->get_plugin_name());
-    }
-
-    /**
-     * Modify json data to add extra information to it.
-     *
-     * @param string|null $data
-     * @return string|null
-     */
-    public function process_data(?string $data): ?string {
-        return $data;
     }
 
     /**

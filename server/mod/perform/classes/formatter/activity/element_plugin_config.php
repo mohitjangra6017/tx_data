@@ -43,9 +43,14 @@ class element_plugin_config extends formatter {
             'title_text' => null, // not formatted, because this is lang string
             'is_title_required' => null, // not formatted, because this is to check title is required
             'is_response_required_enabled' => null, // not formatted, because this is to check response is required
+            'extra_config_data' => null, // not formatted, because this is to check response is required
         ];
     }
 
+    /**
+     * @param string $field
+     * @return bool|string|null
+     */
     protected function get_field(string $field) {
         if (!$this->object instanceof displays_responses &&
             in_array($field, ['has_reporting_id', 'is_response_required_enabled'], true)
@@ -68,20 +73,14 @@ class element_plugin_config extends formatter {
                 return $this->object->is_title_required();
             case 'is_response_required_enabled':
                 return $this->object->is_response_required_enabled();
+            case 'extra_config_data':
+                return json_encode($this->object->get_extra_config_data(), JSON_THROW_ON_ERROR);
             default:
                 throw new \coding_exception('Unexpected field passed to formatter');
         }
     }
 
     protected function has_field(string $field): bool {
-        $fields = [
-            'is_respondable',
-            'has_title',
-            'has_reporting_id',
-            'title_text',
-            'is_title_required',
-            'is_response_required_enabled',
-        ];
-        return in_array($field, $fields);
+        return array_key_exists($field, $this->get_map());
     }
 }

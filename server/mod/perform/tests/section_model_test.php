@@ -29,6 +29,7 @@ use mod_perform\models\activity\section_element;
 use mod_perform\state\activity\active;
 use mod_perform\state\activity\draft;
 use performelement_aggregation\aggregation;
+use performelement_aggregation\calculations\average;
 use performelement_numeric_rating_scale\numeric_rating_scale;
 
 require_once(__DIR__.'/relationship_testcase.php');
@@ -246,7 +247,7 @@ class mod_perform_section_model_testcase extends mod_perform_relationship_testca
             'data' => json_encode([
                 aggregation::SOURCE_SECTION_ELEMENT_IDS => [$section_element1->id],
                 aggregation::EXCLUDED_VALUES => [],
-                aggregation::CALCULATIONS => ['average'],
+                aggregation::CALCULATIONS => [average::get_name()],
             ], JSON_THROW_ON_ERROR)
         ]);
 

@@ -29,13 +29,16 @@ use performelement_aggregation\calculation_method;
  */
 class performelement_aggregation_calculations_testcase extends advanced_testcase {
     
-    public function test_get_aggregation_calculation_method_classes():void {
+    public function test_get_aggregation_calculation_method_classes(): void {
+        self::markTestIncomplete();
+
         $methods = calculation_method::get_aggregation_calculation_methods();
-        
-        // TODO: Fix when other calculation methods are implemented
+
         $expected = [
             'average' => get_string('calculation_label_average', 'performelement_aggregation'),
+            'median' => get_string('calculation_label_median', 'performelement_aggregation'),
         ];
+
         self::assertCount(count($expected), $methods);
         foreach ($expected as $expected_name => $expected_label) {
             foreach ($methods as $actual_name) {

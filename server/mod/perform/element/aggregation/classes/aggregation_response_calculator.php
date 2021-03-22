@@ -96,6 +96,13 @@ class aggregation_response_calculator {
 
         $to_aggregate = static::get_values_to_aggregate($participant_instance_id, $source_section_element_ids, $excluded_values);
 
+        // It's possible that all responses were left blank, in this case we will not populate the aggregate response.
+        // This results in "no_response_submitted" being displayed in the ui.
+        if (count($to_aggregate) === 0) {
+            static::remove_derived_response($referencing_element_id, $participant_instance_id);
+            return;
+        }
+
         $response = [];
         foreach ($calculation_methods as $method) {
             $response[$method] = calculation_method::load_by_method($method)->aggregate($to_aggregate);
@@ -188,7 +195,11 @@ class aggregation_response_calculator {
         return [$data[aggregation::CALCULATIONS], $data[aggregation::EXCLUDED_VALUES]];
     }
 
-    private static function save_derived_response(int $referencing_element_id, int $participant_instance_id, array $response): void {
+    private static function remove_derived_response(int $referencing_element_id, int $participant_instance_id): void {
+        static::save_derived_response($referencing_element_id, $participant_instance_id, null);
+    }
+
+    private static function save_derived_response(int $referencing_element_id, int $participant_instance_id, ?array $response_data): void {
         $referencing_section_element_ids = builder::table(section_element_entity::TABLE)
             ->select('id')
             ->where('element_id', $referencing_element_id)
@@ -201,11 +212,20 @@ class aggregation_response_calculator {
             ->get();
 
         foreach ($referencing_section_element_ids as $referencing_section_element_id) {
+            /** @var element_response_entity|null $aggregated_response */
             $aggregated_response = $existing_aggregated_responses->find(
                 function (element_response_entity $existing_response) use ($participant_instance_id, $referencing_section_element_id) {
                     return (int) $existing_response->participant_instance_id === $participant_instance_id &&
                         (int) $existing_response->section_element_id === (int) $referencing_section_element_id;
                 });
+
+            // If the response is now empty, and the entity already exists, delete it.
+            if ($response_data === null) {
+                if ($aggregated_response !== null) {
+                    $aggregated_response->delete();
+                }
+                continue;
+            }
 
             if ($aggregated_response === null) {
                 $aggregated_response = new element_response_entity();
@@ -213,7 +233,7 @@ class aggregation_response_calculator {
                 $aggregated_response->section_element_id = $referencing_section_element_id;
             }
 
-            $aggregated_response->response_data = json_encode($response, JSON_THROW_ON_ERROR);
+            $aggregated_response->response_data = json_encode($response_data, JSON_THROW_ON_ERROR);
             $aggregated_response->save();
         }
     }

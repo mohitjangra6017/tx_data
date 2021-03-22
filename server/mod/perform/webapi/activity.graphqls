@@ -107,6 +107,11 @@ type mod_perform_element_plugin_config {
   is response required enabled when creating or updating element
   """
   is_response_required_enabled: Boolean!
+
+  """
+  any extra static data the plugin needs to supply (json encoded)
+  """
+  extra_config_data: String!
 }
 
 """
@@ -249,6 +254,10 @@ type mod_perform_element {
   Whether this element can be responded to by a participant
   """
   is_respondable: Boolean!
+  """
+  Whether this element displayes respones or not
+  """
+  displays_responses: Boolean!
 }
 
 """

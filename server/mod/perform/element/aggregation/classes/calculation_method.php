@@ -37,8 +37,12 @@ use ReflectionClass;
  */
 abstract class calculation_method {
 
-    // 'Cache' of available methods
-    private static $methods = [];
+    /**
+     * 'Cache' of available methods.
+     *
+     * @var null|calculation_method[]
+     */
+    private static $methods;
     
     /**
      * Load by method name
@@ -48,38 +52,59 @@ abstract class calculation_method {
      * @return static
      */
     final public static function load_by_method(string $method_name): self {
-        $namespace = __NAMESPACE__ . '\\calculations';
-        $method_class = "{$namespace}\\{$method_name}";
-        if (!class_exists($method_class) || !is_subclass_of($method_class, self::class)) {
+        $method_class = static::get_method_class($method_name);
+
+        if ($method_class === null) {
             throw new \coding_exception('Tried to load an unknown aggregation calculation method: ' . $method_class);
         }
+
         return new $method_class();
+    }
+
+    final public static function is_valid_method_name(string $method_name): bool {
+        return static::get_method_class($method_name) !== null;
+    }
+
+    final protected static function get_method_class(string $method_name): ?string {
+        $namespace = __NAMESPACE__ . '\\calculations';
+        $method_class = "{$namespace}\\{$method_name}";
+
+        if (!class_exists($method_class) || !is_subclass_of($method_class, self::class)) {
+            return null;
+        }
+
+        return $method_class;
     }
 
     /**
      * Get the names of all aggregation calculation methods.
      *
-     * @return string[]
-     * @throws \coding_exception
+     * @return calculation_method[]
      */
     final public static function get_aggregation_calculation_methods(): array {
-        global $CFG;
-        
-        if (!empty(self::$methods)) {
+        if (self::$methods !== null) {
             return self::$methods;
         }
+
+        self::$methods = [];
 
         $namespace = __NAMESPACE__ . '\\calculations';
         $fulldir = __DIR__ . '/calculations';
         $items = new FilesystemIterator($fulldir, FilesystemIterator::KEY_AS_FILENAME | FilesystemIterator::SKIP_DOTS);
+
         foreach ($items as $item) {
             $method_name = $item->getBasename('.php');
             $classname = "{$namespace}\\{$method_name}";
+
             $rc = new ReflectionClass($classname);
             if ($rc->isSubclassOf(self::class)) {
-                self::$methods[] = $method_name;
+                self::$methods[] = new $classname();
             }
         }
+
+        usort(self::$methods, function (calculation_method $a, calculation_method $b) {
+            return $a->get_label() <=> $b->get_label();
+        });
         
         return self::$methods;
     }
@@ -108,4 +133,5 @@ abstract class calculation_method {
      * @return mixed @result
      */
     abstract public function aggregate(array $values);
+
 }

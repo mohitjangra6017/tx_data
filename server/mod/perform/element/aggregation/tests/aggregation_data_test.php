@@ -27,6 +27,7 @@ use mod_perform\models\activity\section_element;
 use mod_perform\entity\activity\section_element as section_element_entity;
 use mod_perform\state\activity\draft;
 use performelement_aggregation\aggregation;
+use performelement_aggregation\calculations\average;
 use performelement_aggregation\data_provider\aggregation_data;
 
 /**
@@ -61,7 +62,7 @@ class performelement_aggregation_aggregation_data_testcase extends advanced_test
         self::assertEquals(
             [
                 aggregation::EXCLUDED_VALUES => [],
-                aggregation::CALCULATIONS => ['average'],
+                aggregation::CALCULATIONS => [average::get_name()],
             ],
             json_decode($aggregation_section_element_entity->element->data, true, 512, JSON_THROW_ON_ERROR)
         );
@@ -139,7 +140,7 @@ class performelement_aggregation_aggregation_data_testcase extends advanced_test
             json_encode([
                 aggregation::SOURCE_SECTION_ELEMENT_IDS => $section_element_ids,
                 aggregation::EXCLUDED_VALUES => [],
-                aggregation::CALCULATIONS => ['average'],
+                aggregation::CALCULATIONS => [average::get_name()],
             ], JSON_THROW_ON_ERROR)
         );
     }

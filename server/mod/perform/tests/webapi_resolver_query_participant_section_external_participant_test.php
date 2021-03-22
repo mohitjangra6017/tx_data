@@ -219,8 +219,10 @@ class mod_perform_webapi_resolver_query_participant_section_external_participant
                     'children' => [],
                     'is_required' => false,
                     'is_respondable' => true,
+                    'displays_responses' => true,
                 ],
             'sort_order' => 1,
+            'can_respond' => true,
             'response_data' => null,
             'response_data_raw' => null,
             'response_data_formatted_lines' => [],
@@ -244,7 +246,7 @@ class mod_perform_webapi_resolver_query_participant_section_external_participant
             ],
             'visible_to' => [],
         ];
-        $this->assertContainsEquals($expected, $section_element_responses);
+        $this->assertEquals($expected, $section_element_responses[0]);
         $this->assertContainsEquals($static_section_element->id, $section_element_ids);
 
         $this->assertEquals($this->create_static_section_element_response($static_section_element->id), $section_element_responses[1]);
@@ -274,8 +276,10 @@ class mod_perform_webapi_resolver_query_participant_section_external_participant
                     '__typename' => 'mod_perform_element',
                     'is_required' => false,
                     'is_respondable' => false,
+                    'displays_responses' => false,
                 ],
             'sort_order' => 2,
+            'can_respond' => false,
             'response_data' => null,
             'response_data_raw' => null,
             'validation_errors' => [],

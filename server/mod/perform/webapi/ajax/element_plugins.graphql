@@ -9,6 +9,7 @@ query mod_perform_element_plugins {
       title_text
       is_title_required
       is_response_required_enabled
+      extra_config_data
     }
     admin_edit_component
     admin_view_component

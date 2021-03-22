@@ -364,11 +364,11 @@ trait element_trait {
      * @return string[] of [plugin_name => Display Name]
      */
     protected function get_element_type_options(): array {
-        $respondable_elements = element_plugin::get_element_plugins(true, false);
+        $displayable_responses_elements = element_plugin::get_displays_responses_plugins();
 
-        return array_map(function (element_plugin $element) {
-            return $element->get_name();
-        }, $respondable_elements);
+        return array_map(function (element_plugin $element_plugin) {
+            return $element_plugin->get_name();
+        }, $displayable_responses_elements);
     }
 
 

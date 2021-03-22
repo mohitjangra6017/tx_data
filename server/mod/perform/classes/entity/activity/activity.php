@@ -50,7 +50,7 @@ use mod_perform\models\activity\element_plugin;
  * Relationships:
  * @property-read collection|notification[] $notifications
  * @property-read collection|notification[] $active_notifications
- * @property-read collection|section[] $sections
+ * @property-read collection|section[] $sections @deprecated Please use sections_ordered or sections_ordered_with_respondable_element_count
  * @property-read collection|section[] $sections_ordered
  * @property-read collection|track[] $tracks
  * @property-read collection|activity_setting[] $settings
@@ -71,6 +71,7 @@ class activity extends entity {
 
     /**
      * Relationship with section entities.
+     * @depreacted Please use sections_ordered or sections_ordered_with_respondable_element_count
      *
      * @return has_many
      */

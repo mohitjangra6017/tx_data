@@ -29,8 +29,14 @@ query mod_perform_participant_section(
           id
           ...mod_perform_participant_section_element_data
         }
+        title
+        data
+        is_required
+        is_respondable
+        displays_responses
       }
       sort_order
+      can_respond
       response_data
       response_data_raw: response_data(format: RAW)
       response_data_formatted_lines

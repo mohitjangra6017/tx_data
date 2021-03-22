@@ -208,7 +208,7 @@ function xmldb_perform_upgrade($oldversion) {
         $table->add_field('referencing_element_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
 
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-        $table->add_key('source_section_element_id', XMLDB_KEY_FOREIGN, ['source_section_element_id'], 'perform_section_element', ['id'], 'cascade');
+        // Do not add source_section_element_id as a foreign key, because mssql does not allow it
         $table->add_key('referencing_element_id', XMLDB_KEY_FOREIGN, ['referencing_element_id'], 'perform_element', ['id'], 'cascade');
 
         if (!$dbman->table_exists($table)) {
@@ -220,7 +220,7 @@ function xmldb_perform_upgrade($oldversion) {
 
     if ($oldversion < 2021031500) {
         $table = new xmldb_table('perform_section_element_reference');
-        $index = new xmldb_index('source_referencing_pair', XMLDB_INDEX_UNIQUE, ['referencing_element_id', 'source_section_element_id']);
+        $index = new xmldb_index('source_referencing_pair', XMLDB_INDEX_UNIQUE, ['source_section_element_id', 'referencing_element_id']);
 
         if (!$dbman->index_exists($table, $index)) {
             $dbman->add_index($table, $index);

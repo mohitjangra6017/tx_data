@@ -111,7 +111,7 @@ class rb_source_perform_element extends rb_base_source {
         $this->defaultcolumns = $this->define_defaultcolumns();
         $this->defaultfilters = $this->define_defaultfilters();
 
-        $non_respondable_elements = array_keys(element_plugin::get_element_plugins(false));
+        $non_respondable_elements = array_keys(element_plugin::get_does_not_display_responses_plugins());
         if (!empty($non_respondable_elements)) {
             $sql = $DB->sql_not_in($non_respondable_elements);
             $this->sourcewhere = 'base.plugin_name ' . $sql->get_sql();

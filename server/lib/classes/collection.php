@@ -24,6 +24,7 @@
 
 namespace core;
 
+use ArrayAccess;
 use coding_exception;
 use Countable;
 use Iterator;
@@ -53,7 +54,7 @@ use JsonSerializable;
  *
  * For more examples check out the collection documentation in Confluence.
  */
-class collection implements Iterator, JsonSerializable, Countable {
+class collection implements Iterator, JsonSerializable, Countable, ArrayAccess {
 
     /**
      * Items in the collection
@@ -248,15 +249,17 @@ class collection implements Iterator, JsonSerializable, Countable {
      * Sort collection items by a given callback
      *
      * @param string|callable $column name to sort by or callback for more complex operations
-     * @param string $direction Sort direction ascending or descending
+     * @param string|null $direction Sort direction ascending or descending
+     * @param bool $keep_keys Maintain the original keys
      * @return $this
+     * @throws coding_exception
      */
-    public function sort($column, string $direction = 'asc') {
-        $direction = strtolower($direction) === 'desc' ? false : true;
+    public function sort($column, ?string $direction = 'asc', bool $keep_keys = true): self {
+        $sort_asc = $direction !== null && strtolower($direction) !== 'desc';
 
         switch (true) {
             case is_string($column):
-                $column = function ($a, $b) use ($direction, $column) {
+                $column = function ($a, $b) use ($sort_asc, $column) {
                     $get_field = function ($obj, $column) {
                         if (is_object($obj)) {
                             return $obj->{$column};
@@ -267,7 +270,7 @@ class collection implements Iterator, JsonSerializable, Countable {
                         return $obj;
                     };
 
-                    return $direction ?
+                    return $sort_asc ?
                         $get_field($a, $column) <=> $get_field($b, $column) :
                         $get_field($b, $column) <=> $get_field($a, $column);
                 };
@@ -278,7 +281,11 @@ class collection implements Iterator, JsonSerializable, Countable {
                 throw new coding_exception('Column must be either callable or string');
         }
 
-        uasort($this->items, $column);
+        if ($keep_keys) {
+            uasort($this->items, $column);
+        } else {
+            usort($this->items, $column);
+        }
 
         return $this;
     }
@@ -458,8 +465,23 @@ class collection implements Iterator, JsonSerializable, Countable {
      *
      * @return int The custom count as an integer.
      */
-    public function count() {
+    public function count(): int {
         return count($this->items);
     }
 
+    public function offsetExists($offset): bool {
+        return array_key_exists($offset, $this->items);
+    }
+
+    public function offsetGet($offset) {
+        return $this->item($offset);
+    }
+
+    public function offsetSet($offset, $value): void {
+        $this->set($offset, $value);
+    }
+
+    public function offsetUnset($offset): void {
+        unset($this->items[$offset]);
+    }
 }

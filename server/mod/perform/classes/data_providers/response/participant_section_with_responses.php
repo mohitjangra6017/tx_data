@@ -31,6 +31,7 @@ use mod_perform\entity\activity\participant_instance as participant_instance_ent
 use mod_perform\entity\activity\participant_instance_repository;
 use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\models\activity\activity_setting;
+use mod_perform\models\activity\derived_responses_element_plugin;
 use mod_perform\models\activity\participant_instance as participant_instance_model;
 use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\section_relationship;
@@ -51,13 +52,18 @@ class participant_section_with_responses {
     /** @var collection|section_element_response[] */
     private $others_section_element_responses;
 
-    /** @var bool*/
+    /** @var bool */
     private $load_responses_for_submission = false;
 
     /**
      * @var collection|relationship[]
      */
     private $other_participant_core_relationships;
+
+    /**
+     * @var derived_responder_group $derived_responder_group_provider
+     */
+    private $derived_responder_group_provider;
 
     /**
      * responses_for_participant_section constructor.
@@ -121,11 +127,8 @@ class participant_section_with_responses {
      * @return array
      */
     private function analyze_response_visibility_and_other_participants(): array {
-        $participant_instance_ids = [];
-
-        if ($this->participant_section_relationship_can_answer()) {
-            $participant_instance_ids[] = $this->participant_section->participant_instance_id;
-        }
+        // Always include the viewing participant, as thy might have derived answers.
+        $participant_instance_ids = [$this->participant_section->participant_instance_id];
 
         $other_participant_instances = new collection();
         $process_other_responses = false;
@@ -138,6 +141,7 @@ class participant_section_with_responses {
                 array_push($participant_instance_ids, ...$other_participant_instances->pluck('id'));
             }
         }
+
         $existing_responses = $this->fetch_existing_responses(
             $participant_instance_ids,
             $this->participant_section->section->section_elements->pluck('id')
@@ -196,10 +200,10 @@ class participant_section_with_responses {
 
     /**
      * @param participant_instance_model $target_participant_instance
-     * @param collection                 $section_elements
-     * @param collection                 $existing_responses
-     * @param bool                       $include_other_responder_groups
-     * @param bool                       $include_draft
+     * @param collection $section_elements
+     * @param collection $existing_responses
+     * @param bool $include_other_responder_groups
+     * @param bool $include_draft
      *
      * @return collection|section_element_response[]
      */
@@ -224,7 +228,6 @@ class participant_section_with_responses {
                 $include_other_responder_groups,
                 $include_draft
             ) {
-
                 //get target participant section
                 $target_participant_section = $target_participant_instance->get_participant_sections()->filter(
                     function (participant_section $participant_section) use ($section_element) {
@@ -232,10 +235,13 @@ class participant_section_with_responses {
                     }
                 )->first();
 
+                $is_derived_response_element = $section_element->get_element()->get_element_plugin() instanceof derived_responses_element_plugin;
+
                 // The element response model will accept missing entities
                 // in the case where a question has not yet been answered.
-                if ($include_draft ||
-                    ($target_participant_section->get_progress_state() instanceof participant_section_complete)
+                if ($include_draft
+                    || $is_derived_response_element
+                    || $target_participant_section->get_progress_state() instanceof participant_section_complete
                 ) {
                     $element_response_entity = $this->find_existing_response_entity(
                         $existing_responses,
@@ -247,16 +253,27 @@ class participant_section_with_responses {
                 }
 
                 $other_responder_groups = new collection();
+                if ($include_other_responder_groups) {
+                    // Note that derived response elements do not need to be directly respondable (is_respondable = true).
+                    // For example aggregation is not "respondable".
+                    if ($is_derived_response_element) {
+                        $other_responder_groups = $this->get_derived_responder_group_provider()->build_for($section_element);
+                    } else if ($section_element->element->is_respondable) {
+                        $other_responder_groups = $this->create_other_responder_groups($section_element->id);
+                    }
+                }
 
-                if ($include_other_responder_groups && $section_element->element->is_respondable) {
-                    $other_responder_groups = $this->create_other_responder_groups($section_element->id);
+                $can_respond = $section_element->element->is_respondable;
+                if ($is_derived_response_element) {
+                    $can_respond = $this->get_derived_responder_group_provider()->viewing_participant_has_source_relationship($section_element);
                 }
 
                 return new section_element_response(
                     $target_participant_instance,
                     $section_element,
                     $element_response_entity,
-                    $other_responder_groups
+                    $other_responder_groups,
+                    $can_respond
                 );
             }
         );
@@ -276,9 +293,7 @@ class participant_section_with_responses {
         int $participant_instance_id
     ): ?element_response_entity {
         return $existing_responses->find(
-            function (
-                element_response_entity $existing_element_response
-            ) use ($section_element_id, $participant_instance_id) {
+            function (element_response_entity $existing_element_response) use ($section_element_id, $participant_instance_id) {
                 return (int) $existing_element_response->section_element_id === $section_element_id &&
                     (int) $existing_element_response->participant_instance_id === $participant_instance_id;
             }
@@ -358,7 +373,6 @@ class participant_section_with_responses {
             $grouped_by_relationship[$relationship_name][] = $other_response;
         }
 
-
         if ($this->is_anonymous_responses()) {
             $anonymous_group = $this->build_anonymous_responder_group($grouped_by_relationship);
             return new collection([$anonymous_group]);
@@ -378,7 +392,7 @@ class participant_section_with_responses {
 
     private function relationship_group_can_answer(string $relationship_name): bool {
         /** @var section_relationship $section_relationship */
-        $section_relationship =  $this->participant_section
+        $section_relationship = $this->participant_section
             ->section
             ->section_relationships
             ->find(function (section_relationship $section_relationship) use ($relationship_name) {
@@ -429,6 +443,7 @@ class participant_section_with_responses {
 
     /**
      * Checks if section relationship for the participant has can_view permissions.
+     *
      * @return bool
      */
     private function participant_section_relationship_can_view(): bool {
@@ -489,4 +504,16 @@ class participant_section_with_responses {
 
         return $anonymous_group;
     }
+
+    private function get_derived_responder_group_provider(): derived_responder_group {
+        if ($this->derived_responder_group_provider === null) {
+            $this->derived_responder_group_provider = derived_responder_group::for_participant_section(
+                $this->participant_section,
+                $this->is_anonymous_responses()
+            );
+        }
+
+        return $this->derived_responder_group_provider;
+    }
+
 }

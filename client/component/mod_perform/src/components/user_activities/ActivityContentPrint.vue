@@ -120,6 +120,7 @@
                   :path="['sectionElements', elementResponse.id]"
                   :section-element="elementResponse"
                   :show-other-response="true"
+                  :can-respond="elementResponse.can_respond"
                   :view-only="false"
                 />
               </div>
@@ -280,6 +281,7 @@ export default {
               ),
               sort_order: sectionElementResponse.sort_order,
               is_respondable: sectionElementResponse.element.is_respondable,
+              can_respond: sectionElementResponse.can_respond,
               response_data: JSON.parse(sectionElementResponse.response_data),
               response_data_raw: JSON.parse(
                 sectionElementResponse.response_data_raw

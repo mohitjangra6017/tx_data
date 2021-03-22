@@ -67,8 +67,11 @@ class performelement_aggregation_aggregation_response_calculator_testcase extend
     public function test_aggregation_across_multiple_sections(): void {
         $this->create_elements();
 
-        // Add responses
-        // $subject_participant_section_model->progress_status
+        // Only the first section will be aggregated on, nothing has been answered yet, so no aggregate response should be saved.
+        $this->subject_participant_section->complete();
+        self::assertThat(null, new is_saved_aggregate_average_response($this->subject_participant_instance, $this->aggregation_section_element)); // () / () = null
+
+        // Add source responses.
         $q1_response = new element_response_entity();
         $q1_response->participant_instance_id = $this->subject_participant_instance->id;
         $q1_response->section_element_id = $this->q1_section_element->id;
@@ -118,8 +121,7 @@ class performelement_aggregation_aggregation_response_calculator_testcase extend
     public function test_excluded_values(): void {
         $this->create_elements([0, -1, 5, 3.555, null]);
 
-        // Add responses
-        // $subject_participant_section_model->progress_status
+        // Add source responses.
         $q1_response = new element_response_entity();
         $q1_response->participant_instance_id = $this->subject_participant_instance->id;
         $q1_response->section_element_id = $this->q1_section_element->id;
@@ -188,13 +190,13 @@ class performelement_aggregation_aggregation_response_calculator_testcase extend
 
         // Re-trigger calculations.
         $this->subject_participant_section->complete();
-        self::assertThat(0, new is_saved_aggregate_average_response($this->subject_participant_instance, $this->aggregation_section_element)); // () / () = 0
+        self::assertThat(null, new is_saved_aggregate_average_response($this->subject_participant_instance, $this->aggregation_section_element)); // () / () = null
     }
 
     public function test_redisplay_is_not_aggregate_on(): void {
         $this->create_elements();
 
-        // Add responses.
+        // Add source responses..
         $q1_response = new element_response_entity();
         $q1_response->participant_instance_id = $this->subject_participant_instance->id;
         $q1_response->section_element_id = $this->q1_section_element->id;

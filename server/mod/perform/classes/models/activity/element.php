@@ -153,7 +153,7 @@ class element extends model {
     }
 
     /**
-     * Does this element display responses.
+     * Does this element display responses (not necessarily directly accept them though).
      *
      * @return bool
      */

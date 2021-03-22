@@ -64,10 +64,12 @@ class behat_mod_perform extends behat_base {
     public const CUSTOM_RATING_SCALE_RESPONSE_LOCATOR = '.tui-radioGroup';
     public const NUMERIC_RATING_SCALE_RANGE_RESPONSE_LOCATOR = 'input[type=range]';
     public const NUMERIC_RATING_SCALE_NUMBER_RESPONSE_LOCATOR = 'input[type=number]';
+    public const PERFORM_ELEMENT_RESPONSE_CONTAINER_LOCATOR = '.tui-performElementResponse';
     public const PERFORM_ELEMENT_OTHER_RESPONSE_CONTAINER_LOCATOR = '.tui-otherParticipantResponses';
     public const PERFORM_ELEMENT_OTHER_RESPONSE_RELATION_LOCATOR = '.tui-otherParticipantResponses .tui-formLabel';
     public const TUI_OTHER_PARTICIPANT_RESPONSES_ANONYMOUS_RESPONSE_PARTICIPANT_LOCATOR = '.tui-otherParticipantResponses__response-participant';
     public const PARTICIPANT_FORM_RESPONSE_DISPLAY_LOCATOR = '.tui-participantFormResponseDisplay';
+    public const PARTICIPANT_FORM_NO_PARTICIPANT = '.tui-otherParticipantResponses__noParticipant';
     public const PARTICIPANT_FORM_HTML_VIEW_ONLY_RESPONSE_LOCATOR = '.tui-participantFormHtmlResponseDisplay';
     public const PERFORM_ACTIVITY_PRINT_SECTION_LOCATOR = '.tui-participantContentPrint__section';
     public const PERFORM_ACTIVITY_YOUR_RELATIONSHIP_VALUE_EXTERNAL = '.tui-participantContent__user-relationshipValue';
@@ -684,6 +686,32 @@ class behat_mod_perform extends behat_base {
     }
 
     /**
+     * @Then /^I should see perform "([^"]*)" question "([^"]*)" is answered by the current user with "([^"]*)"$/
+     * @param $element_type
+     * @param $question_text
+     * @param $expected_answer_text
+     */
+    public function i_should_see_perform_question_is_answered_by_the_current_user_with(
+        string $element_type,
+        string $question_text,
+        ?string $expected_answer_text
+    ): void {
+        $question = $this->find_question_from_text($question_text);
+        $response_container = $question->find('css', self::PERFORM_ELEMENT_RESPONSE_CONTAINER_LOCATOR);
+
+        $responses = $this->find_question_other_responses_by_element($element_type, $response_container)[0];
+
+        if ($expected_answer_text === trim($responses->getText())) {
+            return;
+        }
+
+        throw new ExpectationException(
+            "Could not find expected other response by the current user with {$expected_answer_text}",
+            $this->getSession()
+        );
+    }
+
+    /**
      * @Then /^I should see perform "([^"]*)" question "([^"]*)" is answered by "([^"]*)" with "([^"]*)"$/
      * @param $element_type
      * @param $question_text
@@ -696,33 +724,30 @@ class behat_mod_perform extends behat_base {
         string $expected_relation,
         ?string $expected_answer_text
     ): void {
-        $has_relation = false;
-        $has_answer = false;
         $question = $this->find_question_from_text($question_text);
         $other_response_element = $question->find('css', self::PERFORM_ELEMENT_OTHER_RESPONSE_CONTAINER_LOCATOR);
 
         $relations = $other_response_element->findAll('css', self::PERFORM_ELEMENT_OTHER_RESPONSE_RELATION_LOCATOR);
+
+        $found_relationship_answer = null;
         foreach ($relations as $relation) {
-            if ((strpos(trim($relation->getText()), $expected_relation) === false)) {
-                continue;
+            if (strpos(trim($relation->getText()), $expected_relation) !== false) {
+                $found_relationship_answer = $relation;
+                break;
             }
-            $has_relation = true;
         }
 
-        if ($expected_answer_text === null && $has_relation) {
+        if ($expected_answer_text === null && $found_relationship_answer !== null) {
             return;
         }
 
-        $other_responses = $this->find_question_other_responses_by_element($element_type, $other_response_element);
+        $relationship_container = $found_relationship_answer->getParent()->getParent();
+
+        $other_responses = $this->find_question_other_responses_by_element($element_type, $relationship_container);
         foreach ($other_responses as $other_response) {
-            if ($expected_answer_text !== trim($other_response->getText())) {
-                continue;
+            if ($expected_answer_text === trim($other_response->getText())) {
+                return;
             }
-            $has_answer = true;
-        }
-
-        if ($has_relation && $has_answer) {
-            return;
         }
 
         throw new ExpectationException(
@@ -1131,12 +1156,18 @@ class behat_mod_perform extends behat_base {
         return $question->find('css', $response_locator);
     }
 
-    private function find_question_other_responses_by_element(string $element_type, NodeElement $other_responses) {
+    /**
+     * @param string $element_type
+     * @param NodeElement $other_responses
+     * @return NodeElement[]
+     */
+    private function find_question_other_responses_by_element(string $element_type, NodeElement $other_responses): array {
         $map = [
             'long text' => self::PARTICIPANT_FORM_HTML_VIEW_ONLY_RESPONSE_LOCATOR,
         ];
 
         $locator =  $map[$element_type] ?? self::PARTICIPANT_FORM_RESPONSE_DISPLAY_LOCATOR;
+        $locator .= ', ' . self::PARTICIPANT_FORM_NO_PARTICIPANT;
 
         return $other_responses->findAll('css', $locator);
     }
@@ -1163,11 +1194,19 @@ class behat_mod_perform extends behat_base {
     }
 
     public function find_question_from_text(string $question_text, bool $is_print = false): NodeElement {
+        if ($is_print) {
+            $questions_container_locator = self::PERFORM_ELEMENT_PRINT_LOCATOR;
+            $question_locator = self::PERFORM_ELEMENT_QUESTION_TEXT_PRINT_LOCATOR;
+        } else {
+            $questions_container_locator = self::PERFORM_ELEMENT_LOCATOR . ', ' . self::PERFORM_ELEMENT_PRINT_LOCATOR;
+            $question_locator = self::PERFORM_ELEMENT_QUESTION_TEXT_LOCATOR . ', ' . self::PERFORM_ELEMENT_QUESTION_TEXT_PRINT_LOCATOR;
+        }
+
         /** @var NodeElement[] $questions */
-        $questions = $this->find_all('css', $is_print ? self::PERFORM_ELEMENT_PRINT_LOCATOR : self::PERFORM_ELEMENT_LOCATOR);
+        $questions = $this->find_all('css', $questions_container_locator);
 
         foreach ($questions as $question) {
-            $found_question = $question->find('css', $is_print ? self::PERFORM_ELEMENT_QUESTION_TEXT_PRINT_LOCATOR : self::PERFORM_ELEMENT_QUESTION_TEXT_LOCATOR);
+            $found_question = $question->find('css', $question_locator);
 
             if ($found_question === null) {
                 continue;
@@ -1773,7 +1812,7 @@ class behat_mod_perform extends behat_base {
         $behat_totara_tui->i_click_the_tui_checkbox_in_the_group( 'average', 'calculations');
 
         $behat_forms->i_set_the_following_fields_to_these_values(new TableNode([
-            ['excludedValues[1][value]', '1'],
+            ['excludedValues[0][value]', '0'],
         ]));
     }
 

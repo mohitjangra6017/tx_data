@@ -25,6 +25,13 @@
 namespace mod_perform\testing;
 
 use coding_exception;
+use context_coursecat;
+use mod_perform\state\participant_instance\complete;
+use performelement_aggregation\aggregation;
+use performelement_aggregation\aggregation_response_calculator;
+use performelement_aggregation\calculations\average;
+use performelement_numeric_rating_scale\numeric_rating_scale;
+use stdClass, coding_exception, invalid_parameter_exception;
 use container_perform\perform as perform_container;
 use core\collection;
 use core\entity\cohort;
@@ -78,8 +85,8 @@ use mod_perform\state\participant_section\availability_not_applicable as partici
 use mod_perform\state\participant_section\complete as participant_section_complete;
 use mod_perform\state\participant_section\in_progress as participant_section_in_progress;
 use mod_perform\state\participant_section\not_started as participant_section_not_started;
-use mod_perform\state\participant_section\open as particiant_section_open;
-use mod_perform\state\participant_section\progress_not_applicable as partipant_section_progress_not_applicable;
+use mod_perform\state\participant_section\open as participant_section_open;
+use mod_perform\state\participant_section\progress_not_applicable as participant_section_progress_not_applicable;
 use mod_perform\state\subject_instance\pending;
 use mod_perform\task\service\manual_participant_progress;
 use mod_perform\task\service\subject_instance_creation;
@@ -292,7 +299,21 @@ final class generator extends \core\testing\component_generator {
         $section = $this->get_section_from_title($data['section_name']);
         $data['plugin_name'] = $data['element_name'];
         $data['context'] = $section->get_activity()->get_context();
+
+        if (array_key_exists('data', $data) && $data['plugin_name'] === aggregation::get_plugin_name()) {
+            $data['data'] = json_decode($data['data'], true, 512, JSON_THROW_ON_ERROR);
+
+            $data['data'][aggregation::SOURCE_SECTION_ELEMENT_IDS] = array_map(function (string $title) {
+                /** @var element_entity $element */
+                $element = element_entity::repository()->where('title', $title)->one();
+                return $element->section_element->id;
+            }, $data['data']['sourceSectionElementTitles']);
+
+            $data['data'] = json_encode($data['data'], JSON_THROW_ON_ERROR);
+        }
+
         $element = $this->create_element($data);
+
         $this->create_section_element($section, $element);
     }
 
@@ -317,14 +338,14 @@ final class generator extends \core\testing\component_generator {
         $participant_section->section_id = $section->id;
         $participant_section->participant_instance_id = $participant_instance->id;
         if ($participant_instance->progress === participant_instance_progress_not_applicable::get_code()) {
-            $participant_section->progress = partipant_section_progress_not_applicable::get_code();
+            $participant_section->progress = participant_section_progress_not_applicable::get_code();
         } else {
             $participant_section->progress = participant_section_not_started::get_code();
         }
         if ($participant_instance->availability === participant_instance_availability_not_applicable::get_code()) {
             $participant_section->availability = participant_section_availability_not_applicable::get_code();
         } else {
-            $participant_section->availability = particiant_section_open::get_code();
+            $participant_section->availability = participant_section_open::get_code();
         }
         $participant_section->save();
 
@@ -362,8 +383,9 @@ final class generator extends \core\testing\component_generator {
 
     /**
      * Update existing element
+     *
      * @param element $element
-     * @param array   $data
+     * @param array $data
      */
     public function update_element(element $element, array $data = []): void {
         $element->update_details(
@@ -637,7 +659,7 @@ final class generator extends \core\testing\component_generator {
     /**
      * Create full activities including assignments, subject, participant instances and notifications
      *
-     * @param activity_generator_configuration $configuration
+     * @param activity_generator_configuration|null $configuration
      * @return collection|activity[]
      */
     public function create_full_activities(activity_generator_configuration $configuration = null) {
@@ -707,6 +729,12 @@ final class generator extends \core\testing\component_generator {
 
             for ($k = 0; $k < $configuration->get_number_of_sections_per_activity(); $k++) {
                 $section = $this->create_section($activity, ['title' => $activity->name . ' section ' . $k]);
+
+                $relationships_for_section = $configuration->get_relationships_for_section($k + 1);
+                if ($relationships_for_section !== null) {
+                    $relationships = $relationships_for_section;
+                }
+
                 foreach ($relationships as $relationship_idnumber) {
                     if (in_array($relationship_idnumber, $manual_idnumbers, true)) {
                         $manual_relationships[] = $relationship_idnumber;
@@ -726,7 +754,7 @@ final class generator extends \core\testing\component_generator {
 
         $context = \context_system::instance();
         if (!empty($category_id)) {
-            $context = \context_coursecat::instance($category_id);
+            $context = context_coursecat::instance($category_id);
         }
         $user_data = [];
         if ($tenant_id) {
@@ -739,10 +767,12 @@ final class generator extends \core\testing\component_generator {
                 $cohort = $this->datagenerator->create_cohort(['contextid' => $context->id]);
                 $cohorts[] = $cohort->id;
                 for ($k = 0; $k < $configuration->get_number_of_users_per_user_group_type(); $k++) {
+                    $user_data['idnumber'] = 'subject-from-cohort-' . $cohort->id;
                     $user = $this->datagenerator->create_user($user_data);
                     cohort_add_member($cohort->id, $user->id);
 
                     if ($configuration->should_create_appraiser_for_each_subject_user()) {
+                        $user_data['idnumber'] = 'appraiser-from-cohort-' . $cohort->id;
                         $appraiser = $this->datagenerator->create_user($user_data);
                         job_assignment::create([
                             'userid' => $user->id,
@@ -751,6 +781,7 @@ final class generator extends \core\testing\component_generator {
                         ]);
                     }
                     if ($configuration->should_create_manager_for_each_subject_user()) {
+                        $user_data['idnumber'] = 'manager-from-cohort-' . $cohort->id;
                         $manager = $this->datagenerator->create_user($user_data);
                         job_assignment::create([
                             'userid' => $user->id,
@@ -783,6 +814,19 @@ final class generator extends \core\testing\component_generator {
                 foreach ($activities as $activity) {
                     $this->create_manual_users_for_activity($activity, $manual_relationships);
                 }
+            }
+        }
+
+        if ($configuration->get_aggregation() !== null) {
+            [$aggregation_display_section, $aggregation_source_sections, $aggregation_source_answer_map] = $configuration->get_aggregation();
+
+            foreach ($activities as $activity) {
+                $this->create_aggregation_in_activity(
+                    $activity->get_id(),
+                    $aggregation_display_section,
+                    $aggregation_source_sections,
+                    $aggregation_source_answer_map
+                );
             }
         }
 
@@ -844,11 +888,11 @@ final class generator extends \core\testing\component_generator {
         // Totara: Make sure that the random full user names are unique.
         $firstname = ($country * 10) + $firstname + ($female * 5);
         $lastname = ($country * 10) + $lastname + ($female * 5);
-        return $firstname.' '.$lastname;
+        return $firstname . ' ' . $lastname;
     }
 
     private function generate_email(string $fullname): string {
-        return strtolower(str_replace(' ', '.', $fullname)).'@example.com';
+        return strtolower(str_replace(' ', '.', $fullname)) . '@example.com';
     }
 
     /**
@@ -1211,8 +1255,8 @@ final class generator extends \core\testing\component_generator {
             if (!$anonymous_responses) {
                 return $this->create_activity_in_container(
                     [
-                        'activity_name'  => $name,
-                        'activity_type'  => $type,
+                        'activity_name' => $name,
+                        'activity_type' => $type,
                         'create_section' => false,
                     ]
                 );
@@ -1220,9 +1264,9 @@ final class generator extends \core\testing\component_generator {
 
             $activity = $this->create_activity_in_container(
                 [
-                    'activity_name'   => $name,
-                    'activity_type'   => $type,
-                    'create_section'  => false,
+                    'activity_name' => $name,
+                    'activity_type' => $type,
+                    'create_section' => false,
                     'activity_status' => 'DRAFT',
                 ]
             );
@@ -1255,13 +1299,12 @@ final class generator extends \core\testing\component_generator {
         int $subject_instance_id,
         $core_relationship
     ): participant_instance_entity {
-        if (is_int($core_relationship)) {
-            $core_relationship_id = (int)$core_relationship;
-        } else {
-            $core_relationship_id = core_relationship::load_by_idnumber($core_relationship)->id;
+        if (!is_numeric($core_relationship)) {
+            $core_relationship = core_relationship::load_by_idnumber($core_relationship)->id;
         }
+
         $participant_instance = new participant_instance_entity();
-        $participant_instance->core_relationship_id = $core_relationship_id;
+        $participant_instance->core_relationship_id = $core_relationship;
         $participant_instance->participant_source = participant_source::INTERNAL;
         $participant_instance->participant_id = $participant_user->id;
         $participant_instance->subject_instance_id = $subject_instance_id;
@@ -1277,7 +1320,7 @@ final class generator extends \core\testing\component_generator {
      * @param stdClass|user $participant_user
      * @param int $subject_instance_id
      * @param section $section
-     * @param int $core_relationship_id
+     * @param int|string $core_relationship_id
      * @return participant_section_entity
      */
     public function create_participant_instance_and_section(
@@ -1285,8 +1328,12 @@ final class generator extends \core\testing\component_generator {
         $participant_user,
         int $subject_instance_id,
         section $section,
-        int $core_relationship_id
+        $core_relationship_id
     ): participant_section_entity {
+        if (is_numeric($core_relationship_id)) {
+            $core_relationship_id = (int) $core_relationship_id;
+        }
+
         $participant_instance = $this->create_participant_instance(
             $participant_user, $subject_instance_id, $core_relationship_id
         );
@@ -1303,7 +1350,7 @@ final class generator extends \core\testing\component_generator {
      */
     public function create_cohort_with_users(array $user_ids, $record = []): cohort {
         global $CFG;
-        require_once($CFG->dirroot.'/cohort/lib.php');
+        require_once($CFG->dirroot . '/cohort/lib.php');
 
         $cohort = $this->datagenerator->create_cohort($record);
 
@@ -1550,11 +1597,12 @@ final class generator extends \core\testing\component_generator {
 
     /**
      * Create element identifier
+     *
      * @param string $identifier
      *
      * @return element_identifier_model
      */
-    public function create_element_identifier(string $identifier): element_identifier_model{
+    public function create_element_identifier(string $identifier): element_identifier_model {
         return element_identifier_model::create($identifier);
     }
 
@@ -1579,8 +1627,6 @@ final class generator extends \core\testing\component_generator {
         if (is_string($required_question) && $required_question !== 'true') {
             $required_question = false;
         }
-
-
 
         $section1 = $this->find_or_create_section($activity, ['title' => 'Part one']);
 
@@ -1652,6 +1698,7 @@ final class generator extends \core\testing\component_generator {
      * @return array
      */
     public function create_external_participant_instances(array $data): array {
+        /** @var subject_instance_entity $subject_instance_entity */
         $subject_instance_entity = subject_instance_entity::repository()
             ->join([user::TABLE, 'u'], 'subject_user_id', 'id')
             ->where('u.username', $data['subject'])
@@ -1708,7 +1755,7 @@ final class generator extends \core\testing\component_generator {
                 $participant_section->participant_instance_id = $participant_instance->id;
                 $participant_section->section_id = $section_id;
                 $participant_section->progress = participant_section_not_started::get_code();
-                $participant_section->availability = particiant_section_open::get_code();
+                $participant_section->availability = participant_section_open::get_code();
                 $participant_sections[] = $participant_section->save();
             }
 
@@ -1717,6 +1764,113 @@ final class generator extends \core\testing\component_generator {
 
             return [$participant_instance, $external_user, $participant_sections];
         });
+    }
+
+    /**
+     * Adds all things necessary to set up scenarios with aggregation sources, and calculated responses.
+     * Target sections and relationships must exist.
+     *
+     * @param int $activity_id The activity to add
+     * @param int $aggregation_display_section The section number where the aggregation element will be displayed (1 indexed not 0)
+     * @param array $aggregation_source_sections The sections numbers that aggregation sources will be added to (1 indexed not 0)
+     * @param array $aggregation_source_answer_map A map of relationship idnumber to an array of source responses
+     * @param bool $complete_sections Force all sections to be completed and run aggregation calculations
+     * @return activity_entity
+     * @throws coding_exception
+     */
+    public function create_aggregation_in_activity(
+        int $activity_id,
+        int $aggregation_display_section,
+        array $aggregation_source_sections,
+        array $aggregation_source_answer_map,
+        bool $complete_sections = true
+    ): activity_entity {
+        $activity_entity = new activity_entity($activity_id);
+
+        /** @var section_entity $display_section */
+        $display_section = $activity_entity->sections_ordered->all()[$aggregation_display_section - 1];
+
+        $number_of_source_questions = count(reset($aggregation_source_answer_map));
+        $source_section_element_ids = [];
+
+        for ($source_section_element_index = 0; $source_section_element_index < $number_of_source_questions; $source_section_element_index++) {
+            $source_element = element::create(
+                context_coursecat::instance(perform_container::get_default_category_id()),
+                numeric_rating_scale::get_plugin_name(),
+                "Aggregation source " . ($source_section_element_index + 1),
+                '',
+                json_encode([
+                    'highValue' => 1000,
+                    'lowValue' => 0,
+                    'defaultValue' => 50,
+                ], JSON_THROW_ON_ERROR),
+                false
+            );
+
+            $source_section_number = $aggregation_source_sections[$source_section_element_index];
+            $source_section = new section($activity_entity->sections_ordered->all()[$source_section_number - 1]);
+
+            $source_section_element = $this->create_section_element($source_section, $source_element);
+
+            $source_section_element_ids[] = $source_section_element->get_id();
+        }
+
+        $aggregation_element = $this->create_element([
+            'plugin_name' => 'aggregation',
+            'data' => json_encode([
+                aggregation::SOURCE_SECTION_ELEMENT_IDS => $source_section_element_ids,
+                aggregation::EXCLUDED_VALUES => [],
+                aggregation::CALCULATIONS => [average::get_name()],
+            ], JSON_THROW_ON_ERROR),
+        ]);
+
+        $this->create_section_element(new section($display_section), $aggregation_element);
+
+        foreach ($aggregation_source_answer_map as $source_relationship_name => $source_responses_data) {
+            /** @var subject_instance_entity[] $subject_instances */
+            $subject_instances = subject_instance_entity::repository()
+                ->as('si')
+                ->join([track_user_assignment::TABLE, 'tua'], 'si.track_user_assignment_id', 'tua.id')
+                ->join([track_entity::TABLE, 't'], 'tua.track_id', 't.id')
+                ->where('t.activity_id', $activity_id)->get();
+
+            foreach ($subject_instances as $subject_instance) {
+                $participant_instance = $subject_instance->participant_instances->find(
+                    function (participant_instance_entity $participant_instance) use ($source_relationship_name) {
+                        return $participant_instance->core_relationship->idnumber === $source_relationship_name;
+                    }
+                );
+
+                foreach ($source_section_element_ids as $source_section_element_index => $source_section_element_id) {
+                    $response_data = $source_responses_data[$source_section_element_index];
+
+                    // Nulls are skipped, including completing the section (aggregating).
+                    if ($response_data !== null) {
+                        $source_response = new element_response();
+                        $source_response->response_data = "\"{$response_data}\"";
+                        $source_response->section_element_id = $source_section_element_id;
+                        $source_response->participant_instance_id = $participant_instance->id;
+                        $source_response->save();
+                    }
+                }
+            }
+        }
+
+        if (!$complete_sections) {
+            return $activity_entity;
+        }
+
+        /** @var participant_instance_entity $participant_sections */
+        $participant_sections = participant_section_entity::repository()->get();
+        foreach ($participant_sections as $participant_section_entity) {
+            // By pass the completion checks.
+            $participant_section_entity->progress = complete::get_code();
+            $participant_section_entity->save();
+
+            aggregation_response_calculator::calculate_responses_effected_by($participant_section_entity);
+        }
+
+        return $activity_entity;
     }
 
 }

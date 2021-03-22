@@ -92,6 +92,9 @@
                   :activity-id="activityId"
                   :activity-context-id="activityContextId"
                   @child-update="childUpdate"
+                  :extra-plugin-config-data="
+                    getExtraPluginConfigData(sectionElement)
+                  "
                   @update="update(sectionElement, $event, index)"
                   @edit="edit(sectionElement)"
                   @display="display(sectionElement)"
@@ -124,6 +127,7 @@
             :section-element="sectionElement"
             :section-id="sectionId"
             :element-plugins="elementPlugins"
+            :extra-plugin-config-data="getExtraPluginConfigData(sectionElement)"
             @update="update(sectionElement, $event, index)"
             @edit="edit(sectionElement)"
             @display="display(sectionElement)"
@@ -817,6 +821,18 @@ export default {
       }
 
       return subComponent;
+    },
+
+    /**
+     * @param {Object} sectionElement
+     * @return {Object|Array}
+     */
+    getExtraPluginConfigData(sectionElement) {
+      const elementPlugin = this.elementPlugins.find(
+        plugin => plugin.plugin_name === sectionElement.element.type.plugin_name
+      );
+
+      return JSON.parse(elementPlugin.plugin_config.extra_config_data);
     },
 
     /**

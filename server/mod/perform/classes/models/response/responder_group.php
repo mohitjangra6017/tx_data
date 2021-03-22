@@ -46,14 +46,21 @@ class responder_group {
     protected $responses;
 
     /**
+     * @var int|null
+     */
+    protected $sort_order;
+
+    /**
      * other_responder_group constructor.
      *
      * @param string $relationship_name
      * @param collection|section_element_response[] $responses
+     * @param int|null $sort_order
      */
-    public function __construct(string $relationship_name, collection $responses) {
+    public function __construct(string $relationship_name, collection $responses, ?int $sort_order = null) {
         $this->relationship_name = $relationship_name;
         $this->responses = $responses;
+        $this->sort_order = $sort_order;
     }
 
     /**
@@ -105,6 +112,15 @@ class responder_group {
         }
 
         return $this;
+    }
+
+    /**
+     * Get the sort order. Note it may not be specified.
+     *
+     * @return int|null
+     */
+    public function get_sort_order(): ?int {
+        return $this->sort_order;
     }
 
 }

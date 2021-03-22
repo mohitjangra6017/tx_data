@@ -32,6 +32,9 @@ use mod_perform\state\participant_section\open as participant_section_availabili
 use mod_perform\state\subject_instance\closed as subject_instance_availability_closed;
 use mod_perform\state\subject_instance\open as subject_instance_availability_open;
 
+/**
+ * @group perform
+ */
 class mod_perform_delete_user_testcase extends advanced_testcase {
 
     public function test_deleting_user_closes_subject_instances() {

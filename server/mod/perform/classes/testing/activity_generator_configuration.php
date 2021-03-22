@@ -62,6 +62,13 @@ class activity_generator_configuration {
     private $relationships_per_section = [constants::RELATIONSHIP_SUBJECT];
 
     /**
+     * Per section relationships that should be created
+     *
+     * @var string[][]
+     */
+    private $relationships_for_sections = [];
+
+    /**
      * The number of elements that should be created per section.
      *
      * @var int
@@ -128,6 +135,21 @@ class activity_generator_configuration {
      * @var int
      */
     private $category_id;
+
+    /**
+     * @var int
+     */
+    private $aggregation_source_sections;
+
+    /**
+     * @var int
+     */
+    private $aggregation_display_section;
+
+    /**
+     * @var array
+     */
+    private $aggregation_source_answer_map;
 
     /**
      * shortcut function to get new object
@@ -224,6 +246,18 @@ class activity_generator_configuration {
         $this->relationships_per_section = $relationship_idnumber;
 
         return $this;
+    }
+
+    public function set_relationships_for_section(int $section_number, array $relationship_idnumbers): self {
+        $this->relationships_for_sections[$section_number] = $relationship_idnumbers;
+
+        $this->relationships_per_section = array_merge($this->relationships_per_section, $relationship_idnumbers);
+
+        return $this;
+    }
+
+    public function get_relationships_for_section(int $section_number): ?array {
+        return $this->relationships_for_sections[$section_number] ?? null;
     }
 
     /**
@@ -430,6 +464,39 @@ class activity_generator_configuration {
      */
     public function get_category_id(): ?int {
         return $this->category_id;
+    }
+
+    /**
+     * Add aggregation scenarios.
+     *
+     * @see generator::create_aggregation_in_activity
+     * @param int $aggregation_display_section
+     * @param array $aggregation_source_sections
+     * @param array $aggregation_source_answer_map
+     * @return $this
+     */
+    public function add_aggregation(
+        int $aggregation_display_section,
+        array $aggregation_source_sections,
+        array $aggregation_source_answer_map
+    ): activity_generator_configuration {
+        $this->aggregation_display_section = $aggregation_display_section;
+        $this->aggregation_source_sections = $aggregation_source_sections;
+        $this->aggregation_source_answer_map = $aggregation_source_answer_map;
+
+        return $this;
+    }
+
+    public function get_aggregation(): ?array {
+        if ($this->aggregation_source_sections === null) {
+            return null;
+        }
+
+        return [
+            $this->aggregation_display_section,
+            $this->aggregation_source_sections,
+            $this->aggregation_source_answer_map,
+        ];
     }
 
 

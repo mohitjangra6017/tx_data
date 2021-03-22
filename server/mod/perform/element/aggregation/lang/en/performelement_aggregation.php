@@ -23,11 +23,13 @@
 
 $string['add_excluded_value'] = 'Add an excluded value';
 $string['add_question'] = 'Add question';
-$string['admin_view_blurb'] = 'Calculations are based on the latest submitted values. Unanswered questions are excluded from calculation.';
-$string['admin_view_blurb_with_exclusions'] = 'Calculations are based on the latest submitted values. Unanswered questions, and the following values are excluded from calculation: {$a}';
+$string['header_blurb'] = 'Calculations are based on the latest submitted values. Unanswered questions are excluded from calculation.';
+$string['header_blurb_with_exclusions'] = 'Calculations are based on the latest submitted values. Unanswered questions, and the following values are excluded from calculation: {$a}';
 $string['aggregate_question_n'] = 'Question to aggregate {$a}';
-$string['calculated_value_preview_placeholder'] = 'calculated value';
+$string['aggregated_response_display'] = '{$a->label}: {$a->value}';
+$string['calculated_value_preview_placeholder'] = '{calculated value}';
 $string['calculation_label_average'] = 'Average';
+$string['calculation_label_median'] = 'Median';
 $string['calculations_to_display'] = 'Calculation to display';
 $string['duplicate_questions_validation_error'] = 'Duplicate – question can only be added once';
 $string['excluded_value_n'] = 'Excluded value {$a}';

@@ -56,6 +56,7 @@ use mod_perform\util;
  * @property-read collection|element_validation_error[] $validation_errors A collection of element_validation_errors
  * @property-read string $response_data Processed response data
  * @property-read string $raw_response_data Raw JSON encoded response data
+ * @property-read bool $can_respond Can the main participant respond to this element (it could be the case that only other relationships/groups can)
  * @property-read element $element The element this is a response to
  * @property-read collection|participant_instance[] $visible_to
  * @property-read collection|responder_group[] $other_responder_groups
@@ -73,6 +74,8 @@ class section_element_response extends model implements section_element_response
         'id',
         'section_element_id',
         'section_element',
+        'section_element_id',
+        'can_respond',
         'response_data', // as a JSON encoded string
         'raw_response_data',
         'response_data_formatted_lines',
@@ -109,6 +112,11 @@ class section_element_response extends model implements section_element_response
     protected $validation_errors;
 
     /**
+     * @var bool
+     */
+    protected $can_respond = true;
+
+    /**
      * @var string|null
      */
     private $computed_response_data;
@@ -132,14 +140,15 @@ class section_element_response extends model implements section_element_response
      * @param section_element $section_element
      * @param element_response_entity|null $element_response_entity
      * @param collection|responder_group[] $other_responder_groups
-     *
+     * @param bool $can_respond Can the main participant respond to this element (it could be the case that only other relationships/groups can)
      * @throws coding_exception
      */
     public function __construct(
         participant_instance $participant_instance,
         section_element $section_element,
         ?element_response_entity $element_response_entity,
-        collection $other_responder_groups
+        collection $other_responder_groups,
+        $can_respond = true
     ) {
         if ($element_response_entity === null) {
             $element_response_entity = new element_response_entity();
@@ -154,6 +163,7 @@ class section_element_response extends model implements section_element_response
         $this->participant_instance = $participant_instance;
         $this->section_element = $section_element;
         $this->other_responder_groups = $other_responder_groups;
+        $this->can_respond = $can_respond;
     }
 
     /**
@@ -186,6 +196,15 @@ class section_element_response extends model implements section_element_response
                 'section_element_id of the element response does not match the supplied section element'
             );
         }
+    }
+
+    /**
+     * Can the main participant respond to this element (it could be the case that only other relationships/groups can).
+     *
+     * @return bool
+     */
+    public function get_can_respond(): bool {
+        return $this->can_respond;
     }
 
     /**
@@ -311,7 +330,7 @@ class section_element_response extends model implements section_element_response
     public function validate_response($is_draft_validation = false): bool {
         $element_plugin = $this->get_element()->get_element_plugin();
 
-        if (!$element_plugin->get_is_respondable()) {
+        if (!$element_plugin instanceof respondable_element_plugin) {
             return true;
         }
 

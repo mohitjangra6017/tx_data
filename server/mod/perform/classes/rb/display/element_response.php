@@ -28,6 +28,7 @@ use core\format;
 use mod_perform\entity\activity\element as element_entity;
 use mod_perform\formatter\response\element_response_formatter;
 use mod_perform\models\activity\element;
+use mod_perform\models\activity\helpers\displays_responses;
 use mod_perform\models\activity\element_plugin;
 use rb_column;
 use rb_column_option;
@@ -57,7 +58,7 @@ class element_response extends base {
         $element = self::get_element_for_row($extrafields);
         $element_plugin = $element->get_element_plugin();
 
-        if (!$element_plugin->get_is_respondable()) {
+        if (!$element_plugin instanceof displays_responses) {
             // Nothing to display!
             return '';
         }
@@ -104,7 +105,7 @@ class element_response extends base {
      */
     private static function get_element_for_row(stdClass $extra_fields): element {
         $element_fields = self::get_element_fields($extra_fields);
-        
+
         return element::load_by_entity(new element_entity($element_fields));
     }
 
@@ -123,7 +124,7 @@ class element_response extends base {
             'plugin_name' => $extra_fields->element_type,
             'data' => $extra_fields->element_data,
         ];
-        
+
         $plugin = element_plugin::load_by_plugin($extra_fields->element_type);
         if ($helper = $plugin->get_response_report_builder_helper()) {
             if ($plugin_extra_fields = $helper->get_response_extra_fields()) {

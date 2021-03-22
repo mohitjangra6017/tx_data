@@ -85,10 +85,10 @@
         >
           <Checkbox
             v-for="calculationOption in calculationOptions"
-            :key="calculationOption.plugin"
-            :value="calculationOption.plugin"
+            :key="calculationOption.name"
+            :value="calculationOption.name"
           >
-            {{ calculationOption.name }}
+            {{ calculationOption.label }}
           </Checkbox>
         </FormCheckboxGroup>
       </FormRow>
@@ -178,6 +178,7 @@ export default {
     settings: Object,
     data: Object,
     currentActivityId: Number,
+    extraPluginConfigData: Object,
   },
   data() {
     const initialValues = {
@@ -255,11 +256,7 @@ export default {
       return elementOptions;
     },
     calculationOptions() {
-      return [
-        { plugin: 'average', name: 'Average' },
-        { plugin: 'median', name: 'Median' },
-      ];
-      // return this.rawData.calculationOptions;
+      return this.extraPluginConfigData.calculations;
     },
   },
   created() {

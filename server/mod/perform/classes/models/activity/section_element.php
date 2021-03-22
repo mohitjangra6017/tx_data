@@ -164,4 +164,5 @@ class section_element extends model {
         $decoded_element_data = json_decode($element_data, true);
         return $decoded_element_data;
     }
+
 }

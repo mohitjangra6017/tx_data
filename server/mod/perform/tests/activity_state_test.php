@@ -32,6 +32,7 @@ use mod_perform\state\activity\draft;
 use mod_perform\state\activity\activity_state;
 use mod_perform\state\state_helper;
 use performelement_aggregation\aggregation;
+use performelement_aggregation\calculations\average;
 use performelement_numeric_rating_scale\numeric_rating_scale;
 use mod_perform\testing\generator as perform_generator;
 
@@ -306,7 +307,7 @@ class mod_perform_activity_state_testcase extends advanced_testcase {
         $aggregation_data = [
             aggregation::SOURCE_SECTION_ELEMENT_IDS => [$source_section_element->id],
             aggregation::EXCLUDED_VALUES => [],
-            aggregation::CALCULATIONS => ['average'],
+            aggregation::CALCULATIONS => [average::get_name()],
         ];
         $aggregation_element = $generator->create_element(array(
             'plugin_name' => aggregation::get_plugin_name(),

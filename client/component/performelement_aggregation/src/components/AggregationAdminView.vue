@@ -20,19 +20,19 @@
     <div v-if="hasExcludedValues">
       {{
         $str(
-          'admin_view_blurb_with_exclusions',
+          'header_blurb_with_exclusions',
           'performelement_aggregation',
           excludedValuesCsv
         )
       }}
     </div>
     <div v-else class="tui-aggregationAdminView__blurb">
-      {{ $str('admin_view_blurb', 'performelement_aggregation') }}
+      {{ $str('header_blurb', 'performelement_aggregation') }}
     </div>
     <div>
-      <template v-for="preview in aggregationTypesPreview">
+      <div v-for="(preview, i) in aggregationTypesPreview" :key="i">
         {{ preview }}
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -42,6 +42,7 @@ export default {
   inheritAttrs: false,
   props: {
     data: Object,
+    extraPluginConfigData: Object,
   },
   computed: {
     hasExcludedValues() {
@@ -61,13 +62,23 @@ export default {
       );
     },
     aggregationTypesPreview() {
-      return ['Average'].map(
-        name =>
-          `${name}: {${this.$str(
-            'calculated_value_preview_placeholder',
-            'performelement_aggregation'
-          )}}`
+      const value = this.$str(
+        'calculated_value_preview_placeholder',
+        'performelement_aggregation'
       );
+
+      const options = this.extraPluginConfigData.calculations;
+
+      return this.data.calculations.map(chosenCalculation => {
+        const label = options.find(option => option.name === chosenCalculation)
+          .label;
+
+        return this.$str(
+          'aggregated_response_display',
+          'performelement_aggregation',
+          { label, value }
+        );
+      });
     },
   },
 };
@@ -76,8 +87,9 @@ export default {
 <lang-strings>
   {
     "performelement_aggregation": [
-      "admin_view_blurb",
-      "admin_view_blurb_with_exclusions",
+      "aggregated_response_display",
+      "header_blurb",
+      "header_blurb_with_exclusions",
       "calculated_value_preview_placeholder"
     ]
   }
