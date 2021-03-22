@@ -39,6 +39,15 @@
         />
       </FormRow>
 
+      <SelectParticipant
+        field-name="selection_relationships"
+        :help-msg="
+          $str('participant_selection_help', 'performelement_linked_review')
+        "
+        :label="$str('selection_participant', 'performelement_linked_review')"
+        :relationships="coreRelationships"
+      />
+
       <!-- For additional custom fields based on selected content type -->
       <FormScope
         v-if="selectedContentTypeSettingsComponent"
@@ -49,33 +58,12 @@
           ref="typeSettings"
         />
       </FormScope>
-
-      <FormRow
-        :label="$str('selection_participant', 'performelement_linked_review')"
-        :helpmsg="
-          $str('participant_selection_help', 'performelement_linked_review')
-        "
-        :required="true"
-      >
-        <FormRadioGroup
-          :validations="v => [v.required()]"
-          name="selection_relationships"
-        >
-          <Radio
-            v-for="relationship in coreRelationships"
-            :key="relationship.id"
-            :value="relationship.id"
-          >
-            {{ relationship.name }}
-          </Radio>
-        </FormRadioGroup>
-      </FormRow>
     </PerformAdminCustomElementEdit>
   </div>
 </template>
 
 <script>
-import PerformAdminCustomElementEdit from 'mod_perform/components/element/PerformAdminCustomElementEdit';
+import Checkbox from 'tui/components/form/Checkbox';
 import FormScope from 'tui/components/reform/FormScope';
 import {
   FormCheckboxGroup,
@@ -83,11 +71,12 @@ import {
   FormRow,
   FormSelect,
 } from 'tui/components/uniform';
+import PerformAdminCustomElementEdit from 'mod_perform/components/element/PerformAdminCustomElementEdit';
 import Radio from 'tui/components/form/Radio';
+import SelectParticipant from 'performelement_linked_review/components/SelectParticipant';
 
 // GraphQL
 import contentTypesQuery from 'performelement_linked_review/graphql/content_types';
-import Checkbox from 'tui/components/form/Checkbox';
 
 export default {
   components: {
@@ -99,6 +88,7 @@ export default {
     FormSelect,
     PerformAdminCustomElementEdit,
     Radio,
+    SelectParticipant,
   },
 
   inheritAttrs: false,

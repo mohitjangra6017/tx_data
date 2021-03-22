@@ -330,6 +330,8 @@ $string['multiple_sections_enabled_confirmation_text'] = 'All existing content w
 $string['multiple_sections_label_help'] = 'Having multiple sections provides more flexibility and control over the participants’ experience of an activity, as each section has its own participant settings. Participants’ progress per section is tracked, and the section headings will appear to participants as navigation within the activity. Switching between formats is possible, but any already created section headings and participant settings will be lost if multiple sections is subsequently disabled (the content, however, will be merged).';
 $string['next_section'] = 'Next section';
 $string['no_items_selected'] = 'No items have been selected.';
+$string['no_participants'] = 'You need to add participants to this activity section, 
+before you can choose which participant can select review items.';
 $string['no_participants_added'] = 'No participants added';
 $string['no_recipients'] = 'No recipients. Go to Content tab: Responding participants, to add recipients.';
 $string['no_response_submitted'] = 'No response submitted';
