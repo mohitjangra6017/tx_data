@@ -12,13 +12,13 @@
   LTD, you may not access, use, modify, or distribute this software.
   Please contact [licensing@totaralearning.com] for more information.
 
-  @author Kunle Odusan <kunle.odusan@totaralearning.com>
-  @author Kevin Hottinger <kevin.hottinger@totaralearning.com>
-  @module performelement_redisplay
+  @module performelement_aggregation
 -->
 
 <template>
   <div class="tui-redisplayAdminView">
+    THIS IS AGG QUESTION
+
     <div v-if="data.activityName">
       {{
         $str('redisplayed_element_admin_preview', 'performelement_redisplay', {
@@ -55,6 +55,47 @@ export default {
 
   props: {
     data: Object,
+  },
+
+  data() {
+    return {
+      sectionElement: {},
+    };
+  },
+
+  computed: {
+    activityName() {
+      if (
+        this.sectionElement.section &&
+        this.sectionElement.section.activity &&
+        this.sectionElement.section.activity.name
+      ) {
+        return this.sectionElement.section.activity.name;
+      }
+
+      return null;
+    },
+    elementTitle() {
+      if (this.sectionElement.element && this.sectionElement.element.title) {
+        return this.sectionElement.element.title;
+      }
+      return null;
+    },
+    relationshipList() {
+      if (
+        this.sectionElement.section &&
+        this.sectionElement.section.section_relationships
+      ) {
+        let relationshipNames = this.sectionElement.section.section_relationships.map(
+          sectionRelationship => {
+            return sectionRelationship.core_relationship.name;
+          }
+        );
+        return relationshipNames.join(', ');
+      }
+
+      return null;
+    },
   },
 };
 </script>

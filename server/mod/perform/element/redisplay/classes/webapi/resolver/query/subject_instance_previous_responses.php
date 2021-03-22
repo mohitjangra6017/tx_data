@@ -27,24 +27,25 @@ use core\webapi\execution_context;
 use core\webapi\middleware\require_advanced_feature;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
+use core\webapi\resolver\has_middleware;
 use mod_perform\models\response\participant_section as participant_section_model;
 use performelement_redisplay\data_provider\previous_responses;
-use performelement_redisplay\models\element_redisplay_relationship;
+use mod_perform\models\activity\section_element_reference;
 
 /**
  * Query to get previous responses for a section element on a subject instance
  * related to the current participant section's subject instance for a logged-in user.
 */
-class subject_instance_previous_responses implements query_resolver {
+class subject_instance_previous_responses implements query_resolver, has_middleware {
 
     /**
-     * @inheritDocs
+     * @inheritDoc
      */
-    public static function resolve(array $args, execution_context $ec) {
+    public static function resolve(array $args, execution_context $ec): array {
         $participant_section_id = $args['input']['participant_section_id'];
         $section_element_id = $args['input']['section_element_id'];
 
-        if (!element_redisplay_relationship::participant_section_can_access_section_element($participant_section_id, $section_element_id)) {
+        if (!section_element_reference::participant_section_can_access_section_element($participant_section_id, $section_element_id)) {
             throw new coding_exception('Invalid access to redisplay');
         }
 

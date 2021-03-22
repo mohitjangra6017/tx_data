@@ -22,8 +22,14 @@
  */
 
 use core_container\hook\module_supported_in_container;
+use mod_perform\hook\pre_activity_deleted;
+use mod_perform\hook\pre_section_deleted;
+use mod_perform\hook\pre_section_element_deleted;
 use mod_perform\watcher\activity;
 use mod_perform\hook\subject_instances_created;
+use mod_perform\watcher\activity_deletion_check;
+use mod_perform\watcher\section_deletion_check;
+use mod_perform\watcher\section_element_deletion_check;
 use mod_perform\watcher\subject_static_instances;
 use mod_perform\watcher\participant_instances;
 use mod_perform\watcher\participant_sections;
@@ -62,5 +68,17 @@ $watchers = [
     [
         'hookname' => subject_instances_created::class,
         'callback' => [subject_static_instances::class, 'create_subject_static_instances'],
+    ],
+    [
+        'hookname' => pre_activity_deleted::class,
+        'callback' => [activity_deletion_check::class, 'can_delete'],
+    ],
+    [
+        'hookname' => pre_section_deleted::class,
+        'callback' => [section_deletion_check::class, 'can_delete'],
+    ],
+    [
+        'hookname' => pre_section_element_deleted::class,
+        'callback' => [section_element_deletion_check::class, 'can_delete'],
     ],
 ];

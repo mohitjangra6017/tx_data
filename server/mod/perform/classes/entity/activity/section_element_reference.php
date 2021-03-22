@@ -21,36 +21,35 @@
  * @package mod_perform
  */
 
-namespace performelement_redisplay\entity;
+namespace mod_perform\entity\activity;
 
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
-use mod_perform\entity\activity\element;
 
 /**
- * Element redisplay relationship entity
+ * Element reference relationship entity.
+ *
+ * Links a perform element (abstract element), to a particular section element (element in a particular activity/section).
  *
  * Properties:
  * @property-read int $id ID
- * @property int $source_activity_id ID of the activity that the selected element belongs to
  * @property int $source_section_element_id ID of the selected section element
- * @property int $redisplay_element_id ID of the redisplay element
+ * @property int $referencing_element_id ID of the referencing element
  *
  * Relationships:
- * @property-read element $element
+ * @property-read section_element $source_section_element
  *
- * @package performelement_redisplay\entity
+ * @package mod_perform\entity\activity
  *
  */
-class element_redisplay_relationship extends entity {
-    public const TABLE = 'perform_element_redisplay_relationship';
+class section_element_reference extends entity {
+    public const TABLE = 'perform_section_element_reference';
 
     /**
-     * Each element redisplay relationship belongs to a specific redisplay element
-     *
      * @return belongs_to
      */
-    public function section_element(): belongs_to {
-        return $this->belongs_to(element::class, 'redisplay_element_id', 'id');
+    public function source_section_element(): belongs_to {
+        return $this->belongs_to(section_element::class, 'source_section_element_id');
     }
+
 }

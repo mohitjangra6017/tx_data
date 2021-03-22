@@ -45,6 +45,7 @@ use mod_perform\entity\activity\track_user_assignment;
 use mod_perform\entity\activity\subject_instance;
 use mod_perform\notification\factory;
 use mod_perform\task\check_notification_trigger_task;
+use performelement_redisplay\redisplay;
 
 class behat_mod_perform extends behat_base {
 
@@ -98,7 +99,7 @@ class behat_mod_perform extends behat_base {
     public const ADMIN_FORM_DONE_BUTTON = '.tui-performAdminCustomElementEdit__submit';
     public const ADMIN_FORM = '.tui-performAdminCustomElement';
     public const ADMIN_FORM_STATIC_CONTENT_WEKA = '.tui-staticContentAdminEdit .tui-weka';
-    public const FORM_BUILDER_ADD_ELEMENT_BUTTONS = '.tui-dropdownButton';
+    public const FORM_BUILDER_ADD_ELEMENT_BUTTONS = '.tui-performSectionContent__add .tui-dropdownButton'; // Top level only.
     public const FORM_BUILDER_RAW_TITLE_NAME = 'rawTitle';
     public const TUI_NOTEPAD_LINES = '.tui-notepadLines';
     public const TUI_PARTICIPANT_CONTENT_PRINT_PRINTED_TODO = '.tui-performElementParticipantHeader__printedTodo';
@@ -1676,9 +1677,12 @@ class behat_mod_perform extends behat_base {
                 $this->fill_element_admin_form_settings($element_setting_container);
         }
 
-        if ($required && !in_array($title, ['Static content', 'Response redisplay'], true)) {
+        if ($required) {
             $response_required_input = $element_setting_container->find('css', self::ADMIN_FORM_RESPONSE_REQUIRED);
-            $response_required_input->getParent()->find('css', 'label')->click();
+
+            if ($response_required_input !== null) {
+                $response_required_input->getParent()->find('css', 'label')->click();
+            }
         }
 
         $element_setting_container->find('css', self::ADMIN_FORM_DONE_BUTTON)->click();
@@ -1750,18 +1754,19 @@ class behat_mod_perform extends behat_base {
     }
 
     private function fill_redisplay_admin_form_settings(): void {
-        $table_node = new TableNode([
+        /** @var behat_forms $behat_forms */
+        $behat_forms = behat_context_helper::get('behat_forms');
+
+        $behat_forms->i_set_the_following_fields_to_these_values(new TableNode([
             ['rawTitle', 'Previous response'],
             ['activityId', 'One of every element (Current activity)'],
-        ]);
+        ]));
 
-        $this->execute('behat_forms::i_set_the_following_fields_to_these_values', ['data' => $table_node]);
-        $this->execute('behat_general::i_wait_for_pending_js');
+        $this->wait_for_pending_js();
 
-        $table_node = new TableNode([
-            ['sectionElementId', 'Text: Long response (Text: Long response)'],
-        ]);
-        $this->execute('behat_forms::i_set_the_following_fields_to_these_values', ['data' => $table_node]);
+        $behat_forms->i_set_the_following_fields_to_these_values(new TableNode([
+            [redisplay::SOURCE_SECTION_ELEMENT_ID, 'Text: Long response (Text: Long response)'],
+        ]));
     }
 
     /**

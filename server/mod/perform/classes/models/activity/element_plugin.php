@@ -40,14 +40,8 @@ use mod_perform\rb\helper\element_plugin_response_report_builder;
  */
 abstract class element_plugin {
 
-    const GROUP_QUESTION = 1;
-    const GROUP_OTHER = 2;
-
-    /**
-     * Element plugin constructor
-     */
-    private function __construct() {
-    }
+    public const GROUP_QUESTION = 1;
+    public const GROUP_OTHER = 2;
 
     /**
      * Load by plugin name
@@ -97,7 +91,7 @@ abstract class element_plugin {
      *
      * @return string
      */
-    final public function get_plugin_name(): string {
+    final public static function get_plugin_name(): string {
         return explode('\\', static::class)[1];
     }
 
@@ -234,6 +228,16 @@ abstract class element_plugin {
     }
 
     /**
+     * Modify json data to add extra information to it.
+     *
+     * @param element_entity $element
+     * @return string|null
+     */
+    public function process_data(element_entity $element): ?string {
+        return $element->data;
+    }
+
+    /**
      * Calculate the full path to a tui component related to this element plugin.
      *
      * @param string $suffix
@@ -307,6 +311,15 @@ abstract class element_plugin {
      */
     public function get_is_respondable(): bool {
         return $this instanceof respondable_element_plugin;
+    }
+
+    /**
+     * Can this element be used in aggregation.
+     *
+     * @return bool
+     */
+    public function get_is_aggregatable(): bool {
+        return false;
     }
 
     /**

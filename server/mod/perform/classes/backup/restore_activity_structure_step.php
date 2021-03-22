@@ -26,6 +26,7 @@ namespace mod_perform\backup;
 
 defined('MOODLE_INTERNAL') || die();
 
+use mod_perform\models\activity\section_element_reference;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\helpers\element_cloning;
 use restore_path_element;
@@ -88,8 +89,8 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         );
 
         $paths[] = new restore_path_element(
-            'element_redisplay_relationship',
-            '/activity/perform/element_redisplay_relationships/element_redisplay_relationship'
+            'section_element_reference',
+            '/activity/perform/section_element_references/section_element_reference'
         );
 
         $paths[] = new restore_path_element(
@@ -321,30 +322,24 @@ class restore_activity_structure_step extends \restore_activity_structure_step {
         $this->set_mapping('perform_section_element', $old_id, $new_item_id);
     }
 
-    protected function process_element_redisplay_relationship($data) {
+    protected function process_section_element_reference($data) {
         global $DB;
 
         $data = (object)$data;
         $old_id = $data->id;
-        $data->redisplay_element_id = $this->get_mappingid('perform_element', $data->redisplay_element_id);
+        $data->referencing_element_id = $this->get_mappingid('perform_element', $data->referencing_element_id);
 
-        // When the redisplay is referencing an element inside the same activity, we have to adjust the reference to
-        // point at the clone, not the original.
-        if ($this->get_mappingid('perform', $data->source_activity_id) === $this->get_new_parentid('perform')) {
-            $data->source_activity_id = $this->get_new_parentid('perform');
+        $section_element_reference = section_element_reference::load_by_id($data->id);
+
+        // When referencing a section element inside the same activity,
+        // we have to adjust the source section element to point at the clone, not the original.
+        if ($this->get_mappingid('perform', $section_element_reference->get_source_activity_id()) === $this->get_new_parentid('perform')) {
             $data->source_section_element_id = $this->get_mappingid('perform_section_element', $data->source_section_element_id);
-
-            // Element itself also needs adjustment.
-            $element = element::load_by_id($data->redisplay_element_id);
-            $helper = $element->get_element_plugin()->get_clone_helper();
-            if ($helper) {
-                $helper->update_source_section_element_id($element, $data->source_section_element_id);
-            }
         }
 
-        $new_item_id = $DB->insert_record('perform_element_redisplay_relationship', $data);
+        $new_item_id = $DB->insert_record('perform_section_element_reference', $data);
 
-        $this->set_mapping('element_redisplay_relationship', $old_id, $new_item_id);
+        $this->set_mapping('section_element_reference', $old_id, $new_item_id);
     }
 
     protected function process_element_response($data) {

@@ -37,7 +37,7 @@ use totara_core\entity\relationship;
  * Properties:
  * @property-read int $id ID
  * @property string $title Title of the section
- * @property int $activity_id ID of linked activity
+ * @property string $activity_id ID of linked activity
  * @property int $sort_order order of sections within an activity
  * @property int $created_at
  * @property int $updated_at

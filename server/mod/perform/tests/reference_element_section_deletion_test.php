@@ -21,74 +21,67 @@
  * @package mod_perform
  */
 
+use core_container\entity\section as section_entity;
 use mod_perform\models\activity\section;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-require_once(__DIR__ . '/redisplay_test.php');
+require_once(__DIR__ . '/section_element_reference_test.php');
 
 /**
  * @group perform
  * @group perform_element
  */
-class section_deletion_testcase extends redisplay_testcase {
-    const QUERY = "mod_perform_section_deletion_validation";
+class mod_perform_reference_element_section_deletion_testcase extends section_element_reference_testcase {
+    public const QUERY = 'mod_perform_section_deletion_validation';
 
     use webapi_phpunit_helper;
 
     public function test_delete_watcher(): void {
-        $data = $this->create_test_data();
+        $this->create_test_data();
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessageMatches("/This section cannot be deleted/");
 
-        section::load_by_id($data->section1->id)->delete();
+        section::load_by_id($this->source_section->id)->delete();
     }
 
     public function test_delete_watcher_redisplay_same_section(): void {
-        $data = $this->create_test_data_referencing_same_section();
+        $this->create_test_data_referencing_same_section();
 
         // Deleting the section should not be blocked.
-        section::load_by_id($data->section1->id)->delete();
-        self::assertNull(\core_container\entity\section::repository()->find($data->section1->id));
+        section::load_by_id($this->self_reference_section->id)->delete();
+        self::assertNull(section_entity::repository()->find($this->self_reference_section->id));
     }
 
-    public function test_query_validation_successful(): void {
-        $data = $this->create_test_data();
+    public function test_query_validation_with_problems(): void {
+        $this->create_test_data();
 
-        $args = ['input' => ['section_id' => $data->section1->id]];
+        $args = ['input' => ['section_id' => $this->source_section->id]];
         $result = $this->resolve_graphql_query(self::QUERY, $args);
 
-        self::assertEquals("Cannot delete section", $result['title']);
+        self::assertEquals('Cannot delete section', $result['title']);
         self::assertFalse($result['can_delete']);
 
         $description = $result['reason']['description'];
         $result_data = $result['reason']['data'];
 
-        self::assertEquals(
-            'This section cannot be deleted, because it contains questions that are being referenced '
-            . 'in a response redisplay element in:',
-            $description
-        );
+        self::assertEquals('This section cannot be deleted, because it contains questions that are being referenced in a response redisplay element in:', $description);
 
-        // // check data with correct order
+        // Check data with correct order.
         self::assertCount(2, $result_data);
 
-        $first_section = $result_data[0];
-        self::assertEquals('activity2 : section2', $first_section);
+        self::assertEquals('referencing_redisplay_activity : referencing_redisplay_section', $result_data[0]);
+        self::assertEquals('source_activity : referencing_aggregation_section', $result_data[1]);
 
-        $first_section = $result_data[1];
-        self::assertEquals('activity3 : section3', $first_section);
     }
 
     public function test_query_validation_redisplay_same_section(): void {
-        $data = $this->create_test_data_referencing_same_section();
+        $this->create_test_data_referencing_same_section();
 
-        $args = ['input' => ['section_id' => $data->section1->id]];
+        $args = ['input' => ['section_id' => $this->self_reference_section->id]];
         $result = $this->resolve_graphql_query(self::QUERY, $args);
 
-        self::assertEquals("Cannot delete section", $result['title']);
         self::assertTrue($result['can_delete']);
-
         self::assertNull($result['reason']['description']);
         self::assertNull($result['reason']['data']);
     }

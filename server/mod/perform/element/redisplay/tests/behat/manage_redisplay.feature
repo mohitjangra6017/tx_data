@@ -49,7 +49,7 @@ Feature: Manage performance activity redisplay element.
       | activityId | First Activity (Draft)          |
     And I wait for pending js
     And I set the following fields to these values:
-      | sectionElementId   | 1-1 Favourite position? (Text: Short response) |
+      | sourceSectionElementId   | 1-1 Favourite position? (Text: Short response) |
     And I save the activity content element
     Then I should see "Element saved" in the tui success notification toast
     And I wait for pending js
@@ -64,7 +64,7 @@ Feature: Manage performance activity redisplay element.
       | activityId | Second Activity (Draft)          |
     And I wait for pending js
     And I set the following fields to these values:
-      | sectionElementId | 2-1 Favourite job? (Text: Short response) |
+      | sourceSectionElementId | 2-1 Favourite job? (Text: Short response) |
     And I save the activity content element
     Then I should see "Element saved" in the tui success notification toast
     And I wait for pending js
@@ -79,7 +79,7 @@ Feature: Manage performance activity redisplay element.
       | activityId | Second Activity (Draft)    |
     And I wait for pending js
     And I set the following fields to these values:
-      | sectionElementId | 2-2 Best job? (Text: Short response) |
+      | sourceSectionElementId | 2-2 Best job? (Text: Short response) |
     And I save the activity content element
     Then I should see "Element saved" in the tui success notification toast
     And I wait for pending js
@@ -105,7 +105,7 @@ Feature: Manage performance activity redisplay element.
       | activityId | First Activity (Draft)          |
     And I wait for pending js
     And I set the following fields to these values:
-      | sectionElementId   | 1-1 Favourite position? (Text: Short response) |
+      | sourceSectionElementId   | 1-1 Favourite position? (Text: Short response) |
     And I save the activity content element
 
     # add redisplay element in second activity
@@ -124,7 +124,7 @@ Feature: Manage performance activity redisplay element.
       | activityId | First Activity (Draft)          |
     And I wait for pending js
     And I set the following fields to these values:
-      | sectionElementId   | 1-1 Favourite position? (Text: Short response) |
+      | sourceSectionElementId   | 1-1 Favourite position? (Text: Short response) |
     And I save the activity content element
 
     # try to delete activity

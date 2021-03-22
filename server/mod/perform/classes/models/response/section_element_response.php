@@ -35,6 +35,7 @@ use mod_perform\entity\activity\section_relationship;
 use mod_perform\hook\post_element_response_submission;
 use mod_perform\hook\element_response_visibility;
 use mod_perform\models\activity\element;
+use mod_perform\models\activity\helpers\displays_responses;
 use mod_perform\models\activity\participant_instance;
 use mod_perform\models\activity\participant_source;
 use mod_perform\models\activity\section_element;
@@ -225,7 +226,7 @@ class section_element_response extends model implements section_element_response
     public function get_response_data_formatted_lines(): array {
         $element_plugin = $this->get_element()->get_element_plugin();
 
-        if (!$element_plugin->get_is_respondable()) {
+        if (!$element_plugin instanceof displays_responses) {
             return [];
         }
 

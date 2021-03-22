@@ -25,11 +25,15 @@ use mod_perform\constants;
 use mod_perform\entity\activity\section_relationship as section_relationship_entity;
 use mod_perform\event\activity_activated;
 use mod_perform\models\activity\activity;
+use mod_perform\models\activity\section_element_reference;
 use mod_perform\models\activity\section_relationship;
 use mod_perform\state\activity\active;
 use mod_perform\state\activity\draft;
 use mod_perform\state\activity\activity_state;
 use mod_perform\state\state_helper;
+use performelement_aggregation\aggregation;
+use performelement_numeric_rating_scale\numeric_rating_scale;
+use mod_perform\testing\generator as perform_generator;
 
 /**
  * @group perform
@@ -285,6 +289,34 @@ class mod_perform_activity_state_testcase extends advanced_testcase {
         $this->assertFalse($draft_activity->can_activate());
     }
 
+    public function test_cant_activate_with_only_aggregate_elements_in_sections(): void {
+        $user1 = $this->getDataGenerator()->create_user();
+
+        $this->setUser($user1);
+
+        $generator = perform_generator::instance();
+        $activity = $this->create_valid_activity();
+
+        $section1 = $activity->get_sections()->first();
+
+        $element = $generator->create_element(['plugin_name' => numeric_rating_scale::get_plugin_name()]);
+        $source_section_element = $generator->create_section_element($section1, $element);
+        $generator->create_element(['plugin_name' => numeric_rating_scale::get_plugin_name()]);
+
+        $aggregation_data = [aggregation::SOURCE_SECTION_ELEMENT_IDS => [$source_section_element->id]];
+        $aggregation_element = $generator->create_element(array(
+            'plugin_name' => aggregation::get_plugin_name(),
+            'data' => json_encode($aggregation_data, JSON_THROW_ON_ERROR),
+        ));
+
+        $section2 = $generator->create_section($activity);
+        $generator->create_section_element($section2, $aggregation_element);
+
+        // A draft activity which fulfills all conditions can be activated, EXCEPT the element is has derived/calculated response elements.
+        $this->assertTrue($activity->can_potentially_activate());
+        $this->assertFalse($activity->can_activate());
+    }
+
     /**
      * Create a basic activity without any sections or questions in it
      *
@@ -313,17 +345,16 @@ class mod_perform_activity_state_testcase extends advanced_testcase {
      *
      * @param int $status defaults to draft
      * @param string $element_plugin_name
+     * @param null $element_plugin_data
      * @return activity
      */
     protected function create_valid_activity(
         int $status = 0,
-        $element_plugin_name = 'short_text'
+        $element_plugin_name = 'short_text',
+        $element_plugin_data = null
     ): activity {
-
         $perform_generator = $this->generator();
-
         $activity = $this->create_activity($status);
-
         $section = $perform_generator->create_section($activity, ['title' => 'Test section 1']);
 
         $perform_generator->create_section_relationship(
@@ -331,9 +362,13 @@ class mod_perform_activity_state_testcase extends advanced_testcase {
             ['relationship' => constants::RELATIONSHIP_MANAGER]
         );
 
-        $element = $perform_generator->create_element(['title' => 'Question one', 'plugin_name' => $element_plugin_name]);
-        $perform_generator->create_section_element($section, $element);
+        $element = $perform_generator->create_element([
+            'title' => 'Question one',
+            'plugin_name' => $element_plugin_name,
+            'data' => $element_plugin_data,
+        ]);
 
+        $perform_generator->create_section_element($section, $element);
         $perform_generator->create_single_activity_track_and_assignment($activity);
 
         return $activity;

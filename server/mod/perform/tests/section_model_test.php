@@ -24,9 +24,12 @@
 
 use mod_perform\constants;
 use mod_perform\models\activity\section;
+use mod_perform\models\activity\section_element_reference;
 use mod_perform\models\activity\section_element;
 use mod_perform\state\activity\active;
 use mod_perform\state\activity\draft;
+use performelement_aggregation\aggregation;
+use performelement_numeric_rating_scale\numeric_rating_scale;
 
 require_once(__DIR__.'/relationship_testcase.php');
 
@@ -227,22 +230,32 @@ class mod_perform_section_model_testcase extends mod_perform_relationship_testca
         $section1 = $perform_generator->create_section($activity);
         $section2 = $perform_generator->create_section($activity);
 
-        $element1 = $perform_generator->create_element(['title' => 'element one', 'is_required' => true]);
+        $element1 = $perform_generator->create_element(['title' => 'element one', 'is_required' => true, 'plugin_name' => numeric_rating_scale::get_plugin_name()]);
         $element2 = $perform_generator->create_element(['title' => 'element two', 'is_required' => true]);
         $element3 = $perform_generator->create_element(['title' => 'element three']);
-        $element4 = $perform_generator->create_element(['title' => 'element three', 'plugin_name' => 'static_content']);
+        $element4 = $perform_generator->create_element(['title' => 'element four', 'plugin_name' => 'static_content']);
 
-        section_element::create($section1, $element1, 1);
+        $section_element1 = section_element::create($section1, $element1, 1);
         section_element::create($section1, $element2, 2);
         section_element::create($section1, $element3, 3);
         section_element::create($section1, $element4, 4);
+
+        $aggregation_element = $perform_generator->create_element([
+            'title' => 'aggregation element',
+            'plugin_name' => aggregation::get_plugin_name(),
+            'data' => json_encode([
+                aggregation::SOURCE_SECTION_ELEMENT_IDS => [$section_element1->id]
+            ], JSON_THROW_ON_ERROR)
+        ]);
+
+        section_element::create($section1, $aggregation_element, 5);
 
         //check element counts after create
         $result = $section1->get_section_elements_summary();
         $expected = (object)[
             'required_question_count' => 2,
             'optional_question_count' => 1,
-            'other_element_count' => 1
+            'other_element_count' => 2, // Static content +1, aggregation +1 = 2
         ];
         $this->assertEquals($expected, $result);
 
@@ -256,7 +269,7 @@ class mod_perform_section_model_testcase extends mod_perform_relationship_testca
         $expected = (object)[
             'required_question_count' => 0,
             'optional_question_count' => 3,
-            'other_element_count' => 1
+            'other_element_count' => 2 // Static content +1, aggregation +1 = 2
         ];
         $this->assertEquals($expected, $result);
 

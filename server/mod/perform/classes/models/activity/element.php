@@ -51,7 +51,7 @@ use mod_perform\models\activity\helpers\child_element_manager;
  * @property-read string element_$identifier
  * @property-read element_identifier $element_identifier
  * @property-read int|null $parent
- * @property-read collection $children
+ * @property-read collection|element[] $children
  *
  * @package mod_perform\models\activity
  */
@@ -97,10 +97,10 @@ class element extends model {
      * @param string $plugin_name
      * @param string $title
      * @param string $identifier
-     * @param string $data
+     * @param string|null $data
      * @param bool $is_required
-     * @param int $parent
-     *
+     * @param int|null $parent
+     * @param int|null $sort_order
      * @return static
      */
     public static function create(
@@ -147,7 +147,7 @@ class element extends model {
      * @return bool
      */
     public function get_is_respondable(): bool {
-        return $this->get_element_plugin()->get_is_respondable();
+        return $this->get_element_plugin() instanceof respondable_element_plugin;
     }
 
     /**
@@ -189,7 +189,9 @@ class element extends model {
      * @return string|null
      */
     public function get_data(): ?string {
-        return element_plugin::load_by_plugin($this->plugin_name)->process_data($this->entity->data);
+        $element_plugin = element_plugin::load_by_plugin($this->plugin_name);
+
+        return $element_plugin->process_data($this->entity);
     }
 
     /**
@@ -245,7 +247,7 @@ class element extends model {
      *
      * @param context $context
      */
-    public function update_context(context $context) {
+    public function update_context(context $context): void {
         $this->entity->context_id = $context->id;
         $this->entity->save();
     }
@@ -276,8 +278,7 @@ class element extends model {
         string $data = null,
         bool $is_required = null,
         string $identifier = ''
-    ) {
-
+    ): void {
         $this->entity->title = $title;
         $this->entity->data = $data;
         $this->entity->is_required = $is_required;
@@ -289,14 +290,35 @@ class element extends model {
         element::post_update($this);
     }
 
-    /**
-     * Clean the data to make sure all invalid keys are removed
-     *
-     * @param element_entity $entity
+    /*
+     * Update the raw eleemnt settings data.
      */
-    protected static function clean(element_entity $entity): void {
-        $element_plugin = element_plugin::load_by_plugin($entity->plugin_name);
-        $element_plugin->clean_element($entity);
+    public function update_data(string $data): element {
+        $this->entity->data = $data;
+        $this->entity->save();
+
+        return $this;
+    }
+
+    /**
+     * Get the unprocessed data from the entity (data is not processed by element_plugin:process_data()).
+     *
+     * @return string|null
+     */
+    public function get_raw_data(): ?string {
+        return $this->entity->data;
+    }
+
+    /**
+     * Clear and save the raw element settings data.
+     *
+     * @return $this
+     */
+    public function clear_data(): self {
+        $this->entity->data = null;
+        $this->entity->save();
+
+        return $this;
     }
 
     /**
@@ -335,16 +357,6 @@ class element extends model {
     }
 
     /**
-     * Change the internal element JSON data.
-     * Note that this does not save the data, it only changes the value in memory.
-     *
-     * @param string $data
-     */
-    public function set_data(string $data): void {
-        $this->entity->data = $data;
-    }
-
-    /**
      * @deprecated since 14.0 - elements are designed to be reused more than once
      * @return section_element_entity
      */
@@ -353,4 +365,15 @@ class element extends model {
         $entity = $this->entity->section_element()->get()->first();
         return $entity;
     }
+
+    /**
+     * Clean the data to make sure all invalid keys are removed
+     *
+     * @param element_entity $entity
+     */
+    protected static function clean(element_entity $entity): void {
+        $element_plugin = element_plugin::load_by_plugin($entity->plugin_name);
+        $element_plugin->clean_element($entity);
+    }
+
 }

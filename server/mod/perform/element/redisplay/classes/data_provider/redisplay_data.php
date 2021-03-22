@@ -23,9 +23,11 @@
 namespace performelement_redisplay\data_provider;
 
 use coding_exception;
-use mod_perform\entity\activity\section_element;
+use mod_perform\entity\activity\section_element_reference as section_element_reference_entity;
 use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\models\activity\section_element as section_element_model;
+use mod_perform\models\activity\section_element_reference;
+use performelement_redisplay\redisplay;
 
 /**
  * Data provider class that adds extra information into the redisplay JSON data.
@@ -35,32 +37,31 @@ class redisplay_data {
     /**
      * Adds extra info to redisplay element data.
      *
-     * @param array $redisplay_settings
+     * @param int $redisplay_element_id
      * @return array
+     * @throws coding_exception
      */
-    public function include_extra_info(array $redisplay_settings): array {
-        /** @var $section_element_entity section_element */
-        $section_element_entity = section_element::repository()
-            ->where('id', $redisplay_settings['sectionElementId'])
-            ->with(
-                [
-                    'element',
-                    'section.activity',
-                ]
-            )
-            ->one();
+    public function include_extra_info(int $redisplay_element_id): array {
+        $element_settings = [];
 
-        if (empty($section_element_entity)) {
-            throw new coding_exception('section element does not exist');
+        /** @var section_element_reference_entity $section_element_reference */
+        $section_element_reference = section_element_reference_entity::repository()
+            ->where('referencing_element_id', $redisplay_element_id)->one();
+
+        if ($section_element_reference === null) {
+            return $element_settings;
         }
-        $section_element = section_element_model::load_by_entity($section_element_entity);
+
+        $element_settings[redisplay::SOURCE_SECTION_ELEMENT_ID] = $section_element_reference->source_section_element_id;
+
+        $section_element = section_element_model::load_by_entity($section_element_reference->source_section_element);
         $activity = $section_element->section->activity;
         $element = $section_element->element;
 
-        $redisplay_settings['activityId'] = $activity->id;
-        $redisplay_settings['activityName'] = $activity->name;
-        $redisplay_settings['activityStatus'] = $activity->get_state_details()::get_display_name();
-        $redisplay_settings['elementTitle'] = $element->title;
+        $element_settings['activityId'] = $activity->id;
+        $element_settings['activityName'] = $activity->name;
+        $element_settings['activityStatus'] = $activity->get_state_details()::get_display_name();
+        $element_settings['elementTitle'] = $element->title;
 
         /** @var respondable_element_plugin $element_plugin*/
         $element_plugin = $element->get_element_plugin();
@@ -68,15 +69,15 @@ class redisplay_data {
         if (!$element_plugin->get_is_respondable()) {
             throw new coding_exception('section element must be respondable');
         }
-        $redisplay_settings['elementPluginName'] = $element_plugin->get_name();
-        $redisplay_settings['elementPluginDisplayComponent'] = $element_plugin->get_participant_response_component();
+        $element_settings['elementPluginName'] = $element_plugin->get_name();
+        $element_settings['elementPluginDisplayComponent'] = $element_plugin->get_participant_response_component();
 
         $relationships = $activity->anonymous_responses
             ? $this->get_anonymous_relationship_string()
             : $this->get_relationships($section_element->section->get_answering_section_relationships());
-        $redisplay_settings['relationships'] = $relationships;
+        $element_settings['relationships'] = $relationships;
 
-        return $redisplay_settings;
+        return $element_settings;
     }
 
     /**

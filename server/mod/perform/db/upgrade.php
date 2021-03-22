@@ -200,5 +200,23 @@ function xmldb_perform_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2020122104, 'perform');
     }
 
+    if ($oldversion < 2021021800) {
+        $table = new xmldb_table('perform_section_element_reference');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('source_section_element_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+        $table->add_field('referencing_element_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('source_section_element_id', XMLDB_KEY_FOREIGN, ['source_section_element_id'], 'perform_section_element', ['id'], 'cascade');
+        $table->add_key('referencing_element_id', XMLDB_KEY_FOREIGN, ['referencing_element_id'], 'perform_element', ['id'], 'cascade');
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_mod_savepoint(true, 2021021800, 'perform');
+    }
+
     return true;
 }

@@ -157,14 +157,13 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
             ]
         );
 
-        $redisplay_relationships = new backup_nested_element('element_redisplay_relationships');
-        $redisplay_relationship = new backup_nested_element(
-            'element_redisplay_relationship',
+        $section_element_references = new backup_nested_element('section_element_references');
+        $section_element_reference = new backup_nested_element(
+            'section_element_reference',
             ['id'],
             [
-                'source_activity_id',
                 'source_section_element_id',
-                'redisplay_element_id',
+                'referencing_element_id',
             ]
         );
 
@@ -450,8 +449,8 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
         $section->add_child($section_relationships);
         $section_relationships->add_child($section_relationship);
 
-        $perform->add_child($redisplay_relationships);
-        $redisplay_relationships->add_child($redisplay_relationship);
+        $perform->add_child($section_element_references);
+        $section_element_references->add_child($section_element_reference);
 
         $perform->add_child($tracks);
         $tracks->add_child($track);
@@ -517,12 +516,12 @@ class backup_activity_structure_step extends \backup_activity_structure_step {
             ['activity_id' => backup::VAR_PARENTID]
         );
 
-        $redisplay_relationship->set_source_sql(
-            "SELECT err.*
-               FROM {perform_element_redisplay_relationship} err
-               JOIN {perform_section_element} pse ON pse.element_id = err.redisplay_element_id
-               JOIN {perform_section} ps ON pse.section_id = ps.id
-              WHERE ps.activity_id = :activity_id",
+        $section_element_reference->set_source_sql(
+            "SELECT ser.*
+               FROM {perform_section_element_reference} ser
+               JOIN {perform_section_element} referencing_section_element ON referencing_section_element.element_id = ser.referencing_element_id
+               JOIN {perform_section} referencing_section ON referencing_section_element.section_id = referencing_section.id
+              WHERE referencing_section.activity_id = :activity_id",
             ['activity_id' => backup::VAR_PARENTID]
         );
 

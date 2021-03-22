@@ -24,7 +24,10 @@ use mod_perform\models\activity\activity;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\section;
 use mod_perform\models\activity\section_element;
+use mod_perform\entity\activity\section_element as section_element_entity;
+use mod_perform\models\activity\section_element_reference;
 use mod_perform\state\activity\draft;
+use performelement_redisplay\redisplay;
 
 /**
  * @group perform
@@ -46,43 +49,50 @@ class performelement_redisplay_redisplay_data_testcase extends advanced_testcase
         'elementTitle',
         'elementPluginName',
         'relationships',
+        redisplay::SOURCE_SECTION_ELEMENT_ID,
     ];
 
-    public function test_redisplay_element_adds_extra_info_to_data() {
+    public function test_redisplay_element_adds_extra_info_to_data(): void {
         $data = $this->create_test_data();
 
         /** @var $other_section_element section_element*/
         $other_section_element = $data['other'];
-        $this->assertNull($other_section_element->element->data);
+        self::assertNull($other_section_element->element->data);
 
         /** @var $redisplay_section_element section_element*/
         $redisplay_section_element = $data['redisplay'];
-        $redisplay_data = json_decode($redisplay_section_element->element->get_data(), true);
+        $redisplay_data = json_decode($redisplay_section_element->element->get_data(), true, 512, JSON_THROW_ON_ERROR);
+
+
+        /* @type section_element_entity $redisplay_section_element_entity */
+        $redisplay_section_element_entity = section_element_entity::repository()->find_or_fail($redisplay_section_element->id);
+        self::assertNull($redisplay_section_element_entity->element->data, 'Element should not save any json data (all data is in reference table)');
 
         $this->assert_extra_fields_exist($redisplay_data);
 
-        $this->assertEquals($this->activity->name, $redisplay_data['activityName']);
-        $this->assertEquals(draft::get_display_name(), $redisplay_data['activityStatus']);
-        $this->assertEquals('Projected performance', $redisplay_data['elementTitle']);
-        $this->assertNotEmpty($redisplay_data['elementPluginName']);
-        $this->assertStringContainsString('No responding relationships added yet', $redisplay_data['relationships']);
+        self::assertEquals($this->activity->name, $redisplay_data['activityName']);
+        self::assertEquals(draft::get_display_name(), $redisplay_data['activityStatus']);
+        self::assertEquals($other_section_element->id, $redisplay_data[redisplay::SOURCE_SECTION_ELEMENT_ID]);
+        self::assertEquals('Projected performance', $redisplay_data['elementTitle']);
+        self::assertNotEmpty($redisplay_data['elementPluginName']);
+        self::assertStringContainsString('No responding relationships added yet', $redisplay_data['relationships']);
 
         $this->assert_relationship_string_is_anonymized($redisplay_section_element);
     }
 
-    private function assert_extra_fields_exist(array $redisplay_data) {
+    private function assert_extra_fields_exist(array $redisplay_data): void {
         foreach ($this->redisplay_extra_data as $redisplay_extra_datum) {
-            $this->assertArrayHasKey($redisplay_extra_datum, $redisplay_data);
+            self::assertArrayHasKey($redisplay_extra_datum, $redisplay_data);
         }
     }
 
-    private function assert_relationship_string_is_anonymized(section_element $redisplay_section_element) {
+    private function assert_relationship_string_is_anonymized(section_element $redisplay_section_element): void {
         $this->activity->set_anonymous_setting(true);
         $this->activity->update();
 
-        $redisplay_data = json_decode($redisplay_section_element->element->get_data(), true);
+        $redisplay_data = json_decode($redisplay_section_element->element->get_data(), true, 512, JSON_THROW_ON_ERROR);
         $this->assert_extra_fields_exist($redisplay_data);
-        $this->assertEquals(
+        self::assertEquals(
             get_string('responses_from_anonymous_relationships', 'performelement_redisplay'),
             $redisplay_data['relationships']
         );
@@ -94,9 +104,8 @@ class performelement_redisplay_redisplay_data_testcase extends advanced_testcase
     }
 
     private function create_test_data(): array {
-        $this->setAdminUser();
+        self::setAdminUser();
 
-        /** @var $perform_generator \mod_perform\testing\generator*/
         $perform_generator = \mod_perform\testing\generator::instance();
 
         $this->activity = $perform_generator->create_activity_in_container(
@@ -115,9 +124,14 @@ class performelement_redisplay_redisplay_data_testcase extends advanced_testcase
             'Projected performance',
             'A2 Element'
         );
-        $section_element_1 = $section_1->get_section_element_manager()->add_element_after($short_text_element_1);
-        $redisplay_section_element = $section_1->get_section_element_manager()->add_element_after(
-            $this->get_redisplay_data($section_element_1->id, 'Performance analysis')
+        $section_element_1 = $section_1->add_element($short_text_element_1);
+
+        $redisplay_element = $this->get_redisplay_element($section_element_1->id, 'Performance analysis');
+
+        element::post_create($redisplay_element);
+
+        $redisplay_section_element = $section_1->add_element(
+            $redisplay_element
         );
 
         return [
@@ -126,15 +140,15 @@ class performelement_redisplay_redisplay_data_testcase extends advanced_testcase
         ];
     }
 
-    private function get_redisplay_data($section_element_id, $name): element {
+    private function get_redisplay_element($section_element_id, $name): element {
         return element::create(
             $this->activity->get_context(),
             'redisplay',
             $name,
             'A2 Element',
             json_encode([
-                'sectionElementId' => $section_element_id,
-            ])
+                redisplay::SOURCE_SECTION_ELEMENT_ID => $section_element_id,
+            ], JSON_THROW_ON_ERROR)
         );
     }
 }

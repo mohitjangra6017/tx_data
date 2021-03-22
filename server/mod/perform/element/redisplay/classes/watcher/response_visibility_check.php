@@ -25,7 +25,8 @@ namespace performelement_redisplay\watcher;
 
 use mod_perform\hook\element_response_visibility;
 use mod_perform\models\activity\participant_source;
-use performelement_redisplay\entity\element_redisplay_relationship;
+use mod_perform\entity\activity\section_element_reference;
+use performelement_redisplay\redisplay;
 
 class response_visibility_check {
 
@@ -39,12 +40,13 @@ class response_visibility_check {
             return;
         }
 
-        $is_participating_in_section_with_redisplay = element_redisplay_relationship::repository()
-            ->join('perform_element', 'redisplay_element_id', 'id')
+        $is_participating_in_section_with_redisplay = section_element_reference::repository()
+            ->join('perform_element', 'referencing_element_id', 'id')
             ->join('perform_section_element', 'perform_element.id', 'element_id')
             ->join('perform_participant_section', 'perform_section_element.section_id', 'section_id')
             // We only want to look at what is re-displaying the original response
-            ->where('source_section_element_id', $hook->get_element_response()->section_element_id);
+            ->where('source_section_element_id', $hook->get_element_response()->section_element_id)
+            ->where('perform_element.plugin_name', redisplay::get_plugin_name());
 
         if ($hook->get_viewing_participant_instance()) {
             $is_participating_in_section_with_redisplay

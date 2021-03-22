@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,15 +15,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kunle Odusan <kunle.odusan@totaralearning.com>
- * @package mod_perform
+ * @author Jaron Steenson <jaron.steenson@totaralearning.com>
+ * @package performelement_aggregation
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2020120800;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020101200; // Requires this Moodle version.
-$plugin->component = 'performelement_redisplay'; // To check on upgrade, that module sits in correct place
+$plugin->version  = 2021021600;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2020101200;       // Requires this Moodle version.
+$plugin->component = 'performelement_aggregation'; // To check on upgrade, that module sits in correct place
 

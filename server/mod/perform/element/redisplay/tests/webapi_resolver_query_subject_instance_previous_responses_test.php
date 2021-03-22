@@ -35,12 +35,14 @@ use mod_perform\expand_task;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\section;
 use mod_perform\models\activity\section_element;
+use mod_perform\models\activity\section_element_reference;
 use mod_perform\models\activity\track;
 use mod_perform\models\response\responder_group;
 use mod_perform\models\response\section_element_response;
 use mod_perform\state\activity\draft;
 use mod_perform\task\service\subject_instance_creation;
 use mod_perform\user_groups\grouping;
+use performelement_redisplay\redisplay;
 use totara_job\job_assignment;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
@@ -483,12 +485,17 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         if (is_null($source_section_element_id)) {
             $source_section_element_id = $redisplay['respondable_section_element']->id;
         }
+
+        $data = json_encode([
+            redisplay::SOURCE_SECTION_ELEMENT_ID => $source_section_element_id
+        ], JSON_THROW_ON_ERROR);
+
         $redisplay_element = element::create(
             $redisplay['activity']->get_context(),
             'redisplay',
             'This was your previous response:',
             '',
-            "{\"sectionElementId\":\"$source_section_element_id\"}"
+            $data,
         );
         $redisplay['redisplay_section_element'] = $redisplay['section']->get_section_element_manager()->add_element_after($redisplay_element);
 

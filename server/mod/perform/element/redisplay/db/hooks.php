@@ -22,27 +22,9 @@
  */
 
 use mod_perform\hook\element_response_visibility;
-use mod_perform\hook\pre_activity_deleted;
-use mod_perform\hook\pre_section_deleted;
-use mod_perform\hook\pre_section_element_deleted;
-use performelement_redisplay\watcher\activity_deletion_check;
 use performelement_redisplay\watcher\response_visibility_check;
-use performelement_redisplay\watcher\section_deletion_check;
-use performelement_redisplay\watcher\section_element_deletion_check;
 
 $watchers = [
-    [
-        'hookname' => pre_activity_deleted::class,
-        'callback' => [activity_deletion_check::class, 'can_delete'],
-    ],
-    [
-        'hookname' => pre_section_deleted::class,
-        'callback' => [section_deletion_check::class, 'can_delete'],
-    ],
-    [
-        'hookname' => pre_section_element_deleted::class,
-        'callback' => [section_element_deletion_check::class, 'can_delete'],
-    ],
     [
         'hookname' => element_response_visibility::class,
         'callback' => [response_visibility_check::class, 'can_view'],

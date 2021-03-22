@@ -390,6 +390,9 @@ class core_plugin_manager_testcase extends advanced_testcase {
         $this->assertFalse($misdeps['foo_bar']);
     }
 
+    /**
+     * @see core_plugin_manager::standard_plugins_list()
+     */
     public function test_addition_plugins_in_distribution() {
         $this->markTestSkippedIfNotTotaraDistribution();
 
@@ -406,6 +409,6 @@ class core_plugin_manager_testcase extends advanced_testcase {
             }
         }
 
-        $this->assertSame([], $additions, 'Totara distribution cannot contain additional plugins!');
+        $this->assertSame([], $additions, 'Totara distribution cannot contain additional plugins! Do you need to add an entry to core_plugin_manager::standard_plugins_list()');
     }
 }

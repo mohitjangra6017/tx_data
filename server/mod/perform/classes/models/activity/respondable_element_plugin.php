@@ -26,6 +26,7 @@ namespace mod_perform\models\activity;
 use coding_exception;
 use core\collection;
 use mod_perform\entity\activity\element as element_entity;
+use mod_perform\models\activity\helpers\displays_responses;
 use mod_perform\hook\post_element_response_submission;
 use mod_perform\models\activity\helpers\element_response_has_files;
 use mod_perform\models\response\element_validation_error;
@@ -39,7 +40,7 @@ use mod_perform\models\response\section_element_response;
  *
  * @package mod_perform\models\activity
  */
-abstract class respondable_element_plugin extends element_plugin {
+abstract class respondable_element_plugin extends element_plugin implements displays_responses {
 
     /**
      * Hook method to validate the response data.

@@ -24,15 +24,21 @@
 namespace performelement_redisplay;
 
 use coding_exception;
+use mod_perform\data_providers\activity\redisplay_extra_data;
+use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element as element_model;
 use mod_perform\models\activity\element_plugin;
 use mod_perform\models\activity\helpers\element_clone_helper;
 use mod_perform\models\activity\section_element;
+use mod_perform\models\activity\section_element_reference;
 use performelement_redisplay\data_provider\redisplay_data;
-use performelement_redisplay\models\element_redisplay_relationship;
-use performelement_redisplay\models\helpers\redisplay_element_clone;
 
 class redisplay extends element_plugin {
+
+    /**
+     * @string The serialized key for a reference element's source section element id.
+     */
+    public const SOURCE_SECTION_ELEMENT_ID = 'sourceSectionElementId';
 
     /**
      * @inheritDoc
@@ -70,64 +76,64 @@ class redisplay extends element_plugin {
     }
 
     /**
-     * Modify json data to add extra information to it.
-     *
-     * @param string|null $data
-     * @return string|null
-     */
-    public function process_data(?string $data): ?string {
-        if (empty($data)) {
-            return $data;
-        }
-        $modified_data = (new redisplay_data())->include_extra_info(json_decode($data, true));
-
-        return json_encode($modified_data);
-    }
-
-    /**
-     * Create element redisplay relationship
-     *
-     * @param element_model $element
-     * @throws coding_exception
-     */
-    public function post_create(element_model $element): void {
-        $data = json_decode($element->data, true);
-        $source_section_element_id = $data['sectionElementId'];
-
-        if (isset($source_section_element_id)) {
-            $section_element = section_element::load_by_id($source_section_element_id);
-            element_redisplay_relationship::create($section_element->section->activity_id, $source_section_element_id, $element->id);
-        }
-    }
-
-    /**
-     * Update element redisplay relationship
-     *
-     * @param element_model $element
-     * @throws coding_exception
-     */
-    public function post_update(element_model $element): void {
-        $data = json_decode($element->data, true);
-        $source_section_element_id = $data['sectionElementId'];
-
-        if (isset($source_section_element_id)) {
-            $section_element = section_element::load_by_id($source_section_element_id);
-            element_redisplay_relationship::update($section_element->section->activity_id, $source_section_element_id, $element->id);
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_clone_helper(): ?element_clone_helper {
-        return new redisplay_element_clone();
-    }
-
-    /**
      * @inheritDoc
      */
     public function get_participant_print_component(): string {
         return $this->get_participant_form_component();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function validate_element(element_entity $element): void {
+        $data = json_decode($element->data, true, 512, JSON_THROW_ON_ERROR);
+
+        $this->ensure_source_section_element_is_set($data);
+    }
+
+    protected function ensure_source_section_element_is_set(array $data): void {
+        $source_section_element_id = $data[self::SOURCE_SECTION_ELEMENT_ID] ?? null;
+
+        if ($source_section_element_id === null) {
+            throw new coding_exception(self::SOURCE_SECTION_ELEMENT_ID .' must be specified in the element data field');
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function process_data(element_entity $element): ?string {
+        $modified_data = (new redisplay_data())->include_extra_info($element->id);
+
+        return json_encode($modified_data, JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function post_create(element_model $element): void {
+        $data = json_decode($element->get_raw_data(), true, 512, JSON_THROW_ON_ERROR);
+        $source_section_element_id = $data[self::SOURCE_SECTION_ELEMENT_ID];
+
+        section_element_reference::create($source_section_element_id, $element->id);
+
+        // Strip this from the data, otherwise it can become incorrect if an element/activity is cloned.
+        // We can safely do this because all data for this type of element is saved in the section_element_reference table.
+        $element->clear_data();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function post_update(element_model $element): void {
+        $data = json_decode($element->get_raw_data(), true, 512, JSON_THROW_ON_ERROR);
+        $source_section_element_id = $data[self::SOURCE_SECTION_ELEMENT_ID];
+
+        section_element_reference::update($source_section_element_id, $element->id);
+
+        // Strip this from the data, otherwise it can become incorrect if an element/activity is cloned.
+        // We can safely do this because all data for this type of element is saved in the section_element_reference table.
+        $element->clear_data();
     }
 
 }

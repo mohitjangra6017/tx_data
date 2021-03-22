@@ -21,7 +21,7 @@
  * @package mod_perform
  */
 
-namespace performelement_redisplay\watcher;
+namespace mod_perform\watcher;
 
 use coding_exception;
 use core\collection;
@@ -38,7 +38,7 @@ abstract class deletion_check_base {
      * @return array
      * @throws coding_exception
      */
-    protected static function get_data(collection $sections) {
+    protected static function get_data(collection $sections): array {
         $data = [];
         foreach ($sections as $section) {
             $formatter = new string_field_formatter(format::FORMAT_PLAIN, $section->activity->get_context());

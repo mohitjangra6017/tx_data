@@ -12,9 +12,7 @@
   LTD, you may not access, use, modify, or distribute this software.
   Please contact [licensing@totaralearning.com] for more information.
 
-  @author Kunle Odusan <kunle.odusan@totaralearning.com>
-  @author Kevin Hottinger <kevin.hottinger@totaralearning.com>
-  @module performelement_redisplay
+  @module performelement_aggregation
 -->
 
 <template>
@@ -28,6 +26,7 @@
       @cancel="$emit('display')"
       @update="saveRedisplayElement"
     >
+      THIS IS AGG QUESTION
       <FormRow
         v-slot="{ labelId }"
         :label="$str('source_activity_value', 'performelement_redisplay')"
@@ -319,6 +318,7 @@ export default {
      */
     saveRedisplayElement(event) {
       delete event.data.activityId;
+      event.data.sourceSectionElementIds = [event.data.sourceSectionElementId];
       this.$emit('update', event);
     },
   },

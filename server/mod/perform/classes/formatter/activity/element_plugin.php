@@ -26,6 +26,7 @@ namespace mod_perform\formatter\activity;
 use coding_exception;
 use core\webapi\formatter\field\string_field_formatter;
 use core\webapi\formatter\formatter;
+use mod_perform\models\activity\helpers\displays_responses;
 use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\models\activity\element_plugin as element_plugin_model;
 
@@ -57,15 +58,15 @@ class element_plugin extends formatter {
     }
 
     protected function get_field(string $field) {
-        $respondable_only_fields = ['participant_response_component'];
+        $displays_responses_only_fields = ['participant_response_component'];
 
-        if (!$this->object->get_is_respondable() && in_array($field, $respondable_only_fields)) {
+        if (!$this->object instanceof displays_responses && in_array($field, $displays_responses_only_fields)) {
             return null;
         }
 
         switch ($field) {
             case 'plugin_name':
-                return $this->object->get_plugin_name();
+                return $this->object::get_plugin_name();
             case 'name':
                 return $this->object->get_name();
             case 'plugin_config':

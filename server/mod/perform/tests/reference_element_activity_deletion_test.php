@@ -25,38 +25,38 @@ use mod_perform\entity\activity\activity as activity_entity;
 use mod_perform\models\activity\activity;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-require_once(__DIR__ . '/redisplay_test.php');
+require_once(__DIR__ . '/section_element_reference_test.php');
 
 /**
  * @group perform
  * @group perform_element
  */
-class activity_deletion_testcase extends redisplay_testcase {
-    const QUERY = "mod_perform_activity_deletion_validation";
-
+class mod_perform_reference_element_activity_deletion_testcase extends section_element_reference_testcase {
     use webapi_phpunit_helper;
 
-    public function test_delete_watcher() {
-        $data = $this->create_test_data();
+    public const QUERY = 'mod_perform_activity_deletion_validation';
+
+    public function test_delete_watcher(): void {
+        $this->create_test_data();
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessageMatches("/This activity cannot be deleted/");
 
-        activity::load_by_id($data->activity1->id)->delete();
+        activity::load_by_id($this->source_activity->id)->delete();
     }
 
     public function test_delete_watcher_redisplay_same_activity(): void {
-        $data = $this->create_test_data_referencing_same_section();
+        $this->create_test_data_referencing_same_section();
 
         // Deleting activity should not be blocked.
-        activity::load_by_id($data->activity1->id)->delete();
-        self::assertNull(activity_entity::repository()->find($data->activity1->id));
+        activity::load_by_id($this->self_reference_activity->id)->delete();
+        self::assertNull(activity_entity::repository()->find($this->self_reference_activity->id));
     }
 
-    public function test_query_validation_successful() {
-        $data = $this->create_test_data();
+    public function test_query_validation_with_problems(): void {
+        $this->create_test_data();
 
-        $args = ['input' => ['activity_id' => $data->activity1->id]];
+        $args = ['input' => ['activity_id' => $this->source_activity->id]];
         $result = $this->resolve_graphql_query(self::QUERY, $args);
 
         $this->assertEquals("Cannot delete activity", $result['title']);
@@ -67,26 +67,20 @@ class activity_deletion_testcase extends redisplay_testcase {
 
         $this->assertEquals('This activity cannot be deleted, because it contains questions that are being referenced in a response redisplay element in:', $description);
 
-        // // check data with correct order
-        $this->assertCount(2, $result_data);
-
-        $first_section = $result_data[0];
-        $this->assertEquals('activity2 : section2', $first_section);
-
-        $first_section = $result_data[1];
-        $this->assertEquals('activity3 : section3', $first_section);
+        // Note the aggregation element is not a problem because it is in the same activity.
+        self::assertCount(1, $result_data);
+        self::assertEquals('referencing_redisplay_activity : referencing_redisplay_section', $result_data[0]);
     }
 
     public function test_query_validation_redisplay_same_activity(): void {
-        $data = $this->create_test_data_referencing_same_section();
+        $this->create_test_data_referencing_same_section();
 
-        $args = ['input' => ['activity_id' => $data->activity1->id]];
+        $args = ['input' => ['activity_id' => $this->self_reference_activity->id]];
         $result = $this->resolve_graphql_query(self::QUERY, $args);
 
-        self::assertEquals("Cannot delete activity", $result['title']);
         self::assertTrue($result['can_delete']);
-
         self::assertNull($result['reason']['description']);
         self::assertNull($result['reason']['data']);
     }
+
 }

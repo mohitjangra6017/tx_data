@@ -26,12 +26,15 @@ namespace mod_perform\entity\activity;
 use core\collection;
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
+use core\orm\entity\relations\has_one;
 use core\orm\entity\relations\has_many;
+use performelement_redisplay\entity\element_aggregation_relationship;
 
 /**
  * Element entity
  *
  * Properties:
+ *
  * @property-read int $id ID
  * @property int $context_id the context which owns this element, a performance activity or category/tenant
  * @property string $plugin_name name of the element plugin that controls this element

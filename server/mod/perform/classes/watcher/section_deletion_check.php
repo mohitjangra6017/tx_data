@@ -21,36 +21,40 @@
  * @package mod_perform
  */
 
-namespace performelement_redisplay\watcher;
+namespace mod_perform\watcher;
 
 use coding_exception;
-use mod_perform\hook\pre_section_element_deleted;
-use performelement_redisplay\models\element_redisplay_relationship;
+use mod_perform\hook\pre_section_deleted;
+use mod_perform\models\activity\section_element_reference;
+use mod_perform\models\activity\section;
 
 /**
- * Check if a section element can be deleted
+ * Check if a section can be deleted
  *
  * @package performelement_redisplay\watcher
  */
-class section_element_deletion_check extends deletion_check_base {
+class section_deletion_check extends deletion_check_base {
 
     /**
-     * Section element only can be deleted if it is not referenced by any redisplay element
+     * Section only can be deleted if it is not referenced by any reference element of a different section.
      *
-     * @param pre_section_element_deleted $hook
+     * @param pre_section_deleted $hook
      * @throws coding_exception
      */
-    public static function can_delete(pre_section_element_deleted $hook) {
-        $section_element_id = $hook->get_section_element_id();
-        $sections = element_redisplay_relationship::get_sections_by_source_section_element_id($section_element_id);
+    public static function can_delete(pre_section_deleted $hook): void {
+        $section_id = $hook->get_section_id();
+        $other_sections = section_element_reference::get_sections_that_reference_section($section_id)
+            ->filter(function (section $section) use ($section_id) {
+                return $section->get_id() !== $section_id;
+            });
 
-        $can_delete = $sections->count() < 1;
+        $can_delete = $other_sections->count() < 1;
 
         if (!$can_delete) {
             $hook->add_reason(
                 'is_referenced_by_redisplay_element',
-                get_string('modal_can_not_delete_element_message', 'performelement_redisplay'),
-                self::get_data($sections)
+                get_string('modal_can_not_delete_section_message', 'performelement_redisplay'),
+                self::get_data($other_sections)
             );
         }
     }

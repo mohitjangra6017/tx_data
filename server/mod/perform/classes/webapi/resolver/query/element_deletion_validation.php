@@ -35,7 +35,7 @@ class element_deletion_validation  implements query_resolver, has_middleware {
     /**
      * @inheritDoc
      */
-    public static function resolve(array $args, execution_context $ec) {
+    public static function resolve(array $args, execution_context $ec): array {
         $source_section_element_id = $args['input']['section_element_id'];
 
         $hook = new pre_section_element_deleted($source_section_element_id);

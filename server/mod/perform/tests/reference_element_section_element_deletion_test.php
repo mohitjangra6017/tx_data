@@ -24,48 +24,45 @@
 use mod_perform\models\activity\section_element;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-require_once(__DIR__ . '/redisplay_test.php');
+require_once(__DIR__ . '/section_element_reference_test.php');
 
 /**
  * @group perform
  * @group perform_element
  */
-class section_element_deletion_testcase extends redisplay_testcase {
-    const QUERY = "mod_perform_element_deletion_validation";
+class mod_perform_reference_element_section_element_deletion_testcase extends section_element_reference_testcase {
+    public const QUERY = 'mod_perform_element_deletion_validation';
 
     use webapi_phpunit_helper;
 
-    public function test_delete_watcher() {
-        $data = $this->create_test_data();
+    public function test_delete_watcher(): void {
+        $this->create_test_data();
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessageMatches("/This question cannot be deleted/");
 
         // delete section element
-        section_element::load_by_id($data->section_element1->id)->delete();
+        section_element::load_by_id($this->source_section_element->id)->delete();
     }
 
-    public function test_query_validation_successful() {
-        $data = $this->create_test_data();
+    public function test_query_validation_with_problems(): void {
+        $this->create_test_data();
 
-        $args = ['input' => ['section_element_id' => $data->section_element1->id]];
+        $args = ['input' => ['section_element_id' => $this->source_section_element->id]];
         $result = $this->resolve_graphql_query(self::QUERY, $args);
 
-        $this->assertEquals("Cannot delete question element", $result['title']);
-        $this->assertFalse($result['can_delete']);
+        self::assertEquals('Cannot delete question element', $result['title']);
+        self::assertFalse($result['can_delete']);
 
         $description = $result['reason']['description'];
         $result_data = $result['reason']['data'];
 
-        $this->assertEquals('This question cannot be deleted, because it is being referenced in a response redisplay element in:', $description);
+        self::assertEquals('This question cannot be deleted, because it is being referenced in a response redisplay element in:', $description);
 
-        // // check data with correct order
-        $this->assertCount(2, $result_data);
+        // Check data with correct order.
+        self::assertCount(2, $result_data);
 
-        $first_section = $result_data[0];
-        $this->assertEquals('activity2 : section2', $first_section);
-
-        $first_section = $result_data[1];
-        $this->assertEquals('activity3 : section3', $first_section);
+        self::assertEquals('referencing_redisplay_activity : referencing_redisplay_section', $result_data[0]);
+        self::assertEquals('source_activity : referencing_aggregation_section', $result_data[1]);
     }
 }
