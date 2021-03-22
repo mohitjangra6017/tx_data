@@ -414,7 +414,7 @@ export default {
      */
     getElementDetails(element) {
       return {
-        data: JSON.parse(element.data),
+        data: element.data ? JSON.parse(element.data) : null,
         element_plugin: element.element_plugin,
         id: element.id,
         is_required: element.is_required,

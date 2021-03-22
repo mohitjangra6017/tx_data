@@ -522,7 +522,7 @@ if (" . ($expected ? '!' : '') . "domNode) {
         global $CFG;
         $images = $parent->findAll('css', 'img');
         foreach ($images as $image) {
-            $image_src = $image->getAttribute('src');
+            $image_src = rawurldecode($image->getAttribute('src'));
             if (!str_contains($image_src, $file_name)) {
                 continue;
             }

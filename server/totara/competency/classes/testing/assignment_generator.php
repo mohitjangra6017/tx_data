@@ -293,7 +293,7 @@ class assignment_generator {
 
             job_assignment::create([
                 'userid' => $id ,
-                'idnumber' => "ja_for_pos_{$id}_user_{$organisation->id}",
+                'idnumber' => "ja_for_org_{$id}_user_{$organisation->id}",
                 'fullname' => 'Job assignment numero ' . $id,
                 'organisationid' => $organisation->id
             ]);

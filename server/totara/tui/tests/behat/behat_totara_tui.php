@@ -695,11 +695,19 @@ class behat_totara_tui extends behat_base {
     /**
      * @When /^I click on the "([^"]*)" tui radio$/
      * @When /^I click on the "([^"]*)" tui radio in the "([^"]*)" tui radio group$/
+     * @When /^I click on the "([^"]*)" tui radio in the "([^"]*)" "([^"]*)"$/
      * @param string $radio Can be the value or label
      * @param string|null $group
+     * @param string|null $selector
      */
-    public function i_click_the_tui_radio_in_the(string $radio, ?string $group = null): void {
+    public function i_click_the_tui_radio_in_the(string $radio, ?string $group = null, ?string $selector = null): void {
         behat_hooks::set_step_readonly(false);
+
+        $parent_element = $this;
+        if ($selector) {
+            $parent_element = $this->find(...$this->transform_selector($selector, $group));
+            $group = null;
+        }
 
         $xpath = '//div[contains(@class, "tui-radio") and ' .
             '(label[contains(@class, "tui-radio__label") and contains(., "' . $radio . '")] or ' .
@@ -708,7 +716,7 @@ class behat_totara_tui extends behat_base {
             '])]/input[contains(@class, "tui-radio__input")]';
 
         /** @var NodeElement $radio_input */
-        $radio_input = $this->find('xpath', $xpath);
+        $radio_input = $parent_element->find('xpath', $xpath);
         if ($radio_input === null) {
             $this->fail("Could not locate radio button with the label or value '{$radio}'" .
                 $group === null ? '' : " in group '{$group}'"

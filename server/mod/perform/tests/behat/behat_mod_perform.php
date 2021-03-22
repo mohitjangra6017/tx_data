@@ -910,6 +910,18 @@ class behat_mod_perform extends behat_base {
     }
 
     /**
+     * @When /^I add a "([^"]*)" element from dropdown list$/
+     * @param string $element_name
+     */
+    public function i_add_an_element_from_dropdown_list(string $element_name): void {
+        behat_hooks::set_step_readonly(false);
+
+        /** @var behat_totara_tui $behat_totara_tui */
+        $behat_totara_tui = behat_context_helper::get('behat_totara_tui');
+        $behat_totara_tui->i_click_on_dropdown_option($element_name);
+    }
+
+    /**
      * @When /^I (save|cancel saving) the activity content element$/
      * @param string $is_saving
      */
@@ -921,6 +933,20 @@ class behat_mod_perform extends behat_base {
         /** @var behat_general $behat_general */
         $behat_general = behat_context_helper::get('behat_general');
         $behat_general->i_click_on_in_the($button_text, 'button', '.tui-performSectionContent__form', 'css_element');
+    }
+
+    /**
+     * @When /^I (save|cancel saving) the activity sub element$/
+     * @param string $is_saving
+     */
+    public function i_save_the_sub_element_settings(string $is_saving): void {
+        behat_hooks::set_step_readonly(false);
+
+        $button_text = $is_saving === 'save' ? 'Save' : 'Cancel';
+
+        /** @var behat_general $behat_general */
+        $behat_general = behat_context_helper::get('behat_general');
+        $behat_general->i_click_on_in_the($button_text, 'button', '.tui-performAdminChildElements', 'css_element');
     }
 
     /**
@@ -949,7 +975,7 @@ class behat_mod_perform extends behat_base {
     }
 
     /**
-     * @When /^I click on the (Edit element|Actions) button for question "([^"]*)"$/
+     * @When /^I click on the (Edit element|Actions|Add sub-element) button for question "([^"]*)"$/
      * @param string $question_text
      */
     public function i_click_on_the_action_for_question(string $action_type, string $question_text): void {
@@ -1135,7 +1161,7 @@ class behat_mod_perform extends behat_base {
         return $locator;
     }
 
-    private function find_question_from_text(string $question_text, bool $is_print = false): NodeElement {
+    public function find_question_from_text(string $question_text, bool $is_print = false): NodeElement {
         /** @var NodeElement[] $questions */
         $questions = $this->find_all('css', $is_print ? self::PERFORM_ELEMENT_PRINT_LOCATOR : self::PERFORM_ELEMENT_LOCATOR);
 

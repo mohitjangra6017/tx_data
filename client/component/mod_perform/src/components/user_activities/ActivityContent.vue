@@ -839,7 +839,7 @@ export default {
      */
     getElementDetails(element) {
       return {
-        data: JSON.parse(element.data),
+        data: element.data ? JSON.parse(element.data) : null,
         id: element.id,
         is_required: element.is_required,
         is_respondable: element.is_respondable,

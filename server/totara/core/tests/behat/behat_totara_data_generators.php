@@ -461,6 +461,28 @@ class behat_totara_data_generators extends behat_base {
                 'datagenerator' => 'track_assignment',
                 'required' => array('track_description', 'assignment_type', 'assignment_name')
             ),
+            'child elements' => array(
+                'datagenerator' => 'child_element',
+                'required' => array('parent_element'),
+            ),
+        ),
+        'performelement_linked_review' => array(
+            'activity with section and review element' => array(
+                'datagenerator' => 'activity_with_section_and_review_element',
+                'required' => array('activity_name', 'section_title', 'content_type'),
+            ),
+            'participants in section' => array(
+                'datagenerator' => 'participant_in_section',
+                'required' => array('section'),
+            ),
+            'selected content' => array(
+                'datagenerator' => 'content_selection',
+                'required' => array('content_name', 'element', 'subject_user', 'selector_user'),
+            ),
+            'competency assignments' => array(
+                'datagenerator' => 'competency_assignment',
+                'required' => array('user'),
+            ),
         ),
         'mod_quiz' => array(
             'responses' => array(

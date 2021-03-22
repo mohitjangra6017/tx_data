@@ -238,6 +238,7 @@ class linked_review_content extends model {
         return linked_review_content_entity::repository()
             ->where('section_element_id', $section_element_id)
             ->where('subject_instance_id', $subject_instance_id)
+            ->order_by('id')
             ->get()
             ->map_to(static::class);
     }
