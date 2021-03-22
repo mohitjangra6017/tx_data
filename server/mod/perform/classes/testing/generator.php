@@ -24,23 +24,22 @@
 
 namespace mod_perform\testing;
 
-use mod_perform\entity\activity\external_participant;
-use mod_perform\entity\activity\section_relationship;
-use stdClass, coding_exception, invalid_parameter_exception;
+use coding_exception;
 use container_perform\perform as perform_container;
 use core\collection;
 use core\entity\cohort;
 use core\entity\user;
 use core\orm\query\builder;
-use core\session\manager;
 use core_container\module\module;
 use hierarchy_organisation\entity\organisation;
 use hierarchy_position\entity\position;
+use invalid_parameter_exception;
 use mod_perform\constants;
 use mod_perform\dates\date_offset;
 use mod_perform\entity\activity\activity as activity_entity;
 use mod_perform\entity\activity\element as element_entity;
 use mod_perform\entity\activity\element_response;
+use mod_perform\entity\activity\external_participant;
 use mod_perform\entity\activity\manual_relationship_selection;
 use mod_perform\entity\activity\manual_relationship_selection_progress;
 use mod_perform\entity\activity\manual_relationship_selector;
@@ -49,6 +48,7 @@ use mod_perform\entity\activity\participant_instance as participant_instance_ent
 use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\entity\activity\section as section_entity;
 use mod_perform\entity\activity\section_element as section_element_entity;
+use mod_perform\entity\activity\section_relationship;
 use mod_perform\entity\activity\subject_instance as subject_instance_entity;
 use mod_perform\entity\activity\track as track_entity;
 use mod_perform\entity\activity\track_user_assignment;
@@ -85,8 +85,10 @@ use mod_perform\task\service\manual_participant_progress;
 use mod_perform\task\service\subject_instance_creation;
 use mod_perform\user_groups\grouping;
 use mod_perform\util;
+use stdClass;
 use totara_core\entity\relationship;
 use totara_core\relationship\relationship as core_relationship;
+use totara_core\relationship\relationship as relationship_model;
 use totara_core\relationship\relationship_provider as core_relationship_provider;
 use totara_job\entity\job_assignment as job_assignment_entity;
 use totara_job\job_assignment;
@@ -393,6 +395,41 @@ final class generator extends \core\testing\component_generator {
     }
 
     /**
+     * Create an element that is a child of another element (linked_review)
+     * Fully compatible with behat.
+     *
+     * @param array $data Inputs: parent_element, after_element, element_plugin, element_title, data, title, is_required
+     * @return element
+     */
+    public function create_child_element(array $data): element {
+        if ($data['parent_element'] instanceof element) {
+            $parent_element = $data['parent_element'];
+        } else {
+            $parent_element = element::load_by_entity(element_entity::repository()->where('title', $data['parent_element'])->one());
+        }
+
+        if (empty($data['after_element'])) {
+            $after_element_id = null;
+        } else if ($data['after_element'] instanceof element) {
+            $after_element_id = $data['after_element']->id;
+        } else {
+            $after_element_id = element_entity::repository()->where('title', $data['after_element'])->one()->id;
+        }
+
+        $element_plugin = $data['element_plugin'] ?? 'short_text';
+        $element_data = !empty($data['data']) ? trim($data['data']) : null;
+        $is_required = !empty($data['is_required']) ? filter_var($data['is_required'], FILTER_VALIDATE_BOOLEAN) : null;
+
+        $child_element = $parent_element->get_child_element_manager()->create_child_element([
+            'title' => $data['element_title'] ?? "$element_plugin child question",
+            'data' => $element_data,
+            'is_required' => $is_required,
+        ], $element_plugin, $after_element_id);
+
+        return $child_element;
+    }
+
+    /**
      * @param string $section_name
      * @return section
      */
@@ -419,10 +456,16 @@ final class generator extends \core\testing\component_generator {
         $can_view = true,
         $can_answer = true
     ): section_relationship_model {
-        $core_relationship = $this->get_core_relationship($data['relationship']);
+        if ($data['relationship'] instanceof relationship || $data['relationship'] instanceof relationship_model) {
+            $relationship_id = $data['relationship']->id;
+        } else if (is_numeric($data['relationship'])) {
+            $relationship_id = $data['relationship'];
+        } else {
+            $relationship_id = $this->get_core_relationship($data['relationship'])->id;
+        }
         return section_relationship_model::create(
             $section->get_id(),
-            $core_relationship->id,
+            $relationship_id,
             $can_view,
             $can_answer
         );

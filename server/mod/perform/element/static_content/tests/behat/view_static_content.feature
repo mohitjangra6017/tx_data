@@ -34,7 +34,7 @@ Feature: View static content
       | rawTitle | Static Content |
     And I activate the weka editor with css ".tui-performAdminCustomElement__content"
     And I type "Static content text content" in the weka editor
-    And I upload embedded media to the weka editor using the file "mod/perform/element/static_content/tests/behat/fixtures/blue.png"
+    And I upload embedded media to the weka editor using the file "mod/perform/tests/behat/fixtures/blue.png"
     And I wait for the next second
     And I save the activity content element
     And I navigate to the edit perform activities page for activity "activity1"

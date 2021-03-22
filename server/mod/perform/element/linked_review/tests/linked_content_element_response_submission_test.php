@@ -22,33 +22,31 @@
  */
 
 use core\collection;
+use core\testing\generator;
 use mod_perform\models\activity\element;
+use mod_perform\models\activity\participant_instance;
 use mod_perform\models\response\section_element_response;
 use mod_perform\testing\generator as perform_generator;
-use mod_perform\models\activity\participant_instance;
 use performelement_linked_review\entity\linked_review_content_response;
 use performelement_linked_review\models\linked_review_content;
-
-require_once(__DIR__ . '/base_linked_review_testcase.php');
+use performelement_linked_review\testing\generator as linked_review_generator;
 
 /**
  * @group perform
  * @group perform_element
  */
-class performelement_linked_review_content_element_response_submission_testcase
-    extends performelement_linked_review_base_linked_review_testcase {
+class performelement_linked_review_content_element_response_submission_testcase extends advanced_testcase {
 
     public function test_saving_and_building_content_child_element_responses() {
         self::setAdminUser();
-        $subject = self::getDataGenerator()->create_user();
-
-        /** @var perform_generator $generator */
-        $generator = perform_generator::instance();
+        $subject = generator::instance()->create_user();
 
         /** @var element $element */
-        [$activity, $section1, $element, $section_element] = $this->create_activity_with_section_and_review_element();
+        [$activity, $section1, $element, $section_element] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        $child_element = perform_generator::instance()->create_child_element(['parent_element' => $element]);
 
-        $subject_instance = $generator->create_subject_instance([
+        $subject_instance = perform_generator::instance()->create_subject_instance([
             'activity_id' => $activity->id,
             'subject_is_participating' => true,
             'subject_user_id' => $subject->id,
@@ -61,7 +59,6 @@ class performelement_linked_review_content_element_response_submission_testcase
         $child_element_config = $element->element_plugin->get_child_element_config();
         $repeating_item_identifier = $child_element_config->repeating_item_identifier;
         $child_element_responses_identifier = $child_element_config->child_element_responses_identifier;
-        $child_element_id = $element->children->first()->id;
 
         $section_element_response = new section_element_response(
             participant_instance::load_by_entity($participant_instance),
@@ -78,18 +75,18 @@ class performelement_linked_review_content_element_response_submission_testcase
             $repeating_item_identifier => [
                 $content_id_1 => [
                     $child_element_responses_identifier => [
-                        $child_element_id => [
+                        $child_element->id => [
                             "response_data" => '"content 1 response"',
-                            "child_element_id" => $child_element_id,
+                            "child_element_id" => $child_element->id,
                         ]
                     ],
                     "content_id" => $content_id_1,
                 ],
                 $content_id_2 => [
                     $child_element_responses_identifier => [
-                        $child_element_id => [
+                        $child_element->id => [
                             "response_data" => '"content 2 response"',
-                            "child_element_id" => $child_element_id,
+                            "child_element_id" => $child_element->id,
                         ]
                     ],
                     "content_id" => $content_id_2,
@@ -118,18 +115,18 @@ class performelement_linked_review_content_element_response_submission_testcase
             $repeating_item_identifier => [
                 $content_id_1 => [
                     $child_element_responses_identifier => [
-                        $child_element_id => [
+                        $child_element->id => [
                             "response_data" => '"content 1 response updated"',
-                            "child_element_id" => $child_element_id,
+                            "child_element_id" => $child_element->id,
                         ]
                     ],
                     "content_id" => $content_id_1,
                 ],
                 $content_id_2 => [
                     $child_element_responses_identifier => [
-                        $child_element_id => [
+                        $child_element->id => [
                             "response_data" => '"content 2 response updated"',
-                            "child_element_id" => $child_element_id,
+                            "child_element_id" => $child_element->id,
                         ]
                     ],
                     "content_id" => $content_id_2,
@@ -157,22 +154,21 @@ class performelement_linked_review_content_element_response_submission_testcase
 
     public function test_saving_response_to_content_participant_instance_does_not_have_access_to() {
         self::setAdminUser();
-        $subject = self::getDataGenerator()->create_user();
-        $another_subject = self::getDataGenerator()->create_user();
-
-        /** @var perform_generator $generator */
-        $generator = perform_generator::instance();
+        $subject = generator::instance()->create_user();
+        $another_subject = generator::instance()->create_user();
 
         /** @var element $element */
-        [$activity, $section1, $element, $section_element] = $this->create_activity_with_section_and_review_element();
+        [$activity, $section1, $element, $section_element] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        $child_element = perform_generator::instance()->create_child_element(['parent_element' => $element]);
 
-        $subject_instance_1 = $generator->create_subject_instance([
+        $subject_instance_1 = perform_generator::instance()->create_subject_instance([
             'activity_id' => $activity->id,
             'subject_is_participating' => true,
             'subject_user_id' => $subject->id,
             'include_questions' => false,
         ]);
-        $subject_instance_2 = $generator->create_subject_instance([
+        $subject_instance_2 = perform_generator::instance()->create_subject_instance([
             'activity_id' => $activity->id,
             'subject_is_participating' => true,
             'subject_user_id' => $another_subject->id,
@@ -201,18 +197,18 @@ class performelement_linked_review_content_element_response_submission_testcase
             $repeating_item_identifier => [
                 $other_content_id_1 => [
                     $child_element_responses_identifier => [
-                        $child_element_id => [
+                        $child_element->id => [
                             "response_data" => '"content 1 response"',
-                            "child_element_id" => $child_element_id,
+                            "child_element_id" => $child_element->id,
                         ]
                     ],
                     "content_id" => $other_content_id_1,
                 ],
                 $content_id_2 => [
                     $child_element_responses_identifier => [
-                        $child_element_id => [
+                        $child_element->id => [
                             "response_data" => '"content 2 response"',
-                            "child_element_id" => $child_element_id,
+                            "child_element_id" => $child_element->id,
                         ]
                     ],
                     "content_id" => $content_id_2,
@@ -233,15 +229,13 @@ class performelement_linked_review_content_element_response_submission_testcase
 
     public function test_saving_content_response_for_non_existing_child_element() {
         self::setAdminUser();
-        $subject = self::getDataGenerator()->create_user();
-
-        /** @var perform_generator $generator */
-        $generator = perform_generator::instance();
+        $subject = generator::instance()->create_user();
 
         /** @var element $element */
-        [$activity, $section1, $element, $section_element] = $this->create_activity_with_section_and_review_element();
+        [$activity, $section1, $element, $section_element] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
 
-        $subject_instance_1 = $generator->create_subject_instance([
+        $subject_instance_1 = perform_generator::instance()->create_subject_instance([
             'activity_id' => $activity->id,
             'subject_is_participating' => true,
             'subject_user_id' => $subject->id,

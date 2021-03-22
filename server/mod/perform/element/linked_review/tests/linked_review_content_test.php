@@ -18,24 +18,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Marco Song <marco.song@totaralearning.com>
- * @package mod_perform
+ * @package performelement_linked_review
  */
 
+use core\testing\generator;
 use mod_perform\constants;
-use performelement_linked_review\models\linked_review_content;
+use mod_perform\testing\generator as perform_generator;
 use performelement_linked_review\entity\linked_review_content as linked_review_content_entity;
-use totara_core\relationship\relationship;
+use performelement_linked_review\models\linked_review_content;
+use performelement_linked_review\testing\generator as linked_review_generator;
 
-require_once(__DIR__ . '/base_linked_review_testcase.php');
-
-class linked_review_content_testcase extends performelement_linked_review_base_linked_review_testcase {
+class performelement_linked_review_content_testcase extends advanced_testcase {
 
     public function test_create() {
         $content_id = 1;
         $validate = false;
 
-        [$activity1, $section1, $element1, $section_element1] = $this->create_activity_with_section_and_review_element();
-        [$user1, $subject_instance1, $participant_instance1] = $this->create_participant_in_section($activity1, $section1);
+        self::setAdminUser();
+        [$activity1, $section1, $element1, $section_element1] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$user1, $subject_instance1, $participant_instance1] = linked_review_generator::instance()
+            ->create_participant_in_section(['activity' => $activity1, 'section' => $section1]);
 
         $this->assertCount(0, linked_review_content_entity::repository()->get());
         linked_review_content::create($content_id, $section_element1->id, $participant_instance1->id, $validate);
@@ -52,8 +55,11 @@ class linked_review_content_testcase extends performelement_linked_review_base_l
         $content_id_2 = 2;
         $validate = false;
 
-        [$activity1, $section1, $element1, $section_element1] = $this->create_activity_with_section_and_review_element();
-        [$user1, $subject_instance1, $participant_instance1] = $this->create_participant_in_section($activity1, $section1);
+        self::setAdminUser();
+        [$activity1, $section1, $element1, $section_element1] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$user1, $subject_instance1, $participant_instance1] = linked_review_generator::instance()
+            ->create_participant_in_section(['activity' => $activity1, 'section' => $section1]);
 
         // Create two contents
         $model_1 = linked_review_content::create($content_id_1, $section_element1->id, $participant_instance1->id, $validate);
@@ -69,29 +75,34 @@ class linked_review_content_testcase extends performelement_linked_review_base_l
     }
 
     public function test_update_content_successful() {
-        [$activity1, $section1, $element1, $section_element1] = $this->create_activity_with_section_and_review_element();
-        [$user1, $subject_instance1, $participant_instance1] = $this->create_participant_in_section($activity1, $section1);
-        $content_ids = $this->create_competency_assignments($user1->id);
-        $first_two_content_ids = array_slice($content_ids, 0, 2);
+        self::setAdminUser();
+        [$activity1, $section1, $element1, $section_element1] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$user1, $subject_instance1, $participant_instance1] = linked_review_generator::instance()
+            ->create_participant_in_section(['activity' => $activity1, 'section' => $section1]);
+        $content_id1 = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
+        $content_id2 = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
+        $content_id3 = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
+        $content_ids = [$content_id1, $content_id2, $content_id3];
 
-        $this->generator()->create_section_relationship($section1, ['relationship' => constants::RELATIONSHIP_SUBJECT]);
+        perform_generator::instance()->create_section_relationship($section1, ['relationship' => constants::RELATIONSHIP_SUBJECT]);
         $this->assertCount(0, linked_review_content_entity::repository()->get());
 
-        $this->setUser($user1);
+        self::setUser($user1);
 
         // add three contents
         linked_review_content::update_content($content_ids, $section_element1->id, $participant_instance1->id);
         $this->assertCount(3, linked_review_content_entity::repository()->get());
-
-        $last_content_id = strval(end($content_ids));
-        $this->assertContains($last_content_id, linked_review_content_entity::repository()->get()->pluck('content_id'));
+        $this->assertTrue(linked_review_content_entity::repository()->where('content_id', $content_id1)->exists());
+        $this->assertTrue(linked_review_content_entity::repository()->where('content_id', $content_id2)->exists());
+        $this->assertTrue(linked_review_content_entity::repository()->where('content_id', $content_id3)->exists());
 
         // remove the last content
-        linked_review_content::update_content($first_two_content_ids, $section_element1->id, $participant_instance1->id);
+        linked_review_content::update_content([$content_id1, $content_id2], $section_element1->id, $participant_instance1->id);
         $this->assertCount(2, linked_review_content_entity::repository()->get());
-
-        $last_content_id = strval(end($content_ids));
-        $this->assertNotContains($last_content_id, linked_review_content_entity::repository()->get()->pluck('content_id'));
+        $this->assertTrue(linked_review_content_entity::repository()->where('content_id', $content_id1)->exists());
+        $this->assertTrue(linked_review_content_entity::repository()->where('content_id', $content_id2)->exists());
+        $this->assertFalse(linked_review_content_entity::repository()->where('content_id', $content_id3)->exists());
     }
 
     public function test_invalid_element() {
@@ -101,61 +112,62 @@ class linked_review_content_testcase extends performelement_linked_review_base_l
     }
 
     public function test_participant_cannot_select_content() {
-        [$activity1, $section1, $element1, $section_element1] = $this->create_activity_with_section_and_review_element();
+        self::setAdminUser();
+        [$activity1, $section1, $element1, $section_element1] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$user1, $subject_instance1, $participant_instance1] = linked_review_generator::instance()->create_participant_in_section([
+            'activity' => $activity1,
+            'section' => $section1,
+            'create_section_relationship' => true,
+            'relationship' => constants::RELATIONSHIP_APPRAISER,
+        ]);
+        $content_id = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
 
-        $appraiser_relationship = relationship::load_by_idnumber(constants::RELATIONSHIP_APPRAISER);
-        [$user1, $subject_instance1, $participant_instance1] = $this->create_participant_in_section(
-            $activity1,
-            $section1,
-            null,
-            $appraiser_relationship->id
-        );
-        $content_ids = $this->create_competency_assignments($user1->id);
-
-        $this->generator()->create_section_relationship(
+        perform_generator::instance()->create_section_relationship(
             $section1, ['relationship' => constants::RELATIONSHIP_SUBJECT], true, false
         );
-        $this->setUser($user1);
+        self::setUser($user1);
 
         $this->expectException(moodle_exception::class);
         $this->expectExceptionMessageMatches('/do not currently have permissions/');
 
-        linked_review_content::update_content($content_ids, $section_element1->id, $participant_instance1->id);
+        linked_review_content::update_content([$content_id], $section_element1->id, $participant_instance1->id);
     }
 
     public function test_logged_in_user_does_not_belong_to_participant_instance() {
-        [$activity1, $section1, $element1, $section_element1] = $this->create_activity_with_section_and_review_element();
-        [$user1, $subject_instance1, $participant_instance1] = $this->create_participant_in_section($activity1, $section1);
-        $user2 = $this->getDataGenerator()->create_user();
-        $content_ids = $this->create_competency_assignments($user1->id);
+        self::setAdminUser();
+        [$activity1, $section1, $element1, $section_element1] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$user1, $subject_instance1, $participant_instance1] = linked_review_generator::instance()
+            ->create_participant_in_section(['activity' => $activity1, 'section' => $section1]);
+        $user2 = generator::instance()->create_user();
+        $content_id = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
 
-        $this->generator()->create_section_relationship(
+        perform_generator::instance()->create_section_relationship(
             $section1, ['relationship' => constants::RELATIONSHIP_SUBJECT], true, false
         );
-        $this->setUser($user2);
+        self::setUser($user2);
 
         $this->expectException(moodle_exception::class);
         $this->expectExceptionMessage('do not currently have permissions');
 
-        linked_review_content::update_content($content_ids, $section_element1->id, $participant_instance1->id);
+        linked_review_content::update_content([$content_id], $section_element1->id, $participant_instance1->id);
     }
 
     public function test_content_ids_point_to_actual_content() {
-        [$activity1, $section1, $element1, $section_element1] = $this->create_activity_with_section_and_review_element();
-        [$user1, $subject_instance1, $participant_instance1] = $this->create_participant_in_section($activity1, $section1);
+        self::setAdminUser();
+        [$activity1, $section1, $element1, $section_element1] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$user1, $subject_instance1, $participant_instance1] = linked_review_generator::instance()
+            ->create_participant_in_section(['activity' => $activity1, 'section' => $section1]);
         $content_ids = [1, 2];
 
-        $this->generator()->create_section_relationship($section1, ['relationship' => constants::RELATIONSHIP_SUBJECT]);
-        $this->setUser($user1);
+        perform_generator::instance()->create_section_relationship($section1, ['relationship' => constants::RELATIONSHIP_SUBJECT]);
+        self::setUser($user1);
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessageMatches('/Not all the specified content IDs actually exist/');
         linked_review_content::update_content($content_ids, $section_element1->id, $participant_instance1->id);
     }
 
-    private function generator(): \mod_perform\testing\generator {
-        $data_generator = $this->getDataGenerator();
-        /** @var \mod_perform\testing\generator $perform_generator */
-        return $data_generator->get_plugin_generator('mod_perform');
-    }
 }

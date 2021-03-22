@@ -21,20 +21,20 @@
  * @package performelement_linked_review
  */
 
-require_once(__DIR__ . '/base_linked_review_testcase.php');
-
 use mod_perform\constants;
 use mod_perform\models\activity\element;
+use performelement_linked_review\testing\generator as linked_review_generator;
 use totara_core\relationship\relationship;
 
 /**
  * @group perform
  * @group perform_element
  */
-class performelement_linked_review_linked_review_testcase extends performelement_linked_review_base_linked_review_testcase {
+class performelement_linked_review_linked_review_testcase extends advanced_testcase {
 
     public function test_clean_and_validate() {
-        [$activity, , , ] = $this->create_activity_with_section_and_review_element();
+        self::setAdminUser();
+        [$activity] = linked_review_generator::instance()->create_activity_with_section_and_review_element();
 
         $element2 = element::create($activity->get_context(), 'linked_review', 'title', '', json_encode([
             'content_type' => 'totara_competency',

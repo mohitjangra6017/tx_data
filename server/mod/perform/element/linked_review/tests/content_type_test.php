@@ -21,10 +21,9 @@
  * @package performelement_linked_review
  */
 
-require_once(__DIR__ . '/base_linked_review_testcase.php');
-
 use mod_perform\constants;
 use performelement_linked_review\content_type_factory;
+use performelement_linked_review\testing\generator as linked_review_generator;
 use totara_competency\performelement_linked_review\competency_assignment;
 use totara_core\advanced_feature;
 use totara_core\relationship\relationship;
@@ -33,7 +32,7 @@ use totara_core\relationship\relationship;
  * @group perform
  * @group perform_element
  */
-class performelement_linked_review_content_type_testcase extends performelement_linked_review_base_linked_review_testcase {
+class performelement_linked_review_content_type_testcase extends advanced_testcase {
 
     public function test_identifiers_are_unique(): void {
         $content_types = content_type_factory::get_all();
@@ -101,7 +100,7 @@ class performelement_linked_review_content_type_testcase extends performelement_
             ],
             'selection_relationships' => [$subject_relationship->id],
         ];
-        $element1 = $this->create_element($element1_input_data);
+        $element1 = linked_review_generator::instance()->create_linked_review_element($element1_input_data);
         $element1_output_data = json_decode($element1->data, true);
         unset($element1_output_data['components']);
         $this->assertEquals([
@@ -132,7 +131,7 @@ class performelement_linked_review_content_type_testcase extends performelement_
             ],
             'selection_relationships' => [$manager_relationship->id],
         ];
-        $element2 = $this->create_element($element2_input_data);
+        $element2 = linked_review_generator::instance()->create_linked_review_element($element2_input_data);
         $element2_output_data = json_decode($element2->data, true);
         unset($element2_output_data['components']);
         $this->assertEquals([
@@ -220,7 +219,7 @@ class performelement_linked_review_content_type_testcase extends performelement_
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage($expected_message);
-        $this->create_element($data);
+        linked_review_generator::instance()->create_linked_review_element($data);
     }
 
 }

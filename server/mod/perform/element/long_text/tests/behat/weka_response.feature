@@ -63,9 +63,9 @@ Feature: Long text responses support the Weka editor
     And I wait until ".tui-performElementParticipantFormContent .tui-formField" "css_element" exists
 
     And I activate the weka editor with css ".tui-performElementParticipantFormContent"
-    And I upload embedded media to the weka editor using the file "mod/perform/element/long_text/tests/behat/fixtures/blue.png"
+    And I upload embedded media to the weka editor using the file "mod/perform/tests/behat/fixtures/blue.png"
     And I move the cursor to the end of the weka editor
-    And I upload attachment to the weka editor using the file "mod/perform/element/long_text/tests/behat/fixtures/green.png"
+    And I upload attachment to the weka editor using the file "mod/perform/tests/behat/fixtures/green.png"
     # This is to make sure that the files are all uploaded correctly
     And I wait for the next second
 

@@ -21,21 +21,24 @@
  * @package performelement_linked_review
  */
 
+use mod_perform\testing\generator as perform_generator;
 use performelement_linked_review\entity\linked_review_content_response;
 use performelement_linked_review\models\linked_review_content;
-
-require_once(__DIR__ . '/base_linked_review_testcase.php');
+use performelement_linked_review\testing\generator as linked_review_generator;
 
 /**
  * @group perform
  * @group perform_element
  */
-class performelement_linked_review_content_response_entity_testcase extends performelement_linked_review_base_linked_review_testcase {
+class performelement_linked_review_content_response_entity_testcase extends advanced_testcase {
 
     public function test_it_update_or_create_response() {
-        [$activity, $section, $element, $section_element] = $this->create_activity_with_section_and_review_element();
-        [$user, $subject_instance, $participant_instance, $participant_section] = $this->create_participant_in_section($activity, $section);
-        $child_element = $section_element->element->children->first();
+        self::setAdminUser();
+        [$activity, $section, $element, $section_element] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$user, $subject_instance, $participant_instance, $participant_section] = linked_review_generator::instance()
+            ->create_participant_in_section(['activity' => $activity, 'section' => $section]);
+        $child_element = perform_generator::instance()->create_child_element(['parent_element' => $element]);
 
         $linked_review_content_1 = linked_review_content::create(1, $section_element->id, $participant_instance->id, false);
         $linked_review_content_2 = linked_review_content::create(2, $section_element->id, $participant_instance->id, false);

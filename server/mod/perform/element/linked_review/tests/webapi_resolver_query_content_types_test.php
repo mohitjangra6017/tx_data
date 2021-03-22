@@ -21,8 +21,7 @@
  * @package performelement_linked_review
  */
 
-require_once(__DIR__ . '/base_linked_review_testcase.php');
-
+use mod_perform\testing\generator as perform_generator;
 use performelement_linked_review\content_type;
 use performelement_linked_review\content_type_factory;
 use totara_competency\performelement_linked_review\competency_assignment;
@@ -34,7 +33,7 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
  * @group perform
  * @group perform_element
  */
-class performelement_linked_review_query_content_types_testcase extends performelement_linked_review_base_linked_review_testcase {
+class performelement_linked_review_query_content_types_testcase extends advanced_testcase {
 
     private const QUERY = 'performelement_linked_review_content_types';
 
@@ -44,8 +43,8 @@ class performelement_linked_review_query_content_types_testcase extends performe
 
     public function test_resolve_query_successful(): void {
         self::setAdminUser();
-        $activity = $this->perform_generator()->create_activity_in_container();
-        $section = $this->perform_generator()->find_or_create_section($activity);
+        $activity = perform_generator::instance()->create_activity_in_container();
+        $section = perform_generator::instance()->find_or_create_section($activity);
 
         $result = $this->resolve_graphql_query(self::QUERY, ['section_id' => $section->id]);
         $this->assertEquals(content_type_factory::get_all_enabled(), $result);
@@ -57,7 +56,7 @@ class performelement_linked_review_query_content_types_testcase extends performe
         }
 
         self::setAdminUser();
-        $activity = self::getDataGenerator()->get_plugin_generator('mod_perform')->create_activity_in_container();
+        $activity = perform_generator::instance()->create_activity_in_container();
 
         /** @var content_type|string $competency_type */
         $competency_type = competency_assignment::class;
@@ -101,8 +100,8 @@ class performelement_linked_review_query_content_types_testcase extends performe
 
     public function test_require_manage_activity_capability(): void {
         self::setAdminUser();
-        $activity = $this->perform_generator()->create_activity_in_container();
-        $section = $this->perform_generator()->find_or_create_section($activity);
+        $activity = perform_generator::instance()->create_activity_in_container();
+        $section = perform_generator::instance()->find_or_create_section($activity);
 
         $user = self::getDataGenerator()->create_user();
         self::setUser($user);

@@ -22,36 +22,44 @@
  * @package performelement_linked_review
  */
 
-require_once(__DIR__ . '/base_linked_review_testcase.php');
-
 use core\collection;
 use mod_perform\constants;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\section_element;
 use performelement_linked_review\entity\linked_review_content as linked_review_content_entity;
+use performelement_linked_review\testing\generator as linked_review_generator;
 use totara_core\advanced_feature;
 use totara_core\feature_not_available_exception;
-use totara_core\relationship\relationship;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
  * @group perform
  * @group perform_element
  */
-class performelement_linked_review_webapi_resolver_mutation_update_linked_review_content_testcase extends performelement_linked_review_base_linked_review_testcase {
+class performelement_linked_review_webapi_resolver_mutation_update_linked_review_content_testcase extends advanced_testcase {
 
     private const MUTATION = 'performelement_linked_review_update_linked_review_content';
 
     use webapi_phpunit_helper;
 
     public function test_resolve_mutation_successful(): void {
-        [$activity, $section, $element, $section_element] = $this->create_activity_with_section_and_review_element();
-        [$user1, $subject_instance, $participant_instance1] = $this->create_participant_in_section($activity, $section);
-        $content_ids = $this->create_competency_assignments($user1->id);
+        self::setAdminUser();
+        [$activity, $section, $element, $section_element] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$user1, $subject_instance, $participant_instance1] = linked_review_generator::instance()->create_participant_in_section([
+            'activity' => $activity, 'section' => $section
+        ]);
+        [$user2, $subject_instance, $participant_instance2] = linked_review_generator::instance()->create_participant_in_section([
+            'activity' => $activity, 'section' => $section, 'subject_instance' => $subject_instance,
+            'relationship' => constants::RELATIONSHIP_MANAGER,
+        ]);
+        $content_id1 = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
+        $content_id2 = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
+        $content_id3 = linked_review_generator::instance()->create_competency_assignment(['user' => $user1])->id;
+        $content_ids = [$content_id1, $content_id2, $content_id3];
 
         $content_type = json_decode($element->data, true)['content_type'] ?? null;
         $this->assertNotEmpty(trim($content_type));
-
         self::setUser($user1);
 
         $args = [
@@ -80,8 +88,12 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
     }
 
     public function test_element_is_not_a_linked_review_element(): void {
-        [$activity, $section, $element, $review_section_element] = $this->create_activity_with_section_and_review_element();
-        [$user, $subject_instance, $participant_instance] = $this->create_participant_in_section($activity, $section);
+        self::setAdminUser();
+        [$activity, $section, $element, $review_section_element] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$user, $subject_instance, $participant_instance] = linked_review_generator::instance()->create_participant_in_section([
+            'activity' => $activity, 'section' => $section,
+        ]);
         $other_user = self::getDataGenerator()->create_user();
         $short_text_element = element::create($activity->get_context(), 'short_text', 'A');
         $short_text_section_element = section_element::create($section, $short_text_element, 4);
@@ -101,9 +113,12 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
     }
 
     public function test_element_is_not_in_participant_section(): void {
-        [$activity, $section] = $this->create_activity_with_section_and_review_element();
-        [,, $element, $section_element] = $this->create_activity_with_section_and_review_element();
-        [$user, $subject_instance, $participant_instance] = $this->create_participant_in_section($activity, $section);
+        self::setAdminUser();
+        [$activity, $section] = linked_review_generator::instance()->create_activity_with_section_and_review_element();
+        [,, $element, $section_element] = linked_review_generator::instance()->create_activity_with_section_and_review_element();
+        [$user, $subject_instance, $participant_instance] = linked_review_generator::instance()->create_participant_in_section([
+            'activity' => $activity, 'section' => $section
+        ]);
         $other_user = self::getDataGenerator()->create_user();
         self::setUser($other_user);
 
@@ -121,8 +136,12 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
     }
 
     public function test_user_is_not_a_participant(): void {
-        [$activity, $section, $element, $section_element] = $this->create_activity_with_section_and_review_element();
-        [$user, $subject_instance, $participant_instance] = $this->create_participant_in_section($activity, $section);
+        self::setAdminUser();
+        [$activity, $section, $element, $section_element] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$user, $subject_instance, $participant_instance] = linked_review_generator::instance()->create_participant_in_section([
+            'activity' => $activity, 'section' => $section,
+        ]);
         $other_user = self::getDataGenerator()->create_user();
         self::setUser($other_user);
 
@@ -140,8 +159,12 @@ class performelement_linked_review_webapi_resolver_mutation_update_linked_review
     }
 
     public function test_invalid_content_ids_specified(): void {
-        [$activity, $section, $element, $section_element] = $this->create_activity_with_section_and_review_element();
-        [$user, $subject_instance, $participant_instance] = $this->create_participant_in_section($activity, $section);
+        self::setAdminUser();
+        [$activity, $section, $element, $section_element] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$user, $subject_instance, $participant_instance] = linked_review_generator::instance()->create_participant_in_section([
+            'activity' => $activity, 'section' => $section,
+        ]);
         self::setUser($user);
 
         $args = [

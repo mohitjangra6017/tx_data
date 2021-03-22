@@ -1,8 +1,8 @@
 <?php
-/*
+/**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,16 +25,15 @@ use mod_perform\constants;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\section;
 use mod_perform\state\activity\draft;
+use mod_perform\testing\generator as perform_generator;
 use totara_webapi\phpunit\webapi_phpunit_helper;
-
-require_once(__DIR__ . '/base_linked_review_testcase.php');
 
 /**
  * @coversDefaultClass \mod_perform\webapi\resolver\mutation\update_section_settings
  *
  * @group perform
  */
-class performelement_linked_review_webapi_resolver_mutation_update_section_settings_testcase extends performelement_linked_review_base_linked_review_testcase {
+class performelement_linked_review_webapi_resolver_mutation_update_section_settings_testcase extends advanced_testcase {
 
     private const MUTATION = 'mod_perform_update_section_settings';
     private const TYPE = 'mod_perform_section';
@@ -43,19 +42,19 @@ class performelement_linked_review_webapi_resolver_mutation_update_section_setti
 
     public function test_remove_relationship_used_in_review_question(): void {
         self::setAdminUser();
-        $activity = $this->perform_generator()->create_activity_in_container(['activity_status' => draft::get_code()]);
-        $section = $this->perform_generator()->create_section($activity);
-        $this->perform_generator()->create_section_relationship(
+        $activity = perform_generator::instance()->create_activity_in_container(['activity_status' => draft::get_code()]);
+        $section = perform_generator::instance()->create_section($activity);
+        perform_generator::instance()->create_section_relationship(
             $section,
             ['relationship' => constants::RELATIONSHIP_SUBJECT]
         );
-        $this->perform_generator()->create_section_relationship(
+        perform_generator::instance()->create_section_relationship(
             $section,
             ['relationship' => constants::RELATIONSHIP_MANAGER]
         );
 
-        $subject_relationship_id = $this->perform_generator()->get_core_relationship(constants::RELATIONSHIP_SUBJECT)->id;
-        $manager_relationship_id = $this->perform_generator()->get_core_relationship(constants::RELATIONSHIP_MANAGER)->id;
+        $subject_relationship_id = perform_generator::instance()->get_core_relationship(constants::RELATIONSHIP_SUBJECT)->id;
+        $manager_relationship_id = perform_generator::instance()->get_core_relationship(constants::RELATIONSHIP_MANAGER)->id;
 
         $element = element::create($activity->get_context(), 'linked_review', 'title', '', json_encode([
             'content_type' => 'totara_competency',
@@ -63,7 +62,7 @@ class performelement_linked_review_webapi_resolver_mutation_update_section_setti
             'selection_relationships' => [$subject_relationship_id],
         ]));
 
-        $section_element = $this->perform_generator()->create_section_element($section, $element);
+        $section_element = perform_generator::instance()->create_section_element($section, $element);
 
         // try to remove the subject relationship should fail
         $result = $this->resolve_graphql_mutation(self::MUTATION, [
@@ -96,10 +95,10 @@ class performelement_linked_review_webapi_resolver_mutation_update_section_setti
 
         $this->assertEquals(
             [
-                'title' => 'Cannot remove participant(s)',
+                'title' => get_string('modal_can_not_delete_relationship_title', 'mod_perform'),
                 'can_delete' => false,
                 'reason' => [
-                    'description' => 'One or more participant(s) cannot be removed from this section because they are referenced in the following question(s):',
+                    'description' => get_string('section_relationship_used_in_linked_review', 'performelement_linked_review'),
                     'data' => [
                         $element->title
                     ]
