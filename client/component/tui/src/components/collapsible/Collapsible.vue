@@ -46,6 +46,7 @@
       v-show="!alwaysRender || (expanded && $scopedSlots.default)"
       :id="generatedId + 'region'"
       class="tui-collapsible__content"
+      :class="{ 'tui-collapsible__content--indented': indentContents }"
       role="region"
       :aria-labelledby="generatedId + 'label'"
     >
@@ -83,6 +84,7 @@ export default {
       default: undefined,
       type: Boolean,
     },
+    indentContents: Boolean,
   },
 
   data() {
@@ -159,6 +161,11 @@ export default {
   &__content {
     & > .tui-formRowStack {
       margin-top: var(--gap-4);
+    }
+
+    // line up with text of header
+    &--indented {
+      padding-left: var(--gap-12);
     }
   }
 }

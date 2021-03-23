@@ -21,7 +21,11 @@
     collapsible component for expanding or collapsing content
 
     <SamplesExample>
-      <Collapsible :label="label" :initial-state="expanded">
+      <Collapsible
+        :label="label"
+        :initial-state="expanded"
+        :indent-contents="indentContents"
+      >
         {{ content }}
       </Collapsible>
     </SamplesExample>
@@ -36,6 +40,12 @@
       <h4 class="tui-samplesCtl__optional">Optional</h4>
       <FormRow label="InitialState">
         <RadioGroup v-model="expanded" :horizontal="true">
+          <Radio :value="true">True</Radio>
+          <Radio :value="false">False</Radio>
+        </RadioGroup>
+      </FormRow>
+      <FormRow label="Indent contents">
+        <RadioGroup v-model="indentContents" :horizontal="true">
           <Radio :value="true">True</Radio>
           <Radio :value="false">False</Radio>
         </RadioGroup>
@@ -78,6 +88,7 @@ export default {
       content: '...',
       expanded: false,
       label: 'Heading',
+      indentContents: false,
 
       codeTemplate: `<Collapsible :label="label" :initial-state="false">
   {{ content }}

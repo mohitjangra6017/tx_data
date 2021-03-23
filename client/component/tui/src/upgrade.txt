@@ -2,6 +2,8 @@ This file describes API changes in /client/component/tui,
 information provided here is intended especially for developers.
 
 === 14.0 ===
+* Allowed Collapsible contents to be indented
+  * Template and SCSS changes
 * Allowed multiple rows of Table to be expanded at once
   * Template changes
 * Allowed CollapsibleGroupToggle.vue to set transparency and alignment, removed chevron
