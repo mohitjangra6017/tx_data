@@ -53,11 +53,6 @@ export default {
   border-top: none;
   box-shadow: var(--shadow-2);
 
-  &--indented {
-    // width of expand button * 2
-    padding-left: calc(var(--gap-9) * 2);
-  }
-
   &--stealth {
     border: none;
     box-shadow: none;
@@ -69,6 +64,16 @@ export default {
   &__content {
     padding: var(--gap-3);
     background: var(--datatable-expanded-bg-color);
+  }
+
+  @media (min-width: $tui-screen-xs) {
+    &--indented {
+      padding-left: var(--gap-11);
+    }
+
+    &--indented &__content {
+      padding: var(--gap-3) 0 var(--gap-3) var(--gap-3);
+    }
   }
 }
 </style>

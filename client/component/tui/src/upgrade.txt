@@ -2,6 +2,9 @@ This file describes API changes in /client/component/tui,
 information provided here is intended especially for developers.
 
 === 14.0 ===
+
+* Updated Table and children component indent options
+  * Template and SCSS changes
 * Allowed Collapsible contents to be indented
   * Template and SCSS changes
 * Allowed multiple rows of Table to be expanded at once

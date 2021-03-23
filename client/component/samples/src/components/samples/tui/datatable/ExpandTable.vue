@@ -19,6 +19,41 @@
 <template>
   <div>
     <SamplesExample>
+      <h4>ExpandTable</h4>
+
+      <Table
+        :color-odd-rows="colorOddRows"
+        :data="dummyData"
+        :expandable-rows="true"
+        :border-bottom-hidden="hideBottomBorder"
+        :border-top-hidden="hideTopBorder"
+        :stealth-expanded="stealthExpanded"
+        :indent-expanded-contents="indentExpandedContents"
+      >
+        <template v-slot:header-row>
+          <ExpandCell :header="true" />
+          <HeaderCell size="16" valign="center">col 1</HeaderCell>
+        </template>
+
+        <template v-slot:row="{ row, expand, expandState }">
+          <ExpandCell
+            :aria-label="row.title"
+            :expand-state="expandState"
+            @click="expand()"
+          />
+          <Cell size="16" column-header="col 1" valign="center">
+            {{ row.title }}
+          </Cell>
+        </template>
+
+        <template v-slot:expand-content="{ row }">
+          <h4>{{ row.title }}</h4>
+          Expanded row content
+        </template>
+      </Table>
+
+      <h4>ExpandTable with a nested Table</h4>
+
       <Table
         :color-odd-rows="colorOddRows"
         :data="dummyData"
@@ -26,6 +61,59 @@
         :expand-multiple-rows="expandMultipleRows"
         :border-bottom-hidden="hideBottomBorder"
         :border-top-hidden="hideTopBorder"
+        :stealth-expanded="stealthExpanded"
+        :indent-expanded-contents="indentExpandedContents"
+      >
+        <template v-slot:header-row>
+          <ExpandCell :header="true" />
+          <HeaderCell size="16" valign="center">col 1</HeaderCell>
+        </template>
+
+        <template v-slot:row="{ row, expand, expandState }">
+          <ExpandCell
+            :aria-label="row.title"
+            :expand-state="expandState"
+            @click="expand()"
+          />
+          <Cell size="16" column-header="col 1" valign="center">
+            {{ row.title }}
+          </Cell>
+        </template>
+
+        <template v-slot:expand-content="{ row }">
+          <Table
+            :color-odd-rows="colorOddRows"
+            :data="dummyData"
+            :expandable-rows="true"
+            :border-bottom-hidden="hideBottomBorder"
+            :border-top-hidden="hideTopBorder"
+            :indent-contents="indentContents"
+            :stealth-expanded="stealthExpanded"
+            :indent-expanded-contents="indentExpandedContents"
+          >
+            <template v-slot:header-row>
+              <HeaderCell size="16" valign="center">col 1</HeaderCell>
+            </template>
+
+            <template v-slot:row="{ row }">
+              <Cell size="16" column-header="col 1" valign="center">
+                {{ row.title }}
+              </Cell>
+            </template>
+          </Table>
+        </template>
+      </Table>
+
+      <h4>ExpandTable with a nested ExpandTable</h4>
+
+      <Table
+        :color-odd-rows="colorOddRows"
+        :data="dummyData"
+        :expandable-rows="true"
+        :expand-multiple-rows="expandMultipleRows"
+        :border-bottom-hidden="hideBottomBorder"
+        :border-top-hidden="hideTopBorder"
+        :indent-contents="indentContents"
         :stealth-expanded="stealthExpanded"
         :indent-expanded-contents="indentExpandedContents"
       >
@@ -97,6 +185,13 @@
 
       <FormRow label="Hide bottom border">
         <RadioGroup v-model="hideBottomBorder" :horizontal="true">
+          <Radio :value="true">True</Radio>
+          <Radio :value="false">False</Radio>
+        </RadioGroup>
+      </FormRow>
+
+      <FormRow label="Indent contents">
+        <RadioGroup v-model="indentContents" :horizontal="true">
           <Radio :value="true">True</Radio>
           <Radio :value="false">False</Radio>
         </RadioGroup>
@@ -182,6 +277,7 @@ export default {
       colorOddRows: false,
       hideBottomBorder: false,
       hideTopBorder: false,
+      indentContents: false,
       stealthExpanded: false,
       indentExpandedContents: false,
       expandMultipleRows: false,
@@ -207,7 +303,7 @@ export default {
 
   <!-- Expand content -->
   <template v-slot:expand-content="{ row }">
-    <h3>{{ row.title }}</h3>
+    <h4>{{ row.title }}</h4>
   </template>
 </Table>`,
       codeScript: `import Cell from 'tui/components/datatable/Cell';

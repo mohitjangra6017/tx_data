@@ -26,7 +26,7 @@
     :class="{ 'tui-dataTable--archived': archived }"
     role="table"
   >
-    <HeaderRow :empty="!$slots['header-row']">
+    <HeaderRow :empty="!$slots['header-row']" :indented="indentContents">
       <HeaderCell
         v-if="$slots['header-row'] && draggableRows"
         class="tui-dataTable__row-move-cell"
@@ -89,6 +89,8 @@
               :draggable="draggableRows"
               :dragging="dragging"
               :expanded="id == expanded"
+              :indented="indentContents"
+              :stealth="indentExpandedContents"
               :stealth-expanded="stealthExpanded"
               v-bind="attrs"
             >
@@ -173,6 +175,8 @@ export default {
   props: {
     // Table is displaying archived content
     archived: Boolean,
+    // Rows are displayed indented
+    indentContents: Boolean,
     // Expanded Rows are displayed indented
     indentExpandedContents: Boolean,
     // Table has stealth expanded rows

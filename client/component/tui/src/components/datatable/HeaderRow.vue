@@ -19,7 +19,10 @@
 <template>
   <div
     class="tui-dataTableRowHeader"
-    :class="{ 'tui-dataTableRowHeader--empty': empty }"
+    :class="{
+      'tui-dataTableRowHeader--empty': empty,
+      'tui-dataTableRowHeader--indented': indented,
+    }"
     role="row"
   >
     <slot />
@@ -30,6 +33,7 @@
 export default {
   props: {
     empty: Boolean,
+    indented: Boolean,
   },
 };
 </script>
@@ -49,6 +53,10 @@ export default {
 
     & > * + * {
       margin-left: var(--gap-4);
+    }
+
+    &--indented {
+      padding-left: var(--gap-11);
     }
   }
 }

@@ -32,7 +32,9 @@
       'tui-dataTableRow--borderSeparatorOff': borderSeparatorHidden,
       'tui-dataTableRow--hoverOff': hoverOff,
       'tui-dataTableRow--expanded': expanded,
+      'tui-dataTableRow--stealth': stealth,
       'tui-dataTableRow--stealthExpanded': stealthExpanded,
+      'tui-dataTableRow--indented': indented,
     }"
     role="row"
   >
@@ -53,7 +55,9 @@ export default {
     selected: Boolean,
     draggable: Boolean,
     dragging: Boolean,
+    indented: Boolean,
     expanded: Boolean,
+    stealth: Boolean,
     stealthExpanded: Boolean,
   },
 };
@@ -211,6 +215,14 @@ export default {
       &:last-child {
         border-bottom: none;
       }
+    }
+
+    &--indented {
+      padding-left: var(--gap-11);
+    }
+
+    &--stealth {
+      box-shadow: none;
     }
   }
 }
