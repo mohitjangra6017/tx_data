@@ -121,9 +121,10 @@ class totara_notification_square_bracket_engine_testcase extends testcase {
             ]
         );
 
+        $admin = get_admin();
         self::assertEquals(
             "Hello, this is Martin Garrix here.\nYou are listening to Martin's channel.",
-            trim($engine->replace($text))
+            trim($engine->render_for_user($text, $admin->id))
         );
     }
 
@@ -196,9 +197,10 @@ class totara_notification_square_bracket_engine_testcase extends testcase {
         $text = "The new [course:fullname] had added to the new program [program:shortname] and an invalid [program:+shortname]";
         $engine = engine::create(mock_notifiable_event_resolver::class, ['fullname' => 'Full name']);
 
+        $admin = get_admin();
         self::assertEquals(
             "The new Full name had added to the new program [program:shortname] and an invalid [program:+shortname]",
-            $engine->replace($text)
+            $engine->render_for_user($text, $admin->id)
         );
 
         $this->assertDebuggingCalled('The key prefix \'program\' does not exist in the list of available placeholder options');
@@ -236,9 +238,10 @@ class totara_notification_square_bracket_engine_testcase extends testcase {
             ]
         );
 
+        $admin = get_admin();
         self::assertEquals(
             "The new [course:idnumber] has a full name as Full name and short name as Short name",
-            $engine->replace($text)
+            $engine->render_for_user($text, $admin->id)
         );
 
         $this->assertDebuggingCalled(
@@ -270,10 +273,12 @@ class totara_notification_square_bracket_engine_testcase extends testcase {
             ['firstname' => /** @lang text */ '<script>alert("doom bringer")</script>']
         );
 
+        $admin = get_admin();
         self::assertNotEquals(
-        /** @lang text */ 'Hello <script>alert("doom")</script>',
-            $engine->replace(
-                "Hello [user:firstname]"
+            /** @lang text */ 'Hello <script>alert("doom")</script>',
+            $engine->render_for_user(
+                "Hello [user:firstname]",
+                $admin->id
             )
         );
 
@@ -281,8 +286,9 @@ class totara_notification_square_bracket_engine_testcase extends testcase {
         // the <script/> tag from the user's value.
         self::assertEquals(
             s(/** @lang text */ 'Hello <script>alert("doom bringer")</script>'),
-            $engine->replace(
-                "Hello [user:firstname]"
+            $engine->render_for_user(
+                "Hello [user:firstname]",
+                $admin->id
             )
         );
     }

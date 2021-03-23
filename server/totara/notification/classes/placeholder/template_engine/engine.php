@@ -22,14 +22,17 @@
  */
 namespace totara_notification\placeholder\template_engine;
 
-use core_string_placeholders;
-
 /**
- * A placeholder/template engine. As we can pass the instance of this interface
- * to the function {@see get_string()} and everything will be processed/replaced.
+ * A placeholder/template engine.
  *
  * Given a string template, this function is responsible to render it
  * into a meaningful content (with converted placeholder into a proper data value).
  */
-interface engine extends core_string_placeholders {
+interface engine {
+    /**
+     * @param string $content
+     * @param int    $target_user_id
+     * @return string
+     */
+    public function render_for_user(string $content, int $target_user_id): string;
 }

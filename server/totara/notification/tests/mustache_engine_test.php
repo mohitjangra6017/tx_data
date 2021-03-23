@@ -76,10 +76,12 @@ class totara_notification_mustache_engine_testcase extends testcase {
 
         // Normal rendering - this is the main behaviour from content parsing, which we are expecting
         // the content to be something like this.
+        $admin = get_admin();
         self::assertEquals(
             "Hello {$user->fullname}, your email is {$user->email} and ur first name is {$user->firstname}",
-            $engine->replace(
-                "Hello {{user.fullname}}, your email is {{user.email}} and ur first name is {{user.firstname}}"
+            $engine->render_for_user(
+                "Hello {{user.fullname}}, your email is {{user.email}} and ur first name is {{user.firstname}}",
+                $admin->id
             )
         );
 
@@ -87,9 +89,10 @@ class totara_notification_mustache_engine_testcase extends testcase {
         // Hence here we are to keep it at least covered with test.
         self::assertEquals(
             "Hello {$user->fullname}, your email is {$user->email} and ur first name is {$user->firstname}",
-            $engine->replace(
+            $engine->render_for_user(
                 "Hello {{#user}}{{fullname}}{{/user}}, your email is " .
-                "{{#user}}{{email}}{{/user}} and ur first name is {{#user}}{{firstname}}{{/user}}"
+                "{{#user}}{{email}}{{/user}} and ur first name is {{#user}}{{firstname}}{{/user}}",
+                $admin->id
             )
         );
     }
@@ -122,12 +125,13 @@ class totara_notification_mustache_engine_testcase extends testcase {
         );
 
         $engine = mustache_engine::create(mock_event_resolver::class, []);
+        $admin = get_admin();
 
         // We still able to render the content. However since the context variables are
         // not provided by placeholder (AKA invalid_placeholder) - then debugging is called.
         self::assertEquals(
             "Some random ",
-            $engine->replace("Some random {{stuff}}")
+            $engine->render_for_user("Some random {{stuff}}", $admin->id)
         );
 
         $this->assertDebuggingCalled("Invalid placeholder instance that is not either a collection or single getter");
@@ -198,34 +202,43 @@ class totara_notification_mustache_engine_testcase extends testcase {
                     + {$user_two->email}
         ";
 
-        self::assertEquals($expected_template, $engine->replace($template));
+        $admin = get_admin();
+        self::assertEquals($expected_template, $engine->render_for_user($template, $admin->id));
 
         // Invalid syntax of mustache.
         // Note that we cannot control the default value for invalid variable in mustache template,
         // hence it will fall to whatever the mustache engine is doing. However, this is quite
         // a rare case, because ideally what the notification would do is to go thru the square bracket engine
         // first and convert it to the mustache template then convert into a proper item.
+        $actual = "
+            This is whatever list of users are:
+                +  details:
+                    + 
+                    + 
+                    + 
+                +  details:
+                    + 
+                    + 
+                    + 
+        ";
+
+        // We only assert without the spaces here to keep the test simple.
         self::assertEquals(
-            "
-                This is whatever list of users are:
-                    +  details:
-                        + 
-                        + 
-                        + 
-                    +  details:
-                        + 
-                        + 
-                        + 
-            ",
-            $engine->replace("
-                This is whatever list of users are:
-                {{#users}}
-                    + {{users.fullname}} details:
-                        + {{users.firstname}}
-                        + {{users.lastname}}
-                        + {{users.email}}
-                {{/users}}
-            ")
+            preg_replace('/\s+/', '', $actual),
+            preg_replace('/\s+/', '',
+                $engine->render_for_user(
+                    "
+                        This is whatever list of users are:
+                        {{#users}}
+                            + {{users.fullname}} details:
+                                + {{users.firstname}}
+                                + {{users.lastname}}
+                                + {{users.email}}
+                        {{/users}}
+                    ",
+                    $admin->id,
+                )
+            )
         );
     }
 }

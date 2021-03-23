@@ -86,10 +86,11 @@ class engine implements engine_interface {
      *  'item_article' => ['name', 'description']
      * ]
      *
-     * @param array $provided_only_keys
+     * @param int      $target_user_id
+     * @param array    $provided_only_keys
      * @return array
      */
-    protected function get_map_variables(array $provided_only_keys = []): array {
+    protected function get_map_variables(int $target_user_id, array $provided_only_keys = []): array {
         /**
          * @see notifiable_event_resolver::get_notification_available_placeholder_options()
          * @var placeholder_option[] $placeholder_options
@@ -112,7 +113,7 @@ class engine implements engine_interface {
             }
 
             $map_variables[$group_name] = [];
-            $placeholder_instance = $placeholder_option->get_placeholder_instance($this->event_data);
+            $placeholder_instance = $placeholder_option->get_placeholder_instance($this->event_data, $target_user_id);
 
             $load_only_keys = $provided_only_keys[$group_name] ?? [];
 
@@ -156,24 +157,17 @@ class engine implements engine_interface {
     }
 
     /**
-     * @param string $string
-     * @return string
-     */
-    public function replace(string $string): string {
-        return $this->render($string);
-    }
-
-    /**
      * Rendering the template with the list of fetch only keys ($provided_only_keys).
      * If the array of keys are appearing to be not empty, then we are fetching everything
      * that provided by placeholder options.
      *
      * @param string $template
+     * @param int    $target_user_id
      * @param array  $provided_only_keys
      *
      * @return string
      */
-    public function render(string $template, array $provided_only_keys = []): string {
+    public function render(string $template, int $target_user_id, array $provided_only_keys = []): string {
         global $CFG;
         if (!class_exists('Mustache_Engine')) {
             // This is just a safe fallback. The Mustache_Engine definitely included
@@ -187,7 +181,17 @@ class engine implements engine_interface {
             'escape' => 's',
         ]);
 
-        $context_variables = $this->get_map_variables($provided_only_keys);
+        $context_variables = $this->get_map_variables($target_user_id, $provided_only_keys);
         return $mustache->render($template, $context_variables);
+    }
+
+    /**
+     * @param string $content
+     * @param int    $target_user_id
+     *
+     * @return string
+     */
+    public function render_for_user(string $content, int $target_user_id): string {
+        return $this->render($content, $target_user_id);
     }
 }

@@ -28,7 +28,6 @@ use core\json_editor\helper\document_helper;
 use core\orm\query\builder;
 use core_user;
 use null_progress_trace;
-use phpunit_util;
 use progress_trace;
 use stdClass;
 use totara_notification\entity\notification_preference as preference_entity;
@@ -164,32 +163,40 @@ class notification_queue_manager {
             $subject_text = document_helper::create_json_string_document_from_text($subject_text);
         }
 
-        // Constructing a default message that will be sent for multiple users.
-        $default_message = new stdClass();
-        $default_message->notification = 1;
-        $default_message->fullmessage = $engine->replace(format_text_email($body_text, $body_format));
-        $default_message->fullmessagehtml = $engine->replace(format_text($body_text, $body_format));
-        $default_message->subject = $engine->replace(content_to_text($subject_text, $subject_format));
-
-        // Set message format to FORMAT_PLAIN as the fullmessage column is only storing processed plain
-        // text instead of the raw content
-        $default_message->fullmessageformat = FORMAT_PLAIN;
-
-        // Static data - which can be tweaked later on.
-        $default_message->contexturl = '';
-        $default_message->contexturlname = '';
-
-        // Note: we are hardcoded to no_reply_user for now, however, it should be up
-        // to the resolver to decide who is the sender.
-        $default_message->userfrom = core_user::get_noreply_user();
-        $default_message->useridfrom = $default_message->userfrom->id;
-
         $message_processors = get_message_processors(true, (defined('PHPUNIT_TEST') && PHPUNIT_TEST));
 
         foreach ($recipient_ids as $target_user_id) {
-            $message = clone $default_message;
+            $message = new stdClass();
+            $message->notification = 1;
             $message->userto = core_user::get_user($target_user_id);
             $message->useridto = $target_user_id;
+
+            $message->fullmessage = $engine->render_for_user(
+                format_text_email($body_text, $body_format),
+                $target_user_id
+            );
+
+            $message->fullmessagehtml = $engine->render_for_user(
+                format_text($body_text, $body_format),
+                $target_user_id,
+            );
+            $message->subject = $engine->render_for_user(
+                content_to_text($subject_text, $subject_format),
+                $target_user_id
+            );
+
+            // Set message format to FORMAT_PLAIN as the fullmessage column is only storing processed plain
+            // text instead of the raw content
+            $message->fullmessageformat = FORMAT_PLAIN;
+
+            // Static data - which can be tweaked later on.
+            $message->contexturl = '';
+            $message->contexturlname = '';
+
+            // Note: we are hardcoded to no_reply_user for now, however, it should be up
+            // to the resolver to decide who is the sender.
+            $message->userfrom = core_user::get_noreply_user();
+            $message->useridfrom = $message->userfrom->id;
 
             // Save the notification first before sending out the message.
             // Note: TL-29518 will encapsulate these logics in API.

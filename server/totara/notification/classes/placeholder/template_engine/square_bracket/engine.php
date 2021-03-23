@@ -142,12 +142,16 @@ class engine implements engine_interface {
     }
 
     /**
-     * @param string $string
+     * Rendering a content into a mustache readable content, and then call to mustache to
+     * render the content into a human readable content.
+     *
+     * @param string $content
+     * @param int    $target_user_id
      * @return string
      */
-    public function replace(string $string): string {
+    public function render_for_user(string $content, int $target_user_id): string {
         $map_placeholders = $this->get_map_placeholder_options();
-        $map_matches = $this->get_map_matches($string);
+        $map_matches = $this->get_map_matches($content);
 
         $search = [];
         $replace = [];
@@ -200,9 +204,9 @@ class engine implements engine_interface {
             }
         }
 
-        $string = str_replace($search, $replace, $string);
+        $content = str_replace($search, $replace, $content);
 
         $mustache_engine = mustache_engine::create($this->resolver_class_name, $this->event_data);
-        return $mustache_engine->render($string, $only_keys);
+        return $mustache_engine->render($content, $target_user_id, $only_keys);
     }
 }
