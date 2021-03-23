@@ -22,14 +22,18 @@
       'tui-performElementParticipantHeader--printedToDo': hasPrintedToDoIcon,
     }"
   >
-    <h3 :id="id" class="tui-performElementParticipantHeader__title">
+    <component
+      :is="headerTag"
+      :id="id"
+      class="tui-performElementParticipantHeader__title"
+    >
       <PrintedTodoIcon
         v-if="hasPrintedToDoIcon"
         class="tui-performElementParticipantHeader__printedTodo"
       />
       {{ title }}
       <RequiredOptionalIndicator v-if="isRespondable" :is-required="required" />
-    </h3>
+    </component>
   </div>
 </template>
 
@@ -48,7 +52,18 @@ export default {
     id: String,
     isRespondable: Boolean,
     required: Boolean,
+    subElement: Boolean,
     title: String,
+  },
+
+  computed: {
+    /**
+     * Provide the correct header tag
+     *
+     */
+    headerTag() {
+      return this.subElement ? 'h4' : 'h3';
+    },
   },
 };
 </script>

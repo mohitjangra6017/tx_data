@@ -36,7 +36,7 @@
 
           <div class="tui-linkedReviewSelectedContent__item-cardActions">
             <CloseButton
-              :aria-label="$str('remove', 'core')"
+              :aria-label="removeText"
               :size="300"
               @click="deleteContent(content.id)"
             />
@@ -128,6 +128,7 @@ export default {
       type: [String, Number],
       required: true,
     },
+    removeText: String,
     required: Boolean,
     sectionElementId: String,
     userId: Number,
@@ -295,8 +296,7 @@ export default {
 <lang-strings>
 {
   "core": [
-    "error",
-    "remove"
+    "error"
   ],
   "mod_perform": [
     "confirm_selection"

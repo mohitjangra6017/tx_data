@@ -20,8 +20,18 @@
 <template>
   <div v-if="content" class="tui-linkedReviewViewCompetency">
     <h4 class="tui-linkedReviewViewCompetency__title">
-      <a v-if="!fromPrint && !preview" :href="competencyUrl">
-        {{ content.competency.display_name }}
+      <a
+        v-if="!fromPrint && !preview"
+        :href="competencyUrl"
+        :aria-label="
+          $str(
+            'selected_competency',
+            'totara_competency',
+            data.competency.display_name
+          )
+        "
+      >
+        {{ data.competency.display_name }}
       </a>
       <template v-else>
         {{ content.competency.display_name }}
@@ -172,7 +182,8 @@ export default {
       "perform_review_competency_missing",
       "proficient",
       "rating_scale",
-      "reason_assigned"
+      "reason_assigned",
+      "selected_competency"
     ]
   }
 </lang-strings>

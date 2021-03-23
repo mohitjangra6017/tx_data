@@ -31,6 +31,7 @@
     "
     :is-draft="isDraft"
     :participant-instance-id="participantInstanceId"
+    :remove-text="$str('remove_competency', 'totara_competency')"
     :required="required"
     :section-element-id="sectionElementId"
     :user-id="userId"
@@ -113,7 +114,8 @@ export default {
 {
   "totara_competency": [
     "add_competencies",
-    "awaiting_selection_text"
+    "awaiting_selection_text",
+    "remove_competency"
   ]
 }
 </lang-strings>

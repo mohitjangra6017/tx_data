@@ -98,6 +98,7 @@
                 "
                 :is-respondable="childElement.is_respondable"
                 :required="childElement.is_required"
+                :sub-element="true"
                 :title="childElement.title"
               />
 

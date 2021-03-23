@@ -155,6 +155,8 @@
                 v-for="sectionElement in cleanedSectionElements"
                 :key="sectionElement.id"
                 class="tui-participantContent__sectionItem"
+                role="group"
+                :aria-label="sectionElement.element.title"
               >
                 <ResponseHeader
                   v-if="sectionElement.element.title"
