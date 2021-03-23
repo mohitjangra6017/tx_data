@@ -54,15 +54,21 @@ class totara_notification_event_queue_manager_testcase extends testcase {
         // Create a valid queue.
         $valid_queue = new notifiable_event_queue();
         $valid_queue->set_extended_context(extended_context::make_with_context($context_user));
-        $valid_queue->set_decoded_event_data(['message' => 'data']);
-        $valid_queue->event_name = totara_notification_mock_notifiable_event::class;
+        $valid_queue->set_decoded_event_data([
+            'message' => 'data',
+            'expected_context_id' => $context_user->id,
+        ]);
+        $valid_queue->resolver_class_name = totara_notification_mock_notifiable_event_resolver::class;
         $valid_queue->save();
 
         // Create an invalid queue.
         $invalid_queue = new notifiable_event_queue();
         $invalid_queue->set_extended_context(extended_context::make_with_context($context_user));
-        $invalid_queue->set_decoded_event_data(['boom' => 'kaboom']);
-        $invalid_queue->event_name = 'anima_martin_garrix';
+        $invalid_queue->set_decoded_event_data([
+            'boom' => 'kaboom',
+            'expected_context_id' => $context_user->id,
+        ]);
+        $invalid_queue->resolver_class_name = 'anima_martin_garrix';
         $invalid_queue->save();
 
         // There should be two queues within database.
@@ -89,7 +95,7 @@ class totara_notification_event_queue_manager_testcase extends testcase {
 
         $first_message = reset($error_messages);
         self::assertEquals(
-            "The event class name is not a notifiable event: 'anima_martin_garrix'",
+            "The resolver class name is not a notifiable event resolver: 'anima_martin_garrix'",
             $first_message
         );
 

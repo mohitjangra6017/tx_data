@@ -57,11 +57,14 @@ class totara_notification_process_event_task_testcase extends testcase {
         $notification_generator->add_mock_built_in_notification_for_component();
 
         $context_system = context_system::instance();
-        $data = ['user_id' => 42];
+        $data = [
+            'user_id' => 42,
+            'expected_context_id' => $context_system->id,
+        ];
 
         // Create mock event first.
         $event_queue = new notifiable_event_queue();
-        $event_queue->event_name = totara_notification_mock_notifiable_event::class;
+        $event_queue->resolver_class_name = totara_notification_mock_notifiable_event_resolver::class;
         $event_queue->set_decoded_event_data($data);
         $event_queue->set_extended_context(extended_context::make_with_context($context_system));
         $event_queue->save();
@@ -113,7 +116,7 @@ class totara_notification_process_event_task_testcase extends testcase {
 
         // Create mock event first.
         $event_queue = new notifiable_event_queue();
-        $event_queue->event_name = totara_notification_mock_notifiable_event::class;
+        $event_queue->resolver_class_name = totara_notification_mock_notifiable_event_resolver::class;
         $event_queue->set_decoded_event_data([]);
         $event_queue->set_extended_context(extended_context::make_with_context($context_system));
         $event_queue->save();
@@ -142,7 +145,7 @@ class totara_notification_process_event_task_testcase extends testcase {
 
         // Create mock event first.
         $event_queue = new notifiable_event_queue();
-        $event_queue->event_name = 'martin_garrix_anima_event';
+        $event_queue->resolver_class_name = 'martin_garrix_anima_resolver';
         $event_queue->set_decoded_event_data([]);
         $event_queue->set_extended_context(extended_context::make_with_context($context_system));
         $event_queue->save();
@@ -169,7 +172,7 @@ class totara_notification_process_event_task_testcase extends testcase {
 
         $first_message = reset($messages);
         self::assertEquals(
-            "The event class name is not a notifiable event: 'martin_garrix_anima_event'",
+            "The resolver class name is not a notifiable event resolver: 'martin_garrix_anima_resolver'",
             $first_message
         );
 

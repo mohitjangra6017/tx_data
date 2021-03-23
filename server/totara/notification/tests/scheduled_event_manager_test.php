@@ -26,7 +26,6 @@ use totara_core\extended_context;
 use totara_notification\entity\notification_queue;
 use totara_notification\local\schedule_helper;
 use totara_notification\manager\scheduled_event_manager;
-use totara_notification\model\notification_event_data;
 use totara_notification\testing\generator;
 use totara_notification_mock_recipient as mock_recipient;
 use totara_notification_mock_scheduled_aware_event_resolver as scheduled_event_resolver;
@@ -54,12 +53,9 @@ class totara_notification_scheduled_event_manager_testcase extends testcase {
         $extended_context = extended_context::make_system();
 
         // Create an event that has the event time which is happening 5 days from time-now
-        scheduled_event_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [scheduled_event_resolver::EVENT_TIME_KEY => ($now + schedule_helper::days_to_seconds(5))]
-            )
-        );
+        scheduled_event_resolver::set_events([
+            [scheduled_event_resolver::EVENT_TIME_KEY => ($now + schedule_helper::days_to_seconds(5))],
+        ]);
 
         // Create a custom notification preference for scheduled event with 3 days before event time.
         $custom_preference = $notification_generator->create_notification_preference(
@@ -112,12 +108,9 @@ class totara_notification_scheduled_event_manager_testcase extends testcase {
         $extended_context = extended_context::make_system();
 
         // Create an event that happened in a day to now.
-        scheduled_event_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(1)]
-            )
-        );
+        scheduled_event_resolver::set_events([
+            [scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(1)],
+        ]);
 
         $custom_preference = $notification_generator->create_notification_preference(
             scheduled_event_resolver::class,
@@ -159,12 +152,9 @@ class totara_notification_scheduled_event_manager_testcase extends testcase {
         $generator->add_notifiable_event_resolver(scheduled_event_resolver::class);
 
         $extended_context = extended_context::make_system();
-        scheduled_event_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [scheduled_event_resolver::EVENT_TIME_KEY => 0]
-            )
-        );
+        scheduled_event_resolver::set_events([
+            [scheduled_event_resolver::EVENT_TIME_KEY => 0],
+        ]);
 
         $generator->create_notification_preference(
             scheduled_event_resolver::class,
@@ -218,12 +208,9 @@ class totara_notification_scheduled_event_manager_testcase extends testcase {
         );
 
         scheduled_event_resolver::set_associated_notifiable_event(true);
-        scheduled_event_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [scheduled_event_resolver::EVENT_TIME_KEY => time() - DAYSECS]
-            )
-        );
+        scheduled_event_resolver::set_events([
+            [scheduled_event_resolver::EVENT_TIME_KEY => time() - DAYSECS],
+        ]);
 
         $generator->purge_notifiable_event_resolvers();
         $generator->add_notifiable_event_resolver(scheduled_event_resolver::class);

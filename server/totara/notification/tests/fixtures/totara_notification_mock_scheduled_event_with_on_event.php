@@ -49,13 +49,6 @@ class totara_notification_mock_scheduled_event_with_on_event implements notifiab
     }
 
     /**
-     * @return extended_context
-     */
-    public function get_notification_extended_context(): extended_context {
-        return $this->extended_context;
-    }
-
-    /**
      * @return array
      */
     public function get_notification_event_data(): array {

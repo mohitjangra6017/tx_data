@@ -28,7 +28,6 @@ use totara_notification\local\schedule_helper;
 use totara_notification\manager\event_queue_manager;
 use totara_notification\manager\notification_queue_manager;
 use totara_notification\manager\scheduled_event_manager;
-use totara_notification\model\notification_event_data;
 use totara_notification\observer\notifiable_event_observer;
 use totara_notification\schedule\schedule_after_event;
 use totara_notification\schedule\schedule_before_event;
@@ -125,22 +124,16 @@ class totara_notification_scheduled_notification_scenario_testcase extends testc
 
         // An event that happened 3 days ago.
         // An event that will happen 10 days from now.
-        mock_event_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [
-                    mock_recipient::RECIPIENT_IDS_KEY => [$user_one->id],
-                    mock_event_resolver::EVENT_TIME_KEY => ($now - schedule_helper::days_to_seconds(3)),
-                ]
-            ),
-            new notification_event_data(
-                $extended_context,
-                [
-                    mock_recipient::RECIPIENT_IDS_KEY => [$user_one->id],
-                    mock_event_resolver::EVENT_TIME_KEY => ($now + schedule_helper::days_to_seconds(10)),
-                ]
-            )
-        );
+        mock_event_resolver::set_events([
+            [
+                mock_recipient::RECIPIENT_IDS_KEY => [$user_one->id],
+                mock_event_resolver::EVENT_TIME_KEY => ($now - schedule_helper::days_to_seconds(3)),
+            ],
+            [
+                mock_recipient::RECIPIENT_IDS_KEY => [$user_one->id],
+                mock_event_resolver::EVENT_TIME_KEY => ($now + schedule_helper::days_to_seconds(10)),
+            ],
+        ]);
 
         self::assertEquals(0, $DB->count_records(notifiable_event_queue::TABLE));
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
@@ -393,12 +386,9 @@ class totara_notification_scheduled_notification_scenario_testcase extends testc
         $extended_context = extended_context::make_system();
 
         // Add one scheduled events to the resolver's getter.
-        mock_event_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [mock_event_resolver::EVENT_TIME_KEY => time()]
-            )
-        );
+        mock_event_resolver::set_events([
+            [mock_event_resolver::EVENT_TIME_KEY => time()],
+        ]);
 
         $event = new mock_event($extended_context, []);
 
@@ -464,16 +454,10 @@ class totara_notification_scheduled_notification_scenario_testcase extends testc
 
         // Add two mock events, which one is happening 6 days ago,
         // and one is occurring 11 days ago.
-        mock_scheduled_event_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(6)]
-            ),
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(11)]
-            )
-        );
+        mock_scheduled_event_resolver::set_events([
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(6)],
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(11)],
+        ]);
 
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 
@@ -543,16 +527,10 @@ class totara_notification_scheduled_notification_scenario_testcase extends testc
 
         // Add two mock events, which one is happening 4 days from now,
         // and one is occurring 9 days from now.
-        mock_scheduled_event_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(4)]
-            ),
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(9)]
-            )
-        );
+        mock_scheduled_event_resolver::set_events([
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(4)],
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(9)],
+        ]);
 
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
         $manager = new scheduled_event_manager();
@@ -627,16 +605,10 @@ class totara_notification_scheduled_notification_scenario_testcase extends testc
 
         // Add two mock events, which one is happening 6 days ago,
         // and one is occurring 9 days from now.
-        mock_scheduled_event_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(6)]
-            ),
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(9)]
-            )
-        );
+        mock_scheduled_event_resolver::set_events([
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(6)],
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(9)],
+        ]);
 
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 
@@ -698,16 +670,10 @@ class totara_notification_scheduled_notification_scenario_testcase extends testc
 
         // Add two mock events, which one is happening 6 days ago,
         // and one is occurring 11 days ago.
-        mock_scheduled_event_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(6)]
-            ),
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(11)]
-            )
-        );
+        mock_scheduled_event_resolver::set_events([
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(6)],
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(11)],
+        ]);
 
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 
@@ -769,16 +735,10 @@ class totara_notification_scheduled_notification_scenario_testcase extends testc
 
         // Add two mock events, which one is happening 6 days ago,
         // and one is occurring 11 days ago.
-        mock_scheduled_event_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(6)]
-            ),
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(11)]
-            )
-        );
+        mock_scheduled_event_resolver::set_events([
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(6)],
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(11)],
+        ]);
 
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 
@@ -840,16 +800,10 @@ class totara_notification_scheduled_notification_scenario_testcase extends testc
 
         // Add two mock events, which one is happening 4 days from now,
         // and one is occurring 9 days from now.
-        mock_scheduled_event_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(4)]
-            ),
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(9)]
-            )
-        );
+        mock_scheduled_event_resolver::set_events([
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(4)],
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(9)],
+        ]);
 
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 
@@ -911,16 +865,10 @@ class totara_notification_scheduled_notification_scenario_testcase extends testc
 
         // Add two mock events, which one is happening 4 days from now,
         // and one is occurring 9 days from now.
-        mock_scheduled_event_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(4)]
-            ),
-            new notification_event_data(
-                $extended_context,
-                [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(9)]
-            )
-        );
+        mock_scheduled_event_resolver::set_events([
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(4)],
+            [mock_scheduled_event_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(9)],
+        ]);
 
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 

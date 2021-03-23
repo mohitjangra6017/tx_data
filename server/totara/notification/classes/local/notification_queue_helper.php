@@ -23,8 +23,9 @@
 namespace totara_notification\local;
 
 use totara_notification\entity\notification_queue;
-use totara_notification\model\notification_event_data;
 use totara_notification\model\notification_preference;
+use totara_notification\resolver\notifiable_event_resolver;
+use totara_notification\resolver\resolver_helper;
 
 /**
  * A static class that contains helper methods to create the queue and what not.
@@ -39,19 +40,22 @@ class notification_queue_helper {
 
     /**
      * @param notification_preference $preference
-     * @param notification_event_data $event
+     * @param array                   $event_data
      * @param int                     $event_time
      * @return notification_queue
      */
     public static function create_queue_from_preference(
         notification_preference $preference,
-        notification_event_data $event,
+        array $event_data,
         int $event_time
     ): notification_queue {
+        $resolver_class_name = $preference->get_resolver_class_name();
+        $resolver = resolver_helper::instantiate_resolver_from_class($resolver_class_name, $event_data);
+
         $queue = new notification_queue();
         $queue->notification_preference_id = $preference->get_id();
-        $queue->set_extended_context($event->get_extended_context());
-        $queue->set_decoded_event_data($event->get_event_data());
+        $queue->set_decoded_event_data($event_data);
+        $queue->set_extended_context($resolver->get_extended_context());
 
         $queue->scheduled_time = schedule_helper::calculate_schedule_timestamp(
             $event_time,

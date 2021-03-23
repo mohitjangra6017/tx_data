@@ -25,7 +25,6 @@ use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\entity\notification_queue;
 use totara_notification\local\schedule_helper;
-use totara_notification\model\notification_event_data;
 use totara_notification\task\process_scheduled_event_task;
 use totara_notification\testing\generator;
 use totara_notification_mock_recipient as mock_recipient;
@@ -74,12 +73,9 @@ class totara_notification_process_scheduled_event_testcase extends testcase {
         );
 
         // Create an event that have the event time set for 6 days from now.
-        mock_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [mock_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(6)]
-            )
-        );
+        mock_resolver::set_events([
+            [mock_resolver::EVENT_TIME_KEY => $now + schedule_helper::days_to_seconds(6)],
+        ]);
 
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 
@@ -134,12 +130,9 @@ class totara_notification_process_scheduled_event_testcase extends testcase {
         );
 
         // Create an event that had happened 1 day before now.
-        mock_resolver::set_events(
-            new notification_event_data(
-                $extended_context,
-                [mock_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(1)]
-            )
-        );
+        mock_resolver::set_events([
+            [mock_resolver::EVENT_TIME_KEY => $now - schedule_helper::days_to_seconds(1)],
+        ]);
 
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
         $task = new process_scheduled_event_task();

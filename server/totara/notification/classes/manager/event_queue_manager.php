@@ -30,7 +30,6 @@ use totara_notification\entity\notifiable_event_queue;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\helper;
 use totara_notification\local\notification_queue_helper;
-use totara_notification\model\notification_event_data;
 use totara_notification\resolver\resolver_helper;
 
 class event_queue_manager {
@@ -68,10 +67,9 @@ class event_queue_manager {
                     continue;
                 }
 
-                $resolver_class_name = resolver_helper::get_resolver_class_name_from_notifiable_event($queue->event_name);
                 $preferences = notification_preference_loader::get_notification_preferences(
                     $queue->get_extended_context(),
-                    $resolver_class_name
+                    $queue->resolver_class_name
                 );
 
                 foreach ($preferences as $preference) {
@@ -82,10 +80,7 @@ class event_queue_manager {
 
                     notification_queue_helper::create_queue_from_preference(
                         $preference,
-                        new notification_event_data(
-                            $queue->get_extended_context(),
-                            $queue->get_decoded_event_data()
-                        ),
+                        $queue->get_decoded_event_data(),
                         $queue->time_created
                     );
                 }
@@ -104,8 +99,8 @@ class event_queue_manager {
      * @return bool
      */
     private function is_valid_queue(notifiable_event_queue $queue): bool {
-        if (!helper::is_valid_notifiable_event($queue->event_name)) {
-            $this->trace->output("The event class name is not a notifiable event: '{$queue->event_name}'");
+        if (!resolver_helper::is_valid_event_resolver($queue->resolver_class_name)) {
+            $this->trace->output("The resolver class name is not a notifiable event resolver: '{$queue->resolver_class_name}'");
             return false;
         }
 

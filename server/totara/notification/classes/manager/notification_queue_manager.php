@@ -134,7 +134,6 @@ class notification_queue_manager {
 
         $resolver = resolver_helper::instantiate_resolver_from_class(
             $preference->get_resolver_class_name(),
-            $queue->get_extended_context(),
             $event_data
         );
 

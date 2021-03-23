@@ -45,7 +45,10 @@ class totara_notification_notifiable_event_observer_testcase extends testcase {
         $user_one = $generator->create_user();
         $context_user = context_user::instance($user_one->id);
 
-        $mock_event_data = ['user_id' => $user_one->id];
+        $mock_event_data = [
+            'user_id' => $user_one->id,
+            'expected_context_id' => $context_user->id,
+        ];
         $event = new totara_notification_mock_notifiable_event(
             $context_user->id,
             $mock_event_data
@@ -67,43 +70,8 @@ class totara_notification_notifiable_event_observer_testcase extends testcase {
         $notifiable_queue = new notifiable_event_queue($queue_record);
 
         self::assertEquals(json_encode($mock_event_data), $notifiable_queue->event_data);
-        self::assertEquals(totara_notification_mock_notifiable_event::class, $notifiable_queue->event_name);
+        self::assertEquals(totara_notification_mock_notifiable_event_resolver::class, $notifiable_queue->resolver_class_name);
         self::assertEquals($mock_event_data, $notifiable_queue->get_decoded_event_data());
-
-        // This assertion is pretty much redundant, but it is better to have one.
-        self::assertEquals($context_user->id, $notifiable_queue->context_id);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_observe_an_event_with_empty_event_data(): void {
-        global $DB;
-        $generator = self::getDataGenerator();
-
-        $user_one = $generator->create_user();
-        $context_user = context_user::instance($user_one->id);
-
-        $event = new totara_notification_mock_notifiable_event($context_user->id);
-
-        self::assertEquals(0, $DB->count_records(notifiable_event_queue::TABLE));
-        notifiable_event_observer::watch_notifiable_event($event);
-
-        self::assertEquals(1, $DB->count_records(notifiable_event_queue::TABLE));
-
-        // Fetch the first record.
-        $queue_record = $DB->get_record(
-            notifiable_event_queue::TABLE,
-            ['context_id' => $context_user->id],
-            '*',
-            MUST_EXIST
-        );
-
-        $notifiable_queue = new notifiable_event_queue($queue_record);
-
-        self::assertEquals("{}", $notifiable_queue->event_data);
-        self::assertEquals(totara_notification_mock_notifiable_event::class, $notifiable_queue->event_name);
-        self::assertEquals([], $notifiable_queue->get_decoded_event_data());
 
         // This assertion is pretty much redundant, but it is better to have one.
         self::assertEquals($context_user->id, $notifiable_queue->context_id);

@@ -31,7 +31,7 @@ use totara_notification\repository\notifiable_event_queue_repository;
  * Entity class represent for table "ttr_notifiable_event_queue"
  *
  * @property int    $id
- * @property string $event_name
+ * @property string $resolver_class_name
  * @property string $event_data     A json string, please use {@see notifiable_event_queue::get_decoded_event_data()}
  *                                  for a decoded version of this attribute. Note that the result returned will be an array.
  * @property int    $time_created

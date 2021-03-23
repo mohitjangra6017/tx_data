@@ -22,7 +22,7 @@
  */
 namespace totara_notification\resolver\abstraction;
 
-use totara_notification\model\notification_event_data;
+use moodle_recordset;
 use totara_notification\schedule\schedule_on_event;
 
 /**
@@ -32,20 +32,19 @@ interface scheduled_event_resolver {
     /**
      * Get all the events that happened/will happen within the time frame.
      *
-     * Note that we are return the instance of a wrapper for the event. So that we can stay away
-     * from the actual event in the system and easily prevent the triggering/dispatching the events
-     * by any mistakes.
+     * It is critical that the events returned INCLUDE those with the $min_time but
+     * EXCLUDE those with the $max_time. E.g. where $min_time <= $event_time < $max_time.
      *
-     * This function is a static as we do not want those notification_event_data wrappers to be depending on
-     * the dependencies data from the resolver. Basically it is to provide a collection of data
-     * that we can instantiate the resolver.
+     * The return type should be moodle_recordset or some subclass, such as lazy_collection
+     * or array_recordset (a wrapper for non-recordset data). The recordset will be closed
+     * after use.
      *
      * @param int $min_time
      * @param int $max_time
      *
-     * @return notification_event_data[]
+     * @return moodle_recordset of events of type array or stdClass
      */
-    public static function get_scheduled_events(int $min_time, int $max_time): array;
+    public static function get_scheduled_events(int $min_time, int $max_time): moodle_recordset;
 
     /**
      * Returns an array of available timing for this event (concrete class).

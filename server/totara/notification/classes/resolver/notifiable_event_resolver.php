@@ -47,11 +47,6 @@ use totara_notification\recipient\recipient;
  */
 abstract class notifiable_event_resolver {
     /**
-     * @var extended_context
-     */
-    protected $extended_context;
-
-    /**
      * @var array
      */
     protected $event_data;
@@ -60,11 +55,9 @@ abstract class notifiable_event_resolver {
      * notifiable_event_resolver constructor.
      * Preventing any complicated construction.
      *
-     * @param extended_context $extended_context
      * @param array            $event_data
      */
-    final public function __construct(extended_context $extended_context, array $event_data) {
-        $this->extended_context = $extended_context;
+    final public function __construct(array $event_data) {
         $this->event_data = $event_data;
     }
 
@@ -201,4 +194,13 @@ abstract class notifiable_event_resolver {
         }
         return false;
     }
+
+    /**
+     * Returns the extended context of where this event occurred. Note that this should almost certainly be
+     * either the same as the natural context (but wrapped in the extended context container class) or an
+     * extended context where the natural context is the immediate parent.
+     *
+     * @return extended_context
+     */
+    abstract public function get_extended_context(): extended_context;
 }

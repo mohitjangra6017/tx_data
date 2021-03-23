@@ -23,13 +23,13 @@
 namespace totara_notification\manager;
 
 use coding_exception;
+use moodle_recordset;
 use null_progress_trace;
 use progress_trace;
 use totara_notification\factory\notifiable_event_resolver_factory;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\event_resolver_schedule;
 use totara_notification\local\notification_queue_helper;
-use totara_notification\model\notification_event_data;
 use totara_notification\resolver\abstraction\scheduled_event_resolver;
 use totara_notification\resolver\resolver_helper;
 use totara_notification\schedule\time_window;
@@ -126,20 +126,22 @@ class scheduled_event_manager {
 
         /**
          * @see scheduled_event_resolver::get_scheduled_events()
-         * @var notification_event_data[] $events
+         * @var moodle_recordset $events
          */
         $events = call_user_func_array(
             [$resolver_class_name, 'get_scheduled_events'],
             [$min_max_window->get_min_time(), $min_max_window->get_max_time()]
         );
 
-        foreach ($events as $event_dto) {
-            $extended_context = $event_dto->get_extended_context();
+        foreach ($events as $event_data) {
+            // Event data might be array or stdClass. We always use it as an array.
+            $event_data = (array)$event_data;
+
             $resolver = resolver_helper::instantiate_resolver_from_class(
                 $resolver_class_name,
-                $extended_context,
-                $event_dto->get_event_data()
+                $event_data
             );
+            $extended_context = $resolver->get_extended_context();
 
             $fixed_event_time = $resolver->get_fixed_event_time();
             if (empty($fixed_event_time) || 0 >= $fixed_event_time) {
@@ -165,11 +167,13 @@ class scheduled_event_manager {
                     // Fixed event time is within the time frame - therefore we can queue it.
                     notification_queue_helper::create_queue_from_preference(
                         $preference,
-                        $event_dto,
+                        $event_data,
                         $fixed_event_time
                     );
                 }
             }
         }
+
+        $events->close();
     }
 }

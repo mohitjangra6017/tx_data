@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use totara_core\extended_context;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\resolver\notifiable_event_resolver;
 
@@ -137,5 +138,9 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
      */
     public static function add_placeholder_options(placeholder_option ...$options): void {
         self::$placeholder_options = $options;
+    }
+
+    public function get_extended_context(): extended_context {
+        return extended_context::make_with_id($this->event_data['expected_context_id']);
     }
 }

@@ -21,12 +21,17 @@
  * @package totara_notification
  */
 
-use totara_notification\model\notification_event_data;
+use totara_core\extended_context;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\resolver\abstraction\scheduled_event_resolver;
 use totara_notification\resolver\notifiable_event_resolver;
 use totara_notification\schedule\schedule_after_event;
 use totara_notification\schedule\schedule_before_event;
+
+global $CFG;
+
+require_once("{$CFG->libdir}/dml/array_recordset.php");
+require_once("{$CFG->libdir}/dml/moodle_recordset.php");
 
 class totara_notification_mock_scheduled_aware_event_resolver extends notifiable_event_resolver
     implements scheduled_event_resolver {
@@ -42,7 +47,7 @@ class totara_notification_mock_scheduled_aware_event_resolver extends notifiable
     private static $placeholder_options;
 
     /**
-     * @var notification_event_data[]|null
+     * @var array
      */
     private static $events;
 
@@ -153,21 +158,17 @@ class totara_notification_mock_scheduled_aware_event_resolver extends notifiable
      * @param int $min_time
      * @param int $max_time
      *
-     * @return notification_event_data[]
+     * @return moodle_recordset
      */
-    public static function get_scheduled_events(int $min_time, int $max_time): array {
-        if (!isset(static::$events)) {
-            return [];
-        }
-
-        return static::$events;
+    public static function get_scheduled_events(int $min_time, int $max_time): moodle_recordset {
+        return new array_recordset(static::$events);
     }
 
     /**
-     * @param notification_event_data ...$events
+     * @param array $events
      * @return void
      */
-    public static function set_events(notification_event_data ...$events): void {
+    public static function set_events(array $events): void {
         static::$events = $events;
     }
 
@@ -196,5 +197,9 @@ class totara_notification_mock_scheduled_aware_event_resolver extends notifiable
      */
     public static function set_associated_notifiable_event(bool $value): void {
         static::$has_associated_event = $value;
+    }
+
+    public function get_extended_context(): extended_context {
+        return extended_context::make_with_context(context_system::instance());
     }
 }

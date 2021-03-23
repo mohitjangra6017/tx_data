@@ -21,9 +21,7 @@
  * @package totara_notification
  */
 
-use totara_core\extended_context;
 use totara_notification\local\notification_queue_helper;
-use totara_notification\model\notification_event_data;
 use totara_notification\testing\generator;
 use totara_notification\entity\notification_queue;
 use core_phpunit\testcase;
@@ -42,10 +40,9 @@ class totara_notification_local_notification_queue_helper_testcase extends testc
 
         notification_queue_helper::create_queue_from_preference(
             $preference,
-            new notification_event_data(
-                extended_context::make_system(),
-                []
-            ),
+            [
+                'expected_context_id' => 123,
+            ],
             DAYSECS * 5
         );
 

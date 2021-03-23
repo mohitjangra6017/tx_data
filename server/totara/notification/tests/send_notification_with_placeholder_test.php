@@ -108,6 +108,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends te
             [
                 'owner_id' => $user_one->id,
                 'author_id' => $user_two->id,
+                'expected_context_id' => $context_system->id,
             ]
         );
 
@@ -217,6 +218,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends te
             [
                 'author_id' => $user_one->id,
                 'commenter_id' => $user_two->id,
+                'expected_context_id' => $context_course->id,
             ]
         );
 
@@ -348,6 +350,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends te
         $event = new mock_notifiable_event($context_system->id, [
             'user_one_id' => $user_one->id,
             'user_two_id' => $user_two->id,
+            'expected_context_id' => $context_system->id,
         ]);
 
         self::assertEquals(0, $DB->count_records(notifiable_event_queue::TABLE));

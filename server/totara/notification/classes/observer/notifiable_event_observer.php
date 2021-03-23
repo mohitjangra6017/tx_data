@@ -26,6 +26,7 @@ use core\event\base;
 use totara_core\extended_context;
 use totara_notification\event\notifiable_event;
 use totara_notification\entity\notifiable_event_queue;
+use totara_notification\resolver\resolver_helper;
 
 /**
  * Event observer for notifiable event interface.
@@ -44,10 +45,15 @@ final class notifiable_event_observer {
     public static function watch_notifiable_event(notifiable_event $event): void {
         $event_data = $event->get_notification_event_data();
 
+        $resolver = resolver_helper::get_resolver_from_notifiable_event(
+            get_class($event),
+            $event_data
+        );
+
         $queue = new notifiable_event_queue();
-        $queue->event_name = get_class($event);
+        $queue->resolver_class_name = get_class($resolver);
         $queue->set_decoded_event_data($event_data);
-        $queue->set_extended_context($event->get_notification_extended_context());
+        $queue->set_extended_context($resolver->get_extended_context());
 
         $queue->save();
     }

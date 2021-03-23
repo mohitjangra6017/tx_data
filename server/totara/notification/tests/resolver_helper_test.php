@@ -36,7 +36,7 @@ class totara_notification_resolver_helper_testcase extends testcase {
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage('Event class name is an invalid notifiable event');
 
-        resolver_helper::get_resolver_from_notifiable_event('hello_world', extended_context::make_system(), []);
+        resolver_helper::get_resolver_from_notifiable_event('hello_world', []);
     }
 
     /**
@@ -48,7 +48,6 @@ class totara_notification_resolver_helper_testcase extends testcase {
 
         $resolver = resolver_helper::get_resolver_from_notifiable_event(
             totara_notification_mock_notifiable_event::class,
-            extended_context::make_system(),
             ['user_data' => false]
         );
 

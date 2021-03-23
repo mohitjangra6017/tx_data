@@ -7,8 +7,8 @@
     <TABLE NAME="notifiable_event_queue" COMMENT="A table to queue the events from system which is used to queue the notifications">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="event_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="It describes the event that occurred, as provided/required by the notifiable_event class"/>
-        <FIELD NAME="event_data" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="A json string encoded of data. It contents the data of the notifiable_event"/>
+        <FIELD NAME="resolver_class_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The notifiable event resolver class name"/>
+        <FIELD NAME="event_data" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="A json string encoded of data. It contents the data describing what happened"/>
         <FIELD NAME="context_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The real context id component of the extended context of where the preference is defined"/>
         <FIELD NAME="component" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The component property of the extended context"/>
         <FIELD NAME="area" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The area property of the extended context"/>
@@ -20,7 +20,7 @@
         <KEY NAME="context_id_key" TYPE="foreign" FIELDS="context_id" REFTABLE="context" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="event_name_index" UNIQUE="false" FIELDS="event_name"/>
+        <INDEX NAME="resolver_class_name_index" UNIQUE="false" FIELDS="resolver_class_name"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="notification_queue" COMMENT="A table to queue all the notifications to be sending out to the outputs">

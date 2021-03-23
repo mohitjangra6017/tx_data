@@ -78,11 +78,4 @@ class totara_notification_invalid_notifiable_event implements notifiable_event {
     public function get_notification_event_data(): array {
         return [];
     }
-
-    /**
-     * @return extended_context
-     */
-    public function get_notification_extended_context(): extended_context {
-        return extended_context::make_with_context($this->context_id);
-    }
 }

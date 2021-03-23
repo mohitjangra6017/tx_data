@@ -41,13 +41,4 @@ interface notifiable_event {
      * @return array
      */
     public function get_notification_event_data(): array;
-
-    /**
-     * Returns the extended context of where this event occurred. Note that this should almost certainly be
-     * either the same as the natural context (but wrapped in the extended context container class) or an
-     * extended context where the natural context is the immediate parent.
-     *
-     * @return extended_context
-     */
-    public function get_notification_extended_context(): extended_context;
 }

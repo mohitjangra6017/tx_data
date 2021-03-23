@@ -23,18 +23,16 @@
 namespace totara_comment\totara_notification\resolver;
 
 use coding_exception;
-use stdClass;
+use moodle_recordset;
 use totara_comment\comment;
 use totara_comment\resolver_factory;
 use totara_comment\totara_notification\recipient\comment_author;
 use totara_comment\totara_notification\recipient\owner;
 use totara_core\extended_context;
-use totara_notification\model\notification_event_data;
 use totara_notification\resolver\abstraction\scheduled_event_resolver;
 use totara_notification\resolver\notifiable_event_resolver;
 use totara_notification\schedule\schedule_after_event;
 use totara_notification\schedule\schedule_on_event;
-use totara_comment\event\comment_soft_deleted as comment_soft_deleted_event;
 
 class comment_soft_deleted extends notifiable_event_resolver implements scheduled_event_resolver {
     /**
@@ -97,31 +95,27 @@ class comment_soft_deleted extends notifiable_event_resolver implements schedule
      * @param int $min_time
      * @param int $max_time
      *
-     * @return notification_event_data[]
+     * @return moodle_recordset
      */
-    public static function get_scheduled_events(int $min_time, int $max_time): array {
+    public static function get_scheduled_events(int $min_time, int $max_time): moodle_recordset {
         global $DB;
+
         $sql = '
-            SELECT * FROM "ttr_totara_comment" c
+            SELECT c.id AS comment_id FROM "ttr_totara_comment" c
             WHERE c.timedeleted IS NOT NULL AND c.timedeleted >= :min_time 
             AND c.timedeleted < :max_time
         ';
 
-        $records = $DB->get_records_sql($sql, ['min_time' => $min_time, 'max_time' => $max_time]);
-        return array_map(
-            function (stdClass $record): notification_event_data {
-                $comment = comment::from_record($record);
-                $resolver = resolver_factory::create_resolver($comment->get_component());
+        return $DB->get_recordset_sql($sql, ['min_time' => $min_time, 'max_time' => $max_time]);
+    }
 
-                $context_id = $resolver->get_context_id($comment->get_instanceid(), $comment->get_area());
-                $event = comment_soft_deleted_event::from_comment($comment, $context_id);
+    public function get_extended_context(): extended_context {
+        $comment_id = $this->event_data['comment_id'];
+        $comment = comment::from_id($comment_id);
 
-                return new notification_event_data(
-                    extended_context::make_with_id($context_id),
-                    $event->get_notification_event_data()
-                );
-            },
-            $records
-        );
+        $resolver = resolver_factory::create_resolver($comment->get_component());
+        $context_id = $resolver->get_context_id($comment->get_instanceid(), $comment->get_area());
+
+        return extended_context::make_with_id($context_id);
     }
 }

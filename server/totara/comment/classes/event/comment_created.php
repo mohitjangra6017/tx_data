@@ -136,11 +136,4 @@ final class comment_created extends base implements interaction_event, notifiabl
             'comment_id' => $this->objectid
         ];
     }
-
-    /**
-     * @return extended_context
-     */
-    public function get_notification_extended_context(): extended_context {
-        return extended_context::make_with_context($this->get_context());
-    }
 }

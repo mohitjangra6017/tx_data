@@ -92,11 +92,4 @@ final class comment_soft_deleted extends base implements notifiable_event {
             'comment_id' => $this->objectid
         ];
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_notification_extended_context(): extended_context {
-        return extended_context::make_with_context($this->get_context());
-    }
 }

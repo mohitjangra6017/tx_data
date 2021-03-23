@@ -24,7 +24,6 @@ namespace totara_notification\resolver;
 
 use coding_exception;
 use core_component;
-use totara_core\extended_context;
 use totara_notification\local\helper;
 use totara_notification\resolver\abstraction\scheduled_event_resolver;
 
@@ -86,30 +85,26 @@ class resolver_helper {
 
     /**
      * @param string           $event_class_name
-     * @param extended_context $extended_context
      * @param array            $event_data
      *
      * @return notifiable_event_resolver
      */
     public static function get_resolver_from_notifiable_event(
         string $event_class_name,
-        extended_context $extended_context,
         array $event_data
     ): notifiable_event_resolver {
         $resolver_class_name = static::get_resolver_class_name_from_notifiable_event($event_class_name);
-        return static::instantiate_resolver_from_class($resolver_class_name, $extended_context, $event_data);
+        return static::instantiate_resolver_from_class($resolver_class_name, $event_data);
     }
 
     /**
      * @param string           $resolver_class_name
-     * @param extended_context $extended_context
      * @param array            $event_data
      *
      * @return notifiable_event_resolver
      */
     public static function instantiate_resolver_from_class(
         string $resolver_class_name,
-        extended_context $extended_context,
         array $event_data
     ): notifiable_event_resolver {
         /**
@@ -117,7 +112,7 @@ class resolver_helper {
          * {@see notifiable_event_resolver::__construct()}. Let the native PHP validate the
          * instance of the class here as we declared the type return from this function.
          */
-        return new $resolver_class_name($extended_context, $event_data);
+        return new $resolver_class_name($event_data);
     }
 
     /**

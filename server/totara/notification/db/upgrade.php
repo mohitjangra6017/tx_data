@@ -348,5 +348,35 @@ function xmldb_totara_notification_upgrade($old_version) {
         upgrade_plugin_savepoint(true, 2021031202, 'totara', 'notification');
     }
 
+    if ($old_version < 2021032304) {
+        // Define index event_name_index (not unique) to be dropped form notifiable_event_queue.
+        $table = new xmldb_table('notifiable_event_queue');
+        $index = new xmldb_index('event_name_index', XMLDB_INDEX_NOTUNIQUE, array('event_name'));
+
+        // Conditionally launch drop index resolver_class_name_index.
+        if ($db_manager->index_exists($table, $index)) {
+            $db_manager->drop_index($table, $index);
+        }
+
+        // Rename field event_name on table notifiable_event_queue to resolver_class_name.
+        $table = new xmldb_table('notifiable_event_queue');
+        $field = new xmldb_field('event_name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'id');
+
+        // Launch rename field event_name to resolver_class_name.
+        $db_manager->rename_field($table, $field, 'resolver_class_name');
+
+        // Define index resolver_class_name_index (not unique) to be added to notifiable_event_queue.
+        $table = new xmldb_table('notifiable_event_queue');
+        $index = new xmldb_index('resolver_class_name_index', XMLDB_INDEX_NOTUNIQUE, array('resolver_class_name'));
+
+        // Conditionally launch add index resolver_class_name_index.
+        if (!$db_manager->index_exists($table, $index)) {
+            $db_manager->add_index($table, $index);
+        }
+
+        // Notification savepoint reached.
+        upgrade_plugin_savepoint(true, 2021032304, 'totara', 'notification');
+    }
+
     return true;
 }

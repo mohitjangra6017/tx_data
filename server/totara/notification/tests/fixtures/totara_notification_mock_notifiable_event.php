@@ -43,6 +43,9 @@ class totara_notification_mock_notifiable_event implements notifiable_event {
      */
     public function __construct(int $context_id, array $mock_event_data = []) {
         $this->context_id = $context_id;
+        if (empty($mock_event_data['expected_context_id'])) {
+            $mock_event_data['expected_context_id'] = $context_id;
+        }
         $this->event_data = $mock_event_data;
     }
 
@@ -51,12 +54,5 @@ class totara_notification_mock_notifiable_event implements notifiable_event {
      */
     public function get_notification_event_data(): array {
         return $this->event_data;
-    }
-
-    /**
-     * @return extended_context
-     */
-    public function get_notification_extended_context(): extended_context {
-        return extended_context::make_with_id($this->context_id);
     }
 }

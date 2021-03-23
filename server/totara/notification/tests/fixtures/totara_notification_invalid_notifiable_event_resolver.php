@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use totara_core\extended_context;
 use totara_notification\resolver\notifiable_event_resolver;
 
 /**
@@ -53,5 +54,9 @@ class totara_notification_invalid_notifiable_event_resolver extends notifiable_e
      */
     public static function get_notification_available_placeholder_options(): array {
         return [];
+    }
+
+    public function get_extended_context(): extended_context {
+        return extended_context::make_system();
     }
 }
