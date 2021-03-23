@@ -39,7 +39,7 @@ use mod_perform\models\activity\section_element_reference;
 class subject_instance_previous_responses_external_participant implements query_resolver, has_middleware {
 
     /**
-     * @inheritDocs
+     * @inheritDoc
      */
     public static function resolve(array $args, execution_context $ec) {
         $participant_section_id = $args['input']['participant_section_id'];

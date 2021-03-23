@@ -28,7 +28,7 @@
         :activity-context-id="activityContextId"
         :activity-id="activityId"
         :activity-state="activityState"
-        :addable-element-plugins="respondableElementPlugins"
+        :addable-element-plugins="compatibleElementPlugins"
         :element-id="elementId"
         :section-element="sectionElement"
         :section-id="sectionId"
@@ -68,16 +68,21 @@ export default {
      * Provide the plugin list for elements that can be added
      *
      */
-    respondableElementPlugins() {
-      if (this.reportPreview || this.activityState.code != 0) {
+    compatibleElementPlugins() {
+      let compatibleChildPlugins = this.sectionElement.element.data
+        .compatible_child_element_plugins;
+
+      if (
+        this.reportPreview ||
+        this.activityState.code ||
+        !compatibleChildPlugins
+      ) {
         return [];
       }
-      return this.elementPlugins.filter(
-        elementPlugin =>
-          // For now don't include the redisplay question, see TL-29708
-          elementPlugin.plugin_name !== 'redisplay' &&
-          elementPlugin.plugin_name !== 'linked_review'
-      );
+
+      return this.elementPlugins.filter(elementPlugin => {
+        return compatibleChildPlugins.includes(elementPlugin.plugin_name);
+      });
     },
   },
 

@@ -89,13 +89,14 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
 
         $expected_assignment1 = assignment_model::load_by_id($assignment1->id);
 
-        $expected_scale_values1 = $expected_assignment1->get_assignment_specific_scale()->values;
+        $expected_scale_values1 = $expected_assignment1->get_assignment_specific_scale()->values->sort('sortorder', 'asc', false);
         $expected_scale1 = [];
         foreach ($expected_scale_values1 as $expected_scale_value) {
             $expected_scale1[] = [
                 'id' => $expected_scale_value->id,
                 'name' => $expected_scale_value->name,
                 'proficient' => (bool) $expected_scale_value->proficient,
+                'sort_order' => $expected_scale_value->sortorder,
             ];
         }
 
@@ -126,13 +127,14 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
 
         $expected_assignment2 = assignment_model::load_by_id($assignment2->id);
 
-        $expected_scale_values2 = $expected_assignment2->get_assignment_specific_scale()->values;
+        $expected_scale_values2 = $expected_assignment2->get_assignment_specific_scale()->values->sort('sortorder', 'asc', false);
         $expected_scale2 = [];
         foreach ($expected_scale_values2 as $expected_scale_value) {
             $expected_scale2[] = [
                 'id' => $expected_scale_value->id,
                 'name' => $expected_scale_value->name,
                 'proficient' => (bool) $expected_scale_value->proficient,
+                'sort_order' => $expected_scale_value->sortorder,
             ];
         }
 

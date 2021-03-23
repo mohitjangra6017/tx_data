@@ -55,11 +55,12 @@ class mod_perform_element_plugin_data_provider_testcase extends advanced_testcas
             'multi_choice_multi',
             'numeric_rating_scale',
             'custom_rating_scale',
+            'competency_rating',
             'date_picker',
+            'linked_review',
             'static_content',
             'redisplay',
             'aggregation',
-            'linked_review',
         ];
 
         self::assertEquals($expected_plugins, $actual_plugin_names, 'Order and names did not match');

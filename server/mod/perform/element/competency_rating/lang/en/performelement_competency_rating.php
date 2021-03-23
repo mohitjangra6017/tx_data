@@ -18,39 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Kunle Odusan <kunle.odusan@totaralearning.com>
- * @package performelement_linked_review
  */
 
-namespace performelement_linked_review;
-
-use mod_perform\models\activity\helpers\child_element_config as base_child_element_config;
-
-/**
- * Child element configuration for linked review.
- *
- * @package performelement_linked_review
- */
-class child_element_config extends base_child_element_config {
-
-    /**
-     * @inheritDoc
-     */
-    public function get_supports_child_elements(): bool {
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_supports_repeating_child_elements(): bool {
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_repeating_item_identifier(): string {
-        return 'contentItemResponses';
-    }
-
-}
+$string['name'] = 'Rating scale: Competency';
+$string['help_text'] = 'The Competency rating scale question references the rating scale for the selected competency. 
+Participants can choose a rating which will be captured in the performance activity. 
+However it would not be submitted to the competency.';
+$string['error_answer_required'] = 'Answer is required';
+$string['pluginname'] = 'Competency Rating';
+$string['scale_value_deleted'] = 'Scale value deleted';

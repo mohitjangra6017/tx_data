@@ -222,7 +222,7 @@ export default {
           // Need to convert stringified raw data from the query
           let rawData = JSON.parse(el.raw_data);
           if (typeof rawData === 'object' && Object.keys(rawData).length > 0) {
-            el.rawData = rawData;
+            el.raw_data = rawData;
           }
 
           // Check if element has a state, if not set it to view

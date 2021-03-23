@@ -42,7 +42,7 @@ class response_formatter extends element_response_formatter {
     }
 
     /**
-     * @inheritDocs
+     * @inheritDoc
      */
     private function get_child_element_formatter(element $element): base {
         return element_response_formatter::get_instance($element, $this->format);

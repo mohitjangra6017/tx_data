@@ -23,8 +23,8 @@
 
 namespace performelement_date_picker;
 
-use coding_exception;
 use core\collection;
+use DateTime;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\respondable_element_plugin;
 
@@ -34,7 +34,7 @@ class date_picker extends respondable_element_plugin {
      * @inheritDoc
      */
     public function get_sortorder(): int {
-        return 70;
+        return 80;
     }
 
     /**
@@ -58,7 +58,7 @@ class date_picker extends respondable_element_plugin {
             if (!isset($response_data['iso'])) {
                 $errors->append(new date_iso_required_error());
             } else {
-                $date_object = \DateTime::createFromFormat('Y-m-d', $response_data['iso']);
+                $date_object = DateTime::createFromFormat('Y-m-d', $response_data['iso']);
 
                 if ($date_object === false) {
                     $errors->append(new invalid_date_error());
@@ -114,7 +114,7 @@ class date_picker extends respondable_element_plugin {
             return null;
         }
 
-        $date_object = \DateTime::createFromFormat('Y-m-d', $response_data['iso']);
+        $date_object = DateTime::createFromFormat('Y-m-d', $response_data['iso']);
 
         return $date_object->getTimestamp();
     }

@@ -7,6 +7,7 @@ query mod_perform_element_plugins {
       has_title
       has_reporting_id
       title_text
+      title_help_text
       is_title_required
       is_response_required_enabled
       extra_config_data
@@ -17,5 +18,9 @@ query mod_perform_element_plugins {
     participant_form_component
     participant_print_component
     group
+    element_usage {
+      can_be_child_element
+      can_be_top_level_element
+    }
   }
 }

@@ -52,6 +52,7 @@ use mod_perform\models\activity\helpers\child_element_manager;
  * @property-read string element_$identifier
  * @property-read element_identifier $element_identifier
  * @property-read int|null $parent
+ * @property-read child_element_manager $child_element_manager
  * @property-read collection|element[] $children
  *
  * @package mod_perform\models\activity
@@ -361,6 +362,7 @@ class element extends model {
      */
     public static function validate(element_entity $entity): void {
         $element_plugin = element_plugin::load_by_plugin($entity->plugin_name);
+        $element_plugin->get_element_usage()->validate_element_usage($entity);
         $element_plugin->validate_element($entity);
     }
 

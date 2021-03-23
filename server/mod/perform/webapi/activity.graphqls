@@ -99,6 +99,11 @@ type mod_perform_element_plugin_config {
   title_text: String!
 
   """
+  title help text when creating or updating element
+  """
+  title_help_text: String
+
+  """
   is title required when creating or updating element
   """
   is_title_required: Boolean!
@@ -183,6 +188,8 @@ type mod_perform_element_plugin {
   Child element configuration.
   """
   child_element_config: mod_perform_child_element_config!
+
+  element_usage: mod_perform_element_usage!
 }
 
 """
@@ -208,6 +215,21 @@ type mod_perform_child_element_config {
   Child element responses identifier.
   """
   child_element_responses_identifier: String
+}
+
+"""
+Element usage, states where an element can be used.
+"""
+type mod_perform_element_usage {
+  """
+  If the element can be used as a child element.
+  """
+  can_be_child_element: Boolean!
+
+  """
+  If the element can be used as a top level element.
+  """
+  can_be_top_level_element: Boolean!
 }
 
 """
@@ -254,6 +276,7 @@ type mod_perform_element {
   Whether this element can be responded to by a participant
   """
   is_respondable: Boolean!
+
   """
   Whether this element displayes respones or not
   """

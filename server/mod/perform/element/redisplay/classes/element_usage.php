@@ -18,39 +18,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Kunle Odusan <kunle.odusan@totaralearning.com>
- * @package performelement_linked_review
  */
 
-namespace performelement_linked_review;
+namespace performelement_redisplay;
 
-use mod_perform\models\activity\helpers\child_element_config as base_child_element_config;
+use mod_perform\models\activity\helpers\element_usage as base_element_usage;
 
 /**
- * Child element configuration for linked review.
+ * Configuration of locations the redisplay element can be used.
  *
- * @package performelement_linked_review
+ * @package performelement_redisplay
  */
-class child_element_config extends base_child_element_config {
+class element_usage extends base_element_usage {
 
     /**
      * @inheritDoc
      */
-    public function get_supports_child_elements(): bool {
-        return true;
+    public function get_can_be_child_element(): bool {
+        return false;
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_supports_repeating_child_elements(): bool {
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_repeating_item_identifier(): string {
-        return 'contentItemResponses';
-    }
-
 }

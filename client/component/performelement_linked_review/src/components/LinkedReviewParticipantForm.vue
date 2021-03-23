@@ -134,6 +134,7 @@
                     :show-other-response="showOtherResponse"
                     :view-only="viewOnly"
                     :token="token"
+                    :extra-data="{ content: getContent(item.content) }"
                   />
                 </ContentChildElementFormScope>
               </div>

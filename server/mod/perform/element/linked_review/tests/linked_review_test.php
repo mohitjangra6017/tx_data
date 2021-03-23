@@ -55,6 +55,7 @@ class performelement_linked_review_linked_review_testcase extends advanced_testc
                 'selection_relationships',
                 'components',
                 'selection_relationships_display',
+                'compatible_child_element_plugins',
                 'content_type_display',
                 'content_type_settings_display',
             ],

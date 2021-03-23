@@ -27,6 +27,7 @@ use mod_perform\entity\activity\element;
 use mod_perform\models\activity\element_plugin;
 use mod_perform\models\activity\element as element_model;
 use performelement_static_content\local\helper;
+use stdClass;
 
 class static_content extends element_plugin {
 
@@ -62,7 +63,7 @@ class static_content extends element_plugin {
      * @inheritDoc
      */
     public function get_sortorder(): int {
-        return 80;
+        return 100;
     }
 
     /**
@@ -83,7 +84,7 @@ class static_content extends element_plugin {
             $options = helper::get_editor_options($context);
 
             // Simulate the form data.
-            $editordata = new \stdClass();
+            $editordata = new stdClass();
             $editordata->content_editor = [
                 'text' => $data['wekaDoc'],
                 'format' => (int) constant($data['docFormat']),

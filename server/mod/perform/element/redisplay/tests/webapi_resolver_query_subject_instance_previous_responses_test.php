@@ -449,7 +449,7 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
     }
 
     /**
-     * @inheritDocs
+     * @inheritDoc
      */
     protected function tearDown(): void {
         $this->perform_generator = null;

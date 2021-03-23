@@ -23,6 +23,7 @@
 
 namespace totara_competency\performelement_linked_review;
 
+use core\collection;
 use core\format;
 use performelement_linked_review\content_type;
 use performelement_linked_review\rb\helper\content_type_response_report;
@@ -206,16 +207,17 @@ class competency_assignment extends content_type {
 
         $scale = $assignment->get_assignment_specific_scale();
 
-        $result = [];
+        $result = new collection();
         foreach ($scale->values as $value) {
             $formatter = new scale_value($value, $this->context);
-            $result[] = [
+            $result->append([
                 'id' => $value->id,
                 'name' => $formatter->format('name', $format),
-                'proficient' => (bool) $value->proficient
-            ];
+                'proficient' => (bool) $value->proficient,
+                'sort_order' => $value->sortorder,
+            ]);
         }
-        return $result;
+        return $result->sort('sort_order', 'asc', false)->to_array();
     }
 
     /**

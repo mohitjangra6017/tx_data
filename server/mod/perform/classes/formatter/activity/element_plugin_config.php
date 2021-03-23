@@ -22,6 +22,7 @@
  */
 namespace mod_perform\formatter\activity;
 
+use coding_exception;
 use core\webapi\formatter\formatter;
 use mod_perform\models\activity\helpers\displays_responses;
 use mod_perform\models\activity\respondable_element_plugin;
@@ -41,6 +42,7 @@ class element_plugin_config extends formatter {
             'has_title' => null, // not formatted, because this is element title field
             'has_reporting_id' => null, // not formatted, because this is element reporting id field
             'title_text' => null, // not formatted, because this is lang string
+            'title_help_text' => null, // not formatted, because this is lang string
             'is_title_required' => null, // not formatted, because this is to check title is required
             'is_response_required_enabled' => null, // not formatted, because this is to check response is required
             'extra_config_data' => null, // not formatted, because this is to check response is required
@@ -69,6 +71,8 @@ class element_plugin_config extends formatter {
                 return $this->object->has_reporting_id();
             case 'title_text':
                 return $this->object->get_title_text();
+            case 'title_help_text':
+                return $this->object->get_title_help_text();
             case 'is_title_required':
                 return $this->object->is_title_required();
             case 'is_response_required_enabled':
@@ -76,7 +80,7 @@ class element_plugin_config extends formatter {
             case 'extra_config_data':
                 return json_encode($this->object->get_extra_config_data(), JSON_THROW_ON_ERROR);
             default:
-                throw new \coding_exception('Unexpected field passed to formatter');
+                throw new coding_exception('Unexpected field passed to formatter');
         }
     }
 

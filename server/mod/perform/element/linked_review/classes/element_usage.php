@@ -23,34 +23,20 @@
 
 namespace performelement_linked_review;
 
-use mod_perform\models\activity\helpers\child_element_config as base_child_element_config;
+use mod_perform\models\activity\helpers\element_usage as base_element_usage;
 
 /**
- * Child element configuration for linked review.
+ * Configuration of locations the linked review element can be used.
  *
  * @package performelement_linked_review
  */
-class child_element_config extends base_child_element_config {
+class element_usage extends base_element_usage {
 
     /**
      * @inheritDoc
      */
-    public function get_supports_child_elements(): bool {
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_supports_repeating_child_elements(): bool {
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_repeating_item_identifier(): string {
-        return 'contentItemResponses';
+    public function get_can_be_child_element(): bool {
+        return false;
     }
 
 }

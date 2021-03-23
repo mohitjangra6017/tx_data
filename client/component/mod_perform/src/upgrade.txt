@@ -15,13 +15,14 @@ information provided here is intended especially for developers.
     * ActivityActions.vue
     * ActivitySection.vue
     * SectionContent.vue
-* For participant view, the sub-plugin elements now handle switching components for different states instead of this 
+* For participant view, the sub-plugin elements now handle switching components for different states instead of this
   being controlled by ActivityContent.vue & ActivityContentPrint.vue
 * Added a new component ElementParticipantResponseHeader.vue for display participant element titles removing previously duplicated implementations
 * Removed ElementParticipantForm.vue, this is now controlled by the sub-plugins and has been replaced with ElementParticipantFormContent.vue
 * HtmlResponseDisplay.vue data prop is now an Array instead of a string
 * ResponseDisplay.vue responseLines prop has been renamed to 'data' for consistency
 * QuestionElementPreviewModal.vue has switched to using the admin preview components instead of the participant form components
+* The SectionContent.vue filters available elements that can be added at the top level by the element plugin's element_usage.can_be_top_level_element property.
 
 === 13.2 ===
 * Reworked several components to centralise common functionality improving consistency and reducing duplication

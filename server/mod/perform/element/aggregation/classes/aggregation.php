@@ -26,6 +26,7 @@ use coding_exception;
 use mod_perform\entity\activity\element as element_entity;
 use mod_perform\entity\activity\section_element as section_element_entity;
 use mod_perform\models\activity\derived_responses_element_plugin;
+use mod_perform\models\activity\helpers\element_usage as base_element_usage;
 use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\element as element_model;
@@ -55,7 +56,7 @@ class aggregation extends derived_responses_element_plugin {
      * @inheritDoc
      */
     public function get_sortorder(): int {
-        return 100;
+        return 120;
     }
 
     /**
@@ -238,4 +239,10 @@ class aggregation extends derived_responses_element_plugin {
         $element->update_data(json_encode($data, JSON_THROW_ON_ERROR));
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function get_element_usage(): base_element_usage {
+        return new element_usage();
+    }
 }

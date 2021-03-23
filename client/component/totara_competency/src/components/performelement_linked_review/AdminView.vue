@@ -53,20 +53,25 @@ export default {
         },
 
         achievement: {
-          id: '0',
-          name: this.$str('competent', 'totara_hierarchy'),
+          id: '1',
+          name: this.$str('rating_value', 'totara_competency', 1),
           proficient: true,
         },
 
         scale_values: [
           {
+            id: '3',
+            name: this.$str('rating_value', 'totara_competency', 3),
+            proficient: false,
+          },
+          {
             id: '2',
-            name: this.$str('notcompetent', 'totara_hierarchy'),
+            name: this.$str('rating_value', 'totara_competency', 2),
             proficient: false,
           },
           {
             id: '1',
-            name: this.$str('competent', 'totara_hierarchy'),
+            name: this.$str('rating_value', 'totara_competency', 1),
             proficient: true,
           },
         ],
@@ -81,11 +86,8 @@ export default {
     "totara_competency": [
       "assignment_reason_self",
       "example_competency_description",
-      "example_competency_title"
-    ],
-    "totara_hierarchy": [
-      "competent",
-      "notcompetent"
+      "example_competency_title",
+      "rating_value"
     ]
   }
 </lang-strings>

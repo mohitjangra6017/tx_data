@@ -27,7 +27,9 @@ use coding_exception;
 use core\collection;
 use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element;
+use mod_perform\models\activity\element_plugin;
 use mod_perform\models\activity\helpers\child_element_config as base_child_element_config;
+use mod_perform\models\activity\helpers\element_usage as base_element_usage;
 use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\models\response\section_element_response;
 use mod_perform\rb\helper\element_plugin_response_report_builder;
@@ -153,6 +155,7 @@ class linked_review extends respondable_element_plugin {
         unset($data['selection_relationships_display']);
         unset($data['content_type_display']);
         unset($data['content_type_settings_display']);
+        unset($data['compatible_child_element_plugins']);
 
         $element->data = json_encode($data, JSON_UNESCAPED_SLASHES);
     }
@@ -185,16 +188,16 @@ class linked_review extends respondable_element_plugin {
     }
 
     /**
-     * @inheritDocs
+     * @inheritDoc
      */
     public function process_data(element_entity $element): ?string {
-        $data = json_decode($element->data, true, 512, JSON_THROW_ON_ERROR);
+        $decoded_data = json_decode($element->data, true, 512, JSON_THROW_ON_ERROR);
 
-        $content_type = content_type_factory::get_class_name_from_identifier($data['content_type']);
+        $content_type = content_type_factory::get_class_name_from_identifier($decoded_data['content_type']);
 
         $relationships = [];
-        if (!empty($data['selection_relationships'])) {
-            foreach ($data['selection_relationships'] as $relationship_id) {
+        if (!empty($decoded_data['selection_relationships'])) {
+            foreach ($decoded_data['selection_relationships'] as $relationship_id) {
                 $relationships[] = [
                     'id' => $relationship_id,
                     'name' => relationship_model::load_by_id($relationship_id)->get_name()
@@ -203,7 +206,7 @@ class linked_review extends respondable_element_plugin {
         }
 
         $human_readable_settings = [];
-        foreach ($content_type::get_display_settings($data['content_type_settings'] ?? []) as $name => $value) {
+        foreach ($content_type::get_display_settings($decoded_data['content_type_settings'] ?? []) as $name => $value) {
             $human_readable_settings[] = [
                 'title' => $name,
                 'value' => $value,
@@ -219,14 +222,38 @@ class linked_review extends respondable_element_plugin {
                 'admin_view' => $content_type::get_admin_view_component(),
                 'content_picker' => $content_type::get_content_picker_component(),
                 'participant_content' => $content_type::get_participant_content_component(),
-            ]
+            ],
+            'compatible_child_element_plugins' => $this->get_compatible_child_element_plugins($element->data),
         ];
 
-        return json_encode(array_merge($data, $additional_data), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+        return json_encode(array_merge($decoded_data, $additional_data), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
     }
 
     /**
-     * @inheritDocs
+     * Gets child element plugins compatible with the element data.
+     *
+     * @param string|null $data
+     * @return array
+     */
+    private function get_compatible_child_element_plugins(?string $data): array {
+        $element_plugins = element_plugin::get_element_plugins();
+        $compatible_plugins = [];
+
+        foreach ($element_plugins as $element_plugin) {
+            $element_usage = $element_plugin->get_element_usage();
+
+            if ($element_usage->can_be_child_element &&
+                $element_usage->is_compatible_child_element($this->get_plugin_name(), $data)
+            ) {
+                $compatible_plugins[] = $element_plugin->get_plugin_name();
+            }
+        }
+
+        return $compatible_plugins;
+    }
+
+    /**
+     * @inheritDoc
      */
     public function build_response_data(section_element_response $section_element_response): ?string {
         return (new content_element_response_builder($section_element_response))->build_response_data();
@@ -250,11 +277,11 @@ class linked_review extends respondable_element_plugin {
      * @inheritDoc
      */
     public function get_sortorder(): int {
-        return 110;
+        return 90;
     }
 
     /**
-     * @inheritDocs
+     * @inheritDoc
      */
     public function get_child_element_config(): base_child_element_config {
         return new child_element_config();
@@ -265,5 +292,12 @@ class linked_review extends respondable_element_plugin {
      */
     public function get_response_report_builder_helper(): ?element_plugin_response_report_builder {
         return new response_report_builder();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_element_usage(): base_element_usage {
+        return new element_usage();
     }
 }

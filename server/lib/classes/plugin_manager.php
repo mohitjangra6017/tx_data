@@ -1382,7 +1382,7 @@ class core_plugin_manager {
             'performelement' => array(
                 'short_text', 'multi_choice', 'long_text', 'multi_choice_multi',
                 'date_picker', 'multi_choice_single', 'static_content', 'numeric_rating_scale',
-                'custom_rating_scale', 'redisplay', 'aggregation', 'linked_review',
+                'custom_rating_scale', 'redisplay', 'aggregation', 'linked_review', 'competency_rating',
             ),
 
             'ml' => array(

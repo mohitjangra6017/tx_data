@@ -18,39 +18,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Kunle Odusan <kunle.odusan@totaralearning.com>
- * @package performelement_linked_review
+ * @package mod_perform
  */
 
-namespace performelement_linked_review;
+defined('MOODLE_INTERNAL') || die();
 
-use mod_perform\models\activity\helpers\child_element_config as base_child_element_config;
-
-/**
- * Child element configuration for linked review.
- *
- * @package performelement_linked_review
- */
-class child_element_config extends base_child_element_config {
-
-    /**
-     * @inheritDoc
-     */
-    public function get_supports_child_elements(): bool {
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_supports_repeating_child_elements(): bool {
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_repeating_item_identifier(): string {
-        return 'contentItemResponses';
-    }
-
-}
+$plugin->version  = 2021032300;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2020101200;       // Requires this Totara version.
+$plugin->component = 'performelement_competency_rating'; // To check on upgrade, that module sits in correct place
+$plugin->dependencies = array(
+    'performelement_linked_review' => 2021031502,
+    'totara_competency' => 2021012600,
+);

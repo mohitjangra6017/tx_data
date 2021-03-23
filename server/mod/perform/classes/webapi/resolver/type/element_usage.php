@@ -18,39 +18,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Kunle Odusan <kunle.odusan@totaralearning.com>
- * @package performelement_linked_review
  */
 
-namespace performelement_linked_review;
+namespace mod_perform\webapi\resolver\type;
 
-use mod_perform\models\activity\helpers\child_element_config as base_child_element_config;
+use coding_exception;
+use core\webapi\execution_context;
+use core\webapi\type_resolver;
+use mod_perform\models\activity\helpers\element_usage as element_usage_config;
 
-/**
- * Child element configuration for linked review.
- *
- * @package performelement_linked_review
- */
-class child_element_config extends base_child_element_config {
+class element_usage implements type_resolver {
 
     /**
      * @inheritDoc
      */
-    public function get_supports_child_elements(): bool {
-        return true;
-    }
+    public static function resolve(string $field, $element_usage, array $args, execution_context $ec) {
+        if (!$element_usage instanceof element_usage_config) {
+            throw new coding_exception('Expected element_usage configuration class');
+        }
 
-    /**
-     * @inheritDoc
-     */
-    public function get_supports_repeating_child_elements(): bool {
-        return true;
+        return $element_usage->{$field};
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_repeating_item_identifier(): string {
-        return 'contentItemResponses';
-    }
-
 }

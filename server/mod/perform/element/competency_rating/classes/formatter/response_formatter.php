@@ -18,39 +18,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Kunle Odusan <kunle.odusan@totaralearning.com>
- * @package performelement_linked_review
- */
-
-namespace performelement_linked_review;
-
-use mod_perform\models\activity\helpers\child_element_config as base_child_element_config;
-
-/**
- * Child element configuration for linked review.
+ * @package performelement_competency_rating
  *
- * @package performelement_linked_review
  */
-class child_element_config extends base_child_element_config {
 
-    /**
-     * @inheritDoc
-     */
-    public function get_supports_child_elements(): bool {
-        return true;
+namespace performelement_competency_rating\formatter;
+
+use core\format;
+use core\webapi\formatter\field\string_field_formatter;
+use mod_perform\formatter\response\element_response_formatter;
+
+class response_formatter extends element_response_formatter {
+
+    protected function get_default_format($value) {
+        if ($value === 'null') {
+            return null;
+        }
+
+        $format = $this->format ?? format::FORMAT_PLAIN;
+        $formatter = new string_field_formatter($format, $this->context);
+
+        return $formatter->format($value);
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_supports_repeating_child_elements(): bool {
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get_repeating_item_identifier(): string {
-        return 'contentItemResponses';
-    }
-
 }

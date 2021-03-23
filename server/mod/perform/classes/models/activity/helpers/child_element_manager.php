@@ -78,8 +78,13 @@ class child_element_manager {
             throw new coding_exception("Element doesn't support child elements");
         }
 
-        if (element_plugin::load_by_plugin($plugin_name)->get_child_element_config()->supports_child_elements) {
+        $element_plugin = element_plugin::load_by_plugin($plugin_name);
+        if ($element_plugin->get_child_element_config()->supports_child_elements) {
             throw new coding_exception('Can not create an element that supports child elements as well');
+        }
+
+        if (!$element_plugin->get_element_usage()->is_compatible_child_element($parent_element_model->plugin_name, $parent_element_model->data)) {
+            throw new coding_exception("$plugin_name element is not compatible with $parent_element_model->plugin_name");
         }
 
         return builder::get_db()->transaction(

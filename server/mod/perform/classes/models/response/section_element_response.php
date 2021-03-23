@@ -261,14 +261,14 @@ class section_element_response extends model implements section_element_response
     }
 
     /**
-     * @inheritDocs
+     * @inheritDoc
      */
     public function get_section_element(): section_element {
         return $this->section_element;
     }
 
     /**
-     * @inheritDocs
+     * @inheritDoc
      */
     public function get_section_element_id(): int {
         return $this->section_element->id;
@@ -388,7 +388,7 @@ class section_element_response extends model implements section_element_response
     }
 
     /**
-     * @inheritDocs
+     * @inheritDoc
      */
     public function get_element(): ?element {
         $element = null;

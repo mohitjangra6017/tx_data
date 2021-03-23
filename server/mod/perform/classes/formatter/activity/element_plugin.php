@@ -54,6 +54,7 @@ class element_plugin extends formatter {
             'participant_print_component' => null, //not formatted, because this print vue component name
             'group' => null, // Not formatted, because this is an internal key
             'child_element_config' => null,
+            'element_usage' => null,
         ];
     }
 
@@ -93,6 +94,8 @@ class element_plugin extends formatter {
                 return $this->object->get_group();
             case 'child_element_config':
                 return $this->object->get_child_element_config();
+            case 'element_usage':
+                return $this->object->get_element_usage();
             default:
                 throw new coding_exception('Unexpected field passed to formatter');
         }
@@ -114,6 +117,7 @@ class element_plugin extends formatter {
             'participant_print_component',
             'group',
             'child_element_config',
+            'element_usage',
         ];
         return in_array($field, $fields);
     }

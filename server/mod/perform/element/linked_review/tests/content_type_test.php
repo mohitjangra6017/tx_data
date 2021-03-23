@@ -103,6 +103,7 @@ class performelement_linked_review_content_type_testcase extends advanced_testca
         $element1 = linked_review_generator::instance()->create_linked_review_element($element1_input_data);
         $element1_output_data = json_decode($element1->data, true);
         unset($element1_output_data['components']);
+        unset($element1_output_data['compatible_child_element_plugins']);
         $this->assertEquals([
             'content_type' => 'totara_competency',
             'content_type_settings' => [
@@ -134,6 +135,7 @@ class performelement_linked_review_content_type_testcase extends advanced_testca
         $element2 = linked_review_generator::instance()->create_linked_review_element($element2_input_data);
         $element2_output_data = json_decode($element2->data, true);
         unset($element2_output_data['components']);
+        unset($element2_output_data['compatible_child_element_plugins']);
         $this->assertEquals([
             'content_type' => 'totara_competency',
             'content_type_settings' => [

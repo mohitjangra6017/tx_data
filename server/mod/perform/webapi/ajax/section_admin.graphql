@@ -38,6 +38,7 @@ fragment mod_perform_section_admin_element_data on mod_perform_element {
       has_title
       has_reporting_id
       title_text
+      title_help_text
       is_title_required
       is_response_required_enabled
     }

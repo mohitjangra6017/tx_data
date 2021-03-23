@@ -70,7 +70,7 @@
                   v-if="!fromPrint"
                   :is-help-for="$str('rating_scale', 'totara_competency')"
                 >
-                  <RatingScaleOverview :scale="scale" :reverse-values="true" />
+                  <RatingScaleOverview :scale="scale" />
                 </InfoIconButton>
               </p>
               <div class="tui-linkedReviewViewCompetency__bar-value">

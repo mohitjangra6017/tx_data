@@ -84,7 +84,7 @@
                       !$apollo.loading
                   "
                   :dragging="dragging"
-                  :element-plugins="elementPlugins"
+                  :element-plugins="childElementPlugins"
                   :section-component="getSectionComponent(sectionElement)"
                   :section-element="sectionElement"
                   :section-id="sectionId"
@@ -110,7 +110,7 @@
         </Droppable>
         <ContentAddElementButton
           class="tui-performSectionContent__add"
-          :element-plugins="elementPlugins"
+          :element-plugins="topLevelElementPlugins"
           @add-element-item="add"
         />
       </div>
@@ -362,6 +362,28 @@ export default {
      */
     isLoading() {
       return this.$apollo.loading || this.isSaving;
+    },
+
+    /**
+     * Returns element plugins that can be added on top level.
+     *
+     * @return {Array}
+     */
+    topLevelElementPlugins() {
+      return this.elementPlugins.filter(elementPlugin => {
+        return elementPlugin.element_usage.can_be_top_level_element;
+      });
+    },
+
+    /**
+     * Returns element plugins that can be added as child elements.
+     *
+     * @return {Array}
+     */
+    childElementPlugins() {
+      return this.elementPlugins.filter(elementPlugin => {
+        return elementPlugin.element_usage.can_be_child_element;
+      });
     },
 
     /**

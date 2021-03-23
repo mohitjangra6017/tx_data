@@ -50,7 +50,9 @@ abstract class child_element_manager_testcase extends advanced_testcase {
         $element->context_id = $activity->get_context_id();
         $element->plugin_name = $parent_element->get_plugin_name();
         $element->title = 'Parent element';
-        $element->data = '';
+        $element->data = json_encode([
+            'content_type' => 'totara_competency',
+        ]);
         $element = $element->save();
         $parent_element_model = element_model::load_by_entity($element);
 

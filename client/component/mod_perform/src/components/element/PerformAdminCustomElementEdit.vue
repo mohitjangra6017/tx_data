@@ -30,6 +30,7 @@
         v-if="settings.has_title"
         :label="settings.title_text"
         :required="settings.is_title_required"
+        :helpmsg="settings.title_help_text"
       >
         <FormText
           name="rawTitle"

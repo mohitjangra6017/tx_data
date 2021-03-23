@@ -29,6 +29,7 @@ use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element as element_model;
 use mod_perform\models\activity\element_plugin;
 use mod_perform\models\activity\helpers\element_clone_helper;
+use mod_perform\models\activity\helpers\element_usage as base_element_usage;
 use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\section_element_reference;
 use performelement_redisplay\data_provider\redisplay_data;
@@ -44,7 +45,7 @@ class redisplay extends element_plugin {
      * @inheritDoc
      */
     public function get_sortorder(): int {
-        return 90;
+        return 110;
     }
 
     /**
@@ -134,6 +135,13 @@ class redisplay extends element_plugin {
         // Strip this from the data, otherwise it can become incorrect if an element/activity is cloned.
         // We can safely do this because all data for this type of element is saved in the section_element_reference table.
         $element->clear_data();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_element_usage(): base_element_usage {
+        return new element_usage();
     }
 
 }

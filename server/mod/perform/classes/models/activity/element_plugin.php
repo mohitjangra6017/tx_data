@@ -29,6 +29,7 @@ use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\helpers\child_element_config;
 use mod_perform\models\activity\helpers\displays_responses;
 use mod_perform\models\activity\helpers\element_clone_helper;
+use mod_perform\models\activity\helpers\element_usage;
 use mod_perform\models\response\section_element_response;
 use mod_perform\rb\helper\element_plugin_response_report_builder;
 
@@ -386,6 +387,15 @@ abstract class element_plugin {
     abstract public function get_title_text(): string;
 
     /**
+     * Return Title Help Text
+     *
+     * @return string
+     */
+    public function get_title_help_text(): ?string {
+        return null;
+    }
+
+    /**
      * return true if element title is required
      *
      * @return bool
@@ -478,4 +488,12 @@ abstract class element_plugin {
         return [];
     }
 
+    /**
+     * Configuration of where the element can be used.
+     *
+     * @return element_usage
+     */
+    public function get_element_usage(): element_usage {
+        return new element_usage();
+    }
 }
