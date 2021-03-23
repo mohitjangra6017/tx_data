@@ -478,6 +478,7 @@ export default {
           )
         ) {
           value = currentValues[field].value.getContent();
+          value = value ? value : '';
         } else {
           value = String(currentValues[field].value);
         }
