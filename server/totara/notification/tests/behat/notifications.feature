@@ -91,3 +91,9 @@ Feature: Notifications page
     And I click on "New comment created details" "button"
     Then I should not see "Test context notification name"
     And I should not see "55"
+
+  Scenario: Admin is able to view notifications page through admin menu
+    Given I log in as "admin"
+    And I click on "Show admin menu window" "button"
+    When I click on "Notifications" "link" in the "#quickaccess-popover-content" "css_element"
+    Then I should see "Notifications"

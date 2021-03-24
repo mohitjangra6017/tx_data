@@ -184,6 +184,7 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
                 'optionalsubsystems' => 'Configure features',
                 'adminnotifications' => 'System information',
                 'msteamssetup' => 'Microsoft Teams',
+                'notifications_setup' => 'Notifications',
             ]
         ], $user);
     }
@@ -228,6 +229,7 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
             ],
             group::CONFIGURATION => [
                 'totarasyncsettings' => 'HR Import',
+                'notifications_setup' => 'Notifications',
             ]
         ], $user);
     }
@@ -1108,7 +1110,8 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
                 'goalmanage'         => 'Goals',
             ],
             group::CONFIGURATION => [
-              'totarasyncsettings' => 'HR Import',
+                'totarasyncsettings' => 'HR Import',
+                'notifications_setup' => 'Notifications',
             ],
         ], $user);
 
@@ -1142,6 +1145,7 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
             ],
             group::CONFIGURATION => [
                 'totarasyncsettings' => 'HR Import',
+                'notifications_setup' => 'Notifications',
             ],
             $group->get_key()    => [
                 'restorecourse'    => 'Restore course',
@@ -1183,6 +1187,7 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
             ],
             group::CONFIGURATION => [
                 'totarasyncsettings' => 'HR Import',
+                'notifications_setup' => 'Notifications',
             ],
         ], $user);
 
@@ -1213,6 +1218,7 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
             ],
             group::CONFIGURATION => [
                 'totarasyncsettings' => 'HR Import',
+                'notifications_setup' => 'Notifications',
                 'restorecourse'      => 'Restore course',
                 'coursemgmt'         => 'Courses and categories',
             ],
