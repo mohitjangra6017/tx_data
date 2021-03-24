@@ -117,7 +117,7 @@ class totara_notification_notification_queue_manager_testcaase extends testcase 
             $first_notification->subject
         );
 
-        // Start the check againist error messages.
+        // Start the check against error messages.
         $error_messages = $trace->get_messages();
         self::assertNotEmpty($error_messages);
         self::assertCount(2, $error_messages);

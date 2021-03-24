@@ -26,6 +26,7 @@ use coding_exception;
 use core\entity\notification;
 use core\json_editor\helper\document_helper;
 use core\orm\query\builder;
+use core_phpunit\internal_util;
 use core_user;
 use null_progress_trace;
 use progress_trace;
@@ -33,6 +34,7 @@ use stdClass;
 use totara_notification\entity\notification_preference as preference_entity;
 use totara_notification\entity\notification_queue;
 use totara_notification\model\notification_preference;
+use totara_notification\placeholder\template_engine\engine;
 use totara_notification\resolver\resolver_helper;
 
 class notification_queue_manager {
@@ -141,6 +143,30 @@ class notification_queue_manager {
 
         $engine = $resolver->get_placeholder_engine();
 
+        $message_processors = get_message_processors(true, (defined('PHPUNIT_TEST') && PHPUNIT_TEST));
+
+        foreach ($recipient_ids as $target_user_id) {
+            $this->dispatch_to_target($target_user_id, $preference, $engine, $message_processors);
+        }
+    }
+
+    /**
+     * Dispatch the message to one recipient.
+     *
+     * @param int $target_user_id
+     * @param notification_preference $preference
+     * @param engine $engine
+     * @param array $message_processors
+     */
+    private function dispatch_to_target(
+        int $target_user_id,
+        notification_preference $preference,
+        engine $engine,
+        array $message_processors
+    ): void {
+        $user = core_user::get_user($target_user_id);
+        cron_setup_user($user);
+
         $body_format = $preference->get_body_format();
         $body_text = $preference->get_body();
 
@@ -163,74 +189,67 @@ class notification_queue_manager {
             $subject_text = document_helper::create_json_string_document_from_text($subject_text);
         }
 
-        $message_processors = get_message_processors(true, (defined('PHPUNIT_TEST') && PHPUNIT_TEST));
+        $message = new stdClass();
+        $message->notification = 1;
+        $message->userto = $user;
+        $message->useridto = $target_user_id;
 
-        foreach ($recipient_ids as $target_user_id) {
-            $message = new stdClass();
-            $message->notification = 1;
-            $message->userto = core_user::get_user($target_user_id);
-            $message->useridto = $target_user_id;
+        $message->fullmessage = $engine->render_for_user(
+            format_text_email($body_text, $body_format),
+            $target_user_id
+        );
 
-            $message->fullmessage = $engine->render_for_user(
-                format_text_email($body_text, $body_format),
-                $target_user_id
-            );
+        $message->fullmessagehtml = $engine->render_for_user(
+            format_text($body_text, $body_format),
+            $target_user_id,
+        );
+        $message->subject = $engine->render_for_user(
+            content_to_text($subject_text, $subject_format),
+            $target_user_id
+        );
 
-            $message->fullmessagehtml = $engine->render_for_user(
-                format_text($body_text, $body_format),
-                $target_user_id,
-            );
-            $message->subject = $engine->render_for_user(
-                content_to_text($subject_text, $subject_format),
-                $target_user_id
-            );
+        // Set message format to FORMAT_PLAIN as the fullmessage column is only storing processed plain
+        // text instead of the raw content
+        $message->fullmessageformat = FORMAT_PLAIN;
 
-            // Set message format to FORMAT_PLAIN as the fullmessage column is only storing processed plain
-            // text instead of the raw content
-            $message->fullmessageformat = FORMAT_PLAIN;
+        // Static data - which can be tweaked later on.
+        $message->contexturl = '';
+        $message->contexturlname = '';
 
-            // Static data - which can be tweaked later on.
-            $message->contexturl = '';
-            $message->contexturlname = '';
+        // Note: we are hardcoded to no_reply_user for now, however, it should be up
+        // to the resolver to decide who is the sender.
+        $message->userfrom = core_user::get_noreply_user();
+        $message->useridfrom = $message->userfrom->id;
 
-            // Note: we are hardcoded to no_reply_user for now, however, it should be up
-            // to the resolver to decide who is the sender.
-            $message->userfrom = core_user::get_noreply_user();
-            $message->useridfrom = $message->userfrom->id;
+        // Save the notification first before sending out the message.
+        // Note: TL-29518 will encapsulate these logics in API.
+        $notification = new notification();
+        $notification->subject = $message->subject;
+        $notification->useridfrom = $message->userfrom->id;
+        $notification->useridto = $message->userto->id;
+        $notification->fullmessage = $message->fullmessage;
+        $notification->fullmessagehtml = $message->fullmessagehtml;
+        $notification->fullmessageformat = $message->fullmessageformat;
+        $notification->smallmessage = $message->fullmessage;
 
-            // Save the notification first before sending out the message.
-            // Note: TL-29518 will encapsulate these logics in API.
-            $notification = new notification();
-            $notification->subject = $message->subject;
-            $notification->useridfrom = $message->userfrom->id;
-            $notification->useridto = $message->userto->id;
-            $notification->fullmessage = $message->fullmessage;
-            $notification->fullmessagehtml = $message->fullmessagehtml;
-            $notification->fullmessageformat = $message->fullmessageformat;
-            $notification->smallmessage = $message->fullmessage;
+        // Note: TL-29325 will convert these properties into proper notification's properties.
+        $notification->component = 'totara_notification';
+        $notification->eventtype = 'notification';
 
-            // Note: TL-29325 will convert these properties into proper notification's properties.
-            $notification->component = 'totara_notification';
-            $notification->eventtype = 'notification';
+        $notification->save();
+        $message->savedmessageid = $notification->id;
 
-            $notification->save();
-            $message->savedmessageid = $notification->id;
+        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST && internal_util::is_redirecting_messages()) {
+            // For unit test purpose only.
+            internal_util::message_sent($message);
+            return;
+        }
 
-            if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
-                // For  unit tests purpose only.
+        $message_processors['popup']->object->send_message($message);
 
-                if (\core_phpunit\internal_util::is_redirecting_messages()) {
-                    \core_phpunit\internal_util::message_sent($message);
-                    return;
-                }
-            }
-
-            $message_processors['popup']->object->send_message($message);
-
-            if (isset($message_processors['email'])) {
-                // This is for behat, as in behat enviroment, email is not enabled by default.
-                $message_processors['email']->object->send_message($message);
-            }
+        if (isset($message_processors['email'])) {
+            // This is for behat, as in behat environment, email is not enabled by default.
+            $message_processors['email']->object->send_message($message);
         }
     }
 }

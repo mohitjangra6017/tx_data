@@ -22,9 +22,9 @@
  */
 namespace totara_notification\placeholder;
 
+use Closure;
 use coding_exception;
 use lang_string;
-use ReflectionFunction;
 use totara_notification\placeholder\abstraction\collection_placeholder;
 use totara_notification\placeholder\abstraction\placeholder;
 
@@ -157,40 +157,11 @@ class placeholder_option {
      * @return placeholder
      */
     public function get_placeholder_instance(array $event_data, int $target_user_id): placeholder {
-        $closure = new ReflectionFunction($this->instantiation_callback);
-        $parameters = $closure->getParameters();
+        $closure = Closure::fromCallable($this->instantiation_callback);
 
-        // Note that we will let the native php to fail if the callback does not return the same type
+        // Note that we will let the native php fail if the callback does not return the same type
         // as this function declared.
-
-        if (0 === count($parameters)) {
-            return $closure->invoke();
-        }
-
-        if (2 === count($parameters)) {
-            // 2 parameters are provided, hence we are using both event_data and the target_user_id.
-            // Let the native php validate the position of the variables. Also, the documentation should
-            // also cover the function's definition.
-            return $closure->invoke($event_data, $target_user_id);
-        }
-
-        if (1 === count($parameters)) {
-            $parameter = reset($parameters);
-            $parameter_type = $parameter->getType();
-
-            if (null === $parameter_type || 'array' === $parameter_type->getName()) {
-                // Default to $event_data if the parameter type is not provided or it is specifically
-                // declared for the event data.
-                return $closure->invoke($event_data);
-            }
-
-            // Otherwise we use the $target_user_id for the parameter to pass in
-            if ('int' === $parameter_type->getName()) {
-                return $closure->invoke($target_user_id);
-            }
-        }
-
-        throw new coding_exception("Invalid instantiation callback had been given");
+        return $closure->__invoke($event_data, $target_user_id);
     }
 
     /**
