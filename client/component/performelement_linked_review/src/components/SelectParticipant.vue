@@ -18,6 +18,9 @@
 
 <template>
   <FormRow :helpmsg="helpMsg" :label="label" :required="true">
+    <div v-if="relationships.length < 1">
+      {{ $str('no_participants', 'mod_perform') }}
+    </div>
     <FormRadioGroup :name="fieldName" :validations="v => [v.required()]">
       <Radio
         v-for="relationship in relationships"
@@ -26,9 +29,6 @@
       >
         {{ relationship.name }}
       </Radio>
-      <div v-if="relationships.length < 1">
-        {{ $str('no_participants', 'mod_perform') }}
-      </div>
     </FormRadioGroup>
   </FormRow>
 </template>

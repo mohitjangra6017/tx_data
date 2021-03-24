@@ -166,7 +166,7 @@
 
         <template v-slot:row="{ row }">
           <Cell
-            size="9"
+            size="4"
             :column-header="$str('header_competency', 'totara_competency')"
             valign="center"
           >
@@ -174,7 +174,7 @@
           </Cell>
 
           <Cell
-            size="9"
+            size="3"
             :column-header="$str('reason_assigned', 'totara_competency')"
             valign="center"
           >
@@ -182,7 +182,7 @@
           </Cell>
 
           <Cell
-            size="3"
+            size="2"
             :column-header="$str('proficient', 'totara_competency')"
             align="center"
             valign="center"
@@ -198,7 +198,7 @@
           </Cell>
 
           <Cell
-            size="4"
+            size="3"
             :column-header="$str('achievement_level', 'totara_competency')"
             valign="center"
           >

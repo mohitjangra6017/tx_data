@@ -214,12 +214,20 @@ export default {
           let el = Object.assign({}, element);
 
           // Need to convert stringified data from the query
-          if (el.data && Object.keys(el.data).length > 0) {
+          if (
+            el.data &&
+            typeof el.data === 'object' &&
+            Object.keys(el.data).length > 0
+          ) {
             el.data = JSON.parse(el.data);
           }
 
           // Need to convert stringified raw data from the query
-          if (el.raw_data && Object.keys(el.raw_data).length > 0) {
+          if (
+            el.raw_data &&
+            typeof el.raw_data === 'object' &&
+            Object.keys(el.raw_data).length > 0
+          ) {
             el.raw_data = JSON.parse(el.raw_data);
           }
 

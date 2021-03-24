@@ -27,11 +27,11 @@
           $str(
             'selected_competency',
             'totara_competency',
-            data.competency.display_name
+            content.competency.display_name
           )
         "
       >
-        {{ data.competency.display_name }}
+        {{ content.competency.display_name }}
       </a>
       <template v-else>
         {{ content.competency.display_name }}
