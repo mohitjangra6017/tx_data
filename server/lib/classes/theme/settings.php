@@ -76,7 +76,7 @@ final class settings {
             'tenant' => '*',
         ];
 
-        $this->tenant_settings_hook = new tenant_customizable_theme_settings_hook($default_tenant_can_customize);
+        $this->tenant_settings_hook = new tenant_customizable_theme_settings_hook($default_tenant_can_customize, $theme_config);
         $this->tenant_settings_hook->execute();
     }
 

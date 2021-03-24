@@ -34,7 +34,9 @@ class core_hook_tenant_customizable_theme_settings_testcase extends advanced_tes
             'some' => ['one', 'two'],
         ];
 
-        $hook = new tenant_customizable_theme_settings_hook($test_settings);
+        $theme_config = theme_config::load('ventura');
+
+        $hook = new tenant_customizable_theme_settings_hook($test_settings, $theme_config);
         $this->assertEqualsCanonicalizing($test_settings, $hook->get_customizable_settings());
         $this->assertTrue($hook->is_tenant_customizable_category('all'));
         $this->assertTrue($hook->is_tenant_customizable_category('some'));
@@ -63,5 +65,23 @@ class core_hook_tenant_customizable_theme_settings_testcase extends advanced_tes
         $this->assertFalse($hook->is_tenant_customizable_category('all'));
         $this->assertFalse($hook->is_tenant_customizable_category('string_only'));
         $this->assertFalse($hook->is_tenant_customizable_category('0'));
+
+        // Check theme_config
+        $this->assertInstanceOf('theme_config', $hook->get_theme_config());
+        $this->assertEquals('ventura', $hook->get_theme_config()->name);
+    }
+
+    public function test_hook_with_legacy_signature() {
+
+        $this->setAdminUser();
+        $test_settings = [
+            'all' => '*',
+            'some' => ['one', 'two'],
+        ];
+
+        // No theme_config passed, nothing breaks.
+        $hook = new tenant_customizable_theme_settings_hook($test_settings);
+        $this->assertEqualsCanonicalizing($test_settings, $hook->get_customizable_settings());
+        $this->assertNull($hook->get_theme_config());
     }
 }

@@ -24,6 +24,7 @@
 namespace core\hook;
 
 use totara_core\hook\base;
+use theme_config;
 
 /**
  * Class tenant_customizable_theme_settings *
@@ -48,8 +49,20 @@ class tenant_customizable_theme_settings extends base {
      */
     private $settings;
 
-    public function __construct(array $settings) {
+    /**
+     * @var $theme_config theme_config
+     */
+    private $theme_config;
+
+    /**
+     * tenant_customizable_theme_settings constructor.
+     *
+     * @param array $settings
+     * @param theme_config|null $theme_config Optional so as not to break existing theme settings implementations.
+     */
+    public function __construct(array $settings, ?theme_config $theme_config = null) {
         $this->settings = $settings;
+        $this->theme_config = $theme_config;
     }
 
     /**
@@ -90,5 +103,14 @@ class tenant_customizable_theme_settings extends base {
         }
 
         return in_array($setting, $settings, true);
+    }
+
+    /**
+     * Get the theme_config object passed to the hook on creation, if there was one.
+     *
+     * @return theme_config|null
+     */
+    public function get_theme_config(): ?theme_config {
+        return $this->theme_config;
     }
 }
