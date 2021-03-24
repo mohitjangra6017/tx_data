@@ -22,16 +22,16 @@
  */
 namespace totara_notification\manager;
 
-use coding_exception;
 use core\entity\notification;
 use core\json_editor\helper\document_helper;
 use core\orm\query\builder;
 use core_phpunit\internal_util;
 use core_user;
+use Exception;
 use null_progress_trace;
 use progress_trace;
 use stdClass;
-use totara_notification\entity\notification_preference as preference_entity;
+use core\orm\query\exceptions\record_not_found_exception;
 use totara_notification\entity\notification_queue;
 use totara_notification\model\notification_preference;
 use totara_notification\placeholder\template_engine\engine;
@@ -62,56 +62,21 @@ class notification_queue_manager {
         $repository = notification_queue::repository();
         $notification_queues = $repository->get_due_notification_queues($current_time);
 
-        try {
-            // At the moment, we will rollback the whole process when one item
-            // failure to process, howerver TL-29469 will be the ticket to help
-            // us exploring a better way to handle the un-expected errors.
-            $transaction = builder::get_db()->start_delegated_transaction();
-
-            /** @var notification_queue $notification_queue */
-            foreach ($notification_queues as $notification_queue) {
-                if (!$this->is_dispatchable($notification_queue)) {
-                    $this->trace->output(
-                        "Cannot dispatch the queue at id '{$notification_queue->id}'"
-                    );
-
-                    continue;
-                }
-
-                $this->dispatch($notification_queue);
-                $notification_queue->delete();
+        /** @var notification_queue $notification_queue */
+        foreach ($notification_queues as $notification_queue) {
+            try {
+                builder::get_db()->transaction(function () use ($notification_queue) {
+                    $this->dispatch($notification_queue);
+                    $notification_queue->delete();
+                });
+            } catch (Exception $exception) {
+                $this->trace->output(
+                    "Cannot send notification queue record with id '{$notification_queue->id}'"
+                );
             }
-
-            $transaction->allow_commit();
-        } finally {
-            $notification_queues->close();
-        }
-    }
-
-    /**
-     * @param notification_queue $queue
-     * @return bool
-     */
-    private function is_dispatchable(notification_queue $queue): bool {
-        global $DB;
-        if (!$DB->record_exists(preference_entity::TABLE, ['id' => $queue->notification_preference_id])) {
-            $this->trace->output(
-                "There is no notification preference record exist at id '{$queue->notification_preference_id}'"
-            );
-
-            return false;
         }
 
-        // Checking whether the event data is a valid json string.
-        try {
-            $queue->get_decoded_event_data();
-        } catch (coding_exception $e) {
-            $this->trace->output($e->getMessage());
-            return false;
-        }
-
-        // All's well, ends well.
-        return true;
+        $notification_queues->close();
     }
 
     /**
@@ -130,7 +95,15 @@ class notification_queue_manager {
         global $CFG;
         require_once("{$CFG->dirroot}/message/lib.php");
 
-        $preference = notification_preference::from_id($queue->notification_preference_id);
+        try {
+            $preference = notification_preference::from_id($queue->notification_preference_id);
+        } catch (record_not_found_exception $e) {
+            // if there is no record to process then silently exit rather than fail.
+            $this->trace->output(
+                "The notification preference record with id '{$queue->notification_preference_id}' does not exist"
+            );
+            return;
+        }
         $event_data = $queue->get_decoded_event_data();
 
         $resolver = resolver_helper::instantiate_resolver_from_class(

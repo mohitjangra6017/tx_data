@@ -135,24 +135,17 @@ class totara_notification_process_notification_queue_task_testcase extends testc
         $task->execute();
 
         // Message should not be sent due to invalid notification name, as it was skipped.
-        self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
         self::assertEquals(0, $sink->count());
         self::assertEmpty($sink->get_messages());
 
         $messages = $trace->get_messages();
         self::assertNotEmpty($messages);
-        self::assertCount(2, $messages);
+        self::assertCount(1, $messages);
 
         $first_message = reset($messages);
         self::assertEquals(
-            "There is no notification preference record exist at id '42'",
+            "The notification preference record with id '42' does not exist",
             $first_message
-        );
-
-        $second_message = end($messages);
-        self::assertEquals(
-            "Cannot dispatch the queue at id '{$queue->id}'",
-            $second_message
         );
     }
 
@@ -246,11 +239,11 @@ class totara_notification_process_notification_queue_task_testcase extends testc
         // The sending message will yield debugging message, because there is
         // one invalid queue in the table.
         $error_messages = $trace->get_messages();
-        self::assertCount(2, $error_messages);
+        self::assertCount(1, $error_messages);
 
         $first_message = reset($error_messages);
         self::assertEquals(
-            "There is no notification preference record exist at id '42'",
+            "The notification preference record with id '42' does not exist",
             $first_message
         );
 
@@ -259,6 +252,69 @@ class totara_notification_process_notification_queue_task_testcase extends testc
 
         // The invalid notification at this point should NOT be removed from the queue.
         // Which means that there should be zero records within the table.
+        self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_sending_message_keep_invalid_notification_queue_for_next_run(): void {
+        global $DB;
+
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+
+        $context_user = context_user::instance($user_one->id);
+        $preference = notification_preference_loader::get_built_in(totara_notification_mock_built_in_notification::class);
+
+        /** @var generator $notification_generator */
+        $notification_generator = $generator->get_plugin_generator('totara_notification');
+        $notification_generator->add_mock_recipient_ids_to_resolver([$user_one->id]);
+
+        // Create an invalid queue
+        $invalid_queue = new notification_queue();
+        $invalid_queue->set_extended_context(extended_context::make_with_context($context_user));
+        $invalid_queue->scheduled_time = 10;
+        $invalid_queue->notification_preference_id = $preference->get_id();
+        $invalid_queue->event_data = ['é', 1];
+        $invalid_queue->save();
+
+        // Create a valid queue
+        $valid_queue = new notification_queue();
+        $valid_queue->set_extended_context(extended_context::make_with_context($context_user));
+        $valid_queue->scheduled_time = 10;
+        $valid_queue->notification_preference_id = $preference->get_id();
+        $valid_queue->event_data = json_encode(['message' => 'bolobala']);
+        $valid_queue->save();
+
+
+        self::assertEquals(2, $DB->count_records(notification_queue::TABLE));
+        $sink = $this->redirectMessages();
+
+        self::assertEquals(0, $sink->count());
+        $trace = $notification_generator->get_test_progress_trace();
+
+        // Start the task that help to sending out the messages.
+        $task = new process_notification_queue_task();
+        $task->set_trace($trace);
+
+        $notification_generator->set_due_time_of_process_notification_task($task, 15);
+        $task->execute();
+
+        // one invalid queue in the table.
+        $error_messages = $trace->get_messages();
+        self::assertCount(1, $error_messages);
+
+        $first_message = reset($error_messages);
+        self::assertEquals(
+            "Cannot send notification queue record with id '{$invalid_queue->id}'",
+            $first_message
+        );
+
+        // There should only be one message sending out to the user.
+        self::assertEquals(1, $sink->count());
+
+        // The invalid notification queue keep in the table for next run.
         self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
     }
 }

@@ -92,9 +92,8 @@ class totara_notification_notification_queue_manager_testcaase extends testcase 
 
         $manager->dispatch_queues(15);
 
-        // There should be one notification sent out, the invalid one will remain
-        // in they database.
-        self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
+        // Check the queue is empty after sending the notifications. errors will add into the trace
+        self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 
         // There is one message sent out
         $notifications = $sink->get_messages();
@@ -117,21 +116,16 @@ class totara_notification_notification_queue_manager_testcaase extends testcase 
             $first_notification->subject
         );
 
-        // Start the check against error messages.
+
+        // There should be only one error message for fail record
         $error_messages = $trace->get_messages();
         self::assertNotEmpty($error_messages);
-        self::assertCount(2, $error_messages);
+        self::assertCount(1, $error_messages);
 
         $first_message = reset($error_messages);
         self::assertEquals(
-            "There is no notification preference record exist at id '{$invalid_queue->notification_preference_id}'",
+            "The notification preference record with id '{$invalid_queue->notification_preference_id}' does not exist",
             $first_message
-        );
-
-        $second_message = end($error_messages);
-        self::assertEquals(
-            "Cannot dispatch the queue at id '{$invalid_queue->id}'",
-            $second_message
         );
     }
 }
