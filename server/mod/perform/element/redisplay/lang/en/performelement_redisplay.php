@@ -42,10 +42,7 @@ $string['responses_from_relationships'] = '{Responses from: {$a->relationships}}
 $string['select_activity'] = 'Select activity...';
 $string['select_question_element'] = 'Select question element...';
 $string['source_activity_value'] = 'Source activity';
-$string['source_activity_value_help'] = 'The activity containing the question whose responses you would like to redisplay. The subject of the current activity will also need to be assigned to the source activity for responses to exist. Responses displayed here will always reflect the current state of the source responses – thus while a source subject instance is open, there is the possibility that they may change.
-
-Where a repeating activity is selected, responses from the most recently created subject instance will be displayed. Where the current activity is selected, responses from the most recent previous instance will be displayed. Where both the current and source activity are job assignment-specific, responses from the most recent instance from the matching job assignment will be displayed. Where the current activity is set to one per user, but the source activity is job assignment specific, responses from the most recent instance (regardless of job assignment will be displayed).
-Note that if the source activity is still in draft, the source question and responding participants may be modified (although not deleted).';
+$string['source_activity_value_help'] = 'Select the activity which contains the question (and responses) you want to redisplay. The subject of this activity must also be assigned to the source activity in order for any responses to be redisplayed.';
 $string['source_element_option'] = '{$a->element_title} ({$a->element_plugin_name})';
 $string['source_question_element_value'] = 'Source question element';
 $string['source_question_element_value_help'] = 'Only question elements can be selected for response redisplay. Responses from all responding participants will be displayed, regardless of who the responding participants are in the current activity, and the viewing permissions of the source activity. Where the source activity is anonymised, anonymity of the responses will be preserved when redisplayed.';

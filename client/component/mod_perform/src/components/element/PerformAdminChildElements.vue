@@ -214,21 +214,15 @@ export default {
           let el = Object.assign({}, element);
 
           // Need to convert stringified data from the query
-          if (
-            el.data &&
-            typeof el.data === 'object' &&
-            Object.keys(el.data).length > 0
-          ) {
-            el.data = JSON.parse(el.data);
+          let data = JSON.parse(el.data);
+          if (typeof data === 'object' && Object.keys(data).length > 0) {
+            el.data = data;
           }
 
           // Need to convert stringified raw data from the query
-          if (
-            el.raw_data &&
-            typeof el.raw_data === 'object' &&
-            Object.keys(el.raw_data).length > 0
-          ) {
-            el.raw_data = JSON.parse(el.raw_data);
+          let rawData = JSON.parse(el.raw_data);
+          if (typeof rawData === 'object' && Object.keys(rawData).length > 0) {
+            el.rawData = rawData;
           }
 
           // Check if element has a state, if not set it to view
