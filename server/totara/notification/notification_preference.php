@@ -47,7 +47,9 @@ if ($context->contextlevel === CONTEXT_COURSE) {
     }
 
     require_login($course);
-    require_capability('moodle/course:update', $context);
+    if (!has_capability('totara/notification:managenotifications', $context)) {
+        require_capability('moodle/course:update', $context);
+    }
 
     $PAGE->set_course($course);
 } else {

@@ -47,3 +47,39 @@ Feature: Course notifications node
     Then I should see "New notification name"
     And I should see "12 days after"
     And I should see "Owner"
+
+  Scenario: Course notification link can see based on user role and capability
+    Given the following "users" exist:
+      | username | firstname | lastname | email |
+      | teacher1 | Teacher | 1 | teacher1@example.com |
+      | teacher2 | Teacher | 2 | teacher2@example.com |
+      | student1 | Student | 1 | student1@example.com |
+    And the following "courses" exist:
+      | fullname | shortname | format |
+      | Course 1 | C1 | topics |
+    And the following "course enrolments" exist:
+      | user | course | role |
+      | teacher1 | C1 | editingteacher |
+      | teacher2 | C1 | teacher |
+      | student1 | C1 | student |
+    And I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    When I navigate to "Notifications" node in "Course administration"
+    Then I should see "Notifications"
+    And I log out
+    And I log in as "teacher2"
+    When I am on "Course 1" course homepage
+    Then I should not see "Notifications"
+    And I log out
+    And I log in as "student1"
+    When I am on "Course 1" course homepage
+    Then I should not see "Notifications"
+    And I log out
+    And the following "permission overrides" exist:
+      | capability                              | permission | role           | contextlevel | reference |
+      | totara/notification:managenotifications | Allow      | teacher        | System       |           |
+    And I log in as "teacher2"
+    And I am on "Course 1" course homepage
+    When I navigate to "Notifications" node in "Course administration"
+    Then I should see "Notifications"
+    And I log out
