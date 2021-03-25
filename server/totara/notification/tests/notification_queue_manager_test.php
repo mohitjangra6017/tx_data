@@ -21,14 +21,23 @@
  * @package totara_notification
  */
 
-use totara_core\extended_context;
+require_once(__DIR__ . '/../../../totara/core/tests/language_pack_faker_trait.php');
+
 use core_phpunit\testcase;
+use engage_article\testing\generator as article_generator;
+use totara_comment\testing\generator as comment_generator;
+use totara_core\extended_context;
+use totara_engage\access\access;
 use totara_notification\entity\notification_queue;
 use totara_notification\manager\notification_queue_manager;
+use totara_notification\task\process_event_queue_task;
+use totara_notification\task\process_notification_queue_task;
 use totara_notification\testing\generator;
 use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 
 class totara_notification_notification_queue_manager_testcaase extends testcase {
+    use language_pack_faker_trait;
+
     /**
      * @return void
      */
@@ -127,5 +136,76 @@ class totara_notification_notification_queue_manager_testcaase extends testcase 
             "The notification preference record with id '{$invalid_queue->notification_preference_id}' does not exist",
             $first_message
         );
+    }
+
+    public function test_dispatch_respects_recipients_language() {
+        $fake_language = 'xz';
+        $this->add_fake_language_pack($fake_language, [
+            'totara_comment' => [
+                'comment_created' => 'Fake language - Comment created subject',
+                'notification_comment_created_body' => 'Fake language - Comment created body',
+            ],
+        ]);
+
+        $generator = self::getDataGenerator();
+        $user1 = $generator->create_user();
+        $user2 = $generator->create_user(['lang' => $fake_language]);
+
+        /** @var article_generator $article_generator */
+        $article_generator = $generator->get_plugin_generator('engage_article');
+        $article_user1 = $article_generator->create_article([
+            'userid' => $user1->id,
+            'access' => access::PUBLIC,
+        ]);
+        $article_user2 = $article_generator->create_article([
+            'userid' => $user2->id,
+            'access' => access::PUBLIC,
+        ]);
+
+        /** @var comment_generator $comment_generator */
+        $comment_generator = $generator->get_plugin_generator('totara_comment');
+        $comment_generator->create_comment(
+            $article_user1->get_id(),
+            'engage_article',
+            $article_user1::COMMENT_AREA,
+            'This is a comment',
+            FORMAT_PLAIN,
+            $user2->id
+        );
+        $comment_generator->create_comment(
+            $article_user2->get_id(),
+            'engage_article',
+            $article_user2::COMMENT_AREA,
+            'This is a comment',
+            FORMAT_PLAIN,
+            $user1->id
+        );
+
+        $sink = self::redirectMessages();
+        $task = new process_event_queue_task();
+        $task->execute();
+        $task = new process_notification_queue_task();
+        $task->execute();
+
+        self::assertEquals(2, $sink->count());
+        $actual = array_map(function (stdClass $message) {
+            return [
+                'userid' => $message->useridto,
+                'subject' => $message->subject,
+                'body' => trim($message->fullmessage),
+            ];
+        }, $sink->get_messages());
+        self::assertEqualsCanonicalizing([
+            [
+                'userid' => (int)$user1->id,
+                'subject' => 'Comment created',
+                'body' => 'A new comment created on your item',
+            ],
+            [
+                'userid' => (int)$user2->id,
+                'subject' => 'Fake language - Comment created subject',
+                'body' => 'Fake language - Comment created body',
+            ],
+        ], $actual);
     }
 }
