@@ -139,16 +139,15 @@
       />
     </div>
 
-    <div class="tui-performAdminCustomElement__lozenge">
-      <Lozenge
-        v-if="
-          sectionElement.element.identifier &&
-            !isActive &&
-            sectionComponent.type !== 'editing'
-        "
-        :text="sectionElement.element.identifier"
-        type="neutral"
-      />
+    <div
+      v-if="
+        sectionElement.element.identifier &&
+          !isActive &&
+          sectionComponent.type !== 'editing'
+      "
+      class="tui-performAdminCustomElement__lozenge"
+    >
+      <Lozenge :text="sectionElement.element.identifier" type="neutral" />
     </div>
   </Card>
 </template>

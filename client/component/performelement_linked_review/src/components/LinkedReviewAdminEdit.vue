@@ -113,7 +113,7 @@ export default {
       ],
       initialValues: Object.assign(
         {
-          content_type: null,
+          content_type: 'totara_competency',
           content_type_settings: {},
         },
         this.rawData,
@@ -137,6 +137,10 @@ export default {
         };
       },
       update({ types }) {
+        if (types.length < 2) {
+          return types;
+        }
+
         return [
           {
             id: null,

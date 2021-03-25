@@ -63,6 +63,7 @@
         <div
           v-for="item in selectedContent.items"
           :key="item.id"
+          ref="selected-content-item"
           class="tui-linkedReviewParticipantForm__item"
         >
           <!-- Card summary of selected content item-->
@@ -415,7 +416,12 @@ export default {
      */
     refetch() {
       this.loading = true;
-      this.$apollo.queries.selectedContent.refetch();
+      this.$apollo.queries.selectedContent.refetch().then(() => {
+        let elements = this.$refs['selected-content-item'];
+        if (elements.length) {
+          elements[0].scrollIntoView();
+        }
+      });
     },
 
     /**

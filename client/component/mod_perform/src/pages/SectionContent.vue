@@ -106,12 +106,13 @@
           </div>
         </Droppable>
         <ContentAddElementButton
+          class="tui-performSectionContent__add"
           :element-plugins="elementPlugins"
           @add-element-item="add"
         />
       </div>
 
-      <div v-else class="tui-performSectionContent__form">
+      <div v-else class="tui-performSectionContent__activeForm">
         <template v-for="(sectionElement, index) in sectionElements">
           <PerformAdminCustomElement
             v-if="elementPlugins.length"
@@ -1057,6 +1058,14 @@ export default {
     }
   }
 
+  &__activeForm {
+    min-height: 2rem;
+    padding-top: var(--gap-2);
+    & > * + * {
+      margin-top: var(--gap-4);
+    }
+  }
+
   &__dragList {
     & > * + * {
       margin-top: var(--gap-2);
@@ -1066,6 +1075,10 @@ export default {
   &__draggableItem {
     position: relative;
     user-select: none;
+  }
+
+  &__add {
+    margin-top: var(--gap-8);
   }
 }
 </style>

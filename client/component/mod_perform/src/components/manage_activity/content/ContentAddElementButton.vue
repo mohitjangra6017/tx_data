@@ -24,7 +24,6 @@
           :aria-label="btnString"
           :text="btnString"
           :title="btnString"
-          :styleclass="{ small: true }"
           :caret="true"
           @click.prevent="toggle"
         >
