@@ -34,13 +34,21 @@ class response_report implements content_type_response_report {
     public function get_content_joins(): array {
         return [
             new rb_join(
-                'competency',
+                'competency_assignment',
                 'LEFT',
-                '{comp}',
-                "linked_review_content.content_id = competency.id 
+                '{totara_competency_assignments}',
+                "linked_review_content.content_id = competency_assignment.id 
                     AND linked_review_content.content_type = 'totara_competency'",
                 REPORT_BUILDER_RELATION_MANY_TO_ONE,
                 'linked_review_content'
+            ),
+            new rb_join(
+                'competency',
+                'LEFT',
+                '{comp}',
+                "competency_assignment.competency_id = competency.id",
+                REPORT_BUILDER_RELATION_MANY_TO_ONE,
+                'competency_assignment'
             ),
         ];
     }
