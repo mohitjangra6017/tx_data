@@ -90,7 +90,9 @@ class mod_facetoface_notification_form extends moodleform {
             $sched_units = array(
                 MDL_F2F_SCHEDULE_UNIT_HOUR  => get_string('hours'),
                 MDL_F2F_SCHEDULE_UNIT_DAY   => get_string('days'),
-                MDL_F2F_SCHEDULE_UNIT_WEEK  => get_string('weeks')
+                MDL_F2F_SCHEDULE_UNIT_WEEK  => get_string('weeks'),
+                MDL_F2F_SCHEDULE_UNIT_MONTH => core_text::strtolower(get_string('months')),
+                MDL_F2F_SCHEDULE_UNIT_YEAR  => get_string('years'),
             );
 
             $sched_types = array(

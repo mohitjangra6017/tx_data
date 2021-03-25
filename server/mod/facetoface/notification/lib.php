@@ -70,6 +70,8 @@ define('MDL_F2F_RECIPIENTS_NOSHOWS',      4);
 define('MDL_F2F_SCHEDULE_UNIT_HOUR',     1);
 define('MDL_F2F_SCHEDULE_UNIT_DAY',      2);
 define('MDL_F2F_SCHEDULE_UNIT_WEEK',     4);
+define('MDL_F2F_SCHEDULE_UNIT_MONTH',    5);
+define('MDL_F2F_SCHEDULE_UNIT_YEAR',     6);
 
 /**
  * Notification conditions for system generated notificaitons.
@@ -289,15 +291,23 @@ class facetoface_notification extends data_object {
     private function _get_timestamp() {
         switch ($this->scheduleunit) {
             case MDL_F2F_SCHEDULE_UNIT_HOUR:
-                $unit = 60*60;
+                $unit = HOURSECS;
                 break;
 
             case MDL_F2F_SCHEDULE_UNIT_DAY:
-                $unit = 60*60*24;
+                $unit = DAYSECS;
                 break;
 
             case MDL_F2F_SCHEDULE_UNIT_WEEK:
-                $unit = 60*60*24*7;
+                $unit = WEEKSECS;
+                break;
+
+            case MDL_F2F_SCHEDULE_UNIT_MONTH:
+                $unit = YEARSECS / 12; // No MONTHSECS is defined
+                break;
+
+            case MDL_F2F_SCHEDULE_UNIT_YEAR:
+                $unit = YEARSECS;
                 break;
         }
 
