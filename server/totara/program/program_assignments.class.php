@@ -22,6 +22,8 @@
  * @subpackage program
 */
 
+global $CFG;
+
 require_once($CFG->dirroot.'/totara/hierarchy/prefix/position/lib.php');
 
 if (!defined('MOODLE_INTERNAL')) {
