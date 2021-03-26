@@ -59,11 +59,9 @@ Feature: Selecting competency assignments linked to a performance review
     And I toggle the adder picker entry with "Doing paperwork" for "Competency"
     And I click on "Add" "button" in the ".tui-modal" "css_element"
     And I click on "Confirm selection" "button"
-    Then I should see "These items were selected by User One"
-    And I should see "Doing paperwork description"
+    Then I should see "Doing paperwork description"
     When I reload the page
-    Then I should see "These items were selected by User One"
-    And I should see "Doing paperwork description"
+    Then I should see "Doing paperwork description"
 
   Scenario: Browse, filter and select competencies via the competency assignment adder
     Given the following "competency assignments" exist in "performelement_linked_review" plugin:
@@ -169,8 +167,7 @@ Feature: Selecting competency assignments linked to a performance review
     And I toggle the adder picker entry with "Talking to people" for "Competency"
     And I click on "Add" "button" in the ".tui-modal" "css_element"
     And I click on "Confirm selection" "button"
-    Then I should see "These items were selected by User One"
-    And I should see "Locating stuff description"
+    Then I should see "Locating stuff description"
     And I should see "Talking to people description"
     When I reload the page
     Then I should see "Locating stuff description"

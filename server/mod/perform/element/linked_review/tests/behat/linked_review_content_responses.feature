@@ -39,11 +39,9 @@ Feature: Responding to competency assignments linked to a performance review
     When I log in as "user1"
     And I navigate to the outstanding perform activities list page
     And I click on "activity1" "link"
-    Then I should see "These items were selected by User One on"
-    And I should see the current date in format "j/m/Y" in the ".tui-linkedReviewParticipantForm__selectedBy" "css_element"
 
     # No responses from Manager yet
-    When I click show others responses
+    And I click show others responses
     Then I should see "Manager response"
     And I should see "No response submitted"
 
@@ -185,8 +183,6 @@ Feature: Responding to competency assignments linked to a performance review
 
     # View the print view
     When I navigate to the "print" user activity page for performance activity "activity1" where "user1" is the subject and "user2" is the participant
-    Then I should see "These items were selected by User One on"
-    And I should see the current date in format "j/m/Y" in the ".tui-linkedReviewParticipantForm__selectedBy" "css_element"
 
     # Print view: first selected competency: Doing paperwork
     And I should see "Doing paperwork" in the 1st selected content item for the "review1" linked review print element
