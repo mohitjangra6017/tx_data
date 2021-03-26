@@ -35,31 +35,36 @@
       {{ $str('header_blurb', 'performelement_aggregation') }}
     </div>
 
-    <template v-if="canRespond && viewingParticipantInstance">
-      <ElementParticipantForm :accessible-label="element.title">
-        <template v-slot:content="{ labelId }">
-          <ElementParticipantResponse>
-            <template v-slot:content>
-              <ResponseDisplay
-                :element="element"
-                :response-lines="responseLines || []"
-              />
-            </template>
-          </ElementParticipantResponse>
-        </template>
-      </ElementParticipantForm>
-    </template>
+    <ElementParticipantFormContent
+      v-bind="$attrs"
+      :element="element"
+      :section-element="sectionElement"
+      :from-print="false"
+      :is-draft="isDraft"
+    >
+      <template v-slot:content="{ labelId }">
+        <ElementParticipantResponse>
+          <template v-slot:content>
+            <ResponseDisplay
+              v-if="sectionElement.can_respond && participantInstanceId"
+              :element="element"
+              :data="sectionElement.response_data_formatted_lines"
+            />
+          </template>
+        </ElementParticipantResponse>
+      </template>
+    </ElementParticipantFormContent>
   </div>
 </template>
 
 <script>
 import ElementParticipantResponse from 'mod_perform/components/element/ElementParticipantResponse';
 import ResponseDisplay from 'mod_perform/components/element/participant_form/ResponseDisplay';
-import ElementParticipantForm from 'mod_perform/components/element/ElementParticipantForm';
+import ElementParticipantFormContent from 'mod_perform/components/element/ElementParticipantFormContent';
 
 export default {
   components: {
-    ElementParticipantForm,
+    ElementParticipantFormContent,
     ElementParticipantResponse,
     ResponseDisplay,
   },
@@ -71,16 +76,12 @@ export default {
       type: Object,
       required: true,
     },
-    viewingParticipantInstance: {
-      type: Object,
+    participantInstanceId: {
+      type: Number,
       required: false,
     },
-    canRespond: {
-      type: Boolean,
-      required: true,
-    },
-    responseLines: {
-      type: Array,
+    sectionElement: {
+      type: Object,
       required: true,
     },
   },

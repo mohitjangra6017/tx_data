@@ -24,31 +24,44 @@
 /**
  * @group perform
  */
+
 use  mod_perform\data_providers\activity\element_plugin as element_plugin_data_provider;
 use  mod_perform\models\activity\element_plugin as element_plugin_model;
 
 class mod_perform_element_plugin_data_provider_testcase extends advanced_testcase {
 
-    public function test_fetch() {
+    public function test_fetch(): void {
         // All users should be able to access the list of element plugins, regardless of capabilities.
-        $data_generator = $this->getDataGenerator();
+        $data_generator = self::getDataGenerator();
         $user1 = $data_generator->create_user();
-        $this->setUser($user1);
+        self::setUser($user1);
 
         $data_provider = new element_plugin_data_provider();
         $element_plugins = $data_provider->fetch()->get();
 
         foreach ($element_plugins as $element_plugin) {
-            $this->assertTrue($element_plugin instanceof element_plugin_model);
+            self::assertInstanceOf(element_plugin_model::class, $element_plugin);
         }
 
         $actual_plugin_names = [];
         foreach ($element_plugins as $element_plugin) {
-            $actual_plugin_names[] = $element_plugin->get_plugin_name();
+            $actual_plugin_names[] = $element_plugin::get_plugin_name();
         }
 
-        $expected_plugins = core_component::get_plugin_list('performelement');
+        $expected_plugins = [
+            'long_text',
+            'short_text',
+            'multi_choice_single',
+            'multi_choice_multi',
+            'numeric_rating_scale',
+            'custom_rating_scale',
+            'date_picker',
+            'static_content',
+            'redisplay',
+            'aggregation',
+            'linked_review',
+        ];
 
-        $this->assertEqualsCanonicalizing(array_keys($expected_plugins), $actual_plugin_names);
+        self::assertEquals($expected_plugins, $actual_plugin_names, 'Order and names did not match');
     }
 }

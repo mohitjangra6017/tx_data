@@ -106,4 +106,5 @@ class custom_rating_scale extends respondable_element_plugin {
 
         return $decoded_response['score'];
     }
+
 }

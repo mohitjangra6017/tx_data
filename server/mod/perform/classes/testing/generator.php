@@ -31,7 +31,6 @@ use performelement_aggregation\aggregation;
 use performelement_aggregation\aggregation_response_calculator;
 use performelement_aggregation\calculations\average;
 use performelement_numeric_rating_scale\numeric_rating_scale;
-use stdClass, coding_exception, invalid_parameter_exception;
 use container_perform\perform as perform_container;
 use core\collection;
 use core\entity\cohort;
@@ -366,7 +365,7 @@ final class generator extends \core\testing\component_generator {
      * @return element
      */
     public function create_element(array $data = []): element {
-        $element = element::create(
+        return element::create(
             $data['context'] ?? \context_coursecat::instance(perform_container::get_default_category_id()),
             $data['plugin_name'] ?? 'short_text',
             $data['title'] ?? 'test element title',
@@ -376,9 +375,6 @@ final class generator extends \core\testing\component_generator {
             $data['parent'] ?? null,
             $data['sort_order'] ?? null
         );
-        element::post_create($element);
-
-        return $element;
     }
 
     /**

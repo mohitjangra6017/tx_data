@@ -53,17 +53,16 @@ class element_plugin {
      *
      * @return $this
      */
-    protected function fetch_elements() {
-        // Do class lookup to find all element models.
-        $plugin_names = \core_component::get_plugin_list('performelement');
+    protected function fetch_elements(): self {
+        $this->items = element_plugin_model::get_element_plugins();
 
-        $plugins = [];
-        foreach ($plugin_names as $plugin_name => $plugin_path) {
-            $plugin = element_plugin_model::load_by_plugin($plugin_name);
-            $plugins[$plugin->get_sortorder()] = $plugin;
-        }
-        ksort($plugins);
-        $this->items = array_values($plugins);
+        usort( $this->items, function (element_plugin_model $a, element_plugin_model $b) {
+            if ($a->get_sortorder() === $b->get_sortorder()) {
+                return $a->get_name() <=> $b->get_name();
+            }
+
+            return $a->get_sortorder() <=> $b->get_sortorder();
+        });
 
         return $this;
     }

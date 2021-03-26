@@ -161,11 +161,11 @@ class linked_review extends respondable_element_plugin {
      * @inheritDoc
      */
     public function post_create(element $element): void {
-        $data = json_decode($element->data, true);
+        $data = json_decode($element->data, true, 512, JSON_THROW_ON_ERROR);
 
         $data = $this->set_content_type_and_settings($data);
 
-        $element->set_data(json_encode($data, JSON_UNESCAPED_SLASHES));
+        $element->set_data(json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
     }
 
     /**
@@ -187,8 +187,8 @@ class linked_review extends respondable_element_plugin {
     /**
      * @inheritDocs
      */
-    public function process_data(?string $data): ?string {
-        $data = json_decode($data, true);
+    public function process_data(element_entity $element): ?string {
+        $data = json_decode($element->data, true, 512, JSON_THROW_ON_ERROR);
 
         $content_type = content_type_factory::get_class_name_from_identifier($data['content_type']);
 
@@ -222,7 +222,7 @@ class linked_review extends respondable_element_plugin {
             ]
         ];
 
-        return json_encode(array_merge($data, $additional_data), JSON_UNESCAPED_SLASHES);
+        return json_encode(array_merge($data, $additional_data), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
     }
 
     /**
@@ -250,7 +250,7 @@ class linked_review extends respondable_element_plugin {
      * @inheritDoc
      */
     public function get_sortorder(): int {
-        return 100;
+        return 110;
     }
 
     /**

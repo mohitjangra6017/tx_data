@@ -28,6 +28,7 @@ fragment mod_perform_update_section_elements_element_data on mod_perform_element
   raw_data: data(format: RAW)
   is_required
   is_respondable
+  displays_responses
   element_plugin {
     plugin_name
     name

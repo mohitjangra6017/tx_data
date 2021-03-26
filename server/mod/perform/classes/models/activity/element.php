@@ -131,7 +131,7 @@ class element extends model {
         $model = self::load_by_entity($entity);
         self::post_create($model);
 
-        return element::load_by_id($model->id);
+        return self::load_by_id($model->id);
     }
 
     /**
@@ -307,7 +307,7 @@ class element extends model {
         self::clean($this->entity);
         self::validate($this->entity);
         $this->entity->save();
-        element::post_update($this);
+        self::post_update($this);
     }
 
     /*
@@ -318,6 +318,16 @@ class element extends model {
         $this->entity->save();
 
         return $this;
+    }
+
+    /**
+     * Change the internal element JSON data.
+     * Note that this does not save the data, it only changes the value in memory.
+     *
+     * @param string $data
+     */
+    public function set_data(string $data): void {
+        $this->entity->data = $data;
     }
 
     /**

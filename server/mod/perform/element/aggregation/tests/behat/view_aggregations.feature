@@ -1,5 +1,5 @@
 @totara @perform @mod_perform @perform_element @javascript @vuejs
-Feature: Respond to sources and view aggregate responses.
+Feature: Respond to sources and view aggregate responses
 
   Background:
     Given the following "users" exist:
@@ -60,7 +60,7 @@ Feature: Respond to sources and view aggregate responses.
     And I click on "Save" "button"
     And I log out
 
-  Scenario: I can create and update an aggregation perform element
+  Scenario: I can respond to aggregation sources and view the aggregated responses
     When I navigate to the external participants form for user "Harry Smith"
 
     When I answer "multi choice single" question "Zero or a hundy" with "A hundy (score: 100)"

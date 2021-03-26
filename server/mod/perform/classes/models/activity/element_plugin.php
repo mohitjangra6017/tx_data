@@ -23,10 +23,14 @@
 
 namespace mod_perform\models\activity;
 
+use coding_exception;
 use core_component;
 use mod_perform\entity\activity\element as element_entity;
+use mod_perform\models\activity\helpers\child_element_config;
 use mod_perform\models\activity\helpers\displays_responses;
 use mod_perform\models\activity\helpers\element_clone_helper;
+use mod_perform\models\response\section_element_response;
+use mod_perform\rb\helper\element_plugin_response_report_builder;
 
 /**
  * Class element_plugin
@@ -63,7 +67,6 @@ abstract class element_plugin {
      * @param bool $get_respondable
      * @param bool $get_non_respondable
      * @return element_plugin[]
-     * @throws coding_exception
      */
     final public static function get_element_plugins(bool $get_respondable = true, bool $get_non_respondable = true): array {
         $elements = core_component::get_plugin_list('performelement');
@@ -409,10 +412,10 @@ abstract class element_plugin {
      *
      * @param string|null $encoded_response_data
      * @param string|null $encoded_element_data
-     * @return int|null
+     * @return float
      */
-    public function get_aggregatable_value(?string $encoded_response_data, ?string $encoded_element_data): ?int {
-        if (!$this->get_is_aggregatable()) {
+    public function get_aggregatable_value(?string $encoded_response_data, ?string $encoded_element_data): ?float {
+        if (!$this instanceof displays_responses && !$this->get_is_aggregatable()) {
             return null;
         }
 
@@ -464,6 +467,15 @@ abstract class element_plugin {
      */
     public function get_response_report_builder_helper(): ?element_plugin_response_report_builder {
         return null;
+    }
+
+    /**
+     * Any extra static data an element plugin wants to provide i.e. a fixed set of configuration options.
+     *
+     * @return array
+     */
+    public function get_extra_config_data(): array {
+        return [];
     }
 
 }

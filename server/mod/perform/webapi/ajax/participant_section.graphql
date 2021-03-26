@@ -29,11 +29,6 @@ query mod_perform_participant_section(
           id
           ...mod_perform_participant_section_element_data
         }
-        title
-        data
-        is_required
-        is_respondable
-        displays_responses
       }
       sort_order
       can_respond
@@ -89,6 +84,7 @@ fragment mod_perform_participant_section_element_data on mod_perform_element {
   data
   is_required
   is_respondable
+  displays_responses
   element_plugin {
     participant_form_component
     participant_response_component

@@ -309,10 +309,10 @@ class mod_perform_activity_state_testcase extends advanced_testcase {
             aggregation::EXCLUDED_VALUES => [],
             aggregation::CALCULATIONS => [average::get_name()],
         ];
-        $aggregation_element = $generator->create_element(array(
+        $aggregation_element = $generator->create_element([
             'plugin_name' => aggregation::get_plugin_name(),
             'data' => json_encode($aggregation_data, JSON_THROW_ON_ERROR),
-        ));
+        ]);
 
         $section2 = $generator->create_section($activity);
         $generator->create_section_element($section2, $aggregation_element);

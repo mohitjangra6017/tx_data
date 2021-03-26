@@ -35,14 +35,14 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
  * @group perform
  * @group perform_element
  */
-class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_testcase extends advanced_testcase {
-    private const MUTATION = 'mod_perform_update_section_elements';
+class mod_perform_webapi_resolver_mutation_create_and_update_aggregation_section_elements_testcase extends advanced_testcase {
+    private const CREATE_MUTATION = 'mod_perform_create_element_in_section';
+    private const UPDATE_MUTATION = 'mod_perform_update_element_in_section';
 
     use webapi_phpunit_helper;
 
     public function test_create_and_update_aggregation_section_elements(): void {
         aggregation_data::$aggregatable_section_cache = [];
-
         self::setAdminUser();
 
         $perform_generator = generator::instance();
@@ -53,36 +53,46 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
         $args = [
             'input' => [
                 'section_id' => $section->id,
-                'create_new' => [
-                    [
-                        'plugin_name' => numeric_rating_scale::get_plugin_name(),
+                'element' => [
+                    'plugin_name' => numeric_rating_scale::get_plugin_name(),
+                    'element_details' => [
                         'title' => 'Original source numeric rating scale',
                         'identifier' => 'num-rating-scale',
                         'data' => '{}',
                         'is_required' => true,
-                        'sort_order' => 1,
-                    ],
-                    [
-                        'plugin_name' => numeric_rating_scale::get_plugin_name(),
-                        'title' => 'Other numeric rating scale',
-                        'identifier' => 'num-rating-scale2',
-                        'data' => '{}',
-                        'is_required' => true,
-                        'sort_order' => 2,
-                    ],
+                    ]
                 ],
             ],
         ];
 
-        $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
-        [$source_section_element, ,] = $this->assert_correct_elements_returned($result, false);
+        $result = $this->resolve_graphql_mutation(self::CREATE_MUTATION, $args);
+        [$source_section_element] = $this->assert_correct_elements_returned($result, 1);
 
         $args = [
             'input' => [
                 'section_id' => $section->id,
-                'create_new' => [
-                    [
-                        'plugin_name' => aggregation::get_plugin_name(),
+                'element' => [
+                    'plugin_name' => numeric_rating_scale::get_plugin_name(),
+                    'element_details' => [
+                        'title' => 'Other numeric rating scale',
+                        'identifier' => 'num-rating-scale2',
+                        'data' => '{}',
+                        'is_required' => true,
+                    ],
+                ],
+                'after_section_element_id' => $source_section_element->get_id(),
+            ],
+        ];
+
+        $result = $this->resolve_graphql_mutation(self::CREATE_MUTATION, $args);
+        [$source_section_element, $other_source_section_element] = $this->assert_correct_elements_returned($result, 2);
+
+        $args = [
+            'input' => [
+                'section_id' => $section->id,
+                'element' => [
+                    'plugin_name' => aggregation::get_plugin_name(),
+                    'element_details' => [
                         'title' => 'Aggregation element',
                         'identifier' => 'agg-element',
                         'data' => json_encode([
@@ -91,19 +101,19 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
                             aggregation::CALCULATIONS => [average::get_name()],
                         ], JSON_THROW_ON_ERROR),
                         'is_required' => false,
-                        'sort_order' => 3,
                     ],
                 ],
+                'after_section_element_id' => $other_source_section_element->get_id(),
             ],
         ];
 
-        $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
+        $result = $this->resolve_graphql_mutation(self::CREATE_MUTATION, $args);
 
         [
             $source_section_element,
             $other_rating_scale_section_element,
             $aggregation_section_element
-        ] = $this->assert_correct_elements_returned($result);
+        ] = $this->assert_correct_elements_returned($result, 3);
 
         $source_section_entity = new section_entity($source_section_element->section_id);
 
@@ -124,35 +134,30 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
 
         $args = [
             'input' => [
-                'section_id' => $section->id,
-                'update' => [
-                    [
-                        'element_id' => $aggregation_section_element->get_element()->id,
-                        'plugin_name' => aggregation::get_plugin_name(),
-                        'title' => 'Aggregation element',
-                        'identifier' => 'agg-element',
-                        'data' => json_encode([
-                            aggregation::SOURCE_SECTION_ELEMENT_IDS => [
-                                $other_rating_scale_section_element->id, // <-- Specifically placed first.
-                                $source_section_element->id,
-                            ],
-                            aggregation::EXCLUDED_VALUES => [],
-                            aggregation::CALCULATIONS => [average::get_name()],
-                        ], JSON_THROW_ON_ERROR),
-                        'is_required' => false,
-                        'sort_order' => 3,
-                    ],
+                'section_element_id' => $aggregation_section_element->get_id(),
+                'element_details' => [
+                    'title' => 'Aggregation element',
+                    'identifier' => 'agg-element',
+                    'data' => json_encode([
+                        aggregation::SOURCE_SECTION_ELEMENT_IDS => [
+                            $other_rating_scale_section_element->id, // <-- Specifically placed first.
+                            $source_section_element->id,
+                        ],
+                        aggregation::EXCLUDED_VALUES => [],
+                        aggregation::CALCULATIONS => [average::get_name()],
+                    ], JSON_THROW_ON_ERROR),
+                    'is_required' => false,
                 ],
             ],
         ];
 
-        $result = $this->resolve_graphql_mutation(self::MUTATION, $args);
+        $result = $this->resolve_graphql_mutation(self::UPDATE_MUTATION, $args);
 
         [
             $source_section_element,
             $other_rating_scale_section_element,
             $aggregation_section_element
-        ] = $this->assert_correct_elements_returned($result);
+        ] = $this->assert_correct_elements_returned($result, 3);
 
         $all_data = json_decode($aggregation_section_element->get_element()->get_data(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -177,24 +182,34 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
 
     /**
      * @param array $result
-     * @param bool $include_aggregation_element
+     * @param int $element_count
      * @return section_element[]
      */
-    private function assert_correct_elements_returned(array $result, bool $include_aggregation_element = true): array {
+    private function assert_correct_elements_returned(array $result, int $element_count): array {
         /** @var section $section */
         $section = $result['section'];
 
         /** @var section_element[] $section_elements */
         $section_elements = $section->get_section_elements()->all(false);
 
-        [$source_section_element, $other_rating_scale_section_element] = $section_elements;
+        $source_section_element = $section_elements[0] ?? null;
+        $other_source_section_element = $section_elements[1] ?? null;
+        $aggregation_section_element = $section_elements[2] ?? null;
 
-        self::assertCount($include_aggregation_element ? 3 : 2, $section_elements);
-        self::assertEquals('Original source numeric rating scale', $source_section_element->get_element()->title);
-        self::assertEquals('Other numeric rating scale', $other_rating_scale_section_element->get_element()->title);
+        self::assertCount($element_count, $section_elements);
 
-        if ($include_aggregation_element) {
-            $aggregation_section_element = $section_elements[2];
+        if ($element_count >= 1) {
+            self::assertNotNull($source_section_element);
+            self::assertEquals('Original source numeric rating scale', $source_section_element->get_element()->title);
+        }
+
+        if ($element_count >= 2) {
+            self::assertNotNull($other_source_section_element);
+            self::assertEquals('Other numeric rating scale', $other_source_section_element->get_element()->title);
+        }
+
+        if ($element_count >= 3) {
+            self::assertNotNull($aggregation_section_element);
             self::assertEquals('Aggregation element', $aggregation_section_element->get_element()->title);
 
             // The section element ids are never saved in the json data field, this is to prevent them falling out of sync when cloning.
@@ -207,7 +222,7 @@ class mod_perform_webapi_resolver_mutation_update_aggregation_section_elements_t
             );
         }
 
-        return [$source_section_element, $other_rating_scale_section_element, $aggregation_section_element ?? null];
+        return [$source_section_element, $other_source_section_element, $aggregation_section_element ?? null];
     }
 
 }

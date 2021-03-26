@@ -38,6 +38,7 @@ use mod_perform\models\activity\element;
 use mod_perform\models\activity\helpers\displays_responses;
 use mod_perform\models\activity\participant_instance;
 use mod_perform\models\activity\participant_source;
+use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\models\activity\section_element;
 use mod_perform\util;
 
@@ -216,7 +217,7 @@ class section_element_response extends model implements section_element_response
     public function get_response_data(): ?string {
         $element_plugin = $this->section_element->element->element_plugin;
 
-        if (!$element_plugin->get_is_respondable()) {
+        if (!$element_plugin instanceof displays_responses) {
             return null;
         }
 

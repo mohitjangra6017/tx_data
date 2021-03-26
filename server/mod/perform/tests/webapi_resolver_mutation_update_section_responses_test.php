@@ -36,6 +36,7 @@ use mod_perform\models\response\participant_section;
 use mod_perform\state\participant_section\closed;
 use mod_perform\state\participant_section\complete;
 use mod_perform\state\participant_section\not_started;
+use mod_perform\testing\generator as perform_generator;
 use performelement_short_text\answer_length_exceeded_error;
 use performelement_short_text\short_text;
 use totara_core\advanced_feature;
@@ -55,8 +56,8 @@ class mod_perform_webapi_resolver_mutation_update_section_responses_testcase ext
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $generator */
+        $generator = perform_generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -207,8 +208,8 @@ class mod_perform_webapi_resolver_mutation_update_section_responses_testcase ext
         self::setAdminUser();
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $generator */
+        $generator = perform_generator::instance();
         $activity = $generator->create_activity_in_container();
         $activity->settings->update([activity_setting::CLOSE_ON_COMPLETION => true]);
 
@@ -263,8 +264,8 @@ class mod_perform_webapi_resolver_mutation_update_section_responses_testcase ext
         self::setAdminUser();
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $generator */
+        $generator = perform_generator::instance();
         $activity = $generator->create_activity_in_container();
         $activity->settings->update([activity_setting::CLOSE_ON_COMPLETION => true]);
 
@@ -322,8 +323,7 @@ class mod_perform_webapi_resolver_mutation_update_section_responses_testcase ext
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = perform_generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -388,8 +388,8 @@ class mod_perform_webapi_resolver_mutation_update_section_responses_testcase ext
         $subject = self::getDataGenerator()->create_user();
         $other_participant = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $generator */
+        $generator = perform_generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -466,8 +466,8 @@ class mod_perform_webapi_resolver_mutation_update_section_responses_testcase ext
 
         $subject = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $generator */
+        $generator = perform_generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -549,8 +549,8 @@ class mod_perform_webapi_resolver_mutation_update_section_responses_testcase ext
         $subject = self::getDataGenerator()->create_user();
         $other_participant = self::getDataGenerator()->create_user();
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $generator */
+        $generator = perform_generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -615,8 +615,8 @@ class mod_perform_webapi_resolver_mutation_update_section_responses_testcase ext
         $subject = self::getDataGenerator()->create_user();
 
 
-        /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        /** @var perform_generator $generator */
+        $generator = perform_generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,

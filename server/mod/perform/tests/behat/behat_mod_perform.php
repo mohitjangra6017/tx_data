@@ -64,7 +64,7 @@ class behat_mod_perform extends behat_base {
     public const CUSTOM_RATING_SCALE_RESPONSE_LOCATOR = '.tui-radioGroup';
     public const NUMERIC_RATING_SCALE_RANGE_RESPONSE_LOCATOR = 'input[type=range]';
     public const NUMERIC_RATING_SCALE_NUMBER_RESPONSE_LOCATOR = 'input[type=number]';
-    public const PERFORM_ELEMENT_RESPONSE_CONTAINER_LOCATOR = '.tui-performElementResponse';
+    public const PERFORM_ELEMENT_RESPONSE_CONTAINER_LOCATOR = '.tui-performElementParticipantFormContent__response-output, .tui-performElementParticipantResponse';
     public const PERFORM_ELEMENT_OTHER_RESPONSE_CONTAINER_LOCATOR = '.tui-otherParticipantResponses';
     public const PERFORM_ELEMENT_OTHER_RESPONSE_RELATION_LOCATOR = '.tui-otherParticipantResponses .tui-formLabel';
     public const TUI_OTHER_PARTICIPANT_RESPONSES_ANONYMOUS_RESPONSE_PARTICIPANT_LOCATOR = '.tui-otherParticipantResponses__response-participant';
@@ -725,9 +725,7 @@ class behat_mod_perform extends behat_base {
         ?string $expected_answer_text
     ): void {
         $question = $this->find_question_from_text($question_text);
-        $other_response_element = $question->find('css', self::PERFORM_ELEMENT_OTHER_RESPONSE_CONTAINER_LOCATOR);
-
-        $relations = $other_response_element->findAll('css', self::PERFORM_ELEMENT_OTHER_RESPONSE_RELATION_LOCATOR);
+        $relations = $question->findAll('css', self::PERFORM_ELEMENT_OTHER_RESPONSE_RELATION_LOCATOR);
 
         $found_relationship_answer = null;
         foreach ($relations as $relation) {

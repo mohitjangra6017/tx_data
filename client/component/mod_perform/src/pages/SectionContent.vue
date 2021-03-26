@@ -91,10 +91,10 @@
                   :section="section"
                   :activity-id="activityId"
                   :activity-context-id="activityContextId"
-                  @child-update="childUpdate"
                   :extra-plugin-config-data="
                     getExtraPluginConfigData(sectionElement)
                   "
+                  @child-update="childUpdate"
                   @update="update(sectionElement, $event, index)"
                   @edit="edit(sectionElement)"
                   @display="display(sectionElement)"

@@ -237,7 +237,6 @@ class mod_perform_response_model_testcase extends advanced_testcase {
         $subject = self::getDataGenerator()->create_user();
         $participant = self::getDataGenerator()->create_user();
 
-        /** @var perform_generator $generator */
         $generator = perform_generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
@@ -274,7 +273,7 @@ class mod_perform_response_model_testcase extends advanced_testcase {
         // Structurally valid response, but will fail validation for being too long.
         $response_data = str_repeat('x', 1025);
 
-        $element_response->set_response_data(json_encode($response_data));
+        $element_response->set_response_data(json_encode($response_data, JSON_THROW_ON_ERROR));
 
         self::assertFalse($element_response->validate_response());
 
@@ -290,7 +289,7 @@ class mod_perform_response_model_testcase extends advanced_testcase {
     public function test_user_can_view_response(): void {
         self::setAdminUser();
         $generator = self::getDataGenerator();
-        /** @var perform_generator $perform_generator */
+
         $perform_generator = perform_generator::instance();
         $activity = $perform_generator->create_activity_in_container();
 
