@@ -65,5 +65,14 @@ query totara_notification_event_resolvers(
       __typename
       is_enabled
     }
+    default_delivery_channels {
+      __typename
+      component
+      label
+      is_enabled
+      is_sub_delivery_channel
+      parent_component
+      display_order
+    }
   }
 }

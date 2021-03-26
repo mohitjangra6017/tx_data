@@ -28,4 +28,5 @@
  * Strings for component 'message_popup', language 'en', branch 'MOODLE_20_STABLE'
  */
 
+$string['delivery_channel_label'] = 'Alerts';
 $string['pluginname'] = 'Alert block';

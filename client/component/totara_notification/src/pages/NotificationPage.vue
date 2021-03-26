@@ -26,10 +26,12 @@
       <NotificationTable
         :event-resolvers="eventResolvers"
         :context-id="parseInt(contextId)"
+        :show-delivery-preference-option="canChangeDeliveryChannelDefaults"
         class="tui-notificationPage__table"
         @create-custom-notification="handleCreateCustomNotification"
         @edit-notification="handleEditNotification"
         @delete-notification="confirmDeleteNotification"
+        @update-delivery-preferences="handleUpdateDeliveryPreferences"
       />
     </template>
     <template v-slot:modals>
@@ -64,6 +66,22 @@
           <p>{{ $str('delete_confirm_message', 'totara_notification') }}</p>
         </template>
       </DeleteConfirmationModal>
+
+      <ModalPresenter
+        v-if="canChangeDeliveryChannelDefaults"
+        :open="deliveryPreferenceModal.open"
+        @request-close="deliveryPreferenceModal.open = false"
+        @close-complete="resetState"
+      >
+        <DeliveryPreferenceModal
+          :context-id="contextId"
+          :resolver-class-name="targetResolverClassName"
+          :resolver-label="targetResolverLabel"
+          :default-delivery-channels="targetDeliveryChannels"
+          :title="$str('delivery_preferences', 'totara_notification')"
+          @form-submit="handleNotificationPreferenceSubmit"
+        />
+      </ModalPresenter>
     </template>
   </Layout>
 </template>
@@ -73,6 +91,7 @@ import NotificationTable from 'totara_notification/components/table/Notification
 import ModalPresenter from 'tui/components/modal/ModalPresenter';
 import NotificationPreferenceModal from 'totara_notification/components/modal/NotificationPreferenceModal';
 import DeleteConfirmationModal from 'tui/components/modal/ConfirmationModal';
+import DeliveryPreferenceModal from 'totara_notification/components/modal/DeliveryPreferenceModal';
 import { notify } from 'tui/notifications';
 
 // GraphQL queries.
@@ -81,6 +100,7 @@ import createCustomNotification from 'totara_notification/graphql/create_custom_
 import overrideNotification from 'totara_notification/graphql/override_notification_preference';
 import updateNotification from 'totara_notification/graphql/update_notification_preference';
 import deleteNotification from 'totara_notification/graphql/delete_notification_preference';
+import updateDefaultDeliveryChannels from 'totara_notification/graphql/update_notifiable_event_default_delivery_channels';
 
 const MODAL_STATE_CREATE = 'create';
 const MODAL_STATE_UPDATE = 'update';
@@ -92,6 +112,7 @@ export default {
     ModalPresenter,
     NotificationPreferenceModal,
     DeleteConfirmationModal,
+    DeliveryPreferenceModal,
   },
 
   props: {
@@ -104,6 +125,7 @@ export default {
       type: [Number, String],
       required: true,
     },
+
     extendedContext: {
       type: Object,
       default() {
@@ -127,6 +149,8 @@ export default {
         return true;
       },
     },
+
+    canChangeDeliveryChannelDefaults: Boolean,
   },
 
   apollo: {
@@ -175,12 +199,17 @@ export default {
       deleteModal: {
         open: false,
       },
+      deliveryPreferenceModal: {
+        open: false,
+      },
       deleting: false,
       targetResolverClassName: null,
       targetDeletePreference: null,
       targetPreference: null,
       targetScheduleTypes: [],
       targetAvailableRecipients: [],
+      targetDeliveryChannels: null,
+      targetResolverLabel: null,
     };
   },
 
@@ -226,6 +255,12 @@ export default {
 
       // Reset the target schedule types
       this.targetScheduleTypes = [];
+
+      // Reset the target label
+      this.targetResolverLabel = null;
+
+      // Reset the target delivery channels
+      this.targetDeliveryChannels = [];
     },
 
     /**
@@ -264,6 +299,22 @@ export default {
       this.modal.title = this.$str('edit_notification', 'totara_notification');
       this.modal.open = true;
       this.modal.state = MODAL_STATE_UPDATE;
+    },
+
+    /**
+     * @param {String} resolverClassName
+     * @param {String} resolverLabel
+     * @param {Array} defaultDeliveryChannels
+     */
+    async handleUpdateDeliveryPreferences({
+      resolverClassName,
+      resolverLabel,
+      defaultDeliveryChannels,
+    }) {
+      this.targetResolverClassName = resolverClassName;
+      this.targetResolverLabel = resolverLabel;
+      this.targetDeliveryChannels = defaultDeliveryChannels;
+      this.deliveryPreferenceModal.open = true;
     },
 
     /**
@@ -643,6 +694,50 @@ export default {
         },
       });
     },
+
+    /**
+     *
+     * @param {Object} default_delivery_channels
+     * @param {String} resolver_class_name
+     * @returns {Promise<void>}
+     */
+    async handleNotificationPreferenceSubmit({
+      delivery_channels,
+      resolver_class_name,
+    }) {
+      await this.$apollo.mutate({
+        mutation: updateDefaultDeliveryChannels,
+        variables: {
+          resolver_class_name,
+          default_delivery_channels: delivery_channels,
+        },
+        update: (proxy, { data: { default_delivery_channels } }) => {
+          let { resolvers } = proxy.readQuery({
+            query: getEventResolvers,
+            variables: this.queryVariables,
+          });
+
+          resolvers = Object.assign([], resolvers);
+          resolvers = resolvers.map(resolver => {
+            if (resolver.class_name === resolver_class_name) {
+              resolver = Object.assign({}, resolver);
+              resolver.default_delivery_channels = default_delivery_channels;
+            }
+
+            return resolver;
+          });
+
+          proxy.writeQuery({
+            query: getEventResolvers,
+            variables: this.queryVariables,
+            data: {
+              resolvers,
+            },
+          });
+        },
+      });
+      this.deliveryPreferenceModal.open = false;
+    },
   },
 };
 </script>
@@ -657,6 +752,7 @@ export default {
       "delete_confirm_title",
       "delete_confirm_message",
       "delete_success",
+      "delivery_preferences",
       "error_cannot_create_custom_notification",
       "error_cannot_delete_custom_notification",
       "edit_notification",

@@ -21,5 +21,6 @@
  * @package message_msteams
  */
 
+$string['delivery_channel_label'] = 'Microsoft Teams';
 $string['notconfigured'] = 'Totara has not been configured to integrate with Microsoft Teams yet';
 $string['pluginname'] = 'Microsoft Teams';

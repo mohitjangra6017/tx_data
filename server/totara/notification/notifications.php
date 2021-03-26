@@ -47,7 +47,8 @@ $tui = new component(
     'totara_notification/pages/NotificationPage',
     [
         'title' => get_string('notifications', 'totara_notification'),
-        'context-id' => $extended_context->get_context_id()
+        'context-id' => $extended_context->get_context_id(),
+        'can-change-delivery-channel-defaults' => true,
     ]
 );
 

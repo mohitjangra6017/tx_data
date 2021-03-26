@@ -23,7 +23,6 @@
 namespace totara_notification\entity;
 
 use core\orm\entity\entity;
-use totara_core\extended_context;
 use totara_notification\repository\notifiable_event_preference_repository;
 
 /**
@@ -36,6 +35,7 @@ use totara_notification\repository\notifiable_event_preference_repository;
  * @property string      $area
  * @property int         $item_id
  * @property int         $enabled
+ * @property string      $default_delivery_channels
  *
  * @method static notifiable_event_preference_repository repository()
  */

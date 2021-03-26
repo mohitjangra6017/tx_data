@@ -26,9 +26,12 @@ use coding_exception;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
 use totara_core\extended_context;
+use totara_notification\entity\notifiable_event_preference as notifiable_event_preference_entity;
+use totara_notification\loader\delivery_channel_loader;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\helper;
 use totara_notification\local\schedule_helper;
+use totara_notification\model\notifiable_event_preference as notifiable_event_preference_model;
 use totara_notification\resolver\resolver_helper;
 
 /**
@@ -66,22 +69,7 @@ class event_resolver implements type_resolver {
                 return resolver_helper::get_human_readable_resolver_name($source);
 
             case 'notification_preferences':
-                $extended_context_args = $args['extended_context'] ?? [];
-
-                // Default extended context.
-                $extended_context = extended_context::make_system();
-
-                if (isset($extended_context_args['context_id'])) {
-                    $extended_context = extended_context::make_with_id(
-                        $extended_context_args['context_id'],
-                        $extended_context_args['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
-                        $extended_context_args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
-                        $extended_context_args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
-                    );
-                } else if ($ec->has_relevant_context()) {
-                    $context = $ec->get_relevant_context();
-                    $extended_context = extended_context::make_with_context($context);
-                }
+                $extended_context = self::get_extended_context_from_args($args, $ec);
 
                 return notification_preference_loader::get_notification_preferences($extended_context, $source);
 
@@ -93,21 +81,9 @@ class event_resolver implements type_resolver {
 
             case 'status':
                 // Default extended context.
-                $extended_context = extended_context::make_system();
+                $extended_context = self::get_extended_context_from_args($args, $ec);
 
                 $resolver_class_name = $source;
-
-                if (isset($extended_context_args['context_id'])) {
-                    $extended_context = extended_context::make_with_id(
-                        $extended_context_args['context_id'],
-                        $extended_context_args['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
-                        $extended_context_args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
-                        $extended_context_args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
-                    );
-                } else if ($ec->has_relevant_context()) {
-                    $context = $ec->get_relevant_context();
-                    $extended_context = extended_context::make_with_context($context);
-                }
 
                 $is_enabled = helper::is_resolver_enabled_for_all_parent_contexts(
                     $resolver_class_name,
@@ -118,8 +94,51 @@ class event_resolver implements type_resolver {
                     'is_enabled' => $is_enabled
                 ];
 
+            case 'default_delivery_channels':
+                $extended_context = self::get_extended_context_from_args($args);
+                $system_context = extended_context::make_system();
+                if (!$extended_context->is_same($system_context)) {
+                    throw new \coding_exception('Delivery channels are only available in the system context');
+                }
+
+                // Find the notifiable event preference record
+                $entity = notifiable_event_preference_entity::repository()->for_context($source, $extended_context);
+
+                // If there's no override, return the defaults
+                if (!$entity) {
+                    return delivery_channel_loader::get_defaults();
+                }
+
+                $model = notifiable_event_preference_model::from_entity($entity);
+                return $model->default_delivery_channels;
+
             default:
                 throw new coding_exception("The field '{$field}' is not yet supported");
         }
+    }
+
+    /**
+     * @param array $args
+     * @param execution_context|null $ec
+     * @return extended_context
+     */
+    private static function get_extended_context_from_args(array $args, ?execution_context $ec = null): extended_context {
+        $extended_context_args = $args['extended_context'] ?? [];
+
+        // Default extended context.
+        $extended_context = extended_context::make_system();
+
+        if (isset($extended_context_args['context_id'])) {
+            $extended_context = extended_context::make_with_id(
+                $extended_context_args['context_id'],
+                $extended_context_args['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
+                $extended_context_args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
+                $extended_context_args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
+            );
+        } else if ($ec && $ec->has_relevant_context()) {
+            $context = $ec->get_relevant_context();
+            $extended_context = extended_context::make_with_context($context);
+        }
+        return $extended_context;
     }
 }

@@ -27,21 +27,19 @@ use coding_exception;
 use core\orm\entity\model;
 use totara_core\extended_context;
 use totara_notification\entity\notifiable_event_preference as entity;
+use totara_notification\loader\delivery_channel_loader;
+use totara_notification\delivery\channel\delivery_channel;
 
 /**
  * Class notifiable_event_preference
  *
  * @property int $id
  * @property string $resolver_class_name
- * @property-read int $context_id
- * @property-read string $component
- * @property-read string $area
- * @property-read int $item_id
  * @property extended_context $extended_context
  * @property bool $enabled
+ * @property delivery_channel[] $default_delivery_channels
  */
 class notifiable_event_preference extends model {
-
     /**
      * @var string[]
      */
@@ -56,6 +54,7 @@ class notifiable_event_preference extends model {
     protected $model_accessor_whitelist = [
         'enabled',
         'extended_context',
+        'default_delivery_channels',
     ];
 
     /**
@@ -141,6 +140,50 @@ class notifiable_event_preference extends model {
     }
 
     /**
+     * @return delivery_channel[]
+     */
+    public function get_default_delivery_channels(): array {
+        $raw_list = $this->entity->get_attribute('default_delivery_channels');
+        $resolver_class_name = $this->entity->get_attribute('resolver_class_name');
+
+        if ($raw_list === null) {
+            return delivery_channel_loader::get_for_event_resolver($resolver_class_name);
+        }
+
+        $list = explode(',', $raw_list);
+        return delivery_channel_loader::get_from_list($resolver_class_name, $list);
+    }
+
+    /**
+     * Sets the raw delivery channels value back, based on the provided collection.
+     * If null, then the default delivery channel settings will be used instead.
+     *
+     * The collection will be transformed into the entity string ",key1,key2," etc...
+     *
+     * @param delivery_channel[]|null $delivery_channels
+     */
+    public function set_default_delivery_channels(?array $delivery_channels): void {
+        if (null === $delivery_channels) {
+            $this->entity->default_delivery_channels = null;
+        } else {
+            $concat = [];
+            foreach ($delivery_channels as $delivery_channel) {
+                if ($delivery_channel->is_enabled) {
+                    $concat[] = $delivery_channel->component;
+                }
+            }
+
+            // Delivery channels are saved as ',email,popup,' etc... with a , at either end
+            // to make any filtering possible by going 'default_delivery_channels LIKE '%,key,%'
+            // A blank entry is added to the start & end of the $concat list to generate the edge commas
+            $concat[] = ''; // Add the , to the end
+            array_unshift($concat, ''); // Add the , to the start
+
+            $this->entity->default_delivery_channels = implode(',', $concat);
+        }
+    }
+
+    /**
      * @return void
      */
     public function refresh(): void {
@@ -168,4 +211,3 @@ class notifiable_event_preference extends model {
         $this->entity->save();
     }
 }
-

@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['delivery_channel_label'] = 'Email';
 $string['email'] = 'Send email notifications to';
 $string['ifemailleftempty'] = 'Leave empty to send notifications to {$a}';
 $string['pluginname'] = 'Email';

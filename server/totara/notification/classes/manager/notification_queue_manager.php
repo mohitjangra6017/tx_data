@@ -32,9 +32,12 @@ use null_progress_trace;
 use progress_trace;
 use stdClass;
 use core\orm\query\exceptions\record_not_found_exception;
+use totara_core\extended_context;
 use totara_notification\entity\notification_queue;
+use totara_notification\loader\delivery_channel_loader;
 use totara_notification\model\notification_preference;
 use totara_notification\placeholder\template_engine\engine;
+use totara_notification\resolver\notifiable_event_resolver;
 use totara_notification\resolver\resolver_helper;
 
 class notification_queue_manager {
@@ -116,7 +119,13 @@ class notification_queue_manager {
 
         $engine = $resolver->get_placeholder_engine();
 
+        // Load the message processors & only show those that have been enabled
         $message_processors = get_message_processors(true, (defined('PHPUNIT_TEST') && PHPUNIT_TEST));
+        $message_processors = $this->filter_message_processors_by_delivery_channel($resolver, $message_processors);
+        if (empty($message_processors)) {
+            // If there are no message processors enabled, there's nothing to send
+            return;
+        }
 
         foreach ($recipient_ids as $target_user_id) {
             $this->dispatch_to_target($target_user_id, $preference, $engine, $message_processors);
@@ -218,11 +227,36 @@ class notification_queue_manager {
             return;
         }
 
-        $message_processors['popup']->object->send_message($message);
-
-        if (isset($message_processors['email'])) {
-            // This is for behat, as in behat environment, email is not enabled by default.
-            $message_processors['email']->object->send_message($message);
+        foreach ($message_processors as $processor) {
+            $processor->object->send_message($message);
         }
+    }
+
+
+    /**
+     * Load the message processors for the resolver, filtering by delivery channel.
+     *
+     * @param notifiable_event_resolver $resolver
+     * @param array $message_processors
+     * @return array
+     */
+    private function filter_message_processors_by_delivery_channel(
+        notifiable_event_resolver $resolver,
+        array $message_processors
+    ): array {
+        $extended_context = extended_context::make_system();
+        $event_preference = $resolver->get_notifiable_event_preference($extended_context);
+        // User-level overrides should be applied here
+        $delivery_channels = $event_preference ? $event_preference->default_delivery_channels :
+            delivery_channel_loader::get_for_event_resolver(get_class($resolver));
+
+        // Drop any message processor that isn't marked as enabled.
+        foreach ($delivery_channels as $delivery_channel) {
+            if (isset($message_processors[$delivery_channel->component]) && !$delivery_channel->is_enabled) {
+                unset($message_processors[$delivery_channel->component]);
+            }
+        }
+
+        return $message_processors;
     }
 }

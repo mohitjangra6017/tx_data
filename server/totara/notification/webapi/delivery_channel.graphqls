@@ -1,0 +1,50 @@
+"""
+A single instance of a delivery channel
+"""
+type totara_notification_delivery_channel {
+  """
+  Message component of this delivery channel.
+  """
+  component: String!
+  """
+  The human-readable lable
+  """
+  label: String!
+  """
+  Whether this channel is checked/in use or not
+  """
+  is_enabled: Boolean!
+  """
+  If true, this channel is considered a child of another channel (and must have that enabled)
+  """
+  is_sub_delivery_channel: Boolean!
+  """
+  The specific component of the parent delivery channel
+  """
+  parent_component: String
+  """
+  Order for display purposes
+  """
+  display_order: Int!
+}
+
+extend type Mutation {
+  """
+  Update the delivery channels attached to the specific notifiable event (in the system context).
+  """
+  totara_notification_update_default_delivery_channels(
+    """
+    Notifiable event resolver class name
+    """
+    resolver_class_name: param_text!
+    """
+    Context to update the delivery channels in.
+    Note: Only the system context is accepted currently.
+    """
+    extended_context: totara_notification_extended_context_input
+    """
+    Default delivery channels to enable. Any delivery channel not referenced will be disabled.
+    """
+    default_delivery_channels: [String!]!
+  ): [totara_notification_delivery_channel!]!
+}

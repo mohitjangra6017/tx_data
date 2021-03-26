@@ -22,4 +22,5 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['delivery_channel_label'] = 'Site notifications';
 $string['pluginname'] = 'Web';

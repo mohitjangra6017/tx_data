@@ -436,6 +436,16 @@ final class generator extends component_generator {
     }
 
     /**
+     * @return void
+     */
+    public function include_mock_delivery_channels(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_mock_delivery_channel.php");
+        require_once("{$fixture_directory}/totara_notification_mock_delivery_channel_second.php");
+        require_once("{$fixture_directory}/totara_notification_mock_delivery_channel_third.php");
+    }
+
+    /**
      * @param lang_string $body
      * @return void
      */

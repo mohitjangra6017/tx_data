@@ -25,6 +25,7 @@ $string['config_airnotifier_appcode'] = 'The AirNotifier app code token issued f
 $string['config_airnotifier_appcode_registered'] = 'The AirNotifier app code token issued for your Totara instance.<br><a href="{$a->url}">Request an app code token from push.totaralearning.com</a>';
 $string['config_airnotifier_appname'] = 'The AirNotifier app name for the mobile app which should receive the notifications.';
 $string['config_airnotifier_host'] = 'Homepage URL of the AirNotifier server to use for sending push notifications.';
+$string['delivery_channel_label'] = 'Mobile app notifications';
 $string['airnotifier_appcode'] = 'AirNotifier App Code';
 $string['airnotifier_appname'] = 'AirNotifier App Name';
 $string['airnotifier_host'] = 'AirNotifier Server URL';

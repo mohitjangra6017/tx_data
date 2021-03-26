@@ -77,7 +77,9 @@
               {{ resolver.name }}
             </Cell>
             <Cell>
-              {{ $str('delivery_channels', 'totara_notification') }}
+              {{
+                display_delivery_channels(resolver.default_delivery_channels)
+              }}
             </Cell>
             <Cell align="start">
               <!-- Toggle Switch goes here !!! -->
@@ -86,11 +88,19 @@
             <Cell align="end">
               <NotifiableEventAction
                 :resolver-name="resolver.name"
+                :show-delivery-preference-option="showDeliveryPreferenceOption"
                 @create-custom-notification="
                   $emit('create-custom-notification', {
                     resolverClassName: resolver.class_name,
                     scheduleTypes: resolver.valid_schedules,
                     recipients: resolver.recipients,
+                  })
+                "
+                @update-delivery-preferences="
+                  $emit('update-delivery-preferences', {
+                    resolverClassName: resolver.class_name,
+                    resolverLabel: resolver.name,
+                    defaultDeliveryChannels: resolver.default_delivery_channels,
                   })
                 "
               />
@@ -209,6 +219,23 @@ export default {
           );
         });
       },
+    },
+
+    showDeliveryPreferenceOption: Boolean,
+  },
+
+  methods: {
+    /**
+     * Squash the collection of delivery channel labels into a string
+     *
+     * @param {Array} channels
+     * @returns {string}
+     */
+    display_delivery_channels(channels) {
+      return channels
+        .filter(({ is_enabled }) => is_enabled)
+        .map(({ label }) => label)
+        .join('; ');
     },
   },
 };

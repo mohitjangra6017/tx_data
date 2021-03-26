@@ -38,7 +38,7 @@ class totara_notification_mock_scheduled_built_in_notification extends built_in_
 
         if (!class_exists('totara_notification_mock_scheduled_aware_event_resolver')) {
             require_once(
-            "{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_scheduled_aware_event_resolver.php"
+                "{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_scheduled_aware_event_resolver.php"
             );
         }
 
@@ -60,7 +60,7 @@ class totara_notification_mock_scheduled_built_in_notification extends built_in_
 
         if (!class_exists('totara_notification_mock_recipient')) {
             require_once(
-            "{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_recipient.php"
+                "{$CFG->dirroot}/totara/notification/tests/fixtures/totara_notification_mock_recipient.php"
             );
         }
 

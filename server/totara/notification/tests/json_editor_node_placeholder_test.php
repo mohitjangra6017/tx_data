@@ -195,7 +195,7 @@ class totara_notification_json_editor_node_placeholder_testcase extends testcase
         $formatter = new default_formatter();
 
         self::assertEquals(
-        /** @lang text */ '<span data-key="key:doctor" data-label="Doctor">[key:doctor]</span>',
+            /** @lang text */ '<span data-key="key:doctor" data-label="Doctor">[key:doctor]</span>',
             (placeholder::from_node([
                 'type' => placeholder::get_type(),
                 'attrs' => [
@@ -206,7 +206,7 @@ class totara_notification_json_editor_node_placeholder_testcase extends testcase
         );
 
         self::assertEquals(
-        /** @lang text */ '<span data-key="key:doctor_what" data-label="Doctor">[key:doctor_what]</span>',
+            /** @lang text */ '<span data-key="key:doctor_what" data-label="Doctor">[key:doctor_what]</span>',
             (placeholder::from_node([
                 'type' => placeholder::get_type(),
                 'attrs' => [
@@ -217,7 +217,7 @@ class totara_notification_json_editor_node_placeholder_testcase extends testcase
         );
 
         self::assertEquals(
-        /** @lang text */ '<span data-key="key:doctor" data-label="Doctor">[key:doctor]</span>',
+            /** @lang text */ '<span data-key="key:doctor" data-label="Doctor">[key:doctor]</span>',
             (placeholder::from_node([
                 'type' => placeholder::get_type(),
                 'attrs' => [
@@ -228,7 +228,7 @@ class totara_notification_json_editor_node_placeholder_testcase extends testcase
         );
 
         self::assertEquals(
-        /** @lang text */ '<span data-key="key:doctor" data-label="Doctor">[key:doctor]</span>',
+            /** @lang text */ '<span data-key="key:doctor" data-label="Doctor">[key:doctor]</span>',
             (placeholder::from_node([
                 'type' => placeholder::get_type(),
                 'attrs' => [

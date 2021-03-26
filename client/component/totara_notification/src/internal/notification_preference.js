@@ -66,6 +66,23 @@ export function validateAvailableRecipientsProp() {
 }
 
 /**
+ * Validator function for the delivery channels props.
+ *
+ * @return {Function}
+ */
+export function validateDefaultDeliveryChannelsProp() {
+  return prop => {
+    return prop.every(deliveryChannel => {
+      return (
+        'component' in deliveryChannel &&
+        'label' in deliveryChannel &&
+        'is_enabled' in deliveryChannel
+      );
+    });
+  };
+}
+
+/**
  *
  * @param {Object} extraAttributes
  * @return {Object}

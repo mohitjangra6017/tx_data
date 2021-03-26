@@ -79,6 +79,7 @@
         <FIELD NAME="area" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The area property of the extended context"/>
         <FIELD NAME="item_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The item_id property of the extended context"/>
         <FIELD NAME="enabled" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Whether this notifiable event is enabled or not. If null, the default class value is used instead."/>
+        <FIELD NAME="default_delivery_channels" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="A concatenated string of delivery channel components. If null, the defaults are used. If not null, only the named channels are enabled."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

@@ -22,6 +22,7 @@
  */
 
 use totara_core\extended_context;
+use totara_notification\delivery\channel\delivery_channel;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\resolver\notifiable_event_resolver;
 
@@ -40,6 +41,11 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
      * @var array|null
      */
     private static $placeholder_options;
+
+    /**
+     * @var array|null
+     */
+    private static $default_delivery_channels;
 
     /**
      * @param callable $recipient_ids_resolver
@@ -68,6 +74,10 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
 
         if (isset(self::$placeholder_options)) {
             self::$placeholder_options = [];
+        }
+
+        if (isset(self::$default_delivery_channels)) {
+            self::$default_delivery_channels = [];
         }
     }
 
@@ -115,10 +125,10 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
     }
 
     /**
-     * @return array
+     * @return delivery_channel[]
      */
     public static function get_notification_default_delivery_channels(): array {
-        return [];
+        return static::$default_delivery_channels ?? [];
     }
 
     /**
@@ -142,5 +152,19 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
 
     public function get_extended_context(): extended_context {
         return extended_context::make_with_id($this->event_data['expected_context_id']);
+    }
+
+    /**
+     * @return array
+     */
+    public static function get_default_delivery_channels(): array {
+        return self::$default_delivery_channels ?? [];
+    }
+
+    /**
+     * @param delivery_channel[] $delivery_channels
+     */
+    public static function set_default_delivery_channels(array $delivery_channels): void {
+        self::$default_delivery_channels = $delivery_channels;
     }
 }

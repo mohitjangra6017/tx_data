@@ -24,9 +24,9 @@ namespace totara_notification\resolver;
 
 use coding_exception;
 use totara_core\extended_context;
-use totara_notification\entity\notifiable_event_preference as pref_entity;
+use totara_notification\entity\notifiable_event_preference as notifiable_event_preference_entity;
 use totara_notification\local\helper;
-use totara_notification\model\notifiable_event_preference;
+use totara_notification\model\notifiable_event_preference as notifiable_event_preference_model;
 use totara_notification\notification\built_in_notification;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\placeholder\template_engine\engine;
@@ -113,8 +113,8 @@ abstract class notifiable_event_resolver {
      * By default we use NULL as the caller of this function will assume that the event
      * is happening instantly, and not for scheduling event.
      *
-     * Extends this function to return the setted event time that you want, for example:
-     * an event about setting program due date, then the setted event time should be due date
+     * Extends this function to return the set event time that you want, for example:
+     * an event about setting program due date, then the set event time should be due date
      * in seconds.
      *
      * Note: please do not return zero or negative number, the system does not like these two values.
@@ -129,13 +129,14 @@ abstract class notifiable_event_resolver {
      * Fetch the notifiable event preference if it exists.
      *
      * @param extended_context $extended_context
-     * @return notifiable_event_preference|null
+     * @return notifiable_event_preference_model|null
      */
-    public function get_notifiable_event_preference(extended_context $extended_context): ?notifiable_event_preference {
-        $pref_entity = pref_entity::repository()->for_context(static::class, $extended_context);
+    public function get_notifiable_event_preference(extended_context $extended_context): ?notifiable_event_preference_model {
+        $entity = notifiable_event_preference_entity::repository()
+            ->for_context(static::class, $extended_context);
 
-        if ($pref_entity) {
-            return notifiable_event_preference::from_entity($pref_entity);
+        if ($entity) {
+            return notifiable_event_preference_model::from_entity($entity);
         }
 
         return null;
@@ -181,6 +182,9 @@ abstract class notifiable_event_resolver {
     /**
      * Returns the default delivery channels that defined for the event by developers.
      * However, note that admin can override this default delivery channels.
+     *
+     * If nothing/a specific channel is not listed here, it will fallback to the built in default.
+     * To disable it, specify the actual default here.
      *
      * @return array
      */

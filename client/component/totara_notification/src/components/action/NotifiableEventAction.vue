@@ -53,6 +53,19 @@
       >
         {{ $str('create_notification', 'totara_notification') }}
       </DropdownItem>
+      <DropdownItem
+        v-if="showDeliveryPreferenceOption"
+        :aria-label="
+          $str(
+            'delivery_preferences_for_event',
+            'totara_notification',
+            resolverName
+          )
+        "
+        @click="$emit('update-delivery-preferences')"
+      >
+        {{ $str('delivery_preferences', 'totara_notification') }}
+      </DropdownItem>
     </Dropdown>
   </div>
 </template>
@@ -78,6 +91,8 @@ export default {
       type: String,
       required: true,
     },
+
+    showDeliveryPreferenceOption: Boolean,
   },
 };
 </script>
@@ -89,7 +104,9 @@ export default {
     ],
     "totara_notification": [
       "create_notification",
-      "create_notification_for_event"
+      "create_notification_for_event",
+      "delivery_preferences",
+      "delivery_preferences_for_event"
     ]
   }
 </lang-strings>
