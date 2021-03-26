@@ -22,13 +22,13 @@
  */
 namespace totara_notification\webapi\resolver\query;
 
-use context_system;
-use coding_exception;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
 use totara_core\extended_context;
+use totara_notification\exception\notification_exception;
+use totara_notification\interactor\notification_preference_interactor;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\model\notification_preference as model;
 
@@ -43,6 +43,7 @@ class notification_preferences implements query_resolver, has_middleware {
      * @return model[]
      */
     public static function resolve(array $args, execution_context $ec): array {
+        global $USER;
         $extended_context = extended_context::make_with_id(
             $args['context_id'],
             $args['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
@@ -50,17 +51,20 @@ class notification_preferences implements query_resolver, has_middleware {
             $args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
         );
 
-        if (!model::can_manage($extended_context)) {
-            throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
-        };
+        $resolver_class_name = $args['resolver_class_name'] ?? null;
+        $interactor = new notification_preference_interactor($extended_context, $USER->id);
 
-        if ($extended_context->get_context_id() != context_system::instance()->id &&
-            !$ec->has_relevant_context()
-        ) {
-            $ec->set_relevant_context($extended_context->get_context());
+        if (null !== $resolver_class_name && !$interactor->can_manage_notification_preferences_of_resolver($resolver_class_name)) {
+            throw notification_exception::on_manage();
+        } else if (!$interactor->can_manage_notification_preferences()) {
+            // This is for the case where the resolver class name is null. It could have been a part of the if statement
+            // above. However, splitting them into two different blocks might be easier to read.
+            throw notification_exception::on_manage();
         }
 
-        $resolver_class_name = $args['resolver_class_name'] ?? null;
+        if (CONTEXT_SYSTEM != $extended_context->get_context_level() && !$ec->has_relevant_context()) {
+            $ec->set_relevant_context($extended_context->get_context());
+        }
 
         return notification_preference_loader::get_notification_preferences(
             $extended_context,

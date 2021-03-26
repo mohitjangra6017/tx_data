@@ -24,9 +24,11 @@
 use totara_core\extended_context;
 use core_phpunit\testcase;
 use totara_notification\entity\notifiable_event_preference as entity;
+use totara_notification\factory\notifiable_event_resolver_factory;
 use totara_notification\model\notifiable_event_preference;
 use totara_notification\resolver\resolver_helper;
 use totara_notification\testing\generator as totara_notification_generator;
+use totara_notification\webapi\resolver\query\event_resolvers;
 use totara_notification_mock_notifiable_event_resolver as mock_event_resolver;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
@@ -155,6 +157,10 @@ class totara_notification_webapi_get_event_resolvers_testcase extends testcase {
         $context_course = context_course::instance($course->id);
 
         $this->setAdminUser();
+        mock_event_resolver::set_support_contexts(
+            extended_context::make_with_context($context_course)
+        );
+
         $result = $this->execute_graphql_operation(
             'totara_notification_event_resolvers',
             ['extended_context' => ['context_id' => $context_course->id],],
@@ -170,7 +176,7 @@ class totara_notification_webapi_get_event_resolvers_testcase extends testcase {
 
         // There are mock custom event, along side with all of the other events
         // from the system.
-        self::assertGreaterThan(1, count($resolvers));
+        self::assertGreaterThanOrEqual(1, count($resolvers));
         $mock_resolvers = array_filter(
             $resolvers,
             function (array $resolver): bool {
@@ -306,6 +312,11 @@ class totara_notification_webapi_get_event_resolvers_testcase extends testcase {
         $course_context = context_course::instance($course->id);
 
         $this->setAdminUser();
+        mock_event_resolver::set_support_contexts(
+            extended_context::make_system(),
+            extended_context::make_with_context($course_context)
+        );
+
         $result = $this->execute_graphql_operation(
             'totara_notification_event_resolvers',
             ['extended_context' => ['context_id' => $course_context->id],],
@@ -321,7 +332,7 @@ class totara_notification_webapi_get_event_resolvers_testcase extends testcase {
 
         // There are mock custom event, along side with all of the other events
         // from the system.
-        self::assertGreaterThan(1, count($resolvers));
+        self::assertGreaterThanOrEqual(1, count($resolvers));
         $mock_resolvers = array_filter(
             $resolvers,
             function (array $resolver): bool {
@@ -401,5 +412,71 @@ class totara_notification_webapi_get_event_resolvers_testcase extends testcase {
         self::assertArrayHasKey('status', $mock_resolver);
         $status = $mock_resolver['status'];
         self::assertFalse($status['is_enabled']);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_get_event_resolvers_at_system_contexts_where_one_resolver_does_not_support_user_permission(): void {
+        global $DB;
+
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+
+        $notification_generator = totara_notification_generator::instance();
+        $notification_generator->add_notifiable_event_resolver(mock_event_resolver::class,);
+        $notification_generator->include_mock_notifiable_event_resolver();
+
+        $context_system = extended_context::make_system();
+        mock_event_resolver::set_permissions($context_system, $user_one->id, true);
+
+        // There will be mock_event_resolver returned in the factory, among the others.
+        $event_resolvers = notifiable_event_resolver_factory::get_resolver_classes();
+        self::assertGreaterThanOrEqual(1, count($event_resolvers));
+
+        // Making sure that this user does not have the general capabilities.
+        self::assertFalse(
+            has_capability(
+                'totara/notification:managenotifications',
+                $context_system->get_context(),
+                $user_one->id
+            )
+        );
+
+        // Add a custom capability to the user to make sure that user is able to fetch the event resolvers,
+        // but not all of it.
+        $role_id = $DB->get_field('role', 'id', ['shortname' => 'user']);
+        assign_capability(
+            'moodle/site:config',
+            CAP_ALLOW,
+            $role_id,
+            $context_system->get_context_id()
+        );
+
+        self::assertTrue(
+            has_capability(
+                'moodle/site:config',
+                $context_system->get_context(),
+                $user_one->id
+            )
+        );
+
+        $notification_generator->add_extra_capability('moodle/site:config', [CONTEXT_SYSTEM]);
+        $this->setUser($user_one);
+
+        $fetched_event_resolvers = $this->resolve_graphql_query(
+            $this->get_graphql_name(event_resolvers::class),
+            [
+                'extended_context' => [
+                    'context_id' => $context_system->get_context_id(),
+                ]
+            ]
+        );
+
+        // There shoulld be only one notifiable event resolver that we added from the above.
+        self::assertCount(1, $fetched_event_resolvers);
+        $first_event_resolver = reset($fetched_event_resolvers);
+
+        self::assertEquals(mock_event_resolver::class, $first_event_resolver);
     }
 }

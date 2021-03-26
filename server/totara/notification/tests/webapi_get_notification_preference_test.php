@@ -21,13 +21,15 @@
  * @package totara_notification
  */
 
+use core\orm\query\builder;
 use core\orm\query\exceptions\record_not_found_exception;
 use core_phpunit\testcase;
 use totara_core\extended_context;
-use core\orm\query\builder;
+use totara_notification\exception\notification_exception;
 use totara_notification\model\notification_preference as model;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\query\notification_preference;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 class totara_notification_webapi_get_notification_preference_testcase extends testcase {
@@ -174,42 +176,49 @@ class totara_notification_webapi_get_notification_preference_testcase extends te
         self::assertTrue($second_result_preference['overridden_subject']);
     }
 
+    /**
+     * @return void
+     */
     public function test_user_cannot_get_notification_without_manage_capability(): void {
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
 
         $course = $this->getDataGenerator()->create_course();
         $context_course = context_course::instance($course->id);
-        /** @var generator $notification_generator */
-        $notification_generator = $this->getDataGenerator()->get_plugin_generator('totara_notification');
+
+        $notification_generator = generator::instance();
+        $notification_generator->include_mock_notifiable_event_resolver();
+
         $custom_notification = $notification_generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context($context_course),
             ['recipient' => totara_notification_mock_recipient::class]
         );
 
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("You are not allowed to manage notification preference");
+        $this->expectException(notification_exception::class);
+        $this->expectExceptionMessage(get_string('error_manage_notification', 'totara_notification'));
 
         $this->resolve_graphql_query(
             $this->get_graphql_name(notification_preference::class),
             [
-                'id' =>  $custom_notification->get_id(),
+                'id' => $custom_notification->get_id(),
             ]
         );
     }
 
+    /**
+     * @return void
+     */
     public function test_user_can_get_notification_with_manage_capability(): void {
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
 
         $course = $this->getDataGenerator()->create_course();
-        $context_course = context_course::instance($course->id);
 
-        /** @var generator $notification_generator */
-        $notification_generator = $this->getDataGenerator()->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
         $system_built_in = $notification_generator->add_mock_built_in_notification_for_component();
         $notification_generator->include_mock_recipient();
+
         $custom_notification = $notification_generator->create_overridden_notification_preference(
             $system_built_in,
             extended_context::make_with_context(context_course::instance($course->id)),
@@ -222,7 +231,7 @@ class totara_notification_webapi_get_notification_preference_testcase extends te
         $fetched_preference = $this->resolve_graphql_query(
             $this->get_graphql_name(notification_preference::class),
             [
-                'id' =>  $custom_notification->get_id(),
+                'id' => $custom_notification->get_id(),
             ]
         );
 

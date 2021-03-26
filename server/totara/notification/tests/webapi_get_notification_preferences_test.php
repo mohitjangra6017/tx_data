@@ -24,6 +24,7 @@
 use core_phpunit\testcase;
 use totara_core\extended_context;
 use core\orm\query\builder;
+use totara_notification\exception\notification_exception;
 use totara_notification\factory\notifiable_event_resolver_factory;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\model\notification_preference as model;
@@ -231,6 +232,9 @@ class totara_notification_webapi_get_notification_preferences_testcase extends t
         self::assertEquals($system_overridden->get_id(), $preference->get_id());
     }
 
+    /**
+     * @return void
+     */
     public function test_user_cannot_get_notifications_without_manage_capability(): void {
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -238,10 +242,10 @@ class totara_notification_webapi_get_notification_preferences_testcase extends t
         $course = $this->getDataGenerator()->create_course();
         $context_course = context_course::instance($course->id);
 
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("You are not allowed to manage notification preference");
+        $this->expectExceptionMessage(notification_exception::class);
+        $this->expectExceptionMessage(get_string('error_manage_notification', 'totara_notification'));
 
-        $preferences = $this->resolve_graphql_query(
+        $this->resolve_graphql_query(
             $this->get_graphql_name(notification_preferences::class),
             [
                 'context_id' => $context_course->id,
@@ -250,6 +254,9 @@ class totara_notification_webapi_get_notification_preferences_testcase extends t
         );
     }
 
+    /**
+     * @return void
+     */
     public function test_user_can_get_notifications_with_manage_capability(): void {
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
@@ -257,10 +264,11 @@ class totara_notification_webapi_get_notification_preferences_testcase extends t
         $course = $this->getDataGenerator()->create_course();
         $context_course = context_course::instance($course->id);
 
-        /** @var generator $notification_generator */
-        $notification_generator = $this->getDataGenerator()->get_plugin_generator('totara_notification');
+        $notification_generator = generator::instance();
+        $notification_generator->include_mock_notifiable_event_resolver();
+
         $custom_notification = $notification_generator->create_notification_preference(
-            totara_notification_mock_notifiable_event::class,
+            mock_resolver::class,
             extended_context::make_with_context($context_course),
             ['recipient' => totara_notification_mock_recipient::class]
         );
@@ -277,5 +285,11 @@ class totara_notification_webapi_get_notification_preferences_testcase extends t
         );
 
         self::assertCount(1, $preferences);
+
+        /** @var model $preference */
+        $preference = reset($preferences);
+        self::assertInstanceOf(model::class, $preference);
+
+        self::assertEquals($custom_notification->get_id(), $preference->get_id());
     }
 }

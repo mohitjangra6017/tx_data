@@ -25,8 +25,9 @@ use totara_core\extended_context;
 use totara_notification\delivery\channel\delivery_channel;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\resolver\notifiable_event_resolver;
+use totara_notification\resolver\abstraction\permission_resolver;
 
-class totara_notification_mock_notifiable_event_resolver extends notifiable_event_resolver {
+class totara_notification_mock_notifiable_event_resolver extends notifiable_event_resolver implements permission_resolver {
     /**
      * @var Closure|null
      */
@@ -46,6 +47,17 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
      * @var array|null
      */
     private static $default_delivery_channels = ['email', 'popup'];
+
+    /**
+     * A hashmap of extended context against user's id and the given permissions.
+     * @var array
+     */
+    private static $permissions;
+
+    /**
+     * @var extended_context[]|null
+     */
+    private static $support_contexts;
 
     /**
      * @param callable $recipient_ids_resolver
@@ -78,6 +90,45 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
         if (isset(self::$default_delivery_channels)) {
             self::$default_delivery_channels = ['email', 'popup'];
         }
+
+        if (isset(self::$permissions)) {
+            self::$permissions = [];
+        }
+
+        if (isset(self::$support_contexts)) {
+            self::$support_contexts = [];
+        }
+    }
+
+    /**
+     * @param extended_context $extended_context
+     * @param int              $user_id
+     * @param bool             $grant
+     *
+     * @return void
+     */
+    public static function set_permissions(extended_context $extended_context, int $user_id, bool $grant): void {
+        if (!isset(self::$permissions)) {
+            self::$permissions = [];
+        }
+
+        $identifier = md5("{$extended_context->__toString()}/{$user_id}");
+        self::$permissions[$identifier] = $grant;
+    }
+
+    /**
+     * @param extended_context $context
+     * @param int              $user_id
+     * @return bool
+     */
+    public static function can_user_manage_notification_preferences(extended_context $context, int $user_id): bool {
+        if (!isset(self::$permissions)) {
+            // Permissions was not set. However, site admin is able to see it thru.
+            return is_siteadmin();
+        }
+
+        $identifier = md5("{$context->__toString()}/{$user_id}");
+        return self::$permissions[$identifier] ?? is_siteadmin();
     }
 
     /**
@@ -161,5 +212,31 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
      */
     public static function set_notification_default_delivery_channels(array $delivery_channels): void {
         self::$default_delivery_channels = $delivery_channels;
+    }
+
+    /**
+     * @param extended_context ...$support_contexts
+     * @return void
+     */
+    public static function set_support_contexts(extended_context ...$support_contexts): void {
+        static::$support_contexts = $support_contexts;
+    }
+
+    /**
+     * @param extended_context $extend_context
+     * @return bool
+     */
+    public static function supports_context(extended_context $extend_context): bool {
+        if (!static::$support_contexts) {
+            return parent::supports_context($extend_context);
+        }
+
+        foreach (static::$support_contexts as $support_context) {
+            if ($extend_context->is_same($support_context)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -23,18 +23,25 @@
 namespace totara_notification\webapi\resolver\mutation;
 
 use core\webapi\execution_context;
-use core\webapi\middleware\require_user_capability;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
 use core\webapi\middleware\require_login;
 use totara_core\extended_context;
 use totara_notification\entity\notifiable_event_preference as entity;
+use totara_notification\exception\notification_exception;
+use totara_notification\interactor\notification_preference_interactor;
 use totara_notification\model\notifiable_event_preference;
 use totara_notification\webapi\middleware\validate_resolver_class_name;
 
 class toggle_notifiable_event implements mutation_resolver, has_middleware {
-
-    public static function resolve(array $args, execution_context $ec) {
+    /**
+     * @param array             $args
+     * @param execution_context $ec
+     *
+     * @return string   Concrete class
+     */
+    public static function resolve(array $args, execution_context $ec): string {
+        global $USER;
         $extended_context_args = $args['extended_context'] ?? [];
 
         // Default extended context.
@@ -47,9 +54,11 @@ class toggle_notifiable_event implements mutation_resolver, has_middleware {
                 $extended_context_args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
                 $extended_context_args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
             );
-        } else if ($ec->has_relevant_context()) {
-            $context = $ec->get_relevant_context();
-            $extended_context = extended_context::make_with_context($context);
+        }
+
+        if (CONTEXT_SYSTEM != $extended_context->get_context_level() && !$ec->has_relevant_context()) {
+            $context = $extended_context->get_context();
+            $ec->set_relevant_context($context);
         }
 
         $resolver_class_name = $args['resolver_class_name'];
@@ -59,6 +68,11 @@ class toggle_notifiable_event implements mutation_resolver, has_middleware {
             $notifiable_event = notifiable_event_preference::create($resolver_class_name, $extended_context);
         } else {
             $notifiable_event = notifiable_event_preference::from_entity($notifiable_event_entity);
+        }
+
+        $interactor = new notification_preference_interactor($extended_context, $USER->id);
+        if (!$interactor->can_manage_notification_preferences_of_resolver($resolver_class_name)) {
+            throw notification_exception::on_manage();
         }
 
         $notifiable_event->set_enabled($args['is_enabled']);
@@ -73,7 +87,6 @@ class toggle_notifiable_event implements mutation_resolver, has_middleware {
     public static function get_middleware(): array {
         return [
             new require_login(),
-            new require_user_capability('totara/notification:managenotifications'),
             new validate_resolver_class_name('resolver_class_name', true)
         ];
     }

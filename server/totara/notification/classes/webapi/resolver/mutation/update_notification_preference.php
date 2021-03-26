@@ -32,6 +32,8 @@ use core\webapi\resolver\has_middleware;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\event\update_custom_notification_preference_event;
 use totara_notification\event\update_overridden_notification_preference_event;
+use totara_notification\exception\notification_exception;
+use totara_notification\interactor\notification_preference_interactor;
 use totara_notification\local\helper;
 use totara_notification\local\schedule_helper;
 use totara_notification\model\notification_preference;
@@ -53,14 +55,15 @@ class update_notification_preference implements mutation_resolver, has_middlewar
         $preference_id = $args['id'];
         $notification_preference = notification_preference::from_id($preference_id);
         $extended_context = $notification_preference->get_extended_context();
-        $context = $extended_context->get_context();
+        $interactor = new notification_preference_interactor($extended_context, $USER->id);
 
-        if (!notification_preference::can_manage($notification_preference->get_extended_context())) {
-            throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
+        $resolver_class_name = $notification_preference->get_resolver_class_name();
+        if (!$interactor->can_manage_notification_preferences_of_resolver($resolver_class_name)) {
+            throw notification_exception::on_manage();
         }
 
-        if (CONTEXT_SYSTEM != $context->contextlevel && !$ec->has_relevant_context()) {
-            $ec->set_relevant_context($context);
+        if (CONTEXT_SYSTEM != $extended_context->get_context_level() && !$ec->has_relevant_context()) {
+            $ec->set_relevant_context($extended_context->get_context());
         }
 
         $builder = notification_preference_builder::from_exist_model($notification_preference);

@@ -28,5 +28,11 @@ $definitions = [
         'simplekeys' => true,
         'simpledata' => true,
         'staticacceleration' => false
-    ]
+    ],
+    'access' => [
+        'mode' => cache_store::MODE_REQUEST,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'staticacceleration' => false
+    ],
 ];

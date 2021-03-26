@@ -22,14 +22,28 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
+use totara_notification\factory\capability_factory;
 
 $ADMIN->add('root', new admin_category('totara_notification', new lang_string('messaging_and_notification', 'totara_notification')));
+
+// Default to our own plugin's generic capabilities.
+$notification_setup_capabilities = ['totara/notification:managenotifications'];
+
+// This script can be invoked during the installation. And we would not want to fetch the
+// capabilities while the installation/upgrade is running, as it will have to invoke the cache
+// metadata, and at this point of time cache metadata might not even be available.
+if (!during_initial_install()) {
+    // We are allowing the plugins that integrate with notification to add more capabilities
+    // for admin setting page.
+    $notification_setup_capabilities = capability_factory::get_capabilities(CONTEXT_SYSTEM);
+}
+
 $ADMIN->add(
     'totara_notification',
     new admin_externalpage(
         'notifications_setup',
         new lang_string('notifications', 'totara_notification'),
         new moodle_url('/totara/notification/notifications.php'),
-        ['totara/notification:managenotifications']
+        $notification_setup_capabilities
     )
 );

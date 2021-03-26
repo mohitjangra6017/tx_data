@@ -24,6 +24,8 @@
 use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\delivery\channel\delivery_channel;
+use totara_notification\entity\notifiable_event_preference;
+use totara_notification\exception\notification_exception;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\mutation\update_default_delivery_channels;
 use totara_notification_mock_notifiable_event_resolver as mock_resolver;
@@ -149,4 +151,88 @@ class totara_notification_webapi_update_notifiable_event_default_delivery_channe
         $notification_generator->include_mock_notifiable_event_resolver();
     }
 
+    /**
+     * @return void
+     */
+    public function test_update_delivery_channels_for_resolver_that_does_not_allow_a_user(): void {
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+
+        $extended_context = extended_context::make_system();
+        self::assertFalse(
+            has_capability(
+                'totara/notification:managenotifications',
+                $extended_context->get_context(),
+                $user_one->id
+            ),
+        );
+
+        $notification_generator = generator::instance();
+        $notification_generator->add_notifiable_event_resolver(mock_resolver::class);
+
+        mock_resolver::set_permissions($extended_context, $user_one->id, false);
+        $this->setUser($user_one);
+
+        $this->expectException(notification_exception::class);
+        $this->expectExceptionMessage(get_string('error_manage_notification', 'totara_notification'));
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(update_default_delivery_channels::class),
+            [
+                'resolver_class_name' => mock_resolver::class,
+                'extended_context' => [
+                    'context_id' => $extended_context->get_context_id(),
+                ],
+                'default_delivery_channels' => ['email']
+            ]
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_delivery_channels_for_resolver_that_does_allow_user(): void {
+        global $DB;
+
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+
+        $extended_context = extended_context::make_system();
+        self::assertFalse(
+            has_capability(
+                'totara/notification:managenotifications',
+                $extended_context->get_context(),
+                $user_one->id
+            ),
+        );
+
+        $notification_generator = generator::instance();
+        $notification_generator->add_notifiable_event_resolver(mock_resolver::class);
+
+        mock_resolver::set_permissions($extended_context, $user_one->id, true);
+        $this->setUser($user_one);
+
+        self::assertEquals(0, $DB->count_records(notifiable_event_preference::TABLE));
+
+        try {
+            $this->resolve_graphql_mutation(
+                $this->get_graphql_name(update_default_delivery_channels::class),
+                [
+                    'resolver_class_name' => mock_resolver::class,
+                    'extended_context' => [
+                        'context_id' => $extended_context->get_context_id(),
+                    ],
+                    'default_delivery_channels' => ['email']
+                ]
+            );
+        } catch (Throwable $e) {
+            self::fail("Expecting the operation to update default delivery channels will not yield any errors");
+        }
+
+        // Confirms one record created.
+        self::assertEquals(1, $DB->count_records(notifiable_event_preference::TABLE));
+        $entity = notifiable_event_preference::repository()->for_context(mock_resolver::class, $extended_context);
+
+        self::assertEquals(",email,", $entity->default_delivery_channels);
+    }
 }

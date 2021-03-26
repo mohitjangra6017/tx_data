@@ -25,6 +25,7 @@ namespace totara_notification\resolver;
 use coding_exception;
 use core_component;
 use totara_notification\local\helper;
+use totara_notification\resolver\abstraction\permission_resolver;
 use totara_notification\resolver\abstraction\scheduled_event_resolver;
 
 class resolver_helper {
@@ -127,6 +128,18 @@ class resolver_helper {
 
     /**
      * @param string $resolver_class_name
+     * @return void
+     */
+    public static function validate_event_resolver(string $resolver_class_name): void {
+        if (!static::is_valid_event_resolver($resolver_class_name)) {
+            throw new coding_exception(
+                "The resolver class '{$resolver_class_name}' is invalid notifiable event resolver"
+            );
+        }
+    }
+
+    /**
+     * @param string $resolver_class_name
      * @return bool
      */
     public static function is_valid_scheduled_event_resolver(string $resolver_class_name): bool {
@@ -212,5 +225,17 @@ class resolver_helper {
         }
 
         return $plugin_name;
+    }
+
+    /**
+     * @param string $resolver_class_name
+     * @return bool
+     */
+    public static function is_valid_permission_resolver(string $resolver_class_name): bool {
+        if (!static::is_valid_event_resolver($resolver_class_name)) {
+            return false;
+        }
+
+        return is_a($resolver_class_name, permission_resolver::class, true);
     }
 }

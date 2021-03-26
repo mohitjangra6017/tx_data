@@ -22,13 +22,15 @@
  */
 
 use totara_core\extended_context;
+use totara_notification\exception\notification_exception;
+use totara_notification\interactor\notification_preference_interactor;
 use totara_notification\local\helper;
 use totara_tui\output\component;
 
-global $CFG, $OUTPUT, $PAGE, $DB;
+global $CFG, $OUTPUT, $PAGE, $DB, $USER;
 
 require_once(__DIR__ . '/../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
 
 // Get URL parameters
 $context_id = required_param('context_id', PARAM_INT);
@@ -43,13 +45,14 @@ $PAGE->set_context($context);
 // Check the context level
 if ($context->contextlevel === CONTEXT_COURSE) {
     $courseid = $context->instanceid;
-    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+    if (!$course = $DB->get_record('course', ['id' => $courseid])) {
         print_error('invalidcourseid');
     }
 
     require_login($course);
-    if (!has_capability('totara/notification:managenotifications', $context)) {
-        require_capability('moodle/course:update', $context);
+    $interactor = new notification_preference_interactor($extended_context, $USER->id);
+    if (!$interactor->has_any_capability_for_context(['moodle/course:update'])) {
+        throw notification_exception::on_manage();
     }
 
     $PAGE->set_course($course);
@@ -64,7 +67,7 @@ if (!$extended_context->is_natural_context()) {
     $url->params([
         'component' => $extended_context->get_component(),
         'area' => $extended_context->get_area(),
-        'item_id' => $extended_context->get_item_id()
+        'item_id' => $extended_context->get_item_id(),
     ]);
 }
 
@@ -81,11 +84,11 @@ $tui = new component(
         'title' => $title,
         'context-id' => $extended_context->get_context_id(),
         'preferred-editor-format' => helper::get_preferred_editor_format(FORMAT_JSON_EDITOR),
-        'extended-context' => array(
+        'extended-context' => [
             'component' => $extended_context->get_component(),
             'area' => $extended_context->get_area(),
-            'itemId' => $extended_context->get_item_id()
-        )
+            'itemId' => $extended_context->get_item_id(),
+        ],
     ]
 );
 

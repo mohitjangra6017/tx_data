@@ -26,6 +26,7 @@ $string['actions_for'] = 'Actions for {$a}';
 $string['actions_for_event'] = 'Actions for {$a} event';
 $string['actions_for_notification'] = 'Actions for {$a} notification';
 $string['body'] = 'Body';
+$string['cachedef_access'] = 'Notification capabilities map cache';
 $string['cachedef_notifiable_resolver_map'] = 'Notificaon resolver map cache';
 $string['create_notification'] = 'Create notification';
 $string['create_notification_for_event'] = 'Create notification for event {$a}';

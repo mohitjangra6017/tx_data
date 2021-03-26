@@ -35,14 +35,14 @@ class notifiable_event_user_preference_loader {
      */
     private function __construct() {
     }
- 
+
     /**
      * @param int $user_id
      * @param extended_context|null $extended_context
      * @return array
      */
     public static function get_user_resolver_classes(int $user_id, ?extended_context $extended_context = null): array {
-        $resolver_classes = notifiable_event_resolver_factory::get_resolver_classes($extended_context);
+        $resolver_classes = notifiable_event_resolver_factory::get_resolver_classes();
 
         // Remove all resolver classes disabled on system level
         $admin_disabled_resolver_classes = notifiable_event_preference_entity::repository()

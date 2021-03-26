@@ -27,6 +27,8 @@ use core\webapi\execution_context;
 use core\webapi\middleware\require_login;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
+use totara_notification\exception\notification_exception;
+use totara_notification\interactor\notification_preference_interactor;
 use totara_notification\model\notification_preference;
 
 class delete_notification_preference implements mutation_resolver, has_middleware {
@@ -36,13 +38,27 @@ class delete_notification_preference implements mutation_resolver, has_middlewar
      * @return bool
      */
     public static function resolve(array $args, execution_context $ec): bool {
+        global $USER;
+
         if (empty($args['id'])) {
             throw new coding_exception(get_string('error_preference_id_missing', 'totara_notification'));
         }
-        $notification_preference = notification_preference::from_id($args['id']);
 
-        if (!notification_preference::can_manage($notification_preference->get_extended_context())) {
-            throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
+        $notification_preference = notification_preference::from_id($args['id']);
+        $interactor = new notification_preference_interactor(
+            $notification_preference->get_extended_context(),
+            $USER->id
+        );
+
+        $resolver_class_name = $notification_preference->get_resolver_class_name();
+        if (!$interactor->can_manage_notification_preferences_of_resolver($resolver_class_name)) {
+            throw notification_exception::on_manage();
+        }
+
+        $extended_context = $notification_preference->get_extended_context();
+        if (CONTEXT_SYSTEM != $extended_context->get_context_level() && !$ec->has_relevant_context()) {
+            $context = $extended_context->get_context();
+            $ec->set_relevant_context($context);
         }
 
         return $notification_preference->delete_custom();

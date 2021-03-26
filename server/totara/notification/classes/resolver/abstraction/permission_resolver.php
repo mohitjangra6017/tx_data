@@ -17,12 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+namespace totara_notification\resolver\abstraction;
 
-defined('MOODLE_INTERNAL') || die();
+use totara_core\extended_context;
 
-$plugin->version  = 2021033102;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020122900;       // Requires this Totara version.
-$plugin->component = 'totara_notification';  // To check on upgrade, that module sits in correct place
+/**
+ * Implement this interface if your resolver want to perform custom
+ * permissions check for managing notifications of the resolver.
+ */
+interface permission_resolver {
+    /**
+     * @param extended_context $context
+     * @param int              $user_id
+     * @return bool
+     */
+    public static function can_user_manage_notification_preferences(extended_context $context, int $user_id): bool;
+}

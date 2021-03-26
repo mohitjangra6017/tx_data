@@ -35,6 +35,8 @@ use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\event\create_custom_notification_preference_event;
 use totara_notification\event\create_override_notification_preference_event;
+use totara_notification\exception\notification_exception;
+use totara_notification\interactor\notification_preference_interactor;
 use totara_notification\local\helper;
 use totara_notification\local\schedule_helper;
 use totara_notification\model\notification_preference;
@@ -52,6 +54,8 @@ class create_notification_preference implements mutation_resolver, has_middlewar
 
         // Default to context system if none is provided.
         $context_id = $args['extended_context']['context_id'] ?? context_system::instance()->id;
+        $resolver_class_name = $args['resolver_class_name'];
+
         $extended_context = extended_context::make_with_id(
             $context_id,
             $args['extended_context']['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
@@ -59,17 +63,16 @@ class create_notification_preference implements mutation_resolver, has_middlewar
             $args['extended_context']['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
         );
 
+        $interactor = new notification_preference_interactor($extended_context, $USER->id);
+        if (!$interactor->can_manage_notification_preferences_of_resolver($resolver_class_name)) {
+            throw notification_exception::on_manage();
+        }
+
         $context = $extended_context->get_context();
-        if (!notification_preference::can_manage($extended_context)) {
-            throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
+        if (CONTEXT_SYSTEM != $context->contextlevel && !$ec->has_relevant_context()) {
+            $ec->set_relevant_context($context);
         }
 
-        if ($extended_context->get_context_id() != context_system::instance()->id && !$ec->has_relevant_context()
-        ) {
-            $ec->set_relevant_context($extended_context->get_context());
-        }
-
-        $resolver_class_name = $args['resolver_class_name'];
         $builder = new notification_preference_builder(
             $resolver_class_name,
             $extended_context

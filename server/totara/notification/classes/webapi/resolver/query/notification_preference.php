@@ -22,11 +22,12 @@
  */
 namespace totara_notification\webapi\resolver\query;
 
-use coding_exception;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
+use totara_notification\exception\notification_exception;
+use totara_notification\interactor\notification_preference_interactor;
 use totara_notification\model\notification_preference as model;
 
 /**
@@ -39,15 +40,20 @@ class notification_preference implements query_resolver, has_middleware {
      * @return model
      */
     public static function resolve(array $args, execution_context $ec): model {
+        global $USER;
+
         // If the record does not exist, then exception will be thrown.
         $notification_preference = model::from_id($args['id']);
         $extended_context = $notification_preference->get_extended_context();
 
-        if (!model::can_manage($notification_preference->get_extended_context())) {
-            throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
-        };
+        $interactor = new notification_preference_interactor($extended_context, $USER->id);
+        $resolver_class_name = $notification_preference->get_resolver_class_name();
 
-        if ($extended_context->get_context_id() != \context_system::instance()->id && !$ec->has_relevant_context()) {
+        if (!$interactor->can_manage_notification_preferences_of_resolver($resolver_class_name)) {
+            throw notification_exception::on_manage();
+        }
+
+        if (CONTEXT_SYSTEM != $extended_context->get_context_level() && !$ec->has_relevant_context()) {
             $ec->set_relevant_context($extended_context->get_context());
         }
 

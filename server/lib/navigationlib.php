@@ -1566,7 +1566,7 @@ class global_navigation extends navigation_node {
                 if (!is_array($categoryids)) {
                     $categoryids = array($categoryids);
                 }
-                list($categorywhere, $categoryparams) = $DB->get_in_or_equal($categoryids, SQL_PARAMS_NAMED, 'cc');
+                [$categorywhere, $categoryparams] = $DB->get_in_or_equal($categoryids, SQL_PARAMS_NAMED, 'cc');
                 $categorywhere = 'WHERE cc.id '.$categorywhere;
             } else if ($toload == self::LOAD_ROOT_CATEGORIES) {
                 $categorywhere = 'WHERE cc.depth = 1 OR cc.depth = 2';
@@ -1602,7 +1602,7 @@ class global_navigation extends navigation_node {
                 // First up fetch all of the courses in categories where we know that we are going to
                 // need the majority of courses.
                 $ccselect = context_helper::get_preload_record_columns_sql('ctx');
-                list($categoryids, $categoryparams) = $DB->get_in_or_equal($fullfetch, SQL_PARAMS_NAMED, 'lcategory');
+                [$categoryids, $categoryparams] = $DB->get_in_or_equal($fullfetch, SQL_PARAMS_NAMED, 'lcategory');
                 $categoryparams['contextlevel'] = CONTEXT_COURSE;
                 $sql = "SELECT c.id, c.sortorder, c.visible, c.audiencevisible, c.fullname, c.shortname, c.category, {$ccselect}
                           FROM {course} c
@@ -1672,7 +1672,7 @@ class global_navigation extends navigation_node {
         } else {
             // Prepare the SQL to load the courses and their contexts
             $ccselect = context_helper::get_preload_record_columns_sql('ctx');
-            list($courseids, $courseparams) = $DB->get_in_or_equal(array_keys($this->addedcourses), SQL_PARAMS_NAMED, 'lc', false);
+            [$courseids, $courseparams] = $DB->get_in_or_equal(array_keys($this->addedcourses), SQL_PARAMS_NAMED, 'lc', false);
             $courseparams['contextlevel'] = CONTEXT_COURSE;
             $sql = "SELECT c.id, c.sortorder, c.visible, c.audiencevisible, c.fullname, c.shortname, c.category, {$ccselect}
                       FROM {course} c
@@ -1769,7 +1769,7 @@ class global_navigation extends navigation_node {
             $addedcategories = $this->addedcategories;
             unset($addedcategories[$categoryid]);
             if (count($addedcategories) > 0) {
-                list($sql, $params) = $DB->get_in_or_equal(array_keys($addedcategories), SQL_PARAMS_NAMED, 'parent', false);
+                [$sql, $params] = $DB->get_in_or_equal(array_keys($addedcategories), SQL_PARAMS_NAMED, 'parent', false);
                 if ($showbasecategories) {
                     // We need to include categories with parent = 0 as well
                     $sqlwhere .= " AND (cc.parent = :categoryid OR cc.parent = 0) AND cc.parent {$sql}";
@@ -1784,12 +1784,12 @@ class global_navigation extends navigation_node {
             // and load this category plus all its parents and subcategories
             $category = $DB->get_record('course_categories', array('id' => $categoryid), 'path', MUST_EXIST);
             $categoriestoload = explode('/', trim($category->path, '/'));
-            list($select, $params) = $DB->get_in_or_equal($categoriestoload, SQL_PARAMS_NAMED, 'id');
+            [$select, $params] = $DB->get_in_or_equal($categoriestoload, SQL_PARAMS_NAMED, 'id');
             // We are going to use select twice so double the params
             $params = array_merge($params, $params);
             $basecategorysql = ($showbasecategories)?' OR cc.depth = 1':'';
             $sqlwhere .= " AND (cc.id {$select}";
-            list($select, $inparams) = $DB->get_in_or_equal($categoriestoload, SQL_PARAMS_NAMED, 'parent');
+            [$select, $inparams] = $DB->get_in_or_equal($categoriestoload, SQL_PARAMS_NAMED, 'parent');
             $params = array_merge($params, $inparams);
             $sqlwhere .= " OR cc.parent {$select}{$basecategorysql})";
         }
@@ -1876,7 +1876,7 @@ class global_navigation extends navigation_node {
                 }
             }
             if ($categoryids) {
-                list($categoriessql, $params) = $DB->get_in_or_equal($categoryids, SQL_PARAMS_NAMED);
+                [$categoriessql, $params] = $DB->get_in_or_equal($categoryids, SQL_PARAMS_NAMED);
                 $params['limit'] = (!empty($CFG->navcourselimit))?$CFG->navcourselimit:20;
                 $sql = "SELECT cc.id, COUNT(c.id) AS coursecount
                           FROM {course_categories} cc
@@ -2050,7 +2050,7 @@ class global_navigation extends navigation_node {
         global $CFG, $DB, $USER, $SITE;
         require_once($CFG->dirroot.'/course/lib.php');
 
-        list($sections, $activities) = $this->generate_sections_and_activities($course);
+        [$sections, $activities] = $this->generate_sections_and_activities($course);
 
         $navigationsections = array();
         foreach ($sections as $sectionid => $section) {
@@ -3294,7 +3294,7 @@ class global_navigation_for_ajax extends global_navigation {
                 $coursesubcategories = array();
                 $addedsubcategories = array();
 
-                list($sql, $params) = $DB->get_in_or_equal($categoryids);
+                [$sql, $params] = $DB->get_in_or_equal($categoryids);
                 $categories = $DB->get_recordset_select('course_categories', 'id '.$sql, $params, 'sortorder, id', 'id, path');
 
                 foreach ($categories as $category){
@@ -3330,7 +3330,7 @@ class global_navigation_for_ajax extends global_navigation {
                 $courses = \totara_core\visibility_controller::course()->get_visible_in_category($categoryid, $USER->id);
             } else {
                 // Take into account the visibility of courses inside this particular category.
-                list($visibilitysql, $visibilityparams) = totara_visibility_where(null, 'c.id', 'c.visible', 'c.audiencevisible');
+                [$visibilitysql, $visibilityparams] = totara_visibility_where(null, 'c.id', 'c.visible', 'c.audiencevisible');
 
                 // Get courses based on the categoryid.
                 $sql = "SELECT c.*
@@ -4233,13 +4233,33 @@ class settings_navigation extends navigation_node {
             $coursenode->add(get_string('remindersmenuitem', 'totara_coursecatalog'), $url, self::TYPE_SETTING, null, null, new pix_icon('i/email', ''));
         }
 
-        // This capability check will improve on TL-30049
-        if (has_capability('moodle/course:update', $coursecontext) || has_capability('totara/notification:managenotifications', $coursecontext)) {
-            // Add the course notifications link.
-            $url = new moodle_url('/totara/notification/notification_preference.php', array('context_id' => $coursecontext->id, 'component' => 'core_course', 'area' => 'core_course', 'item_id' => $course->id));
-            $coursenode->add(get_string('notifications', 'admin'), $url, self::TYPE_SETTING, null, null, new \core\output\flex_icon('notification-non-filled'));
+        // TOTARA: include the navigation link to the course administration page. Only if the notification component
+        // is available.
+        if (class_exists('totara_notification\\interactor\\notification_preference_interactor') &&
+            class_exists('totara_notification\\factory\\notifiable_event_resolver_factory')) {
+            // We are hiding the navigation link if there are no notifiable events support this course context
+            $resolvers = totara_notification\factory\notifiable_event_resolver_factory::get_resolver_classes();
+            $resolvers = array_filter(
+                $resolvers,
+                function (string $resolver_class) use ($coursecontext): bool {
+                    $ec = \totara_core\extended_context::make_with_context($coursecontext);
+                    /** @see totara_notification\resolver\notifiable_event_resolver::supports_context() */
+                    return call_user_func_array([$resolver_class, 'supports_context'], [$ec]);
+                }
+            );
+
+            if (!empty($resolvers)) {
+                // We do have notfiable event resolvers that support the context, hence procceed to permissions check.
+                // Otherwise we hide the link from the navigation tree
+                $interactor = totara_notification\interactor\notification_preference_interactor::from_context_and_global_user($coursecontext);
+                if ($interactor->has_any_capability_for_context(['moodle/course:update'])) {
+                    // Add the course notifications link.
+                    $url = new moodle_url('/totara/notification/notification_preference.php', array('context_id' => $coursecontext->id, 'component' => 'core_course', 'area' => 'core_course', 'item_id' => $course->id));
+                    $coursenode->add(get_string('notifications', 'admin'), $url, self::TYPE_SETTING, null, null, new \core\output\flex_icon('notification-non-filled'));
+                }
+            }
         }
-        
+
         // add enrol nodes
         enrol_add_course_navigation($coursenode, $course);
 

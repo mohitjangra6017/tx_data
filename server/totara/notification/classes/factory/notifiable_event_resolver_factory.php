@@ -29,6 +29,10 @@ use totara_core\extended_context;
 use totara_notification\resolver\notifiable_event_resolver;
 use totara_notification\resolver\resolver_helper;
 
+/**
+ * A factory class that helps to get all the resolver classes that exist in the system.
+ * Note that we can only filter the resolvers by the class name. Not by the context.
+ */
 class notifiable_event_resolver_factory {
     /**
      * @var string
@@ -101,40 +105,31 @@ class notifiable_event_resolver_factory {
     }
 
     /**
-     * @param extended_context|null $extended_context
-     * @return array
+     * Get all the resolver classes within the system, and filter by $component
+     * if there is value passed in.
+     *
+     * @param string|null $component
+     * @return string[]
      */
-    public static function get_resolver_classes(?extended_context $extended_context = null): array {
+    public static function get_resolver_classes(?string $component = null): array {
         static::load_map();
 
         $cache = static::get_cache_loader();
         $map = $cache->get(static::MAP_KEY, MUST_EXIST);
 
-        if (!is_null($extended_context) && !$extended_context->is_natural_context()) {
-            // Skip the loop if context level is system level.
-            if ($extended_context->get_context()->contextlevel === CONTEXT_SYSTEM) {
-                return array_merge(...array_values($map));
-            }
-
-            foreach ($map as $component => $notifiable_events) {
-                foreach ($notifiable_events as $notifiable_event) {
-                    if (!$notifiable_event::supports_context($extended_context)) {
-                        // Remove the notifiable event that does not support extended context.
-                        unset($map[$component][$notifiable_event]);
-                    }
-                }
-            }
+        if (!empty($component)) {
+            return $map[$component] ?? [];
         }
 
         return array_merge(...array_values($map));
     }
 
     /**
-     * @param extended_context|null $extended_context
-     * @return array
+     * @param string|null $component
+     * @return string[]
      */
-    public static function get_scheduled_resolver_classes(?extended_context $extended_context = null): array {
-        $classes = static::get_resolver_classes($extended_context);
+    public static function get_scheduled_resolver_classes(?string $component = null): array {
+        $classes = static::get_resolver_classes($component);
         return array_filter(
             $classes,
             function (string $cls): bool {

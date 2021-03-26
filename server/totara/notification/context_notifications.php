@@ -17,20 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
- * @author Alvin Smith <alvin.smith@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Alvin Smith <alvin.smith@totaralearning.com>
  * @package totara_notification
  */
 
 use totara_core\extended_context;
+use totara_notification\exception\notification_exception;
+use totara_notification\interactor\notification_preference_interactor;
 use totara_notification\local\helper;
 use totara_tui\output\component;
-use totara_notification\model\notification_preference;
 
-global $CFG, $OUTPUT, $PAGE;
+global $CFG, $OUTPUT, $PAGE, $USER;
 
 require_once(__DIR__ . '/../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
 
 // Get URL parameters
 $context_id = required_param('context_id', PARAM_INT);
@@ -59,8 +60,10 @@ if (CONTEXT_COURSE == $context->contextlevel) {
 }
 
 require_login();
-if (!notification_preference::can_manage($extended_context)) {
-    throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
+$interactor = new notification_preference_interactor($extended_context, $USER->id);
+
+if (!$interactor->can_manage_notification_preferences()) {
+    throw notification_exception::on_manage();
 }
 
 $PAGE->set_context($context);
@@ -71,7 +74,7 @@ if (!$extended_context->is_natural_context()) {
     $url->params([
         'component' => $extended_context->get_component(),
         'area' => $extended_context->get_area(),
-        'item_id' => $extended_context->get_item_id()
+        'item_id' => $extended_context->get_item_id(),
     ]);
 }
 $PAGE->set_url($url);
@@ -83,12 +86,12 @@ $tui = new component(
     [
         'title' => get_string('notifications', 'totara_notification'),
         'context-id' => $extended_context->get_context_id(),
-        'extended-context' => array(
+        'extended-context' => [
             'component' => $extended_context->get_component(),
             'area' => $extended_context->get_area(),
-            'itemId' => $extended_context->get_item_id()
-        ),
-        'preferred-editor-format' => helper::get_preferred_editor_format(FORMAT_JSON_EDITOR)
+            'itemId' => $extended_context->get_item_id(),
+        ],
+        'preferred-editor-format' => helper::get_preferred_editor_format(FORMAT_JSON_EDITOR),
     ]
 );
 

@@ -33,6 +33,7 @@ use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\factory\built_in_notification_factory;
+use totara_notification\factory\capability_factory;
 use totara_notification\factory\notifiable_event_resolver_factory;
 use totara_notification\local\helper;
 use totara_notification\model\notification_preference;
@@ -560,5 +561,28 @@ final class generator extends component_generator {
 
         // Delete everything from the database.
         $DB->execute('TRUNCATE TABLE "ttr_notification_preference"');
+    }
+
+    /**
+     * @param string $capability
+     * @param int[]  $context_levels
+     *
+     * @return void
+     */
+    public function add_extra_capability(string $capability, array $context_levels): void {
+        capability_factory::load_map();
+
+        $cache = capability_factory::get_cache_loader();
+        $map = $cache->get(capability_factory::MAP_KEY);
+
+        foreach ($context_levels as $context_level) {
+            if (!isset($map[$context_level])) {
+                $map[$context_level] = [];
+            }
+
+            $map[$context_level][] = $capability;
+        }
+
+        $cache->set(capability_factory::MAP_KEY, $map);
     }
 }

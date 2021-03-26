@@ -22,21 +22,24 @@
  */
 
 use totara_core\extended_context;
+use totara_notification\exception\notification_exception;
+use totara_notification\interactor\notification_preference_interactor;
 use totara_notification\local\helper;
 use totara_tui\output\component;
-use totara_notification\model\notification_preference;
 
-global $CFG, $OUTPUT, $PAGE;
+global $CFG, $OUTPUT, $PAGE, $USER;
 
 require_once(__DIR__ . '/../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
 
 require_login();
 
 //require manage capability to access this page
 $extended_context = extended_context::make_with_context(context_system::instance());
-if (!notification_preference::can_manage($extended_context)) {
-    throw new coding_exception(get_string('error_manage_notification', 'totara_notification'));
+$interactor = new notification_preference_interactor($extended_context, $USER->id);
+
+if (!$interactor->can_manage_notification_preferences()) {
+    throw notification_exception::on_manage();
 }
 
 $PAGE->set_context($extended_context->get_context());
@@ -50,7 +53,7 @@ $tui = new component(
         'title' => get_string('notifications', 'totara_notification'),
         'context-id' => $extended_context->get_context_id(),
         'can-change-delivery-channel-defaults' => true,
-        'preferred-editor-format' => helper::get_preferred_editor_format(FORMAT_JSON_EDITOR)
+        'preferred-editor-format' => helper::get_preferred_editor_format(FORMAT_JSON_EDITOR),
     ]
 );
 

@@ -17,12 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_notification
  */
+namespace totara_notification\exception;
 
-defined('MOODLE_INTERNAL') || die();
+use moodle_exception;
 
-$plugin->version  = 2021033102;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020122900;       // Requires this Totara version.
-$plugin->component = 'totara_notification';  // To check on upgrade, that module sits in correct place
+class notification_exception extends moodle_exception {
+    /**
+     * notification_exception constructor.
+     * @param string     $error_code
+     */
+    private function __construct(string $error_code) {
+        parent::__construct($error_code, 'totara_notification');
+    }
+
+    /**
+     * @return notification_exception
+     */
+    public static function on_manage(): notification_exception {
+        return new static('error_manage_notification');
+    }
+}

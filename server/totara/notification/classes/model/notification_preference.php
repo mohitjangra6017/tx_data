@@ -525,24 +525,6 @@ class notification_preference {
     }
 
     /**
-     * Checks whether the logged in (or given) user has the capability to manage notification preference.
-     *
-     * @param extended_context $extended_context
-     * @param int|null         $userid
-     *
-     * @return bool
-     */
-    public static function can_manage(extended_context $extended_context, int $userid = null): bool {
-        global $USER;
-
-        if (null === $userid) {
-            $userid = $USER->id;
-        }
-
-        return has_capability('totara/notification:managenotifications', $extended_context->get_context(), $userid);
-    }
-
-    /**
      * @return string[]
      */
     public function get_forced_delivery_channels(): array {

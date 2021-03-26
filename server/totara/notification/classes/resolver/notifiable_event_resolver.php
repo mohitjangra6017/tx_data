@@ -236,7 +236,7 @@ abstract class notifiable_event_resolver {
         if (!$extend_context->is_natural_context()) {
             return false;
         }
-        if ($context->context_level === CONTEXT_SYSTEM) {
+        if ($context->contextlevel === CONTEXT_SYSTEM) {
             return true;
         }
         return false;

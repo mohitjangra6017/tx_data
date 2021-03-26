@@ -17,12 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
- * @package totara_notification
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @package core
  */
-
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2021033102;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020122900;       // Requires this Totara version.
-$plugin->component = 'totara_notification';  // To check on upgrade, that module sits in correct place
+$accesses = [
+    [
+        'capability' => 'moodle/course:update',
+        'context_levels' => [
+            CONTEXT_COURSE,
+            CONTEXT_MODULE,
+            CONTEXT_BLOCK
+        ]
+    ]
+];

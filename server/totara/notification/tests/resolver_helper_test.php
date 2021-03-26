@@ -89,4 +89,16 @@ class totara_notification_resolver_helper_testcase extends testcase {
             resolver_helper::get_component_of_resolver_class_name('\\totara_notification_mock_notifiable_event_resolver')
         );
     }
+
+    /**
+     * @return void
+     */
+    public function test_is_valid_permission_resolver(): void {
+        $generator = generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
+
+        self::assertFalse(resolver_helper::is_valid_permission_resolver('boom'));
+        self::assertFalse(resolver_helper::is_valid_permission_resolver(static::class));
+        self::assertTrue(resolver_helper::is_valid_permission_resolver(totara_notification_mock_notifiable_event_resolver::class));
+    }
 }

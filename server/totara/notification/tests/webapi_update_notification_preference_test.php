@@ -32,6 +32,7 @@ use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\event\update_custom_notification_preference_event;
 use totara_notification\event\update_overridden_notification_preference_event;
+use totara_notification\exception\notification_exception;
 use totara_notification\json_editor\node\placeholder;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\schedule_helper;
@@ -574,7 +575,10 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         }
     }
 
-    public function test_user_cannot_update_notification_without_manage_capability() {
+    /**
+     * @return void
+     */
+    public function test_user_cannot_update_notification_without_manage_capability(): void {
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
 
@@ -582,8 +586,8 @@ class totara_notification_webapi_update_notification_preference_testcase extends
             totara_notification_mock_built_in_notification::class
         );
 
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("You are not allowed to manage notification preference");
+        $this->expectException(notification_exception::class);
+        $this->expectExceptionMessage(get_string('error_manage_notification', 'totara_notification'));
 
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(update_notification_preference::class),
@@ -595,7 +599,10 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         );
     }
 
-    public function test_user_can_update_notification_with_manage_capability() {
+    /**
+     * @return void
+     */
+    public function test_user_can_update_notification_with_manage_capability(): void {
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
 
@@ -935,5 +942,44 @@ class totara_notification_webapi_update_notification_preference_testcase extends
 
         self::assertFalse($system_notification->get_enabled());
         self::assertFalse($course_notification->get_enabled());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_user_can_update_notification_with_permission_granted_by_resolver(): void {
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+
+        $ec = extended_context::make_system();
+
+        $notification_generator = generator::instance();
+        $custom = $notification_generator->create_notification_preference(
+            mock_resolver::class,
+            $ec,
+            ['recipient' => totara_notification_mock_recipient::class]
+        );
+
+        mock_resolver::set_permissions($ec, $user_one->id, true);
+        $this->setUser($user_one);
+
+        try {
+            /** @var model $updated_custom */
+            $updated_custom = $this->resolve_graphql_mutation(
+                $this->get_graphql_name(update_notification_preference::class),
+                [
+                    'id' => $custom->get_id(),
+                    'subject' => 'new subject',
+                    'subject_format' => FORMAT_PLAIN
+                ]
+            );
+
+            self::assertInstanceOf(model::class, $updated_custom);
+            self::assertEquals($custom->get_id(), $updated_custom->get_id());
+        } catch (notification_exception $e) {
+            self::fail("Expecting an exception to not be thrown");
+        }
+
+        self::assertNotEquals($custom->get_subject(), $updated_custom->get_subject());
     }
 }

@@ -24,6 +24,7 @@
 use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\entity\notifiable_event_preference as entity;
+use totara_notification\exception\notification_exception;
 use totara_notification\model\notifiable_event_preference;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\mutation\toggle_notifiable_event;
@@ -230,7 +231,8 @@ class totara_notification_webapi_toggle_notifiable_event_testcase extends testca
             true
         );
 
-        $this->expectException(required_capability_exception::class);
+        $this->expectException(notification_exception::class);
+        $this->expectExceptionMessage(get_string('error_manage_notification', 'totara_notification'));
 
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(toggle_notifiable_event::class),
@@ -245,5 +247,93 @@ class totara_notification_webapi_toggle_notifiable_event_testcase extends testca
                 'is_enabled' => true,
             ]
         );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_toggle_notifiable_event_for_resolver_that_is_not_enabled_for_user(): void {
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+
+        $context_system = extended_context::make_system();
+        self::assertFalse(
+            has_capability(
+                'totara/notification:managenotifications',
+                $context_system->get_context(),
+                $user_one->id
+            )
+        );
+
+        $notification_generator = generator::instance();
+        $notification_generator->include_mock_notifiable_event_resolver();
+        $notification_generator->add_notifiable_event_resolver(mock_resolver::class);
+
+        mock_resolver::set_permissions($context_system, $user_one->id, false);
+        $this->setUser($user_one);
+
+        $this->expectException(notification_exception::class);
+        $this->expectExceptionMessage(get_string('error_manage_notification', 'totara_notification'));
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(toggle_notifiable_event::class),
+            [
+                'resolver_class_name' => mock_resolver::class,
+                'is_enabled' => true,
+                'extended_context' => [
+                    'context_id' => $context_system->get_context_id()
+                ]
+            ]
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_toggle_notifiable_event_for_resolver_that_is_enabled_for_user(): void {
+        global $DB;
+
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+
+        $context_system = extended_context::make_system();
+        self::assertFalse(
+            has_capability(
+                'totara/notification:managenotifications',
+                $context_system->get_context(),
+                $user_one->id
+            )
+        );
+
+        $notification_generator = generator::instance();
+        $notification_generator->include_mock_notifiable_event_resolver();
+        $notification_generator->add_notifiable_event_resolver(mock_resolver::class);
+
+        mock_resolver::set_permissions($context_system, $user_one->id, true);
+        $this->setUser($user_one);
+
+        self::assertEquals(0, $DB->count_records(entity::TABLE));
+
+        try {
+            $this->resolve_graphql_mutation(
+                $this->get_graphql_name(toggle_notifiable_event::class),
+                [
+                    'resolver_class_name' => mock_resolver::class,
+                    'is_enabled' => true,
+                    'extended_context' => [
+                        'context_id' => $context_system->get_context_id()
+                    ]
+                ]
+            );
+        } catch (Throwable $e) {
+            self::fail("Expect the operation toggle notifiable event will yeild exception");
+        }
+
+        // One record was created.
+        self::assertEquals(1, $DB->count_records(entity::TABLE));
+        $entity = entity::repository()->for_context(mock_resolver::class, $context_system);
+
+        self::assertNotNull($entity->enabled);
+        self::assertEquals(1, $entity->enabled);
     }
 }

@@ -25,6 +25,7 @@ use core\orm\query\builder;
 use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\entity\notification_preference as entity;
+use totara_notification\exception\notification_exception;
 use totara_notification\event\create_custom_notification_preference_event;
 use totara_notification\event\create_override_notification_preference_event;
 use totara_notification\loader\notification_preference_loader;
@@ -770,8 +771,8 @@ class totara_notification_webapi_create_notification_preference_testcase extends
             totara_notification_mock_built_in_notification::class
         );
 
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("You are not allowed to manage notification preference");
+        $this->expectException(notification_exception::class);
+        $this->expectExceptionMessage(get_string('error_manage_notification', 'totara_notification'));
 
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(create_notification_preference::class),
@@ -814,5 +815,73 @@ class totara_notification_webapi_create_notification_preference_testcase extends
         self::assertEquals($system_built_in->get_title(), $notification_preference->get_title());
         self::assertEquals($system_built_in->get_body_format(), $notification_preference->get_body_format());
         self::assertNotEquals($system_built_in->get_body(), $notification_preference->get_body());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_notification_preference_as_a_user_without_permission_at_resolver(): void {
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+
+        $this->setUser($user_one);
+        $this->expectException(notification_exception::class);
+        $this->expectExceptionMessage(get_string('error_manage_notification', 'totara_notification'));
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(create_notification_preference::class),
+            [
+                'extended_context' => [
+                    'context_id' => context_system::instance()->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
+                'title' => 'Custom title',
+                'subject' => 'Custom subject',
+                'subject_format' => FORMAT_PLAIN,
+                'body' => 'Custom body',
+                'body_format' => FORMAT_PLAIN,
+                'recipient' => mock_recipient::class,
+            ]
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_notification_preference_as_a_user_with_permission_at_resolver(): void {
+        global $DB;
+
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+
+        $ec = extended_context::make_system();
+        mock_resolver::set_permissions($ec, $user_one->id, true);
+
+        $this->setUser($user_one);
+
+        /** @var model $preference */
+        $preference = $this->resolve_graphql_mutation(
+            $this->get_graphql_name(create_notification_preference::class),
+            [
+                'extended_context' => [
+                    'context_id' => context_system::instance()->id,
+                ],
+                'resolver_class_name' => mock_resolver::class,
+                'title' => 'Custom title',
+                'subject' => 'Custom subject',
+                'subject_format' => FORMAT_PLAIN,
+                'body' => 'Custom body',
+                'body_format' => FORMAT_PLAIN,
+                'enabled' => true,
+                'recipient' => mock_recipient::class,
+                'schedule_type' => schedule_before_event::identifier(),
+                'schedule_offset' => 5
+            ]
+        );
+
+        self::assertInstanceOf(model::class, $preference);
+        self::assertTrue(
+            $DB->record_exists(entity::TABLE, ['id' => $preference->get_id()])
+        );
     }
 }

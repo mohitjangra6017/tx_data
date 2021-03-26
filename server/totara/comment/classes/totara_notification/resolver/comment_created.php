@@ -134,6 +134,9 @@ class comment_created extends notifiable_event_resolver implements scheduled_eve
         return $DB->get_recordset_sql($sql, ['min_time' => $min_time, 'max_time' => $max_time]);
     }
 
+    /**
+     * @return extended_context
+     */
     public function get_extended_context(): extended_context {
         $comment_id = $this->event_data['comment_id'];
         $comment = comment::from_id($comment_id);
@@ -142,5 +145,24 @@ class comment_created extends notifiable_event_resolver implements scheduled_eve
         $context_id = $resolver->get_context_id($comment->get_instanceid(), $comment->get_area());
 
         return extended_context::make_with_id($context_id);
+    }
+
+    /**
+     * @param extended_context $extend_context
+     * @return bool
+     */
+    public static function supports_context(extended_context $extend_context): bool {
+        if (defined('BEHAT_SITE_RUNNING') && BEHAT_SITE_RUNNING) {
+            // We are in behat environment, we are using totara_comment/comment_created as
+            // a mock for behat testing at the moment, because it is the only notification
+            // triger that appears in the system at this point of time.
+            if (CONTEXT_COURSE === $extend_context->get_context_level()) {
+                return true;
+            }
+
+            // Otherwise, fallback to the actual original logic for the comment_created.
+        }
+
+        return parent::supports_context($extend_context);
     }
 }

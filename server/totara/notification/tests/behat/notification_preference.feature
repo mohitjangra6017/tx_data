@@ -1,4 +1,4 @@
-@totara @totara_notification @javascript @vuejs
+@totara @totara_notification @javascript @vuejs @core_course @course
 Feature: Course notifications node
   As an notifications administrator
   I need to be able to view notifications and manage notifications
