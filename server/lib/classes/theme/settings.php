@@ -275,6 +275,11 @@ final class settings {
 
         $condition = $this->get_config_parameters();
 
+        // First clean all categories and their properties.
+        foreach ($categories as &$category) {
+            $category['properties'] = $this->clean_properties($category['properties']);
+        }
+
         // Update per category if found, otherwise insert new record.
         $cats = $categories;
         if ($record = $DB->get_record('config_plugins', $condition)) {
@@ -291,6 +296,7 @@ final class settings {
                 $cats[] = $category;
             }
         }
+
         set_config($condition['name'], json_encode($cats), $condition['plugin']);
     }
 
