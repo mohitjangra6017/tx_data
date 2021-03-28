@@ -24,7 +24,10 @@
 global $CFG;
 require_once $CFG->dirroot . '/totara/competency/tests/scale_query_resolver_test.php';
 
-class webapi_resolver_query_scales_testcase extends scale_query_resolver_test {
+/**
+ * @group totara_competency
+ */
+class totara_competency_webapi_resolver_query_scales_testcase extends scale_query_resolver_test {
     /**
      * @inheritDoc
      */

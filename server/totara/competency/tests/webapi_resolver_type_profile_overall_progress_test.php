@@ -32,7 +32,10 @@ use totara_webapi\phpunit\webapi_phpunit_helper;
 global $CFG;
 require_once($CFG->dirroot . '/totara/competency/tests/totara_competency_testcase.php');
 
-class webapi_resolver_type_profile_overall_progress_testcase extends totara_competency_testcase {
+/**
+ * @group totara_competency
+ */
+class totara_competency_webapi_resolver_type_profile_overall_progress_testcase extends totara_competency_testcase {
     use webapi_phpunit_helper;
 
     private const QUERY_TYPE = 'totara_competency_profile_overall_progress';

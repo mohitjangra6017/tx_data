@@ -25,7 +25,10 @@ use totara_competency\entity\assignment;
 use totara_competency\models\assignment as assignment_model;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-class webapi_resolver_type_archive_user_assignment_result_testcase extends advanced_testcase {
+/**
+ * @group totara_competency
+ */
+class totara_competency_webapi_resolver_type_archive_user_assignment_result_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
     private const QUERY_TYPE = 'totara_competency_archive_user_assignment_result';

@@ -39,7 +39,7 @@ use \totara_competency\helpers\capability_helper;
  *
  * @group totara_competency
  */
-class webapi_resolver_mutation_archive_user_assignment_test extends advanced_testcase {
+class totara_competency_webapi_resolver_mutation_archive_user_assignment_test extends advanced_testcase {
 
     /**
      * @var array Generated data.

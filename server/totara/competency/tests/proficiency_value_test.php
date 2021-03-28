@@ -29,6 +29,9 @@ use totara_competency\task\competency_aggregation_queue;
  * @package totara_competency
  */
 
+/**
+ * @group totara_competency
+ */
 class totara_competency_proficiency_value_testcase extends advanced_testcase {
 
     public function test_min_value() {

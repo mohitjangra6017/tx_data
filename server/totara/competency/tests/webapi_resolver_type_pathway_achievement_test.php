@@ -26,7 +26,10 @@ use GraphQL\Deferred;
 use totara_competency\entity\pathway_achievement as pathway_achievement_entity;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-class webapi_resolver_type_pathway_achievement_testcase extends advanced_testcase {
+/**
+ * @group totara_competency
+ */
+class totara_competency_webapi_resolver_type_pathway_achievement_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
     private const QUERY_TYPE = 'totara_competency_pathway_achievement';

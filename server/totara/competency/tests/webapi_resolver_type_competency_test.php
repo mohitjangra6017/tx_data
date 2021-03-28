@@ -29,7 +29,10 @@ use totara_competency\entity\scale;
 use totara_core\advanced_feature;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-class webapi_resolver_type_competency_testcase extends advanced_testcase {
+/**
+ * @group totara_competency
+ */
+class totara_competency_webapi_resolver_type_competency_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
     private const QUERY_TYPE = 'totara_competency_competency';

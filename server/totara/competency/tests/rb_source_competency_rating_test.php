@@ -35,6 +35,7 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * @group totara_reportbuilder
+ * @group totara_competency
  */
 class totara_reportbuilder_rb_source_competency_rating_testcase extends advanced_testcase {
     use totara_reportbuilder\phpunit\report_testing;

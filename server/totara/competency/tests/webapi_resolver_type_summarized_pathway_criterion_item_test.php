@@ -24,7 +24,10 @@
 use core\format;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-class webapi_resolver_type_summarized_pathway_criterion_item_testcase extends advanced_testcase {
+/**
+ * @group totara_competency
+ */
+class totara_competency_webapi_resolver_type_summarized_pathway_criterion_item_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
     private const QUERY_TYPE = 'totara_competency_summarized_pathway_criterion_item';

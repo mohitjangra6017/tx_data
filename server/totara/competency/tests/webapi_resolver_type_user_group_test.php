@@ -25,7 +25,10 @@ use core\format;
 use totara_competency\models\user_group as user_group_model;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
-class webapi_resolver_type_user_group_testcase extends advanced_testcase {
+/**
+ * @group totara_competency
+ */
+class totara_competency_webapi_resolver_type_user_group_testcase extends advanced_testcase {
     use webapi_phpunit_helper;
 
     private const QUERY_TYPE = 'totara_competency_user_group';
