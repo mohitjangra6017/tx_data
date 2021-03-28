@@ -24,7 +24,8 @@ input source_activity_question_elements_input {
 
 input subject_instance_previous_responses_input {
   token: String
-  participant_section_id: param_integer!
+  participant_section_id: param_integer
+  subject_instance_id: param_integer!
   section_element_id: param_integer!
 }
 

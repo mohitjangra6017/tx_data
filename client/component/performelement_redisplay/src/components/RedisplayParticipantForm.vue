@@ -17,7 +17,7 @@
   -->
 
 <template>
-  <div class="tui-redisplayParticipantForm">
+  <div v-if="ready" class="tui-redisplayParticipantForm">
     {{ redisplayData.title }}
 
     <div class="tui-redisplayParticipantForm__cardArea">
@@ -26,33 +26,17 @@
           {{ element.data.elementTitle }}
         </h4>
 
-        <div class="tui-redisplayParticipantForm__card-content">
-          <FormRow
-            v-if="redisplayData.your_response"
-            :label="$str('your_response', 'mod_perform')"
-          >
-            <div class="tui-redisplayParticipantForm__card-contentResponse">
-              <component
-                :is="sourceComponent"
-                :data="JSON.parse(redisplayData.your_response.response_data)"
-                :response-lines="
-                  redisplayData.your_response.response_data_formatted_lines
-                "
-              />
-            </div>
-          </FormRow>
-
-          <OtherParticipantResponses
-            :section-element="{
-              responseDisplayComponent: sourceComponent,
-              other_responder_groups: redisplayData.other_responder_groups,
-            }"
-            :anonymous-responses="redisplayData.is_anonymous"
-            :anonymous-label="
-              $str('anonymous_responses', 'performelement_redisplay')
-            "
-          />
-        </div>
+        <!-- Handle the different view switching for input / responses (read only / print)
+        and output others responses -->
+        <ElementParticipantFormContent
+          v-bind="$attrs"
+          :active-section-is-closed="true"
+          :participant-can-answer="true"
+          :element="element"
+          :element-components="otherData.element.element_plugin"
+          :section-element="otherData"
+          :show-other-response="true"
+        />
       </Card>
     </div>
   </div>
@@ -60,16 +44,14 @@
 
 <script>
 import Card from 'tui/components/card/Card';
-import OtherParticipantResponses from 'mod_perform/components/user_activities/participant/OtherParticipantResponses';
-import { FormRow } from 'tui/components/uniform';
+import ElementParticipantFormContent from 'mod_perform/components/element/ElementParticipantFormContent';
 import subjectInstancePreviousResponsesQuery from 'performelement_redisplay/graphql/subject_instance_previous_responses';
 import subjectInstancePreviousResponsesForExternalParticipantQuery from 'performelement_redisplay/graphql/subject_instance_previous_responses_nosession';
 
 export default {
   components: {
     Card,
-    FormRow,
-    OtherParticipantResponses,
+    ElementParticipantFormContent,
   },
 
   props: {
@@ -79,73 +61,78 @@ export default {
         return value.data && value.data.elementPluginDisplayComponent;
       },
     },
+    token: String,
+    subjectInstanceId: Number,
   },
+
   data() {
     return {
-      redisplayData: {
-        title: null,
-        your_response: null,
-        other_responder_groups: [],
-        is_anonymous: false,
-      },
+      ready: false,
+      redisplayData: {},
     };
   },
 
   apollo: {
     redisplayData: {
       query() {
-        return this.element.token && this.element.token.length > 0
+        if (!this.element.participantSectionId) {
+          return subjectInstancePreviousResponsesQuery;
+        }
+        return this.token && this.token.length > 0
           ? subjectInstancePreviousResponsesForExternalParticipantQuery
           : subjectInstancePreviousResponsesQuery;
       },
       fetchPolicy: 'network-only',
       variables() {
+        let input = {
+          subject_instance_id: this.subjectInstanceId,
+          section_element_id: this.element.data.sourceSectionElementId,
+        };
+
+        if (this.token) {
+          input.token = this.token;
+        }
+
+        if (this.element.participantSectionId) {
+          input.participant_section_id = this.element.participantSectionId;
+        }
         return {
-          input: {
-            participant_section_id: this.element.participantSectionId,
-            section_element_id: this.element.data.sourceSectionElementId,
-            token: this.element.token || null,
-          },
+          input,
         };
       },
       update(data) {
+        this.ready = true;
         return data.redisplayData;
       },
     },
   },
 
   computed: {
-    sourceComponent() {
-      return tui.asyncComponent(
-        this.element.data.elementPluginDisplayComponent
-      );
-    },
-  },
+    otherData() {
+      if (!this.element.data.elementPluginDisplayComponent) {
+        return null;
+      }
 
-  methods: {
-    /**
-     * Check question has other responses
-     *
-     * @param groupResponses
-     * @returns {boolean}
-     */
-    hasResponses(groupResponses) {
-      return groupResponses.length > 0;
+      let componentTypes = Object.assign({}, this.element.element_plugin, {
+        participant_response_component: this.element.data
+          .elementPluginDisplayComponent,
+      });
+
+      let elementData = Object.assign({}, this.element, {
+        element_plugin: componentTypes,
+      });
+
+      return {
+        element: elementData,
+        other_responder_groups: this.redisplayData.other_responder_groups,
+        response_data_formatted_lines: this.redisplayData.your_response
+          ? this.redisplayData.your_response.response_data_formatted_lines
+          : [],
+      };
     },
   },
 };
 </script>
-
-<lang-strings>
-  {
-    "mod_perform": [
-      "your_response"
-    ],
-    "performelement_redisplay": [
-      "anonymous_responses"
-    ]
-  }
-</lang-strings>
 
 <style lang="scss">
 .tui-redisplayParticipantForm {
@@ -164,16 +151,6 @@ export default {
     &-title {
       margin: 0;
       @include tui-font-heading-label();
-    }
-
-    &-content {
-      & > * + * {
-        margin-top: var(--gap-4);
-      }
-    }
-
-    &-contentResponse {
-      padding-top: var(--gap-1);
     }
   }
 }

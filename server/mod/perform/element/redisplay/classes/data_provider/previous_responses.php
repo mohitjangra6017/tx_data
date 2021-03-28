@@ -106,12 +106,14 @@ class previous_responses {
             return $this->return_response($this->get_title_without_participation());
         }
 
-        $responses['your_response'] = null;
-        $previous_participant_instance = $this->find_previous_participant_instance($current_data['participant_instance']);
+        if (!empty($current_data['participant_instance'])) {
+            $responses['your_response'] = null;
+            $previous_participant_instance = $this->find_previous_participant_instance($current_data['participant_instance']);
 
-        if ($previous_participant_instance) {
-            $responses = $this->separate_your_response($responses, $previous_participant_instance);
-            $this->separate_your_participant_instance($previous_participant_instance->id);
+            if ($previous_participant_instance) {
+                $responses = $this->separate_your_response($responses, $previous_participant_instance);
+                $this->separate_your_participant_instance($previous_participant_instance->id);
+            }
         }
 
         $responses_grouped_by_relationship = $this->group_previous_responses_by_relationship($responses['previous_responses']);
@@ -135,11 +137,6 @@ class previous_responses {
      * @return void
      */
     private function validate_current_data(array $current_data): void {
-        if (empty($current_data['participant_instance'])
-            || !$current_data['participant_instance'] instanceof participant_instance_model) {
-            throw new coding_exception('current participant instance missing');
-        }
-
         if (empty($current_data['activity']) || !$current_data['activity'] instanceof activity_model) {
             throw new coding_exception('current participant instance missing');
         }

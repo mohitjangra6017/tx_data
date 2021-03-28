@@ -95,11 +95,13 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $this->generate_instances();
 
         $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
+        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $redisplay['respondable_section_element']->id,
                 'participant_section_id' => $redisplay_subject_participant_section->id,
+                'subject_instance_id' => $subject_instance_id,
             ]
         ]);
 
@@ -120,11 +122,13 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $this->generate_instances();
 
         $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
+        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $question_bank['respondable_section_element']->id,
                 'participant_section_id' => $redisplay_subject_participant_section->id,
+                'subject_instance_id' => $subject_instance_id,
             ]
         ]);
 
@@ -151,11 +155,13 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $this->back_date_subject_instances_for_activity($question_bank['activity']->id, $this->five_days_ago_timestamp());
 
         $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
+        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $question_bank['respondable_section_element']->id,
                 'participant_section_id' => $redisplay_subject_participant_section->id,
+                'subject_instance_id' => $subject_instance_id,
             ]
         ]);
         $date = userdate($this->five_days_ago_timestamp(), get_string(date_format::get_lang_string(date_format::FORMAT_DATE), 'langconfig'));
@@ -184,11 +190,13 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $this->back_date_subject_instances_for_activity($question_bank['activity']->id, $five_days_ago);
 
         $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
+        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $question_bank['respondable_section_element']->id,
                 'participant_section_id' => $redisplay_subject_participant_section->id,
+                'subject_instance_id' => $subject_instance_id,
             ]
         ]);
         $date = userdate($five_days_ago, get_string(date_format::get_lang_string(date_format::FORMAT_DATE), 'langconfig'));
@@ -211,6 +219,7 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $this->generate_instances();
 
         $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($question_bank['activity']->id, $this->users['subject']->id);
+        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
 
         $this->expectException(coding_exception::class);
         $this->expectErrorMessage('Invalid access to redisplay');
@@ -218,6 +227,7 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
             'input' => [
                 'section_element_id' => $redisplay['respondable_section_element']->id,
                 'participant_section_id' => $redisplay_subject_participant_section->id,
+                'subject_instance_id' => $subject_instance_id,
             ]
         ]);
     }
@@ -238,11 +248,13 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $this->generate_responses_for_section_element_of_subject_instances($subject_instances, $question_bank['respondable_section_element']->id);
 
         $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
+        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $question_bank['respondable_section_element']->id,
                 'participant_section_id' => $redisplay_subject_participant_section->id,
+                'subject_instance_id' => $subject_instance_id,
             ]
         ]);
         $date = userdate($this->five_days_ago_timestamp(), get_string(date_format::get_lang_string(date_format::FORMAT_DATE), 'langconfig'));
@@ -285,11 +297,13 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $this->generate_responses_for_section_element_of_subject_instances($subject_instances, $question_bank['respondable_section_element']->id);
 
         $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
+        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $question_bank['respondable_section_element']->id,
                 'participant_section_id' => $redisplay_subject_participant_section->id,
+                'subject_instance_id' => $subject_instance_id,
             ]
         ]);
         $date = userdate($this->five_days_ago_timestamp(), get_string(date_format::get_lang_string(date_format::FORMAT_DATE), 'langconfig'));
@@ -310,6 +324,46 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $this->assertNotContains(strtolower($anonymous_responder_group->get_relationship_name()), $this->base_relationships);
         $this->assertEquals($anonymous_responder_group->get_relationship_name(), 'Anonymous');
         $this->assertEquals(2, $anonymous_responder_group->get_responses()->count());
+    }
+
+    /**
+     * Test it should check if current logged in user can access report if participant section id is not provided,
+     * throw error if user do not have capability
+     */
+    public function test_it_should_check_login_user_capability_without_participant_section_id() {
+        $this->create_test_users();
+        $question_bank = $this->set_up_question_bank_activity($this->base_relationships);
+        $question_bank['activity']->activate();
+        $redisplay = $this->set_up_redisplay_activity($this->base_relationships);
+        $redisplay['activity']->activate();
+        $this->generate_instances();
+
+        $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($question_bank['activity']->id, $this->users['subject']->id);
+        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
+
+        $result = $this->resolve_graphql_query(self::QUERY, [
+            'input' => [
+                'section_element_id' => $redisplay['respondable_section_element']->id,
+                'subject_instance_id' => $subject_instance_id,
+            ]
+        ]);
+
+        $this->assertEquals(
+            'Response redisplay to the following question cannot be shown, because there is no previous participation associated with the activity "Redisplay activity".',
+            $result['title']
+        );
+
+        $user_2 = $this->getDataGenerator()->create_user();
+        $this->setUser($user_2);
+
+        $this->expectException(coding_exception::class);
+        $this->expectErrorMessage('Invalid report access to redisplay');
+        $this->resolve_graphql_query(self::QUERY, [
+            'input' => [
+                'section_element_id' => $redisplay['respondable_section_element']->id,
+                'subject_instance_id' => $subject_instance_id,
+            ]
+        ]);
     }
 
     /**
