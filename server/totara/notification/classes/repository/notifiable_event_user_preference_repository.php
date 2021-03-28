@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author  Alastair Munro <alastair.munro@totaralearning.com>
+ * @author Riana Rossouw <riana.rossouw@totaralearning.com>
  * @package totara_notification
  */
 
@@ -25,33 +25,17 @@ namespace totara_notification\repository;
 
 use core\orm\entity\repository;
 use totara_core\extended_context;
-use totara_notification\entity\notifiable_event_preference;
+use totara_notification\entity\notifiable_event_user_preference as notifiable_event_user_preference_entity;
 
-class notifiable_event_preference_repository extends repository {
-    /**
-     * @param string $resolver_class_name
-     * @param extended_context $extended_context
-     * @return notifiable_event_preference|null
-     */
-    public function for_context(string $resolver_class_name,
-        extended_context $extended_context
-    ): ?notifiable_event_preference {
-        $this->builder->where('context_id', $extended_context->get_context_id());
-        $this->builder->where('component', $extended_context->get_component());
-        $this->builder->where('area', $extended_context->get_area());
-        $this->builder->where('item_id', $extended_context->get_item_id());
-        $this->builder->where('resolver_class_name', ltrim($resolver_class_name, '\\'));
-
-        /** @var notifiable_event_preference|null $entity */
-        $entity = $this->builder->one();
-        return $entity;
-    }
-
+/**
+ * Repository for table "ttr_notifiable_event_user_preference"
+ */
+class notifiable_event_user_preference_repository extends repository {
     /**
      * @param extended_context $extended_context
      * @return $this
      */
-    public function filter_by_extended_context(extended_context $extended_context): notifiable_event_preference_repository {
+    public function filter_by_extended_context(extended_context $extended_context): notifiable_event_user_preference_repository {
         $this->where('context_id', $extended_context->get_context_id());
         $this->where('component', $extended_context->get_component());
         $this->where('area', $extended_context->get_area());
@@ -60,4 +44,24 @@ class notifiable_event_preference_repository extends repository {
         return $this;
     }
 
+    /**
+     * @param string $resolver_class_name
+     * @return $this
+     */
+    public function filter_by_resolver_class(string $resolver_class_name): notifiable_event_user_preference_repository {
+        $this->where('resolver_class_name', ltrim($resolver_class_name, '\\'));
+
+        return $this;
+    }
+
+    /**
+     * @param int $user_id
+     * @return $this
+     */
+    public function filter_by_user(int $user_id): notifiable_event_user_preference_repository {
+        $this->where('user_id', $user_id);
+
+        return $this;
+    }
+    
 }

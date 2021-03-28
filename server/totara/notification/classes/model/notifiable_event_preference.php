@@ -26,7 +26,7 @@ namespace totara_notification\model;
 use coding_exception;
 use core\orm\entity\model;
 use totara_core\extended_context;
-use totara_notification\entity\notifiable_event_preference as entity;
+use totara_notification\entity\notifiable_event_preference as notifiable_event_preference_entity;
 use totara_notification\loader\delivery_channel_loader;
 use totara_notification\delivery\channel\delivery_channel;
 
@@ -58,10 +58,10 @@ class notifiable_event_preference extends model {
     ];
 
     /**
-     * @param entity $entity
+     * @param notifiable_event_preference_entity $entity
      * @return notifiable_event_preference
      */
-    public static function from_entity(entity $entity): notifiable_event_preference {
+    public static function from_entity(notifiable_event_preference_entity $entity): notifiable_event_preference {
         if (!$entity->exists()) {
             throw new coding_exception("Cannot instantiate a notification notifiable event from a non-existing entity");
         }
@@ -74,28 +74,24 @@ class notifiable_event_preference extends model {
      * @return notifiable_event_preference
      */
     public static function from_id(int $id): notifiable_event_preference {
-        $entity = new entity($id);
+        $entity = new notifiable_event_preference_entity($id);
         return static::from_entity($entity);
     }
 
     /**
      * @param string $resolver_class_name
      * @param extended_context $extended_context
+     * @param bool $enabled
      * @return notifiable_event_preference
      */
-    public static function create(string $resolver_class_name, extended_context $extended_context): notifiable_event_preference {
-        $entity = new entity();
+    public static function create(string $resolver_class_name, extended_context $extended_context, bool $enabled = true): notifiable_event_preference {
+        $entity = new notifiable_event_preference_entity();
         $entity->resolver_class_name = $resolver_class_name;
         $entity->context_id = $extended_context->get_context_id();
         $entity->component = $extended_context->get_component();
         $entity->area = $extended_context->get_area();
         $entity->item_id = $extended_context->get_item_id();
-
-        if ($extended_context->is_natural_context() && CONTEXT_SYSTEM == $extended_context->get_context_level()) {
-            // We are at the system context, cant leave the field "enabled" to null.
-            // Default it to true.
-            $entity->enabled = true;
-        }
+        $entity->enabled = $enabled;
 
         $entity->save();
 
@@ -120,7 +116,7 @@ class notifiable_event_preference extends model {
      * @return string
      */
     protected static function get_entity_class(): string {
-        return entity::class;
+        return notifiable_event_preference_entity::class;
     }
 
     /**

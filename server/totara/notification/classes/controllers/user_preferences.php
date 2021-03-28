@@ -24,22 +24,24 @@
 namespace totara_notification\controllers;
 
 use context;
-use context_user;
+use context_system;
 use core\entity\user;
 use moodle_url;
+use totara_core\extended_context;
 use totara_mvc\controller;
 use totara_mvc\tui_view;
+use totara_notification\loader\notifiable_event_user_preference_loader;
 
 /*
  * This page lists a user's notification preferences.
  */
-class preferences extends controller {
+class user_preferences extends controller {
 
     /**
      * @inheritDoc
      */
     protected function setup_context(): context {
-        return context_user::instance($this->get_user_id());
+        return context_system::instance();
     }
 
     private function get_user_id(): int {
@@ -50,14 +52,19 @@ class preferences extends controller {
      * @return tui_view
      */
     public function action(): tui_view {
-        $this->set_url(new moodle_url('/totara/notification/preferences.php'));
+        $this->set_url(new moodle_url('/totara/notification/user_preferences.php'));
 
+        $extended_context = extended_context::make_with_context($this->get_context());
+        
+        // Js/Vue requires the array to be 0 indexed
+        $user_resolver_preferences = notifiable_event_user_preference_loader::get_user_resolver_classes($this->get_user_id(), $extended_context);
+        
         $props = [
-            'current-user-id' => $this->get_user_id(),
-            'context-id' => $this->get_context()->id,
+            'extended-context' => $extended_context,
+            'resolver-preferences' => array_values($user_resolver_preferences),
         ];
 
-        return tui_view::create('totara_notification/pages/Preferences', $props)
-            ->set_title(get_string('preferences_page_title', 'totara_notification'));
+        return tui_view::create('totara_notification/pages/UserPreferences', $props)
+            ->set_title(get_string('user_preferences_page_title', 'totara_notification'));
     }
 }

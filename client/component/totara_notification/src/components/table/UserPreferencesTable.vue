@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div class="tui-preferencesTable">
+  <div class="tui-userPreferencesTable">
     <Table :data="eventResolvers" :expandable-rows="true" :hover-off="true">
       <template v-slot:header-row>
         <HeaderCell>
@@ -26,6 +26,10 @@
         <HeaderCell>
           {{ $str('delivery_channels', 'totara_notification') }}
         </HeaderCell>
+        <HeaderCell>
+          {{ $str('enabled', 'totara_notification') }}
+        </HeaderCell>
+        <HeaderCell />
       </template>
 
       <template v-slot:row="{ row, expand, expandState }">
@@ -47,9 +51,26 @@
           :border-bottom-hidden="true"
           :hover-off="true"
         >
-          <template v-slot:row="{ expand, expandState, row: notifiableEvent }">
+          <template
+            v-slot:row="{ expand, expandState, row: resolverPreference }"
+          >
             <Cell>
-              {{ notifiableEvent.name }}
+              {{ resolverPreference.name }}
+            </Cell>
+            <Cell />
+            <Cell>
+              <ToggleSwitch
+                :aria-label="
+                  $str(
+                    'enabled_status',
+                    'totara_notification',
+                    resolverPreference.name
+                  )
+                "
+                :value="resolverPreference.enabled"
+                :toggle-only="true"
+                @input="toggleEnabled($event, resolverPreference)"
+              />
             </Cell>
             <Cell>
               ...
@@ -66,21 +87,18 @@ import Cell from 'tui/components/datatable/Cell';
 import ExpandCell from 'tui/components/datatable/ExpandCell';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
 import Table from 'tui/components/datatable/Table';
+import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
 
 export default {
   components: {
-    HeaderCell,
     Cell,
-    Table,
     ExpandCell,
+    HeaderCell,
+    Table,
+    ToggleSwitch,
   },
 
   props: {
-    contextId: {
-      type: Number,
-      required: true,
-    },
-
     eventResolvers: {
       type: Array,
       default: () => [],
@@ -88,12 +106,26 @@ export default {
         return prop.every(preference => {
           return (
             'component' in preference &&
-            'resolvers' in preference &&
-            'recipients' in preference &&
-            'plugin_name' in preference
+            'plugin_name' in preference &&
+            'resolvers' in preference
           );
         });
       },
+    },
+  },
+
+  methods: {
+    /**
+     * @param {Boolean} value
+     * @param {Object} updatedResolver
+     */
+    toggleEnabled(value, updatedResolver) {
+      this.$emit('toggle-enabled', {
+        userId: updatedResolver.user_id,
+        resolverClassname: updatedResolver.resolver_class_name,
+        isEnabled: value,
+        userPreferenceId: updatedResolver.user_preference_id,
+      });
     },
   },
 };
@@ -102,6 +134,8 @@ export default {
 {
   "totara_notification": [
     "delivery_channels",
+    "enabled",
+    "enabled_status",
     "notifications"
   ]
 }

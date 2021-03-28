@@ -181,8 +181,8 @@ function xmldb_totara_notification_upgrade($old_version) {
 
             // Set any to the time_created default
             $DB->execute(
-                'UPDATE "ttr_notifiable_event_queue" 
-                SET event_time = time_created 
+                'UPDATE "ttr_notifiable_event_queue"
+                SET event_time = time_created
                 WHERE event_time IS NULL'
             );
 
@@ -212,8 +212,8 @@ function xmldb_totara_notification_upgrade($old_version) {
         // For any preferences that do not have an ancestor we will default
         // their offset to 0 (on_event).
         $DB->execute(
-            'UPDATE "ttr_notification_preference" 
-                SET schedule_offset = 0 
+            'UPDATE "ttr_notification_preference"
+                SET schedule_offset = 0
                 WHERE schedule_offset IS NULL AND ancestor_id IS NULL'
         );
 
@@ -231,7 +231,7 @@ function xmldb_totara_notification_upgrade($old_version) {
         }
 
         $records = $DB->get_records_sql('
-            SELECT id FROM "ttr_notification_preference" 
+            SELECT id FROM "ttr_notification_preference"
             WHERE ancestor_id IS NULL AND notification_class_name IS NULL
         ');
 
@@ -290,7 +290,7 @@ function xmldb_totara_notification_upgrade($old_version) {
 
         // Convert all the old schedule offset into the seconds.
         $records = $DB->get_records_sql('
-            SELECT id, schedule_offset FROM "ttr_notification_preference" 
+            SELECT id, schedule_offset FROM "ttr_notification_preference"
             WHERE schedule_offset IS NOT NULL
         ');
 
@@ -335,7 +335,7 @@ function xmldb_totara_notification_upgrade($old_version) {
             $resolver_class_name = "{$component}\\totara_notification\\resolver\\{$name}";
             $DB->execute(
                 '
-                    UPDATE "ttr_notification_preference" SET resolver_class_name = :resolver_class_name 
+                    UPDATE "ttr_notification_preference" SET resolver_class_name = :resolver_class_name
                     WHERE resolver_class_name = :old_event_name
                 ',
                 [
@@ -463,5 +463,45 @@ function xmldb_totara_notification_upgrade($old_version) {
         upgrade_plugin_savepoint(true, 2021033000, 'totara', 'notification');
     }
 
+    if ($old_version < 2021033001) {
+        $table = new xmldb_table('notifiable_event_user_preference');
+
+        // Adding fields to table notifiable_event_user.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('user_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('resolver_class_name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('context_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('area', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('item_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('enabled', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        // Adding keys to table notification_preference.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('user_id_key', XMLDB_KEY_FOREIGN, ['user_id'], 'user', ['id']);
+        $table->add_key('context_id_key', XMLDB_KEY_FOREIGN, ['context_id'], 'context', ['id']);
+
+        // Adding indexes to table notification_preference.
+        $table->add_index('user_resolver_class_name_index', XMLDB_INDEX_NOTUNIQUE, ['resolver_class_name']);
+
+         // Conditionally create the table
+        if (!$db_manager->table_exists($table)) {
+            $db_manager->create_table($table);
+        }
+
+        // Notification savepoint reached.
+        upgrade_plugin_savepoint(true, 2021033001, 'totara', 'notification');
+    }
+
+    if ($old_version < 2021033101) {
+        $table = new xmldb_table('notifiable_event_user_preference');
+        $index = new xmldb_index('user_context_resolver_class_uindex', XMLDB_INDEX_UNIQUE, ['user_id', 'context_id', 'resolver_class_name']);
+        if (!$db_manager->index_exists($table, $index)) {
+            $db_manager->add_index($table, $index);
+        }
+        // Notification savepoint reached.
+        upgrade_plugin_savepoint(true, 2021033101, 'totara', 'notification');
+    }
+    
     return true;
 }

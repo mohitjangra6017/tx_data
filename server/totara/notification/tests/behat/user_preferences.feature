@@ -14,4 +14,8 @@ Feature: User notifications preferences
     And I follow "Preferences" in the user menu
     And I follow "Notification preferences"
     Then I should see "Notification preferences"
-    And I should see "Delivery channels"
+    And I should see "Totara comment"
+    When I click on "Totara comment details" "button"
+    Then I should see "Comment deleted"
+    # Check enabled toggle switch
+#    When I click on the "Is enabled" tui toggle button

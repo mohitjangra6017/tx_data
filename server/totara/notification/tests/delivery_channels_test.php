@@ -144,6 +144,8 @@ class totara_notification_delivery_channels_testcase extends testcase {
      * Test the message queue is filtered by the resolver's set delivery channels
      */
     public function test_expected_message_outputs_filtered(): void {
+        $user = $this->getDataGenerator()->create_user();
+        
         $mock_message_providers = [
             'first' => [],
             'second' => [],
@@ -167,7 +169,7 @@ class totara_notification_delivery_channels_testcase extends testcase {
             'filter_message_processors_by_delivery_channel'
         );
         $method->setAccessible(true);
-        $results = $method->invoke(new notification_queue_manager(), $resolver, $mock_message_providers);
+        $results = $method->invoke(new notification_queue_manager(), $user->id, $resolver, $mock_message_providers);
 
         self::assertCount(2, $results);
         self::assertArrayHasKey('first', $results);
@@ -181,7 +183,7 @@ class totara_notification_delivery_channels_testcase extends testcase {
         ];
         mock_resolver::set_default_delivery_channels($channels);
 
-        $results = $method->invoke(new notification_queue_manager(), $resolver, $mock_message_providers);
+        $results = $method->invoke(new notification_queue_manager(), $user->id, $resolver, $mock_message_providers);
 
         self::assertCount(1, $results);
         self::assertArrayHasKey('first', $results);

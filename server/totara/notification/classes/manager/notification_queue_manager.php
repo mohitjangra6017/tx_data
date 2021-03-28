@@ -123,11 +123,37 @@ class notification_queue_manager {
         $recipient = $preference->get_recipient();
         $recipient_ids = $resolver->get_recipient_ids($recipient);
 
-        $engine = $resolver->get_placeholder_engine();
-
         // Load the message processors & only show those that have been enabled
         $message_processors = get_message_processors(true, (defined('PHPUNIT_TEST') && PHPUNIT_TEST));
+        if (empty($message_processors)) {
+            // If there are no message processors enabled, there's nothing to send
+            return;
+        }
+
+        foreach ($recipient_ids as $target_user_id) {
+            $this->dispatch_to_target($target_user_id, $preference, $resolver, $message_processors);
+        }
+    }
+
+    /**
+     * Dispatch the message to one recipient.
+     *
+     * @param int $target_user_id
+     * @param notification_preference $preference
+     * @param notifiable_event_resolver $resolver
+     * @param array $message_processors
+     */
+    private function dispatch_to_target(
+        int $target_user_id,
+        notification_preference $preference,
+        notifiable_event_resolver $resolver,
+        array $message_processors
+    ): void {
+        $user = core_user::get_user($target_user_id);
+
+        $engine = $resolver->get_placeholder_engine();
         $message_processors = $this->filter_message_processors_by_delivery_channel(
+            $target_user_id,
             $resolver,
             $message_processors,
             $preference->get_forced_delivery_channels()
@@ -137,27 +163,7 @@ class notification_queue_manager {
             // If there are no message processors enabled, there's nothing to send
             return;
         }
-
-        foreach ($recipient_ids as $target_user_id) {
-            $this->dispatch_to_target($target_user_id, $preference, $engine, $message_processors);
-        }
-    }
-
-    /**
-     * Dispatch the message to one recipient.
-     *
-     * @param int                     $target_user_id
-     * @param notification_preference $preference
-     * @param engine                  $engine
-     * @param array                   $message_processors
-     */
-    private function dispatch_to_target(
-        int $target_user_id,
-        notification_preference $preference,
-        engine $engine,
-        array $message_processors
-    ): void {
-        $user = core_user::get_user($target_user_id);
+        
         cron_setup_user($user);
 
         $body_format = $preference->get_body_format();
@@ -253,22 +259,29 @@ class notification_queue_manager {
     /**
      * Load the message processors for the resolver, filtering by delivery channel.
      *
+     * @param int $target_user_id
      * @param notifiable_event_resolver $resolver
-     * @param array                     $message_processors
-     * @param array                     $forced_delivery_channels
+     * @param array $message_processors
+     * @param array $forced_delivery_channels
      * @return array
      */
     private function filter_message_processors_by_delivery_channel(
+        int $target_user_id,
         notifiable_event_resolver $resolver,
         array $message_processors,
         array $forced_delivery_channels = []
     ): array {
         $extended_context = extended_context::make_system();
         $event_preference = $resolver->get_notifiable_event_preference($extended_context);
-        // User-level overrides should be applied here
+        $user_event_preference = $resolver->get_notifiable_event_user_preference($target_user_id, $extended_context);
 
-        $delivery_channels = $event_preference ? $event_preference->default_delivery_channels :
-            delivery_channel_loader::get_for_event_resolver(get_class($resolver));
+        $delivery_channels = [];
+        if ($user_event_preference === null || $user_event_preference->enabled) {
+            // Add code to get enabled delivery channels from user preferences here
+            // else
+            $delivery_channels = $event_preference ? $event_preference->default_delivery_channels :
+                delivery_channel_loader::get_for_event_resolver(get_class($resolver));
+        }
 
         foreach ($forced_delivery_channels as $channel_name) {
             if (!isset($delivery_channels[$channel_name])) {

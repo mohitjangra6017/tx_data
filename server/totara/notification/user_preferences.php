@@ -23,4 +23,4 @@
 
 require_once(__DIR__ . '/../../config.php');
 
-(new \totara_notification\controllers\preferences())->process();
+(new \totara_notification\controllers\user_preferences())->process();

@@ -142,4 +142,5 @@ class notifiable_event_resolver_factory {
             }
         );
     }
+
 }

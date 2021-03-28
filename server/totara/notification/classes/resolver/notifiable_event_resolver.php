@@ -25,8 +25,10 @@ namespace totara_notification\resolver;
 use coding_exception;
 use totara_core\extended_context;
 use totara_notification\entity\notifiable_event_preference as notifiable_event_preference_entity;
+use totara_notification\entity\notifiable_event_user_preference as notifiable_event_user_preference_entity;
 use totara_notification\local\helper;
 use totara_notification\model\notifiable_event_preference as notifiable_event_preference_model;
+use totara_notification\model\notifiable_event_user_preference as notifiable_event_user_preference_model;
 use totara_notification\notification\built_in_notification;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\placeholder\template_engine\engine;
@@ -137,6 +139,27 @@ abstract class notifiable_event_resolver {
 
         if ($entity) {
             return notifiable_event_preference_model::from_entity($entity);
+        }
+
+        return null;
+    }
+
+    /**
+     * Fetch the notifiable event preference for the specified user.
+     *
+     * @param extended_context $extended_context
+     * @return notifiable_event_preference_model|null
+     */
+    public function get_notifiable_event_user_preference(int $user_id, extended_context $extended_context): ?notifiable_event_user_preference_model {
+        $entity = notifiable_event_user_preference_entity::repository()
+            ->filter_by_user($user_id)
+            ->filter_by_resolver_class(static::class)
+            ->filter_by_extended_context($extended_context)
+            ->get()
+            ->first();
+
+        if ($entity) {
+            return notifiable_event_user_preference_model::from_entity($entity);
         }
 
         return null;

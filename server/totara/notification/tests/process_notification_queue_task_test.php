@@ -328,6 +328,8 @@ class totara_notification_process_notification_queue_task_testcase extends testc
         $generator = generator::instance();
         $generator->include_mock_notifiable_event_resolver();
 
+        $user = $this->getDataGenerator()->create_user();
+        
         $extended_context = extended_context::make_system();
 
         $entity = new notifiable_event_preference();
@@ -348,14 +350,14 @@ class totara_notification_process_notification_queue_task_testcase extends testc
         $manager = new notification_queue_manager();
         $resolver = new mock_resolver(['expected_context_id' => $extended_context->get_context_id()]);
 
-        $first_result = $method->invokeArgs($manager, [$resolver, $message_processors]);
+        $first_result = $method->invokeArgs($manager, [$user->id, $resolver, $message_processors]);
         self::assertIsArray($first_result);
         // Note that we cannot check for the exact same size, because the list of message processors can include
         // the third parties plugins.
         self::assertNotSameSize($message_processors, $first_result);
         self::assertArrayHasKey('email', $first_result);
 
-        $second_result = $method->invokeArgs($manager, [$resolver, $message_processors, ['popup']]);
+        $second_result = $method->invokeArgs($manager, [$user->id, $resolver, $message_processors, ['popup']]);
         self::assertIsArray($second_result);
         // Note that we cannot check for the exact same size, because the list of message processors can include
         // the third parties plugins.

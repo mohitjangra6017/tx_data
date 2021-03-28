@@ -4918,9 +4918,9 @@ class settings_navigation extends navigation_node {
                 has_capability('moodle/user:editmessageprofile', $usercontext) && !is_primary_admin($user->id))) {
             $messagingurl = new moodle_url('/message/edit.php', ['id' => $user->id]);
             $legacy_notificationsurl = new moodle_url('/message/notificationpreferences.php', ['userid' => $user->id]);
-            $notifications_url = new moodle_url('/totara/notification/preferences.php');
+            $notifications_url = new moodle_url('/totara/notification/user_preferences.php');
             $useraccount->add(get_string('messagepreferences', 'message'), $messagingurl, self::TYPE_SETTING);
-            $useraccount->add(get_string('preferences_page_title', 'totara_notification'), $notifications_url, self::TYPE_SETTING);
+            $useraccount->add(get_string('user_preferences_page_title', 'totara_notification'), $notifications_url, self::TYPE_SETTING);
             $useraccount->add(get_string('notificationpreferences', 'message'), $legacy_notificationsurl, self::TYPE_SETTING);
         }
 
