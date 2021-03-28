@@ -276,7 +276,7 @@ class totara_notification_process_notification_queue_task_testcase extends testc
         $invalid_queue->set_extended_context(extended_context::make_with_context($context_user));
         $invalid_queue->scheduled_time = 10;
         $invalid_queue->notification_preference_id = $preference->get_id();
-        $invalid_queue->event_data = ['é', 1];
+        $invalid_queue->event_data = 'é';
         $invalid_queue->save();
 
         // Create a valid queue
