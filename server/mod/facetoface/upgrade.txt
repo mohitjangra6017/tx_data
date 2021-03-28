@@ -26,6 +26,9 @@ information provided here is intended especially for developers.
 * editrecipients.html has been removed and should no longer be included anywhere.
 * mod_facetoface_render::declare_interest() added 2 parameters, 2nd parameter boolean $return to return a html button or print, 3rd parameter $options associative array (disabled, title, css style, etc)
 * Updated mod_facetoface_renderer::custom_field_chooser() adding divs to wrap form controls
+* signup::set_bookedby() now accepts null
+* signup::set_managerid() now accepts null
+* signup::set_jobassignmentid() now accepts null
 
 === 13.0 ===
 
