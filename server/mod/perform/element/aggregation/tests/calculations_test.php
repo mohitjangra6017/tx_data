@@ -29,23 +29,21 @@ use performelement_aggregation\calculation_method;
  */
 class performelement_aggregation_calculations_testcase extends advanced_testcase {
     
-    public function test_get_aggregation_calculation_method_classes(): void {
-        self::markTestIncomplete();
-
+    public function test_get_aggregation_calculation_method_classes():void {
         $methods = calculation_method::get_aggregation_calculation_methods();
 
         $expected = [
             'average' => get_string('calculation_label_average', 'performelement_aggregation'),
             'median' => get_string('calculation_label_median', 'performelement_aggregation'),
+            'minimum' => get_string('calculation_label_minimum', 'performelement_aggregation'),
+            'maximum' => get_string('calculation_label_maximum', 'performelement_aggregation'),
         ];
 
         self::assertCount(count($expected), $methods);
         foreach ($expected as $expected_name => $expected_label) {
-            foreach ($methods as $actual_name) {
-                if ($expected_name == $actual_name) {
-                    $instance = calculation_method::load_by_method($actual_name);
-                    self::assertSame($expected_name, $instance::get_name());
-                    self::assertSame($expected_label, $instance::get_label());
+            foreach ($methods as $method) {
+                if ($expected_name == $method->get_name()) {
+                    self::assertSame($expected_label, $method->get_label());
                     unset($expected[$expected_name]);
                 }
             }
@@ -57,27 +55,48 @@ class performelement_aggregation_calculations_testcase extends advanced_testcase
         return [
             'No values' => [
                 'values' => [],
-                'expected' => ['average' => 0],
+                'expected' => [
+                    'average' => 0,
+                    'median' => 0,
+                    'minimum' => 0,
+                    'maximum' => 0,
+                ],
             ],
             'Single non zero value' => [
                 'values' => [123],
-                'expected' => ['average' => 123],
+                'expected' => [
+                    'average' => 123,
+                    'median' => 123,
+                    'minimum' => 123,
+                    'maximum' => 123,
+                ],
             ],
             'Single float value' => [
                 'values' => [12.3],
-                'expected' => ['average' => 12.3],
+                'expected' => [
+                    'average' => 12.3,
+                    'median' => 12.3,
+                    'minimum' => 12.3,
+                    'maximum' => 12.3,
+                ],
             ],
-            'All non zero whole numbers' => [
-                'values' => [1, 2, 3, 4],
-                'expected' => ['average' => 2.5],
+            'Non zero whole numbers' => [
+                'values' => [2, 3, 6, 8],
+                'expected' => [
+                    'average' => 4.75,
+                    'median' => 4.5,
+                    'minimum' => 2,
+                    'maximum' => 8,
+                ],
             ],
             'Whole numbers with a zero value' => [
-                'values' => [1, 0, 2, 0, 3, 4],
-                'expected' => ['average' => 1.67],
-            ],
-            'Mixed types' => [
-                'values' => [12.3, 7, 'abc'],
-                'expected' => ['average' => 6.43],
+                'values' => [1, 0, 2, 0, 3, 4, 5],
+                'expected' => [
+                    'average' => 2.14,
+                    'median' => 2,
+                    'minimum' => 0,
+                    'maximum' => 5,
+                ],
             ],
         ];
     }

@@ -132,6 +132,6 @@ abstract class calculation_method {
      * @param mixed[] @values
      * @return mixed @result
      */
-    abstract public function aggregate(array $values);
+    abstract public function aggregate(array $values): float;
 
 }

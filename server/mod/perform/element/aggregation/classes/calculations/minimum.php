@@ -25,22 +25,23 @@ namespace performelement_aggregation\calculations;
 
 use performelement_aggregation\calculation_method;
 
-class average extends calculation_method {
+class minimum extends calculation_method {
     
     /**
      * @inheritDoc
      */
     public static function get_label(): string {
-        return get_string('calculation_label_average', 'performelement_aggregation');
+        return get_string('calculation_label_minimum', 'performelement_aggregation');
     }
     
     /**
      * @inheritDoc
      */
-    public function aggregate(array $values): float {
+    public function aggregate(array $values): float  {
         if (count($values) === 0) {
             return 0;
         }
-        return array_sum($values) / count($values);
+
+        return min($values);
     }
 }

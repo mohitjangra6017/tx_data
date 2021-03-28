@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Riana Rossouw <riana.rossouw@totaralearning.com>
- * @package aggregationcalculation_average
+ * @package performelement_aggregation
  */
 
 namespace performelement_aggregation\calculations;
@@ -41,7 +41,21 @@ class median extends calculation_method {
         if (count($values) === 0) {
             return 0;
         }
-        return 50;  // TODO proper calculation
+
+        sort($values, SORT_NUMERIC);
+        $count = count($values);
+        $median_pos = floor(($count - 1) / 2);
+
+        if ($count % 2 !== 0) {
+            // Odd count, return the middle index.
+            return $values[$median_pos];
+        }
+
+        // Even, average the middle two indexes.
+        $low = $values[$median_pos];
+        $high = $values[$median_pos + 1];
+
+        return ($low + $high) / 2;
     }
 
 }
