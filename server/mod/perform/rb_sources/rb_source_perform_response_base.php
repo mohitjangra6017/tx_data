@@ -105,13 +105,32 @@ class rb_source_perform_response_base extends rb_base_source {
         $this->sourcewhere = '1 = 1';
 
         $this->usedcomponents[] = 'mod_perform';
+
+        /*
+         *  Base is split into two queries:
+         *    - Responses on sections that a participant has a completed participant_section for (that can be
+         *      both direct and referenced responses).
+         *    - Referenced responses (e.g. aggregation element) on any sections. These only exist when the participant
+         *      has completed the source section, so no need to check that.
+         */
         $this->base = "(
-            SELECT es.*
-            FROM {perform_element_response} es
-            JOIN {perform_section_element} se ON es.section_element_id = se.id
-            JOIN {perform_participant_section} ps
-                ON ps.section_id = se.section_id AND ps.participant_instance_id = es.participant_instance_id
-                    AND ps.progress = ".complete::get_code()."
+            SELECT es.* FROM (
+                SELECT completed_section_responses.*
+                FROM {perform_element_response} completed_section_responses
+                JOIN {perform_section_element} se ON completed_section_responses.section_element_id = se.id
+                JOIN {perform_participant_section} ps
+                    ON ps.section_id = se.section_id
+                        AND ps.participant_instance_id = completed_section_responses.participant_instance_id
+                        AND ps.progress = " . complete::get_code() . "
+
+                UNION
+
+                SELECT reference_responses.*
+                FROM {perform_element_response} reference_responses
+                JOIN {perform_section_element} se_referencing ON reference_responses.section_element_id = se_referencing.id
+                JOIN {perform_section_element_reference} ser ON se_referencing.element_id = ser.referencing_element_id
+            ) es
+
             JOIN {perform_participant_instance} ppi ON es.participant_instance_id = ppi.id
             LEFT JOIN {user} u ON ppi.participant_id = u.id
                 AND ppi.participant_source = " . participant_source::INTERNAL . "

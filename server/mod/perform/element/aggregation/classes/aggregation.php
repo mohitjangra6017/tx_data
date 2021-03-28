@@ -195,13 +195,20 @@ class aggregation extends derived_responses_element_plugin {
 
     public function format_response_lines(?string $encoded_response_data, ?string $encoded_element_data): array {
         $data = $this->decode_response($encoded_response_data, $encoded_element_data);
-
         if (!$data) {
             return [];
         }
+        return self::get_formatted_response_lines($data);
+    }
 
+    /**
+     * @param array $decoded_response_data
+     * @return array
+     */
+    public static function get_formatted_response_lines(array $decoded_response_data): array {
         $formatted = [];
-        foreach ($data as $calculation => $value) {
+
+        foreach ($decoded_response_data as $calculation => $value) {
             if (!calculation_method::is_valid_method_name($calculation)) {
                 continue;
             }
