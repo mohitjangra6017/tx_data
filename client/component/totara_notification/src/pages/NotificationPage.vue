@@ -28,6 +28,7 @@
         :context-id="parseInt(contextId)"
         :show-delivery-preference-option="canChangeDeliveryChannelDefaults"
         class="tui-notificationPage__table"
+        @status-toggle="statusToggle"
         @create-custom-notification="handleCreateCustomNotification"
         @edit-notification="handleEditNotification"
         @delete-notification="confirmDeleteNotification"
@@ -102,6 +103,7 @@ import overrideNotification from 'totara_notification/graphql/override_notificat
 import updateNotification from 'totara_notification/graphql/update_notification_preference';
 import deleteNotification from 'totara_notification/graphql/delete_notification_preference';
 import updateDefaultDeliveryChannels from 'totara_notification/graphql/update_notifiable_event_default_delivery_channels';
+import updateNotificationStatus from 'totara_notification/graphql/toggle_notifiable_event';
 
 const MODAL_STATE_CREATE = 'create';
 const MODAL_STATE_UPDATE = 'update';
@@ -760,6 +762,52 @@ export default {
         },
       });
       this.deliveryPreferenceModal.open = false;
+    },
+
+    async statusToggle({ value, resolver }) {
+      await this.$apollo.mutate({
+        mutation: updateNotificationStatus,
+        variables: {
+          resolver_class_name: resolver.class_name,
+          extended_context: {
+            context_id: this.contextId,
+            component: this.extendedContext.component,
+            area: this.extendedContext.area,
+            item_id: this.extendedContext.itemId,
+          },
+          is_enabled: value,
+        },
+        update: (proxy, { data: { notifiable_event: notifiableEvent } }) => {
+          const { resolvers } = proxy.readQuery({
+            query: getEventResolvers,
+            variables: this.queryVariables,
+          });
+
+          const { notification_preferences: preferences } = resolver;
+
+          proxy.writeQuery({
+            query: getEventResolvers,
+            variables: this.queryVariables,
+            data: {
+              resolvers: resolvers.map(resolver => {
+                if (resolver.class_name === notifiableEvent.class_name) {
+                  resolver = Object.assign({}, resolver);
+
+                  resolver.status = Object.assign({}, resolver.status, {
+                    is_enabled: value,
+                    __typename: resolver.status.__typename,
+                  });
+
+                  resolver.notification_preferences = preferences.map(
+                    preference => preference
+                  );
+                }
+                return resolver;
+              }),
+            },
+          });
+        },
+      });
     },
   },
 };

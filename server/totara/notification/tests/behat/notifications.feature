@@ -110,3 +110,14 @@ Feature: Notifications page
     And I click on "Show admin menu window" "button"
     When I click on "Notifications" "link" in the "#quickaccess-popover-content" "css_element"
     Then I should see "Notifications"
+
+  Scenario: Admin is able to update notification status
+    Given I log in as "admin"
+    When I navigate to system notifications page
+    And I click on "Totara comment" "button"
+    Then ".tui-toggleSwitch__btn[aria-pressed='true'][aria-label='New comment created notification status']" "css_element" should exist
+    When I click on the "New comment created notification status" tui toggle button
+    And I navigate to system notifications page
+    And I click on "Totara comment" "button"
+    Then ".tui-toggleSwitch__btn[aria-label='New comment created notification status']" "css_element" should exist
+    And ".tui-toggleSwitch__btn[aria-pressed='true'][aria-label='New comment created notification status']" "css_element" should not exist

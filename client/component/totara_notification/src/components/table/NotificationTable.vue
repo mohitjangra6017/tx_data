@@ -74,8 +74,14 @@
               }}
             </Cell>
             <Cell align="start" size="2">
-              <!-- Toggle Switch goes here !!! -->
-              {{ $str('enabled', 'totara_notification') }}
+              <ToggleSwitch
+                :aria-label="
+                  $str('enable_status', 'totara_notification', resolver.name)
+                "
+                :value="resolver.status.is_enabled"
+                :toggle-only="true"
+                @input="onStatusToggle($event, resolver)"
+              />
             </Cell>
             <Cell align="end" size="1">
               <NotifiableEventAction
@@ -143,7 +149,12 @@
                 </Cell>
 
                 <Cell align="start" size="2">
-                  {{ $str('enabled', 'totara_notification') }}
+                  <template v-if="notificationPreference.enabled">
+                    {{ $str('enabled', 'totara_notification') }}
+                  </template>
+                  <template v-if="!notificationPreference.enabled">
+                    {{ $str('disabled', 'totara_notification') }}
+                  </template>
                 </Cell>
 
                 <Cell align="end" size="1">
@@ -185,6 +196,7 @@ import HeaderCell from 'tui/components/datatable/HeaderCell';
 import Table from 'tui/components/datatable/Table';
 import NotificationAction from 'totara_notification/components/action/NotificationAction';
 import NotifiableEventAction from 'totara_notification/components/action/NotifiableEventAction';
+import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
 
 export default {
   components: {
@@ -196,6 +208,7 @@ export default {
     Table,
     NotificationAction,
     NotifiableEventAction,
+    ToggleSwitch,
   },
 
   props: {
@@ -244,6 +257,14 @@ export default {
         .map(({ label }) => label)
         .join('; ');
     },
+
+    onStatusToggle(value, resolver) {
+      const properties = {
+        value: value,
+        resolver: resolver,
+      };
+      this.$emit('status-toggle', properties);
+    },
   },
 };
 </script>
@@ -255,7 +276,9 @@ export default {
     "schedule",
     "delivery_channels",
     "disable",
+    "disabled",
     "enabled",
+    "enable_status",
     "notifications"
   ],
   "core": [
