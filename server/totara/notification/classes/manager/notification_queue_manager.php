@@ -110,9 +110,6 @@ class notification_queue_manager {
 
         // If the preference is currently disabled, do not dispatch anything
         if (!$preference->get_enabled()) {
-            $this->trace->output(
-                "The notification preference record with id '{$queue->notification_preference_id}' is disabled"
-            );
             return;
         }
 

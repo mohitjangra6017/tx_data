@@ -23,6 +23,7 @@
 namespace totara_notification\manager;
 
 use coding_exception;
+use Exception;
 use core\orm\query\builder;
 use null_progress_trace;
 use progress_trace;
@@ -52,75 +53,51 @@ class event_queue_manager {
     public function process_queues(): void {
         $repository = notifiable_event_queue::repository();
         $all_queues = $repository->get_lazy();
-        try {
-            $transaction = builder::get_db()->start_delegated_transaction();
 
-            /** @var notifiable_event_queue $queue */
-            foreach ($all_queues as $queue) {
-                if (!$this->is_valid_queue($queue)) {
-                    $this->trace->output(
-                        "Cannot process the event queue at id: '{$queue->id}'"
-                    );
-
-                    // Skip this queue, note that we are not deleting it, because it might
-                    // be helpful for debugging why it cannot be processed.
-                    continue;
-                }
-
-                $resolver_class_name = $queue->resolver_class_name;
-                $extended_context = $queue->get_extended_context();
-
-                // Skip if this resolver is disabled here, or anywhere in a parent context
-                if (!helper::is_resolver_enabled_for_all_parent_contexts($resolver_class_name, $extended_context)) {
-                    continue;
-                }
-
-                $preferences = notification_preference_loader::get_notification_preferences(
-                    $queue->get_extended_context(),
-                    $queue->resolver_class_name
-                );
-
-                foreach ($preferences as $preference) {
-                    if (!$preference->is_on_event()) {
-                        // Skip those notification preference that are not set for on event.
-                        continue;
+        /** @var notifiable_event_queue $queue */
+        foreach ($all_queues as $queue) {
+            try {
+                builder::get_db()->transaction(function () use ($queue) {
+                    if (!resolver_helper::is_valid_event_resolver($queue->resolver_class_name)) {
+                        throw new coding_exception(
+                            "The resolver class name is not a notifiable event resolver: '{$queue->resolver_class_name}'"
+                        );
                     }
 
-                    notification_queue_helper::create_queue_from_preference(
-                        $preference,
-                        $queue->get_decoded_event_data(),
-                        $queue->time_created
-                    );
-                }
+                    $resolver_class_name = $queue->resolver_class_name;
+                    $extended_context = $queue->get_extended_context();
 
-                $queue->delete();
+                    // process only enabled queues
+                    if (helper::is_resolver_enabled_for_all_parent_contexts($resolver_class_name, $extended_context)) {
+                        $preferences = notification_preference_loader::get_notification_preferences(
+                            $queue->get_extended_context(),
+                            $queue->resolver_class_name
+                        );
+
+                        foreach ($preferences as $preference) {
+                            if (!$preference->is_on_event()) {
+                                // Skip those notification preference that are not set for on event.
+                                continue;
+                            }
+
+                            notification_queue_helper::create_queue_from_preference(
+                                $preference,
+                                $queue->get_decoded_event_data(),
+                                $queue->time_created
+                            );
+                        }
+                    }
+
+                    // delete both disabled and processed queues
+                    $queue->delete();
+                });
+            } catch (Exception $exception) {
+                $this->trace->output(
+                    "Cannot send notification event queue record with id '{$queue->id}'"
+                );
             }
-
-            $transaction->allow_commit();
-        } finally {
-            $all_queues->close();
-        }
-    }
-
-    /**
-     * @param notifiable_event_queue $queue
-     * @return bool
-     */
-    private function is_valid_queue(notifiable_event_queue $queue): bool {
-        if (!resolver_helper::is_valid_event_resolver($queue->resolver_class_name)) {
-            $this->trace->output("The resolver class name is not a notifiable event resolver: '{$queue->resolver_class_name}'");
-            return false;
         }
 
-        try {
-            // Check that the event data is a valid json data.
-            $queue->get_decoded_event_data();
-        } catch (coding_exception $e) {
-            $this->trace->output($e->getMessage());
-            return false;
-        }
-
-        // All's well, ends well
-        return true;
+        $all_queues->close();
     }
 }

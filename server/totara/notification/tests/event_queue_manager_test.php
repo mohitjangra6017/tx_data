@@ -82,27 +82,73 @@ class totara_notification_event_queue_manager_testcase extends testcase {
         $manager = new event_queue_manager($trace);
         $manager->process_queues();
 
-        // One is invalid record, which should be skipped to process.
-        self::assertEquals(1, $DB->count_records(notifiable_event_queue::TABLE));
-
         // There should be one notification queue up, as one of the notifiable event
         // is a legitimate one.
         self::assertEquals(1, $DB->count_records(notification_queue::TABLE));
 
         $error_messages = $trace->get_messages();
         self::assertNotEmpty($error_messages);
-        self::assertCount(2, $error_messages);
+        self::assertCount(1, $error_messages);
 
-        $first_message = reset($error_messages);
+        $message = reset($error_messages);
+
         self::assertEquals(
-            "The resolver class name is not a notifiable event resolver: 'anima_martin_garrix'",
-            $first_message
+            "Cannot send notification event queue record with id '{$invalid_queue->id}'",
+            $message
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_process_queues_with_valid_and_disabled_items(): void {
+        global $DB;
+
+        $generator = self::getDataGenerator();
+        $user_one = $generator->create_user();
+        $notification_generator = generator::instance();
+
+        $context_user = context_user::instance($user_one->id);
+
+        // Create a valid queue.
+        $valid_queue = new notifiable_event_queue();
+        $valid_queue->set_extended_context(extended_context::make_with_context($context_user));
+        $valid_queue->set_decoded_event_data(
+            ['message' => 'data', 'expected_context_id' => $context_user->id,]
+        );
+        $valid_queue->resolver_class_name = totara_notification_mock_notifiable_event_resolver::class;
+        $valid_queue->save();
+
+        // Create an disabled queue.
+        $queue_disabled_resolver = new notifiable_event_queue();
+        $queue_disabled_resolver->set_extended_context(extended_context::make_with_context($context_user));
+        $queue_disabled_resolver->set_decoded_event_data(
+            ['message' => 'data', 'expected_context_id' => $context_user->id,]
+        );
+        $queue_disabled_resolver->resolver_class_name = totara_notification_mock_notifiable_event_resolver::class;
+        $queue_disabled_resolver->save();
+
+        //disabled the resolver
+        $notification_generator->create_notification_preference(
+            totara_notification_mock_notifiable_event_resolver::class,
+            extended_context::make_system(),
+            ['recipient' => totara_notification_mock_recipient::class, 'enabled' => false,]
         );
 
-        $second_message = end($error_messages);
-        self::assertEquals(
-            "Cannot process the event queue at id: '{$invalid_queue->id}'",
-            $second_message
-        );
+        // There should be two queues within database.
+        self::assertEquals(2, $DB->count_records(notifiable_event_queue::TABLE));
+        self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
+
+        $trace = $notification_generator->get_test_progress_trace();
+
+        // Process the queue.
+        $manager = new event_queue_manager($trace);
+        $manager->process_queues();
+
+        // check empty records in event queue
+        self::assertEquals(0, $DB->count_records(notifiable_event_queue::TABLE));
+
+        $error_messages = $trace->get_messages();
+        self::assertEmpty($error_messages);
     }
 }

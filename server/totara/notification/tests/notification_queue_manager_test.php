@@ -283,17 +283,5 @@ class totara_notification_notification_queue_manager_testcase extends testcase {
             totara_notification_mock_built_in_notification::get_default_subject()->out(),
             $first_notification->subject
         );
-
-
-        // There should be only one error message for fail record
-        $error_messages = $trace->get_messages();
-        self::assertNotEmpty($error_messages);
-        self::assertCount(1, $error_messages);
-
-        $first_message = reset($error_messages);
-        self::assertEquals(
-            "The notification preference record with id '{$invalid_queue->notification_preference_id}' is disabled",
-            $first_message
-        );
     }
 }

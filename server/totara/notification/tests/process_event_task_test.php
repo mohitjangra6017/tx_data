@@ -163,23 +163,15 @@ class totara_notification_process_event_task_testcase extends testcase {
         $task->set_trace($trace);
         $task->execute();
 
-        // The event queue will be skipped to process, because it contain invalid record.
-        self::assertEquals(1, $DB->count_records(notifiable_event_queue::TABLE));
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
 
         $messages = $trace->get_messages();
-        self::assertCount(2, $messages);
+        self::assertCount(1, $messages);
 
-        $first_message = reset($messages);
+        $message = reset($messages);
         self::assertEquals(
-            "The resolver class name is not a notifiable event resolver: 'martin_garrix_anima_resolver'",
-            $first_message
-        );
-
-        $second_message = end($messages);
-        self::assertEquals(
-            "Cannot process the event queue at id: '{$event_queue->id}'",
-            $second_message
+            "Cannot send notification event queue record with id '{$event_queue->id}'",
+            $message
         );
     }
 }
