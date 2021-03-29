@@ -51,12 +51,10 @@ class multilang_helper {
      * Return a language string if the specified evidence type name contains one, or otherwise just return the name.
      *
      * @param string $type_name
-     * @param bool $raw Return the string without formatting. (true = without formatting, false = with formatting)
-     *
      * @return string
      */
-    public static function parse_type_name_string(string $type_name, bool $raw = false): string {
-        return self::parse_string($type_name, 'system_type_name:', $raw);
+    public static function parse_type_name_string(string $type_name): string {
+        return self::parse_string($type_name, 'system_type_name:');
     }
 
     /**
