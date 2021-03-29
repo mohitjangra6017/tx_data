@@ -20,8 +20,10 @@
  * @author Jaron Steenson <jaron.steenson@totaralearning.com>
  */
 
+use mod_perform\entity\activity\section as section_entity;
 use mod_perform\models\activity\activity;
 use mod_perform\models\activity\element;
+use mod_perform\models\activity\helpers\section_element_manager;
 use mod_perform\models\activity\section;
 use mod_perform\models\activity\section_element;
 use mod_perform\entity\activity\section_element as section_element_entity;
@@ -110,16 +112,14 @@ class performelement_aggregation_aggregation_data_testcase extends advanced_test
             true
         );
 
-        $source_section_element_1 = $section_1->add_element($numeric_rating_scale_1);
-        $source_section_element_2 = $section_1->add_element($numeric_rating_scale_2);
+        /** @var section_entity $section1_entity */
+        $section1_entity = section_entity::repository()->find($section_1->get_id());
+        $section_element_manager = new section_element_manager($section1_entity);
+        $source_section_element_1 = $section_element_manager->add_element_after($numeric_rating_scale_1);
+        $source_section_element_2 = $section_element_manager->add_element_after($numeric_rating_scale_2, $numeric_rating_scale_1->get_id());
 
         $aggregation_element = $this->get_aggregation_element([$source_section_element_1->id, $source_section_element_2->id], 'Performance analysis');
-
-        element::post_create($aggregation_element);
-
-        $aggregation_section_element = $section_1->add_element(
-            $aggregation_element
-        );
+        $aggregation_section_element = $section_element_manager->add_element_after($aggregation_element, $numeric_rating_scale_2->get_id());
 
         $this->aggregation_section_element = $aggregation_section_element;
         $this->source_section_elements = [$source_section_element_1, $source_section_element_2];

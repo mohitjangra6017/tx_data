@@ -37,6 +37,7 @@
 
     <ElementParticipantFormContent
       v-bind="$attrs"
+      :participant-can-answer="sectionElement.can_respond"
       :element="element"
       :section-element="sectionElement"
       :from-print="false"
@@ -46,7 +47,6 @@
         <ElementParticipantResponse>
           <template v-slot:content>
             <ResponseDisplay
-              v-if="sectionElement.can_respond && participantInstanceId"
               :element="element"
               :data="sectionElement.response_data_formatted_lines"
             />

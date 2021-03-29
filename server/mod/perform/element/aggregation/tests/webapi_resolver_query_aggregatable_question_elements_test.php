@@ -20,8 +20,10 @@
  * @author Matthias Bonk <matthias.bonk@totaralearning.com>
  */
 
+use mod_perform\entity\activity\section as section_entity;
 use core\collection;
 use mod_perform\models\activity\element;
+use mod_perform\models\activity\helpers\section_element_manager;
 use mod_perform\models\activity\section;
 use mod_perform\models\activity\section_element;
 use totara_webapi\phpunit\webapi_phpunit_helper;
@@ -76,10 +78,21 @@ class performelement_aggregation_webapi_resolver_query_aggregatable_question_ele
             '{"defaultValue":"3","highValue":"5","lowValue":"1"}'
         );
 
-        $section_1->add_element($short_text_element);
-        $expected_section_element_1 = $section_1->add_element($custom_rating_element);
-        $expected_section_element_2 = $section_2->add_element($numeric_rating_element);
-        $section_3->add_element($long_text_element);
+        /** @var section_entity $section1_entity */
+        $section1_entity = section_entity::repository()->find($section_1->get_id());
+        $section1_element_manager = new section_element_manager($section1_entity);
+        $section1_element_manager->add_element_after($short_text_element);
+        $expected_section_element_1 = $section1_element_manager->add_element_after($custom_rating_element, $short_text_element->get_id());
+
+        /** @var section_entity $section2_entity */
+        $section2_entity = section_entity::repository()->find($section_2->get_id());
+        $section2_element_manager = new section_element_manager($section2_entity);
+        $expected_section_element_2 = $section2_element_manager->add_element_after($numeric_rating_element);
+
+        /** @var section_entity $section3_entity */
+        $section3_entity = section_entity::repository()->find($section_3->get_id());
+        $section3_element_manager = new section_element_manager($section3_entity);
+        $section3_element_manager->add_element_after($long_text_element);
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [

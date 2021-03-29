@@ -22,10 +22,11 @@
 
 use mod_perform\models\activity\activity;
 use mod_perform\models\activity\element;
+use mod_perform\models\activity\helpers\section_element_manager;
 use mod_perform\models\activity\section;
 use mod_perform\models\activity\section_element;
 use mod_perform\entity\activity\section_element as section_element_entity;
-use mod_perform\models\activity\section_element_reference;
+use mod_perform\entity\activity\section as section_entity;
 use mod_perform\state\activity\draft;
 use performelement_redisplay\redisplay;
 
@@ -124,14 +125,16 @@ class performelement_redisplay_redisplay_data_testcase extends advanced_testcase
             'Projected performance',
             'A2 Element'
         );
-        $section_element_1 = $section_1->add_element($short_text_element_1);
+
+        /** @var section_entity $section1_entity */
+        $section1_entity = section_entity::repository()->find($section_1->get_id());
+        $section1_element_manager = new section_element_manager($section1_entity);
+        $section_element_1 = $section1_element_manager->add_element_after($short_text_element_1);
 
         $redisplay_element = $this->get_redisplay_element($section_element_1->id, 'Performance analysis');
 
-        element::post_create($redisplay_element);
-
-        $redisplay_section_element = $section_1->add_element(
-            $redisplay_element
+        $redisplay_section_element = $section1_element_manager->add_element_after(
+            $redisplay_element, $short_text_element_1->get_id()
         );
 
         return [
