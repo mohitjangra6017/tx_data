@@ -133,7 +133,7 @@ class notification_queue_manager {
         $message_processors = $this->filter_message_processors_by_delivery_channel(
             $resolver,
             $message_processors,
-            $preference->get_locked_delivery_channels()
+            $preference->get_forced_delivery_channels()
         );
 
         if (empty($message_processors)) {
@@ -258,13 +258,13 @@ class notification_queue_manager {
      *
      * @param notifiable_event_resolver $resolver
      * @param array                     $message_processors
-     * @param array                     $locked_delivery_channels
+     * @param array                     $forced_delivery_channels
      * @return array
      */
     private function filter_message_processors_by_delivery_channel(
         notifiable_event_resolver $resolver,
         array $message_processors,
-        array $locked_delivery_channels = []
+        array $forced_delivery_channels = []
     ): array {
         $extended_context = extended_context::make_system();
         $event_preference = $resolver->get_notifiable_event_preference($extended_context);
@@ -273,7 +273,7 @@ class notification_queue_manager {
         $delivery_channels = $event_preference ? $event_preference->default_delivery_channels :
             delivery_channel_loader::get_for_event_resolver(get_class($resolver));
 
-        foreach ($locked_delivery_channels as $channel_name) {
+        foreach ($forced_delivery_channels as $channel_name) {
             if (!isset($delivery_channels[$channel_name])) {
                 debugging("Invalid channel '{$channel_name}' that is not found in delivery channels", DEBUG_DEVELOPER);
                 continue;

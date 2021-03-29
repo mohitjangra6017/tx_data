@@ -133,7 +133,7 @@ final class generator extends component_generator {
      * + recipient: String
      * + schedule_offset: Int
      * + enabled: Boolean
-     * + locked_delivery_channels: String[]
+     * + forced_delivery_channels: String[]
      *
      * @param array                 $data
      * @param extended_context|null $extended_context
@@ -183,7 +183,7 @@ final class generator extends component_generator {
             $data['schedule_offset'] = $data['schedule_offset'] ?? 0;
             $data['enabled'] = $data['enabled'] ?? true;
             $data['recipient'] = $data['recipient'] ?? totara_notification_mock_recipient::class;
-            $data['locked_delivery_channels'] = $data['locked_delivery_channels'] ?? [];
+            $data['forced_delivery_channels'] = $data['forced_delivery_channels'] ?? [];
         }
 
         if (isset($data['body']) && isset($data['body_format'])) {
@@ -218,7 +218,7 @@ final class generator extends component_generator {
         $builder->set_schedule_offset($data['schedule_offset'] ?? null);
         $builder->set_recipient($data['recipient'] ?? null);
         $builder->set_enabled($data['enabled'] ?? null);
-        $builder->set_locked_delivery_channels($data['locked_delivery_channels'] ?? null);
+        $builder->set_forced_delivery_channels($data['forced_delivery_channels'] ?? null);
 
         return $builder->save();
     }
@@ -257,7 +257,7 @@ final class generator extends component_generator {
             'subject_format' => $overridden_data['subject_format'] ?? null,
             'recipient' => $overridden_data['recipient'] ?? null,
             'enabled' => $overridden_data['enabled'] ?? null,
-            'locked_delivery_channels' => $overridden_data['locked_delivery_channels'] ?? null
+            'forced_delivery_channels' => $overridden_data['forced_delivery_channels'] ?? null
         ];
 
         if (!$preference->has_parent()) {

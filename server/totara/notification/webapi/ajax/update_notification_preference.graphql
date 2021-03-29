@@ -11,7 +11,7 @@ mutation totara_notification_update_notification_preference(
   $enabled: param_boolean
   # Note: if null is provided, it will either fallback to whatever the configuration from the parent.
   #       Or set to none channels are forced, and use user's preferences (if the notification preference is a custom at context).
-  $locked_delivery_channels: [param_text!]
+  $forced_delivery_channels: [param_text!]
 ) {
   notification_preference: totara_notification_update_notification_preference(
     id: $id
@@ -24,7 +24,7 @@ mutation totara_notification_update_notification_preference(
     subject_format: $subject_format
     recipient: $recipient
     enabled: $enabled
-    locked_delivery_channels: $locked_delivery_channels
+    forced_delivery_channels: $forced_delivery_channels
   ) {
     __typename
     title
@@ -51,8 +51,8 @@ mutation totara_notification_update_notification_preference(
     overridden_schedule
     enabled
     overridden_enabled
-    overridden_locked_delivery_channels
-    locked_delivery_channels
+    overridden_forced_delivery_channels
+    forced_delivery_channels
     recipient {
       class_name
       name
@@ -73,7 +73,7 @@ mutation totara_notification_update_notification_preference(
       schedule_type
       subject_format
       enabled
-      locked_delivery_channels
+      forced_delivery_channels
       recipient {
         class_name
         name

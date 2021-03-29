@@ -78,12 +78,12 @@ abstract class built_in_notification {
 
     /**
      * Returns the list of delivery channels by its component.
-     * By default nothing is locked. Extends this function at lower
-     * child class to have its own locked delivery channels.
+     * By default nothing is forced. Extends this function at lower
+     * child class to have its own forced delivery channels.
      *
      * @return string[]
      */
-    public static function get_default_locked_delivery_channels(): array {
+    public static function get_default_forced_delivery_channels(): array {
         return [];
     }
 

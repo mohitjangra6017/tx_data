@@ -56,8 +56,8 @@ class notification_preference_formatter extends formatter {
         $record->recipient = $notification_preference->get_recipient();
         $record->enabled = $notification_preference->get_enabled();
         $record->overridden_enabled = $notification_preference->is_overridden_enabled();
-        $record->locked_delivery_channels = $notification_preference->get_locked_delivery_channels();
-        $record->overridden_locked_delivery_channels = $notification_preference->is_overridden_locked_delivery_channels();
+        $record->forced_delivery_channels = $notification_preference->get_forced_delivery_channels();
+        $record->overridden_forced_delivery_channels = $notification_preference->is_overridden_forced_delivery_channels();
 
         parent::__construct($record, $context);
     }
@@ -168,8 +168,8 @@ class notification_preference_formatter extends formatter {
             'overridden_subject' => null,
             'overridden_schedule' => null,
             'overridden_recipient' => null,
-            'overridden_locked_delivery_channels' => null,
-            'locked_delivery_channels' => null,
+            'overridden_forced_delivery_channels' => null,
+            'forced_delivery_channels' => null,
             'ancestor_id' => null,
             'resolver_class_name' => null,
             'is_custom' => null,

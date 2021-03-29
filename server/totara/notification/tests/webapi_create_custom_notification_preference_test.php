@@ -65,7 +65,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'schedule_offset' => 5,
                 'recipient' => totara_notification_mock_recipient::class,
                 'enabled' => true,
-                'locked_delivery_channels' => [],
+                'forced_delivery_channels' => [],
             ]
         );
 
@@ -150,7 +150,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'schedule_offset' => 10,
                 'recipient' => totara_notification_mock_recipient::class,
                 'enabled' => true,
-                'locked_delivery_channels' => [],
+                'forced_delivery_channels' => [],
             ]
         );
 
@@ -228,7 +228,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'schedule_offset' => 6,
                 'recipient' => totara_notification_mock_recipient::class,
                 'enabled' => true,
-                'locked_delivery_channels' => []
+                'forced_delivery_channels' => []
             ]
         );
 
@@ -269,7 +269,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'schedule_offset' => 6,
                 'recipient' => totara_notification_mock_recipient::class,
                 'enabled' => true,
-                'locked_delivery_channels' => [],
+                'forced_delivery_channels' => [],
             ]
         );
 
@@ -349,7 +349,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'schedule_offset' => 2,
                 'recipient' => totara_notification_mock_recipient::class,
                 'enabled' => true,
-                'locked_delivery_channels' => [],
+                'forced_delivery_channels' => [],
             ]
         );
 
@@ -386,7 +386,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'schedule_offset' => 2,
                 'recipient' => totara_notification_mock_recipient::class,
                 'enabled' => true,
-                'locked_delivery_channels' => [],
+                'forced_delivery_channels' => [],
             ]
         );
 
@@ -423,7 +423,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'schedule_offset' => 2,
                 'recipient' => totara_notification_mock_recipient::class,
                 'enabled' => true,
-                'locked_delivery_channels' => [],
+                'forced_delivery_channels' => [],
             ]
         );
 
@@ -461,7 +461,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'schedule_offset' => 2,
                 'recipient' => totara_notification_mock_recipient::class,
                 'enabled' => true,
-                'locked_delivery_channels' => [],
+                'forced_delivery_channels' => [],
             ]
         );
 
@@ -502,7 +502,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'schedule_offset' => 2,
                 'recipient' => totara_notification_mock_recipient::class,
                 'enabled' => true,
-                'locked_delivery_channels' => [],
+                'forced_delivery_channels' => [],
             ]
         );
 
@@ -551,7 +551,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'extended_context_component' => 'totara_notification',
                 'extended_context_item_id' => 1,
                 'enabled' => true,
-                'locked_delivery_channels' => [],
+                'forced_delivery_channels' => [],
             ]
         );
 

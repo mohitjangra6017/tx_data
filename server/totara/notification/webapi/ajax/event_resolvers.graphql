@@ -39,8 +39,8 @@ query totara_notification_event_resolvers(
       overridden_schedule
       enabled
       overridden_enabled
-      overridden_locked_delivery_channels
-      locked_delivery_channels
+      overridden_forced_delivery_channels
+      forced_delivery_channels
       recipient {
         class_name
         name
@@ -61,7 +61,7 @@ query totara_notification_event_resolvers(
         schedule_type
         subject_format
         enabled
-        locked_delivery_channels
+        forced_delivery_channels
         recipient {
           class_name
           name

@@ -451,5 +451,17 @@ function xmldb_totara_notification_upgrade($old_version) {
         upgrade_plugin_savepoint(true, 2021032600, 'totara', 'notification');
     }
 
+    if ($old_version < 2021033000) {
+        // Rename field locked_delivery_channels on table notification_preference to forced_deliver_channels.
+        $table = new xmldb_table('notification_preference');
+        $field = new xmldb_field('locked_delivery_channels', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'enabled');
+
+        // Launch rename field locked_delivery_channels.
+        $db_manager->rename_field($table, $field, 'forced_delivery_channels');
+
+        // Notification savepoint reached.
+        upgrade_plugin_savepoint(true, 2021033000, 'totara', 'notification');
+    }
+
     return true;
 }

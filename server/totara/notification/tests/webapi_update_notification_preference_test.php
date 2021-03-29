@@ -622,7 +622,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
     /**
      * @return void
      */
-    public function test_update_notification_preference_with_locked_delivery_channels(): void {
+    public function test_update_notification_preference_with_forced_delivery_channels(): void {
         global $DB;
 
         $this->setAdminUser();
@@ -631,14 +631,14 @@ class totara_notification_webapi_update_notification_preference_testcase extends
         $custom_preference = $generator->create_notification_preference(
             mock_resolver::class,
             extended_context::make_system(),
-            ['locked_delivery_channels' => ['email', 'popup']]
+            ['forced_delivery_channels' => ['email', 'popup']]
         );
 
         self::assertEquals(
             "[\"email\",\"popup\"]",
             $DB->get_field(
                 entity::TABLE,
-                'locked_delivery_channels',
+                'forced_delivery_channels',
                 ['id' => $custom_preference->get_id()]
             )
         );
@@ -647,30 +647,30 @@ class totara_notification_webapi_update_notification_preference_testcase extends
             $this->get_graphql_name(update_notification_preference::class),
             [
                 'id' => $custom_preference->get_id(),
-                'locked_delivery_channels' => ['totara_task', 'totara_alert'],
+                'forced_delivery_channels' => ['totara_task', 'totara_alert'],
             ]
         );
 
-        $locked_delivery_channels_field = $DB->get_field(
+        $forced_delivery_channels_field = $DB->get_field(
             entity::TABLE,
-            'locked_delivery_channels',
+            'forced_delivery_channels',
             ['id' => $custom_preference->get_id()]
         );
 
-        self::assertNotEquals("[\"email\",\"popup\"]", $locked_delivery_channels_field);
-        self::assertEquals("[\"totara_task\",\"totara_alert\"]", $locked_delivery_channels_field);
+        self::assertNotEquals("[\"email\",\"popup\"]", $forced_delivery_channels_field);
+        self::assertEquals("[\"totara_task\",\"totara_alert\"]", $forced_delivery_channels_field);
 
         $custom_preference->refresh();
         self::assertEquals(
             ['totara_task', 'totara_alert'],
-            $custom_preference->get_locked_delivery_channels()
+            $custom_preference->get_forced_delivery_channels()
         );
     }
 
     /**
      * @return void
      */
-    public function test_update_notification_preference_with_invalid_locked_delivery_channels(): void {
+    public function test_update_notification_preference_with_invalid_forced_delivery_channels(): void {
         $this->setAdminUser();
         $generator = generator::instance();
 
@@ -684,7 +684,7 @@ class totara_notification_webapi_update_notification_preference_testcase extends
                 $this->get_graphql_name(update_notification_preference::class),
                 [
                     'id' => $custom_preference->get_id(),
-                    'locked_delivery_channels' => ['email', 'giac', 'mo', 'hom', 'qua'],
+                    'forced_delivery_channels' => ['email', 'giac', 'mo', 'hom', 'qua'],
                 ]
             );
 
@@ -701,23 +701,23 @@ class totara_notification_webapi_update_notification_preference_testcase extends
     /**
      * @return void
      */
-    public function test_update_notification_preference_with_valid_locked_delivery_channels_for_built_in(): void {
+    public function test_update_notification_preference_with_valid_forced_delivery_channels_for_built_in(): void {
         $generator = generator::instance();
         $built_in = $generator->add_mock_built_in_notification_for_component();
 
         $this->setAdminUser();
-        self::assertEquals([], $built_in->get_locked_delivery_channels());
+        self::assertEquals([], $built_in->get_forced_delivery_channels());
 
         $this->resolve_graphql_mutation(
             $this->get_graphql_name(update_notification_preference::class),
             [
                 'id' => $built_in->get_id(),
-                'locked_delivery_channels' => ['email', 'msteams'],
+                'forced_delivery_channels' => ['email', 'msteams'],
             ]
         );
 
         $built_in->refresh();
-        self::assertEquals(['email', 'msteams'], $built_in->get_locked_delivery_channels());
+        self::assertEquals(['email', 'msteams'], $built_in->get_forced_delivery_channels());
     }
 
     /**

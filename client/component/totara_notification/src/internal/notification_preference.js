@@ -27,7 +27,7 @@ export const NOTIFICATION_PREFERENCE_KEYS = [
   'subject_format',
   'recipient',
   'enabled',
-  'locked_delivery_channels',
+  'forced_delivery_channels',
 ];
 
 export const SCHEDULE_TYPES = {
@@ -104,7 +104,7 @@ export function getDefaultNotificationPreference(extraAttributes = {}) {
     schedule_offset: null,
     recipient: null,
     enabled: false,
-    locked_delivery_channels: [],
+    forced_delivery_channels: [],
   };
 
   return () => {

@@ -227,7 +227,7 @@ class notification_preference {
      * + @see built_in_notification::get_default_subject_format()
      * + @see built_in_notification::get_default_schedule_offset()
      * + @see built_in_notification::get_default_enabled()
-     * + @see built_in_notification::get_default_locked_delivery_channels()
+     * + @see built_in_notification::get_default_forced_delivery_channels()
      *
      * @param string $attribute_name
      * @return mixed|null
@@ -252,7 +252,7 @@ class notification_preference {
             'recipient' => 'get_recipient_class_name',
             'body_format' => 'get_default_body_format',
             'enabled' => 'get_default_enabled',
-            'locked_delivery_channels' => 'get_default_locked_delivery_channels',
+            'forced_delivery_channels' => 'get_default_forced_delivery_channels',
         ];
 
         if (!isset($map_methods[$attribute_name])) {
@@ -545,23 +545,23 @@ class notification_preference {
     /**
      * @return string[]
      */
-    public function get_locked_delivery_channels(): array {
-        if (null !== $this->entity->locked_delivery_channels) {
-            return $this->entity->get_decoded_locked_delivery_channels();
+    public function get_forced_delivery_channels(): array {
+        if (null !== $this->entity->forced_delivery_channels) {
+            return $this->entity->get_decoded_forced_delivery_channels();
         }
 
         if ($this->has_parent()) {
-            return $this->parent->get_locked_delivery_channels();
+            return $this->parent->get_forced_delivery_channels();
         }
 
-        return $this->get_property_from_built_in_notification('locked_delivery_channels');
+        return $this->get_property_from_built_in_notification('forced_delivery_channels');
     }
 
     /**
      * @return bool
      */
-    public function is_overridden_locked_delivery_channels(): bool {
-        $channels = $this->entity->locked_delivery_channels;
+    public function is_overridden_forced_delivery_channels(): bool {
+        $channels = $this->entity->forced_delivery_channels;
 
         // We are using null, because empty array means that the notification
         // preference does not want to force any.

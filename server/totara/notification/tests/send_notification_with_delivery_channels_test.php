@@ -48,7 +48,7 @@ class totara_notification_send_notification_with_delivery_channels_testcase exte
     /**
      * @return void
      */
-    public function test_send_notification_with_default_delivery_channels_only_and_no_locked_delivery(): void {
+    public function test_send_notification_with_default_delivery_channels_only_and_no_forced_delivery(): void {
         global $DB;
         $user_one = self::getDataGenerator()->create_user();
 
@@ -59,7 +59,7 @@ class totara_notification_send_notification_with_delivery_channels_testcase exte
         $notification_preference = $generator->create_notification_preference(
             mock_resolver::class,
             $extended_context,
-            ['locked_delivery_channels' => []]
+            ['forced_delivery_channels' => []]
         );
 
         $event_preference = notifiable_event_preference::create(mock_resolver::class, $extended_context);
@@ -118,7 +118,7 @@ class totara_notification_send_notification_with_delivery_channels_testcase exte
     /**
      * @return void
      */
-    public function test_send_notification_with_locked_deliery_channels_override_default(): void {
+    public function test_send_notification_with_forced_deliery_channels_override_default(): void {
         global $DB;
 
         $generator = self::getDataGenerator();
@@ -131,7 +131,7 @@ class totara_notification_send_notification_with_delivery_channels_testcase exte
         $notification_preference = $notification_generator->create_notification_preference(
             mock_resolver::class,
             $extended_context,
-            ['locked_delivery_channels' => ['email', 'popup']]
+            ['forced_delivery_channels' => ['email', 'popup']]
         );
 
         $event_preference = notifiable_event_preference::create(mock_resolver::class, $extended_context);
@@ -191,7 +191,7 @@ class totara_notification_send_notification_with_delivery_channels_testcase exte
     /**
      * @return void
      */
-    public function test_send_notification_with_locked_delivery_channels_and_default_delivery_channels(): void {
+    public function test_send_notification_with_forced_delivery_channels_and_default_delivery_channels(): void {
         global $DB;
 
         $generator = self::getDataGenerator();
@@ -204,7 +204,7 @@ class totara_notification_send_notification_with_delivery_channels_testcase exte
         $notification_preference = $notification_generator->create_notification_preference(
             mock_resolver::class,
             $extended_context,
-            ['locked_delivery_channels' => ['popup']]
+            ['forced_delivery_channels' => ['popup']]
         );
 
         $event_preference = notifiable_event_preference::create(mock_resolver::class, $extended_context);
@@ -264,7 +264,7 @@ class totara_notification_send_notification_with_delivery_channels_testcase exte
     /**
      * @return void
      */
-    public function test_send_notification_with_no_locked_delivery_channels_nor_default_delivery_channels(): void {
+    public function test_send_notification_with_no_forced_delivery_channels_nor_default_delivery_channels(): void {
         global $DB;
 
         $generator = self::getDataGenerator();
@@ -277,7 +277,7 @@ class totara_notification_send_notification_with_delivery_channels_testcase exte
         $notification_generator->create_notification_preference(
             mock_resolver::class,
             $extended_context,
-            ['locked_delivery_channels' => []]
+            ['forced_delivery_channels' => []]
         );
 
         $event_preference = notifiable_event_preference::create(mock_resolver::class, $extended_context);

@@ -197,7 +197,7 @@ class notification_preference_builder {
      * @param string[]|null $delivery_channels  An array of the delivery channel's identifier.
      * @return void
      */
-    public function set_locked_delivery_channels(?array $delivery_channels): void {
+    public function set_forced_delivery_channels(?array $delivery_channels): void {
         if (null !== $delivery_channels) {
             // Start validating the delivery channels class name.
 
@@ -210,7 +210,7 @@ class notification_preference_builder {
             }
         }
 
-        $this->record_data['locked_delivery_channels'] = $delivery_channels;
+        $this->record_data['forced_delivery_channels'] = $delivery_channels;
     }
 
     /**
@@ -375,12 +375,12 @@ class notification_preference_builder {
             }
         }
 
-        if (isset($record_data['locked_delivery_channels'])) {
+        if (isset($record_data['forced_delivery_channels'])) {
             // Attribute 'forced_delivery_channels' is treated differently from the rest attributes.
-            $entity->set_decoded_locked_delivery_channels($record_data['locked_delivery_channels']);
+            $entity->set_decoded_forced_delivery_channels($record_data['forced_delivery_channels']);
 
             // Remove the attribute from the record_data, so that we don't re-set it again.
-            unset($record_data['locked_delivery_channels']);
+            unset($record_data['forced_delivery_channels']);
         }
 
         foreach ($record_data as $k => $v) {

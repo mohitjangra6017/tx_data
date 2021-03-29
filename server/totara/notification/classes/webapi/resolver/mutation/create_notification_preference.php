@@ -174,9 +174,9 @@ class create_notification_preference implements mutation_resolver, has_middlewar
             $overridding_fields[] = 'recipient';
         }
 
-        $builder->set_locked_delivery_channels($args['locked_delivery_channels'] ?? null);
-        if ($overridding && !empty($args['locked_delivery_channels'])) {
-            $overridding_fields[] = 'locked_delivery_channels';
+        $builder->set_forced_delivery_channels($args['forced_delivery_channels'] ?? null);
+        if ($overridding && !empty($args['forced_delivery_channels'])) {
+            $overridding_fields[] = 'forced_delivery_channels';
         }
 
         $preference = $builder->save();
@@ -210,7 +210,7 @@ class create_notification_preference implements mutation_resolver, has_middlewar
             new clean_editor_content('body', 'body_format', false),
             new clean_editor_content('subject', 'subject_format', false),
             new validate_resolver_class_name('resolver_class_name', true),
-            new validate_delivery_channel_components('locked_delivery_channels', false)
+            new validate_delivery_channel_components('forced_delivery_channels', false)
         ];
     }
 }

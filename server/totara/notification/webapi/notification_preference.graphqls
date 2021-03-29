@@ -91,14 +91,14 @@ type totara_notification_notification_preference {
   """
   overridden_enabled: Boolean!
   """
-  The list of delivery channels that are locked for this notification preference.
+  The list of delivery channels that are forced for this notification preference.
   For now we are using identifier of the channel.
   """
-  locked_delivery_channels: [String!]!
+  forced_delivery_channels: [String!]!
   """
-  Whether the field locked_delivery_channels are overridden or not.
+  Whether the field forced_delivery_channels are overridden or not.
   """
-  overridden_locked_delivery_channels: Boolean!
+  overridden_forced_delivery_channels: Boolean!
 }
 
 """
@@ -171,7 +171,7 @@ type totara_notification_notification_preference_value {
   schedule_type: totara_notification_schedule_type!
   recipient: totara_notification_recipient!
   enabled: Boolean
-  locked_delivery_channels: [String!]!
+  forced_delivery_channels: [String!]!
 }
 
 extend type Mutation {
@@ -207,7 +207,7 @@ extend type Mutation {
     """
     An array of delivery channel's identifier names. It is optional to be provided.
     """
-    locked_delivery_channels: [param_text!]
+    forced_delivery_channels: [param_text!]
   ): totara_notification_notification_preference!
 
   """
@@ -229,7 +229,7 @@ extend type Mutation {
     subject_format: param_integer
     recipient: param_text
     enabled: param_boolean
-    locked_delivery_channels: [param_text!]
+    forced_delivery_channels: [param_text!]
   ): totara_notification_notification_preference!
 
   """

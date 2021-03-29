@@ -171,30 +171,30 @@
       <template v-slot="{ id }">
         <Checkbox
           v-if="showCustomCheckBoxes"
-          :value="customisation.lockedDeliveryChannels ? '1' : '0'"
-          name="override_locked_delivery_channels"
-          :checked="customisation.lockedDeliveryChannels"
+          :value="customisation.forcedDeliveryChannels ? '1' : '0'"
+          name="override_forced_delivery_channels"
+          :checked="customisation.forcedDeliveryChannels"
           :aria-label="
             $str(
-              'enable_custom_locked_delivery_Channels',
+              'enable_custom_forced_delivery_channels',
               'totara_notification'
             )
           "
-          @change="customisation.lockedDeliveryChannels = $event"
+          @change="customisation.forcedDeliveryChannels = $event"
         >
           {{ $str('override', 'totara_notification') }}
         </Checkbox>
 
-        <FormField :name="['locked_delivery_channels', 'value']">
+        <FormField :name="['forced_delivery_channels', 'value']">
           <template v-slot="{ value, update }">
-            <LockDeliveryChannels
+            <ForceDeliveryChannels
               :aria-labelledby="id"
               :default-delivery-channels="defaultDeliveryChannels"
-              :locked-delivery-channels="value"
+              :forced-delivery-channels="value"
               :disabled="
-                showCustomCheckBoxes && !customisation.lockedDeliveryChannels
+                showCustomCheckBoxes && !customisation.forcedDeliveryChannels
               "
-              @update-locked-delivery-channels="update"
+              @update-forced-delivery-channels="update"
             />
           </template>
         </FormField>
@@ -369,7 +369,7 @@ import {
   validateAvailableRecipientsProp,
   validateDefaultDeliveryChannelsProp,
 } from '../../internal/notification_preference';
-import LockDeliveryChannels from 'totara_notification/components/form/field/LockDeliveryChannels';
+import ForceDeliveryChannels from 'totara_notification/components/form/field/ForceDeliveryChannels';
 import Checkbox from 'tui/components/form/Checkbox';
 
 // GraphQL queries
@@ -431,11 +431,11 @@ function createFormValues(currentPreference, parentValue) {
 
     // At the initial state, we keep it as empty array and the lower part of this function will
     // populate the value of this field.
-    locked_delivery_channels: {
+    forced_delivery_channels: {
       value:
-        !parentValue || currentPreference.locked_delivery_channels
-          ? currentPreference.locked_delivery_channels
-          : parentValue.locked_delivery_channels || [],
+        !parentValue || currentPreference.forced_delivery_channels
+          ? currentPreference.forced_delivery_channels
+          : parentValue.forced_delivery_channels || [],
       type: 'array',
     },
   };
@@ -502,7 +502,7 @@ export default {
     RadioNumberInput,
     FormRadioWithInput,
     FormSelect,
-    LockDeliveryChannels,
+    ForceDeliveryChannels,
     Checkbox,
   },
 
@@ -562,8 +562,8 @@ export default {
           this.preference.overridden_recipient || Boolean(!this.parentValue),
         enabled:
           this.preference.overridden_enabled || Boolean(!this.parentValue),
-        lockedDeliveryChannels:
-          this.preference.overridden_locked_delivery_channels ||
+        forcedDeliveryChannels:
+          this.preference.overridden_forced_delivery_channels ||
           Boolean(!this.parentValue),
       },
       errors: null,
@@ -697,10 +697,10 @@ export default {
           );
         }
 
-        if (!toggle.lockedDeliveryChannels) {
+        if (!toggle.forcedDeliveryChannels) {
           preferenceForm.update(
-            ['locked_delivery_channels', 'value'],
-            this.parentValue.locked_delivery_channels || []
+            ['forced_delivery_channels', 'value'],
+            this.parentValue.forced_delivery_channels || []
           );
         }
       },
@@ -786,9 +786,9 @@ export default {
           : formValue.schedule_offset[formValue.schedule_type.value],
         recipient: formValue.recipient,
         enabled: !this.customisation.enabled ? null : formValue.enabled.value,
-        locked_delivery_channels: !this.customisation.lockedDeliveryChannels
+        forced_delivery_channels: !this.customisation.forcedDeliveryChannels
           ? null
-          : formValue.locked_delivery_channels.value,
+          : formValue.forced_delivery_channels.value,
       };
 
       this.$emit('submit', parameters);
@@ -871,7 +871,7 @@ export default {
     "enable_custom_status",
     "recipient",
     "delivery_label",
-    "enable_custom_locked_delivery_Channels",
+    "enable_custom_forced_delivery_channels",
     "override"
   ],
   "totara_core": [

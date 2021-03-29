@@ -324,7 +324,7 @@ class totara_notification_process_notification_queue_task_testcase extends testc
      * @covers totara_notification\manager\notification_queue_manager::filter_message_processors_by_delivery_channel
      * @return void
      */
-    public function test_filter_message_processors_without_locked_delivery_channels(): void {
+    public function test_filter_message_processors_without_forced_delivery_channels(): void {
         $generator = generator::instance();
         $generator->include_mock_notifiable_event_resolver();
 

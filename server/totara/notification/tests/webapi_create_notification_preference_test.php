@@ -619,7 +619,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
     /**
      * @return void
      */
-    public function test_create_custom_notification_that_has_locked_delivery_channels(): void {
+    public function test_create_custom_notification_that_has_forced_delivery_channels(): void {
         $this->setAdminUser();
 
         /** @var model $custom_preference */
@@ -635,7 +635,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'body_format' => FORMAT_PLAIN,
                 'subject_format' => FORMAT_PLAIN,
                 'recipient' => mock_recipient::class,
-                'locked_delivery_channels' => ['email', 'popup'],
+                'forced_delivery_channels' => ['email', 'popup'],
                 'title' => 'Custom title',
                 'schedule_offset' => 5,
                 'schedule_type' => schedule_before_event::identifier(),
@@ -645,14 +645,14 @@ class totara_notification_webapi_create_notification_preference_testcase extends
 
         self::assertEquals(
             ['email', 'popup'],
-            $custom_preference->get_locked_delivery_channels()
+            $custom_preference->get_forced_delivery_channels()
         );
     }
 
     /**
      * @return void
      */
-    public function test_create_custom_notification_that_has_invalid_locked_delivery_channels(): void {
+    public function test_create_custom_notification_that_has_invalid_forced_delivery_channels(): void {
         $this->setAdminUser();
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("The channel 'alan' is not a valid delivery channel");
@@ -669,7 +669,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'body_format' => FORMAT_PLAIN,
                 'subject_format' => FORMAT_PLAIN,
                 'recipient' => mock_recipient::class,
-                'locked_delivery_channels' => ['alan'],
+                'forced_delivery_channels' => ['alan'],
                 'title' => 'Custom title',
                 'schedule_offset' => 5,
                 'schedule_type' => schedule_before_event::identifier(),
@@ -745,7 +745,7 @@ class totara_notification_webapi_create_notification_preference_testcase extends
                 'body_format' => FORMAT_PLAIN,
                 'subject_format' => FORMAT_PLAIN,
                 'recipient' => mock_recipient::class,
-                'locked_delivery_channels' => ['email'],
+                'forced_delivery_channels' => ['email'],
                 'title' => 'Custom title',
                 'schedule_offset' => 5,
                 'schedule_type' => schedule_before_event::identifier(),

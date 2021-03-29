@@ -46,7 +46,7 @@ use totara_notification\repository\notification_preference_repository;
  * @property int         $time_created
  * @property int         $schedule_offset
  * @property bool|null   $enabled
- * @property string|null $locked_delivery_channels
+ * @property string|null $forced_delivery_channels
  *
  * @method static notification_preference_repository repository()
  */
@@ -99,22 +99,22 @@ class notification_preference extends entity {
      * @param string[] $channels
      * @return void
      */
-    public function set_decoded_locked_delivery_channels(array $channels): void {
+    public function set_decoded_forced_delivery_channels(array $channels): void {
         $json_string = json_encode($channels, JSON_THROW_ON_ERROR);
-        $this->set_attribute_raw('locked_delivery_channels', $json_string);
+        $this->set_attribute_raw('forced_delivery_channels', $json_string);
     }
 
     /**
      * Return encoded json string of array of channel's identifier names .
      * @return string[]
      */
-    public function get_decoded_locked_delivery_channels(): array {
-        if (empty($this->locked_delivery_channels)) {
+    public function get_decoded_forced_delivery_channels(): array {
+        if (empty($this->forced_delivery_channels)) {
             return [];
         }
 
         return json_decode(
-            $this->locked_delivery_channels,
+            $this->forced_delivery_channels,
             true,
             512,
             JSON_THROW_ON_ERROR

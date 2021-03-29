@@ -16,7 +16,7 @@
   @module totara_notification
 -->
 <template>
-  <Table :data="defaultDeliveryChannels" class="tui-lockDeliveryChannels">
+  <Table :data="defaultDeliveryChannels" class="tui-forceDeliveryChannels">
     <template v-slot:header-row>
       <HeaderCell>
         {{ $str('delivery_channel', 'totara_notification') }}
@@ -25,12 +25,12 @@
         {{ $str('default', 'core') }}
       </HeaderCell>
       <HeaderCell align="center">
-        <div class="tui-lockDeliveryChannels__lockedHeader">
-          {{ $str('locked', 'totara_notification') }}
+        <div class="tui-forceDeliveryChannels__forcedHeader">
+          {{ $str('forced', 'totara_notification') }}
           <InfoIconButton
-            :aria-label="$str('locked_info', 'totara_notification')"
+            :aria-label="$str('forced_info', 'totara_notification')"
           >
-            {{ $str('locked_delivery_help', 'totara_notification') }}
+            {{ $str('forced_delivery_help', 'totara_notification') }}
           </InfoIconButton>
         </div>
       </HeaderCell>
@@ -61,10 +61,10 @@
         >
           <Checkbox
             :value="component"
-            :checked="isLocked({ component })"
-            :aria-label="$str('lock_channel_x', 'totara_notification', label)"
+            :checked="isForced({ component })"
+            :aria-label="$str('force_channel_x', 'totara_notification', label)"
             :disabled="disabled"
-            :name="`lock_${component}`"
+            :name="`force_${component}`"
             @change="updateForceDeliveryChannels(component, $event)"
           />
         </template>
@@ -112,7 +112,7 @@ export default {
      * An list of string component names of which delivery channels are enabled.
      * @var {String[]}
      */
-    lockedDeliveryChannels: {
+    forcedDeliveryChannels: {
       type: Array,
       default() {
         return [];
@@ -131,9 +131,9 @@ export default {
      * @param {String} component
      * @return {Boolean}
      */
-    isLocked({ component }) {
-      return !!this.lockedDeliveryChannels.find(
-        lockedComponent => component === lockedComponent
+    isForced({ component }) {
+      return !!this.forcedDeliveryChannels.find(
+        forcedComponent => component === forcedComponent
       );
     },
 
@@ -160,10 +160,10 @@ export default {
         return true;
       }
 
-      // Either the parent channel is enabled, or the parent channel is locked.
+      // Either the parent channel is enabled, or the parent channel is forced.
       return (
         parentChannel.is_enabled ||
-        this.isLocked({ component: parentComponent })
+        this.isForced({ component: parentComponent })
       );
     },
 
@@ -173,20 +173,20 @@ export default {
      * @param {Boolean} checked
      */
     updateForceDeliveryChannels(component, checked) {
-      const channels = this.lockedDeliveryChannels;
+      const channels = this.forcedDeliveryChannels;
 
       if (checked) {
         const foundComponent = channels.find(
-          lockedComponent => component === lockedComponent
+          forcedComponent => component === forcedComponent
         );
 
         if (foundComponent) {
-          this.$emit('update-locked-delivery-channels', channels);
+          this.$emit('update-forced-delivery-channels', channels);
           return;
         }
 
         this.$emit(
-          'update-locked-delivery-channels',
+          'update-forced-delivery-channels',
           channels.concat([component])
         );
         return;
@@ -194,8 +194,8 @@ export default {
 
       // It is probably remove the channel class name from the list of forced delivery.
       this.$emit(
-        'update-locked-delivery-channels',
-        channels.filter(lockedComponent => lockedComponent !== component)
+        'update-forced-delivery-channels',
+        channels.filter(forcedComponent => forcedComponent !== component)
       );
     },
   },
@@ -206,10 +206,10 @@ export default {
 {
   "totara_notification": [
     "delivery_channel",
-    "lock_channel_x",
-    "locked",
-    "locked_info",
-    "locked_delivery_help"
+    "force_channel_x",
+    "forced",
+    "forced_info",
+    "forced_delivery_help"
   ],
   "core": [
     "default",
@@ -219,8 +219,8 @@ export default {
 </lang-strings>
 
 <style lang="scss">
-.tui-lockDeliveryChannels {
-  &__lockedHeader {
+.tui-forceDeliveryChannels {
+  &__forcedHeader {
     display: flex;
   }
 }

@@ -14,7 +14,7 @@ mutation totara_notification_create_custom_notification_preference(
   $subject_format: param_integer!
   $recipient: param_text!
   $enabled: param_boolean!
-  $locked_delivery_channels: [param_text!]!
+  $forced_delivery_channels: [param_text!]!
 ) {
   notification_preference: totara_notification_create_notification_preference(
     extended_context: {
@@ -33,7 +33,7 @@ mutation totara_notification_create_custom_notification_preference(
     subject_format: $subject_format
     recipient: $recipient
     enabled: $enabled
-    locked_delivery_channels: $locked_delivery_channels
+    forced_delivery_channels: $forced_delivery_channels
   ) {
     __typename
     title
@@ -59,8 +59,8 @@ mutation totara_notification_create_custom_notification_preference(
     schedule_label
     overridden_schedule
     overridden_enabled
-    overridden_locked_delivery_channels
-    locked_delivery_channels
+    overridden_forced_delivery_channels
+    forced_delivery_channels
     recipient {
       class_name
       name
@@ -81,7 +81,7 @@ mutation totara_notification_create_custom_notification_preference(
       schedule_offset(unit: DAY)
       schedule_type
       subject_format
-      locked_delivery_channels
+      forced_delivery_channels
       recipient {
         class_name
         name

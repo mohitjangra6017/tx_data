@@ -76,7 +76,7 @@ class notification_preference_value {
      * The array of delivery channel identifiers.
      * @var string[]
      */
-    private $locked_delivery_channels;
+    private $forced_delivery_channels;
 
     /**
      * notification_preference_value constructor.
@@ -88,7 +88,7 @@ class notification_preference_value {
      * @param int|null $body_format
      * @param int|null $subject_format
      * @param bool|null $enabled
-     * @param array    $locked_delivery_channels
+     * @param array    $forced_delivery_channels
      */
     private function __construct(
         string $body,
@@ -99,7 +99,7 @@ class notification_preference_value {
         ?int $body_format = null,
         ?int $subject_format = null,
         ?bool $enabled = null,
-        array $locked_delivery_channels = []
+        array $forced_delivery_channels = []
     ) {
         $this->body = $body;
         $this->subject = $subject;
@@ -109,7 +109,7 @@ class notification_preference_value {
         $this->body_format = $body_format ?? FORMAT_MOODLE;
         $this->subject_format = $subject_format ?? FORMAT_JSON_EDITOR;
         $this->enabled = $enabled;
-        $this->locked_delivery_channels = $locked_delivery_channels;
+        $this->forced_delivery_channels = $forced_delivery_channels;
     }
 
     /**
@@ -130,7 +130,7 @@ class notification_preference_value {
          * @see built_in_notification::get_default_schedule_offset()
          * @see built_in_notification::get_recipient_class_name()
          * @see built_in_notification::get_default_enabled()
-         * @see built_in_notification::get_default_locked_delivery_channels()
+         * @see built_in_notification::get_default_forced_delivery_channels()
          *
          * @var string      $built_in_class_name
          * @var lang_string $body
@@ -177,7 +177,7 @@ class notification_preference_value {
             $model->get_body_format(),
             $model->get_subject_format(),
             $model->get_enabled(),
-            $model->get_locked_delivery_channels()
+            $model->get_forced_delivery_channels()
         );
     }
 
@@ -240,7 +240,7 @@ class notification_preference_value {
     /**
      * @return string[]
      */
-    public function get_locked_delivery_channels(): array {
-        return $this->locked_delivery_channels;
+    public function get_forced_delivery_channels(): array {
+        return $this->forced_delivery_channels;
     }
 }

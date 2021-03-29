@@ -16,11 +16,11 @@
   @module samples
 -->
 <template>
-  <div class="tui-lockedDeliveryChannelsTable">
-    <LockDeliveryChannels
+  <div class="tui-forcedDeliveryChannelsTable">
+    <ForceDeliveryChannels
       :default-delivery-channels="deliveryChannels"
-      :locked-delivery-channels="lockedDeliveryChannels"
-      @update-locked-delivery-channels="lockedDeliveryChannels = $event"
+      :forced-delivery-channels="forcedDeliveryChannels"
+      @update-forced-delivery-channels="forcedDeliveryChannels = $event"
     />
 
     <hr />
@@ -31,21 +31,21 @@
     </p>
 
     <pre>
-      {{ lockedDeliveryChannelsString }}
+      {{ forcedDeliveryChannelsString }}
     </pre>
   </div>
 </template>
 
 <script>
-import LockDeliveryChannels from 'totara_notification/components/form/field/LockDeliveryChannels';
+import ForceDeliveryChannels from 'totara_notification/components/form/field/ForceDeliveryChannels';
 export default {
   components: {
-    LockDeliveryChannels,
+    ForceDeliveryChannels,
   },
 
   data() {
     return {
-      lockedDeliveryChannels: ['some_class_1', 'some_class_3'],
+      forcedDeliveryChannels: ['some_class_1', 'some_class_3'],
       deliveryChannels: [
         {
           component: 'some_class_1',
@@ -87,8 +87,8 @@ export default {
   },
 
   computed: {
-    lockedDeliveryChannelsString() {
-      return JSON.stringify(this.lockedDeliveryChannels);
+    forcedDeliveryChannelsString() {
+      return JSON.stringify(this.forcedDeliveryChannels);
     },
   },
 };

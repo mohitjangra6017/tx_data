@@ -471,7 +471,7 @@ export default {
      * @param {Number} subject_format
      * @param {String} recipient
      * @param {Boolean} enabled
-     * @param {Array}  locked_delivery_channels
+     * @param {Array}  forced_delivery_channels
      */
     async createCustomNotification({
       subject,
@@ -484,7 +484,7 @@ export default {
       subject_format,
       recipient,
       enabled,
-      locked_delivery_channels,
+      forced_delivery_channels,
     }) {
       const variables = {
         body,
@@ -498,7 +498,7 @@ export default {
         schedule_offset,
         recipient,
         enabled,
-        locked_delivery_channels,
+        forced_delivery_channels,
       };
 
       // When area, component and item id are all set together, we pass them to mutation.
@@ -636,7 +636,7 @@ export default {
      * @param {Number} subject_format
      * @param {String} recipient
      * @param {Boolean} enabled
-     * @param {String[]} locked_delivery_channels
+     * @param {String[]} forced_delivery_channels
      */
     async updateNotification({
       subject,
@@ -648,7 +648,7 @@ export default {
       subject_format,
       recipient,
       enabled,
-      locked_delivery_channels,
+      forced_delivery_channels,
     }) {
       if (!this.targetPreference) {
         throw new Error('Cannot run update while target preference is empty');
@@ -672,7 +672,7 @@ export default {
           schedule_offset,
           recipient,
           enabled,
-          locked_delivery_channels,
+          forced_delivery_channels,
         },
         update: (
           proxy,
