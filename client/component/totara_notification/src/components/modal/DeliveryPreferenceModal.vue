@@ -36,6 +36,8 @@
       </p>
       <DeliveryPreferenceForm
         :default-delivery-channels="defaultDeliveryChannels"
+        :show-override="showOverride"
+        :initial-override-status="initialOverrideStatus"
         @form-submit="handleSubmit"
         @cancel="$emit('request-close')"
       />
@@ -82,28 +84,23 @@ export default {
       type: String,
       required: true,
     },
+
+    showOverride: Boolean,
+    initialOverrideStatus: Boolean,
   },
 
   methods: {
-    handleSubmit(deliveryChannels) {
+    handleSubmit(deliveryChannels, overridenStatus) {
       const formValue = {
         resolver_class_name: this.resolverClassName,
         delivery_channels: deliveryChannels,
       };
 
-      this.$emit('form-submit', formValue);
+      this.$emit('form-submit', formValue, overridenStatus);
     },
   },
 };
 </script>
-
-<style lang="scss">
-.tui-notificationPreferenceModal {
-  &__form {
-    margin-top: var(--gap-6);
-  }
-}
-</style>
 
 <lang-strings>
   {

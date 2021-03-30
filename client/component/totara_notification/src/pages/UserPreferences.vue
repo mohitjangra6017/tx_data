@@ -27,7 +27,24 @@
         :event-resolvers="groupedPreferences"
         class="tui-userPreferences__table"
         @toggle-enabled="saveUserPreference"
+        @update-delivery-preferences="handleUpdateDeliveryPreferences"
       />
+
+      <ModalPresenter
+        :open="deliveryPreferenceModal.open"
+        @request-close="deliveryPreferenceModal.open = false"
+        @close-complete="resetState"
+      >
+        <DeliveryPreferenceModal
+          :title="$str('delivery_preferences', 'totara_notification')"
+          :resolver-class-name="targetResolverClassName"
+          :resolver-label="targetResolverLabel"
+          :default-delivery-channels="targetDefaultDeliveryChannels"
+          :show-override="showDeliveryChannelsOverride"
+          :initial-override-status="OverrideDeliveryChannels"
+          @form-submit="handleNotificationPreferenceSubmit"
+        />
+      </ModalPresenter>
     </template>
   </Layout>
 </template>
@@ -35,14 +52,19 @@
 import Layout from 'tui/components/layouts/LayoutOneColumn';
 import UserPreferencesTable from 'totara_notification/components/table/UserPreferencesTable';
 import { notify } from 'tui/notifications';
+import ModalPresenter from 'tui/components/modal/ModalPresenter';
+import DeliveryPreferenceModal from 'totara_notification/components/modal/DeliveryPreferenceModal';
 
 // GraphQL
 import updateUserPreferenceMutation from 'totara_notification/graphql/update_notifiable_event_user_preference';
+import updateDeliveryPreferenceChannels from 'totara_notification/graphql/update_user_delivery_channels';
 
 export default {
   components: {
     Layout,
     UserPreferencesTable,
+    ModalPresenter,
+    DeliveryPreferenceModal,
   },
 
   props: {
@@ -78,16 +100,23 @@ export default {
   data() {
     return {
       userPreferencesList: this.resolverPreferences,
+      groupedPreferences: [],
+      deliveryPreferenceModal: {
+        open: false,
+      },
+      targetResolverClassName: null,
+      targetResolverLabel: null,
+      targetDefaultDeliveryChannels: null,
+      userPreferenceId: null,
+      OverrideDeliveryChannels: false,
+      showDeliveryChannelsOverride: true,
+      preferences: this.resolverPreferences,
     };
   },
 
   computed: {
-    /**
-     * Group the resolvers per component
-     * @return {Array}
-     */
-    groupedPreferences() {
-      let groupedResolvers = [];
+    groupPreferences() {
+      let groupedResolvers = {};
       this.userPreferencesList.forEach(resolver => {
         const { component, plugin_name } = resolver;
         if (!groupedResolvers[component]) {
@@ -100,12 +129,29 @@ export default {
 
         groupedResolvers[component].resolvers.push(resolver);
       });
-
       return Object.values(groupedResolvers);
     },
   },
-
+  watch: {
+    groupPreferences: {
+      immediate: true,
+      deep: true,
+      handler(value) {
+        this.groupedPreferences = value;
+      },
+    },
+  },
   methods: {
+    resetState() {
+      // Reset the target event class name.
+      this.targetResolverClassName = null;
+
+      // Reset the target delivery channels
+      this.targetDefaultDeliveryChannels = null;
+
+      // Reset the target label
+      this.targetResolverLabel = null;
+    },
     /**
      * @param {Number} userId
      * @param {String} resolverClassname
@@ -147,7 +193,12 @@ export default {
      * @param {Object} updatedUserPreference
      */
     updateResolverPreferenceList(updatedUserPreference) {
-      this.userPreferencesList = this.userPreferencesList.map(resolver => {
+      let deliveryPreferences = Object.assign([], this.groupedPreferences);
+      let preferences = deliveryPreferences.find(
+        el => el.component === updatedUserPreference.component
+      );
+
+      preferences.resolvers = preferences.resolvers.map(resolver => {
         if (
           resolver.resolver_class_name ===
             updatedUserPreference.resolver_class_name &&
@@ -161,6 +212,61 @@ export default {
         }
       });
     },
+
+    handleUpdateDeliveryPreferences({
+      resolverClassName,
+      resolverLabel,
+      defaultDeliveryChannels,
+      OverrideDeliveryChannels,
+      userPreferenceId,
+    }) {
+      this.targetResolverClassName = resolverClassName;
+      this.targetResolverLabel = resolverLabel;
+      this.targetDefaultDeliveryChannels = defaultDeliveryChannels;
+      this.OverrideDeliveryChannels = OverrideDeliveryChannels;
+      this.userPreferenceId = userPreferenceId;
+      this.deliveryPreferenceModal.open = true;
+    },
+
+    async handleNotificationPreferenceSubmit(
+      { delivery_channels, resolver_class_name },
+      overriddenStatus
+    ) {
+      // If override is disabled and all delivery channel selections and disabled
+      // then pass null instead of an ampty array
+      let channels = !overriddenStatus ? null : delivery_channels;
+
+      await this.$apollo.mutate({
+        mutation: updateDeliveryPreferenceChannels,
+        variables: {
+          resolver_class_name: resolver_class_name,
+          extended_context: this.extendedContext,
+          delivery_channels: channels,
+          user_preference_id: this.userPreferenceId,
+        },
+        update: (
+          proxy,
+          { data: { notifiable_event_user_preference: updatedPreference } }
+        ) => {
+          let deliveryPreferences = Object.assign([], this.groupedPreferences);
+          let preferences = deliveryPreferences.find(
+            el => el.component === updatedPreference.component
+          );
+
+          preferences.resolvers = preferences.resolvers.map(resolver => {
+            if (
+              resolver.resolver_class_name ===
+                updatedPreference.resolver_class_name &&
+              resolver.name === updatedPreference.name
+            ) {
+              return updatedPreference;
+            }
+            return resolver;
+          });
+        },
+      });
+      this.deliveryPreferenceModal.open = false;
+    },
   },
 };
 </script>
@@ -169,7 +275,8 @@ export default {
 {
   "totara_notification": [
     "error_user_preference_permission",
-    "user_preferences_page_title"
+    "user_preferences_page_title",
+    "delivery_preferences"
   ]
 }
 </lang-strings>

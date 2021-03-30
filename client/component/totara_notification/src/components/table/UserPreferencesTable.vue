@@ -47,6 +47,11 @@
             <HeaderCell align="start" size="2">
               {{ $str('enabled', 'totara_notification') }}
             </HeaderCell>
+            <HeaderCell>
+              <span class="sr-only">
+                {{ $str('actions', 'core') }}
+              </span>
+            </HeaderCell>
           </template>
 
           <template v-slot:row="{ row }">
@@ -59,11 +64,19 @@
             <Cell align="start" size="2">
               <ToggleSwitch
                 :aria-label="
-                  $str('enabled_status', 'totara_notification', row.name)
+                  $str('enable_status', 'totara_notification', row.name)
                 "
                 :value="row.enabled"
                 :toggle-only="true"
                 @input="toggleEnabled($event, row)"
+              />
+            </Cell>
+            <Cell align="end" size="1">
+              <NotifiableEventAction
+                :resolver-name="row.name"
+                :show-create-notification-option="false"
+                :show-delivery-preference-option="true"
+                @update-delivery-preferences="updateDeliveryPreference(row)"
               />
             </Cell>
           </template>
@@ -80,6 +93,7 @@ import Cell from 'tui/components/datatable/Cell';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
 import Table from 'tui/components/datatable/Table';
 import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
+import NotifiableEventAction from 'totara_notification/components/action/NotifiableEventAction';
 
 export default {
   components: {
@@ -89,6 +103,7 @@ export default {
     HeaderCell,
     Table,
     ToggleSwitch,
+    NotifiableEventAction,
   },
 
   props: {
@@ -108,12 +123,16 @@ export default {
   },
 
   data() {
+    return { expanded: {} };
+  },
+
+  created() {
     const expanded = {};
     this.eventResolvers.forEach(
       eventResolver => (expanded[eventResolver.component] = false)
     );
 
-    return { expanded };
+    this.expanded = expanded;
   },
 
   methods: {
@@ -141,6 +160,20 @@ export default {
         .map(({ label }) => label)
         .join('; ');
     },
+
+    /**
+     * @param {Object} resolverPreference
+     */
+    updateDeliveryPreference(resolverPreference) {
+      this.$emit('update-delivery-preferences', {
+        resolverClassName: resolverPreference.resolver_class_name,
+        resolverLabel: resolverPreference.name,
+        defaultDeliveryChannels: resolverPreference.delivery_channels,
+        OverrideDeliveryChannels:
+          resolverPreference.overridden_delivery_channels,
+        userPreferenceId: resolverPreference.user_preference_id,
+      });
+    },
   },
 };
 </script>
@@ -149,8 +182,11 @@ export default {
   "totara_notification": [
     "delivery_channels",
     "enabled",
-    "enabled_status",
+    "enable_status",
     "notifiable_events"
+  ],
+  "core": [
+    "actions"
   ]
 }
 </lang-strings>

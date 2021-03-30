@@ -20,6 +20,34 @@
     class="tui-notificationDeliveryPreferenceForm"
     @submit="handleFormSubmit"
   >
+    <div
+      v-if="showOverride"
+      class="tui-notificationDeliveryPreferenceForm__overrideWrapper"
+    >
+      <Checkbox
+        :aria-label="
+          $str('override_delivery_channels_aria', 'totara_notification')
+        "
+        :checked="isDeliveryPreferenceOverridden"
+        :value="isDeliveryPreferenceOverridden ? '1' : '0'"
+        name="override_delivery_preferences"
+        @change="overrideDeliveryPreference"
+      >
+        {{ $str('override', 'totara_notification') }}
+      </Checkbox>
+      <InfoIconButton
+        :aria-label="
+          $str(
+            'delivery_preferences_override_helptext_aria',
+            'totara_notification'
+          )
+        "
+      >
+        {{
+          $str('delivery_preferences_override_helptext', 'totara_notification')
+        }}
+      </InfoIconButton>
+    </div>
     <Table :data="defaultDeliveryChannels" :expandable-rows="true">
       <template v-slot:header-row>
         <HeaderCell size="3">
@@ -27,6 +55,7 @@
             $str('notification_delivery_channels_label', 'totara_notification')
           }}
           <InfoIconButton
+            v-if="!showOverride"
             :aria-label="
               $str('delivery_preferences_helptext_aria', 'totara_notification')
             "
@@ -46,6 +75,7 @@
             "
             v-model="deliveryChannels[row.component]"
             :aria-label="row.label"
+            :disabled="isCheckboxDisabled"
             :name="`default_${row.component}`"
           />
           <template v-else>
@@ -116,12 +146,23 @@ export default {
       required: true,
       validator: validateDefaultDeliveryChannelsProp(),
     },
+
+    showOverride: Boolean,
+    initialOverrideStatus: Boolean,
   },
 
   data() {
     return {
       deliveryChannels: createDeliveryChannels(this.defaultDeliveryChannels),
+      isCheckboxDisabled: this.selectionsDisabled(),
+      isDeliveryPreferenceOverridden: this.initialOverrideStatus,
     };
+  },
+
+  watch: {
+    isDeliveryPreferenceOverridden() {
+      this.isCheckboxDisabled = this.selectionsDisabled();
+    },
   },
 
   methods: {
@@ -133,7 +174,31 @@ export default {
         }
       }
 
-      this.$emit('form-submit', channels);
+      this.$emit(
+        'form-submit',
+        channels,
+        this.showOverride ? this.isDeliveryPreferenceOverridden : null
+      );
+    },
+
+    selectionsDisabled() {
+      // Checkbox disabled state should be handled only if override functionality is visible
+      if (this.showOverride) {
+        if (
+          (this.isDeliveryPreferenceOverridden === undefined &&
+            !this.initialOverrideStatus) ||
+          (this.isDeliveryPreferenceOverridden !== undefined &&
+            !this.isDeliveryPreferenceOverridden)
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+    },
+
+    overrideDeliveryPreference(value) {
+      this.isDeliveryPreferenceOverridden = value;
     },
   },
 };
@@ -145,7 +210,11 @@ export default {
     "delivery_preferences_helptext",
     "delivery_preferences_helptext_aria",
     "notification_delivery_channels_label",
-    "unavailable"
+    "unavailable",
+    "delivery_preferences_override_helptext",
+    "delivery_preferences_override_helptext_aria",
+    "override",
+    "override_delivery_channels_aria"
   ],
   "totara_core": [
     "save"
@@ -158,6 +227,12 @@ export default {
 
 <style lang="scss">
 .tui-notificationDeliveryPreferenceForm {
+  &__overrideWrapper {
+    display: flex;
+    align-items: center;
+    margin-top: var(--gap-2);
+  }
+
   &__buttonGroup {
     display: flex;
     justify-content: flex-end;

@@ -33,6 +33,7 @@
       </template>
 
       <DropdownItem
+        v-if="showCreateNotificationOption"
         :aria-label="
           $str(
             'create_notification_for_event',
@@ -82,6 +83,10 @@ export default {
     },
 
     showDeliveryPreferenceOption: Boolean,
+    showCreateNotificationOption: {
+      type: Boolean,
+      default: true,
+    },
   },
 };
 </script>
