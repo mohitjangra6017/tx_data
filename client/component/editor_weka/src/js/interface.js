@@ -87,6 +87,13 @@ export default {
   },
 
   /**
+   * @returns {Format}
+   */
+  getValueFormat() {
+    return Format.JSON_EDITOR;
+  },
+
+  /**
    * If this editor is picked and we don't have a specified format to use, use
    * this format.
    */
@@ -103,6 +110,6 @@ export default {
    * @return {Boolean}
    */
   supportsFormat(format) {
-    return Format.JSON_EDITOR == format;
+    return Format.JSON_EDITOR === format;
   },
 };

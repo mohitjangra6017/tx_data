@@ -48,10 +48,11 @@ export default {
    * Convert raw (serialzed) value to something the component can understand.
    *
    * @param {string} content
+   * @param {number} format
    * @returns {*}
    */
-  rawToValue(content) {
-    return { content };
+  rawToValue(content, format) {
+    return { content, format };
   },
 
   /**
@@ -75,6 +76,16 @@ export default {
   },
 
   /**
+   * Return a value's format
+   *
+   * @param {*} value
+   * @returns {Format}
+   */
+  getValueFormat(value) {
+    return value.format;
+  },
+
+  /**
    * If this editor is picked and we don't have a specified format to use, use
    * this format.
    *
@@ -95,7 +106,10 @@ export default {
    */
   supportsFormat(format) {
     return (
-      format == Format.MOODLE || format == Format.PLAIN || format == Format.HTML
+      format === Format.MOODLE ||
+      format === Format.PLAIN ||
+      format === Format.HTML ||
+      format === Format.MARKDOWN
     );
   },
 };

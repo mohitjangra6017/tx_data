@@ -20,6 +20,7 @@
 // eslint-disable-next-line no-unused-vars
 import { EditorContent, Format } from 'tui/editor';
 import {
+  reconcileFormats,
   getEditorConfig,
   // eslint-disable-next-line no-unused-vars
   EditorIdentifier,
@@ -116,6 +117,41 @@ export default {
   },
 
   computed: {
+    requestedFormat() {
+      if (this.value && this.value._originalFormat !== null) {
+        return this.value._originalFormat;
+      }
+
+      if (this.value && this.value.format !== null) {
+        return this.value.format;
+      }
+
+      if (this.defaultFormat != null) {
+        return this.defaultFormat;
+      }
+
+      return null;
+    },
+
+    activeFormat() {
+      if (
+        this.editorInterface &&
+        !this.editorInterface.supportsFormat(this.requestedFormat)
+      ) {
+        return this.defaultFallbackFormat;
+      }
+
+      if (this.value && this.value.format != null) {
+        return this.value.format;
+      }
+
+      if (this.defaultFormat != null) {
+        return this.defaultFormat;
+      }
+
+      return this.defaultFallbackFormat;
+    },
+
     editorFixedConfig() {
       return {
         format: this.requestedFormat,
@@ -128,25 +164,6 @@ export default {
         extraExtensions: this.extraExtensions,
         disabled: this.disabled,
       };
-    },
-
-    /**
-     * Return the current format that is passed down from the `value` or
-     * the `defaultFormat`. If none are provided, then we used the
-     * defaultFallbackFormat which is retrieved from the server.
-     *
-     * @return {Number}
-     */
-    activeFormat() {
-      if (this.value && this.value.format != null) return this.value.format;
-      if (this.defaultFormat != null) return this.defaultFormat;
-      return this.defaultFallbackFormat;
-    },
-
-    requestedFormat() {
-      if (this.value && this.value.format != null) return this.value.format;
-      if (this.defaultFormat != null) return this.defaultFormat;
-      return null;
     },
 
     activeFileItemId() {
@@ -228,24 +245,6 @@ export default {
       // this is the format we will use if none is specified
       this.defaultFallbackFormat = editor.getPreferredFormat();
 
-      // Update the current value, because the current editor does not support the request format.
-      if (!editor.supportsFormat(this.activeFormat)) {
-        console.warn(
-          `The value format '${this.activeFormat}' is not supported by server, fallback to '${this.defaultFallbackFormat}'`
-        );
-
-        // This is to fix the default format of editor content. As the requested format is not support-able
-        // by the server.
-        this.$emit(
-          'fix-editor-content',
-          new EditorContent({
-            format: this.defaultFallbackFormat,
-            content: this.value ? this.value.getContent() : null,
-            fileItemId: this.value ? this.value.fileItemId : null,
-          })
-        );
-      }
-
       // this is the content we will use if none is specified
       this.generatedDefaultContent = new EditorContent({
         format: this.activeFormat,
@@ -286,18 +285,12 @@ export default {
       let oldValue = this.value;
       if (!oldValue) {
         oldValue = new EditorContent({
-          format: this.activeFormat,
+          format: this.requestedFormat,
           content: null,
           fileItemId: null,
         });
       }
       const newValue = oldValue._updateNativeValue(this.editorInterface, value);
-
-      if (newValue.format === null) {
-        // Update the value's format, with the activeFormat if its not set.
-        newValue.format = this.activeFormat;
-      }
-
       this.$emit('input', newValue);
     },
 
@@ -312,6 +305,23 @@ export default {
     handleReady() {
       this.$emit('ready');
     },
+
+    $_getNativeValue() {
+      if (!this.value) {
+        return this.generatedDefaultContent._getNativeValue(
+          this.editorInterface
+        );
+      }
+
+      if (this.editorInterface.supportsFormat(this.value.format)) {
+        return this.value._getNativeValue(this.editorInterface);
+      }
+
+      return reconcileFormats(this.value, {
+        from: this.requestedFormat,
+        to: this.defaultFallbackFormat,
+      })._getNativeValue(this.editorInterface);
+    },
   },
 
   render(h) {
@@ -323,14 +333,10 @@ export default {
       });
     }
 
-    const nativeValue = this.value
-      ? this.value._getNativeValue(this.editorInterface)
-      : this.generatedDefaultContent._getNativeValue(this.editorInterface);
-
     return h(this.vueComponent, {
       key: this.iter,
       props: Object.assign({}, this.vueComponentProps, {
-        value: nativeValue,
+        value: this.$_getNativeValue(),
       }),
       on: {
         input: this.handleEditorInput,

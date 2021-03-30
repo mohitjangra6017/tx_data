@@ -25,7 +25,7 @@ describe('EditorTextarea', () => {
   beforeEach(() => {
     wrapper = shallowMount(EditorTextarea, {
       propsData: {
-        value: { content: 'text value' },
+        value: { content: 'text value', format: 1 },
       },
     });
   });

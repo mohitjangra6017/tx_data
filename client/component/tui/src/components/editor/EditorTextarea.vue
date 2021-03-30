@@ -18,7 +18,9 @@
 
 <template>
   <div class="tui-editorTextarea">
+    <Select :value="format" :options="formatOptions" @input="handleSelect" />
     <Textarea
+      ref="textarea"
       :value="value && value.content"
       :disabled="disabled"
       class="tui-editorTextarea__textarea"
@@ -30,16 +32,40 @@
 </template>
 
 <script>
+import Select from 'tui/components/form/Select';
 import Textarea from 'tui/components/form/Textarea';
+import { Format } from 'tui/editor';
 
 export default {
   components: {
     Textarea,
+    Select,
   },
 
   props: {
     value: {
+      required: true,
       type: Object,
+      validator(value) {
+        const keys = Object.keys(value);
+        return ['content', 'format'].every(prop => keys.includes(prop));
+      },
+    },
+  },
+
+  data() {
+    return {
+      formatOptions: [
+        { id: Format.PLAIN, label: this.$str('formatplain', 'moodle') },
+        { id: Format.HTML, label: this.$str('formathtml', 'moodle') },
+        { id: Format.MARKDOWN, label: this.$str('formatmarkdown', 'moodle') },
+      ],
+    };
+  },
+
+  computed: {
+    format() {
+      return this.value.format || Format.PLAIN;
     },
     disabled: Boolean,
   },
@@ -49,18 +75,40 @@ export default {
   },
 
   methods: {
-    handleInput(val) {
-      this.$emit('input', { content: val });
+    handleSelect(format) {
+      this.$emit('input', { content: this.$refs.textarea.value, format });
+    },
+
+    handleInput(content) {
+      this.$emit('input', { content, format: this.format });
     },
   },
 };
 </script>
-
+<lang-strings>
+  {
+    "moodle": [
+      "formatplain",
+      "formatmarkdown",
+      "formathtml"
+    ]
+  }
+</lang-strings>
 <style lang="scss">
 .tui-editorTextarea {
-  // stretch child input to be full height if the editor is given a specific height
   display: flex;
+  flex-direction: column;
   // expand to full width if in horizontal flex
   width: 100%;
+
+  // needed a more specific selector to override tui-select { flex-grow: 1; }
+  > :first-child {
+    flex-grow: 0;
+  }
+
+  &__textarea {
+    // stretch child input to be full height if the editor is given a specific height
+    flex-grow: 1;
+  }
 }
 </style>

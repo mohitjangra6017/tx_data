@@ -4,6 +4,11 @@ exports[`EditorTextarea matches snapshot 1`] = `
 <div
   class="tui-editorTextarea"
 >
+  <select-stub
+    options="[object Object],[object Object],[object Object]"
+    value="1"
+  />
+   
   <textarea-stub
     charlength="full"
     class="tui-editorTextarea__textarea"

@@ -22,6 +22,87 @@ import apollo from 'tui/apollo_client';
 import { EditorInterface } from 'tui/editor';
 import textareaFallback from './editor_textarea_fallback';
 import configQuery from 'core/graphql/editor';
+import { EditorContent, Format } from 'tui/editor';
+
+/**
+ *
+ * @typedef {Object} StringWrapper - allows a string to be recursively concatenated
+ * @property {string} val
+ *
+ * @param {Object} json
+ * @param {StringWrapper} strWrapper
+ * @returns {string}
+ */
+function extractText(json, strWrapper) {
+  const paragraphNodes = ['doc', 'blockquote', 'list_item'];
+
+  if (json.text) {
+    strWrapper.val += json.text;
+  }
+
+  if (json.type === 'hard_break') {
+    strWrapper.val += '\n';
+  }
+
+  if (Array.isArray(json.content) && json.content.length > 0) {
+    json.content.forEach(node => {
+      extractText(node, strWrapper);
+
+      if (paragraphNodes.includes(json.type)) {
+        strWrapper.val += '\n\n';
+      }
+    });
+  }
+
+  return strWrapper;
+}
+
+/**
+ * Convert a serialized JSON_EDITOR doc string to PLAIN text string.
+ * Strips out rich content
+ *
+ * @param {string} serialized
+ * @returns {string}
+ */
+export function toPlain(serialized) {
+  try {
+    const json = JSON.parse(serialized);
+    const { val } = extractText(json, { val: '' });
+    return val;
+  } catch (err) {
+    console.error(
+      'Failed to parse JSON_EDITOR content. Is it a serialized string?'
+    );
+    console.log(serialized);
+    console.error(err);
+    return serialized;
+  }
+}
+
+/**
+ * @typedef {Object} FormatConversionConfig
+ * @property {number} from
+ * @property {number} to
+ *
+ * Convert an unsupported EditorContent into the equivalent supported EditorContent
+ *
+ * @param {EditorContent} value
+ * @param {FormatConversionConfig} config
+ * @returns {EditorContent}
+ */
+export function reconcileFormats(value, { from, to }) {
+  if (from === Format.JSON_EDITOR && to === Format.PLAIN) {
+    return new EditorContent({
+      originalFormat: Format.JSON_EDITOR,
+      format: Format.PLAIN,
+      content: toPlain(value.getContent()),
+    });
+  }
+
+  // space for other potential format conversions
+
+  return value;
+}
 
 /**
  * @typedef {Object} EditorIdentifier
@@ -74,6 +155,7 @@ export async function getEditorConfig({
   const hasInterface = !!config.js_module;
 
   return new EditorConfigResult({
+    name: config.name,
     interface: hasInterface ? config.js_module : textareaFallback,
     options:
       hasInterface && config.variant.options
@@ -90,6 +172,7 @@ class EditorConfigResult {
    * @param {(string|EditorInterface)} opts.interface
    */
   constructor(opts) {
+    this._name = opts.name;
     this._interface = opts.interface;
     this._options = opts.options;
     this._contextId = opts.contextId;
@@ -106,6 +189,13 @@ class EditorConfigResult {
     } else {
       return this._interface;
     }
+  }
+
+  /**
+   * @returns {string}
+   */
+  getName() {
+    return this._name;
   }
 
   /**

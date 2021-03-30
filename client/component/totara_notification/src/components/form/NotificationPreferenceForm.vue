@@ -257,7 +257,6 @@
             class="tui-notificationPreferenceForm__subjectEditor"
             variant="simple"
             :compact="true"
-            @fix-editor-content="updateSubjectEditor($event, update)"
             @input="updateSubjectEditor($event, update)"
           />
         </FormField>
@@ -316,7 +315,6 @@
             ]"
             class="tui-notificationPreferenceForm__bodyEditor"
             variant="description"
-            @fix-editor-content="updateBodyEditor($event, update)"
             @input="updateBodyEditor($event, update)"
           />
         </FormField>

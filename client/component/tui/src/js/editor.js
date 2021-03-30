@@ -33,6 +33,10 @@
  *   Check if editor-specific content is empty.
  * @property {() => Format} getPreferredFormat
  *   If this editor is picked and we don't have a specified format to use, use this format.
+ * @property {(format: Format) => boolean} supportsFormat
+ *   Check if the Editor supports a format.
+ * @property {(value: any) => Format} getValueFormat
+ *   Get the value's format
  * @property {boolean} forceRecreate
  *   Forcibly recreate the editor if its options (aside from content) change.
  *   Defaults to false. If the editor can't handle having *all* of its props
@@ -48,6 +52,7 @@ export class EditorContent {
    */
   constructor({ format = null, content = null, fileItemId = null } = {}) {
     this.format = format;
+    this._originalFormat = format;
     this._content = content;
     this.fileItemId = fileItemId;
 
@@ -78,11 +83,12 @@ export class EditorContent {
    */
   _updateNativeValue(editor, value) {
     const inst = new EditorContent({
-      format: this.format,
+      format: editor.getValueFormat(value),
       fileItemId: this.fileItemId,
     });
     inst._nativeEditor = editor;
     inst._nativeValue = value;
+    inst._originalFormat = this._originalFormat;
     return inst;
   }
 

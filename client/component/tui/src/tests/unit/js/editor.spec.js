@@ -22,11 +22,13 @@ const editorA = {
   rawToValue: jest.fn((content, format) => ({ e: 'a', content, format })),
   valueToRaw: jest.fn(value => value.content),
   isContentEmpty: jest.fn(value => !value.content),
+  getValueFormat: jest.fn(value => value.format),
 };
 const editorB = {
   rawToValue: jest.fn((content, format) => ({ e: 'b', content, format })),
   valueToRaw: jest.fn(value => value.content),
   isContentEmpty: jest.fn(value => !value.content),
+  getValueFormat: jest.fn(value => value.format),
 };
 
 describe('EditorContent', () => {
@@ -92,7 +94,7 @@ describe('EditorContent', () => {
   });
 
   it('converts native value back to content', () => {
-    const nv = { content: 'hello' };
+    const nv = { content: 'hello', format: 42 };
     const ec2 = ec._updateNativeValue(editorA, nv);
 
     expect(ec2.getContent()).toBe('hello');
@@ -101,7 +103,7 @@ describe('EditorContent', () => {
   });
 
   it('supports native values for multiple editors at the same time', () => {
-    const nv = { content: 'hello' };
+    const nv = { content: 'hello', format: 42 };
     const ec2 = ec._updateNativeValue(editorA, nv);
 
     expect(ec2._getNativeValue(editorA)).toBe(nv);
