@@ -17,12 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author  Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_notification
  */
 namespace totara_notification\notification;
 
 use lang_string;
+use totara_notification\local\helper;
 
 /**
  * A static class that define the built-in configuration for the notification(s), which are belonging
@@ -99,7 +100,7 @@ abstract class built_in_notification {
      * @return int
      */
     public static function get_default_body_format(): int {
-        return FORMAT_JSON_EDITOR;
+        return helper::get_preferred_editor_format(FORMAT_JSON_EDITOR);
     }
 
     /**
@@ -114,7 +115,7 @@ abstract class built_in_notification {
      * @return int
      */
     public static function get_default_subject_format(): int {
-        return FORMAT_JSON_EDITOR;
+        return helper::get_preferred_editor_format(FORMAT_JSON_EDITOR);
     }
 
     /**

@@ -247,6 +247,7 @@
             class="tui-notificationPreferenceForm__subjectEditor"
             variant="description"
             :compact="true"
+            @fix-editor-content="updateSubjectEditor($event, update)"
             @input="updateSubjectEditor($event, update)"
           />
         </FormField>
@@ -296,6 +297,7 @@
             ]"
             class="tui-notificationPreferenceForm__bodyEditor"
             variant="description"
+            @fix-editor-content="updateBodyEditor($event, update)"
             @input="updateBodyEditor($event, update)"
           />
         </FormField>
@@ -357,7 +359,7 @@ import {
 import FormRow from 'tui/components/form/FormRow';
 import Radio from 'tui/components/form/Radio';
 import RadioNumberInput from 'tui/components/form/RadioNumberInput';
-import { EditorContent, Format } from 'tui/editor';
+import { EditorContent } from 'tui/editor';
 import Editor from 'tui/components/editor/Editor';
 import ButtonGroup from 'tui/components/buttons/ButtonGroup';
 import Button from 'tui/components/buttons/Button';
@@ -452,16 +454,12 @@ function createFormValues(currentPreference, parentValue) {
   // Overridden subject initializing values.
   if (!parentValue || currentPreference.overridden_subject) {
     formValue.subject.value = new EditorContent({
-      format: !currentPreference.subject_format
-        ? currentPreference.subject_format
-        : Format.JSON_EDITOR,
+      format: currentPreference.subject_format,
       content: currentPreference.subject,
     });
   } else {
     formValue.subject.value = new EditorContent({
-      format: parentValue.subject_format
-        ? parentValue.subject_format
-        : Format.JSON_EDITOR,
+      format: parentValue.subject_format,
       content: parentValue.subject,
     });
   }
@@ -469,16 +467,12 @@ function createFormValues(currentPreference, parentValue) {
   // Overridden body initializing values.
   if (!parentValue || currentPreference.overridden_body) {
     formValue.body.value = new EditorContent({
-      format: !currentPreference.body_format
-        ? currentPreference.body_format
-        : Format.JSON_EDITOR,
+      format: currentPreference.body_format,
       content: currentPreference.body,
     });
   } else {
     formValue.body.value = new EditorContent({
-      format: parentValue.body_format
-        ? parentValue.body_format
-        : Format.JSON_EDITOR,
+      format: parentValue.body_format,
       content: parentValue.body,
     });
   }
@@ -680,7 +674,7 @@ export default {
               content: this.parentValue.subject,
               format: this.parentValue.subject_format
                 ? this.parentValue.subject_format
-                : Format.JSON_EDITOR,
+                : this.formInitialValues.subject.value.format,
             })
           );
         }
@@ -692,7 +686,7 @@ export default {
               content: this.parentValue.body,
               format: this.parentValue.body_format
                 ? this.parentValue.body_format
-                : Format.JSON_EDITOR,
+                : this.formInitialValues.body.value.format,
             })
           );
         }

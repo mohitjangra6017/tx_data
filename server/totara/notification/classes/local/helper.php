@@ -124,4 +124,16 @@ class helper {
 
         return true;
     }
+
+    /**
+     * @param int|null $request_format
+     * @return int
+     */
+    public static function get_preferred_editor_format(?int $request_format = null): int {
+        global $CFG;
+        require_once("{$CFG->dirroot}/lib/editorlib.php");
+
+        $editor = editors_get_preferred_editor($request_format);
+        return $editor->get_preferred_format();
+    }
 }
