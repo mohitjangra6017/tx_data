@@ -36,5 +36,12 @@ function xmldb_scorm_upgrade($oldversion) {
 
     // Totara 13.0 release line.
 
+    if ($oldversion < 2021033100) {
+        $DB->execute('UPDATE {scorm} SET completionstatusallscos = 0 WHERE completionstatusallscos IS NULL');
+
+        // Scorm savepoint reached.
+        upgrade_mod_savepoint(true, 2021033100, 'scorm');
+    }
+
     return true;
 }
