@@ -93,4 +93,14 @@ export default {
   },
 
   forceRecreate: true,
+
+  /**
+   * Checks that if the format is supported by the weka editor.
+   *
+   * @param {Number} format
+   * @return {Boolean}
+   */
+  supportsFormat(format) {
+    return Format.JSON_EDITOR == format;
+  },
 };

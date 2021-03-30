@@ -77,9 +77,24 @@ export default {
    * If this editor is picked and we don't have a specified format to use, use
    * this format.
    *
+   * The default format that we used for this editor. However if the format is FORMAT_MOODLE or
+   * FORMAT_HTML then this editor is still able to support it.
+   *
    * @returns {Format}
    */
   getPreferredFormat() {
     return Format.PLAIN;
+  },
+
+  /**
+   * Checks if the given format is supported by this editor.
+   *
+   * @param {Number} format
+   * @return {Boolean}
+   */
+  supportsFormat(format) {
+    return (
+      format == Format.MOODLE || format == Format.PLAIN || format == Format.HTML
+    );
   },
 };

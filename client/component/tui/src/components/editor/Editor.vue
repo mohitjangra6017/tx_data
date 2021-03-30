@@ -127,6 +127,13 @@ export default {
       };
     },
 
+    /**
+     * Return the current format that is passed down from the `value` or
+     * the `defaultFormat`. If none are provided, then we used the
+     * defaultFallbackFormat which is retrieved from the server.
+     *
+     * @return {Number}
+     */
     activeFormat() {
       if (this.value && this.value.format != null) return this.value.format;
       if (this.defaultFormat != null) return this.defaultFormat;
@@ -217,6 +224,24 @@ export default {
 
       // this is the format we will use if none is specified
       this.defaultFallbackFormat = editor.getPreferredFormat();
+
+      // Update the current value, because the current editor does not support the request format.
+      if (!editor.supportsFormat(this.activeFormat)) {
+        console.warn(
+          `The value format '${this.activeFormat}' is not supported by server, fallback to '${this.defaultFallbackFormat}'`
+        );
+
+        // This is to fix the default format of editor content. As the requested format is not support-able
+        // by the server.
+        this.$emit(
+          'fix-editor-content',
+          new EditorContent({
+            format: this.defaultFallbackFormat,
+            content: this.value ? this.value.getContent() : null,
+            fileItemId: this.value ? this.value.fileItemId : null,
+          })
+        );
+      }
 
       // this is the content we will use if none is specified
       this.generatedDefaultContent = new EditorContent({
