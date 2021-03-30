@@ -40,19 +40,19 @@ class event_resolver_schedule {
     private $resolver_class_name;
 
     /**
-     * Cached result of {@see notifiable_event_resolver::has_associated_notifiable_event()}
+     * Cached result of {@see notifiable_event_resolver::uses_on_event_queue()}
      * @var bool
      */
-    private $has_associated_event;
+    private $uses_on_event_queue;
 
     /**
      * event_resolver_schedule constructor.
      * @param string $resolver_class_name
-     * @param bool   $has_associated_event
+     * @param bool   $uses_on_event_queue
      */
-    private function __construct(string $resolver_class_name, bool $has_associated_event) {
+    private function __construct(string $resolver_class_name, bool $uses_on_event_queue) {
         $this->resolver_class_name = $resolver_class_name;
-        $this->has_associated_event = $has_associated_event;
+        $this->uses_on_event_queue = $uses_on_event_queue;
     }
 
     /**
@@ -65,11 +65,11 @@ class event_resolver_schedule {
         }
 
         /**
-         * @see notifiable_event_resolver::has_associated_notifiable_event()
-         * @var bool $has_associated_event
+         * @see notifiable_event_resolver::uses_on_event_queue()
+         * @var bool $uses_on_event_queue
          */
-        $has_associated_event = call_user_func([$resolver_class_name, 'has_associated_notifiable_event']);
-        return new static($resolver_class_name, $has_associated_event);
+        $uses_on_event_queue = call_user_func([$resolver_class_name, 'uses_on_event_queue']);
+        return new static($resolver_class_name, $uses_on_event_queue);
     }
 
     /**
@@ -87,7 +87,7 @@ class event_resolver_schedule {
             $built_in_classes
         );
 
-        if (!$this->has_associated_event) {
+        if (!$this->uses_on_event_queue) {
             return $offsets;
         }
 
@@ -104,7 +104,7 @@ class event_resolver_schedule {
     /**
      * Returns the min/max from the database, or null if nothing is found.
      *
-     * @param bool $min Pass this paramater down as true if you are looking for minimum number in the database.
+     * @param bool $min Pass this parameter down as true if you are looking for minimum number in the database.
      *                  Otherwise FALSE to get the maximum.
      * @return int
      */
@@ -126,7 +126,7 @@ class event_resolver_schedule {
         // Remove those on_event notification preference if the notifiable_event_resolver does have
         // associated notifiable event.
         $builder->when(
-            $this->has_associated_event,
+            $this->uses_on_event_queue,
             function (builder $inner_builder): void {
                 $inner_builder->where('schedule_offset', '<>', 0);
             }
@@ -209,8 +209,8 @@ class event_resolver_schedule {
     /**
      * @return bool
      */
-    public function has_associated_event(): bool {
-        return $this->has_associated_event;
+    public function uses_on_event_queue(): bool {
+        return $this->uses_on_event_queue;
     }
 
     /**

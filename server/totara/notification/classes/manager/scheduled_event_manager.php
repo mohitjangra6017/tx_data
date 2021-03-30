@@ -156,7 +156,7 @@ class scheduled_event_manager {
             $this->trace->output("Queuing notifications for event resolver '{$resolver_class_name}'");
 
             foreach ($preferences as $preference) {
-                if ($resolver_schedule->has_associated_event() && $preference->is_on_event()) {
+                if ($resolver_schedule->uses_on_event_queue() && $preference->is_on_event()) {
                     // Skip those preference that are set for on event, when the resolver had
                     // already had notifiable event interface.
                     continue;

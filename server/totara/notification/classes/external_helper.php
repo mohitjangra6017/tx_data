@@ -17,38 +17,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_notification
  */
-namespace totara_notification\observer;
 
-use core\event\base;
-use totara_notification\event\notifiable_event;
-use totara_notification\external_helper;
-use totara_notification\resolver\resolver_helper;
+namespace totara_notification;
+
+use totara_notification\entity\notifiable_event_queue;
+use totara_notification\resolver\notifiable_event_resolver;
 
 /**
- * Event observer for notifiable event interface.
+ * This class can be called for other plugins
+ *
+ * Class external_helper
  */
-final class notifiable_event_observer {
+class external_helper {
     /**
-     * notification_observer constructor.
+     * helper constructor.
+     * Preventing this class from instantiation.
      */
     private function __construct() {
     }
 
     /**
-     * @param notifiable_event|base $event
-     * @return void
+     * @param notifiable_event_resolver $resolver
      */
-    public static function watch_notifiable_event(notifiable_event $event): void {
-        $event_data = $event->get_notification_event_data();
+    public static function create_notifiable_event_queue(notifiable_event_resolver $resolver): void {
+        $queue = new notifiable_event_queue();
+        $queue->resolver_class_name = get_class($resolver);
+        $queue->set_decoded_event_data($resolver->get_event_data());
+        $queue->set_extended_context($resolver->get_extended_context());
 
-        $resolver = resolver_helper::get_resolver_from_notifiable_event(
-            get_class($event),
-            $event_data
-        );
-
-        external_helper::create_notifiable_event_queue($resolver);
+        $queue->save();
     }
 }

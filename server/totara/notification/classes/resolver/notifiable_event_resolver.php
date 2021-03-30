@@ -57,7 +57,7 @@ abstract class notifiable_event_resolver {
      * notifiable_event_resolver constructor.
      * Preventing any complicated construction.
      *
-     * @param array            $event_data
+     * @param array $event_data
      */
     final public function __construct(array $event_data) {
         $this->event_data = $event_data;
@@ -143,10 +143,12 @@ abstract class notifiable_event_resolver {
     }
 
     /**
-     * This is to check whether the resolver has an event interface associated with it or not.
+     * This is to check whether the resolver is processed through event queue or not and also it could be override if
+     * dev want to skip queueing up.
+     *
      * @return bool
      */
-    public static function has_associated_notifiable_event(): bool {
+    public static function uses_on_event_queue(): bool {
         $cls = get_called_class();
 
         if (self::class === $cls) {
@@ -225,4 +227,11 @@ abstract class notifiable_event_resolver {
      * @return extended_context
      */
     abstract public function get_extended_context(): extended_context;
+
+    /**
+     * @return array
+     */
+    public function get_event_data(): array {
+        return $this->event_data;
+    }
 }
