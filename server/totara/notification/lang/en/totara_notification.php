@@ -73,6 +73,7 @@ $string['force_channel_x'] = 'Force channel {$a}';
 $string['messaging_and_notification'] = 'Messaging and notifications';
 $string['more_actions_for'] = 'More actions for {$a}';
 $string['no_available_data_for_key'] = '<no available data for {$a}>';
+$string['no_notifications'] = 'No notifications found.';
 $string['notifiable_events'] = 'Notification triggers';
 $string['notifications'] = "Notifications";
 $string['notification:managenotifications'] = "Manage notifications";

@@ -59,12 +59,10 @@
           </template>
           <template v-slot:row="{ expand, expandState, row: resolver }">
             <ExpandCell
-              v-if="resolver.notification_preferences.length"
               :aria-label="resolver.name"
               :expand-state="expandState"
               @click="expand()"
             />
-            <ExpandCell v-else :empty="true" />
             <Cell size="4">
               {{ resolver.name }}
             </Cell>
@@ -108,6 +106,7 @@
 
           <template v-slot:expand-content="{ row: resolver }">
             <Table
+              v-if="resolver.notification_preferences.length"
               :data="resolver.notification_preferences"
               :expandable-rows="false"
               :expand-multiple-rows="true"
@@ -180,6 +179,29 @@
                 </Cell>
               </template>
             </Table>
+
+            <template v-else>
+              {{ $str('no_notifications', 'totara_notification') }}
+
+              <Button
+                :text="$str('create_notification', 'totara_notification')"
+                :aria-label="
+                  $str(
+                    'create_notification_for_event',
+                    'totara_notification',
+                    resolver.name
+                  )
+                "
+                @click="
+                  $emit('create-custom-notification', {
+                    resolverClassName: resolver.class_name,
+                    scheduleTypes: resolver.valid_schedules,
+                    recipients: resolver.recipients,
+                    deliveryChannels: resolver.default_delivery_channels,
+                  })
+                "
+              />
+            </template>
           </template>
         </Table>
       </Collapsible>
@@ -188,6 +210,7 @@
 </template>
 
 <script>
+import Button from 'tui/components/buttons/Button';
 import Collapsible from 'tui/components/collapsible/Collapsible';
 import CollapsibleGroupToggle from 'tui/components/collapsible/CollapsibleGroupToggle';
 import Cell from 'tui/components/datatable/Cell';
@@ -200,6 +223,7 @@ import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
 
 export default {
   components: {
+    Button,
     Collapsible,
     CollapsibleGroupToggle,
     Cell,
@@ -279,7 +303,10 @@ export default {
     "disabled",
     "enabled",
     "enable_status",
-    "notifications"
+    "notifications",
+    "create_notification",
+    "create_notification_for_event",
+    "no_notifications"
   ],
   "core": [
     "actions",
