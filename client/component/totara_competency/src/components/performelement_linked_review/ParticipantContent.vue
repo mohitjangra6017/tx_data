@@ -68,6 +68,7 @@
                 {{ $str('achievement_level', 'totara_competency') }}
                 <InfoIconButton
                   v-if="!fromPrint"
+                  class="tui-linkedReviewViewCompetency__bar-headerHelp"
                   :is-help-for="$str('rating_scale', 'totara_competency')"
                 >
                   <RatingScaleOverview :scale="scale" />
@@ -243,9 +244,12 @@ export default {
     }
 
     &-header {
-      display: flex;
       margin: 0;
       @include tui-font-body();
+    }
+
+    &-headerHelp {
+      display: inline-block;
     }
 
     &-value {

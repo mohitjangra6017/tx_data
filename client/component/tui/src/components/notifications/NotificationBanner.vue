@@ -28,6 +28,7 @@
         :alt="labelForIconType + ': '"
         :title="labelForIconType"
         :size="200"
+        state="none"
       />
     </div>
     <div class="tui-notificationBanner__message" v-html="message" />

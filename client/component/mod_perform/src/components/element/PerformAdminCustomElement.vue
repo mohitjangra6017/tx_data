@@ -132,7 +132,7 @@
         :activity-context-id="activityContextId"
         :current-activity-id="activityId"
         :extra-plugin-config-data="extraPluginConfigData"
-        @child-update="$emit('child-update')"
+        @child-update="$emit('child-update', $event)"
         @display="$emit('display', sectionElement)"
         @display-read="$emit('display-read', sectionElement)"
         @unsaved-child="$emit('unsaved-child', $event)"

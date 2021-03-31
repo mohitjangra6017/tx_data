@@ -17,77 +17,91 @@
 -->
 
 <template>
-  <div class="tui-performAdminChildElements">
-    <Droppable
-      v-slot="{
-        attrs,
-        events,
-        dropTarget,
-        placeholder,
-      }"
-      :source-id="$id('child-element-list')"
-      source-name="Child Element List"
-      :reorder-only="true"
-      @drop="handleDropElement"
-    >
-      <div
-        class="tui-performAdminChildElements__dragList"
-        v-bind="attrs"
-        v-on="events"
+  <Loader :loading="loading">
+    <div class="tui-performAdminChildElements">
+      <Droppable
+        v-slot="{
+          attrs,
+          events,
+          dropTarget,
+          placeholder,
+        }"
+        :source-id="$id('child-element-list')"
+        source-name="Child Element List"
+        :reorder-only="true"
+        @drop="handleDropElement"
       >
-        <render :vnode="dropTarget" />
-        <Draggable
-          v-for="(element, index) in childElements"
-          :key="element.id"
-          v-slot="{ dragging, attrs, events, moveMenu }"
-          :index="index"
-          :value="element.id"
-          :aria-label="$str('move_element', 'mod_perform', element.title)"
-          type="element"
-          :disabled="!canDrag(element.id)"
+        <div
+          class="tui-performAdminChildElements__dragList"
+          v-bind="attrs"
+          v-on="events"
         >
-          <div
-            class="tui-performAdminChildElements__draggableItem"
-            v-bind="attrs"
-            v-on="events"
+          <render :vnode="dropTarget" />
+          <Draggable
+            v-for="(element, index) in childElements"
+            :key="element.id"
+            v-slot="{ dragging, attrs, events, moveMenu }"
+            :index="index"
+            :value="element.id"
+            :aria-label="$str('move_element', 'mod_perform', element.title)"
+            type="element"
+            :disabled="!canDrag(element.id)"
           >
-            <render :vnode="moveMenu" />
-            <PerformAdminCustomElement
-              :activity-context-id="activityContextId"
-              :activity-id="activityId"
-              :activity-state="activityState"
-              :draggable="canDrag(element.id)"
-              :dragging="dragging"
-              :is-multi-section-active="false"
-              :section-component="getElementComponent(element)"
-              :section-element="{ element: element }"
-              :section-id="sectionId"
-              @display="setElementToView(element.id)"
-              @display-read="setElementToReadOnly(element.id)"
-              @edit="setElementToEdit(element.id)"
-              @remove="deleteChildElement(element.id)"
-              @update="saveElement(element, $event, index)"
-            />
-          </div>
-        </Draggable>
-        <render :vnode="placeholder" />
-      </div>
-    </Droppable>
+            <div
+              class="tui-performAdminChildElements__draggableItem"
+              v-bind="attrs"
+              v-on="events"
+            >
+              <render :vnode="moveMenu" />
+              <PerformAdminCustomElement
+                :activity-context-id="activityContextId"
+                :activity-id="activityId"
+                :activity-state="activityState"
+                :draggable="canDrag(element.id)"
+                :dragging="dragging"
+                :is-multi-section-active="false"
+                :section-component="getElementComponent(element)"
+                :section-element="{ element: element }"
+                :section-id="sectionId"
+                @display="setElementToView(element.id)"
+                @display-read="setElementToReadOnly(element.id)"
+                @edit="setElementToEdit(element.id)"
+                @remove="confirmDelete(element.id)"
+                @update="saveElement(element, $event, index)"
+              />
+            </div>
+          </Draggable>
+          <render :vnode="placeholder" />
+        </div>
+      </Droppable>
 
-    <ContentAddElementButton
-      v-if="canShowButton"
-      :element-plugins="addableElementPlugins"
-      :for-child-elements="true"
-      @add-element-item="addElement"
-    />
-  </div>
+      <ContentAddElementButton
+        v-if="canShowButton"
+        :element-plugins="addableElementPlugins"
+        :for-child-elements="true"
+        @add-element-item="addElement"
+      />
+
+      <ConfirmationModal
+        :open="deleteModalOpen"
+        :title="$str('modal_element_delete_title', 'mod_perform')"
+        :confirm-button-text="$str('delete', 'core')"
+        @confirm="deleteChildElement"
+        @cancel="closeDeleteModal"
+      >
+        <p>{{ $str('modal_element_delete_message', 'mod_perform') }}</p>
+      </ConfirmationModal>
+    </div>
+  </Loader>
 </template>
 
 <script>
 //Components
+import ConfirmationModal from 'tui/components/modal/ConfirmationModal';
 import ContentAddElementButton from 'mod_perform/components/manage_activity/content/ContentAddElementButton';
 import Draggable from 'tui/components/drag_drop/Draggable';
 import Droppable from 'tui/components/drag_drop/Droppable';
+import Loader from 'tui/components/loading/Loader';
 import PerformAdminCustomElement from 'mod_perform/components/element/PerformAdminCustomElement';
 import { uniqueId } from 'tui/util';
 import Vue from 'vue';
@@ -100,9 +114,11 @@ import reorderChildElementMutation from 'mod_perform/graphql/reorder_child_eleme
 
 export default {
   components: {
+    ConfirmationModal,
     ContentAddElementButton,
     Draggable,
     Droppable,
+    Loader,
     PerformAdminCustomElement,
   },
 
@@ -122,8 +138,14 @@ export default {
     return {
       // List of child elements
       childElements: [],
+      // Display delete modal
+      deleteModalOpen: false,
+      // Element to delete
+      elementToDelete: false,
       // Display status for each child element
       elementStates: {},
+      // Loading state
+      loading: false,
       // New child element list for unsaved elements
       newElements: [],
     };
@@ -198,6 +220,24 @@ export default {
      */
     canDrag(id) {
       return this.getChildState(id) === 'view' && !this.isActive;
+    },
+
+    /**
+     * Close element deletion confirmation modal.
+     */
+    closeDeleteModal() {
+      this.elementToDelete = null;
+      this.deleteModalOpen = false;
+    },
+
+    /**
+     * Show confirm Delete child element modal
+     *
+     * @param {Number} id
+     */
+    confirmDelete(id) {
+      this.elementToDelete = id;
+      this.deleteModalOpen = true;
     },
 
     /**
@@ -437,13 +477,24 @@ export default {
      * @param id
      */
     async createChildElement(elementData, id) {
-      await this.$apollo.mutate({
-        mutation: createChildElementMutation,
-        variables: elementData,
-      });
+      this.loading = true;
+      try {
+        await this.$apollo.mutate({
+          mutation: createChildElementMutation,
+          variables: elementData,
+        });
 
-      // Request for full section data update
-      this.$emit('child-update');
+        this.loading = false;
+
+        // Request for full section data update
+        this.$emit(
+          'child-update',
+          this.$str('toast_success_save_element', 'mod_perform')
+        );
+      } catch (e) {
+        this.loading = false;
+        this.$emit('child-update');
+      }
 
       // Remove temp created element
       this.newElements = this.newElements.filter(element => {
@@ -457,19 +508,35 @@ export default {
     /**
      * Delete child element
      *
-     * @param {Number} id
      */
-    async deleteChildElement(id) {
-      let input = {
-        element_id: id,
-      };
-      await this.$apollo.mutate({
-        mutation: deleteChildElementMutation,
-        variables: { input },
-      });
+    async deleteChildElement() {
+      if (!this.elementToDelete) {
+        return;
+      }
 
-      // Request for full section data update
-      this.$emit('child-update');
+      let input = {
+        element_id: this.elementToDelete,
+      };
+
+      this.loading = true;
+      try {
+        await this.$apollo.mutate({
+          mutation: deleteChildElementMutation,
+          variables: { input },
+        });
+        this.closeDeleteModal();
+        this.loading = false;
+
+        // Request for full section data update
+        this.$emit(
+          'child-update',
+          this.$str('toast_success_delete_element', 'mod_perform')
+        );
+      } catch (e) {
+        this.loading = false;
+        this.closeDeleteModal();
+        this.$emit('child-update');
+      }
     },
 
     /**
@@ -481,13 +548,23 @@ export default {
     async updateChildElement(elementData, id) {
       const data = { input: elementData };
 
-      await this.$apollo.mutate({
-        mutation: updateChildElementMutation,
-        variables: data,
-      });
+      this.loading = true;
+      try {
+        await this.$apollo.mutate({
+          mutation: updateChildElementMutation,
+          variables: data,
+        });
+        this.loading = false;
 
-      // Request for full section data update
-      this.$emit('child-update');
+        // Request for full section data update
+        this.$emit(
+          'child-update',
+          this.$str('toast_success_save_element', 'mod_perform')
+        );
+      } catch (e) {
+        this.loading = false;
+        this.$emit('child-update');
+      }
 
       // Set the element to view state
       this.setElementToView(id);
@@ -501,13 +578,23 @@ export default {
         },
       };
 
-      await this.$apollo.mutate({
-        mutation: reorderChildElementMutation,
-        variables: data,
-      });
+      this.loading = true;
+      try {
+        await this.$apollo.mutate({
+          mutation: reorderChildElementMutation,
+          variables: data,
+        });
+        this.loading = false;
 
-      // Request for full section data update
-      this.$emit('child-update');
+        // Request for full section data update
+        this.$emit(
+          'child-update',
+          this.$str('toast_success_move_element', 'mod_perform')
+        );
+      } catch (e) {
+        this.loading = false;
+        this.$emit('child-update');
+      }
     },
   },
 };
@@ -515,8 +602,16 @@ export default {
 
 <lang-strings>
   {
+    "core": [
+      "delete"
+    ],
     "mod_perform": [
-      "move_element"
+      "modal_element_delete_message",
+      "modal_element_delete_title",
+      "move_element",
+      "toast_success_delete_element",
+      "toast_success_move_element",
+      "toast_success_save_element"
     ]
   }
 </lang-strings>

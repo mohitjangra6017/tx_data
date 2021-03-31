@@ -472,9 +472,16 @@ export default {
 
     /**
      * Child element update
+     *
+     * @param {String} successMessage
      */
-    childUpdate() {
-      this.$apollo.queries.section.refetch();
+    async childUpdate(successMessage) {
+      await this.$apollo.queries.section.refetch();
+      if (successMessage) {
+        this.showSuccessNotification(successMessage);
+      } else {
+        this.showErrorNotification();
+      }
     },
 
     /**
@@ -1008,7 +1015,11 @@ export default {
         section_element_id: info.item.value,
         move_to_after_section_element_id: afterSectionElementId,
       };
-      this.save(variables, null, reorderSectionElementMutation);
+      this.save(
+        variables,
+        this.$str('toast_success_move_element', 'mod_perform'),
+        reorderSectionElementMutation
+      );
     },
 
     /**

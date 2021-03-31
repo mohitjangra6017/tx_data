@@ -32,7 +32,7 @@
         :element-id="elementId"
         :section-element="sectionElement"
         :section-id="sectionId"
-        @child-update="$emit('child-update')"
+        @child-update="$emit('child-update', $event)"
         @unsaved-child="$emit('unsaved-child', $event)"
       />
     </div>

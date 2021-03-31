@@ -55,7 +55,7 @@ export function createIconComponent([type, svgAttrs, content], opts = {}) {
           htmlContent: content,
           viewBox: svgAttrs.viewBox,
           rootFill: svgAttrs.fill,
-          state: opts.state || props.state,
+          state: props.state || opts.state,
           flipRtl: opts.flipRtl,
         }),
       });

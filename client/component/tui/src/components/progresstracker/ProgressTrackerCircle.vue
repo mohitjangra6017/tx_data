@@ -83,6 +83,8 @@ export default {
     background: transparent;
     border: var(--border-width-thin) solid transparent;
     border-radius: 50%;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
 
     // Pending
     #{$pending} & {
@@ -126,6 +128,24 @@ export default {
     // Achieved
     #{$achieved} & {
       border-color: var(--progresstracker-container-bg-color);
+    }
+  }
+}
+.ie,
+.msedge {
+  .tui-progressTrackerCircle--achieved {
+    .tui-progressTrackerCircle {
+      &__middle {
+        border: var(--gap-1) solid var(--progresstracker-color-achieved);
+      }
+    }
+  }
+
+  .tui-progressTrackerCircle--complete {
+    .tui-progressTrackerCircle {
+      &__middle {
+        border: var(--gap-1) solid var(--progresstracker-color-complete);
+      }
     }
   }
 }

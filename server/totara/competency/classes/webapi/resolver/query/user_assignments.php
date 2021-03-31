@@ -53,7 +53,7 @@ class user_assignments implements query_resolver, has_middleware {
             self::require_view_capability($user_id, $ec);
         } catch (Exception $e) {
             return [
-                'item' => [],
+                'items' => [],
                 'filters' => [],
                 'total' => 0,
                 'next_cursor' => '',

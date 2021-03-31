@@ -10,6 +10,7 @@ exports[`NotificationBanner Checks snapshot 1`] = `
     <svgicongenerated-stub
       alt="tempstring: "
       size="200"
+      state="none"
       title="tempstring"
     />
   </div>
