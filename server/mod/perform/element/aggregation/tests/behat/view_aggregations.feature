@@ -46,8 +46,9 @@ Feature: Respond to sources and view aggregate responses
       | section_name             | element_name         | title                                | data                                                                                                                                   |
       | Source section one       | numeric_rating_scale | On a scale of 1 - 5                  | {"defaultValue":"1", "highValue":"5", "lowValue":"3"}                                                                                  |
       | Source section two       | custom_rating_scale  | Zero or a hundy                      | {"options": [{"name":"option_1","value": {"text":"A hundy","score":"100"}}, {"name":"option_2","value": {"text":"Zero","score":"0"}}]} |
-      | Display aggregation here | short_text           | Not needed to be filled short answer | {"excludedValues": [], "calculations": ["average"], "sourceSectionElementTitles": ["On a scale of 1 - 5", "Zero or a hundy"]}          |
+      | Display aggregation here | short_text           | Not needed to be filled short answer |                                                                                                                                        |
       | Display aggregation here | aggregation          | Average of previous answers          | {"excludedValues": [], "calculations": ["average"], "sourceSectionElementTitles": ["On a scale of 1 - 5", "Zero or a hundy"]}          |
+      | Source section one       | aggregation          | Aggregation with excluded values     | {"excludedValues": [0, 100], "calculations": ["average"], "sourceSectionElementTitles": ["On a scale of 1 - 5", "Zero or a hundy"]}    |
     And I run the scheduled task "mod_perform\task\expand_assignments_task"
     And I run the scheduled task "mod_perform\task\create_subject_instance_task"
     And I run the scheduled task "mod_perform\task\create_manual_participant_progress_task"
@@ -62,13 +63,11 @@ Feature: Respond to sources and view aggregate responses
 
   Scenario: I can respond to aggregation sources and view the aggregated responses
     When I navigate to the external participants form for user "Harry Smith"
-
-    When I answer "multi choice single" question "Zero or a hundy" with "A hundy (score: 100)"
+    And I answer "multi choice single" question "Zero or a hundy" with "A hundy (score: 100)"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
-
-    When I click on "Source section two" "link_or_button"
-    Then I should see perform "" question "Zero or a hundy" is answered by the current user with "A hundy (score: 100)"
+    And I click on "Source section two" "link_or_button"
+    Then I should see perform "custom rating scale" question "Zero or a hundy" is answered by the current user with "A hundy (score: 100)"
     And I should not see "Subject response"
     And I should not see "Manager response"
     And I should not see "Appraiser response"
@@ -108,11 +107,12 @@ Feature: Respond to sources and view aggregate responses
     Then I should see perform "aggregation" question "Average of previous answers" is answered by the current user with "No response submitted"
 
     When I click on "Source section one" "link_or_button"
-    And I answer "numeric rating scale" question "On a scale of 1 - 5" with "5"
+    Then I should see "Calculations are based on the latest submitted values. Unanswered questions, and the following values are excluded from calculation: 0, 100" in the ".tui-aggregationParticipantForm" "css_element"
+
+    When I answer "numeric rating scale" question "On a scale of 1 - 5" with "5"
     And I click on "Submit" "button"
     And I confirm the tui confirmation modal
-
-    When I click on "Source section one" "link_or_button"
+    And I click on "Source section one" "link_or_button"
     Then I should see perform "numeric rating scale" question "On a scale of 1 - 5" is answered by the current user with "5"
     And I should see perform "numeric rating scale" question "On a scale of 1 - 5" is answered by "Manager" with "No response submitted"
     And I should see perform "numeric rating scale" question "On a scale of 1 - 5" is answered by "Manager's manager" with "No participants identified"
@@ -133,7 +133,8 @@ Feature: Respond to sources and view aggregate responses
     And I should see perform "custom rating scale" question "On a scale of 1 - 5" is answered by "Manager" with "No response submitted"
     And I should see perform "custom rating scale" question "On a scale of 1 - 5" is answered by "Manager's manager" with "No participants identified"
 
-    And I should see "Calculations are based on the latest submitted values. Unanswered questions are excluded from calculation." in the ".tui-aggregationParticipantForm" "css_element"
+    And I should see "Calculations are based on the latest submitted values. Unanswered questions are excluded from calculation."
+    And I should see "Calculations are based on the latest submitted values. Unanswered questions, and the following values are excluded from calculation: 0, 100"
     And I should see perform "aggregation" question "Average of previous answers" is answered by the current user with "Average: 5.00"
     And I should see perform "aggregation" question "Average of previous answers" is answered by "Manager" with "No response submitted"
     And I should see perform "aggregation" question "Average of previous answers" is answered by "Manager's manager" with "No participants identified"

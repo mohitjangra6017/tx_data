@@ -31,7 +31,7 @@
         )
       }}
     </div>
-    <div>
+    <div v-else>
       {{ $str('header_blurb', 'performelement_aggregation') }}
     </div>
 
@@ -99,7 +99,7 @@ export default {
 
       // Remove any empty entries.
       return this.element.data.excludedValues.filter(
-        value => value !== null && value.trim() !== ''
+        value => value !== null && String(value).trim() !== ''
       );
     },
   },
