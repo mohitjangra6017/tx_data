@@ -174,25 +174,36 @@ function xmldb_perform_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2020122100, 'perform');
     }
 
-    if ($oldversion < 2020122102) {
-        $table = new xmldb_table('perform_element');
-        $parent_field = new xmldb_field('parent', XMLDB_TYPE_INTEGER, '10', null, false, null, null, 'context_id');
-        $dbman->add_field($table, $parent_field);
-        $key = new xmldb_key('parent', XMLDB_KEY_FOREIGN, array('parent'), 'perform_element', array('id'));
-        $dbman->add_key($table, $key);
-
-        upgrade_mod_savepoint(true, 2020122102, 'perform');
-    }
-
     if ($oldversion < 2020122104) {
+        // Define field parent to be added to perform_element.
         $table = new xmldb_table('perform_element');
-        $sort_order_field = new xmldb_field('sort_order', XMLDB_TYPE_INTEGER, '10', null, false, null, null, 'data');
+        $field = new xmldb_field('parent', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'context_id');
 
-        if (!$dbman->field_exists($table, $sort_order_field)) {
-            $dbman->add_field($table, $sort_order_field);
+        // Conditionally launch add field parent.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
         }
-        $index = new xmldb_index('parent_sort_order', XMLDB_INDEX_UNIQUE, ['parent', 'sort_order']);
 
+        // Define key parent (foreign) to be added to perform_element.
+        $key = new xmldb_key('parent', XMLDB_KEY_FOREIGN, array('parent'), 'perform_element', array('id'));
+
+        // Launch add key parent.
+        if (!$dbman->key_exists($table, $key)) {
+            $dbman->add_key($table, $key);
+        }
+
+        // Define field sort_order to be added to perform_element.
+        $field = new xmldb_field('sort_order', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'data');
+
+        // Conditionally launch add field sort_order.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define index parent_sort_order (not unique) to be added to perform_element.
+        $index = new xmldb_index('parent_sort_order', XMLDB_INDEX_NOTUNIQUE, array('parent', 'sort_order'));
+
+        // Conditionally launch add index parent_sort_order.
         if (!$dbman->index_exists($table, $index)) {
             $dbman->add_index($table, $index);
         }

@@ -107,7 +107,7 @@
         <KEY NAME="parent" TYPE="foreign" FIELDS="parent" REFTABLE="perform_element" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="parent_sort_order" UNIQUE="true" FIELDS="parent, sort_order"/>
+        <INDEX NAME="parent_sort_order" UNIQUE="false" FIELDS="parent, sort_order"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="perform_element_identifier" COMMENT="Table containing identifier strings that can be used to tag elements">
