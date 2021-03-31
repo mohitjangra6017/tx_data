@@ -111,7 +111,7 @@ class totara_notification_mock_scheduled_aware_event_resolver extends notifiable
      * @return array
      */
     public static function get_notification_default_delivery_channels(): array {
-        return [];
+        return ['email', 'popup'];
     }
 
     /**

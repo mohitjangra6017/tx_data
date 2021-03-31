@@ -33,13 +33,6 @@ class totara_notification_mock_delivery_channel extends delivery_channel {
     private static $attributes = [];
 
     /**
-     * @return bool
-     */
-    public static function get_is_enabled_by_default(): bool {
-        return static::$attributes['is_enabled_by_default'] ?? parent::get_is_enabled_by_default();
-    }
-
-    /**
      * @return string|null
      */
     public static function get_parent(): ?string {

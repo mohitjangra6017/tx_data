@@ -45,7 +45,7 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
     /**
      * @var array|null
      */
-    private static $default_delivery_channels;
+    private static $default_delivery_channels = ['email', 'popup'];
 
     /**
      * @param callable $recipient_ids_resolver
@@ -76,7 +76,7 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
         }
 
         if (isset(self::$default_delivery_channels)) {
-            self::$default_delivery_channels = [];
+            self::$default_delivery_channels = ['email', 'popup'];
         }
     }
 
@@ -157,16 +157,9 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
     }
 
     /**
-     * @return array
+     * @param string[] $delivery_channels
      */
-    public static function get_default_delivery_channels(): array {
-        return self::$default_delivery_channels ?? [];
-    }
-
-    /**
-     * @param delivery_channel[] $delivery_channels
-     */
-    public static function set_default_delivery_channels(array $delivery_channels): void {
+    public static function set_notification_default_delivery_channels(array $delivery_channels): void {
         self::$default_delivery_channels = $delivery_channels;
     }
 }

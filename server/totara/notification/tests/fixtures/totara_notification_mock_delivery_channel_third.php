@@ -54,13 +54,6 @@ class totara_notification_mock_delivery_channel_third extends delivery_channel {
     }
 
     /**
-     * @return bool
-     */
-    public static function get_is_enabled_by_default(): bool {
-        return false;
-    }
-
-    /**
      * @param string $key
      * @param mixed $value
      */

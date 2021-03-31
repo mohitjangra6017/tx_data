@@ -81,17 +81,15 @@ final class delivery_channel_loader {
      */
     public static function get_for_event_resolver(string $resolver_class_name): array {
         $defaults = self::get_defaults();
-        $class_defaults = call_user_func([$resolver_class_name, 'get_notification_default_delivery_channels']);
+        $default_enabled_keys = call_user_func([$resolver_class_name, 'get_notification_default_delivery_channels']);
 
-        if (is_array($class_defaults)) {
-            foreach ($class_defaults as $class_default) {
-                $component = $class_default['component'];
-                $enabled = $class_default['enabled'];
-                if (!isset($defaults[$component])) {
-                    debugging("Unknown default delivery channel '${component} for '${resolver_class_name}'");
+        if (is_array($default_enabled_keys)) {
+            foreach ($default_enabled_keys as $default_enabled_key) {
+                if (!isset($defaults[$default_enabled_key])) {
+                    debugging("Unknown default delivery channel '${default_enabled_key} for '${resolver_class_name}'");
                     continue;
                 }
-                $defaults[$component]->set_enabled($enabled);
+                $defaults[$default_enabled_key]->set_enabled(true);
             }
         }
 

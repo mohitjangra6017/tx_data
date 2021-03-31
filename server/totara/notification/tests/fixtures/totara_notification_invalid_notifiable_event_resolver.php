@@ -46,7 +46,7 @@ class totara_notification_invalid_notifiable_event_resolver extends notifiable_e
      * @return array
      */
     public static function get_notification_default_delivery_channels(): array {
-        return [];
+        return ['email', 'popup'];
     }
 
     /**

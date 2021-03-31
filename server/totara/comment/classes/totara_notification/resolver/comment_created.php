@@ -79,7 +79,7 @@ class comment_created extends notifiable_event_resolver implements scheduled_eve
      * @return array
      */
     public static function get_notification_default_delivery_channels(): array {
-        return [];
+        return ['email', 'popup'];
     }
 
     /**

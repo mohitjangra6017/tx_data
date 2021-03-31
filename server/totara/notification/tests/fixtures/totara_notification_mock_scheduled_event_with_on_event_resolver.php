@@ -77,7 +77,7 @@ class totara_notification_mock_scheduled_event_with_on_event_resolver extends no
      * @return array
      */
     public static function get_notification_default_delivery_channels(): array {
-        return [];
+        return ['email', 'popup'];
     }
 
     /**

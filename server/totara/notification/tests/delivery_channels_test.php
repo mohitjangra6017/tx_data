@@ -83,11 +83,7 @@ class totara_notification_delivery_channels_testcase extends testcase {
         }
 
         // Default entry
-        $overrides = [
-            mock_channel_second::set_default(true),
-            mock_channel_third::set_default(false),
-        ];
-        mock_resolver::set_default_delivery_channels($overrides);
+        mock_resolver::set_notification_default_delivery_channels(['second']);
         $default_channels = delivery_channel_loader::get_for_event_resolver(mock_resolver::class);
         $this->entity->default_delivery_channels = null;
         $results = $this->model->default_delivery_channels;
@@ -152,11 +148,7 @@ class totara_notification_delivery_channels_testcase extends testcase {
             'third' => [],
         ];
 
-        $channels = [
-            mock_channel::set_default(true), // component = first
-            mock_channel_second::set_default(true), // component = second
-        ];
-        mock_resolver::set_default_delivery_channels($channels);
+        mock_resolver::set_notification_default_delivery_channels(['first', 'second']);
 
         // Test by loading the get_active_message_processors, and check what's returned
         // We should only see email & msteams here as the rest should have been removed.
@@ -177,11 +169,7 @@ class totara_notification_delivery_channels_testcase extends testcase {
         self::assertArrayNotHasKey('third', $results);
 
         // Disable popup & rerun
-        $channels = [
-            mock_channel::set_default(true), // component = first
-            mock_channel_second::set_default(false), // component = second
-        ];
-        mock_resolver::set_default_delivery_channels($channels);
+        mock_resolver::set_notification_default_delivery_channels(['first']);
 
         $results = $method->invoke(new notification_queue_manager(), $user->id, $resolver, $mock_message_providers);
 
@@ -211,7 +199,7 @@ class totara_notification_delivery_channels_testcase extends testcase {
         $generator->include_mock_delivery_channels();
 
         // Always reset the delivery channels back to nothing
-        mock_resolver::set_default_delivery_channels([]);
+        mock_resolver::set_notification_default_delivery_channels([]);
 
         $this->entity = new entity(null, false, true);
         $this->entity->resolver_class_name = mock_resolver::class;
@@ -231,7 +219,7 @@ class totara_notification_delivery_channels_testcase extends testcase {
     protected function tearDown(): void {
         $this->model = null;
         $this->entity = null;
-        mock_resolver::set_default_delivery_channels([]);
+        mock_resolver::set_notification_default_delivery_channels([]);
         mock_channel::clear();
         mock_channel_second::clear();
         mock_channel_third::clear();

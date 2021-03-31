@@ -81,7 +81,7 @@ class comment_soft_deleted extends notifiable_event_resolver implements schedule
      * @inheritDoc
      */
     public static function get_notification_default_delivery_channels(): array {
-        return [];
+        return ['email', 'popup'];
     }
 
     /**

@@ -29,7 +29,6 @@ namespace totara_notification\delivery\channel;
  *
  * @property-read string $is_enabled
  * @property-read string $label
- * @property-read bool $is_enabled_by_default
  * @property-read string $parent
  * @property-read bool $is_sub_delivery_channel
  * @property-read int $display_order
@@ -74,15 +73,6 @@ abstract class delivery_channel {
     abstract public static function get_display_order(): int;
 
     /**
-     * If the channel is enabled by default.
-     *
-     * @return bool
-     */
-    public static function get_is_enabled_by_default(): bool {
-        return true;
-    }
-
-    /**
      * @return string|null
      */
     public static function get_parent(): ?string {
@@ -119,20 +109,6 @@ abstract class delivery_channel {
     }
 
     /**
-     * Used to identify this delivery channel as a specific default for
-     * a particular event resolver.
-     *
-     * @param bool $enabled
-     * @return bool[]
-     */
-    public static function set_default(bool $enabled): array {
-        return [
-            'component' => static::get_component(),
-            'enabled' => $enabled,
-        ];
-    }
-
-    /**
      * Helper to access static properties.
      * We don't validate that much as this class doesn't hold secret information.
      *
@@ -158,7 +134,7 @@ abstract class delivery_channel {
      * @return bool
      */
     public function get_is_enabled(): bool {
-        return $this->enabled ?? $this->is_enabled_by_default;
+        return $this->enabled ?? false;
     }
 
     /**
