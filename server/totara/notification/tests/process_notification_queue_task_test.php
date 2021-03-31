@@ -73,7 +73,10 @@ class totara_notification_process_notification_queue_task_testcase extends testc
         $queue = new notification_queue();
         $queue->set_extended_context(extended_context::make_with_context($context_user));
         $queue->scheduled_time = 15;
-        $queue->event_data = json_encode(['message' => 'my_name']);
+        $queue->event_data = json_encode([
+            'message' => 'my_name',
+            'expected_context_id' => context_system::instance()->id,
+        ]);
 
         // Fetching preference out of the notification's name.
         $preference = $repository->find_in_system_context(totara_notification_mock_built_in_notification::class);
@@ -214,7 +217,10 @@ class totara_notification_process_notification_queue_task_testcase extends testc
         $valid_queue->set_extended_context(extended_context::make_with_context($context_user));
         $valid_queue->scheduled_time = 10;
         $valid_queue->notification_preference_id = $preference->get_id();
-        $valid_queue->event_data = json_encode(['message' => 'bolobala']);
+        $valid_queue->event_data = json_encode([
+            'message' => 'bolobala',
+            'expected_context_id' => context_system::instance()->id
+        ]);
         $valid_queue->save();
 
         // Create an invalid queue
@@ -286,7 +292,10 @@ class totara_notification_process_notification_queue_task_testcase extends testc
         $valid_queue->set_extended_context(extended_context::make_with_context($context_user));
         $valid_queue->scheduled_time = 10;
         $valid_queue->notification_preference_id = $preference->get_id();
-        $valid_queue->event_data = json_encode(['message' => 'bolobala']);
+        $valid_queue->event_data = json_encode([
+            'message' => 'bolobala',
+            'expected_context_id' => $context_user->id
+        ]);
         $valid_queue->save();
 
 

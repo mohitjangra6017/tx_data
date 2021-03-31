@@ -149,6 +149,9 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
         self::$placeholder_options = $options;
     }
 
+    /**
+     * @return extended_context
+     */
     public function get_extended_context(): extended_context {
         return extended_context::make_with_id($this->event_data['expected_context_id']);
     }

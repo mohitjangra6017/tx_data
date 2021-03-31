@@ -15,7 +15,6 @@
  * @author Kian Nguyen <kian.nguyen@totaralearning.com>
  * @module totara_notification
  */
-import { Format } from 'tui/editor';
 
 export const NOTIFICATION_PREFERENCE_KEYS = [
   'subject',
@@ -97,8 +96,10 @@ export function getDefaultNotificationPreference(extraAttributes = {}) {
   const defaultAttributes = {
     subject: '',
     body: '',
-    body_format: Format.JSON_EDITOR,
-    subject_format: Format.JSON_EDITOR,
+    // Null to fallback to the user's preferences.
+    body_format: null,
+    // Null to fallback to the user's preferences.
+    subject_format: null,
     title: null,
     schedule_type: SCHEDULE_TYPES.ON_EVENT,
     schedule_offset: null,

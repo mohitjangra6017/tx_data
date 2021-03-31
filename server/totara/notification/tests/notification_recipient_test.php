@@ -63,7 +63,10 @@ class totara_notification_notification_recipient_testcase extends testcase {
         $queue = new notification_queue_entity();
         $queue->set_extended_context(extended_context::make_with_context($context_user));
         $queue->scheduled_time = 15;
-        $queue->event_data = json_encode(['message' => 'my_name']);
+        $queue->event_data = json_encode([
+            'message' => 'my_name',
+            'expected_context_id' => context_system::instance()->id,
+        ]);
         $queue->notification_preference_id = $notification_preference->get_id();
         $queue->save();
 

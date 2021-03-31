@@ -40,6 +40,7 @@
         :resolver-class-name="resolverClassName"
         :available-recipients="availableRecipients"
         :default-delivery-channels="defaultDeliveryChannels"
+        :preferred-editor-format="preferredEditorFormat"
         @submit="handleSubmit"
         @cancel="$emit('request-close')"
       />
@@ -119,6 +120,8 @@ export default {
       required: true,
       validator: validateDefaultDeliveryChannelsProp(),
     },
+
+    preferredEditorFormat: Number,
   },
 
   methods: {

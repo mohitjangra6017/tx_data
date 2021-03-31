@@ -65,7 +65,10 @@ class totara_notification_notification_queue_manager_testcase extends testcase {
 
         // Create a valid queue.
         $valid_queue = new notification_queue();
-        $valid_queue->set_decoded_event_data(['message' => 'This is message']);
+        $valid_queue->set_decoded_event_data([
+            'message' => 'This is message',
+            'expected_context_id' => context_system::instance()->id,
+        ]);
         $valid_queue->notification_preference_id = $system_built_in->get_id();
         $valid_queue->scheduled_time = 10;
         $valid_queue->set_extended_context(extended_context::make_with_context($context_user));
@@ -227,7 +230,10 @@ class totara_notification_notification_queue_manager_testcase extends testcase {
 
         // Create a valid queue.
         $valid_queue = new notification_queue();
-        $valid_queue->set_decoded_event_data(['message' => 'This is message']);
+        $valid_queue->set_decoded_event_data([
+            'message' => 'This is message',
+            'expected_context_id' => context_system::instance()->id,
+        ]);
         $valid_queue->notification_preference_id = $system_built_in->get_id();
         $valid_queue->scheduled_time = 10;
         $valid_queue->set_extended_context(extended_context::make_with_context($context_user));

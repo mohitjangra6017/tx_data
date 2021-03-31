@@ -288,6 +288,12 @@ export default {
         });
       }
       const newValue = oldValue._updateNativeValue(this.editorInterface, value);
+
+      if (newValue.format === null) {
+        // Update the value's format, with the activeFormat if its not set.
+        newValue.format = this.activeFormat;
+      }
+
       this.$emit('input', newValue);
     },
 

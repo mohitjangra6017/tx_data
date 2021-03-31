@@ -22,9 +22,10 @@
  */
 
 use totara_core\extended_context;
+use totara_notification\local\helper;
 use totara_tui\output\component;
 
-global $CFG, $OUTPUT, $PAGE;
+global $CFG, $OUTPUT, $PAGE, $DB;
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
@@ -78,8 +79,9 @@ $tui = new component(
     'totara_notification/pages/NotificationPage',
     [
         'title' => $title,
-        'contextId' => $extended_context->get_context_id(),
-        'extendedContext' => array(
+        'context-id' => $extended_context->get_context_id(),
+        'preferred-editor-format' => helper::get_preferred_editor_format(FORMAT_JSON_EDITOR),
+        'extended-context' => array(
             'component' => $extended_context->get_component(),
             'area' => $extended_context->get_area(),
             'itemId' => $extended_context->get_item_id()

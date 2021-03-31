@@ -22,6 +22,7 @@
  */
 
 use totara_core\extended_context;
+use totara_notification\local\helper;
 use totara_tui\output\component;
 use totara_notification\model\notification_preference;
 
@@ -49,6 +50,7 @@ $tui = new component(
         'title' => get_string('notifications', 'totara_notification'),
         'context-id' => $extended_context->get_context_id(),
         'can-change-delivery-channel-defaults' => true,
+        'preferred-editor-format' => helper::get_preferred_editor_format(FORMAT_JSON_EDITOR)
     ]
 );
 

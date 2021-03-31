@@ -23,6 +23,7 @@
  */
 
 use totara_core\extended_context;
+use totara_notification\local\helper;
 use totara_tui\output\component;
 use totara_notification\model\notification_preference;
 
@@ -81,12 +82,13 @@ $tui = new component(
     'totara_notification/pages/NotificationPage',
     [
         'title' => get_string('notifications', 'totara_notification'),
-        'contextId' => $extended_context->get_context_id(),
-        'extendedContext' => array(
+        'context-id' => $extended_context->get_context_id(),
+        'extended-context' => array(
             'component' => $extended_context->get_component(),
             'area' => $extended_context->get_area(),
             'itemId' => $extended_context->get_item_id()
-        )
+        ),
+        'preferred-editor-format' => helper::get_preferred_editor_format(FORMAT_JSON_EDITOR)
     ]
 );
 

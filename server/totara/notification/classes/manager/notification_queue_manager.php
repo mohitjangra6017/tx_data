@@ -163,7 +163,7 @@ class notification_queue_manager {
             // If there are no message processors enabled, there's nothing to send
             return;
         }
-        
+
         cron_setup_user($user);
 
         $body_format = $preference->get_body_format();
@@ -199,7 +199,11 @@ class notification_queue_manager {
         );
 
         $message->fullmessagehtml = $engine->render_for_user(
-            format_text($body_text, $body_format),
+            format_text(
+                $body_text,
+                $body_format,
+                ['context' => $resolver->get_extended_context()->get_context()]
+            ),
             $target_user_id,
         );
         $message->subject = $engine->render_for_user(
@@ -261,8 +265,8 @@ class notification_queue_manager {
      *
      * @param int $target_user_id
      * @param notifiable_event_resolver $resolver
-     * @param array $message_processors
-     * @param array $forced_delivery_channels
+     * @param array                     $message_processors
+     * @param array                     $forced_delivery_channels
      * @return array
      */
     private function filter_message_processors_by_delivery_channel(

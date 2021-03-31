@@ -382,11 +382,12 @@ import validateNotificationPreferenceInput from 'totara_notification/graphql/val
  * It is just a helper do all sort of business logic before the initialisation of component state.
  *
  * @param {Object} currentPreference
- * @param {Object|NULL} parentValue
+ * @param {?Object} parentValue
+ * @param {?Number} defaultEditorFormat
  *
  * @return {Object}
  */
-function createFormValues(currentPreference, parentValue) {
+function createFormValues(currentPreference, parentValue, defaultEditorFormat) {
   const formValue = {
     subject: {
       // At this initial state, we keep it undefined and definitely the
@@ -451,28 +452,47 @@ function createFormValues(currentPreference, parentValue) {
         : parentValue.schedule_offset;
   }
 
+  let bodyFormat = defaultEditorFormat,
+    subjectFormat = defaultEditorFormat;
+
   // Overridden subject initializing values.
   if (!parentValue || currentPreference.overridden_subject) {
+    if (currentPreference.subject_format !== null) {
+      subjectFormat = currentPreference.subject_format;
+    }
+
     formValue.subject.value = new EditorContent({
-      format: currentPreference.subject_format,
+      format: subjectFormat,
       content: currentPreference.subject,
     });
   } else {
+    if (parentValue.subject_format !== null) {
+      subjectFormat = parentValue.subject_format;
+    }
+
     formValue.subject.value = new EditorContent({
-      format: parentValue.subject_format,
+      format: subjectFormat,
       content: parentValue.subject,
     });
   }
 
   // Overridden body initializing values.
   if (!parentValue || currentPreference.overridden_body) {
+    if (currentPreference.body_format !== null) {
+      bodyFormat = currentPreference.body_format;
+    }
+
     formValue.body.value = new EditorContent({
-      format: currentPreference.body_format,
+      format: bodyFormat,
       content: currentPreference.body,
     });
   } else {
+    if (parentValue.body_format !== null) {
+      bodyFormat = parentValue.body_format;
+    }
+
     formValue.body.value = new EditorContent({
-      format: parentValue.body_format,
+      format: bodyFormat,
       content: parentValue.body,
     });
   }
@@ -542,6 +562,11 @@ export default {
       required: true,
       validator: validateDefaultDeliveryChannelsProp(),
     },
+
+    /**
+     * The default preferred editor format.
+     */
+    preferredEditorFormat: Number,
   },
 
   data() {
@@ -561,7 +586,11 @@ export default {
           Boolean(!this.parentValue),
       },
       errors: null,
-      formInitialValues: createFormValues(this.preference, this.parentValue),
+      formInitialValues: createFormValues(
+        this.preference,
+        this.parentValue,
+        this.preferredEditorFormat
+      ),
       scheduleTypes: SCHEDULE_TYPES,
     };
   },

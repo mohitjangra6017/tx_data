@@ -52,6 +52,11 @@
           :valid-schedule-types="targetScheduleTypes"
           :available-recipients="targetAvailableRecipients"
           :default-delivery-channels="targetDefaultDeliveryChannels"
+          :preferred-editor-format="
+            preferredEditorFormat !== null
+              ? Number(preferredEditorFormat)
+              : null
+          "
           @form-submit="handleFormSubmit"
         />
       </ModalPresenter>
@@ -128,6 +133,8 @@ export default {
       type: [Number, String],
       required: true,
     },
+
+    preferredEditorFormat: [Number, String],
 
     extendedContext: {
       type: Object,
