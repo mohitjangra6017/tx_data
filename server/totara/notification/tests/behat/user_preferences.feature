@@ -15,7 +15,12 @@ Feature: User notifications preferences
     And I follow "Notification preferences"
     Then I should see "Notification preferences"
     And I should see "Totara comment"
-    When I click on "Totara comment details" "button"
-    Then I should see "Comment deleted"
-    # Check enabled toggle switch
-#    When I click on the "Is enabled" tui toggle button
+
+    When I click on "Expand all" "button"
+    Then I should see "New comment created"
+
+    When I click on "Collapse all" "button"
+    Then I should not see "New comment created"
+
+    When I click on "Totara comment" "button"
+    Then I should see "New comment created"

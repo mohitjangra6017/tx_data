@@ -17,82 +17,69 @@
 -->
 
 <template>
-  <div class="tui-userPreferencesTable">
-    <Table :data="eventResolvers" :expandable-rows="true" :hover-off="true">
-      <template v-slot:header-row>
-        <HeaderCell>
-          {{ $str('notifications', 'totara_notification') }}
-        </HeaderCell>
-        <HeaderCell>
-          {{ $str('delivery_channels', 'totara_notification') }}
-        </HeaderCell>
-        <HeaderCell>
-          {{ $str('enabled', 'totara_notification') }}
-        </HeaderCell>
-        <HeaderCell />
-      </template>
+  <div>
+    <CollapsibleGroupToggle
+      v-model="expanded"
+      :align-end="false"
+      :transparent="false"
+    />
 
-      <template v-slot:row="{ row, expand, expandState }">
-        <ExpandCell
-          :aria-label="row.plugin_name"
-          :expand-state="expandState"
-          @click="expand()"
-        />
-        <Cell>
-          {{ row.plugin_name }}
-        </Cell>
-      </template>
-
-      <template v-slot:expand-content="{ row }">
+    <div class="tui-userPreferencesTable">
+      <Collapsible
+        v-for="eventResolver in eventResolvers"
+        :key="eventResolver.component"
+        v-model="expanded[eventResolver.component]"
+        :label="eventResolver.plugin_name"
+        :indent-contents="true"
+      >
         <Table
-          :data="row.resolvers"
+          :data="eventResolver.resolvers"
           :expandable-rows="true"
-          :border-top-hidden="true"
-          :border-bottom-hidden="true"
           :hover-off="true"
         >
-          <template
-            v-slot:row="{ expand, expandState, row: resolverPreference }"
-          >
-            <Cell>
-              {{ resolverPreference.name }}
+          <template v-slot:header-row>
+            <HeaderCell size="4">
+              {{ $str('notifiable_events', 'totara_notification') }}
+            </HeaderCell>
+            <HeaderCell align="start" size="2">
+              {{ $str('enabled', 'totara_notification') }}
+            </HeaderCell>
+          </template>
+
+          <template v-slot:row="{ row }">
+            <Cell size="4">
+              {{ row.name }}
             </Cell>
-            <Cell />
-            <Cell>
+            <Cell align="start" size="2">
               <ToggleSwitch
                 :aria-label="
-                  $str(
-                    'enabled_status',
-                    'totara_notification',
-                    resolverPreference.name
-                  )
+                  $str('enabled_status', 'totara_notification', row.name)
                 "
-                :value="resolverPreference.enabled"
+                :value="row.enabled"
                 :toggle-only="true"
-                @input="toggleEnabled($event, resolverPreference)"
+                @input="toggleEnabled($event, row)"
               />
-            </Cell>
-            <Cell>
-              ...
             </Cell>
           </template>
         </Table>
-      </template>
-    </Table>
+      </Collapsible>
+    </div>
   </div>
 </template>
 
 <script>
+import Collapsible from 'tui/components/collapsible/Collapsible';
+import CollapsibleGroupToggle from 'tui/components/collapsible/CollapsibleGroupToggle';
 import Cell from 'tui/components/datatable/Cell';
-import ExpandCell from 'tui/components/datatable/ExpandCell';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
 import Table from 'tui/components/datatable/Table';
 import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
 
 export default {
   components: {
+    Collapsible,
+    CollapsibleGroupToggle,
     Cell,
-    ExpandCell,
     HeaderCell,
     Table,
     ToggleSwitch,
@@ -112,6 +99,15 @@ export default {
         });
       },
     },
+  },
+
+  data() {
+    const expanded = {};
+    this.eventResolvers.forEach(
+      eventResolver => (expanded[eventResolver.component] = false)
+    );
+
+    return { expanded };
   },
 
   methods: {
@@ -136,7 +132,19 @@ export default {
     "delivery_channels",
     "enabled",
     "enabled_status",
-    "notifications"
+    "notifiable_events"
   ]
 }
 </lang-strings>
+
+<style lang="scss">
+.tui-userPreferencesTable {
+  margin-top: var(--gap-4);
+}
+
+.tui-collapsible {
+  &__header {
+    --collapsible-header-border-color: var(--color-neutral-1);
+  }
+}
+</style>
