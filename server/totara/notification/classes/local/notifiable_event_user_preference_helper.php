@@ -23,7 +23,9 @@
 
 namespace totara_notification\local;
 
+use totara_notification\delivery\channel\delivery_channel;
 use totara_notification\entity\notifiable_event_user_preference as notifiable_event_user_preference_entity;
+use totara_notification\loader\delivery_channel_loader;
 use totara_notification\resolver\resolver_helper;
 
 class notifiable_event_user_preference_helper {
@@ -32,14 +34,31 @@ class notifiable_event_user_preference_helper {
      */
     private function __construct() {
     }
-    
+
     /**
      * @param int $user_id
      * @param string $resolver_class_name
      * @param notifiable_event_user_preference_entity|null $user_preference
+     * @param bool $apply_transformations If true, further transformations are applied to make this response graphql-like
      * @return array
      */
-    public static function format_response_data(int $user_id, string $resolver_class_name, ?notifiable_event_user_preference_entity $user_preference = null): array {
+    public static function format_response_data(
+        int $user_id,
+        string $resolver_class_name,
+        ?notifiable_event_user_preference_entity $user_preference = null,
+        bool $apply_transformations = false
+    ): array {
+        $delivery_channels = delivery_channel_loader::get_from_user_preferences(
+            $resolver_class_name,
+            $user_preference ? $user_preference->delivery_channels : null
+        );
+
+        if ($apply_transformations) {
+            $delivery_channels = array_map(function (delivery_channel $delivery_channel) {
+                return $delivery_channel->to_array();
+            }, $delivery_channels);
+        }
+
         return [
             'user_id' => $user_id,
             'component' => resolver_helper::get_component_of_resolver_class_name($resolver_class_name),
@@ -47,6 +66,8 @@ class notifiable_event_user_preference_helper {
             'resolver_class_name' => $resolver_class_name,
             'name' => resolver_helper::get_human_readable_resolver_name($resolver_class_name),
             'enabled' => $user_preference === null ? true : (bool)$user_preference->enabled,
+            'delivery_channels' => array_values($delivery_channels),
+            'overridden_delivery_channels' => $user_preference === null ? false : $user_preference->delivery_channels !== null,
             'user_preference_id' => $user_preference === null ? null : $user_preference->id,
         ];
     }

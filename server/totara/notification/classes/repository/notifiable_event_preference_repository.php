@@ -60,4 +60,32 @@ class notifiable_event_preference_repository extends repository {
         return $this;
     }
 
+    /**
+     * @param string $resolver_class_name
+     * @return $this
+     */
+    public function filter_by_resolver_class_name(string $resolver_class_name): notifiable_event_preference_repository {
+        $this->where('resolver_class_name', $resolver_class_name);
+
+        return $this;
+    }
+
+    /**
+     * @param bool $enabled
+     * @return $this
+     */
+    public function filter_by_enabled(bool $enabled): notifiable_event_preference_repository {
+        $this->where('enabled', $enabled);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function filter_by_has_overridden_default_delivery_channels(): notifiable_event_preference_repository {
+        $this->where_not_null('default_delivery_channels');
+
+        return $this;
+    }
 }

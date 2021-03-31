@@ -40,6 +40,7 @@ use totara_notification\repository\notifiable_event_user_preference_repository;
  * @property string $area
  * @property int $item_id
  * @property bool $enabled
+ * @property array|null $delivery_channels
  *
  * @property-read user $user
  *
@@ -88,4 +89,25 @@ class notifiable_event_user_preference extends entity {
         $this->set_attribute('item_id', $extended_context->get_item_id());
     }
 
+    /**
+     * Getter, converts the DB delivery channel from string into the array (or null).
+     *
+     * @param string|null $delivery_channels
+     * @return array|null
+     */
+    protected function get_delivery_channels_attribute(?string $delivery_channels): ?array {
+        return $delivery_channels !== null ? array_values(array_filter(explode(',', $delivery_channels))) : null;
+    }
+
+    /**
+     * Setter for delivery channels, converts the raw value into the comma-wrapped string
+     *
+     * @param array|null $delivery_channels
+     */
+    protected function set_delivery_channels_attribute(?array $delivery_channels): void {
+        if ($delivery_channels !== null) {
+            $delivery_channels = ',' . join(',', $delivery_channels) . ',';
+        }
+        $this->set_attribute_raw('delivery_channels', $delivery_channels);
+    }
 }

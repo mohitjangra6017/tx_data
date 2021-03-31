@@ -136,4 +136,22 @@ class helper {
         $editor = editors_get_preferred_editor($request_format);
         return $editor->get_preferred_format();
     }
+
+    /**
+     * @param array $resolver_preferences
+     * @return array
+     */
+    public static function transform_resolver_preferences_for_page(array $resolver_preferences): array {
+        foreach ($resolver_preferences as $i => $resolver_preference) {
+            $delivery_channels = $resolver_preference['delivery_channels'];
+            $delivery_channels = array_values(array_map(function ($delivery_channel) {
+                return $delivery_channel->to_array();
+            }, $delivery_channels));
+
+            $resolver_preference['delivery_channels'] = $delivery_channels;
+            $resolver_preferences[$i] = $resolver_preference;
+        }
+
+        return $resolver_preferences;
+    }
 }

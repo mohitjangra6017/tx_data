@@ -502,6 +502,20 @@ function xmldb_totara_notification_upgrade($old_version) {
         // Notification savepoint reached.
         upgrade_plugin_savepoint(true, 2021033101, 'totara', 'notification');
     }
-    
+
+    if ($old_version < 2021033103) {
+        // Define field delivery_channels to be added to notifiable_event_user_preference.
+        $table = new xmldb_table('notifiable_event_user_preference');
+        $field = new xmldb_field('delivery_channels', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'enabled');
+
+        // Conditionally launch add field delivery_channels.
+        if (!$db_manager->field_exists($table, $field)) {
+            $db_manager->add_field($table, $field);
+        }
+
+        // Notification savepoint reached.
+        upgrade_plugin_savepoint(true, 2021033103, 'totara', 'notification');
+    }
+
     return true;
 }

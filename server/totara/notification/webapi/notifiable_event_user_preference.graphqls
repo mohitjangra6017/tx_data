@@ -30,6 +30,14 @@ type totara_notification_notifiable_event_user_preference {
   ID of the user preference record if it already exists
   """
   user_preference_id: core_id
+  """
+  The delivery channels for this preference.
+  """
+  delivery_channels: [totara_notification_delivery_channel!]!
+  """
+  If true the user has opted to override the delivery channels for this channel.
+  """
+  overridden_delivery_channels: Boolean!
 }
 
 extend type Query {

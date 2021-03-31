@@ -13,5 +13,15 @@ query totara_notification_notifiable_event_user_preferences(
     name
     enabled
     user_preference_id
+    overridden_delivery_channels
+    delivery_channels {
+      __typename
+      component
+      label
+      is_enabled
+      is_sub_delivery_channel
+      parent_component
+      display_order
+    }
   }
 }

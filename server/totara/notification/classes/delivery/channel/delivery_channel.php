@@ -27,7 +27,7 @@ namespace totara_notification\delivery\channel;
  * Delivery channel represents one of the available options. It holds
  * static information only.
  *
- * @property-read string $is_enabled
+ * @property-read bool $is_enabled
  * @property-read string $label
  * @property-read string $parent
  * @property-read bool $is_sub_delivery_channel
@@ -142,5 +142,19 @@ abstract class delivery_channel {
      */
     public function set_enabled(?bool $enabled): void {
         $this->enabled = $enabled;
+    }
+
+    /**
+     * @return array
+     */
+    public function to_array(): array {
+        return [
+            'component' => $this->component,
+            'label' => $this->label,
+            'is_enabled' => (bool) $this->is_enabled,
+            'is_sub_delivery_channel' => $this->is_sub_delivery_channel,
+            'parent_component' => $this->parent,
+            'display_order' => $this->display_order,
+        ];
     }
 }

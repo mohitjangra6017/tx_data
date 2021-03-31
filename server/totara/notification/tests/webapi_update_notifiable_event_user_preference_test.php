@@ -99,6 +99,13 @@ class totara_notification_webapi_update_notifiable_event_user_preference_testcas
         self::assertEquals($mock_resolver_class_name, $row['resolver_class_name']);
         self::assertEquals((int)$set_enabled, $row['enabled']);
 
+        // We're not specifically testing delivery channels here, so test that they exist,
+        // but drop them from the final check
+        self::assertArrayHasKey('delivery_channels', $resolver_result);
+        self::assertIsArray($resolver_result['delivery_channels']);
+        self::assertNotEmpty($resolver_result['delivery_channels']);
+        unset($resolver_result['delivery_channels']);
+
         // Verify results from the mutation
         $expected = [
             'user_id' => "$user_id",
@@ -108,6 +115,7 @@ class totara_notification_webapi_update_notifiable_event_user_preference_testcas
             'name' => resolver_helper::get_human_readable_resolver_name($mock_resolver_class_name),
             'enabled' => $set_enabled,
             'user_preference_id' => "{$row['id']}",
+            'overridden_delivery_channels' => false,
         ];
         self::assertEqualsCanonicalizing($expected, $resolver_result);
     }

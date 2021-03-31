@@ -154,6 +154,10 @@ class totara_notification_delivery_channels_testcase extends testcase {
         // We should only see email & msteams here as the rest should have been removed.
         $resolver = new mock_resolver([]);
 
+        $cache = new ReflectionProperty(delivery_channel_loader::class, 'resolver_channels');
+        $cache->setAccessible(true);
+        delivery_channel_loader::reset();
+
         // As this method is private, to test it we'll need to reflect our way inside. It also means
         // we can pass in an array of mock message_output data, as we only want to test our filter works.
         $method = new ReflectionMethod(
@@ -168,9 +172,31 @@ class totara_notification_delivery_channels_testcase extends testcase {
         self::assertArrayHasKey('second', $results);
         self::assertArrayNotHasKey('third', $results);
 
+        $cache_value = $cache->getValue();
+        self::assertNotEmpty($cache_value);
+
+        // Run again (hitting from the cache this time)
+        $results = $method->invoke(new notification_queue_manager(), $user->id, $resolver, $mock_message_providers);
+
+        self::assertCount(2, $results);
+        self::assertArrayHasKey('first', $results);
+        self::assertArrayHasKey('second', $results);
+        self::assertArrayNotHasKey('third', $results);
+
         // Disable popup & rerun
         mock_resolver::set_notification_default_delivery_channels(['first']);
+        delivery_channel_loader::reset();
 
+        $results = $method->invoke(new notification_queue_manager(), $user->id, $resolver, $mock_message_providers);
+
+        self::assertCount(1, $results);
+        self::assertArrayHasKey('first', $results);
+        self::assertArrayNotHasKey('second', $results);
+
+        $cache_value = $cache->getValue();
+        self::assertNotEmpty($cache_value);
+
+        // Run again, hitting the cache
         $results = $method->invoke(new notification_queue_manager(), $user->id, $resolver, $mock_message_providers);
 
         self::assertCount(1, $results);
@@ -188,6 +214,17 @@ class totara_notification_delivery_channels_testcase extends testcase {
         self::assertTrue($channel->is_enabled);
         self::assertEquals('my test label', $channel->label);
         self::assertNull($channel->not_a_property);
+
+        $channel_data = $channel->to_array();
+        self::assertIsArray($channel_data);
+        self::assertEqualsCanonicalizing([
+            'component' => 'first',
+            'label' => 'my test label',
+            'is_enabled' => true,
+            'is_sub_delivery_channel' => false,
+            'parent_component' => null,
+            'display_order' => 10,
+        ], $channel_data);
     }
 
     /**

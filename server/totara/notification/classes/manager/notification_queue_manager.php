@@ -36,7 +36,6 @@ use totara_core\extended_context;
 use totara_notification\entity\notification_queue;
 use totara_notification\loader\delivery_channel_loader;
 use totara_notification\model\notification_preference;
-use totara_notification\placeholder\template_engine\engine;
 use totara_notification\resolver\notifiable_event_resolver;
 use totara_notification\resolver\resolver_helper;
 
@@ -152,11 +151,13 @@ class notification_queue_manager {
         $user = core_user::get_user($target_user_id);
 
         $engine = $resolver->get_placeholder_engine();
+        $bypass_cache = defined('PHPUNIT_TEST') && PHPUNIT_TEST;
         $message_processors = $this->filter_message_processors_by_delivery_channel(
             $target_user_id,
             $resolver,
             $message_processors,
-            $preference->get_forced_delivery_channels()
+            $preference->get_forced_delivery_channels(),
+            $bypass_cache
         );
 
         if (empty($message_processors)) {
@@ -259,47 +260,38 @@ class notification_queue_manager {
         }
     }
 
-
     /**
-     * Load the message processors for the resolver, filtering by delivery channel.
+     * Load the message processors for the resolver, filtering by delivery channels.
      *
      * @param int $target_user_id
      * @param notifiable_event_resolver $resolver
      * @param array                     $message_processors
      * @param array                     $forced_delivery_channels
+     * @param bool $reset
      * @return array
      */
     private function filter_message_processors_by_delivery_channel(
         int $target_user_id,
         notifiable_event_resolver $resolver,
         array $message_processors,
-        array $forced_delivery_channels = []
+        array $forced_delivery_channels = [],
+        bool $reset = false
     ): array {
         $extended_context = extended_context::make_system();
-        $event_preference = $resolver->get_notifiable_event_preference($extended_context);
-        $user_event_preference = $resolver->get_notifiable_event_user_preference($target_user_id, $extended_context);
+        $enabled_delivery_channels = delivery_channel_loader::get_user_enabled_delivery_channels(
+            $target_user_id,
+            $extended_context,
+            get_class($resolver),
+            $reset
+        );
 
-        $delivery_channels = [];
-        if ($user_event_preference === null || $user_event_preference->enabled) {
-            // Add code to get enabled delivery channels from user preferences here
-            // else
-            $delivery_channels = $event_preference ? $event_preference->default_delivery_channels :
-                delivery_channel_loader::get_for_event_resolver(get_class($resolver));
-        }
+        // Add the forced channels in
+        $enabled_delivery_channels = array_unique(array_merge($enabled_delivery_channels, $forced_delivery_channels));
 
-        foreach ($forced_delivery_channels as $channel_name) {
-            if (!isset($delivery_channels[$channel_name])) {
-                debugging("Invalid channel '{$channel_name}' that is not found in delivery channels", DEBUG_DEVELOPER);
-                continue;
-            }
-
-            $delivery_channels[$channel_name]->set_enabled(true);
-        }
-
-        // Drop any message processor that isn't marked as enabled.
-        foreach ($delivery_channels as $delivery_channel) {
-            if (isset($message_processors[$delivery_channel->component]) && !$delivery_channel->is_enabled) {
-                unset($message_processors[$delivery_channel->component]);
+        // Drop any message processor that are not enabled (via user prefs, or admin forced)
+        foreach ($message_processors as $message_key => $message_processor) {
+            if (!in_array($message_key, $enabled_delivery_channels)) {
+                unset($message_processors[$message_key]);
             }
         }
 

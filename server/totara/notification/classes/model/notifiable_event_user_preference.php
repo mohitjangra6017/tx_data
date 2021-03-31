@@ -28,6 +28,7 @@ use core\orm\entity\model;
 use core\webapi\param\boolean;
 use totara_core\extended_context;
 use totara_notification\entity\notifiable_event_user_preference as notifiable_event_user_preference_entity;
+use totara_notification\loader\delivery_channel_loader;
 
 /**
  * Class notifiable_event_user_preference
@@ -41,6 +42,7 @@ use totara_notification\entity\notifiable_event_user_preference as notifiable_ev
  * @property-read int $item_id
  * @property extended_context $extended_context
  * @property boolean $enabled
+ * @property array $delivery_channels
  */
 class notifiable_event_user_preference extends model {
     /**
@@ -51,6 +53,7 @@ class notifiable_event_user_preference extends model {
         'user_id',
         'resolver_class_name',
         'enabled',
+        'delivery_channels',
     ];
 
     /**
@@ -86,9 +89,16 @@ class notifiable_event_user_preference extends model {
      * @param string $resolver_class_name
      * @param extended_context $extended_context
      * @param bool $enabled
+     * @param array|null $delivery_channels
      * @return notifiable_event_user_preference
      */
-    public static function create(int $user_id, string $resolver_class_name, extended_context $extended_context, bool $enabled = true): notifiable_event_user_preference {
+    public static function create(
+        int $user_id,
+        string $resolver_class_name,
+        extended_context $extended_context,
+        bool $enabled = true,
+        ?array $delivery_channels = null
+    ): notifiable_event_user_preference {
         $entity = new notifiable_event_user_preference_entity();
         $entity->user_id = $user_id;
         $entity->resolver_class_name = $resolver_class_name;
@@ -97,6 +107,7 @@ class notifiable_event_user_preference extends model {
         $entity->area = $extended_context->get_area();
         $entity->item_id = $extended_context->get_item_id();
         $entity->enabled = $enabled;
+        $entity->delivery_channels = $delivery_channels;
         $entity->save();
 
         return static::from_entity($entity);
@@ -126,6 +137,39 @@ class notifiable_event_user_preference extends model {
     }
 
     /**
+     * @return array
+     */
+    public function get_delivery_channels(): array {
+        return $this->entity->delivery_channels;
+    }
+
+    /**
+     * @param string[]|null $delivery_channels
+     * @return $this
+     */
+    public function set_delivery_channels(?array $delivery_channels): notifiable_event_user_preference {
+        if (null === $delivery_channels) {
+            $this->entity->delivery_channels = null;
+        } else {
+            $delivery_channels_list = delivery_channel_loader::get_for_event_resolver($this->resolver_class_name);
+            // Filter down to only those that are enabled & parent is enabled
+            $enabled_channels = [];
+            foreach ($delivery_channels_list as $delivery_channel) {
+                if ($delivery_channel->is_sub_delivery_channel && !in_array($delivery_channel->parent, $delivery_channels)) {
+                    continue;
+                }
+
+                if (in_array($delivery_channel->component, $delivery_channels)) {
+                    $enabled_channels[] = $delivery_channel->component;
+                }
+            }
+
+            $this->entity->delivery_channels = $enabled_channels;
+        }
+        return $this;
+    }
+
+    /**
      * @return extended_context
      */
     public function get_extended_context(): extended_context {
@@ -148,7 +192,7 @@ class notifiable_event_user_preference extends model {
         $this->entity->set_attribute('item_id', $extended_context->get_item_id());
         return $this;
     }
-    
+
     /**
      * @return $this
      */
@@ -156,5 +200,4 @@ class notifiable_event_user_preference extends model {
         $this->entity->save();
         return $this;
     }
-
 }

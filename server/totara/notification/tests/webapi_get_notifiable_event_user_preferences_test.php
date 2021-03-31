@@ -115,6 +115,13 @@ class totara_notification_webapi_get_notifiable_event_user_preferences_testcase 
             self::assertCount(1, $mock_resolver_results);
             $mock_resolver_result = reset($mock_resolver_results);
 
+            // We're not specifically testing delivery channels here, so test that they exist,
+            // but drop them from the final check
+            self::assertArrayHasKey('delivery_channels', $mock_resolver_result);
+            self::assertIsArray($mock_resolver_result['delivery_channels']);
+            self::assertNotEmpty($mock_resolver_result['delivery_channels']);
+            unset($mock_resolver_result['delivery_channels']);
+
             $expected = [
                 'user_id' => "$user_id",
                 'component' => resolver_helper::get_component_of_resolver_class_name($mock_resolver_class_name),
@@ -123,16 +130,18 @@ class totara_notification_webapi_get_notifiable_event_user_preferences_testcase 
                 'name' => resolver_helper::get_human_readable_resolver_name($mock_resolver_class_name),
                 'enabled' => $expect_enabled,
                 'user_preference_id' => $user_prefence_id === null ? null : "$user_prefence_id",
+                'overridden_delivery_channels' => false,
             ];
             self::assertEqualsCanonicalizing($expected, $mock_resolver_result);
         } else {
             self::assertCount(0, $mock_resolver_results);
         }
     }
-    
+
     /**
      * @param int $user_id
      * @param string $resolver_class_name
+     * @return notifiable_event_user_preference_entity
      */
     private function disable_notifiable_event_for_user(int $user_id, string $resolver_class_name): notifiable_event_user_preference_entity {
         $model = notifiable_event_user_preference_model::create($user_id, $resolver_class_name, extended_context::make_system(), false);

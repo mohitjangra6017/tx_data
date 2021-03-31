@@ -106,7 +106,7 @@ class event_resolver implements type_resolver {
 
                 // If there's no override, return the defaults
                 if (!$entity) {
-                    return delivery_channel_loader::get_defaults();
+                    return delivery_channel_loader::get_for_event_resolver($source);
                 }
 
                 $model = notifiable_event_preference_model::from_entity($entity);

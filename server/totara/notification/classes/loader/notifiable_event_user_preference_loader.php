@@ -39,9 +39,14 @@ class notifiable_event_user_preference_loader {
     /**
      * @param int $user_id
      * @param extended_context|null $extended_context
+     * @param bool $apply_transformations If true, the formatter must apply any extra transformations to match GraphQL
      * @return array
      */
-    public static function get_user_resolver_classes(int $user_id, ?extended_context $extended_context = null): array {
+    public static function get_user_resolver_classes(
+        int $user_id,
+        ?extended_context $extended_context = null,
+        bool $apply_transformations = false
+    ): array {
         $resolver_classes = notifiable_event_resolver_factory::get_resolver_classes();
 
         // Remove all resolver classes disabled on system level
@@ -64,9 +69,14 @@ class notifiable_event_user_preference_loader {
             ->where('user_id', $user_id)
             ->get();
 
-        $results = array_map(function ($resolver_class_name) use ($user_id, $user_resolver_preferences) {
+        $results = array_map(function ($resolver_class_name) use ($user_id, $user_resolver_preferences, $apply_transformations) {
             $user_preference = $user_resolver_preferences->find('resolver_class_name', $resolver_class_name);
-            return notifiable_event_user_preference_helper::format_response_data($user_id, $resolver_class_name, $user_preference);
+            return notifiable_event_user_preference_helper::format_response_data(
+                $user_id,
+                $resolver_class_name,
+                $user_preference,
+                $apply_transformations
+            );
         }, $resolver_classes);
 
         return $results;

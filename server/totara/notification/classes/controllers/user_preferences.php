@@ -55,10 +55,10 @@ class user_preferences extends controller {
         $this->set_url(new moodle_url('/totara/notification/user_preferences.php'));
 
         $extended_context = extended_context::make_with_context($this->get_context());
-        
+
         // Js/Vue requires the array to be 0 indexed
-        $user_resolver_preferences = notifiable_event_user_preference_loader::get_user_resolver_classes($this->get_user_id(), $extended_context);
-        
+        $user_resolver_preferences = notifiable_event_user_preference_loader::get_user_resolver_classes($this->get_user_id(), $extended_context, true);
+
         $props = [
             'extended-context' => $extended_context,
             'resolver-preferences' => array_values($user_resolver_preferences),

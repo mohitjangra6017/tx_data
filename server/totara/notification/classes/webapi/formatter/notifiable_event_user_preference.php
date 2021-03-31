@@ -40,6 +40,8 @@ class notifiable_event_user_preference extends formatter {
             'name' => string_field_formatter::class,
             'enabled' => null,
             'user_preference_id' => null,
+            'delivery_channels' => null,
+            'overridden_delivery_channels' => null,
         ];
     }
 

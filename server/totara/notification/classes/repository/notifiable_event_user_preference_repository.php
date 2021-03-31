@@ -63,5 +63,23 @@ class notifiable_event_user_preference_repository extends repository {
 
         return $this;
     }
-    
+
+    /**
+     * @param bool $enabled
+     * @return $this
+     */
+    public function filter_by_enabled(bool $enabled): notifiable_event_user_preference_repository {
+        $this->where('enabled', $enabled);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function filter_by_has_overridden_delivery_channels(): notifiable_event_user_preference_repository {
+        $this->where_not_null('delivery_channels');
+
+        return $this;
+    }
 }

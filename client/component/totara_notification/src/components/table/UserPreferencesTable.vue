@@ -41,6 +41,9 @@
             <HeaderCell size="4">
               {{ $str('notifiable_events', 'totara_notification') }}
             </HeaderCell>
+            <HeaderCell size="4">
+              {{ $str('delivery_channels', 'totara_notification') }}
+            </HeaderCell>
             <HeaderCell align="start" size="2">
               {{ $str('enabled', 'totara_notification') }}
             </HeaderCell>
@@ -49,6 +52,9 @@
           <template v-slot:row="{ row }">
             <Cell size="4">
               {{ row.name }}
+            </Cell>
+            <Cell size="4">
+              {{ display_delivery_channels(row.delivery_channels) }}
             </Cell>
             <Cell align="start" size="2">
               <ToggleSwitch
@@ -122,6 +128,18 @@ export default {
         isEnabled: value,
         userPreferenceId: updatedResolver.user_preference_id,
       });
+    },
+    /**
+     * Squash the collection of delivery channel labels into a string
+     *
+     * @param {Array} channels
+     * @returns {string}
+     */
+    display_delivery_channels(channels) {
+      return channels
+        .filter(({ is_enabled }) => is_enabled)
+        .map(({ label }) => label)
+        .join('; ');
     },
   },
 };

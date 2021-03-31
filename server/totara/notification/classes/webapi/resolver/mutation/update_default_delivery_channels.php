@@ -33,6 +33,7 @@ use totara_notification\entity\notifiable_event_preference as entity;
 use totara_notification\exception\notification_exception;
 use totara_notification\interactor\notification_preference_interactor;
 use totara_notification\model\notifiable_event_preference;
+use totara_notification\webapi\middleware\validate_delivery_channel_components;
 use totara_notification\webapi\middleware\validate_resolver_class_name;
 
 class update_default_delivery_channels implements mutation_resolver, has_middleware {
@@ -110,6 +111,7 @@ class update_default_delivery_channels implements mutation_resolver, has_middlew
         return [
             new require_login(),
             new validate_resolver_class_name('resolver_class_name', true),
+            new validate_delivery_channel_components('default_delivery_channels', true),
         ];
     }
 }

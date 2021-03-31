@@ -23,14 +23,16 @@
 
 use core_phpunit\testcase;
 use totara_core\extended_context;
-use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 use totara_notification\entity\notifiable_event_preference;
+use totara_notification\entity\notifiable_event_user_preference;
 use totara_notification\entity\notification_preference;
 use totara_notification\entity\notification_queue;
+use totara_notification\loader\delivery_channel_loader;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\manager\notification_queue_manager;
 use totara_notification\task\process_notification_queue_task;
 use totara_notification\testing\generator;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 
 /**
  * This tes is indirectly cover {@see notification_queue_manager}
@@ -298,7 +300,6 @@ class totara_notification_process_notification_queue_task_testcase extends testc
         ]);
         $valid_queue->save();
 
-
         self::assertEquals(2, $DB->count_records(notification_queue::TABLE));
         $sink = $this->redirectMessages();
 
@@ -338,7 +339,7 @@ class totara_notification_process_notification_queue_task_testcase extends testc
         $generator->include_mock_notifiable_event_resolver();
 
         $user = $this->getDataGenerator()->create_user();
-        
+
         $extended_context = extended_context::make_system();
 
         $entity = new notifiable_event_preference();
@@ -351,6 +352,9 @@ class totara_notification_process_notification_queue_task_testcase extends testc
         $entity->enabled = true;
         $entity->save();
 
+        // Reset the delivery channel loader cache for our test
+        delivery_channel_loader::reset();
+
         $reflection_class = new ReflectionClass(notification_queue_manager::class);
         $method = $reflection_class->getMethod('filter_message_processors_by_delivery_channel');
         $method->setAccessible(true);
@@ -359,19 +363,72 @@ class totara_notification_process_notification_queue_task_testcase extends testc
         $manager = new notification_queue_manager();
         $resolver = new mock_resolver(['expected_context_id' => $extended_context->get_context_id()]);
 
-        $first_result = $method->invokeArgs($manager, [$user->id, $resolver, $message_processors]);
-        self::assertIsArray($first_result);
+        // Expect to see email only
+        $result = $method->invokeArgs($manager, [$user->id, $resolver, $message_processors]);
+        self::assertIsArray($result);
         // Note that we cannot check for the exact same size, because the list of message processors can include
         // the third parties plugins.
-        self::assertNotSameSize($message_processors, $first_result);
-        self::assertArrayHasKey('email', $first_result);
+        self::assertNotSameSize($message_processors, $result);
+        self::assertArrayHasKey('email', $result);
+        self::assertArrayNotHasKey('popup', $result);
 
-        $second_result = $method->invokeArgs($manager, [$user->id, $resolver, $message_processors, ['popup']]);
-        self::assertIsArray($second_result);
+        // Expect to see email and popup
+        $result = $method->invokeArgs($manager, [$user->id, $resolver, $message_processors, ['popup']]);
+        self::assertIsArray($result);
         // Note that we cannot check for the exact same size, because the list of message processors can include
         // the third parties plugins.
-        self::assertNotSameSize($message_processors, $second_result);
-        self::assertArrayHasKey('email', $second_result);
-        self::assertArrayHasKey('popup', $second_result);
+        self::assertNotSameSize($message_processors, $result);
+        self::assertArrayHasKey('email', $result);
+        self::assertArrayHasKey('popup', $result);
+
+        // Now repeat the tests, but let the user override the expected preferences
+        $user_entity = new notifiable_event_user_preference();
+        $user_entity->user_id = $user->id;
+        $user_entity->context_id = $extended_context->get_context_id();
+        $user_entity->resolver_class_name = mock_resolver::class;
+        $user_entity->component = $extended_context->get_component();
+        $user_entity->area = $extended_context->get_area();
+        $user_entity->item_id = $extended_context->get_item_id();
+        $user_entity->delivery_channels = ['popup'];
+        $user_entity->enabled = true;
+        $user_entity->save();
+
+        // Expect to see popup (user chosen) but not email
+        $result = $method->invokeArgs($manager, [$user->id, $resolver, $message_processors]);
+        self::assertIsArray($result);
+        // Note that we cannot check for the exact same size, because the list of message processors can include
+        // the third parties plugins.
+        self::assertNotSameSize($message_processors, $result);
+        self::assertArrayHasKey('popup', $result);
+        self::assertArrayNotHasKey('email', $result);
+
+        // Expect to see popup (user chosen) and email (forced)
+        $result = $method->invokeArgs($manager, [$user->id, $resolver, $message_processors, ['email']]);
+        self::assertIsArray($result);
+        // Note that we cannot check for the exact same size, because the list of message processors can include
+        // the third parties plugins.
+        self::assertNotSameSize($message_processors, $result);
+        self::assertArrayHasKey('popup', $result);
+        self::assertArrayHasKey('email', $result);
+
+        // Expect to not see email or popup (user disabled all)
+        $user_entity->delivery_channels = [];
+        $user_entity->save();
+        $result = $method->invokeArgs($manager, [$user->id, $resolver, $message_processors]);
+        self::assertIsArray($result);
+        // Note that we cannot check for the exact same size, because the list of message processors can include
+        // the third parties plugins.
+        self::assertNotSameSize($message_processors, $result);
+        self::assertArrayNotHasKey('popup', $result);
+        self::assertArrayNotHasKey('email', $result);
+
+        // Expect to see popup (via forced) but not email
+        $result = $method->invokeArgs($manager, [$user->id, $resolver, $message_processors, ['popup']]);
+        self::assertIsArray($result);
+        // Note that we cannot check for the exact same size, because the list of message processors can include
+        // the third parties plugins.
+        self::assertNotSameSize($message_processors, $result);
+        self::assertArrayHasKey('popup', $result);
+        self::assertArrayNotHasKey('email', $result);
     }
 }
