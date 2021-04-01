@@ -758,6 +758,7 @@ $string['nostartdate'] = 'No start date';
 $string['notassigned'] = 'Not assigned';
 $string['notavailable'] = 'Not available';
 $string['notduetostartuntil'] = 'This program is not yet available. Learner assignments will be applied following the start date.';
+$string['notifications'] = 'Notifications';
 $string['notifymanager'] = 'Send notice to manager';
 $string['notifymanager_help'] = 'Check this box if you also want to send a notice to the message recipient\'s manager.';
 $string['notmanager'] = 'You are not a manager';

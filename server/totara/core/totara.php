@@ -503,8 +503,24 @@ function totara_load_program_settings($navinode, $context, $forceopen = false) {
     }
     if (has_capability('totara/program:configuremessages', $context)) {
         $url = new moodle_url('/totara/program/edit_messages.php', array('id' => $program->id));
-        $adminnode->add(get_string('messages', 'totara_program'), $url, navigation_node::TYPE_SETTING, null,
-                    'progmessages', new pix_icon('i/settings', get_string('messages', 'totara_program')));
+        $adminnode->add(
+            get_string('messages', 'totara_program'),
+            $url,
+            navigation_node::TYPE_SETTING,
+            null,
+            'progmessages',
+            new pix_icon('i/settings', get_string('messages', 'totara_program'))
+        );
+
+        $notification_url = new moodle_url('/totara/program/edit_notifications.php', ['context_id' => $context->id, 'id' => $program->id]);
+        $adminnode->add(
+            get_string('notifications', 'totara_program'),
+            $notification_url,
+            navigation_node::TYPE_SETTING,
+            null,
+            'prognotifications',
+            new pix_icon('i/settings', get_string('notifications', 'totara_program'))
+        );
     }
     if (($exceptioncount > 0) && has_capability('totara/program:handleexceptions', $context)) {
         $url = new moodle_url('/totara/program/exceptions.php', array('id' => $program->id, 'page' => 0));

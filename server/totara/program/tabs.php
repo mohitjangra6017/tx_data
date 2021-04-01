@@ -85,12 +85,24 @@ if (has_capability('totara/program:configureassignments', $context)) {
         $activated[] = 'assignments';
     }
 }
-
 // Messages Tab
 if (has_capability('totara/program:configuremessages', $context)) {
     $toprow[] = new tabobject('messages', $CFG->wwwroot.'/totara/program/edit_messages.php?id='.$id, get_string('messages', 'totara_program'));
     if (substr($currenttab, 0, 8) == 'messages'){
         $activated[] = 'messages';
+    }
+}
+
+// Notification Tab
+if (has_capability('totara/program:configuremessages', $context)) {
+    $url = new moodle_url(
+        '/totara/program/edit_notifications.php',
+        ['context_id' => $context->id, 'id' => $id]
+    );
+
+    $toprow[] = new tabobject('notifications', $url, get_string('notifications', 'totara_program'));
+    if (substr($currenttab, 0, 13) == 'notifications') {
+        $activated[] = 'notifications';
     }
 }
 
@@ -126,7 +138,7 @@ if (has_capability('totara/program:handleexceptions', $context)) {
 }
 
 if (!$id) {
-    $inactive = array_merge($inactive, array('overview', 'content', 'assignments', 'messages', 'certification', 'completion'));
+    $inactive = array_merge($inactive, array('overview', 'content', 'assignments', 'messages', 'notifications', 'certification', 'completion'));
 }
 
 $tabs = array($toprow);
