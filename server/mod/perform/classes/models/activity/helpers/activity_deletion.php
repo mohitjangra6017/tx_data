@@ -23,6 +23,7 @@
 
 namespace mod_perform\models\activity\helpers;
 
+use coding_exception;
 use core\orm\query\builder;
 use mod_perform\entity\activity\activity as activity_entity;
 use mod_perform\entity\activity\element as element_entity;
@@ -30,6 +31,8 @@ use mod_perform\entity\activity\manual_relationship_selection;
 use mod_perform\entity\activity\section_relationship as section_relationship_entity;
 use mod_perform\entity\activity\track_user_assignment;
 use mod_perform\event\activity_deleted;
+use mod_perform\hook\dto\pre_deleted_dto;
+use mod_perform\hook\pre_activity_deleted;
 use mod_perform\models\activity\activity;
 
 /**
@@ -57,10 +60,21 @@ class activity_deletion {
      *
      * An activity_deleted event will be triggered on successful deletions.
      *
-     * @return activity_deletion
      * @see activity_deleted
+     * @param bool $force
+     * @return activity_deletion
      */
-    public function delete(): self {
+    public function delete(bool $force = false): self {
+        if (!$force) {
+            // check if perform activity can be deleted
+            $hook = new pre_activity_deleted($this->activity->id);
+            $hook->execute();
+
+            if ($reason = $hook->get_first_reason()) {
+                throw new coding_exception($reason->get_description());
+            }
+        }
+
         builder::get_db()->transaction(function () {
             $delete_event = activity_deleted::create_from_activity($this->activity);
 

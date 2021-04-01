@@ -161,14 +161,30 @@ class perform extends container implements category_name_provider {
 
     /**
      * Delete all course/container records and the related perform activity and it's children.
-     *
-     * @see
+     * This deletes the activity regardless of whether there any deletion checks failing, use with care
      */
     public function delete(): void {
-        builder::get_db()->transaction(function () {
+        $this->do_delete(true);
+    }
+
+    /**
+     * Delete all course/container records and the related perform activity and it's children.
+     * We want all the checks to be applied, so not forcing a delete
+     */
+    public function delete_activity(): void {
+        $this->do_delete();
+    }
+
+    /**
+     * Delete the activity
+     *
+     * @param bool $force
+     */
+    private function do_delete(bool $force = false) {
+        builder::get_db()->transaction(function () use ($force) {
             // Delete the mod perform specific records first because the context
             // record is required to create the activity deleted event.
-            activity::load_by_container_id($this->get_id())->delete();
+            activity::load_by_container_id($this->get_id())->delete($force);
 
             // Delete the container_perform enrollment plugin for this perform instance.
             perform_enrollment::delete_container_instance($this);

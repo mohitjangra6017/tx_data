@@ -48,7 +48,7 @@ class delete_activity implements mutation_resolver, has_middleware {
             throw new moodle_exception('invalid_activity', 'mod_perform');
         }
 
-        perform_container::from_activity($activity)->delete();
+        perform_container::from_activity($activity)->delete_activity();
 
         return true;
     }

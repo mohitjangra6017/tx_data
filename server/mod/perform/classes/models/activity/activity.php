@@ -625,24 +625,11 @@ class activity extends model {
      *
      * An activity_deleted event will be triggered on successful deletions.
      *
-     * @throws coding_exception
      * @see activity_deleted
+     * @param bool $force
      */
-    public function delete(): void {
-        // check if perform activity can be deleted
-        $hook = new pre_activity_deleted($this->id);
-        $hook->execute();
-
-        /**
-         * @var pre_deleted_dto[]
-         */
-        $reasons = $hook->get_reasons();
-
-        if (!empty($reasons)) {
-            throw new coding_exception(array_shift($reasons)->get_description());
-        }
-
-        (new activity_deletion($this))->delete();
+    public function delete(bool $force = false): void {
+        (new activity_deletion($this))->delete($force);
     }
 
     /**

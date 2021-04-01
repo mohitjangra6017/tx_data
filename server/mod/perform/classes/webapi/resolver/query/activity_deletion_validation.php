@@ -44,8 +44,7 @@ class activity_deletion_validation implements query_resolver, has_middleware {
         $description = null;
         $data = null;
 
-        if (!empty($hook->get_reasons())) {
-            $first_reason = $hook->get_first_reason();
+        if ($first_reason = $hook->get_first_reason()) {
             $description = $first_reason->get_description();
             $data = $first_reason->get_data();
         }

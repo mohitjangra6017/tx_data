@@ -49,7 +49,7 @@ trait pre_delete_helper {
     /**
      * Get can not delete reason
      *
-     * @return array
+     * @return array|pre_deleted_dto[]
      */
     public function get_reasons(): array {
         return $this->reasons;
@@ -63,7 +63,7 @@ trait pre_delete_helper {
     public function get_first_reason(): ?pre_deleted_dto {
         $reasons = $this->get_reasons();
 
-        return reset($reasons) ?? null;
+        return array_shift($reasons);
     }
 
     /**
