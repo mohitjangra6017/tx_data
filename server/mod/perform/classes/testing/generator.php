@@ -25,13 +25,8 @@
 namespace mod_perform\testing;
 
 use coding_exception;
-use context_coursecat;
-use mod_perform\state\participant_instance\complete;
-use performelement_aggregation\aggregation;
-use performelement_aggregation\aggregation_response_calculator;
-use performelement_aggregation\calculations\average;
-use performelement_numeric_rating_scale\numeric_rating_scale;
 use container_perform\perform as perform_container;
+use context_coursecat;
 use core\collection;
 use core\entity\cohort;
 use core\entity\user;
@@ -78,6 +73,7 @@ use mod_perform\state\activity\active;
 use mod_perform\state\activity\activity_state;
 use mod_perform\state\activity\draft;
 use mod_perform\state\participant_instance\availability_not_applicable as participant_instance_availability_not_applicable;
+use mod_perform\state\participant_instance\complete;
 use mod_perform\state\participant_instance\open;
 use mod_perform\state\participant_instance\progress_not_applicable as participant_instance_progress_not_applicable;
 use mod_perform\state\participant_section\availability_not_applicable as participant_section_availability_not_applicable;
@@ -91,6 +87,10 @@ use mod_perform\task\service\manual_participant_progress;
 use mod_perform\task\service\subject_instance_creation;
 use mod_perform\user_groups\grouping;
 use mod_perform\util;
+use performelement_aggregation\aggregation;
+use performelement_aggregation\aggregation_response_calculator;
+use performelement_aggregation\calculations\average;
+use performelement_numeric_rating_scale\numeric_rating_scale;
 use stdClass;
 use totara_core\entity\relationship;
 use totara_core\relationship\relationship as core_relationship;
@@ -723,6 +723,8 @@ final class generator extends \core\testing\component_generator {
                 }
             }
 
+            $view_only_relationships = $configuration->get_view_only_relationships();
+
             for ($k = 0; $k < $configuration->get_number_of_sections_per_activity(); $k++) {
                 $section = $this->create_section($activity, ['title' => $activity->name . ' section ' . $k]);
 
@@ -735,7 +737,14 @@ final class generator extends \core\testing\component_generator {
                     if (in_array($relationship_idnumber, $manual_idnumbers, true)) {
                         $manual_relationships[] = $relationship_idnumber;
                     }
-                    $this->create_section_relationship($section, ['relationship' => $relationship_idnumber]);
+
+                    $can_view = true;
+                    $can_answer = true;
+                    if (in_array($relationship_idnumber, $view_only_relationships)) {
+                        $can_answer = false;
+                    }
+
+                    $this->create_section_relationship($section, ['relationship' => $relationship_idnumber], $can_view, $can_answer);
                 }
                 for ($j = 1; $j <= $configuration->get_number_of_elements_per_section(); $j++) {
                     $title = $section->title . " element$j";
