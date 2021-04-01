@@ -25,6 +25,9 @@ namespace core_user\totara_notification\placeholder;
 use coding_exception;
 use core\entity\user as user_entity;
 use core_date;
+use core_user\access_controller;
+use html_writer;
+use moodle_url;
 use totara_notification\placeholder\abstraction\single_emptiable_placeholder;
 use totara_notification\placeholder\option;
 
@@ -63,20 +66,43 @@ class user extends single_emptiable_placeholder {
      */
     public static function get_options(): array {
         return [
-            option::create('firstname', get_string('firstname', 'moodle')),
-            option::create('lastname', get_string('lastname', 'moodle')),
-            option::create('fullname', get_string('fullname', 'moodle')),
+            option::create('first_name', get_string('firstname', 'moodle')),
+            option::create('last_name', get_string('lastname', 'moodle')),
+            option::create('full_name', get_string('fullname', 'moodle')),
+            option::create('full_name_link', get_string('full_name_linked', 'moodle')),
+            option::create('username', get_string('username', 'moodle')),
+            option::create('email', get_string('email', 'moodle')),
             option::create('city', get_string('city', 'moodle')),
             option::create('country', get_string('country', 'moodle')),
             option::create('department', get_string('department', 'moodle')),
-            option::create('firstnamephonetic', get_string('firstnamephonetic', 'moodle')),
-            option::create('lastnamephonetic', get_string('lastnamephonetic', 'moodle')),
-            option::create('middlename', get_string('middlename', 'moodle')),
-            option::create('alternatename', get_string('alternatename', 'moodle')),
-            option::create('timezone', get_string('timezone', 'moodle'))
+            option::create('first_name_phonetic', get_string('firstnamephonetic', 'moodle')),
+            option::create('last_name_phonetic', get_string('lastnamephonetic', 'moodle')),
+            option::create('middle_name', get_string('middlename', 'moodle')),
+            option::create('alternate_name', get_string('alternatename', 'moodle')),
+            option::create('time_zone', get_string('timezone', 'moodle'))
+        ];
+    }
 
-            // Note that we are skipping email away from this list for now, as we need to somehow respect
-            // the settings whether to display the email or not.
+    /**
+     * We want underscores in our keys, so map them to the user DB fields.
+     *
+     * @return string[]
+     */
+    private static function get_keys_to_entity_map(): array {
+        return [
+            'first_name' => 'firstname',
+            'last_name' => 'lastname',
+            'full_name' => 'fullname',
+            'username' => 'username',
+            'email' => 'email',
+            'city' => 'city',
+            'country' => 'country',
+            'department' => 'department',
+            'first_name_phonetic' => 'firstnamephonetic',
+            'last_name_phonetic' => 'lastnamephonetic',
+            'middle_name' => 'middlename',
+            'alternate_name' => 'alternatename',
+            'time_zone' => 'timezone',
         ];
     }
 
@@ -98,20 +124,29 @@ class user extends single_emptiable_placeholder {
         }
 
         switch ($key) {
-            case 'fullname':
+            case 'full_name':
                 $user_record = $this->entity->get_record();
                 return fullname($user_record);
-
-            case 'timezone':
+            case 'full_name_link':
+                $user_record = $this->entity->get_record();
+                $url = new moodle_url('/user/profile.php', ['id' => $user_record->id]);
+                return html_writer::link($url, fullname($user_record));
+            case 'time_zone':
                 $user_record = $this->entity->get_record();
                 return core_date::get_localised_timezone(
                     core_date::get_user_timezone($user_record)
                 );
-
+            case 'email':
+                // Check if the recipient can see this user's email.
+                if (access_controller::for($this->entity->get_record())->can_view_field('email')) {
+                    return $this->entity->email;
+                }
+                return get_string('email_not_visible', 'moodle');
             default:
                 $invalid_keys = ['password'];
-                if (!in_array($key, $invalid_keys) && $this->entity->has_attribute($key)) {
-                    return (string) $this->entity->get_attribute($key);
+                $map = self::get_keys_to_entity_map();
+                if (!in_array($key, $invalid_keys) && $this->entity->has_attribute($map[$key])) {
+                    return (string) $this->entity->get_attribute($map[$key]);
                 }
         }
 

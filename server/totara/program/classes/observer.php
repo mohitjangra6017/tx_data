@@ -22,6 +22,8 @@
  * @subpackage program
  */
 
+use totara_notification\external_helper;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;

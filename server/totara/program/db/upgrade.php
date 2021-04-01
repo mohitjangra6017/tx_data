@@ -22,7 +22,6 @@
  * @subpackage program
  */
 
-
 /**
  * Local database upgrade script
  *
@@ -31,10 +30,19 @@
  */
 function xmldb_totara_program_upgrade($oldversion) {
     global $CFG, $DB;
+    require_once("{$CFG->dirroot}/totara/notification/db/upgradelib.php");
+    require_once("{$CFG->dirroot}/totara/program/db/upgradelib.php");
+    require_once("{$CFG->dirroot}/totara/program/program_messages.class.php");
 
     $dbman = $DB->get_manager();
 
-    // Totara 13.0 release line.
+    if ($oldversion < 2021040100) {
+        // Register all program built-in notifications.
+        totara_notification_sync_built_in_notification('totara_program');
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2021040100, 'totara', 'program');
+    }
 
     return true;
 }

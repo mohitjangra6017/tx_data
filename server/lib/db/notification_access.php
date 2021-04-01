@@ -27,8 +27,9 @@ $accesses = [
         'capability' => 'moodle/course:update',
         'context_levels' => [
             CONTEXT_COURSE,
-            CONTEXT_MODULE,
-            CONTEXT_BLOCK
+            CONTEXT_COURSECAT,
+            CONTEXT_TENANT,
+            CONTEXT_SYSTEM,
         ]
     ]
 ];

@@ -38,6 +38,9 @@ use totara_notification\testing\generator;
 use totara_notification_mock_notifiable_event as mock_notifiable_event;
 use totara_notification_mock_notifiable_event_resolver as mock_notifiable_event_resolver;
 
+/**
+ * @group totara_notification
+ */
 class totara_notification_send_notification_with_placeholder_testcase extends testcase {
     /**
      * @return void
@@ -94,10 +97,10 @@ class totara_notification_send_notification_with_placeholder_testcase extends te
             extended_context::make_with_context(context_system::instance()),
             [
                 'title' => 'This is custom notification',
-                'subject' => 'A notification for [owner:firstname]',
+                'subject' => 'A notification for [owner:first_name]',
                 'body' =>
-                    'Hello [owner:firstname], a user [author:fullname] had make your item ' .
-                    'to this his/her timezone [author:timezone]',
+                    'Hello [owner:first_name], a user [author:full_name] had make your item ' .
+                    'to this his/her timezone [author:time_zone]',
                 'body_format' => FORMAT_MOODLE,
                 'recipient' => totara_notification_mock_recipient::class,
             ]
@@ -176,8 +179,8 @@ class totara_notification_send_notification_with_placeholder_testcase extends te
             mock_notifiable_event_resolver::class,
             extended_context::make_with_context(context_system::instance()),
             [
-                'subject' => 'Hello [author:firstname], a new notification for you',
-                'body' => 'Hello [author:fullname], user [commenter:fullname] had created a new comemnt in your code',
+                'subject' => 'Hello [author:first_name], a new notification for you',
+                'body' => 'Hello [author:full_name], user [commenter:full_name] had created a new comemnt in your code',
                 'body_format' => FORMAT_MOODLE,
                 'recipient' => totara_notification_mock_recipient::class,
             ]
@@ -189,7 +192,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends te
         $notification_generator->create_overridden_notification_preference(
             $custom_notification,
             extended_context::make_with_context($context_course),
-            ['body' => 'User [commenter:fullname] had created a new comment in [author:firstname]\'s code']
+            ['body' => 'User [commenter:full_name] had created a new comment in [author:first_name]\'s code']
         );
 
         mock_notifiable_event_resolver::add_placeholder_options(
@@ -308,7 +311,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends te
                     document_helper::create_document_from_content_nodes([
                         paragraph::create_json_node_with_content_nodes([
                             text::create_json_node_from_text('Hello '),
-                            placeholder::create_node_from_key_and_label('user_one:firstname', 'User\'s first name'),
+                            placeholder::create_node_from_key_and_label('user_one:first_name', 'User\'s first name'),
                         ]),
                     ])
                 ),
@@ -318,9 +321,9 @@ class totara_notification_send_notification_with_placeholder_testcase extends te
                         paragraph::create_json_node_from_text('Boom user'),
                         paragraph::create_json_node_with_content_nodes([
                             text::create_json_node_from_text('User\'s two full name from first name and last name is '),
-                            placeholder::create_node_from_key_and_label('user_two:firstname', 'User\'s first name'),
+                            placeholder::create_node_from_key_and_label('user_two:first_name', 'User\'s first name'),
                             text::create_json_node_from_text(' '),
-                            placeholder::create_node_from_key_and_label('user_two:lastname', 'User\'s last name'),
+                            placeholder::create_node_from_key_and_label('user_two:last_name', 'User\'s last name'),
                         ]),
                     ])
                 ),
@@ -405,9 +408,9 @@ class totara_notification_send_notification_with_placeholder_testcase extends te
                 [
                     /** @lang text */ "<p>Boom user</p>",
                     /** @lang text */ "<p>User&#039;s two full name from first name and last name is ",
-                    /** @lang text */ '<span data-key="user_two:firstname" data-label="User&#039;s first name">',
+                    /** @lang text */ '<span data-key="user_two:first_name" data-label="User&#039;s first name">',
                     /** @lang text */ "{$user_two->firstname}</span> ",
-                    /** @lang text */ '<span data-key="user_two:lastname" data-label="User&#039;s last name">',
+                    /** @lang text */ '<span data-key="user_two:last_name" data-label="User&#039;s last name">',
                     /** @lang text */ "{$user_two->lastname}</span>",
                     /** @lang text */ "</p>",
                 ]

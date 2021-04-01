@@ -64,7 +64,6 @@ class placeholder_option {
     ) {
         $this->group_key = $group_key;
         $this->placeholder_class = $placeholder_class;
-        $this->placeholder_class = $placeholder_class;
         $this->group_lang_string = $group_lang_string;
         $this->instantiation_callback = $instantiation_callback;
     }
@@ -188,7 +187,7 @@ class placeholder_option {
      * @return bool
      */
     public function is_valid_provided_placeholder_key(string $simple_key): bool {
-        $options = static::get_provided_placeholder_options();
+        $options = $this->get_provided_placeholder_options();
         foreach ($options as $option) {
             if ($option->get_key() === $simple_key) {
                 return true;

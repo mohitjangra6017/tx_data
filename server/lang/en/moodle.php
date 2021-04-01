@@ -593,6 +593,7 @@ $string['edulevel_help'] = 'The levels are:* **Teaching**: Actions performed by 
 * **Participating**: Actions performed by a learner, e.g. posting in a forum.
 * **Other**: Actions performed by a user with a role other than trainer or learner.';
 $string['email'] = 'Email address';
+$string['email_not_visible'] = '(Email not visible)';
 $string['emailalreadysent'] = 'A password reset email has already been sent. Please check your email.';
 $string['emailactive'] = 'Email activated';
 $string['emailagain'] = 'Email (again)';
@@ -892,6 +893,7 @@ $string['frontpageformat'] = 'Front page format';
 $string['frontpageformatloggedin'] = 'Front page format when logged in';
 $string['frontpagenews'] = 'Announcements';
 $string['frontpagesettings'] = 'Front page settings';
+$string['full_name_linked'] = 'Full name (with link)';
 $string['fulllistofcourses'] = 'All courses';
 $string['fullname'] = 'Full name'; /* @deprecated - Use fullnamecourse or fullnameuser or some own context specific string. */
 $string['fullnamecourse'] = 'Course full name';
