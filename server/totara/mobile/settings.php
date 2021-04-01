@@ -123,7 +123,7 @@ if ($hassiteconfig) {
     $themepage->add($setting);
 
     // Mobile text colour - default totara green.
-    $default = '#99AC3A';
+    $default = '#69BD45';
     $setting = new admin_setting_configcolourpicker(
         "totara_mobile/primarycolour",
         new lang_string('themesetting_primarycolour', 'totara_mobile'),

@@ -79,7 +79,7 @@ class totara_mobile_util_testcase extends advanced_testcase {
             'siteMaintenance' => '0',
             'theme' => [
                 'urlLogo' => 'https://www.totaralearning.com/themes/custom/totara/images/logo-totara-og-image.jpg',
-                'colorPrimary' => '#99AC3A',
+                'colorPrimary' => '#69BD45',
                 'colorText' => '#FFFFFF'
             ],
             'version' => util::API_VERSION,
