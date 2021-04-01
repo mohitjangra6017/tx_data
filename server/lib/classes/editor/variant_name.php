@@ -41,6 +41,11 @@ class variant_name {
     public const DESCRIPTION = 'description';
 
     /**
+     * @var string
+     */
+    public const SIMPLE = 'simple';
+
+    /**
      * variant_name constructor.
      */
     private function __construct() {

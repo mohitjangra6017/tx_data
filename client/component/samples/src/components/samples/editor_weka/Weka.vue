@@ -27,6 +27,18 @@
       }"
       variant="standard"
       :file-item-id="draftId"
+      :extra-extensions="[
+        {
+          name: 'weka_simple_multi_lang_extension',
+        },
+        {
+          name: 'weka_notification_placeholder_extension',
+          options: {
+            resolver_class_name:
+              'totara_comment\\totara_notification\\resolver\\comment_created',
+          },
+        },
+      ]"
     />
     <hr />
     <Button text="Reset" @click="reset" />

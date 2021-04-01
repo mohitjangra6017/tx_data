@@ -1494,7 +1494,8 @@ class core_plugin_manager {
             ),
 
             'weka' => array(
-                'notification_placeholder'
+                'notification_placeholder',
+                'simple_multi_lang',
             ),
 
             'workshopallocation' => array(

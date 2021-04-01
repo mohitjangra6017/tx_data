@@ -26,9 +26,11 @@ use core\editor\variant_name;
 use editor_weka\extension\attachment;
 use editor_weka\extension\emoji;
 use editor_weka\extension\hashtag;
+use editor_weka\extension\link;
 use editor_weka\extension\list_extension;
 use editor_weka\extension\media;
 use editor_weka\extension\mention;
+use editor_weka\extension\ruler;
 
 class variant_definition {
     /**
@@ -54,6 +56,19 @@ class variant_definition {
                 'exclude_extensions' => [
                     hashtag::class,
                     mention::class
+                ]
+            ],
+
+            variant_name::SIMPLE => [
+                'exclude_extensions' => [
+                    hashtag::class,
+                    mention::class,
+                    emoji::class,
+                    ruler::class,
+                    link::class,
+                    list_extension::class,
+                    media::class,
+                    attachment::class,
                 ]
             ],
             // The rest is the custom variants through out the system that we would want to
@@ -132,6 +147,7 @@ class variant_definition {
             [
                 variant_name::STANDARD,
                 variant_name::DESCRIPTION,
+                variant_name::SIMPLE,
                 'editor_weka-phpunit',
                 'editor_weka-behat',
                 'editor_weka-learn',

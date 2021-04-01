@@ -279,4 +279,24 @@ final class heading extends node implements block_node {
     protected static function do_get_type(): string {
         return 'heading';
     }
+
+    /**
+     * @param string $text
+     * @param int    $level
+     * @return array
+     */
+    public static function create_raw_node(string $text, int $level = 1): array {
+        return [
+            'type' => self::get_type(),
+            'attrs' => [
+                'level' => $level,
+            ],
+            'content' => [
+                [
+                    'type' => 'text',
+                    'text' => $text
+                ]
+            ]
+        ];
+    }
 }
