@@ -27,12 +27,15 @@ use coding_exception;
 use core\collection;
 use core\date_format;
 use mod_perform\entity\activity\element_response;
+use mod_perform\entity\activity\participant_instance as participant_instance_entity;
+use mod_perform\entity\activity\participant_section;
 use mod_perform\models\activity\activity as activity_model;
 use mod_perform\models\activity\participant_instance;
 use mod_perform\models\activity\participant_instance as participant_instance_model;
 use mod_perform\models\activity\subject_instance as subject_instance_model;
 use mod_perform\models\response\responder_group;
 use mod_perform\models\response\section_element_response;
+use mod_perform\state\participant_section\complete;
 use totara_core\entity\relationship;
 use totara_core\relationship\relationship as relationship_model;
 
@@ -191,7 +194,7 @@ class previous_responses {
      * @return array
      */
     private function get_responses_data(): array {
-        $previous_responses = $this->get_previous_responses();
+        $previous_responses = $this->get_previously_submitted_responses();
 
         return [
             'previous_responses' => $previous_responses,
@@ -204,11 +207,19 @@ class previous_responses {
      *
      * @return array
      */
-    private function get_previous_responses(): array {
-        return element_response::repository()->find_for_participants_and_section_elements(
-            $this->source_data['participant_instances']->pluck('id'),
-            [$this->section_element_id]
-        )
+    private function get_previously_submitted_responses(): array {
+        $section_id = $this->source_data['section_element']->section_id;
+
+        return element_response::repository()
+            ->as('er')
+            ->join([participant_instance_entity::TABLE, 'pi'],'er.participant_instance_id', 'id')
+            ->join([participant_section::TABLE, 'ps'],'pi.id', 'participant_instance_id')
+            ->where('ps.section_id', $section_id)
+            ->where('ps.progress', complete::get_code())
+            ->find_for_participants_and_section_elements(
+                $this->source_data['participant_instances']->pluck('id'),
+                [$this->section_element_id]
+            )
             ->filter(function ($response) {
                 // todo: how to differentiate between a 'null' string and a null value in response_data.
                 return $response->response_data != 'null';
@@ -249,7 +260,9 @@ class previous_responses {
      * @param participant_instance_model $current_participant_instance
      * @return participant_instance_model|null
      */
-    private function find_previous_participant_instance(participant_instance_model $current_participant_instance): ?participant_instance_model {
+    private function find_previous_participant_instance(
+        participant_instance_model $current_participant_instance
+    ): ?participant_instance_model {
         $participant_instances = $this->source_data['participant_instances'];
 
         return $participant_instances->find(function ($participant_instance) use ($current_participant_instance) {

@@ -35,11 +35,12 @@ use mod_perform\expand_task;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\section;
 use mod_perform\models\activity\section_element;
-use mod_perform\models\activity\section_element_reference;
 use mod_perform\models\activity\track;
 use mod_perform\models\response\responder_group;
 use mod_perform\models\response\section_element_response;
 use mod_perform\state\activity\draft;
+use mod_perform\state\participant_section\complete as participant_section_complete;
+use mod_perform\state\participant_section\in_progress;
 use mod_perform\task\service\subject_instance_creation;
 use mod_perform\user_groups\grouping;
 use performelement_redisplay\redisplay;
@@ -280,6 +281,39 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         }
     }
 
+    public function test_it_does_not_return_draft_responses() {
+        $this->create_test_users();
+        $question_bank = $this->set_up_question_bank_activity($this->base_relationships);
+        $question_bank['activity']->activate();
+
+        $redisplay = $this->set_up_redisplay_activity($this->base_relationships, $question_bank['respondable_section_element']->id);
+        $redisplay['activity']->activate();
+        $this->generate_instances();
+        $this->back_date_subject_instances_for_activity($question_bank['activity']->id, $this->five_days_ago_timestamp());
+        $subject_instances = $this->get_subject_instances_belonging_to_activity($question_bank['activity']->id);
+        $this->generate_responses_for_section_element_of_subject_instances($subject_instances, $question_bank['respondable_section_element']->id, in_progress::get_code());
+
+        $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
+        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
+
+        $result = $this->resolve_graphql_query(self::QUERY, [
+            'input' => [
+                'section_element_id' => $question_bank['respondable_section_element']->id,
+                'participant_section_id' => $redisplay_subject_participant_section->id,
+                'subject_instance_id' => $subject_instance_id,
+            ]
+        ]);
+        $date = userdate($this->five_days_ago_timestamp(), get_string(date_format::get_lang_string(date_format::FORMAT_DATE), 'langconfig'));
+
+        $this->assertEquals(
+            "Response redisplay cannot be shown, because there is no participation associated with the activity \"Question Bank ($date)\".",
+            $result['title']
+        );
+
+        $this->assertFalse($result['is_anonymous']);
+        $this->assertEmpty($result['other_responder_groups']);
+    }
+
     /**
      * Test previous responses are anonymized if source activity is anonymized.
      */
@@ -338,7 +372,6 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $redisplay['activity']->activate();
         $this->generate_instances();
 
-        $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($question_bank['activity']->id, $this->users['subject']->id);
         $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
 
         $result = $this->resolve_graphql_query(self::QUERY, [
@@ -386,16 +419,24 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
      *
      * @param collection $subject_instances
      * @param int $section_element_id
+     * @param int|null $participant_section_progress
      * @return void
      */
-    private function generate_responses_for_section_element_of_subject_instances(collection $subject_instances, int $section_element_id): void {
+    private function generate_responses_for_section_element_of_subject_instances(collection $subject_instances, int $section_element_id, ?int $participant_section_progress = null): void {
+        if (is_null($participant_section_progress)) {
+            $participant_section_progress = participant_section_complete::get_code();
+        }
         foreach ($subject_instances as $subject_instance) {
+            /** @var participant_instance $participant_instance*/
             foreach ($subject_instance->participant_instances as $participant_instance) {
                 $element_response = new element_response();
                 $element_response->participant_instance_id = $participant_instance->id;
                 $element_response->section_element_id = $section_element_id;
                 $element_response->response_data = "my previous answer {$participant_instance->participant_id}";
                 $element_response->save();
+                participant_section::repository()
+                    ->where('participant_instance_id', $participant_instance->id)
+                    ->update(['progress' => $participant_section_progress]);
             }
         }
     }
