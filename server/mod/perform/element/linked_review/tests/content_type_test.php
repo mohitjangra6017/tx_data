@@ -96,7 +96,8 @@ class performelement_linked_review_content_type_testcase extends advanced_testca
         $element1_input_data = [
             'content_type' => 'totara_competency',
             'content_type_settings' => [
-                // 'show_rating' => false,
+                'enable_rating' => false,
+                'rating_relationship' => null,
             ],
             'selection_relationships' => [$subject_relationship->id],
         ];
@@ -107,7 +108,8 @@ class performelement_linked_review_content_type_testcase extends advanced_testca
         $this->assertEquals([
             'content_type' => 'totara_competency',
             'content_type_settings' => [
-                // 'show_rating' => false,
+                'enable_rating' => false,
+                'rating_relationship' => null,
             ],
             'selection_relationships' => [$subject_relationship->id],
             'selection_relationships_display' => [
@@ -118,17 +120,18 @@ class performelement_linked_review_content_type_testcase extends advanced_testca
             ],
             'content_type_display' => 'Competencies',
             'content_type_settings_display' => [
-                // [
-                //     'title' => 'Show rating',
-                //     'value' => 'Disabled',
-                // ]
+                [
+                    'title' => get_string('enable_performance_rating', 'totara_competency'),
+                    'value' => get_string('no'),
+                ],
             ]
         ], $element1_output_data);
 
         $element2_input_data = [
             'content_type' => 'totara_competency',
             'content_type_settings' => [
-                // 'show_rating' => true,
+                'enable_rating' => true,
+                'rating_relationship' => $manager_relationship->id,
             ],
             'selection_relationships' => [$manager_relationship->id],
         ];
@@ -139,7 +142,9 @@ class performelement_linked_review_content_type_testcase extends advanced_testca
         $this->assertEquals([
             'content_type' => 'totara_competency',
             'content_type_settings' => [
-                // 'show_rating' => true,
+                'enable_rating' => true,
+                'rating_relationship' => $manager_relationship->id,
+                'rating_relationship_name' => $manager_relationship->get_name(),
             ],
             'selection_relationships' => [$manager_relationship->id],
             'selection_relationships_display' => [
@@ -150,10 +155,14 @@ class performelement_linked_review_content_type_testcase extends advanced_testca
             ],
             'content_type_display' => 'Competencies',
             'content_type_settings_display' => [
-                // [
-                //     'title' => 'Show rating',
-                //     'value' => 'Enabled',
-                // ]
+                [
+                    'title' => get_string('enable_performance_rating', 'totara_competency'),
+                    'value' => get_string('yes'),
+                ],
+                [
+                    'title' => get_string('enable_performance_rating_participant', 'totara_competency'),
+                    'value' => $manager_relationship->name,
+                ],
             ]
         ], $element2_output_data);
     }
@@ -190,7 +199,7 @@ class performelement_linked_review_content_type_testcase extends advanced_testca
                 'data' => [
                     'content_type' => 'totara_competency',
                     'content_type_settings' => [
-                        // 'show_rating' => false,
+                        'enable_rating' => false,
                     ],
                     'selection_relationships' => [],
                 ],
@@ -200,7 +209,7 @@ class performelement_linked_review_content_type_testcase extends advanced_testca
                 'data' => [
                     'content_type' => 'totara_competency',
                     'content_type_settings' => [
-                        // 'show_rating' => false,
+                        'enable_rating' => false,
                     ],
                     'selection_relationships' => ['-1'],
                 ],

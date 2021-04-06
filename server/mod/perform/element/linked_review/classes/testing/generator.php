@@ -24,6 +24,7 @@
 namespace performelement_linked_review\testing;
 
 use context_system;
+use core\orm\entity\repository;
 use core\orm\query\builder;
 use core\testing\component_generator;
 use core\testing\generator as core_generator;
@@ -137,7 +138,11 @@ final class generator extends component_generator {
         if ($data['element'] instanceof element) {
             $element = $data['element'];
         } else {
-            $element = element::load_by_entity(element_entity::repository()->where('title', $data['element'])->one());
+            $element_entity = element_entity::repository()->where('title', $data['element'])->one();
+            if ($element_entity === null) {
+                throw new \coding_exception("Element with title '{$data['element']}' doesn't exist.");
+            }
+            $element = element::load_by_entity($element_entity);
         }
         $element_plugin = $element->get_element_plugin();
         if (!$element_plugin instanceof linked_review) {
@@ -149,9 +154,15 @@ final class generator extends component_generator {
         switch ($content_type) {
             case competency_assignment::get_identifier():
                 $content_id = competency_assignment_user::repository()
+                    ->select('assignment_id')
                     ->join([competency::TABLE, 'comp'], 'competency_id', 'id')
                     ->where('comp.fullname', $data['content_name'])
                     ->where('user_id', $subject_user->id)
+                    ->when(!empty($data['assignment_reason']), function (repository $repo) use ($data) {
+                        $repo
+                            ->join([assignment::TABLE, 'ass'], 'assignment_id', 'id')
+                            ->where('ass.user_group_type', $data['assignment_reason']);
+                    })
                     ->one(true)
                     ->assignment_id;
                 break;
@@ -304,7 +315,15 @@ final class generator extends component_generator {
                 $scale = scale::repository()->order_by('id')->first();
                 $framework = competency_generator::instance()->create_framework($scale);
             }
-            $competency = competency_generator::instance()->create_competency($data['competency_name'] ?? null, $framework);
+            $competency_name = $data['competency_name'] ?? null;
+            $competency = competency::repository()->where('fullname', $competency_name)->one();
+            if ($competency === null) {
+                $competency = competency_generator::instance()->create_competency(
+                    $competency_name,
+                    $framework,
+                    $competency_name ? ['idnumber' => $data['competency_name']] : null
+                );
+            }
         }
 
         $generator = competency_generator::instance()->assignment_generator();

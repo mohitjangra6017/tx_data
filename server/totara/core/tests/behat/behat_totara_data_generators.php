@@ -318,6 +318,10 @@ class behat_totara_data_generators extends behat_base {
                 'datagenerator' => 'criteria_group_pathway_for_behat',
                 'required' => array('competency', 'scale_value', 'criteria')
             ),
+            'pathways' => array(
+                'datagenerator' => 'pathway_for_behat',
+                'required' => array('pathway', 'competency')
+            ),
             'learning plan pathways' => array(
                 'datagenerator' => 'learning_plan_pathway_for_behat',
                 'required' => array('competency')

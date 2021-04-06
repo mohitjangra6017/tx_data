@@ -128,11 +128,15 @@ class element extends model {
         $entity->sort_order = $sort_order;
         self::clean($entity);
         self::validate($entity);
-        $entity->save();
-        $model = self::load_by_entity($entity);
-        self::post_create($model);
 
-        return self::load_by_id($model->id);
+        return builder::get_db()->transaction(function () use ($entity) {
+            $entity->save();
+            $model = self::load_by_entity($entity);
+            self::post_create($model);
+            $entity->save();
+
+            return static::load_by_id($model->id);
+        });
     }
 
     /**

@@ -191,6 +191,12 @@
       margin: 0;
       @include tui-font-heading-x-small();
     }
+
+    &-title-full {
+      width: 100%;
+      margin: 0;
+      @include tui-font-heading-x-small();
+    }
   }
 
   &__heading {

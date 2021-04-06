@@ -94,7 +94,7 @@ class request {
                 throw new webapi_request_exception('Query parameter is missing');
             }
 
-            if (!empty($op['operationName']) && !preg_match('/^[a-z][a-z0-9_]+$/D', $op['operationName'])) {
+            if (!empty($op['operationName']) && $op['operationName'] !== 'IntrospectionQuery' && !preg_match('/^[a-z][a-z0-9_]+$/D', $op['operationName'])) {
                 throw new webapi_request_exception('Invalid request, validation of operationName failed');
             }
         }

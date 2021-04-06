@@ -65,7 +65,7 @@ export default {
     size: {
       type: String,
       validator(value) {
-        const allowedOptions = ['sm'];
+        const allowedOptions = ['sm', 'md'];
         return allowedOptions.indexOf(value) !== -1;
       },
     },
@@ -109,6 +109,11 @@ export default {
 
   &--size-sm {
     width: 250px;
+    max-width: none;
+  }
+
+  &--size-md {
+    width: 300px;
     max-width: none;
   }
 

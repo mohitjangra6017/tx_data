@@ -157,6 +157,11 @@ class linked_review extends respondable_element_plugin {
         unset($data['content_type_settings_display']);
         unset($data['compatible_child_element_plugins']);
 
+        if (isset($data['content_type'], $data['content_type_settings']) && $element->exists()) {
+            $content_type = content_type_factory::get_class_name_from_identifier($data['content_type']);
+            $data['content_type_settings'] = $content_type::clean_content_type_settings($data['content_type_settings']);
+        }
+
         $element->data = json_encode($data, JSON_UNESCAPED_SLASHES);
     }
 
@@ -183,6 +188,7 @@ class linked_review extends respondable_element_plugin {
         $available_settings = $content_type::get_available_settings();
         $saved_settings = $data['content_type_settings'] ?? [];
         $settings = array_merge($available_settings, $saved_settings);
+        $settings = $content_type::clean_content_type_settings($settings);
 
         return array_merge($data, ['content_type_settings' => $settings]);
     }
@@ -206,7 +212,7 @@ class linked_review extends respondable_element_plugin {
         }
 
         $human_readable_settings = [];
-        foreach ($content_type::get_display_settings($decoded_data['content_type_settings'] ?? []) as $name => $value) {
+        foreach ($content_type::get_display_settings($decoded_data['content_type_settings']) as $name => $value) {
             $human_readable_settings[] = [
                 'title' => $name,
                 'value' => $value,
@@ -216,12 +222,15 @@ class linked_review extends respondable_element_plugin {
         $additional_data = [
             'selection_relationships_display' => $relationships,
             'content_type_display' => $content_type::get_display_name(),
+            'content_type_settings' => $content_type::get_content_type_settings($decoded_data['content_type_settings']),
             'content_type_settings_display' => $human_readable_settings,
             'components' => [
+                'admin_content_footer' => $content_type::get_admin_content_footer_component(),
                 'admin_settings' => $content_type::get_admin_settings_component(),
                 'admin_view' => $content_type::get_admin_view_component(),
                 'content_picker' => $content_type::get_content_picker_component(),
                 'participant_content' => $content_type::get_participant_content_component(),
+                'participant_content_footer' => $content_type::get_participant_content_footer_component(),
             ],
             'compatible_child_element_plugins' => $this->get_compatible_child_element_plugins($element->data),
         ];

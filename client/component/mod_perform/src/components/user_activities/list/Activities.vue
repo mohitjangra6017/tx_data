@@ -823,6 +823,7 @@ export default {
   }
 
   &__selectRelationshipLink {
+    text-align: left;
     @include tui-font-link();
   }
 

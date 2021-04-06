@@ -36,6 +36,7 @@ use mod_perform\entity\activity\section_element as section_element_entity;
 use mod_perform\models\activity\participant_instance as participant_instance_model;
 use mod_perform\models\activity\participant_source;
 use mod_perform\models\activity\section_element;
+use mod_perform\models\activity\subject_instance;
 use moodle_exception;
 use performelement_linked_review\entity\linked_review_content as linked_review_content_entity;
 use performelement_linked_review\entity\linked_review_content_response;
@@ -52,6 +53,10 @@ use stdClass;
  * @property-read string $content
  * @property-read int $content_id
  * @property-read int $created_at
+ * @property-read user $selector
+ * @property-read subject_instance $subject_instance
+ * @property-read section_element $section_element
+ * @property-read linked_review_content_response[]|collection $responses
  *
  * @package performelement_linked_review\models
  */
@@ -85,10 +90,13 @@ class linked_review_content extends model {
         'selector',
         'selector_id',
         'created_at',
+        'responses',
     ];
 
     protected $model_accessor_whitelist = [
-        'content'
+        'content',
+        'section_element',
+        'subject_instance',
     ];
 
     /**
@@ -247,17 +255,11 @@ class linked_review_content extends model {
      * Set the content. As the types are pluggable the code loading the content item needs to make sure the
      * type code loads the correct item and set it here.
      *
-     * @param $content
+     * @param array $content
      */
-    public function set_content($content) {
-        if (!is_array($content) && $content instanceof stdClass && $content instanceof JsonSerializable) {
-            throw new coding_exception('Content data needs to be json serializable.');
-        }
-
+    public function set_content(array $content): void {
         // Try to validate it
-        if ((isset($content->id) && (int) $content->id !== (int) $this->content_id)
-            || (isset($content['id']) && (int) $content['id'] !== (int) $this->content_id)
-        ) {
+        if (!isset($content['id']) || $content['id'] != $this->content_id) {
             throw new coding_exception('Content item does not have an id.');
         }
 
@@ -397,6 +399,24 @@ class linked_review_content extends model {
             ->find('core_relationship_id', $participant_instance->core_relationship_id);
 
         return $section_relationship !== null;
+    }
+
+    /**
+     * Get the section element model.
+     *
+     * @return section_element
+     */
+    public function get_section_element(): section_element {
+        return section_element::load_by_entity($this->entity->section_element);
+    }
+
+    /**
+     * Get the subject instance model.
+     *
+     * @return subject_instance
+     */
+    public function get_subject_instance(): subject_instance {
+        return subject_instance::load_by_entity($this->entity->subject_instance);
     }
 
 }

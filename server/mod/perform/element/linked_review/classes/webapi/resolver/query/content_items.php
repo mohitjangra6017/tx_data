@@ -75,25 +75,26 @@ final class content_items implements query_resolver, has_middleware {
             $ec->set_relevant_context($subject_instance->get_context());
         }
 
+        $participant_section = null;
         if ($validator) {
-            $has_participant_section = participant_section::repository()
+            $participant_section = participant_section::repository()
                 ->where('section_id', $section_element->section_id)
                 ->where('participant_instance_id', $validator->get_participant_instance()->id)
-                ->exists();
+                ->one();
         } else {
-            $has_participant_section = participant_section::repository()
+            $participant_section = participant_section::repository()
                 ->join([participant_instance::TABLE, 'pi'], 'participant_instance_id', 'id')
                 ->where('section_id', $section_element->section_id)
                 ->where('pi.participant_id', $USER->id)
                 ->where('pi.participant_source', participant_source::INTERNAL)
                 ->where('pi.subject_instance_id', $subject_instance_id)
-                ->exists();
+                ->one();
         }
 
-        if (!$has_participant_section
+        if ($participant_section === null
             && !util::can_report_on_user($subject_instance->subject_user_id, $USER->id)
         ) {
-            throw new coding_exception('User does not participant on given section');
+            throw new coding_exception('User does not participate in the section with ID ' . $section_element->section_id);
         }
 
         $content_items = linked_review_content_model::get_existing_selected_content($section_element_id, $subject_instance_id);
@@ -103,18 +104,20 @@ final class content_items implements query_resolver, has_middleware {
 
         $content_type = self::get_content_type_instance($section_element, $subject_instance->get_context());
 
-        // TODO: Pass additional data as for learning items we also need the type (course, program, certification), the id is not enough
         $created_at = $content_items->first()->created_at;
-        $content_items_data = $content_type->load_content_items(
-            $subject_instance->subject_user_id,
-            $content_items->pluck('content_id'),
+        $loaded_content_items = $content_type->load_content_items(
+            $subject_instance,
+            $content_items,
+            $participant_section,
             $created_at
         );
-        foreach ($content_items_data as $content_id => $content_data) {
-            /** @var linked_review_content_model $item */
-            $item = $content_items->find('content_id', $content_id);
-            if ($item) {
-                $item->set_content($content_data);
+        foreach ($loaded_content_items as $content_id => $loaded_content_data) {
+            /** @var linked_review_content_model $linked_item_model */
+            $linked_item_model = $content_items->find('content_id', $content_id);
+            if ($linked_item_model) {
+                $linked_item_model->set_content($loaded_content_data);
+            } else {
+                throw new coding_exception("Couldn't find a linked content item with content ID {$content_id}");
             }
         }
 

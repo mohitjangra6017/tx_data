@@ -21,6 +21,7 @@
     <component
       :is="component"
       :assignment-id="assignmentId"
+      :competency-id="competencyId"
       :user-id="userId"
       @loaded="isLoaded"
     />
@@ -33,6 +34,9 @@ export default {
   props: {
     assignmentId: {
       required: true,
+      type: Number,
+    },
+    competencyId: {
       type: Number,
     },
     type: {

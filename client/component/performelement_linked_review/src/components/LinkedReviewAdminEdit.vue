@@ -56,6 +56,7 @@
         <component
           :is="selectedContentTypeSettingsComponent"
           ref="typeSettings"
+          :relationships="coreRelationships"
         />
       </FormScope>
     </PerformAdminCustomElementEdit>
@@ -185,6 +186,9 @@ export default {
      * @return {Object}
      */
     selectedType() {
+      if (!this.selectedTypeId && this.contentTypes.length === 1) {
+        return this.contentTypes[0];
+      }
       return this.contentTypes.find(type => type.id === this.selectedTypeId);
     },
   },

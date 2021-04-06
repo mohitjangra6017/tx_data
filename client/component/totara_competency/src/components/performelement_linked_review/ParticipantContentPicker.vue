@@ -39,7 +39,11 @@
     @update="$emit('update', $event)"
   >
     <template v-slot:content-preview="{ content }">
-      <component :is="previewComponent" :content="getItemData(content)" />
+      <component
+        :is="previewComponent"
+        :content="getItemData(content)"
+        :subject-user="subjectUser"
+      />
     </template>
   </SelectContent>
 </template>
@@ -68,6 +72,7 @@ export default {
     previewComponent: [Function, Object],
     required: Boolean,
     sectionElementId: String,
+    subjectUser: Object,
     userId: Number,
   },
 

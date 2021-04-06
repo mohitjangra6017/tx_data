@@ -1376,7 +1376,7 @@ class core_plugin_manager {
             ),
 
             'pathway' => array(
-                'criteria_group', 'learning_plan', 'manual'
+                'criteria_group', 'learning_plan', 'manual', 'perform_rating',
             ),
 
             'performelement' => array(

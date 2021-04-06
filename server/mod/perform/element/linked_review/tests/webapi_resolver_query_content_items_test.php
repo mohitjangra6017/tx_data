@@ -144,7 +144,7 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
             $result = $this->resolve_graphql_query(self::QUERY, $args);
             $this->fail('expected query to fail');
         } catch (coding_exception $exception) {
-            $this->assertStringContainsString('User does not participant on given section', $exception->getMessage());
+            $this->assertStringContainsString('User does not participate in the section with ID', $exception->getMessage());
         }
 
         // Test non existing section_element
@@ -178,7 +178,7 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
             $result = $this->resolve_graphql_query(self::QUERY, $args);
             $this->fail('expected query to fail');
         } catch (coding_exception $exception) {
-            $this->assertStringContainsString('User does not participant on given section', $exception->getMessage());
+            $this->assertStringContainsString('User does not participate in the section with ID', $exception->getMessage());
         }
     }
 

@@ -18,7 +18,7 @@
 
 <template>
   <div class="tui-formHelpIcon">
-    <Popover position="top" :title="title" :triggers="['click']">
+    <Popover position="top" :size="size" :title="title" :triggers="['click']">
       <template v-slot:trigger>
         <ButtonIcon
           class="tui-formHelpIcon__icon"
@@ -66,6 +66,9 @@ export default {
     },
     hidden: {
       type: Boolean,
+    },
+    size: {
+      type: String,
     },
     title: {
       type: String,

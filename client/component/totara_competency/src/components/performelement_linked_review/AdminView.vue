@@ -60,9 +60,9 @@ export default {
 
         scale_values: [
           {
-            id: '3',
-            name: this.$str('rating_value', 'totara_competency', 3),
-            proficient: false,
+            id: '1',
+            name: this.$str('rating_value', 'totara_competency', 1),
+            proficient: true,
           },
           {
             id: '2',
@@ -70,9 +70,9 @@ export default {
             proficient: false,
           },
           {
-            id: '1',
-            name: this.$str('rating_value', 'totara_competency', 1),
-            proficient: true,
+            id: '3',
+            name: this.$str('rating_value', 'totara_competency', 3),
+            proficient: false,
           },
         ],
       };

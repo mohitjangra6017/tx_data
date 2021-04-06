@@ -36,6 +36,12 @@
         @unsaved-child="$emit('unsaved-child', $event)"
       />
     </div>
+
+    <component
+      :is="getFooterComponent()"
+      class="tui-linkedReviewAdminView__footer"
+      :settings="data.content_type_settings"
+    />
   </div>
 </template>
 
@@ -92,6 +98,18 @@ export default {
      *
      * @return {function}
      */
+    getFooterComponent() {
+      if (!this.data.components) {
+        return null;
+      }
+      return tui.asyncComponent(this.data.components.admin_content_footer);
+    },
+
+    /**
+     * Get type specific content for preview
+     *
+     * @return {function}
+     */
     getTypeComponent() {
       if (!this.sectionElement.element.data.components) {
         return null;
@@ -107,10 +125,18 @@ export default {
 
 <style lang="scss">
 .tui-linkedReviewAdminView {
+  & > * + * {
+    margin-top: var(--gap-4);
+  }
+
   &__card {
     flex-direction: column;
     padding: var(--gap-4);
     background: var(--color-neutral-3);
+  }
+
+  &__footer {
+    margin-top: var(--gap-8);
   }
 }
 </style>

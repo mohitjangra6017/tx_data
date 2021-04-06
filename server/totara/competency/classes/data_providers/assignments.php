@@ -99,6 +99,7 @@ class assignments extends user_data_provider {
                     $repository->with([
                         'scale' => function (repository $repository) {
                             $repository->with('values')
+                                ->with('sorted_values_high_to_low')
                                 ->with('min_proficient_value');
                         }
                     ]);

@@ -98,6 +98,7 @@
             <!-- Scale achievement details -->
             <Achievements
               :assignment="selectedAssignmentData"
+              :competency-id="competencyId"
               :user-id="userId"
             />
           </div>

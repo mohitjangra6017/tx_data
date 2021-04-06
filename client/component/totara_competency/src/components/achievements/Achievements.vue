@@ -77,6 +77,9 @@ export default {
       required: true,
       type: Object,
     },
+    competencyId: {
+      type: Number,
+    },
     userId: {
       required: true,
       type: Number,
@@ -112,6 +115,7 @@ export default {
             props: {
               userId: this.userId,
               assignmentId: this.assignmentId,
+              competencyId: this.competencyId,
               type: path.type,
               name: path.name,
             },

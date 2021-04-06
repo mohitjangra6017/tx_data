@@ -75,6 +75,7 @@ class behat_totara_tui extends behat_base {
 
     private const MODAL_WRAPPER_SELECTOR = 'body > .tui-modal';
     private const MODAL_CONTENT_SELECTOR = '.tui-modalContent';
+    private const MODAL_CONTENT_SELECTOR_ALTERNATIVE = '.tui-modal__inner';
 
     private const COLLAPSIBLE_LOCATOR = '.tui-collapsible';
     private const COLLAPSIBLE_HEADER_TEXT_LOCATOR = '.tui-collapsible__header-text';
@@ -710,6 +711,13 @@ class behat_totara_tui extends behat_base {
             $group = null;
         }
 
+        if ($group !== null) {
+            $radio_group = $this->find_tui_form_element_with_label($group);
+            if ($radio_group !== null && $radio_group->hasClass('tui-radioGroup')) {
+                $parent_element = $radio_group;
+            }
+        }
+
         $xpath = '//div[contains(@class, "tui-radio") and ' .
             '(label[contains(@class, "tui-radio__label") and contains(., "' . $radio . '")] or ' .
             'input[contains(@class, "tui-radio__input") and @value="' . $radio . '"' .
@@ -725,6 +733,59 @@ class behat_totara_tui extends behat_base {
         }
 
         $this->click_hidden_element($radio_input);
+    }
+
+    /**
+     * @Then /^I (should|should not) see "([^"]*)" in the "([^"]*)" tui radio group$/
+     *
+     * @param string $should
+     * @param string $expected_text
+     * @param string $group
+     */
+    public function i_should_see_text_in_tui_radio_group(string $should, string $expected_text, string $group): void {
+        \behat_hooks::set_step_readonly(true);
+
+        $should_exist = $should === 'should';
+
+        $radio_group = $this->find_tui_form_element_with_label($group);
+        if ($radio_group === null || !$radio_group->hasClass('tui-radioGroup')) {
+            throw new ExpectationException("Couldn't find the {$group} tui radio group.", $this->getSession());
+        }
+
+        $text_exists = strpos($radio_group->getText(), $expected_text) !== false;
+
+        if ($should_exist && !$text_exists) {
+            throw new ExpectationException("No text matching {$expected_text} found.", $this->getSession());
+        } else if (!$should_exist && $text_exists) {
+            throw new ExpectationException("Text matching {$expected_text} found when it shouldn't exist.", $this->getSession());
+        }
+    }
+
+    /**
+     * Get a form element with the specified associated label.
+     *
+     * @param string $label
+     * @param NodeElement|null $parent_element
+     * @return NodeElement|null
+     */
+    private function find_tui_form_element_with_label(string $label, ?NodeElement $parent_element = null): ?NodeElement {
+        $parent_element = $parent_element ?? $this;
+
+        $form_label_xpath = '//label[contains(@class, "tui-formLabel") and contains(text(), "' . $label . '")]';
+        $label_element = null;
+        try {
+            $label_element = $parent_element->find('xpath', $form_label_xpath);
+        } catch (ElementNotFoundException $exception) {
+            // Annoyingly calling find() throws an exception instead of returning null for some reason, so we have to catch it.
+            return null;
+        }
+
+        if ($label_element === null) {
+            return null;
+        }
+
+        $label_for = $label_element->getAttribute('for');
+        return $parent_element->find('css', "#{$label_for}");
     }
 
     /**
@@ -795,10 +856,19 @@ class behat_totara_tui extends behat_base {
      */
     public function i_should_see_in_the_tui_modal(string $should_see_or_not, string $expected_text): void {
         $should = $should_see_or_not === 'should';
-        $modal_text = $this
+        $modal_content = $this
             ->find_top_visible(self::MODAL_WRAPPER_SELECTOR, 'modal')
-            ->find('css', self::MODAL_CONTENT_SELECTOR)
-            ->getText();
+            ->find('css', self::MODAL_CONTENT_SELECTOR);
+
+        if (!$modal_content) {
+            $modal_content = $this
+                ->find_top_visible(self::MODAL_WRAPPER_SELECTOR, 'modal')
+                ->find('css', self::MODAL_CONTENT_SELECTOR_ALTERNATIVE);
+            if (!$modal_content) {
+                throw new ExpectationException("No modal found", $this->getSession());
+            }
+        }
+        $modal_text = $modal_content->getText();
 
         $text_is_visible = strpos($modal_text, $expected_text) !== false;
         if ($should && !$text_is_visible) {

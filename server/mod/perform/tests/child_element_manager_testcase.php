@@ -52,6 +52,9 @@ abstract class child_element_manager_testcase extends advanced_testcase {
         $element->title = 'Parent element';
         $element->data = json_encode([
             'content_type' => 'totara_competency',
+            'content_type_settings' => [
+                'enable_rating' => false,
+            ],
         ]);
         $element = $element->save();
         $parent_element_model = element_model::load_by_entity($element);

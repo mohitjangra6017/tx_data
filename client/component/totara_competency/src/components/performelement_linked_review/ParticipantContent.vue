@@ -135,6 +135,7 @@ export default {
     createdAt: String,
     fromPrint: Boolean,
     preview: Boolean,
+    subjectUser: Object,
   },
 
   computed: {
@@ -146,6 +147,7 @@ export default {
     competencyUrl() {
       return this.$url('/totara/competency/profile/details/index.php', {
         competency_id: this.content.competency.id,
+        user_id: this.subjectUser.id,
       });
     },
 

@@ -124,6 +124,7 @@ class totara_competency_pathway_factory_testcase extends \advanced_testcase {
             [
                 'manual',
                 'learning_plan',
+                'perform_rating',
             ],
             $types
         );
@@ -137,6 +138,7 @@ class totara_competency_pathway_factory_testcase extends \advanced_testcase {
                 'manual',
                 'learning_plan',
                 'criteria_group',
+                'perform_rating',
             ],
             $types
         );

@@ -198,7 +198,7 @@
                     :token="token"
                     :current-user-id="currentUserId"
                     @unsaved-plugin-change="unsavedPluginChange"
-                    @showBanner="canShowBanner"
+                    @show-banner="canShowBanner"
                   />
                 </div>
               </div>

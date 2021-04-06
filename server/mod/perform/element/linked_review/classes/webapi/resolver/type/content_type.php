@@ -63,6 +63,10 @@ class content_type implements type_resolver {
                 return $type::get_content_picker_component();
             case 'participant_content_component':
                 return $type::get_participant_content_component();
+            case 'participant_content_footer_component':
+                return $type::get_participant_content_footer_component();
+            case 'admin_content_footer_component':
+                return $type::get_admin_content_footer_component();
             case 'available_settings':
                 return json_encode($type::get_available_settings());
             default:

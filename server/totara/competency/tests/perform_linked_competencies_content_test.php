@@ -1,12 +1,4 @@
 <?php
-
-use core\orm\query\builder;
-use totara_competency\expand_task;
-use totara_competency\models\assignment as assignment_model;
-use totara_competency\performelement_linked_review\competency_assignment;
-use totara_competency\testing\generator as competency_generator;
-use totara_core\advanced_feature;
-
 /**
  * This file is part of Totara Learn
  *
@@ -29,16 +21,34 @@ use totara_core\advanced_feature;
  * @package totara_competency
  */
 
+use core\collection;
+use core\orm\query\builder;
+use mod_perform\entity\activity\subject_instance as subject_instance_entity;
+use mod_perform\models\activity\subject_instance;
+use totara_competency\expand_task;
+use totara_competency\models\assignment as assignment_model;
+use totara_competency\performelement_linked_review\competency_assignment;
+use totara_competency\testing\generator as competency_generator;
+use totara_core\advanced_feature;
+use totara_core\relationship\relationship;
+
+/**
+ * @group totara_competency
+ */
 class totara_competency_perform_linked_competencies_content_testcase extends advanced_testcase {
 
     public function test_load_with_empty_content_items_collection() {
         $user = $this->getDataGenerator()->create_user();
+        $dummy_subject_instance = subject_instance::load_by_entity(new subject_instance_entity([
+            'id' => 123456,
+            'subject_user_id' => $user->id,
+        ]));
 
         $this->setUser($user);
 
         $content_type = new competency_assignment(context_system::instance());
 
-        $result = $content_type->load_content_items($user->id, [], time());
+        $result = $content_type->load_content_items($dummy_subject_instance, collection::new([]), null, time());
 
         $this->assertIsArray($result);
         $this->assertEmpty($result);
@@ -46,18 +56,30 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
 
     public function test_load_competency_items_which_do_not_exist() {
         $user = $this->getDataGenerator()->create_user();
+        $dummy_subject_instance = subject_instance::load_by_entity(new subject_instance_entity([
+            'id' => 123456,
+            'subject_user_id' => $user->id,
+        ]));
+        $nonexistent_competency_content_items = collection::new([
+            ['content_id' => -1],
+            ['content_id' => -2],
+        ]);
 
         $this->setUser($user);
 
         $content_type = new competency_assignment(context_system::instance());
 
-        $result = $content_type->load_content_items($user->id, [1, 2], time());
+        $result = $content_type->load_content_items($dummy_subject_instance, $nonexistent_competency_content_items, null, time());
 
         $this->assertEmpty($result);
     }
 
     public function test_load_competency_items() {
         $user1 = $this->getDataGenerator()->create_user();
+        $dummy_subject_instance = subject_instance::load_by_entity(new subject_instance_entity([
+            'id' => 123456,
+            'subject_user_id' => $user1->id,
+        ]));
 
         $competency1 = $this->generator()->create_competency();
         $competency2 = $this->generator()->create_competency();
@@ -72,11 +94,15 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
 
         $created_at = time();
 
-        $content_ids = [$assignment1->id, 666, $assignment2->id];
+        $content_items = collection::new([
+            ['content_id' => $assignment1->id],
+            ['content_id' => 666],
+            ['content_id' => $assignment2->id],
+        ]);
 
         $content_type = new competency_assignment(context_system::instance());
 
-        $result = $content_type->load_content_items($user1->id, $content_ids, $created_at);
+        $result = $content_type->load_content_items($dummy_subject_instance, $content_items, null, $created_at);
 
         $this->assertIsArray($result);
         $this->assertNotEmpty($result);
@@ -116,6 +142,8 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
                 'proficient' => false,
             ],
             'scale_values' => $expected_scale1,
+            'can_rate' => false,
+            'rating' => null,
         ];
 
         $this->assertEquals($expected_content_first_item, $actual_first_item);
@@ -154,6 +182,8 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
                 'proficient' => false,
             ],
             'scale_values' => $expected_scale2,
+            'can_rate' => false,
+            'rating' => null,
         ];
 
         $this->assertEquals($expected_content_third_item, $actual_third_item);
@@ -161,6 +191,10 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
 
     public function test_feature_disabled() {
         $user1 = $this->getDataGenerator()->create_user();
+        $dummy_subject_instance = subject_instance::load_by_entity(new subject_instance_entity([
+            'id' => 123456,
+            'subject_user_id' => $user1->id,
+        ]));
 
         $competency1 = $this->generator()->create_competency();
         $competency2 = $this->generator()->create_competency();
@@ -173,42 +207,57 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
 
         $this->setUser($user1);
 
-        $content_ids = [$assignment1->id, 666, $assignment2->id];
+        $content_items = collection::new([
+            ['content_id' => $assignment1->id],
+            ['content_id' => 666],
+            ['content_id' => $assignment2->id],
+        ]);
 
         advanced_feature::disable('competency_assignment');
 
         $content_type = new competency_assignment(context_system::instance());
-        $result = $content_type->load_content_items($user1->id, $content_ids, time());
+        $result = $content_type->load_content_items($dummy_subject_instance, $content_items, null, time());
 
         $this->assertEmpty($result);
     }
 
     public function test_get_display_settings() {
         $display_settings = competency_assignment::get_display_settings([]);
+        $subject_relationship = relationship::load_by_idnumber('subject');
 
         $this->assertEquals(
-            [],
-            // ['Show rating' => 'Disabled'],
+            [get_string('enable_performance_rating', 'totara_competency') => get_string('no')],
             $display_settings
         );
 
         $display_settings = competency_assignment::get_display_settings([
-            // 'show_rating' => false
+            'enable_rating' => false
         ]);
 
         $this->assertEquals(
-            [],
-            // ['Show rating' => 'Disabled'],
+            [get_string('enable_performance_rating', 'totara_competency') => get_string('no')],
             $display_settings
         );
 
         $display_settings = competency_assignment::get_display_settings([
-            // 'show_rating' => true
+            'enable_rating' => true
         ]);
 
         $this->assertEquals(
-            [],
-            // ['Show rating' => 'Enabled'],
+            [get_string('enable_performance_rating', 'totara_competency') => get_string('yes')],
+            $display_settings
+        );
+
+        $display_settings = competency_assignment::get_display_settings([
+            'enable_rating' => true,
+            'rating_relationship' => $subject_relationship->id,
+        ]);
+
+        $this->assertEquals(
+            [
+                get_string('enable_performance_rating', 'totara_competency') => get_string('yes'),
+                get_string('enable_performance_rating_participant', 'totara_competency') => $subject_relationship->get_name(),
+            ],
             $display_settings
         );
     }

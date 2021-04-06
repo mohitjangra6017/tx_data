@@ -245,8 +245,7 @@ function(templates, ajax, modalFactory, modalEvents, notification, str, Loader) 
 
                 that.pathways[key].singleuse = pw.singleuse || 0;
                 if (that.pathways[key].singleuse) {
-                    // At the moment we have only 1 single use pathway type (learning plan). Need to enhance if there are more
-                    that.toggleSingleUsePathwayTypes(false);
+                    that.toggleSingleUsePathwayTypes(false, that.pathways[key].type);
                 }
                 delete pw.singleuse;
 
@@ -794,7 +793,7 @@ function(templates, ajax, modalFactory, modalEvents, notification, str, Loader) 
                 this.enableApplyChanges();
 
                 if (this.pathways[pwKey].singleuse) {
-                    this.toggleSingleUsePathwayTypes(true);
+                    this.toggleSingleUsePathwayTypes(true, this.pathways[pwKey].type);
                 }
 
                 if (this.pathways[pwKey].id && this.pathways[pwKey].id != 0) {
@@ -887,8 +886,8 @@ function(templates, ajax, modalFactory, modalEvents, notification, str, Loader) 
             // Handle the case where an existing single-use pathway has been removed, another one added
             // and then the user tries to undo removal of the original pathway
             if (this.markedForDeletionPathways[pwKey].singleuse) {
-                var singleUsePathways = this.widget.querySelectorAll('[data-tw-editAchievementPaths-singleUse-pathway="1"]');
-                if (singleUsePathways.length > 1) {
+                var allPathwaysOfThisType = this.widget.querySelectorAll('[data-tw-editachievementpaths-pathway-type="' + this.markedForDeletionPathways[pwKey].type + '"]');
+                if (allPathwaysOfThisType.length > 1) {
                     str.get_string('error_cant_undo_single_use', 'totara_competency').done(function(message) {
                         notification.addNotification({
                             message: message,
@@ -901,7 +900,7 @@ function(templates, ajax, modalFactory, modalEvents, notification, str, Loader) 
 
                     return false;
                 } else {
-                    this.toggleSingleUsePathwayTypes(false);
+                    this.toggleSingleUsePathwayTypes(false, this.markedForDeletionPathways[pwKey].type);
                 }
             }
 
@@ -970,8 +969,9 @@ function(templates, ajax, modalFactory, modalEvents, notification, str, Loader) 
          * Toggle availability of single use pathway types
          *
          * @param {bool} allowSingleUse
+         * @param {String} pwType the pathway type
          */
-        toggleSingleUsePathwayTypes: function(allowSingleUse) {
+        toggleSingleUsePathwayTypes: function(allowSingleUse, pwType) {
             var pathwayTypeDropDownNode = this.widget.querySelector('[data-tw-editAchievementPaths-add-pathway]'),
                 singleUseOptions;
 
@@ -980,14 +980,13 @@ function(templates, ajax, modalFactory, modalEvents, notification, str, Loader) 
             }
 
             if (singleUseOptions) {
-                if (allowSingleUse) {
-                    for (var b = 0; b < singleUseOptions.length; b++) {
-                        singleUseOptions[b].removeAttribute('disabled');
-                    }
-
-                } else {
-                    for (var c = 0; c < singleUseOptions.length; c++) {
-                        singleUseOptions[c].setAttribute('disabled', '');
+                for (var b = 0; b < singleUseOptions.length; b++) {
+                    if (singleUseOptions[b].getAttribute('data-tw-editachievementpaths-path-type') == pwType) {
+                        if (allowSingleUse) {
+                            singleUseOptions[b].removeAttribute('disabled');
+                        } else {
+                            singleUseOptions[b].setAttribute('disabled', '');
+                        }
                     }
                 }
             }

@@ -24,8 +24,15 @@
 namespace totara_competency\performelement_linked_review;
 
 use core\collection;
+use core\date_format;
 use core\format;
+use core\webapi\formatter\field\date_field_formatter;
+use mod_perform\entity\activity\participant_section;
+use mod_perform\models\activity\participant_instance as participant_instance_model;
+use mod_perform\models\activity\subject_instance;
+use pathway_perform_rating\models\perform_rating;
 use performelement_linked_review\content_type;
+use performelement_linked_review\models\linked_review_content;
 use performelement_linked_review\rb\helper\content_type_response_report;
 use totara_competency\data_providers\assignments;
 use totara_competency\entity\assignment;
@@ -37,8 +44,15 @@ use totara_competency\formatter\scale_value;
 use totara_competency\models\assignment as assignment_model;
 use totara_competency\models\profile\proficiency_value;
 use totara_core\advanced_feature;
+use totara_core\relationship\relationship;
+use totara_core\relationship\relationship as relationship_model;
 
 class competency_assignment extends content_type {
+
+    /**
+     * The format type to use when formatting strings for output.
+     */
+    private const TEXT_FORMAT = format::FORMAT_PLAIN;
 
     /**
      * @inheritDoc
@@ -80,8 +94,8 @@ class competency_assignment extends content_type {
      */
     public static function get_available_settings(): array {
         return [
-            // TODO implement final rating settings, leaving this here as an example for now
-            // 'show_rating' => true,
+            'enable_rating' => false,
+            'rating_relationship' => null,
         ];
     }
 
@@ -92,12 +106,49 @@ class competency_assignment extends content_type {
     public static function get_display_settings(array $settings): array {
         $display_settings = [];
 
-        // TODO implement final rating settings, leaving this here as an example for now
-        // if (!empty($settings['show_rating'])) {
-        //     $display_settings[get_string('perform_show_rating', 'totara_competency')] = get_string('yes', 'core');
-        // }
+        $rating_enabled = $settings['enable_rating'] ?? false;
+        $display_settings[get_string('enable_performance_rating', 'totara_competency')] = $rating_enabled
+            ? get_string('yes', 'core')
+            : get_string('no', 'core');
+
+        if ($rating_enabled && !empty($settings['rating_relationship'])) {
+            $display_settings[get_string('enable_performance_rating_participant', 'totara_competency')] =
+                relationship_model::load_by_id($settings['rating_relationship'])->get_name();
+        }
 
         return $display_settings;
+    }
+
+    /**
+     * Append the actual human readable name of the rating relationship if rating is enabled.
+     *
+     * @param array $content_type_settings
+     * @return array
+     */
+    public static function get_content_type_settings(array $content_type_settings): array {
+        if (empty($content_type_settings['rating_relationship']) || !$content_type_settings['enable_rating']) {
+            return $content_type_settings;
+        }
+
+        $relationship = relationship::load_by_id($content_type_settings['rating_relationship']);
+        $content_type_settings['rating_relationship_name'] = $relationship->get_name();
+
+        return $content_type_settings;
+    }
+
+    /**
+     * Remove/clean any unwanted settings attributes before saving.
+     *
+     * @param array $content_type_settings
+     * @return array
+     */
+    public static function clean_content_type_settings(array $content_type_settings): array {
+        if ($content_type_settings['enable_rating'] === false) {
+            $content_type_settings['rating_relationship'] = null;
+        }
+        unset($content_type_settings['rating_relationship_name']);
+
+        return $content_type_settings;
     }
 
     /**
@@ -122,27 +173,62 @@ class competency_assignment extends content_type {
     }
 
     /**
+     * @inheritDoc
+     */
+    public static function get_participant_content_footer_component(): string {
+        return 'pathway_perform_rating/components/RatingForm';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function get_admin_content_footer_component(): string {
+        return 'pathway_perform_rating/components/RatingFormPreview';
+    }
+
+    /**
      * Load the competency assignments
      *
-     * @param int $user_id
-     * @param array $content_ids
+     * @param subject_instance $subject_instance
+     * @param linked_review_content[]|collection $content_items
+     * @param participant_section|null $participant_section
      * @param int $created_at
-     * @return array
+     * @return array[]
      */
-    public function load_content_items(int $user_id, array $content_ids, int $created_at): array {
-        if (empty($content_ids) || advanced_feature::is_disabled('competency_assignment')) {
+    public function load_content_items(
+        subject_instance $subject_instance,
+        collection $content_items,
+        ?participant_section $participant_section,
+        int $created_at
+    ): array {
+        if ($content_items->count() === 0 || advanced_feature::is_disabled('competency_assignment')) {
             return [];
         }
 
-        return assignments::for($user_id)
+        if ($participant_section) {
+            // Element will be the same across all content items, so we can just get it from the first content item.
+            /** @var linked_review_content $content_item */
+            $content_item = $content_items->first();
+            $participant_instance = participant_instance_model::load_by_entity($participant_section->participant_instance);
+            $can_rate = perform_rating::can_rate($participant_instance, $content_item->section_element);
+        } else {
+            $can_rate = false;
+        }
+
+        return assignments::for($subject_instance->subject_user_id)
             ->set_filters([
-                'ids' => $content_ids,
+                'ids' => $content_items->pluck('content_id'),
             ])
             ->fetch()
             ->get()
             ->key_by('id')
-            ->map(function (assignment_entity $assignment) use ($user_id, $created_at) {
-                return $this->creat_result_item($assignment, $user_id, $created_at);
+            ->map(function (assignment_entity $assignment) use ($subject_instance, $created_at, $can_rate) {
+                return $this->create_result_item(
+                    $assignment,
+                    $subject_instance,
+                    $created_at,
+                    $can_rate
+                );
             })
             ->all(true);
     }
@@ -151,30 +237,39 @@ class competency_assignment extends content_type {
      * Create the data for one competency content item
      *
      * @param assignment_entity $assignment
-     * @param int $user_id
+     * @param subject_instance $subject_instance
      * @param int $created_at
+     * @param bool $can_rate
      * @return array
      */
-    private function creat_result_item(assignment_entity $assignment, int $user_id, int $created_at): array {
-        $proficiency_value =proficiency_value::value_at_timestamp($assignment, $user_id, $created_at);
+    private function create_result_item(
+        assignment_entity $assignment,
+        subject_instance $subject_instance,
+        int $created_at,
+        bool $can_rate
+    ): array {
+        $proficiency_value = proficiency_value::value_at_timestamp($assignment, $subject_instance->subject_user_id, $created_at);
         $assignment_model = assignment_model::load_by_entity($assignment);
 
-        $format = format::FORMAT_HTML;
         $competency_formatter = new competency_formatter($assignment_model->get_competency(), $this->context);
         $assignment_formatter = new assignment_formatter($assignment_model, $this->context);
+
+        $rating = perform_rating::get_existing_rating($assignment->competency_id, $subject_instance->id);
 
         return [
             'id' => $assignment_model->get_id(),
             'competency' => [
                 'id' => $assignment_model->get_competency()->id,
-                'display_name' => $competency_formatter->format('display_name', $format),
-                'description' => $competency_formatter->format('description', $format),
+                'display_name' => $competency_formatter->format('display_name', self::TEXT_FORMAT),
+                'description' => $competency_formatter->format('description', format::FORMAT_HTML),
             ],
             'assignment' => [
-                'reason_assigned' => $assignment_formatter->format('reason_assigned', $format),
+                'reason_assigned' => $assignment_formatter->format('reason_assigned', self::TEXT_FORMAT),
             ],
             'achievement' => $this->format_proficiency_value($proficiency_value),
             'scale_values' => $this->format_scale_values($assignment_model),
+            'can_rate' => $can_rate && !$rating,
+            'rating' => $rating ? $this->format_rating($rating) : null,
         ];
     }
 
@@ -185,14 +280,12 @@ class competency_assignment extends content_type {
      * @return array|null
      */
     private function format_proficiency_value(proficiency_value $achievement): array {
-        $format = format::FORMAT_HTML;
-
         $scale_value_formatter = new scale_value_progress($achievement, $this->context);
 
         return [
             'id' => $achievement->id,
-            'name' => $scale_value_formatter->format('name', $format),
-            'proficient' => $scale_value_formatter->format('proficient', $format),
+            'name' => $scale_value_formatter->format('name', self::TEXT_FORMAT),
+            'proficient' => $scale_value_formatter->format('proficient', self::TEXT_FORMAT),
         ];
     }
 
@@ -203,8 +296,6 @@ class competency_assignment extends content_type {
      * @return array
      */
     private function format_scale_values(assignment_model $assignment): array {
-        $format = format::FORMAT_HTML;
-
         $scale = $assignment->get_assignment_specific_scale();
 
         $result = new collection();
@@ -212,12 +303,45 @@ class competency_assignment extends content_type {
             $formatter = new scale_value($value, $this->context);
             $result->append([
                 'id' => $value->id,
-                'name' => $formatter->format('name', $format),
+                'name' => $formatter->format('name', self::TEXT_FORMAT),
                 'proficient' => (bool) $value->proficient,
                 'sort_order' => $value->sortorder,
             ]);
         }
         return $result->sort('sort_order', 'asc', false)->to_array();
+    }
+
+    /**
+     * Format the rating, making sure the data runs through our formatters
+     *
+     * @param perform_rating $rating
+     * @return array
+     */
+    private function format_rating(perform_rating $rating): array {
+        $rater_user = null;
+        if ($rating->rater_user) {
+            $rater_user = [
+                'fullname' => fullname($rating->rater_user->get_record())
+            ];
+        }
+
+        $formatted_date = (new date_field_formatter(date_format::FORMAT_DATE, $this->context))
+            ->format($rating->created_at);
+
+        $scale_value = null;
+        if ($rating->scale_value_id) {
+            $scale_value_formatter = new scale_value($rating->scale_value, $this->context);
+            $scale_value = [
+                'id' => $rating->scale_value_id,
+                'name' => $scale_value_formatter->format('name', self::TEXT_FORMAT),
+            ];
+        }
+
+        return [
+            'created_at' => $formatted_date,
+            'rater_user' => $rater_user,
+            'scale_value' => $scale_value,
+        ];
     }
 
     /**

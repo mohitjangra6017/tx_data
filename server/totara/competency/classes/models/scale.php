@@ -98,7 +98,7 @@ class scale extends model {
      *
      * @param int[] $ids Competency IDs
      * @param bool $with_values A flag to load scale values
-     * @return collection|array
+     * @return collection|array|scale[]
      */
     public static function find_by_competency_ids(array $ids, bool $with_values = false): collection {
         $scales = competency::repository()

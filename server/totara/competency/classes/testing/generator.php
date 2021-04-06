@@ -24,9 +24,8 @@
 
 namespace totara_competency\testing;
 
-use stdClass, coding_exception;
-
 use aggregation_test_aggregation\test_aggregation;
+use coding_exception;
 use core\entity\cohort;
 use core\entity\user;
 use hierarchy_organisation\entity\organisation;
@@ -38,6 +37,7 @@ use pathway_manual\manual;
 use pathway_manual\models\roles\role;
 use pathway_manual\models\roles\role_factory;
 use pathway_test_pathway\test_pathway;
+use stdClass;
 use totara_competency\aggregation_users_table;
 use totara_competency\entity\competency;
 use totara_competency\entity\competency_framework;
@@ -47,6 +47,7 @@ use totara_competency\entity\pathway as pathway_entity;
 use totara_competency\entity\scale;
 use totara_competency\entity\scale_value;
 use totara_competency\pathway;
+use totara_competency\pathway_factory;
 use totara_competency\plugin_types;
 use totara_competency\user_groups;
 use totara_criteria\criterion;
@@ -320,15 +321,19 @@ final class generator extends \core\testing\component_generator {
     /**
      * Create a basic pathway, setting the competency and sort order value.
      *
-     * @param string $pathway_class Pathway class, e.g. manual::class, criteria_group::class, learning_plan::class
+     * @param string $pathway_class Pathway class or plugin name, e.g. manual::class OR 'criteria_group'
      * @param competency|stdClass|int $competency Competency entity, record or ID.
      * @param int|null $sort_order Defaults to being sorted last.
      *
      * @return pathway New instance of the pathway class you specified.
      */
-    protected function create_pathway(string $pathway_class, $competency, ?int $sort_order = null): pathway {
-        /** @var pathway $instance */
-        $instance = new $pathway_class();
+    public function create_pathway(string $pathway_class, $competency, ?int $sort_order = null): pathway {
+        if (class_exists($pathway_class)) {
+            /** @var pathway $instance */
+            $instance = new $pathway_class();
+        } else {
+            $instance = pathway_factory::create($pathway_class);
+        }
 
         if (!$competency instanceof competency) {
             $competency = new competency($competency, true, true);
@@ -534,6 +539,17 @@ final class generator extends \core\testing\component_generator {
             ->all();
 
         $this->create_criteria_group($competency, $criteria, $scale_value, $attributes['sortorder'] ?? null);
+    }
+
+    /**
+     * @param array $attributes
+     */
+    public function create_pathway_for_behat(array $attributes = []) {
+        $this->create_pathway(
+            $attributes['pathway'],
+            self::get_record_id_from_field(competency::TABLE, 'idnumber', $attributes['competency']),
+            $attributes['sortorder'] ?? null
+        )->save();
     }
 
     /**

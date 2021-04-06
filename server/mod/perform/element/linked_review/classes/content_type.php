@@ -24,6 +24,10 @@
 namespace performelement_linked_review;
 
 use context;
+use core\collection;
+use mod_perform\entity\activity\participant_section;
+use mod_perform\models\activity\subject_instance;
+use performelement_linked_review\models\linked_review_content;
 use performelement_linked_review\rb\helper\content_type_response_report;
 
 /**
@@ -105,7 +109,10 @@ abstract class content_type {
     abstract public static function get_available_settings(): array;
 
     /**
-     * Returns the settings in a human readable form. The key is the display name of the setting and the value is human readable form of the value
+     * Returns the settings in a human readable form.
+     * The key is the display name of the setting and the value is human readable form of the value.
+     *
+     * MUST make sure that any output is formatted correctly to prevent XSS risk.
      *
      * @example
      *
@@ -118,6 +125,26 @@ abstract class content_type {
      * @return array
      */
     abstract public static function get_display_settings(array $settings): array;
+
+    /**
+     * Apply any additional processing to the content type settings.
+     *
+     * @param array $content_type_settings
+     * @return array
+     */
+    public static function get_content_type_settings(array $content_type_settings): array {
+        return $content_type_settings;
+    }
+
+    /**
+     * Remove/clean any unwanted settings attributes before saving.
+     *
+     * @param array $content_type_settings
+     * @return array
+     */
+    public static function clean_content_type_settings(array $content_type_settings): array {
+        return $content_type_settings;
+    }
 
     /**
      * The component path of the vue component for picking the content items.
@@ -144,12 +171,18 @@ abstract class content_type {
      *
      * Each individual content item returned needs to have an id property or key.
      *
-     * @param int $user_id the user the items belong to
-     * @param array $content_ids
+     * @param subject_instance $subject_instance The subject instance the content is for
+     * @param linked_review_content[]|collection $content_items
+     * @param participant_section|null $participant_section The participant section of the user viewing the content
      * @param int $created_at the timestamp the content got created, this might be needed for point in time / static data
-     * @return array the array needs to be keyed by the id of the item
+     * @return array[] Array of content items, keyed by the ID of each item. Each content item must be an array itself.
      */
-    abstract public function load_content_items(int $user_id, array $content_ids, int $created_at): array;
+    abstract public function load_content_items(
+        subject_instance $subject_instance,
+        collection $content_items,
+        ?participant_section $participant_section,
+        int $created_at
+    ): array;
 
     /**
      * Returns helper for the content type needed for the response report
@@ -157,5 +190,23 @@ abstract class content_type {
      * @return content_type_response_report
      */
     abstract public static function get_response_report_helper(): content_type_response_report;
+
+    /**
+     * The component path of the vue component for rendering the footer.
+     *
+     * @return string
+     */
+    public static function get_participant_content_footer_component(): string {
+        return '';
+    }
+
+    /**
+     * The component path of the vue component for rendering the admin footer.
+     *
+     * @return string
+     */
+    public static function get_admin_content_footer_component(): string {
+        return '';
+    }
 
 }

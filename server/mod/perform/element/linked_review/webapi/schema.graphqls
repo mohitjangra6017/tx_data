@@ -10,6 +10,7 @@ type performelement_linked_review_content_type {
   admin_view_component: String
   content_picker_component: String!
   participant_content_component: String!
+  participant_content_footer_component: String!
 }
 
 """

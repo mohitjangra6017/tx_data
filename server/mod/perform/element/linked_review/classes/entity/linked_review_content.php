@@ -23,6 +23,7 @@
 
 namespace performelement_linked_review\entity;
 
+use core\collection;
 use core\entity\user;
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
@@ -43,7 +44,7 @@ use mod_perform\entity\activity\subject_instance;
  * @property-read user $selector
  * @property-read subject_instance $subject_instance
  * @property-read section_element $section_element
- * @property-read linked_review_content_response $responses
+ * @property-read linked_review_content_response[]|collection $responses
  *
  * @package performelement_linked_reivew\entity
  */

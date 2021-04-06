@@ -37,6 +37,7 @@
       :required="element.is_required"
       :section-element-id="sectionElement.id"
       :settings="contentSettings"
+      :subject-user="subjectUser"
       :user-id="userId"
       @update="refetch"
       @unsaved-plugin-change="$emit('unsaved-plugin-change', $event)"
@@ -78,6 +79,8 @@
                 :content="getContent(item.content)"
                 :created-at="item.created_at_date"
                 :from-print="fromPrint"
+                :participant-instance-id="participantInstanceId"
+                :subject-user="subjectUser"
               />
             </div>
             <div
@@ -140,6 +143,19 @@
               </div>
             </div>
           </div>
+
+          <!-- Display of additional information / functionality after the question - optional -->
+
+          <component
+            :is="getFooterComponent(element)"
+            :content="getContent(item.content)"
+            :element-data="element.data"
+            :participant-instance-id="participantInstanceId"
+            :section-element-id="sectionElement.id"
+            :subject-user="subjectUser"
+            :from-print="fromPrint"
+            @show-banner="$emit('show-banner', $event)"
+          />
         </div>
       </div>
     </template>
@@ -242,6 +258,17 @@ export default {
      */
     getContentComponent(element) {
       return tui.asyncComponent(element.data.components.participant_content);
+    },
+
+    /**
+     * Get dynamic component
+     *
+     * @return {function}
+     */
+    getFooterComponent(element) {
+      return element.data.components.participant_content_footer
+        ? tui.asyncComponent(element.data.components.participant_content_footer)
+        : null;
     },
 
     /**
@@ -433,7 +460,7 @@ export default {
      */
     refetch(canNotSelectContentMessage) {
       if (canNotSelectContentMessage) {
-        this.$emit('showBanner', canNotSelectContentMessage);
+        this.$emit('show-banner', canNotSelectContentMessage);
       }
       this.loading = true;
       this.$apollo.queries.selectedContent.refetch().then(() => {
