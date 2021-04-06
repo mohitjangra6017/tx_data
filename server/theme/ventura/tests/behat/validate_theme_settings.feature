@@ -21,7 +21,7 @@ Feature: Theme settings basic validations
     When I click on "Colours" "link"
     And I click on "More colours" "button"
     Then the field "Primary brand colour" matches value "#4b7e2b"
-    Then the field "Accent colour" matches value "#99ac3a"
+    Then the field "Accent colour" matches value "#69bd45"
     And the field "Header background colour" matches value "#ffffff"
     And the field "Header text colour" matches value "#262626"
     And the field "Page text colour" matches value "#262626"

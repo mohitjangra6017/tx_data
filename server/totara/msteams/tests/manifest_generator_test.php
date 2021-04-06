@@ -206,7 +206,7 @@ class manifest_generator_testcase extends advanced_testcase {
      */
     private function assert_default_images($files) {
         // Make sure both PNG files are copied from the pix folder.
-        $this->assertSame('5c5e5fabab85d2ea4df496e523a330cd', md5($files['color.png']));
+        $this->assertSame('7b4b56af51e59d272abdf6d2d2f328f2', md5($files['color.png']));
         $this->assertSame('3d5c8a8b7ee458b4597b2e726edf3f29', md5($files['outline.png']));
     }
 
@@ -306,9 +306,9 @@ class manifest_generator_testcase extends advanced_testcase {
 
     public function data_custom_images(): array {
         return [
-            [null, null, '5c5e5fabab85d2ea4df496e523a330cd', '3d5c8a8b7ee458b4597b2e726edf3f29'],
+            [null, null, '7b4b56af51e59d272abdf6d2d2f328f2', '3d5c8a8b7ee458b4597b2e726edf3f29'],
             ['logo1.png', null, 'cf546d92e63c56eaae521c73996b3e7f', '3d5c8a8b7ee458b4597b2e726edf3f29'],
-            [null, 'logo2.png', '5c5e5fabab85d2ea4df496e523a330cd', 'f0da7489fbdba47ce7f73e15753d7102'],
+            [null, 'logo2.png', '7b4b56af51e59d272abdf6d2d2f328f2', 'f0da7489fbdba47ce7f73e15753d7102'],
             ['logo1.png', 'logo2.png', 'cf546d92e63c56eaae521c73996b3e7f', 'f0da7489fbdba47ce7f73e15753d7102'],
         ];
     }

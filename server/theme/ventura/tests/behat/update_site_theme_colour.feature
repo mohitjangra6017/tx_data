@@ -11,7 +11,7 @@ Feature: Update theme settings
 
   Scenario: Confirm default colours apply
     Then element ":root" should have a css property "--color-state" with a value of "#4b7e2b"
-    And element ":root" should have a css property "--color-primary" with a value of "#99ac3a"
+    And element ":root" should have a css property "--color-primary" with a value of "#69bd45"
 
   Scenario: Navigate to theme settings and update theme colours
     When I click on "Colours" "link"

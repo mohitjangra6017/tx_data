@@ -80,7 +80,7 @@ Feature: Theme settings basic validations for tenants
 
     # Confirm that nothing changed for admin user who uses 'site' theme colours
     Then element ":root" should have a css property "--color-state" with a value of "#4b7e2b"
-    And element ":root" should have a css property "--color-primary" with a value of "#99ac3a"
+    And element ":root" should have a css property "--color-primary" with a value of "#69bd45"
 
     # Confirm that tenant member sees new color
     When I log out
@@ -92,10 +92,10 @@ Feature: Theme settings basic validations for tenants
     When I log out
     And I log in as "user2"
     Then element ":root" should have a css property "--color-state" with a value of "#4b7e2b"
-    And element ":root" should have a css property "--color-primary" with a value of "#99ac3a"
+    And element ":root" should have a css property "--color-primary" with a value of "#69bd45"
 
     # Confirm that tenant participant sees site color
     When I log out
     And I log in as "user3"
     Then element ":root" should have a css property "--color-state" with a value of "#4b7e2b"
-    And element ":root" should have a css property "--color-primary" with a value of "#99ac3a"
+    And element ":root" should have a css property "--color-primary" with a value of "#69bd45"
