@@ -579,42 +579,28 @@ export default {
      * Apply dynamic filtering and sorting to section elements.
      */
     cleanedSectionElements() {
-      return this.sectionElements
-        .map(sectionElement => {
-          const cleanSectionElement = Object.assign({}, sectionElement);
+      return this.sectionElements.map(sectionElement => {
+        const cleanSectionElement = Object.assign({}, sectionElement);
 
-          if (
-            this.activity.anonymous_responses &&
-            cleanSectionElement.other_responder_groups.length > 0
-          ) {
-            // Push all missing responses to the end.
-            const sortedAnonGroup = this.sortMissingAnswersToEnd(
-              cleanSectionElement.other_responder_groups[0]
-            );
-
-            cleanSectionElement.other_responder_groups = [sortedAnonGroup];
-          } else if (this.selectedRelationshipFilter) {
-            // Apply relationship filter.
-            cleanSectionElement.other_responder_groups = cleanSectionElement.other_responder_groups.filter(
-              group =>
-                group.relationship_name === this.selectedRelationshipFilter
-            );
-          }
-
-          return cleanSectionElement;
-        })
-        .filter(cleanSectionElement => {
-          if (!cleanSectionElement.displays_responses) {
-            return true;
-          }
-
-          // If the viewing participant (can_respond), or no one else (other_responder_groups) can't respond to the element,
-          // filter it out. Note other_responder_groups is altered by the selectedRelationshipFilter.
-          return (
-            cleanSectionElement.can_respond ||
-            cleanSectionElement.other_responder_groups.length > 0
+        if (
+          this.activity.anonymous_responses &&
+          cleanSectionElement.other_responder_groups.length > 0
+        ) {
+          // Push all missing responses to the end.
+          const sortedAnonGroup = this.sortMissingAnswersToEnd(
+            cleanSectionElement.other_responder_groups[0]
           );
-        });
+
+          cleanSectionElement.other_responder_groups = [sortedAnonGroup];
+        } else if (this.selectedRelationshipFilter) {
+          // Apply relationship filter.
+          cleanSectionElement.other_responder_groups = cleanSectionElement.other_responder_groups.filter(
+            group => group.relationship_name === this.selectedRelationshipFilter
+          );
+        }
+
+        return cleanSectionElement;
+      });
     },
 
     /**
