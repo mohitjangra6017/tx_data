@@ -42,7 +42,7 @@ const propDefs = {
 export function createIconComponent([type, svgAttrs, content], opts = {}) {
   // svgc (content string) is the only supported type
   if (type != 'svgc') throw new Error('Unsupported icon type');
-  return {
+  const comp = {
     name: 'SvgIconGenerated',
     functional: true,
     components: { SvgIconWrap },
@@ -61,4 +61,8 @@ export function createIconComponent([type, svgAttrs, content], opts = {}) {
       });
     },
   };
+  if (opts.deprecated) {
+    comp.deprecated = true;
+  }
+  return comp;
 }

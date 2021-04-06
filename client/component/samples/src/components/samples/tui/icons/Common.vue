@@ -126,7 +126,8 @@ export default {
             name,
             desc: descriptions[name] ? descriptions[name] : '...',
           };
-        }),
+        })
+        .filter(x => !x.icon.deprecated),
       size: '200',
       codeTemplate: `<Close :size="size"/>`,
       codeScript: `import Close from 'tui/components/icons/Close';

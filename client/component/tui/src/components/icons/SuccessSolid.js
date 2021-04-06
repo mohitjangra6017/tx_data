@@ -19,7 +19,4 @@
 import icon from './internal/obj/bootstrap-icons/check-circle-fill.svg';
 import { createIconComponent } from 'tui/lib/svg_icon';
 
-export default createIconComponent(icon, {
-  state: 'success',
-  deprecated: true,
-});
+export default createIconComponent(icon);

@@ -43,3 +43,4 @@ information provided here is intended especially for developers.
 * Updated TagList.vue to display placeholder and color change on icon. 
   * LangString, template & SCSS changes
 * Included an optional inputPlaceholder prop to customise placeholder text in TagList.vue
+* Renamed existing Success icon to SuccessSolid and added a new Success icon

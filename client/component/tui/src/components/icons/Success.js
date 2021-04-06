@@ -16,7 +16,7 @@
  * @module tui
  */
 
-import icon from './internal/obj/bootstrap-icons/check-circle-fill.svg';
+import icon from './internal/obj/bootstrap-icons/check2.svg';
 import { createIconComponent } from 'tui/lib/svg_icon';
 
 export default createIconComponent(icon);
