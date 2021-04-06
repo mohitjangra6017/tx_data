@@ -55,7 +55,7 @@ class derived_responder_group {
     /**
      * Special virtual relationship for the viewing participants own responses, i.e. "Your response".
      */
-    private const VIEWING_PARTICIPANT_GROUP = -1;
+    private const VIEWING_PARTICIPANT_GROUP = - 1;
 
     /**
      * @var collection|participant_instance[]
@@ -94,14 +94,18 @@ class derived_responder_group {
 
     /**
      * Factory method for when building responder groups from the perspective of a specific participant (participant section).
-     * The viewing participants responses will be filtered out, and their relationship group will be removed, unless their
-     * are other source participants that have the same relationship i.e. the viewing participant is a manager, and their is another manager.
+     * The viewing participant's responses will be filtered out, and the relationship group they belong to will be removed,
+     * unless there are other source participants that have the same relationship
+     * i.e. the viewing participant is a manager, and there is another manager.
      *
      * @param participant_section $display_participant_section
      * @param bool $is_anonymous_responses
      * @return static
      */
-    public static function for_participant_section(participant_section $display_participant_section, bool $is_anonymous_responses): self {
+    public static function for_participant_section(
+        participant_section $display_participant_section,
+        bool $is_anonymous_responses
+    ): self {
         $target_section = $display_participant_section->get_section();
         $source_participant_instances = participant_instance_entity::repository()
             ->as('pi')
@@ -113,7 +117,10 @@ class derived_responder_group {
             ->get()
             ->map_to(participant_instance::class);
 
-        $viewing_participant_instance = $source_participant_instances->find('id', $display_participant_section->participant_instance_id);
+        $viewing_participant_instance = $source_participant_instances->find(
+            'id',
+            $display_participant_section->participant_instance_id
+        );
 
         return new static($target_section, $source_participant_instances, $viewing_participant_instance, $is_anonymous_responses);
     }
@@ -127,7 +134,11 @@ class derived_responder_group {
      * @param bool $is_anonymous_responses
      * @return static
      */
-    public static function for_view_only_section(section $section, subject_instance $subject_instance, bool $is_anonymous_responses): self {
+    public static function for_view_only_section(
+        section $section,
+        subject_instance $subject_instance,
+        bool $is_anonymous_responses
+    ): self {
         $source_participant_instances = participant_instance_entity::repository()
             ->as('pi')
             ->where('pi.subject_instance_id', $subject_instance->get_id())
@@ -144,7 +155,8 @@ class derived_responder_group {
      *
      * @param section $target_section
      * @param collection|participant_instance[] $source_participant_instances
-     * @param participant_instance|null $viewing_source_participant_instance The viewing participant that is also a source section respondant.
+     * @param participant_instance|null $viewing_source_participant_instance The viewing participant
+     * that is also a source section respondant.
      * @param bool $is_anonymous_responses
      */
     public function __construct(
@@ -163,7 +175,7 @@ class derived_responder_group {
 
                 return $by_relationship;
             });
-        
+
         $this->target_section = $target_section;
         $this->viewing_source_participant_instance = $viewing_source_participant_instance;
         $this->is_anonymous_responses = $is_anonymous_responses;
@@ -216,7 +228,7 @@ class derived_responder_group {
     }
 
     /**
-     * Does the viewing participant instance, have it's relationship in any of the source sections.
+     * Checks if the viewing participant instance has a relationship with can_answer permissions in any of the source sections.
      *
      * @param section_element $target_section_element
      * @return bool
@@ -240,13 +252,13 @@ class derived_responder_group {
         return false;
     }
 
-    protected function prepare(): self {
+    private function prepare(): self {
         if (count($this->source_participant_instances) === 0) {
             $this->existing_derived_responses = [];
             $this->derived_source_relationships = [];
         } else {
             $this->existing_derived_responses = $this->fetch_existing_responses();
-            $this->derived_source_relationships = $this->fetch_derived_source_relationships();
+            $this->derived_source_relationships = $this->fetch_derived_source_can_answer_relationships();
         }
 
         $this->is_prepared = true;
@@ -262,7 +274,7 @@ class derived_responder_group {
      *
      * @return relationship[][]
      */
-    protected function fetch_derived_source_relationships(): array {
+    private function fetch_derived_source_can_answer_relationships(): array {
         $derived_responses_plugin_names = array_keys(element_plugin::get_derived_responses_plugins());
         $referencing_section_element_ids = $this->target_section->get_section_elements()->pluck('id');
 
@@ -270,7 +282,11 @@ class derived_responder_group {
         $references = section_element_reference::repository()
             ->as('ser')
             ->join([element_entity::TABLE, 'referencing_element'], 'referencing_element.id', 'ser.referencing_element_id')
-            ->join([section_element_entity::TABLE, 'referencing_section_element'], 'referencing_section_element.element_id', 'ser.referencing_element_id')
+            ->join(
+                [section_element_entity::TABLE, 'referencing_section_element'],
+                'referencing_section_element.element_id',
+                'ser.referencing_element_id'
+            )
             ->where_in('referencing_element.plugin_name', $derived_responses_plugin_names)
             ->where_in('referencing_section_element.id', $referencing_section_element_ids)
             ->with('source_section_element.section.section_relationships.core_relationship.resolvers')
@@ -297,9 +313,10 @@ class derived_responder_group {
             }
 
             foreach ($responding_source_relationships as $source_relationship) {
-                $already_in_group = collection::new($derived_source_relationships[$key])->find(function (relationship $relationship) use ($source_relationship) {
-                        return $relationship->get_id() === $source_relationship->get_id();
-                    }) !== null;
+                $already_in_group = collection::new($derived_source_relationships[$key])
+                        ->has(function (relationship $relationship) use ($source_relationship) {
+                            return $relationship->get_id() === $source_relationship->get_id();
+                        });
 
                 if (!$already_in_group) {
                     $derived_source_relationships[$key][] = $source_relationship;
@@ -320,14 +337,14 @@ class derived_responder_group {
      * @param int $referencing_element_id
      * @return relationship[]
      */
-    protected function find_derived_source_relationships(int $referencing_element_id): array {
+    private function find_derived_source_relationships(int $referencing_element_id): array {
         $key = $referencing_element_id;
 
         return $this->derived_source_relationships[$key] ?? [];
     }
 
-    protected function derived_source_relationship_exists(int $referencing_element_id, int $core_relationship_id): bool {
-        return collection::new($this->find_derived_source_relationships($referencing_element_id))->find('id', $core_relationship_id) !== null;
+    private function derived_source_relationship_exists(int $referencing_element_id, int $core_relationship_id): bool {
+        return collection::new($this->find_derived_source_relationships($referencing_element_id))->has('id', $core_relationship_id);
     }
 
     /**
@@ -337,7 +354,7 @@ class derived_responder_group {
      *
      * @return element_response_entity[]
      */
-    protected function fetch_existing_responses(): array {
+    private function fetch_existing_responses(): array {
         $participant_instance_ids = $this->source_participant_instances->pluck('id');
         $section_element_ids = $this->target_section->get_section_elements()->pluck('id');
 
@@ -356,7 +373,7 @@ class derived_responder_group {
         return $keyed_element_responses;
     }
 
-    protected function find_element_response(int $participant_instance_id, int $section_element_id): ?element_response_entity {
+    private function find_element_response(int $participant_instance_id, int $section_element_id): ?element_response_entity {
         $key = $participant_instance_id . '_' . $section_element_id;
 
         return $this->existing_derived_responses[$key] ?? null;
@@ -367,7 +384,7 @@ class derived_responder_group {
      * @return section_element_response[][]
      * @throws coding_exception
      */
-    protected function group_responses_by_core_relationship(section_element $target_section_element): array {
+    private function group_responses_by_core_relationship(section_element $target_section_element): array {
         $responses_by_core_relationship = [];
 
         // Create all the empty responder groups.
@@ -381,11 +398,18 @@ class derived_responder_group {
             $potential_participant_relationship_id = $potential_participant_instance->core_relationship_id;
 
             // This participant instance is not a responding participant in the source section, continue.
-            if (!$this->derived_source_relationship_exists($target_section_element->element_id, $potential_participant_relationship_id)) {
+            if (!$this->derived_source_relationship_exists(
+                $target_section_element->element_id,
+                $potential_participant_relationship_id
+            )
+            ) {
                 continue;
             }
 
-            $element_response_entity = $this->find_element_response($potential_participant_instance->id, $target_section_element->get_id());
+            $element_response_entity = $this->find_element_response(
+                $potential_participant_instance->id,
+                $target_section_element->get_id()
+            );
 
             $section_element_response = new section_element_response(
                 $potential_participant_instance,
@@ -405,14 +429,16 @@ class derived_responder_group {
         if ($this->viewing_source_participant_instance !== null) {
             // If the viewing participant was the only one in their group delete their group we don't need it.
             // The viewing participant will live in their special "Your response" group.
-            $viewing_participants_group = $responses_by_core_relationship[$this->viewing_source_participant_instance->core_relationship_id] ?? null;
+            $core_relationship_id = $this->viewing_source_participant_instance->core_relationship_id;
+            $viewing_participants_group = $responses_by_core_relationship[$core_relationship_id] ?? null;
             if ($viewing_participants_group !== null && count($viewing_participants_group) === 0) {
                 unset($responses_by_core_relationship[$this->viewing_source_participant_instance->core_relationship_id]);
             }
         }
 
-        // The viewing participant are attached the the parent section_element_response, that these responder groups will be attached to.
-        // So now we have determined if we need a responder group of the viewing participants relationship or not, we can remove their group.
+        // The viewing participant are attached the the parent section_element_response,
+        // that these responder groups will be attached to. So now we have determined if
+        // we need a responder group of the viewing participants relationship or not, we can remove their group.
         unset($responses_by_core_relationship[self::VIEWING_PARTICIPANT_GROUP]);
 
         return $responses_by_core_relationship;

@@ -191,7 +191,7 @@ class totara_competency_webapi_resolver_query_user_assignments_testcase extends 
 
         $result = $this->resolve_graphql_query(self::QUERY, []);
 
-        $this->assertCount(0, $result['item']);
+        $this->assertCount(0, $result['items']);
         $this->assertCount(0, $result['filters']);
         $this->assertEquals(0, $result['total']);
         $this->assertEquals('', $result['next_cursor']);
@@ -208,7 +208,7 @@ class totara_competency_webapi_resolver_query_user_assignments_testcase extends 
 
         $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user2->id));
 
-        $this->assertCount(0, $result['item']);
+        $this->assertCount(0, $result['items']);
         $this->assertCount(0, $result['filters']);
         $this->assertEquals(0, $result['total']);
         $this->assertEquals('', $result['next_cursor']);
