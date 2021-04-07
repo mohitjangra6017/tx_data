@@ -373,5 +373,149 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2020122900.00);
     }
 
+    if ($oldversion < 2021040700.00) {
+        // Define table notifiable_event_queue to be created.
+        $table = new xmldb_table('notifiable_event_queue');
+
+        // Adding fields to table notifiable_event_queue.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('resolver_class_name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('event_data', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('context_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('area', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('item_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('time_created', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table notifiable_event_queue.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('context_id_key', XMLDB_KEY_FOREIGN, array('context_id'), 'context', array('id'));
+
+        // Adding indexes to table notifiable_event_queue.
+        $table->add_index('resolver_class_name_index', XMLDB_INDEX_NOTUNIQUE, array('resolver_class_name'));
+
+        // Conditionally launch create table for notifiable_event_queue.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table notification_queue to be created.
+        $table = new xmldb_table('notification_queue');
+
+        // Adding fields to table notification_queue.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('notification_preference_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('event_data', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('context_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('area', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('item_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('time_created', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('scheduled_time', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table notification_queue.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('context_id_key', XMLDB_KEY_FOREIGN, array('context_id'), 'context', array('id'));
+        $table->add_key('notification_preference_id_key', XMLDB_KEY_FOREIGN, array('notification_preference_id'), 'notification_preference', array('id'));
+
+        // Conditionally launch create table for notification_queue.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table notification_preference to be created.
+        $table = new xmldb_table('notification_preference');
+
+        // Adding fields to table notification_preference.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('ancestor_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('resolver_class_name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('notification_class_name', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('context_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('area', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('item_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('title', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('recipient', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('subject', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('subject_format', XMLDB_TYPE_INTEGER, '1', null, null, null, null);
+        $table->add_field('body', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('body_format', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('time_created', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('schedule_offset', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('enabled', XMLDB_TYPE_INTEGER, '1', null, null, null, null);
+        $table->add_field('forced_delivery_channels', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+
+        // Adding keys to table notification_preference.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('context_id_key', XMLDB_KEY_FOREIGN, array('context_id'), 'context', array('id'));
+
+        // Adding indexes to table notification_preference.
+        $table->add_index('resolver_class_name_index', XMLDB_INDEX_NOTUNIQUE, array('resolver_class_name'));
+        $table->add_index('notification_class_name_index', XMLDB_INDEX_NOTUNIQUE, array('notification_class_name'));
+        $table->add_index('title_index', XMLDB_INDEX_NOTUNIQUE, array('title'));
+
+        // Conditionally launch create table for notification_preference.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table notifiable_event_preference to be created.
+        $table = new xmldb_table('notifiable_event_preference');
+
+        // Adding fields to table notifiable_event_preference.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('resolver_class_name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('context_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('area', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('item_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('enabled', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('default_delivery_channels', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+
+        // Adding keys to table notifiable_event_preference.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('context_id_key', XMLDB_KEY_FOREIGN, array('context_id'), 'context', array('id'));
+
+        // Adding indexes to table notifiable_event_preference.
+        $table->add_index('resolver_class_name_index', XMLDB_INDEX_NOTUNIQUE, array('resolver_class_name'));
+
+        // Conditionally launch create table for notifiable_event_preference.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table notifiable_event_user_preference to be created.
+        $table = new xmldb_table('notifiable_event_user_preference');
+
+        // Adding fields to table notifiable_event_user_preference.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('user_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('resolver_class_name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('context_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('area', XMLDB_TYPE_CHAR, '255', null, null, null, '');
+        $table->add_field('item_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('enabled', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('delivery_channels', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+
+        // Adding keys to table notifiable_event_user_preference.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('user_id_key', XMLDB_KEY_FOREIGN, array('user_id'), 'user', array('id'));
+        $table->add_key('context_id_key', XMLDB_KEY_FOREIGN, array('context_id'), 'context', array('id'));
+
+        // Adding indexes to table notifiable_event_user_preference.
+        $table->add_index('user_resolver_class_name_index', XMLDB_INDEX_NOTUNIQUE, array('resolver_class_name'));
+        $table->add_index('user_context_resolver_class_uindex', XMLDB_INDEX_UNIQUE, array('user_id', 'context_id', 'resolver_class_name'));
+
+        // Conditionally launch create table for notifiable_event_user_preference.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2021040700.00);
+    }
+
     return true;
 }
