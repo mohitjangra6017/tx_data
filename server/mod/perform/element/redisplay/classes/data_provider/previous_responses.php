@@ -24,8 +24,11 @@
 namespace performelement_redisplay\data_provider;
 
 use coding_exception;
+use context_system;
 use core\collection;
 use core\date_format;
+use core\format;
+use core\webapi\formatter\field\string_field_formatter;
 use mod_perform\entity\activity\element_response;
 use mod_perform\entity\activity\participant_instance as participant_instance_entity;
 use mod_perform\entity\activity\participant_section;
@@ -383,11 +386,12 @@ class previous_responses {
      * @return string
      */
     private function get_title_with_responses(string $last_response_date): string {
+        $formatter = new string_field_formatter(format::FORMAT_PLAIN, context_system::instance());
         return get_string(
             'redisplayed_summary',
             'performelement_redisplay',
             (object) [
-                'activity_name' => $this->source_data['activity']->name,
+                'activity_name' => $formatter->format($this->source_data['activity']->name),
                 'date_created' => $this->format_date($this->source_data['subject_instance']->created_at),
                 'date_updated' => $last_response_date,
             ]
@@ -404,8 +408,9 @@ class previous_responses {
         $string_identifier = $current_activity_id === $this->source_data['activity']->id
             ? 'redisplay_no_subject_instance_for_same_activity'
             : 'redisplay_no_subject_instance_for_another_activity';
+        $formatter = new string_field_formatter(format::FORMAT_PLAIN, context_system::instance());
 
-        return get_string($string_identifier, 'performelement_redisplay', $this->source_data['activity']->name);
+        return get_string($string_identifier, 'performelement_redisplay', $formatter->format($this->source_data['activity']->name));
     }
 
     /**
@@ -425,8 +430,9 @@ class previous_responses {
      * @return string
      */
     private function get_title_without_participation(): string {
+        $formatter = new string_field_formatter(format::FORMAT_PLAIN, context_system::instance());
         $data = (object) [
-            'activity_name' => $this->source_data['activity']->name,
+            'activity_name' => $formatter->format($this->source_data['activity']->name),
             'subject_instance_date' => $this->format_date($this->source_data['subject_instance']->created_at),
         ];
 

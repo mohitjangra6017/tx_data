@@ -23,6 +23,9 @@
 namespace performelement_redisplay\data_provider;
 
 use coding_exception;
+use context_system;
+use core\format;
+use core\webapi\formatter\field\string_field_formatter;
 use mod_perform\entity\activity\section_element_reference as section_element_reference_entity;
 use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\models\activity\section_element as section_element_model;
@@ -56,11 +59,12 @@ class redisplay_data {
         $section_element = section_element_model::load_by_entity($section_element_reference->source_section_element);
         $activity = $section_element->section->activity;
         $element = $section_element->element;
+        $formatter = new string_field_formatter(format::FORMAT_PLAIN, context_system::instance());
 
         $element_settings['activityId'] = $activity->id;
-        $element_settings['activityName'] = $activity->name;
+        $element_settings['activityName'] = $formatter->format($activity->name);
         $element_settings['activityStatus'] = $activity->get_state_details()::get_display_name();
-        $element_settings['elementTitle'] = $element->title;
+        $element_settings['elementTitle'] = $formatter->format($element->title);
 
         /** @var respondable_element_plugin $element_plugin*/
         $element_plugin = $element->get_element_plugin();
