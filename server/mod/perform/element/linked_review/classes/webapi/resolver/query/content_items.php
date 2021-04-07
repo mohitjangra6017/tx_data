@@ -25,15 +25,22 @@ namespace performelement_linked_review\webapi\resolver\query;
 
 use coding_exception;
 use context;
+use core\orm\entity\repository;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_advanced_feature;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
 use mod_perform\entity\activity\participant_instance;
-use mod_perform\entity\activity\participant_section;
+use mod_perform\entity\activity\participant_instance as participant_instance_entity;
+use mod_perform\entity\activity\participant_instance_repository;
+use mod_perform\entity\activity\participant_section as participant_section_entity;
+use mod_perform\models\activity\activity_setting;
 use mod_perform\models\activity\helpers\external_participant_token_validator;
+use mod_perform\models\activity\participant_instance as participant_instance_model;
 use mod_perform\models\activity\participant_source;
 use mod_perform\models\activity\section_element as section_element_model;
+use mod_perform\models\activity\section_relationship;
+use mod_perform\models\activity\settings\visibility_conditions\visibility_manager;
 use mod_perform\models\activity\subject_instance as subject_instance_model;
 use mod_perform\util;
 use performelement_linked_review\content_type;
@@ -77,12 +84,14 @@ final class content_items implements query_resolver, has_middleware {
 
         $participant_section = null;
         if ($validator) {
-            $participant_section = participant_section::repository()
+            $participant_section = participant_section_entity::repository()
+                ->with('section.section_relationships')
                 ->where('section_id', $section_element->section_id)
                 ->where('participant_instance_id', $validator->get_participant_instance()->id)
                 ->one();
         } else {
-            $participant_section = participant_section::repository()
+            $participant_section = participant_section_entity::repository()
+                ->with('section.section_relationships')
                 ->join([participant_instance::TABLE, 'pi'], 'participant_instance_id', 'id')
                 ->where('section_id', $section_element->section_id)
                 ->where('pi.participant_id', $USER->id)
@@ -103,12 +112,15 @@ final class content_items implements query_resolver, has_middleware {
         }
 
         $content_type = self::get_content_type_instance($section_element, $subject_instance->get_context());
+        
+        $can_view_other_responses = $participant_section ? self::can_view_other_responses($participant_section) : true;
 
         $created_at = $content_items->first()->created_at;
         $loaded_content_items = $content_type->load_content_items(
             $subject_instance,
             $content_items,
             $participant_section,
+            $can_view_other_responses,
             $created_at
         );
         foreach ($loaded_content_items as $content_id => $loaded_content_data) {
@@ -138,6 +150,59 @@ final class content_items implements query_resolver, has_middleware {
         return content_type_factory::get_from_identifier($data['content_type'], $context);
     }
 
+    /**
+     * Check it the partipant can view the other responses on the given section
+     *
+     * @param participant_section_entity $participant_section
+     * @return bool
+     */
+    private static function can_view_other_responses(participant_section_entity $participant_section): bool {
+        /** @var section_relationship $section_relationship */
+        $section_relationship = $participant_section
+            ->section
+            ->section_relationships
+            ->find('core_relationship_id', $participant_section->participant_instance->core_relationship_id);
+
+        $other_responses_visible = self::are_other_responses_visible($participant_section);
+        
+        return $section_relationship->can_view && $other_responses_visible;
+    }
+
+    /**
+     * Checks if visibility conditions on activity allow viewing other responses.
+     *
+     * @param participant_section_entity $participant_section
+     * @return bool
+     */
+    private static function are_other_responses_visible(participant_section_entity $participant_section): bool {
+        $participant_instance = $participant_section->participant_instance;
+
+        // TODO: This should probably be extracted so that we can use it in
+        //       \mod_perform\data_providers\response\participant_section_with_responses::fetch_other_participant_instances()
+        //       and here as well
+        $other_participant_instances = participant_instance_entity::repository()
+            ->as('pi')
+            ->join([participant_section_entity::TABLE, 'ps'], 'id', 'participant_instance_id')
+            ->when(true, function (repository $repository) {
+                participant_instance_repository::add_user_not_deleted_filter($repository, 'pi');
+            })
+            ->where('subject_instance_id', $participant_instance->subject_instance_id)
+            // Guard on the actual participant_instance_id (rather than participant_user_id)
+            // because we need to handle the case where the same user is both a manager and appraiser to the subject.
+            ->where('pi.id', '!=', $participant_section->participant_instance_id)
+            ->where('ps.section_id', $participant_section->section_id)
+            ->get();
+
+        $participant_instance = participant_instance_model::load_by_entity($participant_section->participant_instance);
+
+        $activity_settings = $participant_instance->subject_instance->activity->get_settings();
+        $visibility_value = $activity_settings->lookup(activity_setting::VISIBILITY_CONDITION) ?? 0;
+
+        $visibility_option = (new visibility_manager())->get_option_with_value($visibility_value);
+
+        return $visibility_option->show_responses($participant_instance, $other_participant_instances);
+    }
+    
     /**
      * {@inheritdoc}
      */

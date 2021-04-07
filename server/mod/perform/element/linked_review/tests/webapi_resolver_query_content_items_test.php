@@ -26,9 +26,11 @@ use core\testing\generator;
 use mod_perform\constants;
 use mod_perform\models\activity\participant_instance;
 use mod_perform\testing\generator as perform_generator;
+use pathway_perform_rating\models\perform_rating;
 use performelement_linked_review\models\linked_review_content;
 use performelement_linked_review\testing\generator as linked_review_generator;
 use totara_competency\models\assignment;
+use totara_core\relationship\relationship;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
@@ -317,6 +319,211 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
         $actual_ids = array_column($result['items'], 'id');
         $expected_ids = $content_items->pluck('id');
         $this->assertEqualsCanonicalizing($expected_ids, $actual_ids);
+    }
+
+    public function test_get_content_items_with_rating_enabled() {
+        self::setAdminUser();
+
+        $subject_relationship = relationship::load_by_idnumber(constants::RELATIONSHIP_SUBJECT);
+        $manager_relationship = relationship::load_by_idnumber(constants::RELATIONSHIP_MANAGER);
+        $appraiser_relationship = relationship::load_by_idnumber(constants::RELATIONSHIP_APPRAISER);
+
+        [$activity1, $section1, $element1, $section_element1] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element([
+                'content_type_settings' => [
+                    'enable_rating' => true,
+                    'rating_relationship' => $subject_relationship->id
+                ]
+            ]);
+        [$activity2, $section2, $element2, $section_element2] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$subject, $subject_instance1, $participant_instance1] = linked_review_generator::instance()->create_participant_in_section([
+            'activity' => $activity1,
+            'section' => $section1,
+            'create_section_relationship' => false,
+        ]);
+        [$manager, $subject_instance1, $participant_instance2] = linked_review_generator::instance()->create_participant_in_section([
+            'activity' => $activity1,
+            'section' => $section1,
+            'subject_instance' => $subject_instance1,
+            'relationship' => $manager_relationship,
+            'create_section_relationship' => false,
+        ]);
+        [$appraiser, $subject_instance1, $participant_instance3] = linked_review_generator::instance()->create_participant_in_section([
+            'activity' => $activity1,
+            'section' => $section1,
+            'subject_instance' => $subject_instance1,
+            'relationship' => $appraiser_relationship,
+            'create_section_relationship' => false,
+        ]);
+
+        perform_generator::instance()->create_section_relationship(
+            $section1,
+            ['relationship' => constants::RELATIONSHIP_SUBJECT],
+            true,
+            true
+        );
+
+        perform_generator::instance()->create_section_relationship(
+            $section1,
+            ['relationship' => constants::RELATIONSHIP_MANAGER],
+            true,
+            true
+        );
+
+        perform_generator::instance()->create_section_relationship(
+            $section1,
+            ['relationship' => constants::RELATIONSHIP_APPRAISER],
+            false,
+            true
+        );
+
+        $assignment1 = linked_review_generator::instance()->create_competency_assignment(['user' => $subject]);
+        $content_id1 = $assignment1->id;
+
+        $content_items1 = linked_review_content::create_multiple(
+            [$content_id1],
+            $section_element1->id,
+            $participant_instance1->id, false
+        );
+
+        $this->setUser($subject);
+
+        $args = [
+            'section_element_id' => $section_element1->id,
+            'subject_instance_id' => $subject_instance1->id,
+        ];
+
+        $result = $this->resolve_graphql_query(self::QUERY, $args);
+        $this->assertArrayHasKey('items', $result);
+        $this->assertCount($content_items1->count(), $result['items']);
+        $this->assertContainsOnlyInstancesOf(linked_review_content::class, $result['items']);
+        $actual_ids = array_column($result['items'], 'id');
+        $expected_ids = $content_items1->pluck('id');
+        $this->assertEqualsCanonicalizing($expected_ids, $actual_ids);
+
+        /** @var linked_review_content $item */
+        $item = array_shift($result['items']);
+
+        $this->assertInstanceOf(linked_review_content::class, $item);
+        $content = $item->get_content();
+        $this->assertTrue($content['can_rate']);
+        $this->assertTrue($content['can_view_rating']);
+        $this->assertNull($content['rating']);
+
+        // Now as the manager
+        $this->setUser($manager);
+
+        $result = $this->resolve_graphql_query(self::QUERY, $args);
+        $this->assertArrayHasKey('items', $result);
+        $this->assertCount($content_items1->count(), $result['items']);
+        $this->assertContainsOnlyInstancesOf(linked_review_content::class, $result['items']);
+        $actual_ids = array_column($result['items'], 'id');
+        $expected_ids = $content_items1->pluck('id');
+        $this->assertEqualsCanonicalizing($expected_ids, $actual_ids);
+
+        /** @var linked_review_content $item */
+        $item = array_shift($result['items']);
+
+        $this->assertInstanceOf(linked_review_content::class, $item);
+        $content = $item->get_content();
+        $this->assertFalse($content['can_rate']);
+        $this->assertTrue($content['can_view_rating']);
+        $this->assertNull($content['rating']);
+
+        // Now as an appraiser who cannot see others responses
+        $this->setUser($appraiser);
+
+        $result = $this->resolve_graphql_query(self::QUERY, $args);
+        $this->assertArrayHasKey('items', $result);
+        $this->assertCount($content_items1->count(), $result['items']);
+        $this->assertContainsOnlyInstancesOf(linked_review_content::class, $result['items']);
+        $actual_ids = array_column($result['items'], 'id');
+        $expected_ids = $content_items1->pluck('id');
+        $this->assertEqualsCanonicalizing($expected_ids, $actual_ids);
+
+        /** @var linked_review_content $item */
+        $item = array_shift($result['items']);
+
+        $this->assertInstanceOf(linked_review_content::class, $item);
+        $content = $item->get_content();
+        $this->assertFalse($content['can_rate']);
+        $this->assertFalse($content['can_view_rating']);
+        $this->assertNull($content['rating']);
+
+        $expected_assignment1 = assignment::load_by_id($assignment1->id);
+
+        $expected_scale_values1 = $expected_assignment1
+            ->get_assignment_specific_scale()
+            ->values
+            ->sort('sortorder', 'asc', false);
+        $rating_created_at = time();
+        $rating_scale_value = $expected_scale_values1->first();
+
+        $this->setUser($subject);
+
+        // Now give a rating
+        perform_rating::create(
+            $assignment1->competency_id,
+            $rating_scale_value->id,
+            $participant_instance1->id,
+            $section_element1->id,
+            $rating_created_at
+        );
+
+        $result = $this->resolve_graphql_query(self::QUERY, $args);
+
+        /** @var linked_review_content $item */
+        $item = array_shift($result['items']);
+
+        $expected_rating = [
+            'created_at' => trim(strftime('%e %B %Y', $rating_created_at)),
+            'rater_user' => [
+                'fullname' => fullname($subject),
+            ],
+            'scale_value' => [
+                'name' => $rating_scale_value->name,
+                'id' => $rating_scale_value->id
+            ]
+        ];
+
+        $content = $item->get_content();
+        $this->assertFalse($content['can_rate']);
+        $this->assertTrue($content['can_view_rating']);
+        $this->assertEquals($expected_rating, $content['rating']);
+
+        // Now as the manager
+        $this->setUser($manager);
+
+        $result = $this->resolve_graphql_query(self::QUERY, $args);
+
+        /** @var linked_review_content $item */
+        $item = array_shift($result['items']);
+
+        $content = $item->get_content();
+        $this->assertFalse($content['can_rate']);
+        $this->assertTrue($content['can_view_rating']);
+        $this->assertEquals($expected_rating, $content['rating']);
+
+        // Now as an appraiser who cannot see others responses
+        $this->setUser($appraiser);
+
+        $result = $this->resolve_graphql_query(self::QUERY, $args);
+        $this->assertArrayHasKey('items', $result);
+        $this->assertCount($content_items1->count(), $result['items']);
+        $this->assertContainsOnlyInstancesOf(linked_review_content::class, $result['items']);
+        $actual_ids = array_column($result['items'], 'id');
+        $expected_ids = $content_items1->pluck('id');
+        $this->assertEqualsCanonicalizing($expected_ids, $actual_ids);
+
+        /** @var linked_review_content $item */
+        $item = array_shift($result['items']);
+
+        $this->assertInstanceOf(linked_review_content::class, $item);
+        $content = $item->get_content();
+        $this->assertFalse($content['can_rate']);
+        $this->assertFalse($content['can_view_rating']);
+        $this->assertNull($content['rating']);
     }
 
     /**

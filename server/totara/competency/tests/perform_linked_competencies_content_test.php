@@ -23,8 +23,13 @@
 
 use core\collection;
 use core\orm\query\builder;
+use mod_perform\constants;
+use mod_perform\entity\activity\participant_section;
 use mod_perform\entity\activity\subject_instance as subject_instance_entity;
 use mod_perform\models\activity\subject_instance;
+use pathway_perform_rating\models\perform_rating;
+use performelement_linked_review\models\linked_review_content;
+use performelement_linked_review\testing\generator as linked_review_generator;
 use totara_competency\expand_task;
 use totara_competency\models\assignment as assignment_model;
 use totara_competency\performelement_linked_review\competency_assignment;
@@ -37,6 +42,14 @@ use totara_core\relationship\relationship;
  */
 class totara_competency_perform_linked_competencies_content_testcase extends advanced_testcase {
 
+    protected function setUp(): void {
+        if (!core_component::get_plugin_directory('mod', 'perform')
+            || !core_component::get_plugin_directory('performelement', 'linked_review')
+        ) {
+            $this->markTestSkipped('Perform or the linked review element plugin is not installed');
+        }
+    }
+
     public function test_load_with_empty_content_items_collection() {
         $user = $this->getDataGenerator()->create_user();
         $dummy_subject_instance = subject_instance::load_by_entity(new subject_instance_entity([
@@ -48,7 +61,13 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
 
         $content_type = new competency_assignment(context_system::instance());
 
-        $result = $content_type->load_content_items($dummy_subject_instance, collection::new([]), null, time());
+        $result = $content_type->load_content_items(
+            $dummy_subject_instance,
+            collection::new([]),
+            null,
+            true,
+            time()
+        );
 
         $this->assertIsArray($result);
         $this->assertEmpty($result);
@@ -69,7 +88,13 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
 
         $content_type = new competency_assignment(context_system::instance());
 
-        $result = $content_type->load_content_items($dummy_subject_instance, $nonexistent_competency_content_items, null, time());
+        $result = $content_type->load_content_items(
+            $dummy_subject_instance,
+            $nonexistent_competency_content_items,
+            null,
+            true,
+            time()
+        );
 
         $this->assertEmpty($result);
     }
@@ -102,7 +127,13 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
 
         $content_type = new competency_assignment(context_system::instance());
 
-        $result = $content_type->load_content_items($dummy_subject_instance, $content_items, null, $created_at);
+        $result = $content_type->load_content_items(
+            $dummy_subject_instance,
+            $content_items,
+            null,
+            true,
+            $created_at
+        );
 
         $this->assertIsArray($result);
         $this->assertNotEmpty($result);
@@ -115,7 +146,10 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
 
         $expected_assignment1 = assignment_model::load_by_id($assignment1->id);
 
-        $expected_scale_values1 = $expected_assignment1->get_assignment_specific_scale()->values->sort('sortorder', 'asc', false);
+        $expected_scale_values1 = $expected_assignment1
+            ->get_assignment_specific_scale()
+            ->values
+            ->sort('sortorder', 'asc', false);
         $expected_scale1 = [];
         foreach ($expected_scale_values1 as $expected_scale_value) {
             $expected_scale1[] = [
@@ -143,6 +177,7 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
             ],
             'scale_values' => $expected_scale1,
             'can_rate' => false,
+            'can_view_rating' => true,
             'rating' => null,
         ];
 
@@ -155,7 +190,10 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
 
         $expected_assignment2 = assignment_model::load_by_id($assignment2->id);
 
-        $expected_scale_values2 = $expected_assignment2->get_assignment_specific_scale()->values->sort('sortorder', 'asc', false);
+        $expected_scale_values2 = $expected_assignment2
+            ->get_assignment_specific_scale()
+            ->values
+            ->sort('sortorder', 'asc', false);
         $expected_scale2 = [];
         foreach ($expected_scale_values2 as $expected_scale_value) {
             $expected_scale2[] = [
@@ -183,10 +221,262 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
             ],
             'scale_values' => $expected_scale2,
             'can_rate' => false,
+            'can_view_rating' => true,
             'rating' => null,
         ];
 
         $this->assertEquals($expected_content_third_item, $actual_third_item);
+    }
+
+    public function test_load_competency_items_with_rating_enabled() {
+        self::setAdminUser();
+
+        $subject_relationship = relationship::load_by_idnumber(constants::RELATIONSHIP_SUBJECT);
+        $manager_relationship = relationship::load_by_idnumber(constants::RELATIONSHIP_MANAGER);
+
+        [$activity1, $section1, $element1, $section_element1] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element([
+                'content_type_settings' => [
+                    'enable_rating' => true,
+                    'rating_relationship' => $subject_relationship->id
+                ]
+            ]);
+        [$activity2, $section2, $element2, $section_element2] = linked_review_generator::instance()
+            ->create_activity_with_section_and_review_element();
+        [$user1, $subject_instance1, $participant_instance1] = linked_review_generator::instance()->create_participant_in_section([
+            'activity' => $activity1,
+            'section' => $section1,
+        ]);
+        [$user3, $subject_instance1, $participant_instance2] = linked_review_generator::instance()->create_participant_in_section([
+            'activity' => $activity1,
+            'section' => $section1,
+            'subject_instance' => $subject_instance1,
+            'relationship' => $manager_relationship
+        ]);
+
+        $assignment1 = linked_review_generator::instance()->create_competency_assignment(['user' => $user1]);
+        $content_id1 = $assignment1->id;
+
+        $content_items1 = linked_review_content::create_multiple(
+            [$content_id1],
+            $section_element1->id,
+            $participant_instance1->id, false
+        );
+
+        $this->setUser($user1);
+
+        $created_at = time();
+
+        $content_type = new competency_assignment(context_system::instance());
+
+        $participant_section1 = participant_section::repository()
+            ->where('participant_instance_id', $participant_instance1->id)
+            ->order_by('id')
+            ->first();
+
+        $result = $content_type->load_content_items(
+            $subject_instance1,
+            $content_items1,
+            $participant_section1,
+            true,
+            $created_at
+        );
+
+        $this->assertIsArray($result);
+        $this->assertNotEmpty($result);
+        $this->assertCount(1, $result);
+
+        $expected_assignment1 = assignment_model::load_by_id($assignment1->id);
+
+        $expected_scale_values1 = $expected_assignment1
+            ->get_assignment_specific_scale()
+            ->values
+            ->sort('sortorder', 'asc', false);
+        $expected_scale1 = [];
+        foreach ($expected_scale_values1 as $expected_scale_value) {
+            $expected_scale1[] = [
+                'id' => $expected_scale_value->id,
+                'name' => $expected_scale_value->name,
+                'proficient' => (bool) $expected_scale_value->proficient,
+                'sort_order' => $expected_scale_value->sortorder,
+            ];
+        }
+
+        $expected_content = [
+            'id' => $expected_assignment1->get_id(),
+            'competency' => [
+                'id' => $expected_assignment1->get_competency()->id,
+                'display_name' => $expected_assignment1->get_competency()->display_name,
+                'description' => $expected_assignment1->get_competency()->description,
+            ],
+            'assignment' => [
+                'reason_assigned' => $expected_assignment1->get_reason_assigned(),
+            ],
+            'achievement' => [
+                'id' => 0,
+                'name' => get_string('no_value_achieved', 'totara_competency'),
+                'proficient' => false,
+            ],
+            'scale_values' => $expected_scale1,
+            'can_rate' => true,
+            'can_view_rating' => true,
+            'rating' => null,
+        ];
+
+        $this->assertEquals($expected_content, array_shift($result));
+
+        // Now even without being able to view the ratings raters should always see it
+        $result = $content_type->load_content_items(
+            $subject_instance1,
+            $content_items1,
+            $participant_section1,
+            false,
+            $created_at
+        );
+
+        $this->assertIsArray($result);
+        $this->assertNotEmpty($result);
+        $this->assertCount(1, $result);
+
+        $this->assertEquals($expected_content, array_shift($result));
+
+        // Now as the manager
+        $this->setUser($user3);
+
+        $participant_section2 = participant_section::repository()
+            ->where('participant_instance_id', $participant_instance2->id)
+            ->order_by('id')
+            ->first();
+
+        $result = $content_type->load_content_items(
+            $subject_instance1,
+            $content_items1,
+            $participant_section2,
+            true,
+            $created_at
+        );
+
+        $this->assertIsArray($result);
+        $this->assertNotEmpty($result);
+        $this->assertCount(1, $result);
+
+        $expected_content = [
+            'id' => $expected_assignment1->get_id(),
+            'competency' => [
+                'id' => $expected_assignment1->get_competency()->id,
+                'display_name' => $expected_assignment1->get_competency()->display_name,
+                'description' => $expected_assignment1->get_competency()->description,
+            ],
+            'assignment' => [
+                'reason_assigned' => $expected_assignment1->get_reason_assigned(),
+            ],
+            'achievement' => [
+                'id' => 0,
+                'name' => get_string('no_value_achieved', 'totara_competency'),
+                'proficient' => false,
+            ],
+            'scale_values' => $expected_scale1,
+            'can_rate' => false,
+            'can_view_rating' => true,
+            'rating' => null,
+        ];
+
+        $this->assertEquals($expected_content, array_shift($result));
+
+        // Without being able to view ratings non-raters should get can_view_ratings = false
+        $result = $content_type->load_content_items(
+            $subject_instance1,
+            $content_items1,
+            $participant_section2,
+            false,
+            $created_at
+        );
+
+        $this->assertIsArray($result);
+        $this->assertNotEmpty($result);
+        $this->assertCount(1, $result);
+
+        $expected_content = [
+            'id' => $expected_assignment1->get_id(),
+            'competency' => [
+                'id' => $expected_assignment1->get_competency()->id,
+                'display_name' => $expected_assignment1->get_competency()->display_name,
+                'description' => $expected_assignment1->get_competency()->description,
+            ],
+            'assignment' => [
+                'reason_assigned' => $expected_assignment1->get_reason_assigned(),
+            ],
+            'achievement' => [
+                'id' => 0,
+                'name' => get_string('no_value_achieved', 'totara_competency'),
+                'proficient' => false,
+            ],
+            'scale_values' => $expected_scale1,
+            'can_rate' => false,
+            'can_view_rating' => false,
+            'rating' => null,
+        ];
+
+        $this->assertEquals($expected_content, array_shift($result));
+
+        $this->setUser($user1);
+
+        $rating_created_at = time();
+        $rating_scale_value = $expected_scale_values1->first();
+
+        // Now give a rating
+        perform_rating::create(
+            $assignment1->competency_id,
+            $rating_scale_value->id,
+            $participant_instance1->id,
+            $section_element1->id,
+            $rating_created_at
+        );
+
+        // Now the rating should be included
+        $result = $content_type->load_content_items(
+            $subject_instance1,
+            $content_items1,
+            $participant_section1,
+            false,
+            $created_at
+        );
+
+        $this->assertIsArray($result);
+        $this->assertNotEmpty($result);
+        $this->assertCount(1, $result);
+
+        $expected_content = [
+            'id' => $expected_assignment1->get_id(),
+            'competency' => [
+                'id' => $expected_assignment1->get_competency()->id,
+                'display_name' => $expected_assignment1->get_competency()->display_name,
+                'description' => $expected_assignment1->get_competency()->description,
+            ],
+            'assignment' => [
+                'reason_assigned' => $expected_assignment1->get_reason_assigned(),
+            ],
+            'achievement' => [
+                'id' => 0,
+                'name' => get_string('no_value_achieved', 'totara_competency'),
+                'proficient' => false,
+            ],
+            'scale_values' => $expected_scale1,
+            'can_rate' => false,
+            'can_view_rating' => true,
+            'rating' => [
+                'created_at' => trim(strftime('%e %B %Y', $rating_created_at)),
+                'rater_user' => [
+                    'fullname' => fullname($user1),
+                ],
+                'scale_value' => [
+                    'name' => $rating_scale_value->name,
+                    'id' => $rating_scale_value->id
+                ]
+            ],
+        ];
+
+        $this->assertEquals($expected_content, array_shift($result));
     }
 
     public function test_feature_disabled() {
@@ -216,7 +506,12 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
         advanced_feature::disable('competency_assignment');
 
         $content_type = new competency_assignment(context_system::instance());
-        $result = $content_type->load_content_items($dummy_subject_instance, $content_items, null, time());
+        $result = $content_type->load_content_items(
+            $dummy_subject_instance,
+            $content_items,
+            null, true,
+            time()
+        );
 
         $this->assertEmpty($result);
     }

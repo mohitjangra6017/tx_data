@@ -162,6 +162,7 @@ abstract class content_type {
 
     /**
      * This function is responsible for loading the actual items when requested by the
+     *
      * @see \performelement_linked_review\webapi\resolver\query\content_items query.
      * This data is injected in the content items and used for display in the
      * VUE component returned by @see content_type::get_participant_content_component().
@@ -174,6 +175,7 @@ abstract class content_type {
      * @param subject_instance $subject_instance The subject instance the content is for
      * @param linked_review_content[]|collection $content_items
      * @param participant_section|null $participant_section The participant section of the user viewing the content
+     * @param bool $can_view_other_responses
      * @param int $created_at the timestamp the content got created, this might be needed for point in time / static data
      * @return array[] Array of content items, keyed by the ID of each item. Each content item must be an array itself.
      */
@@ -181,6 +183,7 @@ abstract class content_type {
         subject_instance $subject_instance,
         collection $content_items,
         ?participant_section $participant_section,
+        bool $can_view_other_responses,
         int $created_at
     ): array;
 

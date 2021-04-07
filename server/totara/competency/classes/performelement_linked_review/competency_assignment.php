@@ -27,7 +27,7 @@ use core\collection;
 use core\date_format;
 use core\format;
 use core\webapi\formatter\field\date_field_formatter;
-use mod_perform\entity\activity\participant_section;
+use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\models\activity\participant_instance as participant_instance_model;
 use mod_perform\models\activity\subject_instance;
 use pathway_perform_rating\models\perform_rating;
@@ -187,32 +187,32 @@ class competency_assignment extends content_type {
     }
 
     /**
-     * Load the competency assignments
-     *
-     * @param subject_instance $subject_instance
-     * @param linked_review_content[]|collection $content_items
-     * @param participant_section|null $participant_section
-     * @param int $created_at
-     * @return array[]
+     * @inheritDoc
      */
     public function load_content_items(
         subject_instance $subject_instance,
         collection $content_items,
-        ?participant_section $participant_section,
+        ?participant_section_entity $participant_section,
+        bool $can_view_other_responses,
         int $created_at
     ): array {
         if ($content_items->count() === 0 || advanced_feature::is_disabled('competency_assignment')) {
             return [];
         }
 
+        $can_rate = false;
+        $can_view_rating = $can_view_other_responses;
+
         if ($participant_section) {
             // Element will be the same across all content items, so we can just get it from the first content item.
             /** @var linked_review_content $content_item */
             $content_item = $content_items->first();
             $participant_instance = participant_instance_model::load_by_entity($participant_section->participant_instance);
+
             $can_rate = perform_rating::can_rate($participant_instance, $content_item->section_element);
-        } else {
-            $can_rate = false;
+
+            // If users are in a rater relationship or can view other responses they can view the rating
+            $can_view_rating = $can_rate || $can_view_other_responses;
         }
 
         return assignments::for($subject_instance->subject_user_id)
@@ -222,14 +222,22 @@ class competency_assignment extends content_type {
             ->fetch()
             ->get()
             ->key_by('id')
-            ->map(function (assignment_entity $assignment) use ($subject_instance, $created_at, $can_rate) {
-                return $this->create_result_item(
-                    $assignment,
+            ->map(
+                function (assignment_entity $assignment) use (
                     $subject_instance,
                     $created_at,
-                    $can_rate
-                );
-            })
+                    $can_rate,
+                    $can_view_rating
+                ) {
+                    return $this->create_result_item(
+                        $assignment,
+                        $subject_instance,
+                        $created_at,
+                        $can_rate,
+                        $can_view_rating
+                    );
+                }
+            )
             ->all(true);
     }
 
@@ -240,21 +248,24 @@ class competency_assignment extends content_type {
      * @param subject_instance $subject_instance
      * @param int $created_at
      * @param bool $can_rate
+     * @param bool $can_view_rating
      * @return array
      */
     private function create_result_item(
         assignment_entity $assignment,
         subject_instance $subject_instance,
         int $created_at,
-        bool $can_rate
+        bool $can_rate,
+        bool $can_view_rating
     ): array {
+
         $proficiency_value = proficiency_value::value_at_timestamp($assignment, $subject_instance->subject_user_id, $created_at);
         $assignment_model = assignment_model::load_by_entity($assignment);
 
         $competency_formatter = new competency_formatter($assignment_model->get_competency(), $this->context);
         $assignment_formatter = new assignment_formatter($assignment_model, $this->context);
 
-        $rating = perform_rating::get_existing_rating($assignment->competency_id, $subject_instance->id);
+        $rating = $can_view_rating ? perform_rating::get_existing_rating($assignment->competency_id, $subject_instance->id) : null;
 
         return [
             'id' => $assignment_model->get_id(),
@@ -269,6 +280,7 @@ class competency_assignment extends content_type {
             'achievement' => $this->format_proficiency_value($proficiency_value),
             'scale_values' => $this->format_scale_values($assignment_model),
             'can_rate' => $can_rate && !$rating,
+            'can_view_rating' => $can_view_rating,
             'rating' => $rating ? $this->format_rating($rating) : null,
         ];
     }

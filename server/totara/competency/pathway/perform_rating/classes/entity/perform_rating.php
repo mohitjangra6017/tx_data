@@ -55,8 +55,6 @@ use totara_core\entity\relationship;
  * @property-read user|null $rater_user
  * @property-read relationship|null $rater_relationship
  * @property-read participant_instance|null $participant_instance
- *
- * @method static perform_rating_repository repository()
  */
 class perform_rating extends entity {
 

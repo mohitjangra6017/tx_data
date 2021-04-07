@@ -20,7 +20,7 @@
 <template>
   <div>
     <Rating
-      v-if="isRatingEnabled"
+      v-if="isRatingEnabled && data.can_view_rating"
       class="tui-competencyLinkedReviewRatingForm"
       :from-print="fromPrint"
       :rating="data.rating"

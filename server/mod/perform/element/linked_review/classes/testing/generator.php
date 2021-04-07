@@ -23,6 +23,7 @@
 
 namespace performelement_linked_review\testing;
 
+use coding_exception;
 use context_system;
 use core\orm\entity\repository;
 use core\orm\query\builder;
@@ -87,6 +88,8 @@ final class generator extends component_generator {
             'selection_relationships' => constants::RELATIONSHIP_SUBJECT,
             'activity_name' => 'Test activity',
             'section_title' => 'Test section',
+            'element_title' => 'linked review element',
+            'content_type_settings' => '{}',
         ], $data);
         $activity = perform_generator::instance()->create_activity_in_container([
             'activity_name' => $data['activity_name'],
@@ -99,16 +102,30 @@ final class generator extends component_generator {
             return (string) relationship::load_by_idnumber($relationship_idnumber)->id;
         }, explode(',', $data['selection_relationships']));
 
+        $content_settings = is_string($data['content_type_settings'])
+            ? json_decode($data['content_type_settings'], true)
+            : $data['content_type_settings'];
+
+        if (isset($content_settings['rating_relationship'])) {
+            if (is_string($content_settings['rating_relationship'])) {
+                $relationship_id = relationship::load_by_idnumber($content_settings['rating_relationship'])->id;
+            } else {
+                $relationship_id = $content_settings['rating_relationship'];
+            }
+            $content_settings['rating_relationship'] = $relationship_id;
+            $data['content_type_settings'] = json_encode($content_settings);
+        }
+
         $element_data = json_encode([
             'content_type' => $data['content_type'],
-            'content_type_settings' => [],
+            'content_type_settings' => json_decode($data['content_type_settings'], true),
             'selection_relationships' => $relationship_ids,
         ]);
 
         $element = element::create(
             $activity->get_context(),
             'linked_review',
-            $data['element_title'] ?? 'linked review element',
+            $data['element_title'],
             '',
             $element_data
         );
@@ -140,13 +157,13 @@ final class generator extends component_generator {
         } else {
             $element_entity = element_entity::repository()->where('title', $data['element'])->one();
             if ($element_entity === null) {
-                throw new \coding_exception("Element with title '{$data['element']}' doesn't exist.");
+                throw new coding_exception("Element with title '{$data['element']}' doesn't exist.");
             }
             $element = element::load_by_entity($element_entity);
         }
         $element_plugin = $element->get_element_plugin();
         if (!$element_plugin instanceof linked_review) {
-            throw new \coding_exception('The specified element was not a linked review element');
+            throw new coding_exception('The specified element was not a linked review element');
         }
         $content_type = $element_plugin->get_content_type($element)::get_identifier();
 
@@ -167,7 +184,7 @@ final class generator extends component_generator {
                     ->assignment_id;
                 break;
             default:
-                throw new \coding_exception($content_type . ' is not implemented in generator::create_content_selection');
+                throw new coding_exception($content_type . ' is not implemented in generator::create_content_selection');
         }
 
         $section_element_id = section_element::repository()->where('element_id', $element->id)->one()->id;
@@ -227,7 +244,7 @@ final class generator extends component_generator {
         } else if (isset($data['subject_user']) && !empty($data['subject_user'])) {
             $subject_user_id = $DB->get_field('user', 'id', ['username' => $data['subject_user']]);
             if ($subject_user_id === null) {
-                throw new \coding_exception("Couldn't locate a subject user with the username " . $data['subject_user']);
+                throw new coding_exception("Couldn't locate a subject user with the username " . $data['subject_user']);
             }
             $subject_instance = subject_instance_entity::repository()
                 ->filter_by_activity_id($activity->id)
@@ -260,13 +277,16 @@ final class generator extends component_generator {
             ->where('section_id', $section->id)
             ->where('core_relationship_id', $relationship->id)
             ->exists()) {
-            $can_answer = isset($data['can_answer']) && $data['can_answer'] ?
-                filter_var($data['can_answer'], FILTER_VALIDATE_BOOLEAN)
+            $can_answer = isset($data['can_answer']) && $data['can_answer']
+                ? filter_var($data['can_answer'], FILTER_VALIDATE_BOOLEAN)
+                : true;
+            $can_view = isset($data['can_view']) && $data['can_view']
+                ? filter_var($data['can_view'], FILTER_VALIDATE_BOOLEAN)
                 : true;
             perform_generator::instance()->create_section_relationship(
                 $section,
                 ['relationship' => $relationship],
-                true,
+                $can_view,
                 $can_answer
             );
         }
@@ -355,7 +375,7 @@ final class generator extends component_generator {
         if (isset($data['manual_rating']) && !empty($data['manual_rating'])) {
             $scale_value = $competency->scale->values->filter('name', $data['manual_rating'])->first();
             if ($scale_value === null) {
-                throw new \coding_exception(
+                throw new coding_exception(
                     'Scale value ' . $data['manual_rating'] . ' does not exist for competency ' . $competency->id
                 );
             }
