@@ -156,7 +156,7 @@ abstract class state {
      * Indicates the triggering state that caused the system to move into this
      * state.
      *
-     * @param state $state the triggering state.
+     * @param state|null $state $state the triggering state.
      *
      * @return state this updated object.
      */

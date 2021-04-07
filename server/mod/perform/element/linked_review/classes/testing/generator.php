@@ -24,7 +24,6 @@
 namespace performelement_linked_review\testing;
 
 use context_system;
-use core\entity\user;
 use core\orm\query\builder;
 use core\testing\component_generator;
 use core\testing\generator as core_generator;

@@ -77,6 +77,7 @@ class mod_perform_webapi_type_notification_testcase extends advanced_testcase {
     /**
      * @covers ::resolve
      * @dataProvider data_class_keys
+     * @param string $class_key
      */
     public function test_invalid_field(string $class_key): void {
         [$activity, $context] = $this->create_test_data();
@@ -92,6 +93,7 @@ class mod_perform_webapi_type_notification_testcase extends advanced_testcase {
     /**
      * @covers ::resolve
      * @dataProvider data_class_keys
+     * @param string $class_key
      */
     public function test_resolve(string $class_key): void {
         // Note: cannot use dataproviders here because PHPUnit runs these before

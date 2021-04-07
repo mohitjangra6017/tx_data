@@ -86,7 +86,7 @@ class manual_relationship_selection_progress extends entity {
      *
      * TBD: to remove once the base_entity handles this.
      *
-     * @param int $value incoming value.
+     * @param int|null $value incoming value.
      *
      * @return bool the converted value.
      */

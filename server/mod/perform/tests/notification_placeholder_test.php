@@ -41,7 +41,7 @@ class mod_perform_notification_placeholder_testcase extends mod_perform_notifica
     /**
      * Create an activity and some subject and participant instances for testing.
      *
-     * @param bool $use_duedate
+     * @param date_offset|null $dateoffset
      * @return array
      */
     private function create_instances(date_offset $dateoffset = null): array {

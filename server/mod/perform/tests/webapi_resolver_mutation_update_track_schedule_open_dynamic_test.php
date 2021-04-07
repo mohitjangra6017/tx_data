@@ -24,6 +24,7 @@
 
 use mod_perform\constants;
 use mod_perform\dates\date_offset;
+use mod_perform\dates\resolvers\dynamic\dynamic_source;
 use mod_perform\entity\activity\track as track_entity;
 use mod_perform\event\track_schedule_changed;
 use totara_core\dates\date_time_setting;

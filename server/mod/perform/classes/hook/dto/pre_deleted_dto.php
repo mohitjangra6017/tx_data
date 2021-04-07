@@ -24,7 +24,6 @@
 namespace mod_perform\hook\dto;
 
 use coding_exception;
-use core\collection;
 
 class pre_deleted_dto {
 

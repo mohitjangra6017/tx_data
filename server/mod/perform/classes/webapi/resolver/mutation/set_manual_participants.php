@@ -23,7 +23,6 @@
 
 namespace mod_perform\webapi\resolver\mutation;
 
-use coding_exception;
 use core\entity\user;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_login;

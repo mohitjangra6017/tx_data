@@ -94,7 +94,7 @@ class mod_perform_item_ordering_testcase extends advanced_testcase {
         $second_item = $items[1];
         $last_item = $items[4];
         $items_with_sort_as_index = $item_ordering->move_item_after($second_item->id, $last_item->id);
-        $this->assertEquals(4, count($items_with_sort_as_index));
+        $this->assertCount(4, $items_with_sort_as_index);
         $expected_id_to_sort_values = [
             2 => 5,
             3 => 2,
@@ -115,7 +115,7 @@ class mod_perform_item_ordering_testcase extends advanced_testcase {
         $second_item = $items[1];
         $fourth_item = $items[3];
         $items_with_sort_as_index = $item_ordering->move_item_after($second_item->id, $fourth_item->id);
-        $this->assertEquals(3, count($items_with_sort_as_index));
+        $this->assertCount(3, $items_with_sort_as_index);
         $expected_id_to_sort_values = [
             2 => 4,
             3 => 2,
@@ -136,7 +136,7 @@ class mod_perform_item_ordering_testcase extends advanced_testcase {
         $after_element_id = null;
         $expected_new_position = 1;
         $items_with_sort_as_index = $item_ordering->move_item_after($eight_item->id, $after_element_id);
-        $this->assertEquals(8, count($items_with_sort_as_index));
+        $this->assertCount(8, $items_with_sort_as_index);
 
         foreach ($items_with_sort_as_index as $sort_order => $item) {
             $this->assertTrue($sort_order <= $eight_item->sort_order);
@@ -159,7 +159,7 @@ class mod_perform_item_ordering_testcase extends advanced_testcase {
         $after_element = $items[0];
         $new_position = $after_element->sort_order + 1;
         $items_with_sort_as_index = $item_ordering->move_item_after($eight_item->id, $after_element->id);
-        $this->assertEquals(7, count($items_with_sort_as_index));
+        $this->assertCount(7, $items_with_sort_as_index);
 
         foreach ($items_with_sort_as_index as $sort_order => $item) {
             $this->assertTrue($sort_order <= $eight_item->sort_order);
@@ -200,10 +200,10 @@ class mod_perform_item_ordering_testcase extends advanced_testcase {
         $item_ordering = new item_ordering($items);
         $new_item_sort_order = $item_ordering->get_new_item_sort_order_after();
         $items_to_reorder = $item_ordering->get_items_to_reorder($new_item_sort_order);
-        $this->assertEquals($new_item_sort_order, 1);
+        $this->assertEquals(1, $new_item_sort_order);
 
         foreach ($items_to_reorder as $new_sort_order => $item) {
-            $this->assertEquals($new_sort_order, $item->sort_order + 1);
+            $this->assertEquals($item->sort_order + 1, $new_sort_order);
         }
     }
 
@@ -212,7 +212,7 @@ class mod_perform_item_ordering_testcase extends advanced_testcase {
         $item_ordering = new item_ordering($items);
         $new_item_sort_order = $item_ordering->get_new_item_sort_order_after(5);
         $items_to_reorder = $item_ordering->get_items_to_reorder($new_item_sort_order);
-        $this->assertEquals($new_item_sort_order, 6);
+        $this->assertEquals(6, $new_item_sort_order);
         $this->assertCount(5, $items_to_reorder);
     }
 
@@ -231,7 +231,7 @@ class mod_perform_item_ordering_testcase extends advanced_testcase {
         $item_ordering = new item_ordering($items);
         $new_item_sort_order = $item_ordering->get_new_item_sort_order_after(10);
         $items_to_reorder = $item_ordering->get_items_to_reorder($new_item_sort_order);
-        $this->assertEquals($new_item_sort_order, 11);
+        $this->assertEquals(11, $new_item_sort_order);
         $this->assertCount(0, $items_to_reorder);
     }
 

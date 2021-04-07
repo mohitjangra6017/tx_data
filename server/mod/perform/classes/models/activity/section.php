@@ -29,7 +29,6 @@ use core\orm\entity\model;
 use core\orm\query\builder;
 use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\entity\activity\section as section_entity;
-use mod_perform\entity\activity\section_relationship as section_relationship_entity;
 use mod_perform\hook\dto\pre_deleted_dto;
 use mod_perform\hook\pre_section_deleted;
 use mod_perform\models\activity\helpers\section_element_manager;

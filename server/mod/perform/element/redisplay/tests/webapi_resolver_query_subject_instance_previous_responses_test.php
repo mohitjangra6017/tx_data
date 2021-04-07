@@ -356,7 +356,7 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         /** @var responder_group $anonymous_responder_group*/
         $anonymous_responder_group = end($result['other_responder_groups']);
         $this->assertNotContains(strtolower($anonymous_responder_group->get_relationship_name()), $this->base_relationships);
-        $this->assertEquals($anonymous_responder_group->get_relationship_name(), 'Anonymous');
+        $this->assertEquals('Anonymous', $anonymous_responder_group->get_relationship_name());
         $this->assertEquals(2, $anonymous_responder_group->get_responses()->count());
     }
 
@@ -532,6 +532,9 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
 
     /**
      * Setup activity with questions.
+     *
+     * @param $relationships
+     * @return array
      */
     private function set_up_question_bank_activity($relationships): array {
         $question_bank = [];
@@ -557,6 +560,10 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
 
     /**
      * Setup activity with redisplay element.
+     *
+     * @param $relationships
+     * @param int|null $source_section_element_id
+     * @return array
      */
     private function set_up_redisplay_activity($relationships, int $source_section_element_id = null): array {
         $redisplay = [];
@@ -633,6 +640,8 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
 
     /**
      * Setup track assignments.
+     *
+     * @param track $track
      */
     private function setup_track_assignments(track $track) {
         $this->perform_generator->create_track_assignments($track, 1, 0, 0, 0);

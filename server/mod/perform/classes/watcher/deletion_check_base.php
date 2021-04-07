@@ -25,7 +25,6 @@ namespace mod_perform\watcher;
 
 use coding_exception;
 use core\collection;
-use mod_perform\models\activity\element;
 
 abstract class deletion_check_base {
 

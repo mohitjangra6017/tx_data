@@ -44,7 +44,7 @@ class track_schedule_start_date_fixed {
      * Default constructor.
      *
      * @param date_time_setting $start starting date.
-     * @param date_time_setting $end ending date if any.
+     * @param date_time_setting|null $end ending date if any.
      */
     public function __construct(
         date_time_setting $start,

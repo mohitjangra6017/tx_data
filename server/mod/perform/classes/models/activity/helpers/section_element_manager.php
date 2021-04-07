@@ -184,7 +184,7 @@ class section_element_manager {
     /**
      * Reorder section element to after the specified section element.
      *
-     * @param int $section_element
+     * @param int $section_element_id
      * @param int|null $after_section_element_id
      *
      * @return void

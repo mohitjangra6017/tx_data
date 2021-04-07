@@ -23,10 +23,8 @@
 
 namespace mod_perform\models\activity\helpers;
 
-use mod_perform\entity\activity\section_element;
 use mod_perform\models\activity\activity;
 use mod_perform\models\activity\activity_setting;
-use mod_perform\models\activity\section;
 use mod_perform\models\activity\section_relationship;
 
 /**

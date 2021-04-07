@@ -21,7 +21,6 @@
  * @package mod_perform
  */
 
-use core\orm\query\exceptions\record_not_found_exception;
 use mod_perform\constants;
 use mod_perform\models\activity\activity as activity_model;
 use mod_perform\models\activity\notification as notification_model;

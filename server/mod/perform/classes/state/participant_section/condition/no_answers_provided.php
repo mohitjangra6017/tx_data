@@ -23,7 +23,6 @@
 
 namespace mod_perform\state\participant_section\condition;
 
-use mod_perform\entity\activity\element_response;
 use mod_perform\models\response\participant_section;
 use mod_perform\state\condition;
 

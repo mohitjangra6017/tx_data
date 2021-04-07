@@ -125,7 +125,7 @@ class mod_perform_generator_testcase extends advanced_testcase {
 
         // Try with default configuration
         $activities = $generator->create_full_activities();
-        $this->assertEquals(1, count($activities));
+        $this->assertCount(1, $activities);
 
         $activities_in_db = activity_entity::repository()->get();
         $this->assertCount(1, $activities_in_db);
@@ -201,7 +201,7 @@ class mod_perform_generator_testcase extends advanced_testcase {
             ->set_relationships_per_section([constants::RELATIONSHIP_SUBJECT, constants::RELATIONSHIP_MANAGER, constants::RELATIONSHIP_APPRAISER]);
 
         $activities = $generator->create_full_activities($configuration);
-        $this->assertEquals(3, count($activities));
+        $this->assertCount(3, $activities);
 
         $activities_in_db = activity_entity::repository()->get();
         $this->assertCount(3, $activities_in_db);
@@ -249,7 +249,7 @@ class mod_perform_generator_testcase extends advanced_testcase {
             ->disable_subject_instances();
 
         $activities = $generator->create_full_activities($configuration);
-        $this->assertEquals(1, count($activities));
+        $this->assertCount(1, $activities);
 
         $activities_in_db = activity_entity::repository()->get();
         $this->assertCount(1, $activities_in_db);
@@ -284,7 +284,7 @@ class mod_perform_generator_testcase extends advanced_testcase {
             ->disable_user_assignments();
 
         $activities = $generator->create_full_activities($configuration);
-        $this->assertEquals(1, count($activities));
+        $this->assertCount(1, $activities);
 
         $activities_in_db = activity_entity::repository()->get();
         $this->assertCount(1, $activities_in_db);

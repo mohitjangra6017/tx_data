@@ -1000,6 +1000,7 @@ class behat_mod_perform extends behat_base {
 
     /**
      * @When /^I click on the (Edit element|Actions|Add sub-element) button for question "([^"]*)"$/
+     * @param string $action_type
      * @param string $question_text
      */
     public function i_click_on_the_action_for_question(string $action_type, string $question_text): void {
@@ -1112,6 +1113,7 @@ class behat_mod_perform extends behat_base {
     /**
      * @Given /^I navigate to manage perform activity content page$/
      * @Given /^I navigate to manage perform activity content page of "(?P<section_number>\d+)" activity section$/
+     * @param int $section_number
      */
     public function i_navigate_to_manage_perform_activity_content_page(int $section_number = 1): void {
         behat_hooks::set_step_readonly(false);
@@ -1644,6 +1646,7 @@ class behat_mod_perform extends behat_base {
 
     /**
      * @Given /^I should see today's date in the "([^"]*)" line of the perform activities instance info card$/
+     * @param string $label_text
      */
     public function i_should_see_todays_date_in_the_line_of_the_perform_activities_instance_info_card(string $label_text) {
         $today_date_formatted = (new DateTime())->format('j F Y');

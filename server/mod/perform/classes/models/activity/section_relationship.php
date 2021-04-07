@@ -23,14 +23,12 @@
 
 namespace mod_perform\models\activity;
 
-use coding_exception;
 use core\orm\entity\model;
 use core\orm\query\builder;
 use mod_perform\constants;
 use mod_perform\entity\activity\section_relationship as section_relationship_entity;
 use mod_perform\hook\pre_section_relationship_deleted;
 use mod_perform\section_relationship_deletion_exception;
-use totara_core\relationship\relationship;
 use totara_core\relationship\relationship as core_relationship_model;
 
 /**

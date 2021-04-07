@@ -107,7 +107,7 @@ abstract class factory {
     /**
      * Create a dealer instance.
      *
-     * @param (participant_instance|participant_instance_entity)[] $participant_instances
+     * @param participant_instance[]|participant_instance_entity[] $participant_instances
      * @return dealer
      */
     public static function create_dealer_on_participant_instances(array $participant_instances): dealer {

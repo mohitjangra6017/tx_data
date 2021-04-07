@@ -42,14 +42,14 @@ class webapi_resolver_query_section_deletion_validation_testcase extends advance
         $hook_sink->clear();
         $hooks = $hook_sink->get_hooks();
 
-        $this->assertEquals(0, count($hooks));
+        $this->assertCount(0, $hooks);
 
         $args = ['input' => ['section_id' => $section->id]];
 
         $this->resolve_graphql_query(self::QUERY, $args);
 
         $hooks = $hook_sink->get_hooks();
-        $this->assertEquals(1, count($hooks));
+        $this->assertCount(1, $hooks);
 
         $hook = reset($hooks);
         $this->assertTrue($hook instanceof pre_section_deleted);

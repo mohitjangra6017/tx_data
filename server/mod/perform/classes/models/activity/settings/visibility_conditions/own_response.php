@@ -25,7 +25,6 @@ namespace mod_perform\models\activity\settings\visibility_conditions;
 
 use core\collection;
 use mod_perform\models\activity\participant_instance;
-use mod_perform\state\participant_instance\availability_not_applicable;
 use mod_perform\state\participant_instance\open;
 
 class own_response extends visibility_option {

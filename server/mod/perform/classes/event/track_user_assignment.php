@@ -58,7 +58,7 @@ abstract class track_user_assignment extends base {
      * Create instance of event.
      *
      * @param array $user_assignment
-     * @param string $assignment_type
+     * @param string|null $assignment_type
      * @return self|base
      */
     public static function create_from_array(array $user_assignment, ?string $assignment_type = null) {
@@ -79,7 +79,7 @@ abstract class track_user_assignment extends base {
      * Create instance of event.
      *
      * @param track_user_assignment_entity $user_assignment
-     * @param string $assignment_type
+     * @param string|null $assignment_type
      * @return self
      */
     public static function create_from_user_assignment(track_user_assignment_entity $user_assignment, ?string $assignment_type = null) {

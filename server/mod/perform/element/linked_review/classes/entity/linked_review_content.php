@@ -27,7 +27,6 @@ use core\entity\user;
 use core\orm\entity\entity;
 use core\orm\entity\relations\belongs_to;
 use core\orm\entity\relations\has_many;
-use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\section_element;
 use mod_perform\entity\activity\subject_instance;
 

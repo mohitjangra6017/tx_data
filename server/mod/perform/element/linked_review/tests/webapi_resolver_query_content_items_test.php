@@ -80,7 +80,7 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
 
         $result = $this->resolve_graphql_query(self::QUERY, $args);
         $this->assertArrayHasKey('items', $result);
-        $this->assertEquals($content_items1->count(), count($result['items']));
+        $this->assertCount($content_items1->count(), $result['items']);
         $this->assertContainsOnlyInstancesOf(linked_review_content::class, $result['items']);
         $actual_ids = array_column($result['items'], 'id');
         $expected_ids = $content_items1->pluck('id');
@@ -276,7 +276,7 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
 
         $result = $this->resolve_graphql_query(self::QUERY, $args);
         $this->assertArrayHasKey('items', $result);
-        $this->assertEquals($content_items->count(), count($result['items']));
+        $this->assertCount($content_items->count(), $result['items']);
         $this->assertContainsOnlyInstancesOf(linked_review_content::class, $result['items']);
         $actual_ids = array_column($result['items'], 'id');
         $expected_ids = $content_items->pluck('id');
@@ -312,7 +312,7 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
 
         $result = $this->resolve_graphql_query(self::QUERY, $args);
         $this->assertArrayHasKey('items', $result);
-        $this->assertEquals($content_items->count(), count($result['items']));
+        $this->assertCount($content_items->count(), $result['items']);
         $this->assertContainsOnlyInstancesOf(linked_review_content::class, $result['items']);
         $actual_ids = array_column($result['items'], 'id');
         $expected_ids = $content_items->pluck('id');

@@ -27,7 +27,6 @@ use coding_exception;
 use core\entity\user as user_entity;
 use core\message\message;
 use core_user;
-use dml_exception;
 use mod_perform\models\activity\external_participant as external_participant_model;
 use mod_perform\models\activity\notification as notification_model;
 use mod_perform\models\activity\notification_recipient as notification_recipient_model;

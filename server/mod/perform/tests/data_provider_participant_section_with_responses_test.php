@@ -170,7 +170,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
             /** @var responder_group $manager_response_group */
             $manager_response_group = $other_responder_groups->first();
-            self::assertEquals($manager_response_group->get_relationship_name(), 'Manager');
+            self::assertEquals('Manager', $manager_response_group->get_relationship_name());
 
             $manager_responses = $manager_response_group->get_responses();
             self::assertCount(1, $manager_responses);
@@ -195,7 +195,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
             /** @var responder_group $manager_response_group */
             $manager_response_group = $other_responder_groups->first();
-            self::assertEquals($manager_response_group->get_relationship_name(), 'Manager');
+            self::assertEquals('Manager', $manager_response_group->get_relationship_name());
 
             $manager_responses = $manager_response_group->get_responses();
             self::assertCount(1, $manager_responses);
@@ -242,7 +242,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
             /** @var responder_group $manager_response_group */
             $manager_response_group = $other_responder_groups->first();
-            self::assertEquals($manager_response_group->get_relationship_name(), 'Manager');
+            self::assertEquals('Manager', $manager_response_group->get_relationship_name());
 
             $manager_responses = $manager_response_group->get_responses();
             self::assertCount(1, $manager_responses);
@@ -267,7 +267,7 @@ class mod_perform_data_provider_participant_section_with_responses_testcase exte
 
             /** @var responder_group $manager_response_group */
             $manager_response_group = $other_responder_groups->first();
-            self::assertEquals($manager_response_group->get_relationship_name(), 'Manager');
+            self::assertEquals('Manager', $manager_response_group->get_relationship_name());
 
             $manager_responses = $manager_response_group->get_responses();
             self::assertCount(1, $manager_responses);

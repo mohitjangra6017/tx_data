@@ -24,13 +24,10 @@
 namespace performelement_redisplay;
 
 use coding_exception;
-use mod_perform\data_providers\activity\redisplay_extra_data;
 use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element as element_model;
 use mod_perform\models\activity\element_plugin;
-use mod_perform\models\activity\helpers\element_clone_helper;
 use mod_perform\models\activity\helpers\element_usage as base_element_usage;
-use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\section_element_reference;
 use performelement_redisplay\data_provider\redisplay_data;
 

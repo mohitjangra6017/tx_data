@@ -26,7 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 use container_perform\perform;
 use mod_perform\models\activity\activity;
 use mod_perform\models\activity\element;
-use mod_perform\models\activity\element_plugin;
 use mod_perform\models\activity\section_element;
 use performelement_static_content\static_content;
 use totara_webapi\phpunit\webapi_phpunit_helper;

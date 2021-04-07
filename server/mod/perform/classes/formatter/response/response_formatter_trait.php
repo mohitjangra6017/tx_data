@@ -51,7 +51,7 @@ trait response_formatter_trait {
      *
      * @param element $element_model
      * @param string|null $format
-     * @return static
+     * @return base
      */
     public static function get_instance(element $element_model, ?string $format): base {
         $classname = static::for_element($element_model);

@@ -26,25 +26,24 @@ use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\participant_section;
 use mod_perform\entity\activity\subject_instance;
 use mod_perform\models\response\participant_section as participant_section_model;
-use mod_perform\state\participant_instance\open as participant_instance_open;
 use mod_perform\state\participant_instance\closed as participant_instance_closed;
 use mod_perform\state\participant_instance\complete as participant_instance_complete;
 use mod_perform\state\participant_instance\not_started as participant_instance_not_started;
 use mod_perform\state\participant_instance\not_submitted as participant_instance_not_submitted;
-use mod_perform\state\participant_section\open as participant_section_open;
+use mod_perform\state\participant_instance\open as participant_instance_open;
 use mod_perform\state\participant_section\closed as participant_section_closed;
 use mod_perform\state\participant_section\not_started as participant_section_not_started;
 use mod_perform\state\participant_section\not_submitted as participant_section_not_submitted;
-use mod_perform\state\subject_instance\open as subject_instance_open;
+use mod_perform\state\participant_section\open as participant_section_open;
 use mod_perform\state\subject_instance\closed as subject_instance_closed;
 use mod_perform\state\subject_instance\complete as subject_instance_complete;
 use mod_perform\state\subject_instance\not_started as subject_instance_not_started;
 use mod_perform\state\subject_instance\not_submitted as subject_instance_not_submitted;
-use mod_perform\webapi\resolver\mutation\create_track;
+use mod_perform\state\subject_instance\open as subject_instance_open;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
- * @coversDefaultClass \mod_perform\webapi\resolver\mutation\create_track
+ * @coversDefaultClass \mod_perform\webapi\resolver\mutation\manually_change_participant_section
  *
  * @group perform
  */

@@ -24,9 +24,6 @@
 use container_perform\perform as perform_container;
 use core\orm\collection;
 use mod_perform\entity\activity\element as element_entity;
-use mod_perform\models\activity\element;
-use mod_perform\models\activity\element_identifier;
-use mod_perform\models\activity\section;
 use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\section_element_reference;
 use mod_perform\entity\activity\section_element_reference as section_element_reference_entity;

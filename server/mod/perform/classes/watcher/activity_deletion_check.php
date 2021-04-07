@@ -27,7 +27,6 @@ use coding_exception;
 use mod_perform\hook\pre_activity_deleted;
 use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\section_element_reference;
-use mod_perform\models\activity\section;
 
 /**
  * Check If an activity can be deleted

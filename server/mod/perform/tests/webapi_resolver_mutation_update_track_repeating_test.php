@@ -27,7 +27,6 @@ use mod_perform\dates\date_offset;
 use mod_perform\entity\activity\track;
 use mod_perform\entity\activity\track as track_entity;
 use mod_perform\models\activity\activity;
-use totara_core\dates\date_time_setting;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 require_once(__DIR__ . '/webapi_resolver_mutation_update_track_schedule.php');

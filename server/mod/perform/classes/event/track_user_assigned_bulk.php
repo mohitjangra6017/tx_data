@@ -78,6 +78,10 @@ class track_user_assigned_bulk extends track_user_assignment {
      * Use create_from_track_assignment() instead.
      *
      * @deprecated since Totara 13.1.
+     * @param int $track_id
+     * @param array $subject_user_ids
+     * @param string|null $assignment_type
+     * @return \core\event\base
      */
     public static function create_from_user_assignments(
         int $track_id,

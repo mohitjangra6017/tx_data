@@ -24,7 +24,6 @@
 namespace mod_perform\models\activity\helpers;
 
 use container_perform\perform;
-use container_perform\perform_enrollment;
 use mod_perform\models\activity\activity;
 
 /**
@@ -51,6 +50,7 @@ class activity_clone {
     /**
      * Clone current perform activity
      *
+     * @param bool $is_cloning
      * @return activity
      */
     public function clone(bool $is_cloning = true): activity {

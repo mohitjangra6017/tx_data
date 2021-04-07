@@ -101,7 +101,7 @@ class mod_perform_activity_clone_model_helper_testcase extends advanced_testcase
 
         $old_sections = $activity->get_sections();
         $new_sections = $new_activity->get_sections();
-        $this->assertEquals(count($old_sections), count($new_sections));
+        $this->assertSameSize($old_sections, $new_sections);
 
         $old_notifications = $activity->get_notifications();
         $new_notifications = $new_activity->get_notifications();

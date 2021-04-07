@@ -30,13 +30,13 @@ class pre_section_element_deleted_hook_testcase extends advanced_testcase {
 
         $hook_sink->clear();
         $hooks = $hook_sink->get_hooks();
-        $this->assertEquals(0, count($hooks));
+        $this->assertCount(0, $hooks);
 
         $hook = new pre_section_element_deleted(1);
         $hook->execute();
 
         $hooks = $hook_sink->get_hooks();
-        $this->assertEquals(1, count($hooks));
+        $this->assertCount(1, $hooks);
 
         $hook = reset($hooks);
         $this->assertTrue($hook instanceof pre_section_element_deleted);

@@ -27,7 +27,6 @@ use coding_exception;
 use core\orm\collection;
 use core\orm\entity\model;
 use core\orm\query\builder;
-use core\orm\query\exceptions\record_not_found_exception;
 use mod_perform\entity\activity\notification as notification_entity;
 use mod_perform\entity\activity\notification_recipient as notification_recipient_entity;
 use mod_perform\models\activity\activity;
@@ -75,6 +74,8 @@ class notification_real extends model implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param builder $builder
+     * @param bool $active_only
      */
     public function recipients_builder(builder $builder, bool $active_only = false): void {
         debugging(
@@ -138,6 +139,8 @@ class notification_real extends model implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param string $name
+     * @return mixed|null
      */
     public function __get(string $name) {
         debugging(
@@ -154,6 +157,8 @@ class notification_real extends model implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param string $name
+     * @return bool
      */
     public function has_attribute(string $name): bool {
         debugging(
@@ -170,6 +175,8 @@ class notification_real extends model implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param activity $parent
+     * @return collection
      */
     public static function load_by_activity(activity $parent): collection {
         debugging(
@@ -187,6 +194,10 @@ class notification_real extends model implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param activity $parent
+     * @param string $class_key
+     * @param bool $strict
+     * @return notification_real|null
      */
     public static function load_by_activity_and_class_key(activity $parent, string $class_key, bool $strict = false): ?self {
         debugging(
@@ -207,6 +218,8 @@ class notification_real extends model implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param int $notification_id
+     * @return notification_real
      */
     public static function load_by_id(int $notification_id): self {
         debugging(
@@ -221,6 +234,10 @@ class notification_real extends model implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param activity $parent
+     * @param string $class_key
+     * @param bool $active
+     * @return notification_real
      */
     public static function create(activity $parent, string $class_key, bool $active): self {
         debugging(
@@ -241,6 +258,8 @@ class notification_real extends model implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param bool $active
+     * @return notification_interface
      */
     public function activate(bool $active = true): notification_interface {
         debugging(
@@ -258,6 +277,8 @@ class notification_real extends model implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param array $values
+     * @return notification_interface
      */
     public function set_triggers(array $values): notification_interface {
         debugging(
@@ -272,6 +293,8 @@ class notification_real extends model implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param int $time
+     * @return notification_interface
      */
     public function set_last_run_at(int $time): notification_interface {
         debugging(

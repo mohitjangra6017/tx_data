@@ -43,8 +43,6 @@ use mod_perform\entity\activity\track as track_entity;
 use mod_perform\entity\activity\track_assignment;
 use mod_perform\event\activity_created;
 use mod_perform\event\activity_deleted;
-use mod_perform\hook\dto\pre_deleted_dto;
-use mod_perform\hook\pre_activity_deleted;
 use mod_perform\models\activity\helpers\activity_clone;
 use mod_perform\models\activity\helpers\activity_deletion;
 use mod_perform\models\activity\helpers\activity_multisection_toggler;
@@ -219,10 +217,10 @@ class activity extends model {
      * Create activity on perform container
      *
      * @param perform_container $container
-     * @param string            $name
-     * @param activity_type     $type
-     * @param string|null       $description
-     * @param int               $status
+     * @param string $name
+     * @param activity_type $type
+     * @param string|null $description
+     * @param int|null $status
      *
      * @return static
      */
@@ -365,7 +363,7 @@ class activity extends model {
      *
      * @param string $name
      * @param string|null $description
-     * @param int $type_id
+     * @param int|null $type_id
      * @return $this
      */
     public function set_general_info(string $name, ?string $description, ?int $type_id): self {
@@ -669,6 +667,7 @@ class activity extends model {
     /**
      * Update the manual relationship selections.
      *
+     * @param array $selected_relationships
      * @return activity
      */
     public function update_manual_relationship_selections(array $selected_relationships): activity {
@@ -778,7 +777,7 @@ class activity extends model {
     /**
      * Get all visibility condition options for activity
      *
-     * @return collection
+     * @return \core\collection
      */
     public function get_visibility_condition_options() {
         return (new visibility_manager())->get_options();

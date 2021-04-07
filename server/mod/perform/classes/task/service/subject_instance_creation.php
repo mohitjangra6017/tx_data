@@ -25,7 +25,6 @@ namespace mod_perform\task\service;
 
 use coding_exception;
 use core\collection;
-use core\orm\entity\repository;
 use core\orm\query\builder;
 use core\orm\query\sql\query;
 use mod_perform\dates\date_offset;

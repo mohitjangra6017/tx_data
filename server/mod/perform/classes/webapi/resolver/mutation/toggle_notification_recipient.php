@@ -33,7 +33,6 @@ use mod_perform\webapi\middleware\require_manage_capability;
 
 use mod_perform\models\activity\notification as notification_model;
 use mod_perform\models\activity\notification_recipient as notification_recipient_model;
-use totara_core\relationship\relationship;
 
 class toggle_notification_recipient implements mutation_resolver, has_middleware {
     /**

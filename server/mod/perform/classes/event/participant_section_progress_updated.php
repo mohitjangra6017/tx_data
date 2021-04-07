@@ -42,7 +42,7 @@ class participant_section_progress_updated extends progress_updated_event {
      * Create instance of event.
      *
      * @param participant_section $participant_section
-     * @param string $from_progress_state the name of previous progress state.
+     * @param string|null $from_progress_state the name of previous progress state.
      *
      * @return self|base
      */

@@ -57,7 +57,7 @@ class track_assignment extends entity {
      *
      * TBD: to remove once the base_entity handles this.
      *
-     * @param int $value incoming id.
+     * @param int|null $value incoming id.
      *
      * @return int the converted value.
      */

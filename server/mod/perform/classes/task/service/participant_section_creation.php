@@ -57,7 +57,7 @@ class participant_section_creation {
      * Generate participant sections for a list of participant instances.
      *
      * @param collection|participant_instance_dto[] $participant_instances
-     *
+     * @param subject_instance_activity_collection $activity_collection
      * @return void
      */
     public function generate_sections(collection $participant_instances, subject_instance_activity_collection $activity_collection): void {

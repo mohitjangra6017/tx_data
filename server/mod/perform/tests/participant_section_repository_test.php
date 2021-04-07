@@ -25,7 +25,6 @@ use mod_perform\entity\activity\participant_section as participant_section_entit
  * @author Kunle Odusan <kunle.odusan@totaralearning.com>
  */
 
-use mod_perform\entity\activity\participant_section_repository;
 use mod_perform\models\activity\participant_source;
 
 /**

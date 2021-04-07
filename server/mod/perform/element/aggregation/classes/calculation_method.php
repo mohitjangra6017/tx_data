@@ -24,7 +24,6 @@
 namespace performelement_aggregation;
 
 
-use Dompdf\Exception;
 use FilesystemIterator;
 use ReflectionClass;
 

@@ -24,7 +24,6 @@
 use container_perform\create_exception;
 use mod_perform\models\activity\activity;
 use mod_perform\models\activity\activity_type;
-use mod_perform\webapi\resolver\mutation\create_activity;
 use totara_core\advanced_feature;
 use totara_core\entity\relationship as relationship_entity;
 use totara_core\relationship\relationship;
@@ -158,7 +157,7 @@ class mod_perform_webapi_resolver_mutation_create_activity_testcase extends adva
             ->filter_by_component('mod_perform')
             ->filter_by_type(relationship_entity::TYPE_MANUAL)
             ->get();
-        $this->assertEquals(count($manual_relationships), count($activity->manual_relationships));
+        $this->assertSameSize($manual_relationships, $activity->manual_relationships);
 
         $expected_default_manual_relationships = [];
         foreach ($manual_relationships as $manual_relationship) {

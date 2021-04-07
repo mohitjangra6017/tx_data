@@ -27,7 +27,6 @@ use core\webapi\execution_context;
 
 use mod_perform\models\activity\track as track_model;
 
-use mod_perform\webapi\resolver\type\track;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
@@ -115,17 +114,4 @@ class mod_perform_webapi_type_track_testcase extends advanced_testcase {
         return [$track, $context];
     }
 
-    /**
-     * Creates a graphql execution context.
-     *
-     * @param \context totara context to pass to the execution context.
-     *
-     * @return execution_context the context.
-     */
-    private function get_webapi_context(\context $context): execution_context {
-        $ec = execution_context::create('dev', null);
-        $ec->set_relevant_context($context);
-
-        return $ec;
-    }
 }

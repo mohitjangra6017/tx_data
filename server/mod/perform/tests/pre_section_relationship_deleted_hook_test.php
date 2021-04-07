@@ -54,7 +54,7 @@ class pre_section_relationship_deleted_hook_testcase extends advanced_testcase {
         section_relationship::delete_with_properties($section->id, $core_relationship_id);
 
         $hooks = $hook_sink->get_hooks();
-        $this->assertEquals(1, count($hooks));
+        $this->assertCount(1, $hooks);
 
         $hook = reset($hooks);
         $this->assertTrue($hook instanceof pre_section_relationship_deleted);

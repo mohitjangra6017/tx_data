@@ -23,11 +23,8 @@
  * @category test
  */
 
-use core\entity\user;
 use core\format;
-use mod_perform\formatter\response\element_response_formatter;
 use mod_perform\models\activity\element;
-use mod_perform\models\activity\element_plugin;
 use performelement_long_text\formatter\response_formatter;
 
 global $CFG;

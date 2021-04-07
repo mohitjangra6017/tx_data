@@ -24,8 +24,6 @@
 namespace mod_perform\state\participant_section;
 
 use mod_perform\state\participant_section\condition\all_answers_complete;
-use mod_perform\state\participant_section\condition\all_answers_incomplete;
-use mod_perform\state\participant_section\condition\not_all_answers_complete;
 use mod_perform\state\transition;
 
 defined('MOODLE_INTERNAL') || die();

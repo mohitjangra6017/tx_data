@@ -23,33 +23,7 @@
  * @package mod_perform
  */
 
-use core\collection;
-use core\date_format;
-use core\entity\user;
-use core\webapi\formatter\field\date_field_formatter;
-use mod_perform\constants;
-use mod_perform\entity\activity\activity as activity_entity;
-use mod_perform\entity\activity\external_participant;
-use mod_perform\entity\activity\filters\subject_instances_about;
-use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\subject_instance as subject_instance_entity;
-use mod_perform\expand_task;
-use mod_perform\models\activity\activity_setting;
-use mod_perform\models\activity\participant_instance as participant_instance_model;
-use mod_perform\models\activity\participant_source;
-use mod_perform\models\activity\subject_instance;
-use mod_perform\models\response\participant_section as participant_section_model;
-use mod_perform\state\activity\active;
-use mod_perform\state\activity\draft;
-use mod_perform\state\participant_instance\in_progress as participant_instance_in_progress;
-use mod_perform\state\participant_instance\not_started as participant_instance_not_started;
-use mod_perform\state\participant_instance\open as participant_instance_open;
-use mod_perform\state\participant_section\in_progress as section_in_progress;
-use mod_perform\state\participant_section\not_started as section_not_started;
-use mod_perform\state\participant_section\open;
-use mod_perform\state\subject_instance\in_progress as subject_instance_in_progress;
-use mod_perform\state\subject_instance\open as subject_instance_open;
-use mod_perform\task\service\subject_instance_creation;
 use totara_core\advanced_feature;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 

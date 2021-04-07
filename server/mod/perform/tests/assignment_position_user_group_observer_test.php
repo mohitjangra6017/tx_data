@@ -169,10 +169,4 @@ class mod_perform_assignment_position_user_group_observer_testcase extends advan
         return self::getDataGenerator();
     }
 
-    private function get_expandable_track_assignments() {
-        return track_assignment::repository()
-            ->where('expand', true)
-            ->get();
-    }
-
 }

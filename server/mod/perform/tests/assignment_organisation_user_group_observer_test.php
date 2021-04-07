@@ -169,10 +169,4 @@ class mod_perform_assignment_organisation_user_group_observer_testcase extends a
         return self::getDataGenerator();
     }
 
-    private function get_expandable_track_assignments() {
-        return track_assignment::repository()
-            ->where('expand', true)
-            ->get();
-    }
-
 }

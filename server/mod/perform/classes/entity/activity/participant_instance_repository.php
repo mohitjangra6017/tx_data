@@ -30,7 +30,6 @@ use context_coursecat;
 use context_system;
 use core\orm\entity\repository;
 use core\orm\query\builder;
-use Dompdf\FrameReflower\Page;
 use mod_perform\models\activity\participant_source;
 
 class participant_instance_repository extends repository {

@@ -91,6 +91,11 @@ class participant_instance_creation {
     private $activity_collection;
 
     /**
+     * @var string
+     */
+    private $task_id;
+
+    /**
      * Generates participant instances for a collection of subject instances.
      *
      * @param collection|subject_instance_dto[] $subject_instance_dtos

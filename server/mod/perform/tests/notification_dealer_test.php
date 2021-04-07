@@ -30,7 +30,6 @@ use mod_perform\expand_task;
 use mod_perform\models\activity\notification;
 use mod_perform\models\activity\participant_instance as participant_instance_model;
 use mod_perform\notification\dealer;
-use mod_perform\notification\exceptions\class_key_not_available;
 use mod_perform\notification\factory;
 use totara_job\job_assignment;
 use totara_tenant\local\util;

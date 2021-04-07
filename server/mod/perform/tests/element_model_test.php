@@ -67,7 +67,6 @@ class mod_perform_element_model_testcase extends child_element_manager_testcase 
      * @dataProvider validation_data_provider
      * @param string $plugin1
      * @param string $id1
-     * @param bool $passes_validation
      */
     public function test_validate(string $plugin1, string $id1) {
         $default_context = context_coursecat::instance(perform::get_default_category_id());

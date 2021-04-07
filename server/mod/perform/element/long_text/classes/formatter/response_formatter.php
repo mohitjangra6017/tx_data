@@ -23,11 +23,7 @@
 
 namespace performelement_long_text\formatter;
 
-use coding_exception;
-use core\format;
-use core\webapi\formatter\field\text_field_formatter;
 use mod_perform\formatter\response\element_response_formatter;
-use performelement_long_text\long_text;
 
 /**
  * Formats user entered responses for this element.

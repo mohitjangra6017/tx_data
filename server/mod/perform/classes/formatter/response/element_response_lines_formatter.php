@@ -24,7 +24,6 @@
 namespace mod_perform\formatter\response;
 
 use core\webapi\formatter\field\base;
-use core\webapi\formatter\field\string_field_formatter;
 
 /**
  * Generic element response lines formatter.

@@ -24,7 +24,6 @@
 namespace mod_perform\controllers\reporting\performance;
 
 use context;
-use context_coursecat;
 use context_user;
 use core\output\notification;
 use mod_perform\controllers\perform_controller;
@@ -34,9 +33,7 @@ use mod_perform\views\embedded_report_view;
 use mod_perform\views\override_nav_breadcrumbs;
 use moodle_url;
 use totara_mvc\has_report;
-use totara_mvc\renders_components;
 use totara_mvc\view;
-use totara_tui\output\component;
 
 class element_identifier extends perform_controller {
 

@@ -169,7 +169,7 @@ class mod_perform_activity_respository_testcase extends advanced_testcase {
 
         $result = activity_entity::repository()->filter_by_not_draft()->get();
         // Should return one.
-        $this->assertEquals(1, count($result));
+        $this->assertCount(1, $result);
         $activity = $result->first();
         // Should return the active one.
         $this->assertEquals($active_activity->id, $activity->id);

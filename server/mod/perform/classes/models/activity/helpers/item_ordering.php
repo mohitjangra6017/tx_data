@@ -155,10 +155,8 @@ class item_ordering {
      * and the new sort_order as the key of the item.
      *
      * @param int $item_id
-     * @param int|null $after_item
-     *
+     * @param int|null $after_item_id
      * @return array
-     * @throws coding_exception
      */
     public function move_item_after(int $item_id, ?int $after_item_id = null): array {
         $item = $this->find_item_in_list($item_id);

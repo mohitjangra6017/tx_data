@@ -43,9 +43,10 @@ class participant_instance_progress_updated extends progress_updated_event {
      * Create event by participant instance.
      *
      * @param participant_instance $participant_instance
-     * @param string $from_progress_state the name of previous progress state.
+     * @param string|null $from_progress_state the name of previous progress state.
      *
      * @return self|base
+     * @throws \coding_exception
      */
     public static function create_from_participant_instance(
         participant_instance $participant_instance,

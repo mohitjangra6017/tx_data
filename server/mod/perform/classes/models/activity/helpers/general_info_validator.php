@@ -37,7 +37,7 @@ use mod_perform\models\activity\activity;
  */
 class general_info_validator {
     /**
-     * @var parent activity.
+     * @var activity activity.
      */
     private $parent = null;
 
@@ -62,7 +62,7 @@ class general_info_validator {
      * @param activity $parent parent activity.
      * @param string $name activity name.
      * @param string|null $description activity description.
-     * @param int $new_type_id activity type id.
+     * @param int|null $new_type_id activity type id.
      */
     public function __construct(
         activity $parent,
@@ -79,7 +79,7 @@ class general_info_validator {
     /**
      * Updates the given activity entity with validated general info values.
      *
-     * @return a set of error messages indicating which general info values have
+     * @return collection a set of error messages indicating which general info values have
      *         invalid values.
      */
     public function validate(): collection {
@@ -98,8 +98,7 @@ class general_info_validator {
     /**
      * Validates that the activity name is valid.
      *
-     * @param collection|string[] list of errors to add to if the name is invalid.
-     *
+     * @param collection|string[] $errors list of errors to add to if the name is invalid.
      * @return collection|string[] the updated list of errors.
      */
     private function validate_name(collection $errors): collection {
@@ -118,8 +117,7 @@ class general_info_validator {
     /**
      * Validates that the (new) activity type id is valid.
      *
-     * @param collection|string[] list of errors to add to if the type id is invalid.
-     *
+     * @param collection|string[] $errors list of errors to add to if the type id is invalid.
      * @return collection|string[] the updated list of errors.
      */
     private function validate_type_id(collection $errors): collection {
@@ -142,8 +140,7 @@ class general_info_validator {
      * Validates that the general info changes are valid given the parent activity
      * state.
      *
-     * @param collection|string[] list of errors to add to if the changes are invalid.
-     *
+     * @param collection|string[] $errors list of errors to add to if the changes are invalid.
      * @return collection|string[] the updated list of errors.
      */
     private function validate_only_draft_changes(collection $errors): collection {

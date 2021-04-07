@@ -25,7 +25,6 @@ namespace mod_perform\formatter\activity;
 
 use core\orm\formatter\entity_model_formatter;
 use core\webapi\formatter\field\string_field_formatter;
-use core\webapi\formatter\formatter;
 use mod_perform\notification\trigger;
 
 defined('MOODLE_INTERNAL') || die();

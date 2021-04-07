@@ -52,7 +52,7 @@ abstract class perform_controller extends controller {
     /**
      * Checks and call require_login if parameter is set, can be overridden if special set up is needed
      *
-     * @return $this
+     * @return void
      */
     protected function authorize(): void {
         // We do not want to redirect due to not being enrolled

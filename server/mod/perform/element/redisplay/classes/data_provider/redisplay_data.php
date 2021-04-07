@@ -26,7 +26,6 @@ use coding_exception;
 use mod_perform\entity\activity\section_element_reference as section_element_reference_entity;
 use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\models\activity\section_element as section_element_model;
-use mod_perform\models\activity\section_element_reference;
 use performelement_redisplay\redisplay;
 
 /**

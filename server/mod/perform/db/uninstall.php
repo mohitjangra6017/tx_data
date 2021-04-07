@@ -21,7 +21,6 @@
  * @package mod_perform
  */
 
-use container_perform\perform;
 use container_perform\perform_helper;
 
 defined('MOODLE_INTERNAL') || die();

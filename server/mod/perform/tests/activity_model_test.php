@@ -96,14 +96,14 @@ class mod_perform_activity_model_testcase extends advanced_testcase {
         $activity->set_general_info('New name for existing activity', 'New description', $new_type_id)->update();
 
         // Assert in memory state is correct
-        $this->assertEquals($activity->name, 'New name for existing activity');
-        $this->assertEquals($activity->description, 'New description');
-        $this->assertEquals($new_type_id, $activity->type->id);
+        $this->assertEquals('New name for existing activity', $activity->name);
+        $this->assertEquals('New description', $activity->description);
+        $this->assertEquals($activity->type->id, $new_type_id);
 
         // Assert persisted state is correct
         $from_database = activity::load_by_id($activity->id);
-        $this->assertEquals($from_database->name, 'New name for existing activity');
-        $this->assertEquals($from_database->description, 'New description');
+        $this->assertEquals('New name for existing activity', $from_database->name);
+        $this->assertEquals('New description', $from_database->description);
         $this->assertEquals($new_type_id, $from_database->type->id);
     }
 
@@ -126,12 +126,12 @@ class mod_perform_activity_model_testcase extends advanced_testcase {
         $activity->set_general_info('New name for existing activity', null, null)->update();
 
         // Assert in memory state is correct
-        $this->assertEquals($activity->name, 'New name for existing activity');
+        $this->assertEquals('New name for existing activity', $activity->name);
         $this->assertNull($activity->description);
 
         // Assert persisted state is correct
         $from_database = activity::load_by_id($activity->id);
-        $this->assertEquals($from_database->name, 'New name for existing activity');
+        $this->assertEquals('New name for existing activity', $from_database->name);
         $this->assertNull($from_database->description);
     }
 
@@ -447,7 +447,7 @@ class mod_perform_activity_model_testcase extends advanced_testcase {
         $sections = $activity->get_sections_ordered_with_respondable_element_count();
 
         // One default section and one is the customized section.
-        self::assertEquals(2, count($sections));
+        self::assertCount(2, $sections);
 
         foreach ($sections as $section) {
             self::assertGreaterThanOrEqual(0, $section->get_respondable_element_count());

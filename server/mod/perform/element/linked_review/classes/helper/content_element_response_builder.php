@@ -24,7 +24,6 @@ namespace performelement_linked_review\helper;
 
 use core\collection;
 use mod_perform\models\activity\element;
-use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\models\response\section_element_response;
 use performelement_linked_review\entity\linked_review_content;
 use performelement_linked_review\entity\linked_review_content_response;

@@ -24,7 +24,6 @@
 namespace mod_perform\controllers\reporting\performance;
 
 use context;
-use context_coursecat;
 use core\output\notification;
 use mod_perform\controllers\perform_controller;
 use mod_perform\util;

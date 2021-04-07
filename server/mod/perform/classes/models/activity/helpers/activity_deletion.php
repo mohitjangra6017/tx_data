@@ -31,7 +31,6 @@ use mod_perform\entity\activity\manual_relationship_selection;
 use mod_perform\entity\activity\section_relationship as section_relationship_entity;
 use mod_perform\entity\activity\track_user_assignment;
 use mod_perform\event\activity_deleted;
-use mod_perform\hook\dto\pre_deleted_dto;
 use mod_perform\hook\pre_activity_deleted;
 use mod_perform\models\activity\activity;
 

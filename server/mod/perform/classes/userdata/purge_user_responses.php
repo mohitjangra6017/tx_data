@@ -29,7 +29,6 @@ use Exception;
 use mod_perform\entity\activity\element_response;
 use mod_perform\entity\activity\participant_instance;
 use mod_perform\models\activity\participant_source;
-use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\models\activity\subject_instance;
 use mod_perform\userdata\helpers\userdata_file_helper;
 use mod_perform\userdata\traits\purge_trait;

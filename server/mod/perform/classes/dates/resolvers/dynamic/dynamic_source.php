@@ -59,9 +59,9 @@ class dynamic_source implements JsonSerializable {
     /**
      * dynamic_source constructor.
      *
-     * @param dynamic_date_resolver $resolver
+     * @param dynamic_date_resolver|null $resolver
      * @param string $option_key
-     * @param string $display_name
+     * @param string|null $display_name
      */
     public function __construct(
         ?dynamic_date_resolver $resolver,

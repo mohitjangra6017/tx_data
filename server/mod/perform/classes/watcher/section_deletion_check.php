@@ -27,7 +27,6 @@ use coding_exception;
 use mod_perform\hook\pre_section_deleted;
 use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\section_element_reference;
-use mod_perform\models\activity\section;
 
 /**
  * Check if a section can be deleted

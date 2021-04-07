@@ -30,7 +30,6 @@ use mod_perform\entity\activity\element_response;
 use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\subject_instance;
 use mod_perform\entity\activity\track_user_assignment;
-use mod_perform\models\activity\respondable_element_plugin;
 use mod_perform\userdata\helpers\userdata_file_helper;
 use mod_perform\userdata\traits\purge_trait;
 use totara_userdata\userdata\item;

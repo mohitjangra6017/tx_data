@@ -83,7 +83,7 @@ class manual_participant_helper {
     /**
      * Does the current user have pending manual participant selections that need to be made?
      *
-     * @param int $subject_instance_id If specified, checks if there are pending selections for just a specific subject instance.
+     * @param int|null $subject_instance_id If specified, checks if there are pending selections for just a specific subject instance.
      * @return bool
      */
     public function has_pending_selections(int $subject_instance_id = null): bool {

@@ -28,8 +28,6 @@ use core\webapi\middleware\require_advanced_feature;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
-use mod_perform\data_providers\activity;
-use mod_perform\util;
 use mod_perform\webapi\middleware\require_activity;
 use mod_perform\webapi\middleware\require_manage_capability;
 use performelement_linked_review\content_type_factory;

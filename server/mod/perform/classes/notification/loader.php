@@ -24,7 +24,6 @@
 namespace mod_perform\notification;
 
 use coding_exception;
-use core\orm\query\builder;
 use mod_perform\notification\exceptions\class_key_not_available;
 
 /**

@@ -1567,7 +1567,7 @@ final class generator extends \core\testing\component_generator {
      * By default this will create one response per participant and element in the subject instance.
      *
      * @param subject_instance_entity $subject_instance
-     * @param int $max_responses Maximum number of response records to create. Will exit after saving this many.
+     * @param int|null $max_responses Maximum number of response records to create. Will exit after saving this many.
      */
     public function create_responses(subject_instance_entity $subject_instance, int $max_responses = null): void {
         $activity = $subject_instance->activity();

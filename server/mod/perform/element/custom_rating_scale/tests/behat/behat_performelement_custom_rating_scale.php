@@ -25,6 +25,11 @@ use Behat\Mink\Exception\ExpectationException;
 
 class behat_performelement_custom_rating_scale extends behat_base {
 
+    /**
+     * @deprecated since Totara 13.2
+     * @var string
+     */
+    public const DONE_BUTTON_LOCATOR  = '.tui-elementAdminFormActionButtons__done';
     public const ADD_OPTION_LOCATOR   = '.tui-customRatingScaleAdminEdit__addOption';
     public const EDIT_ELEMENT_LOCATOR = '.tui-customRatingScaleAdminEdit';
     public const QUESTION_DISPLAY_OPTIONS_LOCATOR = '.tui-radio__label';

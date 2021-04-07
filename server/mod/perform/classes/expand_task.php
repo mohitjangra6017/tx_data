@@ -37,7 +37,6 @@ use mod_perform\entity\activity\track_user_assignment;
 use mod_perform\entity\activity\track_user_assignment_via;
 use mod_perform\event\track_user_assigned_bulk;
 use mod_perform\event\track_user_unassigned;
-use mod_perform\models\activity\activity;
 use mod_perform\models\activity\track;
 use mod_perform\models\activity\track_assignment as track_assignment_model;
 use mod_perform\task\expand_task\assignment_parameters;

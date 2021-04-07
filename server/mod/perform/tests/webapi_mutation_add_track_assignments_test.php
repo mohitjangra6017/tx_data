@@ -187,7 +187,7 @@ class mod_perform_webapi_mutation_add_track_assignments_testcase extends advance
     /**
      * Generates a test grouping.
      *
-     * @param string $type grouping type. One of the grouping enums.
+     * @param string|null $type grouping type. One of the grouping enums.
      *
      * @return array (id, type) tuple.
      */

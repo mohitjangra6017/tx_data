@@ -158,6 +158,7 @@ class mod_perform_participant_section_availability_testcase extends state_testca
      * Tests the availability of participant changes based on workflow setting in activity.
      *
      * @dataProvider close_on_completion_data_provider
+     * @param bool $close_on_completion
      * @return void
      */
     public function test_availability_change_on_activity_settings(bool $close_on_completion): void {

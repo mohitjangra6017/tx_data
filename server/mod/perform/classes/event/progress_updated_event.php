@@ -81,6 +81,7 @@ abstract class progress_updated_event extends base {
     /**
      * Anonymise the specified user id if neccessary.
      *
+     * @param int $user_id
      * @return string the anonymised user id
      */
     protected function get_anonymised_user(int $user_id): string {

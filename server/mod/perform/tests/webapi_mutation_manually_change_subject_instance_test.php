@@ -37,11 +37,10 @@ use mod_perform\state\subject_instance\open as subject_instance_open;
 use mod_perform\state\subject_instance\closed as subject_instance_closed;
 use mod_perform\state\subject_instance\not_started as subject_instance_not_started;
 use mod_perform\state\subject_instance\not_submitted as subject_instance_not_submitted;
-use mod_perform\webapi\resolver\mutation\create_track;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
- * @coversDefaultClass \mod_perform\webapi\resolver\mutation\create_track
+ * @coversDefaultClass \mod_perform\webapi\resolver\mutation\manually_change_subject_instance
  *
  * @group perform
  */

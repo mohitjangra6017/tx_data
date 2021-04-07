@@ -98,7 +98,7 @@ class mod_perform_webapi_type_user_grouping_testcase extends advanced_testcase {
     /**
      * Generates a test grouping.
      *
-     * @param string $type grouping type.
+     * @param string|null $type grouping type.
      *
      * @return array (test grouping, context) tuple.
      */
@@ -178,17 +178,4 @@ class mod_perform_webapi_type_user_grouping_testcase extends advanced_testcase {
         return [$grouping, $context];
     }
 
-    /**
-     * Creates a graphql execution context.
-     *
-     * @param context totara context to pass to the execution context.
-     *
-     * @return execution_context the context.
-     */
-    private function get_webapi_context(context $context): execution_context {
-        $ec = execution_context::create('dev', null);
-        $ec->set_relevant_context($context);
-
-        return $ec;
-    }
 }

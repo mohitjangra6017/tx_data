@@ -38,6 +38,7 @@ trait response_formatter_trait {
      * Aggregates formatted responses.
      *
      * @param string|null $value
+     * @return string|null
      */
     protected function format_value(?string $value): ?string {
         if ($value === null) {

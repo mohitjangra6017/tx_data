@@ -23,9 +23,7 @@
 
 namespace mod_perform\rb\display;
 
-use html_writer;
 use mod_perform\util;
-use moodle_url;
 use totara_reportbuilder\rb\display\base;
 use totara_tui\output\component;
 

@@ -25,7 +25,6 @@ namespace mod_perform\models\activity\details;
 
 use coding_exception;
 use core\orm\query\builder;
-use mod_perform\notification\broker;
 use mod_perform\notification\factory;
 use mod_perform\models\activity\activity;
 
@@ -44,6 +43,8 @@ class notification_sparse implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param activity $activity
+     * @param string $class_key
      */
     public function __construct(activity $activity, string $class_key) {
         debugging(
@@ -106,6 +107,8 @@ class notification_sparse implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param builder $builder
+     * @param bool $active_only
      */
     public function recipients_builder(builder $builder, bool $active_only = false): void {
         debugging(
@@ -157,6 +160,8 @@ class notification_sparse implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param bool $active
+     * @return notification_interface
      */
     public function activate(bool $active = true): notification_interface {
         debugging(
@@ -170,6 +175,8 @@ class notification_sparse implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param array $values
+     * @return notification_interface
      */
     public function set_triggers(array $values): notification_interface {
         debugging(
@@ -182,6 +189,8 @@ class notification_sparse implements notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param int $time
+     * @return notification_interface
      */
     public function set_last_run_at(int $time): notification_interface {
         debugging(

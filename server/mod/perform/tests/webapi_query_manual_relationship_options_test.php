@@ -21,7 +21,6 @@
  * @package mod_perform
  */
 
-use mod_perform\constants;
 use mod_perform\models\activity\activity_setting;
 use mod_perform\state\activity\draft;
 use totara_webapi\phpunit\webapi_phpunit_helper;

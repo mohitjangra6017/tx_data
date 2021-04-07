@@ -22,7 +22,6 @@
  */
 
 use mod_perform\constants;
-use mod_perform\webapi\resolver\query\activity;
 
 use totara_core\advanced_feature;
 

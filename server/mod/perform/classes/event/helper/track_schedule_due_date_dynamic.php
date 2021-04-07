@@ -65,8 +65,7 @@ class track_schedule_due_date_dynamic {
     /**
      * Convenience function to format relative dates.
      *
-     * @param date_offset $offset the relative date to format.
-     *
+     * @param date_offset $date
      * @return string the formatted relative date.
      */
     private function formatted(date_offset $date): string {

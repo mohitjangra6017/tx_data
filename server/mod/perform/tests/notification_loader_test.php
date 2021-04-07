@@ -88,7 +88,7 @@ class mod_perform_notification_loader_testcase extends advanced_testcase {
             'no recipients' => [[
                 'kia_ora' => ['name' => 'kia ora', 'class' => 'kia\\ora', 'trigger_type' => trigger::TYPE_ONCE, 'trigger_label' => ['ok']]
             ], 'recipients is missing for kia_ora'],
-            'no recipients' => [[
+            'no recipients2' => [[
                 'kia_ora' => ['name' => 'kia ora', 'class' => 'kia\\ora', 'trigger_type' => trigger::TYPE_ONCE, 'trigger_label' => ['ok'], 'recipients' => 0]
             ], 'no recipients are set for kia_ora'],
         ];

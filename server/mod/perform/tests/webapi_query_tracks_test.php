@@ -23,7 +23,6 @@
  */
 
 use mod_perform\models\activity\track as track_model;
-use mod_perform\webapi\resolver\query\tracks;
 use totara_core\advanced_feature;
 use totara_core\dates\date_time_setting;
 use totara_webapi\phpunit\webapi_phpunit_helper;

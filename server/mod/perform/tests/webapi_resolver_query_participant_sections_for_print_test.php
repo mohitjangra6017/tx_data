@@ -21,15 +21,11 @@
  * @package mod_perform
  */
 
-use core\entity\user;
 use mod_perform\constants;
-use mod_perform\entity\activity\participant_instance;
 use mod_perform\models\activity\section;
 use mod_perform\models\activity\activity;
-use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\models\response\participant_section;
 use totara_core\advanced_feature;
-use totara_job\job_assignment;
 use totara_webapi\graphql;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 

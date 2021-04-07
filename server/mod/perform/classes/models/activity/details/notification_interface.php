@@ -46,6 +46,8 @@ interface notification_interface {
     public function get_active(): bool;
 
     /**
+     * @param builder $builder
+     * @param bool $active_only
      * @deprecated since Totara 13.2
      */
     public function recipients_builder(builder $builder, bool $active_only = false): void;
@@ -67,16 +69,22 @@ interface notification_interface {
 
     /**
      * @deprecated since Totara 13.2
+     * @param bool $active
+     * @return notification_interface
      */
     public function activate(bool $active = true): notification_interface;
 
     /**
      * @deprecated since Totara 13.2
+     * @param array $values
+     * @return notification_interface
      */
     public function set_triggers(array $values): notification_interface;
 
     /**
      * @deprecated since Totara 13.2
+     * @param int $time
+     * @return notification_interface
      */
     public function set_last_run_at(int $time): notification_interface;
 

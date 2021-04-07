@@ -24,7 +24,6 @@
 
 use mod_perform\models\activity\activity_setting;
 use mod_perform\state\activity\draft;
-use mod_perform\webapi\resolver\mutation\toggle_activity_multisection_setting;
 use totara_core\advanced_feature;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 

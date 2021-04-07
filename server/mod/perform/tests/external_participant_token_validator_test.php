@@ -25,7 +25,6 @@
 use mod_perform\constants;
 use mod_perform\entity\activity\external_participant;
 use mod_perform\entity\activity\participant_instance;
-use mod_perform\models\activity\activity;
 use mod_perform\models\activity\helpers\external_participant_token_validator;
 use mod_perform\models\activity\subject_instance as subject_instance_model;
 

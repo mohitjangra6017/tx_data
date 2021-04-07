@@ -31,13 +31,11 @@ use mod_perform\entity\activity\manual_relationship_selection;
 use mod_perform\entity\activity\manual_relationship_selection_progress;
 use mod_perform\entity\activity\manual_relationship_selector;
 use mod_perform\entity\activity\subject_instance;
-use mod_perform\models\activity\helpers\manual_participant_helper;
 use mod_perform\notification\factory;
 use mod_perform\state\subject_instance\pending;
 use stdClass;
 use totara_core\entity\relationship;
 use totara_core\relationship\helpers\relationship_collection_manager;
-use totara_core\relationship\relationship_resolver_dto;
 
 class manual_participant_progress {
 

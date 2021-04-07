@@ -25,7 +25,6 @@
 use mod_perform\models\activity\track;
 use mod_perform\models\activity\track_assignment;
 use mod_perform\models\activity\track_assignment_type;
-use mod_perform\webapi\resolver\mutation\remove_track_assignments;
 use totara_core\advanced_feature;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 

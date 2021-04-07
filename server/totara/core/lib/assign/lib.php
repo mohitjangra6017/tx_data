@@ -94,7 +94,7 @@ class totara_assign_core {
      * Returns a grouptype object which can be used to manage assignedgroups of that type.
      * @access  public
      * @param string $grouptype
-     * @return appropriate assignment grouptype object
+     * @return totara_assign_core_grouptype appropriate assignment grouptype object
      */
     public function load_grouptype($grouptype) {
         $module = static::$module;

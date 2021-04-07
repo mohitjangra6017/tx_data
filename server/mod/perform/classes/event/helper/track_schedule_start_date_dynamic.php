@@ -51,7 +51,7 @@ class track_schedule_start_date_dynamic {
      *
      * @param dynamic_source $trigger the event that starts off this schedule.
      * @param date_offset $start start date relative to the trigger time.
-     * @param date_offset $end ending date relative to the trigger time if any.
+     * @param date_offset|null $end ending date relative to the trigger time if any.
      */
     public function __construct(
         dynamic_source $trigger,
@@ -122,8 +122,7 @@ class track_schedule_start_date_dynamic {
     /**
      * Convenience function to format relative dates.
      *
-     * @param date_offset $offset the relative date to format.
-     *
+     * @param date_offset $date the relative date to format.
      * @return string the formatted relative date.
      */
     private function formatted(date_offset $date): string {

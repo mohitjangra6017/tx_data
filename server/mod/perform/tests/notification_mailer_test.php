@@ -58,6 +58,7 @@ class mod_perform_notification_mailer_testcase extends mod_perform_notification_
      *
      * @param stdClass $subject
      * @param integer|string $recipient internal user id or external user's full name
+     * @return placeholder
      */
     private function placeholders(stdClass $subject, $recipient) {
         return placeholder::from_data([

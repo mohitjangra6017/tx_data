@@ -25,7 +25,6 @@ use mod_perform\constants;
 use mod_perform\models\activity\activity as activity;
 use mod_perform\state\activity\active;
 use mod_perform\state\activity\draft;
-use mod_perform\webapi\resolver\mutation\activate_activity;
 use totara_core\advanced_feature;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
@@ -153,7 +152,7 @@ class mod_perform_webapi_resolver_mutation_activate_activity_testcase extends ad
      * Create a basic activity without any sections or questions in it
      *
      * @param int|null $status defaults to draft
-     * @param stdClass $as_user user that creates the activity.
+     * @param stdClass|null $as_user user that creates the activity.
      * @return array [activity, graphql args] tuple.
      */
     protected function create_activity(int $status = null, ?stdClass $as_user = null): array {

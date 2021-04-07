@@ -21,7 +21,6 @@
  * @package performelement_long_text
  */
 
-use core\collection;
 use core\json_editor\helper\document_helper;
 use mod_perform\models\activity\element_plugin;
 use performelement_long_text\answer_required_error;

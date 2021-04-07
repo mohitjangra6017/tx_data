@@ -33,10 +33,6 @@ use performelement_short_text\short_text;
  */
 class mod_perform_element_short_text_testcase extends advanced_testcase {
 
-    /**
-     * @param array|null $response_data
-     * @throws coding_exception
-     */
     public function test_validate_response_invalid_format(): void {
         /** @var short_text $short_text */
         $short_text = element_plugin::load_by_plugin('short_text');

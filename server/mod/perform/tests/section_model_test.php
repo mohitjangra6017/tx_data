@@ -24,7 +24,6 @@
 
 use mod_perform\constants;
 use mod_perform\models\activity\section;
-use mod_perform\models\activity\section_element_reference;
 use mod_perform\models\activity\section_element;
 use mod_perform\state\activity\active;
 use mod_perform\state\activity\draft;

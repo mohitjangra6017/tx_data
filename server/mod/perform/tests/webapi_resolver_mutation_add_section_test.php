@@ -27,7 +27,6 @@ use mod_perform\models\activity\activity_setting;
 use mod_perform\models\activity\section;
 use mod_perform\state\activity\active;
 use mod_perform\state\activity\draft;
-use mod_perform\webapi\resolver\mutation\activate_activity;
 use totara_core\advanced_feature;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
@@ -149,7 +148,7 @@ class mod_perform_webapi_resolver_mutation_add_section_testcase extends advanced
      * Creates an activity with one section, one question and one relationship
      *
      * @param int|null $status defaults to draft
-     * @param stdClass $as_user user that creates the activity.
+     * @param stdClass|null $as_user user that creates the activity.
      * @return array [activity, graphql args] tuple.
      */
     protected function create_activity(?int $status = null, ?stdClass $as_user = null): array {

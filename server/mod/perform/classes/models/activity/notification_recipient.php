@@ -23,7 +23,6 @@
 
 namespace mod_perform\models\activity;
 
-use coding_exception;
 use core\orm\collection;
 use core\orm\entity\model;
 use core\orm\query\builder;

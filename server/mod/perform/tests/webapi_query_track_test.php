@@ -25,7 +25,6 @@
 use mod_perform\models\activity\track as track_model;
 use mod_perform\models\activity\track_assignment as track_assignment_model;
 use mod_perform\models\activity\track_status;
-use mod_perform\webapi\resolver\query\track;
 use totara_core\advanced_feature;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 

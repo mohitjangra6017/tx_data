@@ -23,8 +23,8 @@
 
 namespace mod_perform\controllers\reporting\performance;
 
+use coding_exception;
 use context;
-use context_coursecat;
 use core\output\notification;
 use mod_perform\controllers\perform_controller;
 use mod_perform\models\activity\activity;
@@ -230,15 +230,4 @@ class export extends perform_controller {
         return '/mod/perform/reporting/performance/export.php';
     }
 
-    private function get_activity(): activity {
-        if (!isset($this->activity)) {
-            try {
-                $activity_id = $this->get_required_param('activity_id', PARAM_INT);
-                $this->activity = activity::load_by_id($activity_id);
-            } catch (\Exception $e) {
-                throw new moodle_exception('error_activity_id_wrong', 'mod_perform', '', null, $e);
-            }
-        }
-        return $this->activity;
-    }
 }
