@@ -57,6 +57,8 @@ Feature: Manage performance activity aggregation element.
       | excludedValues[0][value]          | 1                     |
     And I click on the "average" tui checkbox in the "calculations" tui checkbox group
     And I click on the "median" tui checkbox in the "calculations" tui checkbox group
+    And I click on the "minimum" tui checkbox in the "calculations" tui checkbox group
+    And I click on the "maximum" tui checkbox in the "calculations" tui checkbox group
     And I click on "Add an excluded value" "button"
     And I click on "Add an excluded value" "button"
     And I set the following fields to these values:
@@ -66,7 +68,9 @@ Feature: Manage performance activity aggregation element.
     Then I should see "Element saved" in the tui success notification toast
     And I should see "and the following values are excluded from calculation: 1, 2" in the ".tui-aggregationAdminView" "css_element"
     And I should see "Average: {calculated value}" in the ".tui-aggregationAdminView" "css_element"
-#    And I should see "Median: {calculated value}" in the ".tui-aggregationAdminEdit" "css_element" TODO jaron when plugable
+    And I should see "Median: {calculated value}" in the ".tui-aggregationAdminView" "css_element"
+    And I should see "Minimum: {calculated value}" in the ".tui-aggregationAdminView" "css_element"
+    And I should see "Maximum: {calculated value}" in the ".tui-aggregationAdminView" "css_element"
 
     When I click on "Edit element: Reviewing your scores" "button"
     And I add a "Rating scale: Custom" activity content element

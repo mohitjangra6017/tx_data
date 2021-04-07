@@ -56,9 +56,6 @@ abstract class child_element_manager_testcase extends advanced_testcase {
         $element = $element->save();
         $parent_element_model = element_model::load_by_entity($element);
 
-        // todo: how not to hard-code short_text string. An idea would be to:
-        // update create element method to take in an element_plugin object rather than a plugin name.
-        // this would make it possible to send mock plugins for tests like this.
         $child_element_a = $parent_element_model->get_child_element_manager()->create_child_element(
             [
                 'title' => 'Child A',
