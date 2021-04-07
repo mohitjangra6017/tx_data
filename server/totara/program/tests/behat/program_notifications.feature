@@ -40,5 +40,6 @@ Feature: Check program notifications
     And I log in as "progman"
     And I am on "Program One" program homepage
     When I press "Edit program details"
+    And I switch to "Notifications" tab
     Then I should see "Notifications"
     And I log out

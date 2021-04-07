@@ -38,8 +38,6 @@ global $OUTPUT, $PAGE;
 $context_id = required_param('context_id', PARAM_INT);
 $id = required_param('id', PARAM_INT); // program id
 
-$extended_context = extended_context::make_with_context(context::instance_by_id($context_id));
-
 require_login();
 
 $program = new program($id);
@@ -47,12 +45,19 @@ $iscertif = $program->is_certif();
 
 $programcontext = $program->get_context();
 
+$extended_context = extended_context::make_with_context(
+    $programcontext,
+    $iscertif ? 'totara_certification' : 'totara_program',
+    'program',
+    $program->id
+);
+
 require_capability('totara/program:configuremessages', $programcontext);
 $program->check_enabled();
 
 $PAGE->set_url(
     new moodle_url('/totara/program/edit_notifications.php'),
-    ['context_id' => $context_id, 'id' => $id]
+    ['context_id' => $context_id, 'id' => $program->id]
 );
 $PAGE->set_program($program);
 $PAGE->set_title($program->fullname);
