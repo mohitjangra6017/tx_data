@@ -194,10 +194,6 @@ class notification_queue_manager {
         $message->userto = $user;
         $message->useridto = $target_user_id;
 
-        $message->fullmessage = $engine->render_for_user(
-            format_text_email($body_text, $body_format),
-            $target_user_id
-        );
 
         $message->fullmessagehtml = $engine->render_for_user(
             format_text(
@@ -207,10 +203,32 @@ class notification_queue_manager {
             ),
             $target_user_id,
         );
-        $message->subject = $engine->render_for_user(
-            content_to_text($subject_text, $subject_format),
+
+        // Here is the problem with using html_to_text: it will try to strip out all the unknown encoded
+        // text from the html_content that we produced. Hence we will have some sort of removed encoded character
+        // that was done by {@see s()}. Therefore, we will try to decoded those single quote and double quotes
+        // before hand to keep those things stayed.
+        // Note that we do not want to use decode any html special chars on purpose because this will enable
+        // security vulnerabilities: &lt;script&gt; will become <script> and `html_to_text` will keep it.
+        $message->fullmessage = $engine->render_for_user(
+            html_to_text(
+                str_replace(
+                    ['&#039;', '&#034;'],
+                    ['\'', '"'],
+                    $message->fullmessagehtml
+                ),
+                0
+            ),
             $target_user_id
         );
+
+        $message->subject = $engine->render_for_user(
+            html_to_text(format_text($subject_text, $subject_format)),
+            $target_user_id
+        );
+
+        // For subject text, it needs to be just a one line text only.
+        $message->subject = trim(preg_replace('/\s+/', ' ', $message->subject));
 
         // Set message format to FORMAT_PLAIN as the fullmessage column is only storing processed plain
         // text instead of the raw content
@@ -226,7 +244,6 @@ class notification_queue_manager {
         $message->useridfrom = $message->userfrom->id;
 
         // Save the notification first before sending out the message.
-        // Note: TL-29518 will encapsulate these logics in API.
         $notification = new notification();
         $notification->subject = $message->subject;
         $notification->useridfrom = $message->userfrom->id;
@@ -236,7 +253,6 @@ class notification_queue_manager {
         $notification->fullmessageformat = $message->fullmessageformat;
         $notification->smallmessage = $message->fullmessage;
 
-        // Note: TL-29325 will convert these properties into proper notification's properties.
         $notification->component = 'totara_notification';
         $notification->eventtype = 'notification';
 

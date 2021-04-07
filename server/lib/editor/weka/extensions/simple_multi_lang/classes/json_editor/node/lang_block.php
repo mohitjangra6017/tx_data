@@ -69,6 +69,12 @@ class lang_block extends node implements block_node {
     private $contents;
 
     /**
+     * The total number of block nodes within the collection node, including itself.
+     * @var int
+     */
+    private $siblings_count;
+
+    /**
      * @param formatter $formatter
      * @return string
      */
@@ -80,6 +86,14 @@ class lang_block extends node implements block_node {
         $content = '';
         foreach ($this->contents as $single_node) {
             $content .= $formatter->print_node($single_node, formatter::HTML);
+        }
+
+        if ($this->siblings_count === 1) {
+            // There is only itself, therefore we only render the content without the
+            // span tag. This is happening because we might be able to goe thru the filter json,
+            // and it strips out all the other siblings except the one that matches with the
+            // current language. Hence we can leave the `<span>` tags outside it.
+            return $content;
         }
 
         return html_writer::span(
@@ -125,6 +139,9 @@ class lang_block extends node implements block_node {
         $lang_block = parent::from_node($node);
         $lang_block->lang = $node['attrs']['lang'];
         $lang_block->direction = $node['attrs']['direction'];
+
+        // Default to 1 because the minimum that we can have is 1.
+        $lang_block->siblings_count = $node['attrs']['siblings_count'] ?? 1;
         $lang_block->contents = $node['content'];
 
         return $lang_block;
@@ -292,14 +309,41 @@ class lang_block extends node implements block_node {
      * @return array
      */
     public static function create_raw_json_node(string $lang, string $content, string $direction = self::LTR): array {
-        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
-            $fn = __FUNCTION__;
-            throw new coding_exception("The function {$fn} is only available for phpunit tests");
-        }
-
         $paragraphs = [$content];
         if (false !== strpos($content, "\n")) {
             $paragraphs = explode("\n", $content);
+        }
+
+        $paragraph_nodes = array_map(
+            function (string $paragraph): array {
+                return paragraph::create_json_node_from_text($paragraph);
+            },
+            $paragraphs
+        );
+
+        return static::create_raw_json_node_from_paragraph_nodes(
+            $lang,
+            $paragraph_nodes,
+            $direction
+        );
+    }
+
+    /**
+     * This function is mainly for phpunit tests, please do not use it esle where outside unit test environment.
+     *
+     * @param string $lang
+     * @param array  $paragraph_nodes
+     * @param string $direction
+     * @return array
+     */
+    public static function create_raw_json_node_from_paragraph_nodes(
+        string $lang,
+        array $paragraph_nodes,
+        string $direction = self::LTR
+    ): array {
+        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
+            $fn = __FUNCTION__;
+            throw new coding_exception("The function {$fn} is only available for phpunit tests");
         }
 
         return [
@@ -307,14 +351,9 @@ class lang_block extends node implements block_node {
             'attrs' => [
                 'lang' => $lang,
                 'direction' => $direction,
-                'siblings_count' => 1
+                'siblings_count' => 1,
             ],
-            'content' => array_map(
-                function (string $paragraph): array {
-                    return paragraph::create_json_node_from_text($paragraph);
-                },
-                $paragraphs
-            ),
+            'content' => $paragraph_nodes
         ];
     }
 }

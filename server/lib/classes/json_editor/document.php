@@ -64,6 +64,13 @@ final class document {
     }
 
     /**
+     * @return string
+     */
+    public function to_json(): string {
+        return document_helper::json_encode_document($this->document);
+    }
+
+    /**
      * Given the node type, this function will try to find the raw nodes from document.
      *
      * @param string $type
@@ -192,7 +199,7 @@ final class document {
             } else if (array_key_exists('content', $raw_node) && is_array($raw_node['content'])) {
                 // The node is containing other nodes. Time to run it recursively.
                 $modify_node = $this->do_modify_node($node_type, $raw_node['content'], $callback);
-                $modified_nodes[$i] = $modify_node;
+                $modified_nodes[$i]['content'] = $modify_node;
             }
         }
 

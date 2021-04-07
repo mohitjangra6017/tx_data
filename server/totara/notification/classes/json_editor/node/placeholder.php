@@ -177,16 +177,16 @@ class placeholder extends node implements inline_node {
     }
 
     /**
-     * @param string $grouped_key
-     * @param string $label
+     * @param string        $grouped_key
+     * @param string|null   $label
      * @return array
      */
-    public static function create_node_from_key_and_label(string $grouped_key, string $label): array {
+    public static function create_node_from_key_and_label(string $grouped_key, ?string $label = null): array {
         return [
             'type' => static::get_type(),
             'attrs' => [
                 'key' => $grouped_key,
-                'label' => $label,
+                'label' => $label ?? '',
             ],
         ];
     }

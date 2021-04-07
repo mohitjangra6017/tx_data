@@ -247,7 +247,26 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
         $html = $node->to_html($formatter);
         self::assertEquals(
             /** @lang text */
-            '<span class="multilang" lang="en"><p>&lt;script&gt;alert(&#039;Hello world&#039;)&lt;/script&gt;</p></span>',
+            '<p>&lt;script&gt;alert(&#039;Hello world&#039;)&lt;/script&gt;</p>',
+            $html
+        );
+    }
+
+    public function test_render_lang_block_as_html_with_more_than_one_siblings_count(): void {
+        $raw_node = lang_block::create_raw_json_node(
+            'en',
+            'This is random text'
+        );
+
+        $raw_node['attrs']['siblings_count'] = 2;
+        $node = lang_block::from_node($raw_node);
+
+        $formatter = new default_formatter();
+        $html = $node->to_html($formatter);
+
+        self::assertEquals(
+            /** @lang text */
+            '<span class="multilang" lang="en"><p>This is random text</p></span>',
             $html
         );
     }

@@ -25,6 +25,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core\json_editor\document;
+use totara_notification\json_editor\node\placeholder;
+use weka_simple_multi_lang\json_editor\node\lang_blocks;
+
 // Given XML multilinguage text, return relevant text according to
 // current language:
 //   - look for multilang blocks in the text.
@@ -81,6 +85,76 @@ class filter_multilang extends moodle_text_filter {
      */
     protected static function is_compatible_with_clean_text() {
         return true; // Removes tags, doesn't add any content.
+    }
+
+    /**
+     * For a reason that sometimes the multi lang block can have the placeholder inline node in it
+     * which result the span tag within another span tag when rendered.
+     *
+     * Hence we are going to filter it from JSON text itself.
+     *
+     * @return bool
+     */
+    public function support_json_content(): bool {
+        return class_exists('weka_simple_multi_lang\\json_editor\\node\\lang_blocks');
+    }
+
+    /**
+     * @param string $json_text
+     * @return string
+     */
+    public function filter_json(string $json_text): string {
+        if (!class_exists('weka_simple_multi_lang\\json_editor\\node\\lang_blocks')) {
+            // Nothing to filter here, because lang block collection does not exist.
+            return $json_text;
+        }
+
+        $document = document::create($json_text);
+        $current_lang = current_language();
+
+        if (class_exists('totara_notification\\json_editor\\node\\placeholder')) {
+            // Check for placeholder nodes first, if there are none then we can skip the whole,
+            // filter here, and let the text filtering functionality does the filter.
+            $nodes = $document->find_raw_nodes(placeholder::get_type());
+            if (empty($nodes)) {
+                // No placeholder nodes found, so skip the rest.
+                return $json_text;
+            }
+        }
+
+        // Removes all the single block node that does not match with the current language.
+        // This is our safety approach to prevent the text filtering when there might be some
+        // placeholder nodes inside the document, that result <span/> tags within <span/> tags
+        $document->modify_node(
+            lang_blocks::get_type(),
+            function (array $raw_node) use ($current_lang): array {
+                $block_nodes = array_filter(
+                    $raw_node['content'],
+                    function (array $block_node) use ($current_lang): bool {
+                        if (!isset($block_node['attrs']['lang'])) {
+                            // Invalid block node, skip processing it, but also remove it!
+                            return false;
+                        }
+
+                        return $block_node['attrs']['lang'] === $current_lang;
+                    }
+                );
+
+                $current_total = count($block_nodes);
+                $block_nodes = array_map(
+                    function (array $block_node) use ($current_total): array {
+                        $block_node['attrs']['siblings_count'] = $current_total;
+                        return $block_node;
+                    },
+                    $block_nodes
+                );
+
+                $raw_node['content'] = $block_nodes;
+                return $raw_node;
+            }
+        );
+
+        return $document->to_json();
     }
 }
 

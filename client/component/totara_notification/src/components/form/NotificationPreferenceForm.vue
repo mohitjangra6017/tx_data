@@ -206,6 +206,7 @@
     <FormRow
       :label="$str('notification_subject_label', 'totara_notification')"
       :required="requiredSubject"
+      :helpmsg="$str('notification_subject_label_help', 'totara_notification')"
     >
       <template v-slot="{ id }">
         <Checkbox
@@ -243,9 +244,17 @@
                   resolver_class_name: resolverClassName,
                 },
               },
+              {
+                name: 'weka_simple_multi_lang_extension',
+                options: {
+                  context_id: contextId,
+                  placeholder_resolver_class_name: resolverClassName,
+                  compact: true,
+                },
+              },
             ]"
             class="tui-notificationPreferenceForm__subjectEditor"
-            variant="description"
+            variant="simple"
             :compact="true"
             @fix-editor-content="updateSubjectEditor($event, update)"
             @input="updateSubjectEditor($event, update)"
@@ -259,6 +268,7 @@
     <FormRow
       :required="requiredBody"
       :label="$str('notification_body_label', 'totara_notification')"
+      :helpmsg="$str('notification_body_label_help', 'totara_notification')"
     >
       <template v-slot="{ id }">
         <Checkbox
@@ -292,6 +302,13 @@
                 name: 'weka_notification_placeholder_extension',
                 options: {
                   resolver_class_name: resolverClassName,
+                },
+              },
+              {
+                name: 'weka_simple_multi_lang_extension',
+                options: {
+                  context_id: contextId,
+                  placeholder_resolver_class_name: resolverClassName,
                 },
               },
             ]"
@@ -895,7 +912,9 @@ export default {
     "recipient",
     "delivery_label",
     "enable_custom_forced_delivery_channels",
-    "override"
+    "override",
+    "notification_body_label_help",
+    "notification_subject_label_help"
   ],
   "totara_core": [
     "save",

@@ -394,7 +394,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends te
         // Note that the html_to_text is not provided with the length for optional, hence we have a result of first name and
         // last name are separated from each other.
         self::assertEquals(
-            "Boom user\n\nUser's two full name from first name and last name is {$user_two->firstname}\n{$user_two->lastname}\n",
+            "Boom user\n\nUser's two full name from first name and last name is {$user_two->firstname} {$user_two->lastname}\n",
             $message->fullmessage
         );
 
