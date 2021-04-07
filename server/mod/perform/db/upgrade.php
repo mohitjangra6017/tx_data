@@ -236,6 +236,8 @@ function xmldb_perform_upgrade($oldversion) {
         if (!$dbman->index_exists($table, $index)) {
             $dbman->add_index($table, $index);
         }
+        
+        upgrade_mod_savepoint(true, 2021031500, 'perform');
     }
 
     return true;

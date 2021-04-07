@@ -2,15 +2,6 @@ This files describes API changes in /mod/perform/*,
 information provided here is intended especially for developers.
 
 === 14.0 ===
-* GraphQL mutation update_section_elements has been deprecated.
-  There are individual mutations to handle managing different section element actions.
-  As a result, the following have been deprecated:
-  * GraphQL input mod_perform_update_section_elements_input has been deprecated. Please update calls to use the specific section element mutation for this action.
-  * GraphQL input mod_perform_create_new_element_input has been deprecated.
-  * GraphQL input mod_perform_create_link_element_input has been deprecated.
-  * GraphQL input mod_perform_update_element_input has been deprecated.
-  * GraphQL input mod_perform_delete_section_element_input has been deprecated.
-  * GraphQL input mod_perform_move_section_element_input has been deprecated.
 * respondable_element_plugin::validate_response() function now includes new parameter 'is_draft_validation'
   to check response validation in draft mode. This function signature changed to abstract function and all respondable
   elements should implement this method.
@@ -95,6 +86,15 @@ information provided here is intended especially for developers.
 * Added graphql input type mod_perform_activities_input for mod_perform_activities graphql query.
     * New input mod_perform_activities_input has a sort_by field that can be used to change the order of activities.
 * Deprecated mod_perform\data_providers\activity\activity::DEFAULT_SORTING use mod_perform\data_providers\activity\activity::SORT_BY_CREATION_DATE instead.
+* GraphQL mutation update_section_elements has been deprecated.
+  There are individual mutations to handle managing different section element actions.
+  As a result, the following have been deprecated:
+  * GraphQL input mod_perform_update_section_elements_input has been deprecated. Please update calls to use the specific section element mutation for this action.
+  * GraphQL input mod_perform_create_new_element_input has been deprecated.
+  * GraphQL input mod_perform_create_link_element_input has been deprecated.
+  * GraphQL input mod_perform_update_element_input has been deprecated.
+  * GraphQL input mod_perform_delete_section_element_input has been deprecated.
+  * GraphQL input mod_perform_move_section_element_input has been deprecated.
 * mod_perform\models\activity\element_plugin::get_plugin_name has been made static
 * mod_perform\models\activity\element_plugin::__constructor (private constructor) has been removed
 * Abstract method \mod_perform\models\activity\element_plugin::validate_element() now has 'void' as return type. All child classes should be matched with the method signature

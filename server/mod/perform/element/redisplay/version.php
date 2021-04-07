@@ -23,7 +23,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2020120800;       // The current module version (Date: YYYYMMDDXX).
+$plugin->version  = 2021040800;       // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2020101200; // Requires this Moodle version.
 $plugin->component = 'performelement_redisplay'; // To check on upgrade, that module sits in correct place
 
