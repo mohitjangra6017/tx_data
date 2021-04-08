@@ -37,7 +37,6 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
                 'type' => 'weka_simple_multi_lang_lang_block',
                 'attrs' => [
                     'lang' => 'en',
-                    'direction' => 'ltr'
                 ],
                 'content' => [
                     paragraph::create_json_node_from_text('boom')
@@ -50,7 +49,6 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
                 'type' => 'weka_simple_multi_lang_lang_block',
                 'attrs' => [
                     'lang' => 'en',
-                    'direction' => 'ltr',
                     'siblings_count' => 2
                 ],
                 'content' => [
@@ -64,7 +62,6 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
             lang_block::validate_schema([
                 'attrs' => [
                     'lang' => 'en',
-                    'direction' => 'ltr'
                 ],
                 'content' => [
                     paragraph::create_json_node_from_text('boom')
@@ -75,34 +72,7 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
         self::assertFalse(
             lang_block::validate_schema([
                 'type' => 'weka_simple_multi_lang_lang_block',
-                'attrs' => [
-                    'direction' => 'ltr'
-                ],
-                'content' => [
-                    paragraph::create_json_node_from_text('boom')
-                ]
-            ])
-        );
-
-        self::assertFalse(
-            lang_block::validate_schema([
-                'type' => 'weka_simple_multi_lang_lang_block',
-                'attrs' => [
-                    'lang' => 'en',
-                ],
-                'content' => [
-                    paragraph::create_json_node_from_text('boom')
-                ]
-            ])
-        );
-
-        self::assertFalse(
-            lang_block::validate_schema([
-                'type' => 'weka_simple_multi_lang_lang_block',
-                'attrs' => [
-                    'lang' => 'en',
-                    'direction' => 'ttr',
-                ],
+                'attrs' => [],
                 'content' => [
                     paragraph::create_json_node_from_text('boom')
                 ]
@@ -114,7 +84,6 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
                 'type' => 'weka_simple_multi_lang_lang_block',
                 'attrs' => [
                     'lang' => 'en',
-                    'direction' => 'rtl',
                 ],
                 'content' => [
                     paragraph::create_json_node_from_text('boom')
@@ -127,7 +96,6 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
                 'type' => 'weka_simple_multi_lang_lang_block',
                 'attrs' => [
                     'lang' => 'en',
-                    'direction' => 'rtl',
                 ],
             ])
         );
@@ -137,7 +105,6 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
                 'type' => 'weka_simple_multi_lang_lang_block',
                 'attrs' => [
                     'lang' => 'ennnninni',
-                    'direction' => 'rtl',
                 ],
                 'content' => [
                     paragraph::create_json_node_from_text('boom')
@@ -157,7 +124,6 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
                 'type' => 'weka_simple_multi_lang_lang_block',
                 'attrs' => [
                     'lang' => 'en',
-                    'direction' => 'ltr'
                 ],
                 'content' => [
                     [
@@ -176,7 +142,6 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
                 'type' => 'weka_simple_multi_lang_lang_block',
                 'attrs' => [
                     'lang' => 'en',
-                    'direction' => 'ltr'
                 ],
                 'content' => [
                     paragraph::create_json_node_from_text('Boom')
@@ -191,7 +156,6 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
                 'type' => 'weka_simple_multi_lang_lang_block',
                 'attrs' => [
                     'lang' => 'enddw',
-                    'direction' => 'ltr'
                 ],
                 'content' => [
                     [
@@ -210,7 +174,6 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
                 'type' => 'weka_simple_multi_lang_lang_block',
                 'attrs' => [
                     'lang' => 'enddw',
-                    'direction' => 'ltr'
                 ],
                 'content' => [
                     paragraph::create_json_node_from_text('Boom')
@@ -223,7 +186,6 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
                 'type' => '<script>alert("cc")</script>',
                 'attrs' => [
                     'lang' => 'en',
-                    'direction' => 'ltr'
                 ],
                 'content' => [
                     paragraph::create_json_node_from_text('Boom')
@@ -280,7 +242,6 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
                 'type' => 'weka_simple_multi_lang_lang_block',
                 'attrs' => [
                     'lang' => 'en',
-                    'direction' => 'ltr',
                     'siblings_count' => 1,
                 ],
                 'content' => [
@@ -294,7 +255,6 @@ class weka_simple_multi_lang_json_editor_lang_block_testcase extends testcase {
                 'type' => 'weka_simple_multi_lang_lang_block',
                 'attrs' => [
                     'lang' => 'en',
-                    'direction' => 'ltr',
                     'siblings_count' => 1
                 ],
                 'content' => [

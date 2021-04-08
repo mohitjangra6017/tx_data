@@ -33,7 +33,6 @@
         :content="content"
         :editor-compact="editorCompact"
         :editor-extra-extensions="editorExtraExtensions"
-        :language-direction="languageDirection"
         @submit="$emit('submit', $event)"
         @cancel="$emit('request-close')"
       />
@@ -56,7 +55,6 @@ export default {
   props: {
     lang: String,
     content: Array,
-    languageDirection: String,
     editorCompact: Boolean,
     placeholderResolverClass: String,
   },

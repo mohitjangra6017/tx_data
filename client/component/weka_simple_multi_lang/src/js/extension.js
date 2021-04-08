@@ -23,7 +23,6 @@ import { langString } from 'tui/i18n';
 import { pick } from 'tui/util';
 import MultiLangIcon from 'tui/components/icons/MultiLang';
 import simpleMultiLang from './plugin';
-import { LEFT_TO_RIGHT } from 'weka_simple_multi_lang/constants';
 import { TextSelection } from 'ext_prosemirror/state';
 import { getJsonAttrs } from 'editor_weka/extensions/util';
 
@@ -43,7 +42,6 @@ class WekaSimpleMultiLangExtension extends BaseExtension {
           content: '(paragraph|heading)*',
           attrs: {
             lang: { default: undefined },
-            direction: { default: LEFT_TO_RIGHT },
             siblings_count: { default: 1 },
           },
           toDOM(node) {
@@ -53,7 +51,6 @@ class WekaSimpleMultiLangExtension extends BaseExtension {
                 class: 'tui-wekaMultiLangBlock',
                 'data-attrs': JSON.stringify({
                   lang: node.attrs.lang,
-                  direction: node.attrs.direction,
                   siblings_count: node.attrs.siblings_count,
                 }),
               },

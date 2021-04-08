@@ -61,38 +61,6 @@
       </template>
     </FormRow>
 
-    <FormRow :label="$str('direction', 'weka_simple_multi_lang')">
-      <template>
-        <FormField
-          :name="['direction', 'value']"
-          :validations="v => [v.required()]"
-        >
-          <template v-slot="{ value, update }">
-            <ToggleSet
-              :aria-label="$str('direction', 'weka_simple_multi_lang')"
-              :large="false"
-              :value="value"
-              @input="update"
-            >
-              <ToggleButton
-                :value="ltrValue"
-                :aria-label="$str('ltr', 'weka_simple_multi_lang')"
-              >
-                <LeftToRight />
-              </ToggleButton>
-
-              <ToggleButton
-                :value="rtlValue"
-                :aria-label="$str('rtl', 'weka_simple_multi_lang')"
-              >
-                <RightToLeft />
-              </ToggleButton>
-            </ToggleSet>
-          </template>
-        </FormField>
-      </template>
-    </FormRow>
-
     <ButtonGroup class="tui-wekaSimpleMultiLangForm__buttonGroup">
       <template>
         <Button
@@ -109,16 +77,11 @@
 
 <script>
 import Uniform from 'tui/components/uniform/Uniform';
-import { RIGHT_TO_LEFT, LEFT_TO_RIGHT } from 'weka_simple_multi_lang/constants';
 import Weka from 'editor_weka/components/Weka';
 import WekaValue from 'editor_weka/WekaValue';
 import FormRow from 'tui/components/form/FormRow';
 import FormText from 'tui/components/uniform/FormText';
 import FormField from 'tui/components/uniform/FormField';
-import ToggleSet from 'tui/components/toggle/ToggleSet';
-import ToggleButton from 'tui/components/toggle/ToggleButton';
-import RightToLeft from 'tui/components/icons/RightToLeft';
-import LeftToRight from 'tui/components/icons/LeftToRight';
 import ButtonGroup from 'tui/components/buttons/ButtonGroup';
 import Button from 'tui/components/buttons/Button';
 import Cancel from 'tui/components/buttons/Cancel';
@@ -130,10 +93,6 @@ export default {
     FormText,
     FormField,
     Weka,
-    ToggleSet,
-    ToggleButton,
-    RightToLeft,
-    LeftToRight,
     ButtonGroup,
     Cancel,
     Button,
@@ -160,15 +119,6 @@ export default {
       },
       default() {
         return [];
-      },
-    },
-    languageDirection: {
-      type: String,
-      validator(prop) {
-        return prop === RIGHT_TO_LEFT || prop === LEFT_TO_RIGHT;
-      },
-      default() {
-        return LEFT_TO_RIGHT;
       },
     },
 
@@ -204,30 +154,14 @@ export default {
           type: WekaValue,
           value: wekaValue,
         },
-
-        direction: {
-          type: String,
-          value: this.languageDirection,
-        },
       },
     };
-  },
-
-  computed: {
-    ltrValue() {
-      return LEFT_TO_RIGHT;
-    },
-
-    rtlValue() {
-      return RIGHT_TO_LEFT;
-    },
   },
 
   methods: {
     submitForm(formValue) {
       const submitParameters = {
         lang: formValue.lang.value,
-        direction: formValue.direction.value,
         content: [],
       };
 
@@ -256,10 +190,6 @@ export default {
   "weka_simple_multi_lang": [
     "lang_code",
     "content",
-    "direction",
-    "direction",
-    "ltr",
-    "rtl",
     "content_help",
     "lang_code_help"
   ],

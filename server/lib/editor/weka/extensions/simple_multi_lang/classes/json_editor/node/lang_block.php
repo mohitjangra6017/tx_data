@@ -39,16 +39,6 @@ class lang_block extends node implements block_node {
     /**
      * @var string
      */
-    public const RTL = 'rtl';
-
-    /**
-     * @var string
-     */
-    public const LTR = 'ltr';
-
-    /**
-     * @var string
-     */
     public const MAX_LANG_LENGTH = 5;
 
     /**
@@ -56,11 +46,6 @@ class lang_block extends node implements block_node {
      * @var string
      */
     private $lang;
-
-    /**
-     * @var string
-     */
-    private $direction;
 
     /**
      * An array of paragraph | heading nodes.
@@ -138,7 +123,6 @@ class lang_block extends node implements block_node {
         /** @var lang_block $lang_block */
         $lang_block = parent::from_node($node);
         $lang_block->lang = $node['attrs']['lang'];
-        $lang_block->direction = $node['attrs']['direction'];
 
         // Default to 1 because the minimum that we can have is 1.
         $lang_block->siblings_count = $node['attrs']['siblings_count'] ?? 1;
@@ -157,14 +141,10 @@ class lang_block extends node implements block_node {
         }
 
         $attrs = $raw_node['attrs'];
-        if (!node_helper::check_keys_match_against_data($attrs, ['lang', 'direction'], ['siblings_count'])) {
+        if (!node_helper::check_keys_match_against_data($attrs, ['lang'], ['siblings_count'])) {
             return false;
         } else if (strlen($attrs['lang']) > static::MAX_LANG_LENGTH) {
             // We can only accept the 5 characters as max length of lang keyword.
-            return false;
-        }
-
-        if (!in_array($attrs['direction'], [static::LTR, static::RTL])) {
             return false;
         }
 
@@ -209,13 +189,6 @@ class lang_block extends node implements block_node {
         $lang = $raw_node['attrs']['lang'];
         $lang = clean_string($lang);
         $raw_node['attrs']['lang'] = substr($lang, 0, static::MAX_LANG_LENGTH);
-
-        // Santize the direction.
-        $direction = $raw_node['attrs']['direction'];
-        if (!in_array($direction, [static::LTR, static::RTL])) {
-            // Default the direction to LTR.
-            $raw_node['attrs']['direction'] = static::LTR;
-        }
 
         $content_nodes = $raw_node['content'];
         foreach ($content_nodes as $i => $single_node) {
@@ -283,12 +256,6 @@ class lang_block extends node implements block_node {
         $lang = $cleaned_raw_node['attrs']['lang'];
         $cleaned_raw_node['attrs']['lang'] = clean_param($lang, PARAM_ALPHAEXT);
 
-        $direction = $cleaned_raw_node['attrs']['direction'];
-        if (!in_array($direction, [static::LTR, static::RTL])) {
-            // Default to LTR direction, if it is invalid direction.
-            $cleaned_raw_node['attrs']['direction'] = static::LTR;
-        }
-
         if (isset($cleaned_raw_node['attrs']['siblings_count'])) {
             $cleaned_raw_node['attrs']['siblings_count'] = clean_param(
                 $cleaned_raw_node['attrs']['siblings_count'],
@@ -304,11 +271,10 @@ class lang_block extends node implements block_node {
      *
      * @param string $lang
      * @param string $content
-     * @param string $direction
      *
      * @return array
      */
-    public static function create_raw_json_node(string $lang, string $content, string $direction = self::LTR): array {
+    public static function create_raw_json_node(string $lang, string $content): array {
         $paragraphs = [$content];
         if (false !== strpos($content, "\n")) {
             $paragraphs = explode("\n", $content);
@@ -324,7 +290,6 @@ class lang_block extends node implements block_node {
         return static::create_raw_json_node_from_paragraph_nodes(
             $lang,
             $paragraph_nodes,
-            $direction
         );
     }
 
@@ -333,13 +298,12 @@ class lang_block extends node implements block_node {
      *
      * @param string $lang
      * @param array  $paragraph_nodes
-     * @param string $direction
+     *
      * @return array
      */
     public static function create_raw_json_node_from_paragraph_nodes(
         string $lang,
-        array $paragraph_nodes,
-        string $direction = self::LTR
+        array $paragraph_nodes
     ): array {
         if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
             $fn = __FUNCTION__;
@@ -350,7 +314,6 @@ class lang_block extends node implements block_node {
             'type' => static::get_type(),
             'attrs' => [
                 'lang' => $lang,
-                'direction' => $direction,
                 'siblings_count' => 1,
             ],
             'content' => $paragraph_nodes

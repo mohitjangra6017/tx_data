@@ -23,7 +23,6 @@
   >
     <ModalPresenter :open="editModal" @request-close="editModal = false">
       <EditMultiLangModal
-        :language-direction="languageDirection"
         :lang="language"
         :content="langContentJson"
         :editor-compact="editorCompact"
@@ -106,10 +105,6 @@ export default {
       return this.attrs.lang;
     },
 
-    languageDirection() {
-      return this.attrs.direction;
-    },
-
     /**
      * @return {Array}
      */
@@ -153,14 +148,12 @@ export default {
     /**
      *
      * @param {String} lang
-     * @param {String} direction
      * @param {Object[]} content
      */
-    handleUpdateLangContent({ lang, direction, content }) {
+    handleUpdateLangContent({ lang, content }) {
       const parameters = {
         attrs: {
           lang: lang,
-          direction: direction,
           siblings_count: this.attrs.siblings_count,
         },
         content: content,
