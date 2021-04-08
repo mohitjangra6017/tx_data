@@ -24,6 +24,7 @@
 namespace mod_perform\userdata;
 
 use context;
+use core_component;
 use core\orm\query\builder;
 use Exception;
 use mod_perform\entity\activity\element_response;
@@ -55,11 +56,15 @@ class purge_other_responses extends item {
                     ->filter_by_context($context)
                     ->filter_by_subject_user($user->id)
                     ->get()
-                    ->map(function (subject_instance $subject_instance) {
+                    ->map(function (subject_instance $subject_instance) use ($context) {
                         $track_user_assignment_id = $subject_instance->track_user_assignment_id;
                         $track_user_assignment = new track_user_assignment($track_user_assignment_id);
                         $track_user_assignment->deleted = 1;
                         $track_user_assignment->save();
+
+                        // Assumption: it is safe to run the custom purges before the
+                        // the main bulk of Perform's GDPR purges.
+                        static::purge_custom_userdata($subject_instance, $context);
 
                         // Delete cascades to include participant instances and responses etc.
                         $subject_instance->delete();
@@ -78,6 +83,12 @@ class purge_other_responses extends item {
      * @param int $user_id
      */
     protected static function purge_files(int $user_id): void {
+        // Files to be purged are identified via their element_response id, then
+        // subject instance id. Since the linked review element always has
+        // one entry in the element_response table and that record's' subject
+        // instance id is the same as its child element responses, the statement
+        // below also removes the files belonging to linked review child responses.
+
         $fs = get_file_storage();
         builder::table('files')
             ->when(true, function (builder $builder) {
@@ -104,5 +115,26 @@ class purge_other_responses extends item {
             ->filter_by_context($context)
             ->filter_by_subject_user($user->id)
             ->count();
+    }
+
+    /**
+     * Executes custom user data purges for the given subject instance.
+     *
+     * @param subject_instance $subject_instance the activity subject whose data
+     *        is to be purged.
+     * @param context $context restriction for purging e.g., system context for
+     *        everything, course context for purging one course.
+     */
+    private static function purge_custom_userdata(
+        subject_instance $subject_instance,
+        context $context
+    ): void {
+        $factories = core_component::get_namespace_classes(
+            'userdata', custom_userdata_item::class
+        );
+
+        foreach ($factories as $factory) {
+            $factory::create()->purge_subject($subject_instance, $context);
+        }
     }
 }

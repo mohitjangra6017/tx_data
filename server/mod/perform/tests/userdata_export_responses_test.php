@@ -50,6 +50,7 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
             'subject_user_id' => $subject->id,
             'other_participant_id' => $participant->id,
             'include_questions' => true,
+            'include_review_element' => true
         ]);
 
         $participant_subject_instance = $generator->create_subject_instance([
@@ -57,6 +58,7 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
             'subject_user_id' => $participant->id,
             'other_participant_id' => $subject->id,
             'include_questions' => true,
+            'include_review_element' => true
         ]);
 
         $generator->create_responses($subject_subject_instance);
@@ -65,7 +67,12 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
         $targetuser1 = new target_user($subject);
         $export = export_user_responses::execute_export($targetuser1, context_system::instance());
 
-        $this->assertCount(4, $export->data);
+        /**
+         * Note the expected export counts per participant:
+         * - element responses = 4 (2 normal responses per activity, 2 activities, linked review main question not counted)
+         * - linked review responses = 2 (1 response per activity, 2 activities)
+         */
+        $this->assertCount(6, $export->data);
 
         foreach ($export->data as $record) {
             // All records must have subject as the participant.
@@ -87,6 +94,7 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
             'subject_user_id' => $subject->id,
             'other_participant_id' => $participant->id,
             'include_questions' => true,
+            'include_review_element' => true
         ]);
 
         // Swap roles so participant is now subject.
@@ -95,6 +103,7 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
             'subject_user_id' => $participant->id,
             'other_participant_id' => $subject->id,
             'include_questions' => true,
+            'include_review_element' => true
         ]);
 
         $generator->create_responses($subject_subject_instance);
@@ -103,7 +112,12 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
         $targetuser1 = new target_user($subject);
         $export = export_other_visible_responses::execute_export($targetuser1, context_system::instance());
 
-        $this->assertCount(2, $export->data);
+        /**
+         * Note the expected export counts per subject:
+         * - element responses = 2 (2 normal responses per activity, 1 activity where user is subject, linked review main question not counted)
+         * - linked review responses = 2 (2 response per activity, 1 activity where user is subject)
+         */
+        $this->assertCount(4, $export->data);
 
         $targetuser1 = new target_user($subject);
         $export = export_other_hidden_responses::execute_export($targetuser1, context_system::instance());

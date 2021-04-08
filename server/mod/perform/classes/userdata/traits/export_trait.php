@@ -24,6 +24,7 @@
 
 namespace mod_perform\userdata\traits;
 
+use coding_exception;
 use core\orm\query\builder;
 use mod_perform\entity\activity\element_response;
 use mod_perform\models\activity\element_plugin;
@@ -89,7 +90,19 @@ trait export_trait {
 
         // Convert response data into actual answer.
         /** @var respondable_element_plugin $element_plugin */
-        $element_plugin = element_plugin::load_by_plugin($record['element_type']);
+        try {
+            $element_plugin = element_plugin::load_by_plugin($record['element_type']);
+        } catch (coding_exception $e) {
+            // This means the plugin was removed or does not exist. So no response
+            // can be returned.
+            return [];
+        }
+
+        if ($element_plugin->get_plugin_name() == 'linked_review') {
+            // Linked review elements are processed in their own custom handlers.
+            return [];
+        }
+
         if ($element_plugin->get_is_respondable()) {
             $record['response_data'] = $element_plugin->decode_response($record['response_data'], $record['element_data']);
         }

@@ -24,6 +24,8 @@
 namespace mod_perform\userdata;
 
 use context;
+use core_component;
+use core\collection;
 use mod_perform\entity\activity\element_response;
 use mod_perform\userdata\traits\export_trait;
 use totara_userdata\userdata\export;
@@ -40,12 +42,17 @@ class export_other_hidden_responses extends item {
      * @return int amount of data or negative integer status code (self::RESULT_STATUS_ERROR or self::RESULT_STATUS_SKIPPED)
      */
     protected static function count(target_user $user, context $context): int {
-        return (element_response::repository())
+        $element_response_count = (element_response::repository())
             ->filter_for_export()
             ->filter_by_context($context)
             ->filter_by_subject_for_export($user->id)
             ->filter_by_subject_cannot_view($user->id)
             ->count();
+
+        [$custom_response_count, $element_response_offset] = self::count_custom_userdata($user, $context);
+
+        $final_count = $element_response_count - $element_response_offset + $custom_response_count;
+        return $final_count > 0 ? $final_count : 0;
     }
 
     /**
@@ -63,12 +70,98 @@ class export_other_hidden_responses extends item {
             ->get(true)
             ->map(function ($response) use ($user) {
                 return self::process_response_record($response, $user->id);
-            });
+            })
+            ->filter(
+                // Because some responses can be processed explicitly via custom
+                // handlers, they may return an empty data set in process_response_record().
+                function (array $export): bool {
+                    return !empty($export);
+                }
+            );
+
+        $custom_exports = self::export_custom_userdata($user, $context);
 
         $export = new export();
-        $export->data = $responses->to_array();
+        $export->data = array_merge($responses->to_array(), $custom_exports->all());
         $export->files = static::get_response_files($responses->pluck('id'));
         return $export;
     }
 
+    /**
+     * Counts custom user data exports for the given subject.
+     *
+     * @param target_user $user the activity subject whose data is to be
+     *        exported.
+     * @param context $context restriction for purging e.g., system context for
+     *        everything, course context for purging one course.
+     *
+     * @return int[] a tuple containing *2* elements: the actual response count
+     *         and the offset that needs to be subtracted from the main
+     *         element_response count if any.
+     */
+    private static function count_custom_userdata(
+        target_user $user,
+        context $context
+    ): array {
+        return self::custom_userdata_items()
+            ->reduce(
+                function (array $counts, custom_userdata_item $item) use ($user, $context): array {
+                    [$running_count, $running_offset] = $counts;
+                    [$count, $offset] = $item->count_other_hidden_responses($user, $context);
+
+                    return [$running_count + $count, $running_offset + $offset];
+                },
+                [0, 0]
+            );
+    }
+
+    /**
+     * Executes custom user data exports for the given participant.
+     *
+     * @param target_user $user the activity participant whose data is to be
+     *        exported.
+     * @param context $context restriction for purging e.g., system context for
+     *        everything, course context for purging one course.
+     *
+     * @return collection the exported data as a list of records; each record is
+     *         an associative array.
+     */
+    private static function export_custom_userdata(
+        target_user $user,
+        context $context
+    ): collection {
+        $all = [];
+        foreach (self::custom_userdata_items() as $item) {
+            $exports = $item
+                ->export_other_hidden_responses($user, $context)
+                ->all();
+
+            $all = array_merge($all, $exports);
+        }
+
+        return collection::new($all);
+    }
+
+    /**
+     * Returns the custom userdata items to execute for the export.
+     *
+     * @param target_user $user the activity participant whose data is to be
+     *        exported.
+     * @param context $context restriction for purging e.g., system context for
+     *        everything, course context for purging one course.
+     *
+     * @return collection|custom_userdata_item[] the custom user data items.
+     */
+    private static function custom_userdata_items(): collection {
+        $factories = core_component::get_namespace_classes(
+            'userdata', custom_userdata_item::class
+        );
+
+        return collection::new($factories)
+            ->map(
+                function (string $class): custom_userdata_item {
+                    return $class::create();
+                }
+            );
+    }
 }

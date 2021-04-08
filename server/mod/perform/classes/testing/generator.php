@@ -90,6 +90,7 @@ use mod_perform\util;
 use performelement_aggregation\aggregation;
 use performelement_aggregation\aggregation_response_calculator;
 use performelement_aggregation\calculations\average;
+use performelement_linked_review\testing\generator as linked_review_generator;
 use performelement_numeric_rating_scale\numeric_rating_scale;
 use stdClass;
 use totara_core\entity\relationship;
@@ -1583,18 +1584,35 @@ final class generator extends \core\testing\component_generator {
                     // Don't create responses for non-respondable elements.
                     continue;
                 }
+
+                $participant_instances = $subject_instance->participant_instances;
+                $subject_as_participant = null;
+                $normal_participants = [];
+
                 /** @var participant_instance_entity $participant_instance */
-                foreach ($subject_instance->participant_instances as $participant_instance) {
+                foreach ($participant_instances as $participant_instance) {
                     $element_response_entity = new element_response();
                     $element_response_entity->participant_instance_id = $participant_instance->id;
                     $element_response_entity->section_element_id = $section_element->id;
                     $element_response_entity->response_data = $element_plugin->get_example_response_data();
                     $element_response_entity->save();
 
+                    if ($participant_instance->participant_user->id === $subject_instance->subject_user_id) {
+                        $subject_as_participant = $participant_instance;
+                    } else {
+                        $normal_participants[] = $participant_instance;
+                    }
+
                     if (!is_null($max_responses) && $count >= $max_responses) {
                         return;
                     }
                     $count++;
+                }
+
+                if ($element_plugin->get_plugin_name() == 'linked_review') {
+                    linked_review_generator::instance()->create_review_element_responses(
+                        $element_plugin, $section_element, $subject_as_participant, $normal_participants
+                    );
                 }
             }
         }
@@ -1673,6 +1691,10 @@ final class generator extends \core\testing\component_generator {
             ]);
 
             $this->create_section_element($section1, $element3, 3);
+        }
+
+        if ($data['include_review_element'] ?? false) {
+            linked_review_generator::instance()->create_linked_review_element_in_section($activity, $section1);
         }
 
         return $section1;
@@ -1877,5 +1899,4 @@ final class generator extends \core\testing\component_generator {
 
         return $activity_entity;
     }
-
 }

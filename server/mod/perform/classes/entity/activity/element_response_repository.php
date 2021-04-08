@@ -86,7 +86,10 @@ class element_response_repository extends repository {
                         $builder->where_raw('COALESCE(subject_relationship.can_view, 0) = 1')
                             ->where('perform_participant_section.progress', $progress_complete);
                     })
-                    ->or_where('perform_participant_instance.participant_id', $subject_user_id);
+                    ->or_where(function (builder $builder) use ($subject_user_id) {
+                        $builder->where('perform_participant_instance.participant_id', $subject_user_id)
+                                 ->where("perform_participant_instance.participant_source", participant_source::INTERNAL);
+                    });
             });
     }
 

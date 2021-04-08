@@ -34,8 +34,11 @@ use mod_perform\entity\activity\track;
 use mod_perform\entity\activity\track_user_assignment;
 use mod_perform\state\subject_instance\complete;
 use mod_perform\state\subject_instance\in_progress;
+use mod_perform\testing\generator;
 use mod_perform\userdata\purge_other_responses;
 use mod_perform\userdata\purge_user_responses;
+use performelement_linked_review\entity\linked_review_content;
+use performelement_linked_review\entity\linked_review_content_response;
 use totara_userdata\userdata\item;
 use totara_userdata\userdata\target_user;
 
@@ -51,37 +54,61 @@ class mod_perform_userdata_purge_responses_testcase  extends advanced_testcase {
         $participant = self::getDataGenerator()->create_user();
 
         /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = generator::instance();
 
+        $activity1 = $generator->create_activity_in_container();
         $target_subject_instance = $generator->create_subject_instance([
+            'activity_id' => $activity1->id,
             'subject_is_participating' => true,
             'subject_user_id' => $subject->id,
             'other_participant_id' => $participant->id,
             'include_questions' => true,
+            'include_review_element' => true
         ]);
+
         $target_user_assignment_id = $target_subject_instance->track_user_assignment_id;
 
         // Swap roles so participant is now subject.
+        $activity2 = $generator->create_activity_in_container();
         $untouched_subject_instance = $generator->create_subject_instance([
+            'activity_id' => $activity2->id,
             'subject_is_participating' => true,
             'subject_user_id' => $participant->id,
             'other_participant_id' => $subject->id,
             'include_questions' => true,
+            'include_review_element' => true
         ]);
+
         $untouched_user_assignment_id = $untouched_subject_instance->track_user_assignment_id;
 
         $generator->create_responses($target_subject_instance);
         $generator->create_responses($untouched_subject_instance);
 
+        /**
+         * Note the expected pre purge counts:
+         * - activities = 2
+         * - tracks = 2 (1 track per activity)
+         * - sections = 2 (1 section per activity)
+         * - elements = 8 (2 normal question, 1 linked question, 1 sub element for linked = 4 per activity)
+         * - section elements = 6 (2 normal question, 1 linked question = 3 per activity)
+         * - subject instance = 2 (1 subject per activity)
+         * - participant instances = 4 (1 subject, 1 other = 2 per activity)
+         * - participant sections = 4 (1 subject, 1 other = 2 per activity)
+         * - element responses = 12 (3 responses per activity (2 normal + 1 linked review), 2 participants for each question, 2 activities)
+         * - linked review content = 2 (1 question per activity)
+         * - linked review responses = 4 (2 participants per activity = 2 responses per activity, 2 activities)
+         */
         $this->assertEquals(2, (activity::repository())->count());
         $this->assertEquals(2, (track::repository())->count());
         $this->assertEquals(2, (section::repository())->count());
-        $this->assertEquals(4, (section_element::repository())->count());
-        $this->assertEquals(4, (element::repository())->count());
+        $this->assertEquals(6, (section_element::repository())->count());
+        $this->assertEquals(8, (element::repository())->count());
         $this->assertEquals(2, (subject_instance::repository())->count());
         $this->assertEquals(4, (participant_instance::repository())->count());
         $this->assertEquals(4, (participant_section::repository())->count());
-        $this->assertEquals(8, (element_response::repository())->count());
+        $this->assertEquals(12, (element_response::repository())->count());
+        $this->assertEquals(2, linked_review_content::repository()->count());
+        $this->assertEquals(4, linked_review_content_response::repository()->count());
 
         $targetuser1 = new target_user($subject);
         $status = purge_other_responses::execute_purge($targetuser1, context_system::instance());
@@ -91,8 +118,8 @@ class mod_perform_userdata_purge_responses_testcase  extends advanced_testcase {
         $this->assertEquals(2, (activity::repository())->count());
         $this->assertEquals(2, (track::repository())->count());
         $this->assertEquals(2, (section::repository())->count());
-        $this->assertEquals(4, (section_element::repository())->count());
-        $this->assertEquals(4, (element::repository())->count());
+        $this->assertEquals(6, (section_element::repository())->count());
+        $this->assertEquals(8, (element::repository())->count());
 
         // Purged user's subject instances removed but not other one.
         $subject_instances = (subject_instance::repository())->get();
@@ -118,13 +145,39 @@ class mod_perform_userdata_purge_responses_testcase  extends advanced_testcase {
         $this->assertEquals($participant_instance_ids, $section_pi_ids);
         // Responses belong to remaining participant sections.
         $responses = (element_response::repository())->get();
-        $this->assertEquals(4, $responses->count());
+        $this->assertEquals(6, $responses->count());
         $response_ps_ids = $responses->pluck('participant_instance_id');
         sort($response_ps_ids);
         $this->assertEquals(
-            [$participant_instance_ids[0], $participant_instance_ids[0], $participant_instance_ids[1], $participant_instance_ids[1]],
+            [
+                $participant_instance_ids[0],
+                $participant_instance_ids[0],
+                $participant_instance_ids[0],
+                $participant_instance_ids[1],
+                $participant_instance_ids[1],
+                $participant_instance_ids[1]
+            ],
             $response_ps_ids
         );
+
+        // linked review content + response remain only for the untouched_subject_instance activity.
+        $linked_review_contents = linked_review_content::repository()->get();
+        $this->assertEquals(1, $linked_review_contents->count());
+
+        $linked_review_content = $linked_review_contents->first();
+        $this->assertEquals(
+            $untouched_subject_instance->id,
+            $linked_review_content->subject_instance_id
+        );
+
+        $linked_review_responses = linked_review_content_response::repository()->get();
+        $this->assertEquals(2, $linked_review_responses->count());
+        foreach ($linked_review_responses as $linked_review_response) {
+            $this->assertEquals(
+                $linked_review_content->id,
+                $linked_review_response->linked_review_content_id
+            );
+        }
 
         // Deleted user's user_assignment is now deleted
         $target_subject_instance_user_assignment = track_user_assignment::repository()->find($target_user_assignment_id);
@@ -142,13 +195,14 @@ class mod_perform_userdata_purge_responses_testcase  extends advanced_testcase {
         $participant = self::getDataGenerator()->create_user();
 
         /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
             'subject_user_id' => $subject->id,
             'other_participant_id' => $participant->id,
             'include_questions' => true,
+            'include_review_element' => true
         ]);
 
         $subject_instance2 = $generator->create_subject_instance([
@@ -156,20 +210,37 @@ class mod_perform_userdata_purge_responses_testcase  extends advanced_testcase {
             'subject_user_id' => $participant->id,
             'other_participant_id' => $subject->id,
             'include_questions' => true,
+            'include_review_element' => true
         ]);
 
         $generator->create_responses($subject_instance);
         $generator->create_responses($subject_instance2);
 
+        /**
+         * Note the expected pre purge counts:
+         * - activities = 2
+         * - tracks = 2 (1 track per activity)
+         * - sections = 2 (1 section per activity)
+         * - elements = 8 (2 normal question, 1 linked question, 1 sub element for linked = 4 per activity)
+         * - section elements = 6 (2 normal question, 1 linked question = 3 per activity)
+         * - subject instance = 2 (1 subject per activity)
+         * - participant instances = 4 (1 subject, 1 other = 2 per activity)
+         * - participant sections = 4 (1 subject, 1 other = 2 per activity)
+         * - element responses = 12 (3 questions per activity, 2 participants for each question, 2 activities)
+         * - linked review content = 2 (1 question per activity)
+         * - linked review responses = 4 (2 participants per activity = 2 responses per activity, 2 activities)
+         */
         $this->assertEquals(2, (activity::repository())->count());
         $this->assertEquals(2, (track::repository())->count());
         $this->assertEquals(2, (section::repository())->count());
-        $this->assertEquals(4, (section_element::repository())->count());
-        $this->assertEquals(4, (element::repository())->count());
+        $this->assertEquals(6, (section_element::repository())->count());
+        $this->assertEquals(8, (element::repository())->count());
         $this->assertEquals(2, (subject_instance::repository())->count());
         $this->assertEquals(4, (participant_instance::repository())->count());
         $this->assertEquals(4, (participant_section::repository())->count());
-        $this->assertEquals(8, (element_response::repository())->count());
+        $this->assertEquals(12, (element_response::repository())->count());
+        $this->assertEquals(2, linked_review_content::repository()->count());
+        $this->assertEquals(4, linked_review_content_response::repository()->count());
 
         $targetuser1 = new target_user($subject);
         $status = purge_user_responses::execute_purge($targetuser1, context_system::instance());
@@ -180,8 +251,8 @@ class mod_perform_userdata_purge_responses_testcase  extends advanced_testcase {
         $this->assertEquals(2, (activity::repository())->count());
         $this->assertEquals(2, (track::repository())->count());
         $this->assertEquals(2, (section::repository())->count());
-        $this->assertEquals(4, (section_element::repository())->count());
-        $this->assertEquals(4, (element::repository())->count());
+        $this->assertEquals(6, (section_element::repository())->count());
+        $this->assertEquals(8, (element::repository())->count());
 
         // Purged user's subject instance is not removed.
         $subject_instances = (subject_instance::repository())->get();
@@ -208,14 +279,34 @@ class mod_perform_userdata_purge_responses_testcase  extends advanced_testcase {
 
         // Responses belong to remaining participant sections.
         $responses = (element_response::repository())->get();
-        $this->assertEquals(4, $responses->count());
+        $this->assertEquals(6, $responses->count());
         $response_ps_ids = $responses->pluck('participant_instance_id');
         sort($response_ps_ids);
         $participant_instance_ids = $participant_instances->pluck('id');
         $this->assertEquals(
-            [$participant_instance_ids[0], $participant_instance_ids[0], $participant_instance_ids[1], $participant_instance_ids[1]],
+            [
+                $participant_instance_ids[0],
+                $participant_instance_ids[0],
+                $participant_instance_ids[0],
+                $participant_instance_ids[1],
+                $participant_instance_ids[1],
+                $participant_instance_ids[1]
+            ],
             $response_ps_ids
         );
+
+        // linked review content remain but response removed for the purged user.
+        $linked_review_contents = linked_review_content::repository()->get();
+        $this->assertEquals(2, $linked_review_contents->count());
+
+        $linked_review_responses = linked_review_content_response::repository()->get();
+        $this->assertEquals(2, $linked_review_responses->count());
+        foreach ($linked_review_responses as $linked_review_response) {
+            $this->assertEquals(
+                $participant->id,
+                $linked_review_response->participant_instance->participant_user->id
+            );
+        }
     }
 
     /**
@@ -238,7 +329,7 @@ class mod_perform_userdata_purge_responses_testcase  extends advanced_testcase {
         $subject = self::getDataGenerator()->create_user();
 
         /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = generator::instance();
 
         $course_subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -306,7 +397,7 @@ class mod_perform_userdata_purge_responses_testcase  extends advanced_testcase {
         $participant = self::getDataGenerator()->create_user();
 
         /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = generator::instance();
 
         $subject_instance = $generator->create_subject_instance([
             'subject_is_participating' => true,
@@ -361,7 +452,7 @@ class mod_perform_userdata_purge_responses_testcase  extends advanced_testcase {
         $user2 = self::getDataGenerator()->create_user();
 
         /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = generator::instance();
 
         $activity = $generator->create_activity_in_container();
         $context_id = $activity->get_context()->id;
@@ -418,7 +509,7 @@ class mod_perform_userdata_purge_responses_testcase  extends advanced_testcase {
         $user2 = self::getDataGenerator()->create_user();
 
         /** @var \mod_perform\testing\generator $generator */
-        $generator = \mod_perform\testing\generator::instance();
+        $generator = generator::instance();
 
         $activity = $generator->create_activity_in_container();
         $context_id = $activity->get_context()->id;
@@ -470,5 +561,4 @@ class mod_perform_userdata_purge_responses_testcase  extends advanced_testcase {
         $this->assertFalse($fs->file_exists_by_hash($user1_file->get_pathnamehash()));
         $this->assertFalse($fs->file_exists_by_hash($user2_file->get_pathnamehash()));
     }
-
 }

@@ -40,10 +40,12 @@ use mod_perform\entity\activity\section_relationship;
 use mod_perform\entity\activity\subject_instance as subject_instance_entity;
 use mod_perform\models\activity\activity;
 use mod_perform\models\activity\element;
+use mod_perform\models\activity\element_plugin;
 use mod_perform\models\activity\section;
 use mod_perform\models\activity\subject_instance;
 use mod_perform\testing\generator as perform_generator;
 use performelement_linked_review\entity\linked_review_content as linked_review_content_entity;
+use performelement_linked_review\entity\linked_review_content_response;
 use performelement_linked_review\linked_review;
 use performelement_linked_review\models\linked_review_content;
 use totara_competency\aggregation_task;
@@ -74,6 +76,37 @@ final class generator extends component_generator {
     public function create_linked_review_element(array $data, activity $activity = null): element {
         $context = $activity ? $activity->get_context() : context_system::instance();
         return element::create($context, 'linked_review', 'title', '', json_encode($data));
+    }
+
+    /**
+     * Creates a linked review element with one sub element in the given activity and section.
+     *
+     * @param activity $activity parent activity.
+     * @param section $section section in which to create the linked review element.
+     * @param string $content_type content type.
+     */
+    public function create_linked_review_element_in_section(
+        activity $activity,
+        section $section,
+        ?string $content_type = null
+    ): void {
+        $content_type = $content_type ?? competency_assignment::get_identifier();
+
+        $linked_review_data = [
+            'content_type' => $content_type,
+            'content_type_settings' => [],
+            'selection_relationships' => [
+                relationship::load_by_idnumber(constants::RELATIONSHIP_SUBJECT)->id
+            ],
+        ];
+
+        $element = $this->create_linked_review_element($linked_review_data, $activity);
+
+        $perform_generator = perform_generator::instance();
+        $perform_generator->create_section_element($section, $element);
+        $perform_generator->create_child_element([
+            'parent_element' => $element
+        ]);
     }
 
     /**
@@ -387,4 +420,70 @@ final class generator extends component_generator {
         return $assignment;
     }
 
+    /**
+     * Creates linked review element responses.
+     *
+     * @param linked_review $element_plugin linked review plugin.
+     * @param section_element $section_element section element where linked review
+     *        element resides.
+     * @param participant_instance $subject_as_participant the subject whose
+     *        linked review content is to be assessed.
+     * @param participant_instance[] $normal_participant_instances the other
+     *        participants in the linked review question.
+     */
+    public function create_review_element_responses(
+        linked_review $element_plugin,
+        section_element $section_element,
+        participant_instance $subject_as_participant,
+        array $normal_participant_instances
+    ): void {
+        $element = $section_element->element;
+        $content_type = $element_plugin->get_content_type(element::load_by_entity($element));
+
+        $content_id = null;
+        if ($content_type === competency_assignment::class) {
+            $user = $subject_as_participant->participant_user->id;
+            $content_id = $this
+                ->create_competency_assignment(['user' => $user])
+                ->id;
+        } else {
+            throw new coding_exception("cannot generate data for '$content_type'");
+        }
+
+        $linked_review = new linked_review_content_entity();
+        $linked_review->section_element_id = $section_element->id;
+        $linked_review->subject_instance_id = $subject_as_participant->subject_instance_id;
+        $linked_review->selector_id = $subject_as_participant->participant_user->id;
+        $linked_review->content_type = competency_assignment::get_identifier();
+        $linked_review->content_id = $content_id;
+
+        $linked_review_id = $linked_review->save()->id;
+
+        foreach ($element->children as $child_element) {
+            $sub_element_type = $child_element->plugin_name;
+            $sub_element_plugin = element_plugin::load_by_plugin($sub_element_type);
+            if (!$sub_element_plugin->get_is_respondable()) {
+                // Don't create responses for non-respondable elements.
+                continue;
+            }
+
+            $response = $sub_element_plugin->get_example_response_data();
+
+            $subject_child_response = new linked_review_content_response();
+            $subject_child_response->linked_review_content_id = $linked_review_id;
+            $subject_child_response->child_element_id = $child_element->id;
+            $subject_child_response->participant_instance_id = $subject_as_participant->id;
+            $subject_child_response->response_data = $response;
+            $subject_child_response->save();
+
+            foreach ($normal_participant_instances as $participant_instance) {
+                $participant_response = new linked_review_content_response();
+                $participant_response->linked_review_content_id = $linked_review_id;
+                $participant_response->child_element_id = $child_element->id;
+                $participant_response->participant_instance_id = $participant_instance->id;
+                $participant_response->response_data = $response;
+                $participant_response->save();
+            }
+        }
+    }
 }
