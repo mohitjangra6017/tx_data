@@ -179,6 +179,10 @@ export default {
      * @param {WekaValue} content
      */
     validateContentEditor(content) {
+      if (!content) {
+        return this.$str('required', 'moodle');
+      }
+
       return content.isEmpty ? this.$str('required', 'moodle') : '';
     },
   },

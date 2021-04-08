@@ -20,7 +20,9 @@
   <div
     class="tui-wekaMultiLangBlock"
     :data-lang="language || $str('unspecified', 'weka_simple_multi_lang')"
+    contenteditable="false"
   >
+    <!-- We need the contenteditable attribute to be set to false here, so that prosemirror does not put a cursor within it. -->
     <ModalPresenter :open="editModal" @request-close="editModal = false">
       <EditMultiLangModal
         :lang="language"
@@ -187,6 +189,10 @@ export default {
 <style lang="scss">
 .tui-wekaMultiLangBlock {
   white-space: normal;
+
+  .ProseMirror-gapcursor {
+    display: none;
+  }
 
   &__container {
     display: flex;

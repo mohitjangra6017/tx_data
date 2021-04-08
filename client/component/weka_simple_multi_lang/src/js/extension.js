@@ -323,6 +323,7 @@ class WekaSimpleMultiLangExtension extends BaseExtension {
         return this._createNewLine(view);
 
       case 'Backspace':
+      case 'Delete':
         return this._handleRemoveCollectionBlocKFromBackspace(view);
 
       default:
