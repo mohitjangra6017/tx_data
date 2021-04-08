@@ -530,4 +530,38 @@ describe('Reform', () => {
     expect(result).toEqual({ foo: 'bar' });
     expect(submitHandler).toHaveBeenCalled();
   });
+
+  it('exposes validation results', async () => {
+    let last;
+    const validationChanged = jest.fn();
+    const { scope } = createSimple(
+      {},
+      { listeners: { 'validation-changed': validationChanged } }
+    );
+
+    expect(validationChanged).not.toHaveBeenCalled();
+
+    scope.register('validator', 'field', x => (x == 'f' ? 'error' : null));
+    scope.touch('field');
+
+    await validateWait();
+
+    expect(validationChanged).toHaveBeenCalledTimes(1);
+    last = validationChanged.mock.calls[0][0];
+    expect(last.isValid).toBe(true);
+    expect(last.getError('field')).not.toBeAnything();
+    expect(last.getError('foo')).not.toBeAnything();
+
+    scope.update('field', 'f');
+
+    await validateWait();
+
+    expect(validationChanged).toHaveBeenCalledTimes(2);
+    last = validationChanged.mock.calls[1][0];
+    expect(last.isValid).toBe(false);
+    expect(last.isValid).toBe(false);
+    expect(last.getError('field')).toBe('error');
+    expect(last.getError()).toEqual({ field: 'error' });
+    expect(last.getError('foo')).not.toBeAnything();
+  });
 });

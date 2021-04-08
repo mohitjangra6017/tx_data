@@ -17,6 +17,7 @@
  */
 
 import { config } from '@vue/test-utils';
+import './matchers';
 
 import * as i18n from 'tui/i18n';
 

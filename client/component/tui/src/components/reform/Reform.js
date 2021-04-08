@@ -17,54 +17,25 @@
  */
 
 import Vue from 'vue';
-import {
-  get,
-  set,
-  orderBy,
-  isPlainObject,
-  structuralDeepClone,
-  structuralShallowClone,
-  result,
-} from 'tui/util';
+import { get, set, structuralDeepClone, result } from 'tui/util';
 import { set as vueSet } from 'tui/vue_util';
-import { isLangString, loadLangStrings, isRtl } from 'tui/i18n';
+import { loadLangStrings, isRtl } from 'tui/i18n';
 import { getDocumentPosition } from 'tui/dom/position';
 import { getTabbableElements } from 'tui/dom/focus';
 import BatchingLoadQueue from '../../js/internal/BatchingLoadQueue';
-
-/**
- * Check if two arrays are shallowly == (all of their items are ==)
- *
- * @param {array} a
- * @param {array} b
- * @returns {boolean}
- */
-const arrayEqual = (a, b) => a.length == b.length && arrayStartsWith(a, b);
-
-/**
- * Check if an array starts with a prefix (using ==)
- *
- * @param {array} arr
- * @param {array} prefix
- * @returns {boolean}
- */
-const arrayStartsWith = (arr, prefix) => prefix.every((x, i) => arr[i] == x);
-
-/**
- * Ensure path-like value is a path.
- *
- * @param {(array|string)} path
- * @returns {array}
- */
-const toPath = path => (Array.isArray(path) ? path : [path]);
-
-/**
- * Helper to check if value is a plain data structure (object or array).
- *
- * @param {*} value
- * @returns {boolean}
- */
-const isDataStructure = value => isPlainObject(value) || Array.isArray(value);
+import {
+  arrayEqual,
+  arrayStartsWith,
+  toPath,
+  pathFunctionEqual,
+  sortEntriesByPath,
+  collectErrorValues,
+  mergeErrors,
+  onlyTouched,
+  makeAllTouch,
+  collectLangStrings,
+} from '../../js/internal/reform/data_structure_utils';
+import ValidationResults from '../../js/internal/reform/ValidationResults';
 
 export default {
   provide() {
@@ -138,6 +109,7 @@ export default {
 
       // generated
       mergedErrors: {},
+      validationResults: new ValidationResults({}),
       validatorsErrors: [],
     };
   },
@@ -149,7 +121,7 @@ export default {
      * @returns {object}
      */
     displayedErrors() {
-      return this.$_onlyTouched(this.mergedErrors, this.touched);
+      return onlyTouched(this.mergedErrors, this.touched);
     },
 
     /**
@@ -158,7 +130,7 @@ export default {
      * @returns {boolean}
      */
     isValid() {
-      return this.$_collectErrorValues(this.mergedErrors).every(x => !x);
+      return collectErrorValues(this.mergedErrors).every(x => !x);
     },
   },
 
@@ -167,7 +139,7 @@ export default {
     errors: {
       handler(errors) {
         if (errors) {
-          this.$_mergeErrors(this.touched, this.$_makeAllTouch(errors));
+          mergeErrors(this.touched, makeAllTouch(errors));
         }
         this.$_validate();
       },
@@ -314,14 +286,14 @@ export default {
 
     $_register(array, path, fn) {
       const entry = [path, fn];
-      if (!array.some(x => this.$_pathFunctionEqual(x, entry))) {
+      if (!array.some(x => pathFunctionEqual(x, entry))) {
         array.push(entry);
       }
     },
 
     $_unregister(array, path, fn) {
       const entry = [path, fn];
-      const index = array.findIndex(x => this.$_pathFunctionEqual(x, entry));
+      const index = array.findIndex(x => pathFunctionEqual(x, entry));
       if (index !== -1) {
         array.splice(index, 1);
       }
@@ -384,14 +356,14 @@ export default {
       await this.$_validate();
 
       this.submitting = false;
-      this.$_mergeErrors(this.touched, this.$_makeAllTouch(this.mergedErrors));
+      mergeErrors(this.touched, makeAllTouch(this.mergedErrors));
 
       // emit
       if (this.isValid) {
-        const processors = this.$_sortEntriesByPath(
+        const processors = sortEntriesByPath(
           this.registrations.processor
         ).reverse();
-        const submitHandlers = this.$_sortEntriesByPath(
+        const submitHandlers = sortEntriesByPath(
           this.registrations.submitHandler
         ).reverse();
         let values = structuralDeepClone(this.values);
@@ -553,28 +525,6 @@ export default {
     },
 
     /**
-     * Check if two path-function entries are equal.
-     *
-     * @param {[(string|number|array), function]} a
-     * @param {[(string|number|array), function]} b
-     * @returns {bool}
-     */
-    $_pathFunctionEqual(a, b) {
-      return arrayEqual(toPath(a[0]), toPath(b[0])) && a[1] == b[1];
-    },
-
-    /**
-     * Sort [path, value] entries by the length of the path (shortest to longest).
-     *
-     * @internal
-     * @param {array} arr
-     * @returns {array}
-     */
-    $_sortEntriesByPath(arr) {
-      return orderBy(arr, ([path]) => (path ? path.length : 0));
-    },
-
-    /**
      * Run validators and update error status.
      *
      * @internal
@@ -608,7 +558,7 @@ export default {
     async $_validateInternal(validatePaths) {
       validatePaths = validatePaths.map(toPath);
       // figure out what validators to run
-      let validators = this.$_sortEntriesByPath(this.validators);
+      let validators = sortEntriesByPath(this.validators);
       if (this.validate) {
         validators.unshift([null, this.validate]);
       }
@@ -649,7 +599,7 @@ export default {
       if (validatorMatcher) {
         // filter out errors from validators matching our path, then replace
         // with new validation results
-        validatorResults = this.$_sortEntriesByPath(
+        validatorResults = sortEntriesByPath(
           this.validatorsErrors
             .filter(([path]) => !validatorMatcher(path))
             .concat(validatorResults)
@@ -658,12 +608,12 @@ export default {
 
       // combine errors into a single object
       const mergedErrors = validatorResults.reduce(
-        (acc, [, errors]) => this.$_mergeErrors(acc, errors),
+        (acc, [, errors]) => mergeErrors(acc, errors),
         this.errors ? structuralDeepClone(this.errors) : {}
       );
 
       // load strings for errors
-      const langStrings = this.$_collectLangStrings(mergedErrors);
+      const langStrings = collectLangStrings(mergedErrors);
       if (langStrings.length > 0) {
         await loadLangStrings(langStrings);
       }
@@ -671,121 +621,9 @@ export default {
       // finally, assign result
       this.validatorsErrors = validatorResults;
       this.mergedErrors = mergedErrors;
-    },
+      this.validationResults = new ValidationResults(mergedErrors);
 
-    /**
-     * Merge error objects.
-     *
-     * @internal
-     * @param {object} result Error result. Will be mutated.
-     * @param {object} newErrors Errors to merge in.
-     */
-    $_mergeErrors(result, newErrors) {
-      if (!newErrors) {
-        return result;
-      }
-      Object.keys(newErrors).forEach(k => {
-        const val = newErrors[k];
-        if (k in result && result[k] != null) {
-          if (!val) return;
-          if (isDataStructure(val)) {
-            result[k] = structuralShallowClone(result[k]);
-            this.$_mergeErrors(result[k], val);
-          } else {
-            // Vue.set not needed as already in result
-            result[k] = val;
-          }
-        } else {
-          // doesn't exist in result - just assign
-          // shallow clone so later updates to the same property don't modify
-          // the value from newErrors
-          Vue.set(result, k, structuralShallowClone(val));
-        }
-      });
-      return result;
-    },
-
-    /**
-     * Filter nested errors object to keys that have a truthy value in touched.
-     *
-     * @internal
-     * @param {object} errors
-     * @param {object} touched
-     * @returns {object}
-     */
-    $_onlyTouched(errors, touched) {
-      return Object.entries(errors)
-        .filter(([key]) => touched[key])
-        .reduce(
-          (acc, [key, value]) => {
-            acc[key] = isDataStructure(value)
-              ? this.$_onlyTouched(value, touched[key])
-              : value;
-            return acc;
-          },
-          Array.isArray(errors) ? [] : {}
-        );
-    },
-
-    /**
-     * Make a touch object that covers all entries in errors.
-     *
-     * @internal
-     * @param {(object|array)} errors
-     * @returns {(object|array)}
-     */
-    $_makeAllTouch(errors) {
-      return Object.entries(errors).reduce(
-        (acc, [key, value]) => {
-          if (value) {
-            acc[key] = isDataStructure(value)
-              ? this.$_makeAllTouch(value)
-              : true;
-          }
-          return acc;
-        },
-        Array.isArray(errors) ? [] : {}
-      );
-    },
-
-    /**
-     * Collect all values from an error object.
-     *
-     * @internal
-     * @param {(object|array)} errors
-     */
-    $_collectErrorValues(errors) {
-      const arr = [];
-      this.$_collectErrorValuesInternal(arr, errors);
-      return arr;
-    },
-
-    /**
-     * Internal implementation of $_collectErrorValues
-     *
-     * @internal
-     * @param {array} arr Output
-     * @param {(object|array)} errors
-     */
-    $_collectErrorValuesInternal(arr, errors) {
-      return Object.values(errors).forEach(value => {
-        if (isDataStructure(value)) {
-          this.$_collectErrorValuesInternal(arr, value);
-        } else if (value) {
-          arr.push(value);
-        }
-      });
-    },
-
-    /**
-     * Collect all language strings from an error object.
-     *
-     * @internal
-     * @param {array} arr Output array
-     * @param {(object|array)} errors
-     */
-    $_collectLangStrings(errors) {
-      return this.$_collectErrorValues(errors).filter(x => isLangString(x));
+      this.$emit('validation-changed', this.validationResults);
     },
 
     /**
