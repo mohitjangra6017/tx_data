@@ -244,7 +244,13 @@ final class settings {
      */
     public function clean_properties(array $properties): array {
         foreach ($properties as &$property) {
-            $property['value'] = clean_text($property['value']);
+            $property['value'] = clean_text(
+                $property['value'],
+                FORMAT_HTML,
+                [
+                    'allowid' => true
+                ]
+            );
         }
         return $properties;
     }
