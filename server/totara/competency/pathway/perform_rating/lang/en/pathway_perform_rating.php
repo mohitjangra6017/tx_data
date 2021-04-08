@@ -52,4 +52,7 @@ $string['rating_set_to_none'] = "Set to 'No rating'";
 $string['rating_submit'] = 'Submit rating';
 $string['rating_to_be_submitted'] = 'Final rating to be submitted for the competency';
 $string['rating_who'] = 'This will be answered by a {$a}.';
+$string['userdataitemperform_rating_other'] = 'Performance activity ratings on others';
+$string['userdataitemperform_rating_other_help'] = 'When purging this item, the rating will be anonymised (rater’s name replaced with text indicating it has been removed). The rating itself (scale value, role in which rating was given) will remain.';
+$string['userdataitemperform_rating_self'] = 'Performance activity ratings on self';
 $string['your_rating'] = 'Your rating';
