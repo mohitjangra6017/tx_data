@@ -28,7 +28,7 @@
           <div
             class="tui-pathwayPerformRatingAchievementRater__overview-relationship"
           >
-            {{ ratersRelationship }}
+            {{ rating.rater_role }}
           </div>
         </div>
       </template>
@@ -108,20 +108,6 @@ export default {
     rating: {
       required: true,
       type: Object,
-    },
-  },
-
-  computed: {
-    /**
-     * Return raters relationship
-     *
-     * @return {String}
-     */
-    ratersRelationship() {
-      let relationshipIdnumber = this.rating.rater_relationship.idnumber;
-      return relationshipIdnumber === 'subject'
-        ? this.$str('your_rating', 'pathway_perform_rating')
-        : this.rating.rater_relationship.name;
     },
   },
 

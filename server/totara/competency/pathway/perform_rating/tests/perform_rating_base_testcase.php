@@ -36,7 +36,7 @@ use totara_userdata\userdata\target_user;
 
 abstract class perform_rating_base_testcase extends advanced_testcase {
 
-    protected function create_data() {
+    protected function create_data(array $configuration_data = []) {
         $this->setAdminUser();
 
         // As we want to check the details with deleted users we need a purge type
@@ -75,17 +75,22 @@ abstract class perform_rating_base_testcase extends advanced_testcase {
         $perform_generator = perform_generator::instance();
         $activity = $perform_generator->create_activity_in_container(['activity_name' => 'Test activity']);
         $section = $perform_generator->create_section($activity);
-        $section_relationship = $perform_generator->create_section_relationship(
+        $manager_section_relationship = $perform_generator->create_section_relationship(
             $section,
             ['relationship' => constants::RELATIONSHIP_MANAGER]
         );
+        $subject_section_relationship = $perform_generator->create_section_relationship(
+            $section,
+            ['relationship' => constants::RELATIONSHIP_SUBJECT]
+        );
+        $rating_relationship_id = $configuration_data['rating_relationship'] ?? constants::RELATIONSHIP_MANAGER;
         $element = element::create($activity->get_context(), 'linked_review', 'title', '', json_encode([
             'content_type' => 'totara_competency',
             'content_type_settings' => [
                 'enable_rating' => true,
-                'rating_relationship' => $perform_generator->get_core_relationship(constants::RELATIONSHIP_MANAGER)->id
+                'rating_relationship' => $perform_generator->get_core_relationship($rating_relationship_id)->id
             ],
-            'selection_relationships' => [$section_relationship->core_relationship_id],
+            'selection_relationships' => [$manager_section_relationship->core_relationship_id],
         ]));
 
         $section_element = $perform_generator->create_section_element($section, $element);
@@ -105,7 +110,7 @@ abstract class perform_rating_base_testcase extends advanced_testcase {
             $manager_user,
             $subject_instance1->id,
             $section,
-            $section_relationship->core_relationship->id
+            $manager_section_relationship->core_relationship->id
         );
 
         $participant_section2 = $perform_generator->create_participant_instance_and_section(
@@ -113,7 +118,22 @@ abstract class perform_rating_base_testcase extends advanced_testcase {
             $manager_user,
             $subject_instance2->id,
             $section,
-            $section_relationship->core_relationship->id
+            $manager_section_relationship->core_relationship->id
+        );
+
+        $subject_participant_section1 = $perform_generator->create_participant_instance_and_section(
+            $activity,
+            $subject_user,
+            $subject_instance1->id,
+            $section,
+            $subject_section_relationship->core_relationship->id
+        );
+        $subject_participant_section2 = $perform_generator->create_participant_instance_and_section(
+            $activity,
+            $subject_user,
+            $subject_instance2->id,
+            $section,
+            $subject_section_relationship->core_relationship->id
         );
 
         $linked_assignment1 = linked_review_content::create(
@@ -131,6 +151,10 @@ abstract class perform_rating_base_testcase extends advanced_testcase {
             public $participant_instance1;
             /** @var participant_instance_entity */
             public $participant_instance2;
+            /** @var participant_instance_entity */
+            public $subject_participant_instance1;
+            /** @var participant_instance_entity */
+            public $subject_participant_instance2;
             /** @var competency_entity */
             public $competency;
             /** @var section_element_model */
@@ -148,6 +172,8 @@ abstract class perform_rating_base_testcase extends advanced_testcase {
         $data->subject_user = $subject_user;
         $data->participant_instance1 = $participant_section1->participant_instance;
         $data->participant_instance2 = $participant_section2->participant_instance;
+        $data->subject_participant_instance1 = $subject_participant_section1->participant_instance;
+        $data->subject_participant_instance2 = $subject_participant_section2->participant_instance;
         $data->competency = $competency;
         $data->section_element = $section_element;
         $data->section = $section;

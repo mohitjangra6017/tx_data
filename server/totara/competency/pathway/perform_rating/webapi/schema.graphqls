@@ -10,6 +10,10 @@ type pathway_perform_rating_perform_rating {
   """
   rater_user: core_user
   rater_relationship: totara_core_relationship
+  """
+  Role of the rater with respect to the user viewing the rating.
+  """
+  rater_role(format: core_format = PLAIN): String!
   activity: mod_perform_activity
   """
   The scale value can be null if the rater explicit gave "no rating"

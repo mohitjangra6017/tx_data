@@ -28,6 +28,7 @@ use coding_exception;
 use core\entity\user;
 use core\orm\entity\model;
 use core\orm\entity\repository;
+use mod_perform\constants;
 use mod_perform\entity\activity\participant_section;
 use mod_perform\entity\activity\section_relationship;
 use mod_perform\models\activity\activity;
@@ -90,6 +91,7 @@ class perform_rating extends model {
 
     protected $model_accessor_whitelist = [
         'rater_relationship',
+        'rater_role',
         'activity',
         'subject_instance',
         'participant_instance',
@@ -304,6 +306,24 @@ class perform_rating extends model {
         return $this->entity->rater_relationship
             ? relationship::load_by_entity($this->entity->rater_relationship)
             : null;
+    }
+
+    /**
+     * Get the rater's role with respect to the user viewing the rating and the rater relationship.
+     *
+     * @return string
+     */
+    public function get_rater_role(): string {
+        $user = user::logged_in();
+
+        if (!is_null($user)
+            && (int)$user->id === (int)$this->rater_user_id
+            && $this->rater_relationship->idnumber === constants::RELATIONSHIP_SUBJECT
+        ) {
+            return get_string('your_rating', 'pathway_perform_rating');
+        }
+
+        return $this->rater_relationship->name;
     }
 
     /**

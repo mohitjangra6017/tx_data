@@ -37,6 +37,7 @@ class perform_rating extends entity_model_formatter {
             'id' => null,
             'rater_user' => null,
             'rater_relationship' => null,
+            'rater_role' => string_field_formatter::class,
             'activity' => null,
             'user_id' => null,
             'user' => null,

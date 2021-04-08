@@ -22,12 +22,14 @@
  */
 
 use core\orm\query\builder;
+use mod_perform\constants;
 use mod_perform\models\activity\activity as activity_model;
 use mod_perform\models\activity\participant_instance as participant_instance_model;
 use pathway_perform_rating\entity\perform_rating as perform_rating_entity;
 use pathway_perform_rating\models\perform_rating as perform_rating_model;
 use pathway_perform_rating\testing\generator as pathway_perform_rating_generator;
 use totara_core\advanced_feature;
+use totara_core\relationship\relationship;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 require_once __DIR__.'/perform_rating_base_testcase.php';
@@ -105,6 +107,45 @@ class pathway_perform_rating_webapi_resolver_query_linked_competencies_rating_te
         $this->assertArrayHasKey('rating', $result);
         $this->assertInstanceOf(perform_rating_model::class, $result['rating']);
         $this->assertEquals($perform_rating->id, $result['rating']->id);
+    }
+
+    public function test_your_rating_shows_as_rater_role_for_self_rated_competency() {
+        $data = $this->create_data(['rating_relationship' => constants::RELATIONSHIP_SUBJECT]);
+
+        $this->setUser($data->subject_user);
+
+        $args = [
+            'input' => [
+                'user_id' => $data->subject_user->id,
+                'competency_id' => $data->competency->id,
+            ]
+        ];
+        $scale_value = $data->competency->scale->sorted_values_high_to_low->first();
+
+        // Now create a rating and check that it gets returned
+        pathway_perform_rating_generator::instance()->create_perform_rating(
+            $data->competency,
+            participant_instance_model::load_by_entity($data->subject_participant_instance1),
+            $data->section_element,
+            $scale_value
+        );
+
+        $result = $this->resolve_graphql_query($this->get_query_name(), $args);
+        $this->assertArrayHasKey('rating', $result);
+        $this->assertInstanceOf(perform_rating_model::class, $result['rating']);
+
+        // Returns your rating for subject user that rated himself.
+        $this->assertEquals('Your rating', $result['rating']->rater_role);
+
+        $this->setUser($data->manager_user);
+
+        $result = $this->resolve_graphql_query($this->get_query_name(), $args);
+        $this->assertArrayHasKey('rating', $result);
+        $this->assertInstanceOf(perform_rating_model::class, $result['rating']);
+
+        // Returns relationship name for other users.
+        $subject_relationship = relationship::load_by_idnumber(constants::RELATIONSHIP_SUBJECT);
+        $this->assertEquals($subject_relationship->name, $result['rating']->rater_role);
     }
 
     public function test_user_can_view_null_rating() {
@@ -215,7 +256,10 @@ class pathway_perform_rating_webapi_resolver_query_linked_competencies_rating_te
         $expected_name = $data->manager_user->firstname.' '.$data->manager_user->lastname;
         $this->assertEquals($expected_name, $webapi_data['rating']['rater_user']['fullname']);
         $this->assertNotEquals('? ?', $webapi_data['rating']['rater_user']['fullname']);
-        $this->assertStringContainsString('moodle/theme/image.php/_s/ventura/core/1/u/f1', $webapi_data['rating']['rater_user']['profileimageurl']);
+        $this->assertStringContainsString(
+            'moodle/theme/image.php/_s/ventura/core/1/u/f1',
+            $webapi_data['rating']['rater_user']['profileimageurl']
+        );
 
         $this->delete_user($data->manager_user);
 
@@ -229,7 +273,10 @@ class pathway_perform_rating_webapi_resolver_query_linked_competencies_rating_te
         $this->assertArrayHasKey('fullname', $webapi_data['rating']['rater_user']);
         $this->assertArrayHasKey('profileimageurl', $webapi_data['rating']['rater_user']);
         $this->assertEquals('? ?', $webapi_data['rating']['rater_user']['fullname']);
-        $this->assertStringContainsString('moodle/theme/image.php/_s/ventura/core/1/u/f1', $webapi_data['rating']['rater_user']['profileimageurl']);
+        $this->assertStringContainsString(
+            'moodle/theme/image.php/_s/ventura/core/1/u/f1',
+            $webapi_data['rating']['rater_user']['profileimageurl']
+        );
     }
 
     public function test_user_purged() {
@@ -357,5 +404,5 @@ class pathway_perform_rating_webapi_resolver_query_linked_competencies_rating_te
 
         $this->resolve_graphql_query($this->get_query_name(), $args);
     }
-    
+
 }

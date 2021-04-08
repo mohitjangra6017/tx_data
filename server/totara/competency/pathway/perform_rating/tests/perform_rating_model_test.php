@@ -140,7 +140,11 @@ class pathway_perform_rating_perform_rating_model_testcase extends perform_ratin
         $this->assertTrue(perform_rating_model::can_rate($participant_instance, $section_element));
 
         // Can't rate as the relationship doesn't exist on the section.
-        $section_relationship = section_relationship::repository()->one();
+        $section_relationship = section_relationship::repository()
+            ->where('core_relationship_id', $participant_instance->core_relationship_id)
+            ->where('section_id', $section_element->section_id)
+            ->get()
+            ->first();
         $section_relationship->delete();
         $this->assertFalse(perform_rating_model::can_rate($participant_instance, $section_element));
 

@@ -11,6 +11,7 @@ query pathway_perform_rating_linked_competencies_rating(
         idnumber
         name(format: PLAIN)
       }
+      rater_role(format: PLAIN)
       scale_value {
         name(format: PLAIN)
         proficient

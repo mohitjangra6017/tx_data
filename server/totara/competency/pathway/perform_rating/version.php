@@ -27,6 +27,7 @@ $plugin->version  = 2020032900;       // The current module version (Date: YYYYM
 $plugin->requires = 2020101200;       // Requires this Totara version.
 $plugin->component = 'pathway_perform_rating'; // To check on upgrade, that module sits in correct place
 $plugin->dependencies = array(
+    'mod_perform' => 2021031500,
     'performelement_linked_review' => 2021031502,
     'totara_hierarchy' => 2020101200,
 );
