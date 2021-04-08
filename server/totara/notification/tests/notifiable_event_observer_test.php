@@ -32,6 +32,7 @@ class totara_notification_notifiable_event_observer_testcase extends testcase {
      */
     protected function setUp(): void {
         $generator = generator::instance();
+        $generator->include_mock_notifiable_event();
         $generator->include_mock_notifiable_event_resolver();
     }
 
