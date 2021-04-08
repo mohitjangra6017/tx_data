@@ -1531,16 +1531,14 @@ class hierarchy {
         $canview = has_capability('totara/hierarchy:view' . $this->prefix, $systemcontext);
         if ($canview) {
             $out .= $OUTPUT->action_link(new moodle_url('/totara/hierarchy/item/view.php', array('prefix' => $this->prefix, 'id' => $record->id)), format_string($record->fullname), null, array('class' => $cssclass));
+            if (!empty($record->warning_message)) {
+                $out .= $this->write_inline_warning_message($record->warning_message);
+            }
         } else {
             $out .= format_string($record->fullname);
         }
         if ($include_custom_fields) {
             $out .= html_writer::empty_tag('br');
-
-            if (!empty($record->warning_message)) {
-                $out .= $this->write_inline_warning_message($record->warning_message);
-                $out .= html_writer::empty_tag('br');
-            }
 
             // Print description if available.
             if ($record->description) {

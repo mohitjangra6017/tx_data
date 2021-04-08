@@ -128,6 +128,9 @@ Feature: Manage Competency achievement paths
     And I should see "Some of these competencies have achievement paths which need to be reviewed." in the ".alert-warning" "css_element"
     And I should see "Competencies cannot be rated without a valid achievement path." in the ".alert-warning" "css_element"
     And I should see "Achievement paths need review" in the ".hierarchy-index" "css_element"
+    When I click on "Hide details" "button"
+    Then I should see "Achievement paths need review" in the ".hierarchy-index" "css_element"
+    And I should not see "Description: Single item parent competency"
 
     # Manage assignments page.
     When I click on "Manage competency assignments" "link"
