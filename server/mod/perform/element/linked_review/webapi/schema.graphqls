@@ -46,6 +46,7 @@ Input type for query to load content items
 """
 input performelement_linked_review_content_items_input {
   section_element_id: core_id!
+  participant_section_id: core_id
   subject_instance_id: core_id!
   token: String
 }

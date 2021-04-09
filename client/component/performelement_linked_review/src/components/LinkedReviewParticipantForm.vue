@@ -490,6 +490,9 @@ export default {
         return {
           input: {
             subject_instance_id: this.subjectInstanceId,
+            participant_section_id: this.element.participantSectionId
+              ? this.element.participantSectionId
+              : null,
             section_element_id: this.sectionElement.id,
             token: this.token ? this.token : null,
           },

@@ -58,6 +58,7 @@ final class content_items implements query_resolver, has_middleware {
         $validator = null;
         $token = $args['token'] ?? $args['input']['token'] ?? null;
         $subject_instance_id = $args['subject_instance_id'] ?? $args['input']['subject_instance_id'] ?? null;
+        $participant_section_id = $args['participant_section_id'] ?? $args['input']['participant_section_id'] ?? null;
         $section_element_id = $args['section_element_id'] ?? $args['input']['section_element_id'] ?? null;
 
         if (!empty($token)) {
@@ -83,21 +84,25 @@ final class content_items implements query_resolver, has_middleware {
         }
 
         $participant_section = null;
-        if ($validator) {
-            $participant_section = participant_section_entity::repository()
-                ->with('section.section_relationships')
-                ->where('section_id', $section_element->section_id)
-                ->where('participant_instance_id', $validator->get_participant_instance()->id)
-                ->one();
-        } else {
-            $participant_section = participant_section_entity::repository()
-                ->with('section.section_relationships')
-                ->join([participant_instance::TABLE, 'pi'], 'participant_instance_id', 'id')
-                ->where('section_id', $section_element->section_id)
-                ->where('pi.participant_id', $USER->id)
-                ->where('pi.participant_source', participant_source::INTERNAL)
-                ->where('pi.subject_instance_id', $subject_instance_id)
-                ->one();
+        if ($participant_section_id) {
+            if ($validator) {
+                $participant_section = participant_section_entity::repository()
+                    ->with('section.section_relationships')
+                    ->where('id', $participant_section_id)
+                    ->where('section_id', $section_element->section_id)
+                    ->where('participant_instance_id', $validator->get_participant_instance()->id)
+                    ->one();
+            } else {
+                $participant_section = participant_section_entity::repository()
+                    ->with('section.section_relationships')
+                    ->join([participant_instance::TABLE, 'pi'], 'participant_instance_id', 'id')
+                    ->where('id', $participant_section_id)
+                    ->where('section_id', $section_element->section_id)
+                    ->where('pi.participant_id', $USER->id)
+                    ->where('pi.participant_source', participant_source::INTERNAL)
+                    ->where('pi.subject_instance_id', $subject_instance_id)
+                    ->one();
+            }
         }
 
         if ($participant_section === null
@@ -112,7 +117,7 @@ final class content_items implements query_resolver, has_middleware {
         }
 
         $content_type = self::get_content_type_instance($section_element, $subject_instance->get_context());
-        
+
         $can_view_other_responses = $participant_section ? self::can_view_other_responses($participant_section) : true;
 
         $created_at = $content_items->first()->created_at;
@@ -164,7 +169,7 @@ final class content_items implements query_resolver, has_middleware {
             ->find('core_relationship_id', $participant_section->participant_instance->core_relationship_id);
 
         $other_responses_visible = self::are_other_responses_visible($participant_section);
-        
+
         return $section_relationship->can_view && $other_responses_visible;
     }
 
@@ -202,7 +207,7 @@ final class content_items implements query_resolver, has_middleware {
 
         return $visibility_option->show_responses($participant_instance, $other_participant_instances);
     }
-    
+
     /**
      * {@inheritdoc}
      */

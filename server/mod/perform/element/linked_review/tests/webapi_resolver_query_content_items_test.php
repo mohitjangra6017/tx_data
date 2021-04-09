@@ -24,6 +24,7 @@
 use core\orm\query\exceptions\record_not_found_exception;
 use core\testing\generator;
 use mod_perform\constants;
+use mod_perform\entity\activity\participant_instance as participant_instance_entity;
 use mod_perform\models\activity\participant_instance;
 use mod_perform\testing\generator as perform_generator;
 use pathway_perform_rating\models\perform_rating;
@@ -49,10 +50,10 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
             ->create_activity_with_section_and_review_element();
         [$activity2, $section2, $element2, $section_element2] = linked_review_generator::instance()
             ->create_activity_with_section_and_review_element();
-        [$user1, $subject_instance1, $participant_instance1] = linked_review_generator::instance()->create_participant_in_section([
+        [$user1, $subject_instance1, $participant_instance1, $participant_section1] = linked_review_generator::instance()->create_participant_in_section([
             'activity' => $activity1, 'section' => $section1,
         ]);
-        [$user2, $subject_instance2, $participant_instance2] = linked_review_generator::instance()->create_participant_in_section([
+        [$user2, $subject_instance2, $participant_instance2, $participant_section2] = linked_review_generator::instance()->create_participant_in_section([
             'activity' => $activity2, 'section' => $section2,
         ]);
 
@@ -77,6 +78,7 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
 
         $args = [
             'section_element_id' => $section_element1->id,
+            'participant_section_id' => $participant_section1->id,
             'subject_instance_id' => $participant_instance1->subject_instance_id,
         ];
 
@@ -109,10 +111,10 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
             ->create_activity_with_section_and_review_element();
         [$activity2, $section2, $element2, $section_element2] = linked_review_generator::instance()
             ->create_activity_with_section_and_review_element();
-        [$user1, $subject_instance1, $participant_instance1] = linked_review_generator::instance()->create_participant_in_section([
+        [$user1, $subject_instance1, $participant_instance1, $participant_section1] = linked_review_generator::instance()->create_participant_in_section([
             'activity' => $activity1, 'section' => $section1,
         ]);
-        [$user2, $subject_instance2, $participant_instance2] = linked_review_generator::instance()->create_participant_in_section([
+        [$user2, $subject_instance2, $participant_instance2, $participant_section2] = linked_review_generator::instance()->create_participant_in_section([
             'activity' => $activity2, 'section' => $section2,
         ]);
 
@@ -139,6 +141,7 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
         // Try section_element not part of given participant instance
         $args = [
             'section_element_id' => $section_element2->id,
+            'participant_section_id' => $participant_section1->id,
             'subject_instance_id' => $participant_instance1->subject_instance_id,
         ];
 
@@ -167,12 +170,27 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
             $this->assertStringContainsString('Invalid section element ID: '.$section_element3->id, $exception->getMessage());
         }
 
+        // Given participant section does not match
+        $args = [
+            'section_element_id' => $section_element1->id,
+            'participant_section_id' => $participant_section2->id,
+            'subject_instance_id' => $participant_instance1->subject_instance_id,
+        ];
+
+        try {
+            $result = $this->resolve_graphql_query(self::QUERY, $args);
+            $this->fail('expected query to fail');
+        } catch (coding_exception $exception) {
+            $this->assertStringContainsString('User does not participate in the section with ID', $exception->getMessage());
+        }
+
         // Test user is not a participant
 
         self::setUser($user2);
 
         $args = [
             'section_element_id' => $section_element1->id,
+            'participant_section_id' => $participant_section1->id,
             'subject_instance_id' => $participant_instance1->subject_instance_id,
         ];
 
@@ -210,6 +228,7 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
             ['relationship' => constants::RELATIONSHIP_EXTERNAL]
         );
 
+        /** @var participant_instance_entity $external_participant_instance1 */
         [$external_participant_instance1] = perform_generator::instance()->generate_external_participant_instances(
             $subject_instance1->id,
             [
@@ -217,6 +236,8 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
                 'email' => 'mytest@example.com',
             ]
         );
+
+        $participant_section1 = $external_participant_instance1->participant_sections->first();
 
         perform_generator::instance()->create_section_relationship(
             $section2,
@@ -245,6 +266,7 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
         // Missing token should throw an exception
         $args = [
             'section_element_id' => $section_element1->id,
+            'participant_section_id' => $participant_section1->id,
             'subject_instance_id' => $participant_instance1->subject_instance_id,
         ];
 
@@ -337,19 +359,19 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
             ]);
         [$activity2, $section2, $element2, $section_element2] = linked_review_generator::instance()
             ->create_activity_with_section_and_review_element();
-        [$subject, $subject_instance1, $participant_instance1] = linked_review_generator::instance()->create_participant_in_section([
+        [$subject, $subject_instance1, $participant_instance1, $participant_section1] = linked_review_generator::instance()->create_participant_in_section([
             'activity' => $activity1,
             'section' => $section1,
             'create_section_relationship' => false,
         ]);
-        [$manager, $subject_instance1, $participant_instance2] = linked_review_generator::instance()->create_participant_in_section([
+        [$manager, $subject_instance1, $participant_instance2, $participant_section2] = linked_review_generator::instance()->create_participant_in_section([
             'activity' => $activity1,
             'section' => $section1,
             'subject_instance' => $subject_instance1,
             'relationship' => $manager_relationship,
             'create_section_relationship' => false,
         ]);
-        [$appraiser, $subject_instance1, $participant_instance3] = linked_review_generator::instance()->create_participant_in_section([
+        [$appraiser, $subject_instance1, $participant_instance3, $participant_section3] = linked_review_generator::instance()->create_participant_in_section([
             'activity' => $activity1,
             'section' => $section1,
             'subject_instance' => $subject_instance1,
@@ -391,6 +413,7 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
 
         $args = [
             'section_element_id' => $section_element1->id,
+            'participant_section_id' => $participant_section1->id,
             'subject_instance_id' => $subject_instance1->id,
         ];
 
@@ -414,6 +437,12 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
         // Now as the manager
         $this->setUser($manager);
 
+        $args = [
+            'section_element_id' => $section_element1->id,
+            'participant_section_id' => $participant_section2->id,
+            'subject_instance_id' => $subject_instance1->id,
+        ];
+
         $result = $this->resolve_graphql_query(self::QUERY, $args);
         $this->assertArrayHasKey('items', $result);
         $this->assertCount($content_items1->count(), $result['items']);
@@ -433,6 +462,12 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
 
         // Now as an appraiser who cannot see others responses
         $this->setUser($appraiser);
+
+        $args = [
+            'section_element_id' => $section_element1->id,
+            'participant_section_id' => $participant_section3->id,
+            'subject_instance_id' => $subject_instance1->id,
+        ];
 
         $result = $this->resolve_graphql_query(self::QUERY, $args);
         $this->assertArrayHasKey('items', $result);
@@ -471,6 +506,12 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
             $rating_created_at
         );
 
+        $args = [
+            'section_element_id' => $section_element1->id,
+            'participant_section_id' => $participant_section1->id,
+            'subject_instance_id' => $subject_instance1->id,
+        ];
+
         $result = $this->resolve_graphql_query(self::QUERY, $args);
 
         /** @var linked_review_content $item */
@@ -495,6 +536,12 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
         // Now as the manager
         $this->setUser($manager);
 
+        $args = [
+            'section_element_id' => $section_element1->id,
+            'participant_section_id' => $participant_section2->id,
+            'subject_instance_id' => $subject_instance1->id,
+        ];
+
         $result = $this->resolve_graphql_query(self::QUERY, $args);
 
         /** @var linked_review_content $item */
@@ -507,6 +554,12 @@ class performelement_linked_review_webapi_resolver_query_content_items_testcase 
 
         // Now as an appraiser who cannot see others responses
         $this->setUser($appraiser);
+
+        $args = [
+            'section_element_id' => $section_element1->id,
+            'participant_section_id' => $participant_section3->id,
+            'subject_instance_id' => $subject_instance1->id,
+        ];
 
         $result = $this->resolve_graphql_query(self::QUERY, $args);
         $this->assertArrayHasKey('items', $result);
