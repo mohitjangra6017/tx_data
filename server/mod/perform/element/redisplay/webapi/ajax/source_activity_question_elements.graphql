@@ -4,7 +4,7 @@ query performelement_redisplay_source_activity_question_elements(
   performelement_redisplay_source_activity_question_elements(input: $input) {
     sections {
       id
-      title
+      title: display_title
       respondable_section_elements {
         id
         element {
