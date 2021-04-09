@@ -74,7 +74,7 @@ class performelement_aggregation_aggregation_data_testcase extends advanced_test
 
         // Check the static cache was used.
         $activity_id = $this->aggregation_section_element->section->activity_id;
-        self::assertEquals(aggregation_data::$aggregatable_section_cache[$activity_id]->to_array(), $aggregation_data[aggregation_data::AGGREGATABLE_SECTIONS]);
+        self::assertEquals(aggregation_data::$aggregatable_section_cache[$activity_id], $aggregation_data[aggregation_data::AGGREGATABLE_SECTIONS]);
 
         aggregation_data::$aggregatable_section_cache = [];
     }

@@ -25,6 +25,8 @@ namespace mod_perform\controllers\activity;
 
 use coding_exception;
 use context;
+use core\format;
+use core\webapi\formatter\field\string_field_formatter;
 use mod_perform\controllers\perform_controller;
 use mod_perform\controllers\requires_activity;
 use mod_perform\models\activity\activity;
@@ -77,8 +79,10 @@ class edit_activity extends perform_controller {
         }
         $cloned_activity = activity::load_by_id($cloned_activity_id);
 
+        $formatter = new string_field_formatter(format::FORMAT_PLAIN, $cloned_activity->get_context());
+
         $props['activity-cloned-success'] = true;
-        $props['cloned-activity-name'] = $cloned_activity->name;
+        $props['cloned-activity-name'] = $formatter->format($cloned_activity->name);
 
         return $props;
     }

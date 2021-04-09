@@ -23,9 +23,13 @@
 namespace performelement_aggregation\data_provider;
 
 use core\collection;
+use core\format;
+use core\webapi\formatter\field\string_field_formatter;
 use mod_perform\data_providers\activity\sections as sections_provider;
 use mod_perform\entity\activity\section_element_reference as section_element_reference_entity;
 use mod_perform\entity\activity\element;
+use mod_perform\models\activity\activity;
+use mod_perform\models\activity\element_plugin;
 use mod_perform\models\activity\section;
 use performelement_aggregation\aggregation;
 
@@ -65,7 +69,7 @@ class aggregation_data {
      * @param element $element
      * @return collection|section[]
      */
-    private function get_aggregatable_sections(element $element): collection {
+    private function get_aggregatable_sections(element $element): array {
         $activity_id = $element->section_element->section->activity_id;
 
         if (array_key_exists($activity_id, static::$aggregatable_section_cache)) {
@@ -74,9 +78,34 @@ class aggregation_data {
 
         $aggregatable_sections = (new sections_provider())->get_sections_with_aggregatable_section_elements($activity_id);
 
-        static::$aggregatable_section_cache[$activity_id] = $aggregatable_sections;
+        $activity = activity::load_by_entity($element->section_element->section->activity);
+        $formatter = new string_field_formatter(format::FORMAT_PLAIN, $activity->get_context());
 
-        return $aggregatable_sections;
+        $result = [];
+        foreach ($aggregatable_sections as $aggregatable_section) {
+            $section_elements = [];
+            foreach ($aggregatable_section->aggregatable_section_elements as $aggregatable_section_element) {
+                $plugin = element_plugin::load_by_plugin($aggregatable_section_element->element->plugin_name);
+                $section_elements[] = [
+                    'id' => $aggregatable_section_element->id,
+                    'element' => [
+                        'title' => $formatter->format($aggregatable_section_element->element->title),
+                        'element_plugin' => [
+                            'name' => $plugin->get_name()
+                        ]
+                    ]
+                ];
+            }
+            $result[] = [
+                'id' => $aggregatable_section->id,
+                'title' => $formatter->format($aggregatable_section->title),
+                'aggregatable_section_elements' => $section_elements
+            ];
+        }
+
+        static::$aggregatable_section_cache[$activity_id] = $result;
+
+        return $result;
     }
 
     /**

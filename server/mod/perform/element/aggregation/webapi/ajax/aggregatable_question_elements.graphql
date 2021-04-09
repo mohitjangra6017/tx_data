@@ -4,7 +4,7 @@ query performelement_aggregation_aggregatable_question_elements(
   performelement_aggregation_aggregatable_question_elements(input: $input) {
     sections {
       id
-      title
+      title: display_title
       aggregatable_section_elements {
         id
         element {
