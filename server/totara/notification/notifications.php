@@ -38,7 +38,7 @@ require_login();
 $extended_context = extended_context::make_with_context(context_system::instance());
 $interactor = new notification_preference_interactor($extended_context, $USER->id);
 
-if (!$interactor->can_manage_notification_preferences()) {
+if (!$interactor->has_any_capability_for_context()) {
     throw notification_exception::on_manage();
 }
 

@@ -43,3 +43,16 @@ Feature: Check program notifications
     And I switch to "Notifications" tab
     Then I should see "Notifications"
     And I log out
+
+  Scenario: program manager can configure program notification at the admin level
+    Given
+    And the following "role assigns" exist:
+      | user    | role        | contextlevel  | reference |
+      | progman | progmanager | System        | prog2     |
+    And the following "permission overrides" exist:
+      | capability                           | permission | role          | contextlevel  | reference |
+      | totara/program:configuremessages     | Allow      | progmanager   | System        | prog2     |
+    And I log in as "progman"
+    When I navigate to system notifications page
+    Then I should see "Notifications"
+    And I log out
