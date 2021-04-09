@@ -84,7 +84,7 @@ $tui = new component(
             'area'      => $extended_context->get_area(),
             'itemId'    => $extended_context->get_item_id(),
         ],
-        'can-change-delivery-channel-defaults' => true,
+        'can-change-delivery-channel-defaults' => false,
         'preferred-editor-format'              => helper::get_preferred_editor_format(FORMAT_JSON_EDITOR),
     ]
 );
