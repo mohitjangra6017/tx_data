@@ -94,4 +94,16 @@ class program extends single_emptiable_placeholder {
 
         throw new coding_exception("Invalid key '{$key}'");
     }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public static function is_safe_html(string $key): bool {
+        if ('full_name_link' === $key) {
+            return true;
+        }
+
+        return parent::is_safe_html($key);
+    }
 }

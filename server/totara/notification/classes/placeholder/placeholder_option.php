@@ -196,4 +196,14 @@ class placeholder_option {
 
         return false;
     }
+
+    /**
+     * We are pass thru to {@see placeholder::is_safe_html()
+     *
+     * @param string $simple_key
+     * @return bool
+     */
+    public function is_safe_html(string $simple_key): bool {
+        return call_user_func([$this->placeholder_class, 'is_safe_html'], $simple_key);
+    }
 }

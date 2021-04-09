@@ -198,7 +198,13 @@ class engine implements engine_interface {
                 }
 
                 $search[] = $match;
-                $replace[] = $collection_placeholder ? "{{{$placeholder_key}}}" : "{{{$group_key}.{$placeholder_key}}}";
+                $context_variable = $collection_placeholder ? $placeholder_key : "{$group_key}.{$placeholder_key}";
+
+                if ($placeholder_option->is_safe_html($placeholder_key)) {
+                    $replace[] = "{{{{$context_variable}}}}";
+                } else {
+                    $replace[] = "{{{$context_variable}}}";
+                }
 
                 $only_keys[$group_key][] = $placeholder_key;
             }

@@ -41,4 +41,13 @@ interface placeholder {
      * @return option[]
      */
     public static function get_options(): array;
+
+    /**
+     * Checks if we are expecting html content from the value that associated with
+     * the $key or not.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public static function is_safe_html(string $key): bool;
 }

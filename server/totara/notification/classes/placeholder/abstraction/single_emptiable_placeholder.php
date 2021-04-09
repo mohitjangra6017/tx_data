@@ -70,4 +70,12 @@ abstract class single_emptiable_placeholder implements single_placeholder {
 
         return $this->do_get($key);
     }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public static function is_safe_html(string $key): bool {
+        return false;
+    }
 }

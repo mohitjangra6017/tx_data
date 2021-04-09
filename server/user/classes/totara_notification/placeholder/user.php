@@ -116,6 +116,18 @@ class user extends single_emptiable_placeholder {
 
     /**
      * @param string $key
+     * @return bool
+     */
+    public static function is_safe_html(string $key): bool {
+        if ('full_name_link' === $key) {
+            return true;
+        }
+
+        return parent::is_safe_html($key);
+    }
+
+    /**
+     * @param string $key
      * @return string
      */
     public function do_get(string $key): string {

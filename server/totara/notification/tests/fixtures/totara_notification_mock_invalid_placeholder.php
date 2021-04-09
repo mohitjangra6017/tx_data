@@ -34,4 +34,12 @@ class totara_notification_mock_invalid_placeholder implements placeholder {
     public static function get_options(): array {
         return [];
     }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public static function is_safe_html(string $key): bool {
+        return false;
+    }
 }

@@ -62,10 +62,10 @@ class totara_notification_mock_collection_placeholder implements collection_plac
     }
 
     /**
-     * @param array $black_list_keys
-     * @return void
+     * @param string $key
+     * @return bool
      */
-    public static function set_black_list_keys(array $black_list_keys): void {
-        static::$black_list_keys = $black_list_keys;
+    public static function is_safe_html(string $key): bool {
+        return false;
     }
 }

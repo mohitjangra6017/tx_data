@@ -90,4 +90,12 @@ class totara_notification_mock_single_placeholder implements single_placeholder 
             self::$options = [];
         }
     }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public static function is_safe_html(string $key): bool {
+        return false;
+    }
 }
