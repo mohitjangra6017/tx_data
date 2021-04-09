@@ -114,3 +114,10 @@ extend type Query {
   """
   totara_program_my_programs: [totara_program_program!]!
 }
+
+extend type Mutation {
+  """
+  Mark a program as viewed for the current user, the program_id is mandatory
+  """
+  totara_program_program_view(program_id: core_id!): Boolean!
+}

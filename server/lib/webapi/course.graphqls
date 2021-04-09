@@ -401,3 +401,12 @@ enum core_category_sort_order {
   """
   IDNUMBER
 }
+
+extend type Mutation {
+  """
+  Mark a course as viewed for the current user
+  The course_id is mandatory, and the current user must be able to access the course
+  The section_id is optional, but if given must be the id of a section within the given course_id
+  """
+  core_course_view(course_id: core_id!, section_id: core_id): Boolean!
+}
