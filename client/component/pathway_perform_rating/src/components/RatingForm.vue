@@ -80,7 +80,7 @@
       <!-- Display the form for collecting rating -->
       <template v-slot:form>
         <Uniform
-          v-if="data.can_rate"
+          v-if="data.can_rate && participantInstanceId"
           :initial-values="initialValues"
           :validate="validations"
           @submit="confirmRating"
@@ -193,7 +193,8 @@ export default {
     isDraft: Boolean,
     participantInstanceId: {
       type: [String, Number],
-      required: true,
+      // For view-only this is not passed
+      required: false,
     },
     required: Boolean,
     sectionElementId: {
