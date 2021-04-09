@@ -11,6 +11,7 @@ query performelement_redisplay_source_activity_question_elements(
           title
           element_plugin {
             name
+            plugin_name
           }
         }
       }

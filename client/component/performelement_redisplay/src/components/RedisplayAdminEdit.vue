@@ -237,7 +237,9 @@ export default {
         elementOptions = groups.map(group => {
           return {
             label: group.title,
-            options: group.respondable_section_elements.map(sectionElement => {
+            options: this.filterLinkedReview(
+              group.respondable_section_elements
+            ).map(sectionElement => {
               return {
                 id: sectionElement.id,
                 label: this.getElementLabel(sectionElement.element),
@@ -246,14 +248,14 @@ export default {
           };
         });
       } else {
-        elementOptions = groups[0].respondable_section_elements.map(
-          sectionElement => {
-            return {
-              id: sectionElement.id,
-              label: this.getElementLabel(sectionElement.element),
-            };
-          }
-        );
+        elementOptions = this.filterLinkedReview(
+          groups[0].respondable_section_elements
+        ).map(sectionElement => {
+          return {
+            id: sectionElement.id,
+            label: this.getElementLabel(sectionElement.element),
+          };
+        });
       }
 
       let defaultOption = {
@@ -263,6 +265,20 @@ export default {
 
       elementOptions.unshift(defaultOption);
       this.selectedActivityElementOptions = elementOptions;
+    },
+
+    /**
+     * Filter out linked_review elements. Todo: fix in TL-30351.
+     *
+     * @param {Array} sectionElements
+     * @return {Array}
+     */
+    filterLinkedReview(sectionElements) {
+      return sectionElements.filter(sectionElement => {
+        return (
+          sectionElement.element.element_plugin.plugin_name !== 'linked_review'
+        );
+      });
     },
 
     /**

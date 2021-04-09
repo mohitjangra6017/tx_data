@@ -28,6 +28,7 @@ use mod_perform\entity\activity\element as element_entity;
 use mod_perform\models\activity\element as element_model;
 use mod_perform\models\activity\element_plugin;
 use mod_perform\models\activity\helpers\element_usage as base_element_usage;
+use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\section_element_reference;
 use performelement_redisplay\data_provider\redisplay_data;
 
@@ -89,8 +90,14 @@ class redisplay extends element_plugin {
         $this->ensure_source_section_element_is_set($data);
     }
 
-    protected function ensure_source_section_element_is_set(array $data): void {
+    private function ensure_source_section_element_is_set(array $data): void {
         $source_section_element_id = $data[self::SOURCE_SECTION_ELEMENT_ID] ?? null;
+        $section_element = section_element::load_by_id($source_section_element_id);
+
+        // Todo: fix in TL-30351, Hard-coded linked_review element.
+        if ($section_element->element->plugin_name === 'linked_review') {
+            throw new coding_exception('Linked review elements can not be redisplayed');
+        }
 
         if ($source_section_element_id === null) {
             throw new coding_exception(self::SOURCE_SECTION_ELEMENT_ID .' must be specified in the element data field');
