@@ -90,7 +90,7 @@ class totara_notification_process_scheduled_event_testcase extends testcase {
         $task->set_time_now($now + schedule_helper::days_to_seconds(2));
 
         // Last run time is today.
-        $task->set_last_run_time($now);
+        set_config(process_scheduled_event_task::LAST_RUN_TIME_NAME, $now, 'totara_notification');
         $task->execute();
 
         // Since the last run time is only 2 days up - therefore we are not going to receive any queues.
@@ -147,7 +147,7 @@ class totara_notification_process_scheduled_event_testcase extends testcase {
         // Set the time is 2 days after from now which it will make the
         // event match the criteria of notification preference and will trigger
         // the notification queue.
-        $task->set_last_run_time($now);
+        set_config(process_scheduled_event_task::LAST_RUN_TIME_NAME, $now, 'totara_notification');
         $task->set_time_now($now + schedule_helper::days_to_seconds(2) + HOURSECS);
         $task->execute();
 

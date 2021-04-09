@@ -32,6 +32,12 @@ use totara_notification\schedule\schedule_after_event;
 
 class process_scheduled_event_task extends scheduled_task {
     /**
+     * The configuration name.
+     * @var string
+     */
+    public const LAST_RUN_TIME_NAME = 'last_scheduled_event_task_run_time';
+
+    /**
      * The current time now - epoch time.
      * This variable will be tweaked by the generator.
      * @var void
@@ -84,12 +90,18 @@ class process_scheduled_event_task extends scheduled_task {
      * @return void
      */
     public function execute() {
-        $last_cron_run = $this->get_last_run_time();
-        $manager = new scheduled_event_manager($this->trace);
+        // Note that this is different from last_cron_time. Because we stored it completely different
+        // from last cron run time, just in case the last cron time get reset.
+        $last_run_time = get_config('totara_notification', static::LAST_RUN_TIME_NAME);
+        if (empty($last_run_time)) {
+            // First time running the tasks most likely. Hence we are using the time now.
+            $last_run_time = $this->time_now;
+        }
 
-        // This is happening because this task might be running for the first time.
-        // Hence we are using the time now.
-        $last_cron_run = empty($last_cron_run) ? $this->time_now : $last_cron_run;
-        $manager->execute($this->time_now, $last_cron_run);
+        $manager = new scheduled_event_manager($this->trace);
+        $manager->execute($this->time_now, $last_run_time);
+
+        // Update the last run time.
+        set_config(static::LAST_RUN_TIME_NAME, $this->time_now, 'totara_notification');
     }
 }
