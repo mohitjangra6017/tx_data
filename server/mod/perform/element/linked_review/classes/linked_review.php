@@ -309,4 +309,12 @@ class linked_review extends respondable_element_plugin {
     public function get_element_usage(): base_element_usage {
         return new element_usage();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function is_enabled(): bool {
+        $content_types = content_type_factory::get_all_enabled();
+        return $content_types->count() > 0;
+    }
 }

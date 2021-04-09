@@ -79,7 +79,8 @@ class competency_assignment extends content_type {
      * @inheritDoc
      */
     public static function is_enabled(): bool {
-        return advanced_feature::is_enabled('competency_assignment');
+        return advanced_feature::is_enabled('competencies')
+            && advanced_feature::is_enabled('competency_assignment');
     }
 
     /**

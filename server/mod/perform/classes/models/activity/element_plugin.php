@@ -496,4 +496,13 @@ abstract class element_plugin {
     public function get_element_usage(): element_usage {
         return new element_usage();
     }
+
+    /**
+     * Is this element enabled?
+     * 
+     * @return bool
+     */
+    public function is_enabled(): bool {
+        return true;
+    }
 }

@@ -56,6 +56,11 @@ class element_plugin {
     protected function fetch_elements(): self {
         $this->items = element_plugin_model::get_element_plugins();
 
+        // Only load enabled plugins
+        $this->items = array_filter($this->items, function (element_plugin_model $plugin) {
+            return $plugin->is_enabled();
+        });
+
         usort( $this->items, function (element_plugin_model $a, element_plugin_model $b) {
             if ($a->get_sortorder() === $b->get_sortorder()) {
                 return $a->get_name() <=> $b->get_name();
