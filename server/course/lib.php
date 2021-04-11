@@ -3658,7 +3658,7 @@ function course_save_image(stdClass $data, int $courseid) {
  * @return moodle_url
  */
 function course_get_image($course) {
-    global $DB, $OUTPUT, $PAGE;
+    global $DB, $OUTPUT, $PAGE, $USER;
 
     if (is_object($course)) {
         if (empty($course->cacherev)) {
@@ -3683,6 +3683,7 @@ function course_get_image($course) {
         return $url;
     }
     $course_image = new course_image($PAGE->theme);
+    $course_image->set_tenant_id(!empty($USER->tenantid) ? $USER->tenantid : 0);
     $file = $course_image->get_current_or_default_url();
     if ($file) {
         return $file;
