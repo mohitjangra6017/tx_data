@@ -201,7 +201,7 @@ class totara_notification_send_notification_with_multi_lang_testcase extends tes
                                 [
                                     paragraph::create_json_node_with_content_nodes([
                                         text::create_json_node_from_text('Hello user '),
-                                        placeholder::create_node_from_key_and_label('target:firstname', 'Random label'),
+                                        placeholder::create_node_from_key_and_label('target:first_name', 'Random label'),
                                     ]),
                                     paragraph::create_json_node_from_text('From english')
                                 ]
@@ -211,7 +211,7 @@ class totara_notification_send_notification_with_multi_lang_testcase extends tes
                                 [
                                     paragraph::create_json_node_with_content_nodes([
                                         text::create_json_node_from_text('Hello user '),
-                                        placeholder::create_node_from_key_and_label('target:lastname', 'Random label'),
+                                        placeholder::create_node_from_key_and_label('target:last_name', 'Random label'),
                                     ]),
                                     paragraph::create_json_node_from_text('From french')
                                 ]
@@ -219,7 +219,7 @@ class totara_notification_send_notification_with_multi_lang_testcase extends tes
                         ]),
                         paragraph::create_json_node_with_content_nodes([
                             text::create_json_node_from_text('User full name is '),
-                            placeholder::create_node_from_key_and_label('target:fullname', 'Random label')
+                            placeholder::create_node_from_key_and_label('target:full_name', 'Random label')
                         ])
                     ])
                 ),
@@ -281,11 +281,11 @@ class totara_notification_send_notification_with_multi_lang_testcase extends tes
                 [
                     /** @lang text */ '<p>This is text</p>',
                     /** @lang text */ '<p>Hello user ',
-                    /** @lang text */ '<span data-key="target:firstname" data-label="Random label">',
+                    /** @lang text */ '<span data-key="target:first_name" data-label="Random label">',
                     /** @lang text */ "{$user_one->firstname}</span></p>",
                     /** @lang text */ '<p>From english</p>',
                     /** @lang text */ '<p>User full name is ',
-                    /** @lang text */ '<span data-key="target:fullname" data-label="Random label">',
+                    /** @lang text */ '<span data-key="target:full_name" data-label="Random label">',
                     /** @lang text */ "{$user_one->fullname}</span></p>"
                 ]
             ),

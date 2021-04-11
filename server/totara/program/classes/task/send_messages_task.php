@@ -25,6 +25,9 @@
 namespace totara_program\task;
 
 use totara_core\advanced_feature;
+use totara_notification\external_helper;
+use totara_certification\totara_notification\resolver\new_exception as certification_new_exception_resolver;
+use totara_program\totara_notification\resolver\new_exception as program_new_exception_resolver;
 
 /**
  * Sends any messages that are due to be sent
@@ -647,7 +650,16 @@ class send_messages_task extends \core\task\scheduled_task {
                     $message->send_message($admin);
                 }
             }
+
+            // This isn't the ideal place for this. It would be better if we triggered an event and listened
+            // with an observer. We can do that before we deprecate this file.
+            $notifiable_event_data = [
+                'program_id' => $progfound->id,
+            ];
+            $resolver = $program->is_certif()
+                ? new certification_new_exception_resolver($notifiable_event_data)
+                : new program_new_exception_resolver($notifiable_event_data);
+            external_helper::create_notifiable_event_queue($resolver);
         }
     }
 }
-

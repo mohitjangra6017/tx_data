@@ -28,15 +28,19 @@ use totara_notification\placeholder\option;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
-require_once($CFG->dirroot . '/totara/program/program_assignments.class.php');
-
 /**
  * @group totara_notification
  */
 class core_user_totara_notification_placeholder_testcase extends testcase {
+    /**
+     * @return void
+     */
+    protected function setUp(): void {
+        global $CFG;
+        require_once($CFG->dirroot . '/totara/program/program_assignments.class.php');
+    }
 
-    public function test_user_placeholders() {
+    public function test_user_placeholders(): void {
         // Make devs aware they should extend this test when adding placeholders.
         $option_keys = array_map(static function (option $option) {
             return $option->get_key();

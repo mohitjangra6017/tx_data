@@ -24,6 +24,28 @@
 
 // Certification db upgrades.
 
+use totara_certification\totara_notification\notification\assigned_for_managers;
+use totara_certification\totara_notification\notification\assigned_for_subject;
+use totara_certification\totara_notification\notification\completed_for_managers;
+use totara_certification\totara_notification\notification\completed_for_subject;
+use totara_certification\totara_notification\notification\course_set_completed_for_subject;
+use totara_certification\totara_notification\notification\course_set_completed_for_managers;
+use totara_certification\totara_notification\notification\failure_to_recertify_for_subject;
+use totara_certification\totara_notification\notification\new_exception_for_site_admin;
+use totara_certification\totara_notification\notification\unassigned_for_managers;
+use totara_certification\totara_notification\notification\unassigned_for_subject;
+use totara_certification\totara_notification\notification\window_open_date_for_subject;
+use totara_certification\totara_notification\resolver\assigned;
+use totara_certification\totara_notification\resolver\completed;
+use totara_certification\totara_notification\resolver\course_set_completed;
+use totara_certification\totara_notification\resolver\course_set_due_date;
+use totara_certification\totara_notification\resolver\due_date;
+use totara_certification\totara_notification\resolver\expiry_date;
+use totara_certification\totara_notification\resolver\failure_to_recertify;
+use totara_certification\totara_notification\resolver\new_exception;
+use totara_certification\totara_notification\resolver\unassigned;
+use totara_certification\totara_notification\resolver\window_open_date;
+
 /**
  * Certification database upgrade script
  *
@@ -39,12 +61,99 @@ function xmldb_totara_certification_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2021040100) {
-        // Register all certification built-in notifications.
-        totara_notification_sync_built_in_notification('totara_certification');
+    if ($oldversion < 2021041100) {
+        totara_program_upgrade_migrate_messages(
+            assigned::class,
+            [MESSAGETYPE_ENROLMENT => false],
+            false,
+            'alert',
+            'totara_message',
+            [assigned_for_managers::class, assigned_for_subject::class]
+        );
+
+        totara_program_upgrade_migrate_messages(
+            unassigned::class,
+            [MESSAGETYPE_UNENROLMENT => false],
+            false,
+            'alert',
+            'totara_message',
+            [unassigned_for_managers::class, unassigned_for_subject::class]
+        );
+
+        totara_program_upgrade_migrate_messages(
+            due_date::class,
+            [MESSAGETYPE_PROGRAM_DUE => true, MESSAGETYPE_PROGRAM_OVERDUE => false],
+            false,
+            'alert',
+            'totara_message',
+            []
+        );
+
+        totara_program_upgrade_migrate_messages(
+            completed::class,
+            [MESSAGETYPE_PROGRAM_COMPLETED => false, MESSAGETYPE_LEARNER_FOLLOWUP => false],
+            false,
+            'alert',
+            'totara_message',
+            [completed_for_managers::class, completed_for_subject::class]
+        );
+
+        totara_program_upgrade_migrate_messages(
+            course_set_due_date::class,
+            [MESSAGETYPE_COURSESET_DUE => true, MESSAGETYPE_COURSESET_OVERDUE => false],
+            false,
+            'alert',
+            'totara_message',
+            []
+        );
+
+        totara_program_upgrade_migrate_messages(
+            course_set_completed::class,
+            [MESSAGETYPE_COURSESET_COMPLETED => false],
+            false,
+            'alert',
+            'totara_message',
+            [course_set_completed_for_managers::class, course_set_completed_for_subject::class]
+        );
+
+        totara_program_upgrade_migrate_messages(
+            new_exception::class,
+            [MESSAGETYPE_EXCEPTION_REPORT => false],
+            false,
+            'alert',
+            'totara_message',
+            [new_exception_for_site_admin::class]
+        );
+
+        totara_program_upgrade_migrate_messages(
+            window_open_date::class,
+            [MESSAGETYPE_RECERT_WINDOWOPEN => false],
+            false,
+            'alert',
+            'totara_message',
+            [window_open_date_for_subject::class]
+        );
+
+        totara_program_upgrade_migrate_messages(
+            failure_to_recertify::class,
+            [MESSAGETYPE_RECERT_FAILRECERT => false],
+            false,
+            'alert',
+            'totara_message',
+            [failure_to_recertify_for_subject::class]
+        );
+
+        totara_program_upgrade_migrate_messages(
+            expiry_date::class,
+            [MESSAGETYPE_RECERT_WINDOWDUECLOSE => true],
+            false,
+            'alert',
+            'totara_message',
+            []
+        );
 
         // Savepoint reached.
-        upgrade_plugin_savepoint(true, 2021040100, 'totara', 'certification');
+        upgrade_plugin_savepoint(true, 2021041100, 'totara', 'certification');
     }
 
     return true;

@@ -20,19 +20,26 @@
  * @author Nathan Lewis <nathan.lewis@totaralearning.com>
  * @package totara_notification
  */
-global $CFG;
 
 use totara_core\extended_context;
 use totara_program\testing\generator;
 use totara_program\totara_notification\recipient\manager;
 use totara_program\totara_notification\recipient\subject;
-
-require_once("{$CFG->dirroot}/totara/program/db/upgradelib.php");
+use core_phpunit\testcase;
 
 /**
  * @group totara_notification
  */
-class totara_program_upgradelib_testcase extends advanced_testcase {
+class totara_program_upgradelib_testcase extends testcase {
+    /**
+     * @return void
+     */
+    protected function setUp(): void {
+        global $CFG;
+
+        require_once("{$CFG->dirroot}/totara/program/db/upgradelib.php");
+        require_once("{$CFG->dirroot}/totara/notification/db/upgradelib.php");
+    }
 
     public function test_totara_program_upgrade_migrate_message(): void {
         global $DB;

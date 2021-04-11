@@ -24,24 +24,23 @@
 defined('MOODLE_INTERNAL') || die();
 
 use totara_program\totara_notification\recipient\manager;
+use totara_program\totara_notification\recipient\site_admin;
 use totara_program\totara_notification\recipient\subject;
 
 /**
  * Shortcut to do all the program and certification migration steps.
  *
  * @param string $resolver_class_name
- * @param int $program_message_type
+ * @param bool[] $program_message_types_and_schedules where key is int $program_message_type and value is bool $schedule_is_before
  * @param bool $is_for_program
- * @param bool $schedule_is_before
  * @param string $provider_name
  * @param string $provider_component
  * @param array $notification_class_names
  */
 function totara_program_upgrade_migrate_messages(
     string $resolver_class_name,
-    int $program_message_type,
+    array $program_message_types_and_schedules,
     bool $is_for_program,
-    bool $schedule_is_before,
     string $provider_name,
     string $provider_component,
     array $notification_class_names
@@ -55,12 +54,14 @@ function totara_program_upgrade_migrate_messages(
         totara_notification_sync_built_in_notification('totara_certification');
     }
 
-    totara_program_upgrade_migrate_message_instances(
-        $program_message_type,
-        $is_for_program,
-        $schedule_is_before,
-        $resolver_class_name
-    );
+    foreach ($program_message_types_and_schedules as $program_message_type => $schedule_is_before) {
+        totara_program_upgrade_migrate_message_instances(
+            $program_message_type,
+            $is_for_program,
+            $schedule_is_before,
+            $resolver_class_name
+        );
+    }
 
     totara_notification_migrate_notifiable_event_prefs(
         $resolver_class_name,
@@ -125,6 +126,10 @@ function totara_program_upgrade_migrate_message_instances(
     foreach ($messages as $message) {
         $offset = $schedule_is_before ? -$message->triggertime : $message->triggertime;
 
+        $recipient = ($program_message_type == MESSAGETYPE_EXCEPTION_REPORT)
+            ? site_admin::class
+            : subject::class;
+
         // Subject message.
         $notif_pref_override = [
             'resolver_class_name' => $resolver_class_name,
@@ -133,7 +138,7 @@ function totara_program_upgrade_migrate_message_instances(
             'area' => 'program',
             'item_id' => $message->programid,
             'enabled' => 1,
-            'recipient' => subject::class,
+            'recipient' => $recipient,
             'title' => totara_program_upgrade_convert_placeholders($message->messagesubject, $is_for_program),
             'subject' => totara_program_upgrade_convert_placeholders($message->messagesubject, $is_for_program),
             'subject_format' => FORMAT_PLAIN,

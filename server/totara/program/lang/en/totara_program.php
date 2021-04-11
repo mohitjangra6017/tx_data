@@ -762,14 +762,64 @@ $string['notassigned'] = 'Not assigned';
 $string['notavailable'] = 'Not available';
 $string['notduetostartuntil'] = 'This program is not yet available. Learner assignments will be applied following the start date.';
 $string['notifications'] = 'Notifications';
+$string['notification_assigned_for_managers_body'] = 'Your team member [subject:full_name_link] is now assigned on [program:full_name].
+
+Go to [program:full_name_link]';
+$string['notification_assigned_for_managers_subject'] = '[subject:full_name] has been assigned in [program:full_name]';
+$string['notification_assigned_for_managers_title'] = 'Team member assigned in program';
+$string['notification_assigned_for_subject_body'] = 'You are now assigned on program [program:full_name].
+
+Go to [program:full_name_link]';
+$string['notification_assigned_for_subject_subject'] = 'You have been assigned in [program:full_name]';
+$string['notification_assigned_for_subject_title'] = 'Learner assigned in program';
+$string['notification_assigned_resolver_title'] = 'Learner assigned in program';
 $string['notification_assignment_placeholder_group'] = 'Assignment {$a}';
+$string['notification_completed_for_subject_body'] = 'You have completed [program:full_name].
+
+Go to program: [program:full_name_link]';
+$string['notification_completed_for_subject_subject'] = 'You have completed [program:full_name]';
+$string['notification_completed_for_subject_title'] = 'Program completed';
+$string['notification_completed_for_managers_body'] = 'Your team member [subject:full_name_link] has completed [program:full_name].
+
+Go to program: [program:full_name_link]';
+$string['notification_completed_for_managers_subject'] = '[subject:full_name] has completed [program:full_name]';
+$string['notification_completed_for_managers_title'] = 'Program completed';
+$string['notification_completed_resolver_title'] = 'Program completed';
+$string['notification_course_set_completed_for_subject_body'] = 'You have completed [course_set:label] in [program:full_name].
+
+Go to program: [program:full_name_link]';
+$string['notification_course_set_completed_for_subject_subject'] = 'You have completed [course_set:label] in [program:full_name]';
+$string['notification_course_set_completed_for_subject_title'] = 'Program course set completed';
+$string['notification_course_set_completed_for_managers_body'] = 'Your team member [subject:full_name_link] has completed [course_set:label].
+
+Go to program: [program:full_name_link]';
+$string['notification_course_set_completed_for_managers_subject'] = '[subject:full_name] has completed [course_set:label] in [program:full_name]';
+$string['notification_course_set_completed_for_managers_title'] = 'Program course set completed';
+$string['notification_course_set_completed_resolver_title'] = 'Program course set completed';
+$string['notification_course_set_due_date_resolver_title'] = 'Course set due date';
 $string['notification_course_set_placeholder_group'] = 'Course set {$a}';
+$string['notification_due_date_resolver_title'] = 'Program due date';
+$string['notification_new_exception_for_site_admin_body'] = 'There are exceptions in program [program:full_name] which need to be resolved.
+
+Go to program: [program:full_name_link]';
+$string['notification_new_exception_for_site_admin_subject'] = 'Exceptions require attention in program [program:full_name]';
+$string['notification_new_exception_for_site_admin_title'] = 'New exception reported';
+$string['notification_new_exception_resolver_title'] = 'New exception reported';
 $string['notification_manager_placeholder_group'] = 'All managers {$a}';
 $string['notification_manager_recipient'] = 'Manager';
 $string['notification_program_placeholder_group'] = 'Program {$a}';
 $string['notification_recipient_placeholder_group'] = 'Recipient {$a}';
+$string['notification_site_admin_recipient'] = 'Site administrator';
 $string['notification_subject_placeholder_group'] = 'Subject {$a}';
 $string['notification_subject_recipient'] = 'Subject';
+$string['notification_unassigned_for_managers_body'] = 'Your team member [subject:full_name_link] is un-assigned from [program:full_name].
+Go to program: [program:full_name_link]';
+$string['notification_unassigned_for_managers_subject'] = '[subject:full_name] has been un-assigned from [program:full_name]';
+$string['notification_unassigned_for_managers_title'] = 'User unassignment';
+$string['notification_unassigned_for_subject_body'] = 'You are no longer assigned on [program:full_name].';
+$string['notification_unassigned_for_subject_subject'] = 'You have been un-assigned from [program:full_name]';
+$string['notification_unassigned_for_subject_title'] = 'User unassignment';
+$string['notification_unassigned_resolver_title'] = 'Learner un-assigned from program';
 $string['notifymanager'] = 'Send notice to manager';
 $string['notifymanager_help'] = 'Check this box if you also want to send a notice to the message recipient\'s manager.';
 $string['notmanager'] = 'You are not a manager';

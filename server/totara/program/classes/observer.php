@@ -22,7 +22,15 @@
  * @subpackage program
  */
 
+use totara_certification\totara_notification\resolver\assigned as certification_assigned;
+use totara_certification\totara_notification\resolver\completed as certification_completed;
+use totara_certification\totara_notification\resolver\course_set_completed as certification_course_set_completed;
+use totara_certification\totara_notification\resolver\unassigned as certification_unassigned;
 use totara_notification\external_helper;
+use totara_program\totara_notification\resolver\assigned as program_assigned;
+use totara_program\totara_notification\resolver\completed as program_completed;
+use totara_program\totara_notification\resolver\course_set_completed as program_course_set_completed;
+use totara_program\totara_notification\resolver\unassigned as program_unassigned;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -44,8 +52,24 @@ class totara_program_observer {
         $userid = $event->userid;
 
         try {
-            $messagesmanager = prog_messages_manager::get_program_messages_manager($programid);
             $program = new program($programid);
+        } catch (ProgramException $e) {
+            return true;
+        }
+
+        $notifiable_event_data = [
+            'program_id' => $programid,
+            'user_id' => $userid
+        ];
+
+        if ($program->is_certif()) {
+            external_helper::create_notifiable_event_queue(new certification_unassigned($notifiable_event_data));
+        } else {
+            external_helper::create_notifiable_event_queue(new program_unassigned($notifiable_event_data));
+        }
+
+        try {
+            $messagesmanager = prog_messages_manager::get_program_messages_manager($programid);
 
             $user = $DB->get_record('user', array('id' => $userid));
             if (empty($user) || $user->suspended) {
@@ -84,6 +108,22 @@ class totara_program_observer {
         $userid = $event->userid;
 
         try {
+            $program = new program($programid);
+        } catch (ProgramException $e) {
+            return true;
+        }
+
+        $notifiable_event_data = [
+            'program_id' => $programid,
+            'user_id' => $userid,
+        ];
+        if ($program->is_certif()) {
+            external_helper::create_notifiable_event_queue(new certification_completed($notifiable_event_data));
+        } else {
+            external_helper::create_notifiable_event_queue(new program_completed($notifiable_event_data));
+        }
+
+        try {
             $messagesmanager = prog_messages_manager::get_program_messages_manager($programid);
             $program = new program($programid);
             $user = $DB->get_record('user', array('id' => $userid));
@@ -120,6 +160,23 @@ class totara_program_observer {
         $programid = $event->objectid;
         $userid = $event->userid;
         $coursesetid = $event->other['coursesetid'];
+
+        try {
+            $program = new program($programid);
+        } catch (ProgramException $e) {
+            return true;
+        }
+
+        $notifiable_event_data = [
+            'program_id' => $programid,
+            'user_id' => $userid,
+            'course_set_id' => $coursesetid
+        ];
+        if ($program->is_certif()) {
+            external_helper::create_notifiable_event_queue(new certification_course_set_completed($notifiable_event_data));
+        } else {
+            external_helper::create_notifiable_event_queue(new program_course_set_completed($notifiable_event_data));
+        }
 
         try {
             $messagesmanager = prog_messages_manager::get_program_messages_manager($programid);
@@ -806,6 +863,36 @@ class totara_program_observer {
         $userid = $event->relateduserid;
         $planid = $event->objectid;
         \totara_program\assignment\plan::update_plan_assignments($userid, $planid);
+
+        return true;
+    }
+
+    /**
+     * Handler function called when a program_assigned event is triggered
+     *
+     * @param \totara_program\event\program_assigned $event
+     * @return bool Success status
+     */
+    public static function assigned(\totara_program\event\program_assigned $event): bool {
+        $programid = $event->objectid;
+        $user_id = $event->userid;
+
+        try {
+            $program = new program($programid);
+        } catch (ProgramException $e) {
+            return true;
+        }
+
+        $notifiable_event_data = [
+            'program_id' => $programid,
+            'user_id' => $user_id
+        ];
+
+        if ($program->is_certif()) {
+            external_helper::create_notifiable_event_queue(new certification_assigned($notifiable_event_data));
+        } else {
+            external_helper::create_notifiable_event_queue(new program_assigned($notifiable_event_data));
+        }
 
         return true;
     }

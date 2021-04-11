@@ -362,7 +362,70 @@ $string['notapplicable'] = 'Not applicable';
 $string['notassigned'] = 'Not assigned';
 $string['notcertified'] = 'Not certified';
 $string['notduetostartuntil'] = 'This certification is not yet available. Learner assignments will be applied following the start date.';
+$string['notification_assigned_for_managers_body'] = 'Your team member [subject:full_name_link] is now assigned on [certification:full_name].
+
+Go to [certification:full_name_link]';
+$string['notification_assigned_for_managers_subject'] = '[subject:full_name] has been assigned in [certification:full_name]';
+$string['notification_assigned_for_managers_title'] = 'Team member assigned in certification';
+$string['notification_assigned_for_subject_body'] = 'You are now assigned on certification [certification:full_name].
+
+Go to [certification:full_name_link]';
+$string['notification_assigned_for_subject_subject'] = 'You have been assigned in [certification:full_name]';
+$string['notification_assigned_for_subject_title'] = 'Learner assigned in certification';
+$string['notification_assigned_resolver_title'] = 'Learner assigned in certification';
 $string['notification_certification_placeholder_group'] = 'Certification {$a}';
+$string['notification_completed_for_subject_body'] = 'You have completed [certification:full_name].
+
+Go to certification: [certification:full_name_link]';
+$string['notification_completed_for_subject_subject'] = 'You have completed [certification:full_name]';
+$string['notification_completed_for_subject_title'] = 'Certification completed';
+$string['notification_completed_for_managers_body'] = 'Your team member [subject:full_name_link] has completed [certification:full_name].
+
+Go to program: [certification:full_name_link]';
+$string['notification_completed_for_managers_subject'] = '[subject:full_name] has completed [certification:full_name]';
+$string['notification_completed_for_managers_title'] = 'Certification completed';
+$string['notification_completed_resolver_title'] = 'Certification completed';
+$string['notification_course_set_completed_resolver_title'] = 'Course set completed';
+$string['notification_course_set_completed_for_subject_body'] = 'You have completed [course_set:label] in [certification:full_name].
+
+Go to certification: [certification:full_name_link]';
+$string['notification_course_set_completed_for_subject_subject'] = 'You have completed [course_set:label] in [certification:full_name]';
+$string['notification_course_set_completed_for_subject_title'] = 'Certification course set completed';
+$string['notification_course_set_completed_for_managers_body'] = 'Your team member [subject:full_name_link] has completed [course_set:label] in [certification:full_name].
+
+Go to certification: [certification:full_name_link]';
+$string['notification_course_set_completed_for_managers_subject'] = '[subject:full_name] has completed [course_set:label] in [certification:full_name]';
+$string['notification_course_set_completed_for_managers_title'] = 'Certification course set completed';
+$string['notification_course_set_due_date_resolver_title'] = 'Course set due date';
+$string['notification_due_date_resolver_title'] = 'Certification due date';
+$string['notification_expiry_date_resolver_title'] = 'Certification expiry date';
+$string['notification_failure_to_recertify_for_subject_body'] = '[certification:full_name] is overdue.
+
+Go to [certification:full_name_link] to complete your learning.';
+$string['notification_failure_to_recertify_for_subject_subject'] = '[certification:full_name] is overdue';
+$string['notification_failure_to_recertify_for_subject_title'] = 'Failed to re-certify';
+$string['notification_failure_to_recertify_resolver_title'] = 'Failure to re-certify';
+$string['notification_new_exception_for_site_admin_body'] = 'There are exceptions in certification [certification:full_name] which need to be resolved.
+
+Go to certification: [certification:full_name_link]';
+$string['notification_new_exception_for_site_admin_subject'] = 'Exceptions require attention in certification [certification:full_name]';
+$string['notification_new_exception_for_site_admin_title'] = 'New exception reported';
+$string['notification_new_exception_resolver_title'] = 'New exception reported';
+$string['notification_unassigned_for_managers_body'] = 'Your team member [subject:full_name_link] is un-assigned from [certification:full_name].
+
+Go to certification: [certification:full_name_link]';
+$string['notification_unassigned_for_managers_subject'] = '[subject:full_name] has been un-assigned from [certification:full_name]';
+$string['notification_unassigned_for_managers_title'] = 'User unassignment';
+$string['notification_unassigned_for_subject_body'] = 'You are no longer assigned on [certification:full_name].';
+$string['notification_unassigned_for_subject_subject'] = 'You have been un-assigned from [certification:full_name]';
+$string['notification_unassigned_for_subject_title'] = 'User unassignment';
+$string['notification_unassigned_resolver_title'] = 'Learner un-assigned from certification';
+$string['notification_window_open_date_for_subject_body'] = '[certification:full_name] is ready for renewal.
+
+Go to [certification:full_name_link] to complete your learning.';
+$string['notification_window_open_date_for_subject_subject'] = '[certification:full_name] is ready for renewal';
+$string['notification_window_open_date_for_subject_title'] = 'Recertification window opened';
+$string['notification_window_open_date_resolver_title'] = 'Recertification window open date';
 $string['oricertpath'] = 'Original certification path';
 $string['oricertpathdesc'] = 'Define the content required for the original certification path.';
 $string['perioddays'] = '{$a} day(s)';

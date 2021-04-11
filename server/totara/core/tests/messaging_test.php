@@ -71,6 +71,7 @@ class totara_core_messaging_testcase extends advanced_testcase {
      */
     public function test_messages_from_no_reply() {
         global $USER, $CFG;
+        require_once($CFG->dirroot . '/totara/program/program_message.class.php');
         $this->setAdminUser();
 
         $noreplyaddress = 'no-reply@example.com';
@@ -80,8 +81,13 @@ class totara_core_messaging_testcase extends advanced_testcase {
 
         $sink = $this->redirectEmails();
 
-        // Messages in Programs.
+        // Add enrolment message in Programs.
         $program1 = $this->programgenerator->create_program();
+        $program_message_manager = new prog_messages_manager($program1->id);
+        $program_message_manager->add_message(MESSAGETYPE_ENROLMENT);
+        $program_message_manager->save_messages();
+        prog_messages_manager::reset_cache();
+
         $this->programgenerator->assign_program($program1->id, array($this->user1->id, $this->user2->id));
 
         $this->waitForSecond(); // Messages are only sent if they were created before "now", so we need to wait one second.

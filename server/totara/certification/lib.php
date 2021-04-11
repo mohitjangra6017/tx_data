@@ -117,6 +117,9 @@ $CERTIFPATHSUF = array(
     CERTIFPATH_RECERT => '_rc',
 );
 
+use totara_certification\totara_notification\resolver\window_open_date;
+use totara_notification\external_helper;
+
 class certification_event_handler {
 
     /**
@@ -1750,6 +1753,12 @@ function certif_set_state_windowopen(int $programid, int $userid, string $logmes
 
     $transaction->allow_commit();
 
+    $notifiable_event_data = [
+        'program_id' => $programid,
+        'user_id' => $userid
+    ];
+    external_helper::create_notifiable_event_queue(new window_open_date($notifiable_event_data));
+
     // Get the messages for the certification, using the message manager cache.
     $messagesmanager = prog_messages_manager::get_program_messages_manager($programid);
     $messages = $messagesmanager->get_messages();
@@ -1863,6 +1872,10 @@ function certif_set_state_expired(int $programid, int $userid, string $logmessag
             $message->send_message($user);
         }
     }
+
+    // Trigger event for failure to re-certify in the given window.
+    $event = \totara_certification\event\failure_to_recertify::create_from_user_program($userid, $programid);
+    $event->trigger();
 
     return true;
 }

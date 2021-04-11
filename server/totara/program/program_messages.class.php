@@ -99,18 +99,7 @@ class prog_messages_manager {
                 $this->messages[] = $messageob;
             }
         } else if ($newprogram) {
-            // If it is a new program, create the default messages.
-            $enrolment_message_class = $this->message_classnames[MESSAGETYPE_ENROLMENT];
-            $enrolment_message = new $enrolment_message_class($programid);
-            $enrolment_message->messagesubject = get_string('defaultenrolmentmessage_subject', 'totara_program');
-            $enrolment_message->mainmessage = get_string('defaultenrolmentmessage_message', 'totara_program');
-            $this->messages[] = $enrolment_message;
-
-            $exception_report_message_class = $this->message_classnames[MESSAGETYPE_EXCEPTION_REPORT];
-            $exception_report_message = new $exception_report_message_class($programid);
-            $exception_report_message->messagesubject = get_string('defaultexceptionreportmessage_subject', 'totara_program');
-            $exception_report_message->mainmessage = get_string('defaultexceptionreportmessage_message', 'totara_program');
-            $this->messages[] = $exception_report_message;
+            // We no longer create legacy messages. Instead, new built-in notifications will be inherited.
 
             // The default message must be saved at this point.
             $this->save_messages();

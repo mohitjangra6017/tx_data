@@ -27,6 +27,9 @@
  *
  */
 
+use totara_certification\event\failure_to_recertify;
+use totara_notification\observer\notifiable_event_observer;
+
 defined('MOODLE_INTERNAL') || die();
 
 $observers = array(
@@ -90,5 +93,9 @@ $observers = array(
     array(
         'eventname' => '\totara_customfield\event\customfield_updated',
         'callback'  => 'totara_certification\totara_catalog\certification\observer\customfield_changed::update_default_data'
+    ),
+    array(
+        'eventname' => failure_to_recertify::class,
+        'callback'  => [notifiable_event_observer::class, 'watch_notifiable_event']
     ),
 );

@@ -62,7 +62,8 @@ class variant_name {
             $variant_name,
             [
                 static::STANDARD,
-                static::DESCRIPTION
+                static::DESCRIPTION,
+                static::SIMPLE
             ]
         );
     }

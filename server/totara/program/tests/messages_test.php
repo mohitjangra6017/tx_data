@@ -109,6 +109,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Set up the messages.
         $programmessagemanager = $this->program1->get_messagesmanager();
         $programmessagemanager->add_message(MESSAGETYPE_UNENROLMENT);
+        $programmessagemanager->add_message(MESSAGETYPE_ENROLMENT);
         $programmessagemanager->save_messages();
         prog_messages_manager::get_program_messages_manager($this->program1->id, true); // Causes static cache to be reset.
 
@@ -117,6 +118,8 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
 
         // Some quick edits to the enrolment message content.
         $enrolmentmessage->managersubject = '';
+        $enrolmentmessage->messagesubject = get_string('defaultenrolmentmessage_subject', 'totara_program');
+        $enrolmentmessage->mainmessage = get_string('defaultenrolmentmessage_message', 'totara_program');
         $enrolmentmessage->managermessage = 'Staff Program Assignment';
         $enrolmentmessage->notifymanager = 1;
         $DB->update_record('prog_message', $enrolmentmessage);
@@ -1221,6 +1224,7 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         // Set up the messages.
         $programmessagemanager = $this->program1->get_messagesmanager();
         $programmessagemanager->add_message(MESSAGETYPE_UNENROLMENT);
+        $programmessagemanager->add_message(MESSAGETYPE_ENROLMENT);
         $programmessagemanager->save_messages();
         prog_messages_manager::get_program_messages_manager($this->program1->id, true); // Causes static cache to be reset.
 
@@ -1228,6 +1232,8 @@ class totara_program_messages_testcase extends reportcache_advanced_testcase {
         $unenrolmentmessage = $DB->get_record('prog_message', array('programid' => $this->program1->id, 'messagetype' => MESSAGETYPE_UNENROLMENT));
 
         // Some quick edits to the enrolment message content.
+        $enrolmentmessage->messagesubject = get_string('defaultenrolmentmessage_subject', 'totara_program');
+        $enrolmentmessage->mainmessage = get_string('defaultenrolmentmessage_message', 'totara_program');
         $enrolmentmessage->managersubject = '';
         $enrolmentmessage->managermessage = 'Staff Program Assignment';
         $enrolmentmessage->notifymanager = 1;

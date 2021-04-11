@@ -21,6 +21,8 @@
  * @package totara_certification
  */
 
+use core\orm\query\builder;
+use core_phpunit\testcase;
 use totara_core\advanced_feature;
 use totara_job\job_assignment;
 use totara_program\testing\generator as program_generator;
@@ -30,10 +32,13 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * @group totara_notification
  */
-class totara_certification_totara_notification_base extends advanced_testcase {
+abstract class totara_certification_totara_notification_base extends testcase {
 
     protected function setup_certifications(): stdClass {
         self::setAdminUser();
+
+        // Disable built-in notifications.
+        builder::table('notification_preference')->update(['enabled' => 0]);
 
         $test_data = new stdClass();
 
@@ -93,14 +98,38 @@ class totara_certification_totara_notification_base extends advanced_testcase {
         $generator->enrol_user($test_data->user1->id, $course1->id);
         $generator->enrol_user($test_data->user1->id, $course2->id);
 
-        // Assign user to certification.
+        // Assign user to certification and assigned event will be triggered.
         $program_generator->assign_program($test_data->program1->id, [$test_data->user1->id]);
 
         $test_data->due_date = new DateTime('2020-10-25', new DateTimeZone('Pacific/Auckland'));
-        $prog_compl1 = prog_load_completion($test_data->program1->id, $test_data->user1->id);
+        [$certif_compl1, $prog_compl1] = certif_load_completion($test_data->program1->id, $test_data->user1->id);
         $prog_compl1->timedue = $test_data->due_date->getTimestamp();
-        self::assertTrue(prog_write_completion($prog_compl1));
+        self::assertTrue(certif_write_completion($certif_compl1, $prog_compl1));
 
         return $test_data;
+    }
+
+    /**
+     * @param string $resolver_class_name
+     * @param int $min_time
+     * @param int $max_time
+     * @param array $expected
+     */
+    protected static function assert_scheduled_events(
+        string $resolver_class_name,
+        int $min_time,
+        int $max_time,
+        array $expected
+    ): void {
+        $events = call_user_func([$resolver_class_name, 'get_scheduled_events'], $min_time, $max_time);
+        $actual = $events->to_array();
+        $actual_to_array = array_map(static function (stdClass $scheduled) {
+            return (array)$scheduled;
+        }, $actual);
+        self::assertEqualsCanonicalizing(
+            $expected,
+            $actual_to_array,
+            'Expected: ' . json_encode($expected) . ' but got: ' . json_encode($actual_to_array)
+        );
     }
 }

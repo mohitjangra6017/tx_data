@@ -22,6 +22,23 @@
  * @subpackage program
  */
 
+use totara_program\totara_notification\notification\assigned_for_managers;
+use totara_program\totara_notification\notification\assigned_for_subject;
+use totara_program\totara_notification\notification\completed_for_managers;
+use totara_program\totara_notification\notification\completed_for_subject;
+use totara_program\totara_notification\notification\course_set_completed_for_managers;
+use totara_program\totara_notification\notification\course_set_completed_for_subject;
+use totara_program\totara_notification\notification\new_exception_for_site_admin;
+use totara_program\totara_notification\notification\unassigned_for_managers;
+use totara_program\totara_notification\notification\unassigned_for_subject;
+use totara_program\totara_notification\resolver\assigned;
+use totara_program\totara_notification\resolver\completed;
+use totara_program\totara_notification\resolver\course_set_completed;
+use totara_program\totara_notification\resolver\course_set_due_date;
+use totara_program\totara_notification\resolver\due_date;
+use totara_program\totara_notification\resolver\new_exception;
+use totara_program\totara_notification\resolver\unassigned;
+
 /**
  * Local database upgrade script
  *
@@ -36,12 +53,72 @@ function xmldb_totara_program_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2021040100) {
-        // Register all program built-in notifications.
-        totara_notification_sync_built_in_notification('totara_program');
+    if ($oldversion < 2021041100) {
+        totara_program_upgrade_migrate_messages(
+            assigned::class,
+            [MESSAGETYPE_ENROLMENT => false],
+            true,
+            'alert',
+            'totara_message',
+            [assigned_for_managers::class, assigned_for_subject::class]
+        );
+
+        totara_program_upgrade_migrate_messages(
+            unassigned::class,
+            [MESSAGETYPE_UNENROLMENT => false],
+            true,
+            'alert',
+            'totara_message',
+            [unassigned_for_managers::class, unassigned_for_subject::class]
+        );
+
+        totara_program_upgrade_migrate_messages(
+            due_date::class,
+            [MESSAGETYPE_PROGRAM_DUE => true, MESSAGETYPE_PROGRAM_OVERDUE => false],
+            true,
+            'alert',
+            'totara_message',
+            []
+        );
+
+        totara_program_upgrade_migrate_messages(
+            completed::class,
+            [MESSAGETYPE_PROGRAM_COMPLETED => false, MESSAGETYPE_LEARNER_FOLLOWUP => false],
+            true,
+            'alert',
+            'totara_message',
+            [completed_for_managers::class, completed_for_subject::class]
+        );
+
+        totara_program_upgrade_migrate_messages(
+            course_set_due_date::class,
+            [MESSAGETYPE_COURSESET_DUE => true, MESSAGETYPE_COURSESET_OVERDUE => false],
+            true,
+            'alert',
+            'totara_message',
+            []
+        );
+
+        totara_program_upgrade_migrate_messages(
+            course_set_completed::class,
+            [MESSAGETYPE_COURSESET_COMPLETED => false],
+            true,
+            'alert',
+            'totara_message',
+            [course_set_completed_for_managers::class, course_set_completed_for_subject::class]
+        );
+
+        totara_program_upgrade_migrate_messages(
+            new_exception::class,
+            [MESSAGETYPE_EXCEPTION_REPORT => false],
+            true,
+            'alert',
+            'totara_message',
+            [new_exception_for_site_admin::class]
+        );
 
         // Savepoint reached.
-        upgrade_plugin_savepoint(true, 2021040100, 'totara', 'program');
+        upgrade_plugin_savepoint(true, 2021041100, 'totara', 'program');
     }
 
     return true;
