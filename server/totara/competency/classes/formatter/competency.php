@@ -23,6 +23,7 @@
 
 namespace totara_competency\formatter;
 
+use context_system;
 use core\orm\formatter\entity_formatter;
 use core\webapi\formatter\field\date_field_formatter;
 use core\webapi\formatter\field\string_field_formatter;
@@ -48,8 +49,12 @@ class competency extends entity_formatter {
                 $filearea = \hierarchy::get_short_prefix('competency');
                 $itemid = $this->object->id;
 
+                // Competencies are always created in the system context,
+                // therefore for the files to work we need to use the system context
+                $context = context_system::instance();
+
                 return $formatter
-                    ->set_pluginfile_url_options($this->context, $component, $filearea, $itemid)
+                    ->set_pluginfile_url_options($context, $component, $filearea, $itemid)
                     ->format($value);
             },
             'timecreated' => date_field_formatter::class,
