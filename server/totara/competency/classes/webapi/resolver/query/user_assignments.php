@@ -28,7 +28,6 @@ use coding_exception;
 use context_user;
 use core\entity\user;
 use core\webapi\execution_context;
-use core\webapi\middleware\require_advanced_feature;
 use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;

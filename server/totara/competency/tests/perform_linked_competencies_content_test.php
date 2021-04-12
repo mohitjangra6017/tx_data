@@ -513,7 +513,8 @@ class totara_competency_perform_linked_competencies_content_testcase extends adv
             time()
         );
 
-        $this->assertEmpty($result);
+        $this->assertNotEmpty($result);
+        $this->assertCount(2, $result);
     }
 
     public function test_get_display_settings() {

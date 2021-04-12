@@ -26,7 +26,7 @@
     :from-print="false"
   >
     <template v-slot:content>
-      <FormScope v-if="scaleValuesAvailable" :path="path" :process="process">
+      <FormScope :path="path" :process="process">
         <FormRadioGroup
           class="tui-competencyRatingParticipantForm"
           :validations="validations"
@@ -41,12 +41,6 @@
           </Radio>
         </FormRadioGroup>
       </FormScope>
-
-      <div v-else>
-        {{
-          $str('scale_values_not_available', 'performelement_competency_rating')
-        }}
-      </div>
     </template>
   </ElementParticipantFormContent>
 </template>
@@ -71,6 +65,23 @@ export default {
     isDraft: Boolean,
     extraData: {
       type: Object,
+      required: true,
+      /**
+       * Validates the content has valid scale values.
+       */
+      validator(value) {
+        if (
+          !value.content ||
+          !value.content.scale_values ||
+          value.content.scale_values.length < 1
+        ) {
+          return false;
+        }
+
+        return value.content.scale_values.every(scale_value => {
+          return scale_value.id && scale_value.name;
+        });
+      },
     },
     path: {
       type: [String, Array],
@@ -92,20 +103,6 @@ export default {
 
       return [];
     },
-
-    /**
-     * Checks if scale values are available.
-     *
-     * @return {Boolean}
-     */
-    scaleValuesAvailable() {
-      return (
-        this.extraData &&
-        this.extraData.content &&
-        this.extraData.content.scale_values &&
-        this.extraData.content.scale_values.length > 0
-      );
-    },
   },
 
   methods: {
@@ -125,10 +122,3 @@ export default {
   },
 };
 </script>
-<lang-strings>
-  {
-    "performelement_competency_rating": [
-      "scale_values_not_available"
-    ]
-  }
-</lang-strings>

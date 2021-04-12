@@ -197,7 +197,7 @@ class competency_assignment extends content_type {
         bool $can_view_other_responses,
         int $created_at
     ): array {
-        if ($content_items->count() === 0 || advanced_feature::is_disabled('competency_assignment')) {
+        if ($content_items->count() === 0) {
             return [];
         }
 
