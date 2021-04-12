@@ -363,6 +363,14 @@ final class generator extends component_generator {
     /**
      * @return void
      */
+    public function include_real_mock_lang_string(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_real_mock_lang_string.php");
+    }
+
+    /**
+     * @return void
+     */
     public function include_mock_notifiable_event_resolver(): void {
         $fixture_directory = self::fixtures_location();
         require_once("{$fixture_directory}/totara_notification_mock_notifiable_event_resolver.php");

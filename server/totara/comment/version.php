@@ -31,5 +31,4 @@ $plugin->component = 'totara_comment';   // To check on upgrade, that module sit
 $plugin->dependencies = [
     'editor_weka' => 2020101200,
     'totara_reportedcontent' => 2020101200,
-    'totara_notification' => 2021012000
 ];

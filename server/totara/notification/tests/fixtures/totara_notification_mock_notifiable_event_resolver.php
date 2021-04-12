@@ -141,7 +141,7 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
         }
 
         // Let the native php handle the miss-matched type returned from callback - i'm tired.
-        return self::$recipient_ids_resolver->__invoke();
+        return self::$recipient_ids_resolver->__invoke($this->event_data);
     }
 
     /**

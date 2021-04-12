@@ -20,10 +20,8 @@
  * @author Nathan Lewis <nathan.lewis@totaralearning.com>
  * @package totara_notification
  */
-global $CFG;
 
-use totara_comment\totara_notification\resolver\comment_created;
-use totara_comment\totara_notification\resolver\comment_soft_deleted;
+use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\entity\notifiable_event_preference as notification_event_preference_entity;
 use totara_notification\entity\notifiable_event_user_preference as notifiable_event_user_preference_entity;
@@ -31,22 +29,51 @@ use totara_notification\model\notifiable_event_preference as notification_event_
 use totara_notification\model\notifiable_event_user_preference as notifiable_event_user_preference_model;
 use totara_notification\model\notification_preference as notification_preference_model;
 use totara_notification\testing\generator;
+use totara_notification_mock_notifiable_event_resolver as mock_resolver;
+use totara_notification_mock_scheduled_aware_event_resolver as scheduled_resolver;
 
-require_once("{$CFG->dirroot}/totara/notification/db/upgradelib.php");
+class totara_notification_upgradelib_testcase extends testcase {
+    /**
+     * @return void
+     */
+    protected function setUp(): void {
+        global $CFG;
+        require_once("{$CFG->dirroot}/totara/notification/db/upgradelib.php");
 
-class totara_notification_upgradelib_testcase extends advanced_testcase {
+        $generator = generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
+        $generator->include_mock_scheduled_aware_notifiable_event_resolver();
+    }
 
+    /**
+     * @return notification_preference_model
+     */
     private function create_new_notification_preference(): notification_preference_model {
         $generator = generator::instance();
 
-        return $generator->create_notification_preference(comment_created::class);
+        return $generator->create_notification_preference(mock_resolver::class);
     }
 
+    /**
+     * @param string $provider_name
+     * @param string $provider_component
+     * @param bool   $enabled
+     *
+     * @return void
+     */
     private function set_legacy_preference_status(string $provider_name, string $provider_component, bool $enabled): void {
         $name = $provider_component . '_' . $provider_name . '_disabled';
         set_config($name, (int)(!$enabled), 'message');
     }
 
+    /**
+     * @param string $provider_name
+     * @param string $provider_component
+     * @param string $output
+     * @param string $permitted
+     *
+     * @return void
+     */
     private function set_legacy_preference_permissions(
         string $provider_name,
         string $provider_component,
@@ -70,17 +97,18 @@ class totara_notification_upgradelib_testcase extends advanced_testcase {
 
     /**
      * Test that the correct outputs are enabled and disabled in the new notifiable event.
+     * @return void
      */
     public function test_totara_notification_migrate_notifiable_event_prefs_with_existing_record(): void {
         $control_notifiable_event_entity = new notification_event_preference_entity();
-        $control_notifiable_event_entity->resolver_class_name = comment_created::class;
+        $control_notifiable_event_entity->resolver_class_name = mock_resolver::class;
         $control_notifiable_event_entity->context_id = context_system::instance()->id;
         $control_notifiable_event_entity->save();
         $control_notifiable_event = notification_event_preference_model::from_entity($control_notifiable_event_entity);
         $control_enabled_delivery_channels = $control_notifiable_event->get_default_delivery_channels();
 
         $target_notifiable_event_entity = new notification_event_preference_entity();
-        $target_notifiable_event_entity->resolver_class_name = comment_soft_deleted::class;
+        $target_notifiable_event_entity->resolver_class_name = scheduled_resolver::class;
         $target_notifiable_event_entity->context_id = context_system::instance()->id;
         $target_notifiable_event_entity->save();
         $target_notifiable_event = notification_event_preference_model::from_entity($target_notifiable_event_entity);
@@ -117,6 +145,9 @@ class totara_notification_upgradelib_testcase extends advanced_testcase {
         self::assertTrue($target_delivery_channels_enabled['email']->is_enabled);
     }
 
+    /**
+     * @return void
+     */
     public function test_totara_notification_migrate_notifiable_event_prefs_with_no_record(): void {
         $extended_context = extended_context::make_with_context(context_system::instance());
 
@@ -128,18 +159,18 @@ class totara_notification_upgradelib_testcase extends advanced_testcase {
         );
 
         totara_notification_migrate_notifiable_event_prefs(
-            comment_created::class,
+            mock_resolver::class,
             'alert',
             'totara_message'
         );
         $target_notifiable_event_entity = notification_event_preference_entity::repository()
-            ->for_context(comment_created::class, $extended_context);
+            ->for_context(mock_resolver::class, $extended_context);
         $target_notifiable_event = notification_event_preference_model::from_entity($target_notifiable_event_entity);
         $target_delivery_channels_enabled = $target_notifiable_event->get_default_delivery_channels();
 
         // Check that the control is unaffected.
         $control_notifiable_event_entity = notification_event_preference_entity::repository()
-            ->for_context(comment_soft_deleted::class, $extended_context);
+            ->for_context(scheduled_resolver::class, $extended_context);
         self::assertEmpty($control_notifiable_event_entity);
 
         // Case where both loggedin and loggedoff are off.

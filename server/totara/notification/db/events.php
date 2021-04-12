@@ -22,17 +22,5 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-use totara_comment\event\comment_soft_deleted;
-use totara_notification\observer\notifiable_event_observer;
-use totara_comment\event\comment_created;
-
 $observers = [
-    [
-        'eventname' => comment_created::class,
-        'callback' => [notifiable_event_observer::class, 'watch_notifiable_event']
-    ],
-    [
-        'eventname' => comment_soft_deleted::class,
-        'callback' => [notifiable_event_observer::class, 'watch_notifiable_event']
-    ],
 ];

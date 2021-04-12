@@ -171,6 +171,10 @@ class course_set_completed extends notifiable_event_resolver implements schedule
         return has_capability('totara/program:configuremessages', $natural_context, $user_id);
     }
 
+    /**
+     * @param extended_context $extended_context
+     * @return bool
+     */
     public static function supports_context(extended_context $extended_context): bool {
         $context = $extended_context->get_context();
 

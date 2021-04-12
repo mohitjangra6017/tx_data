@@ -25,13 +25,11 @@ namespace totara_comment\event;
 use core\event\base;
 use totara_comment\comment;
 use totara_comment\entity\comment as entity;
-use totara_notification\event\notifiable_event;
-use totara_core\extended_context;
 
 /**
  * For comment soft deleted.
  */
-final class comment_soft_deleted extends base implements notifiable_event {
+final class comment_soft_deleted extends base {
     /**
      * @return void
      */

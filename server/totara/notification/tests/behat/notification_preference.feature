@@ -12,10 +12,10 @@ Feature: Course notifications node
     When I navigate to "Notifications" node in "Course administration"
     Then I should see "Notifications"
 
-    When I click on "Totara comment" "button"
-    Then I should see "New comment created"
+    When I click on "Certification" "button"
+    And I should see "Course set completed"
 
-    When I click on "Actions for New comment created event" "button"
+    When I click on "Actions for Course set completed" "button"
     Then I should see "Create notification"
     And I click on "Create notification" "link"
     Then I should see "Create notification" in the ".tui-modalContent__header-title" "css_element"
@@ -27,16 +27,16 @@ Feature: Course notifications node
     When I click on "Create notification" "link"
     Then I should see "Create notification" in the ".tui-modalContent__header-title" "css_element"
 
-    When I set the field with xpath "//select[@class='tui-select__input']" to "Comment author"
+    When I set the field with xpath "//select[@class='tui-select__input']" to "Subject"
     And I set the field "Name" to "Test custom notification name"
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test custom notification subject"
     And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Test custom notification body"
     And I click on the "Days after" tui radio
     And I set the field "Number" to "7"
     And I click on "Save" "button"
-    And I click on "New comment created details" "button"
+    And I click on "Course set completed details" "button"
     Then I should see "Test custom notification name"
-    And I should see "Comment author"
+    And I should see "Subject"
 
     #Update custom notification
     When I click on "Actions for Test custom notification name" "button"
@@ -46,11 +46,11 @@ Feature: Course notifications node
 
     When I set the field "Name" to "New notification name"
     And I set the field "Number" to "12"
-    And I set the field with xpath "//select[@class='tui-select__input']" to "Owner"
+    And I set the field with xpath "//select[@class='tui-select__input']" to "Manager"
     And I click on "Save" "button"
     Then I should see "New notification name"
     And I should see "12 days after"
-    And I should see "Owner"
+    And I should see "Manager"
 
   Scenario: Course notification link can see based on user role and capability
     Given the following "users" exist:

@@ -7,52 +7,50 @@ Feature: Notifications page
   Scenario: Admin is able to view notifications page
     Given I log in as "admin"
     And I navigate to system notifications page
-    Then I should see "Totara comment"
+    Then I should see "Certification"
 
     When I click on "Expand all" "button"
-    Then I should see "New comment created"
+    Then I should see "Course set completed"
 
     When I click on "Collapse all" "button"
-    Then I should not see "New comment created"
+    Then I should not see "Course set completed"
 
-    When I click on "Totara comment" "button"
-    Then I should see "New comment create"
+    When I click on "Certification" "button"
+    Then I should see "Course set completed"
 
-    When I click on "New comment created details" "button"
-    Then I should see "Comment created"
+    When I click on "Course set completed details" "button"
+    Then I should see "Certification course set completed"
 
   Scenario: Admin is able to create/update/delete custom notification
     Given I log in as "admin"
     And I navigate to system notifications page
-    Then I should not see "New comment created"
-    And I should not see "comment created"
+    Then I should not see "Learner assigned in certification"
+    And I should not see "Learner assigned in certification"
 
-    When I click on "Totara comment" "button"
-    Then I should see "New comment created"
+    When I click on "Certification" "button"
+    Then I should see "Learner assigned in certification"
 
-    When I click on "Actions for New comment created event" "button"
+    When I click on "Actions for Learner assigned in certification event" "button"
     Then I should see "Create notification"
     And I click on "Create notification" "link"
     Then I should see "Create notification" in the ".tui-modalContent__header-title" "css_element"
 
     When I click on "Close" "button"
-    And I click on "Actions for New comment created event" "button"
+    And I click on "Actions for Learner assigned in certification event" "button"
     Then I should see "Create notification"
     When I click on "Create notification" "link"
     Then I should see "Create notification" in the ".tui-modalContent__header-title" "css_element"
 
-    When I set the field with xpath "//select[@class='tui-select__input']" to "Comment author"
+    When I set the field with xpath "//select[@class='tui-select__input']" to "Manager"
     And I set the field "Name" to "Test custom notification"
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test custom notification subject"
     And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Test custom notification body"
-    And I click on the "Days after" tui radio
-    And I set the field "Number" to "7"
     And I click on "Save" "button"
     And I navigate to system notifications page
-    And I click on "Totara comment" "button"
-    And I click on "New comment created details" "button"
+    And I click on "Certification" "button"
+    And I click on "Learner assigned in certification details" "button"
     Then I should see "Test custom notification"
-    And I should see "Comment author"
+    And I should see "Manager"
 
     #Update custom notification
     When I click on "Actions for Test custom notification" "button"
@@ -61,12 +59,10 @@ Feature: Notifications page
     Then I should see "Edit notification"
 
     When I set the field "Name" to "New notification"
-    And I set the field "Number" to "12"
-    And I set the field with xpath "//select[@class='tui-select__input']" to "Owner"
+    And I set the field with xpath "//select[@class='tui-select__input']" to "Subject"
     And I click on "Save" "button"
     Then I should see "New notification"
-    And I should see "12 days after"
-    And I should see "Owner"
+    And I should see "Subject"
 
     #Delete custom notification
     When I click on "Actions for New notification" "button"
@@ -83,27 +79,23 @@ Feature: Notifications page
       | fullname   | shortname | format |
       | Course 101 | c101      | topics |
     And I navigate to notifications page of "course" "c101"
-    And I click on "Totara comment" "button"
-    When I click on "Actions for New comment created event" "button"
+    And I click on "Certification" "button"
+    When I click on "Actions for Course set completed event" "button"
     Then I should see "Create notification"
     And I click on "Create notification" "link"
-    And I set the field with xpath "//select[@class='tui-select__input']" to "Comment author"
+    And I set the field with xpath "//select[@class='tui-select__input']" to "Manager"
     And I set the field "Name" to "Test context notification name"
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test context notification subject"
     And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Test context notification body"
-    And I click on the "Days after" tui radio
-    And I set the field "Number" to "55"
     And I click on "Save" "button"
-    And I click on "New comment created details" "button"
+    And I click on "Course set completed details" "button"
     Then I should see "Test context notification name"
-    And I should see "55"
-    And I should see "Comment author"
+    And I should see "Manager"
 
     When I navigate to system notifications page
-    And I click on "Totara comment" "button"
-    And I click on "New comment created details" "button"
+    And I click on "Certification" "button"
+    And I click on "Course set completed details" "button"
     Then I should not see "Test context notification name"
-    And I should not see "55"
 
   Scenario: Admin is able to view notifications page through admin menu
     Given I log in as "admin"
@@ -114,10 +106,10 @@ Feature: Notifications page
   Scenario: Admin is able to update notification status
     Given I log in as "admin"
     When I navigate to system notifications page
-    And I click on "Totara comment" "button"
-    Then ".tui-toggleSwitch__btn[aria-pressed='true'][aria-label='New comment created notification status']" "css_element" should exist
-    When I click on the "New comment created notification status" tui toggle button
+    And I click on "Certification" "button"
+    Then ".tui-toggleSwitch__btn[aria-pressed='true'][aria-label='Course set completed notification status']" "css_element" should exist
+    When I click on the "Course set completed notification status" tui toggle button
     And I navigate to system notifications page
-    And I click on "Totara comment" "button"
-    Then ".tui-toggleSwitch__btn[aria-label='New comment created notification status']" "css_element" should exist
-    And ".tui-toggleSwitch__btn[aria-pressed='true'][aria-label='New comment created notification status']" "css_element" should not exist
+    And I click on "Certification" "button"
+    Then ".tui-toggleSwitch__btn[aria-label='Course set completed notification status']" "css_element" should exist
+    And ".tui-toggleSwitch__btn[aria-pressed='true'][aria-label='Course set completed notification status']" "css_element" should not exist

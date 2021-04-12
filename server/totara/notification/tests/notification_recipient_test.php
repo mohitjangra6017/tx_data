@@ -22,14 +22,10 @@
  */
 
 use core_user\totara_notification\placeholder\user;
-use totara_comment\comment_helper;
-use totara_comment\totara_notification\resolver\comment_soft_deleted;
-use totara_comment\totara_notification\recipient\comment_author;
 use totara_core\extended_context;
 use totara_notification\builder\notification_preference_builder;
 use totara_notification\entity\notification_queue as notification_queue_entity;
 use totara_notification\model\notification_preference as notification_preference_model;
-use totara_notification\task\process_event_queue_task;
 use totara_notification\task\process_notification_queue_task;
 use totara_notification\testing\generator as notification_generator;
 use totara_notification_mock_notifiable_event_resolver as mock_resolver;
@@ -95,94 +91,6 @@ class totara_notification_notification_recipient_testcase extends testcase {
     /**
      * @return void
      */
-    public function test_comment_author_recipient(): void {
-        // Create notification preference with a mock recipient that will resolve
-        // to user one's ID.
-        $this->create_notification_preference(
-            comment_soft_deleted::class,
-            comment_author::class
-        );
-
-        $generator = $this->getDataGenerator();
-        $user_one = $generator->create_user();
-        $user_two = $generator->create_user();
-
-        // Set user one as active user.
-        $this->setUser($user_one);
-
-        // Create comment as user_two.
-        $comment = comment_helper::create_comment(
-            'totara_comment',
-            'comment_view',
-            42,
-            'This is content',
-            FORMAT_PLAIN,
-            null,
-            $user_two->id
-        );
-
-        // Return ID of comment created.
-        totara_comment_default_resolver::add_callback(
-            'get_owner_id_from_instance',
-            function () use ($comment): int {
-                return $comment->get_userid();
-            }
-        );
-
-        // Soft delete the comment.
-        comment_helper::soft_delete($comment->get_id());
-
-        // Redirect messages.
-        $message_sink = $this->redirectMessages();
-
-        // Run tasks.
-        $task = new process_event_queue_task();
-        $task->execute();
-        $task = new process_notification_queue_task();
-        $task->execute();
-
-        // Get messages.
-        $messages = $message_sink->get_messages();
-
-        // We should get 3 messages
-        //  - 1 for comment created for built-in notification
-        //  - 2 for comment deleted, one for built-in and another for our preference
-        $this->assertCount(3, $messages);
-
-        $this->assertEquals(
-            true,
-            $this->user_message_exists(
-                $messages,
-                "A new comment created on your item\n",
-                $user_two->id
-            ),
-            'Notification message not found for user'
-        );
-
-        $this->assertEquals(
-            true,
-            $this->user_message_exists(
-                $messages,
-                "Your comment has been deleted\n",
-                $user_two->id
-            ),
-            'Notification message not found for user'
-        );
-
-        $this->assertEquals(
-            true,
-            $this->user_message_exists(
-                $messages,
-                'Notification preference body for [' . comment_soft_deleted::class . ',' . comment_author::class . ']',
-                $user_two->id
-            ),
-            'Notification message not found for user'
-        );
-    }
-
-    /**
-     * @return void
-     */
     public function test_inherit_from_system_recipient_instead_of_category_level_at_course_level(): void {
         $generator = self::getDataGenerator();
 
@@ -222,22 +130,6 @@ class totara_notification_notification_recipient_testcase extends testcase {
 
         // This is expectation to fallback to, because we override the built-in notification at system context.
         self::assertEquals(totara_notification_mock_owner::class, $course_built_in->get_recipient());
-    }
-
-    /**
-     * @param array $messages
-     * @param string $full_message
-     * @param string $to_user_id
-     *
-     * @return bool
-     */
-    private function user_message_exists(array $messages, string $full_message, string $to_user_id): bool {
-        foreach ($messages as $message) {
-            if ($message->fullmessage === $full_message && $message->userto->id === $to_user_id) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

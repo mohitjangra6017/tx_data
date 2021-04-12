@@ -25,16 +25,17 @@ require_once(__DIR__ . '/../../../totara/core/tests/language_pack_faker_trait.ph
 
 use core_phpunit\testcase;
 use core_user\totara_notification\placeholder\user;
-use engage_article\testing\generator as article_generator;
-use totara_comment\testing\generator as comment_generator;
 use totara_core\extended_context;
-use totara_engage\access\access;
 use totara_notification\entity\notification_queue;
 use totara_notification\manager\notification_queue_manager;
+use totara_notification\observer\notifiable_event_observer;
 use totara_notification\task\process_event_queue_task;
 use totara_notification\task\process_notification_queue_task;
 use totara_notification\testing\generator;
 use totara_notification_mock_notifiable_event_resolver as mock_resolver;
+use totara_notification_mock_notifiable_event as mock_event;
+use totara_notification_mock_built_in_notification as mock_built_in;
+use totara_notification_real_mock_lang_string as lang_string;
 
 class totara_notification_notification_queue_manager_testcase extends testcase {
     use language_pack_faker_trait;
@@ -149,12 +150,20 @@ class totara_notification_notification_queue_manager_testcase extends testcase {
         );
     }
 
-    public function test_dispatch_respects_recipients_language() {
+    /**
+     * @return void
+     */
+    public function test_dispatch_respects_recipients_language(): void {
+        $generator = generator::instance();
+        $generator->include_mock_notifiable_event();
+        $generator->include_mock_built_in_notification();
+        $generator->include_real_mock_lang_string();
+
         $fake_language = 'xz';
         $this->add_fake_language_pack($fake_language, [
-            'totara_comment' => [
-                'comment_created' => 'Fake language - Comment created subject',
-                'notification_comment_created_body' => 'Fake language - Comment created body',
+            'totara_notification' => [
+                'notification_subject_label' => 'Fake Subject',
+                'notification_body_label' => 'Fake Body'
             ],
         ]);
 
@@ -162,35 +171,27 @@ class totara_notification_notification_queue_manager_testcase extends testcase {
         $user1 = $generator->create_user();
         $user2 = $generator->create_user(['lang' => $fake_language]);
 
-        /** @var article_generator $article_generator */
-        $article_generator = $generator->get_plugin_generator('engage_article');
-        $article_user1 = $article_generator->create_article([
-            'userid' => $user1->id,
-            'access' => access::PUBLIC,
-        ]);
-        $article_user2 = $article_generator->create_article([
-            'userid' => $user2->id,
-            'access' => access::PUBLIC,
-        ]);
+        $user_one_create_event = new mock_event(
+            context_user::instance($user2->id)->id,
+            ['recipient_id' => $user2->id]
+        );
 
-        /** @var comment_generator $comment_generator */
-        $comment_generator = $generator->get_plugin_generator('totara_comment');
-        $comment_generator->create_comment(
-            $article_user1->get_id(),
-            'engage_article',
-            $article_user1::COMMENT_AREA,
-            'This is a comment',
-            FORMAT_PLAIN,
-            $user2->id
+        $user_two_create_event = new mock_event(
+            context_user::instance($user1->id)->id,
+            ['recipient_id' => $user1->id]
         );
-        $comment_generator->create_comment(
-            $article_user2->get_id(),
-            'engage_article',
-            $article_user2::COMMENT_AREA,
-            'This is a comment',
-            FORMAT_PLAIN,
-            $user1->id
+
+        notifiable_event_observer::watch_notifiable_event($user_one_create_event);
+        notifiable_event_observer::watch_notifiable_event($user_two_create_event);
+
+        mock_resolver::set_recipient_ids_resolver(
+            function (array $event_data): array {
+                return [$event_data['recipient_id']];
+            }
         );
+
+        mock_built_in::set_default_body(new lang_string('notification_body_label', 'totara_notification'));
+        mock_built_in::set_default_subject(new lang_string('notification_subject_label', 'totara_notification'));
 
         $sink = self::redirectMessages();
         $task = new process_event_queue_task();
@@ -208,14 +209,14 @@ class totara_notification_notification_queue_manager_testcase extends testcase {
         }, $sink->get_messages());
         self::assertEqualsCanonicalizing([
             [
-                'userid' => (int)$user1->id,
-                'subject' => 'Comment created',
-                'body' => 'A new comment created on your item',
+                'userid' => (int) $user1->id,
+                'subject' => 'Subject',
+                'body' => 'Body',
             ],
             [
                 'userid' => (int)$user2->id,
-                'subject' => 'Fake language - Comment created subject',
-                'body' => 'Fake language - Comment created body',
+                'subject' => 'Fake Subject',
+                'body' => 'Fake Body',
             ],
         ], $actual);
     }

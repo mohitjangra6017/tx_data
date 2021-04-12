@@ -74,7 +74,22 @@ class course_set_completed extends program_course_set_completed {
         );
     }
 
+    /**
+     * @param extended_context $extended_context
+     * @return bool
+     */
     public static function supports_context(extended_context $extended_context): bool {
+        if (defined('BEHAT_SITE_RUNNING') && BEHAT_SITE_RUNNING) {
+            // We are in behat environment, we are using this very resolver as
+            // a mock for behat testing at the moment, because we do not have any notification
+            // resolvers that are related to course. Once we have them, we can remove this bit of the code.
+            if (CONTEXT_COURSE === $extended_context->get_context_level()) {
+                return true;
+            }
+
+            // Otherwise, fallback to the actual original logic for the comment_created.
+        }
+
         $context = $extended_context->get_context();
 
         if ($extended_context->is_natural_context()) {

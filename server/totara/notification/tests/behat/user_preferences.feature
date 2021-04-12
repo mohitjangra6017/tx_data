@@ -14,13 +14,13 @@ Feature: User notifications preferences
     And I follow "Preferences" in the user menu
     And I follow "Notification preferences"
     Then I should see "Notification preferences"
-    And I should see "Totara comment"
+    And I should see "Certification"
 
     When I click on "Expand all" "button"
-    Then I should see "New comment created"
+    Then I should see "Course set completed"
 
     When I click on "Collapse all" "button"
-    Then I should not see "New comment created"
+    Then I should not see "Course set completed"
 
-    When I click on "Totara comment" "button"
-    Then I should see "New comment created"
+    When I click on "Certification" "button"
+    Then I should see "Course set completed"

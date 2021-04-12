@@ -26,14 +26,12 @@ use core\event\base;
 use core_ml\event\interaction_event;
 use totara_comment\comment;
 use totara_comment\entity\comment as entity;
-use totara_notification\event\notifiable_event;
-use totara_core\extended_context;
 
 /**
  * Class comment_created
  * @package totara_comment\event
  */
-final class comment_created extends base implements interaction_event, notifiable_event {
+final class comment_created extends base implements interaction_event {
     /**
      * @param comment   $comment
      * @param \context  $context

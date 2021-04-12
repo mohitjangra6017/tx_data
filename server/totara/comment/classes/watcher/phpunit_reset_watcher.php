@@ -24,7 +24,6 @@ namespace totara_comment\watcher;
 
 use core\hook\phpunit_reset;
 use totara_comment_default_resolver;
-use totara_comment_mock_comment_created_notification;
 
 class phpunit_reset_watcher {
     /**
@@ -33,10 +32,6 @@ class phpunit_reset_watcher {
     public static function reset_data(phpunit_reset $hook): void {
         if (class_exists('totara_comment_default_resolver')) {
             totara_comment_default_resolver::reset_callbacks();
-        }
-
-        if (class_exists('totara_comment_mock_comment_created_notification')) {
-            totara_comment_mock_comment_created_notification::clear();
         }
     }
 }
