@@ -62,4 +62,38 @@ class totara_reportbuilder_lib_static_testcase extends advanced_testcase {
         // this time however it will come internally from the cache.
         $this->assertSame($generateddirs, \reportbuilder::find_source_dirs());
     }
+
+    /**
+     * Test \reportbuilder::find_source_dirs
+     */
+    public function test_find_source_dirs_including_well_known_dirs() {
+        // List of locations to search pre TL-30377
+        $locations = array(
+            'auth',
+            'mod',
+            'block',
+            'tool',
+            'totara',
+            'local',
+            'enrol',
+            'repository',
+        );
+        $oldsourcedirs = [];
+        foreach ($locations as $modtype) {
+            foreach (core_component::get_plugin_list($modtype) as $mod => $path) {
+                $dir = "$path/rb_sources/";
+                if (file_exists($dir) && is_dir($dir)) {
+                    $oldsourcedirs[] = $dir;
+                }
+            }
+        }
+
+        // Source directories from find_source_dirs()
+        $generateddirs = \reportbuilder::find_source_dirs(true);
+
+        // Make sure each of the old directories is also in the new (potentially bigger) list of source directories.
+        foreach ($oldsourcedirs as $path) {
+            $this->assertContains($path, $generateddirs, 'Expected to find rb_sources in '.$path);
+        }
+    }
 }

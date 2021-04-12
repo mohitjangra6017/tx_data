@@ -1431,18 +1431,9 @@ class reportbuilder {
         $sourcepaths = $cache->get('all');
         if (!is_array($sourcepaths)) {
             $sourcepaths = array();
-            $locations = array(
-                'auth',
-                'mod',
-                'block',
-                'tool',
-                'totara',
-                'local',
-                'enrol',
-                'repository',
-            );
             // Search for rb_sources directories for each plugin type.
-            foreach ($locations as $modtype) {
+            $locations = \core_component::get_plugin_types();
+            foreach ($locations as $modtype => $modpath) {
                 foreach (core_component::get_plugin_list($modtype) as $mod => $path) {
                     $dir = "$path/rb_sources/";
                     if (file_exists($dir) && is_dir($dir)) {
