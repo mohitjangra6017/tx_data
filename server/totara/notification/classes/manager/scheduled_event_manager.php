@@ -137,14 +137,16 @@ class scheduled_event_manager {
             // Event data might be array or stdClass. We always use it as an array.
             $event_data = (array)$event_data;
 
+            /** @var scheduled_event_resolver $resolver */
             $resolver = resolver_helper::instantiate_resolver_from_class(
                 $resolver_class_name,
                 $event_data
             );
-            $extended_context = $resolver->get_extended_context();
 
+            $extended_context = $resolver->get_extended_context();
             $fixed_event_time = $resolver->get_fixed_event_time();
-            if (empty($fixed_event_time) || 0 >= $fixed_event_time) {
+
+            if (0 >= $fixed_event_time) {
                 throw new coding_exception("Invalid event time resolved by the resolver");
             }
 

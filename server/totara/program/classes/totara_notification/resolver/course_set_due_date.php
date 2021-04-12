@@ -182,7 +182,7 @@ class course_set_due_date extends notifiable_event_resolver implements scheduled
     /**
      * @inheritDoc
      */
-    public function get_fixed_event_time(): ?int {
+    public function get_fixed_event_time(): int {
         return $this->event_data['time_due'];
     }
 

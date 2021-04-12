@@ -38,7 +38,7 @@ class comment_soft_deleted extends notifiable_event_resolver implements schedule
     /**
      * @return int
      */
-    public function get_fixed_event_time(): ?int {
+    public function get_fixed_event_time(): int {
         $comment_id = $this->event_data['comment_id'];
         $comment = comment::from_id($comment_id);
 

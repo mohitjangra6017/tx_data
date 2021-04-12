@@ -39,9 +39,9 @@ use totara_notification\schedule\schedule_on_event;
 class comment_created extends notifiable_event_resolver implements scheduled_event_resolver {
     /**
      * Returns the comment's created time.
-     * @return int|null
+     * @return int
      */
-    public function get_fixed_event_time(): ?int {
+    public function get_fixed_event_time(): int {
         $comment_id = $this->event_data['comment_id'];
         $comment = comment::from_id($comment_id);
 

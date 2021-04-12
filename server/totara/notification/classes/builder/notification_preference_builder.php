@@ -256,7 +256,7 @@ class notification_preference_builder {
             if (0 !== stripos($current_context_path, $ancestor_context_path)) {
                 // If the current context path does not contain the ancestor context path at the
                 // start of the string then we are overriding a notification preference that reference
-                // ancestor at some path that does not go to this very path. DOOM BRINGER 😈!
+                // ancestor at some path that does not go to this very path.
                 throw new coding_exception(
                     "The context path of ancestor does not appear in the context path of the overridden preference"
                 );

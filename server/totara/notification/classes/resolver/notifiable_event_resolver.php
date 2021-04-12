@@ -111,23 +111,6 @@ abstract class notifiable_event_resolver {
     }
 
     /**
-     * Returns the time in seconds of how|when the actual event to be|had been occurred.
-     * By default we use NULL as the caller of this function will assume that the event
-     * is happening instantly, and not for scheduling event.
-     *
-     * Extends this function to return the set event time that you want, for example:
-     * an event about setting program due date, then the set event time should be due date
-     * in seconds.
-     *
-     * Note: please do not return zero or negative number, the system does not like these two values.
-     *
-     * @return int|null
-     */
-    public function get_fixed_event_time(): ?int {
-        return null;
-    }
-
-    /**
      * Fetch the notifiable event preference if it exists.
      *
      * @param extended_context $extended_context

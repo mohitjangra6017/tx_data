@@ -53,10 +53,10 @@ class totara_notification_mock_scheduled_event_with_on_event_resolver extends no
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function get_fixed_event_time(): ?int {
-        return $this->event_data[static::EVENT_TIME_KEY] ?? null;
+    public function get_fixed_event_time(): int {
+        return $this->event_data[static::EVENT_TIME_KEY] ?? time();
     }
 
     /**

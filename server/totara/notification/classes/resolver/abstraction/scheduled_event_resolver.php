@@ -54,4 +54,12 @@ interface scheduled_event_resolver {
      * @return string[]
      */
     public static function get_notification_available_schedules(): array;
+
+    /**
+     * Returns the time in seconds of how|when the actual event to be|had been occurred.
+     * Note: please do not return zero or negative number, the system does not like these two values.
+     *
+     * @return int
+     */
+    public function get_fixed_event_time(): int;
 }

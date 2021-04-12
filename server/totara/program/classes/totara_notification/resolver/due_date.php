@@ -166,7 +166,7 @@ class due_date extends notifiable_event_resolver implements scheduled_event_reso
     /**
      * @inheritDoc
      */
-    public function get_fixed_event_time(): ?int {
+    public function get_fixed_event_time(): int {
         return $this->event_data['time_due'];
     }
 

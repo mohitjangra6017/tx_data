@@ -108,7 +108,10 @@ class window_open_date extends notifiable_event_resolver implements scheduled_ev
         return $DB->get_recordset_sql($sql, $params);
     }
 
-    public function get_fixed_event_time(): ?int {
+    /**
+     * @return int
+     */
+    public function get_fixed_event_time(): int {
         return $this->event_data['time_window_opens'];
     }
 

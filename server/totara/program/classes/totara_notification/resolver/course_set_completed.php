@@ -162,7 +162,7 @@ class course_set_completed extends notifiable_event_resolver implements schedule
     /**
      * @inheritDoc
      */
-    public function get_fixed_event_time(): ?int {
+    public function get_fixed_event_time(): int {
         return $this->event_data['time_completed'];
     }
 

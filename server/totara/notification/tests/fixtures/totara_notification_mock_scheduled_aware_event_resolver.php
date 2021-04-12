@@ -62,9 +62,9 @@ class totara_notification_mock_scheduled_aware_event_resolver extends notifiable
     private static $has_associated_event;
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function get_fixed_event_time(): ?int {
+    public function get_fixed_event_time(): int {
         if (!isset($this->event_data[static::EVENT_TIME_KEY])) {
             throw new coding_exception("Cannot find the event time within the event data");
         }

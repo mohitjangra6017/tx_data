@@ -142,7 +142,10 @@ class completed extends notifiable_event_resolver implements scheduled_event_res
         );
     }
 
-    public function get_fixed_event_time(): ?int {
+    /**
+     * @return int
+     */
+    public function get_fixed_event_time(): int {
         return $this->event_data['time_completed'];
     }
 
