@@ -145,6 +145,9 @@ class totara_certification_userdata_assignment_completion_test extends totara_pr
         $fixtures->program1 = $programgenerator->create_certification(['category' => $fixtures->category1->id]);
         $fixtures->program2 = $programgenerator->create_certification(['category' => $fixtures->category1->id]);
         $fixtures->program3 = $programgenerator->create_certification(['category' => $fixtures->category2->id]);
+        $this->create_enrolment_message($fixtures->program1);
+        $this->create_enrolment_message($fixtures->program2);
+        $this->create_enrolment_message($fixtures->program3);
 
         // As create_certification just returns the related program id we need to load the certifications.
         $fixtures->cert1 = $this->get_certification($fixtures->program1->id);
@@ -161,6 +164,8 @@ class totara_certification_userdata_assignment_completion_test extends totara_pr
 
         // Create non-certification program to be able to test that it won't be affected.
         $program = $programgenerator->create_program(['fullname' => 'Certification', 'category' => $fixtures->category1->id]);
+        $this->create_enrolment_message($program);
+
         $fixtures->controlprogramid = $program->id;
         $programgenerator->assign_program($fixtures->controlprogramid, [$fixtures->activeuser->id]);
         $this->create_prog_history($fixtures->controlprogramid, $fixtures->activeuser->id);

@@ -146,6 +146,9 @@ class totara_program_userdata_assignment_completion_test extends totara_program_
         $fixtures->program1 = $programgenerator->create_program(['category' => $fixtures->category1->id]);
         $fixtures->program2 = $programgenerator->create_program(['category' => $fixtures->category1->id]);
         $fixtures->program3 = $programgenerator->create_program(['category' => $fixtures->category2->id]);
+        $this->create_enrolment_message($fixtures->program1);
+        $this->create_enrolment_message($fixtures->program2);
+        $this->create_enrolment_message($fixtures->program3);
 
         $programgenerator->assign_to_program($fixtures->program1->id, ASSIGNTYPE_INDIVIDUAL, $fixtures->activeuser->id, null, true);
         $programgenerator->assign_to_program($fixtures->program2->id, ASSIGNTYPE_INDIVIDUAL, $fixtures->activeuser->id, ['completionevent' => COMPLETION_EVENT_FIRST_LOGIN], true);
@@ -157,7 +160,10 @@ class totara_program_userdata_assignment_completion_test extends totara_program_
 
         // Have a certification to be able to test that it won't be affected.
         $data = ['fullname' => 'Certification', 'category' => $fixtures->category1->id];
-        $fixtures->controlprogramid = $programgenerator->create_certification($data)->id;
+        $program = $programgenerator->create_certification($data);
+        $fixtures->controlprogramid = $program->id;
+        $this->create_enrolment_message($program);
+
         $programgenerator->assign_program($fixtures->controlprogramid, [$fixtures->activeuser->id]);
         $cert = $this->get_certification($fixtures->controlprogramid);
         $this->create_certif_history($cert->id, $fixtures->activeuser->id);

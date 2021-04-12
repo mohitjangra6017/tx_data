@@ -253,4 +253,13 @@ abstract class totara_program_base_userdata_assignment_completion_base_test exte
         $DB->delete_records('prog_assignment', $params);
     }
 
+    /**
+     * @param program $program
+     */
+    protected function create_enrolment_message(program $program): void {
+        $program_message_manager = $program->get_messagesmanager();
+        $program_message_manager->add_message(MESSAGETYPE_ENROLMENT);
+        $program_message_manager->save_messages();
+        prog_messages_manager::reset_cache();
+    }
 }
