@@ -28,6 +28,6 @@
  * Popup processor version information
  */
 
-$plugin->version  = 2020101201;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020101200;       // Requires this Totara version.
+$plugin->version  = 2021041300;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2021040700;       // Requires this Totara version.
 $plugin->component = 'message_totara_alert';  // Full name of the plugin (used for diagnostics)

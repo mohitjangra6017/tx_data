@@ -23,6 +23,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2020120900;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2017111309;       // Requires this Moodle version.
+$plugin->version  = 2021041300;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2021040700;       // Requires this Moodle version.
 $plugin->component = 'flavour_learn_professional'; // To check on upgrade, that module sits in correct place

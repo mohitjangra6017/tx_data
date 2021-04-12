@@ -23,8 +23,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2021010100;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2017111309;       // Requires this Totara version.
+$plugin->version  = 2021041300;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2021040700;       // Requires this Totara version.
 $plugin->component = 'virtualmeeting_poc_user'; // To check on upgrade, that module sits in correct place
 $plugin->dependencies = [
     'virtualmeeting_poc_app' => 2021010100,

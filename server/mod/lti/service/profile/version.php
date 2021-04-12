@@ -27,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 
-$plugin->version   = 2020101200;
-$plugin->requires  = 2020101200;
+$plugin->version   = 2021041300;
+$plugin->requires  = 2021040700;
 $plugin->component = 'ltiservice_profile';
 $plugin->backported = 'v3.8.1'; // TOTARA: backported from this release

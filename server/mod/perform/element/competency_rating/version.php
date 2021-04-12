@@ -23,8 +23,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2021032300;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020101200;       // Requires this Totara version.
+$plugin->version  = 2021041300;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2021040700;       // Requires this Totara version.
 $plugin->component = 'performelement_competency_rating'; // To check on upgrade, that module sits in correct place
 $plugin->dependencies = array(
     'performelement_linked_review' => 2021031502,

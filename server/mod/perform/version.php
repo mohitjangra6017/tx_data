@@ -23,7 +23,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2021031500;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020101200;       // Requires this Totara version.
+$plugin->version  = 2021041300;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2021040700;       // Requires this Totara version.
 $plugin->component = 'mod_perform'; // To check on upgrade, that module sits in correct place
 $plugin->dependencies = ['container_perform' => 2020101200];
