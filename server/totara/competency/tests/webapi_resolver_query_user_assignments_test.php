@@ -128,14 +128,20 @@ class totara_competency_webapi_resolver_query_user_assignments_testcase extends 
     }
 
     public function test_feature_disabled() {
+        [$created_assignments, $user1, $user2] = $this->create_test_data();
+
         advanced_feature::disable('competency_assignment');
-        $user = self::getDataGenerator()->create_user();
-        $this->setUser($user);
 
-        $this->expectException(feature_not_available_exception::class);
-        $this->expectExceptionMessage('Feature competency_assignment is not available.');
+        self::setUser($user1);
 
-        $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user->id));
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user1->id));
+        $this->assertCount(0, $result['items']);
+
+        advanced_feature::enable('competency_assignment');
+        advanced_feature::disable('competencies');
+
+        $result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($user1->id));
+        $this->assertCount(0, $result['items']);
     }
 
     public function test_require_login() {

@@ -24,8 +24,8 @@
 
 use core\webapi\mutation_resolver;
 use core\webapi\query_resolver;
-use mod_perform\controllers\activity\view_user_activity;
 use mod_perform\controllers\activity\print_user_activity;
+use mod_perform\controllers\activity\view_user_activity;
 use mod_perform\entity\activity\activity as activity_entity;
 use mod_perform\entity\activity\subject_instance;
 use totara_core\advanced_feature;

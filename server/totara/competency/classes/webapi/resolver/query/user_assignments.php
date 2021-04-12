@@ -38,6 +38,7 @@ use totara_competency\entity\assignment as assignment_entity;
 use totara_competency\helpers\capability_helper;
 use totara_competency\models\assignment as assignment_model;
 use totara_competency\models\profile\filter;
+use totara_core\advanced_feature;
 
 class user_assignments implements query_resolver, has_middleware {
 
@@ -49,6 +50,9 @@ class user_assignments implements query_resolver, has_middleware {
         $user_id = $args['input']['user_id'] ?? user::logged_in()->id;
 
         try {
+            // Require those features being enabled but return an empty result if not
+            advanced_feature::require('competencies');
+            advanced_feature::require('competency_assignment');
             // In case the user does not have permission to view we return an empty result to not fail requests
             self::require_view_capability($user_id, $ec);
         } catch (Exception $e) {
@@ -88,7 +92,6 @@ class user_assignments implements query_resolver, has_middleware {
     public static function get_middleware(): array {
         return [
             new require_login(),
-            new require_advanced_feature('competency_assignment'),
         ];
     }
 

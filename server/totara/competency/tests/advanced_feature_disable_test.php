@@ -27,6 +27,7 @@ use totara_competency\webapi\resolver\query\competency;
 use totara_competency\webapi\resolver\query\linked_courses;
 use totara_competency\webapi\resolver\query\scale;
 use totara_competency\webapi\resolver\query\scales;
+use totara_competency\webapi\resolver\query\user_assignments;
 use totara_core\advanced_feature;
 use totara_core\feature_not_available_exception;
 use totara_mvc\admin_controller;
@@ -72,6 +73,7 @@ class totara_competency_advanced_feature_disable_testcase extends advanced_testc
             linked_courses::class,
             scale::class,
             scales::class,
+            user_assignments::class,
         ];
     }
 
