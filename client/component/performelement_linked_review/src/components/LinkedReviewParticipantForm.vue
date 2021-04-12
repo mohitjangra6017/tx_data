@@ -475,7 +475,9 @@ export default {
      * @param {string} content
      */
     getContent(content) {
-      return content ? JSON.parse(content) : {};
+      let result = content ? JSON.parse(content) : {};
+
+      return result !== null ? result : {};
     },
   },
 

@@ -27,3 +27,4 @@ However it would not be submitted to the competency.';
 $string['error_answer_required'] = 'Answer is required';
 $string['pluginname'] = 'Competency Rating';
 $string['scale_value_deleted'] = 'Scale value deleted';
+$string['scale_values_not_available'] = 'These scale values are not available.';

@@ -18,7 +18,7 @@
 -->
 
 <template>
-  <div v-if="content" class="tui-linkedReviewViewCompetency">
+  <div v-if="competencyContentExists" class="tui-linkedReviewViewCompetency">
     <h4 class="tui-linkedReviewViewCompetency__title">
       <a
         v-if="!fromPrint && !preview"
@@ -157,6 +157,21 @@ export default {
      */
     scale() {
       return { values: this.content.scale_values };
+    },
+
+    /**
+     * Checks if the competency exists in the content property.
+     *
+     * @return {Boolean}
+     */
+    competencyContentExists() {
+      return (
+        this.content &&
+        this.content.competency &&
+        this.content.scale_values &&
+        this.content.achievement &&
+        this.content.assignment
+      );
     },
 
     /**
