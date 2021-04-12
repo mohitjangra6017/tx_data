@@ -485,6 +485,17 @@ export default {
     },
 
     /**
+     * Check if element has unsaved child elements
+     *
+     * @param {Object} element
+     * @return {Boolean}
+     */
+    elementHasUnsavedChild(element) {
+      let id = element.id;
+      return this.unsavedChildElements[id];
+    },
+
+    /**
      * Track if elements have unsaved child elements
      *
      * @param {Object} data
@@ -980,7 +991,11 @@ export default {
      * @param {Array} sectionElement
      */
     validDragElement(sectionElement) {
-      return !this.isEditing(sectionElement) && this.sectionElements.length > 1;
+      return (
+        !this.isEditing(sectionElement) &&
+        this.sectionElements.length > 1 &&
+        !this.elementHasUnsavedChild(sectionElement)
+      );
     },
 
     /**
