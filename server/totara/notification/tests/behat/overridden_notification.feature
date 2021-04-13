@@ -21,7 +21,7 @@ Feature: Overridden notifications at lower context
     Then I should see "Edit"
     And "Edit" "link" should exist
 
-    When I click on "Edit" "link"
+    When I click on "//a[@title='Edit notification Comment created'][contains(text(),'Edit')]" "xpath_element"
     Then I should not see "Overridden subject at system"
     And I should not see "Overridden body at system"
     And "Enable customising field recipient" "checkbox" should exist
@@ -69,7 +69,7 @@ Feature: Overridden notifications at lower context
     And I click on the "enabled[value]" tui checkbox
     And I click on "Save" "button"
     And I click on "Actions for Comment created" "button"
-    Then I click on "Edit" "link"
+    Then I click on "//a[@title='Edit notification Comment created'][contains(text(),'Edit')]" "xpath_element"
     Then the "Recipient" "field" should be enabled
     And the "On notification trigger event" "field" should be enabled
     And the "Days after" "field" should be enabled
@@ -107,7 +107,7 @@ Feature: Overridden notifications at lower context
 
     When I click on "Save" "button"
     And I click on "Actions for Comment created" "button"
-    And I click on "Edit" "link"
+    And I click on "//a[@title='Edit notification Comment created'][contains(text(),'Edit')]" "xpath_element"
     Then I should not see "Overridden subject at system"
     And I should not see "Overridden body at system"
     And the field "Number" does not match value "3"

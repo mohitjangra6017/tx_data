@@ -22,7 +22,7 @@ Feature: Sending overridden notification
     And I click on "Totara comment" "button"
     And I click on "New comment created details" "button"
     When I click on "Actions for Comment created" "button"
-    And I click on "Edit" "link"
+    And I click on "//a[@title='Edit notification Comment created'][contains(text(),'Edit')]" "xpath_element"
     # And I click on "Edit" "link" in the ".tui-dataTableRows .tui-dataTableRow:nth-of-type(2)" "css_element"
     Then the "Recipient" "field" should be disabled
 

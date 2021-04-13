@@ -85,7 +85,7 @@
           :resolver-class-name="targetResolverClassName"
           :resolver-label="targetResolverLabel"
           :default-delivery-channels="targetDefaultDeliveryChannels"
-          :title="$str('delivery_preferences', 'totara_notification')"
+          :title="$str('edit_delivery_preferences', 'totara_notification')"
           @form-submit="handleNotificationPreferenceSubmit"
         />
       </ModalPresenter>
@@ -812,7 +812,7 @@ export default {
       "delete_confirm_title",
       "delete_confirm_message",
       "delete_success",
-      "delivery_preferences",
+      "edit_delivery_preferences",
       "error_cannot_create_custom_notification",
       "error_cannot_delete_custom_notification",
       "edit_notification",

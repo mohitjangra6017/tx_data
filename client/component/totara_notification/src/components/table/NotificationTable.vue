@@ -46,10 +46,37 @@
               {{ $str('notifiable_events', 'totara_notification') }}
             </HeaderCell>
             <HeaderCell size="4">
-              {{ $str('delivery_channels', 'totara_notification') }}
+              <div class="tui-notificationTable__header">
+                {{ $str('delivery_channels', 'totara_notification') }}
+                <InfoIconButton
+                  :aria-label="
+                    $str(
+                      'delivery_preferences_helptext_aria',
+                      'totara_notification'
+                    )
+                  "
+                >
+                  {{
+                    $str(
+                      'default_delivery_preferences_helptext',
+                      'totara_notification'
+                    )
+                  }}
+                </InfoIconButton>
+              </div>
             </HeaderCell>
+
             <HeaderCell align="start" size="2">
-              {{ $str('status', 'core') }}
+              <div class="tui-notificationTable__header">
+                {{ $str('enabled', 'totara_notification') }}
+                <InfoIconButton
+                  :aria-label="
+                    $str('enabled_helptext_aria', 'totara_notification')
+                  "
+                >
+                  {{ $str('enabled_helptext', 'totara_notification') }}
+                </InfoIconButton>
+              </div>
             </HeaderCell>
             <HeaderCell size="1">
               <span class="sr-only">
@@ -114,10 +141,16 @@
               :get-id="(unused, index) => index"
               :indent-expanded-contents="true"
               :stealth-expanded="true"
+              :class="{
+                'tui-notificationTable__subTable': !resolver.status.is_enabled,
+              }"
             >
               <template v-slot:header-row>
                 <HeaderCell align="start" size="4">
                   {{ $str('notifications', 'totara_notification') }}
+                </HeaderCell>
+                <HeaderCell align="start" size="4">
+                  {{ $str('type', 'totara_notification') }}
                 </HeaderCell>
                 <HeaderCell align="start" size="4">
                   {{ $str('recipient', 'totara_notification') }}
@@ -140,6 +173,28 @@
                 </Cell>
 
                 <Cell align="start" size="4">
+                  <template
+                    v-if="
+                      notificationPreference.is_custom &&
+                        !notificationPreference.ancestor_id
+                    "
+                  >
+                    {{ $str('custom', 'totara_notification') }}
+                  </template>
+                  <template
+                    v-else-if="
+                      !notificationPreference.is_custom &&
+                        !notificationPreference.ancestor_id
+                    "
+                  >
+                    {{ $str('factory', 'totara_notification') }}
+                  </template>
+                  <template v-else>
+                    {{ $str('inherited', 'totara_notification') }}
+                  </template>
+                </Cell>
+
+                <Cell align="start" size="4">
                   {{ notificationPreference.recipient.name }}
                 </Cell>
 
@@ -148,11 +203,21 @@
                 </Cell>
 
                 <Cell align="start" size="2">
-                  <template v-if="notificationPreference.enabled">
-                    {{ $str('enabled', 'totara_notification') }}
+                  <template v-if="resolver.status.is_enabled">
+                    <template v-if="notificationPreference.enabled">
+                      {{ $str('enabled', 'totara_notification') }}
+                    </template>
+                    <template v-if="!notificationPreference.enabled">
+                      {{ $str('disabled', 'totara_notification') }}
+                    </template>
                   </template>
-                  <template v-if="!notificationPreference.enabled">
-                    {{ $str('disabled', 'totara_notification') }}
+                  <template v-else>
+                    <template v-if="notificationPreference.enabled">
+                      <del>{{ $str('enabled', 'totara_notification') }}</del>
+                    </template>
+                    <template v-if="!notificationPreference.enabled">
+                      <del>{{ $str('disabled', 'totara_notification') }}</del>
+                    </template>
                   </template>
                 </Cell>
 
@@ -220,6 +285,7 @@ import Table from 'tui/components/datatable/Table';
 import NotificationAction from 'totara_notification/components/action/NotificationAction';
 import NotifiableEventAction from 'totara_notification/components/action/NotifiableEventAction';
 import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
+import InfoIconButton from 'tui/components/buttons/InfoIconButton';
 
 export default {
   components: {
@@ -233,6 +299,7 @@ export default {
     NotificationAction,
     NotifiableEventAction,
     ToggleSwitch,
+    InfoIconButton,
   },
 
   props: {
@@ -298,15 +365,23 @@ export default {
     "notifiable_events",
     "recipient",
     "schedule",
+    "custom",
     "delivery_channels",
     "disable",
     "disabled",
+    "delivery_preferences_helptext_aria",
+    "default_delivery_preferences_helptext",
     "enabled",
+    "enabled_helptext",
+    "enabled_helptext_aria",
     "enable_status",
+    "factory",
+    "inherited",
     "notifications",
     "create_notification",
     "create_notification_for_event",
-    "no_notifications"
+    "no_notifications",
+    "type"
   ],
   "core": [
     "actions",
@@ -318,6 +393,13 @@ export default {
 <style lang="scss">
 .tui-notificationTable {
   margin-top: var(--gap-4);
+  &__header {
+    display: flex;
+  }
+
+  &__subTable {
+    background-color: var(--color-text-disabled);
+  }
 }
 
 .tui-collapsible {

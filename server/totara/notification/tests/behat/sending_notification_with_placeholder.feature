@@ -22,7 +22,7 @@ Feature: Sending notification with placeholders
     And I click on "Totara comment" "button"
     And I click on "New comment created details" "button"
     When I click on "Actions for Comment created" "button"
-    And I click on "Edit" "link"
+    And I click on "//a[@title='Edit notification Comment created'][contains(text(),'Edit')]" "xpath_element"
     And I click on the "override_subject" tui checkbox
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to ""
     And I activate the weka editor with css ".tui-notificationPreferenceForm__subjectEditor"

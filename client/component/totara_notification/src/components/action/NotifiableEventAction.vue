@@ -56,7 +56,7 @@
         "
         @click="$emit('update-delivery-preferences')"
       >
-        {{ $str('delivery_preferences', 'totara_notification') }}
+        {{ $str('edit_delivery_preferences', 'totara_notification') }}
       </DropdownItem>
     </Dropdown>
   </div>
@@ -97,7 +97,7 @@ export default {
       "actions_for_event",
       "create_notification",
       "create_notification_for_event",
-      "delivery_preferences",
+      "edit_delivery_preferences",
       "delivery_preferences_for_event"
     ]
   }

@@ -11,11 +11,11 @@ Feature: Notifications delivery channels
 
     When I click on "Totara comment" "button"
     Then I should see "New comment create"
-    And I should see "Delivery channels"
+    And I should see "Default delivery channels"
 
     When I click on "more" "button"
-    And I click on "Delivery preferences" "link"
-    Then I should see "Delivery preferences" in the ".tui-modalContent__header-title" "css_element"
+    And I click on "Edit delivery channels" "link"
+    Then I should see "Edit delivery channels" in the ".tui-modalContent__header-title" "css_element"
     And I should see "Notification trigger: New comment created" in the ".tui-modalContent__content" "css_element"
     And the field "Site notifications" matches value "1"
     And the field "Mobile app notifications" matches value "0"
@@ -36,7 +36,7 @@ Feature: Notifications delivery channels
     When I click on "Save" "button"
     And I wait for the next second
     And I click on "more" "button"
-    And I click on "Delivery preferences" "link"
+    And I click on "Edit delivery channels" "link"
     Then the field "Site notifications" matches value "0"
     And "Mobile app notifications" "checkbox" should not exist
     And "Tasks" "checkbox" should not exist
@@ -54,7 +54,7 @@ Feature: Notifications delivery channels
 
     When I click on "Totara comment" "button"
     Then I should see "New comment create"
-    And I should see "Delivery channels"
+    And I should see "Default delivery channels"
     When I click on "more" "button"
     Then I should not see "Delivery preferences"
 
@@ -67,11 +67,11 @@ Feature: Notifications delivery channels
 
     When I click on "Totara comment" "button"
     Then I should see "New comment create"
-    And I should see "Delivery channels"
+    And I should see "Default delivery channels"
     And I should see "Site notifications; Email"
 
     When I click on "more" "button"
-    And I click on "Delivery preferences" "link"
+    And I click on "Edit delivery channels" "link"
     Then I should see "Delivery preferences" in the ".tui-modalContent__header-title" "css_element"
     And I should see "Notification trigger: New comment created" in the ".tui-modalContent__content" "css_element"
     And the field "Override" matches value "0"
