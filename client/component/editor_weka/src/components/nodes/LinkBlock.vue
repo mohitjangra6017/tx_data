@@ -18,13 +18,14 @@
 
 <template>
   <div class="tui-wekaLinkBlock" :data-url="attrs.url">
-    <Dropdown>
+    <Dropdown :disabled="editorDisabled">
       <template v-slot:trigger="{ toggle, isOpen }">
         <div @click.capture.prevent="toggle">
           <LinkBlockInner :attrs="attrs" />
         </div>
         <div class="tui-wekaLinkBlock__btn-wrapper">
           <ButtonIcon
+            v-if="!editorDisabled"
             :styleclass="{ small: true, transparent: true }"
             class="tui-wekaLinkBlock__btn"
             :aria-expanded="isOpen.toString()"

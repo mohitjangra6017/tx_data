@@ -45,6 +45,7 @@
         <a :href="attrs.url">{{ attrs.url }}</a>
       </div>
       <NodeBar
+        v-if="!editorDisabled"
         :actions="actions"
         :aria-label="$str('actions_menu_for', 'editor_weka', summaryText)"
       />

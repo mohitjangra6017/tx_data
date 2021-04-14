@@ -35,8 +35,6 @@ import WekaValue from './WekaValue';
 import { uniqueId } from 'tui/util';
 import { notify } from 'tui/notifications';
 import { langString, loadLangStrings } from 'tui/i18n';
-// eslint-disable-next-line no-unused-vars
-import FileStorage from './helpers/file';
 
 export default class Editor {
   /**
@@ -220,6 +218,14 @@ export default class Editor {
       dispatchTransaction: this.dispatch,
       nodeViews: this._nodeViews,
       attributes,
+      editable: () => {
+        if ('editable' in this._options) {
+          return this._options.editable;
+        }
+
+        // Default to editable.
+        return true;
+      },
     });
 
     this.view.dom.addEventListener('focus', e => {
@@ -290,6 +296,15 @@ export default class Editor {
   }
 
   /**
+   * Forces the editor's view to be re-rendered.
+   */
+  forceRerenderView() {
+    const state = EditorState.create(Object.assign({}, this._editorConfig()));
+    this.view.updateState(state);
+    this.view.updateState(this.state);
+  }
+
+  /**
    * Returning the file storage item's id that are holding all the files.
    *
    * @return {?number}
@@ -322,7 +337,10 @@ export default class Editor {
   }
 
   getToolbarItems() {
-    this._toolbarItemInstances.forEach(b => b.update(this));
+    this._toolbarItemInstances.map(b => {
+      return b.update(this);
+    });
+
     return this._toolbarItems;
   }
 

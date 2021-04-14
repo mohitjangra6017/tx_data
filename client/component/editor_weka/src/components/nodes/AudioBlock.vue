@@ -55,6 +55,7 @@
         >
           <template slot="actions">
             <NodeBar
+              v-if="!editorDisabled"
               :actions="actions"
               :aria-label="$str('actions_menu_for', 'editor_weka', filename)"
             />
@@ -165,6 +166,10 @@ export default {
     },
 
     transcriptButtonVisible() {
+      if (this.editorDisabled) {
+        return false;
+      }
+
       return this.attrs.transcript === null;
     },
   },

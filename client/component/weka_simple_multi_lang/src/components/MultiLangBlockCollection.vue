@@ -28,6 +28,7 @@
       }"
     >
       <ButtonIcon
+        v-if="!editorDisabled"
         :aria-label="$str('add_new', 'weka_simple_multi_lang')"
         :styleclass="{
           transparentNoPadding: true,

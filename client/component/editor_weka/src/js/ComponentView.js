@@ -51,6 +51,7 @@ export default class ComponentView {
       replaceWith: fn => this.replaceWith(fn),
       getPos: this.getPos,
       getRange: this.getRange.bind(this),
+      editorDisabled: !this.view.editable,
     };
 
     this.vm = new Component({
@@ -113,6 +114,7 @@ export default class ComponentView {
 
     this.updateComponentProps({
       nodeInfo: this.getNodeInfo(),
+      editorDisabled: !this.view.editable,
     });
 
     return true;

@@ -98,6 +98,10 @@ class EmojiExtension extends BaseExtension {
         label: langString('insertemoji', 'editor'),
         iconComponent: EmojiIcon,
         enabled: editor => {
+          if (!editor.view.editable) {
+            return false;
+          }
+
           return editor.view.state.selection.$head.pos > 0;
         },
         reset: editor => {

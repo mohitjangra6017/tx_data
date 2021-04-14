@@ -48,6 +48,9 @@ export default function(editor, resolverClassName) {
 
           if (!text || !active) {
             return;
+          } else if (!view.editable) {
+            // Editor is disabled, do not apply anything.
+            return;
           }
 
           // remove [ when passing value to state/component

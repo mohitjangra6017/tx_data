@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <Dropdown class="tui-wekaHashtag">
+  <Dropdown :disabled="editorDisabled" class="tui-wekaHashtag">
     <template v-slot:trigger="{ toggle, isOpen }">
       <Hashtag
         :url="url"

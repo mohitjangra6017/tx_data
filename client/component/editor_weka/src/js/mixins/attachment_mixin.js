@@ -34,5 +34,6 @@ export default {
     },
 
     hasDownloadUrl: Boolean,
+    disabled: Boolean,
   },
 };

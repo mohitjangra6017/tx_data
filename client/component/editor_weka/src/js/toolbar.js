@@ -42,11 +42,19 @@ export class ToolbarItem {
   update(editor) {
     const { _def: def, _opts: opts } = this;
     this._editor = editor;
-    def.enabled = opts.enabled === undefined || opts.enabled(editor);
+
+    if (!this._editor.view.editable) {
+      // The whole editor is disabled, hence we can make the toolbar item
+      // to be disabled as well without questioning itself.
+      def.enabled = false;
+    } else {
+      def.enabled = opts.enabled === undefined || opts.enabled(editor);
+    }
     def.active = opts.active != null ? opts.active(editor) : null;
     if (opts.children) {
       opts.children.forEach(x => x.update(editor));
     }
+
     return Object.assign({}, def);
   }
 

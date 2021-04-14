@@ -27,6 +27,7 @@
     />
 
     <NodeBar
+      v-if="!disabled"
       :actions="actions"
       :aria-label="$str('actions_menu_for', 'editor_weka', filename)"
     />

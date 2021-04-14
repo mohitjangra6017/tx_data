@@ -147,6 +147,7 @@ export default {
         });
       },
     },
+    disabled: Boolean,
   },
 
   data() {
@@ -195,6 +196,20 @@ export default {
       if (this.editor && this.isLoggedIn) {
         this.editor.updateFileItemId(value);
       }
+    },
+
+    disabled(value) {
+      if (!this.editor.view) {
+        return;
+      }
+
+      this.editor.view.setProps({
+        editable: () => {
+          return !value;
+        },
+      });
+      this.updateToolbar();
+      this.editor.forceRerenderView();
     },
   },
 
@@ -355,6 +370,7 @@ export default {
         component: this.usageIdentifier.component || null,
         area: this.usageIdentifier.area || null,
         instanceId: this.usageIdentifier.instanceId || null,
+        editable: !this.disabled,
         onTransaction: () => {
           this.updateToolbarThrottled();
         },

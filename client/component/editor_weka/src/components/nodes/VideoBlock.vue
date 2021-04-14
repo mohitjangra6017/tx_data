@@ -51,6 +51,7 @@
         />
 
         <NodeBar
+          v-if="!editorDisabled"
           :actions="actions"
           :aria-label="$str('actions_menu_for', 'editor_weka', filename)"
         />
@@ -189,6 +190,10 @@ export default {
     },
 
     subtitleButtonVisible() {
+      if (this.editorDisabled) {
+        return false;
+      }
+
       return this.attrs.subtitle === null;
     },
   },

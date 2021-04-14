@@ -31,6 +31,7 @@
         @click="openModal"
       />
       <NodeBar
+        v-if="!editorDisabled"
         :actions="actions"
         :aria-label="$str('actions_menu_for', 'editor_weka', filename)"
       />
@@ -126,6 +127,9 @@ export default {
     },
 
     altTextButtonVisible() {
+      if (this.editorDisabled) {
+        return false;
+      }
       return this.altText === null;
     },
 

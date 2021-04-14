@@ -47,6 +47,7 @@
           </div>
           <div class="tui-wekaMultiLangBlock__actions">
             <ButtonIcon
+              v-if="!editorDisabled"
               :aria-label="editLanguageAriaLabel"
               :styleclass="{
                 transparent: true,
@@ -118,6 +119,11 @@ export default {
     },
 
     removable() {
+      if (this.editorDisabled) {
+        // Editor is disabled, so we cannot remove the node.
+        return false;
+      }
+
       return this.attrs.siblings_count > 2;
     },
 

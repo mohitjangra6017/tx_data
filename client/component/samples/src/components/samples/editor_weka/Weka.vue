@@ -21,6 +21,7 @@
     <Weka
       v-if="draftId && showEditor"
       v-model="content"
+      :disabled="editorDisabled"
       :usage-identifier="{
         component: 'editor_weka',
         area: 'default',
@@ -44,6 +45,7 @@
     <Button text="Reset" @click="reset" />
     <Button text="Toggle editor" @click="showEditor = !showEditor" />
     <Button text="Apply formatters" @click="applyFormatter" />
+    <Button text="Disable editor" @click="editorDisabled = !editorDisabled" />
     <br />
     <div class="tui-sample-weka__json" v-text="json" />
   </div>
@@ -68,6 +70,7 @@ export default {
       content: null,
       json: '',
       draftId: null,
+      editorDisabled: false,
     };
   },
 

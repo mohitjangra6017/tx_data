@@ -33,6 +33,7 @@ export default {
     compact,
     usageIdentifer,
     extraExtensions,
+    disabled,
   }) {
     return {
       fileItemId,
@@ -47,6 +48,7 @@ export default {
       },
       placeholder,
       compact,
+      disabled,
     };
   },
 

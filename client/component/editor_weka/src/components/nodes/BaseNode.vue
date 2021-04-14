@@ -25,6 +25,7 @@ export default {
     replaceWith: Function,
     getPos: Function,
     getRange: Function,
+    editorDisabled: Boolean,
   },
 
   computed: {
