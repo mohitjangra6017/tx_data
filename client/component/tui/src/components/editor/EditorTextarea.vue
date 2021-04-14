@@ -20,6 +20,7 @@
   <div class="tui-editorTextarea">
     <Textarea
       :value="value && value.content"
+      :disabled="disabled"
       class="tui-editorTextarea__textarea"
       char-length="full"
       rows="8"
@@ -40,6 +41,7 @@ export default {
     value: {
       type: Object,
     },
+    disabled: Boolean,
   },
 
   mounted() {

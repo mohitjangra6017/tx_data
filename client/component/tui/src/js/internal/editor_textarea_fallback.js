@@ -38,9 +38,10 @@ export default {
    * @param {?number} opts.fileItemId Draft ID
    * @returns {object} Props
    */
-  // eslint-disable-next-line no-unused-vars
   getProps(opts) {
-    return {};
+    return {
+      disabled: opts.disabled,
+    };
   },
 
   /**

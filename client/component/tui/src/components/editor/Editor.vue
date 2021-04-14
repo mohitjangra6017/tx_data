@@ -65,6 +65,8 @@ export default {
 
     contextId: Number,
 
+    disabled: Boolean,
+
     /**
      * The entry that is being edited. Passed to extensions so that they can
      * alter their configuration based off what they are editing, e.g. only
@@ -124,6 +126,7 @@ export default {
         placeholder: this.placeholder,
         compact: this.compact,
         extraExtensions: this.extraExtensions,
+        disabled: this.disabled,
       };
     },
 
@@ -261,6 +264,7 @@ export default {
           compact: fixedConfig.compact,
           usageIdentifier: fixedConfig.usageIdentifier,
           extraExtensions: fixedConfig.extraExtensions,
+          disabled: fixedConfig.disabled,
         }),
       ]);
 
