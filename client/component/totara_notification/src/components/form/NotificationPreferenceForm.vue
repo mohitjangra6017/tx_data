@@ -231,6 +231,7 @@
           <!-- We are only requiring the field body if the parent does not have one -->
           <Editor
             :id="id"
+            :disabled="!customisation.subject"
             :value="value"
             :context-id="contextId"
             :usage-identifier="{
@@ -293,6 +294,7 @@
             :id="id"
             :value="value"
             :context-id="contextId"
+            :disabled="!customisation.body"
             :usage-identifier="{
               component: 'totara_notification',
               area: 'notification_body',
