@@ -4946,7 +4946,7 @@ class settings_navigation extends navigation_node {
 
         // Totara: Admin navigation preferences.
         if ($loggedin_notguest && $currentuser && has_capability('totara/core:editownquickaccessmenu', context_user::instance($USER->id))) {
-            $adminmenu = totara_core\quickaccessmenu\factory::instance($USER->id)->get_possible_items();
+            $adminmenu = totara_core\quickaccessmenu\factory::instance($USER->id)->has_possible_items();
             if (!empty($adminmenu)) {
                 $url = new moodle_url('/user/quickaccessmenu.php', array('id' => $user->id));
                 $useraccount->add(get_string('quickaccessmenu:settingsheading', 'totara_core'), $url, self::TYPE_SETTING, null, 'quickaccessmenu');
