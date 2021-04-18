@@ -1,12 +1,12 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => 'dev-TL-28276/14',
-    'version' => 'dev-TL-28276/14',
+    'pretty_version' => 'dev-TL-30572/14',
+    'version' => 'dev-TL-30572/14',
     'aliases' => 
     array (
     ),
-    'reference' => 'fb5f9b9314d9834e9ae9354bb391a7065b56d4c8',
+    'reference' => '282fc362d46017533adaf57c50c527aafa7f7bd7',
     'name' => 'totara/totara_require',
   ),
   'versions' => 
@@ -58,21 +58,21 @@
     ),
     'markbaker/matrix' => 
     array (
-      'pretty_version' => '2.0.0',
-      'version' => '2.0.0.0',
+      'pretty_version' => '2.1.2',
+      'version' => '2.1.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '9567d9c4c519fbe40de01dbd1e4469dbbb66f46a',
+      'reference' => '361c0f545c3172ee26c3d596a0aa03f0cef65e6a',
     ),
     'myclabs/php-enum' => 
     array (
-      'pretty_version' => '1.7.7',
-      'version' => '1.7.7.0',
+      'pretty_version' => '1.8.0',
+      'version' => '1.8.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd178027d1e679832db9f38248fcc7200647dc2b7',
+      'reference' => '46cf3d8498b095bd33727b13fd5707263af99421',
     ),
     'phenx/php-font-lib' => 
     array (
@@ -166,21 +166,39 @@
     ),
     'symfony/polyfill-mbstring' => 
     array (
-      'pretty_version' => 'v1.20.0',
-      'version' => '1.20.0.0',
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '39d483bdf39be819deabf04ec872eb0b2410b531',
+      'reference' => '5232de97ee3b75b0360528dae24e73db49566ab1',
+    ),
+    'symfony/polyfill-php74' => 
+    array (
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '577e147350331efeb816897e004d85e6e765daaf',
+    ),
+    'symfony/polyfill-php80' => 
+    array (
+      'pretty_version' => 'v1.22.1',
+      'version' => '1.22.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'dc3063ba22c2a1fd2f45ed856374d79114998f91',
     ),
     'totara/totara_require' => 
     array (
-      'pretty_version' => 'dev-TL-28276/14',
-      'version' => 'dev-TL-28276/14',
+      'pretty_version' => 'dev-TL-30572/14',
+      'version' => 'dev-TL-30572/14',
       'aliases' => 
       array (
       ),
-      'reference' => 'fb5f9b9314d9834e9ae9354bb391a7065b56d4c8',
+      'reference' => '282fc362d46017533adaf57c50c527aafa7f7bd7',
     ),
     'webonyx/graphql-php' => 
     array (
