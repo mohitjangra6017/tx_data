@@ -200,7 +200,6 @@ export default {
 
   data() {
     return {
-      eventResolvers: [],
       modal: {
         open: false,
         title: '',
@@ -404,26 +403,9 @@ export default {
 
           proxy.writeQuery({
             query: getEventResolvers,
-            variables: { context_id: this.contextId },
+            variables: this.queryVariables,
             data: { resolvers: resolvers },
           });
-
-          let result = {};
-          resolvers.forEach(resolver => {
-            const { component, plugin_name, recipients } = resolver;
-            if (!result[component]) {
-              result[component] = {
-                component: component,
-                plugin_name: plugin_name,
-                resolvers: [],
-                recipients: recipients,
-              };
-            }
-
-            result[component].resolvers.push(resolver);
-          });
-
-          this.eventResolvers = Object.values(result);
         },
       });
     },
