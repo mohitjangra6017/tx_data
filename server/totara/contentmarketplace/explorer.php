@@ -61,7 +61,7 @@ if ($mode === \totara_contentmarketplace\explorer::MODE_CREATE_COURSE) {
     $PAGE->navbar->add(get_string('explore', 'totara_contentmarketplace'));
 }
 
-if (has_capability('totara/contentmarketplace:config', $context)) {
+if ($can_manage_content = has_capability('totara/contentmarketplace:config', $context)) {
     $url = $plugin->contentmarketplace()->settings_url("content_settings");
     $searchform = $OUTPUT->single_button($url, get_string("manage_available_content", "totara_contentmarketplace"), "get");
     $PAGE->set_button($searchform);
@@ -70,6 +70,21 @@ if (has_capability('totara/contentmarketplace:config', $context)) {
 $PAGE->set_title($explorer->get_heading());
 $PAGE->set_heading($explorer->get_heading());
 
+// TODO: Extract the handling into a pluggable controller.
+if ($marketplace === 'linkedin') {
+    $component = new \totara_tui\output\component(
+        'contentmarketplace_linkedin/pages/CatalogImport',
+        [
+            'canManageContent' => $can_manage_content,
+        ]
+    );
+    $component->register($PAGE);
+}
+
 echo $OUTPUT->header();
-echo $explorer->render();
+if ($marketplace === 'linkedin') {
+    echo $OUTPUT->render($component);
+} else {
+    echo $explorer->render();
+}
 echo $OUTPUT->footer();

@@ -26,6 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['actions'] = 'Actions';
 $string['add_to_collection'] = 'Add to collection';
 $string['availability'] = 'Availability';
+$string['back_to_manage_content_marketplaces'] = 'Back to Manage Content Marketplaces';
 $string['contentmarketplace'] = 'Content Marketplace';
 $string['contentmarketplace:add'] = 'Add Content Marketplace';
 $string['contentmarketplace:config'] = 'Manage Content Marketplace';

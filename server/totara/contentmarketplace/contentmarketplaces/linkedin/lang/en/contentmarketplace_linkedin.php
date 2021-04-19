@@ -24,6 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['browse_learning_content'] = 'Browse LinkedIn Learning content';
+$string['catalog_title'] = 'LinkedIn Learning catalogue';
 $string['plugin_description'] = 'Online Training Courses for Creative, Technology, Business Skills.';
 $string['pluginname'] = 'LinkedIn Learning';
 $string['warningdisablemarketplace:body:html'] = '<p>You are about to disable the LinkedIn Learning Content Marketplace. If you proceed, items from the marketplace will no longer be available to course creators for inclusion in newly created courses.</p>
