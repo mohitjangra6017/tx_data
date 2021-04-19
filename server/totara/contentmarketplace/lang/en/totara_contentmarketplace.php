@@ -49,6 +49,7 @@ $string['enable_content_marketplace'] = 'Enable a Content Marketplace';
 $string['enablecontentmarketplaces'] = 'Enable content marketplaces';
 $string['enablecontentmarketplacesdesc'] = 'When enabled, you can configure and access external training content through Totara\'s third party content marketplaces';
 $string['enabled'] = 'Enabled';
+$string['enable_plugin'] = 'Enable {$a}';
 $string['error:disabledmarketplace'] = '{$a} Content Marketplace disabled';
 $string['error:disabledmarketplaces'] = 'Content Marketplaces are disabled';
 $string['explore'] = 'Explore';

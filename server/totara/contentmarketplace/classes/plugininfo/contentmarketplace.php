@@ -20,26 +20,34 @@
  * @author Sergey Vidusov <sergey.vidusov@androgogic.com>
  * @package totara_contentmarketplace
  */
-
 namespace totara_contentmarketplace\plugininfo;
 
-defined('MOODLE_INTERNAL') || die();
+use admin_settingpage;
+use core\plugininfo\base;
+use core_plugin_manager;
+use part_of_admin_tree;
+use totara_contentmarketplace\local\contentmarketplace\collection;
+use totara_contentmarketplace\local\contentmarketplace\contentmarketplace as local_instance;
+use totara_contentmarketplace\local\contentmarketplace\search;
 
-class contentmarketplace extends \core\plugininfo\base {
+class contentmarketplace extends base {
 
+    /**
+     * @return array
+     */
     public static function get_enabled_plugins() {
         global $DB;
         $sql = "SELECT plugin
             FROM {config_plugins}
-            WHERE ".$DB->sql_like('plugin', ':pluginname')."
+            WHERE " . $DB->sql_like('plugin', ':pluginname') . "
                 AND name = 'enabled'
                 AND value = '1'";
-        $records = $DB->get_records_sql($sql, array('pluginname' => 'contentmarketplace_%'));
+        $records = $DB->get_records_sql($sql, ['pluginname' => 'contentmarketplace_%']);
         if (!$records) {
-            return array();
+            return [];
         }
 
-        $enabled = array();
+        $enabled = [];
         foreach ($records as $record) {
             $name = str_replace('contentmarketplace_', '', $record->plugin);
             $enabled[$name] = $name;
@@ -47,6 +55,9 @@ class contentmarketplace extends \core\plugininfo\base {
         return $enabled;
     }
 
+    /**
+     * @return bool
+     */
     public function is_uninstall_allowed() {
         if ($this->is_standard()) {
             return false;
@@ -55,7 +66,7 @@ class contentmarketplace extends \core\plugininfo\base {
     }
 
     /**
-     * @return \totara_contentmarketplace\local\contentmarketplace\contentmarketplace
+     * @return local_instance
      */
     public function contentmarketplace() {
         $classname = "\\{$this->component}\\contentmarketplace";
@@ -63,7 +74,7 @@ class contentmarketplace extends \core\plugininfo\base {
     }
 
     /**
-     * @return \totara_contentmarketplace\local\contentmarketplace\search
+     * @return search
      */
     public function search() {
         $classname = "\\{$this->component}\\search";
@@ -71,7 +82,7 @@ class contentmarketplace extends \core\plugininfo\base {
     }
 
     /**
-     * @return \totara_contentmarketplace\local\contentmarketplace\collection
+     * @return collection
      */
     public function collection() {
         $classname = "\\{$this->component}\\collection";
@@ -80,11 +91,11 @@ class contentmarketplace extends \core\plugininfo\base {
 
     /**
      * @param string $name
-     * @param bool $required If set to true (default) and the plugin doesn't exist a coding_exception is thrown.
+     * @param bool   $required If set to true (default) and the plugin doesn't exist a coding_exception is thrown.
      * @return contentmarketplace|null
      */
     public static function plugin($name, $required = true) {
-        $plugin = \core_plugin_manager::instance()->get_plugin_info("contentmarketplace_{$name}");
+        $plugin = core_plugin_manager::instance()->get_plugin_info("contentmarketplace_{$name}");
         if ($plugin === null) {
             if ($required) {
                 throw new \coding_exception('Unknown content marketplace plugin requested.');
@@ -97,6 +108,9 @@ class contentmarketplace extends \core\plugininfo\base {
         return $plugin;
     }
 
+    /**
+     * @return void
+     */
     public function enable() {
         global $USER;
         $userid = (isloggedin()) ? $USER->id : -1;
@@ -105,18 +119,79 @@ class contentmarketplace extends \core\plugininfo\base {
         $this->set_enabled(1);
     }
 
+    /**
+     * @return void
+     */
     public function disable() {
         set_config('enabled_by', '', $this->component);
         set_config('enabled_on', '', $this->component);
         $this->set_enabled(0);
     }
 
+    /**
+     * @param bool|int $value
+     * @return void
+     */
     protected function set_enabled($value) {
         set_config('enabled', $value, $this->component);
         \core_plugin_manager::reset_caches();
     }
 
+    /**
+     * @return bool
+     */
     public function has_never_been_enabled() {
         return get_config($this->component, 'enabled') === false;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function get_settings_section_name(): ?string {
+        return "content_marketplace_setting_{$this->name}";
+    }
+
+    /**
+     * @param part_of_admin_tree $adminroot
+     * @param string             $parentnodename
+     * @param bool               $hassiteconfig
+     */
+    public function load_settings(part_of_admin_tree $adminroot, $parentnodename, $hassiteconfig) {
+        // The reason why we are including these globals and declaring $ADMIN as because the legacy code from
+        // {plugin}/settings.php that we are about to include is assuming these dark magics are available for them
+        // by default.
+        global $CFG, $USER, $DB, $PAGE, $OUTPUT;
+        $ADMIN = $adminroot;
+
+        if (!$this->is_installed_and_upgraded()) {
+            return;
+        }
+
+        if (!$hassiteconfig) {
+            return;
+        }
+
+        $full_path = $this->full_path('settings.php');
+
+        if (file_exists($full_path)) {
+            $display_name = $this->displayname;
+            $component = $this->component;
+            $string_manager = get_string_manager();
+
+            if ($string_manager->string_exists('settings_title', $component)) {
+                // Look up to the settings title so that we can set it as the title of the page.
+                $display_name = $string_manager->get_string('settings_title', $component);
+            }
+
+            $settings_page = new admin_settingpage(
+                $this->get_settings_section_name(),
+                $display_name,
+                'moodle/site:config',
+                !$this->is_enabled(),
+            );
+
+            include($full_path);
+            $adminroot->add($parentnodename, $settings_page);
+        }
     }
 }

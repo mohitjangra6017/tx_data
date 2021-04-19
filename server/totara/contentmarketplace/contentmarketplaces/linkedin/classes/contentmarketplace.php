@@ -68,4 +68,14 @@ final class contentmarketplace extends contentmarketplace_parent {
         ]);
     }
 
+    /**
+     * @param null|string $tab
+     * @return string|moodle_url
+     */
+    public function settings_url($tab = null) {
+        $plugin_info = contentmarketplace_plugininfo::plugin($this->name);
+        $section_name = $plugin_info->get_settings_section_name();
+
+        return new moodle_url("/admin/settings.php", ['section' => $section_name]);
+    }
 }

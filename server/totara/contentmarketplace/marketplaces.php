@@ -116,8 +116,9 @@ foreach ($plugins as $plugin) {
         $actionshtml[] = $marketplace->get_setup_html(get_string('setup', 'totara_contentmarketplace'));
     } else {
         if ($isenabled) {
+            $settings_url = $plugin->contentmarketplace()->settings_url();
             $actionshtml[] = html_writer::link(
-                new moodle_url($PAGE->url, array('id' => $plugin->name)),
+                $settings_url,
                 $OUTPUT->pix_icon('t/edit', get_string('settings', 'totara_contentmarketplace'))
             );
             $actionshtml[] = html_writer::link(

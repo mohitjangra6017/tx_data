@@ -25,8 +25,13 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['browse_learning_content'] = 'Browse LinkedIn Learning content';
 $string['catalog_title'] = 'LinkedIn Learning catalogue';
+$string['client_id'] = 'Client ID';
+$string['client_id_help'] = 'Client ID can be obtained from LinkedIn Learning under the integration settings page.';
+$string['client_secret'] = 'Client secret';
+$string['client_secret_help'] = 'Client secret can be obtained from LinkedIn Learning under the integration settings page.';
 $string['plugin_description'] = 'Online Training Courses for Creative, Technology, Business Skills.';
 $string['pluginname'] = 'LinkedIn Learning';
+$string['settings_title'] = 'LinkedIn Learning settings';
 $string['warningdisablemarketplace:body:html'] = '<p>You are about to disable the LinkedIn Learning Content Marketplace. If you proceed, items from the marketplace will no longer be available to course creators for inclusion in newly created courses.</p>
 <p>Users who have previously already started LinkedIn Learning activities will continue to have access to that content, but they will not be able to start new LinkedIn Learning activities.</p>
 <p>Are you sure you wish to proceed?</p>';

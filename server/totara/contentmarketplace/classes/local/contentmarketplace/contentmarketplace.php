@@ -169,11 +169,16 @@ abstract class contentmarketplace {
             'sesskey' => sesskey(),
         ]);
 
-        return html_writer::link($enable_url, $label, [
-            'class' => 'tcm-enable',
-            'data-action' => 'enable',
-            'data-marketplace' => $this->name,
-        ]);
+        return html_writer::link(
+            $enable_url,
+            $label,
+            [
+                'class' => 'tcm-enable',
+                'data-action' => 'enable',
+                'data-marketplace' => $this->name,
+                'title' => get_string('enable_plugin', 'totara_contentmarketplace', $this->fullname),
+            ]
+        );
     }
 
     /**
