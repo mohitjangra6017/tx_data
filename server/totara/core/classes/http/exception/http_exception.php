@@ -33,12 +33,12 @@ class http_exception extends Exception {
     /**
      * Constructor.
      *
-     * @param string $errorcode
-     * @param string $message
-     * @param string $debugmessage
-     * @param Throwable $previous
+     * @param string         $errorcode
+     * @param string         $message
+     * @param string         $debugmessage
+     * @param Throwable|null $previous
      */
-    public function __construct(string $errorcode, string $message, string $debugmessage = '', Throwable $previous = null) {
+    public function __construct(string $errorcode, string $message, string $debugmessage = '', ?Throwable $previous = null) {
         global $CFG;
         $message = "{$errorcode}: {$message}";
         if (((defined('PHPUNIT_TEST') && PHPUNIT_TEST) || !empty($CFG->debugdeveloper)) && $debugmessage !== '') {

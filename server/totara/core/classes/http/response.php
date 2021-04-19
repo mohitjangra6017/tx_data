@@ -32,24 +32,32 @@ use totara_core\http\exception\request_exception;
  * A class that encapsulates an HTTP response.
  */
 final class response {
-    /** @var string */
+    /**
+     * @var string
+     */
     private $body;
 
-    /** @var integer */
+    /**
+     * @var integer
+     */
     private $http_code;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $content_type;
 
-    /** @var string[] */
+    /**
+     * @var string[]
+     */
     private $response;
 
     /**
      * Constructor.
      *
-     * @param string $body
-     * @param integer $code
-     * @param string[] $response
+     * @param string      $body
+     * @param integer     $code
+     * @param string[]    $response
      * @param string|null $contenttype
      */
     public function __construct(string $body, int $code, array $response, ?string $contenttype = null) {
@@ -72,7 +80,7 @@ final class response {
      * @return boolean
      */
     public function is_ok(): bool {
-        return 200 <= $this->http_code && $this->http_code <= 299;
+        return response_code::is_successful_response($this->http_code);
     }
 
     /**
@@ -173,10 +181,13 @@ final class response {
             return;
         }
         $message = "Request failed with {$this->get_http_code()}";
-        if ($this->http_code === 400 || $this->http_code === 401) {
+
+        if ($this->http_code === response_code::BAD_REQUEST ||
+            $this->http_code === response_code::UNAUTHORIZED) {
             $message .= ', Authentication failed';
             throw new auth_exception($message, $this->get_body());
         }
+
         throw new request_exception($message, $this->get_body());
     }
 

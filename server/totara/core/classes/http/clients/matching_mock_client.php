@@ -32,10 +32,14 @@ use totara_core\http\response;
  * A mock client that provides pattern matching for testing.
  */
 class matching_mock_client implements client {
-    /** @var array */
+    /**
+     * @var array
+     */
     private $responses = [];
 
-    /** @var request[] */
+    /**
+     * @var request[]
+     */
     private $requests = [];
 
     /**
@@ -83,22 +87,40 @@ class matching_mock_client implements client {
         return $this->requests;
     }
 
+    /**
+     * @return void
+     */
     public function reset(): void {
         $this->requests = [];
     }
 
+    /**
+     * @return void
+     */
     public function reset_responses(): void {
         $this->responses = [];
     }
 
+    /**
+     * @param int $timeout
+     * @return client
+     */
     public function set_connect_timeout(int $timeout): client {
         return $this;
     }
 
+    /**
+     * @param int $timeout
+     * @return client
+     */
     public function set_timeout(int $timeout): client {
         return $this;
     }
 
+    /**
+     * @param request $request
+     * @return response
+     */
     public function execute(request $request): response {
         $this->requests[] = $request;
         if (empty($this->responses)) {

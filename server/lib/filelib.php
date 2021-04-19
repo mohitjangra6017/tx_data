@@ -3842,7 +3842,7 @@ class curl {
     /**
      * HTTP PATCH method
      *
-     * @param strng $url
+     * @param string $url
      * @param string $params
      * @param array $options
      * @return bool
@@ -3900,7 +3900,7 @@ class curl {
     /**
      * Get curl information
      *
-     * @return string
+     * @return string|array
      */
     public function get_info() {
         return $this->info;

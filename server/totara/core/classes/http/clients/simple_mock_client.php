@@ -32,10 +32,14 @@ use totara_core\http\response;
  * A simple FIFO mock client for testing.
  */
 class simple_mock_client implements client {
-    /** @var response[] */
+    /**
+     * @var response[]
+     */
     private $responses = [];
 
-    /** @var request[] */
+    /**
+     * @var request[]
+     */
     private $requests = [];
 
     /**
@@ -52,22 +56,40 @@ class simple_mock_client implements client {
         return $this->requests;
     }
 
+    /**
+     * @return void
+     */
     public function reset(): void {
         $this->requests = [];
     }
 
+    /**
+     * @return void
+     */
     public function reset_queue(): void {
         $this->responses = [];
     }
 
+    /**
+     * @param int $timeout
+     * @return client
+     */
     public function set_connect_timeout(int $timeout): client {
         return $this;
     }
 
+    /**
+     * @param int $timeout
+     * @return client
+     */
     public function set_timeout(int $timeout): client {
         return $this;
     }
 
+    /**
+     * @param request $request
+     * @return response
+     */
     public function execute(request $request): response {
         $this->requests[] = $request;
         if (empty($this->responses)) {

@@ -32,11 +32,11 @@ class bad_format_exception extends http_exception {
     /**
      * Constructor.
      *
-     * @param string $message
-     * @param string $debugmessage
-     * @param Throwable $previous
+     * @param string         $message
+     * @param string         $debugmessage
+     * @param Throwable|null $previous
      */
-    public function __construct(string $message, string $debugmessage = '', Throwable $previous = null) {
+    public function __construct(string $message, string $debugmessage = '', ?Throwable $previous = null) {
         parent::__construct('badformatexception', $message, $debugmessage, $previous);
     }
 }

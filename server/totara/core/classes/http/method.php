@@ -27,14 +27,16 @@ namespace totara_core\http;
  * Method types.
  */
 final class method {
-    const GET = 'GET';
-    const HEAD = 'HEAD';
-    const POST = 'POST';
-    const PUT = 'PUT';
-    const DELETE = 'DELETE';
-    const PATCH = 'PATCH';
+    public const GET = 'GET';
+    public const HEAD = 'HEAD';
+    public const POST = 'POST';
+    public const PUT = 'PUT';
+    public const DELETE = 'DELETE';
+    public const PATCH = 'PATCH';
 
-    /** @var string[] */
+    /**
+     * @var string[]
+     */
     private static $valid_methods = [
         self::GET,
         self::HEAD,

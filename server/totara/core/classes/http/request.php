@@ -30,16 +30,24 @@ use moodle_url;
  * A class that encapsulates an HTTP request.
  */
 final class request {
-    /** @var moodle_url */
+    /**
+     * @var moodle_url
+     */
     private $url;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $method;
 
-    /** @var string[] */
+    /**
+     * @var string[]
+     */
     private $headers = [];
 
-    /** @var string|formdata|object|null */
+    /**
+     * @var string|formdata|object|null
+     */
     private $postdata = null;
 
     /**

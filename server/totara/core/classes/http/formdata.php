@@ -27,7 +27,9 @@ namespace totara_core\http;
  * A class represents form data.
  */
 final class formdata {
-    /** @var (string|array)[] */
+    /**
+     * @var array
+     */
     private $data = [];
 
     /**
