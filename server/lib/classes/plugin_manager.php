@@ -1250,7 +1250,7 @@ class core_plugin_manager {
 
             // Totara
             'contentmarketplace' => array(
-                'goone'
+                'goone', 'linkedin',
             ),
 
             'customfield' => array(

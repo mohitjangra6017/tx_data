@@ -24,17 +24,19 @@
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
-// This is very purposefully here, please don't move it beneath admin_externalpage_setup.
-// We want users on sites where it is not enabled, or where they've followed a link on a call to action to be directed
-// to a page that engages them.
-if (!\totara_contentmarketplace\local::is_enabled() || \totara_contentmarketplace\local::should_show_admin_setup_intro()) {
-    redirect(new moodle_url('/totara/contentmarketplace/setup.php'));
-    die;
-}
+use totara_contentmarketplace\local;
 
 $id = optional_param('id', null, PARAM_ALPHAEXT);
 $enable = optional_param('enable', null, PARAM_BOOL);
 $disable = optional_param('disable', null, PARAM_BOOL);
+
+// This is very purposefully here, please don't move it beneath admin_externalpage_setup.
+// We want users on sites where it is not enabled, or where they've followed a link on a call to action to be directed
+// to a page that engages them.
+if (!local::is_enabled() || (local::should_show_admin_setup_intro() && empty($id))) {
+    redirect(new moodle_url('/totara/contentmarketplace/setup.php'));
+    die;
+}
 
 admin_externalpage_setup('manage_content_marketplaces');
 
@@ -123,6 +125,7 @@ foreach ($plugins as $plugin) {
                 $OUTPUT->pix_icon('t/hide', get_string('disable', 'totara_contentmarketplace')),
                 [
                     'class' => 'tcm-disable',
+                    'data-action' => 'disable',
                     'data-marketplace' => $marketplace->name,
                 ]
             );
@@ -133,7 +136,12 @@ foreach ($plugins as $plugin) {
             );
             $actionshtml[] = html_writer::link(
                 new moodle_url($PAGE->url, array('id' => $plugin->name, 'enable' => 1, 'sesskey' => sesskey())),
-                $OUTPUT->pix_icon('t/show', get_string('enable', 'totara_contentmarketplace'))
+                $OUTPUT->pix_icon('t/show', get_string('enable', 'totara_contentmarketplace')),
+                [
+                    'class' => 'tcm-enable',
+                    'data-action' => 'enable',
+                    'data-marketplace' => $marketplace->name,
+                ]
             );
         }
         $actionshtml[] = html_writer::empty_tag('br');

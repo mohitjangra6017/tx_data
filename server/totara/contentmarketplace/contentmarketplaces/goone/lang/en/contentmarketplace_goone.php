@@ -108,5 +108,11 @@ $string['unknownlanguage'] = 'Unknown';
 $string['warningdisablemarketplace:body:html'] = '<p>You are about to disable the GO1 Content Marketplace. If you proceed, items from the marketplace will no longer be available to course creators for inclusion in newly created courses.</p>
 <p>Users who have previously already started GO1 activities will continue to have access to that content, but they will not be able to start new GO1 activities.</p>
 <p>Are you sure you wish to proceed?</p>';
-$string['warningdisablemarketplace:title'] = 'Are you sure?';
+$string['warningdisablemarketplace:title'] = 'Disable GO1 content';
+$string['warningenablemarketplace:body:html'] = 'You are about to enable the GO1 Content Marketplace. If you proceed, items from the marketplace will be available to course creators for inclusion in newly created courses.';
+$string['warningenablemarketplace:title'] = 'Enable GO1 content';
+
+
+// Deprecated since Totara 15
+
 $string['warningdisablemarketplace:yes'] = 'Disable GO1';

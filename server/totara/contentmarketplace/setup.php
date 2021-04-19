@@ -53,6 +53,8 @@ $title = get_string('setup_tc', 'totara_contentmarketplace');
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
 
+$PAGE->requires->js_call_amd('totara_contentmarketplace/disable', 'init');
+
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('setup_content_marketplaces', 'totara_contentmarketplace'));
 echo $OUTPUT->render_from_template('totara_contentmarketplace/setup_description', []);

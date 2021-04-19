@@ -32,14 +32,20 @@ define(['jquery', 'core/modal_factory', 'core/modal_events', 'core/str'], functi
     var disable = {};
 
     disable.init = function() {
-        $('.tcm-disable').each(function() {
+        $('.tcm-disable, .tcm-enable').each(function() {
             var context = $(this);
             var marketplace = context.data('marketplace');
+            var action = context.data('action') ? context.data('action') : 'disable';
             var component = 'contentmarketplace_' + marketplace;
+            /*
+             * Strings used:
+             * warningdisablemarketplace:title, warningdisablemarketplace:body:html, enable
+             * warningenablemarketplace:title, warningenablemarketplace:body:html, disable
+             */
             var requiredStrings = [
-                {key: 'warningdisablemarketplace:title', component: component},
-                {key: 'warningdisablemarketplace:body:html', component: component},
-                {key: 'warningdisablemarketplace:yes', component: component},
+                {key: 'warning' + action + 'marketplace:title', component: component},
+                {key: 'warning' + action + 'marketplace:body:html', component: component},
+                {key: action, component: 'totara_contentmarketplace'},
                 {key: 'cancel'}
             ];
             Str.get_strings(requiredStrings).done(function(strings) {

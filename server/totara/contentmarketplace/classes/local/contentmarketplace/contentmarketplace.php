@@ -23,6 +23,10 @@
 
 namespace totara_contentmarketplace\local\contentmarketplace;
 
+use html_writer;
+use moodle_url;
+use totara_contentmarketplace\plugininfo\contentmarketplace as contentmarketplace_plugininfo;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -79,7 +83,7 @@ abstract class contentmarketplace {
         }
         $this->plugin_name = 'contentmarketplace_'.$this->name;
 
-        $this->descriptionhtml = get_string('plugin_description_html', $this->get_plugin_name());
+        $this->descriptionhtml = $this->get_description_html();
         $this->fullname = get_string('pluginname', $this->get_plugin_name());
     }
 
@@ -128,13 +132,22 @@ abstract class contentmarketplace {
         $logo = $this->get_plugin_directory() . '/pix/logo.png';
         if (file_exists($logo)) {
             // No need to screen variables here; html_writer takes care of it.
-            return \html_writer::img(
+            return html_writer::img(
                 $PAGE->theme->image_url('logo', $this->get_plugin_name()),
-                $this->name,
-                array('width' => $width, 'title' => $this->fullname, 'alt' => $this->fullname)
+                $this->fullname,
+                array('width' => $width, 'title' => $this->fullname)
             );
         }
         return '';
+    }
+
+    /**
+     * Get the HTML to display for the description of this marketplace.
+     *
+     * @return string
+     */
+    public function get_description_html(): string {
+        return get_string('plugin_description_html', $this->get_plugin_name());
     }
 
     /**
@@ -145,7 +158,22 @@ abstract class contentmarketplace {
      * @return string HTML snippet with the setup code.
      */
     public function get_setup_html($label) {
-        return '';
+        if (!contentmarketplace_plugininfo::plugin($this->name)->has_never_been_enabled()) {
+            // Plugin has been configured in the past, so don't need to show the initial enable link.
+            return '';
+        }
+
+        $enable_url = new moodle_url('/totara/contentmarketplace/marketplaces.php', [
+            'id' => $this->name,
+            'enable' => 1,
+            'sesskey' => sesskey(),
+        ]);
+
+        return html_writer::link($enable_url, $label, [
+            'class' => 'tcm-enable',
+            'data-action' => 'enable',
+            'data-marketplace' => $this->name,
+        ]);
     }
 
     /**
