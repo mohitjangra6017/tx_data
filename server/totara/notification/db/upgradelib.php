@@ -83,37 +83,15 @@ function totara_notification_sync_built_in_notification(?string $component = nul
 }
 
 /**
- * @param string $table
- * @return void
- */
-function totara_notification_add_extend_context_fields(string $table): void {
-    global $DB;
-
-    $db_manager = $DB->get_manager();
-
-    $table = new xmldb_table($table);
-    $component_field = new xmldb_field('component', XMLDB_TYPE_CHAR, '255', null, false,'', '');
-    $area_field = new xmldb_field('area', XMLDB_TYPE_CHAR, '255', null, false, null, '');
-    $item_id_field = new xmldb_field('item_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
-
-    if (!$db_manager->field_exists($table, $component_field)) {
-        $db_manager->add_field($table, $component_field);
-    }
-
-    if (!$db_manager->field_exists($table, $area_field)) {
-        $db_manager->add_field($table, $area_field);
-    }
-
-    if (!$db_manager->field_exists($table, $item_id_field)) {
-        $db_manager->add_field($table, $item_id_field);
-    }
-}
-
-/**
  * Migrates legacy notification preferences to new notifiable event configuration.
+ *
+ * !!! WARNING !!! This function should only be called immediately after a new notifiable event resolver
+ *                 has been installed. It resets notifiable event preferences to those specified by the
+ *                 legacy message provider.
  *
  * New notifiable event default outputs come from legacy notification default outputs.
  * New notification event status is NOT affected by legacy notification status.
+ * New notification user output preferences come from legacy notification user output preferences.
  *
  * @param string $resolver_class_name
  * @param string $provider_name
@@ -126,12 +104,13 @@ function totara_notification_migrate_notifiable_event_prefs(
 ) {
     global $DB;
 
+    // Default outputs.
     $name = 'message_provider_' . $provider_component . '_' . $provider_name;
-    $outputs_enabled_online = explode(',', get_config('message', $name . '_loggedin'));
-    $outputs_enabled_online = $outputs_enabled_online === false ? [] : $outputs_enabled_online;
-    $outputs_enabled_offline = explode(',', get_config('message', $name . '_loggedoff'));
-    $outputs_enabled_offline = $outputs_enabled_offline === false ? [] : $outputs_enabled_offline;
-    $outputs_enabled = array_unique(array_merge($outputs_enabled_offline, $outputs_enabled_online));
+    $outputs_enabled_loggedin = explode(',', get_config('message', $name . '_loggedin'));
+    $outputs_enabled_loggedin = $outputs_enabled_loggedin === false ? [] : $outputs_enabled_loggedin;
+    $outputs_enabled_loggedoff = explode(',', get_config('message', $name . '_loggedoff'));
+    $outputs_enabled_loggedoff = $outputs_enabled_loggedoff === false ? [] : $outputs_enabled_loggedoff;
+    $outputs_enabled = array_unique(array_merge($outputs_enabled_loggedoff, $outputs_enabled_loggedin));
 
     $record = $DB->get_record('notifiable_event_preference', [
         'resolver_class_name' => ltrim($resolver_class_name, '\\'),
@@ -158,6 +137,148 @@ function totara_notification_migrate_notifiable_event_prefs(
         $record->default_delivery_channels = $default_delivery_channels;
         $DB->update_record('notifiable_event_preference', $record);
     }
+
+    // User preferences.
+    $preferences_loggedin = $DB->get_recordset('user_preferences',  [
+        'name' => 'message_provider_' . $provider_component . '_' . $provider_name . '_loggedin',
+    ], 'userid', 'userid, name, value');
+    $preferences_loggedoff = $DB->get_recordset('user_preferences',  [
+        'name' => 'message_provider_' . $provider_component . '_' . $provider_name . '_loggedoff',
+    ], 'userid', 'userid, name, value');
+
+    while ($preferences_loggedin->valid() || $preferences_loggedoff->valid()) {
+        if (!$preferences_loggedoff->valid()) {
+            // Only logged-in is present, so just process that.
+            totara_notification_migrate_notification_user_pref(
+                $resolver_class_name,
+                $preferences_loggedin->current()
+            );
+            $preferences_loggedin->next();
+            continue;
+        }
+
+        if (!$preferences_loggedin->valid()) {
+            // Only logged-off is present, so just process that.
+            totara_notification_migrate_notification_user_pref(
+                $resolver_class_name,
+                $preferences_loggedoff->current()
+            );
+            $preferences_loggedoff->next();
+            continue;
+        }
+
+        // Both records must be present.
+        $preference_loggedin = $preferences_loggedin->current();
+        $preference_loggedoff = $preferences_loggedoff->current();
+
+        if ($preference_loggedin->userid === $preference_loggedoff->userid) {
+            // Both records relate to the same user, so we combine their results (OR).
+            totara_notification_migrate_notification_user_pref(
+                $resolver_class_name,
+                $preference_loggedin,
+                $preference_loggedoff
+            );
+            $preferences_loggedin->next();
+            $preferences_loggedoff->next();
+            continue;
+        }
+
+        // There is a mismatch, so we process the lower userid only. The other record might get a match next time around.
+        if ($preference_loggedin->userid < $preference_loggedoff->userid) {
+            totara_notification_migrate_notification_user_pref(
+                $resolver_class_name,
+                $preference_loggedin
+            );
+            $preferences_loggedin->next();
+        } else {
+            totara_notification_migrate_notification_user_pref(
+                $resolver_class_name,
+                $preference_loggedoff
+            );
+            $preferences_loggedoff->next();
+        }
+    }
+
+    $preferences_loggedin->close();
+    $preferences_loggedoff->close();
+}
+
+/**
+ * Converts one or two legacy message user preferences into a new notification user preference
+ *
+ * This function is used by totara_notification_migrate_notifiable_event_prefs and should not be
+ * used elsewhere.
+ *
+ * If two records are provided then the delivery channels from both are combined.
+ *
+ * @param string $resolver_class_name
+ * @param stdClass $preference1
+ * @param stdClass|null $preference2
+ */
+function totara_notification_migrate_notification_user_pref(
+    string $resolver_class_name,
+    stdClass $preference1,
+    stdClass $preference2 = null
+) {
+    global $DB;
+
+    if (!empty($preference2)) {
+        if ($preference1->userid != $preference2->userid) {
+            throw new coding_exception(
+                'When two preferences are provided to totara_notification_migrate_notification_user_pref they must match'
+            );
+        }
+        // Check that the two records match.
+        $preference1_name = str_replace('_loggedin', '', str_replace('_loggedoff', '', $preference1->name));
+        $preference2_name = str_replace('_loggedin', '', str_replace('_loggedoff', '', $preference2->name));
+        if ($preference1_name !== $preference2_name) {
+            throw new coding_exception(
+                'When two preferences are provided to totara_notification_migrate_notification_user_pref they must match'
+            );
+        }
+
+        // Combine the two preferences (OR), and remove duplicates.
+        $delivery_channels_list = array_unique(array_merge(
+            explode(',', $preference1->value),
+            explode(',', $preference2->value)
+        ));
+        $delivery_channels = implode(',', $delivery_channels_list);
+    } else {
+        $delivery_channels = $preference1->value;
+    }
+
+    $record = $DB->get_record('notifiable_event_user_preference', [
+        'resolver_class_name' => ltrim($resolver_class_name, '\\'),
+        'user_id' => $preference1->userid,
+        'context_id' => context_system::instance()->id,
+        'component' => extended_context::NATURAL_CONTEXT_COMPONENT,
+        'area' => extended_context::NATURAL_CONTEXT_AREA,
+        'item_id' => extended_context::NATURAL_CONTEXT_ITEM_ID,
+    ], 'id, delivery_channels');
+
+    if (empty($record)) {
+        $record = [
+            'resolver_class_name' => ltrim($resolver_class_name, '\\'),
+            'user_id' => $preference1->userid,
+            'context_id' => context_system::instance()->id,
+            'component' => extended_context::NATURAL_CONTEXT_COMPONENT,
+            'area' => extended_context::NATURAL_CONTEXT_AREA,
+            'item_id' => extended_context::NATURAL_CONTEXT_ITEM_ID,
+            'enabled' => true,
+            'delivery_channels' => ',' . $delivery_channels . ',',
+        ];
+        $DB->insert_record('notifiable_event_user_preference', $record);
+    } else {
+        // Combine the legacy and new preferences (OR), and remove duplicates.
+        $delivery_channels_list = array_unique(array_merge(
+            explode(',', $delivery_channels),
+            explode(',', $record->delivery_channels)
+        ));
+        $delivery_channels = implode(',', $delivery_channels_list);
+
+        $record->delivery_channels = ',' . $delivery_channels . ',';
+        $DB->update_record('notifiable_event_user_preference', $record);
+    }
 }
 
 /**
@@ -165,7 +286,6 @@ function totara_notification_migrate_notifiable_event_prefs(
  *
  * New notification preference forced delivery is determined by legacy notification permissions.
  * New notification preference status comes from legacy notification status.
- * New notification user output preferences come from legacy notification user output preferences.
  *
  * @param int $notification_preference_id
  * @param string $provider_name
@@ -201,6 +321,4 @@ function totara_notification_migrate_notification_prefs(
     $record->enabled = !$disabled;
     $record->forced_delivery_channels = json_encode($forced_delivery_channels);
     $DB->update_record('notification_preference', $record);
-
-    // Migrate user preferences
 }

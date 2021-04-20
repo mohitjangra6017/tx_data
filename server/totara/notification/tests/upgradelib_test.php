@@ -26,7 +26,9 @@ use totara_comment\totara_notification\resolver\comment_created;
 use totara_comment\totara_notification\resolver\comment_soft_deleted;
 use totara_core\extended_context;
 use totara_notification\entity\notifiable_event_preference as notification_event_preference_entity;
+use totara_notification\entity\notifiable_event_user_preference as notifiable_event_user_preference_entity;
 use totara_notification\model\notifiable_event_preference as notification_event_preference_model;
+use totara_notification\model\notifiable_event_user_preference as notifiable_event_user_preference_model;
 use totara_notification\model\notification_preference as notification_preference_model;
 use totara_notification\testing\generator;
 
@@ -58,12 +60,12 @@ class totara_notification_upgradelib_testcase extends advanced_testcase {
     private function set_legacy_preference_default_outputs(
         string $provider_name,
         string $provider_component,
-        string $outputs_enabled_online,
-        string $outputs_enabled_offline
+        string $outputs_enabled_loggedin,
+        string $outputs_enabled_loggedoff
     ): void {
         $name = 'message_provider_' . $provider_component . '_' . $provider_name;
-        set_config($name . '_loggedin', $outputs_enabled_online, 'message');
-        set_config($name . '_loggedoff', $outputs_enabled_offline, 'message');
+        set_config($name . '_loggedin', $outputs_enabled_loggedin, 'message');
+        set_config($name . '_loggedoff', $outputs_enabled_loggedoff, 'message');
     }
 
     /**
@@ -102,16 +104,16 @@ class totara_notification_upgradelib_testcase extends advanced_testcase {
         $control_notifiable_event->refresh();
         self::assertEquals($control_enabled_delivery_channels, $control_notifiable_event->get_default_delivery_channels());
 
-        // Case where both online and offline are off.
+        // Case where both loggedin and loggedoff are off.
         self::assertFalse($target_delivery_channels_enabled['popup']->is_enabled);
 
-        // Case where both online and offline are on.
+        // Case where both loggedin and loggedoff are on.
         self::assertTrue($target_delivery_channels_enabled['totara_alert']->is_enabled);
 
-        // Case where online is on and offline is off.
+        // Case where loggedin is on and loggedoff is off.
         self::assertTrue($target_delivery_channels_enabled['msteams']->is_enabled);
 
-        // Case where online is off and offline is on.
+        // Case where loggedin is off and loggedoff is on.
         self::assertTrue($target_delivery_channels_enabled['email']->is_enabled);
     }
 
@@ -140,20 +142,233 @@ class totara_notification_upgradelib_testcase extends advanced_testcase {
             ->for_context(comment_soft_deleted::class, $extended_context);
         self::assertEmpty($control_notifiable_event_entity);
 
-        // Case where both online and offline are off.
+        // Case where both loggedin and loggedoff are off.
         self::assertFalse($target_delivery_channels_enabled['popup']->is_enabled);
 
-        // Case where both online and offline are on.
+        // Case where both loggedin and loggedoff are on.
         self::assertTrue($target_delivery_channels_enabled['totara_alert']->is_enabled);
 
-        // Case where online is on and offline is off.
+        // Case where loggedin is on and loggedoff is off.
         self::assertTrue($target_delivery_channels_enabled['msteams']->is_enabled);
 
-        // Case where online is off and offline is on.
+        // Case where loggedin is off and loggedoff is on.
         self::assertTrue($target_delivery_channels_enabled['email']->is_enabled);
     }
 
-        /**
+    /**
+     * Tests that legacy message preferences are correctly copied over to notifiable event user preferences.
+     */
+    public function test_totara_notification_migrate_notifiable_event_prefs_user_prefs(): void {
+        // Set up.
+        $user0 = self::getDataGenerator()->create_user();
+        $user1 = self::getDataGenerator()->create_user();
+        $user2 = self::getDataGenerator()->create_user();
+        $user3 = self::getDataGenerator()->create_user();
+        $user4 = self::getDataGenerator()->create_user();
+        $user5 = self::getDataGenerator()->create_user();
+        $user6 = self::getDataGenerator()->create_user();
+
+        set_user_preferences([
+            'message_provider_resolver_mock_loggedin' => '',
+        ], $user0->id);
+
+        set_user_preferences([
+            'message_provider_resolver_mock_loggedin' => 'one,two',
+            'message_provider_resolver_mock_loggedoff' => 'two,three',
+        ], $user1->id);
+
+        set_user_preferences([
+            'message_provider_resolver_mock_loggedin' => 'one',
+        ], $user2->id);
+
+        set_user_preferences([
+            'message_provider_resolver_mock_loggedoff' => 'two',
+        ], $user3->id);
+
+        set_user_preferences([
+            'message_provider_resolver_mock_loggedin' => 'one',
+            'message_provider_resolver_mock_loggedoff' => 'two',
+        ], $user4->id);
+
+        set_user_preferences([
+            'message_provider_resolver_mock_loggedoff' => 'five',
+        ], $user5->id);
+
+        // Control records - not migrated.
+        set_user_preferences([
+            'message_provider_resolver_control_loggedin' => 'one,two',
+            'message_provider_resolver_control_loggedoff' => 'two,three',
+        ], $user3->id);
+
+        set_user_preferences([
+            'message_provider_resolver_control_loggedin' => 'six',
+        ], $user6->id);
+
+        // Do the migration (tests 2nd to 5th code paths).
+        totara_notification_migrate_notifiable_event_prefs(mock_resolver::class, 'mock', 'resolver');
+
+        // Check results.
+        $preference_entities = notifiable_event_user_preference_entity::repository()->get();
+        self::assertCount(6, $preference_entities);
+
+        /** @var notifiable_event_user_preference_entity $preference_entity */
+        foreach ($preference_entities as $preference_entity) {
+            self::assertEquals(mock_resolver::class, $preference_entity->resolver_class_name);
+            self::assertEquals(extended_context::make_system()->get_context_id(), $preference_entity->context_id);
+            self::assertEquals(extended_context::NATURAL_CONTEXT_COMPONENT, $preference_entity->component);
+            self::assertEquals(extended_context::NATURAL_CONTEXT_AREA, $preference_entity->area);
+            self::assertEquals(extended_context::NATURAL_CONTEXT_ITEM_ID, $preference_entity->item_id);
+            self::assertEquals(1, $preference_entity->enabled);
+            switch ($preference_entity->user_id) {
+                case $user0->id:
+                    self::assertEqualsCanonicalizing([], $preference_entity->delivery_channels);
+                    break;
+                case $user1->id:
+                    self::assertEqualsCanonicalizing(['one', 'two', 'three'], $preference_entity->delivery_channels);
+                    break;
+                case $user2->id:
+                    self::assertEqualsCanonicalizing(['one'], $preference_entity->delivery_channels);
+                    break;
+                case $user3->id:
+                    self::assertEqualsCanonicalizing(['two'], $preference_entity->delivery_channels);
+                    break;
+                case $user4->id:
+                    self::assertEqualsCanonicalizing(['one', 'two'], $preference_entity->delivery_channels);
+                    break;
+                case $user5->id:
+                    self::assertEqualsCanonicalizing(['five'], $preference_entity->delivery_channels);
+                    break;
+                default:
+                    self::fail('Unexpected user id found');
+            }
+        }
+
+        // Do the migration (tests first code path).
+        totara_notification_migrate_notifiable_event_prefs(mock_resolver::class, 'control', 'resolver');
+
+        // Check results.
+        $preference_entities = notifiable_event_user_preference_entity::repository()
+            ->where('user_id', $user6->id)
+            ->get();
+        self::assertCount(1, $preference_entities);
+
+        /** @var notifiable_event_user_preference_entity $preference_entity */
+        $preference_entity = $preference_entities->first();
+        self::assertEqualsCanonicalizing(['six'], $preference_entity->delivery_channels);
+    }
+
+    /**
+     * Tests that one legacy user preference is correctly migrated with the correct values.
+     */
+    public function test_totara_notification_migrate_notification_user_pref_with_one_legacy_preference(): void {
+        // Set up.
+        $user = self::getDataGenerator()->create_user();
+
+        $legacy_preference = new stdClass();
+        $legacy_preference->userid = $user->id;
+        $legacy_preference->value = 'one,two';
+
+        // Do the migration.
+        totara_notification_migrate_notification_user_pref(
+            mock_resolver::class,
+            $legacy_preference
+        );
+
+        // Check results.
+        $preference_entities = notifiable_event_user_preference_entity::repository()->get();
+        self::assertCount(1, $preference_entities);
+        /** @var notifiable_event_user_preference_entity $preference_entity */
+        $preference_entity = $preference_entities->first();
+        self::assertEquals(mock_resolver::class, $preference_entity->resolver_class_name);
+        self::assertEquals($user->id, $preference_entity->user_id);
+        self::assertEquals(extended_context::make_system()->get_context_id(), $preference_entity->context_id);
+        self::assertEquals(extended_context::NATURAL_CONTEXT_COMPONENT, $preference_entity->component);
+        self::assertEquals(extended_context::NATURAL_CONTEXT_AREA, $preference_entity->area);
+        self::assertEquals(extended_context::NATURAL_CONTEXT_ITEM_ID, $preference_entity->item_id);
+        self::assertEquals(1, $preference_entity->enabled);
+        self::assertEqualsCanonicalizing(['one', 'two'], $preference_entity->delivery_channels);
+    }
+
+    /**
+     * Tests that two legacy user preferences (loggedin and loggedoff) are correctly combined into one notification preference.
+     */
+    public function test_totara_notification_migrate_notification_user_pref_with_two_legacy_preferences(): void {
+        // Set up.
+        $user = self::getDataGenerator()->create_user();
+
+        $legacy_preference1 = new stdClass();
+        $legacy_preference1->userid = $user->id;
+        $legacy_preference1->name = 'pref_loggedin';
+        $legacy_preference1->value = 'one,two';
+
+        $legacy_preference2 = new stdClass();
+        $legacy_preference2->userid = $user->id;
+        $legacy_preference2->name = 'pref_loggedoff';
+        $legacy_preference2->value = 'two,three';
+
+        // Do the migration.
+        totara_notification_migrate_notification_user_pref(
+            mock_resolver::class,
+            $legacy_preference1,
+            $legacy_preference2
+        );
+
+        // Check results.
+        $preference_entities = notifiable_event_user_preference_entity::repository()->get();
+        self::assertCount(1, $preference_entities);
+        /** @var notifiable_event_user_preference_entity $preference_entity */
+        $preference_entity = $preference_entities->first();
+        self::assertEquals(mock_resolver::class, $preference_entity->resolver_class_name);
+        self::assertEquals($user->id, $preference_entity->user_id);
+        self::assertEquals(extended_context::make_system()->get_context_id(), $preference_entity->context_id);
+        self::assertEquals(extended_context::NATURAL_CONTEXT_COMPONENT, $preference_entity->component);
+        self::assertEquals(extended_context::NATURAL_CONTEXT_AREA, $preference_entity->area);
+        self::assertEquals(extended_context::NATURAL_CONTEXT_ITEM_ID, $preference_entity->item_id);
+        self::assertEquals(1, $preference_entity->enabled);
+        self::assertEqualsCanonicalizing(['one', 'two', 'three'], $preference_entity->delivery_channels);
+    }
+
+    /**
+     * Tests that one legacy user preference is correctly migrated with the correct values.
+     */
+    public function test_totara_notification_migrate_notification_user_pref_with_existing_new_preference(): void {
+        // Set up.
+        $user = self::getDataGenerator()->create_user();
+
+        $legacy_preference = new stdClass();
+        $legacy_preference->userid = $user->id;
+        $legacy_preference->value = 'one,two';
+
+        notifiable_event_user_preference_model::create(
+            $user->id,
+            mock_resolver::class,
+            extended_context::make_system(),
+            true,
+            ['two', 'three']
+        );
+
+        // Do the migration.
+        totara_notification_migrate_notification_user_pref(
+            mock_resolver::class,
+            $legacy_preference
+        );
+
+        // Check results.
+        $preference_entities = notifiable_event_user_preference_entity::repository()->get();
+        self::assertCount(1, $preference_entities);
+        /** @var notifiable_event_user_preference_entity $preference_entity */
+        $preference_entity = $preference_entities->first();
+        self::assertEquals(mock_resolver::class, $preference_entity->resolver_class_name);
+        self::assertEquals($user->id, $preference_entity->user_id);
+        self::assertEquals(extended_context::make_system()->get_context_id(), $preference_entity->context_id);
+        self::assertEquals(extended_context::NATURAL_CONTEXT_COMPONENT, $preference_entity->component);
+        self::assertEquals(extended_context::NATURAL_CONTEXT_AREA, $preference_entity->area);
+        self::assertEquals(extended_context::NATURAL_CONTEXT_ITEM_ID, $preference_entity->item_id);
+        self::assertEquals(1, $preference_entity->enabled);
+        self::assertEqualsCanonicalizing(['one', 'two', 'three'], $preference_entity->delivery_channels);
+    }
+
+    /**
      * Test that the enabled/disabled legacy notification preference results in a new notification that is enabled or disabled.
      */
     public function test_totara_notification_migrate_notification_prefs_status(): void {
