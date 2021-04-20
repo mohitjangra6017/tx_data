@@ -18,9 +18,9 @@
 
 <template>
   <div class="tui-engageSurveyCardBody">
-    <div :id="labelId" class="tui-engageSurveyCardBody__title">
+    <h3 :id="labelId" class="tui-engageSurveyCardBody__title">
       {{ name }}
-    </div>
+    </h3>
     <div class="tui-engageSurveyCardBody__footer">
       <p v-if="showEdit" class="tui-engageSurveyCardBody__text">
         {{ $str('noresult', 'engage_survey') }}
@@ -146,6 +146,7 @@ export default {
     @include tui-font-heading-small-regular();
     flex-grow: 1;
     height: 100%;
+    margin: 0;
     overflow: hidden;
     -ms-word-break: break-all;
     overflow-wrap: break-word;
