@@ -23,28 +23,23 @@
 
 namespace totara_contentmarketplace\quickaccessmenu;
 
-use \totara_core\quickaccessmenu\group;
-use \totara_core\quickaccessmenu\item;
+use lang_string;
+use totara_core\quickaccessmenu\group;
+use totara_core\quickaccessmenu\item;
+use totara_core\quickaccessmenu\provider;
 
-class general implements \totara_core\quickaccessmenu\provider {
-
+class general implements provider {
+    /**
+     * @return array
+     */
     public static function get_items(): array {
         return [
             item::from_provider(
-                'setup_content_marketplaces',
-                group::get(group::LEARN),
-                new \lang_string('contentmarketplace', 'totara_contentmarketplace'),
-                7000
-            ),
-            // The same string is intentional here since only 'manage' will show in the admin tree
-            // after the initial contentmarketplace setup.
-            item::from_provider(
                 'manage_content_marketplaces',
                 group::get(group::LEARN),
-                new \lang_string('contentmarketplace', 'totara_contentmarketplace'),
-                8000
+                new lang_string('contentmarketplace', 'totara_contentmarketplace'),
+                7000
             ),
         ];
     }
-
 }

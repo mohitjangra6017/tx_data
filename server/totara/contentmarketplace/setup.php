@@ -20,88 +20,26 @@
  * @author Sergey Vidusov <sergey.vidusov@androgogic.com>
  * @package totara_contentmarketplace
  */
+require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once($CFG->libdir.'/adminlib.php');
+// This file has been deprecated since Totara 15.0 and is no longer used.
 
+// This is for backward compatible, ideally, we do not want any admin user to enable the content marketplaces plugin via
+// this entry point anymore.
 $action = optional_param('action', null, PARAM_ALPHA);
-
-// If hardcoded off in config, don't even show this page.
-if (!\totara_contentmarketplace\local::is_enabled() &&
-    array_key_exists('enablecontentmarketplaces', $CFG->config_php_settings)) {
-
-    throw new \moodle_exception('error:disabledmarketplaces', 'totara_contentmarketplace');
-}
-
-// At least one marketplace already configured, redirect to management instead.
-if (\totara_contentmarketplace\local::is_enabled() &&
-    !\totara_contentmarketplace\local::should_show_admin_setup_intro()) {
-    redirect(new \moodle_url('/totara/contentmarketplace/marketplaces.php'));
-}
-
-admin_externalpage_setup('setup_content_marketplaces');
-
 if ($action) {
+    require_login();
     require_sesskey();
+
     $value = ($action == 'enable');
     set_config('enablecontentmarketplaces', $value);
-    redirect(new \moodle_url('/totara/contentmarketplace/setup.php'));
+
+    debugging(
+        "Please do not use this entry point to enable/disable the content marketplace plugin",
+        DEBUG_DEVELOPER
+    );
 }
 
-// Set a more appropriate title.
-$title = get_string('setup_tc', 'totara_contentmarketplace');
-$PAGE->set_title($title);
-$PAGE->set_heading($title);
-
-$PAGE->requires->js_call_amd('totara_contentmarketplace/disable', 'init');
-
-echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('setup_content_marketplaces', 'totara_contentmarketplace'));
-echo $OUTPUT->render_from_template('totara_contentmarketplace/setup_description', []);
-
-if (!\totara_contentmarketplace\local::is_enabled()) {
-    $action = 'enable';
-    $buttonstr = get_string('enablecontentmarketplaces', 'totara_contentmarketplace');
-} else {
-    $action = 'disable';
-    $buttonstr = get_string('disablecontentmarketplaces', 'totara_contentmarketplace');
-}
-$url = new \moodle_url('/totara/contentmarketplace/setup.php', [
-    'action' => $action,
-]);
-$togglemarketplacesbutton = new single_button($url, $buttonstr, 'post');
-echo $OUTPUT->render($togglemarketplacesbutton);
-
-$table = new html_table();
-$head = [
-    get_string('contentmarketplace', 'totara_contentmarketplace'),
-    '',
-    get_string('description', 'totara_contentmarketplace'),
-];
-if (\totara_contentmarketplace\local::is_enabled()) {
-    $head[] = get_string('actions', 'totara_contentmarketplace');
-}
-$table->head  = $head;
-$table->attributes['class'] = 'contentmarketplaces generaltable';
-$table->data  = array();
-
-/** @var totara_contentmarketplace\plugininfo\contentmarketplace[] $plugins */
-$plugins = core_plugin_manager::instance()->get_plugins_of_type('contentmarketplace');
-foreach ($plugins as $plugin) {
-
-    $prov = $plugin->contentmarketplace();
-
-    $data = [
-        $prov->get_logo_html(60),
-        $prov->fullname,
-        $prov->descriptionhtml,
-    ];
-    if (\totara_contentmarketplace\local::is_enabled()) {
-        $data[] = !$plugin->is_enabled() ? $prov->get_setup_html(get_string('enable', 'totara_contentmarketplace')) : '';
-    }
-    $table->data[] = $data;
-    $table->rowclasses[] = $plugin->component;
-}
-
-echo $OUTPUT->render($table);
-echo $OUTPUT->footer();
+// Redirect user to the manage marketplaces plugin.
+redirect(new moodle_url('/totara/contentmarketplace/marketplaces.php'));
+die();

@@ -42,7 +42,6 @@ $string['createsingleactivitycourse'] = 'Create a new single activity course for
 $string['createsingleactivitycourses'] = 'Create a new single activity course for each selected content item';
 $string['description'] = 'Description';
 $string['disable'] = 'Disable';
-$string['disablecontentmarketplaces'] = 'Disable content marketplaces';
 $string['disabled'] = 'Disabled';
 $string['enable'] = 'Enable';
 $string['enable_content_marketplace'] = 'Enable a Content Marketplace';
@@ -82,13 +81,11 @@ $string['setup'] = 'Set up';
 $string['setup_content_marketplaces'] = 'Setup Content Marketplaces';
 $string['setup_description_body:html'] = "<p>
     Content Marketplace offers you a range of free and paid learning content
-    that you can then offer to your customers or learners. With Content
-    Marketplace, you can set up subscriptions with Content Marketplaces
+    that you can then offer to your customers or learners. 
+    You can set up subscriptions with Content Marketplaces
     to <strong>access their free or premium content</strong> then use that
     content when creating courses.
 </p>";
-$string['setup_description_heading'] = "What is Content Marketplace?";
-$string['setup_tc'] = 'Set up Content Marketplace';
 $string['shortnamenotuniquewithinform'] = 'Short name is already used for another course above ({$a})';
 $string['sortby'] = 'Sort by';
 $string['subplugintype_contentmarketplace'] = 'Content Marketplace';
@@ -101,7 +98,10 @@ $string['warningcreatetoomanycourses:title'] = 'Too many courses';
 $string['warningtoomanyselectall:body'] = 'There are too many items to select them all. Filter the search and try again.';
 $string['warningtoomanyselectall:title'] = 'Too many';
 
-// Deprecated Since Totara 15.0
+// Deprecated since Totara 15.0
+$string['disablecontentmarketplaces'] = 'Disable content marketplaces';
+$string['setup_description_heading'] = "What is Content Marketplace?";
+$string['setup_tc'] = 'Set up Content Marketplace';
 $string['marketplacenotificationbodyhtml'] = '<p>Totara Learn now supports content marketplaces, allowing you to browse and import external content into your Totara site.</p><p>{$a}</p>';
 $string['marketplacenotificationbodytext'] = 'Totara Learn now supports content marketplaces, allowing you to browse and import external content into your Totara site.
 

@@ -30,6 +30,7 @@ use totara_contentmarketplace\workflow_manager\exploremarketplace;
  * @var bool           $hassiteconfig
  * @var context_system $systemcontext
  * @var admin_root     $ADMIN
+ * @var stdClass       $CFG
  */
 
 $content_marketplace_capabilities = [
@@ -40,38 +41,22 @@ $content_marketplace_capabilities = [
 $has_setting_config = $hassiteconfig || has_any_capability($content_marketplace_capabilities, $systemcontext);
 
 $ADMIN->add(
-    'root',
+    'modules',
     new admin_category(
         'contentmarketplace',
         get_string('contentmarketplace', 'totara_contentmarketplace'),
         !$has_setting_config
-    ),
-    'appearance'
+    )
 );
 
 if ($has_setting_config) {
     $marketplaceenabled = local::is_enabled();
-    // Check for explicit disable via config.php
-    $forcedisabled = (!$marketplaceenabled && array_key_exists('enablecontentmarketplaces', $CFG->config_php_settings));
-    // Check if enabled and configured.
-    $alreadysetup = ($marketplaceenabled && !local::should_show_admin_setup_intro());
 
-    // Hide if force disabled or already setup.
-    $ADMIN->add('contentmarketplace', new admin_externalpage(
-        'setup_content_marketplaces',
-        get_string('setup_content_marketplaces', 'totara_contentmarketplace'),
-        $CFG->wwwroot . '/totara/contentmarketplace/setup.php',
-        'totara/contentmarketplace:config',
-        ($forcedisabled || $alreadysetup)
-    ));
-
-    // Hide unless marketplaces are already setup.
     $ADMIN->add('contentmarketplace', new admin_externalpage(
         'manage_content_marketplaces',
         get_string('manage_content_marketplaces', 'totara_contentmarketplace'),
         $CFG->wwwroot . '/totara/contentmarketplace/marketplaces.php',
         'totara/contentmarketplace:config',
-        !$alreadysetup
     ));
 
     $beforesibling = null;
@@ -94,8 +79,6 @@ if ($has_setting_config) {
     // Clean up after ourselves, the admin tree is big enough without us leaving things around.
     unset($wm);
     unset($marketplaceenabled);
-    unset($forcedisabled);
-    unset($alreadysetup);
     unset($beforesibling);
 }
 

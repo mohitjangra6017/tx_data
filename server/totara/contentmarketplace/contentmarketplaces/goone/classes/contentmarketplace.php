@@ -177,4 +177,20 @@ final class contentmarketplace extends \totara_contentmarketplace\local\contentm
         return [];
     }
 
+    /**
+     * @param null|string $tab
+     * @return \moodle_url
+     */
+    public function settings_url($tab = null) {
+        $url = new \moodle_url(
+            "/totara/contentmarketplace/marketplaces.php",
+            ['id' => $this->name],
+        );
+
+        if (!empty($tab)) {
+            $url->param('tab', $tab);
+        }
+
+        return $url;
+    }
 }
