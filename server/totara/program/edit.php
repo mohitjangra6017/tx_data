@@ -344,9 +344,15 @@ if ($action == 'view') {
     $assignmentform->display();
 
     // Display the messages form.
-    $messagesform = new program_messages_nonedit_form($editmessagesurl, array('program' => $program), 'get');
-    $messagesform->set_data($program);
-    $messagesform->display();
+    // Check the config setting to show program message tab.
+    $show_program_message_tab = (!empty($CFG->show_program_message_tab) && $CFG->show_program_message_tab);
+    $has_program_messages = $DB->record_exists('prog_message', [], IGNORE_MULTIPLE);
+
+    if ($has_program_messages || $show_program_message_tab) {
+        $messagesform = new program_messages_nonedit_form($editmessagesurl, array('program' => $program), 'get');
+        $messagesform->set_data($program);
+        $messagesform->display();
+    }
 
     if ($iscertif) {
         // Display the certifications form.

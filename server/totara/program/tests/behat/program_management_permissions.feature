@@ -107,29 +107,6 @@ Feature: Specific permissions allow users to manage programs
     Then I should see "Program content saved successfully"
     And I should see "Course One"
 
-  Scenario: totara/program:configuremessages allows a user to edit program messages
-    Given the following "permission overrides" exist:
-      | capability                           | permission | role          | contextlevel | reference |
-      | totara/program:configuremessages     | Allow      | progmanager   | Program      | prog1     |
-    And I log in as "progman"
-    And I am on "Program One" program homepage
-    And I press "Edit program details"
-    Then "Edit program details" "button" should not exist
-    And "Edit program assignments" "button" should not exist
-    And "Edit program content" "button" should not exist
-    And "Exception Report (1)" "link" should not exist
-    And "Completion" "link" should not exist
-    When I press "Edit program messages"
-    And I press "Add"
-    And I set the field "Subject" to "New subject line for Program One"
-    # Need to be specific to select the message textarea.
-    And I set the field with css "textarea[name*=mainmessage]" to "New message for Program One"
-    And I press "Save changes"
-    And I press "Save all changes"
-    Then I should see "Program messages saved"
-    And the following fields match these values:
-      | Subject | New subject line for Program One |
-
   Scenario: totara/program:configureassignments allows a user to edit program assignments
     Given the following "permission overrides" exist:
       | capability                           | permission | role          | contextlevel | reference |
@@ -217,7 +194,6 @@ Feature: Specific permissions allow users to manage programs
     And I press "Edit certification details"
     Then "Edit certification details" "button" should be visible
     And "Edit certification content" "button" should be visible
-    And "Edit certification messages" "button" should be visible
     And "Edit certification assignments" "button" should be visible
     And "Completion" "link" should be visible
 

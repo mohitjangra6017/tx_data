@@ -610,23 +610,10 @@ class prog_messages_manager {
             // Add the add message drop down
             if ($updateform) {
                 $messageoptions = array(
-                    MESSAGETYPE_ENROLMENT => get_string('enrolment', 'totara_program'),
-                    MESSAGETYPE_EXCEPTION_REPORT => get_string('exceptionsreport', 'totara_program'),
-                    MESSAGETYPE_UNENROLMENT => get_string('unenrolment', 'totara_program'),
-                    MESSAGETYPE_PROGRAM_DUE => get_string('programdue', 'totara_program'),
-                    MESSAGETYPE_PROGRAM_OVERDUE => get_string('programoverdue', 'totara_program'),
-                    MESSAGETYPE_PROGRAM_COMPLETED => get_string('programcompleted', 'totara_program'),
-                    MESSAGETYPE_COURSESET_DUE => get_string('coursesetdue', 'totara_program'),
-                    MESSAGETYPE_COURSESET_OVERDUE => get_string('coursesetoverdue', 'totara_program'),
-                    MESSAGETYPE_COURSESET_COMPLETED => get_string('coursesetcompleted', 'totara_program'),
-                    MESSAGETYPE_LEARNER_FOLLOWUP => get_string('learnerfollowup', 'totara_program')
                 );
 
                 // Add extra messages if a certification.
                 if ($iscertif) {
-                    $messageoptions[MESSAGETYPE_RECERT_WINDOWOPEN]     = get_string('recertwindowopen', 'totara_certification');
-                    $messageoptions[MESSAGETYPE_RECERT_WINDOWDUECLOSE] = get_string('recertwindowdueclose', 'totara_certification');
-                    $messageoptions[MESSAGETYPE_RECERT_FAILRECERT]     = get_string('recertfailrecert', 'totara_certification');
                 }
 
                 $mform->addElement('select', 'messagetype', get_string('addnew', 'totara_program'), $messageoptions, array('id'=>'messagetype'));

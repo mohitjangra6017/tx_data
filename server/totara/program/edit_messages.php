@@ -75,7 +75,7 @@ if ($rawdata = data_submitted()) {
         print_error('error:setupprogrammessages', 'totara_program');
     }
 
-    if (isset($rawdata->addmessage)) {
+    if (isset($rawdata->addmessage) && !empty($rawdata->messagetype)) {
         if (!$programmessagemanager->add_message($rawdata->messagetype)) {
             echo $OUTPUT->notification(get_string('error:unableaddmessagetypeunrecog', 'totara_program'));
         }

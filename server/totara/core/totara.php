@@ -469,7 +469,7 @@ function totara_is_item_visibility_hidden($item) {
  * @return navigation_node|false
  */
 function totara_load_program_settings($navinode, $context, $forceopen = false) {
-    global $CFG;
+    global $CFG, $DB;
 
     $program = new program($context->instanceid);
     $exceptions = $program->get_exception_count();
@@ -502,15 +502,22 @@ function totara_load_program_settings($navinode, $context, $forceopen = false) {
                     'progassignments', new pix_icon('i/settings', get_string('assignments', 'totara_program')));
     }
     if (has_capability('totara/program:configuremessages', $context)) {
-        $url = new moodle_url('/totara/program/edit_messages.php', array('id' => $program->id));
-        $adminnode->add(
-            get_string('messages', 'totara_program'),
-            $url,
-            navigation_node::TYPE_SETTING,
-            null,
-            'progmessages',
-            new pix_icon('i/settings', get_string('messages', 'totara_program'))
-        );
+
+        // Check the config setting to show program message tab.
+        $show_program_message_tab = (!empty($CFG->show_program_message_tab) && $CFG->show_program_message_tab);
+        $has_program_messages = $DB->record_exists('prog_message', [], IGNORE_MULTIPLE);
+
+        if ($has_program_messages || $show_program_message_tab) {
+            $url = new moodle_url('/totara/program/edit_messages.php', array('id' => $program->id));
+            $adminnode->add(
+                get_string('messages', 'totara_program'),
+                $url,
+                navigation_node::TYPE_SETTING,
+                null,
+                'progmessages',
+                new pix_icon('i/settings', get_string('messages', 'totara_program'))
+            );
+        }
 
         $notification_url = new moodle_url('/totara/program/edit_notifications.php', ['context_id' => $context->id, 'id' => $program->id]);
         $adminnode->add(

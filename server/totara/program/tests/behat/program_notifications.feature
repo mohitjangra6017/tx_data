@@ -56,3 +56,12 @@ Feature: Check program notifications
     When I navigate to system notifications page
     Then I should see "Notifications"
     And I log out
+
+  Scenario: program manager should not see messages tab
+    Given the following "permission overrides" exist:
+      | capability                           | permission | role          | contextlevel | reference |
+      | totara/program:configuremessages     | Allow      | progmanager   | Program      | prog1     |
+    And I log in as "progman"
+    And I am on "Program One" program homepage
+    When I press "Edit program details"
+    Then I should not see "Messages"

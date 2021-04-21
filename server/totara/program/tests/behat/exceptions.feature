@@ -33,14 +33,6 @@ Feature: Generation of program assignment exceptions
     And I click on "Miscellaneous" "link"
     And I click on "Program Exception Tests" "link"
     And I click on "Edit program details" "button"
-    And I switch to "Messages" tab
-    And I press "Add"
-    And I set the field "Subject" to "You have been enrolled on program %programfullname%"
-    # Need to be specific to select the message textarea.
-    And I set the field with css "textarea[name*=mainmessage]" to "You have been enrolled on program %programfullname%"
-    And I press "Save changes"
-    And I press "Save all changes"
-    Then I should see "Program messages saved"
     And I switch to "Content" tab
     And I click on "addcontent_ce" "button" in the "#edit-program-content" "css_element"
     And I click on "Miscellaneous" "link" in the "addmulticourse" "totaradialogue"
@@ -83,7 +75,6 @@ Feature: Generation of program assignment exceptions
 
     When I log out
     And I log in as "user002"
-    And I should see "You have been enrolled on program Program Exception Tests"
     And I click on "Required Learning" in the totara menu
     Then I should see "Program Exception Tests" in the "#program-content" "css_element"
     And I should see "Course 1" in the "#program-content" "css_element"
@@ -121,7 +112,6 @@ Feature: Generation of program assignment exceptions
 
     When I log out
     And I log in as "user001"
-    And I should see "You have been enrolled on program Program Exception Tests"
     And I click on "Required Learning" in the totara menu
     Then I should see "Program Exception Tests" in the "#program-content" "css_element"
     And I should see "Course 1" in the "#program-content" "css_element"
@@ -150,14 +140,6 @@ Feature: Generation of program assignment exceptions
     And I click on "Miscellaneous" "link"
     And I click on "Program Exception Tests" "link"
     And I click on "Edit program details" "button"
-    And I switch to "Messages" tab
-    And I press "Add"
-    And I set the field "Subject" to "You have been enrolled on program %programfullname%"
-    # Need to be specific to select the message textarea.
-    And I set the field with css "textarea[name*=mainmessage]" to "You have been enrolled on program %programfullname%"
-    And I press "Save changes"
-    And I press "Save all changes"
-    Then I should see "Program messages saved"
 
     When I click on "Assignments" "link"
     And I set the field "Add a new" to "Individuals"
@@ -170,7 +152,6 @@ Feature: Generation of program assignment exceptions
 
     When I log out
     And I log in as "user001"
-    And I should see "You have been enrolled on program Program Exception Tests"
     Then I should see "Required Learning" in the totara menu
 
     When I click on "Record of Learning" in the totara menu
@@ -178,14 +159,12 @@ Feature: Generation of program assignment exceptions
 
     When I log out
     And I log in as "user002"
-    And I should see "You have been enrolled on program Program Exception Tests"
     And I click on "Required Learning" in the totara menu
     Then I should see "Program Exception Tests" in the "#program-content" "css_element"
     And I log out
 
     When I run the scheduled task "\totara_program\task\send_messages_task"
     And I log in as "user001"
-    And I should see "You have been enrolled on program Program Exception Tests"
     And I click on "Required Learning" in the totara menu
     Then I should see "Program Exception Tests" in the "#program-content" "css_element"
 

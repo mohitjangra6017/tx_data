@@ -87,9 +87,16 @@ if (has_capability('totara/program:configureassignments', $context)) {
 }
 // Messages Tab
 if (has_capability('totara/program:configuremessages', $context)) {
-    $toprow[] = new tabobject('messages', $CFG->wwwroot.'/totara/program/edit_messages.php?id='.$id, get_string('messages', 'totara_program'));
-    if (substr($currenttab, 0, 8) == 'messages'){
-        $activated[] = 'messages';
+
+    // Check the config setting to show program message tab.
+    $show_program_message_tab = (!empty($CFG->show_program_message_tab) && $CFG->show_program_message_tab);
+    $has_program_messages = $DB->record_exists('prog_message', [], IGNORE_MULTIPLE);
+
+    if ($has_program_messages || $show_program_message_tab) {
+        $toprow[] = new tabobject('messages', $CFG->wwwroot . '/totara/program/edit_messages.php?id=' . $id, get_string('messages', 'totara_program'));
+        if (substr($currenttab, 0, 8) == 'messages') {
+            $activated[] = 'messages';
+        }
     }
 }
 
