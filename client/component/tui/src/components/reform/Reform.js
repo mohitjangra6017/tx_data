@@ -36,6 +36,8 @@ import {
   collectLangStrings,
 } from '../../js/internal/reform/data_structure_utils';
 import ValidationResults from '../../js/internal/reform/ValidationResults';
+import { TOUCHED } from '../../js/internal/reform/constants';
+import { produce } from '../../js/immutable';
 
 export default {
   provide() {
@@ -43,10 +45,10 @@ export default {
       reformScope: {
         getValue: this.get,
         getError: name => get(this.displayedErrors, name),
-        getTouched: name => !!get(this.touched, name),
+        getTouched: name => !!get(this.$_state(TOUCHED), name),
         update: this.update,
         blur: this.blur,
-        touch: this.blur,
+        touch: this.touch,
         register: this.register,
         unregister: this.unregister,
         updateRegistration: this.updateRegistration,
@@ -56,14 +58,28 @@ export default {
     };
   },
 
+  model: {
+    prop: 'state',
+    event: 'update:state',
+  },
+
   props: {
     /**
      * Initial values for form fields.
+     *
+     * Ignored if `state` is passed.
      */
     initialValues: {
       type: [Object, Function],
       default: () => ({}),
     },
+
+    /**
+     * Form state, when controlled externally.
+     *
+     * Updates are emitted through `update:state`
+     */
+    state: Object,
 
     /**
      * External errors to display in form.
@@ -103,9 +119,10 @@ export default {
       submitting: false,
 
       // form content state
-      values: structuralDeepClone(result(this.initialValues)),
-      touched: {},
-      changed: {},
+      formState: {
+        values: structuralDeepClone(result(this.initialValues)),
+        [TOUCHED]: {},
+      },
 
       // generated
       mergedErrors: {},
@@ -121,7 +138,11 @@ export default {
      * @returns {object}
      */
     displayedErrors() {
-      return onlyTouched(this.mergedErrors, this.touched);
+      return onlyTouched(
+        this.mergedErrors,
+        this.$_state(TOUCHED),
+        this.$_computedTouched
+      );
     },
 
     /**
@@ -132,18 +153,33 @@ export default {
     isValid() {
       return collectErrorValues(this.mergedErrors).every(x => !x);
     },
+
+    isControlled() {
+      return this.state != null;
+    },
   },
 
   watch: {
     // revalidate when external errors change
     errors: {
-      handler(errors) {
-        if (errors) {
-          mergeErrors(this.touched, makeAllTouch(errors));
-        }
+      handler() {
         this.$_validate();
       },
       deep: true,
+    },
+
+    state: {
+      handler(val, old) {
+        if (old == null || val == null) {
+          throw new Error(
+            'Reform may not be shifted between controlled and uncontrolled. ' +
+              'You must either not pass :value or always pass :value.'
+          );
+        }
+
+        // Run validators and listeners.
+        this.$_afterChange([]);
+      },
     },
   },
 
@@ -154,9 +190,68 @@ export default {
       equal: arrayEqual,
       serial: true,
     });
+
+    this.$_stateUpdateTask = false;
+    this.$_pendingState = null;
   },
 
   methods: {
+    /**
+     * Get the part of state identified by field
+     *
+     * @param {string|Symbol} field
+     * @returns {object}
+     */
+    $_state(field) {
+      const state = this.$_pendingState || this.state || this.formState;
+      if (field) {
+        return state[field] || {};
+      }
+      return state;
+    },
+
+    /**
+     * Record an update to the state.
+     *
+     * Calls recipe with the state as an argument.
+     *
+     * When in controlled mode, it uses produce() from tui/immutable to apply
+     * an immutable update.
+     *
+     * @param {(draft: object)} recipe
+     * @param {string|number|array} pathHint
+     */
+    $_recordUpdate(recipe, pathHint) {
+      if (this.isControlled) {
+        const state = this.$_pendingState || this.state;
+        const dummy = {
+          values: state.values || {},
+          [TOUCHED]: state[TOUCHED] || {},
+        };
+        const newState = produce(dummy, recipe);
+        if (newState != dummy) {
+          this.$_pendingState = {
+            values: newState.values,
+            [TOUCHED]: newState[TOUCHED],
+          };
+          // batch up changes and send in the next tick, that way we won't lose
+          // multiple mutations made in the same tick
+          if (!this.$_stateUpdateTask) {
+            this.$_stateUpdateTask = true;
+            Vue.nextTick(() => {
+              this.$emit('update:state', this.$_pendingState);
+              this.$_pendingState = null;
+              this.$_stateUpdateTask = false;
+            });
+          }
+        }
+      } else {
+        recipe(this.formState);
+        this.$emit('change', this.formState.values);
+        this.$_afterChange(toPath(pathHint));
+      }
+    },
+
     /**
      * Update recorded value for input.
      *
@@ -164,14 +259,14 @@ export default {
      * @param {*} value
      */
     update(path, value) {
-      if (path == null) {
-        this.values = value;
-      } else {
-        path = toPath(path);
-        vueSet(this.values, path, value);
-      }
-
-      this.$_afterChange(path);
+      this.$_recordUpdate(state => {
+        if (path == null) {
+          state.values = value;
+        } else {
+          path = toPath(path);
+          vueSet(state.values, path, value);
+        }
+      }, path);
     },
 
     /**
@@ -182,9 +277,9 @@ export default {
      */
     get(path) {
       if (path == null) {
-        return this.values;
+        return this.$_state('values');
       }
-      return get(this.values, path);
+      return get(this.$_state('values'), path);
     },
 
     /**
@@ -202,8 +297,10 @@ export default {
      * @param {(string|number|array)} path
      */
     touch(path) {
-      vueSet(this.touched, path, true);
-      if (this.validationMode != 'submit') {
+      this.$_recordUpdate(draft => {
+        vueSet(draft[TOUCHED], path, true);
+      }, path);
+      if (!this.isControlled && this.validationMode != 'submit') {
         this.$_validate(path);
       }
     },
@@ -323,8 +420,15 @@ export default {
      * Reset form to initial state.
      */
     reset() {
-      this.values = structuralDeepClone(result(this.initialValues));
-      this.touched = {};
+      const newState = {
+        values: structuralDeepClone(result(this.initialValues)),
+        [TOUCHED]: {},
+      };
+      if (this.isControlled) {
+        this.$emit('update:state', newState);
+      } else {
+        this.formState = newState;
+      }
       this.mergedErrors = {};
       this.validatorsErrors = [];
     },
@@ -356,7 +460,9 @@ export default {
       await this.$_validate();
 
       this.submitting = false;
-      mergeErrors(this.touched, makeAllTouch(this.mergedErrors));
+      this.$_recordUpdate(draft => {
+        mergeErrors(draft[TOUCHED], makeAllTouch(this.mergedErrors));
+      });
 
       // emit
       if (this.isValid) {
@@ -366,7 +472,7 @@ export default {
         const submitHandlers = sortEntriesByPath(
           this.registrations.submitHandler
         ).reverse();
-        let values = structuralDeepClone(this.values);
+        let values = structuralDeepClone(this.$_state('values'));
 
         // process values
         for (let i = 0; i < processors.length; i++) {
@@ -483,21 +589,24 @@ export default {
      * @param {({ values, touched }) => { values, touched }} fn Callback. Called with { values, touched }, should return the same shaped object.
      */
     $_internalUpdateSliceState(path, fn) {
-      const slice = path
-        ? { values: get(this.values, path), touched: get(this.touched, path) }
-        : { values: this.values, touched: this.touched };
+      this.$_recordUpdate(draft => {
+        const slice = path
+          ? {
+              values: get(draft.values, path),
+              touched: get(draft[TOUCHED], path),
+            }
+          : { values: draft.values, touched: draft[TOUCHED] };
 
-      const result = fn(slice);
+        const result = fn(slice);
 
-      if (path) {
-        vueSet(this.values, path, result.values);
-        vueSet(this.touched, path, result.touched);
-      } else {
-        this.values = result.values;
-        this.touched = result.touched;
-      }
-
-      this.$_afterChange(toPath(path));
+        if (path) {
+          vueSet(draft.values, path, result.values);
+          vueSet(draft[TOUCHED], path, result.touched);
+        } else {
+          draft.values = result.values;
+          draft[TOUCHED] = result.touched;
+        }
+      }, path);
     },
 
     /**
@@ -507,8 +616,6 @@ export default {
      * @param {array} path
      */
     $_afterChange(path) {
-      this.$emit('change', this.values);
-
       // run listeners for any parents, self, or children matching
       const listeners = this.registrations.changeListener.filter(
         ([listenerPath]) =>
@@ -544,7 +651,7 @@ export default {
     $_validateIfTouched(path = null) {
       if (path == null) {
         this.$_validate();
-      } else if (get(this.touched, path)) {
+      } else if (get(this.$_state('touched'), path)) {
         this.$_validate(path);
       }
     },
@@ -584,9 +691,11 @@ export default {
       let validatorResults = await Promise.all(
         validators.map(([path, validator]) => {
           if (path === null) {
-            return Promise.resolve(validator(this.values)).then(x => [path, x]);
+            return Promise.resolve(
+              validator(this.$_state('values'))
+            ).then(x => [path, x]);
           } else {
-            const values = get(this.values, path);
+            const values = get(this.$_state('values'), path);
             return Promise.resolve(validator(values)).then(validatorResult => {
               let validatorErrors = {};
               vueSet(validatorErrors, path, validatorResult);
@@ -633,6 +742,16 @@ export default {
      */
     getSubmitting() {
       return this.submitting;
+    },
+
+    /**
+     * Compute touched.
+     *
+     * @param {string} field
+     * @returns {boolean}
+     */
+    $_computedTouched(field) {
+      return this.errors && !!get(this.errors, field);
     },
   },
 

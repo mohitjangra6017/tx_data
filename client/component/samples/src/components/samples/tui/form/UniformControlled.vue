@@ -18,13 +18,14 @@
 
 <template>
   <Uniform
+    v-model="state"
     v-slot="{ getSubmitting }"
-    :initial-values="initialValues"
     :errors="errors"
     :validate="validate"
     @change="handleChange"
     @submit="submit"
   >
+    <Button text="Change state" @click="changeState" />
     <FormRow label="Title" required>
       <FormText
         name="title"
@@ -61,7 +62,7 @@
         :validations="v => [v.required(), v.colorValueHex()]"
       />
       <FormRowDefaults :id="$id('colour-default')">{{
-        initialValues.color
+        defaultColor
       }}</FormRowDefaults>
       <FormRowDetails :id="$id('colour-details')"
         >This field changes colour</FormRowDetails
@@ -166,6 +167,7 @@ import {
   FormToggleSwitch,
   FormRange,
 } from 'tui/components/uniform';
+import Button from 'tui/components/buttons/Button';
 import InputText from 'tui/components/form/InputText';
 import Checkbox from 'tui/components/form/Checkbox';
 import Radio from 'tui/components/form/Radio';
@@ -176,6 +178,7 @@ import FieldGroup from 'tui/components/form/FieldGroup';
 import SampleFormPart from 'samples/components/sample_parts/tui/form/FormPart';
 import Repeater from 'tui/components/form/Repeater';
 import theme from 'tui/theme';
+import { produce } from 'tui/immutable';
 
 export default {
   components: {
@@ -188,6 +191,7 @@ export default {
     FormNumber,
     FormRadioGroup,
     FormRange,
+    Button,
     InputText,
     FormToggleSwitch,
     Radio,
@@ -204,10 +208,13 @@ export default {
 
   data() {
     return {
-      initialValues: {
-        answers: ['first value', '', 'third value'],
-        color: theme.getVar('color-primary'),
-        pineapple: true,
+      defaultColor: theme.getVar('color-primary'),
+      state: {
+        values: {
+          answers: ['first value', '', 'third value'],
+          color: theme.getVar('color-primary'),
+          pineapple: true,
+        },
       },
       errors: null,
       value: null,
@@ -216,6 +223,19 @@ export default {
   },
 
   methods: {
+    changeState() {
+      // `produce` is an immutable helper function that translates the mutations
+      // to the object we make in the callback to an entirely new object,
+      // leaving its argument unchanged. unmodified references are preserved.
+      // this is neccesary as Uniform/Reform expects its state prop to be an
+      // immutable object.
+      this.state = produce(this.state, ({ values }) => {
+        values.length = '12';
+        values.answers.push('another value');
+        values.pineapple = !values.pineapple;
+      });
+    },
+
     validate(values) {
       const errors = {};
 

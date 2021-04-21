@@ -114,13 +114,32 @@ export function mergeErrors(result, newErrors) {
  * @param {object} touched
  * @returns {object}
  */
-export function onlyTouched(errors, touched) {
+export function onlyTouched(errors, touched, touchedTest) {
+  return onlyTouchedImpl(errors, touched, touchedTest);
+}
+
+/**
+ * Filter nested errors object to keys that have a truthy value in touched.
+ *
+ * @private
+ * @param {object} errors
+ * @param {object} touched
+ * @returns {object}
+ */
+function onlyTouchedImpl(errors, touched, touchedTest, path = []) {
   return Object.entries(errors)
-    .filter(([key]) => touched[key])
+    .filter(
+      ([key]) => (touched && touched[key]) || touchedTest(path.concat(key))
+    )
     .reduce(
       (acc, [key, value]) => {
         acc[key] = isDataStructure(value)
-          ? onlyTouched(value, touched[key])
+          ? onlyTouchedImpl(
+              value,
+              touched && touched[key],
+              touchedTest,
+              path.concat(key)
+            )
           : value;
         return acc;
       },

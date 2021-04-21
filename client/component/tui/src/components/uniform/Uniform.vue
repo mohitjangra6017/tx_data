@@ -21,10 +21,12 @@
     ref="reform"
     v-slot="slotProps"
     :initial-values="initialValues"
+    :state="state"
     :errors="errors"
     :validate="validate"
     :validation-mode="validationMode"
     @change="$emit('change', $event)"
+    @update:state="$emit('update:state', $event)"
     @submit="$emit('submit', $event)"
   >
     <Form
@@ -49,6 +51,11 @@ export default {
     Form,
   },
 
+  model: {
+    prop: 'state',
+    event: 'update:state',
+  },
+
   props: {
     /*
      * Initial values for form fields.
@@ -57,6 +64,13 @@ export default {
       type: [Object, Function],
       default: () => ({}),
     },
+
+    /**
+     * Form state, when controlled externally.
+     *
+     * Updates are emitted through `update:state`
+     */
+    state: Object,
 
     /**
      * External errors to display in form.
