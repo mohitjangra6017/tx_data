@@ -333,9 +333,7 @@ export default {
     @include tui-font-heading-x-small();
     margin-top: var(--gap-4);
     color: var(--color-text);
-    -ms-word-break: break-all;
-    overflow-wrap: break-word;
-    hyphens: none;
+    @include tui-wordbreak--hyphens;
   }
 
   &__subTitle {

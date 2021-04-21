@@ -148,9 +148,7 @@ export default {
     height: 100%;
     margin: 0;
     overflow: hidden;
-    -ms-word-break: break-all;
-    overflow-wrap: break-word;
-    hyphens: none;
+    @include tui-wordbreak--hyphens;
   }
 
   &__footer {
