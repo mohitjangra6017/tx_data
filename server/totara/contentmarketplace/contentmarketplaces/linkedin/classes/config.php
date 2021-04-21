@@ -26,6 +26,11 @@ use core\base_plugin_config;
 
 class config extends base_plugin_config {
     /**
+     * @var string
+     */
+    public const ACCESS_TOKEN_ENDPOINT = 'https://www.linkedin.com/oauth/v2/accessToken';
+
+    /**
      * @return string
      */
     protected static function get_component(): string {
@@ -44,5 +49,47 @@ class config extends base_plugin_config {
      */
     public static function client_secret(): ?string {
         return static::get('client_secret');
+    }
+
+    /**
+     * Returns the value of access token.
+     * @return string|null
+     */
+    public static function access_token(): ?string {
+        return static::get('access_token');
+    }
+
+    /**
+     * Returns the expiry dates of the access token.
+     * @return int|null
+     */
+    public static function access_token_expiry(): ?int {
+        $expiry = static::get('access_token_expiry');
+        if (null === $expiry) {
+            return null;
+        }
+
+        return (int) $expiry;
+    }
+
+    /**
+     * @return string
+     */
+    public static function access_token_endpoint(): string {
+        return static::get('access_token_endpoint', static::ACCESS_TOKEN_ENDPOINT);
+    }
+
+    /**
+     * @param string|null $value
+     */
+    public static function save_access_token(?string $value): void {
+        static::set('access_token', $value);
+    }
+
+    /**
+     * @param int|null $value
+     */
+    public static function save_access_token_expiry(?int $value): void {
+        static::set('access_token_expiry', $value);
     }
 }

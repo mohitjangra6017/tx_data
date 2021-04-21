@@ -20,13 +20,15 @@
  * @author Michael Dunstan <michael.dunstan@androgogic.com>
  * @package contentmarketplace_goone
  */
-
 namespace contentmarketplace_goone;
 
-defined('MOODLE_INTERNAL') || die();
+use totara_contentmarketplace\exception\invalid_token;
 
-class invalid_token_exception extends \moodle_exception {
-
+class invalid_token_exception extends invalid_token {
+    /**
+     * invalid_token_exception constructor.
+     * @param $url
+     */
     public function __construct($url) {
         $errorcode = "error:invalid_token";
         $module = "contentmarketplace_goone";
@@ -35,5 +37,4 @@ class invalid_token_exception extends \moodle_exception {
         $debuginfo = "Received 401 response when calling GO1 API (Called URL $url)";
         parent::__construct($errorcode, $module, $link, $a, $debuginfo);
     }
-
 }
