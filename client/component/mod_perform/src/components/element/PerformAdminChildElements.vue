@@ -459,14 +459,13 @@ export default {
       let hasUnsavedChanges = false;
 
       Object.entries(this.elementStates).forEach(([key]) => {
-        if (
-          this.elementStates[key] === 'editing' ||
-          this.elementStates[key] === 'creating'
-        ) {
+        if (this.elementStates[key] === 'editing') {
           hasUnsavedChanges = true;
         }
       });
-
+      if (this.newElements.length > 0) {
+        hasUnsavedChanges = true;
+      }
       this.$emit('unsaved-child', {
         key: this.sectionElement.id,
         hasChanges: hasUnsavedChanges,
