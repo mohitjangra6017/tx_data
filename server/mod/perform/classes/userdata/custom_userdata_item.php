@@ -25,8 +25,6 @@ namespace mod_perform\userdata;
 
 use context;
 
-use core\collection;
-
 use mod_perform\entity\activity\subject_instance;
 use mod_perform\entity\activity\participant_instance;
 
@@ -89,14 +87,14 @@ interface custom_userdata_item {
      * @param target_user $participant participant whose responses are to be exported.
      * @param context $context restriction for this operation.
      *
-     * @return collection the exported data.
+     * @return custom_userdata_exports the exported data.
      *
      * @throws Exception if the processing failed.
      */
     public function export_participant_responses(
         target_user $participant,
         context $context
-    ): collection;
+    ): custom_userdata_exports;
 
     /**
      * Counts responses belonging to everyone in all activities in which the
@@ -120,11 +118,13 @@ interface custom_userdata_item {
      *
      * @param target_user $subject subject whose responses are to be exported.
      * @param context $context restriction for this operation.
+     *
+     * @return custom_userdata_exports the exported data.
      */
     public function export_other_visible_responses(
         target_user $subject,
         context $context
-    ): collection;
+    ): custom_userdata_exports;
 
     /**
      * Counts responses belonging to other participants in all activities in which
@@ -148,9 +148,11 @@ interface custom_userdata_item {
      *
      * @param target_user $subject subject whose responses are to be exported.
      * @param context $context restriction for this operation.
+     *
+     * @return custom_userdata_exports the exported data.
      */
     public function export_other_hidden_responses(
         target_user $subject,
         context $context
-    ): collection;
+    ): custom_userdata_exports;
 }

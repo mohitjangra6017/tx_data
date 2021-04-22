@@ -1694,7 +1694,12 @@ final class generator extends \core\testing\component_generator {
         }
 
         if ($data['include_review_element'] ?? false) {
-            linked_review_generator::instance()->create_linked_review_element_in_section($activity, $section1);
+            linked_review_generator::instance()->create_linked_review_element_in_section(
+                $activity,
+                $section1,
+                $data['review_element_content_type'] ?? null,
+                $data['review_element_subelement_plugin'] ?? 'short_text'
+            );
         }
 
         return $section1;

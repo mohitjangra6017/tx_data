@@ -21,14 +21,19 @@
 * @package mod_perform
 */
 
+use core\orm\query\builder;
+use core\collection;
 use container_perform\perform;
 use mod_perform\entity\activity\element;
+use mod_perform\entity\activity\element_response;
+use mod_perform\entity\activity\subject_instance;
 use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\participant_section;
 use mod_perform\entity\activity\section;
 use mod_perform\userdata\export_other_hidden_responses;
 use mod_perform\userdata\export_other_visible_responses;
 use mod_perform\userdata\export_user_responses;
+use performelement_long_text\long_text;
 use totara_userdata\userdata\target_user;
 
 /**
@@ -385,7 +390,6 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
     public function test_export_files_are_exported_correctly(): void {
         global $DB;
         self::setAdminUser();
-        $fs = get_file_storage();
 
         $user1 = self::getDataGenerator()->create_user();
         $user2 = self::getDataGenerator()->create_user();
@@ -394,51 +398,258 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
         $generator = \mod_perform\testing\generator::instance();
 
         $activity = $generator->create_activity_in_container();
-        $context_id = $activity->get_context()->id;
         $user1_subject_instance = $generator->create_subject_instance([
             'activity_id' => $activity->id,
             'subject_is_participating' => true,
             'subject_user_id' => $user1->id,
             'include_questions' => true,
+            'include_review_element' => true,
+            'review_element_subelement_plugin' => 'long_text'
         ]);
         $user2_subject_instance = $generator->create_subject_instance([
             'activity_id' => $activity->id,
             'subject_is_participating' => true,
             'subject_user_id' => $user2->id,
             'include_questions' => true,
+            'include_review_element' => true,
+            'review_element_subelement_plugin' => 'long_text'
         ]);
 
         $generator->create_responses($user1_subject_instance);
         $generator->create_responses($user2_subject_instance);
         $DB->set_field(element::TABLE, 'plugin_name', 'long_text');
-        $user1_response = $user1_subject_instance->participant_instances->first()->element_responses->first();
-        $user2_response = $user2_subject_instance->participant_instances->first()->element_responses->first();
 
-
-        $file_record = [
-            'component' => \performelement_long_text\long_text::get_response_files_component_name(),
-            'filearea' => \performelement_long_text\long_text::get_response_files_filearea_name(),
-            'filepath' => '/',
-            'filename' => 'test.txt'
+        $subject_instances = [
+            $user1_subject_instance,
+            $user2_subject_instance
         ];
-        $user1_file = $fs->create_file_from_string(array_merge($file_record, [
-            'contextid' => $context_id,
-            'itemid' => $user1_response->id,
-        ]), 'Test 1');
-        $user2_file = $fs->create_file_from_string(array_merge($file_record, [
-            'contextid' => $context_id,
-            'itemid' => $user2_response->id,
-        ]), 'Test 2');
+        $main_response_ids = collection::new($subject_instances)
+            ->map(
+                function (subject_instance $instance) {
+                    $subject_participant_instance = $instance->participant_instances->first();
+                    $subject_main_response = $subject_participant_instance->element_responses->first();
 
-        $user1_export = export_user_responses::execute_export(new target_user($user1), context_system::instance());
-        $this->assertCount(1, $user1_export->files);
-        $this->assertEquals($user1_file->get_id(), reset($user1_export->files)->get_id());
-        $this->assertNotEquals($user2_file->get_id(), reset($user1_export->files)->get_id());
+                    return $subject_main_response->id;
+                }
+            );
+        $this->create_files($activity->get_context()->id, $main_response_ids);
 
-        $user2_export = export_user_responses::execute_export(new target_user($user2), context_system::instance());
-        $this->assertCount(1, $user2_export->files);
-        $this->assertEquals($user2_file->get_id(), reset($user2_export->files)->get_id());
-        $this->assertNotEquals($user1_file->get_id(), reset($user2_export->files)->get_id());
+        foreach ($subject_instances as $subject_instance) {
+            $subject = $subject_instance->subject_user->get_record();
+            $exports = export_user_responses::execute_export(
+                new target_user($subject),
+                context_system::instance()
+            );
+
+            $actual_file_ids = collection::new($exports->files)
+                ->map(
+                    function (stored_file $file): int {
+                        return $file->get_id();
+                    }
+                )
+                ->all();
+
+            $response_ids = $this
+                ->get_element_responses($subject_instance->participant_instances)
+                ->map(
+                    function (element_response $response): int {
+                        return $response->id;
+                    }
+                );
+            $expected_file_ids = $this->get_response_files($response_ids)->all();
+
+            $this->assertCount(count($expected_file_ids), $actual_file_ids);
+            $this->assertEqualsCanonicalizing($expected_file_ids, $actual_file_ids);
+        }
     }
 
+    public function test_export_hidden_files_are_exported_correctly(): void {
+        global $DB;
+        self::setAdminUser();
+
+        $subject = self::getDataGenerator()->create_user();
+        $participant = self::getDataGenerator()->create_user();
+
+        $generator = \mod_perform\testing\generator::instance();
+        $activity = $generator->create_activity_in_container();
+
+        $subject_instance = $generator->create_subject_instance([
+            'activity_id' => $activity->id,
+            'subject_is_participating' => true,
+            'subject_user_id' => $subject->id,
+            'other_participant_id' => $participant->id,
+            'include_questions' => true,
+            'include_review_element' => true,
+            'relationships_can_view' => '',
+            'update_participant_sections_status' => 'complete',
+            'review_element_subelement_plugin' => 'long_text'
+        ]);
+
+        $generator->create_responses($subject_instance);
+        $DB->set_field(element::TABLE, 'plugin_name', 'long_text');
+
+        $participant_instances = $subject_instance->participant_instances;
+        $main_response_ids = $participant_instances->map(
+            function (participant_instance $pi): int {
+                return $pi->element_responses->first()->id;
+            }
+        );
+        $this->create_files($activity->get_context()->id, $main_response_ids);
+
+        $exports = export_other_hidden_responses::execute_export(
+            new target_user($subject),
+            context_system::instance()
+        );
+        $actual_file_ids = collection::new($exports->files)
+            ->map(
+                function (stored_file $file): int {
+                    return $file->get_id();
+                }
+            )
+            ->all();
+
+        $other_participant_instance = $participant_instances->find(
+            function (participant_instance $pi) use ($participant): bool {
+                return (int)$pi->participant_user->id === (int)$participant->id;
+            }
+        );
+
+        $response_ids = $this
+            ->get_element_responses(collection::new([$other_participant_instance]))
+            ->map(
+                function (element_response $response): int {
+                    return $response->id;
+                }
+            );
+        $expected_file_ids = $this->get_response_files($response_ids)->all();
+
+        $this->assertCount(count($expected_file_ids), $actual_file_ids);
+        $this->assertEqualsCanonicalizing($expected_file_ids, $actual_file_ids);
+    }
+
+    public function test_export_visible_files_are_exported_correctly(): void {
+        global $DB;
+        self::setAdminUser();
+
+        $subject = self::getDataGenerator()->create_user();
+        $participant = self::getDataGenerator()->create_user();
+
+        $generator = \mod_perform\testing\generator::instance();
+        $activity = $generator->create_activity_in_container();
+
+        $subject_instance = $generator->create_subject_instance([
+            'activity_id' => $activity->id,
+            'subject_is_participating' => true,
+            'subject_user_id' => $subject->id,
+            'other_participant_id' => $participant->id,
+            'include_questions' => true,
+            'include_review_element' => true,
+            'update_participant_sections_status' => 'complete',
+            'review_element_subelement_plugin' => 'long_text'
+        ]);
+
+        $generator->create_responses($subject_instance);
+        $DB->set_field(element::TABLE, 'plugin_name', 'long_text');
+
+        $participant_instances = $subject_instance->participant_instances;
+        $main_response_ids = $participant_instances->map(
+            function (participant_instance $pi): int {
+                return $pi->element_responses->first()->id;
+            }
+        );
+        $this->create_files($activity->get_context()->id, $main_response_ids);
+
+        $exports = export_other_visible_responses::execute_export(
+            new target_user($subject),
+            context_system::instance()
+        );
+        $actual_file_ids = collection::new($exports->files)
+            ->map(
+                function (stored_file $file): int {
+                    return $file->get_id();
+                }
+            )
+            ->all();
+
+        $response_ids = $this
+            ->get_element_responses($participant_instances)
+            ->map(
+                function (element_response $response): int {
+                    return $response->id;
+                }
+            );
+        $expected_file_ids = $this->get_response_files($response_ids)->all();
+
+        $this->assertCount(count($expected_file_ids), $actual_file_ids);
+        $this->assertEqualsCanonicalizing($expected_file_ids, $actual_file_ids);
+    }
+
+    /**
+     * Returns the element responses for the participant instances.
+     *
+     * @param collection|participant_instance participants for which to get the
+     *        element responses.
+     *
+     * @return collection|element_response[] the responses.
+     */
+    private function get_element_responses(collection $participant_instances): collection {
+        $participant_ids = $participant_instances->pluck('id');
+
+        return element_response::repository()
+            ->where('participant_instance_id', $participant_ids)
+            ->get();
+    }
+
+    /**
+     * 'Uploads' files for the given set of item ids.
+     *
+     * @param int $context_id activity context id.
+     * @param collection|int[] $item_ids item ids whose files are to be 'uploaded'.
+     *
+     * @return collection|stored_file[] array of stored_files.
+     */
+    private function create_files(int $context_id, collection $item_ids): collection {
+        $fs = get_file_storage();
+
+        return $item_ids
+            ->map(
+                function (int $item_id) use ($fs, $context_id): stored_file {
+                    $content = "test_$item_id";
+                    $record = [
+                        'component' => long_text::get_response_files_component_name(),
+                        'filearea' => long_text::get_response_files_filearea_name(),
+                        'filepath' => '/',
+                        'filename' => "{$content}.txt",
+                        'contextid' => $context_id,
+                        'itemid' => $item_id
+                    ];
+
+                    $a = $fs->create_file_from_string($record, $content);
+                    return $a;
+                }
+            );
+    }
+
+    /**
+     * Returns the set of files associated with the given set of item ids.
+     *
+     * @param collection|int[] $item_ids item ids whose files are to be retrieved.
+     *
+     * @return collection|int[] array of stored_files ids.
+     */
+    private function get_response_files(collection $item_ids): collection {
+        $fs = get_file_storage();
+
+        return builder::table('files')
+            ->where('component', long_text::get_response_files_component_name())
+            ->where('filearea', long_text::get_response_files_filearea_name())
+            ->where_in('itemid', $item_ids->all())
+            ->where('filename', '!=', '.') // Exclude directories
+            ->get()
+            ->map(
+                function (object $file) use ($fs) {
+                    return $fs->get_file_instance($file)->get_id();
+                }
+            );
+    }
 }

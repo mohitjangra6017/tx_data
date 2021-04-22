@@ -32,6 +32,7 @@ use core\testing\generator as core_generator;
 use mod_perform\constants;
 use mod_perform\entity\activity\activity as activity_entity;
 use mod_perform\entity\activity\element as element_entity;
+use mod_perform\entity\activity\element_response;
 use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\participant_section;
 use mod_perform\entity\activity\section as section_entity;
@@ -48,6 +49,7 @@ use performelement_linked_review\entity\linked_review_content as linked_review_c
 use performelement_linked_review\entity\linked_review_content_response;
 use performelement_linked_review\linked_review;
 use performelement_linked_review\models\linked_review_content;
+use stored_file;
 use totara_competency\aggregation_task;
 use totara_competency\aggregation_users_table;
 use totara_competency\entity\assignment;
@@ -88,7 +90,8 @@ final class generator extends component_generator {
     public function create_linked_review_element_in_section(
         activity $activity,
         section $section,
-        ?string $content_type = null
+        ?string $content_type = null,
+        string $element_plugin = 'short_text'
     ): void {
         $content_type = $content_type ?? competency_assignment::get_identifier();
 
@@ -105,7 +108,8 @@ final class generator extends component_generator {
         $perform_generator = perform_generator::instance();
         $perform_generator->create_section_element($section, $element);
         $perform_generator->create_child_element([
-            'parent_element' => $element
+            'parent_element' => $element,
+            'element_plugin' => $element_plugin
         ]);
     }
 
@@ -476,6 +480,7 @@ final class generator extends component_generator {
             $subject_child_response->response_data = $response;
             $subject_child_response->save();
 
+            $participant_ids = [$subject_as_participant->id];
             foreach ($normal_participant_instances as $participant_instance) {
                 $participant_response = new linked_review_content_response();
                 $participant_response->linked_review_content_id = $linked_review_id;
@@ -483,7 +488,58 @@ final class generator extends component_generator {
                 $participant_response->participant_instance_id = $participant_instance->id;
                 $participant_response->response_data = $response;
                 $participant_response->save();
+
+                $participant_ids[] = $participant_instance->id;
             }
         }
+
+        if ($sub_element_type === 'long_text') {
+            // For linked review long texts, any 'uploaded' files are stored
+            // against the relevant element_response records, not the actual
+            // linked_review_content_response records. That's why the files
+            // are created after all the linked review responses have been created.
+
+            $context_id = $element->context_id;
+
+            element_response::repository()
+                ->where('section_element_id', $section_element->id)
+                ->where('participant_instance_id', $participant_ids)
+                ->get()
+                ->map(
+                    function (element_response $response) use ($context_id): void {
+                        $this->create_file_item(
+                            $response->id,
+                            $context_id,
+                            $response->participant_instance_id . ' response'
+                        );
+                    }
+                );
+        }
+    }
+
+    /**
+     * "Uploads" a file for the given response id.
+     *
+     * @param int $element_response_id element_response associated with this file.
+     * @param int $context_id context associated with this file.
+     * @param string $content file content.
+     *
+     * @return stored_file the created file
+     */
+    public function create_file_item(
+        int $element_response_id,
+        int $context_id,
+        string $content = 'testing123'
+    ): stored_file {
+        $file_record = [
+            'component' => \performelement_long_text\long_text::get_response_files_component_name(),
+            'filearea' => \performelement_long_text\long_text::get_response_files_filearea_name(),
+            'filepath' => '/',
+            'filename' => "test_review_{$element_response_id}.txt",
+            'contextid' => $context_id,
+            'itemid' => $element_response_id
+        ];
+
+        return get_file_storage()->create_file_from_string($file_record, $content);
     }
 }

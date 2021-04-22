@@ -48,10 +48,7 @@ class export_user_responses extends item {
             ->filter_by_participant_for_export($user->id)
             ->count();
 
-        [$custom_response_count, $element_response_offset] = self::count_custom_userdata($user, $context);
-
-        $final_count = $element_response_count - $element_response_offset + $custom_response_count;
-        return $final_count > 0 ? $final_count : 0;
+        return self::count_custom_userdata($element_response_count, $user, $context);
     }
 
     /**
@@ -77,67 +74,66 @@ class export_user_responses extends item {
                 }
             );
 
-        $custom_exports = self::export_custom_userdata($user, $context);
-
         $export = new export();
-        $export->data = array_merge($responses->to_array(), $custom_exports->all());
+        $export->data = $responses->to_array();
         $export->files = static::get_response_files($responses->pluck('id'));
-        return $export;
+
+        return self::export_custom_userdata($export, $user, $context);
     }
 
     /**
      * Counts custom user data to be exported for the given participant.
      *
+     * @param $initial_count existing count to which to add custom data counts.
      * @param target_user $user the activity participant whose data is to be
      *        exported.
      * @param context $context restriction for purging e.g., system context for
      *        everything, course context for purging one course.
      *
-     * @return int[] a tuple containing *2* elements: the actual response count
-     *         and the offset that needs to be subtracted from the main
-     *         element_response count if any.
+     * @return int the updated export count.
      */
     private static function count_custom_userdata(
+        int $initial_count,
         target_user $user,
         context $context
-    ): array {
+    ): int {
         return self::custom_userdata_items()
             ->reduce(
-                function (array $counts, custom_userdata_item $item) use ($user, $context): array {
-                    [$running_count, $running_offset] = $counts;
+                function (int $running_count, custom_userdata_item $item) use ($user, $context): int {
                     [$count, $offset] = $item->count_participant_responses($user, $context);
+                    $new_count = $running_count + $count - $offset;
 
-                    return [$running_count + $count, $running_offset + $offset];
+                    return $new_count > 0 ? $new_count : 0;
                 },
-                [0, 0]
+                $initial_count
             );
     }
 
     /**
      * Executes custom user data exports for the given participant.
      *
+     * @param export $exports instance to which to add custom exports and files.
      * @param target_user $user the activity participant whose data is to be
      *        exported.
      * @param context $context restriction for purging e.g., system context for
      *        everything, course context for purging one course.
      *
-     * @return collection the exported data as a list of records; each record is
-     *         an associative array.
+     * @return export the updated set of data to be exported.
      */
     private static function export_custom_userdata(
+        export $exports,
         target_user $user,
         context $context
-    ): collection {
-        $all = [];
-        foreach (self::custom_userdata_items() as $item) {
-            $exports = $item
-                ->export_participant_responses($user, $context)
-                ->all();
-
-            $all = array_merge($all, $exports);
-        }
-
-        return collection::new($all);
+    ): export {
+        return self::custom_userdata_items()
+            ->reduce(
+                function (export $exports, custom_userdata_item $item) use ($user, $context): export {
+                    return $item
+                        ->export_participant_responses($user, $context)
+                        ->add_to_exports($exports);
+                },
+                $exports
+            );
     }
 
     /**

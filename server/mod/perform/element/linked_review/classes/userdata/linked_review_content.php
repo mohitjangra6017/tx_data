@@ -23,23 +23,27 @@
 
 namespace performelement_linked_review\userdata;
 
+use Closure;
 use context;
 use coding_exception;
 
-use core\collection;
 use core\entity\user;
 use core\orm\query\builder;
 
 use mod_perform\constants;
 use mod_perform\entity\activity\activity;
 use mod_perform\entity\activity\element;
+use mod_perform\entity\activity\element_response;
 use mod_perform\entity\activity\section;
 use mod_perform\entity\activity\section_element;
 use mod_perform\entity\activity\section_relationship;
 use mod_perform\entity\activity\subject_instance;
 use mod_perform\entity\activity\participant_instance;
+use mod_perform\entity\activity\participant_section;
 use mod_perform\models\activity\element_plugin;
 use mod_perform\models\activity\participant_source;
+use mod_perform\state\participant_section\complete;
+use mod_perform\userdata\custom_userdata_exports;
 use mod_perform\userdata\custom_userdata_item;
 
 use performelement_linked_review\entity\linked_review_content as linked_review_content_entity;
@@ -53,6 +57,11 @@ use totara_userdata\userdata\target_user;
  * Does GDPR userdata processing for the linked review element.
  */
 class linked_review_content implements custom_userdata_item {
+    /**
+     * Cache to hold file item ids.
+     */
+    private $file_item_ids_cache = [];
+
     /**
      * Creates an instance of this class.
      *
@@ -140,18 +149,13 @@ class linked_review_content implements custom_userdata_item {
     public function export_participant_responses(
         target_user $participant,
         context $context
-    ): collection {
+    ): custom_userdata_exports {
         return $this
             ->get_participant_responses_repository($participant, $context)
             ->get()
-            ->map(
-                function (linked_review_content_response $raw): array {
-                    return $this->parse_response($raw);
-                }
-            )->filter(
-                function (array $export): bool {
-                    return !empty($export);
-                }
+            ->reduce(
+                Closure::fromCallable([$this, 'parse_response']),
+                new custom_userdata_exports()
             );
     }
 
@@ -198,18 +202,13 @@ class linked_review_content implements custom_userdata_item {
     public function export_other_visible_responses(
         target_user $subject,
         context $context
-    ): collection {
+    ): custom_userdata_exports {
         return $this
             ->get_other_visible_responses_repository($subject, $context)
             ->get()
-            ->map(
-                function (linked_review_content_response $raw): array {
-                    return $this->parse_response($raw);
-                }
-            )->filter(
-                function (array $export): bool {
-                    return !empty($export);
-                }
+            ->reduce(
+                Closure::fromCallable([$this, 'parse_response']),
+                new custom_userdata_exports()
             );
     }
 
@@ -272,18 +271,13 @@ class linked_review_content implements custom_userdata_item {
     public function export_other_hidden_responses(
         target_user $subject,
         context $context
-    ): collection {
+    ): custom_userdata_exports {
         return $this
             ->get_other_hidden_responses_repository($subject, $context)
             ->get()
-            ->map(
-                function (linked_review_content_response $raw): array {
-                    return $this->parse_response($raw);
-                }
-            )->filter(
-                function (array $export): bool {
-                    return !empty($export);
-                }
+            ->reduce(
+                Closure::fromCallable([$this, 'parse_response']),
+                new custom_userdata_exports()
             );
     }
 
@@ -302,10 +296,12 @@ class linked_review_content implements custom_userdata_item {
     ): linked_review_content_response_repository {
         $participant_instance = participant_instance::TABLE;
         $section_relationship = section_relationship::TABLE;
+        $participant_section = participant_section::TABLE;
 
         return $this
             ->get_subject_responses_repository($subject, $context)
             ->where("${section_relationship}.can_view", false)
+            ->where("{$participant_section}.progress", complete::get_code())
             ->where("${participant_instance}.participant_id", "!=", $subject->id);
     }
 
@@ -369,6 +365,8 @@ class linked_review_content implements custom_userdata_item {
         $section_relationship = section_relationship::TABLE;
         $section = section::TABLE;
         $section_element = section_element::TABLE;
+        $participant_section = participant_section::TABLE;
+        $participant_instance = participant_instance::TABLE;
 
         return $this
             ->get_all_responses_repository()
@@ -376,12 +374,20 @@ class linked_review_content implements custom_userdata_item {
             ->join($section, "${section_element}.section_id", 'id')
             ->join(
                 $section_relationship,
-                function (builder $builder) use ($section, $section_relationship): builder  {
+                function (builder $builder) use ($section, $section_relationship): builder {
                     $id = relationship::load_by_idnumber(constants::RELATIONSHIP_SUBJECT)->id;
 
                     return $builder
                         ->where_field("${section}.id", "${section_relationship}.section_id")
                         ->where("${section_relationship}.core_relationship_id", '=', $id);
+                }
+            )
+            ->join(
+                $participant_section,
+                function (builder $builder) use ($participant_section, $participant_instance, $section): builder {
+                    return $builder
+                        ->where_field("${participant_section}.section_id", "${section}.id")
+                        ->where_field("${participant_section}.participant_instance_id", "{$participant_instance}.id");
                 }
             )
             ->filter_by_context($context)
@@ -390,40 +396,44 @@ class linked_review_content implements custom_userdata_item {
     }
 
     /**
-     * Create an export record from the incoming raw data.
+     * Create an export record from the incoming raw data. Note each export is a
+     * keyed array structured in this manner:
+     * - activity_id: activity id
+     * - activity_name: activity name
+     * - linked_review_content_id: review content record id eg competency id
+     * - linked_review_content_type: review content type eg totara_competency
+     * - linked_review_title: main linked review question text
+     * - element_title: review sub question text
+     * - element_response: review sub question answer
+     * - element_response_id: review sub question response id
+     * - participant_id: respondent user id; not present if the response
+     *   is anonymized.
+     * - created_at: timestamp when response was created
+     * - updated_at: timestamp when response was last updated.
      *
+     * @param custom_userdata_exports $exports export instance to which to add
+     *        current export data.
      * @param linked_review_content_response $raw raw data as formulated by the
-     *        query from create_query(). In other words, these has extra fields
-     *        in addition to the normal linked_review_content_response attributes.
+     *        query from get_XYZ_responses_repository(). In other words, this has
+     *        extra fields in addition to the normal linked_review_content_response
+     *        attributes.
      *
-     * @return array the export record with these keyed values:
-     *         - activity_id: activity id
-     *         - activity_name: activity name
-     *         - linked_review_content_id: review content record id eg competency id
-     *         - linked_review_content_type: review content type eg totara_competency
-     *         - linked_review_title: main linked review question text
-     *         - element_title: review sub question text
-     *         - element_response: review sub question answer
-     *         - element_response_id: review sub question response id
-     *         - participant_id: respondent user id; not present if the response
-     *           is anonymized.
-     *         - created_at: timestamp when response was created
-     *         - updated_at: timestamp when response was last updated.
-     *
-     *         The return could be an empty array if the raw data is for a non
-     *         respondable question.
+     * @return custom_userdata_exports the updated export instance.
      */
-    private function parse_response(linked_review_content_response $raw): array {
+    private function parse_response(
+        custom_userdata_exports $exports,
+        linked_review_content_response $raw
+    ): custom_userdata_exports {
         try {
             $element_plugin = element_plugin::load_by_plugin($raw->element_type);
         } catch (coding_exception $e) {
             // This means the plugin was removed or does not exist. So no response
             // can be returned.
-            return [];
+            return $exports;
         }
 
         if (!$element_plugin->get_is_respondable()) {
-            return [];
+            return $exports;
         }
 
         $response = $element_plugin
@@ -452,6 +462,23 @@ class linked_review_content implements custom_userdata_item {
             unset($export['participant_id']);
         }
 
-        return $export;
+        $section_element_id = $raw->linked_review_content->section_element_id;
+        $participant_instance_id = $raw->participant_instance_id;
+        $section_participant = "$section_element_id/$participant_instance_id";
+
+        $file_item_ids = [];
+        if (!in_array($section_participant, $this->file_item_ids_cache)) {
+            $file_item_ids = element_response::repository()
+                ->where('section_element_id', $section_element_id)
+                ->where('participant_instance_id', $participant_instance_id)
+                ->get()
+                ->pluck('id');
+
+            $this->file_item_ids_cache[] = $section_participant;
+        }
+
+        return $exports
+            ->add_exports($export)
+            ->add_file_item_ids(...$file_item_ids);
     }
 }
