@@ -120,8 +120,10 @@ Feature: Specific permissions allow users to manage programs
     And "Exception Report (1)" "link" should not exist
     And "Completion" "link" should not exist
     When I press "Edit program messages"
-    And I set the following fields to these values:
-      | Subject | New subject line for Program One |
+    And I press "Add"
+    And I set the field "Subject" to "New subject line for Program One"
+    # Need to be specific to select the message textarea.
+    And I set the field with css "textarea[name*=mainmessage]" to "New message for Program One"
     And I press "Save changes"
     And I press "Save all changes"
     Then I should see "Program messages saved"
