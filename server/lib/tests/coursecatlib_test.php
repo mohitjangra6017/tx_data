@@ -715,7 +715,7 @@ class core_coursecatlib_testcase extends advanced_testcase {
         $CFG->courseoverviewfileslimit = 3;
         $CFG->courseoverviewfilesext = '*';
         // Create course c5 with two image files.
-        $dratid4 = $this->fill_draft_area(array('filename41.jpg' => 'Test file contents41', 'filename42.jpg' => 'Test file contents42'));
+        $dratid4 = $this->fill_draft_area(array('filename41.jpg' => 'Test file contents41', 'filename42.jpeg' => 'Test file contents42'));
         $c4 = $this->getDataGenerator()->create_course(array('category' => $cat1->id,
             'fullname' => 'Test 4', 'overviewfiles_filemanager' => $dratid4));
         // Create course c6 with non-image file.
@@ -725,7 +725,7 @@ class core_coursecatlib_testcase extends advanced_testcase {
 
         // Reset default settings.
         $CFG->courseoverviewfileslimit = 1;
-        $CFG->courseoverviewfilesext = '.jpg,.gif,.png';
+        $CFG->courseoverviewfilesext = '.jpg,.jpeg,.gif,.png';
 
         $courses = $cat1->get_courses();
         $this->assertTrue($courses[$c1->id]->has_course_overviewfiles());

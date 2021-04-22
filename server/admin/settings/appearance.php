@@ -266,7 +266,7 @@ preferences,moodle|/user/preferences.php|preferences',
     } else {
         $courses_per_page_description = new lang_string('configcoursesperpage', 'admin');
     }
-    
+
     $temp->add(
         new admin_setting_configtext(
             'coursesperpage',
@@ -292,7 +292,7 @@ preferences,moodle|/user/preferences.php|preferences',
         )
     );
     $temp->add(new admin_setting_configtext('courseoverviewfilesext', new lang_string('courseoverviewfilesext'),
-            new lang_string('configcourseoverviewfilesext', 'admin'), '.jpg,.gif,.png'));
+            new lang_string('configcourseoverviewfilesext', 'admin'), '.jpg,.jpeg,.gif,.png'));
     $ADMIN->add('courses', $temp);
 
     $temp = new admin_settingpage('ajax', new lang_string('ajaxuse'), array('totara/core:appearance'));
