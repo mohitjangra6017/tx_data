@@ -33,6 +33,14 @@ Feature: Generation of program assignment exceptions
     And I click on "Miscellaneous" "link"
     And I click on "Program Exception Tests" "link"
     And I click on "Edit program details" "button"
+    And I switch to "Messages" tab
+    And I press "Add"
+    And I set the field "Subject" to "You have been enrolled on program %programfullname%"
+    # Need to be specific to select the message textarea.
+    And I set the field with css "textarea[name*=mainmessage]" to "You have been enrolled on program %programfullname%"
+    And I press "Save changes"
+    And I press "Save all changes"
+    Then I should see "Program messages saved"
     And I switch to "Content" tab
     And I click on "addcontent_ce" "button" in the "#edit-program-content" "css_element"
     And I click on "Miscellaneous" "link" in the "addmulticourse" "totaradialogue"
@@ -142,6 +150,14 @@ Feature: Generation of program assignment exceptions
     And I click on "Miscellaneous" "link"
     And I click on "Program Exception Tests" "link"
     And I click on "Edit program details" "button"
+    And I switch to "Messages" tab
+    And I press "Add"
+    And I set the field "Subject" to "You have been enrolled on program %programfullname%"
+    # Need to be specific to select the message textarea.
+    And I set the field with css "textarea[name*=mainmessage]" to "You have been enrolled on program %programfullname%"
+    And I press "Save changes"
+    And I press "Save all changes"
+    Then I should see "Program messages saved"
 
     When I click on "Assignments" "link"
     And I set the field "Add a new" to "Individuals"
