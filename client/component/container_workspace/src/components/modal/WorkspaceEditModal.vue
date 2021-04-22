@@ -242,7 +242,7 @@ export default {
   }
 
   &__form {
-    flex: 1;
+    flex-grow: 1;
     height: 100%;
   }
 }
