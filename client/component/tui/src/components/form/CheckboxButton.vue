@@ -93,14 +93,12 @@ export default {
   }
 
   &__label {
-    @include tui-font-body-small();
     display: flex;
     flex-grow: 1;
     margin: 0;
-    padding: var(--gap-2);
+    padding: var(--gap-1);
     color: var(--btn-checkbox-text-color);
     font-weight: normal;
-    border-radius: 6px;
     cursor: pointer;
 
     &:hover {
