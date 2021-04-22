@@ -18,14 +18,17 @@ Table of contents:
 The Totara Talent Experience Platform (TXP) comprises three powerful solutions to help you build a better workplace, 
 increase resilience and prosper in today’s fast-changing world. 
 
-1. **Totara Learn**, the flexible LMS trusted by millions of learners and favoured by companies worldwide to deliver 
+1. **Totara Learn**  
+   The flexible LMS trusted by millions of learners and favoured by companies worldwide to deliver
    transformational learning, and now even more powerful and adaptable to the unique needs of your organization.
    
-2. **Totara Engage**, the new Learning Experience Platform (LXP) is built to engage, unite and upskill your workforce. 
+2. **Totara Engage**  
+   The new Learning Experience Platform (LXP) is built to engage, unite and upskill your workforce.
    Totara Engage empowers employees to simplify complex knowledge sharing with collaborative workspaces and Microsoft 
    Teams integration, to deliver higher employee engagement.
    
-3. **Totara Perform**, with flexibility, organizational control and continuous performance management at its core, our 
+3. **Totara Perform**  
+   With flexibility, organizational control and continuous performance management at its core, our
    new performance management system enables the modern enterprise to deliver peak productivity. Evidence-based 
    performance reviews allow for objective performance measurement to boost workplace productivity, anytime, anywhere.
 
@@ -56,9 +59,9 @@ For information on product licensing please see the [licensing readme](readme_li
   _It is strongly recommended to use SSL/TLS_
 - Database
     - PostgreSQL
-        - Recommended: 12.x
-        - Supported: 12.x, 11.x, 10.x, 9.6.x
-        - Not supported: major releases greater than 12, 9.5 and lower.
+        - Recommended: 13.x
+        - Supported: 13.x, 12.x, 11.x, 10.x, 9.6.x
+        - Not supported: major releases greater than 13, 9.5 and lower.
     - MariaDB
         - Recommended: 10.5.x
         - Supported: 10.5.x, 10.4.x, 10.3.x, 10.2.6+
@@ -72,26 +75,34 @@ For information on product licensing please see the [licensing readme](readme_li
         - Supported: 14.0 (2017) (minimum)
         - Not supported: 13 (2016) and lower.
 - PHP
-    - Recommended: 7.4.x
+    - Recommended: 8.0.x, 7.4.x
     - Supported: 8.0.x, 7.4.x, 7.3.4+
     - Not supported: 7.3.3 or lower
-- Required PHP extensions
-    - curl
+- Required PHP extensions  
+  Please note some of these are enabled by default.
     - ctype
-    - dom 
+    - curl
+    - date
+    - dom
+    - fileinfo
     - gd
+    - hash
     - iconv
     - intl
     - json
+    - libxml
     - mbstring
     - pcre
+    - session
     - simplexml
     - spl
     - xml
+    - xmlreader
     - zip
     - zlib
 - Recommended PHP extensions  
   These extensions are not strictly required, however when available to Totara they will be used.
+    - exif
     - opcache
     - openssl
     - soap
@@ -101,18 +112,23 @@ For information on product licensing please see the [licensing readme](readme_li
 ### Required database configuration
 
 *PostgreSQL*
-- To create your database: createdb -E utf8 {dbname}
-- For security we recommend you use a dedicated database user who has access just to the Totara database.
+- To create your database:  
+  `createdb -E utf8 {dbname}`
+- For security, we recommend you use a dedicated database user who has access just to the Totara database.
 
 *MariaDB*
 - Barracuda file format 
-- To create your database: CREATE DATABASE {dbname} DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-- For security we recommend you use a dedicated database user who has access just to the Totara database.
+- To create your database:  
+  `CREATE DATABASE {dbname} DEFAULT CHARACTER SET utf8 COLLATE utf8mb4_general_ci;`  
+  _Note: the above collation is a general collation, we recommend choosing an appropriate collation for your primary language_
+- For security, we recommend you use a dedicated database user who has access just to the Totara database.
 
 *MySQL*
 - Barracuda file format
-- To create your database: CREATE DATABASE {dbname} DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-- For security we recommend you use a dedicated database user who has access just to the Totara database.
+- To create your database:  
+  `CREATE DATABASE {dbname} DEFAULT CHARACTER SET utf8 COLLATE utf8mb4_0900_as_cs;`  
+  _Note: the above collation is a general collation, we recommend choosing an appropriate collation for your primary language_
+- For security, we recommend you use a dedicated database user who has access just to the Totara database.
 
 *MSSQL*
 - Your database user must have permission to alter server settings  
@@ -129,12 +145,36 @@ This is important to ensure that date, number and currency data is displayed cor
 
 The following settings should be adjusted in your php.ini file:
 
-- *memory_limit* This will need to be increased for restoring large course backups or unzipping large files within Totara
-- *post_max_size* Ensure that this is larger than the largest file that you expect your users to upload.
-- *upload_max_filesize* - This setting in conjuction with "post_max_size" will determine how high you can set the max upload size within Totara
-- *max_input_vars=10000* - Increasing this setting is recommended as operations such as modifying languages, or large gradebooks may hit the default limit of 1000. Setting to 10000 does not introduce any performance overheads.
-- *upload_tmp_dir* - Some customers may wish to enable this setting and specifically set a directory where files are temporarily stored during the upload process. Note the web server user must have permissions to write files in this directory, or all file uploads will fail.
-- *opcache.enable=1* If the opcache extension is installed then enabling opcache is recommended for performance reasons. This is enabled by default in modern versions of PHP.
+- **memory_limit**  
+  This will need to be increased for restoring large course backups or unzipping large files within Totara
+- **post_max_size**  
+  Ensure that this is larger than the largest file that you expect your users to upload.
+- **upload_max_filesize**  
+  This setting in conjunction with "post_max_size" will determine how high you can set the max upload size within Totara
+- **max_input_vars=10000**  
+  Increasing this setting is recommended as operations such as modifying languages, or large gradebooks may hit the default limit of 1000. Setting to 10000 does not introduce any performance overheads.
+- **upload_tmp_dir**  
+  Some customers may wish to enable this setting and specifically set a directory where files are temporarily stored during the upload process. Note the web server user must have permissions to write files in this directory, or all file uploads will fail.
+- **opcache.enable=1**  
+  If the opcache extension is installed then enabling opcache is recommended for performance reasons. This is enabled by default in modern versions of PHP.
+- **opcache.memory_consumption=256**  
+  Totara is a large application, 256 should be sufficient depending upon the number of plugins installed.
+- **opcache.interned_strings_buffer=16**  
+  Opcache interns strings to save on memory usage. Totara still makes use of many hard coded strings for programmatic reasons.
+- **opcache.max_accelerated_files=16229**  
+  Totara has a large number of files, 16229 is the most suitable prime number, any value between 7963 and 16229 will be rounded up to 16229.
+- **opcache.validate_timestamps=1**  
+  It is safest to keep this enabled.
+- **opcache.revalidate_freq=2**  
+  Defaults to 2, on production sites this can be increased safely however you should then consider ensuring that PHP opcache is invalidated if an action leading to file changes occurs.
+- **opcache.enable_cli=1**  
+  Marginal benefit, but is safe to enable.
+- **opcache.file_cache_fallback=1**  
+  Should be enabled on Windows, and *opcache.file_cache* should be set to an already existing and writable directory
+- **opcache.save_comments**  
+  For production sites it is safe to disable this setting. For development, it is required.
+- **opcache.enable_file_override**  
+  Can be used provided validate_timestamps has been enabled. Some parts of Totara check file existence when enabling pluggability and extensibility.
 
 For more information on changing these settings see [PHP documentation](http://php.net/manual/en/ini.core.php).
 After changing any settings in php.ini you will need to restart your web server, and/or PHP-FPM if you are using that.
@@ -194,7 +234,7 @@ The following is a quick installation overview.
    Once the config.php file exists the installation will continue to create the database structure and essential data,
    and prepare the site data directory.
 
-   As a partner you will now need to set the flavour that the site is using to ensure that the correct
+   As a partner, you will now need to set the flavour that the site is using to ensure that the correct
    functionality is available to the site.
    This can be done by defining the following in your config.php:
    ```php
@@ -227,7 +267,7 @@ For a set of complete instructions please see the help documentation on [install
 The following steps should be followed when upgrading any Totara site, to any newer release.
 For detailed instructions see [upgrading to Totara](https://help.totaralearning.com/display/latest/Upgrading+to+Totara)
 
-If your current Totara version is less than 13.0 then you need to upgrade to latest Totara 13 release first.
+If your current Totara version is less than 13.0 then you need to upgrade to the latest Totara 13 release first.
 
 1.  Check the live logs to check if any users are currently using the site.
     The site will be offline while the upgrades are performed.
