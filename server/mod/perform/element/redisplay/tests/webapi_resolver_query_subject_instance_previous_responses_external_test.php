@@ -2,7 +2,7 @@
 /**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2020 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kunle Odusan <kunle.odusan@totaralearning.com>
+ * @author Fabian Derschatta <fabian.derschatta@totaralearning.com>
+ * @package performelement_redisplay
  */
 
 use core\collection;
@@ -32,7 +33,9 @@ use mod_perform\entity\activity\track as track_entity;
 use mod_perform\entity\activity\track_assignment;
 use mod_perform\entity\activity\track_user_assignment;
 use mod_perform\expand_task;
+use mod_perform\models\activity\activity;
 use mod_perform\models\activity\element;
+use mod_perform\models\activity\participant_source;
 use mod_perform\models\activity\section;
 use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\track;
@@ -46,12 +49,14 @@ use mod_perform\user_groups\grouping;
 use performelement_redisplay\redisplay;
 use totara_job\job_assignment;
 use totara_webapi\phpunit\webapi_phpunit_helper;
+use mod_perform\task\service\manual_participant_progress;
+
 
 /**
  * @group perform
  * @group perform_element
  */
-class performelement_redisplay_webapi_resolver_query_subject_instance_previous_responses_testcase extends advanced_testcase {
+class performelement_redisplay_webapi_resolver_query_subject_instance_previous_responses_external_testcase extends advanced_testcase {
 
     use webapi_phpunit_helper;
 
@@ -60,7 +65,7 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
     */
     private $perform_generator;
 
-    private const QUERY = 'performelement_redisplay_subject_instance_previous_responses';
+    private const QUERY = 'performelement_redisplay_subject_instance_previous_responses_external_participant';
 
     /**
      * @param array $users
@@ -83,7 +88,8 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
     private $base_relationships = [
         constants::RELATIONSHIP_SUBJECT,
         constants::RELATIONSHIP_MANAGER,
-        constants::RELATIONSHIP_APPRAISER
+        constants::RELATIONSHIP_APPRAISER,
+        constants::RELATIONSHIP_EXTERNAL,
     ];
 
     /**
@@ -93,16 +99,15 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $this->create_test_users();
         $redisplay = $this->set_up_redisplay_activity($this->base_relationships);
         $redisplay['activity']->activate();
-        $this->generate_instances();
+        $this->generate_instances($redisplay['activity']);
 
-        $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
-        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
+        $redisplay_subject_participant_section_external = $this->get_participant_section_of_external_user_from_activity($redisplay['activity']->id);
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $redisplay['respondable_section_element']->id,
-                'participant_section_id' => $redisplay_subject_participant_section->id,
-                'subject_instance_id' => $subject_instance_id,
+                'participant_section_id' => $redisplay_subject_participant_section_external->id,
+                'token' => $redisplay_subject_participant_section_external->participant_instance->external_participant->token,
             ]
         ]);
 
@@ -120,16 +125,15 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $question_bank = $this->set_up_question_bank_activity($this->base_relationships);
         $redisplay = $this->set_up_redisplay_activity($this->base_relationships, $question_bank['respondable_section_element']->id);
         $redisplay['activity']->activate();
-        $this->generate_instances();
+        $this->generate_instances($redisplay['activity']);
 
-        $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
-        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
+        $redisplay_subject_participant_section_external = $this->get_participant_section_of_external_user_from_activity($redisplay['activity']->id);
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $question_bank['respondable_section_element']->id,
-                'participant_section_id' => $redisplay_subject_participant_section->id,
-                'subject_instance_id' => $subject_instance_id,
+                'participant_section_id' => $redisplay_subject_participant_section_external->id,
+                'token' => $redisplay_subject_participant_section_external->participant_instance->external_participant->token,
             ]
         ]);
 
@@ -152,17 +156,17 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
 
         $redisplay = $this->set_up_redisplay_activity($this->base_relationships, $question_bank['respondable_section_element']->id);
         $redisplay['activity']->activate();
-        $this->generate_instances();
+        $this->generate_instances($redisplay['activity']);
+
         $this->back_date_subject_instances_for_activity($question_bank['activity']->id, $this->five_days_ago_timestamp());
 
-        $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
-        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
+        $redisplay_subject_participant_section_external = $this->get_participant_section_of_external_user_from_activity($redisplay['activity']->id);
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $question_bank['respondable_section_element']->id,
-                'participant_section_id' => $redisplay_subject_participant_section->id,
-                'subject_instance_id' => $subject_instance_id,
+                'participant_section_id' => $redisplay_subject_participant_section_external->id,
+                'token' => $redisplay_subject_participant_section_external->participant_instance->external_participant->token,
             ]
         ]);
         $date = userdate($this->five_days_ago_timestamp(), get_string(date_format::get_lang_string(date_format::FORMAT_DATE), 'langconfig'));
@@ -184,20 +188,21 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
 
         $redisplay = $this->set_up_redisplay_activity($this->base_relationships, $question_bank['respondable_section_element']->id);
         $redisplay['activity']->activate();
-        $this->generate_instances();
+        $this->generate_instances($redisplay['activity']);
+
         $this->delete_participant_instances_for_activity($question_bank['activity']->id);
 
         $five_days_ago = $this->five_days_ago_timestamp();
         $this->back_date_subject_instances_for_activity($question_bank['activity']->id, $five_days_ago);
 
-        $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
+        $redisplay_subject_participant_section_external = $this->get_participant_section_of_external_user_from_activity($redisplay['activity']->id);
         $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $question_bank['respondable_section_element']->id,
-                'participant_section_id' => $redisplay_subject_participant_section->id,
-                'subject_instance_id' => $subject_instance_id,
+                'participant_section_id' => $redisplay_subject_participant_section_external->id,
+                'token' => $redisplay_subject_participant_section_external->participant_instance->external_participant->token,
             ]
         ]);
         $date = userdate($five_days_ago, get_string(date_format::get_lang_string(date_format::FORMAT_DATE), 'langconfig'));
@@ -217,43 +222,18 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $question_bank['activity']->activate();
         $redisplay = $this->set_up_redisplay_activity($this->base_relationships);
         $redisplay['activity']->activate();
-        $this->generate_instances();
-
-        $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($question_bank['activity']->id, $this->users['subject']->id);
-        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
-
-        $this->expectException(coding_exception::class);
-        $this->expectErrorMessage('Invalid access to redisplay');
-        $this->resolve_graphql_query(self::QUERY, [
-            'input' => [
-                'section_element_id' => $redisplay['respondable_section_element']->id,
-                'participant_section_id' => $redisplay_subject_participant_section->id,
-                'subject_instance_id' => $subject_instance_id,
-            ]
-        ]);
-    }
-
-    /**
-     * Tests exception is thrown when trying to access a redisplay element with a non-associated participant section.
-     */
-    public function test_trying_to_access_redisplay_element_with_non_associated_participant_section2() {
-        $this->create_test_users();
-        $question_bank = $this->set_up_question_bank_activity($this->base_relationships);
-        $question_bank['activity']->activate();
-        $redisplay = $this->set_up_redisplay_activity($this->base_relationships);
-        $redisplay['activity']->activate();
-        $this->generate_instances();
+        $this->generate_instances($redisplay['activity']);
 
         $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
-        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($question_bank['activity']->id)->first()->id;
+        $redisplay_subject_participant_section_external = $this->get_participant_section_of_external_user_from_activity($redisplay['activity']->id);
 
         $this->expectException(coding_exception::class);
-        $this->expectErrorMessage('Invalid access to redisplay');
+        $this->expectErrorMessage('Participant instances for given token and participant_section do not match');
         $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $redisplay['respondable_section_element']->id,
                 'participant_section_id' => $redisplay_subject_participant_section->id,
-                'subject_instance_id' => $subject_instance_id,
+                'token' => $redisplay_subject_participant_section_external->participant_instance->external_participant->token,
             ]
         ]);
     }
@@ -265,22 +245,23 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $this->create_test_users();
         $question_bank = $this->set_up_question_bank_activity($this->base_relationships);
         $question_bank['activity']->activate();
+        $this->generate_instances($question_bank['activity']);
 
         $redisplay = $this->set_up_redisplay_activity($this->base_relationships, $question_bank['respondable_section_element']->id);
         $redisplay['activity']->activate();
-        $this->generate_instances();
+        $this->generate_instances($redisplay['activity']);
+
         $this->back_date_subject_instances_for_activity($question_bank['activity']->id, $this->five_days_ago_timestamp());
         $subject_instances = $this->get_subject_instances_belonging_to_activity($question_bank['activity']->id);
         $this->generate_responses_for_section_element_of_subject_instances($subject_instances, $question_bank['respondable_section_element']->id);
 
-        $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
-        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
+        $redisplay_subject_participant_section_external = $this->get_participant_section_of_external_user_from_activity($redisplay['activity']->id);
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $question_bank['respondable_section_element']->id,
-                'participant_section_id' => $redisplay_subject_participant_section->id,
-                'subject_instance_id' => $subject_instance_id,
+                'participant_section_id' => $redisplay_subject_participant_section_external->id,
+                'token' => $redisplay_subject_participant_section_external->participant_instance->external_participant->token,
             ]
         ]);
         $date = userdate($this->five_days_ago_timestamp(), get_string(date_format::get_lang_string(date_format::FORMAT_DATE), 'langconfig'));
@@ -291,8 +272,8 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
             $result['title']
         );
 
-        $this->assertInstanceOf(section_element_response::class, $result['your_response']);
-        $this->assertEquals("my previous answer {$this->users['subject']->id}", $result['your_response']->response_data);
+        // For external participants there cannot be redisplayed questions as there's no fixed user in the system we can align this to
+        $this->assertArrayNotHasKey('your_response', $result);
         $this->assertFalse($result['is_anonymous']);
         $this->assertNotEmpty($result['other_responder_groups']);
 
@@ -302,7 +283,12 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
             $this->assertNotEquals(constants::RELATIONSHIP_SUBJECT, $responder_group->get_relationship_name());
             $this->assertEquals(1, $responder_group->get_responses()->count());
             $response = $responder_group->get_responses()->first();
-            $this->assertEquals("my previous answer {$this->users[$relationship]->id}", $response->response_data);
+            // If it's an external participant we don't have a fixed user id, just do a light check in this case
+            if ($responder_group->get_relationship_name() === 'External respondent') {
+                $this->assertStringStartsWith("my previous answer", $response->response_data);
+            } else {
+                $this->assertEquals("my previous answer {$this->users[$relationship]->id}", $response->response_data);
+            }
         }
     }
 
@@ -310,22 +296,23 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $this->create_test_users();
         $question_bank = $this->set_up_question_bank_activity($this->base_relationships);
         $question_bank['activity']->activate();
+        $this->generate_instances($question_bank['activity']);
 
         $redisplay = $this->set_up_redisplay_activity($this->base_relationships, $question_bank['respondable_section_element']->id);
         $redisplay['activity']->activate();
-        $this->generate_instances();
+        $this->generate_instances($redisplay['activity']);
+
         $this->back_date_subject_instances_for_activity($question_bank['activity']->id, $this->five_days_ago_timestamp());
         $subject_instances = $this->get_subject_instances_belonging_to_activity($question_bank['activity']->id);
         $this->generate_responses_for_section_element_of_subject_instances($subject_instances, $question_bank['respondable_section_element']->id, in_progress::get_code());
 
-        $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
-        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
+        $redisplay_subject_participant_section_external = $this->get_participant_section_of_external_user_from_activity($redisplay['activity']->id);
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $question_bank['respondable_section_element']->id,
-                'participant_section_id' => $redisplay_subject_participant_section->id,
-                'subject_instance_id' => $subject_instance_id,
+                'participant_section_id' => $redisplay_subject_participant_section_external->id,
+                'token' => $redisplay_subject_participant_section_external->participant_instance->external_participant->token,
             ]
         ]);
         $date = userdate($this->five_days_ago_timestamp(), get_string(date_format::get_lang_string(date_format::FORMAT_DATE), 'langconfig'));
@@ -347,22 +334,22 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $question_bank = $this->set_up_question_bank_activity($this->base_relationships);
         $question_bank['activity']->set_anonymous_setting(true);
         $question_bank['activity']->activate();
+        $this->generate_instances($question_bank['activity']);
 
         $redisplay = $this->set_up_redisplay_activity($this->base_relationships, $question_bank['respondable_section_element']->id);
         $redisplay['activity']->activate();
-        $this->generate_instances();
+        $this->generate_instances($redisplay['activity']);
         $this->back_date_subject_instances_for_activity($question_bank['activity']->id, $this->five_days_ago_timestamp());
         $subject_instances = $this->get_subject_instances_belonging_to_activity($question_bank['activity']->id);
         $this->generate_responses_for_section_element_of_subject_instances($subject_instances, $question_bank['respondable_section_element']->id);
 
-        $redisplay_subject_participant_section = $this->get_participant_section_of_user_from_activity($redisplay['activity']->id, $this->users['subject']->id);
-        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
+        $redisplay_subject_participant_section_external = $this->get_participant_section_of_external_user_from_activity($redisplay['activity']->id);
 
         $result = $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $question_bank['respondable_section_element']->id,
-                'participant_section_id' => $redisplay_subject_participant_section->id,
-                'subject_instance_id' => $subject_instance_id,
+                'participant_section_id' => $redisplay_subject_participant_section_external->id,
+                'token' => $redisplay_subject_participant_section_external->participant_instance->external_participant->token,
             ]
         ]);
         $date = userdate($this->five_days_ago_timestamp(), get_string(date_format::get_lang_string(date_format::FORMAT_DATE), 'langconfig'));
@@ -373,8 +360,8 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
             $result['title']
         );
 
-        $this->assertInstanceOf(section_element_response::class, $result['your_response']);
-        $this->assertEquals("my previous answer {$this->users['subject']->id}", $result['your_response']->response_data);
+        // For external participants there cannot be redisplayed questions as there's no fixed user in the system we can align this to
+        $this->assertArrayNotHasKey('your_response', $result);
         $this->assertTrue($result['is_anonymous']);
         $this->assertCount(1, $result['other_responder_groups']);
 
@@ -382,7 +369,7 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $anonymous_responder_group = end($result['other_responder_groups']);
         $this->assertNotContains(strtolower($anonymous_responder_group->get_relationship_name()), $this->base_relationships);
         $this->assertEquals('Anonymous', $anonymous_responder_group->get_relationship_name());
-        $this->assertEquals(2, $anonymous_responder_group->get_responses()->count());
+        $this->assertEquals(4, $anonymous_responder_group->get_responses()->count());
     }
 
     /**
@@ -395,31 +382,33 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
         $question_bank['activity']->activate();
         $redisplay = $this->set_up_redisplay_activity($this->base_relationships);
         $redisplay['activity']->activate();
-        $this->generate_instances();
+        $this->generate_instances($redisplay['activity']);
 
-        $subject_instance_id = $this->get_subject_instances_belonging_to_activity($redisplay['activity']->id)->first()->id;
+        $redisplay_subject_participant_section_external = $this->get_participant_section_of_external_user_from_activity($redisplay['activity']->id);
 
-        $result = $this->resolve_graphql_query(self::QUERY, [
-            'input' => [
-                'section_element_id' => $redisplay['respondable_section_element']->id,
-                'subject_instance_id' => $subject_instance_id,
-            ]
-        ]);
-
-        $this->assertEquals(
-            'Response redisplay to the following question cannot be shown, because there is no previous participation associated with the activity "Redisplay activity".',
-            $result['title']
-        );
+        try {
+            $result = $this->resolve_graphql_query(
+                self::QUERY, [
+                    'input' => [
+                        'section_element_id' => $redisplay['respondable_section_element']->id,
+                        'token' => $redisplay_subject_participant_section_external->participant_instance->external_participant->token,
+                    ]
+                ]
+            );
+            $this->fail('Expected exception');
+        } catch (invalid_parameter_exception $exception) {
+            $this->assertStringContainsString('Missing mandatory arguments', $exception->getMessage());
+        }
 
         $user_2 = $this->getDataGenerator()->create_user();
         $this->setUser($user_2);
 
-        $this->expectException(coding_exception::class);
-        $this->expectErrorMessage('Invalid report access to redisplay');
+        $this->expectException(invalid_parameter_exception::class);
+        $this->expectErrorMessage('Missing mandatory arguments.');
         $this->resolve_graphql_query(self::QUERY, [
             'input' => [
                 'section_element_id' => $redisplay['respondable_section_element']->id,
-                'subject_instance_id' => $subject_instance_id,
+                'token' => $redisplay_subject_participant_section_external->participant_instance->external_participant->token,
             ]
         ]);
     }
@@ -501,6 +490,22 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
     }
 
     /**
+     * Get participant section of external user from activity.
+     *
+     * @param int $activity_id
+     * @return participant_section|null
+     */
+    private function get_participant_section_of_external_user_from_activity(int $activity_id): ?participant_section {
+        return participant_section::repository()->as('ps')
+            ->join([participant_instance::TABLE, 'pi'], 'ps.participant_instance_id', 'pi.id')
+            ->join([section_entity::TABLE, 's'], 'ps.section_id', 's.id')
+            ->where('pi.participant_source', participant_source::EXTERNAL)
+            ->where('s.activity_id', $activity_id)
+            ->order_by('id')
+            ->first();
+    }
+
+    /**
      * Get subject instances belonging to activity.
      *
      * @param int $activity_id
@@ -549,10 +554,15 @@ class performelement_redisplay_webapi_resolver_query_subject_instance_previous_r
     /**
      * Generate subject/participant instances.
      */
-    private function generate_instances() {
+    private function generate_instances(activity $activity) {
         expand_task::create()->expand_all();
         $service = new subject_instance_creation();
         $service->generate_instances();
+
+        // Make sure the progress records are there
+        (new manual_participant_progress())->generate();
+
+        $this->perform_generator->create_manual_users_for_activity($activity, [constants::RELATIONSHIP_EXTERNAL]);
     }
 
     /**

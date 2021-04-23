@@ -27,6 +27,7 @@ use core\webapi\execution_context;
 use core\webapi\middleware\require_advanced_feature;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
+use invalid_parameter_exception;
 use mod_perform\models\activity\helpers\external_participant_token_validator;
 use mod_perform\models\response\participant_section as participant_section_model;
 use performelement_redisplay\data_provider\previous_responses;
@@ -42,17 +43,28 @@ class subject_instance_previous_responses_external_participant implements query_
      * @inheritDoc
      */
     public static function resolve(array $args, execution_context $ec) {
-        $participant_section_id = $args['input']['participant_section_id'];
-        $section_element_id = $args['input']['section_element_id'];
-        $token = $args['input']['token'];
+        $participant_section_id = $args['input']['participant_section_id'] ?? null;
+        $section_element_id = $args['input']['section_element_id'] ?? null;
+        $token = $args['input']['token'] ?? null;
+
+        if (empty($participant_section_id) || empty($section_element_id) || empty($token)) {
+            throw new invalid_parameter_exception('Missing mandatory arguments.');
+        }
 
         $validator = new external_participant_token_validator($token);
 
-        if (!$validator->is_valid() || !section_element_reference::participant_section_can_access_section_element($participant_section_id, $section_element_id)) {
+        if (!$validator->is_valid() 
+            || !section_element_reference::participant_section_can_access_section_element($participant_section_id, $section_element_id)
+        ) {
             throw new coding_exception('Invalid access to redisplay');
         }
 
         $current_data = self::get_current_data($participant_section_id);
+        // Make sure the instance the token is valid for and the one for the given participant_section matches
+        if ($validator->get_participant_instance()->id !== $current_data['participant_instance']->id) {
+            throw new coding_exception('Participant instances for given token and participant_section do not match');
+        }
+        
         $ec->set_relevant_context($current_data['activity']->get_context());
 
         $previous_responses_provider = new previous_responses($section_element_id, $current_data['subject_instance']);

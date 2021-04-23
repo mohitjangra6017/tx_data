@@ -53,11 +53,11 @@ class subject_instance_previous_responses implements query_resolver, has_middlew
         $ec->set_relevant_context($current_data['activity']->get_context());
 
         if ($participant_section_id !== null) {
-            $current_data['participant_instance'] = participant_section_model::load_by_id($participant_section_id)
-                ->get_participant_instance();
-            if (!section_element_reference::participant_section_can_access_section_element(
-                $participant_section_id, $section_element_id
-            )) {
+            $current_data['participant_instance'] = participant_section_model::load_by_id($participant_section_id)->get_participant_instance();
+            // If the section does not belong to the same subject instance or the section element is not in the same activity
+            if ($current_data['participant_instance']->subject_instance_id != $subject_instance_id
+                || !section_element_reference::participant_section_can_access_section_element($participant_section_id, $section_element_id)
+            ) {
                 throw new coding_exception('Invalid access to redisplay');
             }
         } else {
