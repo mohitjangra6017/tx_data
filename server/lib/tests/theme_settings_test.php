@@ -1793,6 +1793,83 @@ class core_theme_settings_testcase extends advanced_testcase {
         $this->assertCount(2, $result);
     }
 
+    /**
+     * Test default properties via the web api.
+     */
+    public function test_webapi_theme_settings_tenant_send_email_notification() {
+        $generator = $this->getDataGenerator();
+
+        // Create tenants.
+        $tenant_generator = $generator->get_plugin_generator('totara_tenant');
+        $tenant_generator->enable_tenants();
+        $tenant1 = $tenant_generator->create_tenant();
+        $tenant2 = $tenant_generator->create_tenant();
+
+        // Create tenant members.
+        $tenant_user1 = $generator->create_user(
+            ['tenantid' => $tenant1->id, 'tenantdomainmanager' => $tenant1->idnumber]
+        );
+        $tenant_user2 = $generator->create_user(
+            ['tenantid' => $tenant2->id]
+        );
+
+        // Tenant user 1 should NOT be able to test email notification for site.
+        $this->setUser($tenant_user1);
+        $result = $this->execute_graphql_operation(
+            'core_theme_settings_send_email_notification', [
+                'html_header' => '<div>test html header</div>',
+                'html_footer' => '<div>test html footer</div>',
+                'text_footer' => 'test text footer',
+            ]
+        );
+        $this->assertNotEmpty($result->errors);
+        $this->assertEquals(
+            'Sorry, but you do not currently have permissions to do that (Manage theme settings)',
+            $result->errors[0]->message
+        );
+
+        // Tenant user 2 should NOT be able to test email notification.
+        $this->setUser($tenant_user2);
+        $result = $this->execute_graphql_operation(
+            'core_theme_settings_send_email_notification', [
+                'html_header' => '<div>test html header</div>',
+                'html_footer' => '<div>test html footer</div>',
+                'text_footer' => 'test text footer',
+                'tenant_id' => $tenant1->id,
+            ]
+        );
+        $this->assertNotEmpty($result->errors);
+        $this->assertEquals(
+            'Sorry, but you do not currently have permissions to do that (Manage theme settings)',
+            $result->errors[0]->message
+        );
+
+        // Redirect emails to sink.
+        $sink = $this->redirectEmails();
+
+        // Tenant domain manager of tenancy 1 should be able to test email notification for tenancy 1.
+        $this->setUser($tenant_user1);
+        $result = $this->execute_graphql_operation(
+            'core_theme_settings_send_email_notification', [
+                'html_header' => '<div>test html header</div>',
+                'html_footer' => '<div>test html footer</div>',
+                'text_footer' => 'test text footer',
+                'tenant_id' => $tenant1->id,
+            ]
+        );
+        $this->assertEmpty($result->errors);
+        $this->assertNotEmpty($result->data);
+
+        // Confirm that the operation was successful.
+        $this->assertArrayHasKey('core_theme_settings_send_email_notification', $result->data);
+        $this->assertTrue($result->data['core_theme_settings_send_email_notification']);
+
+        // Confirm that we sent 2 emails.
+        $result = $sink->get_messages();
+        $sink->close();
+        $this->assertCount(2, $result);
+    }
+
     private function skip_if_build_not_present() {
         if (!file_exists(bundle::get_vendors_file())) {
             $this->markTestSkipped('Tui build files must exist for this test to complete.');

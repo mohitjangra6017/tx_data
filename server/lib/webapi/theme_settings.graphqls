@@ -128,5 +128,6 @@ extend type Mutation {
     html_header: String!
     html_footer: String!
     text_footer: String!
+    tenant_id: core_id
   ): Boolean
 }

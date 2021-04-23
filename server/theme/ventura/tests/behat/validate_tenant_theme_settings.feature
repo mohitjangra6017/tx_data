@@ -19,6 +19,9 @@ Feature: Theme settings basic validations for tenants
       | user3    | name3     | surname3 |              | ten1              |
       | user4    | name4     | surname4 |              | ten2              |
       | user5    | name5     | surname5 |              |                   |
+    And the following "users" exist:
+      | username | firstname | lastname | email          | tenantmember | tenantparticipant | tenantdomainmanager |
+      | user6    | name6     | surname6 | user6@test.com | ten1         |                   | ten1                |
     And I navigate to "Ventura" node in "Site administration > Appearance > Themes"
 
   Scenario: Confirm we see the tenant selection page
@@ -99,3 +102,23 @@ Feature: Theme settings basic validations for tenants
     And I log in as "user3"
     Then element ":root" should have a css property "--color-state" with a value of "#4b7e2b"
     And element ":root" should have a css property "--color-primary" with a value of "#69bd45"
+
+  Scenario: Log in as tenant domain manager and confirm that we can send test emails
+    Given I log out
+    And I log in as "user6"
+    And I navigate to "Ventura" node in "Site administration > Appearance"
+    And I click on the "Custom tenant branding" tui toggle button
+    And I click on "Brand" "link" in the ".tui-tabs__tabs" "css_element"
+
+    # Confirm that notification settings are present
+    When I click on "Email notifications" "button"
+    Then I should see "HTML header" in the ".tui-tabContent" "css_element"
+    And I should see "HTML footer" in the ".tui-tabContent" "css_element"
+    And I should see "Plain-text footer" in the ".tui-tabContent" "css_element"
+
+    # Confirm that email gets sent
+    When I reset the email sink
+    And I click on "Test email notification" "button"
+    Then the following emails should have been sent:
+      | To             | Subject        | Body              |
+      | user6@test.com | This is a test | Body of the email |

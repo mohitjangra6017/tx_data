@@ -516,6 +516,7 @@ export default {
             ].value.getContent(),
             text_footer:
               values['formbrand_field_notificationstextfooter'].value,
+            tenant_id: this.selectedTenantId,
           },
         });
 

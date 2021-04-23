@@ -17,6 +17,19 @@ Feature: Theme settings basic validations
     And I should see "Favicon" in the ".tui-tabContent" "css_element"
     And the URL for image nested in ".tui-form .tui-formRow:nth-child(3)" should match "/theme\/image.php\/ventura\/theme\/[0-9]+\/favicon/"
 
+    # Confirm that notification settings are present
+    When I click on "Email notifications" "button"
+    Then I should see "HTML header" in the ".tui-tabContent" "css_element"
+    And I should see "HTML footer" in the ".tui-tabContent" "css_element"
+    And I should see "Plain-text footer" in the ".tui-tabContent" "css_element"
+
+    # Confirm that email gets sent
+    When I reset the email sink
+    And I click on "Test email notification" "button"
+    Then the following emails should have been sent:
+      | To                 | Subject        | Body              |
+      | moodle@example.com | This is a test | Body of the email |
+
   Scenario: Confirm Colours tab has all the required elements
     When I click on "Colours" "link"
     And I click on "More colours" "button"
