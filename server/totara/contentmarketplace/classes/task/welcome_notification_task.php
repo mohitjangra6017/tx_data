@@ -23,6 +23,9 @@
 
 namespace totara_contentmarketplace\task;
 
+/**
+ * @deprecated since Totara 15.0
+ */
 class welcome_notification_task extends \core\task\adhoc_task {
     /**
      * Constructor.
@@ -33,8 +36,11 @@ class welcome_notification_task extends \core\task\adhoc_task {
 
     /**
      * Send out messages.
+     * @deprecated since Totara 15.0
      */
     public function execute() {
+        debugging('welcome_notification_task is deprecated', DEBUG_DEVELOPER);
+
         global $CFG, $OUTPUT;
         $users = array_keys(get_users_by_capability(\context_system::instance(), 'totara/contentmarketplace:config', 'u.id'));
         $admins = explode(',', $CFG->siteadmins);

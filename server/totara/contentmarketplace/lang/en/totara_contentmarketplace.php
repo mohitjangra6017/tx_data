@@ -67,14 +67,6 @@ $string['loading_filters'] = 'Loading filters...';
 $string['loading_search_results'] = 'Loading search results...';
 $string['manage_available_content'] = 'Manage available content';
 $string['manage_content_marketplaces'] = 'Manage Content Marketplaces';
-$string['marketplacenotificationbodyhtml'] = '<p>Totara Learn now supports content marketplaces, allowing you to browse and import external content into your Totara site.</p><p>{$a}</p>';
-$string['marketplacenotificationbodytext'] = 'Totara Learn now supports content marketplaces, allowing you to browse and import external content into your Totara site.
-
-Click here to set it up:
-
-{$a}
-';
-$string['marketplacenotificationsubject'] = 'Content Marketplaces now available in Totara';
 $string['messageprovider:notification'] = 'Content marketplace feature notification';
 $string['missingcoursecategory'] = 'Missing course category';
 $string['online'] = 'Online';
@@ -108,3 +100,13 @@ $string['warningcreatetoomanycourses:body'] = 'Can\'t create more than 100 cours
 $string['warningcreatetoomanycourses:title'] = 'Too many courses';
 $string['warningtoomanyselectall:body'] = 'There are too many items to select them all. Filter the search and try again.';
 $string['warningtoomanyselectall:title'] = 'Too many';
+
+// Deprecated Since Totara 15.0
+$string['marketplacenotificationbodyhtml'] = '<p>Totara Learn now supports content marketplaces, allowing you to browse and import external content into your Totara site.</p><p>{$a}</p>';
+$string['marketplacenotificationbodytext'] = 'Totara Learn now supports content marketplaces, allowing you to browse and import external content into your Totara site.
+
+Click here to set it up:
+
+{$a}
+';
+$string['marketplacenotificationsubject'] = 'Content Marketplaces now available in Totara';

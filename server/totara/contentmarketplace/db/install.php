@@ -25,20 +25,5 @@
  * Content Marketplace install hook.
  */
 function xmldb_totara_contentmarketplace_install() {
-    global $CFG;
-
-    // Check for explicit disable via config.php
-    // To disable this notification add $CFG->enablecontentmarketplace = false; to config.php prior to upgrading.
-    $forcedisabled = (!\totara_contentmarketplace\local::is_enabled() && array_key_exists('enablecontentmarketplaces', $CFG->config_php_settings));
-
-    // Don't send notification if force disabled.
-    if (!$forcedisabled) {
-
-        // Don't generate welcome notifications when tests running.
-        if (!PHPUNIT_TEST && !defined('BEHAT_SITE_RUNNING')) {
-            // Queue tasks to notify admins about content marketplace.
-            $task = new \totara_contentmarketplace\task\welcome_notification_task();
-            \core\task\manager::queue_adhoc_task($task);
-        }
-    }
+    return;
 }

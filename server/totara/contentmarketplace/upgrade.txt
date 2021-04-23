@@ -1,6 +1,9 @@
 List of upgrade and API changes in content marketplace,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+* contentmarketplace/classes/task/welcome_notification_task::execute() has been deprecated and should no longer be included anywhere.
+
 === 14.0 ===
 
 === 13.0 ===

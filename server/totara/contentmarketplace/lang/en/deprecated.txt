@@ -1,0 +1,3 @@
+marketplacenotificationbodyhtml,totara_contentmarketplace
+marketplacenotificationbodytext,totara_contentmarketplace
+marketplacenotificationsubject,totara_contentmarketplace
