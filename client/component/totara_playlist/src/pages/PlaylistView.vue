@@ -225,18 +225,6 @@ export default {
 
       this.$apollo.mutate({
         mutation: updateCardOrder,
-        refetchQueries: [
-          {
-            query: getCards,
-            variables: {
-              id: playlistId,
-              source: 'pl.' + this.playlistId,
-              footnotes_type: 'playlist',
-              footnotes_item_id: this.playlistId,
-              include_footnotes: true,
-            },
-          },
-        ],
         variables: {
           id: playlistId,
           instanceid,
