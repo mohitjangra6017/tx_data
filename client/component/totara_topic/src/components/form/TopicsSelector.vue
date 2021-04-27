@@ -19,7 +19,7 @@
   <TagList
     class="tui-topicsSelector"
     :filter="searchTerm"
-    :items="topics"
+    :items="displayTopics"
     :tags="pickedTopics"
     :input-placeholder="inputPlaceholder"
     @filter="findTopics"
@@ -77,7 +77,6 @@ export default {
   data() {
     return {
       searchTerm: '',
-      topics: [],
     };
   },
 
@@ -98,6 +97,23 @@ export default {
         };
       });
     },
+
+    /**
+     * Get the topics to display in the topic dropdown (topics less selected topics).
+     * Reduces number of ajax requests, and improves UI response time
+     */
+    displayTopics() {
+      if (!this.topics) {
+        return [];
+      }
+      return this.topics.filter(topic => {
+        let contains = this.selectedTopics.filter(selected => {
+          return selected.id == topic.id;
+        });
+
+        return contains.length === 0;
+      });
+    },
   },
 
   methods: {
@@ -111,11 +127,12 @@ export default {
     },
 
     /**
+     * Selects a topic and moves it to the selected tags list
      *
-     * @param {Number}  id
-     * @param {String}  value
+     * @param {Number} id the id of the tag being selected
+     * @param {String} value the human readible name of the tag beins selected
      */
-    selectTopic({ id, value }) {
+    async selectTopic({ id, value }) {
       const selectedTopics = Array.prototype.concat.call(this.selectedTopics, {
         id,
         value,
@@ -123,9 +140,12 @@ export default {
 
       this.$emit('change', selectedTopics);
 
-      // Reset search term and refetch the query.
-      this.searchTerm = '';
-      this.$apollo.queries.topics.refetch();
+      await this.$nextTick();
+      if (this.displayTopics.length === 0) {
+        // all viewable items have been selected - reset the filter
+        this.searchTerm = '';
+        this.$apollo.queries.topics.refetch();
+      }
     },
 
     /**
