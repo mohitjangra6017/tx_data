@@ -90,15 +90,25 @@
               :expand-state="expandState"
               @click="expand()"
             />
-            <Cell size="4">
+            <Cell
+              size="4"
+              :column-header="$str('notifiable_events', 'totara_notification')"
+            >
               {{ resolver.name }}
             </Cell>
-            <Cell size="4">
+            <Cell
+              size="4"
+              :column-header="$str('delivery_channels', 'totara_notification')"
+            >
               {{
                 display_delivery_channels(resolver.default_delivery_channels)
               }}
             </Cell>
-            <Cell align="start" size="2">
+            <Cell
+              align="start"
+              size="2"
+              :column-header="$str('enabled', 'totara_notification')"
+            >
               <ToggleSwitch
                 :aria-label="
                   $str('enable_status', 'totara_notification', resolver.name)
@@ -168,11 +178,19 @@
                 </HeaderCell>
               </template>
               <template v-slot:row="{ row: notificationPreference }">
-                <Cell align="start" size="4">
+                <Cell
+                  align="start"
+                  size="4"
+                  :column-header="$str('notifications', 'totara_notification')"
+                >
                   {{ notificationPreference.title }}
                 </Cell>
 
-                <Cell align="start" size="4">
+                <Cell
+                  align="start"
+                  size="4"
+                  :column-header="$str('type', 'totara_notification')"
+                >
                   <template
                     v-if="
                       notificationPreference.is_custom &&
@@ -194,15 +212,27 @@
                   </template>
                 </Cell>
 
-                <Cell align="start" size="4">
+                <Cell
+                  align="start"
+                  size="4"
+                  :column-header="$str('recipient', 'totara_notification')"
+                >
                   {{ notificationPreference.recipient.name }}
                 </Cell>
 
-                <Cell align="start" size="3">
+                <Cell
+                  align="start"
+                  size="3"
+                  :column-header="$str('schedule', 'totara_notification')"
+                >
                   {{ notificationPreference.schedule_label }}
                 </Cell>
 
-                <Cell align="start" size="2">
+                <Cell
+                  align="start"
+                  size="2"
+                  :column-header="$str('status', 'core')"
+                >
                   <template v-if="resolver.status.is_enabled">
                     <template v-if="notificationPreference.enabled">
                       {{ $str('enabled', 'totara_notification') }}
