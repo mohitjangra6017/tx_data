@@ -12,6 +12,7 @@ exports[`EditorTextarea matches snapshot 1`] = `
   <textarea-stub
     charlength="full"
     class="tui-editorTextarea__textarea"
+    disabled="true"
     rows="8"
     value="text value"
   />

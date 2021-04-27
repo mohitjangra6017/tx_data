@@ -56,9 +56,9 @@ export default {
   data() {
     return {
       formatOptions: [
-        { id: Format.PLAIN, label: this.$str('formatplain', 'moodle') },
-        { id: Format.HTML, label: this.$str('formathtml', 'moodle') },
-        { id: Format.MARKDOWN, label: this.$str('formatmarkdown', 'moodle') },
+        { id: Format.PLAIN, label: this.$str('formatplain', 'core') },
+        { id: Format.HTML, label: this.$str('formathtml', 'core') },
+        { id: Format.MARKDOWN, label: this.$str('formatmarkdown', 'core') },
       ],
     };
   },
@@ -87,7 +87,7 @@ export default {
 </script>
 <lang-strings>
   {
-    "moodle": [
+    "core": [
       "formatplain",
       "formatmarkdown",
       "formathtml"
