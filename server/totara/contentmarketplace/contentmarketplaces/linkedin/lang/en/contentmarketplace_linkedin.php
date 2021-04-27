@@ -29,6 +29,7 @@ $string['client_id'] = 'Client ID';
 $string['client_id_help'] = 'Client ID can be obtained from LinkedIn Learning under the integration settings page.';
 $string['client_secret'] = 'Client secret';
 $string['client_secret_help'] = 'Client secret can be obtained from LinkedIn Learning under the integration settings page.';
+$string['error:fail_json_validation'] = 'Failed to validate the json data: {$a}';
 $string['plugin_description'] = 'Online Training Courses for Creative, Technology, Business Skills.';
 $string['pluginname'] = 'LinkedIn Learning';
 $string['settings_title'] = 'LinkedIn Learning settings';

@@ -31,6 +31,14 @@ class config extends base_plugin_config {
     public const ACCESS_TOKEN_ENDPOINT = 'https://www.linkedin.com/oauth/v2/accessToken';
 
     /**
+     * This is Totara partner identifier within linkedin learning system.
+     * For more information, see https://docs.microsoft.com/en-us/linkedin/learning/getting-started/partner-identifier
+     *
+     * @var string
+     */
+    public const PARTNER_IDENTIFIER = 'urn:li:partner:totara';
+
+    /**
      * @return string
      */
     protected static function get_component(): string {
