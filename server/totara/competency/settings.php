@@ -22,11 +22,15 @@
  */
 
 use totara_competency\admin_setting_continuous_tracking;
+use totara_competency\admin_setting_legacy_aggregation_method;
 use totara_competency\admin_setting_unassign_behaviour;
 use totara_competency\controllers\assignment\edit_proficiency_value;
 use totara_core\advanced_feature;
 
 defined('MOODLE_INTERNAL') || die;
+
+/** @var admin_settingpage $settings passed from admin/settings/plugins.php */
+/** @var admin_root $ADMIN */
 
 global $CFG;
 
@@ -98,23 +102,30 @@ if ($hassiteconfig) {
                 new lang_string('settings_unassignment_header', 'totara_competency'),
                 new lang_string('settings_unassignment_text', 'totara_competency')
             ));
+
+            $setting = new admin_setting_unassign_behaviour(
+                admin_setting_unassign_behaviour::NAME,
+                new lang_string('settings_unassign_behaviour', 'totara_competency'),
+                new lang_string('settings_unassign_behaviour_description', 'totara_competency')
+            );
+            $settings_page->add($setting);
+
+            $setting = new admin_setting_continuous_tracking(
+                'totara_competency/continuous_tracking',
+                new lang_string('settings_continuous_tracking', 'totara_competency'),
+                new lang_string('settings_continuous_tracking_description', 'totara_competency')
+            );
+            $settings_page->add($setting);
         }
 
-        $setting = new admin_setting_unassign_behaviour(
-            admin_setting_unassign_behaviour::NAME,
-            new lang_string('settings_unassign_behaviour', 'totara_competency'),
-            new lang_string('settings_unassign_behaviour_description', 'totara_competency')
-        );
-        $settings->hidden = $hidden;
-        $settings_page->add($setting);
-
-        $setting = new admin_setting_continuous_tracking(
-            'totara_competency/continuous_tracking',
-            new lang_string('settings_continuous_tracking', 'totara_competency'),
-            new lang_string('settings_continuous_tracking_description', 'totara_competency')
-        );
-        $settings->hidden = $hidden;
-        $settings_page->add($setting);
+        if (advanced_feature::is_disabled('competency_assignment')) {
+            $setting = new admin_setting_legacy_aggregation_method(
+                admin_setting_legacy_aggregation_method::NAME,
+                new lang_string('settings_legacy_aggregation_method', 'totara_competency'),
+                new lang_string('settings_legacy_aggregation_method_description', 'totara_competency')
+            );
+            $settings_page->add($setting);
+        }
     }
 }
 

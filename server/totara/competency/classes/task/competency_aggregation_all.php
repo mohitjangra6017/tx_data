@@ -43,6 +43,14 @@ class competency_aggregation_all extends scheduled_task {
     private $aggregation_time = null;
 
     /**
+     * Set the force flag
+     * @depreacted since Totara 14
+     */
+    public function force_run() {
+        debugging('The method \totara_competency\task\competency_aggregation_all::force_run() is deprecated and has no effect anymore.', DEBUG_DEVELOPER);
+    }
+
+    /**
      * @param int $timestamp
      */
     public function set_aggregation_time(int $timestamp) {

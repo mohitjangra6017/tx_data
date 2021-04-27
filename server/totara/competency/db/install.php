@@ -18,12 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Brendan Cox <brendan.cox@totaralearning.com>
+ * @author Fabian Derschatta <fabian.derschatta@totaralearning.com>
  * @package totara_competency
  */
+
+use core\task\manager;
+use totara_competency\task\default_criteria_on_install;
+use totara_core\advanced_feature;
 
 defined('MOODLE_INTERNAL') || die();
 
 function xmldb_totara_competency_install() {
-    $task = new \totara_competency\task\default_criteria_on_install();
-    \core\task\manager::queue_adhoc_task($task);
+    global $DB;
+    $dbman = $DB->get_manager();
+
 }
