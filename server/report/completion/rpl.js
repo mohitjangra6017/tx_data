@@ -240,12 +240,12 @@ M.totara_completionrpl = M.totara_completionrpl || {
 
                 // Bind enter event to input
                 input.keypress(function(event) {
-                    if (event.which != 13) {
-                        return;
+                    if (event.key === 'Enter'
+                        || event.keyCode == 13
+                        || event.which === 13)
+                    {
+                        $('a.rpledit', cell).trigger('click');
                     }
-
-                    // If enter key pressed, save
-                    $('a.rpledit', cell).trigger('click');
                 });
 
                 // Create delete button

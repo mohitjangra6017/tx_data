@@ -31,6 +31,7 @@ information provided here is intended especially for developers.
   - phone1
   - phone2
   - address
+* Upgraded jQuery to 3.6.0
 
 === 14.0 ===
 
