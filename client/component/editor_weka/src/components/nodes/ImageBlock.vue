@@ -23,13 +23,15 @@
         <EditImageAltTextModal :value="altText" @change="$_updateAltText" />
       </ModalPresenter>
 
-      <ImageBlock :url="file.url" :filename="filename" :alt-text="altText" />
-      <Button
-        v-if="altTextButtonVisible"
-        class="tui-wekaImageBlock__inner-addAltButton"
-        :text="altTextLabel"
-        @click="openModal"
-      />
+      <div class="tui-wekaImageBlock__positioner">
+        <ImageBlock :url="file.url" :filename="filename" :alt-text="altText" />
+        <Button
+          v-if="altTextButtonVisible"
+          class="tui-wekaImageBlock__inner-addAltButton"
+          :text="altTextLabel"
+          @click="openModal"
+        />
+      </div>
       <NodeBar
         v-if="!editorDisabled"
         :actions="actions"
@@ -238,8 +240,10 @@ export default {
     outline: var(--border-width-normal) solid var(--color-secondary);
   }
 
-  &__inner {
+  &__positioner {
     position: relative;
+  }
+  &__inner {
     display: inline-block;
     max-width: 100%;
     white-space: normal;
@@ -247,7 +251,7 @@ export default {
     &-addAltButton {
       position: absolute;
       right: var(--gap-2);
-      bottom: var(--gap-7);
+      bottom: var(--gap-2);
     }
 
     .tui-imageBlock {
