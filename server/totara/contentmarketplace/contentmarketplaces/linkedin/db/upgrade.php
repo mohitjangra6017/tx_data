@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Simon Coggins <simon.coggins@totaralearning.com>
+ * @author  Simon Coggins <simon.coggins@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
 
@@ -26,13 +26,51 @@ defined('MOODLE_INTERNAL') || die;
 /**
  * LinkedIn Learning Content Marketplace plugin upgrade.
  *
- * @param int $oldversion the version we are upgrading from
+ * @param int $old_version the version we are upgrading from
  * @return bool always true
  */
-function xmldb_contentmarketplace_linkedin_upgrade($oldversion) {
-    global $CFG, $DB;
+function xmldb_contentmarketplace_linkedin_upgrade(int $old_version): bool {
+    global $DB;
+    $db_manager = $DB->get_manager();
 
-    $dbman = $DB->get_manager();
+    if ($old_version < 2021042800) {
+        // Define table linkedin_learning_object to be created.
+        $table = new xmldb_table('marketplace_linkedin_learning_object');
+
+        // Adding fields to table linkedin_learning_object.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('urn', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('title', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('description_include_html', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('short_description', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('locale_language', XMLDB_TYPE_CHAR, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('locale_country', XMLDB_TYPE_CHAR, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('last_updated_at', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('published_at', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('retired_at', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('level', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('primary_image_url', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('time_to_complete', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('web_launch_url', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('sso_launch_url', XMLDB_TYPE_TEXT, null, null, null, null, null);
+
+        // Adding keys to table linkedin_learning_object.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table linkedin_learning_object.
+        $table->add_index('urn_index', XMLDB_INDEX_UNIQUE, array('urn'));
+        $table->add_index('last_updated_at_index', XMLDB_INDEX_NOTUNIQUE, array('last_updated_at'));
+        $table->add_index('published_at', XMLDB_INDEX_NOTUNIQUE, array('published_at'));
+        $table->add_index('title_index', XMLDB_INDEX_NOTUNIQUE, array('title'));
+
+        // Conditionally launch create table for linkedin_learning_object.
+        if (!$db_manager->table_exists($table)) {
+            $db_manager->create_table($table);
+        }
+        // Linkedin savepoint reached.
+        upgrade_plugin_savepoint(true, 2021042800, 'contentmarketplace', 'linkedin');
+    }
 
     return true;
 }

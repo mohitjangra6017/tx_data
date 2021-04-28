@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="totara/contentmarketplace/contentmarketplaces/linkedin/db" VERSION="20200428" COMMENT="XMLDB file for Linkedin Learning integration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="marketplace_linkedin_learning_object" COMMENT="Stores the learning assets from linkedin learning locally">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="urn" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="description_include_html" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="short_description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="locale_language" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="locale_country" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="last_updated_at" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="published_at" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="retired_at" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The epoch time indicates when the learning asset was retired. If this field presents then the learning object's availability is retired."/>
+        <FIELD NAME="level" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="primary_image_url" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="time_to_complete" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The time in second unit, to complete the learning object."/>
+        <FIELD NAME="web_launch_url" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="sso_launch_url" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="urn_index" UNIQUE="true" FIELDS="urn"/>
+        <INDEX NAME="last_updated_at_index" UNIQUE="false" FIELDS="last_updated_at"/>
+        <INDEX NAME="published_at" UNIQUE="false" FIELDS="published_at"/>
+        <INDEX NAME="title_index" UNIQUE="false" FIELDS="title"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
