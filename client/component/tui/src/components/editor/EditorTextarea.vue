@@ -51,6 +51,7 @@ export default {
         return ['content', 'format'].every(prop => keys.includes(prop));
       },
     },
+    disabled: Boolean,
   },
 
   data() {
@@ -67,7 +68,6 @@ export default {
     format() {
       return this.value.format || Format.PLAIN;
     },
-    disabled: Boolean,
   },
 
   mounted() {
