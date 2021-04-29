@@ -35,20 +35,22 @@
           />
         </ModalPresenter>
 
-        <Button
-          v-if="subtitleButtonVisible"
-          class="tui-wekaVideoBlock__inner-addCaptionButton"
-          :text="$str('upload_captions', 'editor_weka')"
-          @click="openModal"
-        />
+        <div class="tui-wekaVideoBlock__positioner">
+          <Button
+            v-if="subtitleButtonVisible"
+            class="tui-wekaVideoBlock__inner-addCaptionButton"
+            :text="$str('upload_captions', 'editor_weka')"
+            @click="openModal"
+          />
 
-        <CoreVideoBlock
-          :key="coreVideoBlockKey"
-          :mime-type="file.mime_type"
-          :url="file.url"
-          :filename="filename"
-          :subtitle-url="subtitleUrl"
-        />
+          <CoreVideoBlock
+            :key="coreVideoBlockKey"
+            :mime-type="file.mime_type"
+            :url="file.url"
+            :filename="filename"
+            :subtitle-url="subtitleUrl"
+          />
+        </div>
 
         <NodeBar
           v-if="!editorDisabled"
@@ -321,12 +323,14 @@ export default {
     outline: var(--border-width-normal) solid var(--color-secondary);
   }
 
-  &__inner {
+  &__positioner {
     position: relative;
+  }
+
+  &__inner {
     max-width: 100%;
 
     .tui-videoBlock {
-      // Reset margin
       margin: 0;
       white-space: normal;
     }

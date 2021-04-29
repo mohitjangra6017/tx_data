@@ -39,28 +39,28 @@
           />
         </ModalPresenter>
 
-        <Button
-          v-if="transcriptButtonVisible"
-          class="tui-wekaAudioBlock__inner-addtranscriptButton"
-          :text="$str('upload_transcript', 'editor_weka')"
-          @click="openModal"
-        />
+        <div class="tui-wekaAudioBlock__positioner">
+          <Button
+            v-if="transcriptButtonVisible"
+            class="tui-wekaAudioBlock__inner-addtranscriptButton"
+            :text="$str('upload_transcript', 'editor_weka')"
+            @click="openModal"
+          />
 
-        <CoreAudioBlock
-          :filename="filename"
-          :item-id="itemId"
-          :url="file.url"
-          :mime-type="file.mime_type"
-          :transcript-url="transcriptUrl"
-        >
-          <template slot="actions">
-            <NodeBar
-              v-if="!editorDisabled"
-              :actions="actions"
-              :aria-label="$str('actions_menu_for', 'editor_weka', filename)"
-            />
-          </template>
-        </CoreAudioBlock>
+          <CoreAudioBlock
+            :filename="filename"
+            :item-id="itemId"
+            :url="file.url"
+            :mime-type="file.mime_type"
+            :transcript-url="transcriptUrl"
+          />
+        </div>
+
+        <NodeBar
+          v-if="!editorDisabled"
+          :actions="actions"
+          :aria-label="$str('actions_menu_for', 'editor_weka', filename)"
+        />
       </div>
     </template>
   </div>
@@ -276,8 +276,11 @@ export default {
     outline: var(--border-width-normal) solid var(--color-secondary);
   }
 
-  &__inner {
+  &__positioner {
     position: relative;
+  }
+
+  &__inner {
     display: inline-block;
 
     .tui-audioBlock {
