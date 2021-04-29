@@ -17,13 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
 namespace contentmarketplace_linkedin\api;
 
 use contentmarketplace_linkedin\config;
 use moodle_url;
+use totara_contentmarketplace\exception\invalid_token;
+use totara_contentmarketplace\oauth\oauth_2_client;
 use totara_contentmarketplace\token\token;
 use totara_core\http\client;
 use totara_core\http\request;
@@ -40,18 +42,31 @@ abstract class api {
     protected $client;
 
     /**
-     * @var token
+     * @var oauth_2_client
      */
-    protected $token;
+    protected $oauth_2_client;
 
     /**
      * api constructor.
-     * @param client $client
-     * @param token  $token
+     * @param oauth_2_client $oauth_2_client
+     * @param client|null    $client
      */
-    protected function __construct(client $client, token $token) {
+    protected function __construct(oauth_2_client $oauth_2_client, ?client $client = null) {
+        if (null === $client) {
+            $client = $oauth_2_client->get_client();
+        }
+
+        $this->oauth_2_client = $oauth_2_client;
         $this->client = $client;
-        $this->token = $token;
+    }
+
+    /**
+     * Get the authorization token.
+     *
+     * @return token
+     */
+    protected function get_token(): token {
+        return $this->oauth_2_client->request_token();
     }
 
     /**
@@ -72,8 +87,14 @@ abstract class api {
      * @return request
      */
     protected function prepare_get_request_from_url(moodle_url $url): request {
+        $token = $this->get_token();
+        if ($token->is_expired()) {
+            // Token is expired.
+            throw new invalid_token();
+        }
+
         $headers = [
-            'Authorization' => "Bearer {$this->token}",
+            'Authorization' => "Bearer {$token}",
             'referer' => config::PARTNER_IDENTIFIER,
         ];
 

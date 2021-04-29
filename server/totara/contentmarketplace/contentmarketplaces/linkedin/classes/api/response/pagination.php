@@ -17,18 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
 namespace contentmarketplace_linkedin\api\response;
 
-use coding_exception;
+use contentmarketplace_linkedin\exception\json_validation_exception;
+use core\json\schema\collection as collection_schema;
 use core\json\schema\field\field_alpha;
 use core\json\schema\field\field_collection;
 use core\json\schema\field\field_int;
 use core\json\schema\field\field_text;
 use core\json\schema\object_container;
-use core\json\schema\collection as collection_schema;
 
 class pagination {
     /**
@@ -74,9 +74,7 @@ class pagination {
         $error = $schema->validate($json_data);
 
         if (!empty($error)) {
-            throw new coding_exception(
-                "Failed to validate json data: {$error}"
-            );
+            throw new json_validation_exception($error);
         }
 
         $json_data = $schema->clean($json_data);
@@ -131,5 +129,13 @@ class pagination {
      */
     public function get_next_link(): ?string {
         return $this->find_link_from_rel('next');
+    }
+
+    /**
+     * @return bool
+     */
+    public function has_next(): bool {
+        $url = $this->get_next_link();
+        return null !== $url;
     }
 }

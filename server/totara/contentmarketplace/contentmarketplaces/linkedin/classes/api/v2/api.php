@@ -22,16 +22,32 @@
  */
 namespace contentmarketplace_linkedin\api\v2;
 
-use coding_exception;
+use contentmarketplace_linkedin\api\api as base;
 use contentmarketplace_linkedin\api\response\result;
 use contentmarketplace_linkedin\api\v2\service\service;
 use contentmarketplace_linkedin\oauth\oauth_2;
-use totara_contentmarketplace\token\token;
-use totara_core\http\client;
+use moodle_url;
+use Throwable;
+use totara_contentmarketplace\exception\invalid_token;
 use totara_contentmarketplace\oauth\oauth_2_client;
-use contentmarketplace_linkedin\api\api as base;
+use totara_core\http\client;
+use totara_core\http\exception\auth_exception;
+use totara_core\http\response;
 
+/**
+ * Note that this class does not
+ */
 class api extends base {
+    /**
+     * @var bool
+     */
+    private $retry_after_fail_auth;
+
+    /**
+     * @var Throwable[]
+     */
+    private $exceptions_catched_on_retry;
+
     /**
      * @return string
      */
@@ -40,22 +56,43 @@ class api extends base {
     }
 
     /**
-     * @param client $client
+     * api constructor.
+     * @param oauth_2_client $oauth_2_client
+     * @param client|null    $client
+     */
+    protected function __construct(oauth_2_client $oauth_2_client, ?client $client = null) {
+        parent::__construct($oauth_2_client, $client);
+        $this->retry_after_fail_auth = true;
+        $this->exceptions_catched_on_retry = [];
+    }
+
+    /**
+     * @return Throwable[]
+     */
+    public function get_exception_catched_on_retry(): array {
+        return $this->exceptions_catched_on_retry;
+    }
+
+    /**
+     * @param client              $client
+     * @param oauth_2_client|null $oauth_2_client
      * @return api
      */
-    public static function create(client $client, ?token $token = null): api {
-        if (null !== $token && $token->is_expired()) {
-            throw new coding_exception("The given token is expired");
-        }
-
-        if (null === $token) {
+    public static function create(client $client, ?oauth_2_client $oauth_2_client = null): api {
+        if (null === $oauth_2_client) {
             $oauth = oauth_2::create_from_config();
             $oauth_2_client = new oauth_2_client($oauth, $client);
-
-            $token = $oauth_2_client->request_token();
         }
 
-        return new static($client, $token);
+        return new static($oauth_2_client, $client);
+    }
+
+    /**
+     * @param bool $value
+     * @return void
+     */
+    public function set_retry_after_auth(bool $value): void {
+        $this->retry_after_fail_auth = $value;
     }
 
     /**
@@ -66,11 +103,44 @@ class api extends base {
         $endpoint_url = $this->get_endpoint_url();
         $endpoint_url = $service->apply_to_url($endpoint_url);
 
-        $request = $this->prepare_get_request_from_url($endpoint_url);
+        try {
+            $response = $this->do_request($endpoint_url);
+        } catch (invalid_token $invalid_token) {
+            if (!$this->retry_after_fail_auth) {
+                throw $invalid_token;
+            }
 
-        $response = $this->client->execute($request);
-        $response->throw_if_error();
+            // Capture this exception, for debugging needs.
+            $this->exceptions_catched_on_retry[] = $invalid_token;
+            $response = $this->do_request($endpoint_url, true);
+        } catch (auth_exception $auth_exception) {
+            if (!$this->retry_after_fail_auth) {
+                throw  $auth_exception;
+            }
+
+            // Capture this exception, for debugging needs.
+            $this->exceptions_catched_on_retry[] = $auth_exception;
+            $response = $this->do_request($endpoint_url, true);
+        }
 
         return $service->wrap_response($response);
+    }
+
+    /**
+     * @param moodle_url $url
+     * @param bool       $renew_token
+     *
+     * @return response
+     */
+    protected function do_request(moodle_url $url, bool $renew_token = false): response {
+        if ($renew_token) {
+            $this->oauth_2_client->refresh_token();
+        }
+
+        $request = $this->prepare_get_request_from_url($url);
+        $response = $this->client->execute($request);
+
+        $response->throw_if_error();
+        return $response;
     }
 }

@@ -26,6 +26,7 @@ use coding_exception;
 use contentmarketplace_linkedin\api\response\element as base_element;
 use contentmarketplace_linkedin\locale;
 use core\json\schema\field\field_alpha;
+use core\json\schema\field\field_alphaext;
 use core\json\schema\field\field_clean_html;
 use core\json\schema\field\field_collection;
 use core\json\schema\field\field_int;
@@ -35,6 +36,9 @@ use core\json\schema\field\field_url;
 use core\json\schema\object_container;
 use core\json\schema\collection;
 
+/**
+ * @method static element create(array $json_data)
+ */
 class element extends base_element {
     /**
      * @return object_container
@@ -54,7 +58,7 @@ class element extends base_element {
                     new field_object('locale', $locale_obj)
                 ),
             ),
-            new field_alpha('type'),
+            new field_alphaext('type', false),
             new field_object(
                 'details',
                 object_container::create(
@@ -86,7 +90,8 @@ class element extends base_element {
                     ),
                     new field_collection(
                         'availableLocales',
-                        new collection($locale_obj)
+                        new collection($locale_obj),
+                        false
                     ),
                     new field_object(
                         'urls',
@@ -156,5 +161,126 @@ class element extends base_element {
             $locale_json['language'],
             $locale_json['country']
         );
+    }
+
+    /**
+     * @return int
+     */
+    public function get_last_updated_at(): int {
+        return $this->json_data['details']['lastUpdatedAt'];
+    }
+
+    /**
+     * @return int
+     */
+    public function get_published_at(): int {
+        return $this->json_data['details']['publishedAt'];
+    }
+
+    /**
+     * @return string|null
+     */
+    public function get_description_value(): ?string {
+        if (!isset($this->json_data['details']['description'])) {
+            return null;
+        }
+
+        $details = $this->json_data['details']['description'];
+        return $details['value'];
+    }
+
+    /**
+     * @return locale|null
+     */
+    public function get_description_locale(): ?locale {
+        if (!isset($this->json_data['details']['description'])) {
+            return null;
+        }
+
+        $locale = $this->json_data['details']['description']['locale'];
+        return new locale($locale['language'], $locale['country'] ?? null);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function get_description_include_html(): ?string {
+        if (!isset($this->json_data['details']['descriptionIncludingHtml'])) {
+            return null;
+        }
+
+        $details = $this->json_data['details']['descriptionIncludingHtml'];
+        return $details['value'];
+    }
+
+    /**
+     * @return locale|null
+     */
+    public function get_description_include_html_locale(): ?locale {
+        if (!isset($this->json_data['details']['descriptionIncludingHtml'])) {
+            return null;
+        }
+
+        $details = $this->json_data['details']['descriptionIncludingHtml'];
+        $locale = $details['locale'];
+
+        return new locale($locale['language'], $locale['country'] ?? null);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function get_short_description_value(): ?string {
+        if (!isset($this->json_data['details']['shortDescription'])) {
+            return null;
+        }
+
+        $short_description = $this->json_data['details']['shortDescription'];
+        return $short_description['value'];
+    }
+
+    /**
+     * @return locale|null
+     */
+    public function get_short_description_locale(): ?locale {
+        if (!isset($this->json_data['details']['shortDescription'])) {
+            return null;
+        }
+
+        $details = $this->json_data['details']['shortDescription'];
+        $locale = $details['locale'];
+
+        return new locale($locale['language'], $locale['country'] ?? null);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function get_level(): ?string {
+        return $this->json_data['details']['level'] ?? null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function get_primary_image_url(): ?string {
+        $images = $this->json_data['details']['images'];
+        return $images['primary'] ?? null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function get_web_launch_url(): ?string {
+        $urls = $this->json_data['details']['urls'];
+        return $urls['webLaunch'] ?? null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function get_sso_launch_url(): ?string {
+        $urls = $this->json_data['details']['urls'];
+        return $urls['ssoLaunch'] ?? null;
     }
 }

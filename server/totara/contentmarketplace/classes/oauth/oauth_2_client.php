@@ -84,4 +84,11 @@ class oauth_2_client {
 
         return $this->request_token();
     }
+
+    /**
+     * @return client
+     */
+    public function get_client(): client {
+        return $this->client;
+    }
 }

@@ -66,6 +66,14 @@ class oauth_2 extends base {
     }
 
     /**
+     * @param int $time_now
+     * @return void
+     */
+    public function set_time_now(int $time_now): void {
+        $this->time_now = $time_now;
+    }
+
+    /**
      * @return oauth_2
      */
     public static function create_from_config(): oauth_2 {

@@ -23,6 +23,7 @@
 
 use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\query\criteria;
+use contentmarketplace_linkedin\locale;
 use core_phpunit\testcase;
 
 class contentmarketplace_linkedin_query_criteria_testcase extends testcase {
@@ -72,5 +73,165 @@ class contentmarketplace_linkedin_query_criteria_testcase extends testcase {
 
         // Moodle URL parameters get cast to string eventually.
         self::assertSame($expected_parameters, $applied_parameters);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_set_invalid_asset_types(): void {
+        $criteria = new criteria();
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage('Invalid asset type: data');
+
+        $criteria->set_asset_types(['data', constant::ASSET_TYPE_COURSE]);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_set_invalid_sort_by(): void {
+        $criteria = new criteria();
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage('Invalid sort by: sort_by');
+
+        $criteria->set_sort_by('sort_by');
+    }
+
+    /**
+     * @return void
+     */
+    public function test_set_invalid_difficulty_level(): void {
+        $criteria = new criteria();
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage('Invalid difficulty level: level_one');
+
+        $criteria->set_difficulty_levels(['level_one']);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_apply_to_url_without_filter(): void {
+        $criteria = new criteria();
+        $moodle_url = new moodle_url('http://example.com');
+
+        $criteria->apply_to_url($moodle_url);
+        self::assertEquals('http://example.com?q=criteria', $moodle_url->out());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_apply_to_url_with_asset_types(): void {
+        $criteria = new criteria();
+        $moodle_url = new moodle_url('http://example.com');
+
+        // Add asset types
+        $criteria->set_asset_types([constant::ASSET_TYPE_LEARNING_PATH, constant::ASSET_TYPE_COURSE]);
+        $criteria->apply_to_url($moodle_url);
+
+        self::assertEquals(
+            implode(
+                '&',
+                [
+                    'http://example.com?q=criteria',
+                    'assetFilteringCriteria.assetTypes%5B0%5D=LEARNING_PATH',
+                    'assetFilteringCriteria.assetTypes%5B1%5D=COURSE',
+                ]
+            ),
+            $moodle_url->out(false)
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_apply_to_url_with_sort_by(): void {
+        $criteria = new criteria();
+        $moodle_url = new moodle_url('http://example.com');
+
+        // Add sort by
+        $criteria->set_sort_by(constant::SORT_BY_RELEVANCE);
+        $criteria->apply_to_url($moodle_url);
+
+        self::assertEquals(
+            'http://example.com?q=criteria&assetPresentationCriteria.sortBy=RELEVANCE',
+            $moodle_url->out(false)
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_apply_to_url_with_licensed_only(): void {
+        $criteria = new criteria();
+        $moodle_url = new moodle_url('http://example.com');
+
+        $criteria->set_licensed_only(true);
+        $criteria->apply_to_url($moodle_url);
+
+        self::assertEquals(
+            'http://example.com?q=criteria&assetFilteringCriteria.licensedOnly=true',
+            $moodle_url->out(false)
+        );
+
+        $moodle_url->remove_all_params();
+        $criteria->clear();
+
+        $criteria->set_licensed_only(false);
+        $criteria->apply_to_url($moodle_url);
+
+        self::assertEquals(
+            'http://example.com?q=criteria&assetFilteringCriteria.licensedOnly=false',
+            $moodle_url->out(false)
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_apply_to_url_with_start_and_count(): void {
+        $criteria = new criteria();
+        $moodle_url = new moodle_url('http://example.com');
+
+        $criteria->set_start(15);
+        $criteria->set_count(42);
+
+        $criteria->apply_to_url($moodle_url);
+        self::assertEquals(
+            'http://example.com?q=criteria&start=15&count=42',
+            $moodle_url->out(false)
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_apply_to_url_with_locales(): void {
+        $criteria = new criteria();
+        $moodle_url = new moodle_url('http://example.com');
+
+        $criteria->set_locales([
+            new locale('en', 'US'),
+            new locale('ja', 'JP'),
+        ]);
+
+        $criteria->apply_to_url($moodle_url);
+        self::assertEquals(
+            implode(
+                '&',
+                [
+                    'http://example.com?q=criteria',
+                    'assetFilteringCriteria.locales%5B0%5D.language=en',
+                    'assetFilteringCriteria.locales%5B0%5D.country=US',
+                    'assetFilteringCriteria.locales%5B1%5D.language=ja',
+                    'assetFilteringCriteria.locales%5B1%5D.country=JP',
+                ]
+            ),
+            $moodle_url->out(false)
+        );
     }
 }

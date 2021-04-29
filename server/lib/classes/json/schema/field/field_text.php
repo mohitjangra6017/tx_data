@@ -24,6 +24,18 @@ namespace core\json\schema\field;
 
 class field_text extends field_alpha {
     /**
+     * @param string $value
+     * @return string|null
+     */
+    public function validate($value): ?string {
+        if (null !== $value && !is_string($value)) {
+            return "The value of field '{$this->name}' is not a string";
+        }
+
+        return null;
+    }
+
+    /**
      * @param mixed $value
      * @return string|null
      */

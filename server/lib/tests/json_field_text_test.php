@@ -52,11 +52,7 @@ class core_json_field_text_testcase extends testcase {
         );
 
         // XSS is still a string.
-        self::assertEquals(
-            "The value of field 'field_1' is invalid",
-            $field->validate('<script>alert("Hello world")</script>')
-        );
-
+        self::assertNull($field->validate('<script>alert("Hello world")</script>'));
         self::assertNull($field->validate('hello world'));
         self::assertNull($field->validate('hello+world'));
         self::assertNull($field->validate(null));

@@ -122,7 +122,7 @@ class criteria extends query {
      */
     public function set_sort_by(?string $sort_by): void {
         if (null !== $sort_by && !constant::is_valid_sort_by($sort_by)) {
-            throw new coding_exception("Invalid sort by flag");
+            throw new coding_exception("Invalid sort by: {$sort_by}");
         }
 
         $this->set_scalar_parameter('assetPresentationCriteria.sortBy', $sort_by);

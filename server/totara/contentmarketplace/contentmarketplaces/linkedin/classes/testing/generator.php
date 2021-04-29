@@ -22,7 +22,10 @@
  */
 namespace contentmarketplace_linkedin\testing;
 
+use coding_exception;
+use contentmarketplace_linkedin\config;
 use core\testing\component_generator;
+use totara_contentmarketplace\token\token;
 
 /**
  * @method static generator instance()
@@ -68,5 +71,34 @@ class generator extends component_generator {
 
         $this->set_config_client_id($client_id);
         $this->set_config_client_secret($client_secret);
+    }
+
+    /**
+     * @param token $token
+     * @return void
+     */
+    public function set_token(token $token): void {
+        config::save_access_token($token->get_value());
+        config::save_access_token_expiry($token->get_expiry());
+    }
+
+    /**
+     * @param string $json_filename
+     * @return string
+     */
+    public function get_json_content_from_fixtures(string $json_filename): string {
+        global $CFG;
+        if (false === strpos($json_filename, '.json')) {
+            $json_filename .= ".json";
+        }
+
+        $base_directory = "{$CFG->dirroot}/totara/contentmarketplace/contentmarketplaces/linkedin/tests/fixtures/json";
+        $file = "{$base_directory}/{$json_filename}";
+
+        if (!file_exists($file)) {
+            throw new coding_exception("The file '{$file}' does not exist");
+        }
+
+        return file_get_contents($file);
     }
 }

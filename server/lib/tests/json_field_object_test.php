@@ -50,14 +50,6 @@ class core_json_field_object_testcase extends testcase {
             ])
         );
 
-        self::assertEquals(
-            "The value of field 'field_1' is invalid within the json object at field 'field_obj'",
-            $field->validate([
-                'field_1' => '<script>alert("hello world")</script>',
-                'field_2' => 496,
-            ])
-        );
-
         self::assertNull(
             $field->validate([
                 'field_1' => 'hello world',
@@ -119,6 +111,17 @@ class core_json_field_object_testcase extends testcase {
             $field->clean([
                 'field_1' => 'abcde',
                 'field_2' => 'true'
+            ])
+        );
+
+        self::assertSame(
+            [
+                'field_1' => 'alert("hello world")',
+                'field_2' => false
+            ],
+            $field->clean([
+                'field_1' => /** @lang text */ '<script>alert("hello world")</script>',
+                'field_2' => 'false'
             ])
         );
     }
