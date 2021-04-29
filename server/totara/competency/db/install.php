@@ -26,7 +26,4 @@ defined('MOODLE_INTERNAL') || die();
 function xmldb_totara_competency_install() {
     $task = new \totara_competency\task\default_criteria_on_install();
     \core\task\manager::queue_adhoc_task($task);
-
-    $task = new \totara_competency\task\migrate_competency_achievements_task();
-    \core\task\manager::queue_adhoc_task($task);
 }
