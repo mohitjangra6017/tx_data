@@ -1,12 +1,12 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => 'dev-TL-30572/14',
-    'version' => 'dev-TL-30572/14',
+    'pretty_version' => 'dev-TL-30756',
+    'version' => 'dev-TL-30756',
     'aliases' => 
     array (
     ),
-    'reference' => '282fc362d46017533adaf57c50c527aafa7f7bd7',
+    'reference' => '2a86da9fbdd3f0fc9756a12b28fcaa242b2452a5',
     'name' => 'totara/totara_require',
   ),
   'versions' => 
@@ -73,6 +73,15 @@
       array (
       ),
       'reference' => '46cf3d8498b095bd33727b13fd5707263af99421',
+    ),
+    'opis/json-schema' => 
+    array (
+      'pretty_version' => '1.1.0',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '39d8072be8657a329a284339994401066406c43b',
     ),
     'phenx/php-font-lib' => 
     array (
@@ -193,12 +202,12 @@
     ),
     'totara/totara_require' => 
     array (
-      'pretty_version' => 'dev-TL-30572/14',
-      'version' => 'dev-TL-30572/14',
+      'pretty_version' => 'dev-TL-30756',
+      'version' => 'dev-TL-30756',
       'aliases' => 
       array (
       ),
-      'reference' => '282fc362d46017533adaf57c50c527aafa7f7bd7',
+      'reference' => '2a86da9fbdd3f0fc9756a12b28fcaa242b2452a5',
     ),
     'webonyx/graphql-php' => 
     array (

@@ -20,17 +20,19 @@ use Composer\Semver\VersionParser;
 
 
 
+
+
 class InstalledVersions
 {
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => 'dev-TL-30572/14',
-    'version' => 'dev-TL-30572/14',
+    'pretty_version' => 'dev-TL-30756',
+    'version' => 'dev-TL-30756',
     'aliases' => 
     array (
     ),
-    'reference' => '282fc362d46017533adaf57c50c527aafa7f7bd7',
+    'reference' => '2a86da9fbdd3f0fc9756a12b28fcaa242b2452a5',
     'name' => 'totara/totara_require',
   ),
   'versions' => 
@@ -97,6 +99,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '46cf3d8498b095bd33727b13fd5707263af99421',
+    ),
+    'opis/json-schema' => 
+    array (
+      'pretty_version' => '1.1.0',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '39d8072be8657a329a284339994401066406c43b',
     ),
     'phenx/php-font-lib' => 
     array (
@@ -217,12 +228,12 @@ private static $installed = array (
     ),
     'totara/totara_require' => 
     array (
-      'pretty_version' => 'dev-TL-30572/14',
-      'version' => 'dev-TL-30572/14',
+      'pretty_version' => 'dev-TL-30756',
+      'version' => 'dev-TL-30756',
       'aliases' => 
       array (
       ),
-      'reference' => '282fc362d46017533adaf57c50c527aafa7f7bd7',
+      'reference' => '2a86da9fbdd3f0fc9756a12b28fcaa242b2452a5',
     ),
     'webonyx/graphql-php' => 
     array (
@@ -250,7 +261,6 @@ $packages = array();
 foreach (self::getInstalled() as $installed) {
 $packages[] = array_keys($installed['versions']);
 }
-
 
 if (1 === \count($packages)) {
 return $packages[0];
@@ -443,6 +453,7 @@ public static function reload($data)
 self::$installed = $data;
 self::$installedByVendor = array();
 }
+
 
 
 

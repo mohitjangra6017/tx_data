@@ -62,4 +62,12 @@
     <licenseversion></licenseversion>
     <repository>https://github.com/webonyx/graphql-php</repository>
   </library>
+  <library>
+    <location>required/opis/json-schema</location>
+    <name>Opis JSON Schema</name>
+    <license>Apache</license>
+    <version>1.1.0</version>
+    <licenseversion>2.0</licenseversion>
+    <repository>https://github.com/opis/json-schema</repository>
+  </library>
 </libraries>
