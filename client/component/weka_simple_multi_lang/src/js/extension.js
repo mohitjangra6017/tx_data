@@ -206,7 +206,9 @@ class WekaSimpleMultiLangExtension extends BaseExtension {
       const currentTotal = collectionNode.content.length;
       collectionNode.content = collectionNode.content.map(node => {
         node = Object.assign({}, node);
-        node.attrs = Object.assign({}, node, { siblings_count: currentTotal });
+        node.attrs = Object.assign({}, node.attrs, {
+          siblings_count: currentTotal,
+        });
 
         return node;
       });
