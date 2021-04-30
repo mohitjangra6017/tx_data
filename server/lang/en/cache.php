@@ -54,6 +54,7 @@ $string['cachedef_suspended_userids'] = 'List of suspended users per course';
 $string['cachedef_groupdata'] = 'Course group information';
 $string['cachedef_htmlpurifier'] = 'HTML Purifier - cleaned content';
 $string['cachedef_image_sizes'] = 'Image preview sizes';
+$string['cachedef_json_schema'] = 'Json schema validator';
 $string['cachedef_theme_setting_categories'] = 'Theme settings - categories';
 $string['cachedef_themefileclasses'] = 'Theme settings - file classes';
 $string['cachedef_langmenu'] = 'List of available languages';
