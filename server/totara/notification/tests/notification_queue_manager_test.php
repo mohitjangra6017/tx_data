@@ -24,6 +24,7 @@
 require_once(__DIR__ . '/../../../totara/core/tests/language_pack_faker_trait.php');
 
 use core_phpunit\testcase;
+use core_user\totara_notification\placeholder\user;
 use engage_article\testing\generator as article_generator;
 use totara_comment\testing\generator as comment_generator;
 use totara_core\extended_context;
@@ -42,9 +43,16 @@ class totara_notification_notification_queue_manager_testcase extends testcase {
      * @return void
      */
     protected function setUp(): void {
+        parent::setUp();
         $notification_generator = generator::instance();
         $notification_generator->include_mock_notifiable_event_resolver();
         $notification_generator->add_mock_built_in_notification_for_component();
+        user::clear_instance_cache();
+    }
+
+    protected function tearDown(): void {
+        parent::tearDown();
+        user::clear_instance_cache();
     }
 
     /**

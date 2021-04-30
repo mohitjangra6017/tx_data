@@ -39,8 +39,18 @@ class totara_program_totara_notification_placeholder_testcase extends testcase {
      * @return void
      */
     protected function setUp(): void {
+        parent::setUp();
+
         global $CFG;
         require_once($CFG->dirroot . '/totara/program/program_assignments.class.php');
+        program_placeholder_group::clear_instance_cache();
+        assignment::clear_instance_cache();
+    }
+
+    protected function tearDown(): void {
+        parent::tearDown();
+        program_placeholder_group::clear_instance_cache();
+        assignment::clear_instance_cache();
     }
 
     public function test_program_placeholders(): void {
@@ -118,6 +128,7 @@ class totara_program_totara_notification_placeholder_testcase extends testcase {
                 'completiontime' => $now,
                 'completionevent' => COMPLETION_EVENT_NONE,
             ]);
+        assignment::clear_instance_cache();
         $placeholder_group = assignment::from_program_id_and_user_id($data->program1->id, $data->user1->id);
         self::assertStringContainsString('Complete by', $placeholder_group->do_get('due_date_criteria'));
         self::assertEquals(prog_assignment_category::build_completion_string(
@@ -131,11 +142,37 @@ class totara_program_totara_notification_placeholder_testcase extends testcase {
                 'completiontime' => DURATION_MONTH,
                 'completionevent' => COMPLETION_EVENT_PROGRAM_COMPLETION,
             ]);
+        assignment::clear_instance_cache();
         $placeholder_group = assignment::from_program_id_and_user_id($data->program1->id, $data->user1->id);
         self::assertStringContainsString(
             'Complete within 1 Month(s) of completion of program',
             $placeholder_group->do_get('due_date_criteria')
         );
+    }
+
+    public function test_program_assignment_placeholder_instances_are_cached(): void {
+        global $DB;
+
+        self::setAdminUser();
+        $data = $this->setup_program();
+
+        $query_count = $DB->perf_get_reads();
+        assignment::from_program_id_and_user_id($data->program1->id, $data->user1->id);
+        // When not cached: 2 queries are needed for lookup.
+        self::assertEquals($query_count + 2, $DB->perf_get_reads());
+
+        assignment::from_program_id_and_user_id($data->program1->id, $data->user1->id);
+        self::assertEquals($query_count + 2, $DB->perf_get_reads());
+
+        // Cache also works for non-existent ids.
+        $non_existent_id = - 1;
+        assignment::from_program_id_and_user_id($non_existent_id , $non_existent_id);
+        // ... but only one query is triggered when assignment doesn't exist.
+        self::assertEquals($query_count + 3, $DB->perf_get_reads());
+
+        assignment::from_program_id_and_user_id($data->program1->id, $data->user1->id);
+        assignment::from_program_id_and_user_id($non_existent_id , $non_existent_id);
+        self::assertEquals($query_count + 3, $DB->perf_get_reads());
     }
 
     private function setup_program(): object {
@@ -194,5 +231,30 @@ class totara_program_totara_notification_placeholder_testcase extends testcase {
         self::assertTrue(prog_write_completion($prog_compl1));
 
         return $test_data;
+    }
+
+    public function test_instances_are_cached(): void {
+        global $DB;
+
+        self::setAdminUser();
+
+        $program_generator = program_generator::instance();
+
+        $program1 = $program_generator->create_program();
+        $program2 = $program_generator->create_program();
+
+        $query_count = $DB->perf_get_reads();
+        program_placeholder_group::from_id($program1->id);
+        self::assertEquals($query_count + 1, $DB->perf_get_reads());
+
+        program_placeholder_group::from_id($program1->id);
+        self::assertEquals($query_count + 1, $DB->perf_get_reads());
+
+        program_placeholder_group::from_id($program2->id);
+        self::assertEquals($query_count + 2, $DB->perf_get_reads());
+
+        program_placeholder_group::from_id($program1->id);
+        program_placeholder_group::from_id($program2->id);
+        self::assertEquals($query_count + 2, $DB->perf_get_reads());
     }
 }

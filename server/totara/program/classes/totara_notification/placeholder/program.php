@@ -26,10 +26,13 @@ use coding_exception;
 use html_writer;
 use moodle_url;
 use stdClass;
+use totara_notification\placeholder\abstraction\placeholder_instance_cache;
 use totara_notification\placeholder\abstraction\single_emptiable_placeholder;
 use totara_notification\placeholder\option;
 
 class program extends single_emptiable_placeholder {
+    use placeholder_instance_cache;
+
     /**
      * @var ?stdClass
      */
@@ -51,10 +54,13 @@ class program extends single_emptiable_placeholder {
     public static function from_id(int $id): self {
         global $DB;
 
-        $program_record = $DB->get_record('prog', ['id' => $id]);
-        $record = $program_record ?: null;
-
-        return new static($record);
+        $instance = self::get_cached_instance($id);
+        if (!$instance) {
+            $program_record = $DB->get_record('prog', ['id' => $id]) ?: null;
+            $instance = new static($program_record);
+            self::add_instance_to_cache($id, $instance);
+        }
+        return $instance;
     }
 
     /**

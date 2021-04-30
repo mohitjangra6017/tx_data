@@ -26,11 +26,14 @@ use coding_exception;
 use core\orm\query\builder;
 use prog_assignment_category;
 use stdClass;
+use totara_notification\placeholder\abstraction\placeholder_instance_cache;
 use totara_notification\placeholder\abstraction\single_emptiable_placeholder;
 use totara_notification\placeholder\option;
 use totara_program\utils;
 
 class assignment extends single_emptiable_placeholder {
+    use placeholder_instance_cache;
+
     /**
      * @var ?stdClass
      */
@@ -58,19 +61,25 @@ class assignment extends single_emptiable_placeholder {
     public static function from_program_id_and_user_id(int $program_id, int $user_id): assignment {
         global $DB;
 
-        // Use the most recently assigned.
-        $user_assignments = $DB->get_records(
-            'prog_user_assignment',
-            ['programid' => $program_id, 'userid' => $user_id],
-            'timeassigned DESC, id ASC'
-        );
-        $record = null;
-        if (count($user_assignments) > 0) {
-            $user_assignment = reset($user_assignments);
-            $record = $DB->get_record('prog_assignment', ['id' => $user_assignment->assignmentid]);
-            $record = $record ?: null;
+        $cache_key = $program_id . ':' . $user_id;
+        $instance = self::get_cached_instance($cache_key);
+        if (!$instance) {
+            // Use the most recently assigned.
+            $user_assignments = $DB->get_records(
+                'prog_user_assignment',
+                ['programid' => $program_id, 'userid' => $user_id],
+                'timeassigned DESC, id ASC'
+            );
+            $record = null;
+            if (count($user_assignments) > 0) {
+                $user_assignment = reset($user_assignments);
+                $record = $DB->get_record('prog_assignment', ['id' => $user_assignment->assignmentid]);
+                $record = $record ?: null;
+            }
+            $instance = new static($record, $user_id);
+            self::add_instance_to_cache($cache_key, $instance);
         }
-        return new static($record, $user_id);
+        return $instance;
     }
 
     /**

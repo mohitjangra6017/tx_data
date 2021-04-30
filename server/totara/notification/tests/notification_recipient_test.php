@@ -21,6 +21,7 @@
  * @package totara_notification
  */
 
+use core_user\totara_notification\placeholder\user;
 use totara_comment\comment_helper;
 use totara_comment\totara_notification\resolver\comment_soft_deleted;
 use totara_comment\totara_notification\recipient\comment_author;
@@ -35,6 +36,16 @@ use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 use core_phpunit\testcase;
 
 class totara_notification_notification_recipient_testcase extends testcase {
+
+    protected function setUp(): void {
+        parent::setUp();
+        user::clear_instance_cache();
+    }
+
+    protected function tearDown(): void {
+        parent::tearDown();
+        user::clear_instance_cache();
+    }
 
     /**
      * @return void

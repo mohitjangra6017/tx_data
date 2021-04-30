@@ -28,10 +28,13 @@ use core_date;
 use core_user\access_controller;
 use html_writer;
 use moodle_url;
+use totara_notification\placeholder\abstraction\placeholder_instance_cache;
 use totara_notification\placeholder\abstraction\single_emptiable_placeholder;
 use totara_notification\placeholder\option;
 
 class user extends single_emptiable_placeholder {
+    use placeholder_instance_cache;
+
     /**
      * @var user_entity|null
      */
@@ -55,10 +58,15 @@ class user extends single_emptiable_placeholder {
         global $DB;
 
         $strictness = $strict ? MUST_EXIST : IGNORE_MISSING;
-        $user_record = $DB->get_record(user_entity::TABLE, ['id' => $id], '*', $strictness);
 
-        $entity = !$user_record ? null : new user_entity($user_record);
-        return new static($entity);
+        $instance = self::get_cached_instance($id);
+        if (!$instance) {
+            $user_record = $DB->get_record(user_entity::TABLE, ['id' => $id], '*', $strictness);
+            $entity = !$user_record ? null : new user_entity($user_record);
+            $instance = new static($entity);
+            self::add_instance_to_cache($id, $instance);
+        }
+        return $instance;
     }
 
     /**

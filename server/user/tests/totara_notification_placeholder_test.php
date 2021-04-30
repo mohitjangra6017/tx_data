@@ -38,6 +38,13 @@ class core_user_totara_notification_placeholder_testcase extends testcase {
     protected function setUp(): void {
         global $CFG;
         require_once($CFG->dirroot . '/totara/program/program_assignments.class.php');
+
+        user::clear_instance_cache();
+    }
+
+    protected function tearDown(): void {
+        parent::tearDown();
+        user::clear_instance_cache();
     }
 
     public function test_user_placeholders(): void {
@@ -109,5 +116,27 @@ class core_user_totara_notification_placeholder_testcase extends testcase {
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage("Invalid key 'password'");
         $placeholder_group->do_get('password');
+    }
+
+    public function test_instances_are_cached(): void {
+        global $DB;
+
+        self::setAdminUser();
+        $user1 = self::getDataGenerator()->create_user();
+        $user2 = self::getDataGenerator()->create_user();
+
+        $query_count = $DB->perf_get_reads();
+        user::from_id($user1->id);
+        self::assertEquals($query_count + 1, $DB->perf_get_reads());
+
+        user::from_id($user1->id);
+        self::assertEquals($query_count + 1, $DB->perf_get_reads());
+
+        user::from_id($user2->id);
+        self::assertEquals($query_count + 2, $DB->perf_get_reads());
+
+        user::from_id($user1->id);
+        user::from_id($user2->id);
+        self::assertEquals($query_count + 2, $DB->perf_get_reads());
     }
 }

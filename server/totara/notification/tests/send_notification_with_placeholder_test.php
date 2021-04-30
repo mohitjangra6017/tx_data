@@ -51,6 +51,13 @@ class totara_notification_send_notification_with_placeholder_testcase extends te
         $generator->include_mock_notifiable_event();
         $generator->include_mock_single_placeholder();
         $generator->include_mock_notifiable_event_resolver();
+
+        user::clear_instance_cache();
+    }
+
+    protected function tearDown(): void {
+        parent::tearDown();
+        user::clear_instance_cache();
     }
 
     /**
@@ -290,7 +297,7 @@ class totara_notification_send_notification_with_placeholder_testcase extends te
     /**
      * @return void
      */
-    public function test_send_noptification_with_json_editor_for_subject_and_body(): void {
+    public function test_send_notification_with_json_editor_for_subject_and_body(): void {
         global $DB;
         $generator = self::getDataGenerator();
 

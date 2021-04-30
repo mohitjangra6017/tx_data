@@ -23,9 +23,11 @@
 
 use core\orm\query\builder;
 use core_phpunit\testcase;
+use core_user\totara_notification\placeholder\user as user_placeholder;
 use totara_core\advanced_feature;
 use totara_job\job_assignment;
 use totara_program\testing\generator as program_generator;
+use totara_program\totara_notification\placeholder\program as program_placeholder;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -33,6 +35,18 @@ defined('MOODLE_INTERNAL') || die();
  * @group totara_notification
  */
 abstract class totara_certification_totara_notification_base extends testcase {
+
+    protected function setUp(): void {
+        parent::setUp();
+        user_placeholder::clear_instance_cache();
+        program_placeholder::clear_instance_cache();
+    }
+
+    protected function tearDown(): void {
+        parent::tearDown();
+        user_placeholder::clear_instance_cache();
+        program_placeholder::clear_instance_cache();
+    }
 
     protected function setup_certifications(): stdClass {
         self::setAdminUser();
