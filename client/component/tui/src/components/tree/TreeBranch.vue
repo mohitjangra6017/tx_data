@@ -49,27 +49,33 @@
       <div class="tui-treeBranch__bar">
         <!-- Branch label (Can be text, button or link) -->
 
-        <Button
-          v-if="labelType === 'button'"
-          :id="branchLabelId"
-          class="tui-treeBranch__bar-btn"
-          :styleclass="{ primary: true, transparent: true }"
-          :text="label"
-          @click="$emit('label-click', branchId)"
-        />
+        <template v-if="$scopedSlots['custom-label']">
+          <slot name="custom-label" :label="label" />
+        </template>
 
-        <a
-          v-else-if="labelType === 'link' && linkUrl"
-          :id="branchLabelId"
-          class="tui-treeBranch__bar-link"
-          :href="linkUrl"
-        >
-          {{ label }}
-        </a>
+        <template v-else>
+          <Button
+            v-if="labelType === 'button'"
+            :id="branchLabelId"
+            class="tui-treeBranch__bar-btn"
+            :styleclass="{ primary: true, transparent: true }"
+            :text="label"
+            @click="$emit('label-click', branchId)"
+          />
 
-        <h3 v-else :id="branchLabelId" class="tui-treeBranch__bar-label">
-          {{ label }}
-        </h3>
+          <a
+            v-else-if="labelType === 'link' && linkUrl"
+            :id="branchLabelId"
+            class="tui-treeBranch__bar-link"
+            :href="linkUrl"
+          >
+            {{ label }}
+          </a>
+
+          <h3 v-else :id="branchLabelId" class="tui-treeBranch__bar-label">
+            {{ label }}
+          </h3>
+        </template>
 
         <div class="tui-treeBranch__bar-side">
           <slot v-if="sideContent" name="side" :sideContent="sideContent" />
@@ -105,6 +111,13 @@
             >
               <template v-slot:content="{ content }">
                 <slot name="content" :content="content" />
+              </template>
+
+              <template
+                v-if="$scopedSlots['custom-label']"
+                v-slot:custom-label="{ label }"
+              >
+                <slot name="custom-label" :label="label" />
               </template>
 
               <template v-slot:side="{ sideContent }">

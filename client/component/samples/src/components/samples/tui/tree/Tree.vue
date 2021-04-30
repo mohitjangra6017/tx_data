@@ -95,7 +95,7 @@
 
       <FormRow label="Expand Continents">
         <ToggleSwitch
-          id="toggle"
+          id="toggleOne"
           v-model="expandContinents"
           aria-label="Toggle Continents expanded or collapsed"
         />
@@ -103,7 +103,7 @@
 
       <FormRow label="Expand Oceanic">
         <ToggleSwitch
-          id="toggle"
+          id="toggleTwo"
           v-model="expandOceanic"
           aria-label="Toggle Oceanic expanded or collapsed"
         />
@@ -123,7 +123,7 @@ import SamplesExample from 'samples/components/sample_parts/misc/SamplesExample'
 import SamplesPropCtl from 'samples/components/sample_parts/misc/SamplesPropCtl';
 import ToggleSwitch from 'tui/components/toggle/ToggleSwitch';
 import Tree from 'tui/components/tree/Tree';
-import { getAllBranchKeys } from 'tui/components/tree/util';
+import { getAllBranchKeys, getAllParentKeys } from 'tui/components/tree/util';
 
 export default {
   components: {
@@ -313,8 +313,8 @@ export default {
                   content: {
                     items: [
                       {
-                        id: 'melbourn',
-                        label: 'Melbourn',
+                        id: 'melbourne',
+                        label: 'Melbourne',
                       },
                       {
                         id: 'sydney',
@@ -449,10 +449,16 @@ export default {
 
     /**
      * Check if this branch should be expanded
+     * Also expand it's parent branches when expanding
      *
      */
     expandOceanic(expanded) {
-      this.toggleState(expanded, 'oceanic');
+      if (expanded) {
+        let keysInPath = getAllParentKeys(this.tree, 'oceanic');
+        keysInPath.forEach(key => this.toggleState(expanded, key));
+      } else {
+        this.toggleState(expanded, 'oceanic');
+      }
     },
   },
 

@@ -48,3 +48,41 @@ export function getAllBranchKeys(data) {
   });
   return fullKeyList;
 }
+
+/**
+ * Return an array of all parent keys for the provided key
+ *
+ * @param {array} data
+ * @param {string} key
+ * @returns {array}
+ */
+export function getAllParentKeys(data, key) {
+  /**
+   * Gets parent branch ID's for provided key
+   *
+   * @param {Object} branch
+   * @param {string} key
+   */
+  function getKeyList(branch, path) {
+    let currentPath = [].concat(path);
+    currentPath.push(branch.id);
+
+    if (branch.id === key) {
+      fullPath = currentPath;
+      return;
+    }
+
+    // If there is child data iterate through it
+    if (branch.children) {
+      branch.children.forEach(subBranch => {
+        getKeyList(subBranch, currentPath);
+      });
+    }
+  }
+
+  let fullPath = [];
+  data.forEach(tree => {
+    getKeyList(tree, []);
+  });
+  return fullPath;
+}

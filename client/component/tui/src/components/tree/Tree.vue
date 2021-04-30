@@ -44,6 +44,13 @@
       <template v-slot:side="{ sideContent }">
         <slot name="side" :sideContent="sideContent" />
       </template>
+
+      <template
+        v-if="$scopedSlots['custom-label']"
+        v-slot:custom-label="{ label }"
+      >
+        <slot name="custom-label" :label="label" />
+      </template>
     </TreeBranch>
   </div>
 </template>
