@@ -22,7 +22,6 @@
 @totara_core__QuickAccessMenu_empty_link-color-bg: @totara_style-color_neutral_6;
 @totara_core__QuickAccessMenu_empty_link-color: @totara_style-color_neutral_1;
 @totara_core__QuickAccessMenu_empty_link-font-size: @totara_style-font_body_small_size;
-@totara_core__QuickAccess__transition-time: 200ms;
 
 @totara_core__QuickAccessMenu__shadow: @totara_style-shadow_1;
 
@@ -59,8 +58,20 @@
 
     max-width: 100%;
     min-width: 300px;
+    min-height: 150px;
     opacity: 1;
     z-index: 1;
+
+    &.totara_core__QuickAccess_menu--loading {
+      display: flex;
+      align-items: center;
+      text-align: center;
+
+      .totara_core__QuickAccess_menu_content_loadingContainer {
+        width: 100%;
+      }
+    }
+
 
     //Desktop sizings
     @media (min-width: @quickaccess_desktop_breakpoint) {
@@ -107,13 +118,10 @@
     background-color: @totara_core__QuickAccessMenu_color-bg;
     padding: @totara_core__QuickAccessMenu_padding-outer @totara_core__QuickAccessMenu_padding-outer 0 @totara_core__QuickAccessMenu_padding-outer;
 
-    //Fade in timings
-    transition: transform @totara_core__QuickAccess__transition-time ease, visibility @totara_core__QuickAccess__transition-time linear;
 
     .collapsed& {
       //Fade out timings
-      transition: transform @totara_core__QuickAccess__transition-time ease @totara_core__QuickAccess__transition-time, visibility @totara_core__QuickAccess__transition-time linear @totara_core__QuickAccess__transition-time;
-      visibility: hidden;
+      display: none;
 
       @media (min-width: @quickaccess_desktop_breakpoint) {
         [dir=rtl] & {
@@ -139,17 +147,6 @@
         [dir=rtl] & {
           transform: translateX(-100%);
         }
-      }
-    }
-
-    //Content fade animation
-    > * {
-      opacity: 1;
-      transition: opacity @totara_core__QuickAccess__transition-time ease @totara_core__QuickAccess__transition-time;
-
-      .collapsed& {
-        opacity: 0;
-        transition: opacity @totara_core__QuickAccess__transition-time ease;
       }
     }
 
@@ -360,8 +357,10 @@
   }
 }
 
-#quickaccess-popover-content h3 {
-  //Override for global h3 styling on course/management.php
-  //Remove this when possible
-  padding: 0;
+#quickaccess-popover-content {
+  h3 {
+    //Override for global h3 styling on course/management.php
+    //Remove this when possible
+    padding: 0;
+  }
 }

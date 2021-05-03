@@ -42,35 +42,26 @@
   & &_menu {
     z-index: 1;
     min-width: 300px;
+    min-height: 150px;
     max-width: 100%;
     padding: $quickAccessMenu-box-padding $quickAccessMenu-box-padding 0 $quickAccessMenu-box-padding;
     overflow: hidden;
     color: var(--nav-quick-text-color);
     background-color: var(--nav-quick-bg-color);
     opacity: 1;
-    //Fade in timings
-    transition: transform $quickAccessMenu-transition-time ease,
-      visibility $quickAccessMenu-transition-time linear;
 
-    @include prepend-current('.collapsed') {
-      visibility: hidden;
-      //Fade out timings
-      transition: transform $quickAccessMenu-transition-time ease
-          $quickAccessMenu-transition-time,
-        visibility $quickAccessMenu-transition-time linear
-          $quickAccessMenu-transition-time;
+    &.totara_core__QuickAccess_menu--loading {
+      display: flex;
+      align-items: center;
+      text-align: center;
+
+      .totara_core__QuickAccess_menu_content_loadingContainer {
+        width: 100%;
+      }
     }
 
-    //Content fade animation
-    > * {
-      opacity: 1;
-      transition: opacity $quickAccessMenu-transition-time ease
-        $quickAccessMenu-transition-time;
-
-      @include prepend-current('.collapsed') {
-        opacity: 0;
-        transition: opacity $quickAccessMenu-transition-time ease;
-      }
+    @include prepend-current('.collapsed') {
+      display: none;
     }
 
     &_search {
@@ -226,10 +217,12 @@
   }
 }
 
-#quickaccess-popover-content h3 {
-  //Override for global h3 styling on course/management.php
-  //Remove this when possible
-  padding: 0;
+#quickaccess-popover-content {
+  h3 {
+    //Override for global h3 styling on course/management.php
+    //Remove this when possible
+    padding: 0;
+  }
 }
 
 @media (max-width: $quickAccessMenu-screen-sm-max) {

@@ -75,6 +75,7 @@ define(['core/str', 'core/popover_region_controller', 'core/ajax', 'core/templat
                 return templatesLib.render('totara_core/quickaccessmenu_content', response);
             }).then(function(html) {
                 self.element.querySelector('#quickaccess-popover-content').innerHTML = html;
+                self.element.querySelector('#quickaccess-popover-content').classList.remove('totara_core__QuickAccess_menu--loading');
 
                 self.element.querySelector('[data-quickaccessmenu-close-menu]').addEventListener('click', function(e) {
                     e.preventDefault();
@@ -87,6 +88,18 @@ define(['core/str', 'core/popover_region_controller', 'core/ajax', 'core/templat
                 M.util.js_complete('totara_core--quickaccessmenu_content_loading');
             }).catch(notificationLib.exception);
         });
+
+        if (document.body.classList.contains('ie11')) {
+            // Workaround an issue in IE 11.719.18362.0 where scrollbars are created before
+            // the CSS statement "transform: translateX(-50%);"
+            this.root.on(this.events().menuOpened, function() {
+                document.body.style.overflowX = 'hidden';
+            });
+
+            this.root.on(this.events().menuClosed, function() {
+                document.body.style.overflowX = '';
+            });
+        }
     };
 
     QuickAccessPopoverController.prototype.checkLocation = function() {
