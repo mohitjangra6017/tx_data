@@ -85,6 +85,7 @@ $string['cachedef_completion_progressinfo'] = 'Completion progressinfo cache';
 $string['cachedef_flex_icons'] = 'Flex icons';
 $string['cachedef_hookwatchers'] = 'Hook watchers';
 $string['cachedef_quickaccessmenu'] = 'Admin menu preferences cache';
+$string['cachedef_quickaccessmenu_complete'] = 'Quick access menu item cache';
 $string['cachedef_totara_course_is_viewable'] = 'Totara course is viewable request cache';
 $string['cachedef_visible_content'] = 'Visible category, course, program and certification cache';
 $string['calendar'] = 'Calendar';

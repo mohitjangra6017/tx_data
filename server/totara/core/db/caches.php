@@ -49,7 +49,7 @@ $definitions = array(
         'staticaccelerationsize' => 10
     ),
 
-    // Cache for quickaccess menu items
+    // Cache for quickaccess menu item preference per user
     // Keys are user id's and values are from the quickaccess_preferences table value field.
     'quickaccessmenu' => array(
         'mode' => cache_store::MODE_APPLICATION,
@@ -57,6 +57,23 @@ $definitions = array(
         'simpledata' => true,
         'staticacceleration' => true,
         'staticaccelerationsize' => 10
+    ),
+
+    // Cache for quickaccess menu items for an individual users complete menu.
+    // Keys are user id's and values are from the quickaccess_preferences table value field.
+    // This is stored as an application cache because it is is potentially very large, and the session
+    // size must remain small.
+    'quickaccessmenu_complete' => array(
+        'mode' => cache_store::MODE_APPLICATION,
+        'requireidentifiers' => [
+            'userid', // It must belong to a user.
+            'lang', // It is also bound to their language.
+        ],
+        'simplekeys' => true,
+        'simpledata' => true,
+        'staticacceleration' => true,
+        'staticaccelerationsize' => 2,
+        'ttl' => 600, // TTL of 600 seconds / 10 minutes.
     ),
 
     // A request lifetime cache for the outcome of totara_course_is_viewable for the current user.

@@ -28,7 +28,7 @@ namespace totara_core\quickaccessmenu;
  * Items can be complete, or partial in nature.
  * They are always constructed using one of the public static from methods.
  */
-final class item {
+final class item implements \cacheable_object {
 
     /**
      * The key used to identify the item
@@ -333,12 +333,55 @@ final class item {
         if (!$this->from_preference) {
             throw new \coding_exception('Preference arrays can only be exported for preference items');
         }
-        $data = [];
-        $data['key'] = (isset($this->key)) ? $this->get_key() : null;
-        $data['group'] = (isset($this->group)) ? $this->get_group() : null;
-        $data['label'] = (isset($this->label)) ? $this->get_label() : null;
-        $data['weight'] = (isset($this->weight)) ? $this->get_weight() : null;
-        $data['visible'] = (isset($this->visible)) ? $this->get_visible() : null;
-        return $data;
+        return [
+            'key' => (isset($this->key)) ? $this->get_key() : null,
+            'group' => (isset($this->group)) ? $this->get_group() : null,
+            'label' => (isset($this->label)) ? $this->get_label() : null,
+            'weight' => (isset($this->weight)) ? $this->get_weight() : null,
+            'visible' => (isset($this->visible)) ? $this->get_visible() : null,
+        ];
+    }
+
+    /**
+     * Returns an array suitable to be cached via MUC.
+     *
+     * This is required by the cacheable_object interface.
+     *
+     * @return array
+     */
+    public function prepare_to_cache(): array {
+        return [
+            'key' => (isset($this->key)) ? $this->get_key() : null,
+            'group' => (isset($this->group)) ? $this->get_group() : null,
+            'label' => (isset($this->label)) ? $this->get_label() : null,
+            'weight' => (isset($this->weight)) ? $this->get_weight() : null,
+            'visible' => (isset($this->visible)) ? $this->get_visible() : null,
+            'url' => (isset($this->url)) ? $this->get_url()->out(false) : null,
+        ];
+    }
+
+    /**
+     * This method transforms cache data back into items.
+     * @param array $data
+     * @return item
+     */
+    public static function wake_from_cache($data): item {
+        if (!is_array($data)) {
+            throw new \coding_exception('Invalid data type returned from cache');
+        }
+
+        $key = isset($data['key']) ? (string) $data['key'] : null;
+        $group = isset($data['group']) ? group::get((string) $data['group']) : null;
+        $label = isset($data['label']) ? (string) $data['label'] : null;
+        $weight = isset($data['weight']) ? (int) $data['weight'] : null;
+        $visible = isset($data['visible']) ? (bool) $data['visible'] : null;
+        $url = isset($data['url']) ? new \moodle_url((string)$data['url']) : null;
+
+        if ($group === null || $label === null || $url === null) {
+            throw new \coding_exception('Required properties were not supplied.');
+        }
+
+        $item = new self($key, $group, $label, $weight, $visible, $url);
+        return $item;
     }
 }

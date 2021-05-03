@@ -130,10 +130,32 @@ final class factory {
      * @return menu
      */
     public function get_menu(): menu {
+        // First try to get the users menu from the cache, this has a TTL of 10 minutes.
+        $menu = $this->get_cached_menu();
+        if ($menu->was_loaded_from_cache()) {
+            return $menu;
+        }
+
+        // It's not in the cache, generate it.
         $menu = $this->get_admin_menu();
         self::merge($menu, $this->get_default_menu());
         self::merge($menu, $this->get_user_preference_menu());
+
+        // Store their menu in the cache for next time.
+        menu\cached::set($this, $menu);
+
         return $menu;
+    }
+
+    /**
+     * Returns the cached menu.
+     *
+     * Note, you will need to check if it had data or not by calling {@see cached::has_any_items()}
+     *
+     * @return menu\cached
+     */
+    private function get_cached_menu(): menu\cached {
+        return menu\cached::get($this);
     }
 
     /**
@@ -202,18 +224,16 @@ final class factory {
      * @return bool
      */
     public function has_possible_items(): bool {
-        $cache = \cache::make_from_params(\cache_store::MODE_SESSION, 'totara_core', 'quickaccessmenu_hasitems', [], [
-            'simplekeys' => true,
-            'simpledata' => true,
-            'staticacceleration' => true
-        ]);
-        $cachekey = 'has_possible_items';
-        $possible_count = $cache->get($cachekey);
-        if ($possible_count === false) {
-            $possible_count = count($this->get_possible_items());
-            $cache->set($cachekey, $possible_count);
+        // First we'll check the cached menu, as it will be fast if it has the answer.
+        $cachedmenu = $this->get_cached_menu();
+        $has_any_items = $cachedmenu->has_any_items();
+        if ($has_any_items !== null) {
+            // Yay, its true or false, the cache knew the answer.
+            return (bool) $has_any_items;
         }
-        return $possible_count > 0;
+        // The cached menu returned null, which means it has no data and can't answer. We'll have to load the menu
+        // and confirm if there are any items. This will prime the caches for next time.
+        return !empty(self::get_menu()->get_all_items());
     }
 
 }

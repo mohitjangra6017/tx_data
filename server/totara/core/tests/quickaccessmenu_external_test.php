@@ -23,15 +23,15 @@
 use totara_core\quickaccessmenu\external;
 use totara_core\quickaccessmenu\group;
 
-global $CFG;
-require_once($CFG->dirroot . '/lib/adminlib.php');
-
 /**
  * @group totara_core
  */
 class totara_core_quickaccessmenu_external_testcase extends advanced_testcase {
 
     private function basic_setup() {
+        global $CFG;
+        require_once($CFG->dirroot . '/lib/adminlib.php');
+
         $roleid = $this->getDataGenerator()->create_role();
         $user = $this->getDataGenerator()->create_user();
         $capabilities = [

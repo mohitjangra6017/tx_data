@@ -1,6 +1,6 @@
 <?php
-/*
- * This file is part of Totara Learn
+/**
+ * This file is part of Totara Core
  *
  * Copyright (C) 2018 onwards Totara Learning Solutions LTD
  *
@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Sam Hemelryk <sam.hemelryk@totaralearning.com>
+ * @package totara_core
  */
 
 use totara_core\advanced_feature;
@@ -34,7 +35,7 @@ require_once($CFG->dirroot . '/lib/adminlib.php');
 /**
  * @group totara_core
  */
-class totara_core_quickaccessmenu_testcase extends advanced_testcase {
+class totara_core_quickaccessmenu_testcase extends \core_phpunit\testcase {
 
     private static function assertNodeOrder($expected, $items) {
         $labels = [];
@@ -500,6 +501,8 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
         role_change_permission($roleid, context_system::instance(), 'totara/reportbuilder:managereports', CAP_ALLOW);
         $this->getDataGenerator()->role_assign($roleid, $user->id);
         admin_get_root(true, false);
+        // Purge the caches, otherwise we won't see the changes.
+        \totara_core\quickaccessmenu\menu\cached::delete($user->id);
 
         self::assertMenuStructure([
             group::PLATFORM => [
@@ -833,8 +836,9 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
         $roleid = $this->getDataGenerator()->create_role();
         role_change_permission($roleid, context_system::instance(), 'moodle/user:viewalldetails', CAP_ALLOW);
         $this->getDataGenerator()->role_assign($roleid, $user->id);
-
         admin_get_root(true, false);
+        // Purge the caches, otherwise we won't see the changes.
+        \totara_core\quickaccessmenu\menu\cached::delete($user->id);
 
         self::assertMenuStructure([
             group::PLATFORM => [
@@ -1427,6 +1431,7 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
             ['group' => 'platform', 'key' => 'cohorts'], // intentionally missing label and weight
             ['group' => 'platform', 'key' => 'badgesettings', 'label' => 'sometextX3', 'weight' => 9000],
             ['key' => 'langsettings', 'label' => 'sometextX4', 'weight' => 9999], // intentionally missing group
+            ['group' => 'platform', 'label' => 'sometextX4', 'weight' => 9999], // intentionally missing group
         ];
 
         admin_get_root(true, false); // Force the admin tree to reload.
@@ -1447,6 +1452,7 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
                 'profilefields' => 'sometextX2',
             ],
         ], $user);
+        self::assertDebuggingCalled('Empty key found when preparing quick access menu from config.php');
     }
 
     public function test_core_admin_output_quickaccessmenu() {
@@ -1559,6 +1565,36 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
         item::from_part_of_admin_tree($item);
     }
 
+    public function test_item_from_part_of_admin_tree_unexpected() {
+        $unknown = new class implements part_of_admin_tree {
+            use part_of_admin_tree_trait;
+            private function fail() {
+                throw new coding_exception('This should never be called.');
+            }
+            public function locate($name) {
+                $this->fail();
+            }
+            public function search($query) {
+                $this->fail();
+            }
+            public function is_hidden() {
+                $this->fail();
+            }
+            public function show_save() {
+                $this->fail();
+            }
+            public function prune($name) {
+                $this->fail();
+            }
+            public function check_access() {
+                $this->fail();
+            }
+        };
+        $this->expectException(\coding_exception::class);
+        $this->expectExceptionMessage('Unknown part');
+        item::from_part_of_admin_tree($unknown);
+    }
+
     public function test_reset_for_user() {
         global $DB;
         $this->setAdminUser();
@@ -1623,5 +1659,95 @@ class totara_core_quickaccessmenu_testcase extends advanced_testcase {
             }
         }
         return false;
+    }
+
+    public function test_item_wake_from_cache() {
+        $data = [
+            'key' => 'a',
+            'group' => group::PLATFORM,
+            'label' => 'c',
+            'weight' => 'd',
+            'visible' => 'e',
+            'url' => 'https://example.com/f'
+        ];
+        $item = item::wake_from_cache($data);
+        self::assertInstanceOf(item::class, $item);
+    }
+
+    public function test_item_wake_from_cache_require_properties_only() {
+        $data = [
+            'group' => group::PLATFORM,
+            'label' => 'c',
+            'url' => 'https://example.com/f'
+        ];
+        $item = item::wake_from_cache($data);
+        self::assertInstanceOf(item::class, $item);
+    }
+
+    public function test_item_wake_from_cache_missing_require_group() {
+        $data = [
+            'key' => 'a',
+            'label' => 'c',
+            'weight' => 'd',
+            'visible' => 'e',
+            'url' => 'https://example.com/f'
+        ];
+        $this->expectException(\coding_exception::class);
+        item::wake_from_cache($data);
+    }
+
+    public function test_item_wake_from_cache_missing_require_label() {
+        $data = [
+            'key' => 'a',
+            'group' => group::PLATFORM,
+            'weight' => 'd',
+            'visible' => 'e',
+            'url' => 'https://example.com/f'
+        ];
+        $this->expectException(\coding_exception::class);
+        item::wake_from_cache($data);
+    }
+
+    public function test_item_wake_from_cache_missing_require_url() {
+        $data = [
+            'key' => 'a',
+            'group' => group::PLATFORM,
+            'label' => 'c',
+            'weight' => 'd',
+            'visible' => 'e',
+        ];
+        $this->expectException(\coding_exception::class);
+        item::wake_from_cache($data);
+    }
+
+    public function test_item_wake_from_cache_invalid_type() {
+
+        $data = new stdClass();
+        $data->key = 'a';
+        $data->group = group::PLATFORM;
+        $data->label = 'b';
+        $data->weight = 'd';
+        $data->visible = 'e';
+        $data->url = 'https://example.com/f';
+
+        $this->expectException(\coding_exception::class);
+
+        item::wake_from_cache($data);
+    }
+
+    public function test_factory_can_current_user_have_quickaccessmenu() {
+        $this->setGuestUser();
+        self::assertFalse(factory::can_current_user_have_quickaccessmenu());
+        $this->setAdminUser();
+        self::assertTrue(factory::can_current_user_have_quickaccessmenu());
+    }
+
+    public function test_factory_instance() {
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+        self::assertInstanceOf(factory::class, factory::instance($user->id));
+
+        self::expectException(coding_exception::class);
+        self::assertInstanceOf(factory::class, factory::instance(-1));
     }
 }

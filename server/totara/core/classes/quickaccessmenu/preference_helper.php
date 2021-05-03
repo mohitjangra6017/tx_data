@@ -68,9 +68,7 @@ final class preference_helper {
             $DB->insert_record('quickaccess_preferences', $preference);
         }
 
-        // Clear cache
-        $cache = \cache::make('totara_core', 'quickaccessmenu');
-        $cache->delete($userid);
+        self::clear_caches($userid);
 
         return true;
     }
@@ -91,12 +89,9 @@ final class preference_helper {
             throw new \coding_exception('Preferences cannot be set for the guest user.');
         }
 
-        // Delete from DB.
         $DB->delete_records('quickaccess_preferences', array('userid' => $userid, 'name' => $name));
 
-        // Clear cache
-        $cache = \cache::make('totara_core', 'quickaccessmenu');
-        $cache->delete($userid);
+        self::clear_caches($userid);
 
         return true;
     }
@@ -115,12 +110,24 @@ final class preference_helper {
             throw new \coding_exception('Preferences cannot be set for the guest user.');
         }
 
-        // Delete from DB.
         $DB->delete_records('quickaccess_preferences', ['userid' => $userid]);
-        // Clear cache
+
+        self::clear_caches($userid);
+
+        return true;
+    }
+
+    /**
+     * Clear all caches belonging to the given user.
+     * @param int $userid
+     */
+    private static function clear_caches(int $userid) {
+        // Clear the user preferences cache.
         $cache = \cache::make('totara_core', 'quickaccessmenu');
         $cache->delete($userid);
-        return true;
+
+        // Clear the users complete menu cache.
+        menu\cached::delete($userid);
     }
 
     /**
