@@ -77,6 +77,22 @@ class update_notifiable_event_user_delivery_channels implements mutation_resolve
             $extended_context = extended_context::make_with_context($context);
         }
 
+        if ($preference_id === null) {
+            // Ensure we don't try to create a duplicate
+            $preference_ids = notifiable_event_user_preference_entity::repository()
+                ->select('id')
+                ->filter_by_user($user_id)
+                ->filter_by_resolver_class($resolver_class_name)
+                ->filter_by_extended_context($extended_context)
+                ->get()
+                ->pluck('id');
+
+            if (!empty($preference_ids)) {
+                // There should be at most 1, but just making sure
+                $preference_id = reset($preference_ids);
+            }
+        }
+
         $model = $preference_id === null
             ? notifiable_event_user_preference_model::create($user_id, $resolver_class_name, $extended_context)
             : notifiable_event_user_preference_model::from_id($preference_id);

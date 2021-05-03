@@ -113,6 +113,26 @@ class totara_notification_webapi_update_notifiable_event_user_delivery_channels_
                 }
             }
         }
+
+        // Try submitting the result again - it should not crash
+        $result = $this->execute_graphql_operation(
+            'totara_notification_update_user_delivery_channels',
+            [
+                'user_id' => $this->user->id,
+                'resolver_class_name' => mock_event_resolver::class,
+                'extended_context' => ['context_id' => $extended_context->get_context_id()],
+                'delivery_channels' => $test_data,
+            ]
+        );
+
+        self::assertEmpty($result->errors, 'Errors returned after second create');
+        self::assertNotEmpty($result->data);
+        self::assertIsArray($result->data);
+        self::assertArrayHasKey('notifiable_event_user_preference', $result->data);
+        $resolver_result2 = $result->data['notifiable_event_user_preference'];
+        self::assertIsArray($resolver_result2);
+        self::assertArrayHasKey('user_preference_id', $resolver_result2);
+        self::assertSame($resolver_result['user_preference_id'], $resolver_result2['user_preference_id']);
     }
 
     /**
