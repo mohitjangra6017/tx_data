@@ -130,7 +130,6 @@ function totara_notification_migrate_notifiable_event_prefs(
             'area' => extended_context::NATURAL_CONTEXT_AREA,
             'item_id' => extended_context::NATURAL_CONTEXT_ITEM_ID,
             'default_delivery_channels' => $default_delivery_channels,
-            'enabled' => 1, // TODO TL-30245 Remove this line of code, so that it stores NULL instead.
         ];
         $DB->insert_record('notifiable_event_preference', $record);
     } else {

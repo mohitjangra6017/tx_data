@@ -29,6 +29,10 @@ use totara_notification\testing\generator as notification_generator;
 use totara_notification_mock_notifiable_event_resolver as mock_event_resolver;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use core_phpunit\testcase;
+use totara_notification\model\notifiable_event_preference as notifiable_event_preference_model;
+use totara_notification\entity\notifiable_event_preference as notifiable_event_preference_entity;
+use totara_core\extended_context;
+use totara_notification\local\helper;
 
 class totara_notification_notifiable_event_testcase extends testcase {
 
@@ -104,5 +108,48 @@ class totara_notification_notifiable_event_testcase extends testcase {
                 'Class totara_notification_mock_notifiable_event_resolver need to define recipient'
             );
         }
+    }
+
+    public function test_notifiable_event_resolver_enabled_status(): void {
+        // Out of the box we should be able to get default status.
+        $this->assertEquals(true, mock_event_resolver::get_default_enabled());
+
+        // Now we can test with an instantiated object - create with 'enabled' null.
+        $extended_context = extended_context::make_system();
+        $entity = new notifiable_event_preference_entity();
+        $entity->context_id = $extended_context->get_context_id();
+        $entity->resolver_class_name = mock_event_resolver::class;
+        $entity->component = $extended_context->get_component();
+        $entity->area = $extended_context->get_area();
+        $entity->item_id = $extended_context->get_item_id();
+        $entity->default_delivery_channels = ",email,";
+        $entity->enabled = null;
+        $entity->save();
+
+        // At entity level, we should get the truth.
+        $model = new notifiable_event_preference_model($entity);
+        $this->assertEquals(null, $model->get_enabled());
+
+        // At render or queue processing time, we should get what the truth means:
+        $enabled = helper::is_resolver_enabled_for_all_parent_contexts($entity->resolver_class_name, $extended_context);
+        $this->assertEquals(true, $enabled);
+
+        // Explicitly set false.
+        $entity->set_attribute('enabled', false);
+        $entity->save();
+        $enabled = helper::is_resolver_enabled_for_all_parent_contexts($entity->resolver_class_name, $extended_context);
+        $this->assertEquals(false, $enabled);
+
+        // Explicitly set true.
+        $entity->set_attribute('enabled', true);
+        $entity->save();
+        $enabled = helper::is_resolver_enabled_for_all_parent_contexts($entity->resolver_class_name, $extended_context);
+        $this->assertEquals(true, $enabled);
+
+        // Explicitly set null.
+        $entity->set_attribute('enabled', null);
+        $entity->save();
+        $enabled = helper::is_resolver_enabled_for_all_parent_contexts($entity->resolver_class_name, $extended_context);
+        $this->assertEquals(true, $enabled);
     }
 }

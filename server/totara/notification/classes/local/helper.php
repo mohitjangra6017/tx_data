@@ -102,7 +102,6 @@ class helper {
         extended_context $extended_context
     ): bool {
         // Start with the current level
-        $disabled_in_higher_context = false;
         $parent_context = $extended_context;
 
         // Check if the event has been disabled in a higher context?
@@ -110,19 +109,15 @@ class helper {
             $notifiable_event_entity = entity::repository()->for_context($resolver_class_name, $parent_context);
             if ($notifiable_event_entity) {
                 $notifiable_event = notifiable_event_preference::from_entity($notifiable_event_entity);
-                if (!$notifiable_event->enabled) {
-                    $disabled_in_higher_context = true;
-                    break;
+                if ($notifiable_event->get_enabled() !== null) {
+                    return $notifiable_event->get_enabled();
                 }
             }
             $parent_context = $parent_context->get_parent();
         }
 
-        if ($disabled_in_higher_context) {
-            return false;
-        }
-
-        return true;
+        // If all contexts have returned null, get the default.
+        return $resolver_class_name::get_default_enabled();
     }
 
     /**

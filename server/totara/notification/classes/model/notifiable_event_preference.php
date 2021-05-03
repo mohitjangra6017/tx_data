@@ -106,9 +106,13 @@ class notifiable_event_preference extends model {
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function get_enabled(): bool {
+    public function get_enabled(): ?bool {
+        if ($this->entity->enabled === null) {
+            return null;
+        }
+
         return (bool) $this->entity->enabled;
     }
 

@@ -240,4 +240,14 @@ abstract class notifiable_event_resolver {
     public function get_event_data(): array {
         return $this->event_data;
     }
+
+    /**
+     * Newly created records with enabled = null inherit the setting from their parent object (if one exists).  Where
+     * there is no parent, we use this default value instead.
+     *
+     * @return bool
+     */
+    public static function get_default_enabled(): bool {
+        return true;
+    }
 }
