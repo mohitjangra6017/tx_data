@@ -40,6 +40,13 @@ class totara_notification_mock_delivery_channel_third extends delivery_channel {
     }
 
     /**
+     * @return string|null
+     */
+    public static function get_parent(): ?string {
+        return static::$attributes['parent'] ?? null;
+    }
+
+    /**
      * @return string
      */
     public static function get_label(): string {

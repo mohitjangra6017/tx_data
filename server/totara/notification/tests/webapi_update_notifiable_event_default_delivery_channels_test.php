@@ -24,10 +24,15 @@
 use core_phpunit\testcase;
 use totara_core\extended_context;
 use totara_notification\delivery\channel\delivery_channel;
+use totara_notification\delivery\channel_helper;
 use totara_notification\entity\notifiable_event_preference;
 use totara_notification\exception\notification_exception;
+use totara_notification\loader\delivery_channel_loader;
 use totara_notification\testing\generator;
 use totara_notification\webapi\resolver\mutation\update_default_delivery_channels;
+use totara_notification_mock_delivery_channel as mock_channel_first;
+use totara_notification_mock_delivery_channel_second as mock_channel_second;
+use totara_notification_mock_delivery_channel_third as mock_channel_third;
 use totara_notification_mock_notifiable_event_resolver as mock_resolver;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
@@ -62,24 +67,21 @@ class totara_notification_webapi_update_notifiable_event_default_delivery_channe
                     'item_id' => $extended_context->get_item_id(),
                 ],
                 'default_delivery_channels' => [
-                    'email',
-                    'msteams',
+                    'first',
+                    'second',
                 ],
             ]
         );
 
         self::assertIsArray($saved_channels);
-        self::assertTrue($saved_channels['email']->is_enabled);
-        self::assertTrue($saved_channels['msteams']->is_enabled);
-        self::assertFalse($saved_channels['totara_task']->is_enabled);
-        self::assertFalse($saved_channels['totara_alert']->is_enabled);
-        self::assertFalse($saved_channels['popup']->is_enabled);
-        self::assertFalse($saved_channels['totara_airnotifier']->is_enabled);
+        self::assertTrue($saved_channels['first']->is_enabled);
+        self::assertTrue($saved_channels['second']->is_enabled);
+        self::assertFalse($saved_channels['third']->is_enabled);
 
         $count = $DB->count_records('notifiable_event_preference');
         self::assertEquals(1, $count);
 
-        // Run it a second time, toggling the email off
+        // Run it a second time, toggling the second off
         $saved_channels = $this->resolve_graphql_mutation(
             $this->get_graphql_name(update_default_delivery_channels::class),
             [
@@ -91,14 +93,14 @@ class totara_notification_webapi_update_notifiable_event_default_delivery_channe
                     'item_id' => $extended_context->get_item_id(),
                 ],
                 'default_delivery_channels' => [
-                    'msteams',
+                    'first',
                 ],
             ]
         );
 
         self::assertIsArray($saved_channels);
-        self::assertFalse($saved_channels['email']->is_enabled);
-        self::assertTrue($saved_channels['msteams']->is_enabled);
+        self::assertFalse($saved_channels['second']->is_enabled);
+        self::assertTrue($saved_channels['first']->is_enabled);
     }
 
     /**
@@ -120,7 +122,7 @@ class totara_notification_webapi_update_notifiable_event_default_delivery_channe
         $context_course = context_course::instance($course->id);
         $extended_context = extended_context::make_with_context($context_course);
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(coding_exception::class);
         $this->expectExceptionMessage('Delivery channels are only available in the system context');
 
         $this->resolve_graphql_mutation(
@@ -134,21 +136,11 @@ class totara_notification_webapi_update_notifiable_event_default_delivery_channe
                     'item_id' => $extended_context->get_item_id(),
                 ],
                 'default_delivery_channels' => [
-                    'email',
-                    'msteams',
+                    'first',
+                    'third',
                 ],
             ]
         );
-    }
-
-    protected function setUp(): void {
-        global $DB;
-
-        // We want nothing created
-        $DB->execute('TRUNCATE TABLE {notifiable_event_preference}');
-
-        $notification_generator = generator::instance();
-        $notification_generator->include_mock_notifiable_event_resolver();
     }
 
     /**
@@ -183,7 +175,7 @@ class totara_notification_webapi_update_notifiable_event_default_delivery_channe
                 'extended_context' => [
                     'context_id' => $extended_context->get_context_id(),
                 ],
-                'default_delivery_channels' => ['email']
+                'default_delivery_channels' => ['first']
             ]
         );
     }
@@ -222,7 +214,7 @@ class totara_notification_webapi_update_notifiable_event_default_delivery_channe
                     'extended_context' => [
                         'context_id' => $extended_context->get_context_id(),
                     ],
-                    'default_delivery_channels' => ['email']
+                    'default_delivery_channels' => ['first']
                 ]
             );
         } catch (Throwable $e) {
@@ -233,6 +225,90 @@ class totara_notification_webapi_update_notifiable_event_default_delivery_channe
         self::assertEquals(1, $DB->count_records(notifiable_event_preference::TABLE));
         $entity = notifiable_event_preference::repository()->for_context(mock_resolver::class, $extended_context);
 
-        self::assertEquals(",email,", $entity->default_delivery_channels);
+        self::assertEquals(",first,", $entity->default_delivery_channels);
+    }
+
+    /**
+     * Use mock delivery channels so these tests do not depend on the message output plugins
+     * which may be missing.
+     */
+    protected function setUp(): void {
+        global $DB;
+
+        // We want nothing created
+        $DB->execute('TRUNCATE TABLE {notifiable_event_preference}');
+
+        $notification_generator = generator::instance();
+        $notification_generator->include_mock_notifiable_event_resolver();
+
+        $generator = generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
+        $generator->include_mock_delivery_channels();
+
+        // Always reset the delivery channels back to nothing
+        mock_resolver::set_notification_default_delivery_channels([]);
+
+        // Reset the mock channels
+        mock_channel_first::clear();
+        mock_channel_second::clear();
+        mock_channel_third::clear();
+
+        // This lets us test the delivery channels without creating a dependency on message_* plugins
+        $this->set_loader_definitions([
+            mock_channel_first::class,
+            mock_channel_second::class,
+            mock_channel_third::class,
+        ]);
+        $this->set_valid_channels(['first', 'second', 'third']);
+        $this->set_enabled_message_outputs(['first', 'second', 'third']);
+    }
+
+    /**
+     * Remove the hanging models
+     */
+    protected function tearDown(): void {
+        mock_resolver::set_notification_default_delivery_channels([]);
+        mock_channel_first::clear();
+        mock_channel_second::clear();
+        mock_channel_third::clear();
+        $this->set_loader_definitions(null);
+        $this->set_valid_channels(null);
+        $this->set_enabled_message_outputs(null);
+    }
+
+    /**
+     * Helper method to override the enabled message output filter - otherwise
+     * our mock delivery channels will be filtered out.
+     *
+     * @param array|null $enabled_outputs
+     */
+    private function set_enabled_message_outputs(?array $enabled_outputs): void {
+        $cache_property = new ReflectionProperty(delivery_channel_loader::class, 'enabled_outputs');
+        $cache_property->setAccessible(true);
+        $cache_property->setValue($enabled_outputs);
+    }
+
+    /**
+     * Helper method to override the channel validator when we're testing.
+     * Otherwise the mock tests will fail the validation.
+     *
+     * @param array|null $valid_channels
+     */
+    private function set_valid_channels(?array $valid_channels): void {
+        $cache_property = new ReflectionProperty(channel_helper::class, 'valid_channels');
+        $cache_property->setAccessible(true);
+        $cache_property->setValue($valid_channels);
+    }
+
+    /**
+     * Helper method to override the channel loader when we're testing.
+     * This allows us to override and inject our own mock delivery channels for testing.
+     *
+     * @param array|null $definitions
+     */
+    private function set_loader_definitions(?array $definitions): void {
+        $cache_property = new ReflectionProperty(delivery_channel_loader::class, 'definitions');
+        $cache_property->setAccessible(true);
+        $cache_property->setValue($definitions);
     }
 }

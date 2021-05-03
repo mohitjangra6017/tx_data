@@ -81,6 +81,7 @@ class totara_notification_webapi_type_delivery_channel_testcase extends testcase
      */
     protected function tearDown(): void {
         $this->channel = null;
+        mock_channel::clear();
     }
 
     /**

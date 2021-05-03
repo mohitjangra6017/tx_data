@@ -27,7 +27,7 @@ use totara_notification\loader\delivery_channel_loader;
 use totara_notification\manager\notification_queue_manager;
 use totara_notification\model\notifiable_event_preference as model;
 use totara_notification\testing\generator;
-use totara_notification_mock_delivery_channel as mock_channel;
+use totara_notification_mock_delivery_channel as mock_channel_first;
 use totara_notification_mock_delivery_channel_second as mock_channel_second;
 use totara_notification_mock_delivery_channel_third as mock_channel_third;
 use totara_notification_mock_notifiable_event_resolver as mock_resolver;
@@ -57,7 +57,7 @@ class totara_notification_delivery_channels_testcase extends testcase {
         self::assertIsArray($results);
         self::assertCount(3, $results);
 
-        // Check that all are disabled except email
+        // Check that all are disabled except 'second''
         foreach ($results as $component => $result) {
             if ($component === 'second') {
                 self::assertTrue($result->is_enabled);
@@ -73,7 +73,7 @@ class totara_notification_delivery_channels_testcase extends testcase {
         self::assertIsArray($results);
         self::assertCount(3, $results);
 
-        // Check that all are disabled except msteams & popup
+        // Check that all are disabled except 'second' & 'third'
         foreach ($results as $component => $result) {
             if ($component === 'second' || $component === 'third') {
                 self::assertTrue($result->is_enabled);
@@ -101,7 +101,7 @@ class totara_notification_delivery_channels_testcase extends testcase {
         $this->entity->default_delivery_channels = ',first,';
         $results = $this->model->default_delivery_channels;
 
-        // Check that all are disabled except popup
+        // Check that all are disabled except 'first'
         foreach ($results as $component => $result) {
             if ($component === 'first') {
                 self::assertTrue($result->is_enabled);
@@ -137,6 +137,47 @@ class totara_notification_delivery_channels_testcase extends testcase {
     }
 
     /**
+     * Asserts that if a message output is disabled, then the matching channel will not be included.
+     */
+    public function test_delivery_channel_list_excludes_disabled_outputs(): void {
+        mock_resolver::set_notification_default_delivery_channels(['first', 'second', 'third']);
+        // Check that all channels appear
+        $this->set_enabled_message_outputs(['first', 'second', 'third']);
+        $channels = delivery_channel_loader::get_for_event_resolver(mock_resolver::class);
+        self::assertArrayHasKey('first', $channels);
+        self::assertArrayHasKey('second', $channels);
+        self::assertArrayHasKey('third', $channels);
+
+        // Disable 'second' at the output level by excluding it
+        $this->set_enabled_message_outputs(['first', 'third']);
+        $channels = delivery_channel_loader::get_for_event_resolver(mock_resolver::class);
+        self::assertArrayHasKey('first', $channels);
+        self::assertArrayNotHasKey('second', $channels);
+        self::assertArrayHasKey('third', $channels);
+
+        // 'third' is now going to be a child of 'second', so with second disabled, third should also not appear.
+        mock_channel_third::set_attribute('parent', 'second');
+        $channels = delivery_channel_loader::get_for_event_resolver(mock_resolver::class);
+        self::assertArrayHasKey('first', $channels);
+        self::assertArrayNotHasKey('second', $channels);
+        self::assertArrayNotHasKey('third', $channels);
+
+        // But if second is enabled, third should reappear too
+        $this->set_enabled_message_outputs(['first', 'second', 'third']);
+        $channels = delivery_channel_loader::get_for_event_resolver(mock_resolver::class);
+        self::assertArrayHasKey('first', $channels);
+        self::assertArrayHasKey('second', $channels);
+        self::assertArrayHasKey('third', $channels);
+
+        // Third can be disabled independently of second
+        $this->set_enabled_message_outputs(['first', 'second']);
+        $channels = delivery_channel_loader::get_for_event_resolver(mock_resolver::class);
+        self::assertArrayHasKey('first', $channels);
+        self::assertArrayHasKey('second', $channels);
+        self::assertArrayNotHasKey('third', $channels);
+    }
+
+    /**
      * Test the message queue is filtered by the resolver's set delivery channels
      */
     public function test_expected_message_outputs_filtered(): void {
@@ -151,7 +192,6 @@ class totara_notification_delivery_channels_testcase extends testcase {
         mock_resolver::set_notification_default_delivery_channels(['first', 'second']);
 
         // Test by loading the get_active_message_processors, and check what's returned
-        // We should only see email & msteams here as the rest should have been removed.
         $resolver = new mock_resolver([]);
 
         $cache = new ReflectionProperty(delivery_channel_loader::class, 'resolver_channels');
@@ -183,7 +223,7 @@ class totara_notification_delivery_channels_testcase extends testcase {
         self::assertArrayHasKey('second', $results);
         self::assertArrayNotHasKey('third', $results);
 
-        // Disable popup & rerun
+        // Disable all but 'first'
         mock_resolver::set_notification_default_delivery_channels(['first']);
         delivery_channel_loader::reset();
 
@@ -208,9 +248,9 @@ class totara_notification_delivery_channels_testcase extends testcase {
      * Test the static reading of properties works correctly.
      */
     public function test_delivery_channel_property_reads(): void {
-        mock_channel::set_attribute('label', 'my test label');
+        mock_channel_first::set_attribute('label', 'my test label');
 
-        $channel = mock_channel::make(true);
+        $channel = mock_channel_first::make(true);
         self::assertTrue($channel->is_enabled);
         self::assertEquals('my test label', $channel->label);
         self::assertNull($channel->not_a_property);
@@ -243,11 +283,12 @@ class totara_notification_delivery_channels_testcase extends testcase {
         $this->model = model::from_entity($this->entity);
 
         // This lets us test the delivery channels without creating a dependency on message_* plugins
-        delivery_channel_loader::set_definitions([
-            mock_channel::class,
+        $this->set_loader_definitions([
+            mock_channel_first::class,
             mock_channel_second::class,
             mock_channel_third::class,
         ]);
+        $this->set_enabled_message_outputs(['first', 'second', 'third']);
     }
 
     /**
@@ -257,9 +298,34 @@ class totara_notification_delivery_channels_testcase extends testcase {
         $this->model = null;
         $this->entity = null;
         mock_resolver::set_notification_default_delivery_channels([]);
-        mock_channel::clear();
+        mock_channel_first::clear();
         mock_channel_second::clear();
         mock_channel_third::clear();
-        delivery_channel_loader::set_definitions(null);
+        $this->set_loader_definitions(null);
+        $this->set_enabled_message_outputs(null);
+    }
+
+    /**
+     * Helper method to override the enabled message output filter - otherwise
+     * our mock delivery channels will be filtered out as they're not real.
+     *
+     * @param array|null $enabled_outputs
+     */
+    private function set_enabled_message_outputs(?array $enabled_outputs): void {
+        $cache_property = new ReflectionProperty(delivery_channel_loader::class, 'enabled_outputs');
+        $cache_property->setAccessible(true);
+        $cache_property->setValue($enabled_outputs);
+    }
+
+    /**
+     * Helper method to override the channel loader when we're testing.
+     * This allows us to override and inject our own mock delivery channels for testing.
+     *
+     * @param array|null $definitions
+     */
+    private function set_loader_definitions(?array $definitions): void {
+        $cache_property = new ReflectionProperty(delivery_channel_loader::class, 'definitions');
+        $cache_property->setAccessible(true);
+        $cache_property->setValue($definitions);
     }
 }

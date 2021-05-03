@@ -47,6 +47,11 @@ final class delivery_channel_loader {
     private static $resolver_channels = [];
 
     /**
+     * @var array
+     */
+    private static $enabled_outputs;
+
+    /**
      * Returns a list of all available delivery channel classes.
      *
      * @return array
@@ -68,16 +73,26 @@ final class delivery_channel_loader {
     }
 
     /**
-     * Return a list of all delivery channels, in their default state.
+     * Return a list of all delivery channels for enabled outputs, in their default state.
      *
      * @return delivery_channel[]
      */
     public static function get_defaults(): array {
         /** @var delivery_channel[] $defaults */
         $defaults = [];
+        $enabled_outputs = self::get_enabled_outputs();
         foreach (self::get_built_in_classes() as $built_in_class) {
             /** @var delivery_channel $channel */
             $channel = call_user_func([$built_in_class, 'make']);
+            // Skip any that do not have the matching output enabled
+            if (!in_array($channel->component, $enabled_outputs)) {
+                continue;
+            }
+            // If this is a sub channel, then skip if the parent is disabled
+            if ($channel->is_sub_delivery_channel && !in_array($channel->parent, $enabled_outputs)) {
+                continue;
+            }
+
             $defaults[$channel->component] = $channel;
         }
 
@@ -95,7 +110,8 @@ final class delivery_channel_loader {
         if (is_array($default_enabled_keys)) {
             foreach ($default_enabled_keys as $default_enabled_key) {
                 if (!isset($defaults[$default_enabled_key])) {
-                    debugging("Unknown default delivery channel '${default_enabled_key} for '${resolver_class_name}'");
+                    // It's possible a setting might have been saved for a output that's no longer enabled,
+                    // so we continue quietly here as it's not exceptional.
                     continue;
                 }
                 $defaults[$default_enabled_key]->set_enabled(true);
@@ -167,21 +183,6 @@ final class delivery_channel_loader {
     }
 
     /**
-     * Override the collected definitions. This is a helper method for unit tests,
-     * if called outside a unit test it will throw an exception.
-     *
-     * @param array|null $definitions
-     */
-    public static function set_definitions(?array $definitions): void {
-        // For unit tests we hijack, we want to load the mock fixtures instead of real classes
-        if (!defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
-            throw new \coding_exception('Can only override the delivery channel definitions inside a unit test.');
-        }
-
-        self::$definitions = $definitions;
-    }
-
-    /**
      * Sort the delivery channels based on their display_order preference.
      *
      * @param delivery_channel[] $channels
@@ -217,7 +218,7 @@ final class delivery_channel_loader {
             ->filter_by_user($user_id)
             ->filter_by_resolver_class($resolver_class)
             ->filter_by_extended_context($extended_context)
-            ->get()
+            ->order_by('id')
             ->first();
 
         if ($user_preference) {
@@ -227,7 +228,7 @@ final class delivery_channel_loader {
             }
             if (null !== $user_preference->delivery_channels) {
                 // Return the list of channels. If null it means we need to use the defaults.
-                return $user_preference->delivery_channels;
+                return array_intersect($user_preference->delivery_channels, self::get_enabled_outputs());
             }
         }
 
@@ -248,11 +249,12 @@ final class delivery_channel_loader {
                 ->filter_by_resolver_class_name($resolver_class)
                 ->filter_by_enabled(true)
                 ->filter_by_has_overridden_default_delivery_channels()
-                ->get()
+                ->order_by('id')
                 ->first();
 
             if ($resolver_preference) {
                 $channels = array_values(array_filter(explode(',', $resolver_preference->default_delivery_channels)));
+                $channels = array_intersect($channels, self::get_enabled_outputs());
                 if (!$reset) {
                     self::$resolver_channels[$resolver_class] = $channels;
                 }
@@ -271,6 +273,7 @@ final class delivery_channel_loader {
                     $channels[] = $delivery_channel->component;
                 }
             }
+            $channels = array_intersect($channels, self::get_enabled_outputs());
 
             if ($reset) {
                 return $channels;
@@ -287,5 +290,21 @@ final class delivery_channel_loader {
      */
     public static function reset(): void {
         self::$resolver_channels = [];
+    }
+
+    /**
+     * Get a simple list of the message outputs that are enabled.
+     * Will return an array of output names, which should match delivery channel components.
+     *
+     * @return array
+     */
+    private static function get_enabled_outputs(): array {
+        global $CFG;
+        if (null === self::$enabled_outputs) {
+            require_once($CFG->dirroot . '/message/lib.php');
+            self::$enabled_outputs = array_keys(get_message_processors(true));
+        }
+
+        return self::$enabled_outputs;
     }
 }

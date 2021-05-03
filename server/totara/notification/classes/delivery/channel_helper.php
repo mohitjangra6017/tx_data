@@ -22,9 +22,15 @@
  */
 namespace totara_notification\delivery;
 
+use coding_exception;
 use totara_notification\delivery\channel\delivery_channel;
 
 class channel_helper {
+    /**
+     * @var array|null
+     */
+    private static $valid_channels = null;
+
     /**
      * channel_helper constructor.
      * Preventing this class from instantiation.
@@ -49,6 +55,14 @@ class channel_helper {
      * @return bool
      */
     public static function is_valid_delivery_channel(string $component_name): bool {
+        // Bypass validation for some specific channels. These are only available during unit tests.
+        if (null !== self::$valid_channels) {
+            if (!defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
+                throw new coding_exception('Can only override the delivery channel validator inside a unit test.');
+            }
+            return in_array($component_name, self::$valid_channels, true);
+        }
+
         return self::is_valid_delivery_channel_class(
             "message_{$component_name}\\totara_notification\\delivery\\channel\\delivery_channel"
         );

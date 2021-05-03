@@ -112,7 +112,7 @@ abstract class delivery_channel {
      * Helper to access static properties.
      * We don't validate that much as this class doesn't hold secret information.
      *
-     * @param $name
+     * @param string $name
      * @return mixed
      */
     public function __get(string $name) {
