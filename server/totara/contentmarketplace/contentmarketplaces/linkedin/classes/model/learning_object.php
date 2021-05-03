@@ -1,0 +1,167 @@
+<?php
+/**
+ * This file is part of Totara Learn
+ *
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
+ * @package contentmarketplace_linkedin
+ */
+
+namespace contentmarketplace_linkedin\model;
+
+use Closure;
+use contentmarketplace_linkedin\api\response\result;
+use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
+use contentmarketplace_linkedin\api\v2\service\learning_asset\response\element;
+use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
+use core\orm\entity\model;
+use core\orm\query\builder;
+
+/**
+ * A LinkedIn learning object that has been fetched and stored locally within Totara.
+ *
+ * Properties:
+ * @property-read string $urn
+ * @property-read string $title
+ * @property-read string|null $description
+ * @property-read string|null $description_include_html
+ * @property-read string|null $short_description
+ * @property-read string $locale_language
+ * @property-read string $locale_country
+ * @property-read int $last_updated_at
+ * @property-read int $published_at
+ * @property-read int|null $retired_at
+ * @property-read string|null $level
+ * @property-read string|null $primary_image_url
+ * @property-read int|null $time_to_complete
+ * @property-read string|null $web_launch_url
+ * @property-read string|null $sso_launch_url
+ *
+ * @package contentmarketplace_linkedin\model
+ */
+class learning_object extends model {
+
+    /**
+     * @var learning_object_entity
+     */
+    protected $entity;
+
+    /**
+     * @inheritDoc
+     */
+    protected static function get_entity_class(): string {
+        return learning_object_entity::class;
+    }
+
+    protected $entity_attribute_whitelist = [
+        // For now we just expose all of the entity attributes.
+        'id',
+        'urn',
+        'title',
+        'description',
+        'description_include_html',
+        'short_description',
+        'locale_language',
+        'locale_country',
+        'last_updated_at',
+        'published_at',
+        'retired_at',
+        'level',
+        'primary_image_url',
+        'time_to_complete',
+        'web_launch_url',
+        'sso_launch_url',
+    ];
+
+    /**
+     * Get a learning object model from a URN.
+     *
+     * @param string $urn
+     * @return static
+     */
+    public static function load_by_urn(string $urn): self {
+        $entity = learning_object_entity::repository()
+            ->where('urn', $urn)
+            ->one(true);
+        return static::load_by_entity($entity);
+    }
+
+    /**
+     * Create a new learning object from an API response element.
+     *
+     * @param element $element
+     * @return static
+     */
+    public static function create_from_element(element $element): self {
+        $data = static::get_record_data_from_element($element);
+
+        $entity = new learning_object_entity($data);
+        $entity->save();
+
+        return static::load_by_entity($entity);
+    }
+
+    /**
+     * Create many learning objects from an API response.
+     *
+     * @param result|collection $api_result
+     */
+    public static function create_bulk_from_result(result $api_result): void {
+        $elements = $api_result->get_elements();
+
+        $to_insert = array_map(Closure::fromCallable([static::class, 'get_record_data_from_element']), $elements);
+
+        builder::get_db()->insert_records_via_batch(learning_object_entity::TABLE, $to_insert);
+    }
+
+    /**
+     * Update many learning objects from an API response.
+     *
+     * @param result $api_result
+     */
+    public static function update_bulk_from_result(result $api_result): void {
+        // TODO: Specific handling for updating records.
+        static::create_bulk_from_result($api_result);
+    }
+
+    /**
+     * Convert an API response element into an insert-able learning object record.
+     *
+     * @param element $element
+     * @return object
+     */
+    protected static function get_record_data_from_element(element $element): object {
+        return (object) [
+            'urn' => $element->get_urn(),
+            'title' => $element->get_title_value(),
+            'description' => $element->get_description_value(),
+            'description_include_html' => $element->get_description_include_html(),
+            'short_description' => $element->get_short_description_value(),
+            'locale_language' => $element->get_title_locale()->get_lang(),
+            'locale_country' => $element->get_title_locale()->get_country(),
+            'last_updated_at' => $element->get_last_updated_at()->get_timestamp(),
+            'published_at' => $element->get_published_at()->get_timestamp(),
+            'retired_at' => $element->get_retired_at() ? $element->get_retired_at()->get_timestamp() : null,
+            'level' => $element->get_level(),
+            'primary_image_url' => $element->get_primary_image_url(),
+            'time_to_complete' => $element->get_time_to_complete() ? $element->get_time_to_complete()->get() : null,
+            'web_launch_url' => $element->get_web_launch_url(),
+            'sso_launch_url' => $element->get_sso_launch_url(),
+        ];
+    }
+
+}

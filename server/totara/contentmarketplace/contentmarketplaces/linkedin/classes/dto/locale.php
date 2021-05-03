@@ -20,9 +20,10 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
-namespace contentmarketplace_linkedin;
 
-class locale {
+namespace contentmarketplace_linkedin\dto;
+
+final class locale {
     /**
      * @var string
      */

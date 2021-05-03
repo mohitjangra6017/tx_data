@@ -25,7 +25,7 @@ namespace contentmarketplace_linkedin\api\v2\service\learning_asset\query;
 use coding_exception;
 use contentmarketplace_linkedin\api\v2\service\helper;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
-use contentmarketplace_linkedin\locale;
+use contentmarketplace_linkedin\dto\locale;
 use moodle_url;
 
 class criteria extends query {

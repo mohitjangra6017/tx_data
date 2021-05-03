@@ -20,31 +20,33 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
+
+use contentmarketplace_linkedin\entity\learning_object;
 use core_phpunit\testcase;
 use core\orm\query\builder;
 
 /**
- * Low level of database tests for table "ttr_linkedin_learning_object"
+ * @covers learning_object
  */
-class contentmarketplace_linkedin_linkedin_learning_object_table_testcase extends testcase {
+class contentmarketplace_linkedin_learning_object_entity_testcase extends testcase {
     /**
      * @return void
      */
-    public function test_general_insert_for_linkedin_learning_object(): void {
+    public function test_create_learning_object(): void {
         $urn = 'urn:li:lyndaCourse:144562';
 
-        $record = new stdClass();
-        $record->urn = $urn;
-        $record->level = "BEGINNER";
-        $record->last_updated_at = time();
-        $record->published_at = time();
-        $record->time_to_complete = 496;
-        $record->title = 'This is title';
-        $record->locale_language = 'en';
-        $record->locale_country = 'US';
+        $entity = new learning_object();
+        $entity->urn = $urn;
+        $entity->level = "BEGINNER";
+        $entity->last_updated_at = time();
+        $entity->published_at = time();
+        $entity->time_to_complete = 496;
+        $entity->title = 'This is title';
+        $entity->locale_language = 'en';
+        $entity->locale_country = 'US';
 
         $db = builder::get_db();
-        $record->id = $db->insert_record('marketplace_linkedin_learning_object', $record);
+        $entity->save();
 
         self::assertTrue($db->record_exists('marketplace_linkedin_learning_object', ['urn' => $urn]));
         self::assertEquals(
@@ -54,15 +56,15 @@ class contentmarketplace_linkedin_linkedin_learning_object_table_testcase extend
 
         $fetched_record = $db->get_record('marketplace_linkedin_learning_object', ['urn' => $urn]);
 
-        self::assertEquals($record->urn, $fetched_record->urn);
-        self::assertEquals($record->id, $fetched_record->id);
-        self::assertEquals($record->level, $fetched_record->level);
-        self::assertEquals($record->last_updated_at, $fetched_record->last_updated_at);
-        self::assertEquals($record->published_at, $fetched_record->published_at);
-        self::assertEquals($record->time_to_complete, $fetched_record->time_to_complete);
-        self::assertEquals($record->locale_language, $fetched_record->locale_language);
-        self::assertEquals($record->locale_country, $fetched_record->locale_country);
-        self::assertEquals($record->title, $fetched_record->title);
+        self::assertEquals($entity->urn, $fetched_record->urn);
+        self::assertEquals($entity->id, $fetched_record->id);
+        self::assertEquals($entity->level, $fetched_record->level);
+        self::assertEquals($entity->last_updated_at, $fetched_record->last_updated_at);
+        self::assertEquals($entity->published_at, $fetched_record->published_at);
+        self::assertEquals($entity->time_to_complete, $fetched_record->time_to_complete);
+        self::assertEquals($entity->locale_language, $fetched_record->locale_language);
+        self::assertEquals($entity->locale_country, $fetched_record->locale_country);
+        self::assertEquals($entity->title, $fetched_record->title);
 
         self::assertNull($fetched_record->retired_at);
         self::assertNull($fetched_record->primary_image_url);
@@ -76,36 +78,36 @@ class contentmarketplace_linkedin_linkedin_learning_object_table_testcase extend
     /**
      * @return void
      */
-    public function test_insert_with_duplicated_urn(): void {
+    public function test_create_learning_object_with_duplicate_urn(): void {
         $urn = 'urn:li:lyndaCourse:144562';
         $db = builder::get_db();
 
-        $first_record = new stdClass();
-        $first_record->urn = $urn;
-        $first_record->level = "BEGINNER";
-        $first_record->last_updated_at = time();
-        $first_record->published_at = time();
-        $first_record->time_to_complete = 469;
-        $first_record->title = 'First title';
-        $first_record->locale_language = 'en';
-        $first_record->locale_country = 'US';
+        $first_entity = new learning_object();
+        $first_entity->urn = $urn;
+        $first_entity->level = "BEGINNER";
+        $first_entity->last_updated_at = time();
+        $first_entity->published_at = time();
+        $first_entity->time_to_complete = 469;
+        $first_entity->title = 'First title';
+        $first_entity->locale_language = 'en';
+        $first_entity->locale_country = 'US';
+        $first_entity->save();
 
-        $first_record->id = $db->insert_record('marketplace_linkedin_learning_object', $first_record);
         self::assertTrue($db->record_exists('marketplace_linkedin_learning_object', ['urn' => $urn]));
         self::assertEquals(1, $db->count_records('marketplace_linkedin_learning_object', ['urn' => $urn]));
 
-        $second_record = new stdClass();
-        $second_record->urn = $urn;
-        $second_record->level = "INTERMEDIATE";
-        $second_record->last_updated_at = time();
-        $second_record->published_at = time();
-        $second_record->time_to_complete = 496;
-        $second_record->title = 'こんにちは世界';
-        $second_record->locale_language = 'ja';
-        $second_record->locale_country = 'JP';
+        $second_entity = new learning_object();
+        $second_entity->urn = $urn;
+        $second_entity->level = "INTERMEDIATE";
+        $second_entity->last_updated_at = time();
+        $second_entity->published_at = time();
+        $second_entity->time_to_complete = 496;
+        $second_entity->title = 'こんにちは世界';
+        $second_entity->locale_language = 'ja';
+        $second_entity->locale_country = 'JP';
 
         try {
-            $db->insert_record('marketplace_linkedin_learning_object', $second_record);
+            $second_entity->save();
             self::fail('Expecting the exception to be thrown');
         } catch (dml_write_exception $e) {
             // We have to be generic here, as different database vendors will yield different message.

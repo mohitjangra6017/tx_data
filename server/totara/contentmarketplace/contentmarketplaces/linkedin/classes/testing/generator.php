@@ -23,9 +23,18 @@
 namespace contentmarketplace_linkedin\testing;
 
 use coding_exception;
+use contentmarketplace_linkedin\api\response\result;
+use contentmarketplace_linkedin\api\v2\api;
+use contentmarketplace_linkedin\api\v2\service\learning_asset\query\criteria;
+use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
+use contentmarketplace_linkedin\api\v2\service\learning_asset\service;
 use contentmarketplace_linkedin\config;
+use contentmarketplace_linkedin\oauth\oauth_2;
 use core\testing\component_generator;
 use totara_contentmarketplace\token\token;
+use totara_core\http\clients\simple_mock_client;
+use totara_core\http\response;
+use totara_core\http\response_code;
 
 /**
  * @method static generator instance()
@@ -83,6 +92,8 @@ class generator extends component_generator {
     }
 
     /**
+     * Load a static JSON response from a file.
+     *
      * @param string $json_filename
      * @return string
      */
@@ -101,4 +112,46 @@ class generator extends component_generator {
 
         return file_get_contents($file);
     }
+
+    /**
+     * Load a static response from a file and wrap it in an appropriate mock response object.
+     *
+     * @param string $json_filename
+     * @return result|collection
+     */
+    public function get_mock_result_from_fixtures(string $json_filename): result {
+        $client = new simple_mock_client();
+        $token = oauth_2::create_from_config()->get_current_token();
+
+        if ($token === null || $token->is_expired()) {
+            // Mock token response
+            $client->mock_queue(
+                new response(
+                    json_encode([
+                        'access_token' => 'token',
+                        'expires_in' => HOURSECS,
+                    ]),
+                    response_code::OK,
+                    [],
+                    'application/json'
+                )
+            );
+        }
+
+        // Mock API response.
+        $client->mock_queue(
+            new response(
+                $this->get_json_content_from_fixtures($json_filename),
+                response_code::OK,
+                [],
+                'application/json'
+            )
+        );
+
+        $api = api::create($client);
+        $service = new service(new criteria());
+
+        return $api->execute($service);
+    }
+
 }

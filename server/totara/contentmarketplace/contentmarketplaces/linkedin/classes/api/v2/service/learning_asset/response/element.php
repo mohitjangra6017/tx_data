@@ -24,7 +24,10 @@ namespace contentmarketplace_linkedin\api\v2\service\learning_asset\response;
 
 use coding_exception;
 use contentmarketplace_linkedin\api\response\element as base_element;
-use contentmarketplace_linkedin\locale;
+use contentmarketplace_linkedin\dto\locale;
+use contentmarketplace_linkedin\dto\time_to_complete;
+use contentmarketplace_linkedin\dto\timestamp;
+use core\json\schema\collection;
 use core\json\schema\field\field_alpha;
 use core\json\schema\field\field_alphaext;
 use core\json\schema\field\field_clean_html;
@@ -34,7 +37,6 @@ use core\json\schema\field\field_object;
 use core\json\schema\field\field_text;
 use core\json\schema\field\field_url;
 use core\json\schema\object_container;
-use core\json\schema\collection;
 
 /**
  * @method static element create(array $json_data)
@@ -164,17 +166,38 @@ class element extends base_element {
     }
 
     /**
-     * @return int
+     * Get the last updated at timestamp.
+     * Unit is in milliseconds.
+     *
+     * @return timestamp
      */
-    public function get_last_updated_at(): int {
-        return $this->json_data['details']['lastUpdatedAt'];
+    public function get_last_updated_at(): timestamp {
+        return new timestamp($this->json_data['details']['lastUpdatedAt'], timestamp::MILLISECONDS);
     }
 
     /**
-     * @return int
+     * Get the published at timestamp.
+     * Unit is in milliseconds.
+     *
+     * @return timestamp
      */
-    public function get_published_at(): int {
-        return $this->json_data['details']['publishedAt'];
+    public function get_published_at(): timestamp {
+        return new timestamp($this->json_data['details']['publishedAt'], timestamp::MILLISECONDS);
+    }
+
+    /**
+     * Get the retired at timestamp.
+     * Unit is in milliseconds.
+     *
+     * @return timestamp|null
+     */
+    public function get_retired_at(): ?timestamp {
+        if (!isset($this->json_data['details']['retiredAt'])) {
+            return null;
+        }
+
+        // TODO: Check if this is actually returned by the API.
+        return new timestamp($this->json_data['details']['retiredAt'], timestamp::MILLISECONDS);
     }
 
     /**
@@ -266,6 +289,19 @@ class element extends base_element {
     public function get_primary_image_url(): ?string {
         $images = $this->json_data['details']['images'];
         return $images['primary'] ?? null;
+    }
+
+    /**
+     * @return time_to_complete|null
+     */
+    public function get_time_to_complete(): ?time_to_complete {
+        if (!isset($this->json_data['details']['timeToComplete'])) {
+            return null;
+        }
+
+        $time_to_complete = $this->json_data['details']['timeToComplete'];
+
+        return new time_to_complete($time_to_complete['duration'], $time_to_complete['unit']);
     }
 
     /**

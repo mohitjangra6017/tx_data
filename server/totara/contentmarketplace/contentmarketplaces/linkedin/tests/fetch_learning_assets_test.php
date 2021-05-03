@@ -112,8 +112,8 @@ class contentmarketplace_linkedin_fetch_learning_assets_testcase extends testcas
         self::assertEquals('en_US', $first_element->get_description_include_html_locale()->__toString());
         self::assertEquals('en_US', $second_element->get_description_include_html_locale()->__toString());
 
-        self::assertEquals(1170201600000, $first_element->get_published_at());
-        self::assertEquals(1613522086073, $second_element->get_last_updated_at());
+        self::assertEquals(1170201600000, $first_element->get_published_at()->get_raw());
+        self::assertEquals(1613522086073, $second_element->get_last_updated_at()->get_raw());
 
         self::assertNotNull($first_element->get_short_description_value());
         self::assertNotEmpty($first_element->get_short_description_value());

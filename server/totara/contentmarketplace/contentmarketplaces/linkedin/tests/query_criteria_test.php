@@ -23,7 +23,7 @@
 
 use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\query\criteria;
-use contentmarketplace_linkedin\locale;
+use contentmarketplace_linkedin\dto\locale;
 use core_phpunit\testcase;
 
 class contentmarketplace_linkedin_query_criteria_testcase extends testcase {

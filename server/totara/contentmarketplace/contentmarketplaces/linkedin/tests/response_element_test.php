@@ -89,7 +89,7 @@ class contentmarketplace_linkedin_response_element_testcase extends testcase {
         self::assertEquals('en_US', $element->get_title_locale()->__toString());
         self::assertEquals('this is title', $element->get_title_value());
 
-        self::assertEquals($time_now, $element->get_last_updated_at());
-        self::assertEquals($time_now, $element->get_published_at());
+        self::assertEquals($time_now, $element->get_last_updated_at()->get_raw());
+        self::assertEquals($time_now, $element->get_published_at()->get_raw());
     }
 }
