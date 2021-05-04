@@ -44,27 +44,12 @@ class update_default_delivery_channels implements mutation_resolver, has_middlew
      */
     public static function resolve(array $args, execution_context $ec): array {
         global $USER;
-        $extended_context_args = $args['extended_context'] ?? [];
 
         // Default extended context.
         $extended_context = extended_context::make_system();
 
-        if (isset($extended_context_args['context_id'])) {
-            $extended_context = extended_context::make_with_id(
-                $extended_context_args['context_id'],
-                $extended_context_args['component'] ?? extended_context::NATURAL_CONTEXT_COMPONENT,
-                $extended_context_args['area'] ?? extended_context::NATURAL_CONTEXT_AREA,
-                $extended_context_args['item_id'] ?? extended_context::NATURAL_CONTEXT_ITEM_ID
-            );
-        }
-
         // Note: there is no point to set the execution's context at the moment, because
         // we are only expecting the context system.
-
-        $system_context = extended_context::make_system();
-        if (!$extended_context->is_same($system_context)) {
-            throw new \coding_exception('Delivery channels are only available in the system context');
-        }
 
         // Find the notifiable event preference we're going to update
         $resolver_class_name = $args['resolver_class_name'];

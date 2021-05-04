@@ -1,11 +1,9 @@
 mutation totara_notification_update_notifiable_event_default_delivery_channels(
   $resolver_class_name: param_text!
-  $extended_context: totara_notification_extended_context_input
   $default_delivery_channels: [String!]!
 ) {
   default_delivery_channels: totara_notification_update_default_delivery_channels(
     resolver_class_name: $resolver_class_name
-    extended_context: $extended_context
     default_delivery_channels: $default_delivery_channels
   ) {
     __typename

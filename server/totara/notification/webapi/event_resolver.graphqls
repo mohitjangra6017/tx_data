@@ -40,12 +40,9 @@ type totara_notification_event_resolver {
   ): [totara_notification_notification_preference!]!
   #Note this is where all the configuration fields within the system should be added.
   """
-  The delivery channels and their specific values for this notifiable event in the specified context.
-  Note: While a context can be provided, only the system context is supported right now.
+  The default delivery channels for this resolver.
   """
-  default_delivery_channels(
-    extended_context: totara_notification_extended_context_input
-  ): [totara_notification_delivery_channel!]!
+  default_delivery_channels: [totara_notification_delivery_channel!]!
 }
 
 type totara_notification_notifiable_event_status {

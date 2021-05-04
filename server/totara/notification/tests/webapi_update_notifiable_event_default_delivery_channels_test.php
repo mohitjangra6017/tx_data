@@ -60,12 +60,6 @@ class totara_notification_webapi_update_notifiable_event_default_delivery_channe
             $this->get_graphql_name(update_default_delivery_channels::class),
             [
                 'resolver_class_name' => mock_resolver::class,
-                'extended_context' => [
-                    'context_id' => $extended_context->get_context_id(),
-                    'component' => $extended_context->get_component(),
-                    'area' => $extended_context->get_area(),
-                    'item_id' => $extended_context->get_item_id(),
-                ],
                 'default_delivery_channels' => [
                     'first',
                     'second',
@@ -86,12 +80,6 @@ class totara_notification_webapi_update_notifiable_event_default_delivery_channe
             $this->get_graphql_name(update_default_delivery_channels::class),
             [
                 'resolver_class_name' => mock_resolver::class,
-                'extended_context' => [
-                    'context_id' => $extended_context->get_context_id(),
-                    'component' => $extended_context->get_component(),
-                    'area' => $extended_context->get_area(),
-                    'item_id' => $extended_context->get_item_id(),
-                ],
                 'default_delivery_channels' => [
                     'first',
                 ],
@@ -101,46 +89,6 @@ class totara_notification_webapi_update_notifiable_event_default_delivery_channe
         self::assertIsArray($saved_channels);
         self::assertFalse($saved_channels['second']->is_enabled);
         self::assertTrue($saved_channels['first']->is_enabled);
-    }
-
-    /**
-     * Confirm that we cannot update a delivery channel in a non-system context
-     *
-     * @return void
-     */
-    public function test_update_default_channels_for_course_context(): void {
-        global $DB;
-
-        // Confirm we have no existing preference
-        $count = $DB->count_records('notifiable_event_preference');
-        self::assertEquals(0, $count);
-
-        $this->setAdminUser();
-
-        $generator = self::getDataGenerator();
-        $course = $generator->create_course();
-        $context_course = context_course::instance($course->id);
-        $extended_context = extended_context::make_with_context($context_course);
-
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage('Delivery channels are only available in the system context');
-
-        $this->resolve_graphql_mutation(
-            $this->get_graphql_name(update_default_delivery_channels::class),
-            [
-                'resolver_class_name' => mock_resolver::class,
-                'extended_context' => [
-                    'context_id' => $extended_context->get_context_id(),
-                    'component' => $extended_context->get_component(),
-                    'area' => $extended_context->get_area(),
-                    'item_id' => $extended_context->get_item_id(),
-                ],
-                'default_delivery_channels' => [
-                    'first',
-                    'third',
-                ],
-            ]
-        );
     }
 
     /**
@@ -172,9 +120,6 @@ class totara_notification_webapi_update_notifiable_event_default_delivery_channe
             $this->get_graphql_name(update_default_delivery_channels::class),
             [
                 'resolver_class_name' => mock_resolver::class,
-                'extended_context' => [
-                    'context_id' => $extended_context->get_context_id(),
-                ],
                 'default_delivery_channels' => ['first']
             ]
         );
@@ -211,9 +156,6 @@ class totara_notification_webapi_update_notifiable_event_default_delivery_channe
                 $this->get_graphql_name(update_default_delivery_channels::class),
                 [
                     'resolver_class_name' => mock_resolver::class,
-                    'extended_context' => [
-                        'context_id' => $extended_context->get_context_id(),
-                    ],
                     'default_delivery_channels' => ['first']
                 ]
             );

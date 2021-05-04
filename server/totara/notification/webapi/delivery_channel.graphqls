@@ -38,11 +38,6 @@ extend type Mutation {
     """
     resolver_class_name: param_text!
     """
-    Context to update the delivery channels in.
-    Note: Only the system context is accepted currently.
-    """
-    extended_context: totara_notification_extended_context_input
-    """
     Default delivery channels to enable. Any delivery channel not referenced will be disabled.
     """
     default_delivery_channels: [String!]!
