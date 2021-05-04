@@ -93,6 +93,7 @@ $string['shortnamenotuniquewithinform'] = 'Short name is already used for anothe
 $string['sortby'] = 'Sort by';
 $string['subplugintype_contentmarketplace'] = 'Content Marketplace';
 $string['subplugintype_contentmarketplace_plural'] = 'Content Marketplaces';
+$string['sync_learning_object_metadata_task'] = 'Sync Learning learning object metadata';
 $string['total'] = 'Total';
 $string['warningcreatelotsofcourses:body'] = 'Are you sure you want to create {$a} courses? This may take a while to perform.';
 $string['warningcreatelotsofcourses:title'] = 'Are you sure?';

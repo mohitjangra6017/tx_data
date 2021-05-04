@@ -26,6 +26,12 @@ use core\base_plugin_config;
 
 class config extends base_plugin_config {
     /**
+     * The configuration key.
+     * @var string
+     */
+    public const LIL_SYNC_LAST_TIME_RUN = 'lil_sync_last_time_run';
+
+    /**
      * @var string
      */
     public const ACCESS_TOKEN_ENDPOINT = 'https://www.linkedin.com/oauth/v2/accessToken';
@@ -99,5 +105,23 @@ class config extends base_plugin_config {
      */
     public static function save_access_token_expiry(?int $value): void {
         static::set('access_token_expiry', $value);
+    }
+
+    /**
+     * @param int|null $time
+     */
+    public static function set_last_time_run(?int $time = null): void {
+        if (is_null($time)) {
+            $time = time();
+        }
+
+        set_config(self::LIL_SYNC_LAST_TIME_RUN, $time, 'contentmarketplace_linkedin');
+    }
+
+    /**
+     * @return int|null
+     */
+    public static function get_last_time_run(): ?int {
+        return get_config('contentmarketplace_linkedin', self::LIL_SYNC_LAST_TIME_RUN);
     }
 }

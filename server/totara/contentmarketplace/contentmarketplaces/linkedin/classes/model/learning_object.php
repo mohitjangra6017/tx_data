@@ -24,6 +24,7 @@
 namespace contentmarketplace_linkedin\model;
 
 use Closure;
+use coding_exception;
 use contentmarketplace_linkedin\api\response\result;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\element;
@@ -54,7 +55,15 @@ use core\orm\query\builder;
  * @package contentmarketplace_linkedin\model
  */
 class learning_object extends model {
+    /**
+     * @var int
+     */
+    public const MIN = 60;
 
+    /**
+     * @var int
+     */
+    public const HOUR = 3600;
     /**
      * @var learning_object_entity
      */
