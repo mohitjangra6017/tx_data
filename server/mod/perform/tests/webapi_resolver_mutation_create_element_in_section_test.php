@@ -56,4 +56,24 @@ class mod_perform_webapi_resolver_mutation_create_element_in_section_testcase ex
         $this->assertEquals($new_child_title, $section_elements[2]->element->title);
         $this->assertEquals(3, $section_elements[2]->sort_order);
     }
+
+    public function test_missing_title(): void {
+        $test_data = $this->generate_data();
+        $args = [
+            'input' => [
+                'element' => [
+                    'plugin_name' => 'short_text',
+                    'element_details' => [
+                        'identifier' => 'test identifier',
+                    ],
+                ],
+                'after_section_element_id' => $test_data['section_elements']['b']->id,
+                'section_id' => $test_data['section']->id
+            ]
+        ];
+
+        $this->expectException(invalid_parameter_exception::class);
+        $this->expectExceptionMessage('title must be provided');
+        $this->resolve_graphql_mutation(self::MUTATION, $args);
+    }
 }

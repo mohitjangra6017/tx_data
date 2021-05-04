@@ -27,6 +27,7 @@ use core\webapi\execution_context;
 use core\webapi\middleware\require_advanced_feature;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
+use invalid_parameter_exception;
 use mod_perform\models\activity\element;
 use mod_perform\models\activity\section;
 use mod_perform\webapi\middleware\require_activity;
@@ -37,9 +38,10 @@ class create_element_in_section implements mutation_resolver, has_middleware {
     public static function resolve(array $args, execution_context $ec) {
         $after_section_element_id = $args['input']['after_section_element_id'] ?? null;
         $element_data = $args['input']['element'];
+        self::validate_element_data($element_data);
         $section = section::load_by_id($args['input']['section_id']);
 
-        builder::get_db()->transaction(function() use ($element_data, $section, $after_section_element_id) {
+        builder::get_db()->transaction(function () use ($element_data, $section, $after_section_element_id) {
             $element = element::create(
                 $section->activity->get_context(),
                 $element_data['plugin_name'],
@@ -51,10 +53,19 @@ class create_element_in_section implements mutation_resolver, has_middleware {
             $section->get_section_element_manager()->add_element_after($element, $after_section_element_id);
         });
 
-
         return [
-            'section' =>  section::load_by_id($section->id),
+            'section' => section::load_by_id($section->id),
         ];
+    }
+
+    /**
+     * @param array $element_data
+     * @throws invalid_parameter_exception
+     */
+    private static function validate_element_data(array $element_data): void {
+        if (!isset($element_data['element_details']['title'])) {
+            throw new invalid_parameter_exception('title must be provided');
+        }
     }
 
     /**
