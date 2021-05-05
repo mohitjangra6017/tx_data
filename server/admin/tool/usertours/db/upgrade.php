@@ -34,8 +34,17 @@ use tool_usertours\manager;
  */
 function xmldb_tool_usertours_upgrade($oldversion) {
     global $CFG, $DB;
+    require_once(__DIR__ .'/upgradelib.php');
 
     // Totara 13.0 release line.
+
+    $dbman = $DB->get_manager();
+
+    if ($oldversion < 2021050500) {
+        tool_usertours_upgrade_addsuffixwildcard();
+
+        upgrade_plugin_savepoint(true, 2021050500, 'tool', 'usertours');
+    }
 
     return true;
 }
