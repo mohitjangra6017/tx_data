@@ -3,6 +3,8 @@ Feature: Overridden notifications at lower context
 
   Scenario: Admin edit inherited notification at the system context
     Given I log in as "admin"
+    And I navigate to "Manage message outputs" node in "Site administration > Plugins > Message outputs"
+    And I click on "//table[contains(@class, 'admintable')]/tbody/tr/td[contains(text(), 'Email')]/following-sibling::td[1]/a" "xpath_element"
     And I navigate to system notifications page
 
     When I click on "Totara comment" "button"
