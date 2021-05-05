@@ -336,4 +336,32 @@ class totara_notification_webapi_toggle_notifiable_event_testcase extends testca
         self::assertNotNull($entity->enabled);
         self::assertEquals(1, $entity->enabled);
     }
+
+    /**
+     * @return void
+     */
+    public function test_toggle_with_optional_params(): void {
+        global $DB;
+
+        $this->setAdminUser();
+        $extended_context = extended_context::make_system();
+
+        $this->resolve_graphql_mutation(
+            $this->get_graphql_name(toggle_notifiable_event::class),
+            [
+                'resolver_class_name' => mock_resolver::class,
+            ]
+        );
+
+        $system_context = extended_context::make_system();
+
+        $notifiable_event_entity = entity::repository()->for_context(mock_resolver::class, $extended_context);
+        $notifiable_event = notifiable_event_preference::from_entity($notifiable_event_entity);
+        $this->assertTrue($notifiable_event->enabled);
+        $this->assertEquals(mock_resolver::class, $notifiable_event->resolver_class_name);
+        $this->assertTrue($notifiable_event->extended_context->is_same($system_context));
+
+        $count = $DB->count_records('notifiable_event_preference');
+        self::assertEquals(1, $count);
+    }
 }

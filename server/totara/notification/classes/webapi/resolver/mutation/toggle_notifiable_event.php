@@ -75,7 +75,9 @@ class toggle_notifiable_event implements mutation_resolver, has_middleware {
             throw notification_exception::on_manage();
         }
 
-        $notifiable_event->set_enabled($args['is_enabled']);
+        $is_enabled = $args['is_enabled'] ?? true;
+
+        $notifiable_event->set_enabled($is_enabled);
         $notifiable_event->save();
 
         return $resolver_class_name;
