@@ -155,19 +155,6 @@ class totara_webapi_server_test extends advanced_testcase {
         }
     }
 
-    public function test_invalid_type() {
-        $types = graphql::get_available_types();
-
-        foreach ($types as $type) {
-            // This should not throw an exception
-            $server = new server(execution_context::create($type));
-        }
-
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage('Invalid webapi type given');
-        $server = new server(execution_context::create('foobar'));
-    }
-
     public function test_debug() {
         // First run without debug
         $server = new server(execution_context::create(graphql::TYPE_AJAX));
@@ -210,54 +197,4 @@ class totara_webapi_server_test extends advanced_testcase {
         $this->expectOutputRegex($expected_result);
         $server->send_response($result, false);
     }
-
-    public function test_execute_introspection_query() {
-        $server = new server(execution_context::create(graphql::TYPE_DEV));
-
-        $request_params = [
-            'query' => self::get_introspection_query(),
-            'variables' => [],
-            'operationName' => null
-        ];
-        $request = new request(graphql::TYPE_DEV, $request_params);
-
-        $result = $server->handle_request($request);
-        $this->assertInstanceOf(ExecutionResult::class, $result);
-        $this->assertEmpty($result->errors, 'Unexpected errors found in request');
-    }
-
-    private static function get_introspection_query(): string {
-        // Not getting the types to keep performance impact of this as low as possible.
-        // It should still be enough to test that introspection works.
-        return '
-            query IntrospectionQuery {
-                __schema {
-                    queryType { name }
-                    mutationType { name }
-                    subscriptionType { name }
-                    directives {
-                        name
-                        description
-                        locations
-                        args {
-                            ...InputValue
-                        }
-                    }
-                }
-            }
-        
-            fragment InputValue on __InputValue {
-                name
-                description
-                type { ...TypeRef }
-                defaultValue
-            }
-        
-            fragment TypeRef on __Type {
-                kind
-                name
-            }
-        ';
-    }
-
 }

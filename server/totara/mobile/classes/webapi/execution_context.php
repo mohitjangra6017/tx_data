@@ -25,13 +25,14 @@ namespace totara_mobile\webapi;
 
 use core\format;
 use core\webapi\formatter\field\text_field_formatter;
+use totara_webapi\graphql;
 
 class execution_context extends \core\webapi\execution_context {
     /** @var \stdClass */
     private $device;
 
     public function __construct(string $operationname, \stdClass $device) {
-        parent::__construct('mobile', $operationname);
+        parent::__construct(graphql::TYPE_MOBILE, $operationname);
         $this->device = $device;
     }
 

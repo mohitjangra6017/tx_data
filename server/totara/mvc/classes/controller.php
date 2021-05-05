@@ -32,6 +32,7 @@ use moodle_page;
 use moodle_url;
 use stdClass;
 use Throwable;
+use totara_webapi\serverless;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -187,6 +188,17 @@ abstract class controller {
             require_login(null, $this->auto_login_guest);
         }
 
+    }
+
+    /**
+     * Process graphql operation.
+     *
+     * @param string $operation_name
+     * @param array $params
+     * @return array
+     */
+    public function execute_graphql_operation(?string $operation_name = null, array $params = []): array {
+        return serverless::execute_operation($operation_name, $params);
     }
 
     /**

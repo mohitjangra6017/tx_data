@@ -26,16 +26,14 @@ namespace totara_webapi;
 use coding_exception;
 use core\performance_statistics\collector;
 use core\webapi\execution_context;
-use GraphQL\Error\Debug;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\Server\OperationParams;
-use GraphQL\Server\StandardServer;
 use GraphQL\Type\Schema;
 use Throwable;
 use totara_webapi\local\util;
 
 /**
- * This class handles the request (queries, mutations, etc.) and returns and / or sends the result.
+ * This class handles GraphQL requests originating via HTTP API endpoint.
  *
  * @package totara_webapi
  */
@@ -61,27 +59,15 @@ class server {
      * @param mixed|null $debug
      */
     public function __construct(execution_context $execution_context, $debug = null) {
-        global $CFG;
-
-        if (!in_array($execution_context->get_type(), graphql::get_available_types())) {
-            throw new coding_exception('Invalid webapi type given');
-        }
-
         $this->type = $execution_context->get_type();
         $this->execution_context = $execution_context;
-
-        if ($debug !== null) {
-            $this->debug = $debug;
-        } else if ((bool)$CFG->debugdeveloper) {
-            // If debugging is enabled let's set flags to include message & trace
-            $this->debug = Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE;
-        }
+        $this->debug = $debug;
     }
 
     /**
      * Set debug, check graphql library for available options
      *
-     * @param bool|int $debug|false
+     * @param bool|int $debug
      * @return $this
      */
     public function set_debug($debug): self {
@@ -116,25 +102,7 @@ class server {
             }
 
             $this->ensure_session_initiated();
-
-            $request->validate();
-
-            $operations = $this->prepare_operations($request);
-
-            $schema = $this->prepare_schema();
-
-            $server = new StandardServer([
-                'persistentQueryLoader' => new persistent_operations_loader(),
-                'queryBatching' => true,
-                'debug' => $this->debug,
-                'schema' => $schema,
-                'fieldResolver' => new default_resolver(),
-                'rootValue' => graphql::get_server_root($schema),
-                'context' => $this->execution_context,
-                'errorsHandler' => [util::class, 'graphql_error_handler'],
-                'errorFormatter' => [util::class, 'graphql_error_formatter'],
-            ]);
-            $result = $server->executeRequest($operations);
+            $result = processor::instance($this->execution_context, $this->debug)->process_request($request);
         } catch (Throwable $e) {
             $result = new ExecutionResult(null, [$e]);
             $result->setErrorsHandler([util::class, 'graphql_error_handler']);
@@ -146,8 +114,6 @@ class server {
         ) {
             $this->add_performance_data_to_result($result);
         }
-
-        $this->process_deprecation_warnings($result);
 
         return $result;
     }
@@ -174,10 +140,13 @@ class server {
     /**
      * Build and validate the schema (on developer mode)
      *
+     * @deprecated since Totara 15.0 TL-30804
+     *
      * @param string|null $type One of graphql::TYPE_*
      * @return Schema
      */
     protected static function prepare_schema(string $type = null): Schema {
+        debugging('server::prepare been deprecated since Totara 15.0', DEBUG_DEVELOPER);
         $schema_file_loader = new schema_file_loader();
         $schema_builder = new schema_builder($schema_file_loader);
         $schema = $schema_builder->build();
@@ -193,10 +162,13 @@ class server {
      * Convert the request into OperationParams instances which the GraphQL library
      * needs for executing the request
      *
+     * @deprecated since Totara 15.0 TL-30804
+     *
      * @param request $request
      * @return OperationParams|OperationParams[]
      */
     protected function prepare_operations(request $request) {
+        debugging('server::prepare_operations been deprecated since Totara 15.0', DEBUG_DEVELOPER);
         if ($request->is_batched()) {
             // Operation name in the execution context should be null
             // as the execution context is used for all queries
@@ -219,7 +191,14 @@ class server {
         }
     }
 
+    /**
+     * @deprecated since Totara 15.0 TL-30804
+     *
+     * @param array $params
+     * @return OperationParams
+     */
     protected function create_operation(array $params) {
+        debugging('server::create_operation been deprecated since Totara 15.0', DEBUG_DEVELOPER);
         // To be able to use the persistent query support built into
         // the GraphQL library we use the operation name for the queryId
         if ($this->type !== graphql::TYPE_DEV) {
@@ -253,41 +232,6 @@ class server {
             }
         } else if ($results instanceof ExecutionResult) {
             $results->extensions['performance_data'] = $performance_data;
-        }
-    }
-
-    /**
-     * Process deprecation warnings for field triggered during the request
-     * 1. Throws debugging messages for each one
-     * 2. Appends all messages to the extensions
-     *
-     * @param ExecutionResult|ExecutionResult[] $results
-     */
-    private function process_deprecation_warnings($results) {
-        global $CFG;
-
-        $deprecation_warnings = $this->execution_context->get_deprecation_warnings();
-        if (!empty($deprecation_warnings)) {
-            foreach ($deprecation_warnings as $type => $warnings) {
-                foreach ($warnings as $field => $message) {
-                    debugging(
-                        "Field '{$field}' of type '{$type}' is marked as deprecated: {$message}",
-                        DEBUG_DEVELOPER
-                    );
-                }
-            }
-
-            if ($CFG->debugdeveloper) {
-                // If this is a batched queries we will have multiple results
-                // so go through them and add the deprecation warnings to them
-                if (is_array($results)) {
-                    foreach ($results as $result) {
-                        $result->extensions['deprecation_warnings'] = $deprecation_warnings;
-                    }
-                } else if ($results instanceof ExecutionResult) {
-                    $results->extensions['deprecation_warnings'] = $deprecation_warnings;
-                }
-            }
         }
     }
 
