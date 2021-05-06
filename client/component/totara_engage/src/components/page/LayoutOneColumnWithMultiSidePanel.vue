@@ -30,6 +30,7 @@ This layout is capable of the following:
   <div class="tui-engagelayoutOneColumnWithMultiSidePanel">
     <Responsive
       :breakpoints="responsiveBreakpoints"
+      class="tui-engagelayoutOneColumnWithMultiSidePanel__responsiveContainer"
       @responsive-resize="$_resize"
     >
       <Grid
@@ -522,8 +523,16 @@ export default {
 
 <style lang="scss">
 .tui-engagelayoutOneColumnWithMultiSidePanel {
+  display: flex;
+
+  &__responsiveContainer {
+    display: flex;
+    flex-grow: 1;
+  }
+
   &__outerRight {
     position: relative;
+    display: flex;
   }
   &__rightSidePanelContainer {
     height: 100%;
