@@ -21,6 +21,7 @@
  * @package core
  */
 
+use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
 use contentmarketplace_linkedin\sync_action\sync_learning_asset;
 use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\testing\generator;
@@ -65,10 +66,21 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
             )
         );
 
+        // Mock second page which is empty to end the proicess
+        $client->mock_queue(
+            new response(
+                $generator->get_json_content_from_fixtures('empty_response'),
+                response_code::OK,
+                [],
+                'application/json'
+            )
+        );
+
         $time_now = time();
 
         $sync = new sync_learning_asset(true, $time_now);
         $sync->set_api_client($client);
+        $sync->set_asset_types(constant::ASSET_TYPE_COURSE);
 
         // Before run there should be no record.
         self::assertEquals(0, $db->count_records(learning_object::TABLE));
@@ -118,6 +130,16 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
             )
         );
 
+        // Mock second page which is empty to end the process
+        $client->mock_queue(
+            new response(
+                $generator->get_json_content_from_fixtures('empty_response'),
+                response_code::OK,
+                [],
+                'application/json'
+            )
+        );
+
         $time_now = time();
 
         config::save_last_time_sync_learning_asset($time_now - DAYSECS);
@@ -128,6 +150,7 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
 
         $sync = new sync_learning_asset(true, $time_now);
         $sync->set_api_client($client);
+        $sync->set_asset_types(constant::ASSET_TYPE_COURSE);
 
         $sync->invoke();
 
@@ -135,5 +158,93 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
         self::assertEquals(0, $db->count_records(learning_object::TABLE));
         self::assertNotEquals($time_now, config::last_time_sync_learning_asset());
         self::assertEquals($time_now - DAYSECS, config::last_time_sync_learning_asset());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_initial_sync_with_pagination(): void {
+        $db = builder::get_db();
+        $generator = generator::instance();
+
+        self::assertEquals(0, $db->count_records(learning_object::TABLE));
+
+        $client = new simple_mock_client();
+        $client->mock_queue($generator->create_json_response_from_fixture('response_1'));
+        $client->mock_queue($generator->create_json_response_from_fixture('response_3'));
+
+        $sync = new sync_learning_asset(true);
+        $sync->set_api_client($client);
+        $sync->set_asset_types(constant::ASSET_TYPE_COURSE);
+
+        $sync->invoke();
+
+        // json response 1 has 2 records. and json response 3 has another two records. Which we end up to have
+        // 4 records within our database.
+        self::assertEquals(4, $db->count_records(learning_object::TABLE));
+
+        $urns = [
+            'urn:li:lyndaCourse:252',
+            'urn:li:lyndaCourse:253',
+            'urn:li:lyndaCourse:260',
+            'urn:li:lyndaCourse:261'
+        ];
+
+        foreach ($urns as $urn) {
+            self::assertTrue(
+                $db->record_exists(learning_object::TABLE, ['urn' => $urn])
+            );
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function test_initial_sync_with_empty_response(): void {
+        $db = builder::get_db();
+        $generator = generator::instance();
+
+        self::assertEquals(0, $db->count_records(learning_object::TABLE));
+
+        $client = new simple_mock_client();
+        $client->mock_queue($generator->create_json_response_from_fixture('empty_response'));
+
+        $sync = new sync_learning_asset(true);
+        $sync->set_api_client($client);
+        $sync->set_asset_types(constant::ASSET_TYPE_COURSE);
+
+        $sync->invoke();
+
+        // The response is empty, hence nothing added
+        self::assertEquals(0, $db->count_records(learning_object::TABLE));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_initial_sync_with_duplicated_record(): void {
+        $db = builder::get_db();
+        $generator = generator::instance();
+
+        $generator->create_learning_object('urn:li:lyndaCourse:252');
+        self::assertEquals(1, $db->count_records(learning_object::TABLE));
+
+        $client = new simple_mock_client();
+        $client->mock_queue($generator->create_json_response_from_fixture('response_1'));
+
+        $sync = new sync_learning_asset(true);
+        $sync->set_api_client($client);
+        $sync->set_asset_types(constant::ASSET_TYPE_COURSE);
+
+        try {
+            $sync->invoke();
+            self::fail("Expects the sync learning asset to yield errors");
+        } catch (dml_write_exception $exception) {
+            $message = $exception->getMessage();
+
+            // Different db vendor will yield different errors, this is the best we can assert for now.
+            self::assertStringContainsString("error writing to database", strtolower($message));
+            self::assertStringContainsString("duplicate key value", strtolower($message));
+        }
     }
 }

@@ -24,15 +24,12 @@ namespace contentmarketplace_linkedin\testing;
 
 use coding_exception;
 use contentmarketplace_linkedin\api\response\result;
-use contentmarketplace_linkedin\api\v2\api;
-use contentmarketplace_linkedin\api\v2\service\learning_asset\query\criteria;
+use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
-use contentmarketplace_linkedin\api\v2\service\learning_asset\service;
 use contentmarketplace_linkedin\config;
-use contentmarketplace_linkedin\oauth\oauth_2;
+use contentmarketplace_linkedin\entity\learning_object;
 use core\testing\component_generator;
 use totara_contentmarketplace\token\token;
-use totara_core\http\clients\simple_mock_client;
 use totara_core\http\response;
 use totara_core\http\response_code;
 
@@ -120,38 +117,92 @@ class generator extends component_generator {
      * @return result|collection
      */
     public function get_mock_result_from_fixtures(string $json_filename): result {
-        $client = new simple_mock_client();
-        $token = oauth_2::create_from_config()->get_current_token();
+        $json_string = $this->get_json_content_from_fixtures($json_filename);
+        $json_data = json_decode($json_string, true);
 
-        if ($token === null || $token->is_expired()) {
-            // Mock token response
-            $client->mock_queue(
-                new response(
-                    json_encode([
-                        'access_token' => 'token',
-                        'expires_in' => HOURSECS,
-                    ]),
-                    response_code::OK,
-                    [],
-                    'application/json'
-                )
-            );
-        }
-
-        // Mock API response.
-        $client->mock_queue(
-            new response(
-                $this->get_json_content_from_fixtures($json_filename),
-                response_code::OK,
-                [],
-                'application/json'
-            )
-        );
-
-        $api = api::create($client);
-        $service = new service(new criteria());
-
-        return $api->execute($service);
+        return collection::create($json_data);
     }
 
+    /**
+     * $record is the hashmap where the keys are:
+     * + title: String
+     * + description: String
+     * + description_include_html: String
+     * + short_description: String
+     * + locale_language: String
+     * + locale_country: String
+     * + last_updated_at: Int
+     * + published_at: Int
+     * + retired_at: Int
+     * + level: String
+     * + primary_url: String
+     * + time_to_complete: Int
+     * + web_launch_url: String
+     * + ss_launch_url: String
+     *
+     * @param array $record
+     * @return learning_object
+     */
+    public function create_learning_object(string $urn, array $record = []): learning_object {
+        if (!array_key_exists('title', $record)) {
+            $record['title'] = "This is title " . rand(0, 100);
+        }
+
+        if (!array_key_exists('description', $record)) {
+            $record['description'] = "This is description " . rand(0, 100);
+        }
+
+        if (!array_key_exists('description_include_html', $record)) {
+            $record['description_include_html'] = "<p>{$record['description']}</p>";
+        }
+
+        if (!array_key_exists('last_updated_at', $record)) {
+            $record['last_updated_at'] = time();
+        }
+
+        if (!array_key_exists('published_at', $record)) {
+            $record['published_at'] = (int) $record['last_updated_at'];
+        }
+
+        if (!array_key_exists('level', $record)) {
+            $record['level'] = constant::DIFFICULTY_LEVEL_BEGINNER;
+        }
+
+        if (!array_key_exists('locale_language', $record)) {
+            $record['locale_language'] = 'en';
+        }
+
+        if (!array_key_exists('locale_country', $record)) {
+            $record['locale_country'] = 'US';
+        }
+
+        $entity = new learning_object();
+        $entity->urn = $urn;
+
+        $entity->set_attributes_from_array_record($record);
+        $entity->save();
+
+        return $entity;
+    }
+
+    /**
+     * @param string $json_fixture
+     * @param array  $header
+     * @param int    $code
+     * @param string $conten_type
+     * @return response
+     */
+    public function create_json_response_from_fixture(
+        string $json_fixture,
+        array $header = [],
+        int $code = response_code::OK,
+        string $conten_type = 'application/json'
+    ): response {
+        return new response(
+            $this->get_json_content_from_fixtures($json_fixture),
+            $code,
+            $header,
+            $conten_type
+        );
+    }
 }

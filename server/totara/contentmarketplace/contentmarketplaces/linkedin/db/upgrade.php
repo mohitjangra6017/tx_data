@@ -72,5 +72,29 @@ function xmldb_contentmarketplace_linkedin_upgrade(int $old_version): bool {
         upgrade_plugin_savepoint(true, 2021042800, 'contentmarketplace', 'linkedin');
     }
 
+    if ($old_version < 2021042801) {
+        // Define field type to be added to marketplace_linkedin_learning_object.
+        $table = new xmldb_table('marketplace_linkedin_learning_object');
+        $field = new xmldb_field('asset_type', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'sso_launch_url');
+
+        // Conditionally launch add field type.
+        if (!$db_manager->field_exists($table, $field)) {
+            $db_manager->add_field($table, $field);
+        }
+
+        // Update any default record.
+        $DB->execute(
+            'UPDATE "ttr_marketplace_linkedin_learning_object" SET asset_type = ?',
+            ['COURSE']
+        );
+
+        $field->setNotNull(XMLDB_NOTNULL);
+        $db_manager->change_field_notnull($table, $field);
+
+        // Linkedin savepoint reached.
+        upgrade_plugin_savepoint(true, 2021042801, 'contentmarketplace', 'linkedin');
+    }
+
+
     return true;
 }

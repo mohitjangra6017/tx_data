@@ -23,6 +23,9 @@
 
 namespace totara_contentmarketplace\sync;
 
+use null_progress_trace;
+use progress_trace;
+
 /**
  * The class is to define abstract method for each sub plugins which needs to be extended
  */
@@ -35,11 +38,25 @@ abstract class sync_action {
     protected $initial_run;
 
     /**
+     * @var progress_trace
+     */
+    protected $trace;
+
+    /**
      * sync_action constructor.
      * @param bool $initial_run
      */
     public function __construct(bool $initial_run = false) {
         $this->initial_run = $initial_run;
+        $this->trace = new null_progress_trace();
+    }
+
+    /**
+     * @param progress_trace $trace
+     * @return void
+     */
+    public function set_trace(progress_trace $trace): void {
+        $this->trace = $trace;
     }
 
     /**

@@ -23,6 +23,8 @@
 
 namespace totara_contentmarketplace;
 
+use null_progress_trace;
+use progress_trace;
 use totara_contentmarketplace\sync\external_sync;
 use totara_contentmarketplace\sync\sync_action;
 use totara_core\http\client;
@@ -42,12 +44,24 @@ class sync {
     private $client;
 
     /**
-     * sync constructor.
-     * @param client $client
+     * @var progress_trace
      */
-    public function __construct(client $client) {
+    private $trace;
+
+    /**
+     * sync constructor.
+     *
+     * @param client              $client
+     * @param progress_trace|null $trace
+     */
+    public function __construct(client $client, ?progress_trace $trace = null) {
+        if (null === $trace) {
+            $trace = new null_progress_trace();
+        }
+
         $this->sync_action_classes = [];
         $this->client = $client;
+        $this->trace = $trace;
     }
 
     /**
@@ -57,6 +71,7 @@ class sync {
     public function execute(bool $initial_run): void {
         $actions = $this->get_sync_actions($initial_run);
         foreach ($actions as $action) {
+            $action->set_trace($this->trace);
             $action->invoke();
         }
     }

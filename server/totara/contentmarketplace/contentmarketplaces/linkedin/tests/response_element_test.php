@@ -22,6 +22,7 @@
  */
 
 use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
+use contentmarketplace_linkedin\dto\timestamp;
 use contentmarketplace_linkedin\exception\json_validation_exception;
 use core_phpunit\testcase;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\element;
@@ -77,8 +78,8 @@ class contentmarketplace_linkedin_response_element_testcase extends testcase {
             'details' => [
                 'level' => constant::DIFFICULTY_LEVEL_BEGINNER,
                 'images' => [],
-                'lastUpdatedAt' => $time_now,
-                'publishedAt' => $time_now,
+                'lastUpdatedAt' => $time_now * timestamp::MILLISECONDS_IN_SECOND,
+                'publishedAt' => $time_now * timestamp::MILLISECONDS_IN_SECOND,
                 'urls' => []
             ]
         ];
@@ -89,7 +90,7 @@ class contentmarketplace_linkedin_response_element_testcase extends testcase {
         self::assertEquals('en_US', $element->get_title_locale()->__toString());
         self::assertEquals('this is title', $element->get_title_value());
 
-        self::assertEquals($time_now, $element->get_last_updated_at()->get_raw());
-        self::assertEquals($time_now, $element->get_published_at()->get_raw());
+        self::assertEquals($time_now, $element->get_last_updated_at()->get_timestamp());
+        self::assertEquals($time_now, $element->get_published_at()->get_timestamp());
     }
 }

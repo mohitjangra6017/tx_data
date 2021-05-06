@@ -30,16 +30,28 @@ use coding_exception;
  * @package contentmarketplace_linkedin\dto
  */
 final class timestamp {
-
+    /**
+     * @var string
+     */
     public const SECONDS = 'SECOND';
+
+    /**
+     * @var string
+     */
     public const MILLISECONDS = 'MILLISECOND';
 
     /**
+     * @var int
+     */
+    public const MILLISECONDS_IN_SECOND = 1000;
+
+    /**
      * Available units, and their relation to a second.
+     * @var array
      */
     private const UNITS = [
         self::SECONDS => 1,
-        self::MILLISECONDS => 1 / 1000,
+        self::MILLISECONDS => 1 / self::MILLISECONDS_IN_SECOND,
     ];
 
     /**

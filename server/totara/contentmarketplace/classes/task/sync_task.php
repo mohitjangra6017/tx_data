@@ -17,24 +17,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
- * @package contentmarketplace_linkedin
+ * @author  Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @package totara_contentmarketplace
  */
+namespace totara_contentmarketplace\task;
 
-namespace contentmarketplace_linkedin\entity;
-
-use core\orm\collection;
-use core\orm\entity\repository;
-use core\orm\lazy_collection;
+use totara_contentmarketplace\sync;
 
 /**
- * Class learning_object_repository
- *
- * @method collection|learning_object[] get(bool $unkeyed = false)
- * @method lazy_collection|learning_object[] get_lazy()
- *
- * @package contentmarketplace_linkedin\entity
+ * Synchronise metadata from the external content marketplace services into the local system.
  */
-class learning_object_repository extends repository {
+class sync_task extends base_sync_task {
+    /**
+     * @inheritDoc
+     */
+    public function get_name() {
+        return get_string('sync_learning_object_metadata_task', 'totara_contentmarketplace');
+    }
 
+    /**
+     * @inheritDoc
+     */
+    public function execute() {
+        $sync = new sync($this->client, $this->trace);
+        $sync->execute(false);
+    }
 }

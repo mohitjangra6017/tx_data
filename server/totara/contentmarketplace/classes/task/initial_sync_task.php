@@ -39,7 +39,7 @@ class initial_sync_task extends base_sync_task {
      * @inheritDoc
      */
     public function execute() {
-        $sync = new sync($this->client);
+        $sync = new sync($this->client, $this->trace);
         $sync->execute(true);
     }
 }

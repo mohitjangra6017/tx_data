@@ -22,6 +22,7 @@
  */
 
 use totara_contentmarketplace\task\initial_sync_task;
+use totara_contentmarketplace\task\sync_task;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -29,10 +30,19 @@ $tasks = [
     [
         'classname' => initial_sync_task::class,
         'blocking' => 0,
-        'minute' => 45,
-        'hour' => '*',
+        'minute' => 'R',
+        'hour' => 'R',
         'day' => '*',
-        'dayofweek' => '*',
+        'dayofweek' => 'R',
         'month' => '*'
     ],
+    [
+        'classname' => sync_task::class,
+        'blocking' => 0,
+        'minute' => 'R',
+        'hour' => 'R',
+        'day' => '*',
+        'dayofweek' => 'R',
+        'month' => '*'
+    ]
 ];

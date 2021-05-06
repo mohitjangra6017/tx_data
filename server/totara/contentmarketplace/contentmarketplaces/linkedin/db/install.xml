@@ -22,6 +22,7 @@
         <FIELD NAME="time_to_complete" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The time in second unit, to complete the learning object."/>
         <FIELD NAME="web_launch_url" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="sso_launch_url" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="asset_type" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

@@ -60,7 +60,7 @@ class element extends base_element {
                     new field_object('locale', $locale_obj)
                 ),
             ),
-            new field_alphaext('type', false),
+            new field_alphaext('type'),
             new field_object(
                 'details',
                 object_container::create(
@@ -318,5 +318,12 @@ class element extends base_element {
     public function get_sso_launch_url(): ?string {
         $urls = $this->json_data['details']['urls'];
         return $urls['ssoLaunch'] ?? null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function get_type(): string {
+        return $this->json_data['type'];
     }
 }

@@ -23,7 +23,10 @@
 
 namespace contentmarketplace_linkedin\entity;
 
+use coding_exception;
 use core\orm\entity\entity;
+use contentmarketplace_linkedin\repository\learning_object_repository;
+use stdClass;
 
 /**
  * A LinkedIn learning object that has been fetched and stored locally within Totara.
@@ -44,13 +47,48 @@ use core\orm\entity\entity;
  * @property int|null $time_to_complete
  * @property string|null $web_launch_url
  * @property string|null $sso_launch_url
+ * @property string $asset_type
  *
  * @method static learning_object_repository repository
  *
  * @package contentmarketplace_linkedin\entity
  */
 class learning_object extends entity {
-
+    /**
+     * @var string
+     */
     public const TABLE = 'marketplace_linkedin_learning_object';
 
+    /**
+     * @return string
+     */
+    public static function repository_class_name(): string {
+        return learning_object_repository::class;
+    }
+
+    /**
+     * @param stdClass $record
+     * @return void
+     */
+    public function set_attributes_from_record(stdClass $record): void {
+        $attributes = get_object_vars($record);
+        $this->set_attributes_from_array_record($attributes);
+    }
+
+    /**
+     * @param array $record
+     * @return void
+     */
+    public function set_attributes_from_array_record(array $record): void {
+        foreach ($record as $attribute_name => $value) {
+            if ('urn' === $attribute_name) {
+                if ($this->exists() && $value !== $this->urn) {
+                    // This is illegal.
+                    throw new coding_exception("Update the urn from an existing record is forbidden");
+                }
+            }
+
+            $this->set_attribute($attribute_name, $value);
+        }
+    }
 }

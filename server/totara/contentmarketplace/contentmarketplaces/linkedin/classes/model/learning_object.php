@@ -24,8 +24,6 @@
 namespace contentmarketplace_linkedin\model;
 
 use Closure;
-use coding_exception;
-use contentmarketplace_linkedin\api\response\result;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\element;
 use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
@@ -51,19 +49,11 @@ use core\orm\query\builder;
  * @property-read int|null $time_to_complete
  * @property-read string|null $web_launch_url
  * @property-read string|null $sso_launch_url
+ * @property-read string $asset_type
  *
  * @package contentmarketplace_linkedin\model
  */
 class learning_object extends model {
-    /**
-     * @var int
-     */
-    public const MIN = 60;
-
-    /**
-     * @var int
-     */
-    public const HOUR = 3600;
     /**
      * @var learning_object_entity
      */
@@ -94,6 +84,7 @@ class learning_object extends model {
         'time_to_complete',
         'web_launch_url',
         'sso_launch_url',
+        'asset_type'
     ];
 
     /**
@@ -127,9 +118,9 @@ class learning_object extends model {
     /**
      * Create many learning objects from an API response.
      *
-     * @param result|collection $api_result
+     * @param collection $api_result
      */
-    public static function create_bulk_from_result(result $api_result): void {
+    public static function create_bulk_from_result(collection $api_result): void {
         $elements = $api_result->get_elements();
 
         $to_insert = array_map(Closure::fromCallable([static::class, 'get_record_data_from_element']), $elements);
@@ -140,11 +131,25 @@ class learning_object extends model {
     /**
      * Update many learning objects from an API response.
      *
-     * @param result $api_result
+     * @param collection $api_result
      */
-    public static function update_bulk_from_result(result $api_result): void {
-        // TODO: Specific handling for updating records.
-        static::create_bulk_from_result($api_result);
+    public static function update_bulk_from_result(collection $api_result): void {
+        $elements = $api_result->get_elements();
+        $repository = learning_object_entity::repository();
+
+        foreach ($elements as $element) {
+            $record = static::get_record_data_from_element($element);
+
+            $urn = $element->get_urn();
+            $learning_object = $repository->find_by_urn($urn);
+
+            if (null === $learning_object) {
+                $learning_object = new learning_object_entity();
+            }
+
+            $learning_object->set_attributes_from_record($record);
+            $learning_object->save();
+        }
     }
 
     /**
@@ -170,6 +175,7 @@ class learning_object extends model {
             'time_to_complete' => $element->get_time_to_complete() ? $element->get_time_to_complete()->get() : null,
             'web_launch_url' => $element->get_web_launch_url(),
             'sso_launch_url' => $element->get_sso_launch_url(),
+            'asset_type' => $element->get_type(),
         ];
     }
 
