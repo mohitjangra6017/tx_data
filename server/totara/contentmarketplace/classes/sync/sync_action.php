@@ -21,18 +21,29 @@
  * @package totara_contentmarketplace
  */
 
-use totara_contentmarketplace\task\initial_sync_task;
+namespace totara_contentmarketplace\sync;
 
-defined('MOODLE_INTERNAL') || die();
+/**
+ * The class is to define abstract method for each sub plugins which needs to be extended
+ */
+abstract class sync_action {
+    /**
+     * A flag to say that this action is running for the first time.
+     *
+     * @var bool
+     */
+    protected $initial_run;
 
-$tasks = [
-    [
-        'classname' => initial_sync_task::class,
-        'blocking' => 0,
-        'minute' => 45,
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ],
-];
+    /**
+     * sync_action constructor.
+     * @param bool $initial_run
+     */
+    public function __construct(bool $initial_run = false) {
+        $this->initial_run = $initial_run;
+    }
+
+    /**
+     * @retrun void
+     */
+    abstract public function invoke(): void;
+}

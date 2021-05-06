@@ -61,6 +61,7 @@ $string['explorecreatecourseheading'] = 'Add a new course';
 $string['explorecreatecourseintro'] = 'Select content to include';
 $string['filters'] = 'Filters';
 $string['in_collection'] = 'In collection';
+$string['initial_sync_learning_object_metadata_task'] = 'Initial sync Learning learning object metadata';
 $string['itemselected'] = '1 item selected';
 $string['itemselected_plural'] = '{$a} items selected';
 $string['load_more'] = 'Load more';

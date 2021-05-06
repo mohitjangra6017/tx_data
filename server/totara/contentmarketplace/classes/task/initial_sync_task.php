@@ -20,18 +20,26 @@
  * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_contentmarketplace
  */
-namespace totara_contentmarketplace;
+namespace totara_contentmarketplace\task;
 
-use totara_core\http\client;
+use totara_contentmarketplace\sync;
 
 /**
- * Interface external_sync
+ * Initial synchronise metadata from the external content marketplace services into the local system.
  */
-interface external_sync {
+class initial_sync_task extends base_sync_task {
     /**
-     * Set different client for sync action
-     *
-     * @param client $client
+     * @inheritDoc
      */
-    public function set_api_client(client $client): void;
+    public function get_name() {
+        return get_string('initial_sync_learning_object_metadata_task', 'totara_contentmarketplace');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function execute() {
+        $sync = new sync($this->client);
+        $sync->execute(true);
+    }
 }

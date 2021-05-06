@@ -23,59 +23,80 @@
 
 namespace totara_contentmarketplace;
 
+use totara_contentmarketplace\sync\external_sync;
+use totara_contentmarketplace\sync\sync_action;
+use totara_core\http\client;
 use core_component;
 use core_plugin_manager;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 
-class learning_object_factory {
+class sync {
     /**
      * @var array
      */
     private $sync_action_classes;
 
     /**
-     * learning_object_factory constructor.
+     * @var client
      */
-    private function __construct() {
+    private $client;
+
+    /**
+     * sync constructor.
+     * @param client $client
+     */
+    public function __construct(client $client) {
         $this->sync_action_classes = [];
+        $this->client = $client;
     }
 
     /**
-     * Factory method to create a new instance.
-     * @return static
-     */
-    public static function create(): self {
-        return new learning_object_factory();
-    }
-
-    /**
+     * @param bool $initial_run
      * @return void
      */
-    public function sync(): void {
-        $this->load_sync_action_classes();
-
-        foreach ($this->sync_action_classes as $sync_action_class) {
-             /** @var sync_action $action_class */
-             $action_class = new $sync_action_class();
-
-             if($action_class->initial_run()) {
-                 continue;
-             }
-
-             $action_class->invoke();
+    public function execute(bool $initial_run): void {
+        $actions = $this->get_sync_actions($initial_run);
+        foreach ($actions as $action) {
+            $action->invoke();
         }
     }
+
+    /**
+     * @param bool $initial_run
+     * @return sync_action[]
+     */
+    private function get_sync_actions(bool $initial_run): array {
+        $this->load_sync_action_classes();
+        $actions = [];
+
+        foreach ($this->sync_action_classes as $action_class) {
+            $action = new $action_class($initial_run);
+
+            if ($action instanceof external_sync) {
+                $action->set_api_client($this->client);
+            }
+
+            $actions[] = $action;
+        }
+
+        return $actions;
+    }
+
 
     /**
      * @return void
      */
     private function load_sync_action_classes(): void {
+        if (!empty($this->sync_action_classes)) {
+            return;
+        }
+
         /** @var contentmarketplace[] $plugins */
         $plugins = core_plugin_manager::instance()->get_plugins_of_type('contentmarketplace');
         foreach ($plugins as $plugin) {
             if ($plugin->is_enabled()) {
                 $this->sync_action_classes = core_component::get_namespace_classes(
-                    'action',
+                    'sync_action',
                     sync_action::class,
                     $plugin->component
                 );
@@ -83,11 +104,4 @@ class learning_object_factory {
         }
     }
 
-
-    /**
-     * @return array
-     */
-    public function get_sync_action_classes(): array {
-        return $this->sync_action_classes;
-    }
 }

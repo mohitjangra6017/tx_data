@@ -17,33 +17,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_contentmarketplace
  */
+namespace totara_contentmarketplace\task;
 
-namespace totara_contentmarketplace;
+use core\task\scheduled_task;
+use totara_core\http\client;
+use totara_core\http\clients\curl_client;
 
-/**
- * The class is to define abstract method for each sub plugins which needs to be extended
- */
-abstract class sync_action {
+abstract class base_sync_task extends scheduled_task {
     /**
-     * Prevent constructor to be modified by child class
-     *
-     * lil_sync_action constructor.
+     * @var client
      */
-    public final function __construct() {
+    protected $client;
+
+    /**
+     * base_sync_task constructor.
+     */
+    public function __construct() {
+        // Default to curl client, but it can be mock for testing purpose.
+        $this->client = new curl_client();
     }
 
     /**
-     * @retrun void
+     * @param client $client
+     * @return void
      */
-    public abstract function invoke(): void;
-
-    /**
-     * To check the initial sync runs or not.
-     *
-     * @return bool
-     */
-    public abstract function initial_run(): bool;
+    public function set_client(client $client): void {
+        $this->client = $client;
+    }
 }

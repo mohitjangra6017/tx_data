@@ -20,19 +20,18 @@
  * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package totara_contentmarketplace
  */
+namespace totara_contentmarketplace\sync;
 
-use totara_contentmarketplace\task\initial_sync_task;
+use totara_core\http\client;
 
-defined('MOODLE_INTERNAL') || die();
-
-$tasks = [
-    [
-        'classname' => initial_sync_task::class,
-        'blocking' => 0,
-        'minute' => 45,
-        'hour' => '*',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ],
-];
+/**
+ * Interface external_sync
+ */
+interface external_sync {
+    /**
+     * Set different client for sync action
+     *
+     * @param client $client
+     */
+    public function set_api_client(client $client): void;
+}
