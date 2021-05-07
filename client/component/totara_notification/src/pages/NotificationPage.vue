@@ -432,6 +432,14 @@ export default {
         }
 
         this.modal.open = false;
+
+        notify({
+          type: 'success',
+          message:
+            this.modal.state === MODAL_STATE_CREATE
+              ? this.$str('saved_notification', 'totara_notification')
+              : this.$str('updated_notification', 'totara_notification'),
+        });
       } catch (e) {
         console.error(e);
 
@@ -816,7 +824,9 @@ export default {
       "error_cannot_create_custom_notification",
       "error_cannot_delete_custom_notification",
       "edit_notification",
-      "error_cannot_update_notification"
+      "error_cannot_update_notification",
+      "saved_notification",
+      "updated_notification"
     ]
   }
 </lang-strings>
