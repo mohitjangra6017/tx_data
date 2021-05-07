@@ -7,6 +7,9 @@ query mod_perform_element($element_id: core_id) {
     element_plugin {
       admin_view_component
       participant_form_component
+      plugin_config {
+        extra_config_data
+      }
     }
   }
 }

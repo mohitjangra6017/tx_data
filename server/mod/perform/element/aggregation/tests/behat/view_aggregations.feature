@@ -167,3 +167,10 @@ Feature: Respond to sources and view aggregate responses
     When I choose "External respondent" in the "Responses by relationship" tui select filter
     Then I should see perform "short text" question "Not needed to be filled short answer" is answered by "External respondent" with "No response submitted"
     And I should see perform "aggregation" question "Average of previous answers" is answered by "External respondent" with "Average: 100.00"
+
+  Scenario: Check aggregation preview in activity response data report
+    When I log in as "admin"
+    And I navigate to the mod perform response data report for "Aggregation Activity" activity
+    And I click on "Preview" "button" in the "Average of previous answers" "table_row"
+    Then I should see "Average of previous answers" in the tui modal
+    And I should see "Calculations are based on the latest submitted values. Unanswered questions are excluded from calculation." in the tui modal

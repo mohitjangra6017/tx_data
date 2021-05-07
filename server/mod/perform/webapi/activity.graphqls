@@ -115,6 +115,7 @@ type mod_perform_element_plugin_config {
 
   """
   any extra static data the plugin needs to supply (json encoded)
+  @deprecated since Totara 14 - please use data instead
   """
   extra_config_data: String!
 }

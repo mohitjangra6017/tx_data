@@ -101,3 +101,4 @@ information provided here is intended especially for developers.
 * respondable_element_plugin::post_response_submission() has been deprecated, please use the \mod_perform\hook\post_element_response_submission hook instead.
 * A new pluggable system adds new columns related to the linked review element plugin to the "Performance activity response export" embedded report. To get those new columns the report needs to be either resetted or the new columns be added manually
 * Deprecated mod_perform\entity\activity\activity::sections please use sections_ordered or sections_ordered_with_respondable_element_count
+* GraphQL type mod_perform_element_plugin_config.extra_config_data has been deprecated. please use mod_perform_element.data instead.

@@ -40,6 +40,7 @@
           <component
             :is="component"
             :data="element.data"
+            :extra-plugin-config-data="extraPluginConfigData"
             :report-preview="true"
             :section-element="{
               element: element,
@@ -97,6 +98,18 @@ export default {
 
       return tui.asyncComponent(
         this.element.element_plugin.admin_view_component
+      );
+    },
+    /**
+     * @return {Object}
+     */
+    extraPluginConfigData() {
+      if (this.element === null) {
+        return null;
+      }
+
+      return JSON.parse(
+        this.element.element_plugin.plugin_config.extra_config_data
       );
     },
   },
