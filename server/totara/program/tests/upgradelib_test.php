@@ -111,6 +111,10 @@ class totara_program_upgradelib_testcase extends testcase {
 
         $DB->insert_records('prog_message', $old_messages);
 
+        self::assertEquals(0, $DB->count_records('files', [
+            'filearea' => 'program_legacy_message_backup',
+            'mimetype' => 'application/json',
+        ]));
         totara_program_upgrade_migrate_message_instances(
             123,
             true,
@@ -123,6 +127,13 @@ class totara_program_upgradelib_testcase extends testcase {
             'resolver_class_name' => $resolver_class_name,
             'recipient' => subject::class,
         ]));
+
+        // Check that the backup function was called.
+        self::assertEquals(3, $DB->count_records('files', [
+            'filearea' => 'program_legacy_message_backup',
+            'mimetype' => 'application/json',
+        ]));
+
         $subject_notification_preference = $DB->get_record('notification_preference', [
             'resolver_class_name' => $resolver_class_name,
             'recipient' => subject::class,
@@ -276,5 +287,74 @@ class totara_program_upgradelib_testcase extends testcase {
         $result = totara_program_upgrade_convert_placeholders($source, false);
 
         self::assertEquals($expected, $result);
+    }
+
+    public function test_totara_program_upgrade_backup_message(): void {
+        global $DB;
+
+        $program_generator = generator::instance();
+        $program = $program_generator->create_program();
+        $cert = $program_generator->create_certification();
+        $old_program_message = [
+            'programid' => (string)$program->id,
+            'messagetype' => '123',
+            'sortorder' => '1',
+            'messagesubject' => 'Subject message 1 subject %programfullname%',
+            'mainmessage' => 'Subject 1 main message %username%',
+            'notifymanager' => '1',
+            'managersubject' => 'Manager message 1 subject %programfullname%',
+            'managermessage' => 'Manager 1 main message %username%',
+            'triggertime' => '0',
+        ];
+        $old_program_message_id = $DB->insert_record('prog_message', (object)$old_program_message);
+
+        $old_cert_message = [
+            'programid' => (string)$cert->id,
+            'messagetype' => '123',
+            'sortorder' => '1',
+            'messagesubject' => 'Cert subject',
+            'mainmessage' => 'Cert body',
+            'notifymanager' => '0',
+            'managersubject' => '',
+            'managermessage' => '',
+            'triggertime' => '1000',
+        ];
+        $old_cert_message_id = $DB->insert_record('prog_message', (object)$old_cert_message);
+
+        self::assertFalse($DB->record_exists('files', ['filearea' => 'program_legacy_message_backup']));
+
+        totara_program_upgrade_backup_message($old_program_message_id, true);
+        self::assertEquals(1, $DB->count_records('files', [
+            'filearea' => 'program_legacy_message_backup',
+            'mimetype' => 'application/json',
+        ]));
+        $this->assert_backup_file($program->id, $old_program_message_id, $old_program_message);
+
+        totara_program_upgrade_backup_message($old_cert_message_id, false);
+        self::assertEquals(2, $DB->count_records('files', [
+            'filearea' => 'program_legacy_message_backup',
+            'mimetype' => 'application/json',
+        ]));
+        $this->assert_backup_file($cert->id, $old_cert_message_id, $old_cert_message, false);
+    }
+
+    private function assert_backup_file(int $program_id, int $message_id, array $expected_content, bool $is_program = true): void {
+        $fs = get_file_storage();
+        $program_context = context_program::instance($program_id);
+        $file_info = [
+            'contextid' => $program_context->id,
+            'component' => $is_program ? 'totara_program' : 'totara_certification',
+            'filearea' => 'program_legacy_message_backup',
+            'itemid' => $message_id,
+            'filepath' => '/',
+            'filename' => 'program_legacy_message_backup_' . $message_id . '.json',
+        ];
+
+        $file = $fs->get_file(...array_values($file_info));
+        $json_decoded = json_decode($file->get_content(), true);
+
+        // Add id to the expected record.
+        $expected_content = array_merge(['id' => (string)$message_id], $expected_content);
+        self::assertEqualsCanonicalizing($expected_content, $json_decoded);
     }
 }

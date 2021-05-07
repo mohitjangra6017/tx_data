@@ -174,13 +174,50 @@ function totara_program_upgrade_migrate_message_instances(
             $DB->insert_record('notification_preference', $notif_pref_override);
         }
 
+        // Make a backup of the message record to be deleted.
+        totara_program_upgrade_backup_message($message->id, $is_for_program);
+
         // Remove the old message.
         $DB->delete_records('prog_message', ['id' => $message->id]);
     }
 }
 
 /**
- * Disables the given notification in all existing programs or certificatins
+ * Save a backup of a legacy message record as a file, just in case.
+ *
+ * @param int $message_id
+ * @param bool $is_for_program
+ */
+function totara_program_upgrade_backup_message(int $message_id, bool $is_for_program): void {
+    global $DB, $CFG;
+    require_once($CFG->dirroot . '/lib/moodlelib.php');
+
+    $message_record = $DB->get_record('prog_message', ['id' => $message_id]);
+    if (!$message_record) {
+        return;
+    }
+    $program_context = context_program::instance($message_record->programid, IGNORE_MISSING);
+    if (!$program_context) {
+        return;
+    }
+    try {
+        $fs = get_file_storage();
+        $file_info = [
+            'contextid' => $program_context->id,
+            'component' => $is_for_program ? 'totara_program' : 'totara_certification',
+            'filearea' => 'program_legacy_message_backup',
+            'itemid' => $message_id,
+            'filepath' => '/',
+            'filename' => 'program_legacy_message_backup_' . $message_id . '.json'
+        ];
+        $fs->create_file_from_string($file_info, json_encode($message_record));
+    } catch (moodle_exception $e) {
+        // Don't let upgrade fail if there are problems creating the file.
+    }
+}
+
+/**
+ * Disables the given notification in all existing programs or certifications
  *
  * Note that this doesn't disabled the notification in the system context. The idea is that new programs will inherit
  * the system-context notification while existing programs will not, in order that they continue to use pre-existing
