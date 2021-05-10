@@ -30,6 +30,8 @@ require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/totara/plan/lib.php');
 require_once($CFG->dirroot . '/totara/plan/edit_form.php');
 
+use core\json_editor\helper\document_helper;
+
 // Check if Learning plans are enabled.
 check_learningplan_enabled();
 
@@ -81,6 +83,12 @@ if ($form->is_cancelled()) {
 // Handle form submit
 if ($data = $form->get_data()) {
     if (isset($data->submitbutton)) {
+        // Reformat text if it comes from Weka editor - learning plans were programmed with the hard-coded assumption that text would be FORMAT_HTML.
+        // This is a temporary fix, awaiting TL-27568.
+        if (document_helper::looks_like_json($data->description_editor['text'])) {
+            $data->description_editor['text'] = format_text(document_helper::clean_json_document($data->description_editor['text']), FORMAT_JSON_EDITOR);
+        }
+
         $transaction = $DB->start_delegated_transaction();
         // Set up the plan
         $newid = $DB->insert_record('dp_plan', $data);
