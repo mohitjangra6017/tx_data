@@ -50,10 +50,13 @@
       <Cell>
         {{ label }}
       </Cell>
-      <Cell align="center">
+      <Cell align="center" :column-header="$str('default', 'core')">
         <CheckSuccess v-if="is_enabled" />
       </Cell>
-      <Cell align="center">
+      <Cell
+        align="center"
+        :column-header="$str('forced', 'totara_notification')"
+      >
         <template
           v-if="
             !is_sub_delivery_channel || isChannelAvailable(parent_component)
