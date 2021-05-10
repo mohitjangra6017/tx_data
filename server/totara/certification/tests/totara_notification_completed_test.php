@@ -47,6 +47,7 @@ class totara_certification_totara_notification_completed_testcase extends totara
      * @return void
      */
     protected function setUp(): void {
+        parent::setUp();
         global $CFG;
         require_once($CFG->dirroot . '/totara/certification/lib.php');
     }

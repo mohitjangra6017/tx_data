@@ -48,6 +48,7 @@ class totara_program_totara_notification_completed_testcase extends totara_progr
      * @return void
      */
     protected function setUp(): void {
+        parent::setUp();
         global $CFG;
         require_once($CFG->dirroot . '/totara/program/program.class.php');
     }
