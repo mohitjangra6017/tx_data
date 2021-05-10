@@ -3,6 +3,8 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* Updated LayoutOneColumnWithMultiSidePanel.vue limiting width to stay in container
+  * SCSS changes
 * Update InlineEditing.vue to pass through prop "focusButton" to tui ButtonIcon.vue
   * Template changes
 * Added optional prop "focusButton" to component InlineEditing.vue

@@ -19,7 +19,8 @@
 <template>
   <div class="tui-engageSurveyCardBody">
     <h3 :id="labelId" class="tui-engageSurveyCardBody__title">
-      {{ name }}
+      <span aria-hidden="true" :title="name">{{ displayName }}</span>
+      <span class="sr-only">{{ name }}</span>
     </h3>
     <div class="tui-engageSurveyCardBody__footer">
       <p v-if="showEdit" class="tui-engageSurveyCardBody__text">
@@ -117,6 +118,17 @@ export default {
   computed: {
     showEdit() {
       return this.owned && this.editAble;
+    },
+
+    /**
+     * Gets what a visual user will see
+     */
+    displayName() {
+      if (!this.voted || this.editAble || this.name.length < 40) {
+        return this.name;
+      } else {
+        return this.name.substring(0, 37) + String.fromCharCode(8230);
+      }
     },
   },
 };

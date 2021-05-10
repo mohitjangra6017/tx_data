@@ -337,6 +337,7 @@ export default {
 .tui-grid {
   display: flex;
   flex-grow: 1; // in case nested inside a parent grid cell
+  max-width: 100%;
 
   // main Grid modifiers applied based on supplied prop values
   &--wrapped {

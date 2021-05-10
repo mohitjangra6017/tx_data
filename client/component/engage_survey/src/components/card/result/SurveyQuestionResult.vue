@@ -68,14 +68,17 @@
           />
         </template>
       </template>
-      <template v-if="isSingleChoice">
-        <span class="tui-engageSurveyQuestionResult__percent">
+      <div v-if="isSingleChoice" class="tui-engageSurveyQuestionResult__answer">
+        <span class="tui-engageSurveyQuestionResult__answerPercent">
           {{ $str('percentage', 'engage_survey', percentage(votes)) }}
         </span>
-      </template>
-      <span class="tui-engageSurveyQuestionResult__answer">
+        <span class="tui-engageSurveyQuestionResult__answerText">
+          {{ value }}
+        </span>
+      </div>
+      <div v-else class="tui-engageSurveyQuestionResult__answer">
         {{ value }}
-      </span>
+      </div>
     </div>
     <template v-if="resultContent">
       <div class="tui-engageSurveyQuestionResult__votes">
@@ -233,16 +236,18 @@ export default {
     text-align: end;
   }
 
-  &__percent {
-    @include tui-font-body();
-    margin-right: var(--gap-2);
-    color: var(--color-secondary);
-    font-weight: bold;
-  }
-
   &__answer {
     @include tui-font-body();
-    @include tui-wordbreak--hyphens;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    &Percent {
+      margin-right: var(--gap-2);
+      color: var(--color-secondary);
+      font-weight: bold;
+    }
   }
 
   &__votes {

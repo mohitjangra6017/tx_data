@@ -3,6 +3,8 @@ information provided here is intended especially for developers.
 
 === 14.0 ===
 
+* Updated Grid.vue limiting width to stay in container
+  * SCSS changes
 * Fixed ExpandCell display logic 
   * Template changes
 * Updated Table and children component indent options

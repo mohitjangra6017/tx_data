@@ -18,12 +18,10 @@
 
 <template>
   <div class="tui-engageSurveyResultBody" @click="navigateTo">
-    <a
-      :id="labelId"
-      :href="voteUrl"
-      class="tui-engageSurveyResultBody__title"
-      >{{ name }}</a
-    >
+    <a :id="labelId" :href="voteUrl" class="tui-engageSurveyResultBody__title">
+      <span aria-hidden="true" :title="name">{{ displayName }}</span>
+      <span class="sr-only">{{ name }}</span>
+    </a>
     <div class="tui-engageSurveyResultBody__progress">
       <SurveyQuestionResult
         v-for="({ votes, id, options, answertype }, index) in questions"
@@ -103,7 +101,19 @@ export default {
         page: 'vote',
       });
     },
+
+    /**
+     * Gets what a visual user will see
+     */
+    displayName() {
+      if (this.name.length < 40) {
+        return this.name;
+      } else {
+        return this.name.substring(0, 37) + String.fromCharCode(8230);
+      }
+    },
   },
+
   methods: {
     navigateTo() {
       window.location.href = this.voteUrl;

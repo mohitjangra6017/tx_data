@@ -524,10 +524,12 @@ export default {
 <style lang="scss">
 .tui-engagelayoutOneColumnWithMultiSidePanel {
   display: flex;
+  max-width: 100%;
 
   &__responsiveContainer {
     display: flex;
     flex-grow: 1;
+    max-width: 100%;
   }
 
   &__outerRight {
