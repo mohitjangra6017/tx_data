@@ -1,8 +1,8 @@
 <?php
-/*
+/**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2018 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Michael Dunstan <michael.dunstan@androgogic.com>
- * @package totara_contentmarketplace
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @package contentmarketplace_goone
  */
 
-use totara_contentmarketplace\controllers\catalog_import;
+namespace contentmarketplace_goone\controllers;
 
-require_once(__DIR__ . '/../../config.php');
+use totara_contentmarketplace\controllers\catalog_import as base_catalog_import;
+use totara_mvc\view;
 
-(new catalog_import())->process();
+final class catalog_import extends base_catalog_import {
+    /**
+     * @inheritDoc
+     */
+    public function action(): view {
+        $explorer = $this->get_explorer();
+        return $this->create_view('totara_contentmarketplace/explorer', (array)$explorer->get_data())
+            ->set_title($explorer->get_heading());
+    }
+
+}

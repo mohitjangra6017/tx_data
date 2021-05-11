@@ -1,8 +1,8 @@
 <?php
-/*
+/**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2018 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Michael Dunstan <michael.dunstan@androgogic.com>
- * @package totara_contentmarketplace
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @package contentmarketplace_linkedin
  */
 
-use totara_contentmarketplace\controllers\catalog_import;
+namespace contentmarketplace_linkedin\controllers;
 
-require_once(__DIR__ . '/../../config.php');
+use totara_contentmarketplace\controllers\catalog_import as base_catalog_import;
+use totara_mvc\tui_view;
 
-(new catalog_import())->process();
+final class catalog_import extends base_catalog_import {
+    /**
+     * @inheritDoc
+     */
+    public function action(): tui_view {
+        return $this->create_tui_view(
+            'contentmarketplace_linkedin/pages/CatalogImport',
+            ['canManageContent' => $this->can_manage_marketplace_plugins()]
+        )->set_title($this->explorer->get_heading());
+    }
+}

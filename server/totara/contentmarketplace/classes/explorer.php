@@ -71,6 +71,14 @@ final class explorer {
     public function render() {
         global $OUTPUT;
 
+        $data = $this->get_data();
+        return $OUTPUT->render_from_template('totara_contentmarketplace/explorer', $data);
+    }
+
+    /**
+     * @return object
+     */
+    public function get_data(): object {
         $search = $this->plugin->search();
 
         $data = new \stdClass();
@@ -119,7 +127,7 @@ final class explorer {
             ]
         ];
 
-        return $OUTPUT->render_from_template('totara_contentmarketplace/explorer', $data);
+        return $data;
     }
 
     /**
