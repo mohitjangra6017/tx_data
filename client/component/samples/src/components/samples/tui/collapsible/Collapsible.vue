@@ -27,6 +27,9 @@
         :indent-contents="indentContents"
       >
         {{ content }}
+        <template v-slot:collapsible-side-content>
+          <More />
+        </template>
       </Collapsible>
     </SamplesExample>
 
@@ -69,6 +72,7 @@ import SamplesCode from 'samples/components/sample_parts/misc/SamplesCode';
 import SamplesExample from 'samples/components/sample_parts/misc/SamplesExample';
 import SamplesPropCtl from 'samples/components/sample_parts/misc/SamplesPropCtl';
 import Textarea from 'tui/components/form/Textarea';
+import More from 'tui/components/buttons/MoreIcon';
 
 export default {
   components: {
@@ -81,6 +85,7 @@ export default {
     SamplesExample,
     SamplesPropCtl,
     Textarea,
+    More,
   },
 
   data() {

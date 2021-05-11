@@ -19,25 +19,29 @@
 <template>
   <div class="tui-collapsible">
     <div class="tui-collapsible__header">
-      <ButtonIcon
-        class="tui-collapsible__header_icons"
-        :styleclass="{
-          transparent: true,
-        }"
-        :aria-expanded="expanded.toString()"
-        :aria-controls="generatedId + 'region'"
-        :aria-label="label"
-        @click="toggleExpand()"
-      >
-        <CollapseIcon v-if="expanded" size="100" />
-        <ExpandIcon v-else size="100" />
-      </ButtonIcon>
-      <h3 :id="generatedId + 'label'" class="tui-collapsible__header-text">
-        {{ label }}
-        <slot name="label-extra" />
-      </h3>
+      <div class="tui-collapsible__header-mainContent" @click="toggleExpand">
+        <ButtonIcon
+          class="tui-collapsible__header-icons"
+          :styleclass="{
+            transparent: true,
+          }"
+          :aria-expanded="expanded.toString()"
+          :aria-controls="generatedId + 'region'"
+          :aria-label="label"
+        >
+          <CollapseIcon v-if="expanded" size="100" />
+          <ExpandIcon v-else size="100" />
+        </ButtonIcon>
+        <h3 :id="generatedId + 'label'" class="tui-collapsible__header-text">
+          {{ label }}
+          <slot name="label-extra" />
+        </h3>
+      </div>
 
-      <div class="tui-collapsible__header-sideContent">
+      <div
+        v-if="$scopedSlots['collapsible-side-content']"
+        class="tui-collapsible__header-sideContent"
+      >
         <slot name="collapsible-side-content" />
       </div>
     </div>
@@ -136,14 +140,14 @@ export default {
 .tui-collapsible {
   &__header {
     display: flex;
-    padding: var(--gap-2) var(--gap-2) var(--gap-2) 0;
     background: var(--collapsible-header-bg-color);
     border: var(--border-width-thin) solid
       var(--collapsible-header-border-color);
 
-    &_icons {
-      padding-right: var(--gap-4);
-      padding-left: var(--gap-4);
+    &-icons {
+      margin-right: var(--gap-2);
+      margin-left: var(--gap-2);
+      pointer-events: none;
     }
 
     &-text {
@@ -151,10 +155,19 @@ export default {
       margin: 0;
     }
 
+    &-mainContent {
+      @include tui-wordbreak--hard();
+      display: flex;
+      flex-grow: 1;
+      padding: var(--gap-2) var(--gap-2) var(--gap-2) 0;
+      cursor: pointer;
+      user-select: none;
+    }
+
     &-sideContent {
       display: flex;
       flex-shrink: 0;
-      margin: auto 0 auto auto;
+      padding: var(--gap-2);
     }
   }
 
