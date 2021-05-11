@@ -69,6 +69,7 @@ class personal_goals implements query_resolver, has_middleware {
             $filters['assignment_type'] = personal_goal_assignment_type::by_name($assignment_type)
                 ->get_value();
         }
+        $filters['deleted'] = $filters['deleted'] ?? false;
 
         return personal_goals_provider::create()
             ->set_page_size($result_size)

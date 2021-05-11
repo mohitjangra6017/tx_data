@@ -207,6 +207,75 @@ class totara_hierarchy_webapi_resolver_query_personal_goals_testcase extends adv
         $this->assertCount(0, $items, 'wrong item count');
     }
 
+    public function test_deleted_filter(): void {
+        [$user_ids, $goals, $goals_deleted] = $this->setup_env(3, 5, true);
+
+        $user_id = $user_ids->first();
+        $this->setUser($user_id);
+
+        // Check deleted goals
+        $args = [
+            'input' => [
+                'filters' => ['deleted' => true],
+            ],
+        ];
+
+        $expected = $goals_deleted
+            ->filter('userid', $user_id)
+            ->pluck('id');
+
+        [
+            "items"       => $items,
+            "total"       => $total,
+            "next_cursor" => $enc_cursor,
+        ] = $this->resolve_graphql_query(self::QUERY, $args);
+
+        $this->assertEquals(count($expected), $total, 'wrong total count');
+        $this->assertEmpty($enc_cursor, 'non empty cursor');
+        $this->assertCount(count($expected), $items, 'wrong item count');
+        $this->assertEqualsCanonicalizing($expected, array_column($items, 'id'));
+
+        // Check not deleted goals
+        $args = [
+            'input' => [
+                'filters' => ['deleted' => false],
+            ],
+        ];
+
+        $expected = $goals
+            ->filter('userid', $user_id)
+            ->pluck('id');
+
+        [
+            "items"       => $items,
+            "total"       => $total,
+            "next_cursor" => $enc_cursor,
+        ] = $this->resolve_graphql_query(self::QUERY, $args);
+
+        $this->assertEquals(count($expected), $total, 'wrong total count');
+        $this->assertEmpty($enc_cursor, 'non empty cursor');
+        $this->assertCount(count($expected), $items, 'wrong item count');
+        $this->assertEqualsCanonicalizing($expected, array_column($items, 'id'));
+
+        // Check goals without any filter
+        $args = ['input' => []];
+
+        $expected = $goals
+            ->filter('userid', $user_id)
+            ->pluck('id');
+
+        [
+            "items"       => $items,
+            "total"       => $total,
+            "next_cursor" => $enc_cursor,
+        ] = $this->resolve_graphql_query(self::QUERY, $args);
+
+        $this->assertEquals(count($expected), $total, 'wrong total count');
+        $this->assertEmpty($enc_cursor, 'non empty cursor');
+        $this->assertCount(count($expected), $items, 'wrong item count');
+        $this->assertEqualsCanonicalizing($expected, array_column($items, 'id'));
+    }
+
     public function test_ajax_default_params(): void {
         [$user_ids, $goals] = $this->setup_env();
 
@@ -263,10 +332,11 @@ class totara_hierarchy_webapi_resolver_query_personal_goals_testcase extends adv
      *
      * @param int user_count no of users to generate.
      * @param int goal_count of personal goals per user.
+     * @param bool include_deleted personal goals per user.
      *
-     * @return array a [user ids, personal goals] tuple.
+     * @return array a [user ids, personal goals, deleted personal goals] tuple.
      */
-    private function setup_env(int $user_count=3, int $goal_count=5): array {
+    private function setup_env(int $user_count=3, int $goal_count=5, bool $include_deleted= false): array {
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
@@ -274,6 +344,7 @@ class totara_hierarchy_webapi_resolver_query_personal_goals_testcase extends adv
 
         $user_ids = collection::new([]);
         $goals = collection::new([]);
+        $goals_deleted = collection::new([]);
 
         for ($i = 0; $i < $user_count; $i++) {
             $user_id = $generator->create_user()->id;
@@ -299,8 +370,21 @@ class totara_hierarchy_webapi_resolver_query_personal_goals_testcase extends adv
 
                 $goals->append(new personal_goal_entity($goal_id));
             }
+            if ($include_deleted) {
+                $deleted_goal_id = $hierarchy_generator->create_personal_goal(
+                    $user_id,
+                    [
+                        'name'        => "user$i pg-deleted",
+                        'assigntype'  => $assign_type->get_value(),
+                        'usercreated' => $user_created,
+                        'deleted'     => 1,
+                    ]
+                )->id;
+
+                $goals_deleted->append(new personal_goal_entity($deleted_goal_id));
+            }
         }
 
-        return [$user_ids, $goals];
+        return [$user_ids, $goals, $goals_deleted];
     }
 }

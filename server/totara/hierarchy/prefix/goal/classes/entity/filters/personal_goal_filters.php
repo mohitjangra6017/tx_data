@@ -57,6 +57,9 @@ class personal_goal_filters {
 
             case 'user_id':
                 return self::create_user_id_filter($value);
+
+            case 'deleted':
+                return self::create_deleted_filter($value);
         }
 
         return null;
@@ -117,5 +120,18 @@ class personal_goal_filters {
         return (new equal('userid'))
             ->set_value($value)
             ->set_entity_class(personal_goal::class);
+    }
+
+    /**
+     * Returns an instance of a goal type filter.
+     *
+     * @param bool $value the matching value(s).
+     *
+     * @return filter the filter instance.
+     */
+    public static function create_deleted_filter(bool $value): filter {
+        return (new equal('deleted'))
+            ->set_value((int)$value)
+            ->set_entity_class(goal::class);
     }
 }
