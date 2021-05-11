@@ -55,9 +55,8 @@
             </ButtonIcon>
           </div>
         </div>
-        <div ref="content" class="tui-wekaMultiLangBlock__texts">
-          <!-- Multi lang block. A content placeholder that will hold collection of text blocks -->
-        </div>
+        <!-- Multi lang block. A content placeholder that will hold collection of text blocks -->
+        <div ref="content" class="tui-wekaMultiLangBlock__texts" />
       </div>
       <ButtonIcon
         v-if="removable"
@@ -191,10 +190,6 @@ export default {
 <style lang="scss">
 .tui-wekaMultiLangBlock {
   white-space: normal;
-
-  .ProseMirror-gapcursor {
-    display: none;
-  }
 
   &__container {
     display: flex;

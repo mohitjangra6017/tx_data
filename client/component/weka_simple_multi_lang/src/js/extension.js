@@ -40,6 +40,7 @@ class WekaSimpleMultiLangExtension extends BaseExtension {
           group: 'weka_simple_multi_lang_lang_blocks',
           draggable: false,
           content: '(paragraph|heading)*',
+          allowGapCursor: false,
           attrs: {
             lang: { default: undefined },
             siblings_count: { default: 1 },
@@ -87,6 +88,7 @@ class WekaSimpleMultiLangExtension extends BaseExtension {
           isolating: true,
           group: 'block',
           content: 'weka_simple_multi_lang_lang_block+',
+          allowGapCursor: false,
           toDOM() {
             return ['div', { class: 'tui-wekaMultiLangBlockCollection' }, 0];
           },
