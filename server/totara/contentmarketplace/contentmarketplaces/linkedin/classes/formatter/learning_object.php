@@ -45,7 +45,7 @@ class learning_object extends entity_model_formatter {
             'retired_at' => date_field_formatter::class,
             'level' => null,
             'primary_image_url' => null,
-            'time_to_complete' => date_field_formatter::class,
+            'time_to_complete' => timespan_field_formatter::class,
             'web_launch_url' => null,
             'sso_launch_url' => null,
         ];

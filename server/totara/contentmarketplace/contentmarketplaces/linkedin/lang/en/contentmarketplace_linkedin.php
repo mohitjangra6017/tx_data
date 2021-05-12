@@ -33,6 +33,9 @@ $string['error:fail_json_validation'] = 'Failed to validate the json data: {$a}'
 $string['plugin_description'] = 'Online Training Courses for Creative, Technology, Business Skills.';
 $string['pluginname'] = 'LinkedIn Learning';
 $string['settings_title'] = 'LinkedIn Learning settings';
+$string['timespan_format_hours_minutes_seconds'] = '{$a->hours}h {$a->minutes}m {$a->seconds}s';
+$string['timespan_format_minutes_seconds'] = '{$a->minutes}m {$a->seconds}s';
+$string['timespan_format_seconds'] = '{$a->seconds}s';
 $string['warningdisablemarketplace:body:html'] = '<p>You are about to disable the LinkedIn Learning Content Marketplace. If you proceed, items from the marketplace will no longer be available to course creators for inclusion in newly created courses.</p>
 <p>Users who have previously already started LinkedIn Learning activities will continue to have access to that content, but they will not be able to start new LinkedIn Learning activities.</p>
 <p>Are you sure you wish to proceed?</p>';

@@ -25,7 +25,7 @@ namespace contentmarketplace_linkedin\dto;
 
 use coding_exception;
 
-final class time_to_complete {
+final class timespan {
 
     /**
      * The units that can be specified, with how many seconds are in each unit.
@@ -47,13 +47,13 @@ final class time_to_complete {
     private $unit;
 
     /**
-     * time_to_complete constructor.
+     * timespan constructor.
      * @param int $duration
      * @param string $unit
      */
     public function __construct(int $duration, string $unit) {
         if (!array_key_exists($unit, self::UNIT_VALUES)) {
-            throw new coding_exception("Invalid unit specified for time_to_complete: $unit");
+            throw new coding_exception("Invalid unit specified for timespan: $unit");
         }
         $this->duration = $duration;
         $this->unit = $unit;

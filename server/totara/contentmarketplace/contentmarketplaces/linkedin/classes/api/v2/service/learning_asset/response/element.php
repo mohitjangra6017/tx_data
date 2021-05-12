@@ -25,7 +25,7 @@ namespace contentmarketplace_linkedin\api\v2\service\learning_asset\response;
 use coding_exception;
 use contentmarketplace_linkedin\api\response\element as base_element;
 use contentmarketplace_linkedin\dto\locale;
-use contentmarketplace_linkedin\dto\time_to_complete;
+use contentmarketplace_linkedin\dto\timespan;
 use contentmarketplace_linkedin\dto\timestamp;
 use core\json\schema\collection;
 use core\json\schema\field\field_alpha;
@@ -292,16 +292,16 @@ class element extends base_element {
     }
 
     /**
-     * @return time_to_complete|null
+     * @return timespan|null
      */
-    public function get_time_to_complete(): ?time_to_complete {
+    public function get_time_to_complete(): ?timespan {
         if (!isset($this->json_data['details']['timeToComplete'])) {
             return null;
         }
 
         $time_to_complete = $this->json_data['details']['timeToComplete'];
 
-        return new time_to_complete($time_to_complete['duration'], $time_to_complete['unit']);
+        return new timespan($time_to_complete['duration'], $time_to_complete['unit']);
     }
 
     /**
