@@ -24,6 +24,7 @@
 namespace contentmarketplace_linkedin\testing;
 
 use coding_exception;
+use context_coursecat;
 use core\orm\query\builder;
 
 /**
@@ -78,6 +79,15 @@ class helper {
     }
 
     /**
+     * Get the authenticated user role's id.
+     *
+     * @return int
+     */
+    public static function get_authenticated_user_role(): int {
+        return builder::get_db()->get_field('role', 'id', ['shortname' => 'user']);
+    }
+
+    /**
      * Returns the default course category id within the system.
      *
      * @return int
@@ -85,6 +95,15 @@ class helper {
     public static function get_default_course_category_id(): int {
         $db = builder::get_db();
         return $db->get_field('course_categories', 'id', ['issystem' => 0]);
+    }
+
+    /**
+     * Returns the default course category context within the system.
+     *
+     * @return context_coursecat
+     */
+    public static function get_default_course_category_context(): context_coursecat {
+        return context_coursecat::instance(self::get_default_course_category_id());
     }
 
     /**

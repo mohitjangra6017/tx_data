@@ -1,0 +1,92 @@
+"""
+How a timespan should be displayed.
+When in seconds, it will display the raw number of seconds.
+In human format, it will be displayed in the format "XXh YYm ZZs"
+"""
+enum contentmarketplace_linkedin_timespan_format {
+  SECONDS
+  HUMAN
+}
+
+"""
+What type of LinkedIn Learning asset it is.
+See https://docs.microsoft.com/en-us/linkedin/learning/reference/learningassets#assettype
+"""
+enum contentmarketplace_linkedin_asset_type {
+  COURSE
+  LEARNING_PATH
+  VIDEO
+}
+
+"""
+The skill level required for the LinkedIn learning material.
+See https://docs.microsoft.com/en-us/linkedin/learning/reference/learningassets#query-parameters-1
+"""
+enum contentmarketplace_linkedin_level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+"""
+The way that the learning objects can be sorted by for the catalogue import.
+"""
+enum contentmarketplace_linkedin_catalog_import_sort_by {
+  ALPHABETICAL
+  LATEST
+}
+
+"""
+A LinkedIn Learning asset that can be turned into a Totara course.
+"""
+type contentmarketplace_linkedin_learning_object implements totara_contentmarketplace_learning_object {
+  id: core_id!
+  name(format: core_format = PLAIN): String!
+  language: String!
+  image_url: String
+  description(format: core_format = PLAIN): String!
+  description_include_html(format: core_format = HTML): String!
+  short_description(format: core_format = PLAIN): String!
+  last_updated_at(format: core_date_format = DATE): core_date!
+  published_at(format: core_date_format = DATE): core_date!
+  asset_type: contentmarketplace_linkedin_asset_type!
+  subject(format: core_format = PLAIN): String
+  level: contentmarketplace_linkedin_level
+  time_to_complete(
+    format: contentmarketplace_linkedin_timespan_format = HUMAN
+  ): String
+}
+
+"""
+Output of the learning objects query.
+"""
+type contentmarketplace_linkedin_catalog_import_learning_objects_result implements core_pageable_result {
+  items: [contentmarketplace_linkedin_learning_object]!
+  total: Int!
+  next_cursor: String!
+}
+
+"""
+Applicable filters for the learning objects query.
+"""
+input contentmarketplace_linkedin_catalog_import_learning_objects_filters_input {
+  language: String!
+}
+
+"""
+Input for the catalogue import query.
+"""
+input contentmarketplace_linkedin_catalog_import_learning_objects_input {
+  pagination: core_pagination_input!
+  filters: contentmarketplace_linkedin_catalog_import_learning_objects_filters_input!
+  sort_by: contentmarketplace_linkedin_catalog_import_sort_by!
+}
+
+extend type Query {
+  """
+  Query to return a paginated set of creatable courses from the LinkedIn Learning course catalogue.
+  """
+  contentmarketplace_linkedin_catalog_import_learning_objects(
+    input: contentmarketplace_linkedin_catalog_import_learning_objects_input!
+  ): contentmarketplace_linkedin_catalog_import_learning_objects_result!
+}
