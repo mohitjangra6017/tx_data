@@ -130,6 +130,11 @@ final class factory {
      * @return menu
      */
     public function get_menu(): menu {
+        if (defined('BEHAT_SITE_RUNNING') && BEHAT_SITE_RUNNING) {
+            // Tests always get the 'live' menu.
+            return $this->generate_menu();
+        }
+
         // First try to get the users menu from the cache, this has a TTL of 10 minutes.
         $menu = $this->get_cached_menu();
         if ($menu->was_loaded_from_cache()) {
@@ -137,12 +142,23 @@ final class factory {
         }
 
         // It's not in the cache, generate it.
-        $menu = $this->get_admin_menu();
-        self::merge($menu, $this->get_default_menu());
-        self::merge($menu, $this->get_user_preference_menu());
+        $menu = $this->generate_menu();
 
         // Store their menu in the cache for next time.
         menu\cached::set($this, $menu);
+
+        return $menu;
+    }
+
+    /**
+     * Generates a menu that the user can see.
+     *
+     * @return menu
+     */
+    private function generate_menu(): menu {
+        $menu = $this->get_admin_menu();
+        self::merge($menu, $this->get_default_menu());
+        self::merge($menu, $this->get_user_preference_menu());
 
         return $menu;
     }
