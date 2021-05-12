@@ -22,7 +22,7 @@
  */
 namespace weka_simple_multi_lang;
 
-use core\orm\query\builder;
+use context;
 use editor_weka\extension\abstraction\specific_custom_extension;
 use editor_weka\extension\extension as base_extension;
 
@@ -49,6 +49,11 @@ class extension extends base_extension implements specific_custom_extension {
      * extension constructor.
      */
     public function __construct() {
+        global $CFG;
+
+        // Ensure we can reach filter library functions.
+        require_once("{$CFG->dirroot}/lib/filterlib.php");
+
         parent::__construct();
         $this->context_id = null;
         $this->compact = false;
@@ -66,28 +71,13 @@ class extension extends base_extension implements specific_custom_extension {
      * @return array
      */
     public function get_js_parameters(): array {
-        global $CFG;
-
-        if (!defined('TEXTFILTER_ON')) {
-            require_once("{$CFG->dirroot}/lib/filterlib.php");
-        }
-
         // Check the availability of multi_lang filter within the context.
-        $db = builder::get_db();
         $context_id = $this->context_id ?? SYSCONTEXTID;
-
-        $active = $db->get_field(
-            'filter_active',
-            'active',
-            [
-                'filter' => 'multilang',
-                'contextid' => $context_id
-            ]
-        );
+        $available_filters = filter_get_active_in_context(context::instance_by_id($context_id, MUST_EXIST));
 
         return [
             'compact' => $this->compact,
-            'is_active' => (TEXTFILTER_ON == $active),
+            'is_active' => isset($available_filters['multilang']),
             'placeholder_resolver_class_name' => $this->placeholder_resolver_class_name,
         ];
     }
