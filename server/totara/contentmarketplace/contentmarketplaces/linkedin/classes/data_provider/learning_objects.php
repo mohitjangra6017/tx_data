@@ -35,7 +35,7 @@ use core\orm\entity\repository;
  *
  * @method collection|learning_object_model[] get
  */
-class learning_objects extends provider {
+class learning_objects extends paginated_provider {
 
     public const SORT_BY_ALPHABETICAL = 'ALPHABETICAL';
     public const SORT_BY_LATEST = 'LATEST';
