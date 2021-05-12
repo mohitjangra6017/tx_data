@@ -42,18 +42,20 @@ use stdClass;
  * @property int $last_updated_at
  * @property int $published_at
  * @property int|null $retired_at
+ * @property string $asset_type
+ * @property string|null $subject
  * @property string|null $level
  * @property string|null $primary_image_url
  * @property int|null $time_to_complete
  * @property string|null $web_launch_url
  * @property string|null $sso_launch_url
- * @property string $asset_type
  *
  * @method static learning_object_repository repository
  *
  * @package contentmarketplace_linkedin\entity
  */
 class learning_object extends entity {
+
     /**
      * @var string
      */
@@ -91,4 +93,14 @@ class learning_object extends entity {
             $this->set_attribute($attribute_name, $value);
         }
     }
+    /**
+     * TEMPORARY ONLY!
+     * TODO: Actually get subject field from API and store in the DB in TL-30939
+     *
+     * @return string|null
+     */
+    protected function get_subject_attribute(): ?string {
+        return null;
+    }
+
 }

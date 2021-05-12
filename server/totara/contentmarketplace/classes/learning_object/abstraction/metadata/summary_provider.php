@@ -29,7 +29,7 @@ use totara_contentmarketplace\learning_object\text;
  * Otherwise just use model interface.
  *
  */
-interface summary_provider extends model {
+interface summary_provider extends detailed_model {
     /**
      * Returns the description of learning objects.
      * @return text|null

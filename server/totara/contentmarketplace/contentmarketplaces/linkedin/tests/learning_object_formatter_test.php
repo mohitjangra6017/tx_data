@@ -23,6 +23,7 @@
 
 use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
 use contentmarketplace_linkedin\formatter\learning_object as learning_object_formatter;
+use contentmarketplace_linkedin\formatter\timespan_field_formatter;
 use contentmarketplace_linkedin\model\learning_object as learning_object_model;
 use core\date_format;
 use core\format;
@@ -49,8 +50,9 @@ class contentmarketplace_linkedin_learning_object_formatter_testcase extends tes
         $entity->published_at = time();
         $entity->retired_at = time();
         $entity->level = "BEGINNER";
+        $entity->asset_type = "COURSE";
         $entity->primary_image_url = 'https://example.com/image.jpg?cached=1&time=123';
-        $entity->time_to_complete = 217;
+        $entity->time_to_complete = 120;
         $entity->web_launch_url = 'https://example.com/?cached=1&time=123';
         $entity->sso_launch_url = 'https://example.com/sso.php?cached=1&time=123';
         $entity->save();
@@ -59,17 +61,13 @@ class contentmarketplace_linkedin_learning_object_formatter_testcase extends tes
         $formatter = new learning_object_formatter($model, context_system::instance());
 
         // Unformatted fields
-        $this->assertEquals($entity->urn, $formatter->format('urn'));
-        $this->assertEquals($entity->locale_language, $formatter->format('locale_language'));
-        $this->assertEquals($entity->locale_country, $formatter->format('locale_country'));
+        $this->assertEquals($entity->asset_type, $formatter->format('asset_type'));
         $this->assertEquals($entity->level, $formatter->format('level'));
-        $this->assertEquals($entity->primary_image_url, $formatter->format('primary_image_url'));
-        $this->assertEquals($entity->web_launch_url, $formatter->format('web_launch_url'));
-        $this->assertEquals($entity->sso_launch_url, $formatter->format('sso_launch_url'));
+        $this->assertEquals($entity->primary_image_url, $formatter->format('image_url'));
 
         // String fields
-        $this->assertNotEquals($entity->title, $formatter->format('title', format::FORMAT_PLAIN));
-        $this->assertEquals('This is a title', $formatter->format('title', format::FORMAT_PLAIN));
+        $this->assertNotEquals($entity->title, $formatter->format('name', format::FORMAT_PLAIN));
+        $this->assertEquals('This is a title', $formatter->format('name', format::FORMAT_PLAIN));
         $this->assertNotEquals($entity->description, $formatter->format('description', format::FORMAT_PLAIN));
         $this->assertEquals('This is a description', $formatter->format('description', format::FORMAT_PLAIN));
         $this->assertNotEquals($entity->description_include_html, $formatter->format('description_include_html', format::FORMAT_PLAIN));
@@ -77,12 +75,15 @@ class contentmarketplace_linkedin_learning_object_formatter_testcase extends tes
         $this->assertStringNotContainsString('<script>', $formatter->format('description_include_html', format::FORMAT_HTML));
         $this->assertNotEquals($entity->short_description, $formatter->format('short_description', format::FORMAT_PLAIN));
         $this->assertEquals('This is a short description', $formatter->format('short_description', format::FORMAT_PLAIN));
+        // TODO: Test 'subject' formatter
 
         // Date fields
         $this->assertIsNotInt($formatter->format('last_updated_at', date_format::FORMAT_DATE));
         $this->assertIsNotInt($formatter->format('published_at', date_format::FORMAT_DATE));
-        $this->assertIsNotInt($formatter->format('retired_at', date_format::FORMAT_DATE));
-        $this->assertIsNotInt($formatter->format('time_to_complete', date_format::FORMAT_DATE));
+
+        // Timespan fields
+        $this->assertEquals("2m 0s", $formatter->format('time_to_complete', timespan_field_formatter::FORMAT_HUMAN));
+        $this->assertEquals(120, $formatter->format('time_to_complete', timespan_field_formatter::FORMAT_SECONDS));
     }
 
 }

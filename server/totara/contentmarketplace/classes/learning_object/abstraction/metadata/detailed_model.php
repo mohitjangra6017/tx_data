@@ -22,7 +22,7 @@
  */
 namespace totara_contentmarketplace\learning_object\abstraction\metadata;
 
-interface model {
+interface detailed_model {
     /**
      * Returns the name of learning object.
      *
@@ -50,4 +50,11 @@ interface model {
      * @return string
      */
     public function get_language(): string;
+
+    /**
+     * Returns the URL for displaying the thumbnail image of the learning object.
+     *
+     * @return string|null
+     */
+    public function get_image_url(): ?string;
 }

@@ -33,21 +33,18 @@ class learning_object extends entity_model_formatter {
     protected function get_map(): array {
         return [
             'id' => null,
-            'urn' => null,
-            'title' => string_field_formatter::class,
+            'name' => string_field_formatter::class,
             'description' => string_field_formatter::class,
             'description_include_html' => string_field_formatter::class,
             'short_description' => string_field_formatter::class,
-            'locale_language' => null,
-            'locale_country' => null,
             'last_updated_at' => date_field_formatter::class,
             'published_at' => date_field_formatter::class,
-            'retired_at' => date_field_formatter::class,
+            'subject' => string_field_formatter::class,
             'level' => null,
-            'primary_image_url' => null,
             'time_to_complete' => timespan_field_formatter::class,
-            'web_launch_url' => null,
-            'sso_launch_url' => null,
+            'asset_type' => null,
+            'language' => null,
+            'image_url' => null,
         ];
     }
 

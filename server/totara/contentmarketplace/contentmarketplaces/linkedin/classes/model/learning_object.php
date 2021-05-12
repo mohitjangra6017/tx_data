@@ -42,17 +42,19 @@ use totara_contentmarketplace\learning_object\text;
  * @property-read string|null $description
  * @property-read string|null $description_include_html
  * @property-read string|null $short_description
- * @property-read string      $locale_language
- * @property-read string      $locale_country
  * @property-read int         $last_updated_at
  * @property-read int         $published_at
- * @property-read int|null    $retired_at
+ * @property-read string|null $subject
  * @property-read string|null $level
- * @property-read string|null $primary_image_url
  * @property-read int|null    $time_to_complete
  * @property-read string|null $web_launch_url
  * @property-read string|null $sso_launch_url
  * @property-read string      $asset_type
+ *
+ * Summary provider properties:
+ * @property-read string      $name      Alias for 'title'
+ * @property-read string      $language  Alias for 'locale_language'
+ * @property-read string|null $image_url Alias for 'primary_image_url'
  *
  * @package contentmarketplace_linkedin\model
  */
@@ -70,24 +72,24 @@ class learning_object extends model implements summary_provider {
     }
 
     protected $entity_attribute_whitelist = [
-        // For now we just expose all of the entity attributes.
         'id',
         'urn',
         'title',
         'description',
         'description_include_html',
         'short_description',
-        'locale_language',
-        'locale_country',
         'last_updated_at',
         'published_at',
-        'retired_at',
+        'subject',
         'level',
-        'primary_image_url',
         'time_to_complete',
-        'web_launch_url',
-        'sso_launch_url',
         'asset_type',
+    ];
+
+    protected $model_accessor_whitelist = [
+        'name',
+        'language',
+        'image_url',
     ];
 
     /**
@@ -214,6 +216,14 @@ class learning_object extends model implements summary_provider {
      * @return string
      */
     public function get_language(): string {
-        return $this->locale_language;
+        return $this->entity->locale_language;
     }
+
+    /**
+     * @return string|null
+     */
+    public function get_image_url(): ?string {
+        return $this->entity->primary_image_url;
+    }
+
 }
