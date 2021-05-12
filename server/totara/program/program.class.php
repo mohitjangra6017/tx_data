@@ -30,6 +30,7 @@ use totara_certification\theme\file\certification_image;
 use totara_core\advanced_feature;
 use totara_program\exception\manager as exception_manager;
 use totara_program\theme\file\program_image;
+use totara_program\utils;
 
 require_once($CFG->dirroot . '/totara/program/program_content.class.php');
 require_once($CFG->dirroot . '/totara/program/program_courseset.class.php');
@@ -61,12 +62,20 @@ define('TIME_SELECTOR_INFINITY', 6); // Deprecated.
 /** @deprecated since Totara 13 */
 define('TIME_SELECTOR_NOMINIMUM', 6);
 
-define('DURATION_MINUTE', 60);
-define('DURATION_HOUR',   60 * DURATION_MINUTE);
-define('DURATION_DAY',    24 * DURATION_HOUR);
-define('DURATION_WEEK',   7  * DURATION_DAY);
-define('DURATION_MONTH',  30 * DURATION_DAY);
-define('DURATION_YEAR',   365 * DURATION_DAY);
+// Note: The DURATION_* globals have been deprecated.
+// Please use \totara_program\utils::DURATION_* constants instead.
+/** @deprecated since Totara 14 */
+define('DURATION_MINUTE', utils::DURATION_MINUTE);
+/** @deprecated since Totara 14 */
+define('DURATION_HOUR',   utils::DURATION_HOUR);
+/** @deprecated since Totara 14 */
+define('DURATION_DAY',    utils::DURATION_DAY);
+/** @deprecated since Totara 14 */
+define('DURATION_WEEK',   utils::DURATION_WEEK);
+/** @deprecated since Totara 14 */
+define('DURATION_MONTH',  utils::DURATION_MONTH);
+/** @deprecated since Totara 14 */
+define('DURATION_YEAR',   utils::DURATION_YEAR);
 
 define('AVAILABILITY_NOT_TO_STUDENTS',0);
 define('AVAILABILITY_TO_STUDENTS', 1);

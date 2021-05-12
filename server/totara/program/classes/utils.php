@@ -28,7 +28,15 @@ namespace totara_program;
  * be used independently of and without instantiating a program object
  */
 class utils {
+    // Duration constants.
+    const DURATION_MINUTE = 60;
+    const DURATION_HOUR   = 60  * self::DURATION_MINUTE;
+    const DURATION_DAY    = 24  * self::DURATION_HOUR;
+    const DURATION_WEEK   = 7   * self::DURATION_DAY;
+    const DURATION_MONTH  = 30  * self::DURATION_DAY;
+    const DURATION_YEAR   = 365 * self::DURATION_DAY;
 
+    // Time selector constants.
     const TIME_SELECTOR_HOURS     = 1;
     const TIME_SELECTOR_DAYS      = 2;
     const TIME_SELECTOR_WEEKS     = 3;
@@ -36,6 +44,7 @@ class utils {
     const TIME_SELECTOR_YEARS     = 5;
     const TIME_SELECTOR_NOMINIMUM = 6;
 
+    // Time selector strings.
     public static $timeallowancestrings = [
         self::TIME_SELECTOR_HOURS     => 'hours',
         self::TIME_SELECTOR_DAYS      => 'days',
@@ -58,15 +67,15 @@ class utils {
      */
     public static function duration_implode($num, $period): int {
         if ($period == self::TIME_SELECTOR_YEARS) {
-            return $num * DURATION_YEAR;
+            return $num * self::DURATION_YEAR;
         } else if ($period == self::TIME_SELECTOR_MONTHS) {
-            return $num * DURATION_MONTH;
+            return $num * self::DURATION_MONTH;
         } else if ($period == self::TIME_SELECTOR_WEEKS) {
-            return $num * DURATION_WEEK;
+            return $num * self::DURATION_WEEK;
         } else if ($period == self::TIME_SELECTOR_DAYS) {
-            return $num * DURATION_DAY;
+            return $num * self::DURATION_DAY;
         } else if ($period == self::TIME_SELECTOR_HOURS) {
-            return $num * DURATION_HOUR;
+            return $num * self::DURATION_HOUR;
         }
 
         return 0;
@@ -89,20 +98,20 @@ class utils {
         if ($duration == 0) {
             $ob->num = 0;
             $ob->period = self::TIME_SELECTOR_NOMINIMUM;
-        } else if ($duration % DURATION_YEAR == 0) {
-            $ob->num = $duration / DURATION_YEAR;
+        } else if ($duration % self::DURATION_YEAR == 0) {
+            $ob->num = $duration / self::DURATION_YEAR;
             $ob->period = self::TIME_SELECTOR_YEARS;
-        } else if ($duration % DURATION_MONTH == 0) {
-            $ob->num = $duration / DURATION_MONTH;
+        } else if ($duration % self::DURATION_MONTH == 0) {
+            $ob->num = $duration / self::DURATION_MONTH;
             $ob->period = self::TIME_SELECTOR_MONTHS;
-        } else if ($duration % DURATION_WEEK == 0) {
-            $ob->num = $duration / DURATION_WEEK;
+        } else if ($duration % self::DURATION_WEEK == 0) {
+            $ob->num = $duration / self::DURATION_WEEK;
             $ob->period = self::TIME_SELECTOR_WEEKS;
-        } else if ($duration % DURATION_DAY == 0) {
-            $ob->num = $duration / DURATION_DAY;
+        } else if ($duration % self::DURATION_DAY == 0) {
+            $ob->num = $duration / self::DURATION_DAY;
             $ob->period = self::TIME_SELECTOR_DAYS;
-        } else if ($duration % DURATION_HOUR == 0) {
-            $ob->num = $duration / DURATION_HOUR;
+        } else if ($duration % self::DURATION_HOUR == 0) {
+            $ob->num = $duration / self::DURATION_HOUR;
             $ob->period = self::TIME_SELECTOR_HOURS;
         } else {
             $ob->num = 0;
@@ -138,24 +147,24 @@ class utils {
             $object->num = 0;
             $object->period = self::TIME_SELECTOR_NOMINIMUM;
             $object->periodkey = 'nominimum';
-        } else if ($duration % DURATION_YEAR == 0) {
-            $object->num = $duration / DURATION_YEAR;
+        } else if ($duration % self::DURATION_YEAR == 0) {
+            $object->num = $duration / self::DURATION_YEAR;
             $object->period = self::TIME_SELECTOR_YEARS;
             $object->periodkey = 'years';
-        } else if ($duration % DURATION_MONTH == 0) {
-            $object->num = $duration / DURATION_MONTH;
+        } else if ($duration % self::DURATION_MONTH == 0) {
+            $object->num = $duration / self::DURATION_MONTH;
             $object->period = self::TIME_SELECTOR_MONTHS;
             $object->periodkey = 'months';
-        } else if ($duration % DURATION_WEEK == 0) {
-            $object->num = $duration / DURATION_WEEK;
+        } else if ($duration % self::DURATION_WEEK == 0) {
+            $object->num = $duration / self::DURATION_WEEK;
             $object->period = self::TIME_SELECTOR_WEEKS;
             $object->periodkey = 'weeks';
-        } else if ($duration % DURATION_DAY == 0) {
-            $object->num = $duration / DURATION_DAY;
+        } else if ($duration % self::DURATION_DAY == 0) {
+            $object->num = $duration / self::DURATION_DAY;
             $object->period = self::TIME_SELECTOR_DAYS;
             $object->periodkey = 'days';
-        } else if ($duration % DURATION_HOUR == 0) {
-            $object->num = $duration / DURATION_HOUR;
+        } else if ($duration % self::DURATION_HOUR == 0) {
+            $object->num = $duration / self::DURATION_HOUR;
             $object->period = self::TIME_SELECTOR_HOURS;
             $object->periodkey = 'hours';
         } else {

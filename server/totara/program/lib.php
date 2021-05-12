@@ -23,6 +23,7 @@
  */
 
 use totara_core\advanced_feature;
+use totara_program\utils;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -2003,19 +2004,19 @@ class program_in_list implements IteratorAggregate {
 function prog_format_seconds($seconds, $timeonly = false, $iscertif = false) {
     $component = $iscertif ? 'totara_certification' : 'totara_program';
 
-    $years = floor($seconds / DURATION_YEAR);
+    $years = floor($seconds / utils::DURATION_YEAR);
     $str_years = get_string('xyears', 'totara_program', $years);
-    $seconds = $seconds % DURATION_YEAR;
+    $seconds = $seconds % utils::DURATION_YEAR;
 
-    $months = floor($seconds / DURATION_MONTH);
+    $months = floor($seconds / utils::DURATION_MONTH);
     $str_months = get_string('xmonths', 'totara_program', $months);
-    $seconds = $seconds % DURATION_MONTH;
+    $seconds = $seconds % utils::DURATION_MONTH;
 
-    $weeks = floor($seconds / DURATION_WEEK);
+    $weeks = floor($seconds / utils::DURATION_WEEK);
     $str_weeks = get_string('xweeks', 'totara_program', $weeks);
-    $seconds = $seconds % DURATION_WEEK;
+    $seconds = $seconds % utils::DURATION_WEEK;
 
-    $days = floor($seconds / DURATION_DAY);
+    $days = floor($seconds / utils::DURATION_DAY);
     $str_days = get_string('xdays', 'totara_program', $days);
 
     $timestring = !empty($years) ? ' ' . $str_years : '';

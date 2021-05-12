@@ -23,10 +23,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
-
-require_once($CFG->dirroot . '/totara/program/classes/utils.php');
-require_once($CFG->dirroot . '/totara/program/program.class.php');
+use \totara_program\utils;
 
 class totara_program_utils_testcase extends advanced_testcase {
 
@@ -39,39 +36,39 @@ class totara_program_utils_testcase extends advanced_testcase {
     public function test_get_duration_num_and_period_values() {
 
         // Duration of zero should mean there is no minimum.
-        $returned = \totara_program\utils::get_duration_num_and_period(0);
+        $returned = utils::get_duration_num_and_period(0);
         $this->assertEquals(0, $returned->num);
-        $this->assertEquals(\totara_program\utils::TIME_SELECTOR_NOMINIMUM, $returned->period);
+        $this->assertEquals(utils::TIME_SELECTOR_NOMINIMUM, $returned->period);
         $this->assertEquals('nominimum', $returned->periodkey);
 
         $threeyears = 3 * YEARSECS;
-        $returned = \totara_program\utils::get_duration_num_and_period($threeyears);
+        $returned = utils::get_duration_num_and_period($threeyears);
         $this->assertEquals(3, $returned->num);
-        $this->assertEquals(\totara_program\utils::TIME_SELECTOR_YEARS, $returned->period);
+        $this->assertEquals(utils::TIME_SELECTOR_YEARS, $returned->period);
         $this->assertEquals('years', $returned->periodkey);
 
-        $sevenmonths = 7 * DURATION_MONTH;
-        $returned = \totara_program\utils::get_duration_num_and_period($sevenmonths);
+        $sevenmonths = 7 * utils::DURATION_MONTH;
+        $returned = utils::get_duration_num_and_period($sevenmonths);
         $this->assertEquals(7, $returned->num);
-        $this->assertEquals(\totara_program\utils::TIME_SELECTOR_MONTHS, $returned->period);
+        $this->assertEquals(utils::TIME_SELECTOR_MONTHS, $returned->period);
         $this->assertEquals('months', $returned->periodkey);
 
         $fourweeks = 4 * WEEKSECS;
-        $returned = \totara_program\utils::get_duration_num_and_period($fourweeks);
+        $returned = utils::get_duration_num_and_period($fourweeks);
         $this->assertEquals(4, $returned->num);
-        $this->assertEquals(\totara_program\utils::TIME_SELECTOR_WEEKS, $returned->period);
+        $this->assertEquals(utils::TIME_SELECTOR_WEEKS, $returned->period);
         $this->assertEquals('weeks', $returned->periodkey);
 
         $twodays = 2 * DAYSECS;
-        $returned = \totara_program\utils::get_duration_num_and_period($twodays);
+        $returned = utils::get_duration_num_and_period($twodays);
         $this->assertEquals(2, $returned->num);
-        $this->assertEquals(\totara_program\utils::TIME_SELECTOR_DAYS, $returned->period);
+        $this->assertEquals(utils::TIME_SELECTOR_DAYS, $returned->period);
         $this->assertEquals('days', $returned->periodkey);
 
         $fifteenhours = 15 * HOURSECS;
-        $returned = \totara_program\utils::get_duration_num_and_period($fifteenhours);
+        $returned = utils::get_duration_num_and_period($fifteenhours);
         $this->assertEquals(15, $returned->num);
-        $this->assertEquals(\totara_program\utils::TIME_SELECTOR_HOURS, $returned->period);
+        $this->assertEquals(utils::TIME_SELECTOR_HOURS, $returned->period);
         $this->assertEquals('hours', $returned->periodkey);
     }
 
@@ -82,7 +79,7 @@ class totara_program_utils_testcase extends advanced_testcase {
     public function test_get_duration_num_and_period_exception() {
         $minutes = 1 * DAYSECS + 12 * MINSECS;
         try {
-            $returned = \totara_program\utils::get_duration_num_and_period($minutes);
+            $returned = utils::get_duration_num_and_period($minutes);
             $this->fail('Unsupported units should have thrown an exception');
         } catch (coding_exception $e) {
             $this->assertInstanceOf('coding_exception', $e);
@@ -90,7 +87,7 @@ class totara_program_utils_testcase extends advanced_testcase {
         }
 
         try {
-            $returned = \totara_program\utils::get_duration_num_and_period(1);
+            $returned = utils::get_duration_num_and_period(1);
             $this->fail('Unsupported units should have thrown an exception');
         } catch (coding_exception $e) {
             $this->assertInstanceOf('coding_exception', $e);
@@ -108,23 +105,23 @@ class totara_program_utils_testcase extends advanced_testcase {
     public function test_get_duration_num_and_period_order() {
         // If it is divisible by years and days, years should be output.
         $threesixtyfivedays = 365 * DAYSECS;
-        $returned = \totara_program\utils::get_duration_num_and_period($threesixtyfivedays);
+        $returned = utils::get_duration_num_and_period($threesixtyfivedays);
         $this->assertEquals(1, $returned->num);
-        $this->assertEquals(\totara_program\utils::TIME_SELECTOR_YEARS, $returned->period);
+        $this->assertEquals(utils::TIME_SELECTOR_YEARS, $returned->period);
         $this->assertEquals('years', $returned->periodkey);
 
         // If it is divisable by weeks and days, weeks should be output.
         $sevendays = 7 * DAYSECS;
-        $returned = \totara_program\utils::get_duration_num_and_period($sevendays);
+        $returned = utils::get_duration_num_and_period($sevendays);
         $this->assertEquals(1, $returned->num);
-        $this->assertEquals(\totara_program\utils::TIME_SELECTOR_WEEKS, $returned->period);
+        $this->assertEquals(utils::TIME_SELECTOR_WEEKS, $returned->period);
         $this->assertEquals('weeks', $returned->periodkey);
 
         // If it is divisable by days and hours, days should be output.
         $twentyfourhours = 24 * HOURSECS;
-        $returned = \totara_program\utils::get_duration_num_and_period($twentyfourhours);
+        $returned = utils::get_duration_num_and_period($twentyfourhours);
         $this->assertEquals(1, $returned->num);
-        $this->assertEquals(\totara_program\utils::TIME_SELECTOR_DAYS, $returned->period);
+        $this->assertEquals(utils::TIME_SELECTOR_DAYS, $returned->period);
         $this->assertEquals('days', $returned->periodkey);
     }
 }

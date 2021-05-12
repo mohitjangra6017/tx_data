@@ -25,6 +25,7 @@ use core\orm\query\builder;
 use core_phpunit\testcase;
 use totara_core\advanced_feature;
 use totara_notification\placeholder\option;
+use totara_program\utils;
 use totara_program\testing\generator as program_generator;
 use totara_program\totara_notification\placeholder\assignment;
 use totara_program\totara_notification\placeholder\program as program_placeholder_group;
@@ -139,7 +140,7 @@ class totara_program_totara_notification_placeholder_testcase extends testcase {
         builder::table('prog_assignment')
             ->where('id', $user_assignment->assignmentid)
             ->update([
-                'completiontime' => DURATION_MONTH,
+                'completiontime' => utils::DURATION_MONTH,
                 'completionevent' => COMPLETION_EVENT_PROGRAM_COMPLETION,
             ]);
         assignment::clear_instance_cache();
