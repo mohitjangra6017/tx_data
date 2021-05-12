@@ -360,7 +360,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         $error = reset($result->errors);
 
         self::assertStringContainsString(
-            "The record data does not have required field 'body'",
+            "When creating a new record the following field is required: 'body'",
             $error->message
         );
     }
@@ -397,7 +397,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         $error = reset($result->errors);
 
         self::assertStringContainsString(
-            "The record data does not have required field 'subject'",
+            "When creating a new record the following field is required: 'subject'",
             $error->message
         );
     }
@@ -434,7 +434,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         $error = reset($result->errors);
 
         self::assertStringContainsString(
-            "The record data does not have required field 'title'",
+            "When creating a new record the following field is required: 'title'",
             $error->message
         );
     }

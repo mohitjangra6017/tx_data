@@ -161,6 +161,8 @@ class create_notification_preference implements mutation_resolver, has_middlewar
                 $schedule_type,
                 $schedule_offset
             );
+        } else if ($schedule_type === null ^ $schedule_offset === null) {
+            throw new coding_exception("schedule_type and schedule_offset are mutually inclusive");
         }
 
         $builder->set_schedule_offset($raw_schedule_offset);

@@ -58,7 +58,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_enabled(true);
 
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("The record data does not have required field 'body'");
+        $this->expectExceptionMessage("When creating a new record the following field is required: 'body'");
 
         $builder->save();
     }
@@ -80,7 +80,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_enabled(true);
 
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("The record data does not have required field 'title'");
+        $this->expectExceptionMessage("When creating a new record the following field is required: 'title'");
 
         $builder->save();
     }
@@ -102,7 +102,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_enabled(true);
 
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("The record data does not have required field 'subject'");
+        $this->expectExceptionMessage("When creating a new record the following field is required: 'subject'");
 
         $builder->save();
     }
@@ -124,7 +124,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_enabled(true);
 
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("The record data does not have required field 'body_format'");
+        $this->expectExceptionMessage("When creating a new record the following field is required: 'body_format'");
 
         $builder->save();
     }
@@ -146,7 +146,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_enabled(true);
 
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("The record data does not have required field 'subject_format'");
+        $this->expectExceptionMessage("When creating a new record the following field is required: 'subject_format'");
 
         $builder->save();
     }
@@ -170,7 +170,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_schedule_offset(0);
 
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("The record data does not have required field 'enabled'");
+        $this->expectExceptionMessage("When creating a new record the following field is required: 'enabled'");
 
         $builder->save();
     }
@@ -572,7 +572,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_subject('subject');
 
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("The record data does not have required field 'body'");
+        $this->expectExceptionMessage("When creating a new record the following field is required: 'body'");
 
         $builder->save();
     }
@@ -593,7 +593,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_subject('subject');
 
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("The record data does not have required field 'title'");
+        $this->expectExceptionMessage("When creating a new record the following field is required: 'title'");
 
         $builder->save();
     }
@@ -613,7 +613,7 @@ class totara_notification_notification_preference_builder_testcase extends testc
         $builder->set_body_format(FORMAT_PLAIN);
 
         $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage("The record data does not have required field 'subject'");
+        $this->expectExceptionMessage("When creating a new record the following field is required: 'subject'");
 
         $builder->save();
     }
