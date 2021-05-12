@@ -29,6 +29,8 @@ use core\webapi\middleware\require_login;
 use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
 use mod_perform\hook\pre_section_element_deleted;
+use mod_perform\webapi\middleware\require_activity;
+use mod_perform\webapi\middleware\require_manage_capability;
 
 class element_deletion_validation  implements query_resolver, has_middleware {
 
@@ -66,7 +68,9 @@ class element_deletion_validation  implements query_resolver, has_middleware {
     public static function get_middleware(): array {
         return [
             new require_advanced_feature('performance_activities'),
-            new require_login()
+            new require_login(),
+            require_activity::by_section_element_id('input.section_element_id', true),
+            require_manage_capability::class,
         ];
     }
 }
