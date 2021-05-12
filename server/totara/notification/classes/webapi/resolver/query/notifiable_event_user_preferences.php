@@ -30,7 +30,9 @@ use core\webapi\query_resolver;
 use core\webapi\resolver\has_middleware;
 use core\webapi\middleware\require_login;
 use totara_core\extended_context;
+use totara_notification\exception\notification_exception;
 use totara_notification\factory\notifiable_event_resolver_factory;
+use totara_notification\interactor\notification_preference_interactor;
 use totara_notification\loader\notifiable_event_user_preference_loader;
 
 class notifiable_event_user_preferences implements query_resolver, has_middleware {
@@ -38,6 +40,8 @@ class notifiable_event_user_preferences implements query_resolver, has_middlewar
      * @inheritDoc
      */
     public static function resolve(array $args, execution_context $ec): array {
+        global $USER;
+
         // Note: for now we are returning a list of notifiable_event_resolver classes within the system.
         // However for future development, we might just do sort of DB looks up to get all the notifiable
         // event within configuration within the system
@@ -59,7 +63,13 @@ class notifiable_event_user_preferences implements query_resolver, has_middlewar
             $ec->set_relevant_context($context);
         }
 
-        $user_id = $args['user_id'];
+        // Ascertain whether querying user may request this information.
+        $user_id = (int) $args['user_id'];
+        $interactor = new notification_preference_interactor($extended_context, $USER->id);
+        if ($USER->id != $user_id && !$interactor->can_manage_notification_preferences()) {
+            throw notification_exception::on_manage();
+        }
+
         return notifiable_event_user_preference_loader::get_user_resolver_classes($user_id, $extended_context);
     }
 

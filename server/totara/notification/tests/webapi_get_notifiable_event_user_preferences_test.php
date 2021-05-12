@@ -31,6 +31,7 @@ use totara_notification\resolver\resolver_helper;
 use totara_notification\testing\generator as totara_notification_generator;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 use totara_notification_mock_notifiable_event_resolver as mock_event_resolver;
+use totara_notification\exception\notification_exception;
 
 
 /**
@@ -60,20 +61,69 @@ class totara_notification_webapi_get_notifiable_event_user_preferences_testcase 
         $mock_resolver_class_name = mock_event_resolver::class;
 
         // First all enabled
+        $this->setUser($user1);
         $this->execute_query_and_verify_for_user($user1->id, true, true);
+        $this->setUser($user2);
         $this->execute_query_and_verify_for_user($user2->id, true, true);
 
         // Now disable mock event for user2 - should have effect on user1
         $user2_preference = $this->disable_notifiable_event_for_user($user2->id, $mock_resolver_class_name);
+        $this->setUser($user1);
         $this->execute_query_and_verify_for_user($user1->id, true, true, null);
+        $this->setUser($user2);
         $this->execute_query_and_verify_for_user($user2->id, true, false, $user2_preference->id);
         
         // Now disable mock event on system level - Not available for any user
         $this->disable_notifiable_event_on_system($mock_resolver_class_name);
+        $this->setUser($user1);
         $this->execute_query_and_verify_for_user($user1->id, false, false, null);
+        $this->setUser($user2);
         $this->execute_query_and_verify_for_user($user2->id, false, false, null);
     }
-    
+
+    /**
+     * @return void
+     */
+    public function test_get_notifiable_event_user_preferences_fail(): void {
+        $generator = totara_notification_generator::instance();
+        $generator->include_mock_notifiable_event_resolver();
+        $generator->add_notifiable_event_resolver(mock_event_resolver::class);
+
+        $user1 = self::getDataGenerator()->create_user();
+        $user2 = self::getDataGenerator()->create_user();
+
+        $this->setAdminUser();
+        $mock_resolver_class_name = mock_event_resolver::class;
+
+        $context_system = context_system::instance();
+        $mock_resolver_class_name = mock_event_resolver::class;
+
+        // User1 should see their own user preferences.
+        $this->setUser($user1);
+        $result_user1 = $this->execute_graphql_operation(
+            'totara_notification_notifiable_event_user_preferences',
+            [
+                'user_id' => $user1->id,
+                'extended_context' => ['context_id' => $context_system->id],
+            ]
+        );
+        self::assertNotEmpty($result_user1->data['notifiable_event_user_preferences']);
+
+        // User2 should not be able to see other user preferences.
+        $this->setUser($user2);
+
+        $this->expectException(notification_exception::class);
+        $this->expectExceptionMessage(get_string('error_manage_notification', 'totara_notification'));
+
+        $this->resolve_graphql_query(
+            'totara_notification_notifiable_event_user_preferences',
+            [
+                'user_id' => $user1->id,
+                'extended_context' => ['context_id' => $context_system->id],
+            ]
+        );
+    }
+
     /**
      * @param int $user_id
      * @param bool $expect_mock
