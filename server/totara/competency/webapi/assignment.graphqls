@@ -275,7 +275,6 @@ input totara_competency_user_assignments_input {
   filters: totara_competency_profile_assignment_filters
   result_size: Int
   cursor: String
-  user_id: core_id
 }
 
 """
