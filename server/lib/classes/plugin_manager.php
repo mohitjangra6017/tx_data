@@ -1372,7 +1372,7 @@ class core_plugin_manager {
                 'forum', 'glossary', 'imscp', 'label', 'lesson', 'lti', 'page',
                 'quiz', 'resource', 'scorm', 'survey', 'url', 'wiki', 'workshop'
                 // Totara
-                , 'certificate', 'facetoface', 'perform'
+                , 'certificate', 'facetoface', 'perform', 'contentmarketplace'
             ),
 
             'pathway' => array(

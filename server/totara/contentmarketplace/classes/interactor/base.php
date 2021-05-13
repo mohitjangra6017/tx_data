@@ -22,6 +22,9 @@
  */
 namespace totara_contentmarketplace\interactor;
 
+use context;
+use required_capability_exception;
+
 class base {
     /**
      * The user id of who we are checking for.
@@ -36,5 +39,27 @@ class base {
     public function __construct(?int $user_id = null) {
         global $USER;
         $this->actor_id = $user_id ?? $USER->id;
+    }
+
+    /**
+     * @param string  $capability
+     * @param context $context
+     * @param string  $error_msg
+     * @param string  $component
+     *
+     * @return required_capability_exception
+     */
+    protected static function create_required_capability_exception(
+        string $capability,
+        context $context,
+        string $error_msg = 'nopermissions',
+        string $component = 'error'
+    ): required_capability_exception {
+        return new required_capability_exception(
+            $context,
+            $capability,
+            $error_msg,
+            $component
+        );
     }
 }
