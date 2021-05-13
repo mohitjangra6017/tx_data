@@ -171,4 +171,19 @@ class mod_perform_child_element_manager_testcase extends child_element_manager_t
         $this->assertEquals($children[1]->id, $test_data['children']['c']->id);
         $this->assertEquals($children[2]->id, $test_data['children']['a']->id);
     }
+
+    public function test_reorder_child_elements_from_different_sections() {
+        $test_data_1 = $this->generate_data();
+        $parent_1 = $test_data_1['parent'];
+        $parent_1_element = $test_data_1['children']['a']->id;
+
+        $test_data_2 = $this->generate_data();
+        $parent_2_element = $test_data_2['children']['a']->id;
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("Child elements to be reordered are not siblings");
+        $parent_1
+            ->get_child_element_manager()
+            ->reorder_child_element_to_after($parent_1_element, $parent_2_element);
+    }
 }

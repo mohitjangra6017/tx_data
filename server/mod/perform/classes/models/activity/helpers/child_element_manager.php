@@ -127,12 +127,18 @@ class child_element_manager {
         if (!$parent_element_model->get_element_plugin()->get_child_element_config()->supports_child_elements) {
             throw new coding_exception("Element doesn't support child elements");
         }
-        builder::get_db()->transaction(function () use ($child_element_id, $after_element_id) {
-            $element_siblings = $this->get_children_elements()->all(true);
 
-            if (empty($element_siblings)) {
-                throw new coding_exception("No element siblings to reorder with.");
-            }
+        $element_siblings = $this->get_children_elements()->all(true);
+        if (empty($element_siblings)) {
+            throw new coding_exception("No element siblings to reorder with.");
+        }
+
+        if (!array_key_exists($child_element_id, $element_siblings)
+            || ($after_element_id && !array_key_exists($after_element_id, $element_siblings))) {
+            throw new coding_exception("Child elements to be reordered are not siblings");
+        }
+
+        builder::get_db()->transaction(function () use ($element_siblings, $child_element_id, $after_element_id) {
             $item_ordering = new item_ordering($element_siblings);
             $sibling_elements_to_reorder = $item_ordering->move_item_after($child_element_id, $after_element_id);
 
@@ -205,7 +211,7 @@ class child_element_manager {
             }
 
             [$elements_in_sql, $elements_ids_params] = builder::get_db()->get_in_or_equal($child_element_ids, SQL_PARAMS_NAMED);
-            $sql = "            
+            $sql = "
                 update {perform_element}
                 set sort_order = -sort_order
                 where id {$elements_in_sql}
