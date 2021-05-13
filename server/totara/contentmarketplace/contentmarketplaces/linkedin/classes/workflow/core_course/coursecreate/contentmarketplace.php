@@ -1,0 +1,93 @@
+<?php
+/**
+ * This file is part of Totara Learn
+ *
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @package contentmarketplace_linkedin
+ */
+namespace contentmarketplace_linkedin\workflow\core_course\coursecreate;
+
+use context_coursecat;
+use context_system;
+use totara_contentmarketplace\explorer;
+use totara_contentmarketplace\local;
+use totara_workflow\workflow\base;
+use moodle_url;
+use totara_contentmarketplace\plugininfo\contentmarketplace as contentmarketplace_plugin;
+
+defined('MOODLE_INTERNAL') || die();
+
+class contentmarketplace extends base {
+    /**
+     * @inheritDoc
+     */
+    public function get_name(): string {
+        return get_string('add_linkedin_courses', 'contentmarketplace_linkedin');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_description(): string {
+        return get_string('add_linkedin_courses_description', 'contentmarketplace_linkedin');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function get_workflow_url(): moodle_url {
+        return new moodle_url('/totara/contentmarketplace/explorer.php', [
+            'marketplace' => 'linkedin',
+            'mode' => explorer::MODE_CREATE_COURSE,
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get_image(): moodle_url {
+        return new moodle_url('/totara/contentmarketplace/contentmarketplaces/linkedin/pix/logo.png');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function can_access(): bool {
+        // Content marketplaces are enabled.
+        if (!local::is_enabled()) {
+            return false;
+        }
+
+        // Allowed to add content from marketplaces.
+        $params = $this->manager->get_params();
+        $category = $params['category'] ?? get_config('core', 'defaultrequestcategory');
+        $context = empty($category) ? context_system::instance() : context_coursecat::instance($category);
+        if (!has_capability('totara/contentmarketplace:add', $context)) {
+            return false;
+        }
+
+        // Linked in learning marketplace plugin enabled.
+        /** @var contentmarketplace_plugin $plugin */
+        $plugin = contentmarketplace_plugin::plugin('linkedin');
+        if ($plugin === null || !$plugin->is_enabled()) {
+            return false;
+        }
+
+        return true;
+    }
+}

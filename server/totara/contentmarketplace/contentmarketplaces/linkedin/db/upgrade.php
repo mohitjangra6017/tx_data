@@ -21,6 +21,8 @@
  * @package contentmarketplace_linkedin
  */
 
+use contentmarketplace_linkedin\workflow\core_course\coursecreate\contentmarketplace;
+
 defined('MOODLE_INTERNAL') || die;
 
 /**
@@ -95,6 +97,12 @@ function xmldb_contentmarketplace_linkedin_upgrade(int $old_version): bool {
         upgrade_plugin_savepoint(true, 2021042801, 'contentmarketplace', 'linkedin');
     }
 
+    if ($old_version < 2021042802) {
+        $workflow = contentmarketplace::instance();
+        $workflow->enable();
+        // Linkedin savepoint reached.
+        upgrade_plugin_savepoint(true, 2021042802, 'contentmarketplace', 'linkedin');
+    }
 
     return true;
 }

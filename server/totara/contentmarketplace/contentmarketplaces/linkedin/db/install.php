@@ -15,14 +15,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Simon Coggins <simon.coggins@totaralearning.com>
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
 
-defined('MOODLE_INTERNAL') || die();
+use contentmarketplace_linkedin\workflow\core_course\coursecreate\contentmarketplace;
+/**
+ * Totara workflow install hook.
+ */
+function xmldb_contentmarketplace_linkedin_install() {
+    // Enable Linked In Learning course create workflow on install.
+    $workflow = contentmarketplace::instance();
+    $workflow->enable();
 
-$plugin->version = 2021042802;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020101200;      // Requires this Totara version.
-$plugin->component = 'contentmarketplace_linkedin'; // To check on upgrade, that module sits in correct place
+}

@@ -23,6 +23,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['add_linkedin_courses'] = 'Add courses from the Linked In Learning content marketplace';
+$string['add_linkedin_courses_description'] = 'Create courses based on what is available in the Linked In Learning content marketplace.';
 $string['browse_learning_content'] = 'Browse LinkedIn Learning content';
 $string['catalog_title'] = 'LinkedIn Learning catalogue';
 $string['client_id'] = 'Client ID';
