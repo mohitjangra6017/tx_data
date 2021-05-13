@@ -1,8 +1,8 @@
 <?php
-/*
+/**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2018 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,28 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Sergey Vidusov <sergey.vidusov@androgogic.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package totara_contentmarketplace
  */
+namespace totara_contentmarketplace\interactor;
 
-defined('MOODLE_INTERNAL') || die();
+class base {
+    /**
+     * The user id of who we are checking for.
+     * @var int
+     */
+    protected $actor_id;
 
-$capabilities = array(
-    'totara/contentmarketplace:config' => array(
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW
-        )
-    ),
-    'totara/contentmarketplace:add' => array(
-        'captype' => 'write',
-        'riskbitmask' => RISK_XSS,
-        'contextlevel' => CONTEXT_COURSECAT,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW,
-            'coursecreator' => CAP_ALLOW,
-            'tenantdomainmanager' => CAP_ALLOW
-        )
-    ),
-);
+    /**
+     * base constructor.
+     * @param int|null $user_id     Pass NULL to get the current user in session.
+     */
+    public function __construct(?int $user_id = null) {
+        global $USER;
+        $this->actor_id = $user_id ?? $USER->id;
+    }
+}
