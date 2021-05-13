@@ -71,7 +71,7 @@ abstract class node {
     public static function from_node(array $node): node {
         $expected = static::get_type();
         if (!array_key_exists('type', $node) || $expected !== $node['type']) {
-            throw new \coding_exception("Cannot create a node that is not being matched by type with each other");
+            throw new \coding_exception("Expected node type to be '$expected', got '{$node['type']}'");
         }
 
         return new static();

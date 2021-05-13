@@ -17,11 +17,7 @@
 -->
 <!-- A content block component to display the texts within a block -->
 <template>
-  <div
-    class="tui-wekaMultiLangBlock"
-    :data-lang="language || $str('unspecified', 'weka_simple_multi_lang')"
-    contenteditable="false"
-  >
+  <div class="tui-wekaMultiLangBlock" contenteditable="false">
     <!-- We need the contenteditable attribute to be set to false here, so that prosemirror does not put a cursor within it. -->
     <ModalPresenter :open="editModal" @request-close="editModal = false">
       <EditMultiLangModal

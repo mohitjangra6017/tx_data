@@ -91,14 +91,7 @@ class WekaSimpleMultiLangExtension extends BaseExtension {
             return ['div', { class: 'tui-wekaMultiLangBlockCollection' }, 0];
           },
 
-          parseDOM: [
-            {
-              tag: 'div.tui-wekaMultiLangBlockCollection',
-              getAttrs() {
-                return {};
-              },
-            },
-          ],
+          parseDOM: [{ tag: 'div.tui-wekaMultiLangBlockCollection' }],
         },
         component: MultiLangBlockCollection,
         componentContext: {
@@ -139,6 +132,27 @@ class WekaSimpleMultiLangExtension extends BaseExtension {
     }
 
     bind('Ctrl-m', this._createCollectionBlock.bind(this));
+  }
+
+  loadSerializedVisitor() {
+    return {
+      weka_simple_multi_lang_lang_blocks: node => {
+        node.content.forEach(child => {
+          if (!child.attrs) child.attrs = {};
+          child.attrs.siblings_count = node.content.length;
+        });
+      },
+    };
+  }
+
+  saveSerializedVisitor() {
+    return {
+      weka_simple_multi_lang_lang_blocks: node => {
+        node.content.forEach(child => {
+          delete child.attrs.siblings_count;
+        });
+      },
+    };
   }
 
   /**

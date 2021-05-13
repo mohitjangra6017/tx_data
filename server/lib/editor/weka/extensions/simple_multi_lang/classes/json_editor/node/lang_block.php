@@ -30,7 +30,6 @@ use core\json_editor\node\heading;
 use core\json_editor\node\node;
 use core\json_editor\node\paragraph;
 use core\json_editor\schema;
-use html_writer;
 
 /**
  * A single block node for multi lang block.
@@ -54,38 +53,18 @@ class lang_block extends node implements block_node {
     private $contents;
 
     /**
-     * The total number of block nodes within the collection node, including itself.
-     * @var int
-     */
-    private $siblings_count;
-
-    /**
      * @param formatter $formatter
      * @return string
      */
     public function to_html(formatter $formatter): string {
         if (empty($this->contents)) {
-            return html_writer::span('', 'multilang', ['lang' => $this->lang]);
+            return '';
         }
-
         $content = '';
         foreach ($this->contents as $single_node) {
             $content .= $formatter->print_node($single_node, formatter::HTML);
         }
-
-        if ($this->siblings_count === 1) {
-            // There is only itself, therefore we only render the content without the
-            // span tag. This is happening because we might be able to goe thru the filter json,
-            // and it strips out all the other siblings except the one that matches with the
-            // current language. Hence we can leave the `<span>` tags outside it.
-            return $content;
-        }
-
-        return html_writer::span(
-            $content,
-            "multilang",
-            ['lang' => $this->lang]
-        );
+        return $content;
     }
 
     /**
@@ -96,6 +75,9 @@ class lang_block extends node implements block_node {
      * @return string
      */
     public function to_text(formatter $formatter): string {
+        if (empty($this->lang)) {
+            return '';
+        }
         if (empty($this->contents)) {
             return "```{$this->lang}```";
         }
@@ -122,11 +104,11 @@ class lang_block extends node implements block_node {
     public static function from_node(array $node): node {
         /** @var lang_block $lang_block */
         $lang_block = parent::from_node($node);
-        $lang_block->lang = $node['attrs']['lang'];
+        $lang_block->lang = $node['attrs']['lang'] ?? null;
 
         // Default to 1 because the minimum that we can have is 1.
         $lang_block->siblings_count = $node['attrs']['siblings_count'] ?? 1;
-        $lang_block->contents = $node['content'];
+        $lang_block->contents = $node['content'] ?? [];
 
         return $lang_block;
     }
@@ -136,19 +118,20 @@ class lang_block extends node implements block_node {
      * @return bool
      */
     public static function validate_schema(array $raw_node): bool {
-        if (!node_helper::check_keys_match_against_data($raw_node, ['content', 'type', 'attrs'])) {
+        if (!node_helper::check_keys_match_against_data($raw_node, ['type'], ['attrs', 'content'])) {
             return false;
         }
 
-        $attrs = $raw_node['attrs'];
-        if (!node_helper::check_keys_match_against_data($attrs, ['lang'], ['siblings_count'])) {
+        $attrs = $raw_node['attrs'] ?? [];
+        // note: siblings_count may exist but it is no longer used
+        if (!node_helper::check_keys_match_against_data($attrs, [], ['lang', 'siblings_count'])) {
             return false;
-        } else if (strlen($attrs['lang']) > static::MAX_LANG_LENGTH) {
+        } else if (isset($attrs['lang']) && strlen($attrs['lang']) > static::MAX_LANG_LENGTH) {
             // We can only accept the 5 characters as max length of lang keyword.
             return false;
         }
 
-        $content_nodes = $raw_node['content'];
+        $content_nodes = $raw_node['content'] ?? null;
         if (!empty($content_nodes)) {
             foreach ($content_nodes as $single_node) {
                 if (!isset($single_node['type'])) {

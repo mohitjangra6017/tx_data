@@ -340,22 +340,12 @@ export default {
      * Delete notifications
      */
     async deleteNotification() {
-      try {
-        await this.handleDeleteNotification(this.targetDeletePreference);
-        this.deleteModal.open = false;
-        notify({
-          type: 'success',
-          message: this.$str('delete_success', 'totara_notification'),
-        });
-      } catch (e) {
-        await notify({
-          type: 'error',
-          message: this.$str(
-            'error_cannot_delete_custom_notification',
-            'totara_notification'
-          ),
-        });
-      }
+      await this.handleDeleteNotification(this.targetDeletePreference);
+      this.deleteModal.open = false;
+      notify({
+        type: 'success',
+        message: this.$str('delete_success', 'totara_notification'),
+      });
     },
 
     /**
@@ -422,41 +412,23 @@ export default {
      * @param {Object} formValue
      */
     async handleFormSubmit(formValue) {
-      try {
-        if (this.modal.state === MODAL_STATE_CREATE) {
-          await this.createCustomNotification(formValue);
-        } else if (this.modal.state === MODAL_STATE_UPDATE) {
-          await this.updateNotification(formValue);
-        } else {
-          throw new Error('The modal state is invalid');
-        }
-
-        this.modal.open = false;
-
-        notify({
-          type: 'success',
-          message:
-            this.modal.state === MODAL_STATE_CREATE
-              ? this.$str('saved_notification', 'totara_notification')
-              : this.$str('updated_notification', 'totara_notification'),
-        });
-      } catch (e) {
-        console.error(e);
-
-        await notify({
-          type: 'error',
-          message:
-            this.modal.state === MODAL_STATE_CREATE
-              ? this.$str(
-                  'error_cannot_create_custom_notification',
-                  'totara_notification'
-                )
-              : this.$str(
-                  'error_cannot_update_notification',
-                  'totara_notification'
-                ),
-        });
+      if (this.modal.state === MODAL_STATE_CREATE) {
+        await this.createCustomNotification(formValue);
+      } else if (this.modal.state === MODAL_STATE_UPDATE) {
+        await this.updateNotification(formValue);
+      } else {
+        throw new Error('The modal state is invalid');
       }
+
+      this.modal.open = false;
+
+      notify({
+        type: 'success',
+        message:
+          this.modal.state === MODAL_STATE_CREATE
+            ? this.$str('saved_notification', 'totara_notification')
+            : this.$str('updated_notification', 'totara_notification'),
+      });
     },
 
     /**
@@ -821,10 +793,7 @@ export default {
       "delete_confirm_message",
       "delete_success",
       "edit_delivery_preferences",
-      "error_cannot_create_custom_notification",
-      "error_cannot_delete_custom_notification",
       "edit_notification",
-      "error_cannot_update_notification",
       "saved_notification",
       "updated_notification"
     ]

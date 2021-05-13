@@ -140,10 +140,9 @@ class filter_multilang extends moodle_text_filter {
                     }
                 );
 
-                $current_total = count($block_nodes);
                 $block_nodes = array_map(
-                    function (array $block_node) use ($current_total): array {
-                        $block_node['attrs']['siblings_count'] = $current_total;
+                    function (array $block_node): array {
+                        unset($block_node['attrs']['siblings_count']);
                         return $block_node;
                     },
                     $block_nodes

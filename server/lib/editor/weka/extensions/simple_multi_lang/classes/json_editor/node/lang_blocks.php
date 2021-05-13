@@ -27,6 +27,7 @@ use core\json_editor\formatter\formatter;
 use core\json_editor\helper\node_helper;
 use core\json_editor\node\abstraction\block_node;
 use core\json_editor\node\node;
+use html_writer;
 
 /**
  * A collection node for multiple single lang block.
@@ -45,8 +46,24 @@ class lang_blocks extends node implements block_node {
     public function to_html(formatter $formatter): string {
         $content = '';
 
-        foreach ($this->blocks as $single_block_node) {
-            $content .= $formatter->print_node($single_block_node, formatter::HTML);
+        $blocks = array_values(array_filter($this->blocks, function (array $block): bool {
+            return !empty($block['attrs']['lang']);
+        }));
+
+        if (count($blocks) === 1) {
+            // There is only one node, therefore we only render the content without the
+            // span tag. This is happening because we might be able to go thru the filter json,
+            // and it strips out all the other children except the one that matches with the
+            // current language. Hence we can leave the `<span>` tags outside it.
+            return $formatter->print_node($blocks[0], formatter::HTML);
+        }
+
+        foreach ($blocks as $single_block_node) {
+            $content .= html_writer::span(
+                $formatter->print_node($single_block_node, formatter::HTML),
+                "multilang",
+                ['lang' => $single_block_node['attrs']['lang']]
+            );
         }
 
         return $content;
@@ -142,18 +159,6 @@ class lang_blocks extends node implements block_node {
         if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
             $fn = __FUNCTION__;
             throw new coding_exception("The function {$fn} is mainly for phpunit tests environment");
-        }
-
-        $total_count = count($block_nodes);
-
-        // Update the total count of block nodes to keep it sync up with each other.
-        foreach ($block_nodes as $i => $single_block_node) {
-            if (!isset($single_block_node['attrs']) || !isset($single_block_node['attrs']['siblings_count'])) {
-                throw new coding_exception("The schema of block node is invalid");
-            }
-
-            $single_block_node['attrs']['siblings_count'] = $total_count;
-            $block_nodes[$i] = $single_block_node;
         }
 
         return [
