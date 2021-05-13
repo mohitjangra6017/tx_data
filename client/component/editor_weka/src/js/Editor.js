@@ -32,7 +32,7 @@ import ComponentView from './ComponentView';
 import './transaction';
 import textPlaceholder from './plugins/text_placeholder';
 import WekaValue from './WekaValue';
-import { uniqueId } from 'tui/util';
+import { result, uniqueId } from 'tui/util';
 import { notify } from 'tui/notifications';
 import { langString, loadLangStrings } from 'tui/i18n';
 
@@ -50,6 +50,7 @@ export default class Editor {
     this._parent = options.parent;
     this.viewExtrasEl = options.viewExtrasEl;
     this.viewExtrasLiveEl = options.viewExtrasLiveEl;
+    this._editable = 'editable' in options ? options.editable : true;
 
     /** @type {EditorView} */
     this.view = null;
@@ -218,14 +219,7 @@ export default class Editor {
       dispatchTransaction: this.dispatch,
       nodeViews: this._nodeViews,
       attributes,
-      editable: () => {
-        if ('editable' in this._options) {
-          return this._options.editable;
-        }
-
-        // Default to editable.
-        return true;
-      },
+      editable: () => result(this._editable),
     });
 
     this.view.dom.addEventListener('focus', e => {
@@ -299,6 +293,7 @@ export default class Editor {
    * Forces the editor's view to be re-rendered.
    */
   forceRerenderView() {
+    if (!this.view) return;
     const state = EditorState.create(Object.assign({}, this._editorConfig()));
     this.view.updateState(state);
     this.view.updateState(this.state);
@@ -419,5 +414,29 @@ export default class Editor {
     return this._extensions.map(extension => {
       return extension.applyFormatters.bind(extension);
     });
+  }
+
+  /**
+   * Set whether the editor should be editable or not.
+   *
+   * @param {boolean} value
+   */
+  setEditable(value) {
+    this._editable = value;
+    if (this.view) {
+      // This is already set in createView, but we need to set it again so
+      // ProseMirror rerenders.
+      this.view.setProps({
+        editable: () => result(this._editable),
+      });
+    }
+  }
+
+  /**
+   * Check whether the editor should be editable or not.
+   * @returns {boolean}
+   */
+  getEditable() {
+    return this._editable;
   }
 }

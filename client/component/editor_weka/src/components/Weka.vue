@@ -199,17 +199,14 @@ export default {
     },
 
     disabled(value) {
-      if (!this.editor.view) {
+      if (!this.editor) {
         return;
       }
-
-      this.editor.view.setProps({
-        editable: () => {
-          return !value;
-        },
-      });
-      this.updateToolbar();
-      this.editor.forceRerenderView();
+      this.editor.setEditable(!value);
+      if (this.editor.view) {
+        this.updateToolbar();
+        this.editor.forceRerenderView();
+      }
     },
   },
 
@@ -370,7 +367,7 @@ export default {
         component: this.usageIdentifier.component || null,
         area: this.usageIdentifier.area || null,
         instanceId: this.usageIdentifier.instanceId || null,
-        editable: !this.disabled,
+        editable: () => !this.disabled,
         onTransaction: () => {
           this.updateToolbarThrottled();
         },
