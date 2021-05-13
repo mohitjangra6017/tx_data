@@ -82,6 +82,7 @@ export default {
       skip() {
         return !this.showSort;
       },
+      context: { batch: true },
       update({ sorts }) {
         return Array.prototype.map.call(sorts, ({ value, label }) => {
           return {
