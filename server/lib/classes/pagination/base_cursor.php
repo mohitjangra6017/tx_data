@@ -102,12 +102,18 @@ abstract class base_cursor {
      * @return void
      */
     protected function validate(array $cursor): void {
+        global $CFG;
+
         if (empty($cursor)) {
             throw new coding_exception('Empty cursor given, please provide a cursor with at least one value.');
         }
 
         if (!array_key_exists('limit', $cursor)) {
             throw new coding_exception('You must provide a limit within your cursor.');
+        }
+
+        if (isset($CFG->graphqlcursorlimitmax) && $cursor['limit'] > $CFG->graphqlcursorlimitmax) {
+            throw new coding_exception('Cursor limit has been set above maximum allowed');
         }
     }
 

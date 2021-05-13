@@ -786,6 +786,11 @@ Advanced settings
 // The hostnames / IP addresses must be specified as a comma delimited string, i.e. 'www.example.com,123.34.12.1'
 // $CFG->link_parser_allowed_hosts = '';
 // $CFG->link_parser_blocked_hosts = '';
+//
+// This setting can be used to place a hard limit the number of records that can be returned from GraphQL pagination
+// cursor. This will prevent excessively huge numbers of records being returned from a query which reduces load on the
+// server. If this setting is not specified there will be no records limits applied.
+// $CFG->graphqlcursorlimitmax = 1000
 
 /***********************************************************************************************************************
 Experimental settings
