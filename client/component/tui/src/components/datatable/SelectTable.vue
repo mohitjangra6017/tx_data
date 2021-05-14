@@ -21,6 +21,7 @@
     <Table
       :entire-selected="entireSelected"
       :border-bottom-hidden="borderBottomHidden"
+      :border-separator-hidden="borderSeparatorHidden"
       :color-odd-rows="colorOddRows"
       :data="data"
       :disabled-ids="disabledIds"
@@ -28,9 +29,11 @@
       :get-id="getId"
       :get-group-id="getGroupId"
       :group-mode="groupMode"
+      :hover-off="hoverOff"
       :selection="value"
+      :selected-highlight-off="selectedHighlightOff"
     >
-      <template v-slot:header-row>
+      <template v-if="$scopedSlots['header-row']" v-slot:header-row>
         <SelectVisibleRowsCell
           :no-label-offset="noLabelOffset"
           :large-check-box="largeCheckBox"
@@ -84,6 +87,7 @@
         />
         <slot
           :id="id"
+          :checked="isRowSelected(inGroup ? groupId : id)"
           :expand="expand"
           :expand-group="expandGroup"
           :expand-state="expandState"
@@ -123,6 +127,8 @@ export default {
 
   props: {
     borderBottomHidden: Boolean,
+    // Hide separator border between rows
+    borderSeparatorHidden: Boolean,
     // Enable background colour on odd rows
     colorOddRows: Boolean,
     checkboxVAlign: String,
@@ -149,12 +155,16 @@ export default {
     },
     // Enables group mode
     groupMode: Boolean,
+    // No hover background for rows
+    hoverOff: Boolean,
     largeCheckBox: Boolean,
     noLabelOffset: Boolean,
     // Enables the ability to select all visible items
     selectAllEnabled: { type: Boolean },
     // Enables the ability to select the entire result set
     selectEntireEnabled: { type: Boolean },
+    // Don't add styles for selected items
+    selectedHighlightOff: Boolean,
     // ID's of selected rows
     value: Array,
     rowLabelKey: String,

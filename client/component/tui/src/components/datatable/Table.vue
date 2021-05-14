@@ -85,6 +85,7 @@
               :hover-off="hoverOff"
               :in-group="groupMode"
               :selected="isSelected(id)"
+              :selected-highlight-off="selectedHighlightOff"
               :color-odd="colorOddRows && !draggableRows"
               :draggable="draggableRows"
               :dragging="dragging"
@@ -218,7 +219,8 @@ export default {
     groupMode: Boolean,
     // ID's of selected rows
     selection: Array,
-
+    // Don't add styles for selected items
+    selectedHighlightOff: Boolean,
     // draggable:
     draggableRows: Boolean,
     draggablePlaceholder: Object,
