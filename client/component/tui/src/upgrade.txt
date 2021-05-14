@@ -6,6 +6,12 @@ information provided here is intended especially for developers.
 * Updated CSS Variables for ProgressTrackerNav within tui_spacing.scss
 * Updated Collapsible to match latest design
   * Template and SCSS changes
+* Updated styles of the basket component basket/Basket.vue
+  * Template and SCSS changes
+* Updated styles of filter side panel component filters/FilterSidePanel.vue
+  * Template and SCSS changes
+* Exposed more of the table properties to the select table component datatable/SelectTable.vue
+  * Template changes
 
 === 14.0 ===
 

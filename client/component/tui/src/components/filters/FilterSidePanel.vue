@@ -17,12 +17,18 @@
 -->
 
 <template>
-  <Card class="tui-filterSidePanel">
+  <Card class="tui-filterSidePanel" :no-border="true">
+    <SkipToContent
+      v-if="skipContentId"
+      :content-id="skipContentId"
+      :text="skipContentText"
+    />
+
     <div class="tui-filterSidePanel__heading">
-      <h2 class="tui-filterSidePanel__header">
+      <h3 class="tui-filterSidePanel__header">
         {{ title }}
         <span v-if="activeCount" aria-hidden="true">( {{ activeCount }} )</span>
-      </h2>
+      </h3>
       <div
         v-if="Object.entries(value).length"
         class="tui-filterSidePanel__status"
@@ -63,14 +69,20 @@
 <script>
 import Button from 'tui/components/buttons/Button';
 import Card from 'tui/components/card/Card';
+import SkipToContent from 'tui/components/links/SkipToContent';
 
 export default {
   components: {
     Button,
     Card,
+    SkipToContent,
   },
 
   props: {
+    // Skip content target ID
+    skipContentId: String,
+    // Skip content custom text
+    skipContentText: String,
     title: String,
     value: {
       default() {
@@ -138,16 +150,17 @@ export default {
 <style lang="scss">
 .tui-filterSidePanel {
   display: block;
-  padding: var(--gap-4);
 
   &__header {
-    @include tui-font-heading-x-small();
+    @include tui-font-heading-small();
     min-width: 0;
     margin: 0 var(--gap-2) 0 0;
   }
 
   &__heading {
     display: flex;
+    padding-bottom: var(--gap-2);
+    border-bottom: var(--border-width-normal) solid var(--color-neutral-7);
   }
 
   &__instructions,

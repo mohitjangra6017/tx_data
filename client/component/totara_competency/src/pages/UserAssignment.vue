@@ -67,6 +67,7 @@
       <GridItem v-if="!isViewingSelections" :units="3">
         <FilterSidePanel
           v-model="filters"
+          class="tui-competencySelfAssignment__filters"
           :title="$str('filter_competencies', 'totara_competency')"
           @active-count-change="activeFilterCount = $event"
         >
@@ -530,6 +531,10 @@ export default {
     & > * + * {
       margin-top: var(--gap-2);
     }
+  }
+
+  &__filters {
+    margin-right: var(--gap-4);
   }
 
   &__loadMore {

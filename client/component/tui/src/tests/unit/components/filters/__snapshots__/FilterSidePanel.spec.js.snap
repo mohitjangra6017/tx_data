@@ -2,12 +2,14 @@
 
 exports[`FilterSidePanel.vue matches snapshot 1`] = `
 <div
-  class="tui-card tui-filterSidePanel"
+  class="tui-card tui-filterSidePanel tui-card--noBorder"
 >
+  <!---->
+   
   <div
     class="tui-filterSidePanel__heading"
   >
-    <h2
+    <h3
       class="tui-filterSidePanel__header"
     >
       
@@ -18,7 +20,7 @@ exports[`FilterSidePanel.vue matches snapshot 1`] = `
       >
         ( 2 )
       </span>
-    </h2>
+    </h3>
      
     <div
       class="tui-filterSidePanel__status"
