@@ -6,9 +6,9 @@ Feature: Search for content in the Go1 content marketplace
   Background:
     Given I am on a totara site
     And I log in as "admin"
-    And I navigate to "Setup Content Marketplaces" node in "Site administration > Content Marketplace"
-    And I should see "Enable" in the ".contentmarketplace_goone" "css_element"
-    When I click on "Enable" "link" in the ".contentmarketplace_goone" "css_element"
+    And I navigate to "Plugins > Content Marketplace > Manage Content Marketplaces" in site administration
+    And I should see "Disabled" in the ".contentmarketplace_goone" "css_element"
+    When I click on "Set up" "link" in the ".contentmarketplace_goone" "css_element"
     And I switch to "setup" window
     And the following should exist in the "state" table:
       | full_name       | Admin User         |
@@ -24,7 +24,6 @@ Feature: Search for content in the Go1 content marketplace
     And "Subscription 319" "radio" in the "Availability" "fieldset" should be visible
     And "Custom collection 4" "radio" in the "Availability" "fieldset" should be visible
 
-
   Scenario: Filter by availability
     # Filter to list the subscribed content
     When I click on "Subscription" "radio"
@@ -33,7 +32,6 @@ Feature: Search for content in the Go1 content marketplace
     # Go back to listing of all the content
     When I click on "All" "radio"
     Then I should see "82,137 results"
-
 
   Scenario: Filter on a tag
     # Add tag "Technology" to the filter
@@ -53,7 +51,6 @@ Feature: Search for content in the Go1 content marketplace
     And "All 82,137" "radio" in the "Availability" "fieldset" should be visible
     And "Subscription 319" "radio" in the "Availability" "fieldset" should be visible
     And "Custom collection 4" "radio" in the "Availability" "fieldset" should be visible
-
 
   Scenario: Filter on a couple of tags
     # Add tag "Technology" to the filter
@@ -93,7 +90,6 @@ Feature: Search for content in the Go1 content marketplace
     And "All 82,137" "radio" in the "Availability" "fieldset" should be visible
     And "Subscription 319" "radio" in the "Availability" "fieldset" should be visible
     And "Custom collection 4" "radio" in the "Availability" "fieldset" should be visible
-
 
   Scenario: Combine several filters
     # First filter on the subscribed content

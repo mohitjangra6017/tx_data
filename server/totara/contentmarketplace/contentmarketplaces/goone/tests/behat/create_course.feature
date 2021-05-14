@@ -6,9 +6,9 @@ Feature: Create a course from the Go1 content marketplace
   Background:
     Given I am on a totara site
     And I log in as "admin"
-    And I navigate to "Setup Content Marketplaces" node in "Site administration > Content Marketplace"
-    And I should see "Enable" in the ".contentmarketplace_goone" "css_element"
-    When I click on "Enable" "link" in the ".contentmarketplace_goone" "css_element"
+    And I navigate to "Plugins > Content Marketplace > Manage Content Marketplaces" in site administration
+    And I should see "Disabled" in the ".contentmarketplace_goone" "css_element"
+    When I click on "Set up" "link" in the ".contentmarketplace_goone" "css_element"
     And I switch to "setup" window
     And the following should exist in the "state" table:
       | full_name       | Admin User         |
