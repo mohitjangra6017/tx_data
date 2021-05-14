@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div class="tui-basket">
+  <div class="tui-basket" :class="{ 'tui-basket--wideGap': wideGap }">
     <div class="tui-basket__status">
       <div class="tui-basket__selected" aria-live="polite" aria-atomic="true">
         {{ $str('selected', 'totara_core') }}:
@@ -81,6 +81,8 @@ export default {
     bulkActions: Array,
 
     showClear: Boolean,
+
+    wideGap: Boolean,
   },
 
   computed: {
@@ -136,12 +138,30 @@ export default {
     align-items: center;
     padding: var(--gap-2) var(--gap-3);
 
-    > .tui-formBtn--transparent {
-      padding: var(--gap-1);
+    & > * {
+      margin-top: var(--gap-2);
+      margin-left: var(--gap-4);
     }
 
-    > * + * {
-      margin-left: var(--gap-2);
+    @media (min-width: $tui-screen-xs) {
+      & > * {
+        margin-top: 0;
+        margin-left: 0;
+      }
+
+      > .tui-formBtn--transparent {
+        padding: var(--gap-1);
+      }
+
+      > * + * {
+        margin-left: var(--gap-2);
+      }
+
+      .tui-basket--wideGap & {
+        > * + * {
+          margin-left: var(--gap-4);
+        }
+      }
     }
   }
 
