@@ -143,7 +143,11 @@ class placeholder_option {
             $group_options,
             function (option $option) use ($pattern): bool {
                 $option_key = $option->get_key();
-                return (bool) preg_match("/{$pattern}/", $option_key);
+                if (mb_stripos($option_key, $pattern) !== false) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         );
     }
