@@ -52,8 +52,8 @@ class weka_notification_placeholders_webapi_get_placeholders_testcase extends ad
 
         mock_placeholder::add_options(
             option::create('key_one', 'Key one'),
-            option::create('key_two', 'Key one'),
-            option::create('key_three', 'Key one'),
+            option::create('key_two', 'Key two'),
+            option::create('key_three', 'Key three'),
         );
 
         $invalid_callable = function (): void {
@@ -105,8 +105,6 @@ class weka_notification_placeholders_webapi_get_placeholders_testcase extends ad
                     'user_two:key_three',
                 ]
             );
-
-            unset($option);
         }
 
         $second_result = $this->resolve_graphql_query(
@@ -114,11 +112,11 @@ class weka_notification_placeholders_webapi_get_placeholders_testcase extends ad
             [
                 'context_id' => $context_system->id,
                 'resolver_class_name' => mock_event_resolver::class,
-                'pattern' => 'user_one',
+                'pattern' => 'subject key one',
             ]
         );
 
-        self::assertCount(3, $second_result);
+        self::assertCount(2, $second_result);
 
         /** @var option $option */
         foreach ($second_result as $option) {
@@ -126,12 +124,9 @@ class weka_notification_placeholders_webapi_get_placeholders_testcase extends ad
                 $option->get_key(),
                 [
                     'user_one:key_one',
-                    'user_one:key_two',
-                    'user_one:key_three',
+                    'user_two:key_one',
                 ]
             );
-
-            unset($option);
         }
 
         $third_result = $this->resolve_graphql_query(
@@ -139,7 +134,7 @@ class weka_notification_placeholders_webapi_get_placeholders_testcase extends ad
             [
                 'context_id' => $context_system->id,
                 'resolver_class_name' => mock_event_resolver::class,
-                'pattern' => 'key_one',
+                'pattern' => 'key one',
             ]
         );
 
@@ -154,15 +149,13 @@ class weka_notification_placeholders_webapi_get_placeholders_testcase extends ad
                     'user_two:key_one',
                 ]
             );
-
-            unset($option);
         }
     }
 
     /**
      * @return void
      */
-    public function test_fetch_query_with_invalid_rever_class_name(): void {
+    public function test_fetch_query_with_invalid_resolver_class_name(): void {
         $this->setAdminUser();
         $context_system = context_system::instance();
 

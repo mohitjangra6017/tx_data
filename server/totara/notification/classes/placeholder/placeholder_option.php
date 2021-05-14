@@ -142,8 +142,8 @@ class placeholder_option {
         return array_filter(
             $group_options,
             function (option $option) use ($pattern): bool {
-                $option_key = $option->get_key();
-                if (mb_stripos($option_key, $pattern) !== false) {
+                $option_label = $option->get_label();
+                if (mb_stripos($option_label, $pattern) !== false) {
                     return true;
                 } else {
                     return false;

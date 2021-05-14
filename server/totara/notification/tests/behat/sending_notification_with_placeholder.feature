@@ -26,7 +26,7 @@ Feature: Sending notification with placeholders
     And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to ""
     And I activate the weka editor with css ".tui-notificationPreferenceForm__subjectEditor"
     And I type "New comment from " in the weka editor
-    When I type "[subject:" in the weka editor
+    When I type "[subject" in the weka editor
     Then I should see "Subject Full name"
     And I should see "Subject Full name (with link)"
     When I click on "Subject Full name" "link"
@@ -39,7 +39,7 @@ Feature: Sending notification with placeholders
     And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to ""
     And I activate the weka editor with css ".tui-notificationPreferenceForm__bodyEditor"
     And I type "Hello user " in the weka editor
-    When I type "[certification:" in the weka editor
+    When I type "[certification" in the weka editor
     Then I should see "Certification Full name"
     And I should see "Certification Full name (with link)"
     When I click on "Certification Full name" "link"

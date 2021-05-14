@@ -32,7 +32,7 @@ class totara_notification_mock_lang_string extends lang_string {
      * @param string $you_are_saying
      */
     public function __construct(string $you_are_saying) {
-        parent::__construct('pluginname', 'totara_notification');
+        parent::__construct('notification_subject_placeholder_group', 'totara_program');
         $this->text = $you_are_saying;
     }
 

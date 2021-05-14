@@ -150,7 +150,7 @@ class totara_notification_placeholder_group_option_testcase extends testcase {
         $third_result = $placeholder_option->find_map_group_options_match('');
         self::assertCount(4, $third_result);
 
-        $fourth_result = $placeholder_option->find_map_group_options_match('[user');
+        $fourth_result = $placeholder_option->find_map_group_options_match('[Subj');
         self::assertCount(4, $fourth_result);
     }
 }
