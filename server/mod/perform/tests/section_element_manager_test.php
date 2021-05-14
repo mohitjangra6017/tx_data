@@ -144,5 +144,12 @@ class mod_perform_section_element_manager_testcase extends section_element_manag
         $this->assertEquals($test_data['section_elements']['b']->id, $section_elements[0]->id);
         $this->assertEquals(2, $section_elements[1]->sort_order);
         $this->assertEquals($test_data['section_elements']['c']->id, $section_elements[1]->id);
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage('Cannot move a section element that does not belong to this section');
+        $section->get_section_element_manager()->reorder_section_element_to_after(
+            $test_data['section_elements']['a']->id,
+            $test_data['section_elements_2']['a']->id
+        );
     }
 }

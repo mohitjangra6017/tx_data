@@ -194,6 +194,13 @@ class section_element_manager {
             throw new coding_exception('Section has been deleted, can not add section element');
         }
 
+        if ($after_section_element_id) {
+            $after_section_element = section_element::load_by_id($after_section_element_id);
+            if ($this->section_entity->id != $after_section_element->section_id) {
+                throw new coding_exception('Cannot move a section element that does not belong to this section');
+            }
+        }
+
         builder::get_db()->transaction(function () use ($section_element_id, $after_section_element_id) {
             $item_ordering = new item_ordering($this->get_section_elements()->all());
             $section_elements_to_reorder = $item_ordering->move_item_after($section_element_id, $after_section_element_id);

@@ -59,13 +59,29 @@ abstract class section_element_manager_testcase extends advanced_testcase {
         );
         $section_element_C = $section->get_section_element_manager()->add_element_after($element_C, $element_B->id);
 
+        $section2 = $perform_generator->create_section($activity, ['title' => 'Section two']);
+
+        $element_2_a = $perform_generator->create_element(
+            [
+                'plugin_name' => 'short_text',
+                'title'       => 'Element 2 A',
+            ]
+        );
+
+        $section_element_2_a = $section2->get_section_element_manager()->add_element_after($element_2_a);
+
         return [
-            'section' => $section,
-            'section_elements' => [
+            'section'            => $section,
+            'section_elements'   => [
                 'a' => $section_element_A,
                 'b' => $section_element_B,
                 'c' => $section_element_C,
-            ]
+            ],
+            'section2'           => $section2,
+            'section_elements_2' => [
+                'a' => $section_element_2_a,
+            ],
+
         ];
     }
 }
