@@ -23,8 +23,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['add_linkedin_courses'] = 'Add courses from the Linked In Learning content marketplace';
-$string['add_linkedin_courses_description'] = 'Create courses based on what is available in the Linked In Learning content marketplace.';
+$string['add_linkedin_courses'] = 'Add courses from the LinkedIn Learning content marketplace';
+$string['add_linkedin_courses_description'] = 'Create courses based on what is available in the LinkedIn Learning content marketplace.';
 $string['browse_learning_content'] = 'Browse LinkedIn Learning content';
 $string['catalog_title'] = 'LinkedIn Learning catalogue';
 $string['client_id'] = 'Client ID';
@@ -32,6 +32,8 @@ $string['client_id_help'] = 'Client ID can be obtained from LinkedIn Learning un
 $string['client_secret'] = 'Client secret';
 $string['client_secret_help'] = 'Client secret can be obtained from LinkedIn Learning under the integration settings page.';
 $string['error:fail_json_validation'] = 'Failed to validate the json data: {$a}';
+$string['explore_lil_marketplace'] = 'LinkedIn Learning content marketplace';
+$string['explore_lil_marketplace_description'] = 'Explore content from LinkedIn Learning';
 $string['plugin_description'] = 'Online Training Courses for Creative, Technology, Business Skills.';
 $string['pluginname'] = 'LinkedIn Learning';
 $string['settings_title'] = 'LinkedIn Learning settings';

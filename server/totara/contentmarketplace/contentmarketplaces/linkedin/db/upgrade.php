@@ -22,6 +22,7 @@
  */
 
 use contentmarketplace_linkedin\workflow\core_course\coursecreate\contentmarketplace;
+use contentmarketplace_linkedin\workflow\totara_contentmarketplace\exploremarketplace\linkedin;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -99,6 +100,8 @@ function xmldb_contentmarketplace_linkedin_upgrade(int $old_version): bool {
 
     if ($old_version < 2021042802) {
         $workflow = contentmarketplace::instance();
+        $workflow->enable();
+        $workflow = linkedin::instance();
         $workflow->enable();
         // Linkedin savepoint reached.
         upgrade_plugin_savepoint(true, 2021042802, 'contentmarketplace', 'linkedin');

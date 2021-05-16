@@ -22,12 +22,18 @@
  */
 
 use contentmarketplace_linkedin\workflow\core_course\coursecreate\contentmarketplace;
+use contentmarketplace_linkedin\workflow\totara_contentmarketplace\exploremarketplace\linkedin;
+
 /**
  * Totara workflow install hook.
  */
 function xmldb_contentmarketplace_linkedin_install() {
     // Enable Linked In Learning course create workflow on install.
     $workflow = contentmarketplace::instance();
+    $workflow->enable();
+
+    // Enable Linked In Learning Explore marketplace workflow on install.
+    $workflow = linkedin::instance();
     $workflow->enable();
 
 }

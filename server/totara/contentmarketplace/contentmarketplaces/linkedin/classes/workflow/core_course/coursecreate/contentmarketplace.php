@@ -22,6 +22,7 @@
  */
 namespace contentmarketplace_linkedin\workflow\core_course\coursecreate;
 
+use contentmarketplace_linkedin\interactor\catalog_import_interactor;
 use context_coursecat;
 use context_system;
 use totara_contentmarketplace\explorer;
@@ -29,8 +30,6 @@ use totara_contentmarketplace\local;
 use totara_workflow\workflow\base;
 use moodle_url;
 use totara_contentmarketplace\plugininfo\contentmarketplace as contentmarketplace_plugin;
-
-defined('MOODLE_INTERNAL') || die();
 
 class contentmarketplace extends base {
     /**
@@ -76,9 +75,16 @@ class contentmarketplace extends base {
         // Allowed to add content from marketplaces.
         $params = $this->manager->get_params();
         $category = $params['category'] ?? get_config('core', 'defaultrequestcategory');
-        $context = empty($category) ? context_system::instance() : context_coursecat::instance($category);
-        if (!has_capability('totara/contentmarketplace:add', $context)) {
-            return false;
+        $interactor = new catalog_import_interactor();
+
+        if (empty($category)) {
+            if (!$interactor->can_add_course()) {
+                return false;
+            }
+        } else {
+            if (!$interactor->can_add_course_to_category(context_coursecat::instance($category))) {
+                return false;
+            }
         }
 
         // Linked in learning marketplace plugin enabled.
