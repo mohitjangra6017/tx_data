@@ -45,6 +45,8 @@ $PAGE->set_url('/blog/edit.php', array('action' => $action,
                                        'modid' => $modid,
                                        'courseid' => $courseid));
 
+require_login($courseid);
+
 // If action is add, we ignore $id to avoid any further problems.
 if (!empty($id) && $action == 'add') {
     $id = null;
@@ -71,8 +73,6 @@ if ($modid) {
     $blognode = $PAGE->settingsnav->find('blogadd', null);
     $blognode->make_active();
 }
-
-require_login($courseid);
 
 if (empty($CFG->enableblogs)) {
     print_error('blogdisable', 'blog');
