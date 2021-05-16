@@ -76,4 +76,25 @@ class mod_perform_webapi_resolver_mutation_create_element_in_section_testcase ex
         $this->expectExceptionMessage('title must be provided');
         $this->resolve_graphql_mutation(self::MUTATION, $args);
     }
+
+    public function test_create_element_with_invalid_data() {
+        $test_data = $this->generate_data();
+        $args = [
+            'input' => [
+                'element' => [
+                    'plugin_name' => 'short_text',
+                    'element_details' => [
+                        'title' => 'test title',
+                        'identifier' => 'test identifier',
+                        'data'  => '{ bar: "baz", }'
+                    ],
+                ],
+                'after_section_element_id' => $test_data['section_elements']['b']->id,
+                'section_id' => $test_data['section']->id
+            ]
+        ];
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("Invalid element data format, expected a json string");
+        $this->resolve_graphql_mutation(self::MUTATION, $args);
+    }
 }

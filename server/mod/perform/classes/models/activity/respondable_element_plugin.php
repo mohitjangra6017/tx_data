@@ -92,6 +92,11 @@ abstract class respondable_element_plugin extends element_plugin implements disp
         if (core_text::strlen($element->title) > self::MAX_TITLE_LENGTH) {
             throw new coding_exception('Respondable element title text exceeds the maximum length');
         }
+
+        // Check element data
+        if (!$this->is_valid_element_data($element->data)) {
+            throw new coding_exception('Invalid element data format, expected a json string');
+        }
     }
 
     /**
@@ -268,4 +273,21 @@ abstract class respondable_element_plugin extends element_plugin implements disp
         return $decoded_response ?? null;
     }
 
+    /**
+     * Check valid element data
+     * @param string $data
+     *
+     * @return bool
+     */
+    protected function is_valid_element_data(?string $data): bool {
+        if ($data === null) {
+            return true;
+        }
+
+        $decoded_data = json_decode($data, true);
+        if ($decoded_data === null) {
+            return false;
+        }
+        return true;
+    }
 }
