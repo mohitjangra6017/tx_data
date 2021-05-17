@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
+ * @author  Mark Metcalfe <mark.metcalfe@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
 
@@ -27,33 +27,36 @@ use Closure;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\element;
 use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
+use contentmarketplace_linkedin\learning_object\resolver;
 use core\orm\entity\model;
 use core\orm\query\builder;
+use totara_contentmarketplace\learning_object\abstraction\metadata\summary_provider;
+use totara_contentmarketplace\learning_object\text;
 
 /**
  * A LinkedIn learning object that has been fetched and stored locally within Totara.
  *
  * Properties:
- * @property-read string $urn
- * @property-read string $title
+ * @property-read string      $urn
+ * @property-read string      $title
  * @property-read string|null $description
  * @property-read string|null $description_include_html
  * @property-read string|null $short_description
- * @property-read string $locale_language
- * @property-read string $locale_country
- * @property-read int $last_updated_at
- * @property-read int $published_at
- * @property-read int|null $retired_at
+ * @property-read string      $locale_language
+ * @property-read string      $locale_country
+ * @property-read int         $last_updated_at
+ * @property-read int         $published_at
+ * @property-read int|null    $retired_at
  * @property-read string|null $level
  * @property-read string|null $primary_image_url
- * @property-read int|null $time_to_complete
+ * @property-read int|null    $time_to_complete
  * @property-read string|null $web_launch_url
  * @property-read string|null $sso_launch_url
- * @property-read string $asset_type
+ * @property-read string      $asset_type
  *
  * @package contentmarketplace_linkedin\model
  */
-class learning_object extends model {
+class learning_object extends model implements summary_provider {
     /**
      * @var learning_object_entity
      */
@@ -84,7 +87,7 @@ class learning_object extends model {
         'time_to_complete',
         'web_launch_url',
         'sso_launch_url',
-        'asset_type'
+        'asset_type',
     ];
 
     /**
@@ -179,4 +182,38 @@ class learning_object extends model {
         ];
     }
 
+    /**
+     * @return string
+     */
+    public function get_name(): string {
+        return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public static function get_marketplace_component(): string {
+        return resolver::get_component();
+    }
+
+    /**
+     * @return text|null
+     */
+    public function get_description(): ?text {
+        if (empty($this->description_include_html)) {
+            return null;
+        }
+
+        return new text(
+            $this->description_include_html,
+            FORMAT_HTML
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function get_lang(): string {
+        return $this->locale_language;
+    }
 }
