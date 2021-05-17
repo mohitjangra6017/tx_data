@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div ref="tree" class="tui-tree" :aria-label="ariaLabel">
+  <div ref="tree" class="tui-tree">
     <TreeBranch
       v-for="(tree, index) in treeData"
       :key="tree.id"
@@ -26,6 +26,7 @@
       :content="tree.content"
       :depth="1"
       :depth-limit="depthLimit"
+      :header-level="headerLevel"
       :label="tree.label"
       :label-type="labelType"
       :link-url="tree.linkUrl"
@@ -37,8 +38,13 @@
       @expanded="updateExpanded"
       @label-click="$emit('label-click', $event)"
     >
-      <template v-slot:content="{ content }">
-        <slot name="content" :content="content" />
+      <template v-slot:content="{ content, label, labelledBy }">
+        <slot
+          name="content"
+          :content="content"
+          :label="label"
+          :labelledBy="labelledBy"
+        />
       </template>
 
       <template v-slot:side="{ sideContent }">
@@ -66,13 +72,10 @@ export default {
   },
 
   props: {
-    // Label for the tree wrapper
-    ariaLabel: {
-      required: true,
-      type: String,
-    },
     // Limit the depth of branches in the tree
     depthLimit: Number,
+    // Number for header tag level
+    headerLevel: Number,
     // String (null), link or button for branch label
     labelType: String,
     // Visually display a separator between top level branches

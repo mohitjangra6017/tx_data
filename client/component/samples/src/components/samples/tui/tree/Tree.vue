@@ -25,7 +25,6 @@
       <Tree
         v-model="expandedList"
         class="tui-sample__tree"
-        aria-label="Select Planets or Cities"
         :depth-limit="treeDepth"
         :label-type="labelType"
         :separator="separator"

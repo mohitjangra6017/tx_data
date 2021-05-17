@@ -72,9 +72,14 @@
             {{ label }}
           </a>
 
-          <h3 v-else :id="branchLabelId" class="tui-treeBranch__bar-label">
+          <component
+            :is="headerTag"
+            v-else
+            :id="branchLabelId"
+            class="tui-treeBranch__bar-label"
+          >
             {{ label }}
-          </h3>
+          </component>
         </template>
 
         <div class="tui-treeBranch__bar-side">
@@ -99,6 +104,7 @@
               :content="child.content"
               :depth="depth + 1"
               :depth-limit="depthLimit"
+              :header-level="headerLevel"
               :label="child.label"
               :label-type="labelType"
               :link-url="child.linkUrl"
@@ -109,8 +115,13 @@
               @expanded="$emit('expanded', $event)"
               @label-click="$emit('label-click', $event)"
             >
-              <template v-slot:content="{ content }">
-                <slot name="content" :content="content" />
+              <template v-slot:content="{ content, label, labelledBy }">
+                <slot
+                  name="content"
+                  :content="content"
+                  :label="label"
+                  :labelledBy="labelledBy"
+                />
               </template>
 
               <template
@@ -128,8 +139,13 @@
         </template>
 
         <!-- Branch leaves -->
-        <div class="tui-treeBranch__leaf" :aria-labelledby="branchLabelId">
-          <slot name="content" :content="getOutputContent()" />
+        <div class="tui-treeBranch__leaf">
+          <slot
+            name="content"
+            :content="getOutputContent()"
+            :label="label"
+            :labelledBy="branchLabelId"
+          />
         </div>
       </div>
     </div>
@@ -158,6 +174,11 @@ export default {
     content: Object,
     depth: Number,
     depthLimit: Number,
+    headerLevel: {
+      type: Number,
+      default: 3,
+      validator: level => [1, 2, 3, 4, 5, 6].includes(level),
+    },
     label: String,
     labelType: String,
     linkUrl: String,
@@ -183,6 +204,14 @@ export default {
      */
     branchLabelId() {
       return this.$id('label');
+    },
+
+    /**
+     * Provide the correct header tag for branch label
+     *
+     */
+    headerTag() {
+      return 'h' + this.headerLevel;
     },
 
     /**
