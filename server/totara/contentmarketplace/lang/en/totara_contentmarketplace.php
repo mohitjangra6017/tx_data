@@ -23,10 +23,21 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['a11y_import_page_reviewing'] = 'Displaying review selected courses';
+$string['a11y_import_page_selecting'] = 'Displaying course selection';
 $string['actions'] = 'Actions';
+$string['active_filter'] = ' AND "{$a}"';
+$string['active_filter_first'] = '"{$a}"';
+$string['active_filter_last'] = ' AND "{$a}"';
 $string['add_to_collection'] = 'Add to collection';
+$string['assign_category'] = 'Assign category...';
 $string['availability'] = 'Availability';
 $string['back_to_manage_content_marketplaces'] = 'Back to Manage Content Marketplaces';
+$string['basket_back_to_catalogue'] = 'Back to catalogue';
+$string['basket_clear_selection'] = 'Clear selection';
+$string['basket_create_courses'] = 'Create course(s)';
+$string['basket_go_to_review'] = 'Next: Review';
+$string['basket_select_category'] = 'Select category';
 $string['contentmarketplace'] = 'Content Marketplace';
 $string['contentmarketplace:add'] = 'Add Content Marketplace';
 $string['contentmarketplace:config'] = 'Manage Content Marketplace';
@@ -60,8 +71,11 @@ $string['explore_totara_content_x'] = 'Explore Content Marketplace: {$a}';
 $string['explorecreatecourseheading'] = 'Add a new course';
 $string['explorecreatecourseintro'] = 'Select content to include';
 $string['filters'] = 'Filters';
+$string['filter_sort_by'] = 'Sort by';
 $string['in_collection'] = 'In collection';
 $string['initial_sync_learning_object_metadata_task'] = 'Initial sync of learning object metadata';
+$string['item_count'] = '{$a->count} items';
+$string['item_count_and_filters'] = '{$a->count} items matching {$a->filters}';
 $string['itemselected'] = '1 item selected';
 $string['itemselected_plural'] = '{$a} items selected';
 $string['load_more'] = 'Load more';

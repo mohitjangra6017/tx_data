@@ -1,7 +1,7 @@
 <!--
   This file is part of Totara Enterprise Extensions.
 
-  Copyright (C) 2020 onwards Totara Learning Solutions LTD
+  Copyright (C) 2021 onwards Totara Learning Solutions LTD
 
   Totara Enterprise Extensions is provided only to Totara
   Learning Solutions LTD's customers and partners, pursuant to
@@ -18,16 +18,16 @@
 
 <template>
   <div
-    class="tui-layoutOneColumn"
+    class="tui-pageLayoutTwoColumn"
     :class="{
-      'tui-layoutOneColumn--flush': flush,
+      'tui-pageLayoutTwoColumn--flush': flush,
     }"
   >
     <slot name="feedback-banner" />
 
     <slot name="user-overview" />
 
-    <div class="tui-layoutOneColumn__heading">
+    <div class="tui-pageLayoutTwoColumn__heading">
       <slot name="content-nav" />
 
       <PageHeading :title="title">
@@ -39,8 +39,19 @@
 
     <slot name="pre-body" />
 
-    <Loader :loading="loading" class="tui-layoutOneColumn__body">
-      <slot name="content" />
+    <Loader :loading="loading" class="tui-pageLayoutTwoColumn__body">
+      <Grid :stack-at="stackAt">
+        <!-- Left content -->
+        <GridItem :units="3">
+          <slot name="left-content" />
+        </GridItem>
+        <!-- Right content -->
+        <GridItem :units="9">
+          <Loader :loading="loadingRight">
+            <slot name="right-content" />
+          </Loader>
+        </GridItem>
+      </Grid>
     </Loader>
 
     <slot name="modals" />
@@ -48,18 +59,32 @@
 </template>
 
 <script>
+import Grid from 'tui/components/grid/Grid';
+import GridItem from 'tui/components/grid/GridItem';
 import Loader from 'tui/components/loading/Loader';
 import PageHeading from 'tui/components/layouts/PageHeading';
 
 export default {
   components: {
+    Grid,
+    GridItem,
     Loader,
     PageHeading,
   },
 
   props: {
+    // Correctly space if using flush design
     flush: Boolean,
+    // Display loader over all content
     loading: Boolean,
+    // Display loader over right column content
+    loadingRight: Boolean,
+    // Custom stack at value
+    stackAt: {
+      type: Number,
+      default: 1000,
+    },
+    // Page title
     title: {
       required: true,
       type: String,
@@ -69,7 +94,7 @@ export default {
 </script>
 
 <style lang="scss">
-.tui-layoutOneColumn {
+.tui-pageLayoutTwoColumn {
   @include tui-font-body();
   margin-top: var(--gap-2);
 

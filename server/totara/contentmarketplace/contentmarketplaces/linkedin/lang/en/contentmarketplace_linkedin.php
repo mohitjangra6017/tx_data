@@ -23,23 +23,49 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['a11y_appears_in_n_courses'] = 'Appears in {$a} course(s)';
+$string['a11y_content_completion_time'] = 'Time to complete content';
+$string['a11y_content_difficulty'] = 'Content difficulty level';
+$string['a11y_content_type'] = 'Type of content';
+$string['a11y_search_filter'] = 'Search';
+$string['a11y_time_filter'] = 'Time';
+$string['a11y_view_courses'] = 'View the {$a->count} course(s) "{$a->course}" appears in';
 $string['add_linkedin_courses'] = 'Add courses from the LinkedIn Learning content marketplace';
 $string['add_linkedin_courses_description'] = 'Create courses based on what is available in the LinkedIn Learning content marketplace.';
+$string['appears_in'] = 'Appears in';
+$string['assign_to_category'] ='Assign to category';
 $string['browse_learning_content'] = 'Browse LinkedIn Learning content';
 $string['catalog_title'] = 'LinkedIn Learning catalogue';
+$string['catalog_review_title'] = 'LinkedIn Learning catalogue - Review selections';
+$string['category_label'] ='Category:';
 $string['client_id'] = 'Client ID';
 $string['client_id_help'] = 'Client ID can be obtained from LinkedIn Learning under the integration settings page.';
 $string['client_secret'] = 'Client secret';
 $string['client_secret_help'] = 'Client secret can be obtained from LinkedIn Learning under the integration settings page.';
+$string['content_appears_in'] = 'This LinkedIn Learning content appears in:';
+$string['course_difficulty_advanced'] = 'Advanced';
+$string['course_difficulty_beginner'] = 'Beginner';
+$string['course_difficulty_intermediate'] = 'Intermediate';
+$string['course_number'] = '{$a} course';
+$string['course_number_plural'] = '{$a} courses';
+$string['course_type_course'] = 'Course';
+$string['course_type_learning_path'] = 'Learning path';
+$string['edit_course_category'] = 'Edit course category';
 $string['error:fail_json_validation'] = 'Failed to validate the json data: {$a}';
 $string['explore_lil_marketplace'] = 'LinkedIn Learning content marketplace';
 $string['explore_lil_marketplace_description'] = 'Explore content from LinkedIn Learning';
+$string['filters_title'] = 'Filters';
+$string['language_filter_label'] = 'Language';
 $string['plugin_description'] = 'Online Training Courses for Creative, Technology, Business Skills.';
 $string['pluginname'] = 'LinkedIn Learning';
+$string['search_filter_placeholder'] = 'Search...';
 $string['settings_title'] = 'LinkedIn Learning settings';
+$string['sort_filter_alphabetical'] = 'Alphabetical';
+$string['sort_filter_latest'] = 'Latest';
 $string['timespan_format_hours_minutes_seconds'] = '{$a->hours}h {$a->minutes}m {$a->seconds}s';
 $string['timespan_format_minutes_seconds'] = '{$a->minutes}m {$a->seconds}s';
 $string['timespan_format_seconds'] = '{$a->seconds}s';
+$string['update'] = 'Update';
 $string['warningdisablemarketplace:body:html'] = '<p>You are about to disable the LinkedIn Learning Content Marketplace. If you proceed, items from the marketplace will no longer be available to course creators for inclusion in newly created courses.</p>
 <p>Users who have previously already started LinkedIn Learning activities will continue to have access to that content, but they will not be able to start new LinkedIn Learning activities.</p>
 <p>Are you sure you wish to proceed?</p>';
