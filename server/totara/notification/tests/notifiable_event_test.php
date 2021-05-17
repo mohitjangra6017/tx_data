@@ -87,19 +87,19 @@ class totara_notification_notifiable_event_testcase extends testcase {
         // Explicitly set false.
         $entity->set_attribute('enabled', false);
         $entity->save();
-        $enabled = helper::is_resolver_enabled_for_all_parent_contexts($entity->resolver_class_name, $extended_context);
+        $enabled = helper::is_resolver_enabled($entity->resolver_class_name, $extended_context);
         $this->assertEquals(false, $enabled);
 
         // Explicitly set true.
         $entity->set_attribute('enabled', true);
         $entity->save();
-        $enabled = helper::is_resolver_enabled_for_all_parent_contexts($entity->resolver_class_name, $extended_context);
+        $enabled = helper::is_resolver_enabled($entity->resolver_class_name, $extended_context);
         $this->assertEquals(true, $enabled);
 
         // Explicitly set null.
         $entity->set_attribute('enabled', null);
         $entity->save();
-        $enabled = helper::is_resolver_enabled_for_all_parent_contexts($entity->resolver_class_name, $extended_context);
+        $enabled = helper::is_resolver_enabled($entity->resolver_class_name, $extended_context);
         $this->assertEquals(true, $enabled);
     }
 }

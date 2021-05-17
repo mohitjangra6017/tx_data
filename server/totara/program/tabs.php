@@ -23,6 +23,10 @@
  */
 
 use totara_core\advanced_feature;
+use totara_notification\factory\notifiable_event_resolver_factory;
+use totara_notification\interactor\notification_preference_interactor;
+use totara_notification\local\helper;
+use totara_core\extended_context;
 
 if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.');    ///  It must be included from a Moodle page
@@ -102,15 +106,62 @@ if (has_capability('totara/program:configuremessages', $context)) {
 
 // Notification Tab
 if (has_capability('totara/program:configuremessages', $context)) {
+    $enable_notification_tab = false;
+
+    if ($id) {
+        $extended_context = extended_context::make_with_context(
+            $context,
+            $iscertif ? 'totara_certification' : 'totara_program',
+            'program',
+            $id
+        );
+
+        $interactor = new notification_preference_interactor($extended_context, $USER->id);
+        // Check if the user has any of the capabilities provided by the integrated plugins or not.
+        $enable_notification_tab = $interactor->has_any_capability_for_context();
+    }
+
+    if ($enable_notification_tab) {
+        $resolver_classes = notifiable_event_resolver_factory::get_resolver_classes();
+
+        $filtered_resolvers = array_filter(
+            $resolver_classes,
+            function ($resolver_class) use ($interactor, $extended_context): bool {
+                /**
+                 * @see notifiable_event_resolver::supports_context()
+                 * @var bool $support
+                 */
+                $support = call_user_func([$resolver_class, 'supports_context'], $extended_context);
+                if (!$support) {
+                    return false;
+                }
+
+                $enabled_in_parent_contexts = helper::is_resolver_enabled_for_all_parent_contexts($resolver_class, $extended_context);
+                if (!$enabled_in_parent_contexts) {
+                    return false;
+                }
+
+                // We are only displaying the event resolver if the user has the capability to
+                // manage/interact with the resolver.
+                return $interactor->can_manage_notification_preferences_of_resolver($resolver_class);
+            }
+        );
+
+        // Hide tab if there are no resolvers the user can see
+        $enable_notification_tab = count($filtered_resolvers) > 0;
+
+        if (substr($currenttab, 0, 13) == 'notifications') {
+            $activated[] = 'notifications';
+        }
+    } else {
+        $inactive[] = 'notifications';
+    }
+
     $url = new moodle_url(
         '/totara/program/edit_notifications.php',
         ['context_id' => $context->id, 'id' => $id]
     );
-
     $toprow[] = new tabobject('notifications', $url, get_string('notifications', 'totara_program'));
-    if (substr($currenttab, 0, 13) == 'notifications') {
-        $activated[] = 'notifications';
-    }
 }
 
 // Certification Tab

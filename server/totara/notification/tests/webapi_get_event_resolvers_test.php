@@ -388,7 +388,7 @@ class totara_notification_webapi_get_event_resolvers_testcase extends testcase {
         $status = $mock_resolver['status'];
         self::assertFalse($status['is_enabled']);
 
-        // Now check that it is also disabled in course context
+        // Now check that it is not shown in the course context.
         $result = $this->execute_graphql_operation(
             'totara_notification_event_resolvers',
             ['extended_context' => ['context_id' => $course_context->id],],
@@ -406,12 +406,8 @@ class totara_notification_webapi_get_event_resolvers_testcase extends testcase {
             }
         );
 
-        self::assertCount(1, $mock_resolvers);
-        $mock_resolver = reset($mock_resolvers);
-
-        self::assertArrayHasKey('status', $mock_resolver);
-        $status = $mock_resolver['status'];
-        self::assertFalse($status['is_enabled']);
+        // Resolver list should be empty before the filtering, but we'll check after filtering to make test more robust.
+        self::assertEmpty($mock_resolvers);
     }
 
     /**

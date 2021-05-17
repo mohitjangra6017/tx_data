@@ -32,6 +32,7 @@ use totara_core\extended_context;
 use totara_notification\exception\notification_exception;
 use totara_notification\factory\notifiable_event_resolver_factory;
 use totara_notification\interactor\notification_preference_interactor;
+use totara_notification\local\helper;
 use totara_notification\resolver\notifiable_event_resolver;
 
 class event_resolvers implements query_resolver, has_middleware {
@@ -82,6 +83,11 @@ class event_resolvers implements query_resolver, has_middleware {
                  */
                 $support = call_user_func_array([$resolver_class, 'supports_context'], [$extended_context]);
                 if (!$support) {
+                    return false;
+                }
+
+                $enabled_in_parent_contexts = helper::is_resolver_enabled_for_all_parent_contexts($resolver_class, $extended_context);
+                if (!$enabled_in_parent_contexts) {
                     return false;
                 }
 

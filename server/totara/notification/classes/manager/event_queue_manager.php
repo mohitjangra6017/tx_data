@@ -67,8 +67,14 @@ class event_queue_manager {
                     $resolver_class_name = $queue->resolver_class_name;
                     $extended_context = $queue->get_extended_context();
 
+                    $is_enabled_in_all_parents = helper::is_resolver_enabled_for_all_parent_contexts(
+                        $resolver_class_name,
+                        $extended_context
+                    );
+                    $current_resolver_enabled = helper::is_resolver_enabled($resolver_class_name, $extended_context);
+
                     // process only enabled queues
-                    if (helper::is_resolver_enabled_for_all_parent_contexts($resolver_class_name, $extended_context)) {
+                    if ($current_resolver_enabled && $is_enabled_in_all_parents) {
                         $preferences = notification_preference_loader::get_notification_preferences(
                             $queue->get_extended_context(),
                             $queue->resolver_class_name

@@ -85,10 +85,13 @@ class event_resolver implements type_resolver {
 
                 $resolver_class_name = $source;
 
-                $is_enabled = helper::is_resolver_enabled_for_all_parent_contexts(
+                $is_enabled_in_all_parents = helper::is_resolver_enabled_for_all_parent_contexts(
                     $resolver_class_name,
                     $extended_context
                 );
+                $current_resolver_enabled = helper::is_resolver_enabled($resolver_class_name, $extended_context);
+
+                $is_enabled = $current_resolver_enabled && $is_enabled_in_all_parents;
 
                 return [
                     'is_enabled' => $is_enabled

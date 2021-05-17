@@ -90,6 +90,30 @@ class helper {
     }
 
     /**
+     * Check the specified resolver in the specified context
+     * to see if there are any disabled flags set.
+     *
+     * @param string $resolver_class_name
+     * @param extended_context $extended_context
+     * @return bool
+     */
+    public static function is_resolver_enabled(
+        string $resolver_class_name,
+        extended_context $extended_context
+    ): bool {
+        $notifiable_event_entity = entity::repository()->for_context($resolver_class_name, $extended_context);
+        if ($notifiable_event_entity) {
+            $notifiable_event = notifiable_event_preference::from_entity($notifiable_event_entity);
+            if ($notifiable_event->get_enabled() !== null) {
+                return $notifiable_event->get_enabled();
+            }
+        }
+
+        // If null return default.
+        return $resolver_class_name::get_default_enabled();
+    }
+
+    /**
      * Check the entire context tree (bottom to top) from this context to
      * see if there are any disabled flags set.
      *
@@ -102,7 +126,7 @@ class helper {
         extended_context $extended_context
     ): bool {
         // Start with the current level
-        $parent_context = $extended_context;
+        $parent_context = $extended_context->get_parent();
 
         // Check if the event has been disabled in a higher context?
         while ($parent_context !== null) {
@@ -116,7 +140,7 @@ class helper {
             $parent_context = $parent_context->get_parent();
         }
 
-        // If all contexts have returned null, get the default.
+        // If not set in any parent use default
         return $resolver_class_name::get_default_enabled();
     }
 
