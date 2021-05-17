@@ -22,6 +22,6 @@
  * @subpackage totara_sync
  */
 
-$plugin->version  = 2021041300;       // The current module version (Date: YYYYMMDDXX).
+$plugin->version  = 2021051800;       // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2021040700;       // Requires this Totara version.
 $plugin->component = 'tool_totara_sync'; // Full name of the plugin (used for diagnostics)

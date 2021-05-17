@@ -24,6 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021041300;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2021051800;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2021040700;        // Requires this Totara version
 $plugin->component = 'profilefield_datetime'; // Full name of the plugin (used for diagnostics)

@@ -25,6 +25,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021041300;        // The current plugin version (Date: YYYYMMDDRR)
+$plugin->version   = 2021051800;        // The current plugin version (Date: YYYYMMDDRR)
 $plugin->requires  = 2021040700;        // Requires this Totara version
 $plugin->component = 'enrol_flatfile';  // Full name of the plugin (used for diagnostics)

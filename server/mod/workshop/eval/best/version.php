@@ -25,6 +25,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2021041300;
+$plugin->version  = 2021051800;
 $plugin->requires = 2021040700;  // Requires this Totara version.
 $plugin->component = 'workshopeval_best';
