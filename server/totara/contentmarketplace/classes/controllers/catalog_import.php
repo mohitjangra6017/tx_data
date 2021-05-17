@@ -24,6 +24,7 @@
 namespace totara_contentmarketplace\controllers;
 
 use coding_exception;
+use contentmarketplace_linkedin\interactor\catalog_import_interactor;
 use context;
 use context_coursecat;
 use context_system;
@@ -72,7 +73,7 @@ class catalog_import extends controller {
     }
 
     /**
-    * @inheritDoc
+     * @return context_system|context_coursecat
     */
     protected function setup_context(): context {
         $category_id = $this->get_category_id();
@@ -86,9 +87,22 @@ class catalog_import extends controller {
     */
     protected function authorize(): void {
         parent::authorize();
-        require_capability('totara/contentmarketplace:add', $this->get_context());
+
         local::require_contentmarketplace();
         $this->check_plugin_enabled();
+
+        /** @var context_coursecat|context_system $context */
+        $context = $this->get_context();
+        $interactor = new catalog_import_interactor();
+
+        if (CONTEXT_COURSECAT === $context->contextlevel) {
+            // If we are going to add courses via the course category
+            // level context page, then we can check if the user has the
+            // capability enabled for such context in order to view the page.
+            $interactor->require_add_course_to_category($context);
+        } else {
+            $interactor->require_view_catalog_import_page();
+        }
     }
 
     /**
@@ -121,7 +135,7 @@ class catalog_import extends controller {
 
         $class = reset($classes);
 
-        if (!is_subclass_of(new $class, self::class)) {
+        if (!is_subclass_of($class, self::class)) {
             throw new coding_exception("{$class} is not sub class of explorer");
         }
 
@@ -190,7 +204,7 @@ class catalog_import extends controller {
      * @return bool
      */
     public function can_manage_marketplace_plugins(): bool {
-        return  has_capability('totara/contentmarketplace:config', $this->get_context());
+        return has_capability('totara/contentmarketplace:config', $this->get_context());
     }
 
     /**
