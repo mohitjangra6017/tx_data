@@ -213,7 +213,7 @@ class learning_object extends model implements summary_provider {
     /**
      * @return string
      */
-    public function get_lang(): string {
+    public function get_language(): string {
         return $this->locale_language;
     }
 }
