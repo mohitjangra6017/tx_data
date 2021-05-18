@@ -24,6 +24,8 @@ namespace totara_contentmarketplace\testing;
 
 use coding_exception;
 use core\testing\component_generator;
+use totara_contentmarketplace\learning_object\abstraction\metadata\model;
+use totara_contentmarketplace\learning_object\factory;
 use totara_core\http\response;
 use totara_core\http\response_code;
 
@@ -54,5 +56,31 @@ class generator extends component_generator {
             $response_header,
             'application/json; charset=utf-8'
         );
+    }
+
+    /**
+     * Create a learning object randomly with faker data provider.
+     *
+     * @param string      $marketplace_component
+     * @param string|null $name                     The custom name that we want to give it to the learning object.
+     * @return model
+     */
+    public function create_learning_object(string $marketplace_component, ?string $name = null): model {
+        if (!factory::is_valid_marketplace_component($marketplace_component)) {
+            throw new coding_exception("Invalid marketplace type '{$marketplace_component}'");
+        }
+
+        $generator_class = "{$marketplace_component}\\testing\\generator";
+        $interface_class = learning_object_generator::class;
+
+        if (!is_a($generator_class, $interface_class, true)) {
+            throw new coding_exception(
+                "The generator class '{$generator_class}' does not implement '{$interface_class}'"
+            );
+        }
+
+        /** @var learning_object_generator $learning_object_generator */
+        $learning_object_generator = call_user_func([$generator_class, 'instance']);
+        return $learning_object_generator->generate_learning_object($name);
     }
 }

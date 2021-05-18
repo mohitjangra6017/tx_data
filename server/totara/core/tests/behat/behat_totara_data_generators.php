@@ -505,6 +505,12 @@ class behat_totara_data_generators extends behat_base {
                 'age_data' => 'age_quiz_responses'
             )
         ),
+        'mod_contentmarketplace' => array(
+            'content marketplace' => array(
+                'datagenerator' => 'content_marketplace_instance',
+                'required' => array('name', 'course', 'marketplace_component')
+            )
+        ),
         'totara_message' => array(
             'alerts' => array(
                 'datagenerator' => 'alert_from_params',

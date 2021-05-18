@@ -28,15 +28,19 @@ use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\entity\learning_object;
+use core\orm\query\builder;
 use core\testing\component_generator;
+use totara_contentmarketplace\learning_object\abstraction\metadata\model;
+use totara_contentmarketplace\testing\learning_object_generator;
 use totara_contentmarketplace\token\token;
 use totara_core\http\response;
 use totara_core\http\response_code;
+use contentmarketplace_linkedin\model\learning_object as learning_object_model;
 
 /**
  * @method static generator instance()
  */
-class generator extends component_generator {
+class generator extends component_generator implements learning_object_generator {
     /**
      * Set the configuration item for client_id.
      *
@@ -209,5 +213,31 @@ class generator extends component_generator {
             $header,
             $conten_type
         );
+    }
+
+    /**
+     * @param string|null $name
+     * @return model
+     */
+    public function generate_learning_object(?string $name = null): model {
+        $db = builder::get_db();
+
+        while (true) {
+            $random_id = rand(1, 10000000);
+            $urn = "urn:li:lyndaCourse:{$random_id}";
+
+            $existing = $db->record_exists(learning_object::TABLE, ['urn' => $urn]);
+            if (!$existing) {
+                break;
+            }
+        }
+
+        $record = [];
+        if (!empty($name)) {
+            $record['title'] = $name;
+        }
+
+        $entity = $this->create_learning_object($urn, $record);
+        return new learning_object_model($entity);
     }
 }
