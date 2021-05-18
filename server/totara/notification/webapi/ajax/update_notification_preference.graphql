@@ -1,7 +1,7 @@
 mutation totara_notification_update_notification_preference(
   $id: param_integer!
-  $body: param_text
-  $subject: param_text
+  $body: String
+  $subject: String
   $body_format: param_integer
   $title: param_text
   $schedule_type: param_text

@@ -331,80 +331,6 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
     /**
      * @return void
      */
-    public function test_create_custom_notification_with_html_content_value_of_field_body(): void {
-        $this->setAdminUser();
-        $context_system = context_system::instance();
-
-        $result = $this->execute_graphql_operation(
-            'totara_notification_create_custom_notification_preference',
-            [
-                'resolver_class_name' => mock_resolver::class,
-                'context_id' => $context_system->id,
-                'title' => 'ddd',
-                'body' => /** @lang text */ '<input type="text" value="cc"/>',
-                'subject' => 'lplpdw',
-                'body_format' => FORMAT_MOODLE,
-                'subject_format' => FORMAT_PLAIN,
-                'schedule_type' => schedule_before_event::identifier(),
-                'schedule_offset' => 2,
-                'recipient' => totara_notification_mock_recipient::class,
-                'enabled' => true,
-                'forced_delivery_channels' => [],
-            ]
-        );
-
-        self::assertEmpty($result->data);
-        self::assertNotEmpty($result->errors);
-        self::assertCount(1, $result->errors);
-
-        $error = reset($result->errors);
-
-        self::assertStringContainsString(
-            "When creating a new record the following field is required: 'body'",
-            $error->message
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function test_create_custom_notification_with_html_content_value_of_field_subject(): void {
-        $this->setAdminUser();
-        $context_system = context_system::instance();
-
-        $result = $this->execute_graphql_operation(
-            'totara_notification_create_custom_notification_preference',
-            [
-                'resolver_class_name' => mock_resolver::class,
-                'context_id' => $context_system->id,
-                'title' => 'ddd',
-                'body' => 'cccd',
-                'subject' => /** @lang text */ '<input type="text" value="cc"/>',
-                'body_format' => FORMAT_MOODLE,
-                'subject_format' => FORMAT_PLAIN,
-                'schedule_type' => schedule_before_event::identifier(),
-                'schedule_offset' => 2,
-                'recipient' => totara_notification_mock_recipient::class,
-                'enabled' => true,
-                'forced_delivery_channels' => [],
-            ]
-        );
-
-        self::assertEmpty($result->data);
-        self::assertNotEmpty($result->errors);
-        self::assertCount(1, $result->errors);
-
-        $error = reset($result->errors);
-
-        self::assertStringContainsString(
-            "When creating a new record the following field is required: 'subject'",
-            $error->message
-        );
-    }
-
-    /**
-     * @return void
-     */
     public function test_create_custom_notification_with_html_content_value_of_field_title(): void {
         $this->setAdminUser();
         $context_system = context_system::instance();
@@ -478,7 +404,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertEquals('This is subject', $notification_preference['subject']);
 
         self::assertArrayHasKey('body', $notification_preference);
-        self::assertEquals('alert(1)', $notification_preference['body']);
+        self::assertEquals('<script type="javascript">alert(1)</script>', $notification_preference['body']);
     }
 
     /**
@@ -516,7 +442,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
         self::assertEquals('This is title', $notification_preference['title']);
 
         self::assertArrayHasKey('subject', $notification_preference);
-        self::assertEquals('alert(1)', $notification_preference['subject']);
+        self::assertEquals('<script type="javascript">alert(1)</script>', $notification_preference['subject']);
 
         self::assertArrayHasKey('body', $notification_preference);
         self::assertEquals('This is body', $notification_preference['body']);

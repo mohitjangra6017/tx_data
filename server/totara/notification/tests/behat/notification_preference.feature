@@ -29,8 +29,8 @@ Feature: Course notifications node
 
     When I set the field with xpath "//select[@class='tui-select__input']" to "Subject"
     And I set the field "Name" to "Test custom notification name"
-    And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test custom notification subject"
-    And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Test custom notification body"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Test custom notification subject <hello>"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Test custom notification body <hello>"
     And I click on the "Days after" tui radio
     And I set the field "Number" to "7"
     And I click on "Save" "button"
@@ -43,6 +43,8 @@ Feature: Course notifications node
     Then I should see "Edit"
     And I click on "Edit" "link"
     Then I should see "Edit notification"
+    And I should see "Test custom notification subject <hello>"
+    And I should see "Test custom notification body <hello>"
 
     When I set the field "Name" to "New notification name"
     And I set the field "Number" to "12"

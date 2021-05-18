@@ -6,9 +6,9 @@ mutation totara_notification_override_notification_preference(
   $resolver_class_name: param_text!
   $ancestor_id: param_integer!
   $title: param_text
-  $body: param_text
+  $body: String
   $body_format: param_integer
-  $subject: param_text
+  $subject: String
   $schedule_type: param_text
   $schedule_offset: param_integer
   $subject_format: param_integer

@@ -193,9 +193,9 @@ extend type Mutation {
     """
     ancestor_id: param_integer
     title: param_text
-    body: param_text
+    body: String
     body_format: param_integer
-    subject: param_text
+    subject: String
     schedule_offset: param_integer
     schedule_type: param_text
     subject_format: param_integer
@@ -220,10 +220,10 @@ extend type Mutation {
     Only if this very notification preference can fallback to the parent, or
     the system built in notification that has default values.
     """
-    body: param_text
+    body: String
     body_format: param_integer
     title: param_text
-    subject: param_text
+    subject: String
     schedule_offset: param_integer
     schedule_type: param_text
     subject_format: param_integer

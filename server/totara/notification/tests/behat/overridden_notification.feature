@@ -60,8 +60,8 @@ Feature: Overridden notifications at lower context
     And the "Enabled" "field" should be enabled
 
     When I set the field with xpath "//select[@class='tui-select__input']" to "Manager"
-    And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Overridden subject at system"
-    And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Overridden body at system"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__subjectEditor" to "Overridden subject at system <hello>"
+    And I set the weka editor with css ".tui-notificationPreferenceForm__bodyEditor" to "Overridden body at system <hello>"
     And I click on the "Days after" tui radio
     And I set the field "Number" to "3"
     And I click on the "force_email" tui checkbox
@@ -77,8 +77,8 @@ Feature: Overridden notifications at lower context
     And the "Days after" "field" should be enabled
     And the "Enabled" "field" should be enabled
     And the field "Recipient" matches value "Manager"
-    And I should see "Overridden subject at system"
-    And I should see "Overridden body at system"
+    And I should see "Overridden subject at system <hello>"
+    And I should see "Overridden body at system <hello>"
     And the field "Number" matches value "3"
     And the field "Force channel Email" matches value "email"
     And the field "Force channel Site notifications" matches value "popup"
