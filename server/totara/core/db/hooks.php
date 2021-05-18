@@ -49,5 +49,9 @@ $watchers = [
         'hookname' => '\totara_core\hook\calendar_upcoming_event',
         'callback' => '\totara_core\watcher\calendar_dynamic_content::create',
         'priority' => 100,
+    ],
+    [
+        'hookname' => 'core\hook\phpunit_reset',
+        'callback' => 'core_container\watcher\phpunit_watcher::reset_phpunit'
     ]
 ];

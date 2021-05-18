@@ -119,7 +119,8 @@ final class module_supported {
     /**
      * Returning a hashmap of module name, given the key as the actual plugin name.
      * Note that this function will only return the list of available module - not all the available module
-     * in the system.
+     * in the system. Unless $include_all is specified to TRUE, then the return list will include the
+     * invisible items in the list.
      *
      * @param string    $containertype
      * @param bool      $plural
@@ -149,5 +150,17 @@ final class module_supported {
 
         \core_collator::asort($modules);
         return $modules;
+    }
+
+    /**
+     * @return void
+     */
+    public static function purge_caches(): void {
+        if (!isset(self::$instance)) {
+            return;
+        }
+
+        self::$instance->modsincontainer = [];
+        self::$instance->modules = [];
     }
 }

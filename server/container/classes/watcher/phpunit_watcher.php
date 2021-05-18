@@ -1,8 +1,8 @@
 <?php
-/*
- * This file is part of Totara LMS
+/**
+ * This file is part of Totara Learn
  *
- * Copyright (C) 2019 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package core_container
  */
+namespace core_container\watcher;
 
-defined('MOODLE_INTERNAL') || die();
+use core\hook\phpunit_reset;
+use core_container\local\module_supported;
 
-$string['error:course_access'] = 'Course is not accessible.';
-$string['error:course_hidden'] = 'This course is currently unavailable to learners';
-$string['pluginname'] = 'Course';
+class phpunit_watcher {
+    /**
+     * phpunit_watcher constructor.
+     */
+    private function __construct() {
+        // Prevent this class from instantiation.
+    }
+
+    /**
+     * @param phpunit_reset $hook
+     * @return void
+     */
+    public static function reset_phpunit(phpunit_reset $hook): void {
+        // Reset the hook caches.
+        module_supported::purge_caches();
+    }
+}
