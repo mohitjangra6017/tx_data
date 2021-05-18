@@ -22,6 +22,9 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+use mod_contentmarketplace\local\helper;
+use mod_contentmarketplace\model\content_marketplace;
+
 /**
  * A callback function from course's API to create an instance of content
  * marketplace module.
@@ -30,7 +33,39 @@ defined('MOODLE_INTERNAL') || die();
  * @return int
  */
 function contentmarketplace_add_instance(stdClass $record): int {
-    throw new coding_exception(
-        "TL-30327 will implement this function, it is here for the access.php to appear"
+    $content_marketplace = helper::create_content_marketplace(
+        $record->course,
+        $record->learning_object_id,
+        $record->learning_object_marketplace_component
     );
+
+    return $content_marketplace->id;
+}
+
+/**
+ * Returns TRUE if we support such feature, FALSE for vice versa. Otherwise
+ * NULL if it is unknown.
+ *
+ * @param string|mixed $feature
+ * @return bool|null
+ */
+function contentmarketplace_supports($feature): ?bool {
+    switch ($feature) {
+        case FEATURE_BACKUP_MOODLE2:
+            // Return false for now, but TL-30933 will help to resolve this.
+            return false;
+
+        default:
+            // Everything is unknown for now.
+            return null;
+    }
+}
+
+/**
+ * @param int $id
+ * @return bool
+ */
+function contentmarketplace_delete_instance(int $id): bool {
+    $content_marketplace = content_marketplace::load_by_id($id);
+    return $content_marketplace->delete();
 }

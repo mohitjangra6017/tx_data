@@ -24,7 +24,7 @@ namespace contentmarketplace_linkedin\learning_object;
 
 use contentmarketplace_linkedin\entity\learning_object as entity;
 use contentmarketplace_linkedin\model\learning_object;
-use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
+use totara_contentmarketplace\learning_object\abstraction\metadata\model;
 use totara_contentmarketplace\learning_object\abstraction\resolver as base;
 
 class resolver extends base {
@@ -32,7 +32,7 @@ class resolver extends base {
      * @param int $id
      * @return learning_object|null
      */
-    public function find(int $id): ?detailed_model {
+    public function find(int $id): ?model {
         $repository = entity::repository();
         $entity = $repository->find($id);
 

@@ -22,7 +22,7 @@
  */
 namespace totara_contentmarketplace\learning_object\abstraction;
 
-use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
+use totara_contentmarketplace\learning_object\abstraction\metadata\model;
 
 abstract class resolver {
     /**
@@ -36,9 +36,9 @@ abstract class resolver {
      * Finding the learning object record via id.
      *
      * @param int $id
-     * @return detailed_model|null
+     * @return model|null
      */
-    abstract public function find(int $id): ?detailed_model;
+    abstract public function find(int $id): ?model;
 
     /**
      * @return string

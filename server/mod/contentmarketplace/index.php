@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -20,13 +20,9 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package mod_contentmarketplace
  */
-defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2021041301;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2021040700;       // Requires this Totara version.
-$plugin->component = 'mod_contentmarketplace';
+use mod_contentmarketplace\controllers\index;
+require_once(__DIR__ . '/../../config.php');
 
-$plugin->dependencies = [
-    'totara_contentmarketplace' => 2021041302,
-    'totara_mvc' => 2021041300
-];
+$controller = new index();
+$controller->process();

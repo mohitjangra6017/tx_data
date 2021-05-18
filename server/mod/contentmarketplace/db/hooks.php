@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -22,11 +22,12 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2021041301;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2021040700;       // Requires this Totara version.
-$plugin->component = 'mod_contentmarketplace';
+use container_course\hook\remove_module_hook;
+use mod_contentmarketplace\watcher\remove_module_watcher;
 
-$plugin->dependencies = [
-    'totara_contentmarketplace' => 2021041302,
-    'totara_mvc' => 2021041300
+$watchers = [
+    [
+        'hookname' => remove_module_hook::class,
+        'callback' => [remove_module_watcher::class, 'watch']
+    ]
 ];

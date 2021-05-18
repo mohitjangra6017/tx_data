@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -20,13 +20,25 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package mod_contentmarketplace
  */
-defined('MOODLE_INTERNAL') || die();
+namespace mod_contentmarketplace\watcher;
 
-$plugin->version  = 2021041301;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2021040700;       // Requires this Totara version.
-$plugin->component = 'mod_contentmarketplace';
+use container_course\hook\remove_module_hook;
 
-$plugin->dependencies = [
-    'totara_contentmarketplace' => 2021041302,
-    'totara_mvc' => 2021041300
-];
+class remove_module_watcher {
+    /**
+     * remove_module_watcher constructor.
+     */
+    private function __construct() {
+        // Prevent this class from instantiation.
+    }
+
+    /**
+     * @param remove_module_hook $hook
+     * @return void
+     */
+    public static function watch(remove_module_hook $hook): void {
+        if ($hook->has_module('contentmarketplace')) {
+            $hook->remove_module('contentmarketplace');
+        }
+    }
+}

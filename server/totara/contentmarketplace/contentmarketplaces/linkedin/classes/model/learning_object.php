@@ -30,7 +30,7 @@ use contentmarketplace_linkedin\entity\learning_object as learning_object_entity
 use contentmarketplace_linkedin\learning_object\resolver;
 use core\orm\entity\model;
 use core\orm\query\builder;
-use totara_contentmarketplace\learning_object\abstraction\metadata\summary_provider;
+use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
 use totara_contentmarketplace\learning_object\text;
 
 /**
@@ -58,7 +58,7 @@ use totara_contentmarketplace\learning_object\text;
  *
  * @package contentmarketplace_linkedin\model
  */
-class learning_object extends model implements summary_provider {
+class learning_object extends model implements detailed_model {
     /**
      * @var learning_object_entity
      */

@@ -18,21 +18,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
- * @package totara_contentmarketplace
+ * @package mod_contentmarketplace
  */
-namespace totara_contentmarketplace\learning_object\abstraction\metadata;
+namespace mod_contentmarketplace\entity;
 
-use totara_contentmarketplace\learning_object\text;
+use core\orm\entity\entity;
 
 /**
- * Implement this interface if your learning object can provide the description.
- * Otherwise just use model interface.
+ * Entity class represent for table "ttr_contentmarketplace"
  *
+ * @property int    $id
+ * @property int    $course
+ * @property string $name
+ * @property string $learning_object_marketplace_component
+ * @property int    $learning_object_id
+ * @property int    $time_modified
  */
-interface summary_provider extends detailed_model {
+class content_marketplace extends entity {
     /**
-     * Returns the description of learning objects.
-     * @return text|null
+     * @var string
      */
-    public function get_description(): ?text;
+    public const TABLE = 'contentmarketplace';
+
+    /**
+     * @var string
+     */
+    public const UPDATED_TIMESTAMP = 'time_modified';
+
+    /**
+     * @var bool
+     */
+    public const SET_UPDATED_WHEN_CREATED = true;
 }

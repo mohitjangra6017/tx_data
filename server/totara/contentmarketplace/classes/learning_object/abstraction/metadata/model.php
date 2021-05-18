@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Core
+ * This file is part of Totara Learn
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -22,17 +22,39 @@
  */
 namespace totara_contentmarketplace\learning_object\abstraction\metadata;
 
-use totara_contentmarketplace\learning_object\text;
-
-/**
- * Implement this interface if your learning object can provide the description.
- * Otherwise just use model interface.
- *
- */
-interface detailed_model extends model {
+interface model {
     /**
-     * Returns the description of learning objects.
-     * @return text|null
+     * Returns the name of learning object.
+     *
+     * @return string
      */
-    public function get_description(): ?text;
+    public function get_name(): string;
+
+    /**
+     * Returns the id of learning object.
+     *
+     * @return int
+     */
+    public function get_id(): int;
+
+    /**
+     * Returns the marketplace type of learning object.
+     *
+     * @return string
+     */
+    public static function get_marketplace_component(): string;
+
+    /**
+     * Returns the locale language that this learning object is written under.
+     *
+     * @return string
+     */
+    public function get_language(): string;
+
+    /**
+     * Returns the URL for displaying the thumbnail image of the learning object.
+     *
+     * @return string|null
+     */
+    public function get_image_url(): ?string;
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -20,13 +20,23 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package mod_contentmarketplace
  */
-defined('MOODLE_INTERNAL') || die();
+namespace mod_contentmarketplace\exception;
 
-$plugin->version  = 2021041301;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2021040700;       // Requires this Totara version.
-$plugin->component = 'mod_contentmarketplace';
+use moodle_exception;
 
-$plugin->dependencies = [
-    'totara_contentmarketplace' => 2021041302,
-    'totara_mvc' => 2021041300
-];
+class non_exist_learning_object extends moodle_exception {
+    /**
+     * non_exist_learning_object constructor.
+     * @param string $marketplace_component
+     * @param null|mixed $debuginfo
+     */
+    public function __construct(string $marketplace_component, $debuginfo = null) {
+        parent::__construct(
+            'error:cannot_find_learning_object',
+            'contentmarketplace',
+            null,
+            $marketplace_component,
+            $debuginfo
+        );
+    }
+}
