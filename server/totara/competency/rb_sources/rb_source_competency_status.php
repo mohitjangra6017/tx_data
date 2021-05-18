@@ -229,6 +229,16 @@ class rb_source_competency_status extends rb_base_source {
             ),
             new rb_column_option(
                 'competency_status',
+                'achievement_status',
+                get_string('achievement_status', 'rb_source_competency_status'),
+                'base.status',
+                [
+                    'displayfunc' => 'achievement_status',
+                    'dbdatatype' => 'integer'
+                ]
+            ),
+            new rb_column_option(
+                'competency_status',
                 'scale_value_numericscore',
                 get_string('scale_value_numeric_score', 'rb_source_competency_status'),
                 'scale_values.numericscore',
@@ -440,6 +450,20 @@ class rb_source_competency_status extends rb_base_source {
             ),
             new rb_filter_option(
                 'competency_status',
+                'achievement_status',
+                get_string('achievement_status', 'rb_source_competency_status'),
+                'select',
+                [
+                    'simplemode' => true,
+                    'selectchoices' => [
+                        competency_achievement::ACTIVE_ASSIGNMENT => get_string('status_active', 'totara_competency'),
+                        competency_achievement::ARCHIVED_ASSIGNMENT => get_string('status_archived', 'totara_competency'),
+                        competency_achievement::SUPERSEDED => get_string('superseded', 'totara_competency'),
+                    ]
+                ]
+            ),
+            new rb_filter_option(
+                'competency_status',
                 'proficient',
                 get_string('proficiency_status', 'totara_competency'),
                 'select',
@@ -550,6 +574,11 @@ class rb_source_competency_status extends rb_base_source {
                 'type' => 'competency',
                 'value' => 'time_created',
             ],
+            // Achievement status
+            [
+                'type' => 'competency_status',
+                'value' => 'achievement_status',
+            ],
         );
         if (advanced_feature::is_enabled('competency_assignment')) {
             // Link to the assignment Activity log
@@ -582,6 +611,11 @@ class rb_source_competency_status extends rb_base_source {
             [
                 'type' => 'competency_status',
                 'value' => 'proficient',
+            ],
+            // Achievement status.
+            [
+                'type' => 'competency_status',
+                'value' => 'achievement_status',
             ],
         );
         if (advanced_feature::is_enabled('competency_assignment')) {
