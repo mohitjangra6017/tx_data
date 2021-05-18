@@ -697,6 +697,34 @@ class pgsql_native_moodle_database extends moodle_database {
      * @return bool
      */
     public function setup_is_unicodedb() {
+        $encoding = $this->get_server_encoding();
+
+        return (strtoupper($encoding) == 'UNICODE' || strtoupper($encoding) == 'UTF8');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setup_supports_four_byte_character_set() {
+        $encoding = $this->get_server_encoding();
+
+        // All the following character sets support four byte characters
+        if ($encoding == 'UTF8'
+            || $encoding == 'GB18030'
+            || $encoding == 'MULE_INTERNAL'
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get current server encoding (aka character set)
+     *
+     * @return string|null
+     */
+    private function get_server_encoding(): ?string {
         // Get PostgreSQL server_encoding value
         $sql = "SHOW server_encoding";
         $this->query_start($sql, null, SQL_QUERY_AUX);
@@ -704,13 +732,13 @@ class pgsql_native_moodle_database extends moodle_database {
         $this->query_end($result);
 
         if (!$result) {
-            return false;
+            return null;
         }
         $rawcolumn = pg_fetch_object($result);
         $encoding = $rawcolumn->server_encoding;
         pg_free_result($result);
 
-        return (strtoupper($encoding) == 'UNICODE' || strtoupper($encoding) == 'UTF8');
+        return $encoding;
     }
 
     /**

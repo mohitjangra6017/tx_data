@@ -335,7 +335,7 @@ class mysqli_native_moodle_database extends moodle_database {
 
         if (!$collation) {
             // Totara: we need to always return something valid so that we can perform installation.
-            $collation = 'utf8_unicode_ci';
+            $collation = 'utf8mb4_unicode_ci';
         }
 
         // Cache the result to improve performance.
@@ -1088,6 +1088,24 @@ class mysqli_native_moodle_database extends moodle_database {
         $result->close();
 
         return $return;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setup_supports_four_byte_character_set() {
+        $charset = strtolower($this->get_charset());
+
+        // All the following character sets support four byte characters
+        if ($charset == 'utf8mb4'
+            || $charset == 'utf16'
+            || $charset == 'utf16le'
+            || $charset == 'utf32'
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

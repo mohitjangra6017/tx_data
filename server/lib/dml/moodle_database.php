@@ -1283,6 +1283,14 @@ abstract class moodle_database {
     }
 
     /**
+     * Does the db support four byte characters
+     * @return bool
+     */
+    public function setup_supports_four_byte_character_set() {
+        return true;
+    }
+
+    /**
      * Enable/disable very detailed debugging.
      * @param bool $state
      * @return void

@@ -208,3 +208,26 @@ function totara_shared_src_directory(environment_results $result) {
 
     return $result;
 }
+
+
+/**
+ * Check for four-byte compatible characterset
+ *
+ * @param environment_results $result
+ * @return environment_results
+ */
+function totara_core_four_byte_character_set(environment_results $result) {
+    global $DB;
+
+    $result->setStatus($DB->setup_supports_four_byte_character_set());
+
+    $info_string = get_string('four_byte_characterset_info', 'totara_core');
+    if (method_exists($DB, 'get_charset')) {
+        $info_string = get_string('four_byte_characterset_info_with_current', 'totara_core', $DB->get_charset());
+    }
+    $result->setInfo($info_string);
+
+    $result->setFeedbackStr(['four_byte_characterset_warning', 'totara_core']);
+
+    return $result;
+}
