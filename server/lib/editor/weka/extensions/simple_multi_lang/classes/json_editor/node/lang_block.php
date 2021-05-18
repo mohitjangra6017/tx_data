@@ -162,6 +162,7 @@ class lang_block extends node implements block_node {
     }
 
     /**
+     * @deprecated since Totara 14.0
      * @param array $raw_node
      * @return array
      */
@@ -170,7 +171,6 @@ class lang_block extends node implements block_node {
 
         // Trim down the lang value, as it is invalid
         $lang = $raw_node['attrs']['lang'];
-        $lang = clean_string($lang);
         $raw_node['attrs']['lang'] = substr($lang, 0, static::MAX_LANG_LENGTH);
 
         $content_nodes = $raw_node['content'];

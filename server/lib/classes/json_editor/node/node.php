@@ -184,6 +184,7 @@ abstract class node {
     /**
      * Sanitizes the node's data, and this is for outputing the node to the client.
      *
+     * @deprecated since Totara 14.0
      * @param array $raw_node
      * @return array
      */

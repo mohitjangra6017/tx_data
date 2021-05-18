@@ -131,6 +131,7 @@ abstract class base_list extends node {
     }
 
     /**
+     * @deprecated since Totara 14.0
      * @param array $raw_node
      * @return array
      */

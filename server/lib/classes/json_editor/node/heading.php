@@ -143,6 +143,7 @@ final class heading extends node implements block_node {
     }
 
     /**
+     * @deprecated since Totara 14.0
      * @param array $raw_node
      * @return array
      */
