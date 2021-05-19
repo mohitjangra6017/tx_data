@@ -24,5 +24,5 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'theme_msteams';
-$plugin->version = 2021051800;
-$plugin->requires = 2021040700;
+$plugin->version = 2021052500;
+$plugin->requires = 2021052500;
