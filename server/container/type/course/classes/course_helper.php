@@ -22,6 +22,7 @@
  */
 namespace container_course;
 
+use container_course\hook\remove_module_hook;
 use core_container\factory;
 
 final class course_helper {
@@ -161,5 +162,34 @@ final class course_helper {
 
         $course->update($data);
         return $course;
+    }
+
+    /**
+     * Returns the list of supported modules within the course.
+     *
+     * @param bool $plural              If true returns the plural forms of the names.
+     * @param bool $include_disabled    If true then all the disabled modules will also be included in the list.
+     * @param bool $execute_hook        If true then the hook will not be executed. And the modules that normally
+     *                                  removed from hooked will be kept and returned.
+     *
+     * @return array
+     */
+    public static function get_all_modules(
+        bool $plural = false,
+        bool $include_disabled = false,
+        bool $execute_hook = true
+    ): array {
+        // The list of modules returned from course::get_module_types_supported
+        // includes those activity modules that also does not support creation via
+        // interfaces.
+        $modules = course::get_module_types_supported($plural, $include_disabled);
+        if (!$execute_hook) {
+            return $modules;
+        }
+
+        $hook = new remove_module_hook($modules);
+        $hook->execute();
+
+        return $hook->get_modules();
     }
 }

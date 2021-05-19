@@ -495,11 +495,11 @@ function get_array_of_activities($courseid) {
 function get_module_types_names($plural = false) {
 //    debugging(
 //        "The function 'get_module_types_names' has been deprecated, please use " .
-//        "\container_course\course::get_module_types_supported instead",
+//        "\container_course\course_helper::get_all_modules instead",
 //        DEBUG_DEVELOPER
 //    );
 
-    return \container_course\course::get_module_types_supported($plural);
+    return \container_course\course_helper::get_all_modules($plural);
 }
 
 /**
