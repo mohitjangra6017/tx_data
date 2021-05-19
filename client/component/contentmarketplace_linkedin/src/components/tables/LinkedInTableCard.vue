@@ -51,16 +51,16 @@
             {{ courseLevelString }}
           </div>
           <!-- Course completion time -->
-          <div v-if="data.time">
+          <div v-if="data.time_to_complete">
             <span class="sr-only">
               {{
                 $str(
-                  'a11y_content_completion_time',
+                  'a11y_content_time_to_complete',
                   'contentmarketplace_linkedin'
                 )
               }}
             </span>
-            {{ data.time }}
+            {{ data.time_to_complete }}
           </div>
           <!-- Course type (course, learning path) -->
           <div v-if="courseTypeString">
@@ -248,8 +248,8 @@ export default {
   {
     "contentmarketplace_linkedin": [
       "a11y_appears_in_n_courses",
-      "a11y_content_completion_time",
       "a11y_content_difficulty",
+      "a11y_content_time_to_complete",
       "a11y_content_type",
       "a11y_view_courses",
       "appears_in",

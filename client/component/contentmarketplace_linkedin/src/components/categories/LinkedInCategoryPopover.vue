@@ -87,7 +87,7 @@ export default {
     // Available category options
     categoryOptions: Array,
     // Course Id
-    courseId: Number,
+    courseId: [String, Number],
     // Currently selected category option
     currentCategory: [String, Number],
     // Disabled

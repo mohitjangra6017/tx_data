@@ -71,7 +71,10 @@
 
     <!-- Table count and active filters used -->
     <template v-slot:summary-count>
-      <CountAndFilters :count="items.length" :filters="activeFilterStrings" />
+      <CountAndFilters
+        :filters="activeFilterStrings"
+        :count="learningObjects.total"
+      />
     </template>
 
     <!-- Sort order filter for table -->
@@ -86,7 +89,7 @@
     <!-- Table of available courses -->
     <template v-slot:select-table>
       <SelectionTable
-        :items="items"
+        :items="learningObjects.items"
         :selected-items="selectedItems"
         @update="setSelectedItems"
       />
@@ -96,7 +99,7 @@
     <template v-slot:review-table>
       <ReviewTable
         :category-options="categoryOptions"
-        :items="items"
+        :items="learningObjects.items"
         :selected-item-categories="selectedItemCategories"
         :selected-items="selectedItems"
         @change-course-category="setSingleCourseCategory"
@@ -116,6 +119,8 @@ import PageBackLink from 'tui/components/layouts/PageBackLink';
 import ReviewTable from 'contentmarketplace_linkedin/components/tables/LinkedInReviewTable';
 import SelectionTable from 'contentmarketplace_linkedin/components/tables/LinkedInSelectionTable';
 import SortFilter from 'totara_contentmarketplace/components/filters/SortFilter';
+// Query
+import learningObjectsQuery from 'contentmarketplace_linkedin/graphql/catalog_import_learning_objects';
 
 export default {
   components: {
@@ -147,6 +152,10 @@ export default {
         { label: 'User experience', id: 'user' },
         { label: 'Security', id: 'sec' },
       ],
+      learningObjects: {
+        items: [],
+        total: 0,
+      },
       filters: {
         software: [
           {
@@ -261,104 +270,6 @@ export default {
           },
         ],
       },
-      items: [
-        {
-          id: 1,
-          courses: [
-            { fullname: 'example course 1' },
-            { fullname: 'example course 2' },
-            { fullname: 'example course 3' },
-            { fullname: 'example course 4' },
-            { fullname: 'example course 5' },
-            { fullname: 'example course 6' },
-            { fullname: 'example course 7' },
-            { fullname: 'example course 8' },
-            { fullname: 'example course 9' },
-            { fullname: 'example course 10' },
-            { fullname: 'example course 11' },
-            { fullname: 'example course 12' },
-          ],
-          level: 'INTERMEDIATE',
-          subject: 'Leadership',
-          image_url:
-            '../../../server/pluginfile.php/1336/course/images/1620708777/image?preview=totara_catalog_medium&theme=ventura',
-          time: '9h 7m',
-          name: 'Become a Leader',
-          type: 'learningPath',
-        },
-        {
-          id: 2,
-          courses: [{ fullname: 'example course 1' }],
-          level: 'BEGINNER',
-          subject: 'Communication',
-          image_url:
-            '../../../server/pluginfile.php/2661/course/images/1620710323/image?preview=totara_catalog_medium&theme=ventura',
-          time: '4h 22m',
-          name: 'Diversity, Inclusion, and Belonging for All',
-          type: 'learningPath',
-        },
-        {
-          id: 3,
-          courses: [],
-          level: 'INTERMEDIATE',
-          subject: 'Development',
-          image_url:
-            '../../../server/pluginfile.php/2685/course/images/1620710698/image?preview=totara_catalog_medium&theme=ventura',
-          time: '1h 47m',
-          name: 'Software Testing: Planning Tests for Mobile',
-          type: 'course',
-        },
-        {
-          id: 4,
-          courses: [
-            { fullname: 'example course 1' },
-            { fullname: 'example course 4' },
-          ],
-          level: 'ADVANCED',
-          subject: 'Financial',
-          image_url:
-            '../../../server/pluginfile.php/2679/course/images/1620711202/image?preview=totara_catalog_medium&theme=ventura',
-          time: '4m 30s',
-          name: '5 Tips for Building Your Financial Life',
-          type: 'course',
-        },
-        {
-          id: 5,
-          courses: [{ fullname: 'example course 1' }],
-          level: 'BEGINNER',
-          subject: 'Spreadsheets',
-          image_url:
-            '../../../server/pluginfile.php/2673/course/images/1620711691/image?preview=totara_catalog_medium&theme=ventura',
-          time: '24h 43m',
-          name: 'Master Microsoft Excel',
-          type: 'learningPath',
-        },
-        {
-          id: 6,
-          courses: [],
-          level: 'INTERMEDIATE',
-          subject: 'Leadership',
-          image_url:
-            '../../../server/pluginfile.php/2667/course/images/1620712061/image?preview=totara_catalog_medium&theme=ventura',
-          time: '6h 40m',
-          name: 'Become an Inclusive Leader',
-          type: 'learningPath',
-        },
-        {
-          id: 7,
-          courses: [
-            { fullname: 'example course 1' },
-            { fullname: 'example course 4' },
-          ],
-          level: 'BEGINNER',
-          subject: 'Customer Support',
-          image_url:
-            '../../../server/pluginfile.php/2655/course/images/1620712305/image?preview=totara_catalog_medium&theme=ventura',
-          time: '5h 25m',
-          name: 'Become a Customer Service Specialist',
-          type: 'learningPath',
-        },
-      ],
       // Available language options for primary filter
       languageFilterOptions: [
         {
@@ -413,6 +324,41 @@ export default {
       // Showing display for reviewing selected items
       reviewingSelectedItems: false,
     };
+  },
+
+  apollo: {
+    learningObjects: {
+      query: learningObjectsQuery,
+      variables() {
+        return {
+          input: {
+            pagination: {
+              cursor: null,
+            },
+            sort_by: this.selectedSortOrderFilter,
+            filters: {
+              language: this.selectedLanguage,
+            },
+          },
+        };
+      },
+      update({ result: data }) {
+        // return data;
+        // TODO: Remove this when actual courses come through via the query.
+        return Object.assign({}, data, {
+          items: data.items.map(item => {
+            return Object.assign({}, item, {
+              courses: [
+                { fullname: 'example course 1' },
+                { fullname: 'example course 2' },
+                { fullname: 'example course 3' },
+                { fullname: 'example course 4' },
+              ],
+            });
+          }),
+        });
+      },
+    },
   },
 
   methods: {

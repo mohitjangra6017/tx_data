@@ -24,8 +24,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['a11y_appears_in_n_courses'] = 'Appears in {$a} course(s)';
-$string['a11y_content_completion_time'] = 'Time to complete content';
 $string['a11y_content_difficulty'] = 'Content difficulty level';
+$string['a11y_content_time_to_complete'] = 'Time to complete content';
 $string['a11y_content_type'] = 'Type of content';
 $string['a11y_search_filter'] = 'Search';
 $string['a11y_time_filter'] = 'Time';
