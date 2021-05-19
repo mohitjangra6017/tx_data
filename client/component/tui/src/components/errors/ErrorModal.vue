@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <Modal :size="size" :aria-labelledby="$id('title')">
+  <Modal :size="size" :aria-labelledby="$id('title')" error-modal>
     <ModalContent
       :close-button="true"
       :title="$tryStr('system_error', 'totara_core') || 'System Error'"

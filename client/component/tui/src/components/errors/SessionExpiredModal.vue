@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <Modal :aria-labelledby="$id('title')">
+  <Modal :aria-labelledby="$id('title')" error-modal>
     <ModalContent
       :close-button="true"
       :title="$str('error:sesskey_expired_title', 'totara_core')"

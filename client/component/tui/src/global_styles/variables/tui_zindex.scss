@@ -17,6 +17,7 @@
 // #dock is 12000, modal must be above that
 :root {
   --zindex-modal: 100050;
+  --zindex-error-modal: 100070;
   --zindex-modal-backdrop: 100040;
   --zindex-popover: 100030;
   --zindex-dropdown-menu: 10000;

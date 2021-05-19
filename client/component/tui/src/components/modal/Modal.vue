@@ -28,6 +28,7 @@
       'tui-modal--in': modalIn,
       'tui-modal--always-scroll': forceScroll,
       ['tui-modal--size-' + size]: true,
+      'tui-modal--error': errorModal,
     }"
     tabindex="-1"
     @click="handleModalOuterClick"
@@ -92,6 +93,7 @@ export default {
     },
     ariaLabelledby: String,
     ariaLabel: String,
+    errorModal: Boolean,
   },
 
   inject: {
@@ -372,6 +374,10 @@ $tui-modal-sheetBreakpoint: 768px !default;
     &.tui-modal--in .tui-modal__inner {
       transform: translateY(0);
     }
+  }
+
+  &--error {
+    z-index: var(--zindex-error-modal);
   }
 
   &.tui-modal--size-sheet {
