@@ -26,7 +26,9 @@ use container_course\module\course_module;
 use context_module;
 use core\orm\entity\model;
 use mod_contentmarketplace\entity\content_marketplace as model_entity;
+use moodle_url;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model as learning_object;
+use totara_contentmarketplace\learning_object\factory;
 
 /**
  * Model for content marketplace entity.
@@ -42,6 +44,12 @@ class content_marketplace extends model {
      * @var context_module|null
      */
     private $context;
+
+    /**
+     * Will be lazy loaded by the getter method.
+     * @var learning_object|null
+     */
+    private $learning_object;
 
     /**
      * @var string[]
@@ -62,6 +70,7 @@ class content_marketplace extends model {
     public function __construct(model_entity $entity) {
         parent::__construct($entity);
         $this->context = null;
+        $this->learning_object = null;
     }
 
     /**
@@ -78,7 +87,10 @@ class content_marketplace extends model {
         $entity->name = $learning_object->get_name();
 
         $entity->save();
-        return self::load_by_entity($entity);
+
+        $model = self::load_by_entity($entity);
+        $model->learning_object = $learning_object;
+        return $model;
     }
 
     /**
@@ -134,6 +146,15 @@ class content_marketplace extends model {
      * @return bool
      */
     public function delete(): bool {
+        if ($this->is_deleted()) {
+            debugging(
+                "The record had already been deleted",
+                DEBUG_DEVELOPER
+            );
+
+            return false;
+        }
+
         $this->entity->delete();
         return $this->is_deleted();
     }
@@ -143,5 +164,27 @@ class content_marketplace extends model {
      */
     public function is_deleted(): bool {
         return $this->entity->deleted();
+    }
+
+    /**
+     * @return learning_object
+     */
+    public function get_learning_object(): learning_object {
+        if (null === $this->learning_object) {
+            $resolver = factory::get_resolver($this->learning_object_marketplace_component);
+            $this->learning_object = $resolver->find($this->learning_object_id, true);
+        }
+
+        return $this->learning_object;
+    }
+
+    /**
+     * @return moodle_url
+     */
+    public function get_view_url(): moodle_url {
+        return new moodle_url(
+            '/mod/contentmarketplace/view.php',
+            ['id' => $this->get_id()]
+        );
     }
 }

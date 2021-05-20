@@ -57,4 +57,11 @@ interface model {
      * @return string|null
      */
     public function get_image_url(): ?string;
+
+    /**
+     * Returns the logo url of content marketplace.
+     *
+     * @return string
+     */
+    public static function get_marketplace_image_url(): string;
 }

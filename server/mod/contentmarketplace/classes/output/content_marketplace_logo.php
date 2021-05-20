@@ -18,33 +18,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
- * @package contentmarketplace_linkedin
+ * @package mod_contentmarketplace
  */
-namespace contentmarketplace_linkedin\learning_object;
+namespace mod_contentmarketplace\output;
 
-use contentmarketplace_linkedin\entity\learning_object as entity;
-use contentmarketplace_linkedin\model\learning_object;
-use totara_contentmarketplace\learning_object\abstraction\metadata\model;
-use totara_contentmarketplace\learning_object\abstraction\resolver as base;
+use core\output\template;
+use mod_contentmarketplace\model\content_marketplace;
 
-class resolver extends base {
+/**
+ * Mustache template to output the content marketplace as a single module
+ * within the multi activities course.
+ */
+class content_marketplace_logo extends template {
     /**
-     * @param int $id
-     * @return learning_object|null
+     * @param content_marketplace $content_marketplace
+     * @return content_marketplace_logo
      */
-    public function find(int $id, bool $strict = false): ?model {
-        $repository = entity::repository();
+    public static function create_from_model(content_marketplace $content_marketplace): content_marketplace_logo {
+        $learning_object = $content_marketplace->get_learning_object();
 
-        if ($strict) {
-            $entity = $repository->find_or_fail($id);
-        } else {
-            $entity = $repository->find($id);
-
-            if (null === $entity) {
-                return null;
-            }
-        }
-
-        return new learning_object($entity);
+        return new static([
+            'logo_url' => $learning_object::get_marketplace_image_url()
+        ]);
     }
 }

@@ -88,6 +88,26 @@ class helper {
     }
 
     /**
+     * Returns student role's id.
+     *
+     * @return int
+     */
+    public static function get_student_role(): int {
+        $db = builder::get_db();
+        $records = $db->get_records(
+            'role',
+            ['archetype' => 'student'],
+            'id',
+            'id',
+            0,
+            1
+        );
+
+        $record = reset($records);
+        return $record->id;
+    }
+
+    /**
      * Returns the default course category id within the system.
      *
      * @return int

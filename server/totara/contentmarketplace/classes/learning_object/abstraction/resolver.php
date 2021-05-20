@@ -35,10 +35,12 @@ abstract class resolver {
     /**
      * Finding the learning object record via id.
      *
-     * @param int $id
+     * @param int  $id
+     * @param bool $strict
+     *
      * @return model|null
      */
-    abstract public function find(int $id): ?model;
+    abstract public function find(int $id, bool $strict = false): ?model;
 
     /**
      * @return string

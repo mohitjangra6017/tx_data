@@ -24,6 +24,7 @@ defined('MOODLE_INTERNAL') || die();
 
 use mod_contentmarketplace\local\helper;
 use mod_contentmarketplace\model\content_marketplace;
+use mod_contentmarketplace\output\content_marketplace_logo;
 
 /**
  * A callback function from course's API to create an instance of content
@@ -40,6 +41,21 @@ function contentmarketplace_add_instance(stdClass $record): int {
     );
 
     return $content_marketplace->id;
+}
+
+/**
+ * Render the content for content marketplace.
+ *
+ * @return void
+ */
+function contentmarketplace_cm_info_view(cm_info $course_module): void {
+    global $OUTPUT;
+
+    $content_marketplace = content_marketplace::load_by_id($course_module->instance);
+    $template = content_marketplace_logo::create_from_model($content_marketplace);
+
+    $content = $OUTPUT->render($template);
+    $course_module->set_after_link($content);
 }
 
 /**

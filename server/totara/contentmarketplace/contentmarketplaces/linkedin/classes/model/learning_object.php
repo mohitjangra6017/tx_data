@@ -226,4 +226,14 @@ class learning_object extends model implements detailed_model {
         return $this->entity->primary_image_url;
     }
 
+    /**
+     * @return string
+     */
+    public static function get_marketplace_image_url(): string {
+        global $OUTPUT;
+        return $OUTPUT->image_url(
+            'logo_small_transparent',
+            'contentmarketplace_linkedin',
+        );
+    }
 }

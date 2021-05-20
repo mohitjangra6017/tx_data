@@ -24,6 +24,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['error:cannot_find_learning_object'] = 'Cannot find the learning object from {$a}';
 $string['marketplace_component'] = "Marketplace component";
+$string['marketplace_logo'] = "Content marketplace logo";
 $string['modulename'] = 'External content marketplace';
 $string['modulenameplural'] = 'External content marketplace';
 $string['pluginadministration'] = 'Manage external content marketplace';

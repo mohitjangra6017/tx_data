@@ -64,6 +64,11 @@ class view extends controller {
      * @return tui_view
      */
     public function action(): tui_view {
+        global $USER;
+
+        $interactor = new content_marketplace_interactor($this->model, $USER->id);
+        $interactor->require_view();
+
         $view = new tui_view(
             'mod_contentmarketplace/pages/ContentMarketplaceView',
             ['marketplace-id' => $this->model->get_id()]
@@ -71,16 +76,5 @@ class view extends controller {
 
         $view->set_title(format_string($this->model->name));
         return $view;
-    }
-
-    /**
-     * @return void
-     */
-    protected function authorize(): void {
-        global $USER;
-        parent::authorize();
-
-        $interactor = new content_marketplace_interactor($this->model, $USER->id);
-        $interactor->require_view();
     }
 }
