@@ -22,7 +22,7 @@
  */
 
 use contentmarketplace_linkedin\api\v2\api;
-use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\query\criteria;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\service;
@@ -101,8 +101,8 @@ class contentmarketplace_linkedin_fetch_learning_assets_testcase extends testcas
         self::assertEquals('en_US', $first_element->get_title_locale()->__toString());
         self::assertEquals('en_US', $second_element->get_title_locale()->__toString());
 
-        self::assertEquals(constant::DIFFICULTY_LEVEL_BEGINNER, $first_element->get_level());
-        self::assertEquals(constant::DIFFICULTY_LEVEL_BEGINNER, $second_element->get_level());
+        self::assertEquals(constants::DIFFICULTY_LEVEL_BEGINNER, $first_element->get_level());
+        self::assertEquals(constants::DIFFICULTY_LEVEL_BEGINNER, $second_element->get_level());
 
         self::assertNotNull($first_element->get_description_include_html());
         self::assertNotEmpty($first_element->get_description_include_html());
@@ -152,7 +152,7 @@ class contentmarketplace_linkedin_fetch_learning_assets_testcase extends testcas
 
         $client = new matching_mock_client();
         $criteria = new criteria();
-        $criteria->set_asset_types([constant::ASSET_TYPE_COURSE]);
+        $criteria->set_asset_types([constants::ASSET_TYPE_COURSE]);
 
         $learning_asset = new service($criteria);
         $end_point_url = new moodle_url(api::ENDPOINT . '/' . api::get_version());
@@ -245,7 +245,7 @@ class contentmarketplace_linkedin_fetch_learning_assets_testcase extends testcas
 
         $client = new matching_mock_client();
         $criteria = new criteria();
-        $criteria->set_asset_types([constant::ASSET_TYPE_COURSE]);
+        $criteria->set_asset_types([constants::ASSET_TYPE_COURSE]);
 
         $learning_asset = new service($criteria);
         $end_point_url = new moodle_url(api::ENDPOINT . '/' . api::get_version());

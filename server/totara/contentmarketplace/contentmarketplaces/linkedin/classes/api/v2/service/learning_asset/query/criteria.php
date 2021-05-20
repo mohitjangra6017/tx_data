@@ -24,7 +24,7 @@ namespace contentmarketplace_linkedin\api\v2\service\learning_asset\query;
 
 use coding_exception;
 use contentmarketplace_linkedin\api\v2\service\helper;
-use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\dto\locale;
 use moodle_url;
 
@@ -72,9 +72,7 @@ class criteria extends query {
      * @return void
      */
     public function add_asset_type(string $asset_type): void {
-        if (!constant::is_valid_asset_type($asset_type)) {
-            throw new coding_exception("Invalid asset type: {$asset_type}");
-        }
+        constants::validate_asset_type($asset_type);
 
         $this->asset_types[] = $asset_type;
     }
@@ -96,9 +94,7 @@ class criteria extends query {
      * @return void
      */
     public function add_difficulty_level(string $level): void {
-        if (!constant::is_valid_difficulty_level($level)) {
-            throw new coding_exception("Invalid difficulty level: {$level}");
-        }
+        constants::validate_difficulty_level($level);
 
         $this->difficulty_levels[] = $level;
     }
@@ -121,7 +117,7 @@ class criteria extends query {
      * @return void
      */
     public function set_sort_by(?string $sort_by): void {
-        if (null !== $sort_by && !constant::is_valid_sort_by($sort_by)) {
+        if (null !== $sort_by && !constants::is_valid_sort_by($sort_by)) {
             throw new coding_exception("Invalid sort by: {$sort_by}");
         }
 

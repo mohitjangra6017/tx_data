@@ -24,11 +24,11 @@ namespace contentmarketplace_linkedin\sync_action;
 
 use coding_exception;
 use contentmarketplace_linkedin\api\v2\api;
-use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\query\criteria;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\service;
 use contentmarketplace_linkedin\config;
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\model\learning_object;
 use totara_contentmarketplace\sync\external_sync;
 use totara_contentmarketplace\sync\sync_action;
@@ -86,9 +86,9 @@ class sync_learning_asset extends sync_action implements external_sync {
         $this->sync_with_last_time_modified = true;
 
         $this->asset_types = [
-            constant::ASSET_TYPE_COURSE,
-            constant::ASSET_TYPE_VIDEO,
-            constant::ASSET_TYPE_LEARNING_PATH
+            constants::ASSET_TYPE_COURSE,
+            constants::ASSET_TYPE_VIDEO,
+            constants::ASSET_TYPE_LEARNING_PATH
         ];
     }
 
@@ -112,9 +112,7 @@ class sync_learning_asset extends sync_action implements external_sync {
         $this->asset_types = [];
 
         foreach ($asset_types as $asset_type) {
-            if (!constant::is_valid_asset_type($asset_type)) {
-                throw new coding_exception("The asset type is invalid '{$asset_type}'");
-            }
+            constants::validate_asset_type($asset_type);
 
             $this->asset_types[] = $asset_type;
         }

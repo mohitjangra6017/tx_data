@@ -25,8 +25,10 @@ namespace contentmarketplace_linkedin\data_provider;
 
 use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
 use contentmarketplace_linkedin\model\learning_object as learning_object_model;
+use contentmarketplace_linkedin\repository\learning_object_repository;
 use core\collection;
 use core\orm\entity\repository;
+use totara_contentmarketplace\data_provider\paginated_provider;
 
 /**
  * Class learning_objects.
@@ -48,7 +50,7 @@ class learning_objects extends paginated_provider {
     }
 
     /**
-     * @inheritDoc
+     * @return learning_object_repository
      */
     protected function build_query(): repository {
         return learning_object_entity::repository();
@@ -63,7 +65,7 @@ class learning_objects extends paginated_provider {
     }
 
     /**
-     * @param repository $repository
+     * @param learning_object_repository $repository
      * @param bool $is_retired
      */
     protected function filter_query_by_is_retired(repository $repository, bool $is_retired): void {
@@ -71,7 +73,7 @@ class learning_objects extends paginated_provider {
     }
 
     /**
-     * @param repository $repository
+     * @param learning_object_repository $repository
      * @param string $language
      */
     protected function filter_query_by_language(repository $repository, string $language): void {
@@ -79,14 +81,14 @@ class learning_objects extends paginated_provider {
     }
 
     /**
-     * @param repository $repository
+     * @param learning_object_repository $repository
      */
     protected function sort_query_by_alphabetical(repository $repository): void {
         $repository->order_by('title');
     }
 
     /**
-     * @param repository $repository
+     * @param learning_object_repository $repository
      */
     protected function sort_query_by_latest(repository $repository): void {
         $repository->order_by('last_updated_at', 'DESC');

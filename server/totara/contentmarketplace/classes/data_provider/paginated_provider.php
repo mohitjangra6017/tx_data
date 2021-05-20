@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Mark Metcalfe <mark.metcalfe@totaralearning.com>
- * @package contentmarketplace_linkedin
+ * @package totara_contentmarketplace
  */
 
-namespace contentmarketplace_linkedin\data_provider;
+namespace totara_contentmarketplace\data_provider;
 
 use core\orm\pagination\cursor_paginator;
 use core\pagination\base_paginator;

@@ -21,7 +21,7 @@
  * @package core
  */
 
-use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\sync_action\sync_learning_asset;
 use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\testing\generator;
@@ -80,7 +80,7 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
 
         $sync = new sync_learning_asset(true, $time_now);
         $sync->set_api_client($client);
-        $sync->set_asset_types(constant::ASSET_TYPE_COURSE);
+        $sync->set_asset_types(constants::ASSET_TYPE_COURSE);
 
         // Before run there should be no record.
         self::assertEquals(0, $db->count_records(learning_object::TABLE));
@@ -150,7 +150,7 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
 
         $sync = new sync_learning_asset(true, $time_now);
         $sync->set_api_client($client);
-        $sync->set_asset_types(constant::ASSET_TYPE_COURSE);
+        $sync->set_asset_types(constants::ASSET_TYPE_COURSE);
 
         $sync->invoke();
 
@@ -175,7 +175,7 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
 
         $sync = new sync_learning_asset(true);
         $sync->set_api_client($client);
-        $sync->set_asset_types(constant::ASSET_TYPE_COURSE);
+        $sync->set_asset_types(constants::ASSET_TYPE_COURSE);
 
         $sync->invoke();
 
@@ -211,7 +211,7 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
 
         $sync = new sync_learning_asset(true);
         $sync->set_api_client($client);
-        $sync->set_asset_types(constant::ASSET_TYPE_COURSE);
+        $sync->set_asset_types(constants::ASSET_TYPE_COURSE);
 
         $sync->invoke();
 
@@ -234,7 +234,7 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
 
         $sync = new sync_learning_asset(true);
         $sync->set_api_client($client);
-        $sync->set_asset_types(constant::ASSET_TYPE_COURSE);
+        $sync->set_asset_types(constants::ASSET_TYPE_COURSE);
 
         try {
             $sync->invoke();

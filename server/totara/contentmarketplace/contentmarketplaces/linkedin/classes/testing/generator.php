@@ -24,7 +24,7 @@ namespace contentmarketplace_linkedin\testing;
 
 use coding_exception;
 use contentmarketplace_linkedin\api\response\result;
-use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\entity\learning_object;
@@ -135,6 +135,7 @@ class generator extends component_generator {
      * + published_at: Int
      * + retired_at: Int
      * + level: String
+     * + asset_type: String
      * + primary_url: String
      * + time_to_complete: Int
      * + web_launch_url: String
@@ -165,7 +166,11 @@ class generator extends component_generator {
         }
 
         if (!array_key_exists('level', $record)) {
-            $record['level'] = constant::DIFFICULTY_LEVEL_BEGINNER;
+            $record['level'] = constants::DIFFICULTY_LEVEL_BEGINNER;
+        }
+
+        if (!array_key_exists('asset_type', $record)) {
+            $record['asset_type'] = constants::ASSET_TYPE_COURSE;
         }
 
         if (!array_key_exists('locale_language', $record)) {

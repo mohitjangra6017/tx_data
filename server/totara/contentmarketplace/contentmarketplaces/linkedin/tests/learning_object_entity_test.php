@@ -21,7 +21,7 @@
  * @package contentmarketplace_linkedin
  */
 
-use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\entity\learning_object;
 use core_phpunit\testcase;
 use core\orm\query\builder;
@@ -45,7 +45,7 @@ class contentmarketplace_linkedin_learning_object_entity_testcase extends testca
         $entity->title = 'This is title';
         $entity->locale_language = 'en';
         $entity->locale_country = 'US';
-        $entity->asset_type = constant::ASSET_TYPE_COURSE;
+        $entity->asset_type = constants::ASSET_TYPE_COURSE;
 
         $db = builder::get_db();
         $entity->save();
@@ -94,7 +94,7 @@ class contentmarketplace_linkedin_learning_object_entity_testcase extends testca
         $first_entity->title = 'First title';
         $first_entity->locale_language = 'en';
         $first_entity->locale_country = 'US';
-        $first_entity->asset_type = constant::ASSET_TYPE_COURSE;
+        $first_entity->asset_type = constants::ASSET_TYPE_COURSE;
         $first_entity->save();
 
         self::assertTrue($db->record_exists('marketplace_linkedin_learning_object', ['urn' => $urn]));
@@ -109,7 +109,7 @@ class contentmarketplace_linkedin_learning_object_entity_testcase extends testca
         $second_entity->title = 'こんにちは世界';
         $second_entity->locale_language = 'ja';
         $second_entity->locale_country = 'JP';
-        $second_entity->asset_type = constant::ASSET_TYPE_COURSE;
+        $second_entity->asset_type = constants::ASSET_TYPE_COURSE;
 
         try {
             $second_entity->save();

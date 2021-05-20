@@ -21,7 +21,7 @@
  * @package contentmarketplace_linkedin
  */
 
-use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\entity\learning_object as entity;
 use contentmarketplace_linkedin\sync_action\sync_learning_asset;
@@ -76,7 +76,7 @@ class contentmarketplace_linkedin_regular_sync_learning_asset_testcase extends t
 
         $sync = new sync_learning_asset(false, $time_now);
         $sync->set_api_client($client);
-        $sync->set_asset_types(constant::ASSET_TYPE_COURSE);
+        $sync->set_asset_types(constants::ASSET_TYPE_COURSE);
         $sync->invoke();
 
         self::assertNotEquals($time_now - DAYSECS, config::last_time_sync_learning_asset());
@@ -130,7 +130,7 @@ class contentmarketplace_linkedin_regular_sync_learning_asset_testcase extends t
 
         $sync = new sync_learning_asset(false);
         $sync->set_api_client($client);
-        $sync->set_asset_types(constant::ASSET_TYPE_COURSE);
+        $sync->set_asset_types(constants::ASSET_TYPE_COURSE);
 
         // After invoke, a new learning object record had been added, and the current
         // first learning object should be updated
@@ -160,7 +160,7 @@ class contentmarketplace_linkedin_regular_sync_learning_asset_testcase extends t
 
         $sync = new sync_learning_asset(false);
         $sync->set_api_client($client);
-        $sync->set_asset_types(constant::ASSET_TYPE_COURSE);
+        $sync->set_asset_types(constants::ASSET_TYPE_COURSE);
 
         // Nothing is run.
         $sync->invoke();

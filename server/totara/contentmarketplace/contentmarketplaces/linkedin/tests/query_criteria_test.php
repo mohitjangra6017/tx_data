@@ -21,7 +21,7 @@
  * @package contentmarketplace_linkedin
  */
 
-use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\query\criteria;
 use contentmarketplace_linkedin\dto\locale;
 use core_phpunit\testcase;
@@ -59,7 +59,7 @@ class contentmarketplace_linkedin_query_criteria_testcase extends testcase {
         ksort($applied_parameters);
 
         $expected_parameters = [
-            'assetFilteringCriteria.assetTypes[0]' => constant::ASSET_TYPE_COURSE,
+            'assetFilteringCriteria.assetTypes[0]' => constants::ASSET_TYPE_COURSE,
             'assetFilteringCriteria.licensedOnly' => 'true',
             'assetFilteringCriteria.locales[0].country' => 'US',
             'assetFilteringCriteria.locales[0].language' => 'en',
@@ -84,7 +84,7 @@ class contentmarketplace_linkedin_query_criteria_testcase extends testcase {
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage('Invalid asset type: data');
 
-        $criteria->set_asset_types(['data', constant::ASSET_TYPE_COURSE]);
+        $criteria->set_asset_types(['data', constants::ASSET_TYPE_COURSE]);
     }
 
     /**
@@ -130,7 +130,7 @@ class contentmarketplace_linkedin_query_criteria_testcase extends testcase {
         $moodle_url = new moodle_url('http://example.com');
 
         // Add asset types
-        $criteria->set_asset_types([constant::ASSET_TYPE_LEARNING_PATH, constant::ASSET_TYPE_COURSE]);
+        $criteria->set_asset_types([constants::ASSET_TYPE_LEARNING_PATH, constants::ASSET_TYPE_COURSE]);
         $criteria->apply_to_url($moodle_url);
 
         self::assertEquals(
@@ -154,7 +154,7 @@ class contentmarketplace_linkedin_query_criteria_testcase extends testcase {
         $moodle_url = new moodle_url('http://example.com');
 
         // Add sort by
-        $criteria->set_sort_by(constant::SORT_BY_RELEVANCE);
+        $criteria->set_sort_by(constants::SORT_BY_RELEVANCE);
         $criteria->apply_to_url($moodle_url);
 
         self::assertEquals(

@@ -20,12 +20,14 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
-namespace contentmarketplace_linkedin\api\v2\service\learning_asset;
+namespace contentmarketplace_linkedin;
+
+use coding_exception;
 
 /**
  * Constant definition for the query.
  */
-class constant {
+final class constants {
     /**
      * @var string
      */
@@ -101,6 +103,15 @@ class constant {
     }
 
     /**
+     * @param string $asset_type
+     */
+    public static function validate_asset_type(string $asset_type): void {
+        if (!self::is_valid_asset_type($asset_type)) {
+            throw new coding_exception("Invalid asset type: $asset_type");
+        }
+    }
+
+    /**
      * @param string $level
      * @return bool
      */
@@ -114,4 +125,14 @@ class constant {
             ]
         );
     }
+
+    /**
+     * @param string $level
+     */
+    public static function validate_difficulty_level(string $level): void {
+        if (!self::is_valid_difficulty_level($level)) {
+            throw new coding_exception("Invalid difficulty level: $level");
+        }
+    }
+
 }

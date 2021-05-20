@@ -21,7 +21,7 @@
  * @package core
  */
 
-use contentmarketplace_linkedin\api\v2\service\learning_asset\constant;
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\dto\timestamp;
 use contentmarketplace_linkedin\exception\json_validation_exception;
 use core_phpunit\testcase;
@@ -74,9 +74,9 @@ class contentmarketplace_linkedin_response_element_testcase extends testcase {
                     'country' => 'US'
                 ]
             ],
-            'type' => constant::ASSET_TYPE_COURSE,
+            'type' => constants::ASSET_TYPE_COURSE,
             'details' => [
-                'level' => constant::DIFFICULTY_LEVEL_BEGINNER,
+                'level' => constants::DIFFICULTY_LEVEL_BEGINNER,
                 'images' => [],
                 'lastUpdatedAt' => $time_now * timestamp::MILLISECONDS_IN_SECOND,
                 'publishedAt' => $time_now * timestamp::MILLISECONDS_IN_SECOND,
