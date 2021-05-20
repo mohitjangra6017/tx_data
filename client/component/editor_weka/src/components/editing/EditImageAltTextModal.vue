@@ -25,6 +25,7 @@
       <Form input-width="full" @submit.prevent="confirm">
         <div class="tui-wekaEditImageAltTextModal__input">
           <InputText
+            ref="altTextRef"
             v-model="innerValue"
             :maxlength="120"
             char-length="full"
@@ -89,6 +90,14 @@ export default {
 
       return this.$str('add_image_alt_text', 'editor_weka');
     },
+  },
+
+  mounted() {
+    this.$nextTick(() => {
+      if (this.$refs.altTextRef && this.$refs.altTextRef.$el) {
+        this.$refs.altTextRef.$el.focus();
+      }
+    });
   },
 
   methods: {
