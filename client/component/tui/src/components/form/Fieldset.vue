@@ -18,7 +18,10 @@
 
 <template>
   <fieldset class="tui-fieldset">
-    <legend class="tui-fieldset__legend">
+    <legend
+      class="tui-fieldset__legend"
+      :class="{ 'tui-fieldset--hidden': hidden }"
+    >
       {{ legend }}
     </legend>
     <slot />
@@ -28,6 +31,7 @@
 <script>
 export default {
   props: {
+    hidden: Boolean,
     legend: {
       type: String,
     },
@@ -51,6 +55,10 @@ export default {
     font-size: var(--font-size-18);
     line-height: inherit;
     border: none;
+  }
+
+  &--hidden {
+    @include sr-only();
   }
 }
 </style>

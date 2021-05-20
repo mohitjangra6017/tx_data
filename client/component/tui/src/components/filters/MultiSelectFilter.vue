@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <Fieldset class="tui-multiSelectFilter" :legend="title">
+  <Fieldset class="tui-multiSelectFilter" :hidden="hiddenTitle" :legend="title">
     <template v-for="{ label, id } in options">
       <div :key="id" class="tui-multiSelectFilter__item">
         <CheckboxButton
@@ -42,6 +42,7 @@ export default {
   },
 
   props: {
+    hiddenTitle: Boolean,
     options: Array,
     title: String,
     value: Array,
