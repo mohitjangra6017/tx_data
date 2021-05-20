@@ -32,6 +32,7 @@ $string['a11y_filter_panel_desc'] = 'The following options are used to filter th
 $string['a11y_active_filter_type'] = '{$a} active filter type';
 $string['a11y_active_filter_type_plural'] = '{$a} active filter types';
 $string['a11y_row_details'] = '{$a} details';
+$string['a11y_skip_to_main_content'] = 'Skip to main content';
 $string['a11y_tree_region_summary'] = '{$a->label} {$a->position} of {$a->siblings} in level {$a->depth}';
 $string['activate'] = 'Activate';
 $string['activitycompletionunlockedtext'] = 'When you save changes, completion state for all learners who have completed this activity will be erased. If you change your mind about this, do not save the form.';
