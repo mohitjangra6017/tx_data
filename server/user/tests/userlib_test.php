@@ -543,6 +543,29 @@ class core_user_userlib_testcase extends advanced_testcase {
     }
 
     /**
+     * Test the fullname of the user
+     */
+    public function test_user_menu_fullname() {
+        global $PAGE;
+
+        $user = $this->getDataGenerator()->create_user(
+            [
+                'firstname' => 'Franz',
+                'lastname' => 'Ferdinand'
+            ]
+        );
+
+        $user_info = user_get_user_navigation_info($user, $PAGE);
+        $this->assertEquals('Franz Ferdinand', $user_info->metadata['userfullname']);
+
+        // Test the fullname adheres to the display settting
+        set_config('fullnamedisplay', 'lastname, firstname');
+
+        $user_info = user_get_user_navigation_info($user, $PAGE);
+        $this->assertEquals('Ferdinand, Franz', $user_info->metadata['userfullname']);
+    }
+
+    /**
      * Test user_can_view_profile
      */
     public function test_user_can_view_profile() {

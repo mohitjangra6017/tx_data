@@ -916,7 +916,7 @@ function user_get_user_navigation_info($user, $page, $options = array()) {
 
     // Get basic user metadata.
     $returnobject->metadata['userid'] = $user->id;
-    $returnobject->metadata['userfullname'] = fullname($user, true);
+    $returnobject->metadata['userfullname'] = fullname($user);
     $returnobject->metadata['userprofileurl'] = new moodle_url('/user/profile.php', array(
         'id' => $user->id
     ));
