@@ -23,12 +23,16 @@
 
 namespace contentmarketplace_linkedin\data_provider;
 
+use coding_exception;
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
 use contentmarketplace_linkedin\model\learning_object as learning_object_model;
 use contentmarketplace_linkedin\repository\learning_object_repository;
 use core\collection;
 use core\orm\entity\repository;
+use core\orm\query\builder;
 use totara_contentmarketplace\data_provider\paginated_provider;
+use totara_core\totara\menu\build;
 
 /**
  * Class learning_objects.
@@ -62,6 +66,73 @@ class learning_objects extends paginated_provider {
     protected function process_fetched_items(): collection {
         return $this->items
             ->map_to(learning_object_model::class);
+    }
+
+    /**
+     * @param learning_object_repository $repository
+     * @param string $text
+     */
+    protected function filter_query_by_search(repository $repository, string $text): void {
+        $text = trim($text);
+        if ($text === '') {
+            return;
+        }
+
+        $repository->where(function (builder $builder) use ($text) {
+            $builder
+                ->where('title', 'ILIKE', $text)
+                ->or_where('description', 'ILIKE', $text)
+                ->or_where('short_description', 'ILIKE', $text);
+        });
+    }
+
+    /**
+     * @param learning_object_repository $repository
+     * @param string[] $asset_types
+     */
+    protected function filter_query_by_asset_type(repository $repository, array $asset_types): void {
+        $repository->where(function (builder $builder) use ($asset_types) {
+            foreach ($asset_types as $asset_type) {
+                constants::validate_asset_type($asset_type);
+                $builder->or_where('asset_type', $asset_type);
+            }
+        });
+    }
+
+    /**
+     * @param learning_object_repository $repository
+     * @param string[] $levels
+     */
+    protected function filter_query_by_level(repository $repository, array $levels): void {
+        $repository->where(function (builder $builder) use ($levels) {
+            foreach ($levels as $level) {
+                constants::validate_difficulty_level($level);
+                $builder->or_where('level', $level);
+            }
+        });
+    }
+
+    /**
+     * @param learning_object_repository $repository
+     * @param array[] $ranges Array of arrays with keys 'min' and 'max'. Example: [['min' => 60, 'max' => 120], ['min' => 3600]]
+     */
+    protected function filter_query_by_time_to_complete(repository $repository, array $ranges): void {
+        $repository->where(function (builder $builder) use ($ranges) {
+            foreach ($ranges as $range) {
+                if (empty($range['min']) && empty($range['max'])) {
+                    throw new coding_exception("A min or a max value must be specified for the time_to_complete filter.");
+                }
+
+                $builder->or_where(function (builder $builder) use ($range) {
+                    if (isset($range['min'])) {
+                        $builder->where('time_to_complete', '>=', $range['min']);
+                    }
+                    if (isset($range['max'])) {
+                        $builder->where('time_to_complete', '<=', $range['max']);
+                    }
+                });
+            }
+        });
     }
 
     /**

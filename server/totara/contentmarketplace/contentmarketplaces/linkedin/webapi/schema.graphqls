@@ -67,10 +67,22 @@ type contentmarketplace_linkedin_catalog_import_learning_objects_result implemen
 }
 
 """
+Filter input for a timespan, with minimum and maximum values representing the range to filter for.
+"""
+input contentmarketplace_linkedin_timespan_filter_input {
+  min: Int
+  max: Int
+}
+
+"""
 Applicable filters for the learning objects query.
 """
 input contentmarketplace_linkedin_catalog_import_learning_objects_filters_input {
   language: String!
+  search: String
+  asset_type: [contentmarketplace_linkedin_asset_type!]
+  level: [contentmarketplace_linkedin_level!]
+  time_to_complete: [contentmarketplace_linkedin_timespan_filter_input!]
 }
 
 """
