@@ -1,0 +1,14 @@
+query mod_contentmarketplace_content_marketplace($cm_id: core_id!) {
+  instance: mod_contentmarketplace_content_marketplace(cm_id: $cm_id) {
+    id
+    cm_id
+    course
+    name
+    learning_object {
+      id
+      name
+      language
+      image_url
+    }
+  }
+}

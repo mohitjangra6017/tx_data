@@ -33,11 +33,16 @@ use totara_contentmarketplace\learning_object\factory;
 /**
  * Model for content marketplace entity.
  *
- * @property-read int    $course
- * @property-read string $name
- * @property-read string $learning_object_marketplace_component
- * @property-read int    $learning_object_id
- * @property-read int    $time_modified
+ * @property-read int      $course
+ * @property-read string   $name
+ * @property-read string   $learning_object_marketplace_component
+ * @property-read int      $learning_object_id
+ * @property-read int      $time_modified
+ *
+ * @property-read int               $cm_id
+ * @property-read learning_object   $learning_object
+ * @property-read moodle_url        $view_url
+ *
  */
 class content_marketplace extends model {
     /**
@@ -60,7 +65,16 @@ class content_marketplace extends model {
         'name',
         'learning_object_marketplace_component',
         'learning_object_id',
-        'time_modified'
+        'time_modified',
+    ];
+
+    /**
+     * @var string[]
+     */
+    protected $model_accessor_whitelist = [
+        'cm_id',
+        'learning_object',
+        'view_url',
     ];
 
     /**

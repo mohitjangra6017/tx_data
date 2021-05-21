@@ -32,7 +32,7 @@ class content_marketplace_content_marketplace_interactor_testcase extends testca
     /**
      * @return void
      */
-    public function test_check_can_view_on_sttudent(): void {
+    public function test_check_can_view_on_student(): void {
         $generator = self::getDataGenerator();
         $course_record = $generator->create_course();
 
@@ -102,7 +102,7 @@ class content_marketplace_content_marketplace_interactor_testcase extends testca
     /**
      * @return void
      */
-    public function test_check_can_launch_on_sttudent(): void {
+    public function test_check_can_launch_on_student(): void {
         $generator = self::getDataGenerator();
         $course_record = $generator->create_course();
 
