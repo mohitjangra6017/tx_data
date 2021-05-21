@@ -215,6 +215,7 @@ final class comment {
             $now = time();
         }
         $this->entity->content = null;
+        $this->entity->contenttext = null;
         $this->entity->format = null;
 
         $this->entity->timedeleted = $now;
@@ -491,6 +492,6 @@ final class comment {
      * @return string
      */
     public function get_content_text(): string {
-        return $this->entity->contenttext;
+        return $this->entity->contenttext ?? '';
     }
 }
