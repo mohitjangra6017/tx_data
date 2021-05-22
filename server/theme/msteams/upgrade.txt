@@ -1,6 +1,10 @@
 This files describes API changes in the theme_msteams code,
 information provided here is intended especially for developers.
 
+== 15.0 ==
+
+* Updated navigation.mustache template to display log out links
+
 == 14.0 ==
 
 * Upgraded Microsoft Teams SDK to v1.8.0.
