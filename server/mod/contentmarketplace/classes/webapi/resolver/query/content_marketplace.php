@@ -34,7 +34,7 @@ use mod_contentmarketplace\model\content_marketplace as model;
  */
 final class content_marketplace implements query_resolver, has_middleware {
     /**
-     * @param array $args
+     * @param array             $args
      * @param execution_context $ec
      * @return model
      */

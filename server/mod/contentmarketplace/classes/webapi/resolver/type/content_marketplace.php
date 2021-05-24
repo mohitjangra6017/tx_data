@@ -23,7 +23,6 @@
 namespace mod_contentmarketplace\webapi\resolver\type;
 
 use coding_exception;
-use context_system;
 use core\format;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
@@ -48,10 +47,6 @@ class content_marketplace implements type_resolver {
 
         if ('learning_object' === $field) {
             return $content_marketplace->get_learning_object();
-        }
-
-        if ('cm_id' === $field) {
-            return $content_marketplace->get_cm_id();
         }
 
         $context = $ec->has_relevant_context() ? $ec->get_relevant_context() : $content_marketplace->get_context();

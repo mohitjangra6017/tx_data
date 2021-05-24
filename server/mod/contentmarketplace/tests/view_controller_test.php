@@ -54,7 +54,7 @@ class mod_contentmarketplace_view_controller_testcase extends testcase {
 
         $tui_view = new tui_view(
             'mod_contentmarketplace/pages/ContentMarketplaceView',
-            ['marketplace-id' => (int) $cm->id]
+            ['cm-id' => (int) $cm->cmid]
         );
 
         $tui_view->set_title($cm->name);
@@ -119,7 +119,7 @@ class mod_contentmarketplace_view_controller_testcase extends testcase {
 
         $view = new tui_view(
             'mod_contentmarketplace/pages/ContentMarketplaceView',
-            ['marketplace-id' => (int) $cm->id]
+            ['cm-id' => (int) $cm->cmid]
         );
 
         $view->set_title($cm->name);
@@ -239,7 +239,7 @@ class mod_contentmarketplace_view_controller_testcase extends testcase {
 
         $view = new tui_view(
             'mod_contentmarketplace/pages/ContentMarketplaceView',
-            ['marketplace-id' => (int) $cm->id]
+            ['cm-id' => (int) $cm->cmid]
         );
 
         $view->set_title($cm->name);

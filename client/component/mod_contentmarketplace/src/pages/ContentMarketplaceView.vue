@@ -17,22 +17,50 @@
 -->
 <template>
   <div>
-    <h1>
-      DONE AS PART OF TL-30335
-    </h1>
+    <template v-if="contentMarketplace">
+      <!-- This page rendering is temporary, will be fixed later in Learner workflow -->
+      <h1>
+        {{ contentMarketplace.name }}
+      </h1>
+
+      <p>course_id: {{ contentMarketplace.course }}</p>
+      <p>language: {{ contentMarketplace.learning_object.language }}</p>
+    </template>
   </div>
 </template>
 
 <script>
+import contentMarketplaceQuery from 'mod_contentmarketplace/graphql/content_marketplace';
+
 export default {
   props: {
     /**
-     * The content marketplace id, not the course's module id.
+     * The course's module id, not the content marketplace id.
      */
-    marketplaceId: {
+    cmId: {
       type: Number,
       required: true,
     },
+  },
+
+  apollo: {
+    contentMarketplace: {
+      query: contentMarketplaceQuery,
+      variables() {
+        return {
+          cm_id: this.cmId,
+        };
+      },
+      update({ instance }) {
+        return instance;
+      },
+    },
+  },
+
+  data() {
+    return {
+      contentMarketplace: null,
+    };
   },
 };
 </script>

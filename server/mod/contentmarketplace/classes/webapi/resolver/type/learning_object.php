@@ -23,7 +23,6 @@
 namespace mod_contentmarketplace\webapi\resolver\type;
 
 use coding_exception;
-use context_system;
 use core\format;
 use mod_contentmarketplace\formatter\learning_object as learning_object_formatter;
 use core\webapi\type_resolver;

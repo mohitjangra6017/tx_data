@@ -25,7 +25,6 @@ namespace mod_contentmarketplace\testing;
 use coding_exception;
 use core\orm\query\builder;
 use core\testing\mod_generator;
-use core_container\entity\module;
 use core_container\factory;
 use stdClass;
 use totara_contentmarketplace\testing\generator as totara_contentmarketplace_generator;

@@ -26,7 +26,6 @@ namespace contentmarketplace_linkedin\formatter;
 use core\orm\formatter\entity_model_formatter;
 use core\webapi\formatter\field\date_field_formatter;
 use core\webapi\formatter\field\string_field_formatter;
-use core\webapi\formatter\field\text_field_formatter;
 
 class learning_object extends entity_model_formatter {
 

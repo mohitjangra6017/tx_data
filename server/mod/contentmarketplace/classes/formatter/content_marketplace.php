@@ -35,6 +35,7 @@ class content_marketplace extends entity_model_formatter {
             'id' => null,
             'name' => string_field_formatter::class,
             'course' => null,
+            'cm_id' => null,
         ];
     }
 }

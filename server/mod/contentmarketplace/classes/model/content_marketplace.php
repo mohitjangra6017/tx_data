@@ -33,15 +33,14 @@ use totara_contentmarketplace\learning_object\factory;
 /**
  * Model for content marketplace entity.
  *
- * @property-read int      $course
- * @property-read string   $name
- * @property-read string   $learning_object_marketplace_component
- * @property-read int      $learning_object_id
- * @property-read int      $time_modified
- *
- * @property-read int               $cm_id
- * @property-read learning_object   $learning_object
- * @property-read moodle_url        $view_url
+ * @property-read int             $course
+ * @property-read string          $name
+ * @property-read string          $learning_object_marketplace_component
+ * @property-read int             $learning_object_id
+ * @property-read int             $time_modified
+ * @property-read int             $cm_id
+ * @property-read learning_object $learning_object
+ * @property-read moodle_url      $view_url
  *
  */
 class content_marketplace extends model {
@@ -54,7 +53,7 @@ class content_marketplace extends model {
      * Will be lazy loaded by the getter method.
      * @var learning_object|null
      */
-    private $learning_object;
+    private $internal_learning_object;
 
     /**
      * @var string[]
@@ -84,7 +83,7 @@ class content_marketplace extends model {
     public function __construct(model_entity $entity) {
         parent::__construct($entity);
         $this->context = null;
-        $this->learning_object = null;
+        $this->internal_learning_object = null;
     }
 
     /**
@@ -103,7 +102,7 @@ class content_marketplace extends model {
         $entity->save();
 
         $model = self::load_by_entity($entity);
-        $model->learning_object = $learning_object;
+        $model->internal_learning_object = $learning_object;
         return $model;
     }
 
@@ -184,12 +183,12 @@ class content_marketplace extends model {
      * @return learning_object
      */
     public function get_learning_object(): learning_object {
-        if (null === $this->learning_object) {
+        if (null === $this->internal_learning_object) {
             $resolver = factory::get_resolver($this->learning_object_marketplace_component);
-            $this->learning_object = $resolver->find($this->learning_object_id, true);
+            $this->internal_learning_object = $resolver->find($this->learning_object_id, true);
         }
 
-        return $this->learning_object;
+        return $this->internal_learning_object;
     }
 
     /**
