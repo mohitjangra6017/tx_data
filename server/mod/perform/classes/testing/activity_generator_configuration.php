@@ -159,6 +159,20 @@ class activity_generator_configuration {
     private $aggregation_source_answer_map;
 
     /**
+     * Array with languages, keyed by relationship idnumber
+     *
+     * @var array
+     */
+    private $languages_per_relationship = [];
+
+    /**
+     * Use multi lang filter when possible
+     *
+     * @var bool
+     */
+    private $use_multilang_filter = false;
+
+    /**
      * shortcut function to get new object
      *
      * @return static
@@ -334,6 +348,48 @@ class activity_generator_configuration {
         $this->number_of_users_per_user_group_type = $number;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function get_language_per_relationship(): array {
+        return $this->languages_per_relationship;
+    }
+
+    /**
+     * Set languages for relationships, key is the idnumber of the relationship
+     *
+     * [
+     *     'subject' => 'de',
+     *     'manager' => 'en',
+     *     'appraiser' => 'fr'
+     * ]
+     * @param array $languages_per_relationship
+     * @return $this
+     */
+    public function set_language_per_relationship(array $languages_per_relationship): self {
+        $this->languages_per_relationship = $languages_per_relationship;
+
+        return $this;
+    }
+
+    /**
+     * Enable the use of multi lang filters for all fields supported
+     *
+     * @return $this
+     */
+    public function enable_multilang_filter(): self {
+        $this->use_multilang_filter = true;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function should_use_multilang_filter(): bool {
+        return $this->use_multilang_filter;
     }
 
     /**
