@@ -49,6 +49,13 @@ class mailer {
     private $course_id;
 
     /**
+     * Temporarily holds the language which was set before sending out the notification
+     *
+     * @var string
+     */
+    private $forced_lang;
+
+    /**
      * Constructor. *Do not instantiate this class directly. Use the factory class.*
      *
      * @param notification_model $notification
@@ -79,6 +86,8 @@ class mailer {
      * @throws coding_exception parameter $user is invalid
      */
     public function post($user, relationship_model $relationship, placeholder $placeholders): bool {
+        global $USER, $SESSION;
+
         $recipient = $this->resolve_recipient($relationship);
         if (!$recipient) {
             return false;
@@ -100,11 +109,43 @@ class mailer {
         if (!($user instanceof stdClass)) {
             throw new coding_exception('invalid user passed');
         }
+
+        $this->change_language($user);
+
         $is_reminder = $this->composer->is_reminder();
         $message = $this->composer->compose($placeholders);
         $this->send_notification(core_user::get_noreply_user(), $user, $message, $is_reminder);
-        $this->save_history($recipient, time());
+
+        $this->reset_language();
+
+        $this->save_history($recipient);
+
         return true;
+    }
+
+    /**
+     * Make sure we are sending the notification in the preferred language of the recipient
+     * or if it's an external participant in the default language of the site
+     *
+     * @param stdClass $user
+     * @return void
+     */
+    private function change_language(stdClass $user): void {
+        global $SESSION;
+
+        $this->forced_lang = $SESSION->forcelang ?? null;
+
+        force_current_language($user->lang);
+    }
+
+    /**
+     * Reset force language if not forced previously otherwise force it back to what it was.
+     *
+     * @return void
+     */
+    private function reset_language(): void {
+        force_current_language($this->forced_lang);
+        $this->forced_lang = null;
     }
 
     /**
