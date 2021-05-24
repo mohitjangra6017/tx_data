@@ -82,7 +82,7 @@ class contentmarketplace_linkedin_learning_object_formatter_testcase extends tes
         $this->assertIsNotInt($formatter->format('published_at', date_format::FORMAT_DATE));
 
         // Timespan fields
-        $this->assertEquals("2m 0s", $formatter->format('time_to_complete', timespan_field_formatter::FORMAT_HUMAN));
+        $this->assertEquals("2m", $formatter->format('time_to_complete', timespan_field_formatter::FORMAT_HUMAN));
         $this->assertEquals(120, $formatter->format('time_to_complete', timespan_field_formatter::FORMAT_SECONDS));
     }
 

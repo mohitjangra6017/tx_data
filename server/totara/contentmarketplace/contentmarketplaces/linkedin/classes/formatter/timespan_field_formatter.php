@@ -61,20 +61,46 @@ class timespan_field_formatter extends base_field_formatter {
 
     /**
      * Return a string in the format "XXh YYm ZZs" localised to the user's language.
+     * This replicates the way that the LinkedIn Learning catalogue outputs timespan values.
+     * If the input time is 10 minutes or over, then seconds are not shown and instead the minute is rounded up.
+     *
+     * Input => Output Examples:
+     *    45    => "45s"
+     *    135   => "2m 15s"
+     *    180   => "3m"
+     *    599   => "9m 59s"
+     *    600   => "10m"
+     *    601   => "11m"
+     *    3599  => "1h 0m"
+     *    3601  => "1h 1m"
+     *    36001 => "10h 1m"
      *
      * @param int $total_seconds Raw number of seconds
      * @return string
      */
     protected function format_human(int $total_seconds): string {
         $hours = (int) floor($total_seconds / HOURSECS);
-        $minutes = (int) floor(($total_seconds % HOURSECS) / MINSECS);
+        $minutes = ($total_seconds - ($hours * HOURSECS)) / MINSECS;
         $seconds = $total_seconds % MINSECS;
 
+        if ($hours > 0 || $minutes >= 10) {
+            $minutes = (int) ceil($minutes);
+            if ($minutes === HOURMINS) {
+                $hours++;
+                $minutes = 0;
+            }
+        } else {
+            $minutes = (int) floor($minutes);
+        }
+
         if ($hours > 0) {
-            return get_string('timespan_format_hours_minutes_seconds', 'contentmarketplace_linkedin', [
+            return get_string('timespan_format_hours_minutes', 'contentmarketplace_linkedin', [
                 'hours' => $hours,
                 'minutes' => $minutes,
-                'seconds' => $seconds,
+            ]);
+        } else if ($minutes >= 10 || ($minutes > 0 && $seconds === 0)) {
+            return get_string('timespan_format_minutes', 'contentmarketplace_linkedin', [
+                'minutes' => $minutes,
             ]);
         } else if ($minutes > 0) {
             return get_string('timespan_format_minutes_seconds', 'contentmarketplace_linkedin', [
@@ -82,7 +108,9 @@ class timespan_field_formatter extends base_field_formatter {
                 'seconds' => $seconds,
             ]);
         } else {
-            return get_string('timespan_format_seconds', 'contentmarketplace_linkedin', ['seconds' => $seconds]);
+            return get_string('timespan_format_seconds', 'contentmarketplace_linkedin', [
+                'seconds' => $seconds,
+            ]);
         }
     }
 

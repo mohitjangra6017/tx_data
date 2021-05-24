@@ -40,14 +40,18 @@ class contentmarketplace_linkedin_timespan_formatter_testcase extends testcase {
             [61, "1m 1s"],
             [119, "1m 59s"],
             [121, "2m 1s"],
-            [180, "3m 0s"],
-            [600, "10m 0s"],
-            [3599, "59m 59s"],
-            [3600, "1h 0m 0s"],
-            [3614, "1h 0m 14s"],
-            [3660, "1h 1m 0s"],
-            [52343, "14h 32m 23s"],
-            [852972, "236h 56m 12s"],
+            [180, "3m"],
+            [599, "9m 59s"],
+            [600, "10m"],
+            [615, "11m"],
+            [645, "11m"],
+            [3599, "1h 0m"],
+            [3600, "1h 0m"],
+            [3614, "1h 1m"],
+            [3660, "1h 1m"],
+            [3670, "1h 2m"],
+            [52343, "14h 33m"],
+            [852972, "236h 57m"],
         ];
     }
 
@@ -56,7 +60,7 @@ class contentmarketplace_linkedin_timespan_formatter_testcase extends testcase {
      */
     public function test_formatter_human_format(int $input_time, string $expected_string): void {
         $formatter = new timespan_field_formatter(timespan_field_formatter::FORMAT_HUMAN, context_system::instance());
-        $this->assertEquals($expected_string, $formatter->format($input_time));
+        $this->assertEquals($expected_string, $formatter->format($input_time), "Incorrect result for input of $input_time seconds");
     }
 
     /**
