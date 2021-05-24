@@ -1,6 +1,10 @@
 List of upgrade and API changes in Totara core,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+
+* Moved tests/language_pack_faker_trait to the core_phpunit namespace. Any testcases using the trait need to be updated.
+
 === 14.0 ===
 
 * totara_core_renderer::masthead has changed, no longer returning quickaccessmenu content - this is now loaded by Ajax

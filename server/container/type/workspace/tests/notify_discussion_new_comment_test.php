@@ -22,8 +22,6 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/../../../../totara/core/tests/language_pack_faker_trait.php');
-
 use container_workspace\task\notify_discussion_new_comment_task;
 use totara_comment\comment_helper;
 use container_workspace\member\member;
@@ -32,7 +30,7 @@ use container_workspace\output\comment_on_discussion;
 use container_workspace\notification\workspace_notification;
 
 class container_workspace_notify_discussion_new_comment_testcase extends advanced_testcase {
-    use language_pack_faker_trait;
+    use \core_phpunit\language_pack_faker_trait;
     /**
      * @return void
      */

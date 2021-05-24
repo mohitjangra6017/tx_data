@@ -23,13 +23,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/../../../totara/core/tests/language_pack_faker_trait.php');
-
 use core\task\manager;
 use totara_playlist\task\rate_notify_task;
 
 class totara_playlist_rate_notify_task_testcase extends advanced_testcase {
-    use language_pack_faker_trait;
+    use \core_phpunit\language_pack_faker_trait;
 
     public function test_recipients_language_setting_is_observed(): void {
         $generator = self::getDataGenerator();

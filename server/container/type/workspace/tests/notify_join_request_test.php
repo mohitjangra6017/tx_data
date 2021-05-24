@@ -22,8 +22,6 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/../../../../totara/core/tests/language_pack_faker_trait.php');
-
 use container_workspace\task\notify_join_request_task;
 use container_workspace\member\member_request;
 use container_workspace\output\join_request_notification;
@@ -32,7 +30,7 @@ use totara_userdata\userdata\target_user;
 use container_workspace\userdata\workspace as user_data_workspace;
 
 class container_workspace_notify_join_request_testcase extends advanced_testcase {
-    use language_pack_faker_trait;
+    use \core_phpunit\language_pack_faker_trait;
     /**
      * @return void
      */

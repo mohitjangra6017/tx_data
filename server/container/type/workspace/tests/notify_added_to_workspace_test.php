@@ -22,15 +22,13 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/../../../../totara/core/tests/language_pack_faker_trait.php');
-
 use container_workspace\task\notify_added_to_workspace_task;
 use container_workspace\member\member;
 use container_workspace\notification\workspace_notification;
 use container_workspace\output\added_to_workspace_notification;
 
 class container_workspace_notify_added_to_workspace_testcase extends advanced_testcase {
-    use language_pack_faker_trait;
+    use \core_phpunit\language_pack_faker_trait;
     /**
      * @throws coding_exception
      */

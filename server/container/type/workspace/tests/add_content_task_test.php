@@ -23,8 +23,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/../../../../totara/core/tests/language_pack_faker_trait.php');
-
 use container_workspace\task\add_content_task;
 use container_workspace\testing\generator;
 use container_workspace\member\member;
@@ -32,7 +30,7 @@ use container_workspace\notification\workspace_notification;
 use core\task\manager;
 
 class container_workspace_add_content_task_testcase extends advanced_testcase {
-    use language_pack_faker_trait;
+    use \core_phpunit\language_pack_faker_trait;
 
     public function test_recipients_language_setting_is_observed(): void {
         $generator = self::getDataGenerator();

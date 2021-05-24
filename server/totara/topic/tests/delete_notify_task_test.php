@@ -22,9 +22,6 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/../../../totara/core/tests/language_pack_faker_trait.php');
-require_once(__DIR__ . '/fixtures/topic_resolver.php');
-
 use core\task\manager;
 use core_tag\entity\tag_instance;
 use totara_engage\access\access;
@@ -37,7 +34,14 @@ use totara_topic\task\delete_notify_task;
  * Just a reminder to keep that person to take account of regression :)
  */
 class totara_topic_delete_notify_task_testcase extends advanced_testcase {
-    use language_pack_faker_trait;
+    use \core_phpunit\language_pack_faker_trait;
+
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+        require_once($CFG->dirroot . '/totara/topic/tests/fixtures/topic_resolver.php');
+
+        parent::setUpBeforeClass();
+    }
 
     /**
      * @return void

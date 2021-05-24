@@ -21,8 +21,6 @@
  * @package totara_notification
  */
 
-require_once(__DIR__ . '/../../../totara/core/tests/language_pack_faker_trait.php');
-
 use core_phpunit\testcase;
 use core_user\totara_notification\placeholder\user;
 use totara_core\extended_context;
@@ -38,7 +36,7 @@ use totara_notification_mock_built_in_notification as mock_built_in;
 use totara_notification_real_mock_lang_string as lang_string;
 
 class totara_notification_notification_queue_manager_testcase extends testcase {
-    use language_pack_faker_trait;
+    use \core_phpunit\language_pack_faker_trait;
 
     /**
      * @return void

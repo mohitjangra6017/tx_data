@@ -23,8 +23,6 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once(__DIR__ . '/../../../totara/core/tests/language_pack_faker_trait.php');
-
 use core\oauth2\api;
 use core\oauth2\issuer;
 use totara_msteams\auth_helper;
@@ -37,7 +35,7 @@ use totara_msteams\page_helper;
  * Test manifest\generator class.
  */
 class manifest_generator_testcase extends advanced_testcase {
-    use language_pack_faker_trait;
+    use \core_phpunit\language_pack_faker_trait;
     /** @var string */
     private $manifestid;
 

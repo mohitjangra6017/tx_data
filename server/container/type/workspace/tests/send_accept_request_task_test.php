@@ -22,14 +22,12 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/../../../../totara/core/tests/language_pack_faker_trait.php');
-
 use core\orm\query\exceptions\record_not_found_exception;
 use container_workspace\task\send_accept_request_task;
 use container_workspace\member\member_request;
 
 class container_workspace_send_accept_request_task_testcase extends advanced_testcase {
-    use language_pack_faker_trait;
+    use \core_phpunit\language_pack_faker_trait;
     /**
      * @return void
      */
