@@ -156,5 +156,19 @@ function xmldb_totara_certification_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2021041100, 'totara', 'certification');
     }
 
+    if ($oldversion < 2021052501) {
+        // Define index courcomphist_usrcou_ix (not unique) to be added to course_completion_history.
+        $table = new xmldb_table('course_completion_history');
+        $index = new xmldb_index('courcomphist_usrcou_ix', XMLDB_INDEX_NOTUNIQUE, array('userid', 'courseid'));
+
+        // Conditionally launch add index courcomphist_usrcou_ix.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Certification savepoint reached.
+        upgrade_plugin_savepoint(true, 2021052501, 'totara', 'certification');
+    }
+
     return true;
 }
