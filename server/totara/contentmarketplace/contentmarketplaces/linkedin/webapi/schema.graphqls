@@ -67,11 +67,12 @@ type contentmarketplace_linkedin_catalog_import_learning_objects_result implemen
 }
 
 """
-Filter input for a timespan, with minimum and maximum values representing the range to filter for.
+Output of the learning objects filter options query.
 """
-input contentmarketplace_linkedin_timespan_filter_input {
-  min: Int
-  max: Int
+type contentmarketplace_linkedin_catalog_import_learning_objects_filter_options_result {
+  subjects: [totara_tui_tree_branch!]
+  asset_type: [totara_tui_tree_branch!]
+  time_to_complete: [totara_tui_tree_branch!]
 }
 
 """
@@ -82,7 +83,7 @@ input contentmarketplace_linkedin_catalog_import_learning_objects_filters_input 
   search: String
   asset_type: [contentmarketplace_linkedin_asset_type!]
   level: [contentmarketplace_linkedin_level!]
-  time_to_complete: [contentmarketplace_linkedin_timespan_filter_input!]
+  time_to_complete: [String!]
 }
 
 """
@@ -94,6 +95,13 @@ input contentmarketplace_linkedin_catalog_import_learning_objects_input {
   sort_by: contentmarketplace_linkedin_catalog_import_sort_by!
 }
 
+"""
+Input for the catalogue import filter options query.
+"""
+input contentmarketplace_linkedin_catalog_import_learning_objects_filter_options_input {
+  language: String!
+}
+
 extend type Query {
   """
   Query to return a paginated set of creatable courses from the LinkedIn Learning course catalogue.
@@ -101,4 +109,11 @@ extend type Query {
   contentmarketplace_linkedin_catalog_import_learning_objects(
     input: contentmarketplace_linkedin_catalog_import_learning_objects_input!
   ): contentmarketplace_linkedin_catalog_import_learning_objects_result!
+
+  """
+  Query to return the filters that are availble for querying the learning objects in the catalogue.
+  """
+  contentmarketplace_linkedin_catalog_import_learning_objects_filter_options(
+    input: contentmarketplace_linkedin_catalog_import_learning_objects_filter_options_input!
+  ): contentmarketplace_linkedin_catalog_import_learning_objects_filter_options_result!
 }

@@ -32,7 +32,6 @@ use core\collection;
 use core\orm\entity\repository;
 use core\orm\query\builder;
 use totara_contentmarketplace\data_provider\paginated_provider;
-use totara_core\totara\menu\build;
 
 /**
  * Class learning_objects.
@@ -114,12 +113,13 @@ class learning_objects extends paginated_provider {
 
     /**
      * @param learning_object_repository $repository
-     * @param array[] $ranges Array of arrays with keys 'min' and 'max'. Example: [['min' => 60, 'max' => 120], ['min' => 3600]]
+     * @param string[] $ranges Array of JSON objects with keys 'min' and 'max', e.g: ['{"min": 60, "max": 120}', '{"min": 3600}']
      */
     protected function filter_query_by_time_to_complete(repository $repository, array $ranges): void {
         $repository->where(function (builder $builder) use ($ranges) {
             foreach ($ranges as $range) {
-                if (empty($range['min']) && empty($range['max'])) {
+                $range = json_decode($range, true);
+                if ($range === null || (empty($range['min']) && empty($range['max']))) {
                     throw new coding_exception("A min or a max value must be specified for the time_to_complete filter.");
                 }
 

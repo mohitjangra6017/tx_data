@@ -187,9 +187,9 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
 
         $result_under_10_mins = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
             'time_to_complete' => [
-                [
+                json_encode([
                     'max' => MINSECS * 10,
-                ],
+                ]),
             ],
         ], learning_objects::SORT_BY_ALPHABETICAL));
         $this->assertEquals(1, $result_under_10_mins['total']);
@@ -197,10 +197,10 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
 
         $result_1_to_2_hours = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
             'time_to_complete' => [
-                [
+                json_encode([
                     'min' => HOURSECS,
                     'max' => HOURSECS * 2,
-                ],
+                ]),
             ],
         ], learning_objects::SORT_BY_ALPHABETICAL));
         $this->assertEquals(1, $result_1_to_2_hours['total']);
@@ -208,13 +208,13 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
 
         $result_10_to_30_mins_and_over_3_hours = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
             'time_to_complete' => [
-                [
+                json_encode([
                     'min' => MINSECS * 10,
                     'max' => MINSECS * 30,
-                ],
-                [
+                ]),
+                json_encode([
                     'min' => HOURSECS * 3,
-                ],
+                ]),
             ],
         ], learning_objects::SORT_BY_ALPHABETICAL));
         $this->assertEquals(2, $result_10_to_30_mins_and_over_3_hours['total']);
@@ -225,10 +225,10 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         $this->expectExceptionMessage('A min or a max value must be specified for the time_to_complete filter.');
         $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
             'time_to_complete' => [
-                [
+                json_encode([
                     'min' => 0,
                     'max' => null,
-                ],
+                ]),
             ],
         ]));
     }

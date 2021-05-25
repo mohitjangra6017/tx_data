@@ -28,12 +28,27 @@ use coding_exception;
 final class timespan {
 
     /**
+     * @var string
+     */
+    public const UNIT_HOUR = 'HOUR';
+
+    /**
+     * @var string
+     */
+    public const UNIT_MINUTE = 'MINUTE';
+
+    /**
+     * @var string
+     */
+    public const UNIT_SECOND = 'SECOND';
+
+    /**
      * The units that can be specified, with how many seconds are in each unit.
      */
     private const UNIT_VALUES = [
-        'HOUR' => HOURSECS,
-        'MINUTE' => MINSECS,
-        'SECOND' => 1,
+        self::UNIT_HOUR      => HOURSECS,
+        self::UNIT_MINUTE    => MINSECS,
+        self::UNIT_SECOND    => 1,
     ];
 
     /**
@@ -57,6 +72,33 @@ final class timespan {
         }
         $this->duration = $duration;
         $this->unit = $unit;
+    }
+
+    /**
+     * Define a timespan in hours.
+     * @param int $hours
+     * @return static
+     */
+    public static function hours(int $hours): self {
+        return new self($hours, self::UNIT_HOUR);
+    }
+
+    /**
+     * Define a timespan in minutes.
+     * @param int $minutes
+     * @return static
+     */
+    public static function minutes(int $minutes): self {
+        return new self($minutes, self::UNIT_MINUTE);
+    }
+
+    /**
+     * Define a timespan in seconds.
+     * @param int $seconds
+     * @return static
+     */
+    public static function seconds(int $seconds): self {
+        return new self($seconds, self::UNIT_SECOND);
     }
 
     /**
