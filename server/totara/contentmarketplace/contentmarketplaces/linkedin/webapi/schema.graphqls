@@ -117,3 +117,19 @@ extend type Query {
     input: contentmarketplace_linkedin_catalog_import_learning_objects_filter_options_input!
   ): contentmarketplace_linkedin_catalog_import_learning_objects_filter_options_result!
 }
+
+extend type Mutation {
+  contentmarketplace_linkedin_catalog_import_create_course(
+    input: contentmarketplace_linkedin_catalog_import_course_input!
+  ): contentmarketplace_linkedin_catalog_import_create_course_result!
+}
+
+input contentmarketplace_linkedin_catalog_import_course_input {
+  item_ids: [String!]
+}
+
+type contentmarketplace_linkedin_catalog_import_create_course_result {
+  success: Boolean!
+  message: String!
+  has_notification: Boolean!
+}

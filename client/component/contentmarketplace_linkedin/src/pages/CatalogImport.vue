@@ -119,8 +119,11 @@ import PageBackLink from 'tui/components/layouts/PageBackLink';
 import ReviewTable from 'contentmarketplace_linkedin/components/tables/LinkedInReviewTable';
 import SelectionTable from 'contentmarketplace_linkedin/components/tables/LinkedInSelectionTable';
 import SortFilter from 'totara_contentmarketplace/components/filters/SortFilter';
+import { notify } from 'tui/notifications';
+
 // Query
 import learningObjectsQuery from 'contentmarketplace_linkedin/graphql/catalog_import_learning_objects';
+import createCourseQuery from 'contentmarketplace_linkedin/graphql/catalog_import_create_course';
 
 export default {
   components: {
@@ -385,9 +388,39 @@ export default {
      * Creating courses
      *
      */
-    createCourses() {
-      // TODO
-      console.log('creating courses');
+    async createCourses() {
+      try {
+        const {
+          data: { payload },
+        } = await this.$apollo.mutate({
+          mutation: createCourseQuery,
+          variables: {
+            input: {
+              item_ids: Array.prototype.slice.call(this.selectedItems),
+            },
+          },
+        });
+
+        if (payload.has_notification) {
+          window.location.href = this.$url('/totara/catalog/index.php');
+          return;
+        }
+
+        if (payload.message.length > 0) {
+          notify({
+            message: payload.message,
+            type: payload.success ? 'success' : 'error',
+          });
+        }
+      } catch (e) {
+        notify({
+          message: this.$str(
+            'content_creation_unknown_failure',
+            'contentmarketplace_linkedin'
+          ),
+          type: 'error',
+        });
+      }
     },
 
     /**
@@ -498,6 +531,7 @@ export default {
     "contentmarketplace_linkedin": [
       "catalog_title",
       "catalog_review_title",
+      "content_creation_unknown_failure",
       "sort_filter_alphabetical",
       "sort_filter_latest"
     ],

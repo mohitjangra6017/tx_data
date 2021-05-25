@@ -26,6 +26,11 @@ use core\base_plugin_config;
 
 class config extends base_plugin_config {
     /**
+     * @var int
+     */
+    private const MAX_SELECTED_ITEMS_NUMBER = 50;
+
+    /**
      * @var string
      */
     public const ACCESS_TOKEN_ENDPOINT = 'https://www.linkedin.com/oauth/v2/accessToken';
@@ -129,5 +134,12 @@ class config extends base_plugin_config {
      */
     public static function save_last_time_sync_learning_asset(int $value): void {
         static::set('last_time_sync_learning_asset', $value);
+    }
+
+    /**
+     * @return int
+     */
+    public static function get_max_selected_items_number(): int {
+        return self::MAX_SELECTED_ITEMS_NUMBER;
     }
 }

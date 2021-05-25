@@ -55,6 +55,12 @@ $string['client_id_help'] = 'Client ID can be obtained from LinkedIn Learning un
 $string['client_secret'] = 'Client secret';
 $string['client_secret_help'] = 'Client secret can be obtained from LinkedIn Learning under the integration settings page.';
 $string['content_appears_in'] = 'This LinkedIn Learning content appears in:';
+$string['content_creation_failure'] = 'A number of courses failed to be imported due to a system error. Please <u>try again to import the remaining courses</u>.';
+$string['content_creation_failure_no_course'] = 'All courses failed to be imported due to a system error. Please <u>try again</u>.';
+$string['content_creation_unknown_failure'] = 'Unknown issue';
+$string['course_content_immediate_creation'] = "The courses have been successfully created";
+$string['course_content_delay_creation'] = "It may take several minutes to create courses. If any items fail to be imported, you will
+be sent a notification once the process is complete.";
 $string['course_difficulty_advanced'] = 'Advanced';
 $string['course_difficulty_beginner'] = 'Beginner';
 $string['course_difficulty_intermediate'] = 'Intermediate';
