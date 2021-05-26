@@ -50,6 +50,7 @@ $string['course_number'] = '{$a} course';
 $string['course_number_plural'] = '{$a} courses';
 $string['course_type_course'] = 'Course';
 $string['course_type_learning_path'] = 'Learning path';
+$string['course_type_video'] = 'Video';
 $string['edit_course_category'] = 'Edit course category';
 $string['error:fail_json_validation'] = 'Failed to validate the json data: {$a}';
 $string['explore_lil_marketplace'] = 'LinkedIn Learning content marketplace';

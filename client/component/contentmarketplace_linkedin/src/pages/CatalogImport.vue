@@ -18,7 +18,7 @@
 
 <template>
   <Layout
-    :loading="false"
+    :loading="isLoading"
     :reviewing-selection="reviewingSelectedItems"
     :review-title="$str('catalog_review_title', 'contentmarketplace_linkedin')"
     :selection-title="$str('catalog_title', 'contentmarketplace_linkedin')"
@@ -358,6 +358,17 @@ export default {
           }),
         });
       },
+    },
+  },
+
+  computed: {
+    /**
+     * Are we currently mutating or querying data via graphQL?
+     *
+     * @return {Boolean}
+     */
+    isLoading() {
+      return this.$apollo.loading;
     },
   },
 

@@ -33,7 +33,7 @@
     <div class="tui-linkedInTableCard__content">
       <!-- Course subject -->
       <div class="tui-linkedInTableCard__subject">
-        {{ data.subject }}
+        {{ data.subject }} Coming soon
       </div>
       <!-- Course title -->
       <h3 class="tui-linkedInTableCard__title">
@@ -218,24 +218,26 @@ export default {
     },
 
     /**
-     * Return correct language string for course type
+     * Return correct language string for content type
      *
      * @return {String}
      */
     courseTypeString() {
-      const key = this.data.type;
+      const key = this.data.asset_type;
       if (!key) {
         return '';
       }
 
       let type =
-        key === 'course'
+        key === 'COURSE'
           ? this.$str('course_type_course', 'contentmarketplace_linkedin')
-          : key === 'learningPath'
+          : key === 'LEARNING_PATH'
           ? this.$str(
               'course_type_learning_path',
               'contentmarketplace_linkedin'
             )
+          : key === 'VIDEO'
+          ? this.$str('course_type_video', 'contentmarketplace_linkedin')
           : '';
 
       return type;
@@ -259,6 +261,7 @@ export default {
       "course_difficulty_intermediate",
       "course_type_course",
       "course_type_learning_path",
+      "course_type_video",
       "course_number",
       "course_number_plural"
     ]
