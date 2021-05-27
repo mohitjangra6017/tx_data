@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
- * @package contentmarketplace_linkedin
+ * @package totara_contentmarketplace
  */
 
-namespace contentmarketplace_linkedin\testing;
+namespace totara_contentmarketplace\testing;
 
 use coding_exception;
 use context_coursecat;

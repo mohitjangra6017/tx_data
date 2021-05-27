@@ -27,11 +27,11 @@ use contentmarketplace_linkedin\entity\learning_object as learning_object_entity
 use contentmarketplace_linkedin\formatter\timespan_field_formatter;
 use contentmarketplace_linkedin\model\learning_object;
 use contentmarketplace_linkedin\testing\generator;
-use contentmarketplace_linkedin\testing\helper;
 use core\date_format;
 use core\format;
 use core_phpunit\testcase;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
+use totara_contentmarketplace\testing\helper;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
@@ -311,7 +311,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             'name' => ['Visio 2007 Essential Training', format::FORMAT_PLAIN],
             'short_description' => [
                 'Explores how Visio 2007 can be used to create business and planning documents such as flow charts and floor layouts.',
-                format::FORMAT_PLAIN
+                format::FORMAT_PLAIN,
             ],
             'last_updated_at' => ['17 February 2021', date_format::FORMAT_DATE],
             'published_at' => ['27 March 2007', date_format::FORMAT_DATE],

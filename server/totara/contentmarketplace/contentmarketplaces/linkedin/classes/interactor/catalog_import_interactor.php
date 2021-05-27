@@ -26,12 +26,13 @@ use context;
 use context_coursecat;
 use context_system;
 use required_capability_exception;
+use totara_contentmarketplace\interactor\abstraction\create_course_interactor;
 use totara_contentmarketplace\interactor\base;
 
 /**
  * Interactor class for catalog import actions related.
  */
-class catalog_import_interactor extends base {
+class catalog_import_interactor extends base implements create_course_interactor {
     /**
      * Whether user is able to view the catalog import page.
      *

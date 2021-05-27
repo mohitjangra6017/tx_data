@@ -42,6 +42,14 @@ class base {
     }
 
     /**
+     * Returns the current's actor id.
+     * @return int
+     */
+    public function get_actor_id(): int {
+        return $this->actor_id;
+    }
+
+    /**
      * @param string  $capability
      * @param context $context
      * @param string  $error_msg

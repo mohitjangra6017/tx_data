@@ -29,7 +29,8 @@ use totara_contentmarketplace\learning_object\abstraction\resolver as base;
 
 class resolver extends base {
     /**
-     * @param int $id
+     * @param int  $id
+     * @param bool $strict
      * @return learning_object|null
      */
     public function find(int $id, bool $strict = false): ?model {

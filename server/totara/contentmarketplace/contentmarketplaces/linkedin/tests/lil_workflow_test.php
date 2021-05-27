@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @author  Qingyang Liu <qingyang.liu@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
 
-use core_phpunit\testcase;
 use contentmarketplace_linkedin\workflow\core_course\coursecreate\contentmarketplace;
-use totara_contentmarketplace\plugininfo\contentmarketplace as contentmarketplace_plugin;
 use contentmarketplace_linkedin\workflow\totara_contentmarketplace\exploremarketplace\linkedin;
-use contentmarketplace_linkedin\testing\helper;
+use core_phpunit\testcase;
+use totara_contentmarketplace\plugininfo\contentmarketplace as contentmarketplace_plugin;
+use totara_contentmarketplace\testing\helper;
 
 class contentmarketplace_linkedin_lil_workflow_testcase extends testcase {
     /**

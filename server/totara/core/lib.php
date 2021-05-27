@@ -769,10 +769,11 @@ function totara_get_sender_from_user_by_id($useridfrom) {
  * and returns the first category ID it finds where this is the case.
  *
  * @param string $capability The capability we are checking.
+ * @param int|null $user_id  If this parameter is null, then global $USER will be used.
  * @return string Category id or bool False.
  */
 
-function totara_get_categoryid_with_capability($capability) {
+function totara_get_categoryid_with_capability($capability, ?int $user_id = null) {
     global $DB;
 
     $recordid = false;
@@ -790,10 +791,10 @@ function totara_get_categoryid_with_capability($capability) {
         if ($context->is_user_access_prevented()) {
             continue;
         }
-        if (!$record->visible && !has_capability('moodle/category:viewhiddencategories', $context)) {
+        if (!$record->visible && !has_capability('moodle/category:viewhiddencategories', $context, $user_id)) {
             continue;
         }
-        if (has_capability($capability, $context)) {
+        if (has_capability($capability, $context, $user_id)) {
             $recordid = $record->id;
             break;
         }

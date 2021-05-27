@@ -71,6 +71,9 @@ function contentmarketplace_supports($feature): ?bool {
             // Return false for now, but TL-30933 will help to resolve this.
             return false;
 
+        case FEATURE_NO_VIEW_LINK:
+            return false;
+
         default:
             // Everything is unknown for now.
             return null;

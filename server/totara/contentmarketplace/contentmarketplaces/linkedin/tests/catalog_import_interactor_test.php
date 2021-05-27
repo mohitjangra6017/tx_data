@@ -20,10 +20,10 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
-use core_phpunit\testcase;
+
 use contentmarketplace_linkedin\interactor\catalog_import_interactor;
-use contentmarketplace_linkedin\testing\helper;
-use totara_contentmarketplace\interactor\base;
+use core_phpunit\testcase;
+use totara_contentmarketplace\testing\helper;
 use totara_tenant\testing\generator as tenant_generator;
 
 class contentmarketplace_linkedin_catalog_import_interactor_testcase extends testcase {

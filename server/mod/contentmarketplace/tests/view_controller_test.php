@@ -21,7 +21,7 @@
  * @package mod_contentmarketplace
  */
 
-use contentmarketplace_linkedin\testing\helper;
+use totara_contentmarketplace\testing\helper;
 use core\entity\enrol;
 use core\orm\query\builder;
 use core_phpunit\testcase;

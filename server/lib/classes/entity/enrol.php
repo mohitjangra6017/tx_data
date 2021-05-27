@@ -23,6 +23,7 @@
 namespace core\entity;
 
 use core\orm\entity\entity;
+use stdClass;
 
 /**
  * Entity class for table "enrol"
@@ -62,6 +63,8 @@ use core\orm\entity\entity;
  * @property string|null    $customtext4
  * @property int            $timecreated
  * @property int            $timemodified
+ *
+ * @method static enrol_repository repository()
  */
 final class enrol extends entity {
     /**
@@ -99,5 +102,13 @@ final class enrol extends entity {
 
         $status = $this->get_attribute('status');
         return ENROL_INSTANCE_DISABLED === (int) $status;
+    }
+
+    /**
+     * @return stdClass
+     */
+    public function to_record(): stdClass {
+        $attributes = $this->to_array();
+        return (object) $attributes;
     }
 }
