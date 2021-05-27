@@ -368,7 +368,10 @@ class format_singleactivity extends format_base {
         if (!has_capability('moodle/course:manageactivities', context_course::instance($this->courseid))) {
             return false;
         }
-        if (!course_allowed_module($this->get_course(), $modname)) {
+
+        /** @var container_course\course $container_course */
+        $container_course = core_container\factory::from_record($this->get_course());
+        if (!container_course\course_helper::is_module_addable($modname, $container_course)) {
             return false;
         }
         $libfile = "$CFG->dirroot/mod/$modname/lib.php";

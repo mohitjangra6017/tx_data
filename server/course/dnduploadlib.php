@@ -128,12 +128,14 @@ class dndupload_handler {
 
         // Loop through all modules to find handlers.
         $mods = get_plugin_list_with_function('mod', 'dndupload_register');
+        /** @var container_course\course $container_course */
+        $container_course = core_container\factory::from_record($course);
         foreach ($mods as $component => $funcname) {
             list($modtype, $modname) = core_component::normalize_component($component);
             if ($modnames && !array_key_exists($modname, $modnames)) {
                 continue; // Module is deactivated (hidden) at the site level.
             }
-            if (!course_allowed_module($course, $modname)) {
+            if (!container_course\course_helper::is_module_addable($modname, $container_course)) {
                 continue; // User does not have permission to add this module to the course.
             }
             $resp = $funcname();
@@ -560,7 +562,8 @@ class dndupload_ajax_processor {
     protected function create_course_module() {
         global $CFG;
 
-        if (!course_allowed_module($this->course, $this->module->name)) {
+        $container_course = core_container\factory::from_record($this->course);
+        if (!container_course\course_helper::is_module_addable($this->module->name, $container_course)) {
             throw new coding_exception("The module {$this->module->name} is not allowed to be added to this course");
         }
 

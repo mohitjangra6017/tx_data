@@ -572,8 +572,11 @@ function get_module_metadata($course, $modnames, $sectionreturn = null) {
     if ($sectionreturn !== null) {
         $urlbase->param('sr', $sectionreturn);
     }
+
+    /** @var container_course\course $container_course */
+    $container_course = core_container\factory::from_record($course);
     foreach($modnames as $modname => $modnamestr) {
-        if (!course_allowed_module($course, $modname)) {
+        if (!container_course\course_helper::is_module_addable($modname, $container_course)) {
             continue;
         }
         if (isset($modlist[$course->id][$modname])) {
@@ -1787,19 +1790,20 @@ function course_format_name ($course,$max=100) {
  * @deprecated since Totara 13.0
  */
 function course_allowed_module($course, $modname) {
-//    debugging(
-//        "The function course_allowed_module has been deprecated, please use " .
-//        "\container_course\course::is_module_allowed instead",
-//        DEBUG_DEVELOPER
-//    );
+    debugging(
+        "The function course_allowed_module has been deprecated, please use " .
+        "\container_course\course_helper::is_module_addable instead",
+        DEBUG_DEVELOPER
+    );
 
     if (is_numeric($modname)) {
         throw new coding_exception('Function course_allowed_module no longer
                 supports numeric module ids. Please update your code to pass the module name.');
     }
 
+    /** @var container_course\course $container */
     $container = \core_container\factory::from_record($course);
-    return $container->is_module_allowed($modname);
+    return \container_course\course_helper::is_module_addable($modname, $container);
 }
 
 /**
@@ -1961,7 +1965,7 @@ function save_local_role_names($courseid, $data) {
         if (strpos($fieldname, 'role_') !== 0) {
             continue;
         }
-        list($ignored, $roleid) = explode('_', $fieldname);
+        [$ignored, $roleid] = explode('_', $fieldname);
 
         // make up our mind whether we want to delete, update or insert
         if (!$value) {
@@ -2424,7 +2428,7 @@ class course_request {
         $data->numsections        = $courseconfig->numsections;
         $data->startdate          = usergetmidnight(time());
 
-        list($data->fullname, $data->shortname) = restore_dbops::calculate_course_names(0, $data->fullname, $data->shortname);
+        [$data->fullname, $data->shortname] = restore_dbops::calculate_course_names(0, $data->fullname, $data->shortname);
 
         $course = create_course($data);
         $context = context_course::instance($course->id, MUST_EXIST);
@@ -2780,7 +2784,7 @@ function create_module($moduleinfo) {
 
     // Some additional checks (capability / existing instances).
     $course = $DB->get_record('course', array('id'=>$moduleinfo->course), '*', MUST_EXIST);
-    list($module, $context, $cw) = can_add_moduleinfo($course, $moduleinfo->modulename, $moduleinfo->section);
+    [$module, $context, $cw] = can_add_moduleinfo($course, $moduleinfo->modulename, $moduleinfo->section);
 
     // Add the module.
     $moduleinfo->module = $module->id;
@@ -2812,7 +2816,7 @@ function update_module($moduleinfo) {
     $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
 
     // Some checks (capaibility / existing instances).
-    list($cm, $context, $module, $data, $cw) = can_update_moduleinfo($cm);
+    [$cm, $context, $module, $data, $cw] = can_update_moduleinfo($cm);
 
     // Retrieve few information needed by update_moduleinfo.
     $moduleinfo->modulename = $cm->modname;
@@ -2822,7 +2826,7 @@ function update_module($moduleinfo) {
     $moduleinfo->type = 'mod';
 
     // Update the module.
-    list($cm, $moduleinfo) = update_moduleinfo($cm, $moduleinfo, $course, null);
+    [$cm, $moduleinfo] = update_moduleinfo($cm, $moduleinfo, $course, null);
 
     return $moduleinfo;
 }
@@ -3139,7 +3143,7 @@ function archive_course_purge_gradebook(int $userid, int $courseid) {
 
     $gradeitems = $DB->get_records('grade_items', ['courseid' => $courseid], "itemtype DESC, id DESC"); // Any reproducible order should be fine here.
     if ($gradeitems) {
-        list($select, $params) = $DB->get_in_or_equal(array_keys($gradeitems), SQL_PARAMS_NAMED);
+        [$select, $params] = $DB->get_in_or_equal(array_keys($gradeitems), SQL_PARAMS_NAMED);
         $params['userid'] = $userid;
         $DB->delete_records_select('grade_grades', "userid = :userid AND itemid $select", $params);
 
@@ -3197,7 +3201,7 @@ function archive_course_completion($userid, $courseid, $inprogress = false) {
     if ($inprogress) {
         $status[] = COMPLETION_STATUS_INPROGRESS;
     }
-    list($statussql, $statusparams) = $DB->get_in_or_equal($status, SQL_PARAMS_NAMED, 'status');
+    [$statussql, $statusparams] = $DB->get_in_or_equal($status, SQL_PARAMS_NAMED, 'status');
     $params = array_merge($statusparams, array('course' => $courseid, 'userid' => $userid));
     $where = "course = :course AND userid = :userid AND status {$statussql}";
     if (!$course_completion = $DB->get_record_select('course_completions', $where, $params)) {

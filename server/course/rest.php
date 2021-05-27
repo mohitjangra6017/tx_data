@@ -111,7 +111,9 @@ switch($requestmethod) {
                         require_capability('moodle/course:manageactivities', $coursecontext);
                         require_capability('moodle/backup:backuptargetimport', $coursecontext);
                         require_capability('moodle/restore:restoretargetimport', $coursecontext);
-                        if (!course_allowed_module($course, $cm->modname)) {
+                        /** @var container_course\course $container_course */
+                        $container_course = core_container\factory::from_record($course);
+                        if (!container_course\course_helper::is_module_addable($cm->modname, $container_course)) {
                             throw new moodle_exception('No permission to create that activity');
                         }
                         $sr = optional_param('sr', null, PARAM_INT);

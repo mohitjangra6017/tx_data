@@ -298,7 +298,9 @@ function can_add_moduleinfo($course, $modulename, $section) {
     course_create_sections_if_missing($course, $section);
     $cw = get_fast_modinfo($course)->get_section_info($section);
 
-    if (!course_allowed_module($course, $module->name)) {
+    /** @var container_course\course $container_course */
+    $container_course = core_container\factory::from_record($course);
+    if (!container_course\course_helper::is_module_addable($module->name, $container_course)) {
         print_error('moduledisable');
     }
 

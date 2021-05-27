@@ -436,20 +436,6 @@ class course extends container {
     }
 
     /**
-     * @param string $modname
-     * @return bool
-     */
-    public function is_module_allowed(string $modname): bool {
-        $result = parent::is_module_allowed($modname);
-        if (!$result) {
-            // No point to go further down the line.
-            return false;
-        }
-
-        return course_helper::is_module_addable($modname, $this);
-    }
-
-    /**
      * @return bool
      */
     public static function is_using_system_category(): bool {

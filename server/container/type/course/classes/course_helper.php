@@ -52,13 +52,17 @@ final class course_helper {
     public static function is_module_addable(string $modname, course $course, int $userid = 0): bool {
         global $USER;
 
+        if (!$course->is_module_allowed($modname)) {
+            return false;
+        }
+
         if (0 == $userid) {
             // Including null check.
             $userid = $USER->id;
         }
 
-        if (null == static::$warned) {
-            static::$warned = [];
+        if (!isset(self::$warned)) {
+            self::$warned = [];
         }
 
         $capabilityname = "mod/{$modname}:addinstance";
@@ -66,7 +70,7 @@ final class course_helper {
 
         if (!$capability) {
             $archetype = plugin_supports('mod', $modname, FEATURE_MOD_ARCHETYPE, MOD_ARCHETYPE_OTHER);
-            if (!isset(static::$warned[$modname]) && MOD_ARCHETYPE_SYSTEM !== $archetype) {
+            if (!isset(self::$warned[$modname]) && MOD_ARCHETYPE_SYSTEM !== $archetype) {
                 // Debug warning that the capability does not exist, but no more than once per page.
 
                 debugging(
@@ -74,15 +78,10 @@ final class course_helper {
                     DEBUG_DEVELOPER
                 );
 
-                static::$warned[$modname] = 1;
+                self::$warned[$modname] = 1;
             }
 
             // If the capability does not exist, the module can always be added.
-            return true;
-        }
-
-        if ((defined('PHPUNIT_TEST') && PHPUNIT_TEST)) {
-            // Unit tests are running, we skip the actual capability check.
             return true;
         }
 

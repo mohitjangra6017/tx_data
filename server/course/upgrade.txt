@@ -5,6 +5,7 @@ information provided here is intended especially for developers.
 
  * Updated function get_module_types_names() internally to use container_course\course_helper::get_all_modules(), instead of using container_course\course::get_module_types_supported. The function get_module_types_names() is still deprecated.
  * Deprecated get_module_types_names() please use \container_course\course_helper::get_all_modules()
+ * Updated function course_allowed_module() internally to use container_course\course_helper::is_module_addable(), instead of using container_course\course::is_module_allowed. The function course_allowed_module() is still deprecated.
 
 === 14.0 ===
 
