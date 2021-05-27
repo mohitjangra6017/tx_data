@@ -1,6 +1,11 @@
 This files describes API changes in /client/component/totara_engage,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+
+* Updated EngageSidePanel to use v-if instead of the hidden tab property
+  * Template changes
+
 === 14.0 ===
 
 * Updated LayoutOneColumnWithMultiSidePanel.vue limiting width to stay in container

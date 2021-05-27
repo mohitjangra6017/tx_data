@@ -44,9 +44,8 @@
       </Tab>
 
       <Tab
+        v-if="showRelated"
         id="related"
-        :always-render="true"
-        :hidden="!showRelated"
         class="tui-engageSidePanel__related"
         :name="$str('related', 'totara_engage')"
       >
