@@ -490,14 +490,15 @@ function get_array_of_activities($courseid) {
  * @return array where key is the module name (component name without 'mod_') and
  *     the value is the human-readable string. Array sorted alphabetically by value
  *
+ * @see \container_course\course_helper::get_all_modules
  * @deprecated since Totara 13.0
  */
 function get_module_types_names($plural = false) {
-//    debugging(
-//        "The function 'get_module_types_names' has been deprecated, please use " .
-//        "\container_course\course_helper::get_all_modules instead",
-//        DEBUG_DEVELOPER
-//    );
+    debugging(
+        "The function 'get_module_types_names' has been deprecated, please use " .
+        "\container_course\course_helper::get_all_modules instead",
+        DEBUG_DEVELOPER
+    );
 
     return \container_course\course_helper::get_all_modules($plural);
 }

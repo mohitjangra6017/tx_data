@@ -276,8 +276,8 @@
     // get information about course modules and existing module types
     // format.php in course formats may rely on presence of these variables
     $modinfo = get_fast_modinfo($course);
-    $modnames = get_module_types_names();
-    $modnamesplural = get_module_types_names(true);
+    $modnames = \container_course\course_helper::get_all_modules();
+    $modnamesplural = \container_course\course_helper::get_all_modules(true);
     $modnamesused = $modinfo->get_used_module_names();
     $mods = $modinfo->get_cms();
     $sections = $modinfo->get_section_info_all();

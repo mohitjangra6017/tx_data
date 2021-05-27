@@ -282,7 +282,7 @@ class core_course_renderer extends plugin_renderer_base {
         // check to see if user can add menus and there are modules to add
         if (!has_capability('moodle/course:manageactivities', context_course::instance($course->id))
                 || !$this->page->user_is_editing()
-                || !($modnames = get_module_types_names()) || empty($modnames)) {
+                || !($modnames = \container_course\course_helper::get_all_modules()) || empty($modnames)) {
             return '';
         }
 

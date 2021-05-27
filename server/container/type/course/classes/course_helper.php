@@ -169,7 +169,7 @@ final class course_helper {
      *
      * @param bool $plural              If true returns the plural forms of the names.
      * @param bool $include_disabled    If true then all the disabled modules will also be included in the list.
-     * @param bool $execute_hook        If true then the hook will not be executed. And the modules that normally
+     * @param bool $execute_hook        If false then the hook will not be executed. And the modules that normally
      *                                  removed from hooked will be kept and returned.
      *
      * @return array

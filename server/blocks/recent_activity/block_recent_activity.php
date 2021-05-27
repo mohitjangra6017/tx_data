@@ -168,7 +168,7 @@ class block_recent_activity extends block_base {
                         continue;
                     }
                     // Unfortunately we do not know if the mod was visible.
-                    $modnames = get_module_types_names();
+                    $modnames = \container_course\course_helper::get_all_modules();
                     $changelist[$log->cmid] = array('action' => 'delete mod',
                         'module' => (object)array(
                             'modname' => $log->modname,

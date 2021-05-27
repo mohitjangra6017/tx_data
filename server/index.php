@@ -149,8 +149,8 @@ echo $OUTPUT->header();
 // Print Section or custom info.
 $siteformatoptions = course_get_format($SITE)->get_format_options();
 $modinfo = get_fast_modinfo($SITE);
-$modnames = get_module_types_names();
-$modnamesplural = get_module_types_names(true);
+$modnames = \container_course\course_helper::get_all_modules();
+$modnamesplural = \container_course\course_helper::get_all_modules(true);
 $modnamesused = $modinfo->get_used_module_names();
 $mods = $modinfo->get_cms();
 

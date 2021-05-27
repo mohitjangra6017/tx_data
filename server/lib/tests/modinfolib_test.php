@@ -142,8 +142,8 @@ class core_modinfolib_testcase extends advanced_testcase {
         $moduletypedb = $DB->get_record('modules', array('name' => 'assign'));
         $moduledb = $DB->get_record('course_modules', array('module' => $moduletypedb->id, 'instance' => $assign->id));
         $sectiondb = $DB->get_record('course_sections', array('id' => $moduledb->section));
-        $modnamessingular = get_module_types_names(false);
-        $modnamesplural = get_module_types_names(true);
+        $modnamessingular = \container_course\course_helper::get_all_modules();
+        $modnamesplural = \container_course\course_helper::get_all_modules(true);
 
         // Create and enrol a student.
         $studentrole = $DB->get_record('role', array('shortname' => 'student'), '*', MUST_EXIST);

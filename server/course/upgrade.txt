@@ -3,7 +3,8 @@ information provided here is intended especially for developers.
 
 === 15.0 ===
 
- * Updated function get_module_types_names() internally to use container_course\course_helper::get_all_modules(), instead of using container_course\course::get_module_types_supported. The function is get_module_types_names() still deprecated.
+ * Updated function get_module_types_names() internally to use container_course\course_helper::get_all_modules(), instead of using container_course\course::get_module_types_supported. The function get_module_types_names() is still deprecated.
+ * Deprecated get_module_types_names() please use \container_course\course_helper::get_all_modules()
 
 === 14.0 ===
 

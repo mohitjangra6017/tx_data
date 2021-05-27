@@ -253,7 +253,7 @@ class course_modinfo {
      * @return array
      */
     public function get_used_module_names($plural = false) {
-        $modnames = get_module_types_names($plural);
+        $modnames = \container_course\course_helper::get_all_modules($plural);
         $modnamesused = array();
         foreach ($this->get_cms() as $cmid => $mod) {
             if (!isset($modnamesused[$mod->modname]) && isset($modnames[$mod->modname]) && $mod->uservisible) {
@@ -1516,7 +1516,7 @@ class cm_info implements IteratorAggregate {
      * @return string
      */
     public function get_module_type_name($plural = false) {
-        $modnames = get_module_types_names($plural);
+        $modnames = \container_course\course_helper::get_all_modules($plural);
         if (isset($modnames[$this->modname])) {
             return $modnames[$this->modname];
         } else {
