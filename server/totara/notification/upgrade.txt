@@ -1,0 +1,7 @@
+This files describes API changes for code that uses the notification API,
+information provided here is intended especially for developers.
+
+=== 14.1 ===
+
+* Deprecated the function single_emptiable_placeholder::get_representation_string_for_empty - all empty placeholder
+  values are now automatically replaced with the 'no_available_data_for_key' string when they are used.

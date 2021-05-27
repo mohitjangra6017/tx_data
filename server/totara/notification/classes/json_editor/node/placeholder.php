@@ -117,8 +117,8 @@ class placeholder extends node implements inline_node {
 
         [$group, $placeholder_key] = key_helper::normalize_grouped_key($grouped_key);
         $attrs['key'] = key_helper::get_group_key(
-            clean_param($group, PARAM_ALPHAEXT),
-            clean_param($placeholder_key, PARAM_ALPHAEXT)
+            clean_param($group, PARAM_ALPHANUMEXT),
+            clean_param($placeholder_key, PARAM_ALPHANUMEXT)
         );
 
         // Assign back the clean parameters.

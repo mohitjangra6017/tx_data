@@ -53,8 +53,14 @@ abstract class single_emptiable_placeholder implements single_placeholder {
      *
      * @param string $key
      * @return string
+     * @deprecated since Totara 14.1
      */
     protected function get_representation_string_for_empty(string $key): string {
+        debugging(
+            'single_emptiable_placeholder::get_representation_string_for_empty has been deprecated. Empty values ' .
+            'from single_emptiable_placeholder::get will automatically be replaced by the no_available_data_for_key string.',
+            DEBUG_DEVELOPER
+        );
         return get_string('no_available_data_for_key', 'totara_notification', $key);
     }
 
@@ -65,7 +71,7 @@ abstract class single_emptiable_placeholder implements single_placeholder {
      */
     public function get(string $key): string {
         if (!$this->is_available($key)) {
-            return $this->get_representation_string_for_empty($key);
+            return '';
         }
 
         return $this->do_get($key);

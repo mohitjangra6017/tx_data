@@ -36,9 +36,7 @@ class core_user_totara_notification_placeholder_testcase extends testcase {
      * @return void
      */
     protected function setUp(): void {
-        global $CFG;
-        require_once($CFG->dirroot . '/totara/program/program_assignments.class.php');
-
+        parent::setUp();
         user::clear_instance_cache();
     }
 
@@ -69,7 +67,6 @@ class core_user_totara_notification_placeholder_testcase extends testcase {
             'time_zone',
         ], $option_keys, 'Please add missing placeholders to test coverage.');
 
-        self::setAdminUser();
         $user = self::getDataGenerator()->create_user([
             'firstname' => 'Joe',
             'lastname' => 'Brown',

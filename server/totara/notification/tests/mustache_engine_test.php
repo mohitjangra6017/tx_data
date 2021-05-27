@@ -58,6 +58,7 @@ class totara_notification_mustache_engine_testcase extends testcase {
             option::create('firstname', 'Firstname'),
             option::create('lastname', 'Lastname'),
             option::create('email', 'Email'),
+            option::create('city', 'City'),
         );
 
         mock_event_resolver::add_placeholder_options(
@@ -78,9 +79,11 @@ class totara_notification_mustache_engine_testcase extends testcase {
         // the content to be something like this.
         $admin = get_admin();
         self::assertEquals(
-            "Hello {$user->fullname}, your email is {$user->email} and ur first name is {$user->firstname}",
+            "Hello {$user->fullname}, your email is {$user->email} and ur first name is {$user->firstname} " .
+             "but there is no city &lt;no available data for city&gt;",
             $engine->render_for_user(
-                "Hello {{user.fullname}}, your email is {{user.email}} and ur first name is {{user.firstname}}",
+                "Hello {{user.fullname}}, your email is {{user.email}} and ur first name is {{user.firstname}} " .
+                "but there is no city {{user.city}}",
                 $admin->id
             )
         );

@@ -38,7 +38,7 @@ class user extends single_emptiable_placeholder {
     /**
      * @var user_entity|null
      */
-    private $entity;
+    protected $entity;
 
     /**
      * user constructor.
@@ -52,9 +52,9 @@ class user extends single_emptiable_placeholder {
      * @param int  $id
      * @param bool $strict
      *
-     * @return user
+     * @return static
      */
-    public static function from_id(int $id, bool $strict = false): user {
+    public static function from_id(int $id, bool $strict = false): self {
         global $DB;
 
         $strictness = $strict ? MUST_EXIST : IGNORE_MISSING;
@@ -96,13 +96,11 @@ class user extends single_emptiable_placeholder {
      *
      * @return string[]
      */
-    private static function get_keys_to_entity_map(): array {
+    protected static function get_keys_to_entity_map(): array {
         return [
             'first_name' => 'firstname',
             'last_name' => 'lastname',
-            'full_name' => 'fullname',
             'username' => 'username',
-            'email' => 'email',
             'city' => 'city',
             'country' => 'country',
             'department' => 'department',
@@ -110,7 +108,6 @@ class user extends single_emptiable_placeholder {
             'last_name_phonetic' => 'lastnamephonetic',
             'middle_name' => 'middlename',
             'alternate_name' => 'alternatename',
-            'time_zone' => 'timezone',
         ];
     }
 

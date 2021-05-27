@@ -78,7 +78,7 @@ class totara_program_totara_notification_placeholder_testcase extends testcase {
 
     public function test_program_assignment_placeholders_not_available(): void {
         $placeholder_group = assignment::from_program_id_and_user_id(1, - 1);
-        self::assertEquals('<no available data for due_date>', $placeholder_group->get('due_date'));
+        self::assertEquals('', $placeholder_group->get('due_date'));
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage('The program assignment record is empty');

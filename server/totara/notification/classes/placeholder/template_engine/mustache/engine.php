@@ -144,7 +144,10 @@ class engine implements engine_interface {
                         continue;
                     }
 
-                    $map_variables[$group_name][$key] = $placeholder_instance->get($key);
+                    $value = $placeholder_instance->get($key);
+                    $map_variables[$group_name][$key] = is_null($value) || trim($value) === ''
+                        ? get_string('no_available_data_for_key', 'totara_notification', $key)
+                        : $value;
                 }
 
                 continue;
