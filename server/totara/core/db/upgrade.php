@@ -85,5 +85,30 @@ function xmldb_totara_core_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2021020400, 'totara', 'core');
     }
 
+    if ($oldversion < 2021052501) {
+        // Define field type to be added to oauth2_issuer.
+        $table = new xmldb_table('oauth2_issuer');
+        $field = new xmldb_field('type', XMLDB_TYPE_CHAR, '100', null, null, null, null, 'requireconfirmation');
+
+        // Conditionally launch add field type.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field show_default_branding to be added to oauth2_issuer.
+        $table = new xmldb_table('oauth2_issuer');
+        $field = new xmldb_field('show_default_branding', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'type', ['0', '1']);
+
+        // Conditionally launch add field show_default_branding.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_oauth2_issuers_add_types();
+
+        // Main savepoint reached.
+        upgrade_plugin_savepoint(true, 2021052501, 'totara', 'core');
+    }
+
     return true;
 }

@@ -363,3 +363,29 @@ function totara_core_fix_category_sortorder($categories, &$sortorder, $parent, $
 
     return true;
 }
+
+/**
+ * Add type values to the existing issuers in the oauth2_issuers table.
+ * Can just determine this from the image field.
+ *
+ * @since Totara 15.0
+ */
+function upgrade_oauth2_issuers_add_types() {
+    global $DB;
+
+    $issuer_types = [
+        'google',
+        'microsoft',
+        'facebook',
+        'nextcloud',
+    ];
+
+    foreach ($issuer_types as $issuer_type) {
+        $issuer_like = $DB->sql_like('image', ':issuer_type');
+        $DB->execute("
+            UPDATE {oauth2_issuer}
+            SET type = '{$issuer_type}'
+            WHERE {$issuer_like}
+        ", ['issuer_type' => "%{$issuer_type}%"]);
+    }
+}

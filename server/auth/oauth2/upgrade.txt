@@ -1,6 +1,12 @@
 This files describes API changes in /auth/oaut2/*,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+
+* Added override in \auth_plugin_oauth2::loginpage_idp_list() for when show_default_branding is enabled for an issuer,
+  returning template data for buttonimageurl and issuertype instead of iconurl.
+* Added a hardcoded button logo image for the microsoft issuer type, located at pix/login_button/microsoft.svg
+
 === 14.0 ===
 
 * Users cannot delete their last linked login if their authentication is set to OAuth 2,
