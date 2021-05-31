@@ -49,10 +49,7 @@
   .block_action {
     float: right;
   }
-  .header {
-    // LESS -> SCSS conversion change
-    @include bs-panel-default-heading();
-    @include bs-panel-heading();
+  .block-header {
     min-height: 50px;
     h2 {
       @include bs-panel-title();
@@ -256,7 +253,7 @@
 
 // End of original bootstrap theme code.
 
-.block .header {
+.block .block-header {
   padding: $padding-large-horizontal;
   margin: 0;
 }
