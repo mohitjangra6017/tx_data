@@ -30,12 +30,12 @@ class contentmarketplace_linkedin_response_pagination_testcase extends testcase 
      * @return void
      */
     public function test_create_pagination_from_valid_json(): void {
-        $json_data = [
+        $json_data = (object) [
             'total' => 100,
             'count' => 50,
             'start' => 1,
             'links' => [
-                [
+                (object) [
                     'rel' => 'next',
                     'href' => '/v2/api?q=learningAssets&start=50',
                     'type' => 'application/json'
@@ -57,11 +57,11 @@ class contentmarketplace_linkedin_response_pagination_testcase extends testcase 
      * @return void
      */
     public function test_create_pagination_from_invalid_json(): void {
-        $json_data = [
+        $json_data = (object) [
             'total' => 150,
             'start' => 1,
             'links' => [
-                [
+                (object) [
                     'rel' => 'next',
                     'href' => '/v2/api?q=learningAssets&start=100',
                     'type' => 'application/json'
@@ -70,7 +70,7 @@ class contentmarketplace_linkedin_response_pagination_testcase extends testcase 
         ];
 
         $this->expectException(json_validation_exception::class);
-        $this->expectExceptionMessage("Failed to validate the json data: Missing field 'count' in the json object");
+        $this->expectExceptionMessage("Failed to validate the json data: Missing field 'count'.");
 
         pagination::create($json_data);
     }
@@ -79,7 +79,7 @@ class contentmarketplace_linkedin_response_pagination_testcase extends testcase 
      * @return void
      */
     public function test_pagination_does_not_have_next(): void {
-        $json_data = [
+        $json_data = (object) [
             'total' => 100,
             'count' => 50,
             'start' => 1,

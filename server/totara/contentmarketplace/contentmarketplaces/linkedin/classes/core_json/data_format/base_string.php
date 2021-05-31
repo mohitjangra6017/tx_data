@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -20,28 +20,34 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
-namespace contentmarketplace_linkedin\api\v2\service;
+namespace contentmarketplace_linkedin\core_json\data_format;
 
-use contentmarketplace_linkedin\api\response\result;
-use moodle_url;
-use totara_core\http\response;
+use core\json\data_format\data_format;
+use core\json\type;
 
-/**
- * Service interface which represent for the API endpoint linkedin learning.
- * Note that each service implementation should represent for one endpoint and its query parameters only.
- */
-interface service {
+abstract class base_string extends data_format {
     /**
-     * Returns the moodle url object that has all the filter applied (maybe) and the destination.
-     *
-     * @param moodle_url $endpoint_url
-     * @return moodle_url
+     * @return string
      */
-    public function apply_to_url(moodle_url $endpoint_url): moodle_url;
+    public function get_for_type(): string {
+        return type::STRING;
+    }
 
     /**
-     * @param response $response
-     * @return result
+     * @param string $value
+     * @return bool
      */
-    public function wrap_response(response $response): result;
+    public function validate($value): bool {
+        if (!is_string($value)) {
+            return false;
+        }
+
+        return static::do_validate($value);
+    }
+
+    /**
+     * @param string $value
+     * @return bool
+     */
+    abstract protected function do_validate(string $value): bool;
 }

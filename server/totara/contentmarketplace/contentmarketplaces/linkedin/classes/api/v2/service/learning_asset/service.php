@@ -60,7 +60,7 @@ class service implements service_interface {
      * @return collection
      */
     public function wrap_response(response $response): result {
-        $json_data = $response->get_body_as_json(true, true);
+        $json_data = $response->get_body_as_json(false, true);
         return learning_assets::create($json_data);
     }
 }

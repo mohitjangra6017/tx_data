@@ -23,39 +23,26 @@
 namespace contentmarketplace_linkedin\api\v2\service\learning_asset\response;
 
 use contentmarketplace_linkedin\api\response\collection as base_collection;
-use contentmarketplace_linkedin\api\response\pagination;
-use core\json\schema\container_schema;
-use core\json\schema\field\field_collection;
-use core\json\schema\field\field_object;
-use core\json\schema\object_container;
-use core\json\schema\collection as collection_schema;
+use contentmarketplace_linkedin\core_json\structure\learning_asset_collection;
+use stdClass;
 
 class collection extends base_collection {
     /**
-     * @return container_schema
+     * @return string
      */
-    protected static function get_json_schema(): container_schema {
-        return object_container::create(
-            new field_collection(
-                'elements',
-                new collection_schema(element::get_json_schema()),
-            ),
-            new field_object(
-                'paging',
-                pagination::get_json_schema()
-            ),
-        );
+    protected static function get_structure_name(): string {
+        return learning_asset_collection::class;
     }
 
     /**
      * @return element[]
      */
     public function get_elements(): array {
-        $elements = $this->json_data['elements'];
+        $elements = $this->json_data->elements;
 
         return array_map(
-            function (array $element_data): element {
-                return element::create($element_data);
+            function (stdClass $element_data): element {
+                return element::create($element_data, true);
             },
             $elements,
         );

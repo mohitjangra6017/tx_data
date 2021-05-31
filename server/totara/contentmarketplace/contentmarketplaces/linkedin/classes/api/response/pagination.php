@@ -23,61 +23,49 @@
 namespace contentmarketplace_linkedin\api\response;
 
 use contentmarketplace_linkedin\exception\json_validation_exception;
-use core\json\schema\collection as collection_schema;
-use core\json\schema\field\field_alpha;
-use core\json\schema\field\field_collection;
-use core\json\schema\field\field_int;
-use core\json\schema\field\field_text;
-use core\json\schema\object_container;
+use core\json\validation_adapter;
+use contentmarketplace_linkedin\core_json\structure\pagination as pagination_structure;
+use stdClass;
 
 class pagination {
     /**
      * The json data.
      *
-     * @var array
+     * @var stdClass
      */
     protected $json_data;
 
     /**
      * pagination constructor.
-     * @param array $json_data
+     * @param stdClass $json_data
      */
-    protected function __construct(array $json_data) {
+    protected function __construct(stdClass $json_data) {
         $this->json_data = $json_data;
     }
 
     /**
-     * @return object_container
-     */
-    public static function get_json_schema(): object_container {
-        return object_container::create(
-            new field_int('total'),
-            new field_int('count'),
-            new field_int('start'),
-            new field_collection(
-                'links',
-                collection_schema::create_from_fields_of_obj_container(
-                    new field_alpha('rel'),
-                    new field_text('href'),
-                    new field_text('type')
-                ),
-            ),
-        );
-    }
-
-    /**
-     * @param array $json_data
+     * @param stdClass $json_data       The pagination json data.
+     * @param bool     $skip_validation This flag is in place to help preventing the validation running multiple times.
+     *                                  It is happening because within the collection schema, the pagination schema is also a
+     *                                  sub schema of it, and we would not want to run validation again as the json data is already
+     *                                  been validated. By default, it will not skip the validation.
      * @return pagination
      */
-    public static function create(array $json_data): pagination {
-        $schema = static::get_json_schema();
-        $error = $schema->validate($json_data);
+    public static function create(stdClass $json_data, bool $skip_validation = false): pagination {
+        // Clear any pass by reference.
+        $json_data = clone $json_data;
 
-        if (!empty($error)) {
-            throw new json_validation_exception($error);
+        if (!$skip_validation) {
+            $validator = validation_adapter::create_default();
+            $result = $validator->validate_by_structure_class_name($json_data, pagination_structure::class);
+
+
+            if (!$result->is_valid()) {
+                $error_message = $result->get_error_message();
+                throw new json_validation_exception($error_message);
+            }
         }
 
-        $json_data = $schema->clean($json_data);
         return new static($json_data);
     }
 
@@ -85,21 +73,21 @@ class pagination {
      * @return int
      */
     public function get_total(): int {
-        return $this->json_data['total'];
+        return $this->json_data->total;
     }
 
     /**
      * @return int
      */
     public function get_count(): int {
-        return $this->json_data['count'];
+        return $this->json_data->count;
     }
 
     /**
      * @return int
      */
     public function get_start(): int {
-        return $this->json_data['start'];
+        return $this->json_data->start;
     }
 
     /**
@@ -107,10 +95,10 @@ class pagination {
      * @return string|null
      */
     protected function find_link_from_rel(string $rel): ?string {
-        $links = $this->json_data['links'];
+        $links = $this->json_data->links;;
         foreach ($links as $link) {
-            if ($link['rel'] === $rel) {
-                return $link['href'];
+            if ($link->rel === $rel) {
+                return $link->href;
             }
         }
 

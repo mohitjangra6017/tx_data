@@ -20,28 +20,26 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
-namespace contentmarketplace_linkedin\api\v2\service;
+namespace contentmarketplace_linkedin\core_json\structure;
 
-use contentmarketplace_linkedin\api\response\result;
-use moodle_url;
-use totara_core\http\response;
+use core\json\structure\structure;
+use core\json\type;
 
-/**
- * Service interface which represent for the API endpoint linkedin learning.
- * Note that each service implementation should represent for one endpoint and its query parameters only.
- */
-interface service {
+class locale_string extends structure {
     /**
-     * Returns the moodle url object that has all the filter applied (maybe) and the destination.
-     *
-     * @param moodle_url $endpoint_url
-     * @return moodle_url
+     * @return array
      */
-    public function apply_to_url(moodle_url $endpoint_url): moodle_url;
-
-    /**
-     * @param response $response
-     * @return result
-     */
-    public function wrap_response(response $response): result;
+    public static function get_definition(): array {
+        return [
+            'type' => type::OBJECT,
+            'properties' => [
+                'value' => [
+                    'type' => type::STRING,
+                ],
+                'locale' => locale::get_definition(),
+            ],
+            'required' => ['value', 'locale'],
+            structure::ADDITIONAL_PROPERTIES => false,
+        ];
+    }
 }

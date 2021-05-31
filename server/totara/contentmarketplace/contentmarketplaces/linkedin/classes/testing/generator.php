@@ -93,7 +93,8 @@ class generator extends component_generator implements learning_object_generator
     }
 
     /**
-     * Load a static JSON response from a file.
+     * Load a static JSON response from a file. Which the file must be existing
+     * within the location "server/totara/contentmarketplace/contentmarketplaces/linkedin/tests/fixtures/"
      *
      * @param string $json_filename
      * @return string
@@ -122,7 +123,7 @@ class generator extends component_generator implements learning_object_generator
      */
     public function get_mock_result_from_fixtures(string $json_filename): result {
         $json_string = $this->get_json_content_from_fixtures($json_filename);
-        $json_data = json_decode($json_string, true);
+        $json_data = json_decode($json_string, false);
 
         return collection::create($json_data);
     }

@@ -22,5 +22,8 @@
  */
 namespace contentmarketplace_linkedin\api\response;
 
+/**
+ * This interface is used as a wrapper of json response from linkedin learning API.
+ */
 interface result {
 }

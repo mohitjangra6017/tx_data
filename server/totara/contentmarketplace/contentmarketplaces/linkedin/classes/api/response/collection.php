@@ -23,41 +23,48 @@
 namespace contentmarketplace_linkedin\api\response;
 
 use contentmarketplace_linkedin\exception\json_validation_exception;
-use core\json\schema\container_schema;
+use core\json\validation_adapter;
+use stdClass;
 
 abstract class collection implements result {
     /**
      * The json data.
-     * @var array
+     * @var stdClass
      */
     protected $json_data;
 
     /**
      * collection constructor.
-     * @param array $json_data
+     * @param stdClass $json_data
      */
-    protected function __construct(array $json_data) {
+    protected function __construct(stdClass $json_data) {
         $this->json_data = $json_data;
     }
 
     /**
-     * @return container_schema
+     * Returns the json structure class name.
+     *
+     * @return string
      */
-    abstract protected static function get_json_schema(): container_schema;
+    abstract protected static function get_structure_name(): string;
 
     /**
-     * @param array $json_data
+     * @param stdClass $json_data
      * @return collection
      */
-    public static function create(array $json_data): collection {
-        $schema = static::get_json_schema();
-        $error = $schema->validate($json_data);
+    public static function create(stdClass $json_data): collection {
+        // Clear any pass by reference.
+        $json_data = clone $json_data;
 
-        if (!empty($error)) {
-            throw new json_validation_exception($error);
+        $structure_class_name = static::get_structure_name();
+        $validator = validation_adapter::create_default();
+
+        $result = $validator->validate_by_structure_class_name($json_data, $structure_class_name);
+        if (!$result->is_valid()) {
+            $error_message = $result->get_error_message();
+            throw new json_validation_exception($error_message);
         }
 
-        $json_data = $schema->clean($json_data);
         return new static($json_data);
     }
 
@@ -70,7 +77,7 @@ abstract class collection implements result {
      * @return pagination
      */
     public function get_paging(): pagination {
-        $pagination_data = $this->json_data['paging'];
-        return pagination::create($pagination_data);
+        $pagination_data = $this->json_data->paging;
+        return pagination::create($pagination_data, true);
     }
 }

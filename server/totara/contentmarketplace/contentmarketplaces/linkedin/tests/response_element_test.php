@@ -32,29 +32,20 @@ class contentmarketplace_linkedin_response_element_testcase extends testcase {
      * @return void
      */
     public function test_instantiate_element_from_invalid_json(): void {
-        $json_data = [
+        $json_data = (object) [
             'urn' => 'urn:li:lyndaCourse:252',
-            'title' => [
+            'title' => (object) [
                 'value' => 'Title one',
-                'locale' => [
-                    'language' => 'en'
+                'locale' => (object) [
+                    'country' => 'US'
                 ]
-            ]
+            ],
+            'type' => constants::ASSET_TYPE_COURSE
         ];
 
-        // Note: the error message should be updated once the json validator
-        // library is in place.
         $this->expectException(json_validation_exception::class);
         $this->expectExceptionMessage(
-            implode(
-                ' ',
-                [
-                    'Failed to validate the json data:',
-                    'Missing field \'country\' in the json object',
-                    'at field \'locale\' within the json object at',
-                    'field \'title\' within the json object'
-                ]
-            )
+            "Failed to validate the json data: Missing field 'language', within object at field 'locale'."
         );
 
         element::create($json_data);
@@ -65,22 +56,22 @@ class contentmarketplace_linkedin_response_element_testcase extends testcase {
      */
     public function test_instantiate_element_from_valid_json(): void {
         $time_now = time();
-        $json_data = [
+        $json_data = (object) [
             'urn' => 'urn:li:lyndaCourse:252',
-            'title' => [
+            'title' => (object) [
                 'value' => 'this is title',
-                'locale' => [
+                'locale' => (object) [
                     'language' => 'en',
                     'country' => 'US'
                 ]
             ],
             'type' => constants::ASSET_TYPE_COURSE,
-            'details' => [
+            'details' => (object) [
                 'level' => constants::DIFFICULTY_LEVEL_BEGINNER,
-                'images' => [],
+                'images' => (object) [],
                 'lastUpdatedAt' => $time_now * timestamp::MILLISECONDS_IN_SECOND,
                 'publishedAt' => $time_now * timestamp::MILLISECONDS_IN_SECOND,
-                'urls' => []
+                'urls' => (object) []
             ]
         ];
 

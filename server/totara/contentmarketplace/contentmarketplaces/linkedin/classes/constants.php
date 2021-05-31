@@ -79,6 +79,26 @@ final class constants {
     public const SORT_BY_RECENCY = 'RECENCY';
 
     /**
+     * @var string
+     */
+    public const AVAILABILITY_RETIRED = 'RETIRED';
+
+    /**
+     * @string
+     */
+    public const AVAILABILITY_AVAILABLE = 'AVAILABLE';
+
+    /**
+     * @var string
+     */
+    public const CONTRIBUTION_TYPE_AUTHOR = 'AUTHOR';
+
+    /**
+     * @var string
+     */
+    public const CONTRIBUTION_TYPE_PUBLISHER = 'PUBLISHER';
+
+    /**
      * @param string $sort_by
      * @return bool
      */
@@ -97,8 +117,24 @@ final class constants {
                 self::ASSET_TYPE_CHAPTER,
                 self::ASSET_TYPE_COURSE,
                 self::ASSET_TYPE_LEARNING_PATH,
-                self::ASSET_TYPE_VIDEO
-            ]
+                self::ASSET_TYPE_VIDEO,
+            ],
+            true
+        );
+    }
+
+    /**
+     * @param string $availability
+     * @return bool
+     */
+    public static function is_valid_availability(string $availability): bool {
+        return in_array(
+            $availability,
+            [
+                self::AVAILABILITY_AVAILABLE,
+                self::AVAILABILITY_RETIRED,
+            ],
+            true
         );
     }
 
@@ -119,10 +155,11 @@ final class constants {
         return in_array(
             $level,
             [
-                static::DIFFICULTY_LEVEL_ADVANCED,
-                static::DIFFICULTY_LEVEL_BEGINNER,
-                static::DIFFICULTY_LEVEL_INTERMEDIATE
-            ]
+                self::DIFFICULTY_LEVEL_ADVANCED,
+                self::DIFFICULTY_LEVEL_BEGINNER,
+                self::DIFFICULTY_LEVEL_INTERMEDIATE,
+            ],
+            true
         );
     }
 
@@ -135,4 +172,18 @@ final class constants {
         }
     }
 
+    /**
+     * @param string $value
+     * @return bool
+     */
+    public static function is_valid_contribution_type(string $value): bool {
+        return in_array(
+            $value,
+            [
+                self::CONTRIBUTION_TYPE_AUTHOR,
+                self::CONTRIBUTION_TYPE_PUBLISHER,
+            ],
+            true
+        );
+    }
 }

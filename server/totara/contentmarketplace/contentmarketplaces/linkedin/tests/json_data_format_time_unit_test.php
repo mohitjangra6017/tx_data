@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -20,28 +20,26 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
-namespace contentmarketplace_linkedin\api\v2\service;
 
-use contentmarketplace_linkedin\api\response\result;
-use moodle_url;
-use totara_core\http\response;
+use contentmarketplace_linkedin\core_json\data_format\time_unit;
+use core_phpunit\testcase;
 
-/**
- * Service interface which represent for the API endpoint linkedin learning.
- * Note that each service implementation should represent for one endpoint and its query parameters only.
- */
-interface service {
+class contentmarketplace_linkedin_json_data_format_time_unit_testcase extends testcase {
     /**
-     * Returns the moodle url object that has all the filter applied (maybe) and the destination.
-     *
-     * @param moodle_url $endpoint_url
-     * @return moodle_url
+     * @return void
      */
-    public function apply_to_url(moodle_url $endpoint_url): moodle_url;
+    public function test_validation(): void {
+        $time_unit = new time_unit();
 
-    /**
-     * @param response $response
-     * @return result
-     */
-    public function wrap_response(response $response): result;
+        self::assertTrue($time_unit->validate('SECOND'));
+        self::assertTrue($time_unit->validate('MINUTE'));
+        self::assertTrue($time_unit->validate('HOUR'));
+        self::assertFalse($time_unit->validate('hour'));
+        self::assertFalse($time_unit->validate('minute'));
+        self::assertFalse($time_unit->validate('second'));
+
+        self::assertFalse($time_unit->validate('ccc'));
+        self::assertFalse($time_unit->validate('#921'));
+        self::assertFalse($time_unit->validate(911));
+    }
 }

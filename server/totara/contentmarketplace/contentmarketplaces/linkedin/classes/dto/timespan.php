@@ -67,7 +67,7 @@ final class timespan {
      * @param string $unit
      */
     public function __construct(int $duration, string $unit) {
-        if (!array_key_exists($unit, self::UNIT_VALUES)) {
+        if (!self::is_valid_unit($unit)) {
             throw new coding_exception("Invalid unit specified for timespan: $unit");
         }
         $this->duration = $duration;
@@ -128,4 +128,11 @@ final class timespan {
         return $this->unit;
     }
 
+    /**
+     * @param string $unit
+     * @return bool
+     */
+    public static function is_valid_unit(string $unit): bool {
+        return array_key_exists($unit, self::UNIT_VALUES);
+    }
 }

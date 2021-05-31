@@ -23,20 +23,21 @@
 namespace contentmarketplace_linkedin\api\response;
 
 use contentmarketplace_linkedin\exception\json_validation_exception;
-use core\json\schema\object_container;
+use core\json\validation_adapter;
+use stdClass;
 
 abstract class element implements result {
     /**
      * The cleaned and validated json data.
-     * @var array
+     * @var stdClass
      */
     protected $json_data;
 
     /**
      * element constructor.
-     * @param array $json_data
+     * @param stdClass $json_data
      */
-    public function __construct(array $json_data) {
+    public function __construct(stdClass $json_data) {
         $this->json_data = $json_data;
     }
 
@@ -47,24 +48,35 @@ abstract class element implements result {
     abstract public function get_urn(): string;
 
     /**
-     * Returns the json schema for a single element object.
-     * @return object_container
+     * Returns the json structure class name.
+     * @return string
      */
-    abstract public static function get_json_schema(): object_container;
+    abstract protected static function get_json_structure(): string;
 
     /**
-     * @param array $json_data
+     * @param stdClass $json_data
+     * @param bool     $skip_validation This parameter is here, because when we create the collection from
+     *                                  the json response, the schema structure should be checked against the
+     *                                  element within that collection schema already. Hence we can turn off the
+     *                                  validation to make it faster.
      * @return element
      */
-    public static function create(array $json_data): element {
-        $schema = static::get_json_schema();
-        $error = $schema->validate($json_data);
+    public static function create(stdClass $json_data, bool $skip_validation = false): element {
+        // Clear any pass by reference.
+        $json_data = clone $json_data;
 
-        if (!empty($error)) {
-            throw new json_validation_exception($error);
+        if (!$skip_validation) {
+            $structure_class_name = static::get_json_structure();
+            $validator = validation_adapter::create_default();
+
+            $result = $validator->validate_by_structure_class_name($json_data, $structure_class_name);
+            if (!$result->is_valid()) {
+                $error_message = $result->get_error_message();
+                throw new json_validation_exception($error_message);
+            }
+
         }
 
-        $json_data = $schema->clean($json_data);
         return new static($json_data);
     }
 }
