@@ -17,7 +17,10 @@
  */
 
 import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import {
+  InMemoryCache,
+  IntrospectionFragmentMatcher,
+} from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-link';
 import { createHttpLink } from 'apollo-link-http';
 import { BatchHttpLink } from 'apollo-link-batch-http';
@@ -50,9 +53,18 @@ const link = ApolloLink.from([
   ),
 ]);
 
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData: {
+    __schema: {
+      types: [],
+    },
+  },
+});
+
 const cache = new InMemoryCache({
   addTypename: false,
   freezeResults: true,
+  fragmentMatcher,
 });
 
 const apolloClient = new ApolloClient({
