@@ -4,6 +4,7 @@ information provided here is intended especially for developers.
 == 15.0 ==
 
 * Updated navigation.mustache template to display log out links
+* Updated CSS to be compatible with older browsers.
 
 == 14.0 ==
 
