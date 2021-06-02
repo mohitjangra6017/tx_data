@@ -401,8 +401,8 @@ export default {
           },
         });
 
-        if (payload.has_notification) {
-          window.location.href = this.$url('/totara/catalog/index.php');
+        if (payload.redirect_url) {
+          window.location.href = payload.redirect_url;
           return;
         }
 
