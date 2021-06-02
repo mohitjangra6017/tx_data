@@ -395,9 +395,11 @@ export default {
         } = await this.$apollo.mutate({
           mutation: createCourseQuery,
           variables: {
-            input: {
-              item_ids: Array.prototype.slice.call(this.selectedItems),
-            },
+            input: this.selectedItems.map(item => {
+              return {
+                learning_object_id: item,
+              };
+            }),
           },
         });
 
@@ -407,13 +409,13 @@ export default {
         }
 
         if (payload.message.length > 0) {
-          notify({
+          await notify({
             message: payload.message,
             type: payload.success ? 'success' : 'error',
           });
         }
       } catch (e) {
-        notify({
+        await notify({
           message: this.$str(
             'content_creation_unknown_failure',
             'contentmarketplace_linkedin'

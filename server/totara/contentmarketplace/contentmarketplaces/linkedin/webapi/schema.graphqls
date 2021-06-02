@@ -119,7 +119,8 @@ input contentmarketplace_linkedin_catalog_import_learning_objects_filter_options
 Input for the catalogue import create course mutation.
 """
 input contentmarketplace_linkedin_catalog_import_course_input {
-  item_ids: [String!]!
+  learning_object_id: param_integer!
+  category_id: param_integer
 }
 
 extend type Query {
@@ -143,6 +144,6 @@ extend type Mutation {
   Mutation to create linkedin course.
   """
   contentmarketplace_linkedin_catalog_import_create_course(
-    input: contentmarketplace_linkedin_catalog_import_course_input!
+    input: [contentmarketplace_linkedin_catalog_import_course_input!]!
   ): contentmarketplace_linkedin_catalog_import_create_course_result!
 }

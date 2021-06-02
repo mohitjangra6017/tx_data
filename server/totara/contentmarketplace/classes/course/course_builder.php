@@ -30,6 +30,7 @@ use core\orm\query\builder;
 use core_text;
 use stdClass;
 use Throwable as throwable;
+use totara_contentmarketplace\exception\cannot_resolve_default_course_category;
 use totara_contentmarketplace\interactor\abstraction\create_course_interactor;
 use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model;
@@ -125,6 +126,10 @@ class course_builder {
 
             $actor_id = $interactor->get_actor_id();
             $category_id = totara_get_categoryid_with_capability('totara/contentmarketplace:add', $actor_id);
+
+            if (!$category_id) {
+                throw new cannot_resolve_default_course_category($actor_id);
+            }
         }
 
         return new static($learning_object, $category_id, $interactor);

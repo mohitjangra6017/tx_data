@@ -32,7 +32,8 @@ use core\webapi\middleware\require_login;
 use core\webapi\mutation_resolver;
 use core\webapi\resolver\has_middleware;
 use moodle_url;
-use Throwable as throwable;
+use totara_contentmarketplace\course\course_builder;
+use totara_contentmarketplace\exception\cannot_resolve_default_course_category;
 use totara_contentmarketplace\webapi\middleware\require_content_marketplace;
 
 final class catalog_import_create_course implements mutation_resolver, has_middleware {
@@ -44,21 +45,23 @@ final class catalog_import_create_course implements mutation_resolver, has_middl
      * {@inheritdoc}
      */
     public static function resolve(array $args, execution_context $ec): course_creation_result {
-        (new catalog_import_interactor())->require_add_course();
+        global $USER;
+
+        $interactor = new catalog_import_interactor($USER->id);
+        $interactor->require_add_course();
 
         $input_params = $args['input'];
-        $item_ids = $input_params['item_ids'];
 
         $threshold = config::get_max_selected_items_number();
         $redirect_url = new moodle_url('/totara/catalog/index.php');
 
-        if (count($item_ids) <= $threshold) {
+        if (count($input_params) <= $threshold) {
             // Creation on runtime here.
-            return self::create_course_immediate($item_ids);
+            return self:: create_course_immediate($input_params, $interactor);
         }
 
         // Adhoc task queue here
-        $result = new course_creation_result();
+        $result = new course_creation_result(true);
         $result->set_redirect_url($redirect_url);
 
         notification::info(get_string('course_content_delay_creation', 'contentmarketplace_linkedin'));
@@ -66,41 +69,69 @@ final class catalog_import_create_course implements mutation_resolver, has_middl
     }
 
     /**
-     * @param array $item_ids
+     * Passing a list of hashmap, which the hashmaps contains the learning_object_id and the category_id.
+     * Which we would want to create the course out of learning_object and under the category.
+     *
+     * If category's id is not provided, then fallback to the default category's id that user is able to create.
+     *
+     * @param array                     $input_params
+     * @param catalog_import_interactor $interactor
      * @return course_creation_result
      */
-    private static function create_course_immediate(array $item_ids): course_creation_result {
-        $result = new course_creation_result();
-        $creation_completed = false;
+    private static function create_course_immediate(array $input_params, catalog_import_interactor $interactor): course_creation_result {
+        $redirect_url = new moodle_url('/totara/catalog/index.php');
+        $mutation_result = new course_creation_result();
 
-        try {
-            foreach ($item_ids as $item_id) {
-                // todeo: proper creation
+        // A flag to tell that a partial of course records were created.
+        // And another flag to tell that the whole process is a success.
+        $partial_completed = false;
+        $successful_run = true;
+
+        foreach ($input_params as $input_param) {
+            $learning_object_id = $input_param['learning_object_id'];
+            $category_id = $input_param['category_id'] ?? null;
+
+            try {
+                $course = course_builder::create_with_learning_object(
+                    'contentmarketplace_linkedin',
+                    $learning_object_id,
+                    $interactor,
+                    $category_id
+                );
+
+                // Todo: decide whether we would want to capture the whole process in
+                //       transaction or not.
+                $creation_result = $course->create_course();
+                if ($creation_result->is_success()) {
+                    $partial_completed = true;
+                } else {
+                    // One course failed to be created.
+                    $successful_run = false;
+                }
+            } catch (cannot_resolve_default_course_category $e) {
+                // Cannot resolve the category id. However, we do not want to stop the process
+                // here, as there are several other courses that can be added with given category id.
+                debugging($e->getMessage(), DEBUG_ALL);
+                $successful_run = false;
             }
-        } catch (throwable $e) {
-            debugging(
-                sprintf(
-                    "An exception was caught during the creation, '%s': %s",
-                    get_class($e),
-                    $e->getMessage()
-                ),
-                DEBUG_DEVELOPER
-            );
+        }
 
+        if (!$successful_run) {
+            // The process does not get to completed when created 50 or less courses.
             $identifier = 'content_creation_failure_no_course';
-            if ($creation_completed) {
+            if ($partial_completed) {
                 $identifier = 'content_creation_failure';
             }
 
             notification::error(get_string($identifier, 'contentmarketplace_linkedin'));
-            return $result;
+        } else {
+            // Successful creation
+            notification::success(get_string('course_content_immediate_creation', 'contentmarketplace_linkedin'));
+            $mutation_result->set_success(true);
         }
 
-        // Successful creation
-        notification::success(get_string('course_content_immediate_creation', 'contentmarketplace_linkedin'));
-        $result->set_success(true);
-
-        return $result;
+        $mutation_result->set_redirect_url($redirect_url);
+        return $mutation_result;
     }
 
     /**

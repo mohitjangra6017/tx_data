@@ -42,9 +42,10 @@ class course_creation_result {
 
     /**
      * course_creation_result constructor.
+     * @param bool $success
      */
-    public function __construct() {
-        $this->success = false;
+    public function __construct(bool $success = false) {
+        $this->success = $success;
         $this->message = '';
         $this->redirect_url = null;
     }
