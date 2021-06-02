@@ -120,6 +120,9 @@ export default {
         this.virtualUtil.dataListChangeEvent();
         this.getListOfElements();
         this.calculateDataLength();
+        // On tall screens, there may not be enough items loaded to fill it.
+        // This repeats the call to ensure it gets called again to fill it.
+        this.onScroll();
       }
     },
 
@@ -156,6 +159,8 @@ export default {
     if (this.pageMode) {
       document.addEventListener('scroll', this.onScroll, { passive: true });
     }
+    // Ensure enough items are loaded to fill the screen
+    this.onScroll();
   },
 
   beforeDestroy() {
@@ -393,7 +398,12 @@ export default {
       ) {
         this.$emit('scrollbottom', evt, range);
       }
-      this.$emit('scroll', evt, range);
+
+      if (evt) {
+        // Only fire the user if it was actually scrolled
+        // (as this can be called on initialisation of this component)
+        this.$emit('scroll', evt, range);
+      }
     },
 
     getRenderingItems(h) {
