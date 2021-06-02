@@ -1485,6 +1485,10 @@ class core_plugin_manager {
                 'reportedcontent', 'topic', 'notification'
             ),
 
+            'mobile' => array(
+                'currentlearning',
+            ),
+
             'tabexport' => array(
                 'csv', 'csv_excel', 'excel', 'ods', 'pdflandscape', 'pdfportrait', 'wkpdflandscape', 'wkpdfportrait',
             ),
