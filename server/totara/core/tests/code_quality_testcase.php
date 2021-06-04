@@ -737,7 +737,7 @@ abstract class totara_core_code_quality_testcase_base extends testcase {
             if (substr($file,0,1) == '.') {
                 continue;
             }
-            $file_name = $directory.DIRECTORY_SEPARATOR.$file;
+            $file_name = $directory.'/'.$file;
             $file_type = filetype($file_name);
             if ($file_type == 'dir') {
                 // Directory recursion.
