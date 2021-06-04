@@ -48,7 +48,7 @@ final class catalog_import_learning_objects implements query_resolver, has_middl
 
         $provider->sort_by($input_params['sort_by']);
 
-        return $provider->get_paginated($input_params['pagination']);
+        return $provider->get_offset_page($input_params['pagination']);
     }
 
     /**

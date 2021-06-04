@@ -72,14 +72,19 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         $this->create_data_from_fixture();
 
         // Get first page
-        $first_result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 1));
+        $first_result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options([
+            'page' => 1,
+            'limit' => 1,
+        ]));
         $this->assertCount(1, $first_result['items']);
         $this->assertEquals(2, $first_result['total']);
         $this->assertNotEmpty($first_result['next_cursor']);
         $this->assertEquals($this->data[1]->id, $first_result['items']->first()->id);
 
         // Get next result set
-        $second_result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options($first_result['next_cursor']));
+        $second_result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options([
+            'cursor' => $first_result['next_cursor'],
+        ]));
         $this->assertCount(1, $second_result['items']);
         $this->assertEquals(2, $second_result['total']);
         $this->assertEmpty($second_result['next_cursor']);
@@ -92,7 +97,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         // sort by latest
         $result_latest = $this->resolve_graphql_query(
             self::QUERY,
-            $this->get_query_options(null, 10, [], learning_objects::SORT_BY_LATEST)
+            $this->get_query_options(null, [], learning_objects::SORT_BY_LATEST)
         );
         $this->assertEquals($this->data[0]->id, $result_latest['items']->last()->id);
         $this->assertEquals($this->data[1]->id, $result_latest['items']->first()->id);
@@ -100,7 +105,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         // sort by alphabetical
         $result_alpha = $this->resolve_graphql_query(
             self::QUERY,
-            $this->get_query_options(null, 10, [], learning_objects::SORT_BY_ALPHABETICAL)
+            $this->get_query_options(null, [], learning_objects::SORT_BY_ALPHABETICAL)
         );
         $this->assertEquals($this->data[0]->id, $result_alpha['items']->first()->id);
         $this->assertEquals($this->data[1]->id, $result_alpha['items']->last()->id);
@@ -110,12 +115,12 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         $this->create_data_from_fixture();
 
         // language filter: english
-        $result_en = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, ['language' => 'en']));
+        $result_en = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, ['language' => 'en']));
         $this->assertEquals($this->data[0]->id, $result_en['items']->last()->id);
         $this->assertEquals($this->data[1]->id, $result_en['items']->first()->id);
 
         // language filter: french
-        $result_fr = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, ['language' => 'fr']));
+        $result_fr = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, ['language' => 'fr']));
         $this->assertEmpty($result_fr['items']);
     }
 
@@ -136,32 +141,32 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             'description' => 'A course for experts',
         ]);
 
-        $result_search_for_adobe_flash = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $result_search_for_adobe_flash = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'search' => 'Adobe Flash',
         ]));
         $this->assertEquals(1, $result_search_for_adobe_flash['total']);
         $this->assertEquals($learning_object_2->id, $result_search_for_adobe_flash['items']->first()->id);
 
-        $result_search_for_photoshop = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $result_search_for_photoshop = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'search' => '     photoshop     ',
         ]));
         $this->assertEquals(2, $result_search_for_photoshop['total']);
         $this->assertEquals($learning_object_1->id, $result_search_for_photoshop['items']->first()->id);
         $this->assertEquals($learning_object_3->id, $result_search_for_photoshop['items']->last()->id);
 
-        $result_search_for_course = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $result_search_for_course = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'search' => 'COURSE',
         ]));
         $this->assertEquals(2, $result_search_for_course['total']);
         $this->assertEquals($learning_object_1->id, $result_search_for_course['items']->first()->id);
         $this->assertEquals($learning_object_3->id, $result_search_for_course['items']->last()->id);
 
-        $result_search_no_results = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $result_search_no_results = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'search' => '   UNKNOWN  ',
         ]));
         $this->assertEquals(0, $result_search_no_results['total']);
 
-        $result_search_whitespace = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $result_search_whitespace = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'search' => '     ',
         ]));
         $this->assertEquals(3, $result_search_whitespace['total']);
@@ -185,7 +190,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             'title' => '4',
         ]);
 
-        $result_under_10_mins = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $result_under_10_mins = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'time_to_complete' => [
                 json_encode([
                     'max' => MINSECS * 10,
@@ -195,7 +200,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         $this->assertEquals(1, $result_under_10_mins['total']);
         $this->assertEquals($learning_object_1_min->id, $result_under_10_mins['items']->first()->id);
 
-        $result_1_to_2_hours = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $result_1_to_2_hours = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'time_to_complete' => [
                 json_encode([
                     'min' => HOURSECS,
@@ -206,7 +211,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         $this->assertEquals(1, $result_1_to_2_hours['total']);
         $this->assertEquals($learning_object_1_hour->id, $result_1_to_2_hours['items']->first()->id);
 
-        $result_10_to_30_mins_and_over_3_hours = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $result_10_to_30_mins_and_over_3_hours = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'time_to_complete' => [
                 json_encode([
                     'min' => MINSECS * 10,
@@ -223,7 +228,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage('A min or a max value must be specified for the time_to_complete filter.');
-        $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'time_to_complete' => [
                 json_encode([
                     'min' => 0,
@@ -247,13 +252,13 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             'title' => '3',
         ]);
 
-        $result_courses = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $result_courses = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'asset_type' => [constants::ASSET_TYPE_COURSE],
         ], learning_objects::SORT_BY_ALPHABETICAL));
         $this->assertEquals(1, $result_courses['total']);
         $this->assertEquals($learning_object_course->id, $result_courses['items']->first()->id);
 
-        $result_videos_or_chapters = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $result_videos_or_chapters = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'asset_type' => [constants::ASSET_TYPE_VIDEO, constants::ASSET_TYPE_CHAPTER],
         ], learning_objects::SORT_BY_ALPHABETICAL));
         $this->assertEquals(2, $result_videos_or_chapters['total']);
@@ -262,7 +267,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage('Invalid asset type: NOT_A_TYPE');
-        $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null,  [
             'asset_type' => ['NOT_A_TYPE'],
         ]));
     }
@@ -281,13 +286,13 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             'title' => '3',
         ]);
 
-        $result_beginner = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $result_beginner = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'level' => [constants::DIFFICULTY_LEVEL_BEGINNER],
         ], learning_objects::SORT_BY_ALPHABETICAL));
         $this->assertEquals(1, $result_beginner['total']);
         $this->assertEquals($learning_object_beginner->id, $result_beginner['items']->first()->id);
 
-        $result_intermediate_and_advanced = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $result_intermediate_and_advanced = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'level' => [constants::DIFFICULTY_LEVEL_INTERMEDIATE, constants::DIFFICULTY_LEVEL_ADVANCED],
         ], learning_objects::SORT_BY_ALPHABETICAL));
         $this->assertEquals(2, $result_intermediate_and_advanced['total']);
@@ -296,7 +301,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
 
         $this->expectException(coding_exception::class);
         $this->expectExceptionMessage('Invalid difficulty level: NOT_A_LEVEL');
-        $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, 10, [
+        $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'level' => ['NOT_A_LEVEL'],
         ]));
     }
@@ -354,12 +359,12 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         $this->resolve_graphql_query(self::QUERY, $this->get_query_options());
     }
 
-    private function get_query_options($cursor = null, $limit = 10, $filters = [], $sort_by = 'latest'): array {
+    private function get_query_options($pagination = null, $filters = [], $sort_by = 'latest'): array {
         return [
             'input' => [
-                'pagination' => [
-                    'limit' => $limit,
-                    'cursor' => $cursor,
+                'pagination' => $pagination ?? [
+                    'page' => null,
+                    'limit' => 10,
                 ],
                 'filters' => array_merge([
                     'language' => 'en',

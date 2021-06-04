@@ -65,7 +65,7 @@
         @category-change="setDefaultSelectedCategory"
         @clear-selection="clearSelectedItems"
         @create-courses="createCourses"
-        @reviewing-selection="viewReviewContent"
+        @reviewing-selection="switchContentView"
       />
     </template>
 
@@ -93,10 +93,18 @@
         :selected-items="selectedItems"
         @update="setSelectedItems"
       />
+
+      <SelectionPaging
+        :current-page="paginationPage"
+        :items-per-page="paginationLimit"
+        :total-items="learningObjects.total"
+        @items-per-page-change="setItemsPerPage"
+        @page-change="setPaginationPage"
+      />
     </template>
 
     <!-- Table of selected courses -->
-    <template v-slot:review-table>
+    <template v-if="learningObjects" v-slot:review-table>
       <ReviewTable
         :category-options="categoryOptions"
         :items="learningObjects.items"
@@ -104,6 +112,11 @@
         :selected-items="selectedItems"
         @change-course-category="setSingleCourseCategory"
         @update="setSelectedItems"
+      />
+
+      <ReviewPaging
+        :last-page="!learningObjects.next_cursor.length"
+        @next-page="updateReviewPage"
       />
     </template>
   </Layout>
@@ -116,7 +129,9 @@ import Layout from 'totara_contentmarketplace/pages/CatalogImportLayout';
 import LinkedInFilters from 'contentmarketplace_linkedin/components/filters/LinkedInSideFilters';
 import LinkedInPrimaryFilter from 'contentmarketplace_linkedin/components/filters/LinkedInPrimaryFilter';
 import PageBackLink from 'tui/components/layouts/PageBackLink';
+import ReviewPaging from 'totara_contentmarketplace/components/paging/ReviewLoadMore';
 import ReviewTable from 'contentmarketplace_linkedin/components/tables/LinkedInReviewTable';
+import SelectionPaging from 'totara_contentmarketplace/components/paging/SelectionPaging';
 import SelectionTable from 'contentmarketplace_linkedin/components/tables/LinkedInSelectionTable';
 import SortFilter from 'totara_contentmarketplace/components/filters/SortFilter';
 import { notify } from 'tui/notifications';
@@ -133,7 +148,9 @@ export default {
     LinkedInFilters,
     LinkedInPrimaryFilter,
     PageBackLink,
+    ReviewPaging,
     ReviewTable,
+    SelectionPaging,
     SelectionTable,
     SortFilter,
   },
@@ -291,6 +308,14 @@ export default {
         time: [],
         type: [],
       },
+      // items per page limit
+      paginationLimit: 20,
+      // Selection view pagination page
+      paginationPage: 1,
+      // List of selected items provided to review step
+      reviewingItemList: null,
+      // Current load more page on review display
+      reviewingLoadMorePage: 1,
       // Selected category value
       selectedCategory: {
         id: null,
@@ -332,16 +357,18 @@ export default {
   apollo: {
     learningObjects: {
       query: learningObjectsQuery,
+      fetchPolicy: 'network-only',
       variables() {
         return {
           input: {
-            pagination: {
-              cursor: null,
-            },
-            sort_by: this.selectedSortOrderFilter,
             filters: {
               language: this.selectedLanguage,
             },
+            pagination: {
+              limit: this.paginationLimit,
+              page: this.paginationPage,
+            },
+            sort_by: this.selectedSortOrderFilter,
           },
         };
       },
@@ -440,6 +467,22 @@ export default {
     },
 
     /**
+     * Set all selected item categories to the default
+     *
+     */
+    setAllCategoriesToDefault() {
+      let selectedCategories = {};
+
+      // Add an entry for each selected course and set it to the default
+      this.selectedItems.forEach(key => {
+        selectedCategories[key] = this.selectedCategory;
+      });
+
+      // Reset individual item categories to the default
+      this.selectedItemCategories = selectedCategories;
+    },
+
+    /**
      * Set the default selected category for all courses
      *
      * @param {String} value
@@ -459,6 +502,33 @@ export default {
       this.selectedCategory = this.categoryOptions.find(key => {
         return key.id === value;
       });
+    },
+
+    /**
+     * Update number of items displayed in paginated selection results
+     *
+     * @param {Number} limit
+     */
+    setItemsPerPage(limit) {
+      this.paginationLimit = limit;
+    },
+
+    /**
+     * Set the next page for the reviewing load more button
+     *
+     * @param {Number} page
+     */
+    setLoadMorePage(page) {
+      this.reviewingLoadMorePage = page;
+    },
+
+    /**
+     * Update current paginated page of selection results
+     *
+     * @param {Number} page
+     */
+    setPaginationPage(page) {
+      this.paginationPage = page;
     },
 
     /**
@@ -504,24 +574,59 @@ export default {
     },
 
     /**
+     * Update displayed results on review page (load more)
+     *
+     */
+    updateReviewPage() {
+      // Increase page number
+      this.setLoadMorePage(this.reviewingLoadMorePage + 1);
+
+      // Fetch additional data
+      this.$apollo.queries.learningObjects.fetchMore({
+        variables: {
+          input: {
+            filters: {
+              language: this.selectedLanguage,
+            },
+            pagination: {
+              limit: 20,
+              page: this.reviewingLoadMorePage,
+            },
+            sort_by: 'LATEST',
+          },
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          fetchMoreResult.result.items.unshift(...previousResult.result.items);
+          return fetchMoreResult;
+        },
+      });
+    },
+
+    /**
      * Update the view (either viewing catalogue or reviewing selected items)
      *
      * @param {Boolean} reviewing
      */
-    viewReviewContent(reviewing) {
+    switchContentView(reviewing) {
       // If switching to review display, update default categories of items
       if (reviewing) {
-        let selectedCategories = {};
+        // Reset load more button
+        this.setLoadMorePage(1);
 
-        // Add an entry for each selected course and set it to the default
-        this.selectedItems.forEach(key => {
-          selectedCategories[key] = this.selectedCategory;
-        });
+        // Reset selection results to first page
+        this.setItemsPerPage(20);
+        this.setPaginationPage(1);
 
-        // Reset individual item categories to the default
-        this.selectedItemCategories = selectedCategories;
+        // Set all item categories to the default value
+        this.setAllCategoriesToDefault();
+
+        // Provide selected item list as a unique array
+        this.reviewingItemList = this.selectedItems;
+      } else {
+        this.$apollo.queries.learningObjects.refetch();
       }
 
+      // Switch view
       this.reviewingSelectedItems = reviewing;
     },
   },

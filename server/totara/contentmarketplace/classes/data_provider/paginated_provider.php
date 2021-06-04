@@ -26,6 +26,8 @@ namespace totara_contentmarketplace\data_provider;
 use core\orm\pagination\cursor_paginator;
 use core\pagination\base_paginator;
 use core\pagination\cursor;
+use core\pagination\offset_cursor;
+use core\orm\pagination\offset_cursor_paginator;
 
 /**
  * Common logic for filtering, fetching and getting paginated data for use in queries etc.
@@ -54,13 +56,30 @@ abstract class paginated_provider extends provider {
     }
 
     /**
+     * Get the offset to use for getting the next page of results.
+     *
+     * @param offset_cursor $offset_cursor
+     * @return offset_cursor_paginator
+     */
+    protected function get_offset(offset_cursor $offset_cursor): offset_cursor_paginator {
+        $query = $this->build_query();
+        $this->apply_query_filters($query);
+        $this->apply_query_sorting($query);
+
+        $paginator = new offset_cursor_paginator($query, $offset_cursor);
+        $paginator->get();
+
+        return $paginator;
+    }
+
+    /**
      * Get the paginated items.
      *
      * @param array $pagination_params core_pagination_input input params from query, has keys: 'cursor', 'limit', 'page'.
      * @param bool $include_total Whether to include the total count of records in the output.
      * @return array Returns a set of ['items' => (same as what get() does), 'total' => (int), 'next_cursor' => (cursor)]
      */
-    public function get_paginated(array $pagination_params, bool $include_total = true): array {
+    public function get_cursor_page(array $pagination_params, bool $include_total = true): array {
         $limit = $pagination_params['limit'] ?? null;
         if ($limit === null) {
             $limit = base_paginator::DEFAULT_ITEMS_PER_PAGE;
@@ -76,6 +95,31 @@ abstract class paginated_provider extends provider {
         $this->items = $paginated_set->get_items();
 
         $return_data = $paginated_set->get();
+        $return_data['items'] = $this->process_fetched_items();
+        return $return_data;
+    }
+
+    /**
+     * Get a page of items.
+     * NOTE: The total count is always included in the returned data set.
+     *
+     * @param array $pagination_params core_pagination_input input params from query, has keys: 'cursor', 'limit', 'page'.
+     * @return array Returns a set of ['items' => (same as what get() does), 'total' => (int), 'next_cursor' => (cursor)]
+     */
+    public function get_offset_page(array $pagination_params): array {
+        if (!empty($pagination_params['cursor'])) {
+            $cursor = offset_cursor::decode($pagination_params['cursor']);
+        } else {
+            $cursor = offset_cursor::create([
+                'page' => $pagination_params['page'] ?? 1,
+                'limit' => $pagination_params['limit'] ?? base_paginator::DEFAULT_ITEMS_PER_PAGE,
+            ]);
+        }
+
+        $paginator = $this->get_offset($cursor);
+        $this->items = $paginator->get_items();
+
+        $return_data = $paginator->get();
         $return_data['items'] = $this->process_fetched_items();
         return $return_data;
     }

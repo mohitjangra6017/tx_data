@@ -157,6 +157,9 @@ export default {
      */
     cardImage() {
       let url = this.data.image_url;
+      if (url === null) {
+        return;
+      }
       return 'url(' + url + ')';
     },
 

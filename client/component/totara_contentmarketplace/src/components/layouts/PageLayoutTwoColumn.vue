@@ -13,7 +13,7 @@
   Please contact [licensing@totaralearning.com] for more information.
 
   @author Kevin Hottinger <kevin.hottinger@totaralearning.com>
-  @module tui
+  @package totara_contentmarketplace
 -->
 
 <template>
