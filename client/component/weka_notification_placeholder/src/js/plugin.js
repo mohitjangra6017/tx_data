@@ -21,7 +21,7 @@ import { Plugin, PluginKey } from 'ext_prosemirror/state';
 import Suggestion from 'editor_weka/helpers/suggestion';
 import PlaceholderSuggestion from 'weka_notification_placeholder/components/suggestion/Placeholder';
 
-export const REGEX = new RegExp(`\\[([a-z_:]+]?)?`, 'ig');
+export const REGEX = new RegExp(`\\[([a-z_:]+]?)?$`, 'ig');
 
 /**
  *
