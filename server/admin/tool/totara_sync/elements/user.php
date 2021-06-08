@@ -30,6 +30,9 @@ class totara_sync_element_user extends totara_sync_element {
 
     public const NAME = 'user';
 
+    // KINEO CCM - GLOTOT-1739
+    public static bool $isRunning = false;
+
     const KEEP_USERS = 0;
     const DELETE_USERS = 1;
     const SUSPEND_USERS = 2;
@@ -159,6 +162,9 @@ class totara_sync_element_user extends totara_sync_element {
     }
 
     function sync() {
+        // KINEO CCM - GLOTOT-1739
+        self::$isRunning = true;
+
         global $DB, $CFG;
         require_once($CFG->dirroot . '/user/lib.php');
 
