@@ -54,4 +54,21 @@ class behat_user extends behat_base {
         $this->execute('behat_general::assert_element_not_contains_text', array($error, '//div[contains(@id,' . $field_literal . ')]', 'xpath_element'));
     }
 
+    /**
+     * Goes to a specific user's preference page.
+     *
+     * @Given I navigate to the user preference page for :username
+     */
+    public function i_navigate_to_user_preference_page_for_user(string $username) {
+        behat_hooks::set_step_readonly(false);
+
+        // Get user instance.
+        $user = core_user::get_user_by_username($username);
+
+        // Go directly to URL, we are testing functionality of page, not how to get there.
+        $url = new moodle_url("/user/preferences.php", ['userid' => $user->id]);
+        $this->getSession()->visit($this->locate_path($url->out_as_local_url(false)));
+        $this->wait_for_pending_js();
+    }
+
 }

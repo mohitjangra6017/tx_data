@@ -29,6 +29,7 @@ use core\webapi\middleware\require_login;
 use moodle_exception;
 use totara_core\extended_context;
 use totara_notification\entity\notifiable_event_user_preference as notifiable_event_user_preference_entity;
+use totara_notification\interactor\notifiable_event_user_preference_interactor;
 use totara_notification\local\notifiable_event_user_preference_helper;
 use totara_notification\model\notifiable_event_user_preference as notifiable_event_user_preference_model;
 use totara_notification\webapi\middleware\validate_resolver_class_name;
@@ -42,10 +43,9 @@ class update_notifiable_event_user_preference implements mutation_resolver, has_
 
         $user_id = $args['user_id'] ?? $USER->id;
 
-        // For now only allowing a user to change his own preferences.
-        // We may in future add a separate capability and allow users with this capability
-        // to change other users' settings
-        if ($user_id != $USER->id || isguestuser()) {
+        // Check if we are allowed to update the preference.
+        $interactor = new notifiable_event_user_preference_interactor($user_id);
+        if (!$interactor->can_manage()) {
             throw new moodle_exception('error_user_preference_permission', 'totara_notification');
         }
 
@@ -78,13 +78,13 @@ class update_notifiable_event_user_preference implements mutation_resolver, has_
                 ->filter_by_extended_context($extended_context)
                 ->get()
                 ->pluck('id');
-            
+
             if (!empty($preference_ids)) {
                 // There should be at most 1, but just making sure
                 $preference_id = reset($preference_ids);
             }
         }
-        
+
         $model = $preference_id === null
             ? notifiable_event_user_preference_model::create($user_id, $resolver_class_name, $extended_context)
             : notifiable_event_user_preference_model::from_id($preference_id);

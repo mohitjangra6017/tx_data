@@ -1010,6 +1010,46 @@ class behat_totara_tui extends behat_base {
     public function i_click_on_the_tui_toggle_button(string $button_label): void {
         \behat_hooks::set_step_readonly(false);
 
+        $specified_toggle = $this->get_tui_toggle_button($button_label);
+
+        $specified_toggle
+            ->getParent()
+            ->find('css', self::TOGGLE_BUTTON_LOCATOR)
+            ->click();
+    }
+
+    /**
+     * Checks if the toggle button with the specified aria-label or text prop is on/off.
+     *
+     * @Then /^the "([^"]*)" tui toggle switch should be "(on|off)"$/
+     *
+     * @param string $button_label
+     * @param string $expected_value
+     */
+    public function the_tui_toggle_switch_should_be(string $button_label, string $expected_value): void {
+        \behat_hooks::set_step_readonly(true);
+
+        $specified_toggle = $this->get_tui_toggle_button($button_label);
+
+        if ($specified_toggle->hasAttribute('aria-pressed')) {
+            if ($expected_value === 'off') {
+                $this->fail('Toggle button was not off');
+            }
+        } else {
+            if ($expected_value === 'on') {
+                $this->fail('Toggle button was not on');
+            }
+        }
+    }
+
+    /**
+     * Get the specific TUI toggle button on the page.
+     *
+     * @param $button_label
+     * @return NodeElement|null
+     * @throws ExpectationException
+     */
+    private function get_tui_toggle_button($button_label): ?NodeElement {
         /** @var NodeElement[] $toggles */
         $toggles = $this->find_all('css', self::TOGGLE_BUTTON_LABEL_LOCATOR);
 
@@ -1025,11 +1065,7 @@ class behat_totara_tui extends behat_base {
                 'toggle'
             );
         }
-
-        $specified_toggle
-            ->getParent()
-            ->find('css', self::TOGGLE_BUTTON_LOCATOR)
-            ->click();
+        return $specified_toggle;
     }
 
     /**
