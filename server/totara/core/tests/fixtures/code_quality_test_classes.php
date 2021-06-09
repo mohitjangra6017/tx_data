@@ -106,6 +106,39 @@ class prop_docblock_is_ok2 {
     public $foo;
 }
 
+abstract class prop_docblock_base {
+    /**
+     * Store foo.
+     * @var string
+     */
+    public $foo;
+}
+
+class prop_docblock_inherit1 extends prop_docblock_base {
+    /**
+     * @inheritDoc
+     */
+    public $foo;
+}
+
+class prop_docblock_inherit2 extends prop_docblock_base {
+    /**
+     * {@inheritedDoc}
+     */
+    public $foo;
+}
+
+class prop_docblock_inherit3 extends prop_docblock_base {
+    public $foo;
+}
+
+class prop_docblock_not_inherited extends prop_docblock_base {
+    /**
+     * @inheritDoc
+     */
+    public $bar;
+}
+
 abstract class method_docblock_base {
     /**
      * Return something.

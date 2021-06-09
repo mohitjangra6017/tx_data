@@ -150,6 +150,15 @@ class totara_core_code_quality_testcase extends totara_core_code_quality_testcas
         $this->assertCount(0, $errors);
         $errors = $this->inspect_property_docblocks(totara_core\tests\docblock\prop_docblock_is_ok2::class);
         $this->assertCount(0, $errors);
+        $errors = $this->inspect_property_docblocks(totara_core\tests\docblock\prop_docblock_inherit1::class);
+        $this->assertCount(0, $errors);
+        $errors = $this->inspect_property_docblocks(totara_core\tests\docblock\prop_docblock_inherit2::class);
+        $this->assertCount(0, $errors);
+        $errors = $this->inspect_property_docblocks(totara_core\tests\docblock\prop_docblock_inherit3::class);
+        $this->assertCount(0, $errors);
+        $errors = $this->inspect_property_docblocks(totara_core\tests\docblock\prop_docblock_not_inherited::class);
+        $this->assertCount(2, $errors);
+        $this->assertSame('$bar is not inherited', $errors[1]);
     }
 
     /**

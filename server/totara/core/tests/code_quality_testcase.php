@@ -22,12 +22,14 @@
  * @package totara_core
  */
 
+use core_phpunit\testcase;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * Class totara_core_code_quality_testcase_base
  */
-abstract class totara_core_code_quality_testcase_base extends advanced_testcase {
+abstract class totara_core_code_quality_testcase_base extends testcase {
     /**
      * Set true to disable code inspection.
      * @var boolean
@@ -39,7 +41,7 @@ abstract class totara_core_code_quality_testcase_base extends advanced_testcase 
      *
      * @return string[]
      */
-    protected abstract function get_classes_to_test(): array;
+    abstract protected function get_classes_to_test(): array;
 
     /**
      * Get the array of directories that are excluded from CRLF checks.
@@ -158,10 +160,24 @@ abstract class totara_core_code_quality_testcase_base extends advanced_testcase 
             foreach ($class->getProperties() as $property) {
                 $docblock = $property->getDocComment();
 
+                $inherited_doc = self::is_inherited_doc($docblock);
+                $parent_property = self::seek_parent_property($property);
+                if (empty($docblock) && $parent_property) {
+                    continue;
+                }
                 if (($error = self::check_common_docblock_problems($docblock, '$'.$property->getName(), ['* Undocumented variable'])) != null) {
                     $errors[] = $error;
-                } else if (preg_match('/\*\s+@var/', $docblock) == false) {
-                    $errors[] = "Missing @var declaration for \${$property->getName()}";
+                    continue;
+                }
+                $var_type = self::extract_var_type($docblock);
+                if ($var_type === false) {
+                    if ($inherited_doc) {
+                        if (!$parent_property) {
+                            $errors[] = "\${$property->getName()} is not inherited";
+                        }
+                    } else {
+                        $errors[] = "Missing @var declaration for \${$property->getName()}";
+                    }
                 } else {
                     // Invalid pattern to match @param declarations as below:
                     /**
@@ -450,6 +466,32 @@ abstract class totara_core_code_quality_testcase_base extends advanced_testcase 
     }
 
     /**
+     * See if the property is declared in any parent classes or interfaces.
+     *
+     * @param ReflectionProperty $prop
+     * @return ReflectionProperty|null property found in the closest parent class/interface, or null if not found.
+     */
+    private static function seek_parent_property(ReflectionProperty $prop): ?ReflectionProperty {
+        $name = $prop->getName();
+        $parent = $class = $prop->getDeclaringClass();
+        while (($parent = $parent->getParentClass()) !== false) {
+            try {
+                return $parent->getProperty($name);
+            } catch (ReflectionException $ex) {
+                // swallow exception and continue searching
+            }
+        }
+        foreach ($class->getInterfaces() as $interface) {
+            try {
+                return $interface->getProperty($name);
+            } catch (ReflectionException $ex) {
+                // swallow exception and continue searching
+            }
+        }
+        return null;
+    }
+
+    /**
      * Check the param type and the type hint are compatible.
      *
      * @param string $paramtype     The type string in the PHPDoc block.
@@ -482,6 +524,20 @@ abstract class totara_core_code_quality_testcase_base extends advanced_testcase 
         }
         // No problem found.
         return true;
+    }
+
+    /**
+     * Extract the var type declaration from a docblock.
+     *
+     * @param string $docblock                  The PHPDoc block
+     * @return string|false                     The var type, or false if not found.
+     */
+    private static function extract_var_type(string $docblock) {
+        $pattern = '/\*\s+@var\s+([^\s]+)/';
+        if (preg_match($pattern, $docblock, $matches) === 1) {
+            return $matches[1];
+        }
+        return false;
     }
 
     /**
