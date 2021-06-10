@@ -218,6 +218,7 @@ export default {
      */
     this.$apollo.addSmartQuery('audiences', {
       query: this.customQuery ? this.customQuery : cohorts,
+      fetchPolicy: 'network-only',
       skip() {
         return this.skipQueries;
       },
@@ -355,7 +356,7 @@ export default {
      */
     updateFilterDebounced: debounce(function(input) {
       this.filters.search = input;
-    }, 500),
+    }, 10),
   },
 };
 </script>
