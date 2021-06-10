@@ -124,9 +124,11 @@ $string['customtab_name_placeholder'] = 'Name your tab';
 $string['customtab_search_label'] = 'Search the catalog and select an item to be added in a new tab';
 $string['customtab_search_placeholder'] = 'Search';
 $string['customtab_title'] = 'Create a tab';
+$string['domain_name'] = 'Domain name';
 $string['enable_msteams'] = 'Microsoft Teams integration';
 $string['enable_msteams_description'] = 'When enabled this will allow users to view and interact with their Library of resources/playlists, current learning, notifications and Find learning catalogue through Microsoft Teams. If disabled, the Microsoft Teams API will not be accessible.';
 $string['error:catalognotavailable'] = 'Find learning is not available. For more information, talk to your administrator.';
+$string['error:domain_name'] = 'The site could not be connected. Please check your domain name again.';
 $string['error:manifest_createzip'] = 'Can not create a zip archive.';
 $string['error:mylearningnotavailable'] = 'Current learning is not available. For more information, talk to your administrator.';
 $string['error:nodirectaccess'] = 'Direct access to the page is prohibited.';
@@ -137,6 +139,10 @@ $string['error:oauth2_missingendpoint'] = 'The {$a->type}_endpoint is not found 
 $string['error:oauth2_noissuer'] = 'OAuth2 service is not set.';
 $string['error:sso_failure_desc'] = 'There is an error in the configuration and set up of your organisation\'s Totara app. Please contact your site administrator.';
 $string['error:sso_failure_title'] = 'Single sign-on authentication failure';
+$string['help_info'] = 'The domain will connect your site to your organisation\'s Microsoft Teams. Your domain name is 
+likely to be found in the email addressed used to log on to Microsoft Teams e.g. sarah@globallearning.com means that the 
+domain name is "globallearning.com". Alternatively, you can find the domain name by logging into your Azure portal 
+under the <b>Azure Active Directory</b> \'Overview\' page.';
 $string['help_page_about'] = 'About';
 $string['help_page_about_info'] = 'Here you can find out more about the Totara app, such as the publisher, version number, and a
 description. This tab may also include links to the publisher’s website and important policies.';

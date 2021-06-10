@@ -42,6 +42,8 @@ use core_plugin_manager;
 use lang_string;
 use moodle_url;
 use totara_core\advanced_feature;
+use totara_msteams\check\checks\mf_name;
+use totara_msteams\check\checks\mf_namefull;
 
 /**
  * Generate admin settings pages.
@@ -107,6 +109,10 @@ final class settings_helper {
      * @return admin_settingpage[]|admin_externalpage[]
      */
     private static function load_msteams_settings_pages(bool $withsetting): array {
+        if (self::msteams_gateway_settings_enabled()) {
+            return [self::load_msteams_settings_teams($withsetting)];
+        }
+
         return [
             self::load_msteams_settings_teams($withsetting),
             self::load_msteams_settings_app($withsetting),
@@ -124,176 +130,320 @@ final class settings_helper {
 
         if ($withsetting) {
             // Totara app setup.
-            $page->add(new admin_setting_heading('totara_msteams/header_app',
-                new lang_string('settings:header_app', 'totara_msteams'),
-                new lang_string('settings:header_app_help', 'totara_msteams')));
+            $page->add(
+                new admin_setting_heading(
+                    'totara_msteams/header_app',
+                    new lang_string('settings:header_app', 'totara_msteams'),
+                    new lang_string('settings:header_app_help', 'totara_msteams')
+                )
+            );
 
+            if (self::msteams_gateway_settings_enabled()) {
+                $page->add(
+                    new admin_setting_msteams_gateway_configtext(
+                        'totara_msteams/domain_name',
+                        new lang_string('domain_name', 'totara_msteams'),
+                        new lang_string('help_info', 'totara_msteams'),
+                        '',
+                        PARAM_TEXT
+                    )
+                );
+
+                // Return the gateway settings.
+                return $page;
+            }
+
+            // This is msteams integration settings and not gateway settings.
             // App ID.
-            $page->add(new admin_setting_configtext('totara_msteams/manifest_app_id',
-                new lang_string('settings:manifest_app_id', 'totara_msteams'),
-                new lang_string('settings:manifest_app_id_help', 'totara_msteams'),
-                manifest_helper::GUID_NULL));
+            $page->add(
+                new admin_setting_configtext(
+                    'totara_msteams/manifest_app_id',
+                    new lang_string('settings:manifest_app_id', 'totara_msteams'),
+                    new lang_string('settings:manifest_app_id_help', 'totara_msteams'),
+                    manifest_helper::GUID_NULL
+                )
+            );
 
             // Package name.
-            $page->add(new admin_setting_configtext('totara_msteams/manifest_app_package_name',
-                new lang_string('settings:manifest_package_name', 'totara_msteams'),
-                new lang_string('settings:manifest_package_name_help', 'totara_msteams'),
-                '',
-                PARAM_TEXT));
+            $page->add(
+                new admin_setting_configtext(
+                    'totara_msteams/manifest_app_package_name',
+                    new lang_string('settings:manifest_package_name', 'totara_msteams'),
+                    new lang_string('settings:manifest_package_name_help', 'totara_msteams'),
+                    '',
+                    PARAM_TEXT
+                )
+            );
 
             // Single Sign On.
-            $page->add(new admin_setting_heading('totara_msteams/header_sso',
-                new lang_string('settings:header_sso', 'totara_msteams'),
-                new lang_string('settings:header_sso_help', 'totara_msteams')));
+            $page->add(
+                new admin_setting_heading(
+                    'totara_msteams/header_sso',
+                    new lang_string('settings:header_sso', 'totara_msteams'),
+                    new lang_string('settings:header_sso_help', 'totara_msteams')
+                )
+            );
 
             // OAuth2 service.
-            $page->add(new admin_setting_oauth2_issuer_select('totara_msteams/oauth2_issuer',
-                new lang_string('settings:oauth2_issuer', 'totara_msteams'),
-                new lang_string('settings:oauth2_issuer_help', 'totara_msteams', [
-                    'authurl' => (new moodle_url('/admin/settings.php?section=manageauths'))->out(),
-                    'issuerurl' => (new moodle_url('/admin/tool/oauth2/issuers.php'))->out()
-                ]),
-                0,
-                []
-            ));
+            $page->add(
+                new admin_setting_oauth2_issuer_select(
+                    'totara_msteams/oauth2_issuer',
+                    new lang_string('settings:oauth2_issuer', 'totara_msteams'),
+                    new lang_string(
+                        'settings:oauth2_issuer_help', 'totara_msteams',
+                        [
+                            'authurl' => (new moodle_url('/admin/settings.php?section=manageauths'))->out(),
+                            'issuerurl' => (new moodle_url('/admin/tool/oauth2/issuers.php'))->out()
+                        ]
+                    ),
+                    0,
+                    []
+                )
+            );
 
             // App ID.
-            $page->add(new admin_setting_configtext('totara_msteams/sso_app_id',
-                new lang_string('settings:sso_app_id', 'totara_msteams'),
-                new lang_string('settings:sso_app_id_help', 'totara_msteams'),
-                manifest_helper::GUID_NULL, PARAM_TEXT));
+            $page->add(
+                new admin_setting_configtext(
+                    'totara_msteams/sso_app_id',
+                    new lang_string('settings:sso_app_id', 'totara_msteams'),
+                    new lang_string('settings:sso_app_id_help', 'totara_msteams'),
+                    manifest_helper::GUID_NULL,
+                    PARAM_TEXT
+                )
+            );
 
             // Scope.
-            $page->add(new admin_setting_configtext('totara_msteams/sso_scope',
-                new lang_string('settings:sso_scope', 'totara_msteams'),
-                new lang_string('settings:sso_scope_help', 'totara_msteams'),
-                '', PARAM_TEXT));
+            $page->add(
+                new admin_setting_configtext(
+                    'totara_msteams/sso_scope',
+                    new lang_string('settings:sso_scope', 'totara_msteams'),
+                    new lang_string('settings:sso_scope_help', 'totara_msteams'),
+                    '',
+                    PARAM_TEXT
+                )
+            );
 
             // Teams Bot settings.
-            $page->add(new admin_setting_heading('totara_msteams/header_bot',
-                new lang_string('settings:header_bot', 'totara_msteams'),
-                new lang_string('settings:header_bot_help', 'totara_msteams')));
+            $page->add(
+                new admin_setting_heading(
+                    'totara_msteams/header_bot',
+                    new lang_string('settings:header_bot', 'totara_msteams'),
+                    new lang_string('settings:header_bot_help', 'totara_msteams')
+                )
+            );
 
             // Enable bot feature.
-            $page->add(new admin_setting_configcheckbox('totara_msteams/bot_feature_enabled',
-                new lang_string('settings:bot_feature_enabled', 'totara_msteams'),
-                new lang_string('settings:bot_feature_enabled_help', 'totara_msteams'),
-                '0'));
+            $page->add(
+                new admin_setting_configcheckbox(
+                    'totara_msteams/bot_feature_enabled',
+                    new lang_string('settings:bot_feature_enabled', 'totara_msteams'),
+                    new lang_string('settings:bot_feature_enabled_help', 'totara_msteams'),
+                    '0'
+                )
+            );
 
             // Enable messaging extension.
-            $page->add(new admin_setting_configcheckbox('totara_msteams/messaging_extension_enabled',
-                new lang_string('settings:messaging_extension_enabled', 'totara_msteams'),
-                new lang_string('settings:messaging_extension_enabled_help', 'totara_msteams'),
-                '0'));
+            $page->add(
+                new admin_setting_configcheckbox(
+                    'totara_msteams/messaging_extension_enabled',
+                    new lang_string('settings:messaging_extension_enabled', 'totara_msteams'),
+                    new lang_string('settings:messaging_extension_enabled_help', 'totara_msteams'),
+                    '0'
+                )
+            );
 
             // App ID.
-            $page->add(new admin_setting_configtext('totara_msteams/bot_app_id',
-                new lang_string('settings:bot_app_id', 'totara_msteams'),
-                new lang_string('settings:bot_app_id_help', 'totara_msteams'),
-                manifest_helper::GUID_NULL, PARAM_TEXT));
+            $page->add(
+                new admin_setting_configtext(
+                    'totara_msteams/bot_app_id',
+                    new lang_string('settings:bot_app_id', 'totara_msteams'),
+                    new lang_string('settings:bot_app_id_help', 'totara_msteams'),
+                    manifest_helper::GUID_NULL,
+                    PARAM_TEXT
+                )
+            );
 
             // Client secret.
-            $page->add(new admin_setting_configpasswordunmask('totara_msteams/bot_app_secret',
-                new lang_string('settings:bot_app_secret', 'totara_msteams'),
-                new lang_string('settings:bot_app_secret_help', 'totara_msteams'),
-                ''));
+            $page->add(
+                new admin_setting_configpasswordunmask(
+                    'totara_msteams/bot_app_secret',
+                    new lang_string('settings:bot_app_secret', 'totara_msteams'),
+                    new lang_string('settings:bot_app_secret_help', 'totara_msteams'),
+                    ''
+                )
+            );
 
             // Customisation.
-            $page->add(new admin_setting_heading('totara_msteams/header_branding',
-                new lang_string('settings:header_branding', 'totara_msteams'),
-                new lang_string('settings:header_branding_help', 'totara_msteams')));
+            $page->add(
+                new admin_setting_heading(
+                    'totara_msteams/header_branding',
+                    new lang_string('settings:header_branding', 'totara_msteams'),
+                    new lang_string('settings:header_branding_help', 'totara_msteams')
+                )
+            );
 
             // App version.
-            $page->add(new admin_setting_configtext('totara_msteams/manifest_app_version',
-                new lang_string('settings:manifest_app_version', 'totara_msteams'),
-                new lang_string('settings:manifest_app_version_help', 'totara_msteams', [
-                    'semverurl' => 'https://semver.org/'
-                ]),
-                new lang_string('settings:manifest_app_version_default', 'totara_msteams')));
+            $page->add(
+                new admin_setting_configtext(
+                    'totara_msteams/manifest_app_version',
+                    new lang_string('settings:manifest_app_version', 'totara_msteams'),
+                    new lang_string(
+                        'settings:manifest_app_version_help', 'totara_msteams',
+                        ['semverurl' => 'https://semver.org/']
+                    ),
+                    new lang_string('settings:manifest_app_version_default', 'totara_msteams')
+                )
+            );
 
             // App name.
-            $page->add(new admin_setting_configtext_with_maxlength('totara_msteams/manifest_app_name',
-                new lang_string('settings:manifest_app_name', 'totara_msteams'),
-                new lang_string('settings:manifest_app_name_help', 'totara_msteams'),
-                new lang_string('settings:manifest_app_name_default', 'totara_msteams'),
-                PARAM_TEXT, null, \totara_msteams\check\checks\mf_name::MAX_LENGTH));
+            $page->add(
+                new admin_setting_configtext_with_maxlength(
+                    'totara_msteams/manifest_app_name',
+                    new lang_string('settings:manifest_app_name', 'totara_msteams'),
+                    new lang_string('settings:manifest_app_name_help', 'totara_msteams'),
+                    new lang_string('settings:manifest_app_name_default', 'totara_msteams'),
+                    PARAM_TEXT,
+                    null,
+                    mf_name::MAX_LENGTH
+                )
+            );
 
             // App full name.
-            $page->add(new admin_setting_configtext_with_maxlength('totara_msteams/manifest_app_fullname',
-                new lang_string('settings:manifest_app_full_name', 'totara_msteams'),
-                new lang_string('settings:manifest_app_full_name_help', 'totara_msteams'),
-                '',
-                PARAM_TEXT, null, \totara_msteams\check\checks\mf_namefull::MAX_LENGTH));
+            $page->add(
+                new admin_setting_configtext_with_maxlength(
+                    'totara_msteams/manifest_app_fullname',
+                    new lang_string('settings:manifest_app_full_name', 'totara_msteams'),
+                    new lang_string('settings:manifest_app_full_name_help', 'totara_msteams'),
+                    '',
+                    PARAM_TEXT,
+                    null,
+                    mf_namefull::MAX_LENGTH
+                )
+            );
 
             // App description.
-            $page->add(new admin_setting_configtextarea('totara_msteams/manifest_app_description',
-                new lang_string('settings:manifest_app_desc', 'totara_msteams'),
-                new lang_string('settings:manifest_app_desc_help', 'totara_msteams'),
-                new lang_string('settings:manifest_app_desc_default', 'totara_msteams')));
+            $page->add(
+                new admin_setting_configtextarea(
+                    'totara_msteams/manifest_app_description',
+                    new lang_string('settings:manifest_app_desc', 'totara_msteams'),
+                    new lang_string('settings:manifest_app_desc_help', 'totara_msteams'),
+                    new lang_string('settings:manifest_app_desc_default', 'totara_msteams')
+                )
+            );
 
             // App full description.
-            $page->add(new admin_setting_configtextarea('totara_msteams/manifest_app_fulldescription',
-                new lang_string('settings:manifest_app_fulldesc', 'totara_msteams'),
-                new lang_string('settings:manifest_app_fulldesc_help', 'totara_msteams'),
-                new lang_string('settings:manifest_app_fulldesc_default', 'totara_msteams')));
+            $page->add(
+                new admin_setting_configtextarea(
+                    'totara_msteams/manifest_app_fulldescription',
+                    new lang_string('settings:manifest_app_fulldesc', 'totara_msteams'),
+                    new lang_string('settings:manifest_app_fulldesc_help', 'totara_msteams'),
+                    new lang_string('settings:manifest_app_fulldesc_default', 'totara_msteams')
+                )
+            );
 
             // Colour icon.
-            $page->add(new admin_setting_configstoredfile('totara_msteams/manifest_app_icon_color',
-                new lang_string('settings:manifest_app_icon_colour', 'totara_msteams'),
-                new lang_string('settings:manifest_app_icon_colour_help', 'totara_msteams'),
-                'manifest_app_icon_color',
-                0,
-                ['accepted_types' => ['.png']]));
+            $page->add(
+                new admin_setting_configstoredfile(
+                    'totara_msteams/manifest_app_icon_color',
+                    new lang_string('settings:manifest_app_icon_colour', 'totara_msteams'),
+                    new lang_string('settings:manifest_app_icon_colour_help', 'totara_msteams'),
+                    'manifest_app_icon_color',
+                    0,
+                    ['accepted_types' => ['.png']]
+                )
+            );
 
             // Outline icon.
-            $page->add(new admin_setting_configstoredfile('totara_msteams/manifest_app_icon_outline',
-                new lang_string('settings:manifest_app_icon_outline', 'totara_msteams'),
-                new lang_string('settings:manifest_app_icon_outline_help', 'totara_msteams'),
-                'manifest_app_icon_outline',
-                0,
-                ['accepted_types' => ['.png']]));
+            $page->add(
+                new admin_setting_configstoredfile(
+                    'totara_msteams/manifest_app_icon_outline',
+                    new lang_string('settings:manifest_app_icon_outline', 'totara_msteams'),
+                    new lang_string('settings:manifest_app_icon_outline_help', 'totara_msteams'),
+                    'manifest_app_icon_outline',
+                    0,
+                    ['accepted_types' => ['.png']]
+                )
+            );
 
             // Accent colour.
-            $page->add(new admin_setting_configcolourpicker('totara_msteams/manifest_app_accent_color',
-                new lang_string('settings:manifest_accent_colour', 'totara_msteams'),
-                new lang_string('settings:manifest_accent_colour_help', 'totara_msteams'),
-                new lang_string('settings:manifest_accent_colour_default', 'totara_msteams'),
-                null,
-                false));
+            $page->add(
+                new admin_setting_configcolourpicker(
+                    'totara_msteams/manifest_app_accent_color',
+                    new lang_string('settings:manifest_accent_colour', 'totara_msteams'),
+                    new lang_string('settings:manifest_accent_colour_help', 'totara_msteams'),
+                    new lang_string('settings:manifest_accent_colour_default', 'totara_msteams'),
+                    null,
+                    false
+                )
+            );
 
-            $page->add(new admin_setting_heading('totara_msteams/header_publisher',
-                new lang_string('settings:header_publisher', 'totara_msteams'),
-                new lang_string('settings:header_publisher_help', 'totara_msteams')));
+            $page->add(
+                new admin_setting_heading(
+                    'totara_msteams/header_publisher',
+                    new lang_string('settings:header_publisher', 'totara_msteams'),
+                    new lang_string('settings:header_publisher_help', 'totara_msteams')
+                )
+            );
 
-            $page->add(new admin_setting_configtext_with_maxlength('publishername',
-                new lang_string('publishername', 'admin'),
-                new lang_string('settings:publisher_name_help', 'totara_msteams'),
-                '',
-                PARAM_TEXT, null, 32));
+            $page->add(
+                new admin_setting_configtext_with_maxlength(
+                    'publishername',
+                    new lang_string('publishername', 'admin'),
+                    new lang_string('settings:publisher_name_help', 'totara_msteams'),
+                    '',
+                    PARAM_TEXT,
+                    null,
+                    32
+                )
+            );
 
-            $page->add(new admin_setting_configtext_with_maxlength('publisherwebsite',
-                new lang_string('publisherwebsite', 'admin'),
-                new lang_string('settings:publisher_website_help', 'totara_msteams'),
-                '',
-                PARAM_URL, null, 2048));
+            $page->add(
+                new admin_setting_configtext_with_maxlength(
+                    'publisherwebsite',
+                    new lang_string('publisherwebsite', 'admin'),
+                    new lang_string('settings:publisher_website_help', 'totara_msteams'),
+                    '',
+                    PARAM_URL,
+                    null,
+                    2048
+                )
+            );
 
-            $page->add(new admin_setting_configtext_with_maxlength('privacypolicy',
-                new lang_string('privacypolicy', 'admin'),
-                new lang_string('settings:publisher_privacypolicy_help', 'totara_msteams'),
-                '',
-                PARAM_URL, null, 2048));
+            $page->add(
+                new admin_setting_configtext_with_maxlength(
+                    'privacypolicy',
+                    new lang_string('privacypolicy', 'admin'),
+                    new lang_string('settings:publisher_privacypolicy_help', 'totara_msteams'),
+                    '',
+                    PARAM_URL,
+                    null,
+                    2048
+                )
+            );
 
-            $page->add(new admin_setting_configtext_with_maxlength('termsofuse',
-                new lang_string('termsofuse', 'admin'),
-                new lang_string('settings:publisher_termsofuse_help', 'totara_msteams'),
-                '',
-                PARAM_URL, null, 2048));
+            $page->add(
+                new admin_setting_configtext_with_maxlength(
+                    'termsofuse',
+                    new lang_string('termsofuse', 'admin'),
+                    new lang_string('settings:publisher_termsofuse_help', 'totara_msteams'),
+                    '',
+                    PARAM_URL,
+                    null,
+                    2048
+                )
+            );
 
-            $page->add(new admin_setting_configtext_with_maxlength('totara_msteams/publisher_mpnid',
-                new lang_string('settings:publisher_mpnid', 'totara_msteams'),
-                new lang_string('settings:publisher_mpnid_help', 'totara_msteams'),
-                '',
-                PARAM_TEXT, null, 10));
+            $page->add(
+                new admin_setting_configtext_with_maxlength(
+                    'totara_msteams/publisher_mpnid',
+                    new lang_string('settings:publisher_mpnid', 'totara_msteams'),
+                    new lang_string('settings:publisher_mpnid_help', 'totara_msteams'),
+                    '',
+                    PARAM_TEXT,
+                    null,
+                    10
+                )
+            );
         }
 
         return $page;
@@ -308,5 +458,14 @@ final class settings_helper {
     private static function load_msteams_settings_app(bool $withsetting): admin_externalpage {
         return new admin_externalpage(self::NS.'downloadmanifest', new lang_string('settings:page_totara_app', 'totara_msteams'),
             new moodle_url('/totara/msteams/download_manifest.php'));
+    }
+
+    /**
+     * @return bool
+     */
+    private static function msteams_gateway_settings_enabled(): bool {
+        global $CFG;
+
+        return !empty($CFG->msteams_gateway_url);
     }
 }
