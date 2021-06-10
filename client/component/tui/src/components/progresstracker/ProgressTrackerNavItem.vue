@@ -88,20 +88,20 @@
         <!-- optional generic content -->
         <slot />
       </div>
-    </div>
 
-    <Popover
-      ref="popover"
-      :triggers="popoverTriggerType"
-      :open="open"
-      :reference="$refs.trigger"
-      position="top"
-      size="sm"
-      closeable="always"
-      @request-close="setOpen(false)"
-    >
-      <slot name="popover-content" />
-    </Popover>
+      <Popover
+        ref="popover"
+        :triggers="popoverTriggerType"
+        :open="open"
+        :reference="$refs.trigger"
+        position="top"
+        size="sm"
+        closeable="always"
+        @request-close="setOpen(false)"
+      >
+        <slot name="popover-content" />
+      </Popover>
+    </div>
   </li>
 </template>
 
@@ -278,7 +278,7 @@ export default {
         .map(state => {
           return this.$str(`completionstatus_${state}`, 'totara_tui');
         })
-        .join(',');
+        .join(', ');
 
       return this.$str('ally_status_with_value', 'totara_core', strVar);
     },

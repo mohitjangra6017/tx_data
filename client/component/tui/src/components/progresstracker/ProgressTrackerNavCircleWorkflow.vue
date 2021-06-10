@@ -19,6 +19,7 @@
 
 <template>
   <div
+    ref="interactable"
     class="tui-progressTrackerNavCircleWorkflow tui-progressTrackerNavCircleWorkflow__outer"
     :class="{
       'tui-progressTrackerNavCircleWorkflow--ready': ready,
@@ -27,10 +28,19 @@
       'tui-progressTrackerNavCircleWorkflow--locked': locked,
       'tui-progressTrackerNavCircleWorkflow--optional': optional,
     }"
-    aria-hidden="true"
+    :aria-hidden="!isInteractable"
+    :role="ariaRole"
+    :tabindex="isInteractable ? '0' : '-1'"
+    @keypress="handleKeypress($event)"
   >
     <div class="tui-progressTrackerNavCircleWorkflow__middle">
       <div class="tui-progressTrackerNavCircleWorkflow__inner">
+        <span
+          v-if="isInteractable"
+          class="tui-progressTrackerNavCircleWorkflow__label"
+        >
+          {{ $str('a11y_progresstracker_action', 'totara_tui') }}
+        </span>
         <LockIcon
           v-if="locked"
           :alt="$str('completionstatus_locked', 'totara_tui')"
@@ -57,6 +67,18 @@ export default {
     SuccessIcon,
   },
   props: {
+    ariaRole: {
+      default: 'button',
+      type: String,
+      validator: function(value) {
+        const allowedOptions = ['button', 'link', ''];
+        return allowedOptions.includes(value);
+      },
+    },
+    isInteractable: {
+      default: true,
+      type: Boolean,
+    },
     states: {
       default: () => ['ready'],
       type: Array,
@@ -95,6 +117,18 @@ export default {
     },
     optional() {
       return this.states.includes('optional');
+    },
+  },
+
+  methods: {
+    handleKeypress(e) {
+      if (
+        this.isInteractable &&
+        ['enter', 'spacebar', ' '].includes(e.key.toLowerCase())
+      ) {
+        this.$refs.interactable.click();
+      }
+      return e.preventDefault();
     },
   },
 };
@@ -225,6 +259,10 @@ export default {
     width: 1.6rem;
     height: 1.6rem;
   }
+
+  &__label {
+    @include sr-only();
+  }
 }
 </style>
 
@@ -232,7 +270,8 @@ export default {
 {
   "totara_tui": [
     "completionstatus_done",
-    "completionstatus_locked"
+    "completionstatus_locked",
+    "a11y_progresstracker_action"
   ]
 }
 </lang-strings>

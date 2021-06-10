@@ -157,3 +157,4 @@ $string['completionstatus_done'] = 'Done';
 $string['completionstatus_selected'] = 'Selected';
 $string['completionstatus_locked'] = 'Locked';
 $string['completionstatus_optional'] = 'Optional';
+$string['a11y_progresstracker_action'] = 'Select for more information about this item\'s status.';

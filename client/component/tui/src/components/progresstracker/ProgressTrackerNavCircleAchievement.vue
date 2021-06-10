@@ -19,6 +19,7 @@
 
 <template>
   <div
+    ref="interactable"
     class="tui-progressTrackerNavCircleAchievement tui-progressTrackerNavCircleAchievement__outer"
     :class="{
       'tui-progressTrackerNavCircleAchievement--pending': pending,
@@ -27,10 +28,20 @@
       'tui-progressTrackerNavCircleAchievement--achieved': achieved,
       'tui-progressTrackerNavCircleAchievement--current': current,
     }"
-    aria-hidden="true"
+    :aria-hidden="!isInteractable"
+    :role="ariaRole"
+    :tabindex="isInteractable ? '0' : '-1'"
+    @keypress="handleKeypress($event)"
   >
     <div class="tui-progressTrackerNavCircleAchievement__middle">
-      <div class="tui-progressTrackerNavCircleAchievement__inner" />
+      <div class="tui-progressTrackerNavCircleAchievement__inner">
+        <span
+          v-if="isInteractable"
+          class="tui-progressTrackerNavCircleAchievement__label"
+        >
+          {{ $str('a11y_progresstracker_action', 'totara_tui') }}
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -38,6 +49,18 @@
 <script>
 export default {
   props: {
+    ariaRole: {
+      default: 'button',
+      type: String,
+      validator: function(value) {
+        const allowedOptions = ['button', 'link', ''];
+        return allowedOptions.includes(value);
+      },
+    },
+    isInteractable: {
+      default: true,
+      type: Boolean,
+    },
     states: {
       default: () => ['pending'],
       type: Array,
@@ -76,6 +99,18 @@ export default {
     },
     current() {
       return this.states.includes('current');
+    },
+  },
+
+  methods: {
+    handleKeypress(e) {
+      if (
+        this.isInteractable &&
+        ['enter', 'spacebar', ' '].includes(e.key.toLowerCase())
+      ) {
+        this.$refs.interactable.click();
+      }
+      return e.preventDefault();
     },
   },
 };
@@ -182,5 +217,16 @@ export default {
       border-color: var(--progresstracker-container-bg-color);
     }
   }
+  &__label {
+    @include sr-only();
+  }
 }
 </style>
+
+<lang-strings>
+{
+  "totara_tui": [
+    "a11y_progresstracker_action"
+  ]
+}
+</lang-strings>

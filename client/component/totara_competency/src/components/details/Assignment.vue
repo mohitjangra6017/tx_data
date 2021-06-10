@@ -49,7 +49,11 @@
           </div>
         </GridItem>
         <GridItem :units="4" :class="'tui-competencyDetailAssignment__status'">
-          <ProgressTrackerNavCircleAchievement :states="progressStates" />
+          <ProgressTrackerNavCircleAchievement
+            :states="progressStates"
+            :is-interactable="false"
+            :aria-role="''"
+          />
 
           <span
             class="tui-competencyDetailAssignment__status-text"
