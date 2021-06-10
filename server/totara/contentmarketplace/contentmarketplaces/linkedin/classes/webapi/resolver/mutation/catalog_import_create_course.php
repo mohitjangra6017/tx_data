@@ -26,6 +26,7 @@ namespace contentmarketplace_linkedin\webapi\resolver\mutation;
 use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\dto\course_creation_result;
 use contentmarketplace_linkedin\interactor\catalog_import_interactor;
+use contentmarketplace_linkedin\task\create_course_delay_task;
 use core\notification;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_login;
@@ -52,17 +53,16 @@ final class catalog_import_create_course implements mutation_resolver, has_middl
 
         $input_params = $args['input'];
 
-        $threshold = config::get_max_selected_items_number();
-        $redirect_url = new moodle_url('/totara/catalog/index.php');
-
-        if (count($input_params) <= $threshold) {
+        if (count($input_params) <= config::get_max_selected_items_number()) {
             // Creation on runtime here.
             return self:: create_course_immediate($input_params, $interactor);
         }
 
-        // Adhoc task queue here
+        // Create course delay with adhoc task.
+        create_course_delay_task::enqueue($input_params);
+
         $result = new course_creation_result(true);
-        $result->set_redirect_url($redirect_url);
+        $result->set_redirect_url(new moodle_url('/totara/catalog/index.php'));
 
         notification::info(get_string('course_content_delay_creation', 'contentmarketplace_linkedin'));
         return $result;
