@@ -37,7 +37,7 @@
         v-model="openBranches.subjects"
         :header-level="4"
         :separator="true"
-        :tree-data="filters.subject"
+        :tree-data="filters.subjects"
       >
         <template v-slot:content="{ content, label }">
           <MultiSelectFilter
@@ -45,57 +45,43 @@
             :hidden-title="true"
             :options="content.items"
             :title="label"
+            :visible-item-limit="5"
           />
         </template>
       </Tree>
 
-      <!-- Type tree filter -->
+      <!-- Asset type tree filter -->
       <Tree
-        v-model="openBranches.type"
+        v-model="openBranches.assetType"
         :header-level="4"
         :separator="true"
-        :tree-data="filters.type"
+        :tree-data="filters.assetType"
       >
         <template v-slot:content="{ content, label }">
           <MultiSelectFilter
-            v-model="value.type"
+            v-model="value.assetType"
             :hidden-title="true"
             :options="content.items"
             :title="label"
+            :visible-item-limit="5"
           />
         </template>
       </Tree>
 
       <!-- Time tree filter -->
       <Tree
-        v-model="openBranches.time"
+        v-model="openBranches.timeToComplete"
         :header-level="4"
         :separator="true"
-        :tree-data="filters.time"
+        :tree-data="filters.timeToComplete"
       >
         <template v-slot:content="{ content, label }">
           <MultiSelectFilter
-            v-model="value.time"
+            v-model="value.timeToComplete"
             :hidden-title="true"
             :options="content.items"
             :title="label"
-          />
-        </template>
-      </Tree>
-
-      <!-- Software tree filter -->
-      <Tree
-        v-model="openBranches.software"
-        :header-level="4"
-        :separator="true"
-        :tree-data="filters.software"
-      >
-        <template v-slot:content="{ content, label }">
-          <MultiSelectFilter
-            v-model="value.software"
-            :hidden-title="true"
-            :options="content.items"
-            :title="label"
+            :visible-item-limit="5"
           />
         </template>
       </Tree>

@@ -104,18 +104,18 @@
     </template>
 
     <!-- Table of selected courses -->
-    <template v-if="learningObjects" v-slot:review-table>
+    <template v-if="reviewingLearningObjects" v-slot:review-table>
       <ReviewTable
         :category-options="categoryOptions"
-        :items="learningObjects.items"
-        :selected-item-categories="selectedItemCategories"
+        :items="reviewingLearningObjects.items"
+        :selected-item-categories="reviewingItemCategories"
         :selected-items="selectedItems"
         @change-course-category="setSingleCourseCategory"
         @update="setSelectedItems"
       />
 
       <ReviewPaging
-        :last-page="!learningObjects.next_cursor.length"
+        :last-page="!reviewingLearningObjects.next_cursor.length"
         @next-page="updateReviewPage"
       />
     </template>
@@ -137,9 +137,10 @@ import SortFilter from 'totara_contentmarketplace/components/filters/SortFilter'
 import { notify } from 'tui/notifications';
 
 // Query
-import learningObjectsQuery from 'contentmarketplace_linkedin/graphql/catalog_import_learning_objects';
-import createCourseQuery from 'contentmarketplace_linkedin/graphql/catalog_import_create_course';
 import courseCategoriesQuery from 'contentmarketplace_linkedin/graphql/catalog_import_course_categories';
+import createCourseQuery from 'contentmarketplace_linkedin/graphql/catalog_import_create_course';
+import filterOptionsQuery from 'contentmarketplace_linkedin/graphql/catalog_import_learning_objects_filter_options';
+import learningObjectsQuery from 'contentmarketplace_linkedin/graphql/catalog_import_learning_objects';
 
 export default {
   components: {
@@ -169,123 +170,10 @@ export default {
       activeFilterStrings: ['Data science', 'Videos'],
       // Available Sort filter options
       categoryOptions: [],
-      learningObjects: {
-        items: [],
-        total: 0,
-      },
       filters: {
-        software: [
-          {
-            id: 'software',
-            label: 'Software',
-            content: {
-              items: [
-                {
-                  id: 'linux',
-                  label: 'Linux',
-                },
-                {
-                  id: 'mac',
-                  label: 'Mac',
-                },
-                {
-                  id: 'windows',
-                  label: 'Windows',
-                },
-              ],
-            },
-            children: [],
-          },
-        ],
-        subject: [
-          {
-            id: 'subjects',
-            label: 'Subjects',
-            content: {},
-            children: [
-              {
-                id: 'business',
-                label: 'Business',
-                content: {
-                  items: [
-                    {
-                      id: 'cloud',
-                      label: 'Cloud computing',
-                    },
-                    {
-                      id: 'datascience',
-                      label: 'Data science',
-                    },
-                  ],
-                },
-                children: [],
-              },
-              {
-                id: 'creative',
-                label: 'Creative',
-                content: {
-                  items: [
-                    {
-                      id: 'webDevelopment',
-                      label: 'Web development',
-                    },
-                    {
-                      id: 'mobileDevelopment',
-                      label: 'Mobile development',
-                    },
-                  ],
-                },
-                children: [],
-              },
-            ],
-          },
-        ],
-        type: [
-          {
-            id: 'type',
-            label: 'Type',
-            content: {
-              items: [
-                {
-                  id: 'course',
-                  label: 'Course',
-                },
-                {
-                  id: 'learningPath',
-                  label: 'Learning Path',
-                },
-                {
-                  id: 'video',
-                  label: 'Video',
-                },
-              ],
-            },
-            children: [],
-          },
-        ],
-        time: [
-          {
-            id: 'time',
-            label: 'Time to complete',
-            content: {
-              items: [
-                {
-                  id: 'lessThat5',
-                  label: '0 - 5 minutes',
-                },
-                {
-                  id: '1HourOrLess',
-                  label: 'Less than 1 hour',
-                },
-                {
-                  id: 'lessThan3Hours',
-                  label: 'Less than 3 hours',
-                },
-              ],
-            },
-            children: [],
-          },
-        ],
+        assetType: [],
+        subjects: [],
+        timeToComplete: [],
       },
       // Available language options for primary filter
       languageFilterOptions: [
@@ -298,34 +186,46 @@ export default {
           label: 'French',
         },
       ],
+      // Available learning content populated by learningObjectsQuery
+      learningObjects: {
+        items: [],
+        total: 0,
+      },
       // Open Filter tree branches
       openBranches: {
-        software: [],
+        assetType: [],
         subjects: ['subjects'],
-        time: [],
-        type: [],
+        timeToComplete: [],
       },
       // items per page limit
       paginationLimit: 20,
       // Selection view pagination page
       paginationPage: 1,
+      // Categories assigned to reviewing items
+      reviewingItemCategories: {},
       // List of selected items provided to review step
       reviewingItemList: null,
+      // Selected learning content populated by learningObjectsQuery
+      reviewingLearningObjects: {
+        items: [],
+        next_cursor: '',
+        total: 0,
+      },
       // Current load more page on review display
       reviewingLoadMorePage: 1,
+      // Showing display for reviewing selected items
+      reviewingSelectedItems: false,
       // Selected category value
       selectedCategory: {
         id: null,
         label: null,
       },
       selectedFilters: {
+        assetType: [],
         search: '',
-        software: [],
         subjects: [],
-        time: [],
-        type: [],
+        timeToComplete: [],
       },
-      selectedItemCategories: {},
       // Selected course ID's
       selectedItems: [],
       // Selected language value from primary filter
@@ -346,21 +246,25 @@ export default {
           id: 'ALPHABETICAL',
         },
       ],
-      // Showing display for reviewing selected items
-      reviewingSelectedItems: false,
     };
   },
 
   apollo: {
+    categoryOptions: {
+      query: courseCategoriesQuery,
+    },
+
     learningObjects: {
       query: learningObjectsQuery,
-      fetchPolicy: 'network-only',
       variables() {
         return {
           input: {
             filters: {
+              asset_type: this.selectedFilters.assetType,
+              ids: null,
               language: this.selectedLanguage,
-              ids: this.reviewingItemList,
+              search: this.selectedFilters.search,
+              time_to_complete: this.selectedFilters.timeToComplete,
             },
             pagination: {
               limit: this.paginationLimit,
@@ -388,8 +292,66 @@ export default {
       },
     },
 
-    categoryOptions: {
-      query: courseCategoriesQuery,
+    reviewingLearningObjects: {
+      query: learningObjectsQuery,
+      skip() {
+        return !this.reviewingSelectedItems;
+      },
+      variables() {
+        return {
+          input: {
+            filters: {
+              asset_type: null,
+              ids: this.reviewingItemList,
+              language: this.selectedLanguage,
+              search: null,
+              time_to_complete: null,
+            },
+            pagination: {
+              limit: 20,
+              page: 1,
+            },
+            sort_by: 'LATEST',
+          },
+        };
+      },
+      update({ result: data }) {
+        // return data;
+        // TODO: Remove this when actual courses come through via the query.
+        return Object.assign({}, data, {
+          items: data.items.map(item => {
+            return Object.assign({}, item, {
+              courses: [
+                { fullname: 'example course 1' },
+                { fullname: 'example course 2' },
+                { fullname: 'example course 3' },
+                { fullname: 'example course 4' },
+              ],
+            });
+          }),
+        });
+      },
+    },
+
+    filters: {
+      query: filterOptionsQuery,
+      variables() {
+        return {
+          input: {
+            language: this.selectedLanguage,
+          },
+        };
+      },
+      update({ result: data }) {
+        data = JSON.parse(JSON.stringify(data));
+
+        let filterOptions = {
+          assetType: data.asset_type,
+          subjects: data.subjects,
+          timeToComplete: data.time_to_complete,
+        };
+        return filterOptions;
+      },
     },
   },
 
@@ -461,11 +423,10 @@ export default {
      */
     resetPanelFilters() {
       this.selectedFilters = {
+        assetType: [],
         search: '',
-        software: [],
         subjects: [],
-        time: [],
-        type: [],
+        timeToComplete: [],
       };
     },
 
@@ -482,7 +443,7 @@ export default {
       });
 
       // Reset individual item categories to the default
-      this.selectedItemCategories = selectedCategories;
+      this.reviewingItemCategories = selectedCategories;
     },
 
     /**
@@ -564,7 +525,7 @@ export default {
         return key.id === data.value;
       });
 
-      this.selectedItemCategories[data.courseId] = selectedCategory;
+      this.reviewingItemCategories[data.courseId] = selectedCategory;
     },
 
     /**
@@ -585,12 +546,15 @@ export default {
       this.setLoadMorePage(this.reviewingLoadMorePage + 1);
 
       // Fetch additional data
-      this.$apollo.queries.learningObjects.fetchMore({
+      this.$apollo.queries.reviewingLearningObjects.fetchMore({
         variables: {
           input: {
             filters: {
-              language: this.selectedLanguage,
+              asset_type: [],
               ids: this.reviewingItemList,
+              language: this.selectedLanguage,
+              search: '',
+              time_to_complete: [],
             },
             pagination: {
               limit: 20,
@@ -617,17 +581,18 @@ export default {
         // Reset load more button
         this.setLoadMorePage(1);
 
-        // Reset selection results to first page
-        this.setItemsPerPage(20);
-        this.setPaginationPage(1);
-
         // Set all item categories to the default value
         this.setAllCategoriesToDefault();
 
         // Provide selected item list as a unique array
         this.reviewingItemList = this.selectedItems;
       } else {
-        this.reviewingItemList = null;
+        // Reset filters
+        this.resetPanelFilters();
+
+        // Reset pagination settings
+        this.setItemsPerPage(20);
+        this.setPaginationPage(1);
       }
 
       // Switch view

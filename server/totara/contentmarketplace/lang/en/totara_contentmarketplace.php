@@ -23,6 +23,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['a11y_filter_panel'] = 'Filter panel';
 $string['a11y_import_page_reviewing'] = 'Displaying review selected courses';
 $string['a11y_import_page_selecting'] = 'Displaying course selection';
 $string['actions'] = 'Actions';
@@ -75,6 +76,7 @@ $string['explorecreatecourseheading'] = 'Add a new course';
 $string['explorecreatecourseintro'] = 'Select content to include';
 $string['filters'] = 'Filters';
 $string['filter_sort_by'] = 'Sort by';
+$string['hide_filters'] = 'Hide filters';
 $string['in_collection'] = 'In collection';
 $string['initial_sync_learning_object_metadata_task'] = 'Initial sync of learning object metadata';
 $string['item_count'] = '{$a->count} items';
@@ -109,6 +111,7 @@ $string['setup_description_body:html'] = "<p>
 </p>";
 $string['shortnamenotuniquewithinform'] = 'Short name is already used for another course above ({$a})';
 $string['sortby'] = 'Sort by';
+$string['show_filters'] = 'Show filters';
 $string['subplugintype_contentmarketplace'] = 'Content Marketplace';
 $string['subplugintype_contentmarketplace_plural'] = 'Content Marketplaces';
 $string['sync_learning_object_metadata_task'] = 'Update learning object metadata';

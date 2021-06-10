@@ -53,8 +53,44 @@
       <!-- Filters -->
       <template v-slot:left-content>
         <aside class="tui-contentMarketplaceImport__filters">
-          <slot name="primary-filter" />
-          <slot name="filters" contentId="contentMarketplaceImportBody" />
+          <HideShow
+            :aria-region-label="
+              $str('a11y_filter_panel', 'totara_contentmarketplace')
+            "
+            :hide-content-text="
+              $str('hide_filters', 'totara_contentmarketplace')
+            "
+            :mobile-only="true"
+            :show-content-text="
+              $str('show_filters', 'totara_contentmarketplace')
+            "
+            :sticky="true"
+          >
+            <template
+              v-slot:trigger="{ controls, expanded, text, toggleContent }"
+            >
+              <ButtonIcon
+                :aria-controls="controls"
+                :aria-label="false"
+                class="tui-contentMarketplaceImport__filters-toggle"
+                :class="{
+                  'tui-contentMarketplaceImport__filters-toggleExpanded': expanded,
+                }"
+                :styleclass="{ transparent: true }"
+                :text="text"
+                @click="toggleContent"
+              >
+                <SliderIcon />
+              </ButtonIcon>
+            </template>
+
+            <template v-slot:content>
+              <div class="tui-contentMarketplaceImport__filters-content">
+                <slot name="primary-filter" />
+                <slot name="filters" contentId="contentMarketplaceImportBody" />
+              </div>
+            </template>
+          </HideShow>
         </aside>
       </template>
 
@@ -114,17 +150,23 @@
 </template>
 
 <script>
+import ButtonIcon from 'tui/components/buttons/ButtonIcon';
 import Grid from 'tui/components/grid/Grid';
 import GridItem from 'tui/components/grid/GridItem';
+import HideShow from 'tui/components/collapsible/HideShow';
 import LayoutReview from 'tui/components/layouts/LayoutOneColumn';
 import LayoutSelect from 'totara_contentmarketplace/components/layouts/PageLayoutTwoColumn';
+import SliderIcon from 'tui/components/icons/Slider';
 
 export default {
   components: {
+    ButtonIcon,
     Grid,
     GridItem,
+    HideShow,
     LayoutReview,
     LayoutSelect,
+    SliderIcon,
   },
 
   props: {
@@ -143,12 +185,15 @@ export default {
 </script>
 
 <lang-strings>
-  {
-    "totara_contentmarketplace": [
-      "a11y_import_page_reviewing",
-      "a11y_import_page_selecting"
-    ]
-  }
+{
+  "totara_contentmarketplace": [
+    "a11y_filter_panel",
+    "a11y_import_page_reviewing",
+    "a11y_import_page_selecting",
+    "hide_filters",
+    "show_filters"
+  ]
+}
 </lang-strings>
 
 <style lang="scss">
@@ -166,8 +211,18 @@ export default {
   &__filters {
     margin-right: var(--gap-6);
 
-    & > * + * {
-      margin-top: var(--gap-6);
+    &-content {
+      & > * + * {
+        margin-top: var(--gap-6);
+      }
+    }
+
+    &-toggle {
+      margin: 0 auto;
+    }
+
+    &-toggleExpanded {
+      margin-bottom: var(--gap-5);
     }
   }
 
