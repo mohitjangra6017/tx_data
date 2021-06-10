@@ -18,22 +18,56 @@
 
 <template>
   <div>
-    <MultiSelect v-model="selection" :options="options" :title="'temp title'" />
-    <br />
-    {{ selection }}
+    <SamplesExample>
+      <div>
+        <MultiSelect
+          v-model="selection"
+          :options="options"
+          :title="'temp title'"
+          :visible-item-limit="limitItems"
+        />
+        <br />
+        {{ selection }}
+      </div>
+    </SamplesExample>
+
+    <SamplesPropCtl>
+      <FormRow
+        label="Limit of visible items (extra items added to collapsible area)"
+      >
+        <RadioGroup v-model="limitItems" :horizontal="true">
+          <Radio :value="null">No limit</Radio>
+          <Radio :value="1">1</Radio>
+          <Radio :value="3">3</Radio>
+          <Radio :value="4">4</Radio>
+          <Radio :value="5">5</Radio>
+        </RadioGroup>
+      </FormRow>
+    </SamplesPropCtl>
   </div>
 </template>
 
 <script>
+import FormRow from 'tui/components/form/FormRow';
 import MultiSelect from 'tui/components/filters/MultiSelectFilter';
+import Radio from 'tui/components/form/Radio';
+import RadioGroup from 'tui/components/form/RadioGroup';
+import SamplesExample from 'samples/components/sample_parts/misc/SamplesExample';
+import SamplesPropCtl from 'samples/components/sample_parts/misc/SamplesPropCtl';
 
 export default {
   components: {
+    FormRow,
     MultiSelect,
+    Radio,
+    RadioGroup,
+    SamplesExample,
+    SamplesPropCtl,
   },
 
   data() {
     return {
+      limitItems: null,
       options: [
         {
           id: 'course',
@@ -46,6 +80,14 @@ export default {
         {
           id: 'user',
           label: 'Include users',
+        },
+        {
+          id: 'video',
+          label: 'Include Videos',
+        },
+        {
+          id: 'conference',
+          label: 'Include conferences',
         },
       ],
       selection: ['program'],

@@ -38,5 +38,7 @@ exports[`MultiSelectFilter.vue matches snapshot 1`] = `
       
     </checkboxbutton-stub>
   </div>
+   
+  <!---->
 </fieldset-stub>
 `;

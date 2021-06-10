@@ -12,6 +12,8 @@ information provided here is intended especially for developers.
   * Template and SCSS changes
 * Exposed more of the table properties to the select table component datatable/SelectTable.vue
   * Template changes
+* Updated MultiSelectFilter.vue to optionally support hiding/showing filter options after a certain number
+  * Template and SCSS changes
 
 === 14.0 ===
 
