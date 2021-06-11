@@ -656,6 +656,8 @@ EditorNotify.prototype = {
      * @param {String} message The translated message (use get_string)
      * @param {String} type Must be either "info" or "warning"
      * @param {Number} [timeout] Optional time in milliseconds to show this message for.
+     *
+     * @returns {EditorNotify} this
      * @chainable
      */
     showMessage: function(message, type, timeout) {
@@ -683,15 +685,10 @@ EditorNotify.prototype = {
             intTimeout = 60000;
         }
 
-        var self = this;
-        require(['core/templates'], function(templatelib) {
-            templatelib.renderIcon(type).then(function(html) {
-                self.messageOverlay.empty();
-                self.messageOverlay.removeClass('atto_warning atto_info').addClass('atto_' + type);
-                self.messageOverlay.append(html + message);
-                self.messageOverlay.show(true);
-            });
-        });
+        this.messageOverlay.empty();
+        this.messageOverlay.removeClass('atto_warning atto_info').addClass('atto_' + type);
+        this.messageOverlay.append(message);
+        this.messageOverlay.show(true);
 
         // reset hide timout, if applicable
         if (timeout > 0) {

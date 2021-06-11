@@ -22,13 +22,9 @@
 // @package   theme_legacy
 
 .editor_atto_notification {
-  &.atto_warning {
-    color: var(--color-prompt-warning);
-  }
-
-  &.atto_info {
-    color: var(--color-secondary);
-  }
+  background-color: var(--color-background);
+  border: var(--border-width-normal) solid var(--color-primary);
+  padding: var(--gap-2);
 }
 
 .editor_atto_alert {

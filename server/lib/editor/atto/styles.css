@@ -197,19 +197,11 @@ div.editor_atto_content:hover .atto_control {
 .editor_atto_notification {
     position: absolute;
     z-index: 1;
-    bottom: -1.5em;
-    height: 1.5em;
     margin-top: 1px;
     cursor: pointer;
 }
 .dir-rtl .editor_atto_notification {
     float: left;
-}
-.editor_atto_notification .atto_info,
-.editor_atto_notification .atto_warning {
-    display: inline-block;
-    border-top: none;
-    border-radius: 0 0 8px 8px;
 }
 
 .editor_atto_alert {
