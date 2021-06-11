@@ -24,6 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['enable_goal_status_change'] = 'Ability to change goal status during activity';
+$string['enable_goal_status_change_participant'] = 'Change of goal status participant';
+$string['enable_goal_status_change_participant_help'] = 'Only one goal status change will be submitted to the goal. If there are multiple people in the participant role, the first change submitted will be applied.';
 $string['eventchangedtype'] = 'Changed Goal Type';
 $string['eventcreatedassignment'] = 'Created Goal Assignment';
 $string['eventcreatedframework'] = 'Created Goal Framework';
