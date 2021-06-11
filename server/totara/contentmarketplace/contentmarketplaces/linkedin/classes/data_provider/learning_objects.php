@@ -153,6 +153,14 @@ class learning_objects extends paginated_provider {
 
     /**
      * @param learning_object_repository $repository
+     * @param int[] $ids
+     */
+    protected function filter_query_by_ids(repository $repository, array $ids): void {
+        $repository->where_in('id', $ids);
+    }
+
+    /**
+     * @param learning_object_repository $repository
      */
     protected function sort_query_by_alphabetical(repository $repository): void {
         $repository->order_by('title');

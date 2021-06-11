@@ -67,9 +67,6 @@ type contentmarketplace_linkedin_catalog_import_learning_objects_result implemen
 }
 
 """
-<<<<<<< HEAD
-Output of the learning objects filter options query.
-=======
 Output of the create course mutation.
 """
 type contentmarketplace_linkedin_catalog_import_create_course_result {
@@ -79,8 +76,7 @@ type contentmarketplace_linkedin_catalog_import_create_course_result {
 }
 
 """
-Filter input for a timespan, with minimum and maximum values representing the range to filter for.
->>>>>>> TL-30348 contentmarketplace_linkedin: Prevented race condition problem and cleaned up code
+Output of the learning objects filter options query.
 """
 type contentmarketplace_linkedin_catalog_import_learning_objects_filter_options_result {
   subjects: [totara_tui_tree_branch!]
@@ -97,6 +93,7 @@ input contentmarketplace_linkedin_catalog_import_learning_objects_filters_input 
   asset_type: [contentmarketplace_linkedin_asset_type!]
   level: [contentmarketplace_linkedin_level!]
   time_to_complete: [String!]
+  ids: [core_id!]
 }
 
 """

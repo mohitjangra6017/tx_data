@@ -306,6 +306,30 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         ]));
     }
 
+    public function test_ids_filter(): void {
+        $learning_object_1 = generator::instance()->create_learning_object('1');
+        $learning_object_2 = generator::instance()->create_learning_object('2');
+        $learning_object_3 = generator::instance()->create_learning_object('3');
+
+        $result_1 = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
+            'ids' => [$learning_object_1->id],
+        ]));
+        $this->assertEquals(1, $result_1['total']);
+        $this->assertEquals($learning_object_1->id, $result_1['items']->first()->id);
+
+        $result_2_and_3 = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
+            'ids' => [$learning_object_2->id, $learning_object_3->id],
+        ]));
+        $this->assertEquals(2, $result_2_and_3['total']);
+        $this->assertEquals($learning_object_2->id, $result_2_and_3['items']->first()->id);
+        $this->assertEquals($learning_object_3->id, $result_2_and_3['items']->last()->id);
+
+        $result_empty = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
+            'ids' => [],
+        ]));
+        $this->assertEquals(0, $result_empty['total']);
+    }
+
     public function test_type_resolver(): void {
         $this->create_data_from_fixture();
 

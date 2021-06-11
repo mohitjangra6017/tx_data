@@ -363,6 +363,7 @@ export default {
           input: {
             filters: {
               language: this.selectedLanguage,
+              ids: this.reviewingItemList,
             },
             pagination: {
               limit: this.paginationLimit,
@@ -587,6 +588,7 @@ export default {
           input: {
             filters: {
               language: this.selectedLanguage,
+              ids: this.reviewingItemList,
             },
             pagination: {
               limit: 20,
@@ -623,7 +625,7 @@ export default {
         // Provide selected item list as a unique array
         this.reviewingItemList = this.selectedItems;
       } else {
-        this.$apollo.queries.learningObjects.refetch();
+        this.reviewingItemList = null;
       }
 
       // Switch view
