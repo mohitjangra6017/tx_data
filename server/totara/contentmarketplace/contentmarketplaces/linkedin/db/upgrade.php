@@ -107,5 +107,86 @@ function xmldb_contentmarketplace_linkedin_upgrade(int $old_version): bool {
         upgrade_plugin_savepoint(true, 2021042802, 'contentmarketplace', 'linkedin');
     }
 
+    if ($old_version < 2021061100) {
+        // Define table marketplace_linkedin_classification to be created.
+        $table = new xmldb_table('marketplace_linkedin_classification');
+
+        // Adding fields to table marketplace_linkedin_classification.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('urn', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('locale_country', XMLDB_TYPE_CHAR, '10', null, null, null, null);
+        $table->add_field('locale_language', XMLDB_TYPE_CHAR, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('type', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table marketplace_linkedin_classification.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Adding indexes to table marketplace_linkedin_classification.
+        $table->add_index('urn_index', XMLDB_INDEX_UNIQUE, ['urn']);
+        $table->add_index('name_index', XMLDB_INDEX_NOTUNIQUE, ['name']);
+        $table->add_index('type_index', XMLDB_INDEX_NOTUNIQUE, ['type']);
+
+        // Conditionally launch create table for marketplace_linkedin_classification.
+        if (!$db_manager->table_exists($table)) {
+            $db_manager->create_table($table);
+        }
+
+        // Linkedin savepoint reached.
+        upgrade_plugin_savepoint(true, 2021061100, 'contentmarketplace', 'linkedin');
+    }
+
+    if ($old_version < 2021061101) {
+        // Define table marketplace_linkedin_learning_object_classify to be created.
+        $table = new xmldb_table('marketplace_linkedin_learning_object_classify');
+
+        // Adding fields to table marketplace_linkedin_learning_object_classify.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('learning_object_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('classification_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table marketplace_linkedin_learning_object_classify.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('learning_object_id_fk', XMLDB_KEY_FOREIGN, ['learning_object_id'], 'marketplace_linkedin_learning_object', ['id']);
+        $table->add_key('classification_id_fk', XMLDB_KEY_FOREIGN, ['classification_id'], 'marketplace_linkedin_classification', ['id']);
+
+        // Adding indexes to table marketplace_linkedin_learning_object_classify.
+        $table->add_index('learning_object_classification_idx', XMLDB_INDEX_UNIQUE, ['learning_object_id', 'classification_id']);
+
+        // Conditionally launch create table for marketplace_linkedin_learning_object_classify.
+        if (!$db_manager->table_exists($table)) {
+            $db_manager->create_table($table);
+        }
+
+        // Linkedin savepoint reached.
+        upgrade_plugin_savepoint(true, 2021061101, 'contentmarketplace', 'linkedin');
+    }
+
+    if ($old_version < 2021061102) {
+        // Define table marketplace_linkedin_classification_relationship to be created.
+        $table = new xmldb_table('marketplace_linkedin_classification_relationship');
+
+        // Adding fields to table marketplace_linkedin_classification_relationship.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('parent_classification_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('child_classification_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table marketplace_linkedin_classification_relationship.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('parent_classification_fk', XMLDB_KEY_FOREIGN, ['parent_classification_id'], 'marketplace_linkedin_classification', ['id']);
+        $table->add_key('child_classification_fk', XMLDB_KEY_FOREIGN, ['child_classification_id'], 'marketplace_linkedin_classification', ['id']);
+
+        // Adding indexes to table marketplace_linkedin_classification_relationship.
+        $table->add_index('classification_map_idx', XMLDB_INDEX_UNIQUE, ['parent_classification_id', 'child_classification_id']);
+
+        // Conditionally launch create table for marketplace_linkedin_classification_relationship.
+        if (!$db_manager->table_exists($table)) {
+            $db_manager->create_table($table);
+        }
+
+        // Linkedin savepoint reached.
+        upgrade_plugin_savepoint(true, 2021061102, 'contentmarketplace', 'linkedin');
+    }
+
     return true;
 }

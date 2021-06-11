@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -15,14 +15,25 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Simon Coggins <simon.coggins@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
+namespace contentmarketplace_linkedin\entity;
 
-defined('MOODLE_INTERNAL') || die();
+use core\orm\entity\entity;
 
-$plugin->version = 2021061102;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020101200;      // Requires this Totara version.
-$plugin->component = 'contentmarketplace_linkedin'; // To check on upgrade, that module sits in correct place
+/**
+ * Entity class represent for table "ttr_marketplace_linkedin_learning_object_classify"
+ *
+ * @property int $id
+ * @property int $learning_object_id
+ * @property int $classification_id
+ */
+class learning_object_classification extends entity {
+    /**
+     * @var string
+     */
+    public const TABLE = 'marketplace_linkedin_learning_object_classify';
+}

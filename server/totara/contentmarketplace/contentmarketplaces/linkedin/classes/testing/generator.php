@@ -27,6 +27,7 @@ use contentmarketplace_linkedin\api\response\result;
 use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\config;
+use contentmarketplace_linkedin\entity\classification;
 use contentmarketplace_linkedin\entity\learning_object;
 use core\orm\query\builder;
 use core\testing\component_generator;
@@ -146,6 +147,7 @@ class generator extends component_generator implements learning_object_generator
      * + web_launch_url: String
      * + ss_launch_url: String
      *
+     * @param string $urn
      * @param array $record
      * @return learning_object
      */
@@ -240,5 +242,51 @@ class generator extends component_generator implements learning_object_generator
 
         $entity = $this->create_learning_object($urn, $record);
         return new learning_object_model($entity);
+    }
+
+    /**
+     * $record is a hashmap where keys are:
+     * + name: String
+     * + locale_language: String
+     * + locale_country: String
+     * + type: String
+     *
+     * @param string|null $urn
+     * @param array $record
+     * @return classification
+     */
+    public function create_classification(?string $urn = null, array $record = []): classification {
+        if (empty($urn)) {
+            $urn = sprintf("urn:li:organization:%d", rand(1, 100000));
+        }
+
+        if (empty($record['name'])) {
+            $record['name'] = 'Classification ' . rand(1, 9999);
+        }
+
+        if (empty($record['locale_language'])) {
+            $record['locale_language'] = 'en';
+
+            // Only set the locale country if the language is empty.
+            if (empty($record['locale_country'])) {
+                $record['locale_country'] = 'US';
+            }
+        }
+
+        if (empty($record['type'])) {
+            $record['type'] = constants::CLASSIFICATION_TYPE_SUBJECT;
+        }
+
+        $classification = new classification();
+        $classification->urn = $urn;
+        $classification->name = $record['name'];
+        $classification->locale_language = $record['locale_language'];
+        $classification->locale_country = $record['locale_country'] ?? null;
+        $classification->type = $record['type'];
+
+        $classification->save();
+        $classification->refresh();
+
+        return $classification;
     }
 }

@@ -34,5 +34,53 @@
         <INDEX NAME="title_index" UNIQUE="false" FIELDS="title"/>
       </INDEXES>
     </TABLE>
+    <TABLE NAME="marketplace_linkedin_classification" COMMENT="Stores the classfications from linkedin learning locally">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="urn" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="locale_country" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="locale_language" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Classification types"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="urn_index" UNIQUE="true" FIELDS="urn"/>
+        <INDEX NAME="name_index" UNIQUE="false" FIELDS="name"/>
+        <INDEX NAME="type_index" UNIQUE="false" FIELDS="type"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="marketplace_linkedin_learning_object_classify" COMMENT="Stores the relationship between the marketplace linkedin learning object and the classification">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="learning_object_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The local learning object foreign key"/>
+        <FIELD NAME="classification_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The local classification foreign key"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="learning_object_id_fk" TYPE="foreign" FIELDS="learning_object_id" REFTABLE="marketplace_linkedin_learning_object" REFFIELDS="id"/>
+        <KEY NAME="classification_id_fk" TYPE="foreign" FIELDS="classification_id" REFTABLE="marketplace_linkedin_classification" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="learning_object_classification_idx" UNIQUE="true" FIELDS="learning_object_id, classification_id"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="marketplace_linkedin_classification_relationship" COMMENT="Stores the relationship between the classifications only">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="parent_classification_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The parent classification's id"/>
+        <FIELD NAME="child_classification_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The child classification's id"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="parent_classification_fk" TYPE="foreign" FIELDS="parent_classification_id" REFTABLE="marketplace_linkedin_classification" REFFIELDS="id"/>
+        <KEY NAME="child_classification_fk" TYPE="foreign" FIELDS="child_classification_id" REFTABLE="marketplace_linkedin_classification" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="classification_map_idx" UNIQUE="true" FIELDS="parent_classification_id, child_classification_id"/>
+      </INDEXES>
+    </TABLE>
   </TABLES>
 </XMLDB>

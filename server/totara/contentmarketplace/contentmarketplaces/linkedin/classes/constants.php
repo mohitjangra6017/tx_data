@@ -99,6 +99,22 @@ final class constants {
     public const CONTRIBUTION_TYPE_PUBLISHER = 'PUBLISHER';
 
     /**
+     * @var string
+     */
+    public const CLASSIFICATION_TYPE_LIBRARY = 'LIBRARY';
+
+    /**
+     * @var string
+     */
+    public const CLASSIFICATION_TYPE_SUBJECT = 'SUBJECT';
+
+    /**
+     * @var string
+     */
+    public const CLASSIFICATION_TYPE_TOPIC = 'TOPIC';
+
+
+    /**
      * @param string $sort_by
      * @return bool
      */
