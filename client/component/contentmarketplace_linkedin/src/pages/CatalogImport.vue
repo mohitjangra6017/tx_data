@@ -139,6 +139,7 @@ import { notify } from 'tui/notifications';
 // Query
 import learningObjectsQuery from 'contentmarketplace_linkedin/graphql/catalog_import_learning_objects';
 import createCourseQuery from 'contentmarketplace_linkedin/graphql/catalog_import_create_course';
+import courseCategoriesQuery from 'contentmarketplace_linkedin/graphql/catalog_import_course_categories';
 
 export default {
   components: {
@@ -167,11 +168,7 @@ export default {
       // Array of active filter strings
       activeFilterStrings: ['Data science', 'Videos'],
       // Available Sort filter options
-      categoryOptions: [
-        { label: 'Marketing', id: 'marketing' },
-        { label: 'User experience', id: 'user' },
-        { label: 'Security', id: 'sec' },
-      ],
+      categoryOptions: [],
       learningObjects: {
         items: [],
         total: 0,
@@ -390,6 +387,10 @@ export default {
         });
       },
     },
+
+    categoryOptions: {
+      query: courseCategoriesQuery,
+    },
   },
 
   computed: {
@@ -426,6 +427,7 @@ export default {
             input: this.selectedItems.map(item => {
               return {
                 learning_object_id: item,
+                category_id: this.selectedItemCategories[item].id,
               };
             }),
           },

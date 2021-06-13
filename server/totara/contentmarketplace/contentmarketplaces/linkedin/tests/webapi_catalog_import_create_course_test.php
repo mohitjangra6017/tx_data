@@ -347,11 +347,15 @@ class contentmarketplace_linkedin_webapi_catalog_import_create_course_testcase e
         self::assertEquals(0, $db->count_records('course', ['containertype' => course::get_type()]));
 
         self::setAdminUser();
+        $category_id = helper::get_default_course_category_id();
         $result = $this->execute_graphql_operation(
             'contentmarketplace_linkedin_catalog_import_create_course',
             [
                 'input' => [
-                    ['learning_object_id' => $learning_object->id]
+                    [
+                        'learning_object_id' => $learning_object->id,
+                        'category_id' => $category_id
+                    ]
                 ]
             ]
         );
