@@ -7,31 +7,32 @@ exports[`collapsible matches snapshot 1`] = `
   <div
     class="tui-collapsible__header"
   >
-    <div
-      class="tui-collapsible__header-mainContent"
+    <h3
+      class="tui-collapsible__header-heading"
     >
-      <buttonicon-stub
+      <div
         aria-controls="idundefinedregion"
-        ariaexpanded="true"
-        arialabel="hello"
-        class="tui-collapsible__header-icons"
-        styleclass="[object Object]"
-        type="button"
+        aria-expanded="true"
+        class="tui-collapsible__header-button"
+        role="button"
+        tabindex="0"
       >
         <collapseicon-stub
+          aria-hidden="true"
+          class="tui-collapsible__header-icon"
           size="100"
         />
-      </buttonicon-stub>
-       
-      <h3
-        class="tui-collapsible__header-text"
-        id="idundefinedlabel"
-      >
-        
-        hello
-        
-      </h3>
-    </div>
+         
+        <span
+          class="tui-collapsible__header-text"
+          id="idundefinedlabel"
+        >
+          
+          hello
+          
+        </span>
+      </div>
+    </h3>
      
     <!---->
   </div>

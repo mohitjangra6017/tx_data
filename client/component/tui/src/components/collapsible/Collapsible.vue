@@ -19,24 +19,37 @@
 <template>
   <div class="tui-collapsible">
     <div class="tui-collapsible__header">
-      <div class="tui-collapsible__header-mainContent" @click="toggleExpand">
-        <ButtonIcon
-          class="tui-collapsible__header-icons"
-          :styleclass="{
-            transparent: true,
-          }"
+      <h3 class="tui-collapsible__header-heading">
+        <div
+          class="tui-collapsible__header-button"
+          role="button"
+          tabindex="0"
           :aria-expanded="expanded.toString()"
           :aria-controls="generatedId + 'region'"
-          :aria-label="label"
+          @click="toggleExpand"
+          @keydown="handleHeaderKeydown"
         >
-          <CollapseIcon v-if="expanded" size="100" />
-          <ExpandIcon v-else size="100" />
-        </ButtonIcon>
-        <h3 :id="generatedId + 'label'" class="tui-collapsible__header-text">
-          {{ label }}
-          <slot name="label-extra" />
-        </h3>
-      </div>
+          <CollapseIcon
+            v-if="expanded"
+            class="tui-collapsible__header-icon"
+            aria-hidden="true"
+            size="100"
+          />
+          <ExpandIcon
+            v-else
+            class="tui-collapsible__header-icon"
+            aria-hidden="true"
+            size="100"
+          />
+          <span
+            :id="generatedId + 'label'"
+            class="tui-collapsible__header-text"
+          >
+            {{ label }}
+            <slot name="label-extra" />
+          </span>
+        </div>
+      </h3>
 
       <div
         v-if="$scopedSlots['collapsible-side-content']"
@@ -60,13 +73,11 @@
 </template>
 
 <script>
-import ButtonIcon from 'tui/components/buttons/ButtonIcon';
 import CollapseIcon from 'tui/components/icons/Collapse';
 import ExpandIcon from 'tui/components/icons/Expand';
 
 export default {
   components: {
-    ButtonIcon,
     CollapseIcon,
     ExpandIcon,
   },
@@ -132,6 +143,13 @@ export default {
       // Propagate expanded value change to parent
       this.$emit('input', !this.value);
     },
+
+    handleHeaderKeydown(e) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        this.toggleExpand();
+      }
+    },
   },
 };
 </script>
@@ -144,24 +162,36 @@ export default {
     border: var(--border-width-thin) solid
       var(--collapsible-header-border-color);
 
-    &-icons {
-      margin-right: var(--gap-2);
-      margin-left: var(--gap-2);
-      pointer-events: none;
+    &-heading {
+      display: flex;
+      flex-grow: 1;
+      margin: 0;
+    }
+
+    &-button {
+      @include tui-wordbreak--hard();
+      display: flex;
+      flex-grow: 1;
+      align-items: center;
+      margin: 0;
+      padding: var(--gap-2) var(--gap-2) var(--gap-2) 0;
+      cursor: pointer;
+      user-select: none;
+
+      &:focus {
+        @include tui-focus();
+      }
+    }
+
+    &-icon {
+      flex-shrink: 0;
+      margin: 0 var(--gap-4);
+      color: var(--color-state);
     }
 
     &-text {
       @include tui-font-heading-x-small();
       margin: 0;
-    }
-
-    &-mainContent {
-      @include tui-wordbreak--hard();
-      display: flex;
-      flex-grow: 1;
-      padding: var(--gap-2) var(--gap-2) var(--gap-2) 0;
-      cursor: pointer;
-      user-select: none;
     }
 
     &-sideContent {

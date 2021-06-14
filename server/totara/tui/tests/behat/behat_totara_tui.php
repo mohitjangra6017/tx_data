@@ -79,7 +79,7 @@ class behat_totara_tui extends behat_base {
 
     private const COLLAPSIBLE_LOCATOR = '.tui-collapsible';
     private const COLLAPSIBLE_HEADER_TEXT_LOCATOR = '.tui-collapsible__header-text';
-    private const COLLAPSIBLE_BUTTON_LOCATOR = '.tui-iconBtn.tui-collapsible__header_icons';
+    private const COLLAPSIBLE_BUTTON_LOCATOR = '.tui-collapsible__header-button';
 
     private const TABS_ACTIVE_TAB_LOCATOR = '.tui-tabs__tab--active';
 
