@@ -60,6 +60,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body_format' => FORMAT_MOODLE,
                 'subject' => 'This is subject',
                 'title' => 'This is title',
+                'additional_criteria' => 'Some json stuff',
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_before_event::identifier(),
                 'schedule_offset' => 5,
@@ -82,6 +83,9 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
 
         self::assertArrayHasKey('title', $notification_preference);
         self::assertEquals('This is title', $notification_preference['title']);
+
+        self::assertArrayHasKey('additional_criteria', $notification_preference);
+        self::assertNull($notification_preference['additional_criteria']); // The resolver does not support additional criteria.
 
         self::assertArrayHasKey('subject', $notification_preference);
         self::assertEquals('This is subject', $notification_preference['subject']);
@@ -145,6 +149,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body_format' => FORMAT_HTML,
                 'subject' => 'First subject',
                 'title' => 'First title',
+                'additional_criteria' => 'First json stuff',
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_after_event::identifier(),
                 'schedule_offset' => 10,
@@ -167,6 +172,9 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
 
         self::assertArrayHasKey('title', $notification_preference);
         self::assertEquals('First title', $notification_preference['title']);
+
+        self::assertArrayHasKey('additional_criteria', $notification_preference);
+        self::assertNull($notification_preference['additional_criteria']); // The resolver does not support additional criteria.
 
         self::assertArrayHasKey('subject', $notification_preference);
         self::assertEquals('First subject', $notification_preference['subject']);
@@ -220,6 +228,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'context_id' => 42,
                 'resolver_class_name' => mock_resolver::class,
                 'title' => 'custom title',
+                'additional_criteria' => 'First json stuff',
                 'body' => 'custom body',
                 'subject' => 'custom subject',
                 'body_format' => FORMAT_MOODLE,
@@ -261,6 +270,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'resolver_class_name' => mock_resolver::class,
                 'context_id' => $context_system->id,
                 'title' => 'This is custom',
+                'additional_criteria' => 'Custom json stuff',
                 'body' => 'This is body',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
@@ -286,6 +296,9 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
 
         self::assertArrayHasKey('title', $notification_preference);
         self::assertEquals('This is custom', $notification_preference['title']);
+
+        self::assertArrayHasKey('additional_criteria', $notification_preference);
+        self::assertNull($notification_preference['additional_criteria']); // The resolver does not support additional criteria.
 
         self::assertArrayHasKey('subject', $notification_preference);
         self::assertEquals('This is subject', $notification_preference['subject']);
@@ -341,6 +354,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'resolver_class_name' => mock_resolver::class,
                 'context_id' => $context_system->id,
                 'title' => /** @lang text */ '<input type="text" value="cc"/>',
+                'additional_criteria' => 'Custom json stuff',
                 'body' => 'cccd',
                 'subject' => 'pokopkopfw',
                 'body_format' => FORMAT_MOODLE,
@@ -379,6 +393,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'resolver_class_name' => mock_resolver::class,
                 'context_id' => $context_system->id,
                 'title' => 'This is title',
+                'additional_criteria' => 'Custom json stuff',
                 'body' => /** @lang text */ '<script type="javascript">alert(1)</script>',
                 'subject' => 'This is subject',
                 'body_format' => FORMAT_MOODLE,
@@ -420,6 +435,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'resolver_class_name' => mock_resolver::class,
                 'context_id' => $context_system->id,
                 'title' => 'This is title',
+                'additional_criteria' => 'Custom json stuff',
                 'body' => 'This is body',
                 'subject' => /** @lang text */ '<script type="javascript">alert(1)</script>',
                 'body_format' => FORMAT_MOODLE,
@@ -469,6 +485,7 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
                 'body_format' => FORMAT_HTML,
                 'subject' => 'First subject',
                 'title' => 'First title',
+                'additional_criteria' => 'First json stuff',
                 'subject_format' => FORMAT_PLAIN,
                 'schedule_type' => schedule_after_event::identifier(),
                 'schedule_offset' => 10,
@@ -494,6 +511,9 @@ class totara_notification_webapi_create_custom_notification_preference_testcase 
 
         self::assertArrayHasKey('title', $notification_preference);
         self::assertEquals('First title', $notification_preference['title']);
+
+        self::assertArrayHasKey('additional_criteria', $notification_preference);
+        self::assertNull($notification_preference['additional_criteria']); // The resolver does not support additional criteria.
 
         self::assertArrayHasKey('subject', $notification_preference);
         self::assertEquals('First subject', $notification_preference['subject']);

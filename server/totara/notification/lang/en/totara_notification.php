@@ -54,6 +54,7 @@ $string['edit_delivery_preferences'] = 'Edit delivery channels';
 $string['edit_notification'] = "Edit notification";
 $string['edit_notification_name'] = "Edit notification {\$a}";
 $string['enabled'] = 'Enabled';
+$string['enable_custom_additional_criteria'] = 'Enable customising additional configuration properties';
 $string['enable_custom_body'] = 'Enable customising field body';
 $string['enable_custom_forced_delivery_channels'] = 'Enable customising forced delivery channels';
 $string['enable_custom_schedule'] = 'Enable customising field schedule';

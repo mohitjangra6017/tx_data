@@ -140,6 +140,19 @@ class notification_preference_builder {
      * By setting this value to NULL, you are more likely to reset the notification record to
      * fallback to the ancestor notification preference, if it has any.
      *
+     * Additional criteria can be null.
+     *
+     * @param string|null $additional_criteria
+     * @return void
+     */
+    public function set_additional_criteria(?string $additional_criteria): void {
+        $this->record_data['additional_criteria'] = $additional_criteria;
+    }
+
+    /**
+     * By setting this value to NULL, you are more likely to reset the notification record to
+     * fallback to the ancestor notification preference, if it has any.
+     *
      * This must be the raw offset value (for example, a negative value for a before_event).
      *
      * @param int|null $offset

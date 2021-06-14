@@ -38,6 +38,7 @@ use totara_notification\repository\notification_preference_repository;
  * @property string      $area
  * @property int         $item_id
  * @property string|null $title
+ * @property string|null $additional_criteria json encoded
  * @property string|null $recipient
  * @property string|null $subject
  * @property string|null $subject_format

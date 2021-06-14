@@ -517,5 +517,19 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2021040700.00);
     }
 
+    if ($oldversion < 2021061700.00) {
+        // Define field additional_criteria to be added to notification_preference.
+        $table = new xmldb_table('notification_preference');
+        $field = new xmldb_field('additional_criteria', XMLDB_TYPE_TEXT, null, null, null, null, null, 'title');
+
+        // Conditionally launch add field additional_criteria.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2021061700.00);
+    }
+
     return true;
 }

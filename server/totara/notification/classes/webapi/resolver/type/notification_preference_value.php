@@ -105,6 +105,9 @@ class notification_preference_value implements type_resolver {
             case 'title':
                 return $source->get_title();
 
+            case 'additional_criteria':
+                return $source->get_additional_criteria();
+
             case 'schedule_offset':
                 $format = $args['unit'] ?? schedule_helper::SECOND;
                 $offset = $source->get_scheduled_offset();

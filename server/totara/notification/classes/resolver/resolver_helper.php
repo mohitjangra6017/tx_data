@@ -25,6 +25,7 @@ namespace totara_notification\resolver;
 use coding_exception;
 use core_component;
 use totara_notification\local\helper;
+use totara_notification\resolver\abstraction\additional_criteria_resolver;
 use totara_notification\resolver\abstraction\permission_resolver;
 use totara_notification\resolver\abstraction\scheduled_event_resolver;
 
@@ -237,5 +238,17 @@ class resolver_helper {
         }
 
         return is_a($resolver_class_name, permission_resolver::class, true);
+    }
+
+    /**
+     * @param string $resolver_class_name
+     * @return bool
+     */
+    public static function is_additional_criteria_resolver(string $resolver_class_name): bool {
+        if (!static::is_valid_event_resolver($resolver_class_name)) {
+            return false;
+        }
+
+        return is_a($resolver_class_name, additional_criteria_resolver::class, true);
     }
 }

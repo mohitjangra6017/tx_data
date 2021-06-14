@@ -53,6 +53,15 @@ abstract class built_in_notification {
     abstract public static function get_title(): string;
 
     /**
+     * Returns the notification's additional_criteria, if required.
+     *
+     * @return string|null json encoded
+     */
+    public static function get_additional_criteria(): ?string {
+        return null;
+    }
+
+    /**
      * Return the recipient class name.
      *
      * @return string
@@ -68,6 +77,13 @@ abstract class built_in_notification {
      * @return lang_string
      */
     abstract public static function get_default_subject(): lang_string;
+
+    /**
+     * @return string|null json encoded
+     */
+    public static function get_default_additional_criteria(): ?string {
+        return null;
+    }
 
     /**
      * Returns the schedule offset value, translated for storage.

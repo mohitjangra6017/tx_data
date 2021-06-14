@@ -7,6 +7,14 @@ type totara_notification_notification_preference {
   """
   id: Int!
   title: String!
+  """
+  Whether the field 'additional_criteria' is overridden
+  """
+  overridden_additional_criteria: Boolean!
+  """
+  The additional resolver-specific criteria, json encoded, configured for the notification.
+  """
+  additional_criteria: String
   subject(format: core_format = RAW): String!
   subject_format: Int!
   body(format: core_format = RAW): String!
@@ -23,6 +31,10 @@ type totara_notification_notification_preference {
   Whether the field 'recipient' is overridden
   """
   overridden_recipient: Boolean!
+  """
+  The event resolver.
+  """
+  resolver: totara_notification_event_resolver!
   """
   Human readable event resolver's name.
   """
@@ -167,6 +179,7 @@ type totara_notification_notification_preference_value {
   subject(format: core_format = RAW): String!
   subject_format: Int!
   title: String!
+  additional_criteria: String
   schedule_offset(unit: totara_notification_schedule_offset_unit!): Int!
   schedule_type: totara_notification_schedule_type!
   recipient: totara_notification_recipient!
@@ -193,6 +206,7 @@ extend type Mutation {
     """
     ancestor_id: param_integer
     title: param_text
+    additional_criteria: String
     body: String
     body_format: param_integer
     subject: String
@@ -223,6 +237,7 @@ extend type Mutation {
     body: String
     body_format: param_integer
     title: param_text
+    additional_criteria: String
     subject: String
     schedule_offset: param_integer
     schedule_type: param_text

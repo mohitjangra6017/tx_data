@@ -29,6 +29,7 @@ use totara_core\extended_context;
 use totara_notification\entity\notification_preference as entity;
 use totara_notification\local\schedule_helper;
 use totara_notification\notification\built_in_notification;
+use totara_notification\resolver\resolver_helper;
 use totara_notification\schedule\time_window;
 
 /**
@@ -222,6 +223,7 @@ class notification_preference {
      * + @see built_in_notification::get_default_subject()
      * + @see built_in_notification::get_default_body()
      * + @see built_in_notification::get_title()
+     * + @see built_in_notification::get_default_additional_criteria()
      * + @see built_in_notification::get_recipient_class_name()
      * + @see built_in_notification::get_default_body_format()
      * + @see built_in_notification::get_default_subject_format()
@@ -247,6 +249,7 @@ class notification_preference {
             'body' => 'get_default_body',
             'subject' => 'get_default_subject',
             'title' => 'get_title',
+            'additional_criteria' => 'get_default_additional_criteria',
             'schedule_offset' => 'get_default_schedule_offset',
             'subject_format' => 'get_default_subject_format',
             'recipient' => 'get_recipient_class_name',
@@ -318,6 +321,32 @@ class notification_preference {
         }
 
         return $this->get_property_from_built_in_notification('subject_format');
+    }
+
+    /**
+     * @return string|null json encoded
+     */
+    public function get_additional_criteria(bool $check_relevant = true): ?string {
+        // $check_relevant is a performance optimisation - no reason to check more than once.
+        if ($check_relevant && !resolver_helper::is_additional_criteria_resolver($this->get_resolver_class_name())) {
+            return null;
+        }
+
+        if (!empty($this->entity->additional_criteria)) {
+            return $this->entity->additional_criteria;
+        }
+
+        if ($this->has_parent()) {
+            return $this->parent->get_additional_criteria(false);
+        }
+
+        // This entity has no value, but it also has no parent and is not a built-in notification, so
+        // null is the actual value.
+        if (empty($this->entity->notification_class_name)) {
+            return null;
+        }
+
+        return $this->get_property_from_built_in_notification('additional_criteria');
     }
 
     /**
@@ -423,6 +452,13 @@ class notification_preference {
 
         // Resetting the parent, because we would want to re-calculate the parent.
         $this->parent = null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_overridden_additional_criteria(): bool {
+        return !empty($this->entity->additional_criteria);
     }
 
     /**

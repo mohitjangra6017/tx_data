@@ -130,6 +130,16 @@ class update_notification_preference implements mutation_resolver, has_middlewar
             $builder->set_title($title);
         }
 
+        if (array_key_exists('additional_criteria', $args)) {
+            // Treating empty string as null, so that our builder can reset the
+            // value of $additional_criteria.
+            $additional_criteria = ('' === $args['additional_criteria']) ? null : $args['additional_criteria'];
+            $builder->set_additional_criteria($additional_criteria);
+            if ($is_overridding && !empty($additional_criteria)) {
+                $overridding_fields[] = 'additional_criteria';
+            }
+        }
+
         if (array_key_exists('schedule_type', $args) && array_key_exists('schedule_offset', $args)) {
             // We must translate the value based on the provided schedule type
             $offset = null;

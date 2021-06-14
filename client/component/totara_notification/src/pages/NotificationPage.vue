@@ -43,6 +43,7 @@
       >
         <NotificationPreferenceModal
           :context-id="contextId"
+          :extended-context="extendedContext"
           :resolver-class-name="targetResolverClassName"
           :preference="targetPreference || undefined"
           :parent-value="
@@ -52,6 +53,7 @@
           :valid-schedule-types="targetScheduleTypes"
           :available-recipients="targetAvailableRecipients"
           :default-delivery-channels="targetDefaultDeliveryChannels"
+          :additional-criteria-component="targetadditionalCriteriaComponent"
           :preferred-editor-format="
             preferredEditorFormat !== null
               ? Number(preferredEditorFormat)
@@ -85,6 +87,7 @@
           :resolver-class-name="targetResolverClassName"
           :resolver-label="targetResolverLabel"
           :default-delivery-channels="targetDefaultDeliveryChannels"
+          :additional-criteria-component="targetadditionalCriteriaComponent"
           :title="$str('edit_delivery_preferences', 'totara_notification')"
           @form-submit="handleNotificationPreferenceSubmit"
         />
@@ -218,6 +221,7 @@ export default {
       targetScheduleTypes: [],
       targetAvailableRecipients: [],
       targetDefaultDeliveryChannels: [],
+      targetadditionalCriteriaComponent: null,
       targetResolverLabel: null,
     };
   },
@@ -268,6 +272,9 @@ export default {
       // Reset the target delivery channels
       this.targetDefaultDeliveryChannels = [];
 
+      // Reset the additional criteria component.
+      this.targetadditionalCriteriaComponent = null;
+
       // Reset the target label
       this.targetResolverLabel = null;
     },
@@ -277,12 +284,14 @@ export default {
      * @param {Array} scheduleTypes
      * @param {Array} recipients
      * @param {Array} deliveryChannels
+     * @param {String} additionalCriteriaComponent
      */
     handleCreateCustomNotification({
       resolverClassName,
       scheduleTypes,
       recipients,
       deliveryChannels,
+      additionalCriteriaComponent,
     }) {
       this.modal.title = this.$str(
         'create_custom_notification_title',
@@ -295,6 +304,7 @@ export default {
       this.targetScheduleTypes = scheduleTypes;
       this.targetAvailableRecipients = recipients;
       this.targetDefaultDeliveryChannels = deliveryChannels;
+      this.targetadditionalCriteriaComponent = additionalCriteriaComponent;
     },
 
     /**
@@ -307,13 +317,15 @@ export default {
       oldPreference,
       scheduleTypes,
       recipients,
-      deliveryChannels
+      deliveryChannels,
+      additionalCriteriaComponent
     ) {
       this.targetPreference = await this.getOverriddenPreference(oldPreference);
       this.targetResolverClassName = this.targetPreference.resolver_class_name;
       this.targetScheduleTypes = scheduleTypes;
       this.targetAvailableRecipients = recipients;
       this.targetDefaultDeliveryChannels = deliveryChannels;
+      this.targetadditionalCriteriaComponent = additionalCriteriaComponent;
 
       this.modal.title = this.$str('edit_notification', 'totara_notification');
       this.modal.open = true;
@@ -435,6 +447,7 @@ export default {
      * @param {String} subject
      * @param {String} body
      * @param {String} title
+     * @param {String} additional_criteria
      * @param {Number} body_format
      * @param {String} resolver_class_name
      * @param {String} schedule_type
@@ -448,6 +461,7 @@ export default {
       subject,
       body,
       title,
+      additional_criteria,
       body_format,
       resolver_class_name,
       schedule_type,
@@ -461,6 +475,7 @@ export default {
         body,
         subject,
         title,
+        additional_criteria,
         body_format,
         resolver_class_name,
         subject_format,
@@ -600,6 +615,7 @@ export default {
     /**
      * @param {String} subject
      * @param {String} title
+     * @param {String} additional_criteria
      * @param {String} body
      * @param {Number} body_format
      * @param {String} schedule_type
@@ -612,6 +628,7 @@ export default {
     async updateNotification({
       subject,
       title,
+      additional_criteria,
       body,
       body_format,
       schedule_type,
@@ -629,6 +646,7 @@ export default {
         mutation: updateNotification,
         variables: {
           id: this.targetPreference.id,
+          additional_criteria,
           subject,
           body,
           body_format,

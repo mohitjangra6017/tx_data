@@ -128,6 +128,8 @@
                     scheduleTypes: resolver.valid_schedules,
                     recipients: resolver.recipients,
                     deliveryChannels: resolver.default_delivery_channels,
+                    additionalCriteriaComponent:
+                      resolver.additional_criteria_component,
                   })
                 "
                 @update-delivery-preferences="
@@ -135,6 +137,8 @@
                     resolverClassName: resolver.class_name,
                     resolverLabel: resolver.name,
                     defaultDeliveryChannels: resolver.default_delivery_channels,
+                    additionalCriteriaComponent:
+                      resolver.additional_criteria_component,
                   })
                 "
               />
@@ -264,7 +268,8 @@
                         notificationPreference,
                         resolver.valid_schedules,
                         resolver.recipients,
-                        resolver.default_delivery_channels
+                        resolver.default_delivery_channels,
+                        resolver.additional_criteria_component
                       )
                     "
                     @delete-notification="
@@ -293,6 +298,8 @@
                     scheduleTypes: resolver.valid_schedules,
                     recipients: resolver.recipients,
                     deliveryChannels: resolver.default_delivery_channels,
+                    additionalCriteriaComponent:
+                      resolver.additional_criteria_component,
                   })
                 "
               />

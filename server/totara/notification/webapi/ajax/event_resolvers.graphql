@@ -9,6 +9,7 @@ query totara_notification_event_resolvers(
     plugin_name
     name
     component
+    additional_criteria_component
     recipients {
       class_name
       name
@@ -28,6 +29,8 @@ query totara_notification_event_resolvers(
       overridden_subject
       overridden_recipient
       title
+      overridden_additional_criteria
+      additional_criteria
       resolver_class_name
       resolver_name
       resolver_component
@@ -57,6 +60,7 @@ query totara_notification_event_resolvers(
         body(format: RAW)
         body_format
         title
+        additional_criteria
         schedule_offset(unit: DAY)
         schedule_type
         subject_format

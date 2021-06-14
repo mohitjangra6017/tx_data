@@ -145,6 +145,7 @@ class create_notification_preference implements mutation_resolver, has_middlewar
         // Note: builder is able to validate the input data depending on the cases:
         //       either create new custom notification preference or overridden record.
         $builder->set_title($args['title'] ?? null);
+        $builder->set_additional_criteria($args['additional_criteria'] ?? null);
         $builder->set_body($args['body'] ?? null);
         $builder->set_body_format($args['body_format'] ?? null);
         $builder->set_subject($args['subject'] ?? null);

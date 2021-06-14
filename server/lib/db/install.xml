@@ -4095,6 +4095,7 @@
         <FIELD NAME="area" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false" COMMENT="The area property of the extended context"/>
         <FIELD NAME="item_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The item_id property of the extended context"/>
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="This is required for custom notifications, but should be null for notification override records. The overridden of custom does not have to have value."/>
+        <FIELD NAME="additional_criteria" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Stores data which specifies additional criteria which must be met for a notification to be sent, json encoded"/>
         <FIELD NAME="recipient" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a custom notification then this is required, otherwise null to fallback to the default defined in built in notification"/>
         <FIELD NAME="subject" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a custom notification then it is required, otherwise null to fallback to the default defined in ancestor notification"/>
         <FIELD NAME="subject_format" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a custom notification then it is required, otherwise null to fallback to the default define in ancester notification"/>

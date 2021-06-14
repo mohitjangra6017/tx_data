@@ -16,6 +16,11 @@ query totara_notification_notification_preference($id: param_integer!) {
     overridden_subject
     overridden_recipient
     title
+    overridden_additional_criteria
+    additional_criteria
+    resolver {
+      additional_criteria_component
+    }
     resolver_class_name
     resolver_name
     resolver_component
@@ -45,6 +50,7 @@ query totara_notification_notification_preference($id: param_integer!) {
       body(format: RAW)
       body_format
       title
+      additional_criteria
       schedule_offset(unit: DAY)
       schedule_type
       subject_format

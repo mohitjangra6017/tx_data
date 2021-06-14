@@ -6,6 +6,7 @@ mutation totara_notification_override_notification_preference(
   $resolver_class_name: param_text!
   $ancestor_id: param_integer!
   $title: param_text
+  $additional_criteria: String
   $body: String
   $body_format: param_integer
   $subject: String
@@ -26,6 +27,7 @@ mutation totara_notification_override_notification_preference(
     resolver_class_name: $resolver_class_name
     ancestor_id: $ancestor_id
     title: $title
+    additional_criteria: $additional_criteria
     body: $body
     body_format: $body_format
     subject: $subject
@@ -52,6 +54,8 @@ mutation totara_notification_override_notification_preference(
     overridden_enabled
     enabled
     title
+    overridden_additional_criteria
+    additional_criteria
     resolver_class_name
     resolver_name
     resolver_component
@@ -79,6 +83,7 @@ mutation totara_notification_override_notification_preference(
       body(format: RAW)
       body_format
       title
+      additional_criteria
       schedule_offset(unit: DAY)
       schedule_type
       subject_format

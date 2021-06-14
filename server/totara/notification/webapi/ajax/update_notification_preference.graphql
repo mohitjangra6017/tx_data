@@ -4,6 +4,7 @@ mutation totara_notification_update_notification_preference(
   $subject: String
   $body_format: param_integer
   $title: param_text
+  $additional_criteria: String
   $schedule_type: param_text
   $schedule_offset: param_integer
   $subject_format: param_integer
@@ -19,6 +20,7 @@ mutation totara_notification_update_notification_preference(
     subject: $subject
     body_format: $body_format
     title: $title
+    additional_criteria: $additional_criteria
     schedule_type: $schedule_type
     schedule_offset: $schedule_offset
     subject_format: $subject_format
@@ -40,6 +42,8 @@ mutation totara_notification_update_notification_preference(
     overridden_subject
     overridden_recipient
     title
+    overridden_additional_criteria
+    additional_criteria
     resolver_class_name
     resolver_name
     resolver_component
@@ -69,6 +73,7 @@ mutation totara_notification_update_notification_preference(
       body(format: RAW)
       body_format
       title
+      additional_criteria
       schedule_offset(unit: DAY)
       schedule_type
       subject_format

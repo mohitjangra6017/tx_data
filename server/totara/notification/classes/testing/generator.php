@@ -217,6 +217,7 @@ final class generator extends component_generator {
         $builder->set_subject($data['subject'] ?? null);
         $builder->set_subject_format($data['subject_format'] ?? null);
         $builder->set_title($data['title'] ?? null);
+        $builder->set_additional_criteria($data['additional_criteria'] ?? null);
         $builder->set_schedule_offset($data['schedule_offset'] ?? null);
         $builder->set_recipient($data['recipient'] ?? null);
         $builder->set_enabled($data['enabled'] ?? null);
@@ -363,6 +364,14 @@ final class generator extends component_generator {
     /**
      * @return void
      */
+    public function include_mock_additional_criteria_notification(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_mock_additional_criteria_notification.php");
+    }
+
+    /**
+     * @return void
+     */
     public function include_real_mock_lang_string(): void {
         $fixture_directory = self::fixtures_location();
         require_once("{$fixture_directory}/totara_notification_real_mock_lang_string.php");
@@ -374,6 +383,14 @@ final class generator extends component_generator {
     public function include_mock_notifiable_event_resolver(): void {
         $fixture_directory = self::fixtures_location();
         require_once("{$fixture_directory}/totara_notification_mock_notifiable_event_resolver.php");
+    }
+
+    /**
+     * @return void
+     */
+    public function include_mock_additional_criteria_resolver(): void {
+        $fixture_directory = self::fixtures_location();
+        require_once("{$fixture_directory}/totara_notification_mock_additional_criteria_resolver.php");
     }
 
     /**

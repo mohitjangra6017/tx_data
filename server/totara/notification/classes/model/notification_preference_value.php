@@ -45,6 +45,11 @@ class notification_preference_value {
     /**
      * @var string
      */
+    private $additional_criteria;
+
+    /**
+     * @var string
+     */
     private $title;
 
     /**
@@ -82,6 +87,7 @@ class notification_preference_value {
      * notification_preference_value constructor.
      * @param string   $body
      * @param string   $subject
+     * @param string|null $additional_criteria
      * @param string   $title
      * @param int      $schedule_offset
      * @param string   $recipient
@@ -93,6 +99,7 @@ class notification_preference_value {
     private function __construct(
         string $body,
         string $subject,
+        ?string $additional_criteria,
         string $title,
         int $schedule_offset,
         string $recipient,
@@ -103,6 +110,7 @@ class notification_preference_value {
     ) {
         $this->body = $body;
         $this->subject = $subject;
+        $this->additional_criteria = $additional_criteria;
         $this->title = $title;
         $this->schedule_offset = $schedule_offset;
         $this->recipient = $recipient;
@@ -124,6 +132,7 @@ class notification_preference_value {
         /**
          * @see built_in_notification::get_default_body()
          * @see built_in_notification::get_default_subject()
+         * @see built_in_notification::get_default_additional_criteria()
          * @see built_in_notification::get_title()
          * @see built_in_notification::get_default_body_format()
          * @see built_in_notification::get_default_subject_format()
@@ -139,8 +148,10 @@ class notification_preference_value {
          * @var int         $body_format
          * @var bool        $enabled
          */
+        /** @var built_in_notification $built_in_class_name */
         $body = $built_in_class_name::get_default_body();
         $subject = $built_in_class_name::get_default_subject();
+        $additional_criteria = $built_in_class_name::get_default_additional_criteria();
         $title = $built_in_class_name::get_title();
         $body_format = $built_in_class_name::get_default_body_format();
         $schedule_offset = $built_in_class_name::get_default_schedule_offset();
@@ -151,6 +162,7 @@ class notification_preference_value {
         return new static(
             $body,
             $subject,
+            $additional_criteria,
             $title,
             $schedule_offset,
             $recipient,
@@ -171,6 +183,7 @@ class notification_preference_value {
         return new static(
             $model->get_body(),
             $model->get_subject(),
+            $model->get_additional_criteria(),
             $model->get_title(),
             $model->get_schedule_offset(),
             $model->get_recipient(),
@@ -186,6 +199,13 @@ class notification_preference_value {
      */
     public function get_body(): string {
         return $this->body;
+    }
+
+    /**
+     * @return string|null json encoded
+     */
+    public function get_additional_criteria(): ?string {
+        return $this->additional_criteria;
     }
 
     /**

@@ -32,6 +32,7 @@ use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\helper;
 use totara_notification\local\schedule_helper;
 use totara_notification\model\notifiable_event_preference as notifiable_event_preference_model;
+use totara_notification\resolver\abstraction\additional_criteria_resolver;
 use totara_notification\resolver\resolver_helper;
 
 /**
@@ -110,6 +111,14 @@ class event_resolver implements type_resolver {
 
                 $model = notifiable_event_preference_model::from_entity($entity);
                 return $model->default_delivery_channels;
+
+            case 'additional_criteria_component':
+                if (resolver_helper::is_additional_criteria_resolver($source)) {
+                    /** @var additional_criteria_resolver $source */
+                    return $source::get_additional_criteria_component();
+                } else {
+                    return null;
+                }
 
             default:
                 throw new coding_exception("The field '{$field}' is not yet supported");

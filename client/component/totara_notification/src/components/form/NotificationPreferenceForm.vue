@@ -46,6 +46,36 @@
     </FormRow>
     <!-- End of title field -->
 
+    <!-- Start of additional criteria component injection -->
+    <FormScope path="additional_criteria">
+      <div v-if="hasAdditionalCriteriaComponent">
+        <FormRow
+          v-if="showCustomCheckBoxes"
+          :required="false"
+          class="tui-notificationPreferenceForm__additionalCriteria-checkbox"
+        >
+          <Checkbox
+            :aria-label="
+              $str('enable_custom_additional_criteria', 'totara_notification')
+            "
+            :checked="customisation.additional_criteria"
+            :value="customisation.additional_criteria ? '1' : '0'"
+            name="override_additional_criteria"
+            @change="customisation.additional_criteria = $event"
+          >
+            {{ $str('override', 'totara_notification') }}
+          </Checkbox>
+        </FormRow>
+        <component
+          :is="additionalCriteriaComponentResolved"
+          :disabled="showCustomCheckBoxes && !customisation.additional_criteria"
+          :context-id="contextId"
+          :extended-context="extendedContext"
+        />
+      </div>
+    </FormScope>
+    <!-- End of additional criteria component injection -->
+
     <!-- Start of recipient field -->
     <FormRow
       :label="$str('recipient', 'totara_notification')"
@@ -371,6 +401,7 @@ import {
   FormRadioWithInput,
   FormText,
   FormSelect,
+  FormScope,
   Uniform,
 } from 'tui/components/uniform';
 import FormRow from 'tui/components/form/FormRow';
@@ -425,6 +456,14 @@ function createFormValues(currentPreference, parentValue, defaultEditorFormat) {
           : parentValue.title,
       type: 'text',
     },
+    additional_criteria:
+      !parentValue || currentPreference.overridden_additional_criteria
+        ? currentPreference.additional_criteria
+          ? JSON.parse(currentPreference.additional_criteria)
+          : null
+        : parentValue.additional_criteria
+        ? JSON.parse(parentValue.additional_criteria)
+        : null,
     schedule_type: {
       value:
         !parentValue || currentPreference.overridden_schedule
@@ -528,6 +567,7 @@ export default {
     FormCheckbox,
     FormField,
     FormRow,
+    FormScope,
     FormText,
     Editor,
     ButtonGroup,
@@ -551,6 +591,11 @@ export default {
     contextId: {
       type: Number,
       required: true,
+    },
+
+    extendedContext: {
+      type: Object,
+      required: false,
     },
 
     parentValue: {
@@ -585,6 +630,10 @@ export default {
       validator: validateDefaultDeliveryChannelsProp(),
     },
 
+    additionalCriteriaComponent: {
+      type: String,
+    },
+
     /**
      * The default preferred editor format.
      */
@@ -594,6 +643,9 @@ export default {
   data() {
     return {
       customisation: {
+        additional_criteria:
+          this.preference.overridden_additional_criteria ||
+          Boolean(!this.parentValue),
         body: this.preference.overridden_body || Boolean(!this.parentValue),
         subject:
           this.preference.overridden_subject || Boolean(!this.parentValue),
@@ -618,6 +670,21 @@ export default {
   },
 
   computed: {
+    /**
+     * Whether the field title had been disabled or not.
+     * @return {boolean}
+     */
+    hasAdditionalCriteriaComponent() {
+      return (
+        this.additionalCriteriaComponent &&
+        this.additionalCriteriaComponent !== ''
+      );
+    },
+
+    additionalCriteriaComponentResolved() {
+      return tui.asyncComponent(this.additionalCriteriaComponent);
+    },
+
     /**
      * Whether the field title had been disabled or not.
      * @return {boolean}
@@ -717,6 +784,15 @@ export default {
         }
 
         const { preferenceForm } = this.$refs;
+
+        if (!toggle.additional_criteria) {
+          preferenceForm.update(
+            ['additional_criteria'],
+            this.parentValue.additional_criteria
+              ? JSON.parse(this.parentValue.additional_criteria)
+              : null
+          );
+        }
 
         if (!toggle.recipient) {
           preferenceForm.update(
@@ -835,6 +911,9 @@ export default {
       // nothing to do with the form's values, and it MUST be controlled by the page.
       const parameters = {
         title: formValue.title.value,
+        additional_criteria: !this.customisation.additional_criteria
+          ? null
+          : JSON.stringify(formValue.additional_criteria),
         subject: !this.customisation.subject
           ? null
           : formValue.subject.value.getContent(),
@@ -922,32 +1001,32 @@ export default {
 {
   "totara_notification": [
     "create_notification_select_placeholder",
+    "delivery_label",
+    "enable_custom_additional_criteria",
+    "enable_custom_body",
+    "enable_custom_forced_delivery_channels",
+    "enable_custom_recipient",
+    "enable_custom_schedule",
+    "enable_custom_status",
+    "enable_custom_subject",
     "notification_body_label",
-    "notification_title_label",
+    "notification_body_label_help",
     "notification_schedule_label",
     "notification_status_label",
     "notification_subject_label",
-    "enable_custom_schedule",
-    "enable_custom_subject",
-    "enable_custom_body",
+    "notification_subject_label_help",
+    "notification_title_label",
+    "override",
+    "recipient",
     "schedule_form_label_after_event",
     "schedule_form_label_before_event",
     "schedule_form_label_on_event",
-    "schedule_label_before_event",
     "schedule_label_after_event",
-    "enable_custom_body",
-    "enable_custom_recipient",
-    "enable_custom_status",
-    "recipient",
-    "delivery_label",
-    "enable_custom_forced_delivery_channels",
-    "override",
-    "notification_body_label_help",
-    "notification_subject_label_help"
+    "schedule_label_before_event"
   ],
   "totara_core": [
-    "save",
-    "enabled"
+    "enabled",
+    "save"
   ],
   "core": [
     "required"
@@ -957,6 +1036,11 @@ export default {
 
 <style lang="scss">
 .tui-notificationPreferenceForm {
+  &__additionalCriteria {
+    &-checkbox {
+      margin-bottom: var(--gap-2);
+    }
+  }
   &__buttonGroup {
     display: flex;
     justify-content: flex-end;

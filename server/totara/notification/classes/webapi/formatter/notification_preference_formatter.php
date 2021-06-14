@@ -40,8 +40,10 @@ class notification_preference_formatter extends formatter {
     public function __construct(model $notification_preference, context $context) {
         $record = new stdClass();
         $record->id = $notification_preference->get_id();
-        $record->body = $notification_preference->get_body();
         $record->title = $notification_preference->get_title();
+        $record->overridden_additional_criteria = $notification_preference->is_overridden_additional_criteria();
+        $record->additional_criteria = $notification_preference->get_additional_criteria();
+        $record->body = $notification_preference->get_body();
         $record->subject = $notification_preference->get_subject();
         $record->body_format = $notification_preference->get_body_format();
         $record->resolver_class_name = $notification_preference->get_resolver_class_name();
@@ -122,6 +124,8 @@ class notification_preference_formatter extends formatter {
                 return $formatter->format($value);
             },
             'title' => null,
+            'overridden_additional_criteria' => null,
+            'additional_criteria' => null,
             'subject' => function (?string $value, text_field_formatter $formatter) use ($that): string {
                 // Note: we are using text_field_formatter here because the subject is a content produced
                 // from editor, not a normal input string field.

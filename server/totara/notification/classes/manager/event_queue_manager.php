@@ -31,6 +31,7 @@ use totara_notification\entity\notifiable_event_queue;
 use totara_notification\loader\notification_preference_loader;
 use totara_notification\local\helper;
 use totara_notification\local\notification_queue_helper;
+use totara_notification\resolver\abstraction\additional_criteria_resolver;
 use totara_notification\resolver\resolver_helper;
 
 class event_queue_manager {
@@ -66,6 +67,7 @@ class event_queue_manager {
 
                     $resolver_class_name = $queue->resolver_class_name;
                     $extended_context = $queue->get_extended_context();
+                    $is_additional_criteria_resolver = resolver_helper::is_additional_criteria_resolver($resolver_class_name);
 
                     $is_enabled_in_all_parents = helper::is_resolver_enabled_for_all_parent_contexts(
                         $resolver_class_name,
@@ -84,6 +86,37 @@ class event_queue_manager {
                             if (!$preference->is_on_event()) {
                                 // Skip those notification preference that are not set for on event.
                                 continue;
+                            }
+
+                            $event_data = $queue->get_decoded_event_data();
+
+                            if ($is_additional_criteria_resolver) {
+                                $raw_additional_criteria = $preference->get_additional_criteria();
+                                if (empty($raw_additional_criteria)) {
+                                    $additional_criteria = null;
+                                } else {
+                                    $additional_criteria = @json_decode(
+                                        $raw_additional_criteria,
+                                        true,
+                                        32,
+                                        JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE | JSON_BIGINT_AS_STRING
+                                    );
+                                    if (!is_array($additional_criteria)) {
+                                        throw new exception('json decoding failed');
+                                    }
+                                }
+
+                                /** @var additional_criteria_resolver $resolver_class_name */
+                                if (!$resolver_class_name::is_valid_additional_criteria($additional_criteria, $extended_context)) {
+                                    continue;
+                                }
+
+                                if (!$resolver_class_name::meets_additional_criteria(
+                                    $additional_criteria,
+                                    $event_data
+                                )) {
+                                    continue;
+                                }
                             }
 
                             notification_queue_helper::create_queue_from_preference(

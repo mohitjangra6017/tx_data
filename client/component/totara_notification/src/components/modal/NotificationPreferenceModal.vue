@@ -34,12 +34,14 @@
       <NotificationPreferenceForm
         class="tui-notificationPreferenceModal__form"
         :context-id="contextId"
+        :extended-context="extendedContext"
         :preference="preference"
         :parent-value="parentValue"
         :valid-schedule-types="validScheduleTypes"
         :resolver-class-name="resolverClassName"
         :available-recipients="availableRecipients"
         :default-delivery-channels="defaultDeliveryChannels"
+        :additional-criteria-component="additionalCriteriaComponent"
         :preferred-editor-format="preferredEditorFormat"
         @submit="handleSubmit"
         @cancel="$emit('request-close')"
@@ -75,6 +77,11 @@ export default {
     contextId: {
       type: Number,
       required: true,
+    },
+
+    extendedContext: {
+      type: Object,
+      required: false,
     },
 
     showCloseButton: {
@@ -119,6 +126,10 @@ export default {
       type: Array,
       required: true,
       validator: validateDefaultDeliveryChannelsProp(),
+    },
+
+    additionalCriteriaComponent: {
+      type: String,
     },
 
     preferredEditorFormat: Number,

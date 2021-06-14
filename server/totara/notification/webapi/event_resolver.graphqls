@@ -43,6 +43,10 @@ type totara_notification_event_resolver {
   The default delivery channels for this resolver.
   """
   default_delivery_channels: [totara_notification_delivery_channel!]!
+  """
+  The tui component containing additional resolver-specific form elements required to configure the notification.
+  """
+  additional_criteria_component: String
 }
 
 type totara_notification_notifiable_event_status {

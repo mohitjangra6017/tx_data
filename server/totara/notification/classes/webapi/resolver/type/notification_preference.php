@@ -46,7 +46,9 @@ class notification_preference implements type_resolver {
             throw new coding_exception("Expected notification preference model");
         }
 
-        if ('resolver_component' === $field) {
+        if ('resolver' === $field) {
+            return $source->get_resolver_class_name();
+        } else if ('resolver_component' === $field) {
             $resolver_class_name = $source->get_resolver_class_name();
             return resolver_helper::get_component_of_resolver_class_name($resolver_class_name);
         } else if ('parent_id' === $field) {
