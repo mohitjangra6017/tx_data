@@ -105,11 +105,11 @@ Feature: Competency profile detail page - an overview of their progress (or lack
     And I navigate to the competency profile details page for the "Typing slow" competency
     And I select "Directly assigned by Admin User (Admin)" from the "select_assignment" singleselect
     # Proficient scale values have the __target class
-    Then ".tui-progressTrackerItem__target" "css_element" should not exist in the ".tui-progressTrackerItems .tui-progressTrackerItem:nth-child(2)" "css_element"
-    And ".tui-progressTrackerItem__target" "css_element" should exist in the ".tui-progressTrackerItems .tui-progressTrackerItem:nth-child(3)" "css_element"
+    Then I should not see "Achievement target." in the ".tui-progressTrackerNav__items .tui-progressTrackerNav__item:nth-child(2) .tui-progressTrackerNav__itemStatus" "css_element"
+    And I should see "Achievement target." in the ".tui-progressTrackerNav__items .tui-progressTrackerNav__item:nth-child(3) .tui-progressTrackerNav__itemStatus" "css_element"
 
     When I select "Self-assigned" from the "select_assignment" singleselect
-    Then ".tui-progressTrackerItem__target" "css_element" should exist in the ".tui-progressTrackerItems .tui-progressTrackerItem:nth-child(2)" "css_element"
+    Then I should see "Achievement target." in the ".tui-progressTrackerNav__items .tui-progressTrackerNav__item:nth-child(2) .tui-progressTrackerNav__itemStatus" "css_element"
 
   Scenario: I can navigate directly to the details page of a competency not assigned to me
     When I log in as "admin"
