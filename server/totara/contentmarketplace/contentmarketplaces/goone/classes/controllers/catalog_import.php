@@ -24,6 +24,7 @@
 namespace contentmarketplace_goone\controllers;
 
 use totara_contentmarketplace\controllers\catalog_import as base_catalog_import;
+use totara_contentmarketplace\views\override_catalog_import_nav_breadcrumbs;
 use totara_mvc\view;
 
 final class catalog_import extends base_catalog_import {
@@ -33,7 +34,8 @@ final class catalog_import extends base_catalog_import {
     public function action(): view {
         $explorer = $this->get_explorer();
         return $this->create_view('totara_contentmarketplace/explorer', (array)$explorer->get_data())
-            ->set_title($explorer->get_heading());
+            ->set_title($explorer->get_heading())
+            ->add_override(new override_catalog_import_nav_breadcrumbs($this));
     }
 
 }

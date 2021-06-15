@@ -150,8 +150,7 @@ class catalog_import extends controller {
      * @return tui_view
      */
     public function create_tui_view(string $component, array $props = []): tui_view {
-        return tui_view::create($component, $props)
-            ->add_override(new override_catalog_import_nav_breadcrumbs($this));
+        return tui_view::create($component, $props);
     }
 
     /**
@@ -162,8 +161,7 @@ class catalog_import extends controller {
      * @return view
      */
     public function create_view(string $template, array $data = []): view {
-        return view::create($template, $data)
-            ->add_override(new override_catalog_import_nav_breadcrumbs($this));
+        return view::create($template, $data);
     }
 
     /**
