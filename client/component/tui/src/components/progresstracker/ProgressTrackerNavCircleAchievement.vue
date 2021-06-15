@@ -183,22 +183,4 @@ export default {
     }
   }
 }
-.ie,
-.msedge {
-  .tui-progressTrackerCircle--achieved {
-    .tui-progressTrackerCircle {
-      &__middle {
-        border: var(--gap-1) solid var(--progresstracker-color-achieved);
-      }
-    }
-  }
-
-  .tui-progressTrackerCircle--complete {
-    .tui-progressTrackerCircle {
-      &__middle {
-        border: var(--gap-1) solid var(--progresstracker-color-complete);
-      }
-    }
-  }
-}
 </style>

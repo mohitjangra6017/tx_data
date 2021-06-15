@@ -311,36 +311,22 @@ $progressTracker-half-marker-size: calc(
     top: calc(
       var(--progresstracker-full-marker-size) + var(--border-width-normal)
     );
-    left: calc(
-      #{$progressTracker-half-marker-size} - calc(var(--border-width-normal) / 2)
-    );
+    /* nested calc() will get botched by RTLCSS processing if it is broken down onto multiple lines */
+    /* prettier-ignore */
+    left: calc( #{$progressTracker-half-marker-size} - calc(var(--border-width-normal) / 2) );
     width: var(--border-width-normal);
-    height: calc(
-      100% -
-        calc(
-          var(--progresstracker-full-marker-size) +
-            calc(var(--border-width-normal) * 2)
-        )
-    );
+    /* prettier-ignore */
+    height: calc( 100% - calc( var(--progresstracker-full-marker-size) + calc(var(--border-width-normal) * 2) ) );
     border-width: 0 0 0 var(--border-width-normal);
   }
   .tui-progressTrackerNav--horizontal & {
-    top: calc(
-      #{$progressTracker-half-marker-size} - calc(var(--border-width-normal) / 2)
-    );
-    left: calc(
-      50% + #{$progressTracker-half-marker-size} + var(
-          --progresstracker-connector-gap
-        ) - var(--border-width-normal)
-    );
-    width: calc(
-      100% -
-        calc(
-          var(--progresstracker-full-marker-size) +
-            calc(var(--progresstracker-connector-gap)) +
-            var(--border-width-normal)
-        )
-    );
+    /* nested calc() will get botched by RTLCSS processing if it is broken down onto multiple lines */
+    /* prettier-ignore */
+    top: calc( #{$progressTracker-half-marker-size} - calc(var(--border-width-normal) / 2) );
+    /* prettier-ignore */
+    left: calc(50% + #{$progressTracker-half-marker-size} + var(--progresstracker-connector-gap) - var(--border-width-normal));
+    /* prettier-ignore */
+    width: calc( 100% - calc( var(--progresstracker-full-marker-size) + calc(var(--progresstracker-connector-gap)) + var(--border-width-normal)));
     height: var(--border-width-normal);
     border-width: var(--border-width-normal) 0 0 0;
   }
@@ -395,14 +381,11 @@ $progressTracker-half-marker-size: calc(
       .tui-progressTrackerNav__itemContentWrapper:after {
         position: absolute;
         display: block;
-        width: calc(
-          var(--progresstracker-full-marker-size) +
-            calc(var(--progresstracker-connector-gap) * 2)
-        );
-        height: calc(
-          var(--progresstracker-full-marker-size) +
-            calc(var(--progresstracker-connector-gap) * 2)
-        );
+        /* nested calc() will get botched by RTLCSS processing if it is broken down onto multiple lines */
+        /* prettier-ignore */
+        width: calc( var(--progresstracker-full-marker-size) + calc(var(--progresstracker-connector-gap) * 2) );
+        /* prettier-ignore */
+        height: calc( var(--progresstracker-full-marker-size) + calc(var(--progresstracker-connector-gap) * 2) );
         border-color: var(--progresstracker-container-bg-color);
         border-style: solid;
         border-width: var(--progresstracker-connector-gap);
@@ -439,9 +422,6 @@ $progressTracker-half-marker-size: calc(
   }
 
   &__itemContent {
-    display: flex;
-    flex-direction: column;
-
     .tui-progressTrackerNav--vertical & {
       padding-left: var(--gap-2);
 
