@@ -182,7 +182,7 @@ abstract class provider {
      * Run the ORM query and mark the data provider as already fetched.
      */
     public function fetch(): self {
-        $this->fetched = false;
+         $this->fetched = false;
 
         $query = $this->build_query();
         $this->apply_query_filters($query);

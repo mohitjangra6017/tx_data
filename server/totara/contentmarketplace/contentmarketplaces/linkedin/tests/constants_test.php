@@ -50,4 +50,21 @@ class contentmarketplace_linkedin_constants_testcase extends testcase {
         self::assertFalse(constants::is_valid_availability('available'));
         self::assertFalse(constants::is_valid_availability('xdg_open'));
     }
+
+    /**
+     * @return void
+     */
+    public function test_check_is_valid_classification_type(): void {
+        self::assertTrue(constants::is_valid_classification_type(constants::CLASSIFICATION_TYPE_TOPIC));
+        self::assertTrue(constants::is_valid_classification_type(constants::CLASSIFICATION_TYPE_SUBJECT));
+        self::assertTrue(constants::is_valid_classification_type(constants::CLASSIFICATION_TYPE_LIBRARY));
+        self::assertTrue(constants::is_valid_classification_type(constants::CLASSIFICATION_TYPE_SKILL));
+
+        self::assertFalse(constants::is_valid_classification_type(strtolower(constants::CLASSIFICATION_TYPE_TOPIC)));
+        self::assertFalse(constants::is_valid_classification_type(strtolower(constants::CLASSIFICATION_TYPE_SUBJECT)));
+        self::assertFalse(constants::is_valid_classification_type(strtolower(constants::CLASSIFICATION_TYPE_LIBRARY)));
+        self::assertFalse(constants::is_valid_classification_type(strtolower(constants::CLASSIFICATION_TYPE_SKILL)));
+
+        self::assertFalse(constants::is_valid_classification_type('cDkoow'));
+    }
 }

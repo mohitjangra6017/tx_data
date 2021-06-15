@@ -23,8 +23,10 @@
 
 namespace contentmarketplace_linkedin\data_provider;
 
+use coding_exception;
 use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\dto\timespan;
+use contentmarketplace_linkedin\model\classification;
 use contentmarketplace_linkedin\tree\timespan_leaf;
 use totara_tui\tree\branch;
 use totara_tui\tree\leaf;
@@ -34,67 +36,89 @@ class learning_objects_filter_options {
     /**
      * Get a tree structure of subject filter options.
      *
+     * @param string $language
      * @return branch
      */
-    protected function get_subjects(): branch {
-        // For now we are just returning hard coded dummy data.
-        // TODO: Replace this with real subject data in TL-30373
-        return (new branch(
+    private function get_subjects(string $language): branch {
+        $provider = new classifications();
+        $provider->add_filters([
+            'locale_language' => $language,
+            'classification_types' => [
+                constants::CLASSIFICATION_TYPE_LIBRARY,
+                constants::CLASSIFICATION_TYPE_SUBJECT
+            ]
+        ]);
+
+        $items = $provider->get();
+
+        // Populate the two separate lists that can help to build a snowman.
+        $collection_map = [];
+
+        /** @var classification $item */
+        foreach ($items as $item) {
+            if (!$item->has_parent_classification()) {
+                if (!isset($collection_map[$item->id])) {
+                    $collection_map[$item->id] = [
+                        'parent' => $item,
+                        'children' => []
+                    ];
+
+                    continue;
+                }
+
+                if (isset($collection_map[$item->id]['parent'])) {
+                    throw new coding_exception("The parent had already been set, cannot be reset");
+                }
+
+                $collection_map[$item->id]['parent'] = $item;
+                continue;
+            }
+
+            // A child item.
+            $parent_id = $item->parent_classification_id;
+            if (!isset($collection_map[$parent_id])) {
+                $collection_map[$parent_id] = [
+                    'parent' => null,
+                    'children' => []
+                ];
+            }
+
+            $collection_map[$parent_id]['children'][] = $item;
+        }
+
+        $subject_branch = new branch(
             'subjects',
-            get_string('catalog_filter_subjects', 'contentmarketplace_linkedin'),
-        ))->add_branches(
-            (new branch(
-                'business',
-                'Business',
-            ))->add_leaves(
-                new leaf(
-                    '101',
-                    'Business Analysis and Strategy',
-                ),
-                new leaf(
-                    '102',
-                    'Business Software and Tools',
-                ),
-                new leaf(
-                    '103',
-                    'Career Development',
-                ),
-            ),
-            (new branch(
-                'creative',
-                'Creative',
-            ))->add_leaves(
-                new leaf(
-                    '201',
-                    'Animation and Illustration',
-                ),
-                new leaf(
-                    '202',
-                    'Audio and Music',
-                ),
-                new leaf(
-                    '203',
-                    'Graphic Design',
-                ),
-            ),
-            (new branch(
-                'technology',
-                'Technology',
-            ))->add_leaves(
-                new leaf(
-                    '301',
-                    'Cloud Computing',
-                ),
-                new leaf(
-                    '302',
-                    'Database Management',
-                ),
-                new leaf(
-                    '303',
-                    'DevOps',
-                ),
-            ),
+            get_string('catalog_filter_subjects', 'contentmarketplace_linkedin', $language)
         );
+
+        $subject_branch->add_branches(
+            ...array_map(
+                function (array $map): branch {
+                    /** @var classification $parent_classification */
+                    $parent_classification = $map['parent'];
+                    $parent_branch = new branch(
+                        $parent_classification->id,
+                        $parent_classification->name
+                    );
+
+                    $parent_branch->add_leaves(
+                        ...array_map(
+                            function (classification $child_classification): leaf {
+                                return new leaf(
+                                    $child_classification->id,
+                                    $child_classification->name
+                                );
+                            },
+                            $map['children']
+                        )
+                    );
+                    return $parent_branch;
+                },
+                $collection_map
+            )
+        );
+
+        return $subject_branch;
     }
 
     /**
@@ -168,11 +192,12 @@ class learning_objects_filter_options {
     /**
      * Get the filter option available for filtering learning objects.
      *
+     * @param string $language
      * @return branch[][]
      */
-    public function get(): array {
+    public function get(string $language): array {
         return [
-            'subjects' => [$this->get_subjects()],
+            'subjects' => [$this->get_subjects($language)],
             'asset_type' => [$this->get_asset_types()],
             'time_to_complete' => [$this->get_time_to_complete()],
         ];

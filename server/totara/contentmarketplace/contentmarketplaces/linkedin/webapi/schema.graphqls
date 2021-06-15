@@ -83,9 +83,9 @@ type contentmarketplace_linkedin_catalog_import_create_course_result {
 Output of the learning objects filter options query.
 """
 type contentmarketplace_linkedin_catalog_import_learning_objects_filter_options_result {
-  subjects: [totara_tui_tree_branch!]
-  asset_type: [totara_tui_tree_branch!]
-  time_to_complete: [totara_tui_tree_branch!]
+  subjects: [totara_tui_tree_branch!]!
+  asset_type: [totara_tui_tree_branch!]!
+  time_to_complete: [totara_tui_tree_branch!]!
 }
 
 """

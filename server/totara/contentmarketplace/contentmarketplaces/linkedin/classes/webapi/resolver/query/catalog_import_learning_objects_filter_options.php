@@ -38,8 +38,9 @@ final class catalog_import_learning_objects_filter_options implements query_reso
      */
     public static function resolve(array $args, execution_context $ec) {
         (new catalog_import_interactor())->require_view_catalog_import_page();
+        $input = $args['input'] ?? [];
 
-        return (new learning_objects_filter_options())->get();
+        return (new learning_objects_filter_options())->get($input['language'] ?? 'en');
     }
 
     /**

@@ -99,16 +99,29 @@ final class constants {
     public const CONTRIBUTION_TYPE_PUBLISHER = 'PUBLISHER';
 
     /**
+     * Classification type library.
+     *
      * @var string
      */
     public const CLASSIFICATION_TYPE_LIBRARY = 'LIBRARY';
 
     /**
+     * Classification type subject.
+     *
      * @var string
      */
     public const CLASSIFICATION_TYPE_SUBJECT = 'SUBJECT';
 
     /**
+     * Classification type skill.
+     *
+     * @var string
+     */
+    public const CLASSIFICATION_TYPE_SKILL = 'SKILL';
+
+    /**
+     * Classification type topic.
+     *
      * @var string
      */
     public const CLASSIFICATION_TYPE_TOPIC = 'TOPIC';
@@ -201,5 +214,34 @@ final class constants {
             ],
             true
         );
+    }
+
+    /**
+     * @param string $classification_type
+     * @return bool
+     */
+    public static function is_valid_classification_type(string $classification_type): bool {
+        return in_array(
+            $classification_type,
+            [
+                self::CLASSIFICATION_TYPE_LIBRARY,
+                self::CLASSIFICATION_TYPE_SUBJECT,
+                self::CLASSIFICATION_TYPE_TOPIC,
+                self::CLASSIFICATION_TYPE_SKILL
+            ],
+            true
+        );
+    }
+
+    /**
+     * @param string $classification_type
+     * @return void
+     */
+    public static function validate_classification_type(string $classification_type): void {
+        if (!self::is_valid_classification_type($classification_type)) {
+            throw new coding_exception(
+                "Invalid classification type: {$classification_type}"
+            );
+        }
     }
 }

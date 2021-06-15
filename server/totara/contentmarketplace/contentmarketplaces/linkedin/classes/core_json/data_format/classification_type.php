@@ -1,8 +1,8 @@
 <?php
-/*
- * This file is part of Totara Learn
+/**
+ * This file is part of Totara Core
  *
- * Copyright (C) 2018 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Michael Dunstan <michael.dunstan@androgogic.com>
- * @package totara_contentmarketplace
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
+ * @package contentmarketplace_linkedin
  */
+namespace contentmarketplace_linkedin\core_json\data_format;
 
-defined('MOODLE_INTERNAL') || die();
+use contentmarketplace_linkedin\constants;
 
-$plugin->component = 'totara_contentmarketplace';
-$plugin->version   = 2021061500;
-$plugin->requires  = 2021052500; // Totara 9+ is required.
-$plugin->dependencies = [
-    'mod_scorm' => 2020101200,
-];
+/**
+ * Data format class for classification type value.
+ */
+class classification_type extends base_string {
+    /**
+     * @param string $value
+     * @return bool
+     */
+    protected function do_validate(string $value): bool {
+        return constants::is_valid_classification_type($value);
+    }
+}

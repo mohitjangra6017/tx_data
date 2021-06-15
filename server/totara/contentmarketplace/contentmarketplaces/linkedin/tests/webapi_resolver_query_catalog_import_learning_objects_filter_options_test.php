@@ -21,12 +21,15 @@
  * @package contentmarketplace_linkedin
  */
 
+use contentmarketplace_linkedin\constants;
+use contentmarketplace_linkedin\webapi\resolver\query\catalog_import_learning_objects_filter_options;
 use core_phpunit\testcase;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 use totara_contentmarketplace\testing\helper;
 use totara_tui\tree\branch;
 use totara_tui\tree\leaf;
 use totara_webapi\phpunit\webapi_phpunit_helper;
+use contentmarketplace_linkedin\testing\generator;
 
 /**
  * @covers \contentmarketplace_linkedin\webapi\resolver\query\catalog_import_learning_objects_filter_options
@@ -141,6 +144,91 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         unassign_capability('totara/contentmarketplace:add', $role_id, $context_id);
         $this->expectException(required_capability_exception::class);
         $this->resolve_graphql_query(self::QUERY);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_resolve_subjects(): void {
+        $generator = generator::instance();
+        $classification_1 = $generator->create_classification(null, ['type' => constants::CLASSIFICATION_TYPE_LIBRARY]);
+        $classification_2 = $generator->create_classification(null, ['name' => 'Badmin']);
+
+        $generator->create_classification_relationship($classification_1->id, $classification_2->id);
+        self::setAdminUser();
+
+        $result = $this->resolve_graphql_query(
+            $this->get_graphql_name(catalog_import_learning_objects_filter_options::class)
+        );
+
+        $assert_types_branch = reset($result['subjects']);
+        $resolved_branches = $this->resolve_branch($assert_types_branch);
+
+        self::assertEquals(
+            [
+                'id' => 'subjects',
+                'label' => get_string('catalog_filter_subjects', 'contentmarketplace_linkedin'),
+                'children' => [
+                    [
+                        'id' => $classification_1->id,
+                        'label' => $classification_1->name,
+                        'content' => [
+                            'items' => [
+                                [
+                                    'id' => $classification_2->id,
+                                    'label' => $classification_2->name
+                                ]
+                            ]
+
+                        ]
+                    ]
+                ]
+            ],
+            $resolved_branches
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_resolve_subjects_with_locale_language(): void {
+        $generator = generator::instance();
+        $classification_1 = $generator->create_classification(
+            null,
+            [
+                'type' => constants::CLASSIFICATION_TYPE_LIBRARY,
+                'locale_language' => 'de',
+                'locale_country' => 'DE'
+            ]
+        );
+
+        $classification_2 = $generator->create_classification(
+            null,
+            [
+                'type' => constants::CLASSIFICATION_TYPE_SUBJECT,
+                'locale_language' => 'de',
+                'locale_country' => 'DE'
+            ]
+        );
+
+        $generator->create_classification_relationship($classification_1->id, $classification_2->id);
+        $result = $this->resolve_graphql_query(
+            $this->get_graphql_name(catalog_import_learning_objects_filter_options::class),
+            [
+                'input' => [
+                    'language' => 'ja'
+                ]
+            ]
+        );
+
+        $branch = reset($result['subjects']);
+        self::assertEquals(
+            [
+                'id' => 'subjects',
+                'label' => get_string('catalog_filter_subjects', 'contentmarketplace_linkedin', 'ja')
+            ],
+            $this->resolve_branch($branch)
+        );
     }
 
     /**
