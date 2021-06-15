@@ -395,6 +395,17 @@ final class generator extends \core\testing\component_generator {
             }
         }
 
+        // Insert history record when created with a scale value.
+        if (!empty($goaldata['scalevalueid'])) {
+            $DB->insert_record('goal_item_history', (object)[
+                'scope' => goal::SCOPE_PERSONAL,
+                'itemid' => $goal->id,
+                'scalevalueid' => $goaldata['scalevalueid'],
+                'timemodified' => time(),
+                'usermodified' => $USER->id,
+            ]);
+        }
+
         return $goal;
     }
 
@@ -545,28 +556,67 @@ final class generator extends \core\testing\component_generator {
      * @param int $valueid - The id of the goal scale value record
      * @return boolean
      */
-    public function update_company_goal_user_scale_value($userid, $goalid, $valueid) {
+    public function update_company_goal_user_scale_value($userid, $goalid, $valueid): bool {
+        $this->update_goal_user_scale_value('company', $userid, $goalid, $valueid);
+        return true;
+    }
+
+    /**
+     * Update a users scale value for an existing personal goal assignment, and create
+     * an associated history record for the change.
+     *
+     * @param int $user_id
+     * @param int $goal_id
+     * @param int $scale_value_id - The id of the goal scale value record
+     */
+    public function update_personal_goal_user_scale_value(int $user_id, int $goal_id, int $scale_value_id): void {
+        $this->update_goal_user_scale_value('personal', $user_id, $goal_id, $scale_value_id);
+    }
+
+    /**
+     * Update a users scale value for an existing personal or company goal assignment, and create
+     * an associated history record for the change.
+     *
+     * @param string $type
+     * @param int $user_id
+     * @param int $goal_id
+     * @param int $scale_value_id - The id of the goal scale value record
+     * @throws coding_exception
+     */
+    public function update_goal_user_scale_value(string $type, int $user_id, int $goal_id, int $scale_value_id): void {
         global $DB, $USER;
 
-        if (!$todb = $DB->get_record('goal_record', ['userid' => $userid, 'goalid' => $goalid])) {
-            // You can't update something that isn't there.
-            return false;
+        switch ($type) {
+            case 'personal':
+                $table = 'goal_personal';
+                $conditions = ['userid' => $user_id, 'id' => $goal_id];
+                $scope = goal::SCOPE_PERSONAL;
+                break;
+            case 'company':
+                $table = 'goal_record';
+                $conditions = ['userid' => $user_id, 'goalid' => $goal_id];
+                $scope = goal::SCOPE_COMPANY;
+                break;
+            default:
+                throw new coding_exception('Invalid goal type: ' . $type);
+        }
+        $record = $DB->get_record($table, $conditions);
+        if (!$record) {
+            throw new coding_exception("Could not find record in {$table} for user {$user_id} and goal {$goal_id}");
         }
 
-        // Update the goal record with the new valueid.
-        $todb->scalevalueid = $valueid;
-        $DB->update_record('goal_record', $todb);
+        // Update the goal record with the new value_id.
+        $record->scalevalueid = $scale_value_id;
+        $DB->update_record($table, $record);
 
         // Create a history record for the change.
         $history = new \stdClass();
-        $history->scope = goal::SCOPE_COMPANY;
-        $history->itemid = $todb->id;
-        $history->scalevalueid = $valueid;
+        $history->scope = $scope;
+        $history->itemid = $record->id;
+        $history->scalevalueid = $scale_value_id;
         $history->timemodified = time();
         $history->usermodified = $USER->id;
-
-        return $DB->insert_record('goal_item_history', $history);
-
+        $DB->insert_record('goal_item_history', $history);
     }
 
     /**

@@ -40,7 +40,7 @@ use core\orm\entity\relations\belongs_to;
  * @property int $usermodified time modified
  * @property int $proficient
  *
- * @method static scale_value_repository repository()
+ * @property-read scale $scale The scale this value belongs to
  */
 class scale_value extends entity {
     public const TABLE = 'goal_scale_values';

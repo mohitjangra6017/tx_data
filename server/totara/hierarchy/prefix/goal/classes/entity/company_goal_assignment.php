@@ -38,7 +38,6 @@ use core\orm\entity\relations\belongs_to;
  * @property-read company_goal $goal assigned goal
  * @property-read user $user assigned user
  * @property-read scale_value $scale_value goal score
- * @method static company_goal_assignment repository()
  */
 class company_goal_assignment extends entity {
     public const TABLE = 'goal_record';

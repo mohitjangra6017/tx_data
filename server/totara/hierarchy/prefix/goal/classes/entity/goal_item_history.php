@@ -17,38 +17,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Murali Nair <murali.nair@totaralearning.com>
+ * @author Matthias Bonk <matthias.bonk@totaralearning.com>
  * @package hierarchy_goal
  */
 
 namespace hierarchy_goal\entity;
 
-use core\orm\collection;
 use core\orm\entity\entity;
-use core\orm\entity\relations\has_many;
+use core\orm\entity\relations\belongs_to;
 
 /**
- * Represents a goal scale in the repository.
+ * Represents a goal_item_history record in the repository.
  *
  * @property-read int $id record id
- * @property string $name scale name
- * @property string $description scale description
- * @property int $timemodified time modified
- * @property int $usermodified time modified
- * @property int $defaultid
+ * @property int $scope personal or company goal
+ * @property int $itemid personal or company goal id
+ * @property int $scalevalueid associated scale value
+ * @property int $timemodified
+ * @property int $usermodified
  *
- * @property-read collection|scale_value[] $values Values for this scale, sorted from lowest to highest value
+ * @property-read scale_value $scale_value goal status value
  */
-class scale extends entity {
-    public const TABLE = 'goal_scale';
+class goal_item_history extends entity {
+    public const TABLE = 'goal_item_history';
 
     /**
-     * Values for this scale, sorted from lowest to highest value
+     * Establishes the relationship with scale value entities.
      *
-     * @return has_many
+     * @return belongs_to the relationship.
      */
-    public function values(): has_many {
-        return $this->has_many(scale_value::class, 'scaleid')
-            ->order_by('sortorder', 'desc');
+    public function scale_value(): belongs_to {
+        return $this->belongs_to(scale_value::class, 'scalevalueid');
     }
 }

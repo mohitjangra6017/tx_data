@@ -23,8 +23,14 @@
 
 namespace hierarchy_goal\performelement_linked_review;
 
+use coding_exception;
 use core\collection;
+use core\date_format;
+use core\format;
+use hierarchy_goal\data_providers\assigned_company_goals;
 use hierarchy_goal\entity\company_goal_assignment as company_goal_assignment_entity;
+use hierarchy_goal\formatter\company_goal as company_goal_formatter;
+use hierarchy_goal\helpers\goal_helper;
 use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\models\activity\subject_instance;
 
@@ -61,7 +67,86 @@ class company_goal_assignment extends goal_assignment_content_type {
         bool $can_view_other_responses,
         int $created_at
     ): array {
-        // TODO TL-29506
-        return [];
+        if ($content_items->count() === 0) {
+            return [];
+        }
+
+        [$can_view_status, $can_change_status] = self::get_goal_status_permissions(
+            $content_items,
+            $participant_section,
+            $can_view_other_responses
+        );
+
+        return assigned_company_goals::create()
+            ->set_filters([
+                'user_id' => $subject_instance->subject_user_id,
+                'ids' => $content_items->pluck('content_id'),
+            ])
+            ->fetch()
+            ->key_by('id')
+            ->map(
+                function (company_goal_assignment_entity $company_goal_assignment) use (
+                    $subject_instance,
+                    $created_at,
+                    $can_change_status,
+                    $can_view_status
+                ) {
+                    return $this->create_result_item(
+                        $company_goal_assignment,
+                        $subject_instance,
+                        $created_at,
+                        $can_change_status,
+                        $can_view_status
+                    );
+                }
+            )
+            ->all(true);
+    }
+
+    /**
+     * Create the data for one company goal content item
+     *
+     * @param company_goal_assignment_entity $company_goal_assignment
+     * @param subject_instance $subject_instance
+     * @param int $created_at
+     * @param bool $can_change_status
+     * @param bool $can_view_status
+     * @return array
+     */
+    private function create_result_item(
+        company_goal_assignment_entity $company_goal_assignment,
+        subject_instance $subject_instance,
+        int $created_at,
+        bool $can_change_status,
+        bool $can_view_status
+    ): array {
+
+        $goal_status_scale_value = goal_helper::get_goal_scale_value_at_timestamp($company_goal_assignment->id, $created_at);
+        if (!$goal_status_scale_value) {
+            throw new coding_exception("Scale could not be found for company goal assignment {$company_goal_assignment->id}");
+        }
+        // TODO when implementing status change: Get actual change that was made within activity, not just latest status.
+        $status_change = $can_view_status
+            ? goal_helper::get_goal_scale_value_at_timestamp($company_goal_assignment->id, time())
+            : null;
+
+        $company_goal_formatter = new company_goal_formatter($company_goal_assignment->goal, $this->context);
+
+        return [
+            'id' => $company_goal_assignment->id,
+            'goal' => [
+                'id' => $company_goal_assignment->id,
+                'display_name' => $company_goal_formatter->format('full_name', self::TEXT_FORMAT),
+                'description' => $company_goal_formatter->format('description', format::FORMAT_HTML),
+            ],
+            'status' => $this->format_scale_value($goal_status_scale_value),
+            'scale_values' => $this->format_scale_values($goal_status_scale_value->scale),
+            'target_date' => $company_goal_formatter->format('target_date', date_format::FORMAT_DATE),
+            'can_change_status' => $can_change_status,
+            'can_view_status' => $can_view_status,
+            'status_change' => $status_change
+                ? $this->format_scale_value($status_change)
+                : null,
+        ];
     }
 }

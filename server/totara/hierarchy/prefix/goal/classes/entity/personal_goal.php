@@ -49,8 +49,6 @@ use core\orm\entity\relations\belongs_to;
  * @property-read personal_goal_type $type personal goal type
  * @property-read scale $scale goal scoring scale
  * @property-read scale_value $scale_value goal score
- *
- * @method static personal_goal_repository repository()
  */
 class personal_goal extends entity {
     public const TABLE = 'goal_personal';

@@ -23,8 +23,20 @@
 
 namespace hierarchy_goal\performelement_linked_review;
 
+use coding_exception;
+use core\collection;
 use core\format;
+use hierarchy_goal\entity\scale;
+use hierarchy_goal\formatter\scale_value as scale_value_formatter;
+use hierarchy_goal\entity\scale_value;
+use mod_perform\entity\activity\participant_section;
+use mod_perform\entity\activity\section_relationship;
+use mod_perform\models\activity\participant_instance;
+use mod_perform\models\activity\participant_instance as participant_instance_model;
+use mod_perform\models\activity\section_element;
 use performelement_linked_review\content_type;
+use performelement_linked_review\linked_review;
+use performelement_linked_review\models\linked_review_content;
 use performelement_linked_review\rb\helper\content_type_response_report;
 use totara_core\advanced_feature;
 use totara_core\relationship\relationship;
@@ -153,5 +165,102 @@ abstract class goal_assignment_content_type extends content_type {
      */
     public static function get_response_report_helper(): content_type_response_report {
         return new response_report();
+    }
+
+    /**
+     * Find out if a participant can view and change status for the given content items.
+     *
+     * @param collection $content_items
+     * @param participant_section|null $participant_section
+     * @param bool $can_view_other_responses
+     * @return array
+     */
+    public static function get_goal_status_permissions(
+        collection $content_items,
+        ?participant_section $participant_section,
+        bool $can_view_other_responses
+    ): array {
+        $can_change_status = false;
+        $can_view_status = $can_view_other_responses;
+
+        if ($participant_section) {
+            // Element will be the same across all content items, so we can just get it from the first content item.
+            /** @var linked_review_content $content_item */
+            $content_item = $content_items->first();
+            $participant_instance = participant_instance_model::load_by_entity($participant_section->participant_instance);
+
+            $can_change_status = self::can_change_status($participant_instance, $content_item->section_element);
+
+            // If users are in a rater relationship or can view other responses they can view the rating
+            $can_view_status = $can_change_status || $can_view_other_responses;
+        }
+
+        return [$can_view_status, $can_change_status];
+    }
+
+    /**
+     * Check if changing status is enabled and the participant is permitted to make a status change.
+     *
+     * @param participant_instance $participant_instance
+     * @param section_element $section_element
+     * @return bool
+     */
+    private static function can_change_status(participant_instance $participant_instance, section_element $section_element): bool {
+        /** @var linked_review $linked_review_plugin */
+        $linked_review_plugin = $section_element->element->element_plugin;
+        if (!$linked_review_plugin instanceof linked_review) {
+            throw new coding_exception('The section element with ID ' . $section_element->id . ' is not a linked_review element');
+        }
+        $content_settings = $linked_review_plugin->get_content_settings($section_element->element);
+
+        if (!$content_settings['enable_status_change'] || empty($content_settings['status_change_relationship'])) {
+            return false;
+        }
+
+        if ((int)$content_settings['status_change_relationship'] !== (int)$participant_instance->core_relationship_id) {
+            return false;
+        }
+
+        return participant_section::repository()
+            ->join([section_relationship::TABLE, 'sr'], 'section_id', 'section_id')
+            ->where('sr.core_relationship_id', $content_settings['status_change_relationship'])
+            ->where('participant_instance_id', $participant_instance->id)
+            ->where('section_id', $section_element->section_id)
+            ->exists();
+    }
+
+    /**
+     * Format the scale_value, making sure the data runs through our formatters
+     *
+     * @param scale_value $scale_value
+     * @return array|null
+     */
+    protected function format_scale_value(scale_value $scale_value): array {
+        $scale_value_formatter = new scale_value_formatter($scale_value, $this->context);
+
+        return [
+            'id' => $scale_value->id,
+            'name' => $scale_value_formatter->format('name', self::TEXT_FORMAT),
+        ];
+    }
+
+    /**
+     * Format the list of all scale values for a given scale.
+     *
+     * @param scale $scale
+     * @return array
+     */
+    protected function format_scale_values(scale $scale): array {
+        $formatted_scale_values = [];
+        foreach ($scale->values as $scale_value) {
+            $scale_value_formatter = new scale_value_formatter($scale_value, $this->context);
+            $formatted_scale_values[] = [
+                'id' => $scale_value->id,
+                'name' => $scale_value_formatter->format('name', self::TEXT_FORMAT),
+                'proficient' => (bool) $scale_value->proficient,
+                'sort_order' => $scale_value->sortorder,
+            ];
+        }
+        return $formatted_scale_values;
     }
 }

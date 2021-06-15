@@ -25,7 +25,9 @@ namespace hierarchy_goal\data_providers;
 
 use coding_exception;
 
-use core\orm\entity\filter;
+use core\orm\collection;
+use core\orm\entity\entity;
+use core\orm\entity\repository;
 use core\orm\pagination\cursor_paginator;
 use core\pagination\cursor;
 
@@ -36,7 +38,7 @@ class goal_data_provider {
     public const DEFAULT_PAGE_SIZE = 20;
     private const VALID_ORDER_DIRECTION = ['asc', 'desc'];
 
-    /** @var string association orm entity class. */
+    /** @var string|entity association orm entity class. */
     private $entity_class = null;
 
     /** @var string[] entity fields on which sorting is allowed. */
@@ -198,13 +200,9 @@ class goal_data_provider {
     }
 
     /**
-     * Returns a list of entities meeting the previously set search criteria.
-     *
-     * @param cursor|null $cursor $cursor indicates which "page" of entities to retrieve.
-     *
-     * @return array[entity] the retrieved entities.
+     * @return repository
      */
-    public function fetch_paginated(?cursor $cursor = null): array {
+    private function prepare_repository(): repository {
         $entity_class = $this->entity_class;
         $repository = $entity_class::repository();
 
@@ -216,7 +214,27 @@ class goal_data_provider {
             $repository = $repository->order_by($this->order_by, $this->order_direction);
         }
 
-        $pages = $cursor ? $cursor : cursor::create()->set_limit($this->page_size);
+        return $repository;
+    }
+
+    /**
+     * @return collection
+     */
+    public function fetch(): collection {
+        return $this->prepare_repository()->get();
+    }
+
+    /**
+     * Returns a list of entities meeting the previously set search criteria.
+     *
+     * @param cursor|null $cursor $cursor indicates which "page" of entities to retrieve.
+     *
+     * @return array[entity] the retrieved entities.
+     */
+    public function fetch_paginated(?cursor $cursor = null): array {
+        $repository = $this->prepare_repository();
+
+        $pages = $cursor ?: cursor::create()->set_limit($this->page_size);
         $paginator = new cursor_paginator($repository, $pages, true);
 
         return $paginator->get();

@@ -47,8 +47,6 @@ use core\orm\entity\relations\belongs_to;
  * @property int $typeid goal type ID
  * @property string $sortthread sort order
  * @property-read company_goal_type $type company goal type
- *
- * @method static company_goal_repository repository()
  */
 class company_goal extends hierarchy_item {
     public const TABLE = 'goal';
