@@ -33,6 +33,7 @@
         variant: editorVariant,
         contextId: editorContextId,
       }"
+      :show-comment-form="showCommentForm"
       class="tui-sidePanelCommentBox__box"
       @update-total-comments="totalComments = $event"
       @update-submitting="submitting = $event"
@@ -75,6 +76,11 @@ export default {
     },
 
     editorContextId: [String, Number],
+
+    showCommentForm: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   data() {
