@@ -1,5 +1,8 @@
 This file describes API changes for 'theme_legacy'.
 
+=== 15.0 ===
+* Fixed colours used in mustache template "server/theme/legacy/templates/core/email_html.mustache".
+
 === 14 ===
 * Added intermediate "accent" variables for button colours to support styling through theme settings.
 

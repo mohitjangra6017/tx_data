@@ -6441,6 +6441,11 @@ function email_to_user($user, $from, $subject, $messagetext, $messagehtml = '', 
     if (!empty($user->mailformat) && $user->mailformat == 1) {
         // Only process html templates if the user preferences allow html email.
 
+        $color_primary = $theme_settings->get_property('colours', 'color-primary');
+        if (!empty($color_primary)) {
+            $context['backgroundcolor'] = $color_primary['value'];
+        }
+
         // If either header or footer has a value then both apply even if one is empty.
         $html_header = $theme_settings->get_property('brand', 'formbrand_field_notificationshtmlheader');
         $html_footer = $theme_settings->get_property('brand', 'formbrand_field_notificationshtmlfooter');

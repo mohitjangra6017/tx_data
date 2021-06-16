@@ -42,6 +42,7 @@
     * header (optional)
     * body
     * footer (optional)
+    * backgroundcolor
 
     Example context (json):
     {
@@ -56,7 +57,7 @@
   {{/header}}
   {{^header}}
     <tr>
-      <td colspan="3" style="background-color: #3d444b; line-height: 5px; font-size: 5px;">&nbsp;</td>
+      <td colspan="3" style="background-color: {{#backgroundcolor}}{{{backgroundcolor}}}{{/backgroundcolor}}{{^backgroundcolor}}#99ac3a{{/backgroundcolor}}; line-height: 5px; font-size: 5px;">&nbsp;</td>
     </tr>
   {{/header}}
 
@@ -64,7 +65,7 @@
     <td width="10%">&nbsp;</td>
     <td valign="top">
       <br /><br />
-        {{{body}}}
+      {{{body}}}
       <br />
     </td>
     <td width="10%">&nbsp;</td>
@@ -75,10 +76,10 @@
   {{/footer}}
   {{^footer}}
     <tr>
-      <td colspan="3" style="background-color: #36a5a6; line-height: 5px; font-size: 5px;">&nbsp;</td>
+      <td colspan="3" style="background-color: {{#backgroundcolor}}{{{backgroundcolor}}}{{/backgroundcolor}}{{^backgroundcolor}}#99ac3a{{/backgroundcolor}}; line-height: 5px; font-size: 5px;">&nbsp;</td>
     </tr>
     <tr>
-      <td colspan="3" style="background-color: #3d444b; line-height: 25px; font-size: 25px;">&nbsp;</td>
+      <td colspan="3" style="background-color: {{#backgroundcolor}}{{{backgroundcolor}}}{{/backgroundcolor}}{{^backgroundcolor}}#99ac3a{{/backgroundcolor}}; line-height: 25px; font-size: 25px;">&nbsp;</td>
     </tr>
   {{/footer}}
 </table>
