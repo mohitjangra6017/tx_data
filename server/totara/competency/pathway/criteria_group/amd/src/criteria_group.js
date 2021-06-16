@@ -135,6 +135,8 @@ function(str, notification, templates, Loader) {
 
                 return false;
             });
+
+            window.addEventListener('click', this.hideCriteriaTypeSelectors.bind(this));
         },
 
         // Listen for propagated events
@@ -310,10 +312,16 @@ function(str, notification, templates, Loader) {
 
         /**
          * Hide all criteria type selectors
+         *
+         * @param {MouseEvent} event a click event if this called from an event handler
          */
-        hideCriteriaTypeSelectors: function() {
+        hideCriteriaTypeSelectors: function(event) {
+            var isCurrent = event && event.target && event.target.closest('[data-cg-action="addcriterion"]');
+            if (isCurrent) {
+                return;
+            }
             // We also want to close the options lists in parent templates
-            var criteriaTypeNodes = document.querySelectorAll('[data-tw-editScaleValuePaths-dropDown]');
+            var criteriaTypeNodes = document.querySelectorAll('[data-tw-editScaleValuePaths-dropDown="criteria_group"]');
 
             for (var a = 0; a < criteriaTypeNodes.length; a++) {
                 criteriaTypeNodes[a].classList.add('tw-editAchievementPaths--hidden');

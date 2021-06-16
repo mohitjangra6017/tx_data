@@ -198,6 +198,8 @@ function(templates, ajax, modalFactory, modalEvents, notification, str, Loader) 
                 }
             });
 
+            window.addEventListener('click', this.hideCriteriaTypeSelectors.bind(this));
+
             window.addEventListener('beforeunload', function(e) {
                 if (that.dirty) {
                     e.preventDefault();
@@ -464,9 +466,15 @@ function(templates, ajax, modalFactory, modalEvents, notification, str, Loader) 
 
         /**
          * Hide all criteria type selectors and set their associated buttons to the correct aria state
+         *
+         * @param {MouseEvent} event a click event if this called from an event handler
          */
-        hideCriteriaTypeSelectors: function() {
-            var criteriaDropDowns = this.widget.querySelectorAll('[data-tw-editScaleValuePaths-dropDown]');
+        hideCriteriaTypeSelectors: function(event) {
+            var isCurrent = event && event.target && event.target.closest('[data-tw-editscalevaluepaths-add]');
+            if (isCurrent) {
+                return;
+            }
+            var criteriaDropDowns = this.widget.querySelectorAll('[data-tw-editScaleValuePaths-dropDown="scalevalue"]');
 
             for (var a = 0; a < criteriaDropDowns.length; a++) {
                 criteriaDropDowns[a].classList.add('tw-editAchievementPaths--hidden');
