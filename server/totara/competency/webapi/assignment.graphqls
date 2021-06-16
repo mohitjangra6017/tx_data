@@ -82,6 +82,17 @@ type totara_competency_assignment {
   if there is an assignment specific min proficient value override.
   """
   assignment_specific_scale: totara_competency_scale
+  """
+  Whether the user is currently assigned
+  """
+  is_assigned(user_id: core_id!): Boolean!
+  """
+  If the user is not assigned then this returns the date the user got unassigned last
+  """
+  unassigned_at(
+    format: core_date_format = TIMESTAMP
+    user_id: core_id!
+  ): core_date
 }
 
 """

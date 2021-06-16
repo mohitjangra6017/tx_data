@@ -91,9 +91,17 @@ class assignments extends user_data_provider {
      * @return assignment_repository
      */
     protected function build_query(): assignment_repository {
+        $only_current = null;
+        if (isset($this->filters['status'])) {
+            if ($this->filters['status'] === assignment::STATUS_ACTIVE) {
+                $only_current = true;
+            } else if ($this->filters['status'] === assignment::STATUS_ARCHIVED) {
+                $only_current = false;
+            }
+        }
 
         // Let's outline the relations we want to fetch the assignments with
-        return $this->assignments_repository_for_user()
+        return $this->assignments_repository_for_user($only_current)
             ->with([
                 'competency' => function (repository $repository) {
                     $repository->with([
@@ -214,21 +222,28 @@ class assignments extends user_data_provider {
      * including current assignments either via various user groups
      * or direct as well as archived assignments.
      *
+     * @param bool|null $only_current
      * @return assignment_repository
      */
-    protected function assignments_repository_for_user(): assignment_repository {
+    protected function assignments_repository_for_user(?bool $only_current = null): assignment_repository {
         return assignment::repository()
-            ->where(function (builder $builder)  {
-                $current = builder::table(competency_assignment_user::TABLE)
-                    ->where('user_id', $this->get_user()->id)
-                    ->where_field('assignment_id', new field('id', builder::table(assignment::TABLE)));
+            ->where(function (builder $builder) use ($only_current) {
+                if ($only_current === true || $only_current === null) {
+                    $current = builder::table(competency_assignment_user::TABLE)
+                        ->where('user_id', $this->get_user()->id)
+                        ->where_field('assignment_id', new field('id', builder::table(assignment::TABLE)));
 
-                $archived = builder::table('totara_competency_assignment_user_logs')
-                    ->where('user_id', $this->get_user()->id)
-                    ->where_field('assignment_id', new field('id', builder::table(assignment::TABLE)));
+                    $builder->where_exists($current);
+                }
 
-                $builder->where_exists($current)
-                    ->or_where_exists($archived);
+                // In case we don't filter by any or only want archived
+                if (!$only_current) {
+                    $archived = builder::table('totara_competency_assignment_user_logs')
+                        ->where('user_id', $this->get_user()->id)
+                        ->where_field('assignment_id', new field('id', builder::table(assignment::TABLE)));
+
+                    $builder->or_where_exists($archived);
+                }
             });
     }
 
@@ -259,10 +274,24 @@ class assignments extends user_data_provider {
      * Filter by assignment status
      *
      * @param assignment_repository $repository
-     * @param $value
+     * @param int $value
      */
     protected function filter_by_status(assignment_repository $repository, $value) {
-        $repository->where('status', intval($value));
+        // Treat active assignments with not user assignment records as archived
+        if ($value === assignment::STATUS_ARCHIVED) {
+            $repository->where(
+                function (builder $builder) use ($value) {
+                    $exists_builder = builder::table(competency_assignment_user::TABLE)
+                        ->where_field('assignment_id', new field('id', $builder))
+                        ->where('user_id', $this->get_user()->id);
+
+                    $builder->where_not_exists($exists_builder)
+                        ->or_where('status', intval($value));
+                }
+            );
+        } else {
+            $repository->where('status', intval($value));
+        }
     }
 
     /**

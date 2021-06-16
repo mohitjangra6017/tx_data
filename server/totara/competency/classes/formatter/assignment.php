@@ -51,12 +51,18 @@ class assignment extends formatter {
             'status_name' => null,
             'type_name' => null,
             'progress_name' => string_field_formatter::class,
-            'reason_assigned' => string_field_formatter::class,
+            'reason_assigned' => null,
             'assigner' => null,
             'can_archive' => null,
             'min_proficiency_value' => null,
             'has_default_proficiency_value_override' => null,
             'assignment_specific_scale' => null,
+            // The following fields are used only for assignment_progress
+            // which is essentially a decorator around assignments
+            'assignment' => null,
+            'proficient' => null,
+            'min_value' => null,
+            'my_value' => null,
         ];
     }
 

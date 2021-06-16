@@ -57,7 +57,10 @@
         size="2"
         :column-header="$str('header_archived_date', 'totara_competency')"
       >
-        {{ row.assignment && row.assignment.archived_at }}
+        {{
+          row.assignment &&
+            (row.assignment.archived_at || row.assignment.unassigned_at)
+        }}
       </Cell>
 
       <Cell
