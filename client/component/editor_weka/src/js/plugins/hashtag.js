@@ -114,6 +114,7 @@ export default function(editor) {
           'End',
           'Escape',
           'Spacebar', // For ie11
+          'Esc',
         ];
 
         if (validKeys.includes(event.key)) {
@@ -125,6 +126,7 @@ export default function(editor) {
                 state.schema.node('hashtag', { text: text.slice(1) })
               )
             );
+            event.stopPropagation();
             return true;
           });
         }

@@ -113,7 +113,7 @@ export default function(editor, resolverClassName) {
        * @param {KeyboardEvent} event
        */
       handleKeyDown(view, event) {
-        if (event.key === 'Escape') {
+        if (event.key === 'Escape' || event.key === 'Esc') {
           const { active } = this.getState(view.state);
           if (!active) {
             return false;
@@ -121,6 +121,7 @@ export default function(editor, resolverClassName) {
 
           suggestion.destroyInstance();
           view.focus();
+          event.stopPropagation();
 
           // Returning true to stop the the propagation in the parent editor.
           return true;
