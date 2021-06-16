@@ -15,5 +15,6 @@ query contentmarketplace_linkedin_catalog_import_learning_objects(
     }
     next_cursor
     total
+    selected_filters
   }
 }

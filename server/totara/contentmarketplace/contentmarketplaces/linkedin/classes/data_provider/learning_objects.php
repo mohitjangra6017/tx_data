@@ -86,6 +86,14 @@ class learning_objects extends paginated_provider {
     }
 
     /**
+     * @param repository $repository
+     * @param int[] $subject_ids
+     */
+    protected function filter_query_by_subjects(repository $repository, array $subject_ids): void {
+        // TODO: Add filtering functionality for subjects in TL-30372
+    }
+
+    /**
      * @param learning_object_repository $repository
      * @param string[] $asset_types
      */
@@ -94,19 +102,6 @@ class learning_objects extends paginated_provider {
             foreach ($asset_types as $asset_type) {
                 constants::validate_asset_type($asset_type);
                 $builder->or_where('asset_type', $asset_type);
-            }
-        });
-    }
-
-    /**
-     * @param learning_object_repository $repository
-     * @param string[] $levels
-     */
-    protected function filter_query_by_level(repository $repository, array $levels): void {
-        $repository->where(function (builder $builder) use ($levels) {
-            foreach ($levels as $level) {
-                constants::validate_difficulty_level($level);
-                $builder->or_where('level', $level);
             }
         });
     }
@@ -156,7 +151,9 @@ class learning_objects extends paginated_provider {
      * @param int[] $ids
      */
     protected function filter_query_by_ids(repository $repository, array $ids): void {
-        $repository->where_in('id', $ids);
+        if (!empty($ids)) {
+            $repository->where_in('id', $ids);
+        }
     }
 
     /**

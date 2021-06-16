@@ -24,6 +24,7 @@
 namespace contentmarketplace_linkedin\webapi\resolver\query;
 
 use contentmarketplace_linkedin\data_provider\learning_objects;
+use contentmarketplace_linkedin\data_provider\learning_objects_selected_filters;
 use contentmarketplace_linkedin\interactor\catalog_import_interactor;
 use core\webapi\execution_context;
 use core\webapi\middleware\require_login;
@@ -40,15 +41,19 @@ final class catalog_import_learning_objects implements query_resolver, has_middl
         (new catalog_import_interactor())->require_view_catalog_import_page();
 
         $input_params = $args['input'];
-        $provider = new learning_objects();
 
-        $filters = $input_params['filters'];
-        $filters['is_retired'] = false; // Hard-coded to only return non-retired (i.e. active) learning.
-        $provider->add_filters($filters);
+        $provider = new learning_objects();
+        $provider_filters = $input_params['filters'];
+        $provider_filters['is_retired'] = false; // Hard-coded to only return non-retired (i.e. active) learning.
+        $provider->add_filters($provider_filters);
 
         $provider->sort_by($input_params['sort_by']);
+        $result = $provider->get_offset_page($input_params['pagination']);
 
-        return $provider->get_offset_page($input_params['pagination']);
+        $selected_filter_labels = (new learning_objects_selected_filters($input_params['filters']))->get();
+        $result['selected_filters'] = $selected_filter_labels;
+
+        return $result;
     }
 
     /**

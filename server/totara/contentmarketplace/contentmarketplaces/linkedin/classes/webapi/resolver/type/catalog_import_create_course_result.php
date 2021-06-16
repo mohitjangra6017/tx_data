@@ -27,7 +27,7 @@ use contentmarketplace_linkedin\dto\course_creation_result as result;
 use core\webapi\execution_context;
 use core\webapi\type_resolver;
 
-class catalog_import_create_course_result implements type_resolver {
+final class catalog_import_create_course_result implements type_resolver {
     /**
      * @param string            $field
      * @param result            $source

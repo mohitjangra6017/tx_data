@@ -64,6 +64,10 @@ type contentmarketplace_linkedin_catalog_import_learning_objects_result implemen
   items: [contentmarketplace_linkedin_learning_object]!
   total: Int!
   next_cursor: String!
+  """
+  Array of the labels for the filters that were input to the query.
+  """
+  selected_filters(format: core_format = PLAIN): [String!]!
 }
 
 """
@@ -89,11 +93,11 @@ Applicable filters for the learning objects query.
 """
 input contentmarketplace_linkedin_catalog_import_learning_objects_filters_input {
   language: String!
-  search: String
-  asset_type: [contentmarketplace_linkedin_asset_type!]
-  level: [contentmarketplace_linkedin_level!]
-  time_to_complete: [String!]
-  ids: [core_id!]
+  search: String!
+  subjects: [core_id!]!
+  asset_type: [contentmarketplace_linkedin_asset_type!]!
+  time_to_complete: [String!]!
+  ids: [core_id!]!
 }
 
 """

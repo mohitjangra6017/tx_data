@@ -36,7 +36,7 @@ class learning_objects_filter_options {
      *
      * @return branch
      */
-    private function get_subjects(): branch {
+    protected function get_subjects(): branch {
         // For now we are just returning hard coded dummy data.
         // TODO: Replace this with real subject data in TL-30373
         return (new branch(
@@ -48,15 +48,15 @@ class learning_objects_filter_options {
                 'Business',
             ))->add_leaves(
                 new leaf(
-                    'business-01',
+                    '101',
                     'Business Analysis and Strategy',
                 ),
                 new leaf(
-                    'business-02',
+                    '102',
                     'Business Software and Tools',
                 ),
                 new leaf(
-                    'business-03',
+                    '103',
                     'Career Development',
                 ),
             ),
@@ -65,15 +65,15 @@ class learning_objects_filter_options {
                 'Creative',
             ))->add_leaves(
                 new leaf(
-                    'creative-01',
+                    '201',
                     'Animation and Illustration',
                 ),
                 new leaf(
-                    'creative-02',
+                    '202',
                     'Audio and Music',
                 ),
                 new leaf(
-                    'creative-03',
+                    '203',
                     'Graphic Design',
                 ),
             ),
@@ -82,15 +82,15 @@ class learning_objects_filter_options {
                 'Technology',
             ))->add_leaves(
                 new leaf(
-                    'technology-01',
+                    '301',
                     'Cloud Computing',
                 ),
                 new leaf(
-                    'technology-02',
+                    '302',
                     'Database Management',
                 ),
                 new leaf(
-                    'technology-03',
+                    '303',
                     'DevOps',
                 ),
             ),
@@ -102,7 +102,7 @@ class learning_objects_filter_options {
      *
      * @return branch
      */
-    private function get_asset_types(): branch {
+    protected function get_asset_types(): branch {
         return (new branch(
             'asset_types',
             get_string('catalog_filter_asset_type', 'contentmarketplace_linkedin'),
@@ -127,7 +127,7 @@ class learning_objects_filter_options {
      *
      * @return branch
      */
-    private function get_time_to_complete(): branch {
+    protected function get_time_to_complete(): branch {
         return (new branch(
             'time_to_complete',
             get_string('catalog_filter_time_to_complete', 'contentmarketplace_linkedin'),

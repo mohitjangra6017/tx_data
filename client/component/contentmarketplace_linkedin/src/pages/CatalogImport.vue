@@ -72,7 +72,7 @@
     <!-- Table count and active filters used -->
     <template v-slot:summary-count>
       <CountAndFilters
-        :filters="activeFilterStrings"
+        :filters="learningObjects.selectedFilters"
         :count="learningObjects.total"
       />
     </template>
@@ -137,9 +137,9 @@ import SortFilter from 'totara_contentmarketplace/components/filters/SortFilter'
 import { notify } from 'tui/notifications';
 import { parseQueryString, url } from 'tui/util';
 
-// Query
+// GraphQL
 import courseCategoriesQuery from 'contentmarketplace_linkedin/graphql/catalog_import_course_categories';
-import createCourseQuery from 'contentmarketplace_linkedin/graphql/catalog_import_create_course';
+import createCourseMutation from 'contentmarketplace_linkedin/graphql/catalog_import_create_course';
 import filterOptionsQuery from 'contentmarketplace_linkedin/graphql/catalog_import_learning_objects_filter_options';
 import learningObjectsQuery from 'contentmarketplace_linkedin/graphql/catalog_import_learning_objects';
 
@@ -167,9 +167,6 @@ export default {
 
   data() {
     return {
-      // Array of active filter strings
-      activeFilterStrings: ['Data science', 'Videos'],
-      // Available Sort filter options
       categoryOptions: [],
       filters: {
         assetType: [],
@@ -190,6 +187,7 @@ export default {
       // Available learning content populated by learningObjectsQuery
       learningObjects: {
         items: [],
+        selectedFilters: [],
         total: 0,
       },
       // URL key of marketplace
@@ -207,7 +205,7 @@ export default {
       // Categories assigned to reviewing items
       reviewingItemCategories: {},
       // List of selected items provided to review step
-      reviewingItemList: null,
+      reviewingItemList: [],
       // Selected learning content populated by learningObjectsQuery
       reviewingLearningObjects: {
         items: [],
@@ -269,9 +267,10 @@ export default {
           input: {
             filters: {
               asset_type: this.selectedFilters.assetType,
-              ids: null,
+              ids: [],
               language: this.selectedLanguage,
-              search: this.selectedFilters.search,
+              search: this.trimmedSearch,
+              subjects: this.selectedFilters.subjects,
               time_to_complete: this.selectedFilters.timeToComplete,
             },
             pagination: {
@@ -283,20 +282,29 @@ export default {
         };
       },
       update({ result: data }) {
-        // return data;
-        // TODO: Remove this when actual courses come through via the query.
-        return Object.assign({}, data, {
-          items: data.items.map(item => {
-            return Object.assign({}, item, {
-              courses: [
-                { fullname: 'example course 1' },
-                { fullname: 'example course 2' },
-                { fullname: 'example course 3' },
-                { fullname: 'example course 4' },
-              ],
-            });
-          }),
+        let selectedFilters = data.selected_filters.slice();
+        if (this.trimmedSearch.length > 0) {
+          selectedFilters.unshift(this.trimmedSearch);
+        }
+
+        // TODO: Remove this when actual courses come through via the query in TL-31176
+        const items = data.items.map(item => {
+          return Object.assign({}, item, {
+            courses: [
+              { fullname: 'example course 1' },
+              { fullname: 'example course 2' },
+              { fullname: 'example course 3' },
+              { fullname: 'example course 4' },
+            ],
+          });
         });
+
+        return {
+          items,
+          next_cursor: data.next_cursor,
+          total: data.total,
+          selectedFilters,
+        };
       },
     },
 
@@ -309,11 +317,12 @@ export default {
         return {
           input: {
             filters: {
-              asset_type: null,
+              asset_type: [],
               ids: this.reviewingItemList,
               language: this.selectedLanguage,
-              search: null,
-              time_to_complete: null,
+              search: '',
+              subjects: [],
+              time_to_complete: [],
             },
             pagination: {
               limit: 20,
@@ -372,6 +381,15 @@ export default {
     isLoading() {
       return this.$apollo.loading;
     },
+
+    /**
+     * Get the search string with whitespace removed.
+     *
+     * @return {String}
+     */
+    trimmedSearch() {
+      return this.selectedFilters.search.trim();
+    },
   },
 
   watch: {
@@ -415,7 +433,7 @@ export default {
         const {
           data: { payload },
         } = await this.$apollo.mutate({
-          mutation: createCourseQuery,
+          mutation: createCourseMutation,
           variables: {
             input: this.selectedItems.map(item => {
               return {
@@ -576,7 +594,7 @@ export default {
     /**
      * Update selected category for a single course
      *
-     * @param {Object} value
+     * @param {Object} data
      */
     setSingleCourseCategory(data) {
       // Get string & ID for selected value
@@ -613,6 +631,7 @@ export default {
               ids: this.reviewingItemList,
               language: this.selectedLanguage,
               search: '',
+              subjects: [],
               time_to_complete: [],
             },
             pagination: {

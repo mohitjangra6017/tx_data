@@ -27,6 +27,7 @@ use contentmarketplace_linkedin\entity\learning_object as learning_object_entity
 use contentmarketplace_linkedin\formatter\timespan_field_formatter;
 use contentmarketplace_linkedin\model\learning_object;
 use contentmarketplace_linkedin\testing\generator;
+use contentmarketplace_linkedin\webapi\resolver\type\catalog_import_learning_objects_result;
 use core\date_format;
 use core\format;
 use core_phpunit\testcase;
@@ -172,6 +173,8 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         $this->assertEquals(3, $result_search_whitespace['total']);
     }
 
+    // TODO: Add test for subjects filtering functionality in TL-30372
+
     public function test_time_to_complete_filter(): void {
         $learning_object_1_min = generator::instance()->create_learning_object('1', [
             'time_to_complete' => MINSECS,
@@ -272,40 +275,6 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         ]));
     }
 
-    public function test_level_filter(): void {
-        $learning_object_beginner = generator::instance()->create_learning_object('1', [
-            'level' => constants::DIFFICULTY_LEVEL_BEGINNER,
-            'title' => '1',
-        ]);
-        $learning_object_intermediate = generator::instance()->create_learning_object('2', [
-            'level' => constants::DIFFICULTY_LEVEL_INTERMEDIATE,
-            'title' => '2',
-        ]);
-        $learning_object_advanced = generator::instance()->create_learning_object('3', [
-            'level' => constants::DIFFICULTY_LEVEL_ADVANCED,
-            'title' => '3',
-        ]);
-
-        $result_beginner = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
-            'level' => [constants::DIFFICULTY_LEVEL_BEGINNER],
-        ], learning_objects::SORT_BY_ALPHABETICAL));
-        $this->assertEquals(1, $result_beginner['total']);
-        $this->assertEquals($learning_object_beginner->id, $result_beginner['items']->first()->id);
-
-        $result_intermediate_and_advanced = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
-            'level' => [constants::DIFFICULTY_LEVEL_INTERMEDIATE, constants::DIFFICULTY_LEVEL_ADVANCED],
-        ], learning_objects::SORT_BY_ALPHABETICAL));
-        $this->assertEquals(2, $result_intermediate_and_advanced['total']);
-        $this->assertEquals($learning_object_intermediate->id, $result_intermediate_and_advanced['items']->first()->id);
-        $this->assertEquals($learning_object_advanced->id, $result_intermediate_and_advanced['items']->last()->id);
-
-        $this->expectException(coding_exception::class);
-        $this->expectExceptionMessage('Invalid difficulty level: NOT_A_LEVEL');
-        $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
-            'level' => ['NOT_A_LEVEL'],
-        ]));
-    }
-
     public function test_ids_filter(): void {
         $learning_object_1 = generator::instance()->create_learning_object('1');
         $learning_object_2 = generator::instance()->create_learning_object('2');
@@ -327,7 +296,77 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         $result_empty = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, [
             'ids' => [],
         ]));
-        $this->assertEquals(0, $result_empty['total']);
+        $this->assertEquals(3, $result_empty['total']);
+    }
+
+    public function selected_filters_provider(): array {
+        return [
+            'No filters specified' => [
+                [
+                    'subjects' => [],
+                    'asset_type' => [],
+                    'time_to_complete' => [],
+                ],
+                [],
+            ],
+            'Time to complete' => [
+                [
+                    'subjects' => [],
+                    'asset_type' => [],
+                    'time_to_complete' => ['{"min":600,"max":1800}', '{"min":7200,"max":10800}'],
+                ],
+                [
+                    get_string('catalog_filter_timespan_10_to_30_minutes', 'contentmarketplace_linkedin'),
+                    get_string('catalog_filter_timespan_2_to_3_hours', 'contentmarketplace_linkedin'),
+                ],
+            ],
+            'Asset types' => [
+                [
+                    'subjects' => [],
+                    'asset_type' => [constants::ASSET_TYPE_COURSE, constants::ASSET_TYPE_VIDEO],
+                    'time_to_complete' => [],
+                ],
+                [
+                    get_string('asset_type_course_plural', 'contentmarketplace_linkedin'),
+                    get_string('asset_type_video_plural', 'contentmarketplace_linkedin'),
+                ],
+            ],
+            'Subjects' => [
+                // TODO: Test that subject labels are returned correctly in TL-30372.
+                // TODO: Make sure that the string_field_formatter is applied properly to the names of the subjects.
+                [
+                    'subjects' => [],
+                    'asset_type' => [],
+                    'time_to_complete' => [],
+                ],
+                [],
+            ],
+            'Multiple types' => [
+                [
+                    'subjects' => [], // TODO: Test that subject labels are returned correctly in TL-30372
+                    'asset_type' => [constants::ASSET_TYPE_VIDEO],
+                    'time_to_complete' => ['{"min":7200,"max":10800}'],
+                ],
+                [
+                    // TODO: Test that subject labels are returned correctly in TL-30372
+                    get_string('asset_type_video_plural', 'contentmarketplace_linkedin'),
+                    get_string('catalog_filter_timespan_2_to_3_hours', 'contentmarketplace_linkedin'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider selected_filters_provider
+     */
+    public function test_selected_filters_list(array $filters_input, array $expected_strings): void {
+        $query_result = $this->resolve_graphql_query(self::QUERY, $this->get_query_options(null, $filters_input));
+        $result = $this->resolve_graphql_type(
+            $this->get_graphql_name(catalog_import_learning_objects_result::class),
+            'selected_filters',
+            $query_result
+        );
+        $this->assertEquals($expected_strings, $result);
     }
 
     public function test_type_resolver(): void {
@@ -392,6 +431,10 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
                 ],
                 'filters' => array_merge([
                     'language' => 'en',
+                    'subjects' => [],
+                    'asset_type' => [],
+                    'time_to_complete' => [],
+                    'ids' => [],
                 ], $filters),
                 'sort_by' => $sort_by,
             ],
