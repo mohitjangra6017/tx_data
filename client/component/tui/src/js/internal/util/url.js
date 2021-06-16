@@ -17,6 +17,7 @@
  */
 
 import { config } from '../../config';
+import { set } from './object';
 
 /**
  * Format a URL parameter.
@@ -51,11 +52,11 @@ function formatParam(key, value) {
  *
  * @param {object=} params URL parameters.
  *   Map of keys to values.
- *   Objects and arrays are acceped as values and encoded using [].
+ *   Objects and arrays are accepted as values and encoded using [].
  */
 export function formatParams(params) {
   return Object.entries(params)
-    .map(([key, value]) => formatParam(key, value))
+    .map(([key, value]) => formatParam(encodeURIComponent(key), value))
     .join('&');
 }
 
@@ -65,7 +66,7 @@ export function formatParams(params) {
  * @param {string} url Absolute or relative url.
  * @param {object=} params URL parameters.
  *   Map of keys to values.
- *   Objects and arrays are acceped as values and encoded using [].
+ *   Objects and arrays are accepted as values and encoded using [].
  */
 export function url(url, params) {
   const formattedParams = params && formatParams(params);
@@ -89,7 +90,7 @@ export function url(url, params) {
  *   e.g. '/foo/bar.php', 'https://www.google.com/'
  * @param {object=} params URL parameters.
  *   Map of keys to values.
- *   Objects and arrays are acceped as values and encoded using [].
+ *   Objects and arrays are accepted as values and encoded using [].
  */
 export function totaraUrl(path, params) {
   // prepend with wwwroot if not absolute
@@ -145,4 +146,30 @@ export function getQueryStringParam(name) {
   });
 
   return parsedParams[name];
+}
+
+/**
+ * Get a object of query string params from the current url.
+ *
+ * @param {object} params URL parameters window.location.search
+ * @return {object}
+ */
+export function parseQueryString(params) {
+  if (!params.startsWith('?') || !params.substring(1)) {
+    return {};
+  }
+
+  params = params.substring(1).split('&');
+
+  let parsedParams = {};
+
+  params.forEach(item => {
+    const split = item.split('=');
+    const key = split[0];
+    const value = decodeURIComponent(split[1]);
+    let keyList = key.split(/\[(.*?)\]/).filter(item => item);
+    set(parsedParams, keyList, value);
+  });
+
+  return parsedParams;
 }

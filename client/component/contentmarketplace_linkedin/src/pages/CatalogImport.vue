@@ -135,6 +135,7 @@ import SelectionPaging from 'totara_contentmarketplace/components/paging/Selecti
 import SelectionTable from 'contentmarketplace_linkedin/components/tables/LinkedInSelectionTable';
 import SortFilter from 'totara_contentmarketplace/components/filters/SortFilter';
 import { notify } from 'tui/notifications';
+import { parseQueryString, url } from 'tui/util';
 
 // Query
 import courseCategoriesQuery from 'contentmarketplace_linkedin/graphql/catalog_import_course_categories';
@@ -191,6 +192,8 @@ export default {
         items: [],
         total: 0,
       },
+      // URL key of marketplace
+      marketplace: 'linkedin',
       // Open Filter tree branches
       openBranches: {
         assetType: [],
@@ -232,6 +235,8 @@ export default {
       selectedLanguage: 'en',
       // Selected sort filter value
       selectedSortOrderFilter: 'LATEST',
+      // Setting initial filters
+      settingInitFilters: true,
       // Available Sort filter options
       sortFilterOptions: [
         {
@@ -256,6 +261,9 @@ export default {
 
     learningObjects: {
       query: learningObjectsQuery,
+      skip() {
+        return this.settingInitFilters;
+      },
       variables() {
         return {
           input: {
@@ -364,6 +372,29 @@ export default {
     isLoading() {
       return this.$apollo.loading;
     },
+  },
+
+  watch: {
+    selectedFilters: {
+      deep: true,
+      handler(values) {
+        this.setPageFilterParams(values);
+      },
+    },
+  },
+
+  mounted() {
+    // Populate active filters based on URL params
+    let urlParams = parseQueryString(window.location.search);
+
+    Object.keys(urlParams).forEach(key => {
+      // Only populate filters with default values
+      if (typeof this.selectedFilters[key] !== 'undefined') {
+        this.selectedFilters[key] = urlParams[key];
+      }
+    });
+
+    this.settingInitFilters = false;
   },
 
   methods: {
@@ -484,6 +515,34 @@ export default {
      */
     setLoadMorePage(page) {
       this.reviewingLoadMorePage = page;
+    },
+
+    /**
+     * Set the page filters params in the URL
+     *
+     * @param {Object} values
+     */
+    setPageFilterParams(values) {
+      let urlData = {
+        marketplace: this.marketplace,
+      };
+
+      // Iterate through all filter types
+      Object.keys(values).forEach(key => {
+        let filter = values[key];
+
+        if (key === 'search' && filter) {
+          urlData.search = filter;
+        }
+
+        // Only include filter types with an active filter
+        if (filter instanceof Array && filter.length) {
+          urlData[key] = filter;
+        }
+      });
+
+      const pageUrl = url(window.location.pathname, urlData);
+      window.history.pushState(null, null, pageUrl);
     },
 
     /**
