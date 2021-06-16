@@ -3473,7 +3473,11 @@ function debugging($message = '', $level = DEBUG_NORMAL, $backtrace = null) {
         if (!$backtrace) {
             $backtrace = debug_backtrace();
         }
-        $from = format_backtrace($backtrace, CLI_SCRIPT || NO_DEBUG_DISPLAY);
+        $from = format_backtrace(
+            $backtrace,
+            defined('CLI_SCRIPT') && CLI_SCRIPT
+            || defined('NO_DEBUG_DISPLAY') && NO_DEBUG_DISPLAY
+        );
         if (PHPUNIT_TEST) {
             if (\core_phpunit\internal_util::debugging_triggered($message, $level, $from)) {
                 // We are inside test, the debug message was logged.
@@ -3481,7 +3485,7 @@ function debugging($message = '', $level = DEBUG_NORMAL, $backtrace = null) {
             }
         }
 
-        if (NO_DEBUG_DISPLAY) {
+        if (defined('NO_DEBUG_DISPLAY') && NO_DEBUG_DISPLAY) {
             // Script does not want any errors or debugging in output,
             // we send the info to error log instead.
             error_log('Debugging: ' . $message . ' in '. PHP_EOL . $from);
@@ -3490,7 +3494,7 @@ function debugging($message = '', $level = DEBUG_NORMAL, $backtrace = null) {
             if (!defined('DEBUGGING_PRINTED')) {
                 define('DEBUGGING_PRINTED', 1); // Indicates we have printed something.
             }
-            if (CLI_SCRIPT) {
+            if (defined('CLI_SCRIPT') && CLI_SCRIPT) {
                 echo "++ $message ++\n$from";
             } else {
                 echo '<div class="notifytiny debuggingmessage" data-rel="debugging">' , clean_text($message) , $from , '</div>';
