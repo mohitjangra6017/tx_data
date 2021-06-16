@@ -130,4 +130,44 @@ class branch extends leaf {
         return $this;
     }
 
+    /**
+     * Get a flat list of tree nodes from a given list of tree IDs.
+     * The order of the nodes in the array correspond to how they are displayed in the Tree vue component.
+     *
+     * @param int[] $tree_ids Flat array of IDs.
+     * @return leaf|branch[] Array of tree nodes, keyed by ID.
+     */
+    final public function get_nodes_from_ids(array $tree_ids): array {
+        return static::find_nodes_from_ids($this, $tree_ids, []);
+    }
+
+    /**
+     * Recursively builds a flat list of tree nodes from the specified tree leaf/branch IDs.
+     * The order of the nodes in the array correspond to how they are displayed in the Tree vue component.
+     *
+     * @param leaf|branch $tree_node
+     * @param array $tree_ids
+     * @param leaf[]|branch[] $found_tree_nodes Array of tree nodes, keyed by ID.
+     * @return leaf[]|branch[] Array of tree nodes, keyed by ID.
+     */
+    private static function find_nodes_from_ids(leaf $tree_node, array $tree_ids, array $found_tree_nodes): array {
+        if (!isset($found_tree_nodes[$tree_node->get_id()]) && in_array($tree_node->get_id(), $tree_ids)) {
+            $found_tree_nodes[$tree_node->get_id()] = $tree_node;
+        }
+
+        if (!$tree_node instanceof self) {
+            return $found_tree_nodes;
+        }
+
+        foreach ($tree_node->get_leaves() as $tree_leaf) {
+            $found_tree_nodes = static::find_nodes_from_ids($tree_leaf, $tree_ids, $found_tree_nodes);
+        }
+
+        foreach ($tree_node->get_branches() as $tree_branch) {
+            $found_tree_nodes = static::find_nodes_from_ids($tree_branch, $tree_ids, $found_tree_nodes);
+        }
+
+        return $found_tree_nodes;
+    }
+
 }

@@ -34,60 +34,133 @@ use totara_tui\tree\leaf;
 
 class totara_tui_tree_test extends testcase {
 
-    public function test_tree(): void {
-        $parent_branch = new branch('1', 'Parent Branch');
-        $child_branch = new branch('2', 'Child Branch');
-        $grandchild_branch = new branch('3', 'Grandchild Branch');
+    /**
+     * @var branch
+     */
+    protected $parent_branch;
 
-        $grandchild_leaf_1 = new leaf('3-1', 'Grandchild Leaf 1');
-        $grandchild_leaf_2 = new leaf('3-2', 'Grandchild Leaf 2');
-        $grandchild_leaf_3 = new leaf('3-3', 'Grandchild Leaf 3');
+    /**
+     * @var branch
+     */
+    protected $child_branch;
 
-        $grandchild_branch->add_leaves($grandchild_leaf_1, $grandchild_leaf_2, $grandchild_leaf_3);
+    /**
+     * @var branch
+     */
+    protected $grandchild_branch;
 
-        $parent_branch->add_branches($child_branch);
-        $child_branch->add_branches($grandchild_branch);
+    /**
+     * @var leaf
+     */
+    protected $grandchild_leaf_1;
 
-        // Test get_id()
-        $this->assertEquals('1', $parent_branch->get_id());
-        $this->assertEquals('2', $child_branch->get_id());
-        $this->assertEquals('3', $grandchild_branch->get_id());
-        $this->assertEquals('3-1', $grandchild_leaf_1->get_id());
-        $this->assertEquals('3-2', $grandchild_leaf_2->get_id());
-        $this->assertEquals('3-3', $grandchild_leaf_3->get_id());
+    /**
+     * @var leaf
+     */
+    protected $grandchild_leaf_2;
 
-        // Test get_label()
-        $this->assertEquals('Parent Branch', $parent_branch->get_label());
-        $this->assertEquals('Child Branch', $child_branch->get_label());
-        $this->assertEquals('Grandchild Branch', $grandchild_branch->get_label());
-        $this->assertEquals('Grandchild Leaf 1', $grandchild_leaf_1->get_label());
-        $this->assertEquals('Grandchild Leaf 2', $grandchild_leaf_2->get_label());
-        $this->assertEquals('Grandchild Leaf 3', $grandchild_leaf_3->get_label());
+    /**
+     * @var leaf
+     */
+    protected $grandchild_leaf_3;
 
-        // Test get_branches()
-        $this->assertEquals([$child_branch], $parent_branch->get_branches());
-        $this->assertEquals([$grandchild_branch], $child_branch->get_branches());
-        $this->assertEquals([], $grandchild_branch->get_branches());
+    protected function setUp(): void {
+        parent::setUp();
+        $this->parent_branch = new branch('1', 'Parent Branch');
+        $this->child_branch = new branch('2', 'Child Branch');
+        $this->grandchild_branch = new branch('3', 'Grandchild Branch');
 
-        // Test has_branches()
-        $this->assertTrue($parent_branch->has_branches());
-        $this->assertTrue($child_branch->has_branches());
-        $this->assertFalse($grandchild_branch->has_branches());
+        $this->grandchild_leaf_1 = new leaf('3-1', 'Grandchild Leaf 1');
+        $this->grandchild_leaf_2 = new leaf('3-2', 'Grandchild Leaf 2');
+        $this->grandchild_leaf_3 = new leaf('3-3', 'Grandchild Leaf 3');
 
-        // Test get_leaves()
-        $this->assertEquals([], $parent_branch->get_leaves());
-        $this->assertEquals([], $child_branch->get_leaves());
-        $this->assertEquals([$grandchild_leaf_1, $grandchild_leaf_2, $grandchild_leaf_3], $grandchild_branch->get_leaves());
+        $this->grandchild_branch->add_leaves($this->grandchild_leaf_1, $this->grandchild_leaf_2, $this->grandchild_leaf_3);
 
-        // Test is_root()
-        $this->assertTrue($parent_branch->is_root());
-        $this->assertFalse($child_branch->is_root());
-        $this->assertFalse($grandchild_branch->is_root());
+        $this->parent_branch->add_branches($this->child_branch);
+        $this->child_branch->add_branches($this->grandchild_branch);
+    }
 
-        // Test that the root is always $parent_branch
-        $this->assertEquals($parent_branch, $parent_branch->get_root());
-        $this->assertEquals($parent_branch, $child_branch->get_root());
-        $this->assertEquals($parent_branch, $grandchild_branch->get_root());
+    protected function tearDown(): void {
+        parent::tearDown();
+        $this->parent_branch = $this->child_branch = $this->grandchild_branch = null;
+        $this->grandchild_leaf_1 = $this->grandchild_leaf_2 = $this->grandchild_leaf_3 = null;
+    }
+
+    public function test_get_id(): void {
+        self::assertEquals('1', $this->parent_branch->get_id());
+        self::assertEquals('2', $this->child_branch->get_id());
+        self::assertEquals('3', $this->grandchild_branch->get_id());
+        self::assertEquals('3-1', $this->grandchild_leaf_1->get_id());
+        self::assertEquals('3-2', $this->grandchild_leaf_2->get_id());
+        self::assertEquals('3-3', $this->grandchild_leaf_3->get_id());
+    }
+
+    public function test_get_label(): void {
+        self::assertEquals('Parent Branch', $this->parent_branch->get_label());
+        self::assertEquals('Child Branch', $this->child_branch->get_label());
+        self::assertEquals('Grandchild Branch', $this->grandchild_branch->get_label());
+        self::assertEquals('Grandchild Leaf 1', $this->grandchild_leaf_1->get_label());
+        self::assertEquals('Grandchild Leaf 2', $this->grandchild_leaf_2->get_label());
+        self::assertEquals('Grandchild Leaf 3', $this->grandchild_leaf_3->get_label());
+    }
+
+    public function test_branches(): void {
+        self::assertEquals([$this->child_branch], $this->parent_branch->get_branches());
+        self::assertEquals([$this->grandchild_branch], $this->child_branch->get_branches());
+        self::assertEquals([], $this->grandchild_branch->get_branches());
+    }
+
+    public function test_leaves(): void {
+        self::assertEquals([], $this->parent_branch->get_leaves());
+        self::assertEquals([], $this->child_branch->get_leaves());
+        self::assertEquals(
+            [$this->grandchild_leaf_1, $this->grandchild_leaf_2, $this->grandchild_leaf_3],
+            $this->grandchild_branch->get_leaves()
+        );
+    }
+
+    public function test_is_root(): void {
+        self::assertTrue($this->parent_branch->is_root());
+        self::assertFalse($this->child_branch->is_root());
+        self::assertFalse($this->grandchild_branch->is_root());
+    }
+
+    public function test_get_root(): void {
+        self::assertEquals($this->parent_branch, $this->parent_branch->get_root());
+        self::assertEquals($this->parent_branch, $this->child_branch->get_root());
+        self::assertEquals($this->parent_branch, $this->grandchild_branch->get_root());
+    }
+
+    public function test_get_nodes_from_ids(): void {
+        // Nothing returns nothing - pretty simple really
+        self::assertEquals([], $this->parent_branch->get_nodes_from_ids([]));
+
+        // Parent branch's ID is specified last, but the order returned will be the order that is displayed in the frontend.
+        self::assertEquals(
+            [
+                $this->parent_branch->get_id() => $this->parent_branch,
+                $this->child_branch->get_id() => $this->child_branch,
+                $this->grandchild_leaf_1->get_id() => $this->grandchild_leaf_1,
+                $this->grandchild_leaf_3->get_id() => $this->grandchild_leaf_3,
+            ],
+            $this->parent_branch->get_nodes_from_ids([
+                $this->child_branch->get_id(),
+                $this->grandchild_leaf_3->get_id(),
+                $this->grandchild_leaf_1->get_id(),
+                $this->parent_branch->get_id(),
+            ])
+        );
+
+        // Searching for the parent's ID, but the method was called on the child, so the parent won't be included in the search.
+        self::assertEquals(
+            [
+                $this->grandchild_leaf_2->get_id() => $this->grandchild_leaf_2,
+            ],
+            $this->child_branch->get_nodes_from_ids([
+                $this->grandchild_leaf_2->get_id(),
+                $this->parent_branch->get_id(),
+            ])
+        );
     }
 
 }
