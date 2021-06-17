@@ -439,9 +439,14 @@ function createFormValues(currentPreference, parentValue, defaultEditorFormat) {
       [SCHEDULE_TYPES.ON_EVENT]: 0,
       type: 'number',
     },
-    recipient: currentPreference.recipient
-      ? currentPreference.recipient.class_name
-      : null,
+    recipient:
+      !parentValue || currentPreference.overridden_recipient
+        ? currentPreference.recipient
+          ? currentPreference.recipient.class_name
+          : null
+        : parentValue.recipient
+        ? parentValue.recipient.class_name
+        : null,
     enabled: {
       value:
         !parentValue || currentPreference.overridden_enabled
@@ -713,6 +718,26 @@ export default {
 
         const { preferenceForm } = this.$refs;
 
+        if (!toggle.recipient) {
+          preferenceForm.update(
+            ['recipient'],
+            this.parentValue.recipient.class_name
+          );
+        }
+
+        if (!toggle.schedule) {
+          preferenceForm.update(
+            ['schedule_type', 'value'],
+            this.parentValue.schedule_type
+          );
+          if (this.parentValue.schedule_type != this.scheduleTypes.ON_EVENT) {
+            preferenceForm.update(
+              ['schedule_offset', this.parentValue.schedule_type],
+              this.parentValue.schedule_offset
+            );
+          }
+        }
+
         if (!toggle.subject) {
           preferenceForm.update(
             ['subject', 'value'],
@@ -742,6 +767,10 @@ export default {
             ['forced_delivery_channels', 'value'],
             this.parentValue.forced_delivery_channels || []
           );
+        }
+
+        if (!toggle.enabled) {
+          preferenceForm.update(['enabled', 'value'], this.parentValue.enabled);
         }
       },
     },
@@ -824,7 +853,7 @@ export default {
         schedule_offset: !this.customisation.schedule
           ? null
           : formValue.schedule_offset[formValue.schedule_type.value],
-        recipient: formValue.recipient,
+        recipient: !this.customisation.recipient ? null : formValue.recipient,
         enabled: !this.customisation.enabled ? null : formValue.enabled.value,
         forced_delivery_channels: !this.customisation.forcedDeliveryChannels
           ? null
