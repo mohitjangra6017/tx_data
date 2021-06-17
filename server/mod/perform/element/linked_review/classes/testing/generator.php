@@ -116,7 +116,7 @@ final class generator extends component_generator {
     /**
      * Creates a performance activity with a section, a linked_review element in that section, and a corresponding section element.
      *
-     * @param array $data Input: activity_name, content_type, selection_relationships, section_title,
+     * @param array $data Input: activity_name, activity_status, content_type, selection_relationships, section_title,
      * @return array Output: [activity, section, element, section element]
      */
     public function create_activity_with_section_and_review_element(array $data = []): array {
@@ -124,12 +124,14 @@ final class generator extends component_generator {
             'content_type' => 'totara_competency',
             'selection_relationships' => constants::RELATIONSHIP_SUBJECT,
             'activity_name' => 'Test activity',
+            'activity_status' => 'Active',
             'section_title' => 'Test section',
             'element_title' => 'linked review element',
             'content_type_settings' => '{}',
         ], $data);
         $activity = perform_generator::instance()->create_activity_in_container([
             'activity_name' => $data['activity_name'],
+            'activity_status' => $data['activity_status'],
             'create_section' => false,
         ]);
 

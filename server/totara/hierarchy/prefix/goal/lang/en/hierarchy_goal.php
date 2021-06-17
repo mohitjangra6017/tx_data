@@ -26,7 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['enable_goal_status_change'] = 'Ability to change goal status during activity';
 $string['enable_goal_status_change_participant'] = 'Change of goal status participant';
-$string['enable_goal_status_change_participant_help'] = 'Only one goal status change will be submitted to the goal. If there are multiple people in the participant role, the first change submitted will be applied.';
 $string['eventchangedtype'] = 'Changed Goal Type';
 $string['eventcreatedassignment'] = 'Created Goal Assignment';
 $string['eventcreatedframework'] = 'Created Goal Framework';
@@ -50,6 +49,14 @@ $string['eventupdatedscale'] = 'Updated Goal Scale';
 $string['eventupdatedscalevalue'] = 'Updated Goal Scale Value';
 $string['eventupdatedtype'] = 'Updated Goal Type';
 $string['eventvieweditem'] = 'Viewed Goal';
+$string['example_goal_title'] = 'Goals example';
+$string['example_goal_description'] = 'This is an example of how a goal will display after a participant has selected it.';
+$string['example_goal_status'] = 'Goal Assigned';
+$string['goal_status'] = 'Goal status';
+$string['goal_status_select'] = 'Select goal status';
+$string['goal_change_status_help'] = 'Only one goal status change will be submitted to the goal. If there are multiple people in the participant role, the first change submitted will be applied.';
+$string['perform_review_goal_missing'] = 'The goal no longer exists';
+$string['target_date'] = 'Target date';
 
 $string['userdataitemcompany_export_hidden'] = 'Company goals hidden';
 $string['userdataitemcompany_export_hidden_help'] = 'Only relevant to users without the viewowncompanygoal capability. To export company goals regardless of a user’s capability, select both the visible and hidden settings.';
