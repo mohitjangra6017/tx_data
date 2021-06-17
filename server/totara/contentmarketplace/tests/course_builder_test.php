@@ -243,7 +243,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
      */
     public function test_create_course_with_non_existing_learning_object_with_transaction(): void {
         $admin = get_admin();
-        $learning_object = new learning_object(42, 'en', 'Name');
+        $learning_object = new learning_object(42, 'en', 'Name', 'https://cdn.lynda.com/course/73286/73286-16x9.jpg');
 
         $course_builder = new course_builder(
             $learning_object,
@@ -306,7 +306,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
      */
     public function test_create_course_with_non_existing_learning_object_without_transaction(): void {
         $admin = get_admin();
-        $learning_object = new learning_object(42, 'en', 'Name');
+        $learning_object = new learning_object(42, 'en', 'Name', 'https://cdn.lynda.com/course/73286/73286-16x9.jpg');
 
         $course_builder = new course_builder(
             $learning_object,

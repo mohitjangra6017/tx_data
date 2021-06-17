@@ -1,0 +1,52 @@
+<?php
+/**
+ * This file is part of Totara Learn
+ *
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @package totara_contentmarketplace
+ */
+
+use core_phpunit\testcase;
+use totara_contentmarketplace\course\course_image_downloader;
+
+class totara_contentmarketplace_course_image_downloader_testcase extends testcase {
+    /**
+     * @return void
+     */
+    public function test_course_image(): void {
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $url = self::getExternalTestFileUrl('/test.jpg');
+
+        $course_image = new course_image_downloader($course->id, $url);
+        $file = $course_image->download_image_for_course();
+
+        $context = context_course::instance($course->id);
+
+        // Test the same course
+        self::assertEquals($context->id, $file->get_contextid());
+        self::assertEquals(0, $file->get_itemid());
+        self::assertEquals('course', $file->get_component());
+        self::assertEquals('images', $file->get_filearea());
+
+        $course_image = new course_image_downloader($course->id, $url);
+        $file = $course_image->download_image_for_course();
+        self::assertTrue($file);
+    }
+}

@@ -194,6 +194,10 @@ class generator extends component_generator implements learning_object_generator
             $record['time_to_complete'] = timespan::minutes(90)->get();
         }
 
+        if (!array_key_exists('primary_image_url', $record)) {
+            $record['primary_image_url'] = 'https://cdn.lynda.com/course/73286/73286-16x9.jpg';
+        }
+
         $entity = new learning_object();
         $entity->urn = $urn;
 

@@ -217,6 +217,9 @@ class course_builder {
         }
 
         $course = course_helper::create_course($record);
+
+        // Download image and store it.
+        (new course_image_downloader($course->id, $this->learning_object->get_image_url()))->download_image_for_course();
         $manager = new enrol_manager($course);
 
         // Enable any enrol method.
