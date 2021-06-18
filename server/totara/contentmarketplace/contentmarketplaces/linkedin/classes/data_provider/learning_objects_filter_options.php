@@ -23,10 +23,8 @@
 
 namespace contentmarketplace_linkedin\data_provider;
 
-use coding_exception;
 use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\dto\timespan;
-use contentmarketplace_linkedin\model\classification;
 use contentmarketplace_linkedin\tree\timespan_leaf;
 use totara_tui\tree\branch;
 use totara_tui\tree\leaf;
@@ -34,91 +32,49 @@ use totara_tui\tree\leaf;
 class learning_objects_filter_options {
 
     /**
+     * @var string
+     */
+    protected $language;
+
+    /**
+     * learning_objects_filter_options constructor.
+     * @param string $language
+     */
+    public function __construct(string $language) {
+        $this->language = $language;
+    }
+
+    /**
      * Get a tree structure of subject filter options.
      *
-     * @param string $language
      * @return branch
      */
-    private function get_subjects(string $language): branch {
-        $provider = new classifications();
-        $provider->add_filters([
-            'locale_language' => $language,
-            'classification_types' => [
-                constants::CLASSIFICATION_TYPE_LIBRARY,
-                constants::CLASSIFICATION_TYPE_SUBJECT
-            ]
-        ]);
+    protected function get_subjects(): branch {
+        $root_branch = new branch(
+            'subjects',
+            get_string('catalog_filter_subjects', 'contentmarketplace_linkedin', $this->language)
+        );
 
-        $items = $provider->get();
+        // We just want the top level of classifications (library), so we can then build the tree based upon it.
+        $libraries = (new classifications())
+            ->with_children()
+            ->add_filters([
+                'locale_language' => $this->language,
+                'classification_types' => [constants::CLASSIFICATION_TYPE_LIBRARY],
+            ])
+            ->sort_by(classifications::SORT_BY_ALPHABETICAL)
+            ->get();
 
-        // Populate the two separate lists that can help to build a snowman.
-        $collection_map = [];
+        foreach ($libraries as $library) {
+            $library_branch = new branch($library->id, $library->name);
+            $root_branch->add_branches($library_branch);
 
-        /** @var classification $item */
-        foreach ($items as $item) {
-            if (!$item->has_parent_classification()) {
-                if (!isset($collection_map[$item->id])) {
-                    $collection_map[$item->id] = [
-                        'parent' => $item,
-                        'children' => []
-                    ];
-
-                    continue;
-                }
-
-                if (isset($collection_map[$item->id]['parent'])) {
-                    throw new coding_exception("The parent had already been set, cannot be reset");
-                }
-
-                $collection_map[$item->id]['parent'] = $item;
-                continue;
+            foreach ($library->children as $subject) {
+                $library_branch->add_leaves(new leaf($subject->id, $subject->name));
             }
-
-            // A child item.
-            $parent_id = $item->parent_classification_id;
-            if (!isset($collection_map[$parent_id])) {
-                $collection_map[$parent_id] = [
-                    'parent' => null,
-                    'children' => []
-                ];
-            }
-
-            $collection_map[$parent_id]['children'][] = $item;
         }
 
-        $subject_branch = new branch(
-            'subjects',
-            get_string('catalog_filter_subjects', 'contentmarketplace_linkedin', $language)
-        );
-
-        $subject_branch->add_branches(
-            ...array_map(
-                function (array $map): branch {
-                    /** @var classification $parent_classification */
-                    $parent_classification = $map['parent'];
-                    $parent_branch = new branch(
-                        $parent_classification->id,
-                        $parent_classification->name
-                    );
-
-                    $parent_branch->add_leaves(
-                        ...array_map(
-                            function (classification $child_classification): leaf {
-                                return new leaf(
-                                    $child_classification->id,
-                                    $child_classification->name
-                                );
-                            },
-                            $map['children']
-                        )
-                    );
-                    return $parent_branch;
-                },
-                $collection_map
-            )
-        );
-
-        return $subject_branch;
+        return $root_branch;
     }
 
     /**
@@ -129,19 +85,19 @@ class learning_objects_filter_options {
     protected function get_asset_types(): branch {
         return (new branch(
             'asset_types',
-            get_string('catalog_filter_asset_type', 'contentmarketplace_linkedin'),
+            get_string('catalog_filter_asset_type', 'contentmarketplace_linkedin', $this->language),
         ))->add_leaves(
             new leaf(
                 constants::ASSET_TYPE_COURSE,
-                get_string('asset_type_course_plural', 'contentmarketplace_linkedin'),
+                get_string('asset_type_course_plural', 'contentmarketplace_linkedin', $this->language),
             ),
             new leaf(
                 constants::ASSET_TYPE_VIDEO,
-                get_string('asset_type_video_plural', 'contentmarketplace_linkedin'),
+                get_string('asset_type_video_plural', 'contentmarketplace_linkedin', $this->language),
             ),
             new leaf(
                 constants::ASSET_TYPE_LEARNING_PATH,
-                get_string('asset_type_learning_path_plural', 'contentmarketplace_linkedin'),
+                get_string('asset_type_learning_path_plural', 'contentmarketplace_linkedin', $this->language),
             ),
         );
     }
@@ -154,37 +110,37 @@ class learning_objects_filter_options {
     protected function get_time_to_complete(): branch {
         return (new branch(
             'time_to_complete',
-            get_string('catalog_filter_time_to_complete', 'contentmarketplace_linkedin'),
+            get_string('catalog_filter_time_to_complete', 'contentmarketplace_linkedin', $this->language),
         ))->add_leaves(
             new timespan_leaf(
                 null,
                 timespan::minutes(10),
-                get_string('catalog_filter_timespan_under_10_minutes', 'contentmarketplace_linkedin')
+                get_string('catalog_filter_timespan_under_10_minutes', 'contentmarketplace_linkedin', $this->language)
             ),
             new timespan_leaf(
                 timespan::minutes(10),
                 timespan::minutes(30),
-                get_string('catalog_filter_timespan_10_to_30_minutes', 'contentmarketplace_linkedin')
+                get_string('catalog_filter_timespan_10_to_30_minutes', 'contentmarketplace_linkedin', $this->language)
             ),
             new timespan_leaf(
                 timespan::minutes(30),
                 timespan::minutes(60),
-                get_string('catalog_filter_timespan_30_to_60_minutes', 'contentmarketplace_linkedin')
+                get_string('catalog_filter_timespan_30_to_60_minutes', 'contentmarketplace_linkedin', $this->language)
             ),
             new timespan_leaf(
                 timespan::hours(1),
                 timespan::hours(2),
-                get_string('catalog_filter_timespan_1_to_2_hours', 'contentmarketplace_linkedin')
+                get_string('catalog_filter_timespan_1_to_2_hours', 'contentmarketplace_linkedin', $this->language)
             ),
             new timespan_leaf(
                 timespan::hours(2),
                 timespan::hours(3),
-                get_string('catalog_filter_timespan_2_to_3_hours', 'contentmarketplace_linkedin')
+                get_string('catalog_filter_timespan_2_to_3_hours', 'contentmarketplace_linkedin', $this->language)
             ),
             new timespan_leaf(
                 timespan::hours(3),
                 null,
-                get_string('catalog_filter_timespan_over_3_hours', 'contentmarketplace_linkedin')
+                get_string('catalog_filter_timespan_over_3_hours', 'contentmarketplace_linkedin', $this->language)
             ),
         );
     }
@@ -192,12 +148,11 @@ class learning_objects_filter_options {
     /**
      * Get the filter option available for filtering learning objects.
      *
-     * @param string $language
      * @return branch[][]
      */
-    public function get(string $language): array {
+    public function get(): array {
         return [
-            'subjects' => [$this->get_subjects($language)],
+            'subjects' => [$this->get_subjects()],
             'asset_type' => [$this->get_asset_types()],
             'time_to_complete' => [$this->get_time_to_complete()],
         ];

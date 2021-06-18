@@ -24,12 +24,13 @@ namespace contentmarketplace_linkedin\testing;
 
 use coding_exception;
 use contentmarketplace_linkedin\api\response\result;
-use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\config;
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\entity\classification;
 use contentmarketplace_linkedin\entity\classification_relationship;
 use contentmarketplace_linkedin\entity\learning_object;
+use contentmarketplace_linkedin\model\learning_object as learning_object_model;
 use core\orm\query\builder;
 use core\testing\component_generator;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model;
@@ -37,7 +38,6 @@ use totara_contentmarketplace\testing\learning_object_generator;
 use totara_contentmarketplace\token\token;
 use totara_core\http\response;
 use totara_core\http\response_code;
-use contentmarketplace_linkedin\model\learning_object as learning_object_model;
 
 /**
  * @method static generator instance()
@@ -299,8 +299,8 @@ class generator extends component_generator implements learning_object_generator
      */
     public function create_classification_relationship(int $parent_id, int $child_id): classification_relationship {
         $relationship = new classification_relationship();
-        $relationship->parent_classification_id = $parent_id;
-        $relationship->child_classification_id = $child_id;
+        $relationship->parent_id = $parent_id;
+        $relationship->child_id = $child_id;
 
         $relationship->save();
         return $relationship;

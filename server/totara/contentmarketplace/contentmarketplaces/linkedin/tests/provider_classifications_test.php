@@ -25,8 +25,8 @@ use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\data_provider\classifications;
 use contentmarketplace_linkedin\entity\classification_relationship;
 use contentmarketplace_linkedin\model\classification;
-use core_phpunit\testcase;
 use contentmarketplace_linkedin\testing\generator;
+use core_phpunit\testcase;
 
 class contentmarketplace_linkedin_provider_classifications_testcase extends testcase {
     /**
@@ -120,28 +120,31 @@ class contentmarketplace_linkedin_provider_classifications_testcase extends test
         );
 
         $relationship = new classification_relationship();
-        $relationship->parent_classification_id = $classification_1->id;
-        $relationship->child_classification_id = $classification_2->id;
+        $relationship->parent_id = $classification_1->id;
+        $relationship->child_id = $classification_2->id;
         $relationship->save();
 
         $provider = new classifications();
-        $provider->sort_by('name');
+        $provider->sort_by(classifications::SORT_BY_ALPHABETICAL);
         $collection = $provider->get();
 
         self::assertEquals(2, $collection->count());
 
         /**
-         * @var classification $first
-         * @var classification $last
+         * @var classification $parent
+         * @var classification $child
          */
-        $first = $collection->first();
-        $last = $collection->last();
+        $parent = $collection->first();
+        $child = $collection->last();
 
-        self::assertEquals($classification_1->id, $first->id);
-        self::assertNull($first->parent_classification_id);
+        self::assertEquals($classification_1->id, $parent->id);
+        self::assertEmpty($parent->parents);
+        self::assertCount(1, $parent->children);
+        self::assertEquals($classification_2->id, $parent->children->first()->id);
 
-        self::assertEquals($classification_2->id, $last->id);
-        self::assertNotNull($last->parent_classification_id);
-        self::assertEquals($classification_1->id, $last->parent_classification_id);
+        self::assertEquals($classification_2->id, $child->id);
+        self::assertEmpty($child->children);
+        self::assertCount(1, $child->parents);
+        self::assertEquals($classification_1->id, $child->parents->first()->id);
     }
 }

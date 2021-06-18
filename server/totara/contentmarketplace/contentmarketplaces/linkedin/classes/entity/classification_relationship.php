@@ -29,8 +29,8 @@ use core\orm\entity\entity;
  * Entity class for a record of table "ttr_marketplace_linkedin_classification_relationship"
  *
  * @property int $id
- * @property int $parent_classification_id
- * @property int $child_classification_id
+ * @property int $parent_id
+ * @property int $child_id
  *
  * @method static classification_relationship_repository repository()
  */

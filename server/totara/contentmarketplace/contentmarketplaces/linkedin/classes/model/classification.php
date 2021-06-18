@@ -23,9 +23,8 @@
 namespace contentmarketplace_linkedin\model;
 
 use contentmarketplace_linkedin\entity\classification as classification_entity;
-use contentmarketplace_linkedin\entity\classification_relationship;
+use core\collection;
 use core\orm\entity\model;
-use core\orm\query\builder;
 
 /**
  * Model class for learning object classification.
@@ -38,12 +37,18 @@ use core\orm\query\builder;
  * @property-read string $type
  *
  * Computed properties:
- *
- * @property-read int|null $parent_classification_id
+ * @property-read classification[]|collection $parents
+ * @property-read classification[]|collection $children
  */
 class classification extends model {
+
     /**
-     * @var array
+     * @var classification_entity
+     */
+    protected $entity;
+
+    /**
+     * @var string[]
      */
     protected $entity_attribute_whitelist = [
         'id',
@@ -54,72 +59,13 @@ class classification extends model {
         'type'
     ];
 
+    /**
+     * @var string[]
+     */
     protected $model_accessor_whitelist = [
-        'parent_classification_id'
+        'parents',
+        'children',
     ];
-
-    /**
-     * @var int|null
-     */
-    private $internal_parent_classification_id;
-
-    /**
-     * A flag to tell us whether the class should fetch the parent classification id again.
-     * + TRUE to NOT fetch the parent id.
-     * + FALSE to fetch the parent id.
-     *
-     * @var bool
-     */
-    private $fetched_parent_classification_id;
-
-    /**
-     * classification constructor.
-     * @param classification_entity $entity
-     * @param int|null $parent_classification_id
-     */
-    public function __construct(classification_entity $entity, ?int $parent_classification_id = null) {
-        parent::__construct($entity);
-        $this->internal_parent_classification_id = $parent_classification_id;
-
-        // As long as parent_classification_id is provided, then it does not have to be fetched again.
-        $this->fetched_parent_classification_id = !empty($parent_classification_id);
-    }
-
-    /**
-     * @return int|null
-     */
-    public function get_parent_classification_id(): ?int {
-        $this->load_parent_classification_id();
-        return $this->internal_parent_classification_id;
-    }
-
-    /**
-     * @return void
-     */
-    private function load_parent_classification_id(): void {
-        if (!$this->fetched_parent_classification_id) {
-            // If the flag says to fetch. We are going to ignore the
-            // current value of parent classification id.
-            $db = builder::get_db();
-            $this->internal_parent_classification_id = $db->get_field(
-                classification_relationship::TABLE,
-                'parent_classification_id',
-                ['child_classification_id' => $this->entity->id],
-                IGNORE_MISSING
-            );
-
-            // Update flag
-            $this->fetched_parent_classification_id = true;
-        }
-    }
-
-    /**
-     * @param bool $fetched
-     * @return void
-     */
-    public function set_fetched_parent_classification_id(bool $fetched): void {
-        $this->fetched_parent_classification_id = $fetched;
-    }
 
     /**
      * @return string
@@ -129,10 +75,18 @@ class classification extends model {
     }
 
     /**
-     * @return bool
+     * @return classification[]|collection
      */
-    public function has_parent_classification(): bool {
-        $parent_id = $this->get_parent_classification_id();
-        return !empty($parent_id);
+    public function get_parents(): collection {
+        return $this->entity->parents->map_to(self::class);
+    }
+
+    /**
+     * Get the children of this classification.
+     *
+     * @return classification[]|collection
+     */
+    public function get_children(): collection {
+        return $this->entity->children->map_to(self::class);
     }
 }

@@ -40,7 +40,7 @@ final class catalog_import_learning_objects_filter_options implements query_reso
         (new catalog_import_interactor())->require_view_catalog_import_page();
         $input = $args['input'] ?? [];
 
-        return (new learning_objects_filter_options())->get($input['language'] ?? 'en');
+        return (new learning_objects_filter_options($input['language'] ?? 'en'))->get();
     }
 
     /**

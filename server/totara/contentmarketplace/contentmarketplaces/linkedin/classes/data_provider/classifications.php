@@ -23,32 +23,69 @@
 namespace contentmarketplace_linkedin\data_provider;
 
 use contentmarketplace_linkedin\entity\classification as classification_entity;
-use contentmarketplace_linkedin\entity\classification_relationship;
 use contentmarketplace_linkedin\model\classification as classification_model;
 use contentmarketplace_linkedin\repository\classification_repository;
 use core\collection;
 use core\orm\entity\repository;
-use core\orm\query\builder;
 use core\orm\query\order;
 use totara_contentmarketplace\data_provider\provider;
 
+/**
+ * Class classifications
+ *
+ * @package contentmarketplace_linkedin\data_provider
+ *
+ * @method collection|classification_model[] get
+ */
 class classifications extends provider {
+
+    public const SORT_BY_ALPHABETICAL = 'ALPHABETICAL';
+
+    /**
+     * @var bool
+     */
+    private $with_children = false;
+
+    /**
+     * @var bool
+     */
+    private $with_parents = false;
+
     /**
      * @return repository
      */
     protected function build_query(): repository {
-        $builder = builder::table(classification_entity::TABLE, 'c');
-        $builder->left_join(
-            [classification_relationship::TABLE, 'cr'],
-            'id',
-            'child_classification_id'
-        );
+        $repository = classification_entity::repository();
 
-        $builder->select(['c.*', 'cr.parent_classification_id']);
-        $builder->results_as_arrays(true);
+        if ($this->with_parents) {
+            $repository->with('parents');
+        }
+        if ($this->with_children) {
+            $repository->with('children');
+        }
 
-        // Return the repository with a custom builder.
-        return new classification_repository(classification_entity::class, $builder);
+        return $repository;
+    }
+
+    /**
+     * Set this flag to fetch child classification records too.
+     *
+     * It is highly recommended to set this if you are wanting to use the children relation,
+     * as this improves the performance by only executing one additional DB query.
+     *
+     * @param bool $with_children
+     * @return $this
+     */
+    public function with_children(bool $with_children = true): self {
+        $this->with_children = $with_children;
+        return $this;
+    }
+
+    /**
+     * @return collection
+     */
+    protected function process_fetched_items(): collection {
+        return $this->items->map_to(classification_model::class);
     }
 
     /**
@@ -61,7 +98,7 @@ class classifications extends provider {
         classification_repository $repository,
         string $locale_language
     ): void {
-        $repository->where('c.locale_language', $locale_language);
+        $repository->where('locale_language', $locale_language);
     }
 
     /**
@@ -71,42 +108,14 @@ class classifications extends provider {
      * @return void
      */
     protected function filter_query_by_classification_types(classification_repository $repository, array $types): void {
-        $repository->where_in('c.type', $types);
+        $repository->where_in('type', $types);
     }
 
     /**
      * @param classification_repository $repository
      * @return void
      */
-    protected function sort_query_by_name(classification_repository $repository): void {
+    protected function sort_query_by_alphabetical(classification_repository $repository): void {
         $repository->order_by('name', order::DIRECTION_ASC);
-    }
-
-    /**
-     * @return collection
-     */
-    protected function process_fetched_items(): collection {
-        return $this->items->map_to(
-            function (array $record_map): classification_model {
-                // Pop the parent classification id field, to make sure that our entity can
-                // be instantiated safely.
-                $parent_classification_id = $record_map['parent_classification_id'];
-                unset($record_map['parent_classification_id']);
-
-                $model = new classification_model(
-                    new classification_entity($record_map),
-                    $parent_classification_id
-                );
-
-                if (null === $parent_classification_id) {
-                    // Only flag the value to say fetched when parent id is empty.
-                    // This is to save us a few trials to load the parent id that had already been loaded,
-                    // but not existing.
-                    $model->set_fetched_parent_classification_id(true);
-                }
-
-                return $model;
-            }
-        );
     }
 }

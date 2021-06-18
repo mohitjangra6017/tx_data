@@ -23,6 +23,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2021061102;       // The current module version (Date: YYYYMMDDXX).
+$plugin->version = 2021061103;       // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2020101200;      // Requires this Totara version.
 $plugin->component = 'contentmarketplace_linkedin'; // To check on upgrade, that module sits in correct place

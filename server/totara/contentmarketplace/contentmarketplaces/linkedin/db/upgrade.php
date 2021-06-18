@@ -188,5 +188,58 @@ function xmldb_contentmarketplace_linkedin_upgrade(int $old_version): bool {
         upgrade_plugin_savepoint(true, 2021061102, 'contentmarketplace', 'linkedin');
     }
 
+    if ($old_version < 2021061103) {
+        // Rename field parent_id on table marketplace_linkedin_classification_relationship to NEWNAMEGOESHERE.
+        $table = new xmldb_table('marketplace_linkedin_classification_relationship');
+        $index = new xmldb_index('classification_map_idx', XMLDB_INDEX_UNIQUE, ['parent_classification_id', 'child_classification_id']);
+
+        // Conditionally launch drop index classification_map_idx, so that we
+        if ($db_manager->index_exists($table, $index)) {
+            $db_manager->drop_index($table, $index);
+        }
+
+        $key = new xmldb_key('child_classification_fk', XMLDB_KEY_FOREIGN, ['child_classification_id'], 'marketplace_linkedin_classification', ['id']);
+
+        // Launch drop key child_classification_fk.
+        if ($db_manager->key_exists($table, $key)) {
+            $db_manager->drop_key($table, $key);
+        }
+
+        $key = new xmldb_key('parent_classification_fk', XMLDB_KEY_FOREIGN, ['parent_classification_id'], 'marketplace_linkedin_classification', ['id']);
+        // Launch drop key parent_classification_fk.
+        if ($db_manager->key_exists($table, $key)) {
+            $db_manager->drop_key($table, $key);
+        }
+
+        // Launch rename field parent_id.
+        $field = new xmldb_field('parent_classification_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
+        $db_manager->rename_field($table, $field, 'parent_id');
+
+        // Launch rename field child_id.
+        $field = new xmldb_field('child_classification_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
+        $db_manager->rename_field($table, $field, 'child_id');
+
+        $new_index = new xmldb_index('classification_map_idx', XMLDB_INDEX_UNIQUE, ['parent_id', 'child_id']);
+        // Conditionally launch add index classification_map_idx.
+        if (!$db_manager->index_exists($table, $new_index)) {
+            $db_manager->add_index($table, $new_index);
+        }
+
+        $key = new xmldb_key('parent_classification_fk', XMLDB_KEY_FOREIGN, ['parent_id'], 'marketplace_linkedin_classification', ['id']);
+        // Launch add key parent_classification_fk.
+        if (!$db_manager->key_exists($table, $key)) {
+            $db_manager->add_key($table, $key);
+        }
+
+        $key = new xmldb_key('child_classification_fk', XMLDB_KEY_FOREIGN, ['child_id'], 'marketplace_linkedin_classification', ['id']);
+        // Launch add key child_classification_fk.
+        if (!$db_manager->key_exists($table, $key)) {
+            $db_manager->add_key($table, $key);
+        }
+
+        // Linkedin savepoint reached.
+        upgrade_plugin_savepoint(true, 2021061103, 'contentmarketplace', 'linkedin');
+    }
+
     return true;
 }

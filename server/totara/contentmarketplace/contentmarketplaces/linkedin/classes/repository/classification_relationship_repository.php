@@ -34,7 +34,7 @@ class classification_relationship_repository extends repository {
      * @return classification_relationship
      */
     public function save_entity(entity $entity): entity {
-        if ($entity->child_classification_id === $entity->parent_classification_id) {
+        if ($entity->child_id === $entity->parent_id) {
             // Prevent the same classification id.
             throw new coding_exception(
                 "Cannot create a relationship record of the same classification id"

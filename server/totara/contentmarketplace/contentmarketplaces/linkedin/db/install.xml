@@ -70,16 +70,16 @@
     <TABLE NAME="marketplace_linkedin_classification_relationship" COMMENT="Stores the relationship between the classifications only">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="parent_classification_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The parent classification's id"/>
-        <FIELD NAME="child_classification_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The child classification's id"/>
+        <FIELD NAME="parent_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The parent classification's id"/>
+        <FIELD NAME="child_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The child classification's id"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="parent_classification_fk" TYPE="foreign" FIELDS="parent_classification_id" REFTABLE="marketplace_linkedin_classification" REFFIELDS="id"/>
-        <KEY NAME="child_classification_fk" TYPE="foreign" FIELDS="child_classification_id" REFTABLE="marketplace_linkedin_classification" REFFIELDS="id"/>
+        <KEY NAME="parent_classification_fk" TYPE="foreign" FIELDS="parent_id" REFTABLE="marketplace_linkedin_classification" REFFIELDS="id"/>
+        <KEY NAME="child_classification_fk" TYPE="foreign" FIELDS="child_id" REFTABLE="marketplace_linkedin_classification" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="classification_map_idx" UNIQUE="true" FIELDS="parent_classification_id, child_classification_id"/>
+        <INDEX NAME="classification_map_idx" UNIQUE="true" FIELDS="parent_id, child_id"/>
       </INDEXES>
     </TABLE>
   </TABLES>

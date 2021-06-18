@@ -23,7 +23,9 @@
 namespace contentmarketplace_linkedin\entity;
 
 use contentmarketplace_linkedin\repository\classification_repository;
+use core\orm\collection;
 use core\orm\entity\entity;
+use core\orm\entity\relations\has_many_through;
 
 /**
  * Entity class represent for table "ttr_marketplace_linkedin_classification"
@@ -34,6 +36,9 @@ use core\orm\entity\entity;
  * @property string $locale_country
  * @property string $name
  * @property string $type
+ *
+ * @property-read classification[]|collection $parents
+ * @property-read classification[]|collection $children
  *
  * @method static classification_repository repository()
  */
@@ -48,5 +53,33 @@ class classification extends entity {
      */
     public static function repository_class_name(): string {
         return classification_repository::class;
+    }
+
+    /**
+     * @return has_many_through
+     */
+    public function parents(): has_many_through {
+        return $this->has_many_through(
+            classification_relationship::class,
+            self::class,
+            'id',
+            'child_id',
+            'parent_id',
+            'id'
+        );
+    }
+
+    /**
+     * @return has_many_through
+     */
+    public function children(): has_many_through {
+        return $this->has_many_through(
+            classification_relationship::class,
+            self::class,
+            'id',
+            'parent_id',
+            'child_id',
+            'id'
+        );
     }
 }

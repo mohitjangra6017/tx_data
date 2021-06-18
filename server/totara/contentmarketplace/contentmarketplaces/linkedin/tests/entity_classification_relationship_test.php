@@ -22,9 +22,9 @@
  */
 
 use contentmarketplace_linkedin\entity\classification_relationship;
+use contentmarketplace_linkedin\testing\generator;
 use core\orm\query\builder;
 use core_phpunit\testcase;
-use contentmarketplace_linkedin\testing\generator;
 
 class contentmarketplace_linkedin_entity_classification_relationship_testcase extends testcase {
     /**
@@ -40,19 +40,19 @@ class contentmarketplace_linkedin_entity_classification_relationship_testcase ex
         self::assertEquals(0, $db->count_records(classification_relationship::TABLE));
 
         $map = new classification_relationship();
-        $map->parent_classification_id = $parent_classification->id;
-        $map->child_classification_id = $child_classification->id;
+        $map->parent_id = $parent_classification->id;
+        $map->child_id = $child_classification->id;
 
         $map->save();
         self::assertEquals(1, $db->count_records(classification_relationship::TABLE));
-        self::assertEquals(1, $db->count_records(classification_relationship::TABLE, ['parent_classification_id' => $parent_classification->id]));
-        self::assertEquals(1, $db->count_records(classification_relationship::TABLE, ['child_classification_id' => $child_classification->id]));
+        self::assertEquals(1, $db->count_records(classification_relationship::TABLE, ['parent_id' => $parent_classification->id]));
+        self::assertEquals(1, $db->count_records(classification_relationship::TABLE, ['child_id' => $child_classification->id]));
 
         // Test duplicate insertion.
         try {
             $new_map = new classification_relationship();
-            $new_map->parent_classification_id = $parent_classification->id;
-            $new_map->child_classification_id = $child_classification->id;
+            $new_map->parent_id = $parent_classification->id;
+            $new_map->child_id = $child_classification->id;
 
             $new_map->save();
         } catch (dml_write_exception $e) {
@@ -73,8 +73,8 @@ class contentmarketplace_linkedin_entity_classification_relationship_testcase ex
         $this->expectExceptionMessage("Cannot create a relationship record of the same classification id");
 
         $map = new classification_relationship();
-        $map->parent_classification_id = 42;
-        $map->child_classification_id = 42;
+        $map->parent_id = 42;
+        $map->child_id = 42;
 
         $map->save();
     }
@@ -92,8 +92,8 @@ class contentmarketplace_linkedin_entity_classification_relationship_testcase ex
         self::assertEquals(0, $db->count_records(classification_relationship::TABLE));
 
         $map = new classification_relationship();
-        $map->parent_classification_id = $parent_classification->id;
-        $map->child_classification_id = $child_classification->id;
+        $map->parent_id = $parent_classification->id;
+        $map->child_id = $child_classification->id;
 
         $map->save();
         self::assertEquals(1, $db->count_records(classification_relationship::TABLE));
@@ -112,23 +112,23 @@ class contentmarketplace_linkedin_entity_classification_relationship_testcase ex
         $child_classification = $generator->create_classification();
 
         $map = new classification_relationship();
-        $map->parent_classification_id = $parent_classification->id;
-        $map->child_classification_id = $child_classification->id;
+        $map->parent_id = $parent_classification->id;
+        $map->child_id = $child_classification->id;
         $map->save();
 
         $db = builder::get_db();
         self::assertEquals(1, $db->count_records(classification_relationship::TABLE));
-        self::assertEquals(1, $db->count_records(classification_relationship::TABLE, ['parent_classification_id' => $parent_classification->id]));
-        self::assertEquals(1, $db->count_records(classification_relationship::TABLE, ['child_classification_id' => $child_classification->id]));
+        self::assertEquals(1, $db->count_records(classification_relationship::TABLE, ['parent_id' => $parent_classification->id]));
+        self::assertEquals(1, $db->count_records(classification_relationship::TABLE, ['child_id' => $child_classification->id]));
 
         $new_child_classification = $generator->create_classification();
-        $map->child_classification_id = $new_child_classification->id;
+        $map->child_id = $new_child_classification->id;
         $map->save();
 
         self::assertEquals(1, $db->count_records(classification_relationship::TABLE));
-        self::assertEquals(1, $db->count_records(classification_relationship::TABLE, ['parent_classification_id' => $parent_classification->id]));
-        self::assertEquals(0, $db->count_records(classification_relationship::TABLE, ['child_classification_id' => $child_classification->id]));
+        self::assertEquals(1, $db->count_records(classification_relationship::TABLE, ['parent_id' => $parent_classification->id]));
+        self::assertEquals(0, $db->count_records(classification_relationship::TABLE, ['child_id' => $child_classification->id]));
 
-        self::assertEquals(1, $db->count_records(classification_relationship::TABLE, ['child_classification_id' => $new_child_classification->id]));
+        self::assertEquals(1, $db->count_records(classification_relationship::TABLE, ['child_id' => $new_child_classification->id]));
     }
 }
