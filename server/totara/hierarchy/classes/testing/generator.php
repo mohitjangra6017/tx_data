@@ -577,6 +577,10 @@ final class generator extends \core\testing\component_generator {
     }
 
     public function create_org($data) {
+        global $DB;
+        if (!empty($data['org_parent'])) {
+            $data['parentid'] = $DB->get_field('org', 'id', ['idnumber' => $data['org_parent']], MUST_EXIST);
+        }
         return $this->create_hierarchy($data['frameworkid'], 'organisation', $data);
     }
 
