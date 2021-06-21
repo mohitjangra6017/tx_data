@@ -24,105 +24,130 @@
       'tui-linkedInLearningItem--unselected': unselected,
     }"
   >
-    <!-- Course image -->
-    <div
-      class="tui-linkedInLearningItem__img"
-      :style="{ 'background-image': cardImage }"
-    />
-
-    <div class="tui-linkedInLearningItem__content">
-      <!-- Course subject -->
-      <div class="tui-linkedInLearningItem__subject">
-        {{ data.subject }} Coming soon
+    <template v-if="loading">
+      <div class="tui-linkedInLearningItem__img">
+        <SkeletonContent :has-overlay="true" />
       </div>
-      <!-- Course title -->
-      <h3 class="tui-linkedInLearningItem__title">
-        {{ data.name }}
-      </h3>
-      <div class="tui-linkedInLearningItem__bar">
-        <div class="tui-linkedInLearningItem__bar-overview">
-          <!-- Course level (Beginner, intermediate, advanced) -->
-          <div v-if="courseLevelString">
-            <span class="sr-only">
-              {{
-                $str('a11y_content_difficulty', 'contentmarketplace_linkedin')
-              }}
-            </span>
-            {{ courseLevelString }}
-          </div>
-          <!-- Course completion time -->
-          <div v-if="data.time_to_complete">
-            <span class="sr-only">
-              {{
-                $str(
-                  'a11y_content_time_to_complete',
-                  'contentmarketplace_linkedin'
-                )
-              }}
-            </span>
-            {{ data.time_to_complete }}
-          </div>
-          <!-- Course type (course, learning path) -->
-          <div v-if="courseTypeString">
-            <span class="sr-only">
-              {{ $str('a11y_content_type', 'contentmarketplace_linkedin') }}
-            </span>
-            {{ courseTypeString }}
-          </div>
 
-          <!-- Course appearances in other courses -->
+      <div class="tui-linkedInLearningItem__content">
+        <!-- Course subject -->
+        <div class="tui-linkedInLearningItem__subject">
+          <SkeletonContent char-length="10" :has-overlay="true" />
+        </div>
+        <!-- Course title -->
+        <h3 class="tui-linkedInLearningItem__title">
+          <SkeletonContent char-length="25" :has-overlay="true" />
+        </h3>
+
+        <div class="tui-linkedInLearningItem__bar">
+          <SkeletonContent char-length="25" :has-overlay="true" />
+        </div>
+      </div>
+    </template>
+
+    <template v-else>
+      <!-- Course image -->
+      <div
+        class="tui-linkedInLearningItem__img"
+        :style="{ 'background-image': cardImage }"
+      />
+
+      <div class="tui-linkedInLearningItem__content">
+        <!-- Course subject -->
+        <div class="tui-linkedInLearningItem__subject">
+          {{ data.subject }} Coming soon
+        </div>
+        <!-- Course title -->
+        <h3 class="tui-linkedInLearningItem__title">
+          {{ data.name }}
+        </h3>
+        <div class="tui-linkedInLearningItem__bar">
+          <div class="tui-linkedInLearningItem__bar-overview">
+            <!-- Course level (Beginner, intermediate, advanced) -->
+            <div v-if="courseLevelString">
+              <span class="sr-only">
+                {{
+                  $str('a11y_content_difficulty', 'contentmarketplace_linkedin')
+                }}
+              </span>
+              {{ courseLevelString }}
+            </div>
+            <!-- Course completion time -->
+            <div v-if="data.time_to_complete">
+              <span class="sr-only">
+                {{
+                  $str(
+                    'a11y_content_time_to_complete',
+                    'contentmarketplace_linkedin'
+                  )
+                }}
+              </span>
+              {{ data.time_to_complete }}
+            </div>
+            <!-- Course type (course, learning path) -->
+            <div v-if="courseTypeString">
+              <span class="sr-only">
+                {{ $str('a11y_content_type', 'contentmarketplace_linkedin') }}
+              </span>
+              {{ courseTypeString }}
+            </div>
+
+            <!-- Course appearances in other courses -->
+            <div
+              v-if="data.courses.length"
+              class="tui-linkedInLearningItem__bar-courses"
+            >
+              <span :aria-hidden="true">
+                {{ $str('appears_in', 'contentmarketplace_linkedin') }}
+              </span>
+              <span class="sr-only">
+                {{
+                  $str(
+                    'a11y_appears_in_n_courses',
+                    'contentmarketplace_linkedin',
+                    data.courses.length
+                  )
+                }}
+              </span>
+
+              <!-- Popover to display list of other courses this appears in -->
+              <Popover size="md" :triggers="['click']">
+                <template v-slot:trigger="{ isOpen }">
+                  <Button
+                    :aria-expanded="isOpen.toString()"
+                    :aria-label="
+                      $str('a11y_view_courses', 'contentmarketplace_linkedin', {
+                        count: data.courses.length,
+                        course: data.name,
+                      })
+                    "
+                    :styleclass="{ small: true, transparent: true }"
+                    :text="courseNumberString"
+                  />
+                </template>
+                <div>
+                  {{
+                    $str('content_appears_in', 'contentmarketplace_linkedin')
+                  }}
+                  <ul class="tui-linkedInLearningItem__bar-coursesList">
+                    <li v-for="(course, i) in data.courses" :key="i">
+                      {{ course.fullname }}
+                    </li>
+                  </ul>
+                </div>
+              </Popover>
+            </div>
+          </div>
+          <!-- Side content -->
           <div
-            v-if="data.courses.length"
-            class="tui-linkedInLearningItem__bar-courses"
+            v-if="$scopedSlots['side-content']"
+            class="tui-linkedInLearningItem__bar-side"
           >
-            <span :aria-hidden="true">
-              {{ $str('appears_in', 'contentmarketplace_linkedin') }}
-            </span>
-            <span class="sr-only">
-              {{
-                $str(
-                  'a11y_appears_in_n_courses',
-                  'contentmarketplace_linkedin',
-                  data.courses.length
-                )
-              }}
-            </span>
-
-            <!-- Popover to display list of other courses this appears in -->
-            <Popover size="md" :triggers="['click']">
-              <template v-slot:trigger="{ isOpen }">
-                <Button
-                  :aria-expanded="isOpen.toString()"
-                  :aria-label="
-                    $str('a11y_view_courses', 'contentmarketplace_linkedin', {
-                      count: data.courses.length,
-                      course: data.name,
-                    })
-                  "
-                  :styleclass="{ small: true, transparent: true }"
-                  :text="courseNumberString"
-                />
-              </template>
-              <div>
-                {{ $str('content_appears_in', 'contentmarketplace_linkedin') }}
-                <ul class="tui-linkedInLearningItem__bar-coursesList">
-                  <li v-for="(course, i) in data.courses" :key="i">
-                    {{ course.fullname }}
-                  </li>
-                </ul>
-              </div>
-            </Popover>
+            <slot name="side-content" />
           </div>
         </div>
-        <!-- Side content -->
-        <div
-          v-if="$scopedSlots['side-content']"
-          class="tui-linkedInLearningItem__bar-side"
-        >
-          <slot name="side-content" />
-        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -130,11 +155,13 @@
 // Components
 import Button from 'tui/components/buttons/Button';
 import Popover from 'tui/components/popover/Popover';
+import SkeletonContent from 'totara_contentmarketplace/components/loader/SkeletonContent';
 
 export default {
   components: {
     Button,
     Popover,
+    SkeletonContent,
   },
 
   props: {
@@ -143,6 +170,8 @@ export default {
       type: Object,
       required: true,
     },
+    // Current loading state of page
+    loading: Boolean,
     // Used for displaying content in smaller format
     small: Boolean,
     // Unselected item (used of fading on review list)
@@ -160,7 +189,7 @@ export default {
       if (url === null) {
         return;
       }
-      return 'url(' + url + ')';
+      return 'url("' + url + '")';
     },
 
     /**

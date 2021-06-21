@@ -101,6 +101,7 @@ export default {
   flex-wrap: wrap;
   align-items: center;
   @include tui-font-heading-x-small();
+  @include tui-wordbreak--hard();
 
   & > * + * {
     margin-left: var(--gap-1);

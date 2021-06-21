@@ -89,14 +89,15 @@
     <!-- Table of available learning items -->
     <template v-slot:select-table>
       <SelectionTable
-        :items="learningObjects.items"
+        ref="selection-table"
+        :items="isLoading ? placeholderItems : learningObjects.items"
         row-label-key="name"
         :selected-items="selectedItems"
         @update="setSelectedItems"
       >
         <template v-slot:row="{ row }">
           <!-- Learning item -->
-          <LinkedInLearningItem :data="row" />
+          <LinkedInLearningItem :data="row" :loading="isLoading" />
         </template>
       </SelectionTable>
 
@@ -412,6 +413,15 @@ export default {
     },
 
     /**
+     * Number of placeholder items for loading display
+     *
+     * @return {Array}
+     */
+    placeholderItems() {
+      return Array.from({ length: this.paginationLimit }, () => ({}));
+    },
+
+    /**
      * Get the search string with whitespace removed.
      *
      * @return {String}
@@ -597,6 +607,10 @@ export default {
      * @param {Number} page
      */
     setPaginationPage(page) {
+      if (this.$refs['selection-table']) {
+        this.$refs['selection-table'].$el.scrollIntoView();
+      }
+
       this.paginationPage = page;
     },
 

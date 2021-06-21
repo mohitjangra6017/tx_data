@@ -29,7 +29,7 @@ exports[`SearchFilter.vue matches snapshot 1`] = `
      
     <input
       aria-label="label"
-      class="tui-formInput tui-searchFilter__search tui-formInput--preIcon"
+      class="tui-formInput tui-searchFilter__search tui-formInput--preIcon tui-formInput--postIcon"
       id="tempid"
       type="search"
     />

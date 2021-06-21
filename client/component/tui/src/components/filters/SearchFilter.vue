@@ -36,7 +36,7 @@
         ref="search"
         v-bind="$props"
         :aria-label="ariaLabel || label"
-        :styleclass="{ preIcon: true }"
+        :styleclass="{ preIcon: true, postIcon: true }"
         class="tui-searchFilter__search"
         @input="input"
         @submit="submit"
