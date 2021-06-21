@@ -16,4 +16,4 @@
  * @module tui
  */
 
-export const TOUCHED = Symbol('ReformTouched');
+export const TOUCHED = '__private_ReformTouched';

@@ -202,20 +202,6 @@ describe('Reform', () => {
       await validateWait();
       expect(scope.getError('field')).not.toBe('err');
     });
-
-    it('hides most fields from state', async () => {
-      const { scope, getState } = createSimpleControlled({ field: 'foo' });
-      scope.update('field', 'bar');
-      scope.touch('field');
-
-      await Vue.nextTick();
-
-      const keys = Object.getOwnPropertyNames(getState()).filter(
-        x => x !== '__ob__' // ignore Vue observable junk
-      );
-
-      expect(keys).toEqual(['values']);
-    });
   });
 
   describe.each([
