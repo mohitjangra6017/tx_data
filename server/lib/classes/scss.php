@@ -144,6 +144,8 @@ class core_scss extends \ScssPhp\ScssPhp\Compiler {
 
         // Original theme directory.
         $themedirectory = $CFG->dirroot . "/theme";
+        // KINEO CCM - GLOTOT-1724 - Allow SCSS files from anywhere in the code root.
+        $themedirectory = $CFG->dirroot;
         $realroot = realpath($themedirectory);
 
         // File should end in .scss and must be in sites theme directory, else ignore it.
