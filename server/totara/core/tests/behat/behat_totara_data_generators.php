@@ -28,8 +28,8 @@
 require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
 require_once(__DIR__ . '/helper_generator.php');
 
-use Behat\Gherkin\Node\TableNode as TableNode;
 use Behat\Behat\Tester\Exception\PendingException as PendingException;
+use Behat\Gherkin\Node\TableNode as TableNode;
 
 /**
  * Class to set up quickly a Given environment.
@@ -509,6 +509,12 @@ class behat_totara_data_generators extends behat_base {
             'content marketplace' => array(
                 'datagenerator' => 'content_marketplace_instance',
                 'required' => array('name', 'course', 'marketplace_component')
+            )
+        ),
+        'contentmarketplace_linkedin' => array(
+            'learning objects' => array(
+                'datagenerator' => 'learning_object_for_behat',
+                'required' => array('urn')
             )
         ),
         'totara_message' => array(

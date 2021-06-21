@@ -27,6 +27,7 @@ use contentmarketplace_linkedin\api\response\result;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collection;
 use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\constants;
+use contentmarketplace_linkedin\dto\timespan;
 use contentmarketplace_linkedin\entity\classification;
 use contentmarketplace_linkedin\entity\classification_relationship;
 use contentmarketplace_linkedin\entity\learning_object;
@@ -189,6 +190,10 @@ class generator extends component_generator implements learning_object_generator
             $record['locale_country'] = 'US';
         }
 
+        if (!array_key_exists('time_to_complete', $record)) {
+            $record['time_to_complete'] = timespan::minutes(90)->get();
+        }
+
         $entity = new learning_object();
         $entity->urn = $urn;
 
@@ -196,6 +201,21 @@ class generator extends component_generator implements learning_object_generator
         $entity->save();
 
         return $entity;
+    }
+
+    /**
+     * Create a learning object record for use in behat.
+     *
+     * @param array $record
+     */
+    public function create_learning_object_for_behat(array $record): void {
+        // Have the option of specifying time_to_complete_unit in order to make the behat step more human readable.
+        if (!empty($record['time_to_complete']) && !empty($record['time_to_complete_unit'])) {
+            $record['time_to_complete'] = (new timespan($record['time_to_complete'], $record['time_to_complete_unit']))->get();
+            unset($record['time_to_complete_unit']);
+        }
+
+        $this->create_learning_object($record['urn'], $record);
     }
 
     /**

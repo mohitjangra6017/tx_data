@@ -22,10 +22,45 @@
  */
 
 
+use totara_contentmarketplace\plugininfo\contentmarketplace;
+
 require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
 
 
 class behat_totara_contentmarketplace extends behat_base {
+
+    /**
+     * Enable/Disable a content marketplace plugin.
+     *
+     * @Given /^the "([^"]*)" content marketplace plugin is (enabled|disabled)$/
+     * @param string $plugin_name
+     * @param string $enable_or_disable
+     */
+    public function enable_contentmarketplace_plugin(string $plugin_name, string $enable_or_disable): void {
+        behat_hooks::set_step_readonly(false);
+
+        $plugin = contentmarketplace::plugin($plugin_name);
+        if ($plugin === null) {
+            throw new coding_exception("Invalid content marketplace plugin specified: $plugin_name");
+        }
+
+        if ($enable_or_disable === 'enabled') {
+            $plugin->enable();
+        } else {
+            $plugin->disable();
+        }
+    }
+
+    /**
+     * @When /^I navigate to the catalog import page for the the "([^"]*)" content marketplace/
+     * @param string $plugin_name
+     */
+    public function i_navigate_to_the_content_marketplace_catalog_import_page(string $plugin_name): void {
+        behat_hooks::set_step_readonly(false);
+        $url = new moodle_url('/totara/contentmarketplace/explorer.php', ['marketplace' => $plugin_name]);
+        $this->getSession()->visit($url->out(false));
+        $this->wait_for_pending_js();
+    }
 
     /**
      * Navigates directly to the Totara content markerplace test filters.
@@ -36,7 +71,7 @@ class behat_totara_contentmarketplace extends behat_base {
      * @Given /^I navigate to the content marketplace test filters$/
      */
     public function i_navigate_to_the_content_marketplace_test_filters() {
-        \behat_hooks::set_step_readonly(false);
+        behat_hooks::set_step_readonly(false);
         $url = new moodle_url('/totara/contentmarketplace/tests/fixtures/test_filters.php');
         $this->getSession()->visit($url->out(false));
         $this->wait_for_pending_js();
