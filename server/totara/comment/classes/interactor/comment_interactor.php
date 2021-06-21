@@ -161,8 +161,10 @@ final class comment_interactor {
             return false;
         }
 
-        $owner_id = $this->comment->get_userid();
-        return $owner_id != $this->actor_id;
+        $component = $this->comment->get_component();
+        $resolver = resolver_factory::create_resolver($component);
+
+        return $resolver->can_report_comment($this->comment, $this->actor_id);
     }
 
     /**

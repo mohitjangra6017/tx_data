@@ -109,8 +109,10 @@ final class reply_interactor {
             return false;
         }
 
-        $owner_id = $this->reply->get_userid();
-        return $owner_id != $this->actor_id;
+        $component = $this->reply->get_component();
+        $resolver = resolver_factory::create_resolver($component);
+
+        return $resolver->can_report_reply($this->reply, $this->actor_id);
     }
 
     /**

@@ -154,6 +154,30 @@ abstract class resolver {
     }
 
     /**
+     * Check if acting user is allowed to report the comment.
+     *
+     * @param comment $comment
+     * @param integer $actor_id
+     * @return boolean
+     */
+    public function can_report_comment(comment $comment, int $actor_id): bool {
+        $owner_id = $comment->get_userid();
+        return $owner_id != $actor_id;
+    }
+
+    /**
+     * Check if acting user is allowed to report the reply.
+     *
+     * @param comment $comment
+     * @param integer $actor_id
+     * @return boolean
+     */
+    public function can_report_reply(comment $comment, int $actor_id): bool {
+        $owner_id = $comment->get_userid();
+        return $owner_id != $actor_id;
+    }
+
+    /**
      * Check if acting user is allowed to view the instance's comments
      *
      * @param int       $instance_id
