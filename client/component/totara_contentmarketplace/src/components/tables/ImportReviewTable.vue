@@ -13,25 +13,24 @@
   Please contact [licensing@totaralearning.com] for more information.
 
   @author Kevin Hottinger <kevin.hottinger@totaralearning.com>
-  @package contentmarketplace_linkedin
+  @package totara_contentmarketplace
 -->
 
 <template>
-  <div class="tui-linkedInSelectionTable">
+  <div class="tui-contentMarketplaceImportReviewTable">
     <SelectTable
       :border-bottom-hidden="true"
       :data="items"
       :hover-off="true"
-      :large-check-box="true"
       :no-label-offset="true"
-      row-label-key="title"
+      :row-label-key="rowLabelKey"
       :selected-highlight-off="true"
       :value="selectedItems"
       @input="$emit('update', $event)"
     >
-      <template v-slot:row="{ row }">
+      <template v-slot:row="{ checked, row }">
         <Cell size="12">
-          <Card :data="row" />
+          <slot name="row" :checked="checked" :row="row" />
         </Cell>
       </template>
     </SelectTable>
@@ -40,22 +39,27 @@
 
 <script>
 // Components
-import Card from 'contentmarketplace_linkedin/components/tables/LinkedInTableCard';
 import Cell from 'tui/components/datatable/Cell';
 import SelectTable from 'tui/components/datatable/SelectTable';
 
 export default {
   components: {
-    Card,
     Cell,
     SelectTable,
   },
 
   props: {
+    // Course data
     items: {
       type: Array,
       required: true,
     },
+    // Used for populating accessibility string on rows
+    rowLabelKey: {
+      type: String,
+      required: true,
+    },
+    // List of selected item ID's
     selectedItems: {
       type: Array,
       required: true,
@@ -63,11 +67,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.tui-linkedInSelectionTable {
-  & > * + * {
-    margin-top: var(--gap-2);
-  }
-}
-</style>

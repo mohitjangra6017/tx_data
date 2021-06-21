@@ -18,29 +18,29 @@
 
 <template>
   <div
-    class="tui-linkedInTableCard"
+    class="tui-linkedInLearningItem"
     :class="{
-      'tui-linkedInTableCard--small': small,
-      'tui-linkedInTableCard--unselected': unselected,
+      'tui-linkedInLearningItem--small': small,
+      'tui-linkedInLearningItem--unselected': unselected,
     }"
   >
     <!-- Course image -->
     <div
-      class="tui-linkedInTableCard__img"
+      class="tui-linkedInLearningItem__img"
       :style="{ 'background-image': cardImage }"
     />
 
-    <div class="tui-linkedInTableCard__content">
+    <div class="tui-linkedInLearningItem__content">
       <!-- Course subject -->
-      <div class="tui-linkedInTableCard__subject">
+      <div class="tui-linkedInLearningItem__subject">
         {{ data.subject }} Coming soon
       </div>
       <!-- Course title -->
-      <h3 class="tui-linkedInTableCard__title">
+      <h3 class="tui-linkedInLearningItem__title">
         {{ data.name }}
       </h3>
-      <div class="tui-linkedInTableCard__bar">
-        <div class="tui-linkedInTableCard__bar-overview">
+      <div class="tui-linkedInLearningItem__bar">
+        <div class="tui-linkedInLearningItem__bar-overview">
           <!-- Course level (Beginner, intermediate, advanced) -->
           <div v-if="courseLevelString">
             <span class="sr-only">
@@ -73,7 +73,7 @@
           <!-- Course appearances in other courses -->
           <div
             v-if="data.courses.length"
-            class="tui-linkedInTableCard__bar-courses"
+            class="tui-linkedInLearningItem__bar-courses"
           >
             <span :aria-hidden="true">
               {{ $str('appears_in', 'contentmarketplace_linkedin') }}
@@ -105,7 +105,7 @@
               </template>
               <div>
                 {{ $str('content_appears_in', 'contentmarketplace_linkedin') }}
-                <ul class="tui-linkedInTableCard__bar-coursesList">
+                <ul class="tui-linkedInLearningItem__bar-coursesList">
                   <li v-for="(course, i) in data.courses" :key="i">
                     {{ course.fullname }}
                   </li>
@@ -117,7 +117,7 @@
         <!-- Side content -->
         <div
           v-if="$scopedSlots['side-content']"
-          class="tui-linkedInTableCard__bar-side"
+          class="tui-linkedInLearningItem__bar-side"
         >
           <slot name="side-content" />
         </div>
@@ -272,7 +272,7 @@ export default {
 </lang-strings>
 
 <style lang="scss">
-.tui-linkedInTableCard {
+.tui-linkedInLearningItem {
   display: flex;
   flex-direction: column;
   margin-top: var(--gap-2);
@@ -287,7 +287,7 @@ export default {
     background-position: center;
     background-size: cover;
 
-    .tui-linkedInTableCard--unselected & {
+    .tui-linkedInLearningItem--unselected & {
       opacity: 0.3;
     }
   }
@@ -304,7 +304,7 @@ export default {
     @include tui-font-heading-small();
     margin: var(--gap-1) 0 0;
 
-    .tui-linkedInTableCard--unselected & {
+    .tui-linkedInLearningItem--unselected & {
       color: var(--color-neutral-6);
     }
   }
@@ -368,7 +368,7 @@ export default {
 }
 
 @media (min-width: $tui-screen-xs) {
-  .tui-linkedInTableCard {
+  .tui-linkedInLearningItem {
     flex-direction: row;
     margin-top: 0;
 
@@ -381,7 +381,7 @@ export default {
       width: 180px;
       height: 99px;
 
-      .tui-linkedInTableCard--small & {
+      .tui-linkedInLearningItem--small & {
         width: 106px;
         height: 60px;
       }
@@ -391,7 +391,7 @@ export default {
       flex-grow: 1;
       padding-left: var(--gap-4);
 
-      .tui-linkedInTableCard--small & {
+      .tui-linkedInLearningItem--small & {
         & > * + * {
           margin-top: var(--gap-2);
         }
@@ -399,7 +399,7 @@ export default {
     }
 
     &__title {
-      .tui-linkedInTableCard--small & {
+      .tui-linkedInLearningItem--small & {
         @include tui-font-heading-x-small();
         margin-top: var(--gap-1);
       }
@@ -408,7 +408,7 @@ export default {
 }
 
 @media (min-width: $tui-screen-md) {
-  .tui-linkedInTableCard {
+  .tui-linkedInLearningItem {
     &__bar {
       flex-direction: row;
 

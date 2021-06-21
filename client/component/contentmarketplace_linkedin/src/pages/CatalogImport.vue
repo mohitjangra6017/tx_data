@@ -86,13 +86,19 @@
       />
     </template>
 
-    <!-- Table of available courses -->
+    <!-- Table of available learning items -->
     <template v-slot:select-table>
       <SelectionTable
         :items="learningObjects.items"
+        row-label-key="name"
         :selected-items="selectedItems"
         @update="setSelectedItems"
-      />
+      >
+        <template v-slot:row="{ row }">
+          <!-- Learning item -->
+          <LinkedInLearningItem :data="row" />
+        </template>
+      </SelectionTable>
 
       <SelectionPaging
         :current-page="paginationPage"
@@ -103,16 +109,35 @@
       />
     </template>
 
-    <!-- Table of selected courses -->
+    <!-- Table of selected courses for reviewing -->
     <template v-if="reviewingLearningObjects" v-slot:review-table>
       <ReviewTable
-        :category-options="categoryOptions"
         :items="reviewingLearningObjects.items"
-        :selected-item-categories="reviewingItemCategories"
+        row-label-key="name"
         :selected-items="selectedItems"
-        @change-course-category="setSingleCourseCategory"
         @update="setSelectedItems"
-      />
+      >
+        <template v-slot:row="{ checked, row }">
+          <!-- Learning item -->
+          <LinkedInLearningItem
+            :data="row"
+            :small="true"
+            :unselected="!checked"
+          >
+            <template
+              v-if="reviewingItemCategories[row.id] && checked"
+              v-slot:side-content
+            >
+              <LinkedInLearningItemCategory
+                :category-options="categoryOptions"
+                :course-id="row.id"
+                :current-category="reviewingItemCategories[row.id]"
+                @change-course-category="setSingleCourseCategory"
+              />
+            </template>
+          </LinkedInLearningItem>
+        </template>
+      </ReviewTable>
 
       <ReviewPaging
         :last-page="!reviewingLearningObjects.next_cursor.length"
@@ -127,12 +152,14 @@ import Basket from 'totara_contentmarketplace/components/basket/Basket';
 import CountAndFilters from 'totara_contentmarketplace/components/CountAndFilters';
 import Layout from 'totara_contentmarketplace/pages/CatalogImportLayout';
 import LinkedInFilters from 'contentmarketplace_linkedin/components/filters/LinkedInSideFilters';
+import LinkedInLearningItem from 'contentmarketplace_linkedin/components/learning_item/LinkedInLearningItem';
+import LinkedInLearningItemCategory from 'contentmarketplace_linkedin/components/learning_item/LinkedInLearningItemCategory';
 import LinkedInPrimaryFilter from 'contentmarketplace_linkedin/components/filters/LinkedInPrimaryFilter';
 import PageBackLink from 'tui/components/layouts/PageBackLink';
 import ReviewPaging from 'totara_contentmarketplace/components/paging/ReviewLoadMore';
-import ReviewTable from 'contentmarketplace_linkedin/components/tables/LinkedInReviewTable';
+import ReviewTable from 'totara_contentmarketplace/components/tables/ImportReviewTable';
 import SelectionPaging from 'totara_contentmarketplace/components/paging/SelectionPaging';
-import SelectionTable from 'contentmarketplace_linkedin/components/tables/LinkedInSelectionTable';
+import SelectionTable from 'totara_contentmarketplace/components/tables/ImportSelectionTable';
 import SortFilter from 'totara_contentmarketplace/components/filters/SortFilter';
 import { notify } from 'tui/notifications';
 import { parseQueryString, url } from 'tui/util';
@@ -148,6 +175,8 @@ export default {
     Basket,
     CountAndFilters,
     Layout,
+    LinkedInLearningItem,
+    LinkedInLearningItemCategory,
     LinkedInFilters,
     LinkedInPrimaryFilter,
     PageBackLink,
@@ -438,12 +467,11 @@ export default {
             input: this.selectedItems.map(item => {
               return {
                 learning_object_id: item,
-                category_id: this.selectedItemCategories[item].id,
+                category_id: this.reviewingItemCategories[item].id,
               };
             }),
           },
         });
-
         if (payload.redirect_url) {
           window.location.href = payload.redirect_url;
           return;
