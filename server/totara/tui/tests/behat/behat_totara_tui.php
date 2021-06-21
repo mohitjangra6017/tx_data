@@ -439,6 +439,78 @@ class behat_totara_tui extends behat_base {
     }
 
     /**
+     * @Then /^I should see "([^"]*)" on row "([^"]*)" of the tui select table$/
+     * @param string $expected_text
+     * @param int $row_index
+     */
+    public function i_should_see_on_row_of_select_table(string $expected_text, int $row_index): void {
+        behat_hooks::set_step_readonly(true);
+
+        $table = $this->find_data_table(self::DATA_TABLE_DEFAULT_SELECTOR_TYPE, self::DATA_TABLE_DEFAULT_LOCATOR);
+        $row = $this->find_data_table_row($row_index, $table);
+        $cell = $this->find_cell(0, $row);
+
+        $cell_text = $cell->getText();
+        $expected_text_expanded = $this->expanded_text($expected_text);
+
+        if (strpos($cell_text, $expected_text_expanded) === false) {
+            $exception_message = "Expected row {$row_index} to contain text \"{$expected_text_expanded}\" instead found \"{$cell_text}\"";
+            throw new ExpectationException($exception_message, $this->getSession());
+        }
+    }
+
+    /**
+     * @Then /^I should see the tui select table contains:$/
+     * @param TableNode $expected_items_table
+     */
+    public function i_should_see_in_the_tui_select_table(TableNode $expected_items_table): void {
+        behat_hooks::set_step_readonly(true);
+
+        $expected_items = $expected_items_table->getTable();
+
+        $table = $this->find_data_table(self::DATA_TABLE_DEFAULT_SELECTOR_TYPE, self::DATA_TABLE_DEFAULT_LOCATOR);
+
+        $this->expect_data_table_row_count($table, count($expected_items));
+
+        foreach ($expected_items as $row_index => $row) {
+            foreach ($row as $text_to_search) {
+                $this->i_should_see_on_row_of_select_table($text_to_search, $row_index + 1);
+            }
+        }
+    }
+
+    /**
+     * @When /^I toggle the selection of row "(\d+)" of the tui select table$/
+     * @When /^I toggle the selection of (all) rows in the tui select table$/
+     * @param string $row_identifier
+     */
+    public function i_toggle_selection_of_select_table_row(string $row_identifier): void {
+        behat_hooks::set_step_readonly(false);
+
+        $table = $this->find_data_table(self::DATA_TABLE_DEFAULT_SELECTOR_TYPE, self::DATA_TABLE_DEFAULT_LOCATOR);
+
+        $select_all = $row_identifier === 'all';
+
+        $node_to_search = $table;
+        if (!$select_all) {
+            $node_to_search = $this->find_data_table_row($row_identifier, $table);
+        }
+
+        $checkboxes = $node_to_search->findAll('css', '.tui-dataTableSelectRowCell > .tui-checkbox');
+        if (empty($checkboxes)) {
+            if ($select_all) {
+                throw new ExpectationException("Couldn't find any selectable rows", $this->getSession());
+            } else {
+                throw new ExpectationException("Row {$row_identifier} of the table is not selectable.", $this->getSession());
+            }
+        }
+
+        foreach ($checkboxes as $checkbox) {
+            $checkbox->click();
+        }
+    }
+
+    /**
      * Expands the given text with respect to dynamic dates, etc.
      *
      * @param string $text text to expand.
@@ -2056,6 +2128,11 @@ class behat_totara_tui extends behat_base {
             },
             'card' => function () use ($label, $container) {
                 $locator = ".//div[contains(concat(' ', normalize-space(@class), ' '), ' tui-card ') and contains(., " . behat_context_helper::escape($label) . ")]";
+                return $this->find('xpath', $locator, false, $container);
+            },
+
+            'tree' => function () use ($label, $tui_selector, $container) {
+                $locator = ".//div[contains(concat(' ', normalize-space(@class), ' '), ' tui-tree ') and contains(., " . behat_context_helper::escape($label) . ")]";
                 return $this->find('xpath', $locator, false, $container);
             },
 
