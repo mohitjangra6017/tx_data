@@ -80,6 +80,6 @@ class classification extends entity {
             'parent_id',
             'child_id',
             'id'
-        );
+        )->order_by('name');
     }
 }

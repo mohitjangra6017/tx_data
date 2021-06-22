@@ -55,7 +55,7 @@
       <div class="tui-linkedInLearningItem__content">
         <!-- Course subject -->
         <div class="tui-linkedInLearningItem__subject">
-          {{ data.subject }} Coming soon
+          {{ data.subject }}
         </div>
         <!-- Course title -->
         <h3 class="tui-linkedInLearningItem__title">

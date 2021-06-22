@@ -22,6 +22,8 @@
  */
 namespace contentmarketplace_linkedin\api\v2\service\learning_asset\response;
 
+use contentmarketplace_linkedin\dto\classification;
+use contentmarketplace_linkedin\dto\classification_with_path;
 use stdClass;
 use contentmarketplace_linkedin\api\response\element as base_element;
 use contentmarketplace_linkedin\core_json\structure\learning_asset_element;
@@ -237,5 +239,41 @@ class element extends base_element {
      */
     public function get_type(): string {
         return $this->json_data->type;
+    }
+
+    /**
+     * @return classification_with_path[]
+     */
+    public function get_classifications(): array {
+        $detail = $this->json_data->details;
+        if (!isset($detail->classifications)) {
+            return [];
+        }
+
+        $classifications = [];
+        foreach ($detail->classifications as $raw_classification) {
+            if (!$raw_classification->associatedClassification) {
+                // Skip for those classification record that does not have field associatedClassification.
+                continue;
+            }
+
+            $raw_associated_classification = $raw_classification->associatedClassification;
+            $classification = new classification(
+                $raw_associated_classification->type,
+                $raw_associated_classification->urn
+            );
+
+            $path = [];
+            foreach ($raw_classification->path as $raw_parent_classification) {
+                $path[] = new classification(
+                    $raw_parent_classification->type,
+                    $raw_parent_classification->urn
+                );
+            }
+
+            $classifications[] = new classification_with_path($classification, $path);
+        }
+
+        return $classifications;
     }
 }

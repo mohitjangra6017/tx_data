@@ -118,4 +118,11 @@ class classifications extends provider {
     protected function sort_query_by_alphabetical(classification_repository $repository): void {
         $repository->order_by('name', order::DIRECTION_ASC);
     }
+
+    /**
+     * @return string|null
+     */
+    protected function get_default_sort_by(): ?string {
+        return self::SORT_BY_ALPHABETICAL;
+    }
 }

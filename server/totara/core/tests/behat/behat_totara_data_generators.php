@@ -515,6 +515,18 @@ class behat_totara_data_generators extends behat_base {
             'learning objects' => array(
                 'datagenerator' => 'learning_object_for_behat',
                 'required' => array('urn')
+            ),
+            'classifications' => array(
+                'datagenerator' => 'classification_for_behat',
+                'required' => array('urn')
+            ),
+            'classification relationships' => array(
+                'datagenerator' => 'classification_relationship_for_behat',
+                'required' => array('parent_urn', 'child_urn')
+            ),
+            'learning object classifications' => array(
+                'datagenerator' => 'learning_object_classifications_for_behat',
+                'required' => array('learning_object_urn', 'classification_urn')
             )
         ),
         'totara_message' => array(

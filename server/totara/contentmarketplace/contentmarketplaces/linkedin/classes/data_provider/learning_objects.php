@@ -26,6 +26,7 @@ namespace contentmarketplace_linkedin\data_provider;
 use coding_exception;
 use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
+use contentmarketplace_linkedin\entity\learning_object_classification;
 use contentmarketplace_linkedin\model\learning_object as learning_object_model;
 use contentmarketplace_linkedin\repository\learning_object_repository;
 use core\collection;
@@ -90,7 +91,13 @@ class learning_objects extends paginated_provider {
      * @param int[] $subject_ids
      */
     protected function filter_query_by_subjects(repository $repository, array $subject_ids): void {
-        // TODO: Add filtering functionality for subjects in TL-30372
+        if (empty($subject_ids)) {
+            // Skip the join if the subject ids are empty.
+            return;
+        }
+
+        $repository->join([learning_object_classification::TABLE, 'loc'], 'id', 'learning_object_id');
+        $repository->where_in('loc.classification_id', $subject_ids);
     }
 
     /**

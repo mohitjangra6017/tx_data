@@ -37,7 +37,7 @@ abstract class sync_action {
      *
      * @var bool
      */
-    protected $initial_run;
+    protected $is_initial_run;
 
     /**
      * @var progress_trace
@@ -46,23 +46,24 @@ abstract class sync_action {
 
     /**
      * sync_action constructor.
-     * @param bool $initial_run
+     * @param bool $is_initial_run
      * @param progress_trace|null $trace
      */
-    public function __construct(bool $initial_run = false, ?progress_trace $trace = null) {
+    public function __construct(bool $is_initial_run = false, ?progress_trace $trace = null) {
         if (null === $trace) {
             $trace = new null_progress_trace();
         }
 
-        $this->initial_run = $initial_run;
+        $this->is_initial_run = $is_initial_run;
         $this->trace = $trace;
     }
 
     /**
-     * @param bool $initial_run
+     * @param bool $is_initial_run
+     * @return void
      */
-    final public function set_initial_run(bool $initial_run): void {
-        $this->initial_run = $initial_run;
+    final public function set_is_initial_run(bool $is_initial_run): void {
+        $this->is_initial_run = $is_initial_run;
     }
 
     /**
@@ -83,5 +84,5 @@ abstract class sync_action {
      *
      * @return bool
      */
-    abstract public function is_skip(): bool;
+    abstract public function is_skipped(): bool;
 }

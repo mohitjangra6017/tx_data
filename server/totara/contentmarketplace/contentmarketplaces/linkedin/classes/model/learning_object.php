@@ -29,6 +29,7 @@ use contentmarketplace_linkedin\api\v2\service\learning_asset\response\element;
 use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
 use contentmarketplace_linkedin\learning_object\resolver;
 use core\orm\entity\model;
+use core\orm\collection as orm_collection;
 use core\orm\query\builder;
 use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
 use totara_contentmarketplace\learning_object\text;
@@ -55,6 +56,10 @@ use totara_contentmarketplace\learning_object\text;
  * @property-read string      $name      Alias for 'title'
  * @property-read string      $language  Alias for 'locale_language'
  * @property-read string|null $image_url Alias for 'primary_image_url'
+ *
+ * @property-read classification[]|collection $classifications  Get the mapped classifications
+ * @property-read classification[]|collection $subjects         Get the mapped classifications
+ *                                                              type {@see constants::CLASSIFICATION_TYPE_SUBJECT}
  *
  * @package contentmarketplace_linkedin\model
  */
@@ -121,6 +126,26 @@ class learning_object extends model implements detailed_model {
     }
 
     /**
+     * @param element $element
+     * @return static
+     */
+    public function update_from_element(element $element): self {
+        $data_record = static::get_record_data_from_element($element);
+
+        $this->entity->set_attributes_from_record($data_record);
+        $this->entity->save();
+
+        return $this;
+    }
+
+    /**
+     * @return learning_object_entity
+     */
+    public function get_entity(): learning_object_entity {
+        return $this->entity;
+    }
+
+    /**
      * Create many learning objects from an API response.
      *
      * @param collection $api_result
@@ -131,30 +156,6 @@ class learning_object extends model implements detailed_model {
         $to_insert = array_map(Closure::fromCallable([static::class, 'get_record_data_from_element']), $elements);
 
         builder::get_db()->insert_records_via_batch(learning_object_entity::TABLE, $to_insert);
-    }
-
-    /**
-     * Update many learning objects from an API response.
-     *
-     * @param collection $api_result
-     */
-    public static function update_bulk_from_result(collection $api_result): void {
-        $elements = $api_result->get_elements();
-        $repository = learning_object_entity::repository();
-
-        foreach ($elements as $element) {
-            $record = static::get_record_data_from_element($element);
-
-            $urn = $element->get_urn();
-            $learning_object = $repository->find_by_urn($urn);
-
-            if (null === $learning_object) {
-                $learning_object = new learning_object_entity();
-            }
-
-            $learning_object->set_attributes_from_record($record);
-            $learning_object->save();
-        }
     }
 
     /**
@@ -235,5 +236,29 @@ class learning_object extends model implements detailed_model {
             'logo_small_transparent',
             'contentmarketplace_linkedin',
         );
+    }
+
+    /**
+     * @return orm_collection
+     */
+    public function get_classifications(): orm_collection {
+        return $this->entity->classifications->map_to(classification::class);
+    }
+
+    /**
+     * @return orm_collection
+     */
+    public function get_subjects(): orm_collection {
+        return $this->entity->subjects->map_to(classification::class);
+    }
+
+    /**
+     * Get the first subject within the collection of related classifications type subject.
+     *
+     * @return classification|null
+     */
+    public function get_first_subject(): ?classification {
+        $subjects = $this->get_subjects();
+        return $subjects->first();
     }
 }

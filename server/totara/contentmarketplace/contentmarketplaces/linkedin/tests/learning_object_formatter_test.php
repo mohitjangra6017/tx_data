@@ -30,7 +30,7 @@ use core\format;
 use core_phpunit\testcase;
 
 /**
- * @covers learning_object_formatter
+ * @covers contentmarketplace_linkedin\formatter\learning_object
  */
 class contentmarketplace_linkedin_learning_object_formatter_testcase extends testcase {
 

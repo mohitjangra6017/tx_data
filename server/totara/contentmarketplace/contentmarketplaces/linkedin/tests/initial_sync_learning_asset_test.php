@@ -66,7 +66,7 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
             )
         );
 
-        // Mock second page which is empty to end the proicess
+        // Mock second page which is empty to end the process
         $client->mock_queue(
             new response(
                 $generator->get_json_content_from_fixtures('empty_response'),

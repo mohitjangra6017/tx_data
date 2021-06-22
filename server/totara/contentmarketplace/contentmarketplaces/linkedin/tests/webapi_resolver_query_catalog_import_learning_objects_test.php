@@ -27,9 +27,12 @@ use contentmarketplace_linkedin\entity\learning_object as learning_object_entity
 use contentmarketplace_linkedin\formatter\timespan_field_formatter;
 use contentmarketplace_linkedin\model\learning_object;
 use contentmarketplace_linkedin\testing\generator;
+use contentmarketplace_linkedin\webapi\resolver\query\catalog_import_learning_objects;
 use contentmarketplace_linkedin\webapi\resolver\type\catalog_import_learning_objects_result;
 use core\date_format;
 use core\format;
+use core\orm\collection;
+use contentmarketplace_linkedin\entity\learning_object_classification;
 use core_phpunit\testcase;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 use totara_contentmarketplace\testing\helper;
@@ -441,4 +444,79 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         ];
     }
 
+
+    /**
+     * @return void
+     */
+    public function test_filter_learning_objects_with_subject(): void {
+        $generator = generator::instance();
+        $learning_object_entity = $generator->create_learning_object(
+            'urn:li:lyndaCourse:252',
+            ['asset_type' => constants::ASSET_TYPE_COURSE]
+        );
+
+        $classification_one = $generator->create_classification();
+        $classification_two = $generator->create_classification();
+
+        $map = new learning_object_classification();
+        $map->learning_object_id = $learning_object_entity->id;
+        $map->classification_id = $classification_one->id;
+        $map->save();
+
+        self::setAdminUser();
+        $result_one = $this->resolve_graphql_query(
+            $this->get_graphql_name(catalog_import_learning_objects::class),
+            [
+                'input' => [
+                    'filters' => [
+                        'subjects' => [$classification_one->id],
+                        'asset_type' => [],
+                        'time_to_complete' => []
+                    ],
+                    'pagination' => [],
+                    'sort_by' => learning_objects::SORT_BY_ALPHABETICAL
+                ]
+            ]
+        );
+
+        self::assertIsArray($result_one);
+        self::assertArrayHasKey('items', $result_one);
+        self::assertNotEmpty($result_one['items']);
+        self::assertCount(1, $result_one['items']);
+
+        /** @var collection $collection */
+        $collection = $result_one['items'];
+        self::assertInstanceOf(collection::class, $collection);
+        self::assertEquals(1, $collection->count());
+
+        /** @var learning_object $first_item */
+        $first_item = $collection->first();
+
+        self::assertInstanceOf(learning_object::class, $first_item);
+        self::assertEquals($learning_object_entity->id, $first_item->id);
+
+        $result_two = $this->resolve_graphql_query(
+            $this->get_graphql_name(catalog_import_learning_objects::class),
+            [
+                'input' => [
+                    'filters' => [
+                        'subjects' => [$classification_two->id],
+                        'asset_type' => [],
+                        'time_to_complete' => []
+                    ],
+                    'pagination' => [],
+                    'sort_by' => learning_objects::SORT_BY_ALPHABETICAL
+                ]
+            ]
+        );
+
+        self::assertIsArray($result_two);
+        self::assertArrayHasKey('items', $result_two);
+        self::assertCount(0, $result_two['items']);
+
+        /** @var collection $result_two_collection */
+        $result_two_collection = $result_two['items'];
+        self::assertInstanceOf(collection::class, $result_two_collection);
+        self::assertEquals(0, $result_two_collection->count());
+    }
 }

@@ -23,12 +23,43 @@
 
 namespace contentmarketplace_linkedin\formatter;
 
+use contentmarketplace_linkedin\model\learning_object as learning_object_model;
 use core\orm\formatter\entity_model_formatter;
 use core\webapi\formatter\field\date_field_formatter;
 use core\webapi\formatter\field\string_field_formatter;
 
 class learning_object extends entity_model_formatter {
+    /**
+     * @param string $field
+     * @return mixed|string
+     */
+    protected function get_field(string $field) {
+        if ('subject' == $field) {
+            /** @var learning_object_model $learning_object */
+            $learning_object = $this->object;
+            $first_subject = $learning_object->get_first_subject();
 
+            return (null === $first_subject) ? '' : $first_subject->name;
+        }
+
+        return parent::get_field($field);
+    }
+
+    /**
+     * @param string $field
+     * @return bool
+     */
+    protected function has_field(string $field): bool {
+        if ('subject' === $field) {
+            return true;
+        }
+
+        return parent::has_field($field);
+    }
+
+    /**
+     * @return array
+     */
     protected function get_map(): array {
         return [
             'id' => null,

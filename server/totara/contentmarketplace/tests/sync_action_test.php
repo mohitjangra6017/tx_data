@@ -55,6 +55,6 @@ class totara_contentmarketplace_sync_action_testcase extends testcase {
         $value = $property->getValue($sync);
 
         self::assertNotEmpty($value);
-        self::assertCount(1, $value);
+        self::assertCount(2, $value);
     }
 }

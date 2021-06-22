@@ -22,12 +22,14 @@
  */
 
 use contentmarketplace_linkedin\constants;
+use contentmarketplace_linkedin\entity\classification;
 use contentmarketplace_linkedin\entity\learning_object;
+use contentmarketplace_linkedin\testing\generator;
 use core_phpunit\testcase;
 use core\orm\query\builder;
 
 /**
- * @covers learning_object
+ * @covers contentmarketplace_linkedin\entity\learning_object
  */
 class contentmarketplace_linkedin_learning_object_entity_testcase extends testcase {
     /**
@@ -122,5 +124,38 @@ class contentmarketplace_linkedin_learning_object_entity_testcase extends testca
         }
 
         self::assertEquals(1, $db->count_records('marketplace_linkedin_learning_object', ['urn' => $urn]));
+    }
+
+    /**
+     * @return void
+     */
+    public function test_fetch_learning_objects_with_classifications(): void {
+        $generator = generator::instance();
+        $learning_object = $generator->create_learning_object('urn:li:lyndaCourse:252');
+
+        $library = $generator->create_classification(
+            'urn:li:lyndaCategory:15',
+            ['type' => constants::CLASSIFICATION_TYPE_LIBRARY]
+        );
+
+        $subject = $generator->create_classification(
+            'urn:li:lyndaCategory:11',
+            ['type' => constants::CLASSIFICATION_TYPE_SUBJECT]
+        );
+
+        $generator->create_classification_relationship($library->id, $subject->id);
+        $generator->create_learning_object_classification($learning_object->id, $subject->id);
+        $generator->create_learning_object_classification($learning_object->id, $library->id);
+
+        $subjects = $learning_object->subjects;
+        self::assertEquals(1, $subjects->count());
+
+        /** @var classification $first_item */
+        $first_item = $subjects->first();
+        self::assertNotEquals(constants::CLASSIFICATION_TYPE_LIBRARY, $first_item->type);
+        self::assertNotEquals($library->id, $first_item->id);
+
+        self::assertEquals(constants::CLASSIFICATION_TYPE_SUBJECT, $first_item->type);
+        self::assertEquals($subject->id, $first_item->id);
     }
 }

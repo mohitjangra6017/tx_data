@@ -24,8 +24,11 @@
 namespace contentmarketplace_linkedin\entity;
 
 use coding_exception;
-use core\orm\entity\entity;
+use contentmarketplace_linkedin\constants;
 use contentmarketplace_linkedin\repository\learning_object_repository;
+use core\orm\collection;
+use core\orm\entity\entity;
+use core\orm\entity\relations\has_many_through;
 use stdClass;
 
 /**
@@ -49,6 +52,9 @@ use stdClass;
  * @property int|null $time_to_complete
  * @property string|null $web_launch_url
  * @property string|null $sso_launch_url
+ *
+ * @property-read classification[]|collection subjects
+ * @property-read classification[]|collection classifications
  *
  * @method static learning_object_repository repository
  *
@@ -93,14 +99,28 @@ class learning_object extends entity {
             $this->set_attribute($attribute_name, $value);
         }
     }
+
     /**
-     * TEMPORARY ONLY!
-     * TODO: Actually get subject field from API and store in the DB in TL-30939
-     *
-     * @return string|null
+     * @return has_many_through
      */
-    protected function get_subject_attribute(): ?string {
-        return null;
+    public function classifications(): has_many_through {
+        return $this->has_many_through(
+            learning_object_classification::class,
+            classification::class,
+            'id',
+            'learning_object_id',
+            'classification_id',
+            'id'
+        );
     }
 
+    /**
+     * @return has_many_through
+     */
+    public function subjects(): has_many_through {
+        $relation = $this->classifications();
+        $relation->where('type', constants::CLASSIFICATION_TYPE_SUBJECT);
+
+        return $relation;
+    }
 }

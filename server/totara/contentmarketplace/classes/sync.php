@@ -71,16 +71,16 @@ class sync {
     public function execute(bool $initial_run): void {
         $actions = $this->get_sync_actions($initial_run);
         foreach ($actions as $action) {
-            if ($action->is_skip()) {
+            if ($action->is_skipped()) {
                 $this->trace->output(sprintf('Skipping sync action for %s', get_class($action)));
                 continue;
             }
 
             $action->set_trace($this->trace);
             $action->invoke();
-
-            $this->trace->finished();
         }
+
+        $this->trace->finished();
     }
 
     /**
@@ -98,7 +98,7 @@ class sync {
             // Note: we set the flag initial run thru the setter, because the constructor
             // function can be extended and modified differently from the child class.
             // Which it can yield fatal error on the construction due to different type.
-            $action->set_initial_run($initial_run);
+            $action->set_is_initial_run($initial_run);
 
             if ($action instanceof external_sync) {
                 $action->set_api_client($this->client);

@@ -31,6 +31,7 @@ use contentmarketplace_linkedin\dto\timespan;
 use contentmarketplace_linkedin\entity\classification;
 use contentmarketplace_linkedin\entity\classification_relationship;
 use contentmarketplace_linkedin\entity\learning_object;
+use contentmarketplace_linkedin\entity\learning_object_classification;
 use contentmarketplace_linkedin\model\learning_object as learning_object_model;
 use core\orm\query\builder;
 use core\testing\component_generator;
@@ -207,6 +208,7 @@ class generator extends component_generator implements learning_object_generator
      * Create a learning object record for use in behat.
      *
      * @param array $record
+     * @return void
      */
     public function create_learning_object_for_behat(array $record): void {
         // Have the option of specifying time_to_complete_unit in order to make the behat step more human readable.
@@ -216,6 +218,21 @@ class generator extends component_generator implements learning_object_generator
         }
 
         $this->create_learning_object($record['urn'], $record);
+    }
+
+    /**
+     * Create a classification record for usage in behat.
+     *
+     * @param array $record
+     * @return void
+     */
+    public function create_classification_for_behat(array $record): void {
+        if (!empty($record['type'])) {
+            $record['type'] = strtoupper($record['type']);
+            constants::validate_classification_type($record['type']);
+        }
+
+        $this->create_classification($record['urn'], $record);
     }
 
     /**
@@ -338,5 +355,54 @@ class generator extends component_generator implements learning_object_generator
 
         $relationship->save();
         return $relationship;
+    }
+
+    /**
+     * Create classification relationship for usage in behat.
+     *
+     * @param array $record
+     * @return void
+     */
+    public function create_classification_relationship_for_behat(array $record): void {
+        $db = builder::get_db();
+
+        $parent_urn = trim($record['parent_urn']);
+        $child_urn = trim($record['child_urn']);
+
+        $parent_id = $db->get_field(classification::TABLE, 'id', ['urn' => $parent_urn], MUST_EXIST);
+        $child_id = $db->get_field(classification::TABLE, 'id', ['urn' => $child_urn], MUST_EXIST);
+
+        $this->create_classification_relationship($parent_id, $child_id);
+    }
+
+    /**
+     * Create learning object classification relationship usage in behat.
+     *
+     * @param array $record
+     * @return void
+     */
+    public function create_learning_object_classifications_for_behat(array $record): void {
+        $db = builder::get_db();
+        $learning_object_id = $db->get_field(learning_object::TABLE, 'id', ['urn' => $record['learning_object_urn']], MUST_EXIST);
+        $classification_id = $db->get_field(classification::TABLE, 'id', ['urn' => $record['classification_urn']], MUST_EXIST);
+
+        $this->create_learning_object_classification($learning_object_id, $classification_id);
+    }
+
+    /**
+     * @param int $learning_object_id
+     * @param int $classification_id
+     * @return learning_object_classification
+     */
+    public function create_learning_object_classification(
+        int $learning_object_id,
+        int $classification_id
+    ): learning_object_classification {
+        $map = new learning_object_classification();
+        $map->learning_object_id = $learning_object_id;
+        $map->classification_id = $classification_id;
+        $map->save();
+
+        return $map;
     }
 }

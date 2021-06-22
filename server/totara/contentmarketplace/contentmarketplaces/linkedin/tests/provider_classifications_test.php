@@ -35,8 +35,8 @@ class contentmarketplace_linkedin_provider_classifications_testcase extends test
     public function test_fetch_items(): void {
         $generator = generator::instance();
 
-        $classification_1 = $generator->create_classification('urn:li:organization:442');
-        $classification_2 = $generator->create_classification('urn:li:organization:443');
+        $classification_1 = $generator->create_classification('urn:li:organization:442', ['name' => 'Admin']);
+        $classification_2 = $generator->create_classification('urn:li:organization:443', ['name' => 'Badmin']);
 
         $provider = new classifications();
         $collection = $provider->fetch()->get();

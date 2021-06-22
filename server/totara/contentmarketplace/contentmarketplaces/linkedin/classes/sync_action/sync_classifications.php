@@ -64,16 +64,16 @@ class sync_classifications extends sync_action implements external_sync {
 
     /**
      * sync_classifications constructor.
-     * @param bool $initial_run
+     * @param bool $is_initial_run
      * @param progress_trace|null $trace
      * @param client|null $client
      */
     public function __construct(
-        bool $initial_run = false,
+        bool $is_initial_run = false,
         ?progress_trace $trace = null,
         ?client $client = null
     ) {
-        parent::__construct($initial_run, $trace);
+        parent::__construct($is_initial_run, $trace);
         $this->client = $client;
 
         $this->classification_types = [
@@ -134,12 +134,12 @@ class sync_classifications extends sync_action implements external_sync {
     /**
      * @return bool
      */
-    public function is_skip(): bool {
-        if ($this->initial_run && config::completed_initial_sync_classification()) {
+    public function is_skipped(): bool {
+        if ($this->is_initial_run && config::completed_initial_sync_classification()) {
             return true;
         }
 
-        if (!$this->initial_run && !config::completed_initial_sync_classification()) {
+        if (!$this->is_initial_run && !config::completed_initial_sync_classification()) {
             return true;
         }
 
@@ -158,7 +158,7 @@ class sync_classifications extends sync_action implements external_sync {
      * @return void
      */
     public function invoke(): void {
-        if ($this->is_skip()) {
+        if ($this->is_skipped()) {
             // The sync action should be skipped.
             return;
         } else if (null === $this->client) {
@@ -196,7 +196,7 @@ class sync_classifications extends sync_action implements external_sync {
                         $classification = null;
                         $urn = $element->get_urn();
 
-                        if (!$this->initial_run) {
+                        if (!$this->is_initial_run) {
                             // Not an initial run, hence we run thru database look up.
                             $classification = $repository->find_by_urn($urn);
                         }
@@ -230,7 +230,7 @@ class sync_classifications extends sync_action implements external_sync {
             }
         }
 
-        if ($this->initial_run) {
+        if ($this->is_initial_run) {
             config::save_completed_initial_sync_classification(true);
         }
     }
