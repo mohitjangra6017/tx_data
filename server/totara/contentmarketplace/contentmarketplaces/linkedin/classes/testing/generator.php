@@ -222,21 +222,35 @@ class generator extends component_generator implements learning_object_generator
      * @param string $json_fixture
      * @param array  $header
      * @param int    $code
-     * @param string $conten_type
+     * @param string $content_type
      * @return response
      */
     public function create_json_response_from_fixture(
         string $json_fixture,
         array $header = [],
         int $code = response_code::OK,
-        string $conten_type = 'application/json'
+        string $content_type = 'application/json'
     ): response {
-        return new response(
-            $this->get_json_content_from_fixtures($json_fixture),
-            $code,
-            $header,
-            $conten_type
-        );
+        $json_content = $this->get_json_content_from_fixtures($json_fixture);
+        return $this->create_json_response($json_content, $header, $code, $content_type);
+    }
+
+    /**
+     * Create json response from a json string.
+     *
+     * @param string $json
+     * @param array $header
+     * @param int $code
+     * @param string $content_type
+     * @return response
+     */
+    public function create_json_response(
+        string $json,
+        array $header =  [],
+        int $code = response_code::OK,
+        string $content_type = 'application/json'
+    ): response {
+        return new response($json, $code, $header, $content_type);
     }
 
     /**

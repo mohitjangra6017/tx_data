@@ -27,7 +27,9 @@ use null_progress_trace;
 use progress_trace;
 
 /**
- * The class is to define abstract method for each sub plugins which needs to be extended
+ * The class is to define abstract method for each sub plugins which needs to be extended.
+ *
+ * Note: please do not call to finish the trace (a.k.a output) object within the sync action.
  */
 abstract class sync_action {
     /**
@@ -45,10 +47,22 @@ abstract class sync_action {
     /**
      * sync_action constructor.
      * @param bool $initial_run
+     * @param progress_trace|null $trace
      */
-    public function __construct(bool $initial_run = false) {
+    public function __construct(bool $initial_run = false, ?progress_trace $trace = null) {
+        if (null === $trace) {
+            $trace = new null_progress_trace();
+        }
+
         $this->initial_run = $initial_run;
-        $this->trace = new null_progress_trace();
+        $this->trace = $trace;
+    }
+
+    /**
+     * @param bool $initial_run
+     */
+    final public function set_initial_run(bool $initial_run): void {
+        $this->initial_run = $initial_run;
     }
 
     /**
@@ -63,4 +77,11 @@ abstract class sync_action {
      * @retrun void
      */
     abstract public function invoke(): void;
+
+    /**
+     * Whether the schedule task will skip this action or not.
+     *
+     * @return bool
+     */
+    abstract public function is_skip(): bool;
 }

@@ -142,4 +142,19 @@ class config extends base_plugin_config {
     public static function get_max_selected_items_number(): int {
         return self::MAX_SELECTED_ITEMS_NUMBER;
     }
+
+    /**
+     * @return bool
+     */
+    public static function completed_initial_sync_classification(): bool {
+        return static::get('completed_initial_sync_classification', false);
+    }
+
+    /**
+     * @param bool $value
+     * @return void
+     */
+    public static function save_completed_initial_sync_classification(bool $value): void {
+        static::set('completed_initial_sync_classification', $value);
+    }
 }

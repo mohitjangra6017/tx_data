@@ -23,7 +23,6 @@
 namespace totara_contentmarketplace\task;
 
 use core\task\scheduled_task;
-use null_progress_trace;
 use progress_trace;
 use text_progress_trace;
 use totara_core\http\client;
@@ -42,16 +41,13 @@ abstract class base_sync_task extends scheduled_task {
 
     /**
      * base_sync_task constructor.
+     * @param progress_trace|null $trace
+     * @param client|null $client
      */
-    public function __construct() {
+    public function __construct(?progress_trace $trace = null, ?client $client = null) {
         // Default to curl client, but it can be mock for testing purpose.
-        $this->client = new curl_client();
-
-        if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
-            $this->trace = new text_progress_trace();
-        } else {
-            $this->trace = new null_progress_trace();
-        }
+        $this->client = $client ?? new curl_client();
+        $this->trace = $trace ?? new text_progress_trace();
     }
 
     /**
