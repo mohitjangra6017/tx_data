@@ -33,7 +33,41 @@ function xmldb_totara_hierarchy_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    // Totara 13.0 release line.
+    if ($oldversion < 2021072600) {
+        // Define table goal_perform_status to be created.
+        $table = new xmldb_table('goal_perform_status');
+
+        // Adding fields to table goal_perform_status.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('user_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('goal_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('goal_personal_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('scale_value_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('activity_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('subject_instance_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('status_changer_user_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('status_changer_relationship_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('created_at', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table goal_perform_status.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('fk_user_id', XMLDB_KEY_FOREIGN, array('user_id'), 'user', array('id'));
+        $table->add_key('fk_goal_id', XMLDB_KEY_FOREIGN, array('goal_id'), 'goal', array('id'), 'cascade');
+        $table->add_key('fk_goal_personal_id', XMLDB_KEY_FOREIGN, array('goal_personal_id'), 'goal_personal', array('id'), 'cascade');
+        $table->add_key('fk_scale_value_id', XMLDB_KEY_FOREIGN, array('scale_value_id'), 'goal_scale_values', array('id'));
+        $table->add_key('fk_activity_id', XMLDB_KEY_FOREIGN, array('activity_id'), 'perform', array('id'), 'setnull');
+        $table->add_key('fk_subject_instance_id', XMLDB_KEY_FOREIGN, array('subject_instance_id'), 'perform_subject_instance', array('id'), 'setnull');
+        $table->add_key('fk_status_changer_user_id', XMLDB_KEY_FOREIGN, array('status_changer_user_id'), 'user', array('id'));
+        $table->add_key('fk_status_changer_relationship_id', XMLDB_KEY_FOREIGN, array('status_changer_relationship_id'), 'totara_core_relationship', array('id'), 'cascade');
+
+        // Conditionally launch create table for goal_perform_status.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Hierarchy savepoint reached.
+        upgrade_plugin_savepoint(true, 2021072600, 'totara', 'hierarchy');
+    }
 
     return true;
 }

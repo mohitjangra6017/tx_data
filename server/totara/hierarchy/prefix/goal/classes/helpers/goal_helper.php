@@ -39,10 +39,11 @@ class goal_helper {
      * @param int $timestamp
      * @return scale_value|null
      */
-    public static function get_goal_scale_value_at_timestamp(int $goal_assignment_id, int $timestamp): ?scale_value {
+    public static function get_goal_scale_value_at_timestamp(int $goal_type, int $goal_assignment_id, int $timestamp): ?scale_value {
         /** @var goal_item_history $goal_item_history */
         $goal_item_history = goal_item_history::repository()
             ->with('scale_value')
+            ->where('scope', $goal_type)
             ->where('itemid', $goal_assignment_id)
             ->where('timemodified', '<=', $timestamp)
             ->order_by('timemodified', 'desc')

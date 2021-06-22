@@ -24,40 +24,35 @@
 use core\collection;
 use core\date_format;
 use core\webapi\formatter\field\date_field_formatter;
-use core_phpunit\testcase;
 use hierarchy_goal\entity\company_goal;
 use hierarchy_goal\entity\company_goal_assignment as company_goal_assignment_entity;
 use hierarchy_goal\entity\personal_goal as personal_goal_entity;
 use hierarchy_goal\entity\scale_value;
+use hierarchy_goal\models\company_goal_perform_status;
+use hierarchy_goal\models\personal_goal_perform_status;
 use hierarchy_goal\performelement_linked_review\company_goal_assignment;
 use hierarchy_goal\performelement_linked_review\goal_assignment_content_type;
 use hierarchy_goal\performelement_linked_review\personal_goal_assignment;
-use hierarchy_goal\personal_goal_assignment_type;
 use mod_perform\constants;
 use mod_perform\entity\activity\element as element_entity;
-use mod_perform\entity\activity\participant_instance;
 use mod_perform\entity\activity\participant_section;
 use mod_perform\entity\activity\section_relationship;
 use mod_perform\entity\activity\subject_instance as subject_instance_entity;
-use mod_perform\models\activity\element;
 use mod_perform\models\activity\participant_instance as participant_instance_model;
-use mod_perform\models\activity\section;
-use mod_perform\models\activity\section_element;
 use mod_perform\models\activity\subject_instance;
-use mod_perform\testing\generator as perform_generator;
 use performelement_linked_review\content_type_factory;
 use performelement_linked_review\models\linked_review_content;
 use performelement_linked_review\models\linked_review_content as linked_review_content_model;
 use performelement_linked_review\testing\generator as linked_review_generator;
 use totara_core\advanced_feature;
 use totara_core\relationship\relationship;
-use totara_hierarchy\testing\generator as hierarchy_generator;
-use totara_job\job_assignment;
+
+require_once __DIR__ . '/perform_linked_goals_base_testcase.php';
 
 /**
  * @group hierarchy_goal
  */
-class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
+class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linked_goals_base_testcase {
 
     protected function setUp(): void {
         if (!core_component::get_plugin_directory('mod', 'perform')
@@ -260,12 +255,11 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
     }
 
     public function test_load_personal_goal_items(): void {
-        [$user, $goal1, $goal2] = $this->create_personal_goals();
+        $data = $this->create_activity_data(goal::SCOPE_PERSONAL);
+        $user = $data->subject_user;
+        $goal1 = $data->goal1;
+        $goal2 = $data->goal2;
 
-        $dummy_subject_instance = subject_instance::load_by_entity(new subject_instance_entity([
-            'id' => 123456,
-            'subject_user_id' => $user->id,
-        ]));
         self::setUser($user);
 
         $created_at = time();
@@ -278,8 +272,9 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
 
         $content_type = new personal_goal_assignment(context_system::instance());
 
+        $subject_instance_model = subject_instance::load_by_entity($data->subject_instance1);
         $result = $content_type->load_content_items(
-            $dummy_subject_instance,
+            $subject_instance_model,
             $content_items,
             null,
             true,
@@ -330,10 +325,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
             'target_date' => $formatted_targetdate,
             'can_change_status' => false,
             'can_view_status' => true,
-            'status_change' => [ // TODO update this when implementing changing status
-                'id' => $goal1->scalevalueid,
-                'name' => 'Created',
-            ],
+            'status_change' => null,
         ];
         self::assertEquals($expected_content_goal1, $goal1_result_item);
 
@@ -341,9 +333,6 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
             return (int)$item['id'] === (int)$goal2->id;
         });
         $goal2_result_item = array_shift($goal2_result_item);
-
-        $formatted_targetdate = (new date_field_formatter(date_format::FORMAT_DATE, context_system::instance()))
-            ->format($goal2->targetdate);
 
         // Goal2 doesn't have a scale.
         $expected_content_goal2 = [
@@ -355,21 +344,63 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
             ],
             'status' => null,
             'scale_values' => null,
-            'target_date' => $formatted_targetdate,
+            'target_date' => null,
             'can_change_status' => false,
             'can_view_status' => true,
             'status_change' => null,
         ];
         self::assertEquals($expected_content_goal2, $goal2_result_item);
+
+        // Change status of goal1 and check it's returned as expected.
+        /** @var scale_value $new_scale_value */
+        $new_scale_value = scale_value::repository()->where('name', 'Finished')->one(true);
+        // Make sure the new status doesn't have the same timestamp as the historic status.
+        self::waitForSecond();
+        personal_goal_perform_status::create(
+            $goal1->id,
+            $new_scale_value->id,
+            $data->manager_participant_instance1->id,
+            $data->section_element->id
+        );
+
+        $result = $content_type->load_content_items(
+            $subject_instance_model,
+            collection::new([['content_id' => $goal1->id]]),
+            null,
+            true,
+            $created_at
+        );
+        self::assertCount(1, $result);
+
+        $goal1_result_item = $result[$goal1->id];
+        $expected_content_goal1['status_change'] = [
+            'created_at' => (new date_field_formatter(date_format::FORMAT_DATE, context_system::instance()))
+                ->format($created_at),
+            'status_changer_user' => [
+                'fullname' => 'Manager User'
+            ],
+            'scale_value' => [
+                'id' => $new_scale_value->id,
+                'name' => 'Finished',
+            ]
+        ];
+        self::assertEquals($expected_content_goal1, $goal1_result_item);
+
+        // Also verify that the goal_personal entry has been updated.
+        /** @var personal_goal_entity $goal_personal */
+        $goal_personal = personal_goal_entity::repository()
+            ->where('id', $goal1->id)
+            ->where('userid', $user->id)
+            ->one(true);
+        self::assertEquals($new_scale_value->id, $goal_personal->scalevalueid);
     }
 
     public function test_load_company_goal_items(): void {
-        [$user, $goal1, $goal2] = $this->create_company_goals();
+        $data = $this->create_activity_data(goal::SCOPE_COMPANY);
+        $user = $data->subject_user;
+        $goal1 = $data->goal1;
+        $goal2 = $data->goal2;
 
-        $dummy_subject_instance_user_1 = subject_instance::load_by_entity(new subject_instance_entity([
-            'id' => 123456,
-            'subject_user_id' => $user->id,
-        ]));
         self::setUser($user);
 
         $created_at = time();
@@ -392,8 +423,9 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
 
         $content_type = new company_goal_assignment(context_system::instance());
 
+        $subject_instance_model = subject_instance::load_by_entity($data->subject_instance1);
         $result = $content_type->load_content_items(
-            $dummy_subject_instance_user_1,
+            $subject_instance_model,
             $content_items,
             null,
             true,
@@ -442,16 +474,81 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
             'target_date' => $formatted_target_date,
             'can_change_status' => false,
             'can_view_status' => true,
-            'status_change' => [ // TODO update this when implementing changing status
-                'id' => $goal_assignment_goal1->scalevalueid,
-                'name' => 'Started',
-            ],
+            'status_change' => null,
         ];
         self::assertEquals($expected_content_goal1, $goal1_result_item);
+
+        $goal2_result_item = array_filter($result, static function (array $item) use ($goal_assignment_goal2) {
+            return (int)$item['id'] === (int)$goal_assignment_goal2->id;
+        });
+        $goal2_result_item = array_shift($goal2_result_item);
+
+        // Goal2 doesn't have a target date.
+        $expected_content_goal2 = [
+            'id' => $goal_assignment_goal2->id,
+            'goal' => [
+                'id' => $goal_assignment_goal2->id,
+                'display_name' => $goal2->fullname,
+                'description' => $goal2->description,
+            ],
+            'status' => [
+                'id' => $goal_assignment_goal2->scalevalueid,
+                'name' => 'Created',
+            ],
+            'scale_values' => $expected_scale1,
+            'target_date' => null,
+            'can_change_status' => false,
+            'can_view_status' => true,
+            'status_change' => null,
+        ];
+        self::assertEquals($expected_content_goal2, $goal2_result_item);
+
+        // Change status of goal1 and check it's returned as expected.
+        /** @var scale_value $new_scale_value */
+        $new_scale_value = scale_value::repository()->where('name', 'Finished')->one(true);
+        // Make sure the new status doesn't have the same timestamp as the historic status.
+        self::waitForSecond();
+        company_goal_perform_status::create(
+            $goal_assignment_goal1->id,
+            $new_scale_value->id,
+            $data->manager_participant_instance1->id,
+            $data->section_element->id
+        );
+
+        $result = $content_type->load_content_items(
+            $subject_instance_model,
+            collection::new([['content_id' => $goal_assignment_goal1->id]]),
+            null,
+            true,
+            $created_at
+        );
+        self::assertCount(1, $result);
+
+        $goal1_result_item = $result[$goal_assignment_goal1->id];
+        $expected_content_goal1['status_change'] = [
+            'created_at' => (new date_field_formatter(date_format::FORMAT_DATE, context_system::instance()))
+                ->format($created_at),
+            'status_changer_user' => [
+                'fullname' => 'Manager User'
+            ],
+            'scale_value' => [
+                'id' => $new_scale_value->id,
+                'name' => 'Finished',
+            ]
+        ];
+        self::assertEquals($expected_content_goal1, $goal1_result_item);
+
+        // Also verify that the goal_record entry has been updated.
+        /** @var company_goal_assignment_entity $goal_record */
+        $goal_record = company_goal_assignment_entity::repository()
+            ->where('goalid', $goal1->id)
+            ->where('userid', $user->id)
+            ->one(true);
+        self::assertEquals($new_scale_value->id, $goal_record->scalevalueid);
     }
 
     public function test_get_goal_status_permissions(): void {
-        $data = $this->create_activity_data();
+        $data = $this->create_activity_data(goal::SCOPE_PERSONAL);
         $participant_instance = participant_instance_model::load_by_entity($data->manager_participant_instance1);
         $subject_relationship = relationship::load_by_idnumber('subject')->id;
         $manager_relationship = relationship::load_by_idnumber('manager')->id;
@@ -459,7 +556,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
 
         $element = new element_entity($data->section_element->element_id);
         $element_data = [
-            'content_type' => 'totara_competency',
+            'content_type' => 'personal_goal',
             'content_type_settings' => [
                 'enable_status_change' => false,
                 'status_change_relationship' => null,
@@ -481,8 +578,8 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
             $data->manager_participant_section1,
             false
         );
-        $this->assertFalse($can_view);
-        $this->assertFalse($can_change);
+        self::assertFalse($can_view);
+        self::assertFalse($can_change);
 
         // Can view status as true is passed in for 'view other responses'.
         [$can_view, $can_change] = goal_assignment_content_type::get_goal_status_permissions(
@@ -490,8 +587,8 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
             $data->manager_participant_section1,
             true
         );
-        $this->assertTrue($can_view);
-        $this->assertFalse($can_change);
+        self::assertTrue($can_view);
+        self::assertFalse($can_change);
 
         $element_data['content_type_settings']['enable_status_change'] = true;
         $element_data['content_type_settings']['status_change_relationship'] = $subject_relationship;
@@ -509,8 +606,8 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
             $data->manager_participant_section1,
             true
         );
-        $this->assertTrue($can_view);
-        $this->assertFalse($can_change);
+        self::assertTrue($can_view);
+        self::assertFalse($can_change);
 
         $element_data['content_type_settings']['enable_status_change'] = true;
         $element_data['content_type_settings']['status_change_relationship'] = $manager_relationship;
@@ -527,8 +624,8 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
             $data->manager_participant_section1,
             true
         );
-        $this->assertTrue($can_view);
-        $this->assertTrue($can_change);
+        self::assertTrue($can_view);
+        self::assertTrue($can_change);
 
         // Can view status even when passing in false for viewing other responses.
         [$can_view, $can_change] = goal_assignment_content_type::get_goal_status_permissions(
@@ -536,8 +633,8 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
             $data->manager_participant_section1,
             false
         );
-        $this->assertTrue($can_view);
-        $this->assertTrue($can_change);
+        self::assertTrue($can_view);
+        self::assertTrue($can_change);
 
         $section_relationship = section_relationship::repository()
             ->where('core_relationship_id', $participant_instance->core_relationship_id)
@@ -556,8 +653,8 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
             $data->manager_participant_section1,
             true
         );
-        $this->assertTrue($can_view);
-        $this->assertFalse($can_change);
+        self::assertTrue($can_view);
+        self::assertFalse($can_change);
 
         // Re-create relationship.
         $section_relationship = new section_relationship($section_relationship->to_array());
@@ -571,8 +668,8 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
             $data->manager_participant_section1,
             true
         );
-        $this->assertTrue($can_view);
-        $this->assertTrue($can_change);
+        self::assertTrue($can_view);
+        self::assertTrue($can_change);
 
         // Can't change status as there is no participant section record.
         participant_section::repository()->delete();
@@ -585,202 +682,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends testcase {
             $data->manager_participant_section1,
             true
         );
-        $this->assertTrue($can_view);
-        $this->assertFalse($can_change);
-    }
-
-    /**
-     * @param stdClass|null $user
-     * @return array
-     */
-    private function create_personal_goals(stdClass $user = null): array {
-        self::setAdminUser();
-
-        $generator = self::getDataGenerator();
-        /** @var hierarchy_generator $hierarchy_generator */
-        $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
-
-        $type = personal_goal_assignment_type::self()->get_value();
-
-        $user = $user ?? $generator->create_user();
-
-        $scale = $this->create_scale($hierarchy_generator);
-        $goal1 = $hierarchy_generator->create_personal_goal($user->id, [
-            'name' => "goal1",
-            'assigntype' => $type,
-            'scaleid' => $scale->id,
-            'scalevalueid' => scale_value::repository()->where('name', 'Created')->one(true)->id
-        ]);
-
-        // goal2 doesn't have a scale.
-        $goal2 = $hierarchy_generator->create_personal_goal($user->id, [
-            'name' => "goal1",
-            'assigntype' => $type
-        ]);
-
-        return [$user, $goal1, $goal2];
-    }
-
-    /**
-     * @param hierarchy_generator $hierarchy_generator
-     * @return stdClass
-     */
-    private function create_scale(hierarchy_generator $hierarchy_generator): stdClass {
-        $scale_values = [
-            1 => ['name' => 'Finished', 'proficient' => 1, 'sortorder' => 1, 'default' => 0],
-            2 => ['name' => 'Started', 'proficient' => 0, 'sortorder' => 2, 'default' => 0],
-            3 => ['name' => 'Created', 'proficient' => 0, 'sortorder' => 3, 'default' => 1]
-        ];
-        return $hierarchy_generator->create_scale('goal', ['name' => 'goal_scale1'], $scale_values);
-    }
-
-    /**
-     * @return array
-     */
-    private function create_company_goals(): array {
-        $generator = self::getDataGenerator();
-        /** @var hierarchy_generator $hierarchy_generator */
-        $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
-        $user1 = $generator->create_user();
-        $user2 = $generator->create_user();
-
-        $scale = $this->create_scale($hierarchy_generator);
-        $framework = $hierarchy_generator->create_goal_frame(['name' => 'frame1', 'scaleid' => $scale->id]);
-
-        // Assign just user1.
-        $goal1 = $hierarchy_generator->create_goal(['fullname' => 'goal1', 'frameworkid' => $framework->id]);
-        $goal2 = $hierarchy_generator->create_goal(['fullname' => 'goal2', 'frameworkid' => $framework->id]);
-        $hierarchy_generator->goal_assign_individuals($goal1->id, [$user1->id, $user2->id]);
-        $hierarchy_generator->goal_assign_individuals($goal2->id, [$user1->id, $user2->id]);
-
-        // Update the scale value for user1.
-        $hierarchy_generator->update_company_goal_user_scale_value(
-            $user1->id,
-            $goal1->id,
-            scale_value::repository()->where('name', 'Started')->one(true)->id
-        );
-
-        return [$user1, $goal1, $goal2];
-    }
-
-    protected function create_activity_data() {
-        self::setAdminUser();
-
-        $another_user = self::getDataGenerator()->create_user(['firstname' => 'Another', 'lastname' => 'User']);
-        $manager_user = self::getDataGenerator()->create_user(['firstname' => 'Manager', 'lastname' => 'User']);
-        $subject_user = self::getDataGenerator()->create_user(['firstname' => 'Subject', 'lastname' => 'User']);
-
-        /** @var job_assignment $manager_ja */
-        $manager_ja = job_assignment::create([
-            'userid' => $manager_user->id,
-            'idnumber' => 'ja02',
-        ]);
-
-        job_assignment::create([
-            'userid' => $subject_user->id,
-            'idnumber' => 'ja01',
-            'managerjaid' => $manager_ja->id
-        ]);
-
-        [, $goal1, $goal2] = $this->create_personal_goals($subject_user);
-
-        $perform_generator = perform_generator::instance();
-        $activity = $perform_generator->create_activity_in_container(['activity_name' => 'Test activity']);
-        $section = $perform_generator->create_section($activity);
-        $manager_section_relationship = $perform_generator->create_section_relationship(
-            $section,
-            ['relationship' => constants::RELATIONSHIP_MANAGER]
-        );
-        $subject_section_relationship = $perform_generator->create_section_relationship(
-            $section,
-            ['relationship' => constants::RELATIONSHIP_SUBJECT]
-        );
-        $element = element::create($activity->get_context(), 'linked_review', 'title', '', json_encode([
-            'content_type' => 'personal_goal',
-            'content_type_settings' => [
-                'enable_status_change' => true,
-                'status_change_relationship' => $perform_generator->get_core_relationship(constants::RELATIONSHIP_MANAGER)->id
-            ],
-            'selection_relationships' => [$manager_section_relationship->core_relationship_id],
-        ]));
-
-        $section_element = $perform_generator->create_section_element($section, $element);
-
-        $subject_instance1 = $perform_generator->create_subject_instance([
-            'activity_id' => $activity->id,
-            'subject_user_id' => $subject_user->id
-        ]);
-
-        $subject_instance2 = $perform_generator->create_subject_instance([
-            'activity_id' => $activity->id,
-            'subject_user_id' => $subject_user->id
-        ]);
-
-        $manager_participant_section1 = $perform_generator->create_participant_instance_and_section(
-            $activity,
-            $manager_user,
-            $subject_instance1->id,
-            $section,
-            $manager_section_relationship->core_relationship->id
-        );
-
-        $subject_participant_section1 = $perform_generator->create_participant_instance_and_section(
-            $activity,
-            $subject_user,
-            $subject_instance1->id,
-            $section,
-            $subject_section_relationship->core_relationship->id
-        );
-        $subject_participant_section2 = $perform_generator->create_participant_instance_and_section(
-            $activity,
-            $subject_user,
-            $subject_instance2->id,
-            $section,
-            $subject_section_relationship->core_relationship->id
-        );
-
-        $linked_assignment1 = linked_review_content::create(
-            $goal1->id, $section_element->id, $subject_participant_section1->participant_instance_id, false
-        );
-        $linked_assignment2 = linked_review_content::create(
-            $goal1->id, $section_element->id, $subject_participant_section2->participant_instance_id, false
-        );
-
-        $data = new class {
-            public $another_user;
-            public $manager_user;
-            public $subject_user;
-            /** @var subject_instance_entity $subject_instance1 */
-            public $subject_instance1;
-            /** @var participant_section */
-            public $manager_participant_section1;
-            /** @var participant_instance */
-            public $manager_participant_instance1;
-            /** @var section_element */
-            public $section_element;
-            /** @var section */
-            public $section;
-            /** @var linked_review_content */
-            public $linked_assignment1;
-            /** @var linked_review_content */
-            public $linked_assignment2;
-            public $goal1;
-            public $goal2;
-        };
-
-        $data->another_user = $another_user;
-        $data->manager_user = $manager_user;
-        $data->subject_user = $subject_user;
-        $data->subject_instance1 = $subject_instance1;
-        $data->manager_participant_instance1 = $manager_participant_section1->participant_instance;
-        $data->manager_participant_section1 = $manager_participant_section1;
-        $data->section_element = $section_element;
-        $data->section = $section;
-        $data->linked_assignment1 = $linked_assignment1;
-        $data->linked_assignment2 = $linked_assignment2;
-        $data->goal1 = $goal1;
-        $data->goal2 = $goal2;
-
-        return $data;
+        self::assertTrue($can_view);
+        self::assertFalse($can_change);
     }
 }

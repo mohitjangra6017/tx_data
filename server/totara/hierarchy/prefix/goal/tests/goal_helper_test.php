@@ -27,6 +27,9 @@ use hierarchy_goal\entity\scale_value;
 use hierarchy_goal\helpers\goal_helper;
 use hierarchy_goal\personal_goal_assignment_type;
 
+global $CFG;
+require_once($CFG->dirroot . '/totara/hierarchy/prefix/goal/lib.php');
+
 /**
  * @group hierarchy_goal
  */
@@ -45,20 +48,20 @@ class hierarchy_goal_goal_helper_testcase extends testcase {
         /** @var scale_value $finished_scale_value */
         $finished_scale_value = scale_value::repository()->where('name', 'Finished')->one(true);
 
-        self::assertEquals($created_scale_value, goal_helper::get_goal_scale_value_at_timestamp($goal1->id, $now));
-        self::assertEquals($created_scale_value, goal_helper::get_goal_scale_value_at_timestamp($goal1->id, $now + 100));
-        self::assertNull(goal_helper::get_goal_scale_value_at_timestamp($goal1->id, $an_hour_ago));
+        self::assertEquals($created_scale_value, goal_helper::get_goal_scale_value_at_timestamp(goal::SCOPE_PERSONAL, $goal1->id, $now));
+        self::assertEquals($created_scale_value, goal_helper::get_goal_scale_value_at_timestamp(goal::SCOPE_PERSONAL, $goal1->id, $now + 100));
+        self::assertNull(goal_helper::get_goal_scale_value_at_timestamp(goal::SCOPE_PERSONAL, $goal1->id, $an_hour_ago));
 
         // Goal 2 doesn't have a scale, so it should always return null.
-        self::assertNull(goal_helper::get_goal_scale_value_at_timestamp($goal2->id, $now));
-        self::assertNull(goal_helper::get_goal_scale_value_at_timestamp($goal2->id, $an_hour_ago));
+        self::assertNull(goal_helper::get_goal_scale_value_at_timestamp(goal::SCOPE_PERSONAL, $goal2->id, $now));
+        self::assertNull(goal_helper::get_goal_scale_value_at_timestamp(goal::SCOPE_PERSONAL, $goal2->id, $an_hour_ago));
 
         // Manipulate DB to make the 'Created' scale value assignment older.
         goal_item_history::repository()
             ->where('scalevalueid', $created_scale_value->id)
             ->update(['timemodified' => $a_day_ago]);
-        self::assertEquals($created_scale_value, goal_helper::get_goal_scale_value_at_timestamp($goal1->id, $now));
-        self::assertEquals($created_scale_value, goal_helper::get_goal_scale_value_at_timestamp($goal1->id, $an_hour_ago));
+        self::assertEquals($created_scale_value, goal_helper::get_goal_scale_value_at_timestamp(goal::SCOPE_PERSONAL, $goal1->id, $now));
+        self::assertEquals($created_scale_value, goal_helper::get_goal_scale_value_at_timestamp(goal::SCOPE_PERSONAL, $goal1->id, $an_hour_ago));
 
         // Update the goal status.
         $generator = self::getDataGenerator();
@@ -66,13 +69,13 @@ class hierarchy_goal_goal_helper_testcase extends testcase {
         $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
         $hierarchy_generator->update_personal_goal_user_scale_value($user->id, $goal1->id, $finished_scale_value->id);
         $now = time();
-        self::assertEquals($finished_scale_value, goal_helper::get_goal_scale_value_at_timestamp($goal1->id, $now));
-        self::assertEquals($finished_scale_value, goal_helper::get_goal_scale_value_at_timestamp($goal1->id, $now + 100));
-        self::assertEquals($created_scale_value, goal_helper::get_goal_scale_value_at_timestamp($goal1->id, $an_hour_ago));
-        self::assertNull(goal_helper::get_goal_scale_value_at_timestamp($goal1->id, $a_week_ago));
+        self::assertEquals($finished_scale_value, goal_helper::get_goal_scale_value_at_timestamp(goal::SCOPE_PERSONAL, $goal1->id, $now));
+        self::assertEquals($finished_scale_value, goal_helper::get_goal_scale_value_at_timestamp(goal::SCOPE_PERSONAL, $goal1->id, $now + 100));
+        self::assertEquals($created_scale_value, goal_helper::get_goal_scale_value_at_timestamp(goal::SCOPE_PERSONAL, $goal1->id, $an_hour_ago));
+        self::assertNull(goal_helper::get_goal_scale_value_at_timestamp(goal::SCOPE_PERSONAL, $goal1->id, $a_week_ago));
 
         // Returns null for non-existent goal id.
-        self::assertNull(goal_helper::get_goal_scale_value_at_timestamp(- 1, time()));
+        self::assertNull(goal_helper::get_goal_scale_value_at_timestamp(goal::SCOPE_PERSONAL, - 1, time()));
     }
 
     private function create_goals(): array {

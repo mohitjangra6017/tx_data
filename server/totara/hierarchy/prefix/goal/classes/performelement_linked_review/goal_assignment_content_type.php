@@ -25,17 +25,17 @@ namespace hierarchy_goal\performelement_linked_review;
 
 use coding_exception;
 use core\collection;
+use core\date_format;
 use core\format;
+use core\webapi\formatter\field\date_field_formatter;
 use hierarchy_goal\entity\scale;
 use hierarchy_goal\formatter\scale_value as scale_value_formatter;
 use hierarchy_goal\entity\scale_value;
+use hierarchy_goal\models\perform_status;
 use mod_perform\entity\activity\participant_section;
-use mod_perform\entity\activity\section_relationship;
 use mod_perform\models\activity\participant_instance;
 use mod_perform\models\activity\participant_instance as participant_instance_model;
-use mod_perform\models\activity\section_element;
 use performelement_linked_review\content_type;
-use performelement_linked_review\linked_review;
 use performelement_linked_review\models\linked_review_content;
 use performelement_linked_review\rb\helper\content_type_response_report;
 use totara_core\advanced_feature;
@@ -189,44 +189,13 @@ abstract class goal_assignment_content_type extends content_type {
             $content_item = $content_items->first();
             $participant_instance = participant_instance_model::load_by_entity($participant_section->participant_instance);
 
-            $can_change_status = self::can_change_status($participant_instance, $content_item->section_element);
+            $can_change_status = perform_status::can_change($participant_instance, $content_item->section_element);
 
-            // If users are in a rater relationship or can view other responses they can view the rating
+            // If users are in a relationship that can change status or can view other responses they can view the rating
             $can_view_status = $can_change_status || $can_view_other_responses;
         }
 
         return [$can_view_status, $can_change_status];
-    }
-
-    /**
-     * Check if changing status is enabled and the participant is permitted to make a status change.
-     *
-     * @param participant_instance $participant_instance
-     * @param section_element $section_element
-     * @return bool
-     */
-    private static function can_change_status(participant_instance $participant_instance, section_element $section_element): bool {
-        /** @var linked_review $linked_review_plugin */
-        $linked_review_plugin = $section_element->element->element_plugin;
-        if (!$linked_review_plugin instanceof linked_review) {
-            throw new coding_exception('The section element with ID ' . $section_element->id . ' is not a linked_review element');
-        }
-        $content_settings = $linked_review_plugin->get_content_settings($section_element->element);
-
-        if (!$content_settings['enable_status_change'] || empty($content_settings['status_change_relationship'])) {
-            return false;
-        }
-
-        if ((int)$content_settings['status_change_relationship'] !== (int)$participant_instance->core_relationship_id) {
-            return false;
-        }
-
-        return participant_section::repository()
-            ->join([section_relationship::TABLE, 'sr'], 'section_id', 'section_id')
-            ->where('sr.core_relationship_id', $content_settings['status_change_relationship'])
-            ->where('participant_instance_id', $participant_instance->id)
-            ->where('section_id', $section_element->section_id)
-            ->exists();
     }
 
     /**
@@ -262,5 +231,35 @@ abstract class goal_assignment_content_type extends content_type {
             ];
         }
         return $formatted_scale_values;
+    }
+
+    /**
+     * Format the status change, making sure the data runs through our formatters
+     *
+     * @param perform_status $perform_status
+     * @return array
+     * @throws coding_exception
+     */
+    protected function format_status_change(perform_status $perform_status): array {
+        $status_changer_user = null;
+        if ($perform_status->status_changer_user) {
+            $status_changer_user = [
+                'fullname' => fullname($perform_status->status_changer_user->get_record())
+            ];
+        }
+
+        $formatted_date = (new date_field_formatter(date_format::FORMAT_DATE, $this->context))
+            ->format($perform_status->created_at);
+
+        $scale_value = null;
+        if ($perform_status->scale_value_id) {
+            $scale_value = $this->format_scale_value($perform_status->scale_value);
+        }
+
+        return [
+            'created_at' => $formatted_date,
+            'status_changer_user' => $status_changer_user,
+            'scale_value' => $scale_value,
+        ];
     }
 }

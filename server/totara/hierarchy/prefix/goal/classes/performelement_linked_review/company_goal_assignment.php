@@ -27,12 +27,17 @@ use coding_exception;
 use core\collection;
 use core\date_format;
 use core\format;
+use goal;
 use hierarchy_goal\data_providers\assigned_company_goals;
 use hierarchy_goal\entity\company_goal_assignment as company_goal_assignment_entity;
 use hierarchy_goal\formatter\company_goal as company_goal_formatter;
 use hierarchy_goal\helpers\goal_helper;
+use hierarchy_goal\models\company_goal_perform_status;
 use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\models\activity\subject_instance;
+
+global $CFG;
+require_once($CFG->dirroot . '/totara/hierarchy/prefix/goal/lib.php');
 
 class company_goal_assignment extends goal_assignment_content_type {
 
@@ -121,13 +126,16 @@ class company_goal_assignment extends goal_assignment_content_type {
         bool $can_view_status
     ): array {
 
-        $goal_status_scale_value = goal_helper::get_goal_scale_value_at_timestamp($company_goal_assignment->id, $created_at);
+        $goal_status_scale_value = goal_helper::get_goal_scale_value_at_timestamp(
+            goal::SCOPE_COMPANY,
+            $company_goal_assignment->id,
+            $created_at
+        );
         if (!$goal_status_scale_value) {
             throw new coding_exception("Scale could not be found for company goal assignment {$company_goal_assignment->id}");
         }
-        // TODO when implementing status change: Get actual change that was made within activity, not just latest status.
-        $status_change = $can_view_status
-            ? goal_helper::get_goal_scale_value_at_timestamp($company_goal_assignment->id, time())
+        $existing_status_change = $can_view_status
+            ? company_goal_perform_status::get_existing_status($company_goal_assignment->goalid, $subject_instance->id)
             : null;
 
         $company_goal_formatter = new company_goal_formatter($company_goal_assignment->goal, $this->context);
@@ -141,11 +149,13 @@ class company_goal_assignment extends goal_assignment_content_type {
             ],
             'status' => $this->format_scale_value($goal_status_scale_value),
             'scale_values' => $this->format_scale_values($goal_status_scale_value->scale),
-            'target_date' => $company_goal_formatter->format('target_date', date_format::FORMAT_DATE),
+            'target_date' => ($company_goal_assignment->goal->targetdate > 0)
+                ? $company_goal_formatter->format('target_date', date_format::FORMAT_DATE)
+                : null,
             'can_change_status' => $can_change_status,
             'can_view_status' => $can_view_status,
-            'status_change' => $status_change
-                ? $this->format_scale_value($status_change)
+            'status_change' => $existing_status_change
+                ? $this->format_status_change($existing_status_change)
                 : null,
         ];
     }

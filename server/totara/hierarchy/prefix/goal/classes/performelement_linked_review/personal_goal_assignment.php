@@ -26,12 +26,17 @@ namespace hierarchy_goal\performelement_linked_review;
 use core\collection;
 use core\date_format;
 use core\format;
+use goal;
 use hierarchy_goal\data_providers\personal_goals;
 use hierarchy_goal\entity\personal_goal as personal_goal_entity;
 use hierarchy_goal\formatter\personal_goal;
 use hierarchy_goal\helpers\goal_helper;
+use hierarchy_goal\models\personal_goal_perform_status;
 use mod_perform\entity\activity\participant_section as participant_section_entity;
 use mod_perform\models\activity\subject_instance;
+
+global $CFG;
+require_once($CFG->dirroot . '/totara/hierarchy/prefix/goal/lib.php');
 
 class personal_goal_assignment extends goal_assignment_content_type {
 
@@ -119,11 +124,13 @@ class personal_goal_assignment extends goal_assignment_content_type {
         bool $can_change_status,
         bool $can_view_status
     ): array {
-
-        $goal_status_scale_value = goal_helper::get_goal_scale_value_at_timestamp($personal_goal->id, $created_at);
-        // TODO when implementing status change: Get actual change that was made within activity, not just latest status.
-        $status_change = $can_view_status
-            ? goal_helper::get_goal_scale_value_at_timestamp($personal_goal->id, time())
+        $goal_status_scale_value = goal_helper::get_goal_scale_value_at_timestamp(
+            goal::SCOPE_PERSONAL,
+            $personal_goal->id,
+            $created_at
+        );
+        $existing_status_change = $can_view_status
+            ? personal_goal_perform_status::get_existing_status($personal_goal->id, $subject_instance->id)
             : null;
 
         $personal_goal_formatter = new personal_goal($personal_goal, $this->context);
@@ -141,11 +148,13 @@ class personal_goal_assignment extends goal_assignment_content_type {
             'scale_values' => $personal_goal->scale
                 ? $this->format_scale_values($personal_goal->scale)
                 : null,
-            'target_date' => $personal_goal_formatter->format('target_date', date_format::FORMAT_DATE),
+            'target_date' => ($personal_goal->targetdate > 0)
+                ? $personal_goal_formatter->format('target_date', date_format::FORMAT_DATE)
+                : null,
             'can_change_status' => $can_change_status,
             'can_view_status' => $can_view_status,
-            'status_change' => $status_change
-                ? $this->format_scale_value($status_change)
+            'status_change' => $existing_status_change
+                ? $this->format_status_change($existing_status_change)
                 : null,
         ];
     }

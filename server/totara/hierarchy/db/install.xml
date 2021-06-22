@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="totara/hierarchy/db" VERSION="20191016" COMMENT="XMLDB file for Moodle totara/hierarchy"
+<XMLDB PATH="totara/hierarchy/db" VERSION="20210630" COMMENT="XMLDB file for Moodle totara/hierarchy"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -1000,6 +1000,31 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="goal_perform_status" COMMENT="Stores the goal assignment status changes that were made in performance activities">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="goal_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="goal_personal_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="scale_value_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="activity_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="subject_instance_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="status_changer_user_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="status_changer_relationship_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="created_at" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_user_id" TYPE="foreign" FIELDS="user_id" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="fk_goal_id" TYPE="foreign" FIELDS="goal_id" REFTABLE="goal" REFFIELDS="id" ONDELETE="cascade"/>
+        <KEY NAME="fk_goal_personal_id" TYPE="foreign" FIELDS="goal_personal_id" REFTABLE="goal_personal" REFFIELDS="id" ONDELETE="cascade"/>
+        <KEY NAME="fk_scale_value_id" TYPE="foreign" FIELDS="scale_value_id" REFTABLE="goal_scale_values" REFFIELDS="id"/>
+        <KEY NAME="fk_activity_id" TYPE="foreign" FIELDS="activity_id" REFTABLE="perform" REFFIELDS="id" ONDELETE="setnull"/>
+        <KEY NAME="fk_subject_instance_id" TYPE="foreign" FIELDS="subject_instance_id" REFTABLE="perform_subject_instance" REFFIELDS="id" ONDELETE="setnull"/>
+        <KEY NAME="fk_status_changer_user_id" TYPE="foreign" FIELDS="status_changer_user_id" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="fk_status_changer_relationship_id" TYPE="foreign" FIELDS="status_changer_relationship_id" REFTABLE="totara_core_relationship" REFFIELDS="id" ONDELETE="cascade"/>
       </KEYS>
     </TABLE>
   </TABLES>
