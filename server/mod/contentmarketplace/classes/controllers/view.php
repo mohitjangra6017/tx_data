@@ -39,6 +39,11 @@ class view extends controller {
     private $model;
 
     /**
+     * @var string
+     */
+    protected $layout = 'legacynolayout';
+
+    /**
      * view constructor.
      * @param int|null $cm_id
      */
@@ -46,7 +51,6 @@ class view extends controller {
         $cm_id = $cm_id ?? $this->get_required_param('id', PARAM_INT);
 
         $this->model = content_marketplace::from_course_module_id($cm_id);
-        $this->layout = 'noblocks';
 
         $this->url = new moodle_url(
             '/mod/contentmarketplace/view.php',
@@ -63,6 +67,12 @@ class view extends controller {
         return $this->model->get_context();
     }
 
+    protected function authorize(): void {
+        parent::authorize();
+        // Immediately reset the page layout, as the require_login() call re-enables the course blocks which we don't want here.
+        $this->get_page()->set_pagelayout($this->layout);
+    }
+
     /**
      * @return tui_view
      */
@@ -73,7 +83,7 @@ class view extends controller {
         $interactor->require_view();
 
         $view = new tui_view(
-            'mod_contentmarketplace/pages/ContentMarketplaceView',
+            'mod_contentmarketplace/pages/LinkedInActivity',
             ['cm-id' => $this->model->get_cm_id(),]
         );
 

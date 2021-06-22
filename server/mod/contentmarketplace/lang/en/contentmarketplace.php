@@ -37,3 +37,19 @@ $string['pluginname'] = 'External content marketplace';
 $string['contentmarketplace:addinstance'] = 'Add content marketplace';
 $string['contentmarketplace:launch'] = 'Launch external content';
 $string['contentmarketplace:view'] = 'View external content';
+
+// activity page
+$string['a11y_activity_difficulty'] = 'Activity difficulty level';
+$string['a11y_activity_time_to_complete'] = 'Time to complete activity';
+$string['activity_contents'] = 'Contents';
+$string['activity_set_self_completion'] = 'I have completed this activity';
+$string['activity_status_completed'] = 'Completed';
+$string['activity_status_in_progress'] = 'In progress';
+$string['activity_status_not_started'] = 'Not started';
+$string['administration'] = 'Administration';
+$string['course_details'] = 'Course details';
+$string['enrol'] = 'Enrol';
+$string['launch_in_new_window'] = 'Launch (opens in new window)';
+$string['updated_at'] = 'Updated at: {$a}';
+$string['viewing_as_enrollable_guest'] = 'You’re viewing this course as a ‘Guest’. You must enrol in the course for your learning to be recorded.';
+$string['viewing_as_guest'] = 'You are viewing as a ‘Guest’. Your progress will not be recorded.';
