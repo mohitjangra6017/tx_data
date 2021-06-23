@@ -25,11 +25,13 @@ namespace contentmarketplace_linkedin\entity;
 
 use coding_exception;
 use contentmarketplace_linkedin\constants;
+use core\entity\course;
+use core\orm\entity\entity;
 use contentmarketplace_linkedin\repository\learning_object_repository;
 use core\orm\collection;
-use core\orm\entity\entity;
 use core\orm\entity\relations\has_many_through;
 use stdClass;
+use mod_contentmarketplace\entity\content_marketplace;
 
 /**
  * A LinkedIn learning object that has been fetched and stored locally within Totara.
@@ -53,8 +55,9 @@ use stdClass;
  * @property string|null $web_launch_url
  * @property string|null $sso_launch_url
  *
- * @property-read classification[]|collection subjects
- * @property-read classification[]|collection classifications
+ * @property-read classification[]|collection $subjects
+ * @property-read classification[]|collection $classifications
+ * @property-read course[]|collection         $courses
  *
  * @method static learning_object_repository repository
  *
@@ -122,5 +125,19 @@ class learning_object extends entity {
         $relation->where('type', constants::CLASSIFICATION_TYPE_SUBJECT);
 
         return $relation;
+    }
+
+    /**
+     * @return has_many_through
+     */
+    public function courses(): has_many_through {
+        return $this->has_many_through(
+            content_marketplace::class,
+            course::class,
+            'id',
+            'learning_object_id',
+            'course',
+            'id'
+        );
     }
 }

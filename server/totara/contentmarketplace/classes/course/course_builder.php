@@ -219,11 +219,9 @@ class course_builder {
         }
 
         $course = course_helper::create_course($record);
-
-        // Download image and store it.
         $image_url = $this->learning_object->get_image_url();
         if (!empty($image_url)) {
-            // Download image
+            // Download image and store it.
             (new course_image_downloader($course->id, $image_url))->download_image_for_course();
         }
 

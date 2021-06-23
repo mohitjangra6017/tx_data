@@ -317,20 +317,8 @@ export default {
           selectedFilters.unshift(this.trimmedSearch);
         }
 
-        // TODO: Remove this when actual courses come through via the query in TL-31176
-        const items = data.items.map(item => {
-          return Object.assign({}, item, {
-            courses: [
-              { fullname: 'example course 1' },
-              { fullname: 'example course 2' },
-              { fullname: 'example course 3' },
-              { fullname: 'example course 4' },
-            ],
-          });
-        });
-
         return {
-          items,
+          items: data.items,
           next_cursor: data.next_cursor,
           total: data.total,
           selectedFilters,
@@ -363,20 +351,7 @@ export default {
         };
       },
       update({ result: data }) {
-        // return data;
-        // TODO: Remove this when actual courses come through via the query.
-        return Object.assign({}, data, {
-          items: data.items.map(item => {
-            return Object.assign({}, item, {
-              courses: [
-                { fullname: 'example course 1' },
-                { fullname: 'example course 2' },
-                { fullname: 'example course 3' },
-                { fullname: 'example course 4' },
-              ],
-            });
-          }),
-        });
+        return data;
       },
     },
 

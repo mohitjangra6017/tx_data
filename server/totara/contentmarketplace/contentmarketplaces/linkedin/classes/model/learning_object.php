@@ -28,9 +28,11 @@ use contentmarketplace_linkedin\api\v2\service\learning_asset\response\collectio
 use contentmarketplace_linkedin\api\v2\service\learning_asset\response\element;
 use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
 use contentmarketplace_linkedin\learning_object\resolver;
+use core\entity\user;
 use core\orm\entity\model;
 use core\orm\collection as orm_collection;
 use core\orm\query\builder;
+use core\entity\course;
 use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
 use totara_contentmarketplace\learning_object\text;
 
@@ -38,19 +40,19 @@ use totara_contentmarketplace\learning_object\text;
  * A LinkedIn learning object that has been fetched and stored locally within Totara.
  *
  * Properties:
- * @property-read string      $urn
- * @property-read string      $title
- * @property-read string|null $description
- * @property-read string|null $description_include_html
- * @property-read string|null $short_description
- * @property-read int         $last_updated_at
- * @property-read int         $published_at
- * @property-read string|null $subject
- * @property-read string|null $level
- * @property-read int|null    $time_to_complete
- * @property-read string|null $web_launch_url
- * @property-read string|null $sso_launch_url
- * @property-read string      $asset_type
+ * @property-read string            $urn
+ * @property-read string            $title
+ * @property-read string|null       $description
+ * @property-read string|null       $description_include_html
+ * @property-read string|null       $short_description
+ * @property-read int               $last_updated_at
+ * @property-read int               $published_at
+ * @property-read string|null       $subject
+ * @property-read string|null       $level
+ * @property-read int|null          $time_to_complete
+ * @property-read string|null       $web_launch_url
+ * @property-read string|null       $sso_launch_url
+ * @property-read string            $asset_type
  *
  * Summary provider properties:
  * @property-read string      $name      Alias for 'title'
@@ -60,6 +62,7 @@ use totara_contentmarketplace\learning_object\text;
  * @property-read classification[]|collection $classifications  Get the mapped classifications
  * @property-read classification[]|collection $subjects         Get the mapped classifications
  *                                                              type {@see constants::CLASSIFICATION_TYPE_SUBJECT}
+ * @property-read course[]|collection         $courses
  *
  * @package contentmarketplace_linkedin\model
  */
@@ -95,6 +98,7 @@ class learning_object extends model implements detailed_model {
         'name',
         'language',
         'image_url',
+        'courses'
     ];
 
     /**
@@ -260,5 +264,20 @@ class learning_object extends model implements detailed_model {
     public function get_first_subject(): ?classification {
         $subjects = $this->get_subjects();
         return $subjects->first();
+    }
+
+    /**
+     * @return orm_collection
+     */
+    public function get_courses(): orm_collection {
+        global $CFG;
+        if (!function_exists('totara_course_is_viewable')) {
+            require_once("{$CFG->dirroot}/totara/core/totara.php");
+        }
+
+        return $this->entity->courses->filter(function (course $course) {
+            /** @var course $course */
+            return totara_course_is_viewable($course->to_record(), (user::logged_in())->id);
+        });
     }
 }

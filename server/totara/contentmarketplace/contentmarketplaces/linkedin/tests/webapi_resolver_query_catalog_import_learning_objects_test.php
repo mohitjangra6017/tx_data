@@ -33,9 +33,12 @@ use core\date_format;
 use core\format;
 use core\orm\collection;
 use contentmarketplace_linkedin\entity\learning_object_classification;
+use totara_contentmarketplace\testing\generator as market_generator;
 use core_phpunit\testcase;
+use totara_contentmarketplace\course\course_builder;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 use totara_contentmarketplace\testing\helper;
+use totara_contentmarketplace\testing\mock\create_course_interactor;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
@@ -391,6 +394,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             'asset_type' => ['COURSE'],
             'image_url' => ['https://cdn.lynda.com/course/260/260-636456652549313738-16x9.jpg'],
         ];
+        self::assertEmpty($item->get_courses());
         foreach ($expected_item_field_data as $field => $data) {
             $this->assertEquals(
                 $data[0],
@@ -518,5 +522,27 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         $result_two_collection = $result_two['items'];
         self::assertInstanceOf(collection::class, $result_two_collection);
         self::assertEquals(0, $result_two_collection->count());
+    }
+
+    public function test_learning_objects_for_courses_field(): void {
+        $generator = market_generator::instance();
+
+        // Create one course from learning object
+        $learning_object = $generator->create_learning_object('contentmarketplace_linkedin');
+        $course_builder = new course_builder($learning_object, helper::get_default_course_category_id(), new create_course_interactor());
+        $result = $course_builder->create_course();
+        $results = $this->resolve_graphql_query(self::QUERY, $this->get_query_options());
+        $item = $results['items']->first();
+        /** @var collection $courses */
+        $courses = $item->get_courses();
+        $courses = $courses->to_array();
+
+        self::assertNotEmpty($courses);
+        self::assertIsArray($courses);
+        self::assertCount(1, $courses);
+        $course = reset($courses);
+
+        self::assertIsArray($course);
+        self::assertEquals($result->get_course_id(), $course['id']);
     }
 }

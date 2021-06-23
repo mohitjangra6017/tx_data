@@ -104,11 +104,4 @@ final class enrol extends entity {
         return ENROL_INSTANCE_DISABLED === (int) $status;
     }
 
-    /**
-     * @return stdClass
-     */
-    public function to_record(): stdClass {
-        $attributes = $this->to_array();
-        return (object) $attributes;
-    }
 }

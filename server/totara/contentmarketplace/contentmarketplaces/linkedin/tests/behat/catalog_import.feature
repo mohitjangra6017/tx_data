@@ -137,21 +137,18 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
     And I should see "Content difficulty level Beginner" on row "1" of the tui select table
     And I should see "Time to complete content 30m" on row "1" of the tui select table
     And I should see "Type of content Course" on row "1" of the tui select table
-    And I should see "Appears in 4 course(s)" on row "1" of the tui select table
 
     # Course B
     And I should see "Hibernate is way better than active record" on row "2" of the tui select table
     And I should see "Content difficulty level Intermediate" on row "2" of the tui select table
     And I should see "Time to complete content 4h 0m" on row "2" of the tui select table
     And I should see "Type of content Learning path" on row "2" of the tui select table
-    And I should see "Appears in 4 course(s)" on row "2" of the tui select table
 
     # Course C
     And I should see "Hibernate is way better than active record" on row "3" of the tui select table
     And I should see "Content difficulty level Advanced" on row "3" of the tui select table
     And I should see "Time to complete content 5s" on row "3" of the tui select table
     And I should see "Type of content Video" on row "3" of the tui select table
-    And I should see "Appears in 4 course(s)" on row "3" of the tui select table
 
   Scenario: Learning objects catalog: Applying static filters
     Given the following "learning objects" exist in "contentmarketplace_linkedin" plugin:
@@ -272,4 +269,7 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
 
     When I click on "Explore Content Marketplace" "link"
     Then I should see "LinkedIn Learning catalogue"
-    # TODO: In TL-31176, make sure we cover that they now say "Appears in 1 courses"
+    And I should see "Appears in 1 course" on row "1" of the tui select table
+    And I should see "Appears in 1 course" on row "2" of the tui select table
+    When I click on "1 course" "button"
+    Then I should see "Course A" in the ".tui-linkedInLearningItem__bar-coursesList" "css_element"

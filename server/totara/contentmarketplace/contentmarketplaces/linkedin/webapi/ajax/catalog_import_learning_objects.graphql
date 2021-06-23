@@ -12,6 +12,10 @@ query contentmarketplace_linkedin_catalog_import_learning_objects(
       subject
       level
       time_to_complete
+      courses {
+        id
+        fullname
+      }
     }
     next_cursor
     total

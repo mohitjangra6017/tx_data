@@ -55,6 +55,7 @@ type contentmarketplace_linkedin_learning_object implements totara_contentmarket
   time_to_complete(
     format: contentmarketplace_linkedin_timespan_format = HUMAN
   ): String
+  courses: [core_course!]!
 }
 
 """

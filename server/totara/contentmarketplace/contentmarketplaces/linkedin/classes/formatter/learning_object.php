@@ -75,6 +75,7 @@ class learning_object extends entity_model_formatter {
             'asset_type' => null,
             'language' => null,
             'image_url' => null,
+            'courses' => null,
         ];
     }
 

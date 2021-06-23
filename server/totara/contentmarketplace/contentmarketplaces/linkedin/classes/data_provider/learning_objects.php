@@ -57,7 +57,8 @@ class learning_objects extends paginated_provider {
      * @return learning_object_repository
      */
     protected function build_query(): repository {
-        return learning_object_entity::repository();
+        return learning_object_entity::repository()
+            ->with('courses');
     }
 
     /**
