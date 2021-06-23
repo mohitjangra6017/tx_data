@@ -208,8 +208,8 @@ if ($user->description && !isset($hiddenfields['description'])) {
     echo '</div>';
 }
 
-echo $OUTPUT->custom_block_region('content');
-
 echo '</div>';  // Userprofile class.
+
+echo $OUTPUT->custom_block_region('content');
 
 echo $OUTPUT->footer();
