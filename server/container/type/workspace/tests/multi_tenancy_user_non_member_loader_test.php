@@ -143,7 +143,7 @@ class container_workspace_multi_tenancy_user_non_member_loader_testcase extends 
     public function test_load_non_member_users_exclude_system_users_in_tenant_workspace(): void {
         $workspace_generator = $this->get_workspace_generator();
 
-        $this->setUser($this->tenant_one_user_one->get_record());
+        $this->setUser($this->tenant_one_user_one->to_record());
         $workspace = $workspace_generator->create_workspace();
 
         $query = new non_member_query($workspace->get_id());
@@ -195,7 +195,7 @@ class container_workspace_multi_tenancy_user_non_member_loader_testcase extends 
     public function test_search_for_system_user_in_tenant_workspace(): void {
         $workspace_generator = $this->get_workspace_generator();
 
-        $this->setUser($this->tenant_one_user_one->get_record());
+        $this->setUser($this->tenant_one_user_one->to_record());
         $workspace = $workspace_generator->create_workspace();
 
         $query = new non_member_query($workspace->get_id());
@@ -222,7 +222,7 @@ class container_workspace_multi_tenancy_user_non_member_loader_testcase extends 
     public function test_search_tenant_participant_in_tenant_workspace(): void {
         $workspace_generator = $this->get_workspace_generator();
 
-        $this->setUser($this->tenant_one_user_one->get_record());
+        $this->setUser($this->tenant_one_user_one->to_record());
         $workspace = $workspace_generator->create_workspace();
 
         $query = new non_member_query($workspace->get_id());
@@ -262,7 +262,7 @@ class container_workspace_multi_tenancy_user_non_member_loader_testcase extends 
     public function test_search_different_tenant_user_in_tenant_workspace(): void {
         $workspace_generator = $this->get_workspace_generator();
 
-        $this->setUser($this->tenant_one_user_one->get_record());
+        $this->setUser($this->tenant_one_user_one->to_record());
         $workspace = $workspace_generator->create_workspace();
 
         $query = new non_member_query($workspace->get_id());
@@ -289,7 +289,7 @@ class container_workspace_multi_tenancy_user_non_member_loader_testcase extends 
     public function test_search_for_tenant_member_in_same_tenant_workspace(): void {
         $workspace_generator = $this->get_workspace_generator();
 
-        $this->setUser($this->tenant_one_user_one->get_record());
+        $this->setUser($this->tenant_one_user_one->to_record());
         $workspace = $workspace_generator->create_workspace();
 
         $query = new non_member_query($workspace->get_id());
@@ -328,7 +328,7 @@ class container_workspace_multi_tenancy_user_non_member_loader_testcase extends 
      */
     public function test_load_non_users_in_system_workspace(): void {
         $workspace_generator = $this->get_workspace_generator();
-        $this->setUser($this->system_user->get_record());
+        $this->setUser($this->system_user->to_record());
 
         $admin_user = get_admin();
 

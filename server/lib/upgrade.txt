@@ -9,6 +9,9 @@ information provided here is intended especially for developers.
   The example context JSON for this template has also been updated.
 * Added new method set_url() to \cm_info to allow modules to set and override their own URL.
 * Fixed broken emoji support only for future conversions. Already existing records in the database are not affected and would need to be manually updated
+* Added to_record() method to \core\orm\entity for better backwards compatibility with legacy APIs that do not support ORM.
+* \core\entity\user::get_record() is deprecated, please use to_record() instead.
+* \core\entity\enrol::to_record() has been removed, as it will fallback to the parent \core\orm\entity::to_record() method.
 
 === 14.0 ===
 

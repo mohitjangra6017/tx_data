@@ -95,6 +95,13 @@ class user extends entity {
     public const TABLE = 'user';
 
     /**
+     * Do not add extra attributes here, otherwise it will break legacy compatibility.
+     *
+     * @var array
+     */
+    protected $extra_attributes = [];
+
+    /**
      * Get the logged in user
      *
      * @return user|null
@@ -134,16 +141,18 @@ class user extends entity {
      * @return string
      */
     protected function get_fullname_attribute(): string {
-        return fullname($this->get_record());
+        return fullname($this->to_record());
     }
 
     /**
      * Get the plain DB record of this user.
      *
      * @return object
+     * @deprecated since Totara 15.0
      */
     public function get_record(): object {
-        return (object) $this->get_attributes_raw();
+        debugging('\core\entity\user::get_record() is deprecated, please use to_record() instead.', DEBUG_DEVELOPER);
+        return $this->to_record();
     }
 
 }

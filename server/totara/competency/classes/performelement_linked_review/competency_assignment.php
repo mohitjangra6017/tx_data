@@ -334,7 +334,7 @@ class competency_assignment extends content_type {
         $rater_user = null;
         if ($rating->rater_user) {
             $rater_user = [
-                'fullname' => fullname($rating->rater_user->get_record())
+                'fullname' => fullname($rating->rater_user->to_record())
             ];
         }
 

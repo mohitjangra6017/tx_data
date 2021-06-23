@@ -423,7 +423,7 @@ class data_provider_view_only_section_with_responses_testcase extends advanced_t
 
         $generator->create_participant_instance_and_section(
             $activity,
-            $subject_user->get_record(),
+            $subject_user->to_record(),
             $subject_instance->id,
             $section,
             $subject_section_relationship->core_relationship_id

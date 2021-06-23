@@ -97,7 +97,7 @@ class mod_perform_webapi_resolver_query_participant_sections_for_print_testcase 
         $participant_sections = $this->create_test_data();
 
         $subject_user = $participant_sections[0]->participant_instance->subject_instance->subject_user;
-        delete_user($subject_user->get_user()->get_record());
+        delete_user($subject_user->get_user()->to_record());
 
         $participant_user_id = $participant_sections[0]->participant_instance->participant->id;
         self::setUser($participant_user_id);

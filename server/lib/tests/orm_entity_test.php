@@ -125,6 +125,22 @@ class core_orm_entity_testcase extends orm_entity_testcase {
         $this->assertEquals($record, $entity->to_array());
     }
 
+    public function test_it_converts_to_record() {
+
+        $record = (object) $this->create_sample_record();
+
+        $entity = new extended_sample_entity($record->id);
+
+        $this->assertEquals($record, $entity->to_record(true));
+
+        $record_with_extra_attribute = clone $record;
+        $record_with_extra_attribute->capital_name = strtoupper($record->name);
+        $record_with_extra_attribute->type = 1;
+
+        $this->assertEquals($record_with_extra_attribute, $entity->to_record());
+        $this->assertEquals($record_with_extra_attribute, $entity->to_record(false));
+    }
+
     public function test_it_converts_to_json() {
 
         $record = $this->create_sample_record();

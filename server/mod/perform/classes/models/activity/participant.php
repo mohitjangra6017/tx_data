@@ -116,7 +116,7 @@ class participant {
 
         return $this->source === participant_source::EXTERNAL
             ? $this->user->get_profileimageurlsmall()
-            :  (new user_picture($this->user->get_record(), 0))
+            :  (new user_picture($this->user->to_record(), 0))
                 ->get_url($PAGE)
                 ->out(false);
     }

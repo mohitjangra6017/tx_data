@@ -40,7 +40,7 @@ class achievement_detail extends base_achievement_detail {
         }
 
         $rating = perform_rating_model::load_by_id($this->related_info['rating_id']);
-        $rater = $rating->rater_user ? fullname($rating->rater_user->get_record()) : get_string('rater_details_removed', 'pathway_perform_rating');
+        $rater = $rating->rater_user ? fullname($rating->rater_user->to_record()) : get_string('rater_details_removed', 'pathway_perform_rating');
         $activity = $rating->get_activity();
         if ($activity) {
             $formatter = new string_field_formatter(format::FORMAT_PLAIN, context_system::instance());

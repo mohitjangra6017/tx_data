@@ -88,7 +88,7 @@ class mod_perform_delete_user_testcase extends advanced_testcase {
         $this->assertEquals(subject_instance_availability_open::get_code(), $subject_instance2->availability);
 
         // DELETE the user. This should close all their subject instances
-        delete_user($subject_instance->subject_user->get_record());
+        delete_user($subject_instance->subject_user->to_record());
 
         $subject_instance->refresh();
 
@@ -158,7 +158,7 @@ class mod_perform_delete_user_testcase extends advanced_testcase {
         $this->assertEquals(subject_instance_availability_open::get_code(), $subject_instance2->availability);
 
         // DELETE the user. This should close all their subject instances
-        delete_user($subject_instance->subject_user->get_record());
+        delete_user($subject_instance->subject_user->to_record());
 
         // The subject instance got deleted
         $this->assertFalse(subject_instance::repository()->where('id', $subject_instance->id)->exists());
@@ -224,7 +224,7 @@ class mod_perform_delete_user_testcase extends advanced_testcase {
         $this->assertEquals(participant_instance_availability_open::get_code(), $participant_instance2->availability);
 
         // DELETE the user. This should close all their participant instances
-        delete_user($participant_instance->participant_user->get_record());
+        delete_user($participant_instance->participant_user->to_record());
 
         $participant_instances = participant_instance::repository()
             ->where('participant_id', $participant_instance->participant_id)
@@ -298,7 +298,7 @@ class mod_perform_delete_user_testcase extends advanced_testcase {
         $this->assertEquals(participant_instance_availability_open::get_code(), $participant_instance2->availability);
 
         // DELETE the user. As it's a view only user the participant instance should still be in the same state
-        delete_user($participant_instance->participant_user->get_record());
+        delete_user($participant_instance->participant_user->to_record());
 
         $participant_instances = participant_instance::repository()
             ->where('participant_id', $participant_instance->participant_id)

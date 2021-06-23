@@ -142,20 +142,20 @@ class user extends single_emptiable_placeholder {
 
         switch ($key) {
             case 'full_name':
-                $user_record = $this->entity->get_record();
+                $user_record = $this->entity->to_record();
                 return fullname($user_record);
             case 'full_name_link':
-                $user_record = $this->entity->get_record();
+                $user_record = $this->entity->to_record();
                 $url = new moodle_url('/user/profile.php', ['id' => $user_record->id]);
                 return html_writer::link($url, fullname($user_record));
             case 'time_zone':
-                $user_record = $this->entity->get_record();
+                $user_record = $this->entity->to_record();
                 return core_date::get_localised_timezone(
                     core_date::get_user_timezone($user_record)
                 );
             case 'email':
                 // Check if the recipient can see this user's email.
-                if (access_controller::for($this->entity->get_record())->can_view_field('email')) {
+                if (access_controller::for($this->entity->to_record())->can_view_field('email')) {
                     return $this->entity->email;
                 }
                 return get_string('email_not_visible', 'moodle');

@@ -37,8 +37,8 @@ class mod_facetoface_userdata_room_virtualmeeting_testcase extends mod_facetofac
 
     public function setUp(): void {
         parent::setUp();
-        $this->targetuser1 = new target_user($this->user1->get_record());
-        $this->targetuser2 = new target_user($this->user2->get_record());
+        $this->targetuser1 = new target_user($this->user1->to_record());
+        $this->targetuser2 = new target_user($this->user2->to_record());
     }
 
     public function tearDown(): void {

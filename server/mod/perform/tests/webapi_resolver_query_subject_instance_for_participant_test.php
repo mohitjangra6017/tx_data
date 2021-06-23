@@ -48,12 +48,12 @@ class mod_perform_webapi_resolver_query_subject_instance_for_participant_testcas
         $actual = $this->get_webapi_operation_data($result);
 
         $profile_image_small_url = (new user_picture(
-            self::$about_user_and_participating->subject_user->get_user()->get_record(),
+            self::$about_user_and_participating->subject_user->get_user()->to_record(),
             0
         ))->get_url($GLOBALS['PAGE'])->out(false);
 
         $profile_image_url = (new user_picture(
-            self::$about_user_and_participating->subject_user->get_user()->get_record(),
+            self::$about_user_and_participating->subject_user->get_user()->to_record(),
             1
         ))->get_url($GLOBALS['PAGE'])->out(false);
 
@@ -136,7 +136,7 @@ class mod_perform_webapi_resolver_query_subject_instance_for_participant_testcas
 
         $subject_user = $subject_instance->subject_user->get_user();
 
-        delete_user($subject_user->get_record());
+        delete_user($subject_user->to_record());
 
         $result = $this->parsed_graphql_operation(self::QUERY, $args);
         $this->assert_webapi_operation_successful($result);

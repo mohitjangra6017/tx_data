@@ -435,7 +435,7 @@ class mod_perform_userdata_export_responses_testcase  extends advanced_testcase 
         $this->create_files($activity->get_context()->id, $main_response_ids);
 
         foreach ($subject_instances as $subject_instance) {
-            $subject = $subject_instance->subject_user->get_record();
+            $subject = $subject_instance->subject_user->to_record();
             $exports = export_user_responses::execute_export(
                 new target_user($subject),
                 context_system::instance()

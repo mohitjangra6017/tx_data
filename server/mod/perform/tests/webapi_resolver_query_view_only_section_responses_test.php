@@ -93,7 +93,7 @@ class mod_perform_webapi_resolver_query_view_only_section_responses_testcase ext
         $participant_section = $participant_sections->first();
 
         $reporter = self::getDataGenerator()->create_user();
-        $subject = $participant_section->participant_instance->subject_instance->subject_user->get_record();
+        $subject = $participant_section->participant_instance->subject_instance->subject_user->to_record();
 
         $args = [
             'section_id' => $participant_section->section_id,
@@ -244,7 +244,7 @@ class mod_perform_webapi_resolver_query_view_only_section_responses_testcase ext
 
     private function create_other_responder_groups(user $subject_participant_user): array {
         $profile_image_small_url = (new user_picture(
-            $subject_participant_user->get_record(),
+            $subject_participant_user->to_record(),
             0
         ))->get_url($GLOBALS['PAGE'])->out(false);
 

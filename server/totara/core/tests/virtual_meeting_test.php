@@ -131,7 +131,7 @@ class totara_core_virtual_meeting_testcase extends advanced_testcase {
         $model = virtual_meeting::create('poc_app', $user, 'test meeting', new DateTime('+1 hour'), new DateTime('+2 hour'), $client);
         $this->assertEquals($user->id, $this->entity_prop->getValue($model)->userid);
         $this->assertSame($client, $this->client_prop->getValue($model));
-        $model = virtual_meeting::create('poc_app', $user->get_record(), 'test meeting', new DateTime('+1 hour'), new DateTime('+2 hour'), $client);
+        $model = virtual_meeting::create('poc_app', $user->to_record(), 'test meeting', new DateTime('+1 hour'), new DateTime('+2 hour'), $client);
         $this->assertEquals($user->id, $this->entity_prop->getValue($model)->userid);
         $model = virtual_meeting::create('poc_app', $user->id, 'test meeting', new DateTime('+1 hour'), new DateTime('+2 hour'), $client);
         $this->assertEquals($user->id, $this->entity_prop->getValue($model)->userid);

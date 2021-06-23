@@ -245,7 +245,7 @@ class mod_perform_webapi_resolver_query_selectable_users_testcase extends advanc
 
         $this->assertNotEmpty($selectable_users);
 
-        delete_user($subject_instance->subject_user->get_user()->get_record());
+        delete_user($subject_instance->subject_user->get_user()->to_record());
 
         $result = $this->parsed_graphql_operation(self::QUERY, $params);
         $this->assert_webapi_operation_failed($result, 'Invalid activity');

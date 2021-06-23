@@ -55,7 +55,7 @@ class participant implements type_resolver {
             return $formatter->format($field, $format);
         }
 
-        return user_type::resolve($field, $source->get_user()->get_record(), $args, $ec);
+        return user_type::resolve($field, $source->get_user()->to_record(), $args, $ec);
     }
 
 }

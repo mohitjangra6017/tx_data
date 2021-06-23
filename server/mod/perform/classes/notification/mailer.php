@@ -104,7 +104,7 @@ class mailer {
             $user = totara_user::get_external_user($user->email);
         } else if ($user instanceof user_entity) {
             // Convert $user from user_entity to the good-old stdClass.
-            $user = $user->get_record();
+            $user = $user->to_record();
         }
         if (!($user instanceof stdClass)) {
             throw new coding_exception('invalid user passed');

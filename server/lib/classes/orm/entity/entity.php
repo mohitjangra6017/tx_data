@@ -774,6 +774,19 @@ abstract class entity implements JsonSerializable {
     }
 
     /**
+     * Convert the entity into a legacy compatible DB record object.
+     *
+     * @param bool $raw If true, just the DB fields are returned without any modifications.
+     * @return stdClass
+     */
+    public function to_record(bool $raw = false): stdClass {
+        if ($raw) {
+            return (object) $this->get_attributes_raw();
+        }
+        return (object) $this->to_array();
+    }
+
+    /**
      * Define has many relationship
      * Technically it's just a convenience method.
      *

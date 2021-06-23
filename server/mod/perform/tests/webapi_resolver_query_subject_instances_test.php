@@ -138,7 +138,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         $this->assertEquals($expected_subject, $subject['subject']);
 
         $participant = new user($participant_id);
-        $profile_image_url = (new user_picture($participant->get_record(), 0))->get_url($GLOBALS['PAGE'])->out(false);
+        $profile_image_url = (new user_picture($participant->to_record(), 0))->get_url($GLOBALS['PAGE'])->out(false);
 
         $section = $activity->sections->first();
         $expected_section = [
@@ -226,7 +226,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         $appraiser = user::repository()->find_or_fail($job->appraiserid);
 
         // Now delete the appraiser
-        delete_user($appraiser->get_record());
+        delete_user($appraiser->to_record());
 
         $result = $this->parsed_graphql_operation(self::QUERY, $args);
         $this->assert_webapi_operation_successful($result);
@@ -271,7 +271,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         /** @var user $appraiser */
         $appraiser = user::repository()->find_or_fail($job->appraiserid);
 
-        self::setUser($appraiser->get_record());
+        self::setUser($appraiser->to_record());
 
         $args = [
             'filters' => [
@@ -288,7 +288,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         $this->assertNotEmpty($actual);
 
         // Now delete the appraiser
-        delete_user(user::repository()->find_or_fail($participant_id)->get_record());
+        delete_user(user::repository()->find_or_fail($participant_id)->to_record());
 
         $result = $this->parsed_graphql_operation(self::QUERY, $args);
         $this->assert_webapi_operation_successful($result);
@@ -399,7 +399,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         $this->assertEquals($expected_subject, $subject['subject']);
 
         $participant = new user($participant_id);
-        $profile_image_url = (new user_picture($participant->get_record(), 0))->get_url($GLOBALS['PAGE'])->out(false);
+        $profile_image_url = (new user_picture($participant->to_record(), 0))->get_url($GLOBALS['PAGE'])->out(false);
 
         global $PAGE;
         $renderer = $PAGE->get_renderer('core');
@@ -566,7 +566,7 @@ class mod_perform_webapi_resolver_query_subject_instances_testcase extends advan
         $this->assertEquals($expected_subject, $subject['subject']);
 
         $participant = new user($participant_id);
-        $profile_image_url = (new user_picture($participant->get_record(), 0))->get_url($GLOBALS['PAGE'])->out(false);
+        $profile_image_url = (new user_picture($participant->to_record(), 0))->get_url($GLOBALS['PAGE'])->out(false);
 
         $section = $activity->sections->first();
         $expected_section = [

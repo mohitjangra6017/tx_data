@@ -200,7 +200,7 @@ class mod_perform_webapi_resolver_query_participant_section_testcase extends adv
         $args = ['participant_section_id' => $participant_section->id];
 
         $participant = $participant_section->participant_instance->participant_user;
-        self::setUser($participant->get_record());
+        self::setUser($participant->to_record());
 
         $result = $this->parsed_graphql_operation(self::QUERY, $args);
         $this->assert_webapi_operation_successful($result);
@@ -224,7 +224,7 @@ class mod_perform_webapi_resolver_query_participant_section_testcase extends adv
         /** @var user $appraiser */
         $appraiser = user::repository()->find_or_fail($job->appraiserid);
 
-        delete_user($appraiser->get_record());
+        delete_user($appraiser->to_record());
 
         $result = $this->parsed_graphql_operation(self::QUERY, $args);
         $this->assert_webapi_operation_successful($result);

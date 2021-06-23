@@ -675,7 +675,7 @@ abstract class testcase extends \PHPUnit\Framework\TestCase {
         global $CFG, $DB;
 
         if ($user instanceof \core\entity\user) {
-            $user = $user->get_record();
+            $user = $user->to_record();
         } else if (is_object($user)) {
             $user = clone($user);
         } else if (!$user) {

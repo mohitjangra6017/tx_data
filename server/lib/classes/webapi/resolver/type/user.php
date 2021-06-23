@@ -46,7 +46,7 @@ class user implements \core\webapi\type_resolver {
         global $CFG, $USER;
 
         if ($user instanceof \core\entity\user) {
-            $user = $user->get_record();
+            $user = $user->to_record();
         }
 
         if ($field === 'password' or $field === 'secret') {
