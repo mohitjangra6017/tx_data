@@ -70,7 +70,7 @@ abstract class base_notification_preference_event extends base {
             return new moodle_url('/totara/notification/notifications.php');
         }
 
-        $extended_context = $this->other;
+        $extended_context = $this->other['extended_context'];
         return new moodle_url(
             '/totara/notification/context_notifications.php',
             [

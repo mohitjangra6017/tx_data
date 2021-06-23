@@ -88,7 +88,7 @@ class update_custom_notification_preference_event extends base_notification_pref
      * @return string
      */
     public static function get_name(): string {
-        return get_string('event_override_notification_preference', 'totara_notification');
+        return get_string('event_update_custom_notification_preference', 'totara_notification');
     }
 
     /**

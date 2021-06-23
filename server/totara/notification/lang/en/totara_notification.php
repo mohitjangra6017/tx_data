@@ -66,6 +66,7 @@ $string['enabled_status'] = 'Is enabled';
 $string['event_create_custom_notification_preference'] = 'Create custom notification preference';
 $string['event_create_override_notification_preference'] = 'Create an Override of the notification preference';
 $string['event_update_custom_notification_preference'] = 'Update custom notification preference';
+$string['event_update_overridden_notification_preference'] = 'Update inherited notification preference';
 $string['error_manage_notification'] = 'You are not allowed to manage notification preference';
 $string['error_preference_id_missing'] = 'You are not allowed to manage notification preference with an empty id';
 $string['error_user_preference_permission'] = 'You are not allowed to update notification preferences';
