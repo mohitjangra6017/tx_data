@@ -109,10 +109,18 @@ class totara_notification_notification_queue_manager_testcase extends testcase {
         self::assertEquals(0, $sink->count());
         self::assertEmpty($sink->get_messages());
 
+        // Check that the resolver sent call counts are zero before we start.
+        mock_resolver::reset_notification_not_sent_call_count();
+        mock_resolver::reset_notification_sent_call_count();
+
         $manager->dispatch_queues(15);
 
         // Check the queue is empty after sending the notifications. errors will add into the trace
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
+
+        // Check that only "sent" was called.
+        $this->assertEquals(0, mock_resolver::get_notification_not_sent_call_count());
+        $this->assertGreaterThan(0, mock_resolver::get_notification_sent_call_count());
 
         // There is one message sent out
         $notifications = $sink->get_messages();
@@ -271,10 +279,18 @@ class totara_notification_notification_queue_manager_testcase extends testcase {
         self::assertEquals(0, $sink->count());
         self::assertEmpty($sink->get_messages());
 
+        // Check that the resolver sent call counts are zero before we start.
+        mock_resolver::reset_notification_not_sent_call_count();
+        mock_resolver::reset_notification_sent_call_count();
+
         $manager->dispatch_queues(15);
 
         // Check the queue is empty after sending the notifications. errors will add into the trace
         self::assertEquals(0, $DB->count_records(notification_queue::TABLE));
+
+        // Check that both "sent" and "not sent" functions were called.
+        $this->assertGreaterThan(0, mock_resolver::get_notification_not_sent_call_count());
+        $this->assertGreaterThan(0, mock_resolver::get_notification_sent_call_count());
 
         // There is one message sent out
         $notifications = $sink->get_messages();

@@ -29,6 +29,7 @@ use totara_notification\entity\notifiable_event_user_preference as notifiable_ev
 use totara_notification\local\helper;
 use totara_notification\model\notifiable_event_preference as notifiable_event_preference_model;
 use totara_notification\model\notifiable_event_user_preference as notifiable_event_user_preference_model;
+use totara_notification\model\notification_preference;
 use totara_notification\notification\built_in_notification;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\placeholder\template_engine\engine;
@@ -50,6 +51,11 @@ use totara_notification\recipient\recipient;
  * for this very specific event or edit a built-in notification that come out-of-box.
  */
 abstract class notifiable_event_resolver {
+
+    // Constants indicating reasons why a notification might not have been sent.
+    const NOT_SENT_DISABLED = 1; // The notification preference was disabled.
+    const NOT_SENT_NO_PROCESSORS = 2; // No message processors were enabled, so there was no way to send notifications.
+
     /**
      * @var array
      */
@@ -249,5 +255,26 @@ abstract class notifiable_event_resolver {
      */
     public static function get_default_enabled(): bool {
         return true;
+    }
+
+    /**
+     * When a notification is not sent, the resolver will be notified by calling this function. Resolvers can implement
+     * this function and use it to perform actions when notification are not sent, such as logging the event.
+     *
+     * @param notification_preference $preference
+     * @param int $reason
+     */
+    public function notification_not_sent(notification_preference $preference, int $reason): void {
+    }
+
+    /**
+     * When a notification is sent, the resolver will be notified by calling this function. Resolvers can implement
+     * this function and use it to perform actions when notification are sent, such as logging the event.
+     *
+     * Note that the event data used when sending the notification can be obtained from $this->event_data.
+     *
+     * @param notification_preference $preference
+     */
+    public function notification_sent(notification_preference $preference): void {
     }
 }

@@ -23,11 +23,17 @@
 
 use totara_core\extended_context;
 use totara_notification\delivery\channel\delivery_channel;
+use totara_notification\model\notification_preference;
 use totara_notification\placeholder\placeholder_option;
 use totara_notification\resolver\notifiable_event_resolver;
 use totara_notification\resolver\abstraction\permission_resolver;
 
 class totara_notification_mock_notifiable_event_resolver extends notifiable_event_resolver implements permission_resolver {
+
+    public static $notification_not_sent_call_count = 0;
+
+    public static $notification_sent_call_count = 0;
+
     /**
      * @var Closure|null
      */
@@ -238,5 +244,53 @@ class totara_notification_mock_notifiable_event_resolver extends notifiable_even
         }
 
         return false;
+    }
+
+    public function notification_not_sent(notification_preference $preference, int $reason): void {
+        // When called, simply increment the count so that tests can see.
+        self::$notification_not_sent_call_count++;
+    }
+
+    public function notification_sent(notification_preference $preference): void {
+        // When called, simply increment the count so that tests can see.
+        self::$notification_sent_call_count++;
+    }
+
+    /**
+     * Allows tests to reset the number of times that notification_not_sent has been called.
+     */
+    public static function reset_notification_not_sent_call_count(): void {
+        self::$notification_not_sent_call_count = 0;
+    }
+
+    /**
+     * Allows tests to reset the number of times that notification_sent has been called.
+     */
+    public static function reset_notification_sent_call_count(): void {
+        self::$notification_sent_call_count = 0;
+    }
+
+    /**
+     * Allows tests to check how many time the notification_not_sent function has been called.
+     *
+     * When using this function, make sure that you either record the previous count before running
+     * the test or else reset the count using reset_notification_not_sent_call_count().
+     *
+     * @return int
+     */
+    public static function get_notification_not_sent_call_count(): int {
+        return self::$notification_not_sent_call_count;
+    }
+
+    /**
+     * Allows tests to check how many time the notification_not_sent function has been called.
+     *
+     * When using this function, make sure that you either record the previous count before running
+     * the test or else reset the count using reset_notification_sent_call_count().
+     *
+     * @return int
+     */
+    public static function get_notification_sent_call_count(): int {
+        return self::$notification_sent_call_count;
     }
 }

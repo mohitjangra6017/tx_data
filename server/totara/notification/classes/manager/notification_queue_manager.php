@@ -107,17 +107,18 @@ class notification_queue_manager {
             return;
         }
 
-        // If the preference is currently disabled, do not dispatch anything
-        if (!$preference->get_enabled()) {
-            return;
-        }
-
         $event_data = $queue->get_decoded_event_data();
 
         $resolver = resolver_helper::instantiate_resolver_from_class(
             $preference->get_resolver_class_name(),
             $event_data
         );
+
+        // If the preference is currently disabled, do not dispatch anything
+        if (!$preference->get_enabled()) {
+            $resolver->notification_not_sent($preference, notifiable_event_resolver::NOT_SENT_DISABLED);
+            return;
+        }
 
         $recipient = $preference->get_recipient();
         $recipient_ids = $resolver->get_recipient_ids($recipient);
@@ -126,12 +127,15 @@ class notification_queue_manager {
         $message_processors = get_message_processors(true, (defined('PHPUNIT_TEST') && PHPUNIT_TEST));
         if (empty($message_processors)) {
             // If there are no message processors enabled, there's nothing to send
+            $resolver->notification_not_sent($preference, notifiable_event_resolver::NOT_SENT_NO_PROCESSORS);
             return;
         }
 
         foreach ($recipient_ids as $target_user_id) {
             $this->dispatch_to_target($target_user_id, $preference, $resolver, $message_processors);
         }
+
+        $resolver->notification_sent($preference);
     }
 
     /**
