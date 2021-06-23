@@ -81,10 +81,12 @@ class course_image_downloader {
     private function make_filename(): string {
         $pathinfo = pathinfo($this->url);
         $filename = $pathinfo['filename'];
-        return sha1($filename) . '.' .$pathinfo['extension'];
+
+        return "{$filename}.{$pathinfo['extension']}";
     }
 
     /**
+     * @param string $filename
      * @return array
      */
     private function get_file_info(string $filename): array {

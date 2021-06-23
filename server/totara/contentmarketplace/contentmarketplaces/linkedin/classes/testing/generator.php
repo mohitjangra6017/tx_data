@@ -144,7 +144,7 @@ class generator extends component_generator implements learning_object_generator
      * + retired_at: Int
      * + level: String
      * + asset_type: String
-     * + primary_url: String
+     * + primary_image_url: String
      * + time_to_complete: Int
      * + web_launch_url: String
      * + ss_launch_url: String
@@ -192,10 +192,6 @@ class generator extends component_generator implements learning_object_generator
 
         if (!array_key_exists('time_to_complete', $record)) {
             $record['time_to_complete'] = timespan::minutes(90)->get();
-        }
-
-        if (!array_key_exists('primary_image_url', $record)) {
-            $record['primary_image_url'] = 'https://cdn.lynda.com/course/73286/73286-16x9.jpg';
         }
 
         $entity = new learning_object();

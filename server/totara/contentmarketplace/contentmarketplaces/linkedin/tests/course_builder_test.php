@@ -155,4 +155,50 @@ class contentmarketplace_linkedin_course_builder_testcase extends testcase {
             $message
         );
     }
+
+    /**
+     * @return void
+     */
+    public function test_create_course_with_image(): void {
+        global $CFG;
+
+        $generator = generator::instance();
+        $entity = $generator->create_learning_object(
+            'urn:li:lyndaCourse:252',
+            [
+                'primary_image_url' => 'https://example.com/image_one.png'
+            ]
+        );
+
+        require_once("{$CFG->dirroot}/lib/filelib.php");
+        curl::mock_response("This is image");
+
+        $admin = get_admin();
+        $course_builder = new course_builder(
+            new learning_object($entity),
+            helper::get_default_course_category_id(),
+            new catalog_import_interactor($admin->id)
+        );
+
+        $result = $course_builder->create_course_in_transaction();
+        self::assertFalse($result->is_error());
+        self::assertTrue($result->is_success());
+        self::assertNotNull($result->get_course_id());
+        self::assertNull($result->get_message());
+        self::assertNull($result->get_exception());
+
+        $context_course = context_course::instance($result->get_course_id());
+
+        $fs = get_file_storage();
+        self::assertTrue(
+            $fs->file_exists(
+                $context_course->id,
+                'course',
+                'images',
+                0,
+                '/',
+                'image_one.png'
+            )
+        );
+    }
 }

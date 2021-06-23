@@ -49,4 +49,48 @@ class totara_contentmarketplace_course_image_downloader_testcase extends testcas
         $file = $course_image->download_image_for_course();
         self::assertTrue($file);
     }
+
+    /**
+     * @return void
+     */
+    public function test_actual_download_image(): void {
+        global $CFG;
+        require_once("{$CFG->dirroot}/lib/filelib.php");
+
+        $test_image = file_get_contents("{$CFG->dirroot}/lib/tests/fixtures/image_test.png");
+        curl::mock_response($test_image);
+
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $fs = get_file_storage();
+        $context_course = context_course::instance($course->id);
+        self::assertFalse(
+            $fs->file_exists(
+                $context_course->id,
+                'course',
+                'images',
+                0,
+                '/',
+                'duck.jpg'
+            )
+        );
+
+        $downloader = new course_image_downloader($course->id, "https://example.com/duck.jpg");
+        $result = $downloader->download_image_for_course();
+
+        self::assertIsNotBool($result);
+        self::assertInstanceOf(stored_file::class, $result);
+
+        self::assertTrue(
+            $fs->file_exists(
+                $context_course->id,
+                'course',
+                'images',
+                0,
+                '/',
+                'duck.jpg'
+            )
+        );
+    }
 }

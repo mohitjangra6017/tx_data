@@ -212,14 +212,21 @@ class course_builder {
 
         if ($this->learning_object instanceof detailed_model) {
             $summary = $this->learning_object->get_description();
-            $record->summary = $summary->get_raw_value();
-            $record->summaryformat = $summary->get_format();
+            if (null !== $summary) {
+                $record->summary = $summary->get_raw_value();
+                $record->summaryformat = $summary->get_format();
+            }
         }
 
         $course = course_helper::create_course($record);
 
         // Download image and store it.
-        (new course_image_downloader($course->id, $this->learning_object->get_image_url()))->download_image_for_course();
+        $image_url = $this->learning_object->get_image_url();
+        if (!empty($image_url)) {
+            // Download image
+            (new course_image_downloader($course->id, $image_url))->download_image_for_course();
+        }
+
         $manager = new enrol_manager($course);
 
         // Enable any enrol method.
