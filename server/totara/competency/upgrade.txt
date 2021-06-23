@@ -1,6 +1,10 @@
 This files describes API changes in /totara/competency/*,
 information provided here is intended especially for developers.
 
+=== 15.0 ===
+
+* \totara_competency\entity\course has been copied to \core\entity\course, and \totara_competency\entity\course now extends it.
+
 === 14.0 ===
 * totara_competency\entities\filters\competency_assignment_status has been moved to totara_competency\entity\filters\competency_assignment_status
 * totara_competency\entities\filters\competency_assignment_type has been moved to totara_competency\entity\filters\competency_assignment_type

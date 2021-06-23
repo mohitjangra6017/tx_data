@@ -35,6 +35,10 @@ class course implements type_resolver {
     public static function resolve(string $field, $course, array $args, execution_context $ec) {
         global $DB, $USER, $CFG, $OUTPUT;
 
+        if ($course instanceof \core\entity\course) {
+            $course = $course->to_record();
+        }
+
         // Note: There's no good way of checking course object since it returns a db object.
         if (!$course instanceof \stdClass) {
             throw new \coding_exception('Only course objects are accepted: ' . gettype($course));

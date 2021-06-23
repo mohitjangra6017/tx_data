@@ -1,8 +1,8 @@
 <?php
-/*
+/**
  * This file is part of Totara Learn
  *
- * Copyright (C) 2019 onwards Totara Learning Solutions LTD
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Riana Rossouw <riana.rossouw@totaralearning.com>
- * @package criteria_coursecompletion
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @package core
  */
 
-namespace totara_competency\entity;
+namespace core\entity;
+
+use core\orm\entity\entity;
 
 /**
  * Course entity
@@ -64,17 +67,17 @@ namespace totara_competency\entity;
  * @property string $icon
  * @property string $containertype
  *
- * @method static course_repository repository()
- *
- * @package totara_competency/entity
+ * @package core\entity
  */
-class course extends \core\entity\course {
+class course extends entity {
+
+    public const TABLE = 'course';
 
     /**
-     * @return string
+     * Do not add extra attributes here, otherwise it will break legacy compatibility.
+     *
+     * @var array
      */
-    public static function repository_class_name(): string {
-        return course_repository::class;
-    }
+    protected $extra_attributes = [];
 
 }

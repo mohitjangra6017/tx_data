@@ -12,6 +12,7 @@ information provided here is intended especially for developers.
 * Added to_record() method to \core\orm\entity for better backwards compatibility with legacy APIs that do not support ORM.
 * \core\entity\user::get_record() is deprecated, please use to_record() instead.
 * \core\entity\enrol::to_record() has been removed, as it will fallback to the parent \core\orm\entity::to_record() method.
+* \core\webapi\resolver\type\course now supports the \core\entity\course entity as input.
 
 === 14.0 ===
 
