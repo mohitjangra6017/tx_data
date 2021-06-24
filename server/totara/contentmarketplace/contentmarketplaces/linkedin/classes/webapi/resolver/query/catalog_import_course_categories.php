@@ -37,7 +37,12 @@ final class catalog_import_course_categories implements query_resolver, has_midd
      */
     public static function resolve(array $args, execution_context $ec) {
         (new catalog_import_interactor())->require_view_catalog_import_page();
-        return self::build_category_list([], coursecat::get(0));
+
+        $categories = [];
+        foreach (coursecat::make_categories_list('totara/contentmarketplace:add') as $id => $name) {
+            $categories[] = (object) ['id' => $id, 'name' => $name];
+        }
+        return $categories;
     }
 
     /**
@@ -50,19 +55,4 @@ final class catalog_import_course_categories implements query_resolver, has_midd
         ];
     }
 
-    /**
-     * Recursively builds a flat list of categories that are the child of the specified parent category.
-     * TODO: Modify this in TL-31124 so the actual hierarchy tree of categories is built.
-     *
-     * @param coursecat[] $categories
-     * @param coursecat $parent_category
-     * @return coursecat[]
-     */
-    private static function build_category_list(array $categories, coursecat $parent_category): array {
-        foreach ($parent_category->get_children() as $child_category) {
-            $categories[] = $child_category;
-            $categories = self::build_category_list($categories, $child_category);
-        }
-        return $categories;
-    }
 }

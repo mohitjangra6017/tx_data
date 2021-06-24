@@ -87,17 +87,17 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_course_ca
 
         /** @var coursecat $cc_1 */
         $cc_1 = array_shift($categories);
-        self::assertInstanceOf(coursecat::class, $cc_1);
+        self::assertIsObject($cc_1);
         self::assertEquals('Miscellaneous', $cc_1->name);
         $cc_2 = array_shift($categories);
         self::assertEquals($cc->id, $cc_2->id);
         self::assertEquals($cc->name, $cc_2->name);
         $cc_3 = array_shift($categories);
         self::assertEquals($child_cc_1->id, $cc_3->id);
-        self::assertEquals($child_cc_1->name, $cc_3->name);
+        self::assertEquals($cc_2->name . ' / ' . $child_cc_1->name, $cc_3->name);
         $cc_4 = array_shift($categories);
         self::assertEquals($child_cc_2->id, $cc_4->id);
-        self::assertEquals($child_cc_2->name, $cc_4->name);
+        self::assertEquals($cc_2->name . ' / ' . $child_cc_2->name, $cc_4->name);
     }
 
     /**
@@ -114,11 +114,8 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_course_ca
         $this->setUser($user_one);
         $categories = $this->resolve_graphql_query(self::QUERY);
         self::assertIsArray($categories);
-        self::assertCount(2, $categories);
-        $cc_1 = array_shift($categories);
-        self::assertEquals('Miscellaneous', $cc_1->name);
-        $cc_2 = array_shift($categories);
-        self::assertEquals($cc->id, $cc_2->id);
-        self::assertEquals($cc->name, $cc_2->name);
+        self::assertCount(1, $categories);
+        self::assertEquals($cc->id, $categories[0]->id);
+        self::assertEquals($cc->name, $categories[0]->name);
     }
 }
