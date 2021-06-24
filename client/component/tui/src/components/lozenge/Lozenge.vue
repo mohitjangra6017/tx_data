@@ -42,11 +42,11 @@ export default {
 <style lang="scss">
 .tui-lozenge {
   display: inline-flex;
-  padding: 0 var(--gap-2) calc(var(--gap-1) / 2);
+  padding: 3px var(--gap-2) 3px;
   color: var(--color-neutral-1);
   @include tui-font-body-x-small();
-  font-weight: 700;
-  line-height: 1.25;
+  @include tui-font-heavy();
+  line-height: 1;
   background: var(--color-prompt-info);
   border-radius: var(--border-radius-small);
 
