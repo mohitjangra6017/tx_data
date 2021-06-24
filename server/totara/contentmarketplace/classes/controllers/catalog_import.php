@@ -30,6 +30,7 @@ use context_coursecat;
 use context_system;
 use core_component;
 use moodle_exception;
+use moodle_url;
 use totara_contentmarketplace\local;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 use totara_contentmarketplace\views\override_catalog_import_nav_breadcrumbs;
@@ -46,11 +47,6 @@ class catalog_import extends controller {
     * @var string
     */
     protected $layout = 'noblocks';
-
-    /**
-    * @var string
-    */
-    protected $url = '/totara/contentmarketplace/explorer.php';
 
     /**
     * @var contentmarketplace
@@ -70,6 +66,7 @@ class catalog_import extends controller {
 
         $this->plugin = contentmarketplace::plugin($this->get_marketplace());
         $this->explorer = new explorer_model($this->get_marketplace(), $this->get_layout(), $this->get_category_id());
+        $this->url = new moodle_url('/totara/contentmarketplace/explorer.php', ['marketplace' => $this->get_marketplace()]);
     }
 
     /**
