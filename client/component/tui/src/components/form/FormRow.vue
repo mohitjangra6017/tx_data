@@ -45,7 +45,11 @@
           :hidden="hidden"
           :label="label || null"
           :title="helpTitle"
-        />
+        >
+          <slot name="help-message">
+            {{ helpmsg }}
+          </slot>
+        </HelpIcon>
       </div>
 
       <FieldContextProvider
