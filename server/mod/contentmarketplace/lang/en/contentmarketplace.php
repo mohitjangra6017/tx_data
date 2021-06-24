@@ -22,6 +22,9 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+$string['completion_condition'] = 'Completion condition';
+$string['completion_content_provider_description'] = 'Show activity as complete when {$a} conditions have been met';
+$string['completion_launch_description'] = "Mark the activity completed on launch";
 $string['error:cannot_find_learning_object'] = 'Cannot find the learning object from {$a}';
 $string['marketplace_component'] = "Marketplace component";
 $string['marketplace_logo'] = "Content marketplace logo";

@@ -11,6 +11,7 @@
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="learning_object_marketplace_component" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the sub plugin of totara_contentmarketplace, which also included the plugin type as well."/>
         <FIELD NAME="learning_object_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The learning's object id that reference to the learning object table of the sub plugin associated in field marketplace type"/>
+        <FIELD NAME="completion_condition" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Which condition to use when marking the content marketplace complete"/>
         <FIELD NAME="time_modified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>

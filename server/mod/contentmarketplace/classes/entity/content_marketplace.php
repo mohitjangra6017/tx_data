@@ -23,6 +23,7 @@
 namespace mod_contentmarketplace\entity;
 
 use core\orm\entity\entity;
+use stdClass;
 
 /**
  * Entity class represent for table "ttr_contentmarketplace"
@@ -33,6 +34,7 @@ use core\orm\entity\entity;
  * @property string $learning_object_marketplace_component
  * @property int    $learning_object_id
  * @property int    $time_modified
+ * @property int    $completion_condition
  */
 class content_marketplace extends entity {
     /**
@@ -49,4 +51,14 @@ class content_marketplace extends entity {
      * @var bool
      */
     public const SET_UPDATED_WHEN_CREATED = true;
+
+    /**
+     * Using PHP dark magic to convert boolean-like integer into boolean data type.
+     *
+     * @param bool $value
+     * @return bool
+     */
+    protected function get_completion_on_launch_attribute(bool $value): bool {
+        return $value;
+    }
 }

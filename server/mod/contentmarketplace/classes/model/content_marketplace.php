@@ -27,6 +27,7 @@ use context_module;
 use core\orm\entity\model;
 use mod_contentmarketplace\entity\content_marketplace as model_entity;
 use moodle_url;
+use stdClass;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model as learning_object;
 use totara_contentmarketplace\learning_object\factory;
 
@@ -39,6 +40,7 @@ use totara_contentmarketplace\learning_object\factory;
  * @property-read int             $learning_object_id
  * @property-read int             $time_modified
  * @property-read int             $cm_id
+ * @property-read int             $completion_condition
  * @property-read learning_object $learning_object
  * @property-read moodle_url      $view_url
  *
@@ -65,6 +67,7 @@ class content_marketplace extends model {
         'learning_object_marketplace_component',
         'learning_object_id',
         'time_modified',
+        'completion_condition',
     ];
 
     /**
@@ -87,7 +90,7 @@ class content_marketplace extends model {
     }
 
     /**
-     * @param int             $course_id
+     * @param int $course_id
      * @param learning_object $learning_object
      *
      * @return content_marketplace
@@ -199,5 +202,12 @@ class content_marketplace extends model {
             '/mod/contentmarketplace/view.php',
             ['id' => $this->get_id()]
         );
+    }
+
+    /**
+     * @return stdClass
+     */
+    public function get_entity_record(): stdClass {
+        return $this->entity->to_record();
     }
 }

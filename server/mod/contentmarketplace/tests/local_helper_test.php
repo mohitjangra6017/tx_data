@@ -97,4 +97,26 @@ class mod_contentmarketplace_local_helper_testcase extends testcase {
             );
         }
     }
+
+    /**
+     * @return void
+     */
+    public function test_update_content_marketplace_with_invalid_condition(): void {
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $marketplace_generator = marketplace_generator::instance();
+        $learning_object = $marketplace_generator->create_learning_object('contentmarketplace_linkedin');
+
+        $model = helper::create_content_marketplace(
+            $course->id,
+            $learning_object->get_id(),
+            $learning_object::get_marketplace_component()
+        );
+
+        $this->expectException(coding_exception::class);
+        $this->expectExceptionMessage("The completion condition is invalid");
+
+        helper::update_content_marketplace($model->id, 42);
+    }
 }

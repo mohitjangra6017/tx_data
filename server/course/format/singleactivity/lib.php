@@ -346,7 +346,7 @@ class format_singleactivity extends format_base {
      * @return array array($module => $name of the module).
      */
     public static function get_supported_activities() {
-        $availabletypes = \container_course\course_helper::get_all_modules();
+        $availabletypes = \container_course\course_helper::get_all_modules(false, false, false);
         foreach ($availabletypes as $module => $name) {
             if (plugin_supports('mod', $module, FEATURE_NO_VIEW_LINK, false)) {
                 unset($availabletypes[$module]);

@@ -109,5 +109,20 @@ function xmldb_contentmarketplace_upgrade(int $old_version): bool {
         upgrade_mod_savepoint(true, 2021041301, 'contentmarketplace');
     }
 
+    if ($old_version < 2021062500) {
+        // Define field completion_on_launch to be added to contentmarketplace.
+        $table = new xmldb_table('contentmarketplace');
+        $field = new xmldb_field('completion_condition', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'learning_object_id');
+
+        // Conditionally launch add field completion_on_launch.
+        if (!$db_manager->field_exists($table, $field)) {
+            $db_manager->add_field($table, $field);
+        }
+
+        // Contentmarketplace savepoint reached.
+        upgrade_mod_savepoint(true, 2021062500, 'contentmarketplace');
+    }
+
+
     return true;
 }

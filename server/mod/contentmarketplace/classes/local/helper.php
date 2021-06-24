@@ -22,6 +22,8 @@
  */
 namespace mod_contentmarketplace\local;
 
+use mod_contentmarketplace\completion\condition;
+use mod_contentmarketplace\entity\content_marketplace as content_marketplace_entity;
 use mod_contentmarketplace\model\content_marketplace;
 use mod_contentmarketplace\exception\non_exist_learning_object;
 use totara_contentmarketplace\learning_object\factory;
@@ -61,5 +63,23 @@ class helper {
         }
 
         return content_marketplace::create($course_id, $learning_object);
+    }
+
+    /**
+     * @param int      $content_marketplace_id
+     * @param int|null $completion_condition    One of the condition constants from {@see condition}, or null to
+     *                                          unset the condition.
+     *
+     * @return void
+     */
+    public static function update_content_marketplace(int $content_marketplace_id, ?int $completion_condition): void {
+        if (!empty($completion_condition)) {
+            condition::validate($completion_condition);
+        }
+
+        $entity = new content_marketplace_entity($content_marketplace_id);
+        $entity->completion_condition = $completion_condition;
+
+        $entity->save();
     }
 }

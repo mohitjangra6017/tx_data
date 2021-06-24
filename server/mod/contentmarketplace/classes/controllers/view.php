@@ -23,8 +23,11 @@
 namespace mod_contentmarketplace\controllers;
 
 use context;
+use core_container\factory;
+use mod_contentmarketplace\event\course_module_viewed;
 use mod_contentmarketplace\interactor\content_marketplace_interactor;
 use mod_contentmarketplace\model\content_marketplace;
+use mod_contentmarketplace\entity\content_marketplace as content_marketplace_entity;
 use moodle_url;
 use totara_mvc\controller;
 use totara_mvc\tui_view;
@@ -75,6 +78,13 @@ class view extends controller {
         );
 
         $view->set_title(format_string($this->model->name));
+
+        // Triggering a course module viewed event before the view is returned.
+        $event = course_module_viewed::from_model($this->model, $USER->id);
+        $event->add_record_snapshot('course', factory::from_id($this->model->course)->to_record());
+        $event->add_record_snapshot(content_marketplace_entity::TABLE, $this->model->get_entity_record());
+        $event->trigger();
+
         return $view;
     }
 }

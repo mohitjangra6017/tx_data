@@ -22,8 +22,12 @@
  */
 
 use container_course\course;
+use container_course\module\course_module;
 use core\orm\query\builder;
+use core_container\entity\module;
 use core_phpunit\testcase;
+use mod_contentmarketplace\completion\condition;
+use mod_contentmarketplace\entity\content_marketplace;
 use mod_contentmarketplace\entity\content_marketplace as entity;
 use mod_contentmarketplace\exception\non_exist_learning_object;
 use totara_contentmarketplace\testing\generator as totara_content_marketplace_generator;
@@ -181,5 +185,107 @@ class mod_contentmarketplace_lib_testcase extends testcase {
                 $e->getMessage()
             );
         }
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_instance_with_completion_on_launch(): void {
+        global $CFG;
+        require_once("{$CFG->dirroot}/lib/completionlib.php");
+
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course(['enablecompletion' => COMPLETION_ENABLED]);
+
+        $module_record = $generator->create_module('contentmarketplace', ['course' => $course->id]);
+        $module = course_module::from_id($module_record->cmid);
+
+
+        $db = builder::get_db();
+        self::assertNull(
+            $db->get_field(content_marketplace::TABLE, 'completion_condition', ['id' => $module->get_instance()])
+        );
+
+        self::assertEquals(
+            COMPLETION_TRACKING_NONE,
+            $db->get_field(module::TABLE, 'completion', ['id' => $module->get_id()])
+        );
+
+        // Start updating module.
+        $update_data = new stdClass();
+        $update_data->modulename = "contentmarketplace";
+        $update_data->completion = COMPLETION_TRACKING_AUTOMATIC;
+        $update_data->completion_condition = condition::LAUNCH;
+        $update_data->completionunlocked = 1;
+
+        $module->update($update_data);
+        self::assertEquals(
+            condition::LAUNCH,
+            $db->get_field(content_marketplace::TABLE, 'completion_condition', ['id' => $module->get_instance()])
+        );
+
+        self::assertEquals(
+            COMPLETION_TRACKING_AUTOMATIC,
+            $db->get_field(module::TABLE, 'completion', ['id' => $module->get_id()])
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_instance_when_completion_is_disabled(): void {
+        global $CFG;
+        require_once("{$CFG->dirroot}/lib/completionlib.php");
+
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course(['enablecompletion' => COMPLETION_ENABLED]);
+
+        $module_record = $generator->create_module('contentmarketplace', ['course' => $course->id]);
+        $module = course_module::from_id($module_record->cmid);
+
+
+        $db = builder::get_db();
+        self::assertNull(
+            $db->get_field(content_marketplace::TABLE, 'completion_condition', ['id' => $module->get_instance()])
+        );
+
+        self::assertEquals(
+            COMPLETION_TRACKING_NONE,
+            $db->get_field(module::TABLE, 'completion', ['id' => $module->get_id()])
+        );
+
+        // Start updating module.
+        $update_data = new stdClass();
+        $update_data->modulename = "contentmarketplace";
+        $update_data->completion = COMPLETION_TRACKING_AUTOMATIC;
+        $update_data->completion_condition = condition::LAUNCH;
+        $update_data->completionunlocked = 1;
+
+        $module->update($update_data);
+        self::assertEquals(
+            COMPLETION_TRACKING_AUTOMATIC,
+            $db->get_field(module::TABLE, 'completion', ['id' => $module->get_id()])
+        );
+
+        self::assertEquals(
+            condition::LAUNCH,
+            $db->get_field(content_marketplace::TABLE, 'completion_condition', ['id' => $module->get_instance()])
+        );
+
+        $new_update_data = new stdClass();
+        $new_update_data->modulename = "contentmarketplace";
+        $new_update_data->completion = COMPLETION_TRACKING_NONE;
+        $new_update_data->completion_condition = condition::CONTENT_MARKETPLACE;
+        $new_update_data->completionunlocked = 1;
+
+        $module->update($new_update_data);
+        self::assertNull(
+            $db->get_field(content_marketplace::TABLE, 'completion_condition', ['id' => $module->get_instance()])
+        );
+
+        self::assertEquals(
+            COMPLETION_TRACKING_NONE,
+            $db->get_field(module::TABLE, 'completion', ['id' => $module->get_id()])
+        );
     }
 }

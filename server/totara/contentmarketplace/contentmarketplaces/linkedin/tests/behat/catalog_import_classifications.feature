@@ -29,7 +29,7 @@ Feature: Catalog import learning objects classifications.
     Then I should see "C++, Java" on row "1" of the tui select table
     And I should see "C++" on row "2" of the tui select table
     And I should see "Software development"
-        # Course C, B but not the filter
+    # Course C, B but not the filter
     And I should see "C++" exactly "2" times
     When I click on "Software development" "button"
     # Course C, B and the filter

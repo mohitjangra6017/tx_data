@@ -46,6 +46,7 @@ function contentmarketplace_add_instance(stdClass $record): int {
 /**
  * Render the content for content marketplace.
  *
+ * @param cm_info $course_module
  * @return void
  */
 function contentmarketplace_cm_info_view(cm_info $course_module): void {
@@ -72,6 +73,7 @@ function contentmarketplace_supports($feature): ?bool {
             return false;
 
         case FEATURE_NO_VIEW_LINK:
+        case FEATURE_MOD_INTRO:
             return false;
 
         default:
@@ -87,4 +89,27 @@ function contentmarketplace_supports($feature): ?bool {
 function contentmarketplace_delete_instance(int $id): bool {
     $content_marketplace = content_marketplace::load_by_id($id);
     return $content_marketplace->delete();
+}
+
+/**
+ * A callback function from core, to update the database record.
+ *
+ * @param stdClass $content_marketplace
+ * @param null $moodle_form
+ *
+ * @return bool
+ */
+function contentmarketplace_update_instance(stdClass $content_marketplace, $moodle_form = null) {
+    // Default value for completion on launch
+    $completion_condition = null;
+
+    // This block of logic is following the logics from seminar, as if the completion is not enabled,
+    // it fall back to the default value which is disabled for any criteria.
+    if (COMPLETION_TRACKING_AUTOMATIC == $content_marketplace->completion) {
+        $completion_condition = $content_marketplace->completion_condition;
+    }
+
+    // If the record does not exist, entity API will yield error. So no need to check the validity of record.
+    helper::update_content_marketplace($content_marketplace->instance, $completion_condition);
+    return true;
 }
