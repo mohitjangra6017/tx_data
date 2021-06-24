@@ -202,6 +202,11 @@ final class chartjs extends base {
             ];
         }
 
+        // Add data options as a separate top level setting type
+        if (array_key_exists('data-settings', $settings)) {
+            $options['series-settings'] = $settings['data-settings'];
+        }
+
         // If there are custom settings, override the options with anything inside it
         if (isset($settings['custom'])) {
             $options = array_replace_recursive($options, $settings['custom']);

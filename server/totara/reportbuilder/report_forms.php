@@ -952,7 +952,7 @@ class report_builder_edit_graph_form extends moodleform {
         $mform->setType('maxrecords', PARAM_INT);
         $mform->disabledIf('maxrecords', 'type', 'eq', '');
 
-        $mform->addElement('textarea', 'settings', get_string('graphcustomsettings', 'totara_reportbuilder'), array('rows' => 10));
+        $mform->addElement('textarea', 'settings', get_string('graphcustomsettings', 'totara_reportbuilder'), array('rows' => 10, 'cols' => 50));
         $mform->addHelpButton('settings', 'graphcustomsettings', 'totara_reportbuilder');
         $mform->setType('settings', PARAM_RAW);
         $mform->disabledIf('settings', 'type', 'eq', '');

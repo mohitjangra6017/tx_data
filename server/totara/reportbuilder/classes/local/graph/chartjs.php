@@ -123,6 +123,16 @@ final class chartjs extends base {
                 }
             }
         }
+
+        // Custom data series setting overrides
+        if (!empty($this->usersettings['series-settings'])) {
+            $seriessettings = $this->usersettings['series-settings'];
+            foreach ($seriessettings as $seriesnum => $customconf) {
+                foreach ($customconf as $k => $val) {
+                    $this->values[$seriesnum][$k] = $val;
+                }
+            }
+        }
     }
 
     protected function process_data(array $data): void {
