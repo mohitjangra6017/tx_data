@@ -375,23 +375,7 @@ export default {
     }
 
     &-overview {
-      display: flex;
-      flex-wrap: wrap;
-
-      & > * + * {
-        position: relative;
-        margin-left: var(--gap-2);
-        padding-left: calc(var(--gap-2) + 1px);
-
-        &:before {
-          position: absolute;
-          top: 2px;
-          left: 0;
-          height: 1em;
-          border-left: var(--border-width-thin) solid;
-          content: '';
-        }
-      }
+      @include tui-separator-pipe();
     }
   }
 }
