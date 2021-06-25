@@ -74,6 +74,8 @@ class mustache_template_finder {
             $parents = $themeconfig->parents;
             $themename = $themeconfig->name; // Totara: use default theme if theme does not exist!
         }
+        // KINEO CCM - GLOTOT-1514
+        $dirs = \local_core\Mustache\OverrideSystem::getOverrideDirectories($component);
 
         // First check the theme.
         $dirs[] = $CFG->dirroot . '/theme/' . $themename . '/templates/' . $component . '/';
