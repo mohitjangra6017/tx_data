@@ -181,11 +181,7 @@ export default {
     customQuery: Object,
     customQueryKey: String,
     showLoadingBtn: Boolean,
-    targetUserId: {
-      required: false,
-      type: String,
-      default: null,
-    },
+    userId: Number,
   },
 
   data() {
@@ -228,7 +224,7 @@ export default {
           input: {
             filters: {
               name: this.filters.search,
-              user_id: this.targetUserId,
+              user_id: this.userId,
             },
           },
         };
@@ -253,6 +249,7 @@ export default {
           input: {
             filters: {
               ids: [],
+              user_id: this.userId,
             },
           },
         };
@@ -295,7 +292,7 @@ export default {
               cursor: this.nextPage,
               filters: {
                 name: this.filters.search,
-                user_id: this.targetUserId,
+                user_id: this.userId,
               },
             },
           },
@@ -328,6 +325,7 @@ export default {
           input: {
             filters: {
               ids: selection,
+              user_id: this.userId,
             },
             result_size: numberOfItems,
           },

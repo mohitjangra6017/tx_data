@@ -154,9 +154,18 @@ export default {
      * @return {(function|object)[]}
      */
     validations() {
-      if (!this.required || this.isDraft) {
+      if (this.isDraft) {
         return [];
       }
+
+      if (this.selectedIds.length) {
+        return [validation.required()];
+      }
+
+      if (!this.required) {
+        return [];
+      }
+
       return [validation.required()];
     },
   },

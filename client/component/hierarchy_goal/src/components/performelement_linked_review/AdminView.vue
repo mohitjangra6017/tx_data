@@ -61,10 +61,9 @@ export default {
           display_name: this.$str('example_goal_title', 'hierarchy_goal'),
           description: this.$str('example_goal_description', 'hierarchy_goal'),
         },
+        target_date: this.dateToday,
         status: this.$str('example_goal_status', 'hierarchy_goal'),
         completed: false,
-
-        target_date: this.dateToday,
       };
     },
   },

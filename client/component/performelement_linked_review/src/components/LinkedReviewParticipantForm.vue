@@ -39,6 +39,7 @@
       :settings="contentSettings"
       :subject-user="subjectUser"
       :user-id="userId"
+      :content-type="element.data.content_type"
       @update="refetch"
       @unsaved-plugin-change="$emit('unsaved-plugin-change', $event)"
     />

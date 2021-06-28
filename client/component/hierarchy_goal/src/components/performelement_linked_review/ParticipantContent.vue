@@ -19,7 +19,18 @@
 <template>
   <div v-if="goalContentExists" class="tui-linkedReviewViewGoal">
     <h4 class="tui-linkedReviewViewGoal__title">
-      {{ content.goal.display_name }}
+      <a
+        v-if="!preview"
+        :href="goalUrl"
+        :aria-label="
+          $str('selected_goal', 'hierarchy_goal', content.goal.display_name)
+        "
+      >
+        {{ content.goal.display_name }}
+      </a>
+      <template v-else>
+        {{ content.goal.display_name }}
+      </template>
     </h4>
 
     <div
@@ -28,19 +39,26 @@
     />
 
     <div class="tui-linkedReviewViewGoal__overview">
+      <div v-if="!preview && content.status && content.target_date">
+        {{ createdAt }}
+      </div>
       <div class="tui-linkedReviewViewGoal__bar">
         <Grid :stack-at="600">
           <GridItem :units="3">
-            <span class="tui-linkedReviewViewGoal__bar-label">
-              {{ $str('goal_status', 'hierarchy_goal') }}
-            </span>
-            <span class="tui-linkedReviewViewGoal__bar-value">
-              {{ content.status }}
-            </span>
+            <template v-if="content.status">
+              <span class="tui-linkedReviewViewGoal__bar-label">
+                {{ $str('goal_status', 'hierarchy_goal') }}
+              </span>
+              <span class="tui-linkedReviewViewGoal__bar-value">
+                {{ content.status.name }}
+              </span>
+            </template>
           </GridItem>
-
           <GridItem :units="5">
-            <div class="tui-linkedReviewViewGoal__bar-wrap">
+            <div
+              v-if="content.target_date"
+              class="tui-linkedReviewViewGoal__bar-wrap"
+            >
               <span class="tui-linkedReviewViewGoal__bar-label">
                 {{ $str('target_date', 'hierarchy_goal') }}
               </span>
@@ -62,6 +80,7 @@
 <script>
 import Grid from 'tui/components/grid/Grid';
 import GridItem from 'tui/components/grid/GridItem';
+import { COMPANY_GOAL } from '../../js/constants';
 
 export default {
   components: {
@@ -74,16 +93,42 @@ export default {
       type: Object,
     },
     preview: Boolean,
+    createdAt: String,
   },
 
   computed: {
+    /**
+     * Provide url for goal
+     * @return {String}
+     */
+    goalUrl() {
+      if (this.content.content_type === COMPANY_GOAL) {
+        return this.$url('/totara/hierarchy/item/view.php', {
+          id: this.content.goal.id,
+          prefix: 'goal',
+        });
+      } else {
+        return this.$url('/totara/hierarchy/prefix/goal/item/view.php', {
+          id: this.content.goal.id,
+        });
+      }
+    },
+
     /**
      * Checks if the goal exists in the content property.
      *
      * @return {Boolean}
      */
     goalContentExists() {
-      return this.content && this.content.goal && this.content.status;
+      if (!this.content) {
+        return false;
+      }
+
+      if (this.content.content_type === COMPANY_GOAL) {
+        return this.content.goal && this.content.status;
+      } else {
+        return this.content.goal ? true : false;
+      }
     },
   },
 };
@@ -94,7 +139,8 @@ export default {
     "hierarchy_goal": [
       "goal_status",
       "target_date",
-      "perform_review_goal_missing"
+      "perform_review_goal_missing",
+      "selected_goal"
     ]
   }
 </lang-strings>
@@ -143,7 +189,8 @@ export default {
     }
 
     &-wrap {
-      padding-left: var(--gap-2);
+      padding-left: var(--gap-4);
+      border-color: var(--color-neutral-6);
       border-style: solid;
       border-width: 0 0 0 var(--border-width-thick);
 

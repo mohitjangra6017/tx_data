@@ -24,6 +24,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['add_company_goals'] = 'Add company goals';
+$string['add_personal_goals'] = 'Add personal goals';
+$string['awaiting_company_selection_text'] = 'Awaiting company goal selection from a {$a}.';
+$string['awaiting_personal_selection_text'] = 'Awaiting personal goal selection from a {$a}.';
 $string['enable_goal_status_change'] = 'Ability to change goal status during activity';
 $string['enable_goal_status_change_participant'] = 'Change of goal status participant';
 $string['eventchangedtype'] = 'Changed Goal Type';
@@ -71,3 +75,6 @@ $string['userdataitempersonal_export_visible_help'] = 'Only relevant to users wi
 $string['userdataitempersonal_purge'] = 'Personal goals';
 $string['userdataitempersonal_purge_help'] = 'This includes all data related to a user\'s personal goals regardless of whether they have the viewownpersonalgoal capability.';
 $string['pluginname'] = 'Goal Hierarchies';
+$string['remove_company_goal'] = 'Remove company goal';
+$string['remove_personal_goal'] = 'Remove personal goal';
+$string['selected_goal'] = 'Goal: {$a}';
