@@ -140,7 +140,18 @@ class config extends base_plugin_config {
      * @return int
      */
     public static function get_max_selected_items_number(): int {
-        return self::MAX_SELECTED_ITEMS_NUMBER;
+        return static::get('max_selected_learning_items', static::MAX_SELECTED_ITEMS_NUMBER);
+    }
+
+    /**
+     * Mainly used for testing to reduce or increase the threshold number
+     * of learning objects that we can pipe it to the adhoc tasks.
+     *
+     * @param int $number
+     * @return void
+     */
+    public static function set_max_selected_items_number(int $number): void {
+        static::set('max_selected_learning_items', $number);
     }
 
     /**

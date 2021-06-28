@@ -119,13 +119,13 @@ class result {
      * @return bool
      */
     public function is_error(): bool {
-        return !$this->is_success();
+        return !$this->is_successful();
     }
 
     /**
      * @return bool
      */
-    public function is_success(): bool {
+    public function is_successful(): bool {
         return static::SUCCESS === $this->code;
     }
 

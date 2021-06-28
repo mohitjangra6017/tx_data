@@ -48,7 +48,7 @@ class contentmarketplace_linkedin_course_builder_testcase extends testcase {
 
         $result = $course_builder->create_course_in_transaction();
         self::assertFalse($result->is_error());
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertNotNull($result->get_course_id());
         self::assertNull($result->get_message());
         self::assertNull($result->get_exception());
@@ -104,7 +104,7 @@ class contentmarketplace_linkedin_course_builder_testcase extends testcase {
 
         $result = $course_builder->create_course();
 
-        self::assertFalse($result->is_success());
+        self::assertFalse($result->is_successful());
         self::assertTrue($result->is_error());
         self::assertEquals(result::ERROR_ON_COURSE_CREATION, $result->get_code());
         self::assertNotEquals(result::ERROR_ON_MODULE_CREATION, $result->get_code());
@@ -137,7 +137,7 @@ class contentmarketplace_linkedin_course_builder_testcase extends testcase {
 
         $result = $course_builder->create_course_in_transaction();
         self::assertTrue($result->is_error());
-        self::assertFalse($result->is_success());
+        self::assertFalse($result->is_successful());
         self::assertNull($result->get_exception());
         self::assertEquals(result::ERROR_ON_COURSE_CREATION, $result->get_code());
         self::assertNotEquals(result::ERROR_ON_MODULE_CREATION, $result->get_code());
@@ -182,7 +182,7 @@ class contentmarketplace_linkedin_course_builder_testcase extends testcase {
 
         $result = $course_builder->create_course_in_transaction();
         self::assertFalse($result->is_error());
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertNotNull($result->get_course_id());
         self::assertNull($result->get_message());
         self::assertNull($result->get_exception());

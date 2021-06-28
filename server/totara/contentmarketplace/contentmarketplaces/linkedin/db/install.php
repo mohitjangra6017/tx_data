@@ -28,6 +28,9 @@ use contentmarketplace_linkedin\workflow\totara_contentmarketplace\exploremarket
  * Totara workflow install hook.
  */
 function xmldb_contentmarketplace_linkedin_install() {
+    global $CFG;
+    require_once("{$CFG->dirroot}/totara/notification/db/upgradelib.php");
+
     // Enable Linked In Learning course create workflow on install.
     $workflow = contentmarketplace::instance();
     $workflow->enable();
@@ -36,4 +39,6 @@ function xmldb_contentmarketplace_linkedin_install() {
     $workflow = linkedin::instance();
     $workflow->enable();
 
+    // Install the built in notification
+    totara_notification_sync_built_in_notification('contentmarketplace_linkedin');
 }

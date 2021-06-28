@@ -24,6 +24,8 @@
 namespace contentmarketplace_linkedin\task;
 
 use contentmarketplace_linkedin\config;
+use contentmarketplace_linkedin\event\import_course_full_failure;
+use contentmarketplace_linkedin\event\import_course_partial_failure;
 use contentmarketplace_linkedin\interactor\catalog_import_interactor;
 use core\entity\user;
 use core\task\adhoc_task;
@@ -54,6 +56,8 @@ final class create_course_delay_task extends adhoc_task {
         $this->set_component('contentmarketplace_linkedin');
 
         if (is_null($trace)) {
+            // This is pretty bad, because there is no way we can set the progress_trace instance to
+            // the adhoc task, without relying on the global constant PHPUNIT_TEST.
             if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
                 $this->trace = new text_progress_trace();
             } else {
@@ -70,12 +74,11 @@ final class create_course_delay_task extends adhoc_task {
      *          'category_id'        => 1
      *      ]
      * ]
-     * @param progress_trace|null $trace
      *
      * @return static
      */
-    public static function enqueue(array $input_params, ?progress_trace $trace = null): self {
-        $task = new self($trace);
+    public static function enqueue(array $input_params): self {
+        $task = new self();
 
         $task->set_userid(user::logged_in()->id);
         $task->set_custom_data([
@@ -93,8 +96,7 @@ final class create_course_delay_task extends adhoc_task {
         $course_input_array = $this->get_course_input_array();
 
         if (count($course_input_array) == 0) {
-            $this->trace->output('No course are is queue up');
-            debugging("No course is queue up for the task", DEBUG_DEVELOPER);
+            $this->trace->output('No courses were queue up');
             return;
         }
 
@@ -115,14 +117,12 @@ final class create_course_delay_task extends adhoc_task {
         $data = $this->get_custom_data();
         $course_input_array = $data->course_input_array;
 
-        $course_input_array = array_map(function ($course_input) {
+        return array_map(function ($course_input) {
             if (is_array($course_input)) {
                 return $course_input;
             }
             return (array) $course_input;
         }, $course_input_array);
-
-        return $course_input_array;
     }
 
     /**
@@ -130,22 +130,54 @@ final class create_course_delay_task extends adhoc_task {
      * @return bool
      */
     private function create_bulk_courses(array $course_input_array): bool {
-        $result = false;
+        $actor_id = $this->get_userid();
+
+        // Flagging the number of course to be import before the array is being modified.
+        $total_to_import = count($course_input_array);
+
+        // A list of learning objects that were failed to be imported into course.
+        // Note that this list will be a 2 dimensional array before it becomes a flat list.
+        $failed_learning_objects = [];
+
+        // Note that we are using count($course_input_array) instead of using $total_to_import, because
+        // $course_input_array would be reduced from the array_splice hence the while loop will reach
+        // to the point of exiting by itself.
         while (count($course_input_array) > 0) {
             $batch_array = array_splice($course_input_array, 0, config::get_max_selected_items_number());
-            $result = $this->do_create_bulk_courses($batch_array);
+            $partial_failed_learning_objects = $this->do_create_bulk_courses($batch_array);
+
+            $failed_learning_objects[] = $partial_failed_learning_objects;
         }
 
-        return $result;
+        // Flatten the list.
+        $failed_learning_objects = array_merge(...$failed_learning_objects);
+
+        if ($total_to_import === count($failed_learning_objects)) {
+            // All items are failed to import. Triggers event full failure.
+            $event = import_course_full_failure::from_actor_id($actor_id);
+            $event->trigger();
+        } else if ($total_to_import > count($failed_learning_objects) && !empty($failed_learning_objects)) {
+            // Partial of items are failed to import. Triggers event for partial failure.
+            $event = import_course_partial_failure::from_list_of_learning_object_ids($failed_learning_objects, $actor_id);
+            $event->trigger();
+        }
+
+        return empty($failed_learning_objects);
     }
 
     /**
+     * Bulk creating the courses out of learning objects. Then returns the list of learning objects
+     * that are failed to be created. If the list is empty then all the courses were created successfully.
+     *
      * @param array $patch_array
-     * @return bool
+     * @return int[]
      */
-    private function do_create_bulk_courses(array $patch_array): bool {
+    private function do_create_bulk_courses(array $patch_array): array {
         $interactor = new catalog_import_interactor($this->get_userid());
-        $successful_run = true;
+
+        // The list of failed learning object's id. If this list is empty the whole process is completed
+        // without any errors.
+        $failed_learning_objects = [];
 
         foreach ($patch_array as $course_input) {
             $learning_object_id = $course_input['learning_object_id'];
@@ -160,17 +192,16 @@ final class create_course_delay_task extends adhoc_task {
                 );
 
                 $result = $course->create_course_in_transaction();
-                if (!$result->is_success()) {
-                    $successful_run = false;
+                if (!$result->is_successful()) {
+                    $failed_learning_objects[] = $learning_object_id;
                 }
-
             } catch (cannot_resolve_default_course_category $e) {
-                $this->trace->output('There are some courses that can be added with given category id.');
-                $successful_run = false;
+                $this->trace->output('There is a course that cannot be added with given category id.');
+                $failed_learning_objects[] = $learning_object_id;
             }
         }
 
-        return $successful_run;
+        return $failed_learning_objects;
     }
 
     /**

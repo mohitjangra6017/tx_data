@@ -63,7 +63,7 @@ class mod_contentmarketplace_totara_contentmarketplace_course_builder_testcase e
         self::assertEquals(0, $db->count_records('course', ['containertype' => course::get_type()]));
 
         $result = $course_builder->create_course_in_transaction();
-        self::assertFalse($result->is_success());
+        self::assertFalse($result->is_successful());
         self::assertTrue($result->is_error());
         self::assertEquals(result::ERROR_ON_MODULE_CREATION, $result->get_code());
 

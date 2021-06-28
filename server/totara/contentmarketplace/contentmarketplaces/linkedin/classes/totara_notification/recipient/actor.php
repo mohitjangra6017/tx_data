@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Totara Learn
+ * This file is part of Totara Core
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -15,18 +15,28 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Simon Coggins <simon.coggins@totaralearning.com>
+ * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package contentmarketplace_linkedin
  */
+namespace contentmarketplace_linkedin\totara_notification\recipient;
 
-defined('MOODLE_INTERNAL') || die();
+use totara_notification\recipient\recipient;
 
-$plugin->version = 2021061104;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020101200;      // Requires this Totara version.
-$plugin->component = 'contentmarketplace_linkedin'; // To check on upgrade, that module sits in correct place
+class actor implements recipient {
+    /**
+     * @param array $data
+     * @return array
+     */
+    public static function get_user_ids(array $data): array {
+        return [$data['user_id']];
+    }
 
-$plugin->dependencies = [
-    'totara_notification' => 2021052500
-];
+    /**
+     * @return string
+     */
+    public static function get_name(): string {
+        return get_string('recipient_actor', 'contentmarketplace_linkedin');
+    }
+}

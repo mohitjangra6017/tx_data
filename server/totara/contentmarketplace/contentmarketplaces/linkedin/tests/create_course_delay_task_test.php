@@ -57,7 +57,7 @@ class contentmarketplace_linkedin_create_course_delay_task_testcase extends test
      */
     public function test_create_course_delay_task(): void {
         global $DB;
-        
+
         $count = $DB->count_records('course', ['containertype' => course::get_type()]);
         self::assertEquals(0, $count);
 
@@ -80,7 +80,7 @@ class contentmarketplace_linkedin_create_course_delay_task_testcase extends test
             $learning_object = $generator->create_learning_object('urn:lyndaCourse:25' . $x);
             $data['learning_object_id'] = $learning_object->id;
             $data['category_id'] = $new_category->id;
-            
+
             $this->data[] = $data;
         }
     }

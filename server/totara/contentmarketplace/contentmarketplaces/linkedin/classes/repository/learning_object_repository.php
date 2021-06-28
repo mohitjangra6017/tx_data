@@ -47,4 +47,26 @@ class learning_object_repository extends repository {
             ->where('urn', $urn)
             ->one();
     }
+
+    /**
+     * @param array $learning_object_ids
+     * @return collection|learning_object[]
+     */
+    public function get_in(array $learning_object_ids): collection {
+        $repository = learning_object::repository();
+        $repository->where_in('id', $learning_object_ids);
+
+        return $repository->get();
+    }
+
+    /**
+     * Get the list of names from $learning_object_ids.
+     *
+     * @param array $learning_object_ids
+     * @return string[]
+     */
+    public function get_titles_of(array $learning_object_ids): array {
+        $collection = $this->get_in($learning_object_ids);
+        return $collection->pluck('title');
+    }
 }

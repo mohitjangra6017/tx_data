@@ -91,7 +91,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
 
         $result = $course_builder->create_course_in_transaction();
         self::assertFalse($result->is_error());
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertNotNull($result->get_course_id());
         self::assertNull($result->get_message());
         self::assertNull($result->get_exception());
@@ -143,7 +143,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         );
 
         $result = $course_builder->create_course();
-        self::assertFalse($result->is_success());
+        self::assertFalse($result->is_successful());
         self::assertTrue($result->is_error());
         self::assertEquals(result::ERROR_ON_COURSE_CREATION, $result->get_code());
 
@@ -190,7 +190,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
 
         $result = $course_builder->create_course();
         self::assertFalse($result->is_error());
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertNull($result->get_message());
         self::assertNull($result->get_exception());
 
@@ -258,7 +258,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         // The creation should not leaving any trailing record if the error yield
         self::assertEquals(0, $db->count_records('course', ['containertype' => course::get_type()]));
 
-        self::assertFalse($result->is_success());
+        self::assertFalse($result->is_successful());
         self::assertTrue($result->is_error());
         self::assertNull($result->get_course_id());
         self::assertEquals(result::ERROR_ON_MODULE_CREATION, $result->get_code());
@@ -306,7 +306,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
             $db->record_exists('course', ['containertype' => course::get_type(), 'fullname' => 'Name'])
         );
 
-        self::assertFalse($result->is_success());
+        self::assertFalse($result->is_successful());
         self::assertTrue($result->is_error());
         self::assertNull($result->get_course_id());
         self::assertEquals(result::ERROR_ON_MODULE_CREATION, $result->get_code());
@@ -345,7 +345,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         $course_builder->disable_enrol('self');
         $result = $course_builder->create_course();
 
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertFalse($result->is_error());
         self::assertNull($result->get_exception());
         self::assertNull($result->get_message());
@@ -382,7 +382,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
 
         $result = $course_builder->create_course();
 
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertFalse($result->is_error());
         self::assertNull($result->get_exception());
         self::assertNull($result->get_message());
@@ -421,7 +421,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         $course_builder->enable_enrols('guest', 'self');
         $result = $course_builder->create_course();
 
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertFalse($result->is_error());
         self::assertNull($result->get_exception());
         self::assertNull($result->get_message());
@@ -460,7 +460,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         $course_builder->enable_enrol('g2a');
         $result = $course_builder->create_course();
 
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertFalse($result->is_error());
         self::assertNull($result->get_exception());
         self::assertNull($result->get_message());
@@ -502,7 +502,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         $course_builder->enable_enrol('totara_facetoface');
         $result = $course_builder->create_course();
 
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertFalse($result->is_error());
         self::assertNull($result->get_exception());
         self::assertNull($result->get_message());
@@ -551,7 +551,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
 
         $result = $course_builder->create_course_in_transaction();
 
-        self::assertFalse($result->is_success());
+        self::assertFalse($result->is_successful());
         self::assertTrue($result->is_error());
         self::assertEmpty($result->get_course_id());
 
@@ -594,7 +594,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         );
 
         $result = $course_builder->create_course_in_transaction();
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertFalse($result->is_error());
 
         self::assertNull($result->get_message());
@@ -647,7 +647,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         $course_builder->set_course_format('topics');
         $result = $course_builder->create_course_in_transaction();
 
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertFalse($result->is_error());
         self::assertNull($result->get_message());
         self::assertNull($result->get_exception());
@@ -699,7 +699,7 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         );
 
         $result = $course_builder->create_course();
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertFalse($result->is_error());
         self::assertNull($result->get_exception());
         self::assertNull($result->get_message());

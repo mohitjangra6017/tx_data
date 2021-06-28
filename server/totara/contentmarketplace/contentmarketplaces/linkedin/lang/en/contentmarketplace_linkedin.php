@@ -46,6 +46,7 @@ $string['catalog_filter_timespan_2_to_3_hours'] = '2 - 3 hours';
 $string['catalog_filter_timespan_30_to_60_minutes'] = '30 - 60 mins';
 $string['catalog_filter_timespan_over_3_hours'] = '3+ hours';
 $string['catalog_filter_timespan_under_10_minutes'] = '< 10 mins';
+$string['catalog_import_page_placeholder_group'] = 'Catalog import {$a}';
 $string['catalog_title'] = 'LinkedIn Learning catalogue';
 $string['catalog_review_title'] = 'LinkedIn Learning catalogue - Review selections';
 $string['category_label'] ='Category:';
@@ -55,7 +56,7 @@ $string['client_secret'] = 'Client secret';
 $string['client_secret_help'] = 'Client secret can be obtained from LinkedIn Learning under the integration settings page.';
 $string['comma_and_space'] = ', ';
 $string['content_appears_in'] = 'This LinkedIn Learning content appears in:';
-$string['content_creation_failure'] = 'A number of courses failed to be imported due to a system error. Please <u>try again to import the remaining courses</u>.';
+$string['content_creation_failure'] = 'A number of courses failed to be imported due to a system error. Please <u>try again to import the remaining courses</u> ({$a}).';
 $string['content_creation_failure_no_course'] = 'All courses failed to be imported due to a system error. Please <u>try again</u>.';
 $string['content_creation_unknown_failure'] = 'Unknown issue';
 $string['course_content_immediate_creation'] = "The courses have been successfully created";
@@ -74,10 +75,27 @@ $string['error:fail_json_validation'] = 'Failed to validate the json data: {$a}'
 $string['explore_lil_marketplace'] = 'LinkedIn Learning content marketplace';
 $string['explore_lil_marketplace_description'] = 'Explore content from LinkedIn Learning';
 $string['filters_title'] = 'Filters';
+$string['import_course_full_failure_body'] = 'Unfortunately, an error occurred when importing items from LinkedIn Learning causing all of the items to fail to import.
+Please re-attempt the import by following this link: [catalog_import:page_link_placeholder]';
+$string['import_course_full_failure_resolver_name'] = 'Failed to import all courses';
+$string['import_course_full_failure_subject'] = 'LinkedIn Learning import failure';
+$string['import_course_full_failure_title'] = 'LinkedIn Learning import failure';
+$string['import_course_partial_failure_body'] = "Unfortunately, an error occurred when importing items from LinkedIn Learning. The following items failed to be imported:
+[learning_objects:titles_list]
+Please re-attempt the import by following this link: [learning_objects:catalog_import_link]
+";
+$string['import_course_partial_failure_resolver_name'] = "Failed to import several courses";
+$string['import_course_partial_failure_subject'] = "LinkedIn Learning import failure";
+$string['import_course_partial_failure_title'] = "LinkedIn Learning import failure";
 $string['language_en'] = 'English';
 $string['language_filter_label'] = 'Language';
+$string['learning_objects_group'] = 'Learning objects {$a}';
+$string['learning_object_titles'] = 'titles';
+$string['learning_object_title_list_item'] = '* {$a}';
+$string['page_link_placeholder'] = "page link";
 $string['plugin_description'] = 'Online Training Courses for Creative, Technology, Business Skills.';
 $string['pluginname'] = 'LinkedIn Learning';
+$string['recipient_actor'] = 'User who triggered action';
 $string['search_filter_placeholder'] = 'Search...';
 $string['settings_title'] = 'LinkedIn Learning settings';
 $string['sort_filter_alphabetical'] = 'Alphabetical';

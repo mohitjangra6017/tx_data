@@ -25,6 +25,7 @@ namespace contentmarketplace_linkedin\webapi\resolver\mutation;
 
 use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\dto\course_creation_result;
+use contentmarketplace_linkedin\entity\learning_object;
 use contentmarketplace_linkedin\interactor\catalog_import_interactor;
 use contentmarketplace_linkedin\task\create_course_delay_task;
 use core\notification;
@@ -41,7 +42,7 @@ final class catalog_import_create_course implements mutation_resolver, has_middl
     /**
      * Note: the resolver functionality will queue up to $SESSION for the notification of the process.
      *       This can cause the race conditions problem with a low chances, it is not ideally, but at
-     *       the moment, there is no common prace around this notification for navigated page.
+     *       the moment, there is no common practice around this notification for navigated page.
      *
      * {@inheritdoc}
      */
@@ -55,16 +56,32 @@ final class catalog_import_create_course implements mutation_resolver, has_middl
 
         if (count($input_params) <= config::get_max_selected_items_number()) {
             // Creation on runtime here.
-            return self:: create_course_immediate($input_params, $interactor);
+            return self::create_course_immediate($input_params, $interactor);
         }
 
+        return self::queue_adhoc_task($input_params);
+    }
+
+    /**
+     * The data structure of $input_params would be looking like:
+     * $input_params = [
+     *  [
+     *      'learning_object_id' => 42,
+     *      'category_id' => 496
+     *  ]
+     * ]
+     *
+     * @param array $input_params
+     * @return course_creation_result
+     */
+    private static function queue_adhoc_task(array $input_params): course_creation_result {
         // Create course delay with adhoc task.
         create_course_delay_task::enqueue($input_params);
 
+        notification::info(get_string('course_content_delay_creation', 'contentmarketplace_linkedin'));
         $result = new course_creation_result(true);
         $result->set_redirect_url(new moodle_url('/totara/catalog/index.php'));
 
-        notification::info(get_string('course_content_delay_creation', 'contentmarketplace_linkedin'));
         return $result;
     }
 
@@ -73,6 +90,13 @@ final class catalog_import_create_course implements mutation_resolver, has_middl
      * Which we would want to create the course out of learning_object and under the category.
      *
      * If category's id is not provided, then fallback to the default category's id that user is able to create.
+     * The data structure of $input_params would be looking like:
+     * $input_params = [
+     *  [
+     *      'learning_object_id' => 42,
+     *      'category_id' => 496
+     *  ]
+     * ]
      *
      * @param array                     $input_params
      * @param catalog_import_interactor $interactor
@@ -82,10 +106,9 @@ final class catalog_import_create_course implements mutation_resolver, has_middl
         $redirect_url = new moodle_url('/totara/catalog/index.php', ['orderbykey' => 'time']);
         $mutation_result = new course_creation_result();
 
-        // A flag to tell that a partial of course records were created.
-        // And another flag to tell that the whole process is a success.
-        $partial_completed = false;
-        $successful_run = true;
+        // The list of learning objects that are failed to create a course out of.
+        // If the list is empty, the process is success. Otherwise, there are either some or all failing.
+        $failed_learning_objects = [];
 
         foreach ($input_params as $input_param) {
             $learning_object_id = $input_param['learning_object_id'];
@@ -100,36 +123,45 @@ final class catalog_import_create_course implements mutation_resolver, has_middl
                 );
 
                 $creation_result = $course->create_course_in_transaction();
-                if ($creation_result->is_success()) {
-                    $partial_completed = true;
-                } else {
+                if ($creation_result->is_error()) {
                     // One course failed to be created.
-                    $successful_run = false;
+                    $failed_learning_objects[] = $learning_object_id;
                 }
             } catch (cannot_resolve_default_course_category $e) {
                 // Cannot resolve the category id. However, we do not want to stop the process
-                // here, as there are several other courses that can be added with given category id.
+                // here, as there are several other courses that can be added with the given category id(s).
                 debugging($e->getMessage(), DEBUG_ALL);
-                $successful_run = false;
+                $failed_learning_objects[] = $learning_object_id;
             }
         }
 
-        if (!$successful_run) {
-            // The process does not get to completed when created 50 or less courses.
-            if ($partial_completed) {
-                $message = get_string('content_creation_failure', 'contentmarketplace_linkedin');
+        if (!empty($failed_learning_objects)) {
+            // The process does not get to complete when create 50 or less courses.
+            if (count($input_params) > count($failed_learning_objects)) {
+                // Only a partial of 50 or less courses were completed within unsuccessful process.
+                // Hence we yield error notification banner for the navigated page, with a list of learning object's
+                // names that are failed to be created.
+                $repository = learning_object::repository();
+                $names = $repository->get_titles_of($failed_learning_objects);
+                $names = implode(',', $names);
+
+                notification::error(
+                    get_string('content_creation_failure', 'contentmarketplace_linkedin', $names)
+                );
+
+                $mutation_result->set_redirect_url($redirect_url);
             } else {
-                $message = get_string('content_creation_failure_no_course', 'contentmarketplace_linkedin');
+                $mutation_result->set_message(
+                    get_string('content_creation_failure_no_course', 'contentmarketplace_linkedin')
+                );
             }
-            $mutation_result->set_message($message);
-            notification::error($message);
         } else {
             // Successful creation
             notification::success(get_string('course_content_immediate_creation', 'contentmarketplace_linkedin'));
             $mutation_result->set_successful(true);
+            $mutation_result->set_redirect_url($redirect_url);
         }
 
-        $mutation_result->set_redirect_url($redirect_url);
         return $mutation_result;
     }
 

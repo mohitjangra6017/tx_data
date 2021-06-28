@@ -25,7 +25,9 @@ use container_course\course;
 use contentmarketplace_linkedin\dto\course_creation_result;
 use contentmarketplace_linkedin\testing\generator;
 use contentmarketplace_linkedin\webapi\resolver\mutation\catalog_import_create_course;
+use core\notification;
 use core\orm\query\builder;
+use core\output\notification as output_notification;
 use core_phpunit\testcase;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 use totara_contentmarketplace\testing\helper;
@@ -408,5 +410,193 @@ class contentmarketplace_linkedin_webapi_resolver_mutation_catalog_import_create
                 ]
             ]
         );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_courses_with_just_partial_completed(): void {
+        // Steps:
+        //      + Create two different course categories
+        //      + Create one user
+        //      + Assign capability course create to one of the category
+        //      + Create two learning objects
+        //      + Log in as created user
+        //      + Call to the mutation with the newly two created learning objects
+        //        that are mapped with the categories each.
+        //      + Check that one of the learning object is created with a course
+        //        and the other learning object cannot be created with a course.
+        //      + Check the notification session.
+        $generator = self::getDataGenerator();
+        $category_one = $generator->create_category(['name' => 'Able create category']);
+        $category_two = $generator->create_category(['name' => 'Unable create category']);
+
+        $user = $generator->create_user();
+
+        $context_category_one = context_coursecat::instance($category_one->id);
+        $context_category_two = context_coursecat::instance($category_two->id);
+
+        self::assertFalse(has_capability('totara/contentmarketplace:add', $context_category_one, $user->id));
+        self::assertFalse(has_capability('totara/contentmarketplace:add', $context_category_two, $user->id));
+
+        role_assign(
+            helper::get_course_creator_role(),
+            $user->id,
+            $context_category_one->id
+        );
+
+        self::assertTrue(has_capability('totara/contentmarketplace:add', $context_category_one, $user->id));
+        self::assertFalse(has_capability('totara/contentmarketplace:add', $context_category_two, $user->id));
+
+        $marketplace_generator = generator::instance();
+
+        $learning_object_one = $marketplace_generator->create_learning_object('urn:lyndaCourse:252');
+        $learning_object_two = $marketplace_generator->create_learning_object('urn:lyndaCourse:212');
+
+        self::setUser($user);
+        self::assertEmpty(notification::fetch());
+
+        $db = builder::get_db();
+        self::assertEquals(0, $db->count_records('course', ['containertype' => course::get_type()]));
+
+        /** @var course_creation_result $result */
+        $result = $this->resolve_graphql_mutation(
+            $this->get_graphql_name(catalog_import_create_course::class),
+            [
+                'input' => [
+                    [
+                        'learning_object_id' => $learning_object_one->id,
+                        'category_id' => $category_one->id,
+                    ],
+                    [
+                        'learning_object_id' => $learning_object_two->id,
+                        'category_id' => $category_two->id
+                    ]
+                ]
+            ]
+        );
+
+        self::assertInstanceOf(course_creation_result::class, $result);
+        self::assertFalse($result->is_successful());
+
+        // Message is piped thru notification system. Which means that the redirect url is included in the result.
+        self::assertEmpty($result->get_message());
+        self::assertNotNull($result->get_redirect_url());
+
+        $notifications = notification::fetch();
+        self::assertNotEmpty($notifications);
+
+        /** @var output_notification $notification */
+        $notification = reset($notifications);
+        self::assertInstanceOf(output_notification::class, $notification);
+        self::assertEquals(
+            get_string('content_creation_failure', 'contentmarketplace_linkedin', $learning_object_two->title),
+            $notification->get_message()
+        );
+
+        // Only one course is created out of two.
+        self::assertEquals(1, $db->count_records('course', ['containertype' => course::get_type()]));
+
+        // Check that the learning object one is created successfully, but not the learning object two.
+        $exist_sql = '
+            SELECT 1 FROM "ttr_course" c
+            INNER JOIN "ttr_contentmarketplace" cm ON cm.course = c.id
+            WHERE cm.learning_object_id = :learning_object_id
+            AND cm.learning_object_marketplace_component = :component
+        ';
+
+        self::assertFalse(
+            $db->record_exists_sql(
+                $exist_sql,
+                [
+                    'learning_object_id' => $learning_object_two->id,
+                    'component' => 'contentmarketplace_linkedin',
+                ]
+            )
+        );
+
+        self::assertTrue(
+            $db->record_exists_sql(
+                $exist_sql,
+                [
+                    'learning_object_id' => $learning_object_one->id,
+                    'component' => 'contentmarketplace_linkedin',
+                ]
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_create_courses_with_fully_failure(): void {
+        // Steps:
+        //      + Create two course categories
+        //      + Create a user
+        //      + Assign user to be a course creator of one of the course category
+        //      + Create one learning object
+        //      + Log in as user
+        //      + Create courses with mutation but provide the second category to the learning object.
+        //      + Check the result - assertion
+        //      + Check that there are no courses created from the mutation.
+        $generator = self::getDataGenerator();
+
+        $category_one = $generator->create_category(['name' => 'Category one']);
+        $category_two = $generator->create_category(['name' => 'Category two']);
+
+        $user = $generator->create_user();
+
+        $context_category_one = context_coursecat::instance($category_one->id);
+        $context_category_two = context_coursecat::instance($category_two->id);
+
+        self::assertFalse(has_capability('totara/contentmarketplace:add', $context_category_one, $user->id));
+        self::assertFalse(has_capability('totara/contentmarketplace:add', $context_category_two, $user->id));
+
+        role_assign(
+            helper::get_course_creator_role(),
+            $user->id,
+            $context_category_one->id,
+        );
+
+        self::assertTrue(has_capability('totara/contentmarketplace:add', $context_category_one, $user->id));
+        self::assertFalse(has_capability('totara/contentmarketplace:add', $context_category_two, $user->id));
+
+        // Create two learning objects.
+        $marketplace_generator = generator::instance();
+        $learning_object = $marketplace_generator->create_learning_object('urn:lyndaCourse:452');
+
+        self::assertEmpty(notification::fetch());
+
+        $db = builder::get_db();
+        self::assertEquals(0, $db->count_records('course', ['containertype' => course::get_type()]));
+
+        self::setUser($user);
+
+        /** @var course_creation_result $result */
+        $result = $this->resolve_graphql_mutation(
+            $this->get_graphql_name(catalog_import_create_course::class),
+            [
+                'input' => [
+                    [
+                        'learning_object_id' => $learning_object->id,
+                        'category_id' => $category_two->id
+                    ]
+                ]
+            ]
+        );
+
+        self::assertInstanceOf(course_creation_result::class, $result);
+        self::assertFalse($result->is_successful());
+
+        // Message is produced but not the redirect link because none of the course(s) are created.
+        $message = $result->get_message();
+        self::assertNotEmpty($message);
+        self::assertEquals(
+            get_string('content_creation_failure_no_course', 'contentmarketplace_linkedin'),
+            $message
+        );
+
+        self::assertNull($result->get_redirect_url());
+        self::assertEquals(0, $db->count_records('course', ['containertype' => course::get_type()]));
     }
 }

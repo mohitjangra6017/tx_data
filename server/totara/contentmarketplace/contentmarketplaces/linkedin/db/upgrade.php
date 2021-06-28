@@ -33,7 +33,7 @@ defined('MOODLE_INTERNAL') || die;
  * @return bool always true
  */
 function xmldb_contentmarketplace_linkedin_upgrade(int $old_version): bool {
-    global $DB;
+    global $DB, $CFG;
     $db_manager = $DB->get_manager();
 
     if ($old_version < 2021042800) {
@@ -239,6 +239,13 @@ function xmldb_contentmarketplace_linkedin_upgrade(int $old_version): bool {
 
         // Linkedin savepoint reached.
         upgrade_plugin_savepoint(true, 2021061103, 'contentmarketplace', 'linkedin');
+    }
+
+    if ($old_version < 2021061104) {
+        require_once("{$CFG->dirroot}/totara/notification/db/upgradelib.php");
+        totara_notification_sync_built_in_notification('contentmarketplace_linkedin');
+
+        upgrade_plugin_savepoint(true, 2021061104, 'contentmarketplace', 'linkedin');
     }
 
     return true;
