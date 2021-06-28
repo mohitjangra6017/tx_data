@@ -24,10 +24,9 @@
 namespace contentmarketplace_linkedin\formatter;
 
 use core\orm\formatter\entity_model_formatter;
-use core\webapi\formatter\field\date_field_formatter;
 use core\webapi\formatter\field\string_field_formatter;
 
-class learning_object extends entity_model_formatter {
+class classification extends entity_model_formatter {
 
     /**
      * @return array
@@ -36,19 +35,9 @@ class learning_object extends entity_model_formatter {
         return [
             'id' => null,
             'name' => string_field_formatter::class,
-            'description' => string_field_formatter::class,
-            'description_include_html' => string_field_formatter::class,
-            'short_description' => string_field_formatter::class,
-            'last_updated_at' => date_field_formatter::class,
-            'published_at' => date_field_formatter::class,
-            'level' => null,
-            'time_to_complete' => timespan_field_formatter::class,
-            'asset_type' => null,
-            'language' => null,
-            'image_url' => null,
-            'classifications' => null,
-            'subjects' => null,
-            'courses' => null,
+            'type' => null,
+            'children' => null,
+            'parents' => null,
         ];
     }
 

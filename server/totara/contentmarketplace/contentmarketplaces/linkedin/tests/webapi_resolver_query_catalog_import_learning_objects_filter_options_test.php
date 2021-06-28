@@ -50,8 +50,6 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         $plugin->enable();
     }
 
-    // TODO: Add test for subject data in TL-30373
-
     public function test_resolve_asset_types(): void {
         $result = $this->resolve_graphql_query(self::QUERY);
         $assert_types_branch = reset($result['asset_type']);

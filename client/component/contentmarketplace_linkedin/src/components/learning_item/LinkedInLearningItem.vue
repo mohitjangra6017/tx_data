@@ -55,7 +55,7 @@
       <div class="tui-linkedInLearningItem__content">
         <!-- Course subject -->
         <div class="tui-linkedInLearningItem__subject">
-          {{ data.subject }}
+          {{ subjectsString }}
         </div>
         <!-- Course title -->
         <h3 class="tui-linkedInLearningItem__title">
@@ -274,6 +274,17 @@ export default {
 
       return type;
     },
+
+    /**
+     * Return a concatenated string of the learning object's subjects.
+     *
+     * @return {String}
+     */
+    subjectsString() {
+      return this.data.subjects
+        .map(subject => subject.name)
+        .join(this.$str('comma_and_space', 'contentmarketplace_linkedin'));
+    },
   },
 };
 </script>
@@ -287,6 +298,7 @@ export default {
       "a11y_content_type",
       "a11y_view_courses",
       "appears_in",
+      "comma_and_space",
       "content_appears_in",
       "course_difficulty_advanced",
       "course_difficulty_beginner",

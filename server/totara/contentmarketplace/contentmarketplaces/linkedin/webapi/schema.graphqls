@@ -37,6 +37,27 @@ enum contentmarketplace_linkedin_catalog_import_sort_by {
 }
 
 """
+The level in the hierarchy that a classification is.
+"""
+enum contentmarketplace_linkedin_classification_type {
+  LIBRARY
+  SUBJECT
+  SKILL
+  TOPIC
+}
+
+"""
+Classifications representing groups of related learning objects.
+"""
+type contentmarketplace_linkedin_classification {
+  id: core_id!
+  name(format: core_format = PLAIN): String!
+  type: contentmarketplace_linkedin_classification_type!
+  parents: [contentmarketplace_linkedin_classification!]!
+  children: [contentmarketplace_linkedin_classification!]!
+}
+
+"""
 A LinkedIn Learning asset that can be turned into a Totara course.
 """
 type contentmarketplace_linkedin_learning_object implements totara_contentmarketplace_learning_object {
@@ -50,7 +71,8 @@ type contentmarketplace_linkedin_learning_object implements totara_contentmarket
   last_updated_at(format: core_date_format = DATE): core_date!
   published_at(format: core_date_format = DATE): core_date!
   asset_type: contentmarketplace_linkedin_asset_type!
-  subject(format: core_format = PLAIN): String
+  classifications: [contentmarketplace_linkedin_classification!]!
+  subjects: [contentmarketplace_linkedin_classification!]!
   level: contentmarketplace_linkedin_level
   time_to_complete(
     format: contentmarketplace_linkedin_timespan_format = HUMAN

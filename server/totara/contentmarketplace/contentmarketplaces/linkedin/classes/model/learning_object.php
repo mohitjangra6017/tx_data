@@ -47,7 +47,6 @@ use totara_contentmarketplace\learning_object\text;
  * @property-read string|null       $short_description
  * @property-read int               $last_updated_at
  * @property-read int               $published_at
- * @property-read string|null       $subject
  * @property-read string|null       $level
  * @property-read int|null          $time_to_complete
  * @property-read string|null       $web_launch_url
@@ -59,10 +58,10 @@ use totara_contentmarketplace\learning_object\text;
  * @property-read string      $language  Alias for 'locale_language'
  * @property-read string|null $image_url Alias for 'primary_image_url'
  *
- * @property-read classification[]|collection $classifications  Get the mapped classifications
- * @property-read classification[]|collection $subjects         Get the mapped classifications
- *                                                              type {@see constants::CLASSIFICATION_TYPE_SUBJECT}
- * @property-read course[]|collection         $courses
+ * @property-read classification[]|orm_collection $classifications  Get the mapped classifications
+ * @property-read classification[]|orm_collection $subjects         Get the mapped classifications
+ *                                                                  type {@see constants::CLASSIFICATION_TYPE_SUBJECT}
+ * @property-read course[]|orm_collection         $courses
  *
  * @package contentmarketplace_linkedin\model
  */
@@ -88,7 +87,6 @@ class learning_object extends model implements detailed_model {
         'short_description',
         'last_updated_at',
         'published_at',
-        'subject',
         'level',
         'time_to_complete',
         'asset_type',
@@ -98,7 +96,9 @@ class learning_object extends model implements detailed_model {
         'name',
         'language',
         'image_url',
-        'courses'
+        'classifications',
+        'subjects',
+        'courses',
     ];
 
     /**
@@ -243,27 +243,17 @@ class learning_object extends model implements detailed_model {
     }
 
     /**
-     * @return orm_collection
+     * @return orm_collection|classification[]
      */
     public function get_classifications(): orm_collection {
         return $this->entity->classifications->map_to(classification::class);
     }
 
     /**
-     * @return orm_collection
+     * @return orm_collection|classification[]
      */
     public function get_subjects(): orm_collection {
         return $this->entity->subjects->map_to(classification::class);
-    }
-
-    /**
-     * Get the first subject within the collection of related classifications type subject.
-     *
-     * @return classification|null
-     */
-    public function get_first_subject(): ?classification {
-        $subjects = $this->get_subjects();
-        return $subjects->first();
     }
 
     /**
@@ -276,8 +266,7 @@ class learning_object extends model implements detailed_model {
         }
 
         return $this->entity->courses->filter(function (course $course) {
-            /** @var course $course */
-            return totara_course_is_viewable($course->to_record(), (user::logged_in())->id);
+            return totara_course_is_viewable($course->to_record(), user::logged_in()->id);
         });
     }
 }

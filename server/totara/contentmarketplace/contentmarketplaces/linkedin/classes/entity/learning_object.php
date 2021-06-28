@@ -48,7 +48,6 @@ use mod_contentmarketplace\entity\content_marketplace;
  * @property int $published_at
  * @property int|null $retired_at
  * @property string $asset_type
- * @property string|null $subject
  * @property string|null $level
  * @property string|null $primary_image_url
  * @property int|null $time_to_complete
@@ -121,10 +120,10 @@ class learning_object extends entity {
      * @return has_many_through
      */
     public function subjects(): has_many_through {
-        $relation = $this->classifications();
-        $relation->where('type', constants::CLASSIFICATION_TYPE_SUBJECT);
-
-        return $relation;
+        return $this->classifications()
+            ->where('type', constants::CLASSIFICATION_TYPE_SUBJECT)
+            ->order_by('name')
+            ->order_by('id');
     }
 
     /**
@@ -138,6 +137,8 @@ class learning_object extends entity {
             'learning_object_id',
             'course',
             'id'
-        );
+        )
+            ->order_by('fullname')
+            ->order_by('id');
     }
 }

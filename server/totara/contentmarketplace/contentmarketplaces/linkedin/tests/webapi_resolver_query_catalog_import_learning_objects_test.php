@@ -29,6 +29,7 @@ use contentmarketplace_linkedin\model\learning_object;
 use contentmarketplace_linkedin\testing\generator;
 use contentmarketplace_linkedin\webapi\resolver\query\catalog_import_learning_objects;
 use contentmarketplace_linkedin\webapi\resolver\type\catalog_import_learning_objects_result;
+use contentmarketplace_linkedin\webapi\resolver\type\classification;
 use core\date_format;
 use core\format;
 use core\orm\collection;
@@ -178,8 +179,6 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
         ]));
         $this->assertEquals(3, $result_search_whitespace['total']);
     }
-
-    // TODO: Add test for subjects filtering functionality in TL-30372
 
     public function test_time_to_complete_filter(): void {
         $learning_object_1_min = generator::instance()->create_learning_object('1', [
@@ -338,8 +337,6 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
                 ],
             ],
             'Subjects' => [
-                // TODO: Test that subject labels are returned correctly in TL-30372.
-                // TODO: Make sure that the string_field_formatter is applied properly to the names of the subjects.
                 [
                     'subjects' => [],
                     'asset_type' => [],
@@ -349,12 +346,11 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             ],
             'Multiple types' => [
                 [
-                    'subjects' => [], // TODO: Test that subject labels are returned correctly in TL-30372
+                    'subjects' => [],
                     'asset_type' => [constants::ASSET_TYPE_VIDEO],
                     'time_to_complete' => ['{"min":7200,"max":10800}'],
                 ],
                 [
-                    // TODO: Test that subject labels are returned correctly in TL-30372
                     get_string('asset_type_video_plural', 'contentmarketplace_linkedin'),
                     get_string('catalog_filter_timespan_2_to_3_hours', 'contentmarketplace_linkedin'),
                 ],
@@ -454,13 +450,14 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
      */
     public function test_filter_learning_objects_with_subject(): void {
         $generator = generator::instance();
+        $classification_type = $this->get_graphql_name(classification::class);
         $learning_object_entity = $generator->create_learning_object(
             'urn:li:lyndaCourse:252',
             ['asset_type' => constants::ASSET_TYPE_COURSE]
         );
 
-        $classification_one = $generator->create_classification();
-        $classification_two = $generator->create_classification();
+        $classification_one = $generator->create_classification('1', ['name' => '<script>Subject One</script>']);
+        $classification_two = $generator->create_classification('2');
 
         $map = new learning_object_classification();
         $map->learning_object_id = $learning_object_entity->id;
@@ -495,9 +492,31 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
 
         /** @var learning_object $first_item */
         $first_item = $collection->first();
-
         self::assertInstanceOf(learning_object::class, $first_item);
         self::assertEquals($learning_object_entity->id, $first_item->id);
+
+        /** @var \contentmarketplace_linkedin\model\classification $subject */
+        $subject = $first_item->subjects->first();
+        self::assertEquals($classification_one->id, $this->resolve_graphql_type(
+            $classification_type,
+            'id',
+            $subject
+        ));
+        self::assertEquals($classification_one->type, $this->resolve_graphql_type(
+            $classification_type,
+            'type',
+            $subject
+        ));
+        self::assertNotEquals($classification_one->name, $this->resolve_graphql_type(
+            $classification_type,
+            'name',
+            $subject
+        ));
+        self::assertEquals('Subject One', $this->resolve_graphql_type(
+            $classification_type,
+            'name',
+            $subject
+        ));
 
         $result_two = $this->resolve_graphql_query(
             $this->get_graphql_name(catalog_import_learning_objects::class),

@@ -54,6 +54,7 @@ $string['client_id'] = 'Client ID';
 $string['client_id_help'] = 'Client ID can be obtained from LinkedIn Learning under the integration settings page.';
 $string['client_secret'] = 'Client secret';
 $string['client_secret_help'] = 'Client secret can be obtained from LinkedIn Learning under the integration settings page.';
+$string['comma_and_space'] = ', ';
 $string['content_appears_in'] = 'This LinkedIn Learning content appears in:';
 $string['content_creation_failure'] = 'A number of courses failed to be imported due to a system error. Please <u>try again to import the remaining courses</u>.';
 $string['content_creation_failure_no_course'] = 'All courses failed to be imported due to a system error. Please <u>try again</u>.';

@@ -66,7 +66,9 @@ class classification extends entity {
             'child_id',
             'parent_id',
             'id'
-        );
+        )
+            ->order_by('name')
+            ->order_by('id');
     }
 
     /**
@@ -80,6 +82,8 @@ class classification extends entity {
             'parent_id',
             'child_id',
             'id'
-        )->order_by('name');
+        )
+            ->order_by('name')
+            ->order_by('id');
     }
 }
