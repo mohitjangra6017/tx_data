@@ -62,6 +62,7 @@
         :selected-category="selectedCategory.id"
         :selected-items="selectedItems"
         :viewing-selected="reviewingSelectedItems"
+        :creating-content="creatingContentLoading"
         @category-change="setDefaultSelectedCategory"
         @clear-selection="clearSelectedItems"
         @create-courses="createCourses"
@@ -279,6 +280,7 @@ export default {
           id: 'ALPHABETICAL',
         },
       ],
+      creatingContentLoading: false,
     };
   },
 
@@ -440,10 +442,10 @@ export default {
 
     /**
      * Creating courses
-     *
      */
     async createCourses() {
       try {
+        this.creatingContentLoading = true;
         const {
           data: { payload },
         } = await this.$apollo.mutate({
@@ -468,6 +470,7 @@ export default {
             type: payload.success ? 'success' : 'error',
           });
         }
+        this.creatingContentLoading = false;
       } catch (e) {
         await notify({
           message: this.$str(
@@ -476,6 +479,7 @@ export default {
           ),
           type: 'error',
         });
+        this.creatingContentLoading = false;
       }
     },
 

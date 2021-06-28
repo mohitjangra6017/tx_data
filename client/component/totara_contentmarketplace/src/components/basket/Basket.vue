@@ -67,7 +67,7 @@
         />
 
         <Button
-          :disabled="empty"
+          :disabled="empty || creatingContent"
           :styleclass="{ primary: true }"
           :text="$str('basket_create_courses', 'totara_contentmarketplace')"
           @click="$emit('create-courses')"
@@ -101,6 +101,7 @@ export default {
     },
     // On the viewing selected screen
     viewingSelected: Boolean,
+    creatingContent: Boolean,
   },
 
   computed: {
