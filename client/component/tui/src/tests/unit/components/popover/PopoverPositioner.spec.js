@@ -18,6 +18,7 @@
 
 import { shallowMount } from '@vue/test-utils';
 import PopoverPositioner from 'tui/components/popover/PopoverPositioner';
+import pending from 'tui/pending';
 
 jest.mock('tui/lib/popover', () => {
   const { Point } = require('tui/geometry');
@@ -33,6 +34,41 @@ jest.mock('tui/lib/popover', () => {
 });
 
 describe('PopoverPositioner', () => {
+  it.each([['transitionEnter'], ['transitionLeave']])(
+    'calls pending during %s',
+    method => {
+      const wrapper = shallowMount(PopoverPositioner);
+
+      expect(pending.__outstanding()).toBe(0);
+
+      wrapper.vm[method]();
+
+      expect(pending.__outstanding()).toBe(1);
+
+      // check that pending goes away when the tab is hidden
+      Object.defineProperty(document, 'visibilityState', {
+        configurable: true,
+        value: 'hidden',
+      });
+      window.dispatchEvent(new Event('visibilitychange'));
+
+      expect(pending.__outstanding()).toBe(0);
+
+      Object.defineProperty(document, 'visibilityState', {
+        configurable: true,
+        value: 'visible',
+      });
+      window.dispatchEvent(new Event('visibilitychange'));
+
+      expect(pending.__outstanding()).toBe(1);
+
+      // check that it returns to 0 once the transition finishes
+      wrapper.vm[method + 'End']();
+
+      expect(pending.__outstanding()).toBe(0);
+    }
+  );
+
   it('matches snapshot', () => {
     const wrapper = shallowMount(PopoverPositioner, {
       scopedSlots: {

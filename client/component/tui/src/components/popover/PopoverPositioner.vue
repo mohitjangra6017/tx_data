@@ -67,6 +67,30 @@ const ContextType = {
   UNCONTAINED: 'uncontained',
 };
 
+/**
+ * Wrapper for pending that removes the task while the page is not visible
+ * (as transitions are paused when pages are hidden).
+ *
+ * @param {string} name
+ * @returns {() => void}
+ */
+function pendingTransition(name) {
+  let done = pending(name);
+  const handler = () => {
+    if (document.visibilityState === 'visible') {
+      done(); // in case we recieve 2 visible events in a row
+      done = pending(name);
+    } else {
+      done();
+    }
+  };
+  window.addEventListener('visibilitychange', handler);
+  return () => {
+    window.removeEventListener('visibilitychange', handler);
+    done();
+  };
+}
+
 export default {
   props: {
     position: String,
@@ -160,6 +184,13 @@ export default {
   destroyed() {
     this.$_closeCleanup();
     this.resizeObserver.disconnect();
+
+    if (this.enterDone) {
+      this.enterDone();
+    }
+    if (this.leaveDone) {
+      this.leaveDone();
+    }
   },
 
   methods: {
@@ -329,7 +360,7 @@ export default {
       if (this.enterDone) {
         this.enterDone();
       }
-      this.enterDone = pending('popover-positioner-enter');
+      this.enterDone = pendingTransition('popover-positioner-enter');
     },
 
     transitionEnterEnd() {
@@ -343,7 +374,7 @@ export default {
       if (this.leaveDone) {
         this.leaveDone();
       }
-      this.leaveDone = pending('popover-positioner-leave');
+      this.leaveDone = pendingTransition('popover-positioner-leave');
     },
 
     transitionLeaveEnd() {
