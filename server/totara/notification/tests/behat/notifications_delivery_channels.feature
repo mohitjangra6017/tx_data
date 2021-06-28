@@ -63,7 +63,6 @@ Feature: Notifications delivery channels
     And I switch to "Notifications" tab
     Then I should see "Notifications"
 
-    When I click on "Certification" "button"
     Then I should see "Learner assigned in certification"
     And I should see "Default delivery channels"
     When I click on "more" "button"

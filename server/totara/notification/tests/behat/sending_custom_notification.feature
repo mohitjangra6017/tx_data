@@ -59,7 +59,6 @@ Feature: Sending custom notifications to user
     And I am on "Certification 1" certification homepage
     And I click on "Edit certification details" "button"
     And I follow "Notifications"
-    And I click on "Certification" "button"
     When I click on "Learner assigned in certification details" "button"
     Then I should see "Custom notification one"
     When I click on "Actions for Custom notification one" "button"

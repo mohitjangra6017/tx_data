@@ -12,7 +12,6 @@ Feature: Course notifications node
     When I navigate to "Notifications" node in "Course administration"
     Then I should see "Notifications"
 
-    When I click on "Certification" "button"
     And I should see "Course set completed"
 
     When I click on "Actions for Course set completed" "button"

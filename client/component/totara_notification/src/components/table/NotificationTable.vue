@@ -19,17 +19,23 @@
 <template>
   <div>
     <CollapsibleGroupToggle
+      v-show="!singleEventResolver"
       v-model="expanded"
       :align-end="false"
       :transparent="false"
     />
-    <div class="tui-notificationTable">
+    <div
+      class="tui-notificationTable"
+      :class="{
+        'tui-notificationTable--singleEventResolver': singleEventResolver,
+      }"
+    >
       <Collapsible
         v-for="eventResolver in eventResolvers"
         :key="eventResolver.component"
         v-model="expanded[eventResolver.component]"
         :label="eventResolver.plugin_name"
-        :indent-contents="true"
+        :indent-contents="!singleEventResolver"
       >
         <Table
           :data="eventResolver.resolvers"
@@ -144,7 +150,6 @@
               />
             </Cell>
           </template>
-
           <template v-slot:expand-content="{ row: resolver }">
             <Table
               v-if="resolver.notification_preferences.length"
@@ -364,12 +369,21 @@ export default {
   },
 
   data() {
+    const singleEventResolver = this.eventResolvers.length === 1;
     const expanded = {};
-    this.eventResolvers.forEach(
-      eventResolver => (expanded[eventResolver.component] = false)
-    );
 
-    return { expanded };
+    if (singleEventResolver) {
+      expanded[this.eventResolvers[0].component] = true;
+    } else {
+      this.eventResolvers.forEach(
+        eventResolver => (expanded[eventResolver.component] = false)
+      );
+    }
+
+    return {
+      singleEventResolver,
+      expanded,
+    };
   },
 
   methods: {
@@ -436,6 +450,14 @@ export default {
 
   &__subTable {
     background-color: var(--color-text-disabled);
+  }
+
+  &--singleEventResolver {
+    .tui-collapsible {
+      &__header {
+        display: none;
+      }
+    }
   }
 }
 

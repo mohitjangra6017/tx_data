@@ -79,7 +79,6 @@ Feature: Notifications page
       | fullname   | shortname | format |
       | Course 101 | c101      | topics |
     And I navigate to notifications page of "course" "c101"
-    And I click on "Certification" "button"
     When I click on "Actions for Course set completed event" "button"
     Then I should see "Create notification"
     And I click on "Create notification" "link"
