@@ -57,6 +57,9 @@ class mod_perform_webapi_resolver_query_subject_instance_for_participant_testcas
             1
         ))->get_url($GLOBALS['PAGE'])->out(false);
 
+        $url = new moodle_url('/user/profile.php');
+        $profile_url = $url->out();
+
         $expected = [
             'id' => (string) self::$about_user_and_participating->id,
             'progress_status' => self::$about_user_and_participating->get_progress_status(),
@@ -85,11 +88,11 @@ class mod_perform_webapi_resolver_query_subject_instance_for_participant_testcas
                 'profileimageurlsmall' => $profile_image_small_url,
                 'card_display' => [
                     'profile_picture_alt' => null,
-                    'profile_url' => null,
+                    'profile_url' => $profile_url,
                     'profile_picture_url' => $profile_image_url,
                     'display_fields' => [
                         [
-                            'associate_url' => null,
+                            'associate_url' => $profile_url,
                             'value' => self::$about_user_and_participating->subject_user->fullname,
                             'label' => 'Full name',
                             'is_custom' => false,

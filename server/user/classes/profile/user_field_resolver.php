@@ -248,7 +248,7 @@ final class user_field_resolver {
             }
         }
 
-        if ('profileurl' === $field_name && $this->access_controller->can_view_profile()) {
+        if ('profileurl' === $field_name && $this->access_controller->get_profile_url()) {
             // Special custom computed field 'profileurl'
             return $this->do_get_value('profileurl');
         }
