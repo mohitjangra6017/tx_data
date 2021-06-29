@@ -27,7 +27,7 @@ use totara_contentmarketplace\explorer as explorer_model;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 use contentmarketplace_linkedin\controllers\catalog_import as lil_catalog_import;
 
-class totara_contentmarketplace_catalog_import_controller_testcase  extends testcase {
+class totara_contentmarketplace_catalog_import_controller_testcase extends testcase {
     /**
      * @return void
      */

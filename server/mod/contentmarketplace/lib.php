@@ -25,6 +25,7 @@ defined('MOODLE_INTERNAL') || die();
 use mod_contentmarketplace\local\helper;
 use mod_contentmarketplace\model\content_marketplace;
 use mod_contentmarketplace\output\content_marketplace_logo;
+use totara_contentmarketplace\entity\course_source;
 
 /**
  * A callback function from course's API to create an instance of content
@@ -88,9 +89,16 @@ function contentmarketplace_supports($feature): ?bool {
  */
 function contentmarketplace_delete_instance(int $id): bool {
     $content_marketplace = content_marketplace::load_by_id($id);
-    return $content_marketplace->delete();
-}
 
+    // Delete the course source when the learning activity is deleted.
+    course_source::repository()->delete_by_course_id(
+        $content_marketplace->course,
+        $content_marketplace->learning_object_id,
+        $content_marketplace->learning_object_marketplace_component
+    );
+
+     return $content_marketplace->delete();
+}
 /**
  * A callback function from core, to update the database record.
  *

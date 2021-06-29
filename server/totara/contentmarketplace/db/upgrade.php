@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of Totara Learn
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
@@ -31,6 +31,8 @@ use core\orm\query\builder;
  */
 function xmldb_totara_contentmarketplace_upgrade($oldversion) {
     $DB = builder::get_db();
+    $dbman = $DB->get_manager();
+
     if ($oldversion < 2021061501) {
         $condition = [
             'component' => 'totara_contentmarketplace',
@@ -41,6 +43,33 @@ function xmldb_totara_contentmarketplace_upgrade($oldversion) {
         }
 
         upgrade_plugin_savepoint(true, 2021061501, 'totara', 'contentmarketplace');
+    }
+
+    if ($oldversion < 2021061502) {
+        // Define table totara_contentmarketplace_course_source to be created.
+        $table = new xmldb_table('totara_contentmarketplace_course_source');
+
+        // Adding fields to table totara_contentmarketplace_course_source.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('learning_object_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('course_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('marketplace_component', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table totara_contentmarketplace_course_source.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table totara_contentmarketplace_course_source.
+        $table->add_index('learning_object_idx', XMLDB_INDEX_NOTUNIQUE, array('learning_object_id'));
+        $table->add_index('course_idx', XMLDB_INDEX_NOTUNIQUE, array('course_id'));
+        $table->add_index('marketplace_component_idx', XMLDB_INDEX_NOTUNIQUE, array('marketplace_component'));
+
+        // Conditionally launch create table for totara_contentmarketplace_course_source.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Contentmarketplace savepoint reached.
+        upgrade_plugin_savepoint(true, 2021061502, 'totara', 'contentmarketplace');
     }
 
     return true;

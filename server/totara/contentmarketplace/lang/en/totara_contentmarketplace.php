@@ -68,6 +68,7 @@ $string['error:cannot_obtain_token_by_invalid_value'] = 'Cannot obtain the acces
 $string['error:disabledmarketplace'] = '{$a} Content Marketplace disabled';
 $string['error:disabledmarketplaces'] = 'Content Marketplaces are disabled';
 $string['error:invalid_token'] = 'There is an authentication problem when connecting to the external servers.';
+$string['event_course_source_created'] = 'Course source created';
 $string['explore'] = 'Explore';
 $string['explore_totara_content'] = 'Explore Content Marketplace';
 $string['explore_totara_content_x'] = 'Explore Content Marketplace: {$a}';

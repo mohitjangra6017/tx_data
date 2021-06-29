@@ -31,11 +31,13 @@ use core_text;
 use coursecat;
 use stdClass;
 use Throwable as throwable;
+use totara_contentmarketplace\event\course_source_created;
 use totara_contentmarketplace\exception\cannot_resolve_default_course_category;
 use totara_contentmarketplace\interactor\abstraction\create_course_interactor;
 use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
 use totara_contentmarketplace\learning_object\abstraction\metadata\model;
 use totara_contentmarketplace\learning_object\factory;
+use totara_contentmarketplace\model\course_source;
 
 /**
  * The course_builder class is designed to create a course for one learning object.
@@ -218,6 +220,13 @@ class course_builder {
         }
 
         $course = course_helper::create_course($record);
+
+        // Create course source.
+        $model = course_source::create($course, $this->learning_object);
+
+        // Trigger course_source_created event
+        (course_source_created::from_model($model))->trigger();
+
         $image_url = $this->learning_object->get_image_url();
         if (!empty($image_url)) {
             // Download image and store it.
