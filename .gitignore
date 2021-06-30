@@ -10,7 +10,7 @@ composer.phar
 /composer.lock
 /vendor/
 # Node modules for the TUI componentry
-/node_modules/
+node_modules/
 # PHPUnit profiling artefacts in the srcroot directory
 /phpunit_profile_methods_*.csv
 /phpunit_profile_classes_*.csv

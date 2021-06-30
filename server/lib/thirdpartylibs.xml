@@ -278,6 +278,12 @@
     <version>3.8.2</version>
   </library>
   <library>
+    <location>lib/javascript_polyfill/es/es_promise_ie11.js</location>
+    <name>ES6-Promise (subset of rsvp.js)</name>
+    <license>MIT</license>
+    <version>v4.2.4+314e4831</version>
+  </library>
+  <library>
     <location>lib/javascript_polyfill/src/esnext_features.js</location>
     <name>core-js</name>
     <license>MIT</license>
