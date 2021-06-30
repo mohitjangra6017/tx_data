@@ -46,6 +46,9 @@ interface placeholder {
      * Checks if we are expecting html content from the value that associated with
      * the $key or not.
      *
+     * If the corresponding placeholder value comes from user input then make sure to clean it
+     * in your "get" function, using format_string or something similar.
+     *
      * @param string $key
      * @return bool
      */

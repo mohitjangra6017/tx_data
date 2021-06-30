@@ -28,7 +28,7 @@ namespace totara_notification\placeholder\abstraction;
  */
 abstract class single_emptiable_placeholder implements single_placeholder {
     /**
-     * Checking whether the placeholder is available with the given data for key
+     * Checks whether the placeholder is available with the given data for key
      * {$key} or not.
      *
      * @param string $key
@@ -39,8 +39,11 @@ abstract class single_emptiable_placeholder implements single_placeholder {
     /**
      * This function is called as part of {@see placeholder::get()}.
      *
-     * The child class will have extend this function in order to be able to
-     * provide the value at placeholder key.
+     * Child classes should extend this function in order to be able to
+     * provide the value for the given placeholder key.
+     *
+     * If is_safe_html is true for the given key, make sure to process any user-entered
+     * text with format_string or something similar.
      *
      * @param string $key
      * @return string
@@ -48,7 +51,7 @@ abstract class single_emptiable_placeholder implements single_placeholder {
     abstract protected function do_get(string $key): string;
 
     /**
-     * Give the representation string for not resolveable placeholder key, due to data does not exist.
+     * Give the representation string for not resolveable placeholder key, due to data not existing.
      * Extend this function to change the representation string for empty value.
      *
      * @param string $key
@@ -65,6 +68,11 @@ abstract class single_emptiable_placeholder implements single_placeholder {
     }
 
     /**
+     * Get the placeholder value for the given key.
+     *
+     * If is_safe_html is true for the given key, make sure to process any user-entered
+     * text with format_string or something similar.
+     *
      * @inheritDoc
      * @param string $key
      * @return string
@@ -78,6 +86,12 @@ abstract class single_emptiable_placeholder implements single_placeholder {
     }
 
     /**
+     * Checks if we are expecting html content from the value that associated with
+     * the $key or not.
+     *
+     * If the corresponding placeholder value comes from user input then make sure to clean it
+     * in your "get" function, using format_string or something similar.
+     *
      * @param string $key
      * @return bool
      */

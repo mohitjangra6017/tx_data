@@ -95,7 +95,7 @@ class program extends single_emptiable_placeholder {
                 return $this->record->fullname;
             case 'full_name_link':
                 $url = new moodle_url('/totara/program/view.php', ['id' => $this->record->id]);
-                return html_writer::link($url, $this->record->fullname);
+                return html_writer::link($url, format_string($this->record->fullname));
         }
 
         throw new coding_exception("Invalid key '{$key}'");

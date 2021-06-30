@@ -32,6 +32,9 @@ interface single_placeholder extends placeholder {
      * to these values should be either '1'/'0' (or any equivalent string that the child can use for boolean)
      * or numeric string
      *
+     * If is_safe_html is true for the given key, make sure to process any user-entered
+     * text with format_string or something similar.
+     *
      * @param string $key
      * @return string
      */
