@@ -20,10 +20,14 @@
  * @author  Kian Nguyen <kian.nguyen@totaralearning.com>
  * @package mod_contentmarketplace
  */
+
+use core\format;
+use core\webapi\formatter\field\text_field_formatter;
 use core_phpunit\testcase;
-use totara_webapi\phpunit\webapi_phpunit_helper;
 use mod_contentmarketplace\model\content_marketplace;
 use mod_contentmarketplace\webapi\resolver\type\learning_object as type_learning_object;
+use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
+use totara_webapi\phpunit\webapi_phpunit_helper;
 
 class mod_contentmarketplace_learning_object_testcase extends testcase {
     use webapi_phpunit_helper;
@@ -116,6 +120,38 @@ class mod_contentmarketplace_learning_object_testcase extends testcase {
                 $learning_object,
                 [],
                 $content_marketplace->get_context()
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_resolve_field_description(): void {
+        $generator = self::getDataGenerator();
+        $course = $generator->create_course();
+
+        $cm = $generator->create_module('contentmarketplace', ['course' => $course->id]);
+        $content_marketplace = content_marketplace::from_course_module_id($cm->cmid);
+
+        /** @var detailed_model $learning_object */
+        $learning_object = $content_marketplace->get_learning_object();
+        self::assertInstanceOf(detailed_model::class, $learning_object);
+
+        $context = $content_marketplace->get_context();
+        $formatter = new text_field_formatter(format::FORMAT_PLAIN, $context);
+        $formatter->disabled_pluginfile_url_rewrite();
+
+        self::assertEquals(
+            $formatter->format(
+                $learning_object->get_description()->get_raw_value()
+            ),
+            $this->resolve_graphql_type(
+                $this->get_graphql_name(type_learning_object::class),
+                'description',
+                $learning_object,
+                ['format' => format::FORMAT_PLAIN,],
+                $context
             )
         );
     }

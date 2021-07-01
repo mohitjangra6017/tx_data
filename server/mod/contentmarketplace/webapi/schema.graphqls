@@ -3,6 +3,7 @@ type mod_contentmarketplace_learning_obejct implements totara_contentmarketplace
   name(format: core_format = PLAIN): String!
   language: String!
   image_url: String
+  description(format: core_format = PLAIN): String
 }
 
 type mod_contentmarketplace_content_marketplace {

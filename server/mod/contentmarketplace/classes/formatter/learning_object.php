@@ -23,10 +23,46 @@
 
 namespace mod_contentmarketplace\formatter;
 
+use context;
 use core\orm\formatter\entity_model_formatter;
 use core\webapi\formatter\field\string_field_formatter;
+use core\webapi\formatter\field\text_field_formatter;
+use totara_contentmarketplace\learning_object\abstraction\metadata\detailed_model;
+use totara_contentmarketplace\learning_object\abstraction\metadata\model;
+use totara_contentmarketplace\learning_object\text;
 
+/**
+ * This formatter should only work with the instance of {@see model}
+ */
 class learning_object extends entity_model_formatter {
+    /**
+     * @param string $field
+     * @return bool
+     */
+    protected function has_field(string $field): bool {
+        if ('description' === $field) {
+            return true;
+        }
+
+        return parent::has_field($field);
+    }
+
+    /**
+     * @param string $field
+     * @return mixed|null
+     */
+    protected function get_field(string $field) {
+        if ('description' === $field) {
+            if ($this->object instanceof detailed_model) {
+                return $this->object->get_description();
+            }
+
+            return null;
+        }
+
+        return parent::get_field($field);
+    }
+
     /**
      * @inheritDoc
      */
@@ -36,6 +72,16 @@ class learning_object extends entity_model_formatter {
             'name' => string_field_formatter::class,
             'language' => null,
             'image_url' => null,
+            'description' => function (?text $text, text_field_formatter $formatter): ?string {
+                if (null === $text) {
+                    return null;
+                }
+
+                $formatter->disabled_pluginfile_url_rewrite();
+                $formatter->set_text_format($text->get_format());
+
+                return $formatter->format($text->get_raw_value());
+            }
         ];
     }
 }

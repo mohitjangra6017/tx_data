@@ -9,6 +9,7 @@ query mod_contentmarketplace_content_marketplace($cm_id: core_id!) {
       name
       language
       image_url
+      description
     }
   }
 }
