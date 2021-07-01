@@ -143,6 +143,7 @@ export default {
 .tui-hideShow {
   display: flex;
   flex-direction: column;
+  background: var(--color-neutral-1);
 
   &__content {
     display: none;
@@ -159,7 +160,7 @@ export default {
       position: sticky;
       top: 0;
       z-index: 1;
-      background: var(--color-neutral-1);
+      background: inherit;
     }
   }
 }
