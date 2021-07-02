@@ -34,13 +34,10 @@ use core\webapi\type_resolver;
 class category implements type_resolver {
     public static function resolve(string $field, $category, array $args, execution_context $ec) {
         global $DB, $CFG;
-
         require_once($CFG->dirroot . '/course/lib.php');
 
         $format = $args['format'] ?? null;
-
-        $category_context = context_coursecat::instance($category->id);
-        if (!self::authorize($field, $format, $category_context)) {
+        if (!self::do_authorize($field, $format, $category->id)) {
             return null;
         }
 
@@ -94,7 +91,7 @@ class category implements type_resolver {
             if (empty($courseids)) {
                 return [];
             } else {
-                list($insql, $inparams) = $DB->get_in_or_equal($courseids);
+                [$insql, $inparams] = $DB->get_in_or_equal($courseids);
                 $courses = $DB->get_records_select('course', "id {$insql}", $inparams);
                 foreach ($courses as $course) {
                     $course->image = course_get_image($course);
@@ -103,19 +100,53 @@ class category implements type_resolver {
             }
         }
 
-        $formatter = new category_formatter($category, $category_context);
+        $formatter = new category_formatter(
+            $category,
+            context_coursecat::instance($category->id)
+        );
+
         return $formatter->format($field, $format);
     }
 
-    public static function authorize(string $field, ?string $format, context_coursecat $context) {
-        // Permission to see RAW formatted string fields
-        if (in_array($field, ['name']) && $format == format::FORMAT_RAW) {
-            return has_capability('moodle/category:manage', $context);
+    /**
+     * Checks if the user is authorized to see any of the fields with FORMAT_RAW or not.
+     *
+     * @param string      $field
+     * @param string|null $format
+     * @param int         $category_id
+     *
+     * @return bool
+     */
+    private static function do_authorize(string $field, ?string $format, int $category_id): bool {
+        if (in_array($field, ['name', 'description']) && $format == format::FORMAT_RAW) {
+            // Note that we are trying to instantiate the context_category as latest as possible,
+            // so that it can help to improve the performance to be a bit faster.
+            $context_category = context_coursecat::instance($category_id);
+            return has_capability('moodle/category:manage', $context_category);
         }
-        // Permission to see RAW formatted text fields
-        if (in_array($field, ['description']) && $format == format::FORMAT_RAW) {
-            return has_capability('moodle/category:manage', $context);
-        }
+
         return true;
+    }
+
+    /**
+     * @deprecated since Totara 15.0
+     *
+     * @param string            $field
+     * @param string|null       $format
+     * @param context_coursecat $context
+     * @return bool
+     */
+    public static function authorize(string $field, ?string $format, context_coursecat $context) {
+        debugging(
+            sprintf(
+                "The function %s had been deprecated and should not be used publicly outside of the class, " .
+                "please use %s instead",
+                __FUNCTION__,
+                static::class . "::do_authorize"
+            ),
+            DEBUG_DEVELOPER
+        );
+
+        return self::do_authorize($field, $format, $context->instanceid);
     }
 }

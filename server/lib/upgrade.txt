@@ -1,7 +1,7 @@
 This files describes API changes in core libraries and APIs,
 information provided here is intended especially for developers.
 
-=== 14.1 ===
+=== 15.0 ===
 
 * Added columns 'type' and 'show_default_branding' to the oauth2_issuer table, and added them as properties to core\oauth2\issuer.
 * The login template (login.mustache) has been updated to support overriding the default OAuth2 IDP sign in buttons,
@@ -14,6 +14,7 @@ information provided here is intended especially for developers.
 * \core\entity\enrol::to_record() has been removed, as it will fallback to the parent \core\orm\entity::to_record() method.
 * \core\webapi\resolver\type\course now supports the \core\entity\course entity as input.
 * Increased character limit for the name column in the course_categories table to 1333 characters.
+* \core\webapi\resolver\type\category::authorize had been deprecated and should not be used publicly outside of the class, please use \core\webapi\resolver\type\category::do_authorize instead
 
 === 14.0 ===
 

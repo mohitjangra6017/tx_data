@@ -245,7 +245,7 @@ class catalog_retrieval {
                 }
 
                 // If we want to modify any record of a catalog, probably here is a good place to
-                // have another seperate hook for it.
+                // have another separate hook for it.
 
                 // Unfortunately, there should not have a hook to add new record(s) into the list
                 // of the result, because adding new record(s) will break the core functionality of
