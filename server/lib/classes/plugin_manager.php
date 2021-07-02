@@ -1486,7 +1486,7 @@ class core_plugin_manager {
             ),
 
             'mobile' => array(
-                'currentlearning',
+                'currentlearning', 'findlearning',
             ),
 
             'tabexport' => array(

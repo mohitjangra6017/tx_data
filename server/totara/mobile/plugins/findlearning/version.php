@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of Totara LMS
+ * This file is part of Totara Learn
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -18,17 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author David Curry <david.curry@totaralearning.com>
- * @package totara_mobile
+ * @package mobile_currentlearning.
  */
-
-namespace totara_mobile\plugininfo;
-
-use core\plugininfo\base;
 
 defined('MOODLE_INTERNAL') || die();
 
-class mobile extends base {
-    public function is_uninstall_allowed(): bool {
-        return false;
-    }
-}
+// Note that \totara_mobile\util::API_VERSION may also need to be changed,
+// if endpoints or HTTP response codes have changed.
+
+$plugin->version   = 2021061700;    // The current module version (Date: YYYYMMDDXX).
+$plugin->requires  = 2017111309;    // Requires this platform version.
+$plugin->component = 'mobile_findlearning'; // To check on upgrade, that module sits in correct place.

@@ -71,7 +71,7 @@ class totara_mobile_deprecated_resolver_testcase extends advanced_testcase {
     /**
      * Check that current learning items work as expected but with a deprecation warning;
      */
-    public function test_resolve_deprecated_current_learning_item () {
+    public function test_resolve_deprecated_current_learning_item() {
         list($user, $course, $program, $certification) = $this->create_faux_learning_items();
         $this->setUser($user);
 
@@ -96,7 +96,7 @@ class totara_mobile_deprecated_resolver_testcase extends advanced_testcase {
     /**
      * Check that current learning query works as expected but with a deprecation warning;
      */
-    public function test_resolve_deprecated_current_learning_query () {
+    public function test_resolve_deprecated_current_learning_query() {
         list($user, $course, $program, $certification) = $this->create_faux_learning_items();
         $this->setUser($user);
 

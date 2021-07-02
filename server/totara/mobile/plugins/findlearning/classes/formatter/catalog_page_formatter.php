@@ -1,6 +1,6 @@
 <?php
-/*
- * This file is part of Totara LMS
+/**
+ * This file is part of Totara Learn
  *
  * Copyright (C) 2021 onwards Totara Learning Solutions LTD
  *
@@ -18,17 +18,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author David Curry <david.curry@totaralearning.com>
- * @package totara_mobile
+ * @package mobile_findlearning
  */
 
-namespace totara_mobile\plugininfo;
+namespace mobile_findlearning\formatter;
 
-use core\plugininfo\base;
+use core\webapi\formatter\formatter;
+use core\webapi\formatter\field\date_field_formatter;
+use core\webapi\formatter\field\string_field_formatter;
+use core\webapi\formatter\field\text_field_formatter;
 
-defined('MOODLE_INTERNAL') || die();
+/**
+ * Formatter for catalog page
+ */
+class catalog_page_formatter extends formatter {
 
-class mobile extends base {
-    public function is_uninstall_allowed(): bool {
-        return false;
+    protected function get_map(): array {
+        $map = [
+            'max_count' => null, // Basic int.
+            'limit_from' => null, // Basic int.
+            'final_records' => null, // Basic boolean.
+            'items' => null, // mobile_findlearning\catalog_item::class
+        ];
+
+        return $map;
     }
 }

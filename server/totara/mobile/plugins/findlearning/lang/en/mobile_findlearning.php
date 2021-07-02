@@ -18,17 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author David Curry <david.curry@totaralearning.com>
- * @package totara_mobile
+ * @package mobile_findlearning
  */
 
-namespace totara_mobile\plugininfo;
-
-use core\plugininfo\base;
-
-defined('MOODLE_INTERNAL') || die();
-
-class mobile extends base {
-    public function is_uninstall_allowed(): bool {
-        return false;
-    }
-}
+$string['pluginname'] = 'Mobile find learning';
