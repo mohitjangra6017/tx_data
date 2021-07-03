@@ -1,0 +1,208 @@
+<?php
+/**
+ * This file is part of Totara Learn
+ *
+ * Copyright (C) 2021 onwards Totara Learning Solutions LTD
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author Qingyang Liu <qingyang.liu@totaralearning.com>
+ * @package totara_contentmarketplace
+ */
+namespace totara_contentmarketplace\totara_catalog;
+
+use core_plugin_manager;
+use lang_string;
+use stdClass;
+use totara_catalog\datasearch\equal;
+use totara_catalog\datasearch\in_or_equal;
+use totara_catalog\merge_select\multi;
+use totara_catalog\datasearch\filter as datasearch_filter;
+use totara_catalog\filter;
+use totara_catalog\merge_select\tree;
+use totara_contentmarketplace\local;
+use totara_contentmarketplace\plugininfo\contentmarketplace;
+
+class provider {
+    /**
+     * @var int
+     */
+    public const INTERNAL = 'container_course';
+
+    /**
+     * @return array
+     */
+    public static function get_filters(): array {
+        $filters = [];
+
+        if (!local::is_enabled()) {
+            return $filters;
+        }
+
+        // The panel filter can appear in the panel region.
+        $filters[] = self::get_panel_filter();
+
+        // The browse filter can appear in the primary region.
+        $filters[] = self::get_browse_filter();
+
+        return $filters;
+    }
+
+    /**
+     * @return filter
+     */
+    private static function get_panel_filter(): filter {
+        $panel_data_filter = new in_or_equal(
+            'contentmarketplace_provider_panel',
+            'catalog',
+            ['objectid', 'objecttype']
+        );
+
+        self::add_source($panel_data_filter);
+
+        $panel_selector = new multi(
+            'contentmarketplace_provider_panel',
+            new lang_string('provider', 'totara_contentmarketplace')
+        );
+
+        $panel_selector->add_options_loader(self::get_filter_options());
+
+        return new filter(
+            'contentmarketplace_provider_multi',
+            filter::REGION_PANEL,
+            $panel_data_filter,
+            $panel_selector
+        );
+    }
+
+    /**
+     * @return filter
+     */
+    private static function get_browse_filter(): filter {
+        $browse_data_filter = new equal(
+            'contentmarketplace_provider_browse',
+            'catalog',
+            ['objecttype', 'objectid']
+        );
+
+        self::add_source($browse_data_filter);
+
+        $browse_selector = new tree(
+            'contentmarketplace_provider_browse',
+            new lang_string('provider', 'totara_contentmarketplace'),
+            self::get_tree_options()
+        );
+
+        $browse_selector->add_all_option();
+
+        return new filter(
+            'contentmarketplace_provider_tree',
+            filter::REGION_BROWSE,
+            $browse_data_filter,
+            $browse_selector
+        );
+    }
+
+    /**
+     * @param array $enabled_plugins
+     */
+    private static function add_source(datasearch_filter $filter): void {
+        // Add internal filter.
+        $filter->add_source(
+            'course.containertype',
+            '(SELECT c.id AS id, c.containertype FROM {course} c 
+            LEFT JOIN {totara_contentmarketplace_course_source} cs 
+            ON c.id = cs.course_id WHERE cs.learning_object_id IS NULL)',
+            'course',
+            ['objectid' => 'course.id', 'objecttype' => "'course'"]
+        );
+
+        if (self::enabled_plugin_source()) {
+            // Add subplugin filter.
+            $filter->add_source(
+                'course.component',
+                '(SELECT c.id AS id, cs.marketplace_component AS component FROM {course} c 
+            JOIN {totara_contentmarketplace_course_source} cs 
+            ON c.id = cs.course_id)',
+                'course',
+                ['objectid' => 'course.id', 'objecttype' => "'course'"],
+            );
+        }
+    }
+
+    /**
+     * @return callable
+     */
+    private static function get_tree_options(): callable {
+        return function () {
+            $options = [];
+            foreach (self::get_options() as $key => $name) {
+                $option = new stdClass();
+                $option->key = $key;
+                $option->name = $name;
+                $options[] = $option;
+            }
+
+            return $options;
+        };
+    }
+
+    /**
+     * @return callable
+     */
+    private static function get_filter_options(): callable {
+        return function () {
+            return self::get_options();
+        };
+    }
+
+    /**
+     * @return array
+     */
+    private static function get_options(): array {
+        $options[self::INTERNAL] = get_string('provider_internal', 'totara_contentmarketplace');
+        $string_manager = get_string_manager();
+        /** @var contentmarketplace[] $plugins */
+        $plugins = core_plugin_manager::instance()->get_plugins_of_type('contentmarketplace');
+        foreach ($plugins as $plugin) {
+            if ($plugin->is_enabled()) {
+                if (!$string_manager->string_exists('provider_' . $plugin->name, $plugin->component)) {
+                    // If plugin do not implement filter option, we just skip
+                    continue;
+                }
+                $options[$plugin->component] = get_string('provider_' . $plugin->name, $plugin->component);
+            }
+        }
+
+        return $options;
+    }
+
+    /**
+     * @return bool
+     */
+    private static function enabled_plugin_source(): bool {
+        $plugins = contentmarketplace::get_enabled_plugins();
+        $string_manager = get_string_manager();
+        $result = false;
+        foreach (array_keys($plugins) as $plugin_name) {
+            $result = $string_manager->string_exists('provider_' . $plugin_name, 'contentmarketplace_' . $plugin_name);
+
+            if ($result) {
+                return $result;
+            }
+        }
+
+        return $result;
+    }
+}

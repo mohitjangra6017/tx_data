@@ -96,6 +96,7 @@ $string['page_link_placeholder'] = "page link";
 $string['plugin_description'] = 'Online Training Courses for Creative, Technology, Business Skills.';
 $string['pluginname'] = 'LinkedIn Learning';
 $string['recipient_actor'] = 'User who triggered action';
+$string['provider_linkedin'] = 'LinkedIn Learning';
 $string['search_filter_placeholder'] = 'Search...';
 $string['settings_title'] = 'LinkedIn Learning settings';
 $string['sort_filter_alphabetical'] = 'Alphabetical';
