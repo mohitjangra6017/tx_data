@@ -17,9 +17,9 @@
 -->
 
 <template>
-  <div class="tui-linkedInPrimaryFilter">
+  <div class="tui-linkedInImportPrimaryFilter">
     <Label
-      class="tui-linkedInPrimaryFilter__label"
+      class="tui-linkedInImportPrimaryFilter__label"
       :for-id="$id('languageSelect')"
       :label="$str('language_filter_label', 'contentmarketplace_linkedin')"
     />
@@ -65,7 +65,7 @@ export default {
 </lang-strings>
 
 <style lang="scss">
-.tui-linkedInPrimaryFilter {
+.tui-linkedInImportPrimaryFilter {
   display: flex;
   align-items: center;
 

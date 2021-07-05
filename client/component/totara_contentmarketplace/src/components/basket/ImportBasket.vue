@@ -18,13 +18,13 @@
 
 <template>
   <Basket
-    class="tui-contentMarketplaceBasket"
+    class="tui-contentMarketplaceImportBasket"
     :items="selectedItems"
     :wide-gap="true"
   >
     <template v-slot:status="{ empty }">
       <Button
-        v-if="viewingSelected && !empty"
+        v-if="!empty"
         :styleclass="{ transparent: true }"
         :text="$str('basket_clear_selection', 'totara_contentmarketplace')"
         @click="$emit('clear-selection')"
@@ -35,7 +35,7 @@
       <!-- Selection view -->
       <template v-if="!viewingSelected">
         <!-- Default category select -->
-        <div class="tui-contentMarketplaceBasket__category">
+        <div class="tui-contentMarketplaceImportBasket__category">
           <Select
             :id="$id('categorySelect')"
             :aria-label="
@@ -139,7 +139,7 @@ export default {
 </lang-strings>
 
 <style lang="scss">
-.tui-contentMarketplaceBasket {
+.tui-contentMarketplaceImportBasket {
   &__category {
     width: tui-char-length(15);
   }

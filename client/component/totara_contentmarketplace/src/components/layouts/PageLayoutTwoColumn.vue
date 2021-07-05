@@ -18,16 +18,16 @@
 
 <template>
   <div
-    class="tui-pageLayoutTwoColumn"
+    class="tui-contentMarketplacePageLayoutTwoColumn"
     :class="{
-      'tui-pageLayoutTwoColumn--flush': flush,
+      'tui-contentMarketplacePageLayoutTwoColumn--flush': flush,
     }"
   >
     <slot name="feedback-banner" />
 
     <slot name="user-overview" />
 
-    <div class="tui-pageLayoutTwoColumn__heading">
+    <div class="tui-contentMarketplacePageLayoutTwoColumn__heading">
       <slot name="content-nav" />
 
       <PageHeading :title="title">
@@ -39,7 +39,10 @@
 
     <slot name="pre-body" />
 
-    <Loader :loading="loading" class="tui-pageLayoutTwoColumn__body">
+    <Loader
+      :loading="loading"
+      class="tui-contentMarketplacePageLayoutTwoColumn__body"
+    >
       <Grid :stack-at="stackAt">
         <!-- Left content -->
         <GridItem :units="3">
@@ -94,7 +97,7 @@ export default {
 </script>
 
 <style lang="scss">
-.tui-pageLayoutTwoColumn {
+.tui-contentMarketplacePageLayoutTwoColumn {
   @include tui-font-body();
   margin-top: var(--gap-2);
 

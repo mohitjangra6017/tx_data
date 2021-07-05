@@ -17,7 +17,7 @@
 -->
 
 <template>
-  <div class="tui-contentMarketplaceReviewPaging">
+  <div class="tui-contentMarketplaceImportReviewPaging">
     <Button
       :disabled="lastPage"
       :text="$str('load_more', 'totara_contentmarketplace')"
@@ -50,7 +50,7 @@ export default {
 </lang-strings>
 
 <style lang="scss">
-.tui-contentMarketplaceReviewPaging {
+.tui-contentMarketplaceImportReviewPaging {
   display: flex;
   justify-content: center;
 }

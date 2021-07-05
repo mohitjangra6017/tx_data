@@ -150,19 +150,19 @@
 </template>
 
 <script>
-import Basket from 'totara_contentmarketplace/components/basket/Basket';
-import CountAndFilters from 'totara_contentmarketplace/components/CountAndFilters';
+import Basket from 'totara_contentmarketplace/components/basket/ImportBasket';
+import CountAndFilters from 'totara_contentmarketplace/components/count/ImportCountAndFilters';
 import Layout from 'totara_contentmarketplace/pages/CatalogImportLayout';
-import LinkedInFilters from 'contentmarketplace_linkedin/components/filters/LinkedInSideFilters';
-import LinkedInLearningItem from 'contentmarketplace_linkedin/components/learning_item/LinkedInLearningItem';
-import LinkedInLearningItemCategory from 'contentmarketplace_linkedin/components/learning_item/LinkedInLearningItemCategory';
-import LinkedInPrimaryFilter from 'contentmarketplace_linkedin/components/filters/LinkedInPrimaryFilter';
+import LinkedInFilters from 'contentmarketplace_linkedin/components/filters/ImportSideFilters';
+import LinkedInLearningItem from 'contentmarketplace_linkedin/components/learning_item/ImportLearningItem';
+import LinkedInLearningItemCategory from 'contentmarketplace_linkedin/components/learning_item/ImportLearningItemCategory';
+import LinkedInPrimaryFilter from 'contentmarketplace_linkedin/components/filters/ImportPrimaryFilter';
 import PageBackLink from 'tui/components/layouts/PageBackLink';
-import ReviewPaging from 'totara_contentmarketplace/components/paging/ReviewLoadMore';
+import ReviewPaging from 'totara_contentmarketplace/components/paging/ImportReviewLoadMore';
 import ReviewTable from 'totara_contentmarketplace/components/tables/ImportReviewTable';
-import SelectionPaging from 'totara_contentmarketplace/components/paging/SelectionPaging';
+import SelectionPaging from 'totara_contentmarketplace/components/paging/ImportSelectionPaging';
 import SelectionTable from 'totara_contentmarketplace/components/tables/ImportSelectionTable';
-import SortFilter from 'totara_contentmarketplace/components/filters/SortFilter';
+import SortFilter from 'totara_contentmarketplace/components/filters/ImportSortFilter';
 import { notify } from 'tui/notifications';
 import { parseQueryString, url } from 'tui/util';
 
@@ -208,11 +208,7 @@ export default {
       languageFilterOptions: [
         {
           id: 'en',
-          label: 'English',
-        },
-        {
-          id: 'fr',
-          label: 'French',
+          label: this.$str('language_en', 'contentmarketplace_linkedin'),
         },
       ],
       // Available learning content populated by learningObjectsQuery
@@ -359,6 +355,7 @@ export default {
 
     filters: {
       query: filterOptionsQuery,
+      fetchPolicy: 'network-only',
       variables() {
         return {
           input: {
@@ -707,6 +704,7 @@ export default {
       "catalog_title",
       "catalog_review_title",
       "content_creation_unknown_failure",
+      "language_en",
       "sort_filter_alphabetical",
       "sort_filter_latest"
     ],

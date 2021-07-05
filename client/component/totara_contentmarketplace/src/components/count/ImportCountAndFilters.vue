@@ -17,11 +17,11 @@
 -->
 
 <template>
-  <div class="tui-contentMarketplaceCountAndFilters" aria-live="polite">
+  <div class="tui-contentMarketplaceImportCountAndFilters" aria-live="polite">
     <template v-if="activeFilters">
       {{
         $str('item_count_and_filters', 'totara_contentmarketplace', {
-          count: count,
+          count: formattedCount,
           filters: activeFilters,
         })
       }}
@@ -29,7 +29,7 @@
     <template v-else>
       {{
         $str('item_count', 'totara_contentmarketplace', {
-          count: count,
+          count: formattedCount,
         })
       }}
     </template>
@@ -79,6 +79,15 @@ export default {
 
       return text;
     },
+
+    /**
+     * Format count number
+     *
+     * @return {String}
+     */
+    formattedCount() {
+      return this.count.toLocaleString();
+    },
   },
 };
 </script>
@@ -96,7 +105,7 @@ export default {
 </lang-strings>
 
 <style lang="scss">
-.tui-contentMarketplaceCountAndFilters {
+.tui-contentMarketplaceImportCountAndFilters {
   display: flex;
   flex-wrap: wrap;
   align-items: center;

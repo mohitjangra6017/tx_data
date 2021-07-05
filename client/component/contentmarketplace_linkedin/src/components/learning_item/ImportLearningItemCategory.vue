@@ -18,11 +18,11 @@
 
 <template>
   <!-- Display currently assigned category -->
-  <div class="tui-linkedInLearningItemCategory">
+  <div class="tui-linkedInImportLearningItemCategory">
     <div>
       {{ $str('category_label', 'contentmarketplace_linkedin') }}
     </div>
-    <div class="tui-linkedInLearningItemCategory__current">
+    <div class="tui-linkedInImportLearningItemCategory__current">
       {{ currentCategory.label }}
     </div>
 
@@ -38,7 +38,7 @@
 
 <script>
 // Components
-import CategoryPopover from 'contentmarketplace_linkedin/components/categories/LinkedInCategoryPopover';
+import CategoryPopover from 'contentmarketplace_linkedin/components/categories/ImportCategoryPopover';
 
 export default {
   components: {
@@ -71,7 +71,7 @@ export default {
 </lang-strings>
 
 <style lang="scss">
-.tui-linkedInLearningItemCategory {
+.tui-linkedInImportLearningItemCategory {
   display: flex;
 
   &__current {

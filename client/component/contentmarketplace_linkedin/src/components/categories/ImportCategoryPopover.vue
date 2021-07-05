@@ -18,7 +18,7 @@
 
 <template>
   <Popover
-    class="tui-linkedInCategoryPopover"
+    class="tui-linkedInImportCategoryPopover"
     size="md"
     :triggers="['click']"
     @open-changed="resetCategoryForm"
@@ -29,13 +29,13 @@
         :aria-label="
           $str('edit_course_category', 'contentmarketplace_linkedin')
         "
-        class="tui-linkedInCategoryPopover__icon"
+        class="tui-linkedInImportCategoryPopover__icon"
         :disabled="disabled"
         :size="100"
       />
     </template>
 
-    <div class="tui-linkedInCategoryPopover__edit">
+    <div class="tui-linkedInImportCategoryPopover__edit">
       <!-- Category select and label -->
       <Label
         :for-id="$id('category' + courseId)"
@@ -144,7 +144,7 @@ export default {
 </lang-strings>
 
 <style lang="scss">
-.tui-linkedInCategoryPopover {
+.tui-linkedInImportCategoryPopover {
   line-height: 1;
 
   &__edit {

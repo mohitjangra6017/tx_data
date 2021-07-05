@@ -8,7 +8,7 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
   Scenario: Learning objects catalog: No items
     When I navigate to the catalog import page for the the "linkedin" content marketplace
     Then the tui basket should be empty
-    And I should see "0 items" in the ".tui-contentMarketplaceCountAndFilters" "css_element"
+    And I should see "0 items" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     And I should see "No items to display"
     And ".tui-dataTable" "css_element" should not be visible
     And ".tui-paging" "css_element" should not be visible
@@ -21,7 +21,7 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
       | C   | Course A |
     When I navigate to the catalog import page for the the "linkedin" content marketplace
     Then the field "Sort by" matches value "Latest"
-    And I should see "3 items" in the ".tui-contentMarketplaceCountAndFilters" "css_element"
+    And I should see "3 items" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     And I should see "3" rows in the tui datatable
     And I should see the tui select table contains:
       | Course C |
@@ -161,32 +161,32 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
       | Course A |
       | Course B |
       | Course C |
-    And I should see "3 items" in the ".tui-contentMarketplaceCountAndFilters" "css_element"
+    And I should see "3 items" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     When I click on "Courses" tui "checkbox" in the "Type" tui "tree"
     Then I should see the tui select table contains:
       | Course A |
-    And I should see "1 items matching \"Courses\"" in the ".tui-contentMarketplaceCountAndFilters" "css_element"
+    And I should see "1 items matching \"Courses\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     When I click on "< 10 mins" tui "checkbox" in the "Time to Complete" tui "tree"
     Then the tui basket should be empty
-    And I should see "0 items matching \"Courses\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceCountAndFilters" "css_element"
+    And I should see "0 items matching \"Courses\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     When I click on "Courses" tui "checkbox" in the "Type" tui "tree"
     And I click on "Videos" tui "checkbox" in the "Type" tui "tree"
     Then I should see the tui select table contains:
       | Course C |
-    And I should see "1 items matching \"Videos\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceCountAndFilters" "css_element"
+    And I should see "1 items matching \"Videos\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     When I set the field "Search" to "   people    "
     Then I should see the tui select table contains:
       | Course C |
-    And I should see "1 items matching \"people\" AND \"Videos\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceCountAndFilters" "css_element"
+    And I should see "1 items matching \"people\" AND \"Videos\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     When I reload the page
     Then I should see the tui select table contains:
       | Course C |
-    And I should see "1 items matching \"people\" AND \"Videos\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceCountAndFilters" "css_element"
+    And I should see "1 items matching \"people\" AND \"Videos\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     When I click on "Clear all" "button" in the ".tui-filterSidePanel" "css_element"
     And I set the field "Search" to "photoshop"
     Then I should see the tui select table contains:
       | Course B |
-    And I should see "1 items" in the ".tui-contentMarketplaceCountAndFilters" "css_element"
+    And I should see "1 items" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
 
   Scenario: Learning objects catalog: Create courses from basket selection with categories
     Given I am on a totara site
@@ -269,4 +269,4 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
     And I should see "Appears in 1 course" on row "1" of the tui select table
     And I should see "Appears in 1 course" on row "2" of the tui select table
     When I click on "1 course" "button"
-    Then I should see "Course A" in the ".tui-linkedInLearningItem__bar-coursesList" "css_element"
+    Then I should see "Course A" in the ".tui-linkedInImportLearningItem__bar-coursesList" "css_element"

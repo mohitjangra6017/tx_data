@@ -19,7 +19,7 @@
 <template>
   <Paging
     v-if="totalItems"
-    class="tui-contentMarketplaceSelectionPaging"
+    class="tui-contentMarketplaceImportSelectionPaging"
     :items-per-page="itemsPerPage"
     :page="currentPage"
     :total-items="totalItems"

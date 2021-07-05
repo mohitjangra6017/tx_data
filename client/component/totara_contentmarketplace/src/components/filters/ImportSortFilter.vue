@@ -17,9 +17,9 @@
 -->
 
 <template>
-  <div class="tui-contentMarketplaceSortFilter">
+  <div class="tui-contentMarketplaceImportSortFilter">
     <Label
-      class="tui-contentMarketplaceSortFilter__label"
+      class="tui-contentMarketplaceImportSortFilter__label"
       :for-id="$id('sortBy')"
       :label="$str('filter_sort_by', 'totara_contentmarketplace')"
     />
@@ -66,7 +66,7 @@ export default {
 </lang-strings>
 
 <style lang="scss">
-.tui-contentMarketplaceSortFilter {
+.tui-contentMarketplaceImportSortFilter {
   display: flex;
   flex-grow: 1;
   align-items: center;
