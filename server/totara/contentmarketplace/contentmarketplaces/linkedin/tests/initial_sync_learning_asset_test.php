@@ -39,7 +39,6 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
      */
     protected function setUp(): void {
         $generator = generator::instance();
-        $generator->set_up_configuration();
 
         $token = new token('tokenone', time() + DAYSECS);
         $generator->set_token($token);
@@ -51,6 +50,7 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
     public function test_initial_sync(): void {
         $db = builder::get_db();
         $generator = generator::instance();
+        $generator->set_up_configuration();
 
         // Initial run should not set the function.
         self::assertFalse(config::completed_initial_sync_learning_asset());
@@ -115,6 +115,7 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
     public function test_initial_sync_with_flag_completed(): void {
         $db = builder::get_db();
         $generator = generator::instance();
+        $generator->set_up_configuration();
 
         // Originally, there are no records.
         self::assertEquals(0, $db->count_records(learning_object::TABLE));
@@ -166,6 +167,7 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
     public function test_initial_sync_with_pagination(): void {
         $db = builder::get_db();
         $generator = generator::instance();
+        $generator->set_up_configuration();
 
         self::assertEquals(0, $db->count_records(learning_object::TABLE));
 
@@ -203,6 +205,7 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
     public function test_initial_sync_with_empty_response(): void {
         $db = builder::get_db();
         $generator = generator::instance();
+        $generator->set_up_configuration();
 
         self::assertEquals(0, $db->count_records(learning_object::TABLE));
 
@@ -225,6 +228,7 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
     public function test_initial_sync_with_duplicated_record(): void {
         $db = builder::get_db();
         $generator = generator::instance();
+        $generator->set_up_configuration();
 
         $generator->create_learning_object('urn:li:lyndaCourse:252');
         self::assertEquals(1, $db->count_records(learning_object::TABLE));
@@ -246,5 +250,16 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
             self::assertStringContainsString("error writing to database", strtolower($message));
             self::assertStringContainsString("duplicate key value", strtolower($message));
         }
+    }
+
+    /**
+     * @return void
+     */
+    public function test_initial_sync_without_proper_configuration(): void {
+        $client = new simple_mock_client();
+        $sync = new sync_learning_asset(true);
+        $sync->set_api_client($client);
+        $sync->set_asset_types(constants::ASSET_TYPE_COURSE);
+        self::assertTrue($sync->is_skipped());
     }
 }

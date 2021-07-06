@@ -135,6 +135,10 @@ class sync_classifications extends sync_action implements external_sync {
      * @return bool
      */
     public function is_skipped(): bool {
+        if (!config::client_id() || !config::client_secret()) {
+            return true;
+        }
+
         if ($this->is_initial_run && config::completed_initial_sync_classification()) {
             return true;
         }

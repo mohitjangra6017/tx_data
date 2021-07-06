@@ -41,7 +41,6 @@ class contentmarketplace_linkedin_sync_classification_testcase extends testcase 
      */
     protected function setUp(): void {
         $generator = generator::instance();
-        $generator->set_up_configuration();
 
         $token = new token('token_one', time() + DAYSECS);
         $generator->set_token($token);
@@ -55,6 +54,7 @@ class contentmarketplace_linkedin_sync_classification_testcase extends testcase 
         self::assertEquals(0, $db->count_records(classification::TABLE));
 
         $generator = generator::instance();
+        $generator->set_up_configuration();
 
         $client = new simple_mock_client();
         $client->mock_queue($generator->create_json_response_from_fixture('classification_response_1'));
@@ -86,6 +86,7 @@ class contentmarketplace_linkedin_sync_classification_testcase extends testcase 
         self::assertEquals(0, $db->count_records(classification_relationship::TABLE));
 
         $generator = generator::instance();
+        $generator->set_up_configuration();
 
         $client = new simple_mock_client();
         $client->mock_queue($generator->create_json_response_from_fixture('classification_response_1'));
@@ -107,6 +108,7 @@ class contentmarketplace_linkedin_sync_classification_testcase extends testcase 
 
         config::save_completed_initial_sync_classification(true);
         $generator = generator::instance();
+        $generator->set_up_configuration();
 
         $client = new simple_mock_client();
         $client->mock_queue($generator->create_json_response_from_fixture('classification_response_1'));
@@ -122,6 +124,7 @@ class contentmarketplace_linkedin_sync_classification_testcase extends testcase 
      */
     public function test_initial_sync_classification_with_duplicated_record(): void {
         $generator = generator::instance();
+        $generator->set_up_configuration();
         $generator->create_classification("urn:li:lyndaCategory:496");
 
         $client = new simple_mock_client();
@@ -190,6 +193,7 @@ class contentmarketplace_linkedin_sync_classification_testcase extends testcase 
      */
     public function test_initial_sync_classification_with_pagination(): void {
         $generator = generator::instance();
+        $generator->set_up_configuration();
         $client = new simple_mock_client();
 
         $json_response_1 = $generator->get_json_content_from_fixtures('classification_current');
@@ -227,5 +231,15 @@ class contentmarketplace_linkedin_sync_classification_testcase extends testcase 
         self::assertTrue(
             $db->record_exists(classification::TABLE, ['urn' => $second_element->get_urn()])
         );
+    }
+
+    /**
+     * @return void
+     */
+    public function test_initial_sync_classification_without_proper_configuration(): void {
+        $client = new simple_mock_client();
+        $action = new sync_classifications(true, new null_progress_trace(), $client);
+        $action->set_classification_types(constants::CLASSIFICATION_TYPE_TOPIC);
+        self::assertTrue($action->is_skipped());
     }
 }
