@@ -380,4 +380,33 @@ class contentmarketplace_linkedin_webapi_resolver_mutation_catalog_import_create
             $payload['redirect_url']
         );
     }
+
+    /**
+     * @return void
+     */
+    public function test_create_course_with_system_category(): void {
+        global $DB;
+        self::setAdminUser();
+
+        $records = $DB->get_records('course_categories', ['issystem' => 1]);
+        self::assertGreaterThanOrEqual(1, count($records));
+        $cat = reset($records);
+
+        $generator = generator::instance();
+        $learning_object = $generator->create_learning_object('urn:lyndaCourse:252');
+
+        self::expectException(coding_exception::class);
+        self::expectExceptionMessage("Category {$cat->id} is not supported.");
+        $this->resolve_graphql_mutation(
+            'contentmarketplace_linkedin_catalog_import_create_course',
+            [
+                'input' => [
+                    [
+                        'learning_object_id' => $learning_object->id,
+                        'category_id' => $cat->id
+                    ]
+                ]
+            ]
+        );
+    }
 }

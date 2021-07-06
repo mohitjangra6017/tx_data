@@ -28,6 +28,7 @@ use container_course\course_helper;
 use context_coursecat;
 use core\orm\query\builder;
 use core_text;
+use coursecat;
 use stdClass;
 use Throwable as throwable;
 use totara_contentmarketplace\exception\cannot_resolve_default_course_category;
@@ -129,6 +130,10 @@ class course_builder {
 
             if (!$category_id) {
                 throw new cannot_resolve_default_course_category($actor_id);
+            }
+        } else {
+            if ((coursecat::get($category_id))->issystem == 1) {
+                throw new coding_exception("Category {$category_id} is not supported.");
             }
         }
 
