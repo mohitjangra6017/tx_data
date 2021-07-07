@@ -63,6 +63,8 @@ class sync_learning_asset extends sync_action implements external_sync {
     private $client;
 
     /**
+     * The time after which the assets were changed, it only accepts number of milliseconds
+     *
      * @var int
      */
     private $time_run;
@@ -105,7 +107,7 @@ class sync_learning_asset extends sync_action implements external_sync {
     ) {
         parent::__construct($is_initial_run, $trace);
         $this->client = null;
-        $this->time_run = $time_run ?? time();
+        $this->time_run = $time_run ?? round(microtime(true) * 1000);
         $this->sync_with_last_time_modified = true;
 
         $this->asset_types = [
