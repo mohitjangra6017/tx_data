@@ -228,6 +228,8 @@ export default {
       reviewingItemCategories: {},
       // List of selected items provided to review step
       reviewingItemList: [],
+      // Number of items to display per page
+      reviewingItemPageLimit: 50,
       // Selected learning content populated by learningObjectsQuery
       reviewingLearningObjects: {
         items: [],
@@ -336,7 +338,7 @@ export default {
               time_to_complete: [],
             },
             pagination: {
-              limit: 20,
+              limit: this.reviewingItemPageLimit,
               page: 1,
             },
             sort_by: 'LATEST',
@@ -648,7 +650,7 @@ export default {
               time_to_complete: [],
             },
             pagination: {
-              limit: 20,
+              limit: this.reviewingItemPageLimit,
               page: this.reviewingLoadMorePage,
             },
             sort_by: 'LATEST',

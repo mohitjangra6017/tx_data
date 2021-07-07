@@ -57,7 +57,38 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
       | 19  | Course 19 |
       | 20  | Course 20 |
       | 21  | Course 21 |
+      | 22  | Course 22 |
+      | 23  | Course 23 |
+      | 24  | Course 24 |
+      | 25  | Course 25 |
+      | 26  | Course 26 |
+      | 27  | Course 27 |
+      | 28  | Course 28 |
+      | 29  | Course 29 |
+      | 30  | Course 30 |
+      | 31  | Course 31 |
+      | 32  | Course 32 |
+      | 33  | Course 33 |
+      | 34  | Course 34 |
+      | 35  | Course 35 |
+      | 36  | Course 36 |
+      | 37  | Course 37 |
+      | 38  | Course 38 |
+      | 39  | Course 39 |
+      | 40  | Course 40 |
+      | 41  | Course 41 |
+      | 42  | Course 42 |
+      | 43  | Course 43 |
+      | 44  | Course 44 |
+      | 45  | Course 45 |
+      | 46  | Course 46 |
+      | 47  | Course 47 |
+      | 48  | Course 48 |
+      | 49  | Course 49 |
+      | 50  | Course 50 |
+      | 51  | Course 51 |
     When I navigate to the catalog import page for the the "linkedin" content marketplace
+    And I set the field "Sort by" to "Alphabetical"
     Then the field "Items per page" matches value "20"
     And I should see "20" rows in the tui datatable
     And I should see "Course 01"
@@ -86,27 +117,31 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
     And I should not see "Course 20"
     And I should see "Course 21"
     When I click on "Page 1" "button"
-    And I set the field "Items per page" to "50"
+    And I set the field "Items per page" to "20"
+    And I toggle the selection of all rows in the tui select table
+    And I click on "Page 2" "button"
+    And I toggle the selection of all rows in the tui select table
+    And I click on "Page 3" "button"
     And I toggle the selection of all rows in the tui select table
     And I set the field "Select category" to "Miscellaneous"
-    Then I should see "21" items in the tui basket
+    Then I should see "51" items in the tui basket
     When I click on "Next: Review" "button"
-    Then I should see "20" rows in the tui datatable
+    Then I should see "50" rows in the tui datatable
     And I should see "Course 01"
     And I should see "Course 10"
     And I should see "Course 11"
     And I should see "Course 20"
-    And I should not see "Course 21"
+    And I should not see "Course 51"
     When I click on "Load more" "button"
-    Then I should see "21" rows in the tui datatable
+    Then I should see "51" rows in the tui datatable
     And I should see "Course 01"
-    And I should see "Course 21"
+    And I should see "Course 51"
     When I click on "Back to catalogue" "button"
     Then I should see "20" rows in the tui datatable
     And I should not see "Course 21"
-    When I click on "Page 2" "button"
-    Then I should see "1" rows in the tui datatable
-    And I should see "Course 21"
+    When I click on "Page 3" "button"
+    Then I should see "11" rows in the tui datatable
+    And I should see "Course 51"
 
   Scenario: Learning objects catalog: Card content
     Given the following "learning objects" exist in "contentmarketplace_linkedin" plugin:

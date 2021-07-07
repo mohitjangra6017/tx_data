@@ -19,7 +19,7 @@
 <template>
   <div class="tui-contentMarketplaceImportReviewPaging">
     <Button
-      :disabled="lastPage"
+      v-if="!lastPage"
       :text="$str('load_more', 'totara_contentmarketplace')"
       @click="$emit('next-page')"
     />
