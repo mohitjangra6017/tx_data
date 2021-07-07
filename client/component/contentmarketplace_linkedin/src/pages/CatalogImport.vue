@@ -405,8 +405,8 @@ export default {
   watch: {
     selectedFilters: {
       deep: true,
-      handler(values) {
-        this.setPageFilterParams(values);
+      handler() {
+        this.setPageFilterParams();
       },
     },
   },
@@ -419,6 +419,10 @@ export default {
       // Only populate filters with default values
       if (typeof this.selectedFilters[key] !== 'undefined') {
         this.selectedFilters[key] = urlParams[key];
+      }
+
+      if (key === 'sortby') {
+        this.selectedSortOrderFilter = urlParams[key];
       }
     });
 
@@ -549,12 +553,13 @@ export default {
     /**
      * Set the page filters params in the URL
      *
-     * @param {Object} values
      */
-    setPageFilterParams(values) {
+    setPageFilterParams() {
       let urlData = {
         marketplace: this.marketplace,
       };
+
+      let values = this.selectedFilters;
 
       // Iterate through all filter types
       Object.keys(values).forEach(key => {
@@ -569,6 +574,10 @@ export default {
           urlData[key] = filter;
         }
       });
+
+      if (this.selectedSortOrderFilter) {
+        urlData.sortby = this.selectedSortOrderFilter;
+      }
 
       const pageUrl = url(window.location.pathname, urlData);
       window.history.pushState(null, null, pageUrl);
@@ -627,6 +636,7 @@ export default {
      */
     setSortOrderFilter(value) {
       this.selectedSortOrderFilter = value;
+      this.setPageFilterParams();
     },
 
     /**
