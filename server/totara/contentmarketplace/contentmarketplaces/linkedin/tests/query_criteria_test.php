@@ -130,7 +130,7 @@ class contentmarketplace_linkedin_query_criteria_testcase extends testcase {
         $moodle_url = new moodle_url('http://example.com');
 
         // Add asset types
-        $criteria->set_asset_types([constants::ASSET_TYPE_LEARNING_PATH, constants::ASSET_TYPE_COURSE]);
+        $criteria->set_asset_types([constants::ASSET_TYPE_COURSE]);
         $criteria->apply_to_url($moodle_url);
 
         self::assertEquals(
@@ -138,8 +138,7 @@ class contentmarketplace_linkedin_query_criteria_testcase extends testcase {
                 '&',
                 [
                     'http://example.com?q=criteria',
-                    'assetFilteringCriteria.assetTypes%5B0%5D=LEARNING_PATH',
-                    'assetFilteringCriteria.assetTypes%5B1%5D=COURSE',
+                    'assetFilteringCriteria.assetTypes%5B0%5D=COURSE',
                 ]
             ),
             $moodle_url->out(false)

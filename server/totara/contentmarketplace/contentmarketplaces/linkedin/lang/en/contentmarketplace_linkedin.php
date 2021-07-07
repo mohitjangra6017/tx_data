@@ -34,7 +34,6 @@ $string['add_linkedin_courses'] = 'Add courses from the LinkedIn Learning conten
 $string['add_linkedin_courses_description'] = 'Create courses based on what is available in the LinkedIn Learning content marketplace.';
 $string['appears_in'] = 'Appears in';
 $string['asset_type_course_plural'] = 'Courses';
-$string['asset_type_learning_path_plural'] = 'Learning Paths';
 $string['asset_type_video_plural'] = 'Videos';
 $string['assign_to_category'] = 'Assign to category';
 $string['browse_learning_content'] = 'Browse LinkedIn Learning content';

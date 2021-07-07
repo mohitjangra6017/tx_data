@@ -30,7 +30,6 @@ class contentmarketplace_linkedin_constants_testcase extends testcase {
      */
     public function test_check_is_valid_asset_types(): void {
         self::assertTrue(constants::is_valid_asset_type(constants::ASSET_TYPE_COURSE));
-        self::assertTrue(constants::is_valid_asset_type('LEARNING_PATH'));
         self::assertTrue(constants::is_valid_asset_type(constants::ASSET_TYPE_VIDEO));
         self::assertTrue(constants::is_valid_asset_type(constants::ASSET_TYPE_CHAPTER));
 

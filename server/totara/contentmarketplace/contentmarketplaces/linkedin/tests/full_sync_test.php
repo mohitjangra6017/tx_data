@@ -252,7 +252,7 @@ class contentmarketplace_linkedin_full_sync_testcase extends testcase {
         // Total number from the response file.
         $expected_outputs[] = "Finish syncing with the total of records: 1";
 
-        foreach ([constants::ASSET_TYPE_VIDEO, constants::ASSET_TYPE_LEARNING_PATH] as $asset_type) {
+        foreach ([constants::ASSET_TYPE_VIDEO] as $asset_type) {
             $expected_outputs[] = "Sync for type: {$asset_type}";
             $expected_outputs[] = "No learning assets found for type: {$asset_type}";
         }

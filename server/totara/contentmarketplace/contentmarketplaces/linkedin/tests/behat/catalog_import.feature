@@ -142,7 +142,6 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
     And I should see "Hibernate is way better than active record" on row "2" of the tui select table
     And I should see "Content difficulty level Intermediate" on row "2" of the tui select table
     And I should see "Time to complete content 4h 0m" on row "2" of the tui select table
-    And I should see "Type of content Learning path" on row "2" of the tui select table
 
     # Course C
     And I should see "Hibernate is way better than active record" on row "3" of the tui select table
@@ -233,7 +232,6 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
     And I should see "Hibernate is way better than active record" on row "2" of the tui select table
     And I should see "Content difficulty level Intermediate" on row "2" of the tui select table
     And I should see "Time to complete content 4h 0m" on row "2" of the tui select table
-    And I should see "Type of content Learning path" on row "2" of the tui select table
     And I should see "Category: Category A" on row "2" of the tui select table
     # Course C
     And I should see "Hibernate is way better than active record" on row "3" of the tui select table

@@ -94,11 +94,7 @@ class learning_objects_filter_options {
             new leaf(
                 constants::ASSET_TYPE_VIDEO,
                 get_string('asset_type_video_plural', 'contentmarketplace_linkedin', $this->language),
-            ),
-            new leaf(
-                constants::ASSET_TYPE_LEARNING_PATH,
-                get_string('asset_type_learning_path_plural', 'contentmarketplace_linkedin', $this->language),
-            ),
+            )
         );
     }
 

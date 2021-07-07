@@ -66,11 +66,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
                     [
                         'id' => 'VIDEO',
                         'label' => 'Videos',
-                    ],
-                    [
-                        'id' => 'LEARNING_PATH',
-                        'label' => 'Learning Paths',
-                    ],
+                    ]
                 ],
             ],
         ];

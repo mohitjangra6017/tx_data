@@ -111,7 +111,6 @@ class sync_learning_asset extends sync_action implements external_sync {
         $this->asset_types = [
             constants::ASSET_TYPE_COURSE,
             constants::ASSET_TYPE_VIDEO,
-            constants::ASSET_TYPE_LEARNING_PATH
         ];
     }
 
