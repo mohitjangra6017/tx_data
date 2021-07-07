@@ -109,7 +109,7 @@ type core_category {
   """
   Category name.
   """
-  name(format: core_format = PLAIN): String!
+  name(format: core_format = PLAIN): String
   """
   Category idnumber
   """
