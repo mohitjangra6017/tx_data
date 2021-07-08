@@ -222,6 +222,44 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
       | Course B |
     And I should see "1 items" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
 
+  Scenario: Learning objects catalog: Applying static filters resets filters
+    Given the following "learning objects" exist in "contentmarketplace_linkedin" plugin:
+      | urn | title     |
+      | 01  | Course 01 |
+      | 02  | Course 02 |
+      | 03  | Course 03 |
+      | 04  | Course 04 |
+      | 05  | Course 05 |
+      | 06  | Course 06 |
+      | 07  | Course 07 |
+      | 08  | Course 08 |
+      | 09  | Course 09 |
+      | 10  | Course 10 |
+      | 11  | Course 11 |
+      | 12  | Course 12 |
+      | 13  | Course 13 |
+      | 14  | Course 14 |
+      | 15  | Course 15 |
+      | 16  | Course 16 |
+      | 17  | Course 17 |
+      | 18  | Course 18 |
+      | 19  | Course 19 |
+      | 20  | Course 20 |
+      | 21  | Course 21 |
+      | 22  | Course 22 |
+      | 23  | Course 23 |
+      | 24  | Course 24 |
+      | 25  | Course 25 |
+    When I navigate to the catalog import page for the the "linkedin" content marketplace
+    Then the field "Items per page" matches value "20"
+    And I should see "20" rows in the tui datatable
+    When I click on "Page 2" "button"
+    Then I should see "5" rows in the tui datatable
+    And I should see "2" in the ".tui-paging__selector-number--current" "css_element"
+    When I set the field "Search" to "Course"
+    Then I should see "20" rows in the tui datatable
+    And I should see "1" in the ".tui-paging__selector-number--current" "css_element"
+
   Scenario: Learning objects catalog: Create courses from basket selection with categories
     Given I am on a totara site
     And the following "categories" exist:

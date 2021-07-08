@@ -407,6 +407,7 @@ export default {
       deep: true,
       handler() {
         this.setPageFilterParams();
+        this.setPaginationPage(1);
       },
     },
   },
@@ -636,6 +637,7 @@ export default {
      */
     setSortOrderFilter(value) {
       this.selectedSortOrderFilter = value;
+      this.setPaginationPage(1);
       this.setPageFilterParams();
     },
 
