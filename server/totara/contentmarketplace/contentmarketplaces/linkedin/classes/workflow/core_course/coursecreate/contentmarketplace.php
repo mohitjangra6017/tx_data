@@ -22,14 +22,10 @@
  */
 namespace contentmarketplace_linkedin\workflow\core_course\coursecreate;
 
-use contentmarketplace_linkedin\interactor\catalog_import_interactor;
-use context_coursecat;
-use context_system;
+use contentmarketplace_linkedin\workflow\work_flow_access_manager;
 use totara_contentmarketplace\explorer;
-use totara_contentmarketplace\local;
 use totara_workflow\workflow\base;
 use moodle_url;
-use totara_contentmarketplace\plugininfo\contentmarketplace as contentmarketplace_plugin;
 
 class contentmarketplace extends base {
     /**
@@ -67,33 +63,6 @@ class contentmarketplace extends base {
      * @inheritDoc
      */
     public function can_access(): bool {
-        // Content marketplaces are enabled.
-        if (!local::is_enabled()) {
-            return false;
-        }
-
-        // Allowed to add content from marketplaces.
-        $params = $this->manager->get_params();
-        $category = $params['category'] ?? get_config('core', 'defaultrequestcategory');
-        $interactor = new catalog_import_interactor();
-
-        if (empty($category)) {
-            if (!$interactor->can_add_course()) {
-                return false;
-            }
-        } else {
-            if (!$interactor->can_add_course_to_category(context_coursecat::instance($category))) {
-                return false;
-            }
-        }
-
-        // Linked in learning marketplace plugin enabled.
-        /** @var contentmarketplace_plugin $plugin */
-        $plugin = contentmarketplace_plugin::plugin('linkedin');
-        if ($plugin === null || !$plugin->is_enabled()) {
-            return false;
-        }
-
-        return true;
+        return work_flow_access_manager::can_access($this->manager->get_params());
     }
 }
