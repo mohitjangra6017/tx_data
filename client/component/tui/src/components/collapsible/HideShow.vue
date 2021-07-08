@@ -149,6 +149,7 @@ export default {
     display: none;
     &--show {
       display: block;
+      outline: none;
     }
   }
 
