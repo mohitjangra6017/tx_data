@@ -23,7 +23,7 @@ Feature: Manage the LinkedIn Learning content marketplace plugin
     And I should see "Settings" in the "LinkedIn Learning" "table_row"
     When I click on "Browse LinkedIn Learning content" "link" in the "LinkedIn Learning" "table_row"
     Then I should see "LinkedIn Learning catalogue"
-    When I click on "Back to Manage Content Marketplaces" "link"
+    When I click on "Manage Content Marketplaces" "link"
     And I click on "Disable" "link" in the "LinkedIn Learning" "table_row"
     Then I should see "Disable LinkedIn Learning content" in the ".modal" "css_element"
     And I should see "You are about to disable the LinkedIn Learning Content Marketplace" in the ".modal" "css_element"

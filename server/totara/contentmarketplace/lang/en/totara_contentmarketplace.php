@@ -33,7 +33,6 @@ $string['active_filter_last'] = ' AND "{$a}"';
 $string['add_to_collection'] = 'Add to collection';
 $string['assign_category'] = 'Assign category...';
 $string['availability'] = 'Availability';
-$string['back_to_manage_content_marketplaces'] = 'Back to Manage Content Marketplaces';
 $string['basket_back_to_catalogue'] = 'Back to catalogue';
 $string['basket_clear_selection'] = 'Clear selection';
 $string['basket_create_courses'] = 'Create course(s)';

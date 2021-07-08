@@ -26,12 +26,7 @@
     <template v-if="canManageContent" v-slot:content-nav>
       <PageBackLink
         :link="$url('/totara/contentmarketplace/marketplaces.php')"
-        :text="
-          $str(
-            'back_to_manage_content_marketplaces',
-            'totara_contentmarketplace'
-          )
-        "
+        :text="$str('manage_content_marketplaces', 'totara_contentmarketplace')"
       />
     </template>
 
@@ -709,7 +704,7 @@ export default {
       "sort_filter_latest"
     ],
     "totara_contentmarketplace": [
-      "back_to_manage_content_marketplaces"
+      "manage_content_marketplaces"
     ]
   }
 </lang-strings>
