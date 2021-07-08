@@ -156,7 +156,7 @@
       </VirtualScroll>
 
       <div
-        v-if="loadMoreSearchResultsVisibility"
+        v-if="loadMoreDiscussionsVisibility"
         class="tui-workspaceDiscussionTab__loadMoreContainer"
       >
         <div class="tui-workspaceDiscussionTab__viewedDiscussions">
@@ -194,6 +194,8 @@ import getDiscussions from 'container_workspace/graphql/get_discussions';
 import getWorkspaceInteractor from 'container_workspace/graphql/workspace_interactor';
 import postDiscussion from 'container_workspace/graphql/post_discussion';
 import searchContent from 'container_workspace/graphql/search_discussion_content';
+
+const AUTOLOAD_LIMIT = 40;
 
 export default {
   components: {
@@ -322,7 +324,6 @@ export default {
 
       sort: this.selectedSort,
       searchTerm: '',
-      isLoadMoreVisible: false,
     };
   },
 
@@ -606,17 +607,29 @@ export default {
       });
     },
 
+    /**
+     * Triggers any requested autoloading
+     */
     async onScrollToBottom() {
-      if (this.isLoadMoreVisible) {
+      const count = this.hasSearch
+        ? this.search.results.length
+        : this.page.discussions.length;
+      if (count >= AUTOLOAD_LIMIT || this.$apollo.loading) {
         return;
       }
       await this.loadMoreItems();
-      this.isLoadMoreVisible = true;
     },
 
+    /**
+     * Deprecated - use loadMoreItems instead
+     *
+     * @deprecated since 15.0
+     */
     async loadMore() {
+      console.warn(
+        'WorkspaceDiscussionTab.loadMore() is deprecated - use loadMoreItems instead'
+      );
       await this.loadMoreItems();
-      this.isLoadMoreVisible = false;
     },
 
     async loadMoreItems() {
@@ -628,10 +641,10 @@ export default {
     },
 
     async loadMoreDiscussions() {
-      if (!this.page.cursor.next) {
+      if (!this.page.cursor.next || this.$apollo.queries.page.loading) {
         return;
       }
-      this.$apollo.queries.page.fetchMore({
+      await this.$apollo.queries.page.fetchMore({
         variables: {
           cursor: this.page.cursor.next,
           workspace_id: this.workspaceId,
@@ -651,10 +664,10 @@ export default {
     },
 
     async loadMoreSearchResults() {
-      if (!this.search.cursor.next) {
+      if (!this.search.cursor.next || this.$apollo.queries.search.loading) {
         return;
       }
-      this.$apollo.queries.search.fetchMore({
+      await this.$apollo.queries.search.fetchMore({
         variables: {
           cursor: this.search.cursor.next,
           workspace_id: this.workspaceId,
