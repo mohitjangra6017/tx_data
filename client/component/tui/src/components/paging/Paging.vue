@@ -253,6 +253,19 @@ export default {
     },
   },
 
+  watch: {
+    /**
+     * Update Input box value when page changed externally
+     *
+     * @param {Number} value
+     */
+    page(value) {
+      if (value) {
+        this.newPage = value;
+      }
+    },
+  },
+
   mounted() {
     this.resizeObserver = new ResizeObserver(
       throttle(this.$_measure, THROTTLE_UPDATE)
@@ -288,7 +301,7 @@ export default {
       if (page > this.totalPages) {
         page = this.totalPages;
       }
-      this.newPage = page;
+
       this.$emit('page-change', parseInt(page, 10));
     },
 
