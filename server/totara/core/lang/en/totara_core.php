@@ -143,6 +143,7 @@ $string['coursecompletion'] = 'Course completion';
 $string['coursecompletionsfor'] = 'Course Completions for ';
 $string['courseduex'] = 'Course due {$a}';
 $string['courseicon'] = 'Course icon';
+$string['course_regrade_needed'] = "Grades are now being re-aggregated due to the additional activity.";
 $string['coursetype'] = 'Course Type';
 $string['cronscheduleregularity'] = 'Your cron is not run very regularly. We recommend configuring the cron to run every minute, this way scheduled tasks will run as configured below and system load will be minimised.';
 $string['csvdateformat'] = 'CSV Import date format';

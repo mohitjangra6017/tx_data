@@ -85,6 +85,9 @@ class core_grade_reportlib_testcase extends advanced_testcase {
         $forum = $this->getDataGenerator()->create_module('forum', array('assessed' => 1, 'scale' => 100, 'course' => $course->id));
         $forumcm = get_coursemodule_from_id('forum', $forum->cmid);
 
+        // Totara: run adhoc tasks in order to regrade the grades.
+        self::executeAdhocTasks();
+
         // Insert student grades for the two activities.
         $gi = grade_item::fetch(array('itemtype' => 'mod', 'itemmodule' => 'data', 'iteminstance' => $data->id, 'courseid' => $course->id));
         $datagrade = 50;
@@ -160,6 +163,9 @@ class core_grade_reportlib_testcase extends advanced_testcase {
 
         $forum = $this->getDataGenerator()->create_module('forum', array('assessed' => 1, 'scale' => 100, 'course' => $course->id));
         $forumcm = get_coursemodule_from_id('forum', $forum->cmid);
+
+        // Totara: run adhoc tasks in order to regrade the grades.
+        self::executeAdhocTasks();
 
         $gi = grade_item::fetch(array('itemtype' => 'mod', 'itemmodule' => 'data', 'iteminstance' => $data->id, 'courseid' => $course->id));
         $datagrade = 50;

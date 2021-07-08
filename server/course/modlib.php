@@ -235,9 +235,13 @@ function edit_module_post_actions($moduleinfo, $course) {
     }
 
     rebuild_course_cache($course->id, true);
+
     if ($hasgrades) {
-        grade_regrade_final_grades($course->id);
+        // TOTARA: the regrading final grades of enrolled user within the course is now delegated
+        // into cron task which is "core\task\grade_regrade_final_grades_task".
+        core\task\grade_regrade_final_grades_task::enqueue($course->id);
     }
+
     require_once($CFG->libdir.'/plagiarismlib.php');
     plagiarism_save_form_elements($moduleinfo);
 

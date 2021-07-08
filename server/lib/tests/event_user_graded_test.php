@@ -23,6 +23,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\entity\adhoc_task;
+use core\task\grade_regrade_final_grades_task;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -110,6 +113,25 @@ class core_event_user_graded_testcase extends advanced_testcase {
         $user = $this->getDataGenerator()->create_user();
         $this->getDataGenerator()->enrol_user($user->id, $course->id);
         $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+
+        // An adhoc task is queued.
+        self::assertEquals(
+            1,
+            $DB->count_records(
+                adhoc_task::TABLE,
+                ['classname' => "\\" . grade_regrade_final_grades_task::class]
+            )
+        );
+
+        $this->executeAdhocTasks();
+        self::assertEquals(
+            0,
+            $DB->count_records(
+                adhoc_task::TABLE,
+                ['classname' => "\\" . grade_regrade_final_grades_task::class]
+            )
+        );
+
         $quizitemparams = array('itemtype' => 'mod', 'itemmodule' => 'quiz', 'iteminstance' => $quiz->id,
             'courseid' => $course->id);
         $gradeitem = grade_item::fetch($quizitemparams);

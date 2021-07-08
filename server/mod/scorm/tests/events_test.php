@@ -75,6 +75,9 @@ class mod_scorm_event_testcase extends advanced_testcase {
         // Totara: we do not want instant completion events to mess up this test
         set_config('enablecompletion', 0);
 
+        // Totara: regrade final grades functionality is now delegated to cron.
+        $this->executeAdhocTasks();
+
         scorm_insert_track(2, $this->eventscorm->id, 1, 4, 'cmi.core.score.raw', 10);
         $sink = $this->redirectEvents();
         scorm_delete_attempt(2, $this->eventscorm, 4);

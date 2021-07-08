@@ -47,6 +47,10 @@ Feature: Activity completed via RPL
       | Completion tracking | Show activity as complete when conditions are met |
       | completionusegrade  | 1                                                 |
 
+    # Execute the adhoc tasks, as the grades need to be regraded.
+    And I run all adhoc tasks
+    And I am on "Course 1" course homepage with editing mode on
+
     When I navigate to "Course completion" node in "Course administration"
     And I expand all fieldsets
     And I set the field "Completion requirements" to "Course is complete when ALL conditions are met"
@@ -240,6 +244,10 @@ Feature: Activity completed via RPL
       | Require grade                 | Yes, passing grade                                |
       | Passing grade                 | 100                                               |
     And I click on "Save and return to course" "button"
+
+    # Execute the adhoc tasks, as the grades need to be regraded.
+    And I run all adhoc tasks
+    And I am on "Course 1" course homepage with editing mode on
 
     When I navigate to "Course completion" node in "Course administration"
     And I expand all fieldsets

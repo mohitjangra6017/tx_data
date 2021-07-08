@@ -66,6 +66,10 @@ class gradereport_overview_externallib_testcase extends externallib_advanced_tes
 
         $assignment1 = $this->getDataGenerator()->create_module('assign', array('name' => "Test assign", 'course' => $this->course1->id));
         $assignment2 = $this->getDataGenerator()->create_module('assign', array('name' => "Test assign", 'course' => $this->course2->id));
+
+        // Totara: regrade final grades is now delegated to cron.
+        $this->executeAdhocTasks();
+
         $modcontext1 = get_coursemodule_from_instance('assign', $assignment1->id, $this->course1->id);
         $modcontext2 = get_coursemodule_from_instance('assign', $assignment2->id, $this->course2->id);
         $assignment1->cmidnumber = $modcontext1->id;

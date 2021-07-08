@@ -252,6 +252,15 @@
     }
 
     $PAGE->set_heading($course->fullname);
+
+    // Totara: finding out if this course has enrolled user's grades that need to be re-aggregate.
+    //         Note that we only display message to course editor who can manage course's grades.
+    if (\core_course\local\grade_helper::does_course_need_regrade($course->id) &&
+        has_capability("moodle/grade:manage", $context)) {
+        // Looks like this course needs to regrade the grades records.
+        core\notification::info(get_string("course_regrade_needed", "totara_core"));
+    }
+
     echo $OUTPUT->header();
 
     if ($completion->is_enabled()) {
