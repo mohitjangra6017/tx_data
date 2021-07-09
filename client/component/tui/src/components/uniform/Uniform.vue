@@ -28,6 +28,7 @@
     @change="$emit('change', $event)"
     @update:state="$emit('update:state', $event)"
     @submit="$emit('submit', $event)"
+    @validation-changed="$emit('validation-changed', $event)"
   >
     <Form
       :vertical="vertical"
