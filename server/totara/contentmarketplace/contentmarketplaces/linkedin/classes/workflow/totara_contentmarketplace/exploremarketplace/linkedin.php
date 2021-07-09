@@ -22,7 +22,7 @@
  */
 namespace contentmarketplace_linkedin\workflow\totara_contentmarketplace\exploremarketplace;
 
-use contentmarketplace_linkedin\workflow\work_flow_access_manager;
+use contentmarketplace_linkedin\workflow\workflow_access_manager;
 use totara_workflow\workflow\base;
 use moodle_url;
 
@@ -62,7 +62,7 @@ class linkedin extends base {
      * @inheritDoc
      */
     public function can_access(): bool {
-        return work_flow_access_manager::can_access($this->manager->get_params());
+        return workflow_access_manager::can_access($this->manager->get_params());
     }
 
 }

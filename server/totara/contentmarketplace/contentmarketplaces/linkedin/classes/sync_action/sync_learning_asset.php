@@ -30,6 +30,7 @@ use contentmarketplace_linkedin\api\v2\service\learning_asset\response\element;
 use contentmarketplace_linkedin\api\v2\service\learning_asset\service;
 use contentmarketplace_linkedin\config;
 use contentmarketplace_linkedin\constants;
+use contentmarketplace_linkedin\dto\timestamp;
 use contentmarketplace_linkedin\entity\classification;
 use contentmarketplace_linkedin\entity\classification_relationship;
 use contentmarketplace_linkedin\entity\learning_object as learning_object_entity;
@@ -63,8 +64,6 @@ class sync_learning_asset extends sync_action implements external_sync {
     private $client;
 
     /**
-     * The time after which the assets were changed, it only accepts number of milliseconds
-     *
      * @var int
      */
     private $time_run;
@@ -107,7 +106,7 @@ class sync_learning_asset extends sync_action implements external_sync {
     ) {
         parent::__construct($is_initial_run, $trace);
         $this->client = null;
-        $this->time_run = $time_run ?? round(microtime(true) * 1000);
+        $this->time_run = $time_run ?? time();
         $this->sync_with_last_time_modified = true;
 
         $this->asset_types = [
@@ -181,7 +180,7 @@ class sync_learning_asset extends sync_action implements external_sync {
 
             if (!$this->is_initial_run && $this->sync_with_last_time_modified) {
                 $last_modified_at = config::last_time_sync_learning_asset();
-                $criteria->set_last_modified_after($last_modified_at);
+                $criteria->set_last_modified_after($last_modified_at * timestamp::MILLISECONDS_IN_SECOND);
             }
 
             $this->trace->output("Sync for type: {$asset_type}");

@@ -23,31 +23,38 @@
 
 namespace totara_contentmarketplace\workflow_manager;
 
+use context_coursecat;
+use totara_contentmarketplace\local;
+use totara_workflow\workflow_manager\base;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * Workflow manager singleton class for managing explore marketplace workflow instances.
  */
-class exploremarketplace extends \totara_workflow\workflow_manager\base {
+class exploremarketplace extends base {
 
     public function get_name(): string {
         return get_string('explore_totara_content', 'totara_contentmarketplace');
     }
 
     protected function can_access(): bool {
-        if (!\totara_contentmarketplace\local::is_enabled()) {
+        if (!local::is_enabled()) {
             return false;
         }
 
         // Allowed to add content from marketplaces.
         $params = $this->get_params();
-        $category = $params['category'] ?? get_config('core', 'defaultrequestcategory');
-        $context = empty($category) ? \context_system::instance() : \context_coursecat::instance($category);
-        if (!has_capability('totara/contentmarketplace:add', $context)) {
-            return false;
+
+        if (isset($params['category'])) {
+            $context = context_coursecat::instance($params['category']);
+            return has_capability('totara/contentmarketplace:add', $context);
         }
 
-        return true;
-    }
+        if (during_initial_install()) {
+            return true;
+        }
 
+        return has_capability_in_any_context('totara/contentmarketplace:add');
+    }
 }

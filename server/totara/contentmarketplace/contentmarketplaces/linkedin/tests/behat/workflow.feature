@@ -7,10 +7,16 @@ Feature: Test the LinkedIn Learning content marketplace plugin workflow
       | username | firstname | lastname | email          |
       | user1    | User      | One      | user1@test.com |
       | user2    | User      | Two      | user2@test.com |
+      | user3    | User      | Three    | user3@test.com |
+
+    And the following "categories" exist:
+      | name        | idnumber |
+      | CategoryOne | cat1     |
 
     And the following "role assigns" exist:
       | user     | role          | contextlevel | reference |
       | user2    | coursecreator | System       |           |
+      | user3    | coursecreator | Category     |  cat1     |
 
   Scenario: Workflow accessibility check
     Given I am on a totara site
@@ -26,6 +32,12 @@ Feature: Test the LinkedIn Learning content marketplace plugin workflow
     And I log out
 
     And I log in as "user2"
+    When I click on "Find Learning" in the totara menu
+    Then I should see "Explore Content Marketplace"
+    And I should see "Create Course"
+    And I log out
+
+    And I log in as "user3"
     When I click on "Find Learning" in the totara menu
     Then I should see "Explore Content Marketplace"
     And I should see "Create Course"

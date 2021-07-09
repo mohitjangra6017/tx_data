@@ -35,10 +35,12 @@ class contentmarketplace_linkedin_json_data_format_asset_type_testcase extends t
         self::assertTrue($asset_type->validate(constants::ASSET_TYPE_COURSE));
         self::assertTrue($asset_type->validate(constants::ASSET_TYPE_CHAPTER));
         self::assertTrue($asset_type->validate(constants::ASSET_TYPE_VIDEO));
+        self::assertTrue($asset_type->validate(constants::ASSET_TYPE_LEARNING_PATH));
 
         self::assertFalse($asset_type->validate(strtolower(constants::ASSET_TYPE_COURSE)));
         self::assertFalse($asset_type->validate(strtolower(constants::ASSET_TYPE_CHAPTER)));
         self::assertFalse($asset_type->validate(strtolower(constants::ASSET_TYPE_VIDEO)));
+        self::assertFalse($asset_type->validate(strtolower(constants::ASSET_TYPE_LEARNING_PATH)));
 
         self::assertFalse($asset_type->validate(129.2));
         self::assertFalse($asset_type->validate(false));

@@ -27,7 +27,7 @@ use context_coursecat;
 use totara_contentmarketplace\local;
 use totara_contentmarketplace\plugininfo\contentmarketplace;
 
-final class work_flow_access_manager {
+final class workflow_access_manager {
     /**
      * Constructor is private: this is a static class
      */
@@ -44,20 +44,14 @@ final class work_flow_access_manager {
             return false;
         }
 
-        $category = $data['category'] ?? get_config('core', 'defaultrequestcategory');
+        $category = isset($data['category']) ? $data['category']:null;
         $interactor = new catalog_import_interactor();
 
         if (empty($category)) {
-            if (!$interactor->can_add_course()) {
-                return false;
-            }
-        } else {
-            if (!$interactor->can_add_course_to_category(context_coursecat::instance($category))) {
-                return false;
-            }
+            return $interactor->can_add_course();
         }
 
-        return true;
+        return $interactor->can_add_course_to_category(context_coursecat::instance($category));
     }
 
 }

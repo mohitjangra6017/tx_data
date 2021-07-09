@@ -36,6 +36,11 @@ final class constants {
     /**
      * @var string
      */
+    public const ASSET_TYPE_LEARNING_PATH = 'LEARNING_PATH';
+
+    /**
+     * @var string
+     */
     public const ASSET_TYPE_VIDEO = 'VIDEO';
 
     /**
@@ -141,6 +146,7 @@ final class constants {
                 self::ASSET_TYPE_CHAPTER,
                 self::ASSET_TYPE_COURSE,
                 self::ASSET_TYPE_VIDEO,
+                self::ASSET_TYPE_LEARNING_PATH,
             ],
             true
         );
