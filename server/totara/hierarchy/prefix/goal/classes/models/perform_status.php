@@ -347,7 +347,7 @@ abstract class perform_status extends model {
             && (int)$user->id === (int)$this->status_changer_user_id
             && $this->status_changer_relationship->idnumber === constants::RELATIONSHIP_SUBJECT
         ) {
-            return get_string('your_rating', 'hierarchy_goal');
+            return get_string('perform_review_goal_status_changer_you', 'hierarchy_goal');
         }
 
         return $this->status_changer_relationship->name;

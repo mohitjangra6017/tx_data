@@ -47,7 +47,7 @@ abstract class perform_linked_goals_base_testcase extends testcase {
         parent::setUp();
     }
 
-    protected function create_activity_data(int $goal_type): stdClass {
+    protected function create_activity_data(int $goal_type, string $status_change_relationship = 'manager'): stdClass {
         self::setAdminUser();
 
         $another_user = self::getDataGenerator()->create_user(['firstname' => 'Another', 'lastname' => 'User']);
@@ -89,7 +89,7 @@ abstract class perform_linked_goals_base_testcase extends testcase {
             'content_type' => 'personal_goal',
             'content_type_settings' => [
                 'enable_status_change' => true,
-                'status_change_relationship' => $perform_generator->get_core_relationship(constants::RELATIONSHIP_MANAGER)->id
+                'status_change_relationship' => $perform_generator->get_core_relationship($status_change_relationship)->id
             ],
             'selection_relationships' => [$subject_section_relationship->core_relationship_id],
         ]));
@@ -156,7 +156,7 @@ abstract class perform_linked_goals_base_testcase extends testcase {
             $goal1_assignment->id, $section_element->id, $subject_participant_section1->participant_instance_id, false
         );
         $linked_assignment2 = linked_review_content::create(
-            $goal1_assignment->id, $section_element->id, $subject_participant_section2->participant_instance_id, false
+            $goal2_assignment->id, $section_element->id, $subject_participant_section1->participant_instance_id, false
         );
 
         $data = new stdClass();
@@ -165,6 +165,7 @@ abstract class perform_linked_goals_base_testcase extends testcase {
         $data->subject_user = $subject_user;
         $data->activity = $activity;
         $data->subject_instance1 = $subject_instance1;
+        $data->subject_participant_instance1 = $subject_participant_section1->participant_instance;
         $data->manager_participant_instance1 = $manager_participant_section1->participant_instance;
         $data->manager_participant_section1 = $manager_participant_section1;
         $data->section_element = $section_element;

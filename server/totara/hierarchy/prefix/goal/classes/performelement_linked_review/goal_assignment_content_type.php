@@ -244,7 +244,7 @@ abstract class goal_assignment_content_type extends content_type {
         $status_changer_user = null;
         if ($perform_status->status_changer_user) {
             $status_changer_user = [
-                'fullname' => fullname($perform_status->status_changer_user->get_record())
+                'fullname' => fullname($perform_status->status_changer_user->to_record())
             ];
         }
 
