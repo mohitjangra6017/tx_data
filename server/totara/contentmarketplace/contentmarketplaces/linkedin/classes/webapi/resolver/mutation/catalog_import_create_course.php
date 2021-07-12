@@ -79,7 +79,7 @@ final class catalog_import_create_course implements mutation_resolver, has_middl
      * @return course_creation_result
      */
     private static function create_course_immediate(array $input_params, catalog_import_interactor $interactor): course_creation_result {
-        $redirect_url = new moodle_url('/totara/catalog/index.php');
+        $redirect_url = new moodle_url('/totara/catalog/index.php', ['orderbykey' => 'time']);
         $mutation_result = new course_creation_result();
 
         // A flag to tell that a partial of course records were created.

@@ -238,7 +238,7 @@ class contentmarketplace_linkedin_webapi_resolver_mutation_catalog_import_create
         $redirect_url = $result->get_redirect_url();
         self::assertNotNull($redirect_url);
         self::assertEquals(
-            new moodle_url('/totara/catalog/index.php'),
+            new moodle_url('/totara/catalog/index.php', ['orderbykey' => 'time']),
             $redirect_url
         );
 
@@ -290,7 +290,7 @@ class contentmarketplace_linkedin_webapi_resolver_mutation_catalog_import_create
         $redirect_url = $result->get_redirect_url();
         self::assertNotNull($redirect_url);
         self::assertEquals(
-            new moodle_url('/totara/catalog/index.php'),
+            new moodle_url('/totara/catalog/index.php', ['orderbykey' => 'time']),
             $redirect_url
         );
 
@@ -376,7 +376,7 @@ class contentmarketplace_linkedin_webapi_resolver_mutation_catalog_import_create
         self::assertTrue($payload['success']);
         self::assertEmpty($payload['message']);
         self::assertEquals(
-            (string) new moodle_url('/totara/catalog/index.php'),
+            (string) new moodle_url('/totara/catalog/index.php', ['orderbykey' => 'time']),
             $payload['redirect_url']
         );
     }
