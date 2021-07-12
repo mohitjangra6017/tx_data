@@ -66,6 +66,7 @@ import { bodySetModalOpen } from '../../js/internal/body_modal';
 import { presenterInterfaceName } from 'tui/components/modal/ModalPresenter';
 import PropsProvider from 'tui/components/util/PropsProvider';
 import CloseButton from 'tui/components/buttons/CloseIcon';
+import { addListener, removeListener } from 'tui/dom/keyboard_stack';
 
 export default {
   components: {
@@ -140,6 +141,15 @@ export default {
         return Object.assign(defaultDismissable, this.dismissable);
       }
     },
+
+    /**
+     * Checks to see if this is the current modal that is open
+     */
+    isCurrentModal() {
+      const modals = document.querySelectorAll('.tui-modal');
+      const currentModal = modals[modals.length - 1];
+      return this.$refs.modal == currentModal;
+    },
   },
 
   watch: {
@@ -168,7 +178,8 @@ export default {
 
   beforeDestroy() {
     this.$_removeElements();
-    document.removeEventListener('keydown', this.$_handleDocumentKeydown);
+    removeListener('Escape', this.$_handleEscape);
+    removeListener('Tab', this.$_trapFocus);
     if (this.$_bodyModalHandle) {
       this.$_bodyModalHandle.close();
     }
@@ -191,7 +202,8 @@ export default {
       this.$_bodyModalHandle = bodySetModalOpen();
       this.forceScroll = this.$_bodyModalHandle.scroll;
 
-      document.addEventListener('keydown', this.$_handleDocumentKeydown);
+      addListener('Escape', this.$_handleEscape);
+      addListener('Tab', this.$_trapFocus);
 
       // accessibility: save previously focused element to restore when the dialog is closed
       this.previousFocus = document.activeElement;
@@ -232,7 +244,8 @@ export default {
           this.closing = false;
           this.isOpen = false;
 
-          document.removeEventListener('keydown', this.$_handleDocumentKeydown);
+          removeListener('Escape', this.$_handleEscape);
+          removeListener('Tab', this.$_trapFocus);
 
           // accessibility: restore focus to previous element when modal closed
           if (this.previousFocus) {
@@ -274,24 +287,27 @@ export default {
       }
     },
 
-    $_handleDocumentKeydown(e) {
-      // Make sure that only the current modal is the one that is interacted with
-      const modals = document.querySelectorAll('.tui-modal');
-      const currentModal = modals[modals.length - 1];
-      if (this.$refs.modal != currentModal) {
-        return;
+    /**
+     * Traps tab focus to to the modal
+     *
+     * @param {Object} e The (slightly modified) KeyboardEvent to handle
+     */
+    $_trapFocus(e) {
+      if (this.isCurrentModal) {
+        trapFocusOnTab(this.$refs.modal, e);
       }
+    },
 
-      switch (e.key) {
-        case 'Escape':
-        case 'Esc': // for IE11
-          if (this.dismissableSources.esc) {
-            this.dismiss();
-          }
-          break;
-        case 'Tab':
-          trapFocusOnTab(this.$refs.modal, e);
-          break;
+    /**
+     * Handles an escape keypress - closing the modal if specified
+     *
+     * @param {Object} event A lightly modified keyboard event
+     */
+    $_handleEscape(event) {
+      if (this.isCurrentModal && this.dismissableSources.esc) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.dismiss();
       }
     },
 

@@ -74,6 +74,7 @@
 import PropsProvider from 'tui/components/util/PropsProvider';
 import PopoverPositioner from 'tui/components/popover/PopoverPositioner';
 import { getTabbableElements } from 'tui/dom/focus';
+import { addListener, removeListener } from 'tui/dom/keyboard_stack';
 
 const DEFAULT_CLOSE_OPTIONS = ['escape', 'outside'];
 
@@ -159,6 +160,7 @@ export default {
           );
           document.addEventListener('click', this.$_clickedOutside);
           document.addEventListener('contextmenu', this.$_clickedOutside);
+          addListener('Escape', this.$_handleEscape);
         } else {
           document.removeEventListener('keydown', this.$_keyPress);
           document.removeEventListener(
@@ -168,6 +170,7 @@ export default {
           );
           document.removeEventListener('click', this.$_clickedOutside);
           document.removeEventListener('contextmenu', this.$_clickedOutside);
+          removeListener('Escape', this.$_handleEscape);
           this.activeNodeIndex = null;
         }
       },
@@ -265,16 +268,23 @@ export default {
     },
 
     /**
+     * Check and prevent pressing escape key propagation when a dropdown is expanded
+     *
+     * @param {Object} event The (slightly modified) KeyboardEvent event to handle
+     */
+    $_handleEscape(event) {
+      if (this.isOpen && this.cancelOptions.includes('escape')) {
+        this.$_focusTrigger();
+        this.dismiss();
+        event.stopPropagation();
+        event.preventDefault();
+      }
+    },
+
+    /**
      * Keypress event that is bound to the document
      */
     $_keyPress(event) {
-      if (event.key === 'Escape') {
-        if (this.cancelOptions.indexOf('escape') < 0) return;
-        this.$_focusTrigger();
-        this.dismiss();
-        return;
-      }
-
       if (!this.$refs.dropdownContent) {
         return;
       }
