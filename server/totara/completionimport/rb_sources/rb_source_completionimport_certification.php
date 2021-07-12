@@ -66,7 +66,7 @@ class rb_source_completionimport_certification extends rb_base_source {
      * @return bool
      */
     public static function is_source_ignored() {
-        return !advanced_feature::is_enabled('certifications');
+        return !advanced_feature::is_enabled('certifications') || advanced_feature::is_disabled('completionimport');
     }
 
     /**

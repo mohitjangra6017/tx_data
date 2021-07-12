@@ -26,6 +26,8 @@
  */
 namespace totara_completionimport\task;
 
+use totara_core\advanced_feature;
+
 class clean_course_completion_upload_logs_task extends \core\task\scheduled_task {
 
     /**
@@ -42,6 +44,10 @@ class clean_course_completion_upload_logs_task extends \core\task\scheduled_task
      */
     public function execute() {
         global $DB;
+
+        if (advanced_feature::is_disabled('completionimport')) {
+            return;
+        }
 
         $loglifetime = get_config('complrecords', 'courseloglifetime');
         if ((int)$loglifetime > 0) {

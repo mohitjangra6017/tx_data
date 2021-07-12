@@ -92,6 +92,7 @@ class definition extends \totara_flavour\definition {
                 'enableappraisals' => advanced_feature::DISABLED,
                 'enablefeedback360' => advanced_feature::DISABLED,
                 'enablegoals' => advanced_feature::DISABLED,
+                'enablecompletionimport' => advanced_feature::DISABLED,
             ]
         ];
     }

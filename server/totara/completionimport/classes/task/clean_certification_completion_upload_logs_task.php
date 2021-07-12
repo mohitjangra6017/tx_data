@@ -45,7 +45,7 @@ class clean_certification_completion_upload_logs_task extends \core\task\schedul
     public function execute() {
         global $DB;
 
-        if (advanced_feature::is_enabled('certifications')) {
+        if (advanced_feature::is_enabled('certifications') && !advanced_feature::is_disabled('completionimport')) {
             $loglifetime = get_config('complrecords', 'certificationloglifetime');
             if ((int)$loglifetime > 0) {
                 $time = time();

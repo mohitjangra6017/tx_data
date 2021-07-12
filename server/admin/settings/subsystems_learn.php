@@ -228,5 +228,13 @@ if ($hassiteconfig) {
             )
         );
 
+        $adv_features_learn->add(
+            new totara_core_admin_setting_feature_checkbox(
+                'enablecompletionimport',
+                new lang_string('enablecompletionimport', 'totara_completionimport'),
+                new lang_string('enablecompletionimport_help', 'totara_completionimport'),
+                advanced_feature::ENABLED
+            )
+        );
     }
 }

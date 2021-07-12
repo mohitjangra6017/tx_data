@@ -245,3 +245,11 @@ Feature: Verify course completion data can be successfully uploaded.
     And "2" row "Course ID Number" column of "completionimport_course" table should contain "testcourse1"
     And "2" row "Completion date" column of "completionimport_course" table should contain "2015-01-01"
     And "2" row "Grade" column of "completionimport_course" table should contain "77"
+
+  Scenario: Disabling completion import feature in admin settings
+    When I log in as "admin"
+    And I navigate to "Courses and categories" node in "Site administration > Courses"
+    Then I should see "Upload completion records"
+    When I disable the "completionimport" advanced feature
+    And I navigate to "Courses and categories" node in "Site administration > Courses"
+    Then I should not see "Upload completion records"

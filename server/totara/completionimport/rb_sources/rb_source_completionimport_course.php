@@ -22,6 +22,8 @@
  * @subpackage completionimport
  */
 
+use totara_core\advanced_feature;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -565,5 +567,12 @@ class rb_source_completionimport_course extends rb_base_source {
             $out[$time->timecreated] = userdate($time->timecreated, get_string('strftimedatetimeshort', 'langconfig'));
         }
         return $out;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function is_source_ignored() {
+        return advanced_feature::is_disabled('completionimport');
     }
 }

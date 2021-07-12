@@ -147,6 +147,7 @@ class advanced_feature {
             'reportgraphs',
             'totaradashboard',
             'totara_msteams',
+            'completionimport',
         ];
     }
 

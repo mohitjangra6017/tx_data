@@ -26,6 +26,11 @@ use totara_core\advanced_feature;
 
 defined('MOODLE_INTERNAL') || die;
 
+// Don't add any settings or pages if completion import feature is disabled.
+if (advanced_feature::is_disabled('completionimport')) {
+    return;
+}
+
 $ADMIN->add('courses',
     new admin_category('totara_completionimport',
       get_string('completionimport', 'totara_completionimport'))

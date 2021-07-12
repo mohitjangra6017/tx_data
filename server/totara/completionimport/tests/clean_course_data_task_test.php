@@ -28,6 +28,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  */
 
+use totara_completionimport\task\clean_course_completion_upload_logs_task;
+use totara_core\advanced_feature;
+
 defined('MOODLE_INTERNAL') || die();
 
 define('COURSE_IMPORT_USERS', 11);
@@ -131,9 +134,18 @@ class totara_completionimport_clean_course_data_task_testcase extends completion
         $timecreated = $time - (($loglifetime+10) * DAYSECS);
         $DB->execute("UPDATE {totara_compl_import_course} SET timecreated = ?", array($timecreated));
 
+        // Check with disabled completion import - no change in record count expected.
+        advanced_feature::disable('completionimport');
+        ob_start(); // Start a buffer to catch all the mtraces in the task.
+        $task = new clean_course_completion_upload_logs_task();
+        $task->execute();
+        ob_end_clean(); // Throw away the buffer content.
+        $this->assertEquals($totalcourserows, $DB->count_records('totara_compl_import_course'), 'Record count mismatch in the totara_compl_import_course table');
+
+        advanced_feature::enable('completionimport');
         ob_start(); // Start a buffer to catch all the mtraces in the task.
         // Run scheduled course task to remove the records.
-        $task = new \totara_completionimport\task\clean_course_completion_upload_logs_task();
+        $task = new clean_course_completion_upload_logs_task();
         $task->execute();
         ob_end_clean(); // Throw away the buffer content.
         // Test total number of records after running reset_course_report_data_task.

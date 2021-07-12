@@ -117,6 +117,7 @@ class overview implements \renderable {
                 'enablelearningplans'             => null,  // Learn.
                 'enableprograms'                  => null,  // Learn.
                 'enablecertifications'            => null,  // Learn.
+                'enablecompletionimport'          => null,  // Learn.
                 'enablecompetency_assignment'     => null,  // Perform.
                 'enableperformance_activities'    => null,  // Perform.
                 'enablegoals'                     => null,  // Perform.
