@@ -155,7 +155,7 @@
 // Components
 import Button from 'tui/components/buttons/Button';
 import Popover from 'tui/components/popover/Popover';
-import SkeletonContent from 'totara_contentmarketplace/components/loader/SkeletonContent';
+import SkeletonContent from 'tui/components/loading/SkeletonContent';
 
 export default {
   components: {
