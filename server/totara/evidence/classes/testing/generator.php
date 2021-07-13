@@ -639,6 +639,17 @@ final class generator extends \core\testing\component_generator {
     }
 
     /**
+     * Create evidence type fields for behat
+     *
+     * @param array $record
+     */
+    public function create_evidence_type_fields_for_behat(array $record = []): void {
+        $evidence_type = $this->get_type_from_name($record['evidence_type']);
+        unset($record['evidence_type']);
+        $this->create_evidence_type_fields($evidence_type, [$record], false, []);
+    }
+
+    /**
      * Create custom fields for an evidence type
      *
      * @param evidence_type $evidence_type Evidence type

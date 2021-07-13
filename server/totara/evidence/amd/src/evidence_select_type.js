@@ -20,106 +20,138 @@
  * @package totara_evidence
  */
 
-define(['jquery', 'core/templates', 'core/ajax', 'core/str', 'core/form-autocomplete', 'core/url'],
-function($, templates, ajax, str, autocomplete, url) {
+define([
+  'jquery',
+  'core/templates',
+  'core/ajax',
+  'core/str',
+  'core/form-autocomplete',
+  'core/url',
+], function($, templates, ajax, str, autocomplete, url) {
+  /**
+   * No results processing required
+   *
+   * @param {String} selector
+   * @param {Array} data
+   * @return {Array}
+   */
+  function processResults(selector, data) {
+    return data;
+  }
 
-    /**
-     * No results processing required
-     *
-     * @param {String} selector
-     * @param {Array} data
-     * @return {Array}
-     */
-    function processResults(selector, data) {
-        return data;
-    }
+  /**
+   * Fetch results based on the current query
+   *
+   * @param {String} selector Selector for the original select element
+   * @param {String} query Current search string
+   * @param {Function} success Success handler
+   * @param {Function} failure Failure handler
+   */
+  function transport(selector, query, success, failure) {
+    M.util.js_pending('totara_evidence_type_search_' + query);
+    ajax
+      .call([
+        {
+          methodname: 'totara_evidence_type_search',
+          args: {
+            string: query.trim(),
+          },
+        },
+      ])[0]
+      .then(function(result) {
+        success(result);
+        M.util.js_complete('totara_evidence_type_search_' + query);
+      })
+      .catch(failure);
+  }
 
-    /**
-     * Fetch results based on the current query
-     *
-     * @param {String} selector Selector for the original select element
-     * @param {String} query Current search string
-     * @param {Function} success Success handler
-     * @param {Function} failure Failure handler
-     */
-    function transport(selector, query, success, failure) {
-        M.util.js_pending('totara_evidence_type_search_' + query);
-        ajax.call([{
-            methodname: 'totara_evidence_type_search',
-            args: {
-                string: query.trim()
-            }
-        }])[0]
-            .then(function(result) {
-                success(result);
-                M.util.js_complete('totara_evidence_type_search_' + query);
-            })
-            .catch(failure);
-    }
-
-    /**
-     * Display an information box about a given type
-     *
-     * @param {number} typeId
-     */
-    function displayTypeMetadata(typeId) {
-        M.util.js_pending('totara_evidence_type_details_' + typeId);
-        ajax.call([{
-            methodname: 'totara_evidence_type_details',
-            args: {
-                type_id: typeId,
-                user_id: document.querySelector('[data-user-id]').getAttribute('data-user-id')
-            }
-        }])[0].then(function(result) {
-            templates.render('totara_evidence/_select_type_metadata', result).then(function(templateHtml) {
-                templates.replaceNodeContents(document.querySelector('[data-type-metadata]'), templateHtml);
-
-                document.querySelector('[data-type-submit]').setAttribute('data-type-id', typeId);
-                document.querySelector('[data-type-infobox]').classList.remove('tw-evidence__hidden');
-
-                M.util.js_complete('totara_evidence_type_details_' + typeId);
-            });
-        });
-    }
-
-    /**
-     * Initialise the autocomplete element
-     */
-    function init() {
-        str.get_string('select_type', 'totara_evidence').then(function(placeholderText) {
-            autocomplete.enhance(
-                '[data-type-autocomplete]',
-                false,
-                'totara_evidence/evidence_select_type',
-                placeholderText
+  /**
+   * Display an information box about a given type
+   *
+   * @param {number} typeId
+   */
+  function displayTypeMetadata(typeId) {
+    M.util.js_pending('totara_evidence_type_details_' + typeId);
+    ajax
+      .call([
+        {
+          methodname: 'totara_evidence_type_details',
+          args: {
+            type_id: typeId,
+            user_id: document
+              .querySelector('[data-user-id]')
+              .getAttribute('data-user-id'),
+          },
+        },
+      ])[0]
+      .then(function(result) {
+        templates
+          .render('totara_evidence/_select_type_metadata', result)
+          .then(function(templateHtml) {
+            templates.replaceNodeContents(
+              document.querySelector('[data-type-metadata]'),
+              templateHtml
             );
 
-            // autocomplete doesn't trigger native js events, only jquery ones
-            $('[data-type-autocomplete]').change(function(e) {
-                displayTypeMetadata(e.currentTarget.value);
-            });
+            document
+              .querySelector('[data-type-submit]')
+              .setAttribute('data-type-id', typeId);
+            document
+              .querySelector('[data-type-infobox]')
+              .classList.remove('tw-evidence__hidden');
 
-            document.querySelector('[data-type-buttons]').addEventListener('click', function(e) {
-                e.preventDefault();
-                if (e.target.closest('[data-type-submit]')) {
-                    var params = {
-                        typeid: e.target.getAttribute('data-type-id')
-                    };
-                    if (e.target.getAttribute('data-user-id')) {
-                        params.user_id = e.target.getAttribute('data-user-id');
-                    }
-                    window.location.href = url.relativeUrl('/totara/evidence/create.php', params);
-                } else if (e.target.closest('[data-type-cancel]')) {
-                    document.querySelector('[data-type-infobox]').classList.add('tw-evidence__hidden');
-                    location.reload();
-                }
-            });
+            M.util.js_complete('totara_evidence_type_details_' + typeId);
+          });
+      });
+  }
+
+  /**
+   * Initialise the autocomplete element
+   */
+  function init() {
+    str
+      .get_string('select_type', 'totara_evidence')
+      .then(function(placeholderText) {
+        autocomplete.enhance(
+          '[data-type-autocomplete]',
+          false,
+          'totara_evidence/evidence_select_type',
+          placeholderText
+        );
+
+        // autocomplete doesn't trigger native js events, only jquery ones
+        $('[data-type-autocomplete]').change(function(e) {
+          displayTypeMetadata(e.currentTarget.value);
         });
-    }
 
-    return {
-        init: init,
-        processResults: processResults,
-        transport: transport
-    };
+        document
+          .querySelector('[data-type-buttons]')
+          .addEventListener('click', function(e) {
+            e.preventDefault();
+            if (e.target.closest('[data-type-submit]')) {
+              var params = {
+                typeid: e.target.getAttribute('data-type-id'),
+              };
+              if (e.target.getAttribute('data-user-id')) {
+                params.user_id = e.target.getAttribute('data-user-id');
+              }
+              window.location.href = url.relativeUrl(
+                '/totara/evidence/create.php',
+                params
+              );
+            } else if (e.target.closest('[data-type-cancel]')) {
+              document
+                .querySelector('[data-type-infobox]')
+                .classList.add('tw-evidence__hidden');
+              location.reload();
+            }
+          });
+      });
+  }
+
+  return {
+    init: init,
+    processResults: processResults,
+    transport: transport,
+  };
 });
