@@ -99,9 +99,7 @@ final class catalog_import_create_course implements mutation_resolver, has_middl
                     $category_id
                 );
 
-                // Todo: decide whether we would want to capture the whole process in
-                //       transaction or not.
-                $creation_result = $course->create_course();
+                $creation_result = $course->create_course_in_transaction();
                 if ($creation_result->is_success()) {
                     $partial_completed = true;
                 } else {
@@ -118,16 +116,17 @@ final class catalog_import_create_course implements mutation_resolver, has_middl
 
         if (!$successful_run) {
             // The process does not get to completed when created 50 or less courses.
-            $identifier = 'content_creation_failure_no_course';
             if ($partial_completed) {
-                $identifier = 'content_creation_failure';
+                $message = get_string('content_creation_failure', 'contentmarketplace_linkedin');
+            } else {
+                $message = get_string('content_creation_failure_no_course', 'contentmarketplace_linkedin');
             }
-
-            notification::error(get_string($identifier, 'contentmarketplace_linkedin'));
+            $mutation_result->set_message($message);
+            notification::error($message);
         } else {
             // Successful creation
             notification::success(get_string('course_content_immediate_creation', 'contentmarketplace_linkedin'));
-            $mutation_result->set_success(true);
+            $mutation_result->set_successful(true);
         }
 
         $mutation_result->set_redirect_url($redirect_url);

@@ -75,7 +75,6 @@ class contentmarketplace_linkedin_learning_object_formatter_testcase extends tes
         $this->assertStringNotContainsString('<script>', $formatter->format('description_include_html', format::FORMAT_HTML));
         $this->assertNotEquals($entity->short_description, $formatter->format('short_description', format::FORMAT_PLAIN));
         $this->assertEquals('This is a short description', $formatter->format('short_description', format::FORMAT_PLAIN));
-        // TODO: Test 'subject' formatter
 
         // Date fields
         $this->assertIsNotInt($formatter->format('last_updated_at', date_format::FORMAT_DATE));

@@ -82,7 +82,7 @@ class contentmarketplace_linkedin_webapi_resolver_mutation_catalog_import_create
         );
 
         self::assertInstanceOf(course_creation_result::class, $result);
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
 
         // 2 new courses created, and they are all under the new category.
         self::assertEquals(2, $db->count_records('course', ['containertype' => course::get_type()]));
@@ -232,7 +232,7 @@ class contentmarketplace_linkedin_webapi_resolver_mutation_catalog_import_create
         );
 
         self::assertInstanceOf(course_creation_result::class, $result);
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertEmpty($result->get_message());
 
         $redirect_url = $result->get_redirect_url();
@@ -284,7 +284,7 @@ class contentmarketplace_linkedin_webapi_resolver_mutation_catalog_import_create
         );
 
         self::assertInstanceOf(course_creation_result::class, $result);
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertEmpty($result->get_message());
 
         $redirect_url = $result->get_redirect_url();
@@ -323,7 +323,7 @@ class contentmarketplace_linkedin_webapi_resolver_mutation_catalog_import_create
         );
 
         self::assertInstanceOf(course_creation_result::class, $result);
-        self::assertTrue($result->is_success());
+        self::assertTrue($result->is_successful());
         self::assertEmpty($result->get_message());
 
         $redirect_url = $result->get_redirect_url();
@@ -395,9 +395,8 @@ class contentmarketplace_linkedin_webapi_resolver_mutation_catalog_import_create
         $generator = generator::instance();
         $learning_object = $generator->create_learning_object('urn:lyndaCourse:252');
 
-        self::expectException(coding_exception::class);
-        self::expectExceptionMessage("Category {$cat->id} is not supported.");
-        $this->resolve_graphql_mutation(
+        /** @var course_creation_result $result */
+        $result = $this->resolve_graphql_mutation(
             'contentmarketplace_linkedin_catalog_import_create_course',
             [
                 'input' => [
@@ -408,5 +407,8 @@ class contentmarketplace_linkedin_webapi_resolver_mutation_catalog_import_create
                 ]
             ]
         );
+        self::assertDebuggingCalled();
+        self::assertFalse($result->is_successful());
+        self::assertEquals(get_string('content_creation_failure_no_course', 'contentmarketplace_linkedin'), $result->get_message());
     }
 }

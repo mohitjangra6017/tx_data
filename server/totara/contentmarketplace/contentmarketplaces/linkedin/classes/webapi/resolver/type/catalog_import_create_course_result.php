@@ -48,7 +48,7 @@ final class catalog_import_create_course_result implements type_resolver {
 
         switch ($field) {
             case 'success':
-                return $source->is_success();
+                return $source->is_successful();
 
             case 'message':
                 return $source->get_message();

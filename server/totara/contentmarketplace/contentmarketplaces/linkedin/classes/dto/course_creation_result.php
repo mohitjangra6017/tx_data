@@ -28,7 +28,7 @@ class course_creation_result {
     /**
      * @var bool
      */
-    private $success;
+    private $successful;
 
     /**
      * @var string
@@ -42,10 +42,10 @@ class course_creation_result {
 
     /**
      * course_creation_result constructor.
-     * @param bool $success
+     * @param bool $successful
      */
-    public function __construct(bool $success = false) {
-        $this->success = $success;
+    public function __construct(bool $successful = false) {
+        $this->successful = $successful;
         $this->message = '';
         $this->redirect_url = null;
     }
@@ -53,16 +53,16 @@ class course_creation_result {
     /**
      * @return bool
      */
-    public function is_success(): bool {
-        return $this->success;
+    public function is_successful(): bool {
+        return $this->successful;
     }
 
     /**
-     * @param bool $success
+     * @param bool $successful
      * @return void
      */
-    public function set_success(bool $success): void {
-        $this->success = $success;
+    public function set_successful(bool $successful): void {
+        $this->successful = $successful;
     }
 
     /**

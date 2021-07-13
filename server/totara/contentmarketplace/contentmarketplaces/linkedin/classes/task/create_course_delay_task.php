@@ -159,7 +159,7 @@ final class create_course_delay_task extends adhoc_task {
                     $category_id
                 );
 
-                $result = $course->create_course();
+                $result = $course->create_course_in_transaction();
                 if (!$result->is_success()) {
                     $successful_run = false;
                 }

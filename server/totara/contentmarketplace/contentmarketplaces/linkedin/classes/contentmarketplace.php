@@ -47,7 +47,7 @@ final class contentmarketplace extends contentmarketplace_parent {
      * @return string
      */
     public function course_create_page() {
-        // TODO: Return URL to the proper page
+        // For the LinkedIn marketplace, we rely on GraphQL mutations rather than a dedicated page for creating the actual courses.
         return '';
     }
 

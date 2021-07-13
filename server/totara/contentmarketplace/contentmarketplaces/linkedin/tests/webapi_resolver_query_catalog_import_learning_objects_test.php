@@ -470,6 +470,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             [
                 'input' => [
                     'filters' => [
+                        'language' => 'en',
                         'subjects' => [$classification_one->id],
                         'asset_type' => [],
                         'time_to_complete' => []
@@ -523,6 +524,7 @@ class contentmarketplace_linkedin_webapi_resolver_query_catalog_import_learning_
             [
                 'input' => [
                     'filters' => [
+                        'language' => 'en',
                         'subjects' => [$classification_two->id],
                         'asset_type' => [],
                         'time_to_complete' => []

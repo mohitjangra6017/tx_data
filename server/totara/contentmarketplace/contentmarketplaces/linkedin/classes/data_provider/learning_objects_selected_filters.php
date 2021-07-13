@@ -23,6 +23,8 @@
 
 namespace contentmarketplace_linkedin\data_provider;
 
+use contentmarketplace_linkedin\constants;
+use contentmarketplace_linkedin\entity\classification;
 use totara_tui\tree\branch;
 use totara_tui\tree\leaf;
 
@@ -35,11 +37,10 @@ class learning_objects_selected_filters extends learning_objects_filter_options 
 
     /**
      * learning_objects_selected_filter_labels constructor.
-     * @param string $language
      * @param int[][] $selected_filters Associative array of filter type => IDs array
      */
     public function __construct(array $selected_filters) {
-        parent::__construct($selected_filters['language'] ?? 'en');
+        parent::__construct($selected_filters['language']);
         $this->selected_filters = $selected_filters;
     }
 
@@ -49,9 +50,14 @@ class learning_objects_selected_filters extends learning_objects_filter_options 
      * @return string[]
      */
     private function get_subject_labels(): array {
-        // TODO: Have this do a DB query on the classifications table to get the subjects.
-        // For now, we just get it from the placeholder tree.
-        return self::get_tree_labels_from_ids($this->get_subjects(), $this->selected_filters['subjects']);
+        return classification::repository()
+            ->select('name')
+            ->where('locale_language', $this->language)
+            ->where('type', constants::CLASSIFICATION_TYPE_SUBJECT)
+            ->where_in('id', $this->selected_filters['subjects'])
+            ->order_by('name')
+            ->get()
+            ->pluck('name');
     }
 
     /**
