@@ -21,17 +21,19 @@
  * @package core
  */
 
-use contentmarketplace_linkedin\constants;
-use contentmarketplace_linkedin\sync_action\sync_learning_asset;
 use contentmarketplace_linkedin\config;
+use contentmarketplace_linkedin\constants;
+use contentmarketplace_linkedin\entity\learning_object;
+use contentmarketplace_linkedin\sync_action\sync_learning_asset;
 use contentmarketplace_linkedin\testing\generator;
+use core\orm\query\builder;
 use core_phpunit\testcase;
 use totara_contentmarketplace\token\token;
 use totara_core\http\clients\simple_mock_client;
+use totara_core\http\exception\bad_format_exception;
+use totara_core\http\exception\http_exception;
 use totara_core\http\response;
 use totara_core\http\response_code;
-use core\orm\query\builder;
-use contentmarketplace_linkedin\entity\learning_object;
 
 class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends testcase {
     /**
@@ -248,4 +250,105 @@ class contentmarketplace_linkedin_initial_sync_learning_asset_testcase extends t
         }
     }
 
+    /**
+     * @return void
+     */
+    public function test_sync_with_server_exception(): void {
+        $json_content = json_encode(["error" => "Error"]);
+
+        $client = new simple_mock_client();
+        $client->mock_queue(
+            new response(
+                json_encode(["error" => "Error"]),
+                response_code::INTERNAL_SERVER_ERROR,
+                [],
+                "application/json"
+            )
+        );
+
+        $sync = new sync_learning_asset(true);
+        $sync->set_api_client($client);
+        $sync->set_asset_types(constants::ASSET_TYPE_COURSE);
+        $sync->set_http_failure_threshold(1);
+
+        self::assertEmpty($sync->get_caught_request_exceptions());
+        $sync->invoke();
+
+        $caught_exceptions = $sync->get_caught_request_exceptions();
+        self::assertNotEmpty($caught_exceptions);
+        self::assertCount(1, $caught_exceptions);
+
+        $exception = reset($caught_exceptions);
+        self::assertNotInstanceOf(bad_format_exception::class, $exception);
+        self::assertInstanceOf(http_exception::class, $exception);
+
+        self::assertEquals("httpreqexception: Request failed with 500 ({$json_content})", $exception->getMessage());
+    }
+
+    /**
+     * For case when Linkedin Learning returns empty page but response code is 200.
+     *
+     * @return void
+     */
+    public function test_sync_with_empty_response_exception(): void {
+        $client = new simple_mock_client();
+        $client->mock_queue(
+            new response(
+                "",
+                response_code::OK,
+                [],
+                "application/json"
+            )
+        );
+
+        $sync = new sync_learning_asset(true);
+        $sync->set_http_failure_threshold(1);
+        $sync->set_api_client($client);
+        $sync->set_asset_types(constants::ASSET_TYPE_COURSE);
+
+        self::assertEmpty($sync->get_caught_request_exceptions());
+        $sync->invoke();
+
+        $caught_exceptions = $sync->get_caught_request_exceptions();
+        self::assertNotEmpty($caught_exceptions);
+        self::assertCount(1, $caught_exceptions);
+
+        $exception = reset($caught_exceptions);
+        self::assertInstanceOf(bad_format_exception::class, $exception);
+        self::assertEquals("badformatexception: No data", $exception->getMessage());
+    }
+
+    /**
+     * Less likely a case, but for scenario when Linkedin Learning return an error message instead of a
+     * json format for error message.
+     *
+     * @return void
+     */
+    public function test_sync_with_bad_format_response_exception(): void {
+        $client = new simple_mock_client();
+        $client->mock_queue(
+            new response(
+                "hello world",
+                response_code::OK,
+                [],
+                "application/json"
+            )
+        );
+
+        $sync = new sync_learning_asset(true);
+        $sync->set_http_failure_threshold(1);
+        $sync->set_api_client($client);
+        $sync->set_asset_types(constants::ASSET_TYPE_COURSE);
+
+        self::assertEmpty($sync->get_caught_request_exceptions());
+        $sync->invoke();
+
+        $caught_exceptions = $sync->get_caught_request_exceptions();
+        self::assertNotEmpty($caught_exceptions);
+        self::assertCount(1, $caught_exceptions);
+
+        $exception = reset($caught_exceptions);
+        self::assertInstanceOf(bad_format_exception::class, $exception);
+        self::assertEquals("badformatexception: Syntax error (hello world)", $exception->getMessage());
+    }
 }

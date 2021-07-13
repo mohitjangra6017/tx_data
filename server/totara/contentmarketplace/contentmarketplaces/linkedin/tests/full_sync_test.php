@@ -206,6 +206,9 @@ class contentmarketplace_linkedin_full_sync_testcase extends testcase {
         self::assertEquals(0, $db->count_records(learning_object_classification::TABLE));
 
         $sync = new sync($client, $trace);
+
+        // Turn off debugging mode.
+        $sync->set_performance_debug(false);
         $sync->execute(true);
 
         // Created zero classifications
@@ -233,9 +236,9 @@ class contentmarketplace_linkedin_full_sync_testcase extends testcase {
 
         foreach ($classification_types as $classification_type) {
             $expected_outputs[] = "Sync for classification type {$classification_type}";
-            $expected_outputs[] = "\tSync for locale {$target_locale->__toString()}";
+            $expected_outputs[] = "Sync for locale {$target_locale->__toString()}";
             $expected_outputs[] = sprintf(
-                "\tThere are no records for classification %s with locale %s",
+                "There are no records for classification %s with locale %s",
                 $classification_type,
                 $target_locale->__toString()
             );
@@ -245,9 +248,12 @@ class contentmarketplace_linkedin_full_sync_testcase extends testcase {
         $expected_outputs[] = sprintf('Sync for type: %s', constants::ASSET_TYPE_COURSE);
 
         // URN from the learning asset response under classifications
-        $expected_outputs[] = "\tCannot find the classification with urn urn:li:lyndaCategory:458";
-        $expected_outputs[] = "\tCannot find the classification with urn urn:li:lyndaCategory:496";
-        $expected_outputs[] = "\tCannot find the classification with urn urn:li:lyndaCategory:456";
+        $expected_outputs[] = "Cannot find the classification with urn urn:li:lyndaCategory:458";
+        $expected_outputs[] = "Cannot find the classification with urn urn:li:lyndaCategory:496";
+        $expected_outputs[] = "Cannot find the classification with urn urn:li:lyndaCategory:456";
+
+        // Syncing progress
+        $expected_outputs[] = "Syncing 100/1";
 
         // Total number from the response file.
         $expected_outputs[] = "Finish syncing with the total of records: 1";

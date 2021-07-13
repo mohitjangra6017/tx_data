@@ -45,6 +45,12 @@ abstract class sync_action {
     protected $trace;
 
     /**
+     * A flag to display performance debugging.
+     * @var bool
+     */
+    protected $performance_debug;
+
+    /**
      * sync_action constructor.
      * @param bool $is_initial_run
      * @param progress_trace|null $trace
@@ -56,6 +62,15 @@ abstract class sync_action {
 
         $this->is_initial_run = $is_initial_run;
         $this->trace = $trace;
+        $this->performance_debug = false;
+    }
+
+    /**
+     * @param bool $value
+     * @return void
+     */
+    final public function set_performance_debug(bool $value): void {
+        $this->performance_debug = $value;
     }
 
     /**

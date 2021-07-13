@@ -120,7 +120,7 @@ final class response {
         $json = @json_decode($this->body, $assoc, 512, JSON_BIGINT_AS_STRING);
         if ($json === null) {
             if ($electrify && json_last_error()) {
-                throw new bad_format_exception(json_last_error_msg());
+                throw new bad_format_exception(json_last_error_msg(), $this->body);
             }
             return null;
         }

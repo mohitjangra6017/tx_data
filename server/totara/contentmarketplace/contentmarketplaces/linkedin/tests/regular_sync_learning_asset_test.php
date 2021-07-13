@@ -146,7 +146,7 @@ class contentmarketplace_linkedin_regular_sync_learning_asset_testcase extends t
     /**
      * @return void
      */
-    public function test_run_regulary_sync_without_the_flag(): void {
+    public function test_run_regularly_sync_without_the_flag(): void {
         $db = builder::get_db();
         $generator = generator::instance();
 

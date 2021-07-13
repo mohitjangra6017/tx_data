@@ -41,6 +41,8 @@ use progress_trace;
 use totara_contentmarketplace\sync\external_sync;
 use totara_contentmarketplace\sync\sync_action;
 use totara_core\http\client;
+use totara_core\http\exception\auth_exception;
+use totara_core\http\exception\http_exception;
 
 /**
  * Class learning_asset
@@ -57,6 +59,19 @@ class sync_learning_asset extends sync_action implements external_sync {
         constants::CLASSIFICATION_TYPE_SUBJECT => [constants::CLASSIFICATION_TYPE_LIBRARY],
         constants::CLASSIFICATION_TYPE_LIBRARY => [],
     ];
+
+    /**
+     * The default threshold number which allow number http calls fail up to.
+     *
+     * @var int
+     */
+    private const DEFAULT_HTTP_FAILURE_THRESHOLD = 2;
+
+    /**
+     * The maximum count for linkedin learning's API to get the learning assets.
+     * @var int
+     */
+    private const MAXIMUM_COUNT = 100;
 
     /**
      * @var client
@@ -94,9 +109,25 @@ class sync_learning_asset extends sync_action implements external_sync {
     private $asset_types;
 
     /**
+     * The number of threshold which allow number of HTTP calls fail up to.
+     *
+     * @var int
+     */
+    private $http_failure_threshold;
+
+    /**
+     * The list of http exceptions that were caught during the execution.
+     * Note that this list will be reset everytime the {@see sync_learning_asset::invoke()}
+     * is called.
+     *
+     * @var http_exception[]
+     */
+    private $caught_request_exceptions;
+
+    /**
      * sync_learning_asset constructor.
-     * @param bool $is_initial_run
-     * @param int|null $time_run
+     * @param bool                $is_initial_run
+     * @param int|null            $time_run
      * @param progress_trace|null $trace
      */
     public function __construct(
@@ -112,6 +143,24 @@ class sync_learning_asset extends sync_action implements external_sync {
         $this->asset_types = [
             constants::ASSET_TYPE_COURSE,
         ];
+
+        $this->http_failure_threshold = self::DEFAULT_HTTP_FAILURE_THRESHOLD;
+        $this->caught_request_exceptions = [];
+    }
+
+    /**
+     * @param int $new_threshold
+     * @return void
+     */
+    public function set_http_failure_threshold(int $new_threshold): void {
+        $this->http_failure_threshold = $new_threshold;
+    }
+
+    /**
+     * @return http_exception[]
+     */
+    public function get_caught_request_exceptions(): array {
+        return $this->caught_request_exceptions;
     }
 
     /**
@@ -173,48 +222,98 @@ class sync_learning_asset extends sync_action implements external_sync {
         }
 
         $api = api::create($this->client);
+        $time_consumes = [];
+
+        // Reset the list of caught exception. This list of exception will be output to stdOut
+        // for system admin or whoever is looking into the logs
+        $this->caught_request_exceptions = [];
+
         foreach ($this->asset_types as $asset_type) {
+            $time_start = microtime(true);
+
             $criteria = new criteria();
             $criteria->set_asset_types([$asset_type]);
 
             if (!$this->is_initial_run && $this->sync_with_last_time_modified) {
                 $last_modified_at = config::last_time_sync_learning_asset();
-                $criteria->set_last_modified_after($last_modified_at * timestamp::MILLISECONDS_IN_SECOND);
+
+                if (null !== $last_modified_at) {
+                    // Converting the last time modified into milli seconds. However, only when it
+                    // is not null. Because we want to treat null as not provided for the API call.
+                    // Otherwise, "null * 1000 = 0" which will be included in the API call.
+                    $last_modified_at *= timestamp::MILLISECONDS_IN_SECOND;
+                }
+
+                $criteria->set_last_modified_after($last_modified_at);
             }
 
             $this->trace->output("Sync for type: {$asset_type}");
-            $criteria->set_count(100);
+            $criteria->set_count(self::MAXIMUM_COUNT);
 
             $service = new service($criteria);
+            $current = 0;
 
+            // A flag to identify how many times Linkedin Learning response as failures to us.
+            // In order to stop requesting, when the threshold number is reached.
+            $request_failures = 0;
 
             while (true) {
-                /** @var collection $collection */
-                $collection = $api->execute($service);
-                $elements = $collection->get_elements();
+                try {
+                    /** @var collection $collection */
+                    $collection = $api->execute($service);
+                    $elements = $collection->get_elements();
 
-                if (empty($elements)) {
-                    $this->trace->output("No learning assets found for type: {$asset_type}");
+                    if (empty($elements)) {
+                        $this->trace->output("No learning assets found for type: {$asset_type}");
+                        break;
+                    }
+
+                    foreach ($elements as $element) {
+                        $this->do_sync_element($element);
+                    }
+
+                    $pagination = $collection->get_paging();
+                    $total = $pagination->get_total();
+                    $current += $pagination->get_count();
+
+                    $this->trace->output("Syncing {$current}/{$total}");
+
+                    if (!$pagination->has_next()) {
+                        $this->trace->output(
+                            "Finish syncing with the total of records: {$total}"
+                        );
+                        break;
+                    }
+
+                    $next_href = $pagination->get_next_link();
+
+                    $criteria->clear();
+                    $criteria->set_parameters_from_paging_url($next_href);
+                } catch (auth_exception $e) {
+                    // We do not care about authentication exception, pass it thru.
+                    throw $e;
+                } catch (http_exception $e) {
+                    // Bad response format response. This can potentially happened because of internal
+                    // server error response from linkedin which were captured and still output it as
+                    // 200 response code.
+                    $request_failures += 1;
+                    $this->caught_request_exceptions[] = $e;
+                }
+
+                if ($request_failures === $this->http_failure_threshold) {
+                    // Too many request failures, shutdown the sync for asset type gracefully.
                     break;
                 }
-
-                foreach ($elements as $element) {
-                    $this->do_sync_element($element);
-                }
-
-                $pagination = $collection->get_paging();
-                if (!$pagination->has_next()) {
-                    $this->trace->output(
-                        "Finish syncing with the total of records: {$pagination->get_total()}"
-                    );
-                    break;
-                }
-
-                $next_href = $pagination->get_next_link();
-
-                $criteria->clear();
-                $criteria->set_parameters_from_paging_url($next_href);
             }
+
+            $time_end = microtime(true);
+            $total_time_consumes_for_type = round($time_end - $time_start);
+
+            if ($this->performance_debug) {
+                $this->trace->output("Completed sync for type {$asset_type} after {$total_time_consumes_for_type}");
+            }
+
+            $time_consumes[] = $total_time_consumes_for_type;
         }
 
         if ($this->is_initial_run) {
@@ -222,6 +321,23 @@ class sync_learning_asset extends sync_action implements external_sync {
         }
 
         config::save_last_time_sync_learning_asset($this->time_run);
+
+        if (!empty($this->caught_request_exceptions)) {
+            // Output to the stdOut for debugging purpose.
+            foreach ($this->caught_request_exceptions as $exception) {
+                $this->trace->output($exception->getMessage());
+                $this->trace->output($exception->getTraceAsString());
+            }
+        }
+
+        if ($this->performance_debug) {
+            $this->trace->output(
+                sprintf(
+                    "Completed sync after: %d",
+                    array_sum($time_consumes)
+                )
+            );
+        }
     }
 
     /**
@@ -252,7 +368,9 @@ class sync_learning_asset extends sync_action implements external_sync {
 
     /**
      * @param learning_object_entity $entity
-     * @param element $element
+     * @param element                $element
+     *
+     * @return void
      */
     private function populate_classifications(learning_object_entity $entity, element $element): void {
         // Progress on classification path and its relationship.
@@ -277,7 +395,8 @@ class sync_learning_asset extends sync_action implements external_sync {
             if (empty($classification_id)) {
                 // Cannot find the classification's id within our database.
                 $this->trace->output(
-                    "\tCannot find the classification with urn {$classification_with_path_urn}"
+                    "Cannot find the classification with urn {$classification_with_path_urn}",
+                    4
                 );
 
                 continue;
@@ -321,7 +440,8 @@ class sync_learning_asset extends sync_action implements external_sync {
 
                 if (empty($parent_classification_id)) {
                     $this->trace->output(
-                        "\tCannot find the parent classification with urn {$parent_classification_urn}"
+                        "Cannot find the parent classification with urn {$parent_classification_urn}",
+                        4
                     );
 
                     continue;

@@ -49,12 +49,18 @@ class sync {
     private $trace;
 
     /**
+     * @var bool
+     */
+    private $performance_debug;
+
+    /**
      * sync constructor.
      *
      * @param client              $client
      * @param progress_trace|null $trace
      */
     public function __construct(client $client, ?progress_trace $trace = null) {
+        global $CFG;
         if (null === $trace) {
             $trace = new null_progress_trace();
         }
@@ -62,6 +68,19 @@ class sync {
         $this->sync_action_classes = [];
         $this->client = $client;
         $this->trace = $trace;
+
+        // This is what output renderer was using.
+        $this->performance_debug = (
+            (defined('MDL_PERF') && MDL_PERF === true) || (!empty($CFG->perfdebug) && $CFG->perfdebug > 7)
+        );
+    }
+
+    /**
+     * @param bool $value
+     * @return void
+     */
+    public function set_performance_debug(bool $value): void {
+        $this->performance_debug = $value;
     }
 
     /**
@@ -76,6 +95,7 @@ class sync {
                 continue;
             }
 
+            $action->set_performance_debug($this->performance_debug);
             $action->set_trace($this->trace);
             $action->invoke();
         }

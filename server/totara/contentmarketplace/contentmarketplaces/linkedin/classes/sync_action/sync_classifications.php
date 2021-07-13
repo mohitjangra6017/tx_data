@@ -176,7 +176,7 @@ class sync_classifications extends sync_action implements external_sync {
             $this->trace->output("Sync for classification type {$classification_type}");
 
             foreach ($this->target_locales as $target_locale) {
-                $this->trace->output("\tSync for locale {$target_locale}");
+                $this->trace->output("Sync for locale {$target_locale}", 4);
 
                 $locale_and_type = new locale_and_type($target_locale, $classification_type);
                 $locale_and_type->set_count(100);
@@ -190,7 +190,8 @@ class sync_classifications extends sync_action implements external_sync {
 
                     if (empty($elements)) {
                         $this->trace->output(
-                            "\tThere are no records for classification {$classification_type} with locale {$target_locale}"
+                            "There are no records for classification {$classification_type} with locale {$target_locale}",
+                            4
                         );
 
                         break;
