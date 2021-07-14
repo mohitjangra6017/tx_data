@@ -255,27 +255,6 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         self::assertEquals(0, $db->count_records('course', ['containertype' => course::get_type()]));
         $result = $course_builder->create_course_in_transaction();
 
-        // Clear the debugging message first, just in case any assertions below are wrong would
-        // not yield the issue with the debugging messages.
-        $debugging_messages = self::getDebuggingMessages();
-        self::resetDebugging();
-
-        self::assertCount(1, $debugging_messages);
-
-        $debugging_message = reset($debugging_messages);
-        self::assertIsObject($debugging_message);
-        self::assertObjectHasAttribute('message', $debugging_message);
-
-        self::assertStringContainsString(
-            "Caught exception 'coding_exception':",
-            $debugging_message->message
-        );
-
-        self::assertStringContainsString(
-            "Incorrect function 'contentmarketplace_add_instance'",
-            $debugging_message->message
-        );
-
         // The creation should not leaving any trailing record if the error yield
         self::assertEquals(0, $db->count_records('course', ['containertype' => course::get_type()]));
 
@@ -317,27 +296,6 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         $db = builder::get_db();
         self::assertEquals(0, $db->count_records('course', ['containertype' => course::get_type()]));
         $result = $course_builder->create_course();
-
-        // Clear the debugging message first, just in case any assertions below are wrong would
-        // not yield the issue with the debugging messages.
-        $debugging_messages = self::getDebuggingMessages();
-        self::resetDebugging();
-
-        self::assertCount(1, $debugging_messages);
-
-        $debugging_message = reset($debugging_messages);
-        self::assertIsObject($debugging_message);
-        self::assertObjectHasAttribute('message', $debugging_message);
-
-        self::assertStringContainsString(
-            "Caught exception 'coding_exception':",
-            $debugging_message->message
-        );
-
-        self::assertStringContainsString(
-            "Incorrect function 'contentmarketplace_add_instance'",
-            $debugging_message->message
-        );
 
         // The creation should not leaving any trailing record if the error yield
         self::assertEquals(1, $db->count_records('course', ['containertype' => course::get_type()]));
@@ -592,9 +550,6 @@ class totara_contentmarketplace_course_builder_testcase extends testcase {
         self::assertEquals(0, $db->count_records('course', ['containertype' => course::get_type()]));
 
         $result = $course_builder->create_course_in_transaction();
-
-        // Exception thrown, hence we call to the debugging.
-        self::assertDebuggingCalledCount(1);
 
         self::assertFalse($result->is_success());
         self::assertTrue($result->is_error());

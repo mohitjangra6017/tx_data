@@ -105,7 +105,7 @@ final class create_course_delay_task extends adhoc_task {
             return;
         }
 
-        $this->trace->output('Some courses creation failure');
+        $this->trace->output('Some courses could not be created');
     }
 
     /**

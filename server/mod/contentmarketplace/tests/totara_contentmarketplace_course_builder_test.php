@@ -63,19 +63,6 @@ class mod_contentmarketplace_totara_contentmarketplace_course_builder_testcase e
         self::assertEquals(0, $db->count_records('course', ['containertype' => course::get_type()]));
 
         $result = $course_builder->create_course_in_transaction();
-
-        $debugging_messages = self::getDebuggingMessages();
-        self::resetDebugging();
-        self::assertCount(1, $debugging_messages);
-
-        $debugging_message = reset($debugging_messages);
-        self::assertIsObject($debugging_message);
-        self::assertObjectHasAttribute('message', $debugging_message);
-        self::assertStringContainsString(
-            "Cannot add module 'contentmarketplace' to course '{$learning_object->get_name()}'",
-            $debugging_message->message
-        );
-
         self::assertFalse($result->is_success());
         self::assertTrue($result->is_error());
         self::assertEquals(result::ERROR_ON_MODULE_CREATION, $result->get_code());

@@ -289,14 +289,6 @@ class course_builder {
         try {
             $course = $this->do_create_course();
         } catch (throwable $e) {
-            // Encapsulate whatever the exception is in the result, and return this result,
-            // instead of yielding the error.
-            $class_name = get_class($e);
-            debugging(
-                "Caught exception '{$class_name}': {$e->getMessage()}",
-                DEBUG_ALL
-            );
-
             return result::create(
                 null,
                 result::ERROR_ON_COURSE_CREATION,
@@ -308,12 +300,6 @@ class course_builder {
         try {
             $this->do_add_module($course);
         } catch (throwable $e) {
-            $class_name = get_class($e);
-            debugging(
-                "Caught exception '{$class_name}': {$e->getMessage()}",
-                DEBUG_ALL
-            );
-
             return result::create(
                 null,
                 result::ERROR_ON_MODULE_CREATION,
