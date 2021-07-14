@@ -28,6 +28,7 @@ use core\collection;
 use core\entity\user;
 
 use hierarchy_goal\entity\company_goal;
+use hierarchy_goal\entity\scale_value;
 
 /**
  * Holds the company goal assignment details for a user.
@@ -55,23 +56,31 @@ class company_goal_assignment {
     private $assignment_types = null;
 
     /**
+     * @var scale_value goal status.
+     */
+    private $scale_value = null;
+
+    /**
      * Default constructor.
      *
      * @param int $id assignment id.
      * @param company_goal $goal assigned company goal.
      * @param user $user assigned user.
      * @param collection|assignment_type_extended[] $types assignment types.
+     * @param scale_value $scale_value goal status.
      */
     public function __construct(
         int $id,
         company_goal $goal,
         user $user,
-        array $types
+        array $types,
+        ?scale_value $scale_value = null
     ) {
         $this->id = $id;
         $this->goal = $goal;
         $this->user = $user;
         $this->assignment_types = collection::new($types);
+        $this->scale_value = $scale_value;
     }
 
     /**
@@ -99,6 +108,15 @@ class company_goal_assignment {
      */
     public function get_user(): user {
         return $this->user;
+    }
+
+    /**
+     * Returns the goal status.
+     *
+     * @return scale_value the status value.
+     */
+    public function get_scale_value(): ?scale_value {
+        return $this->scale_value;
     }
 
     /**

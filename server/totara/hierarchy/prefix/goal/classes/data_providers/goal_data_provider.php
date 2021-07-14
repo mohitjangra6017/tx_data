@@ -38,8 +38,8 @@ class goal_data_provider {
     public const DEFAULT_PAGE_SIZE = 20;
     private const VALID_ORDER_DIRECTION = ['asc', 'desc'];
 
-    /** @var string|entity association orm entity class. */
-    private $entity_class = null;
+    /** @var callable ()->repository method to create a ORM repository. */
+    private $repo_factory = null;
 
     /** @var string[] entity fields on which sorting is allowed. */
     private $allowed_order_by_fields = [];
@@ -62,19 +62,29 @@ class goal_data_provider {
     /**
      * Default constructor.
      *
-     * @param entity_class target entity class.
+     * @param entity_class target entity class. Used to create a repository if
+     *        $repo_factory is not provided.
      * @param string[] allowed_order_by_fields entity fields on which sorting is
      *        allowed.
-     * @param callable a (string, mixed)->?filter method that takes the filter
+     * @param callable|null a (string, mixed)->?filter method that takes a filter
      *        name and the filter value and returns the initialized filter if it
      *        can be created.
+     * @param callable $repo_factory ()->repository function to create a single
+     *        use ORM repository. For cases where you need a repository that has
+     *        joins, etc.
      */
     public function __construct(
         string $entity_class,
         array $allowed_order_by_fields = [],
-        ?callable $filter_factory = null
+        ?callable $filter_factory = null,
+        ?callable $repo_factory = null
     ) {
-        $this->entity_class = $entity_class;
+        $this->repo_factory = $repo_factory
+            ? $repo_factory
+            : function () use ($entity_class): repository {
+                return $entity_class::repository();
+            };
+
         $this->filter_factory = $filter_factory;
 
         if ($allowed_order_by_fields) {
@@ -192,19 +202,17 @@ class goal_data_provider {
             return strlen($str_value) > 0 ? $str_value : null;
         }
 
-        if (is_int($value)) {
-            return $value;
-        }
-
         return $value;
     }
 
     /**
+     * Initializes an instance of the repository to be used for querying.
+     *
      * @return repository
      */
     private function prepare_repository(): repository {
-        $entity_class = $this->entity_class;
-        $repository = $entity_class::repository();
+        $factory = $this->repo_factory;
+        $repository = $factory();
 
         if ($this->filters) {
             $repository = $repository->set_filters($this->filters);
@@ -218,7 +226,9 @@ class goal_data_provider {
     }
 
     /**
-     * @return collection
+     * Returns the entities  meeting the previously set search criteria.
+     *
+     * @return collection|entity[] the retrieved entities.
      */
     public function fetch(): collection {
         return $this->prepare_repository()->get();
@@ -229,7 +239,7 @@ class goal_data_provider {
      *
      * @param cursor|null $cursor $cursor indicates which "page" of entities to retrieve.
      *
-     * @return array[entity] the retrieved entities.
+     * @return entity[] the retrieved entities.
      */
     public function fetch_paginated(?cursor $cursor = null): array {
         $repository = $this->prepare_repository();

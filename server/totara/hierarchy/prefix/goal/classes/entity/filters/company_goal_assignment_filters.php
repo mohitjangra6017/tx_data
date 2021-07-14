@@ -26,7 +26,9 @@ namespace hierarchy_goal\entity\filters;
 use core\orm\entity\filter\equal;
 use core\orm\entity\filter\filter;
 use core\orm\entity\filter\in;
+use core\orm\entity\filter\like;
 
+use hierarchy_goal\entity\company_goal;
 use hierarchy_goal\entity\company_goal_assignment;
 
 /**
@@ -99,7 +101,9 @@ class company_goal_assignment_filters {
      * @return filter the filter instance.
      */
     public static function create_goal_name_filter(string $value): filter {
-        return (new company_goal_assignment_fullname())
+        // Note this assumes the goal table has already been joined to the
+        // goal_assignment table.
+        return (new like(company_goal::TABLE . '.fullname'))
             ->set_value($value)
             ->set_entity_class(company_goal_assignment::class);
     }

@@ -48,6 +48,20 @@ type totara_hierarchy_goal_assignment_type_extended {
 }
 
 """
+Describes a goal scale value.
+"""
+type totara_hierarchy_goal_scale_value {
+  """
+  Scale value id
+  """
+  id: core_id!
+  """
+  Scale value name
+  """
+  name(format: core_format = PLAIN): String!
+}
+
+"""
 Parameters to retrieve a set of goal assignment types.
 """
 input totara_hierarchy_goal_assignment_types_input {

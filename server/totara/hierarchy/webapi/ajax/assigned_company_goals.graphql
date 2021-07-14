@@ -8,6 +8,8 @@ query totara_hierarchy_assigned_company_goals(
       goal {
         id
         full_name
+        description
+        target_date
       }
       assignment_types {
         type {
@@ -15,6 +17,9 @@ query totara_hierarchy_assigned_company_goals(
           value
         }
         description
+      }
+      scale_value {
+        name
       }
     }
     total

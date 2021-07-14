@@ -26,6 +26,7 @@ use hierarchy_goal\company_goal_assignment;
 use hierarchy_goal\company_goal_assignment_type;
 use hierarchy_goal\entity\company_goal_assignment as company_goal_assignment_entity;
 use totara_core\advanced_feature;
+use totara_hierarchy\testing\generator;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
@@ -99,7 +100,7 @@ class totara_hierarchy_webapi_resolver_query_assigned_company_goals_testcase ext
         $args = [
             'input' => [
                 'filters' => [],
-                'order_by' => 'goalid',
+                'order_by' => 'GOAL_NAME',
                 'order_dir' => $order_direction,
                 'result_size' => $page_size,
                 'cursor' => null
@@ -119,14 +120,14 @@ class totara_hierarchy_webapi_resolver_query_assigned_company_goals_testcase ext
 
         $retrieved = [];
         foreach ($items as $item) {
-            $retrieved[] = $item->get_goal()->id;
+            $retrieved[] = $item->get_goal()->fullname;
         }
 
         // 2nd round.
         $args = [
             'input' => [
                 'filters' => [],
-                'order_by' => 'goalid',
+                'order_by' => 'GOAL_NAME',
                 'order_dir' => $order_direction,
                 'result_size' => $page_size,
                 'cursor' => $enc_cursor
@@ -144,30 +145,30 @@ class totara_hierarchy_webapi_resolver_query_assigned_company_goals_testcase ext
         $this->assertEmpty($enc_cursor, 'non empty cursor');
 
         foreach ($items as $item) {
-            $retrieved[] = $item->get_goal()->id;
+            $retrieved[] = $item->get_goal()->fullname;
         }
 
         // See if items were retrieved in the correct order.
         $expected = $assignments
             ->sort(
                 function (company_goal_assignment $a, company_goal_assignment $b) use ($order_direction): int {
-                    $a_goal_id = $a->get_goal()->id;
-                    $b_goal_id = $b->get_goal()->id;
+                    $a_goal_name = $a->get_goal()->fullname;
+                    $b_goal_name = $b->get_goal()->fullname;
 
                     return $order_direction === 'desc'
-                        ? $b_goal_id <=> $a_goal_id
-                        : $a_goal_id <=> $b_goal_id;
+                        ? $b_goal_name <=> $a_goal_name
+                        : $a_goal_name <=> $b_goal_name;
                 },
                 $order_direction
             )
             ->map_to(
-                function (company_goal_assignment $assignment): int {
-                    return (int)$assignment->get_goal()->id;
+                function (company_goal_assignment $assignment): string {
+                    return $assignment->get_goal()->fullname;
                 }
             )
             ->all();
 
-        //$this->assertEquals($expected, $retrieved, 'retrieved in wrong order');
+        $this->assertEquals($expected, $retrieved, 'retrieved in wrong order');
     }
 
     public function test_filters(): void {
@@ -335,7 +336,7 @@ class totara_hierarchy_webapi_resolver_query_assigned_company_goals_testcase ext
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
-        $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
+        $hierarchy_generator = generator::instance();
 
         $user_ids = collection::new([]);
         for ($i = 0; $i < $user_count; $i++) {
@@ -360,7 +361,7 @@ class totara_hierarchy_webapi_resolver_query_assigned_company_goals_testcase ext
             ->map(
                 function (company_goal_assignment_entity $entity) use ($type): company_goal_assignment {
                     return new company_goal_assignment(
-                        $entity->id, $entity->goal, $entity->user, $type
+                        $entity->id, $entity->goal, $entity->user, $type, $entity->scale_value
                     );
                 }
             );

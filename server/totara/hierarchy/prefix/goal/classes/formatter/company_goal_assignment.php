@@ -38,7 +38,8 @@ class company_goal_assignment extends formatter {
             'id' => null,
             'user_id' => null,
             'goal' => null,
-            'assignment_types' => null
+            'assignment_types' => null,
+            'scale_value' => null
         ];
     }
 

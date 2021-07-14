@@ -25,6 +25,7 @@ use core\collection;
 use core\pagination\cursor;
 use hierarchy_goal\data_providers\assigned_company_goals;
 use hierarchy_goal\entity\company_goal_assignment as company_goal_assignment_entity;
+use totara_hierarchy\testing\generator;
 
 /**
  * @group totara_hierarchy
@@ -257,7 +258,7 @@ class totara_hierarchy_assigned_company_goals_data_provider_testcase extends adv
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
-        $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
+        $hierarchy_generator = generator::instance();
 
         $user_ids = collection::new([]);
         for ($i = 0; $i < $user_count; $i++) {

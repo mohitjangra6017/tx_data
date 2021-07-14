@@ -75,7 +75,14 @@ class company_goal extends formatter {
                 return $this->object->parentid;
 
             case 'target_date':
-                return $this->object->targetdate;
+                // Unfortunately it is possible to store a goal target date of 0
+                // when there is no target date because the dates are stored as
+                // integers. 0 is a valid timestamp but in this context, it must
+                // be treated a logical marker because target dates will always
+                // be positive, non zero values. So need to correct that irritating
+                // '0-or-null-for-no-date' problem here.
+                $date = $this->object->targetdate;
+                return empty($date) ? null : $date;
 
             case 'proficiency_expected':
                 return $this->object->proficiencyexpected;

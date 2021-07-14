@@ -30,6 +30,7 @@
       :get-group-id="getGroupId"
       :group-mode="groupMode"
       :hover-off="hoverOff"
+      :no-items-text="noItemsText"
       :selection="value"
       :selected-highlight-off="selectedHighlightOff"
     >
@@ -168,6 +169,8 @@ export default {
     // ID's of selected rows
     value: Array,
     rowLabelKey: String,
+    // The text to display if the data array is empty
+    noItemsText: String,
   },
 
   computed: {

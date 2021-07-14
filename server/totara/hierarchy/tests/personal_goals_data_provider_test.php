@@ -27,6 +27,7 @@ use hierarchy_goal\assignment_type;
 use hierarchy_goal\personal_goal_assignment_type;
 use hierarchy_goal\data_providers\personal_goals;
 use hierarchy_goal\entity\personal_goal as personal_goal_entity;
+use totara_hierarchy\testing\generator;
 
 /**
  * @group totara_hierarchy
@@ -282,7 +283,7 @@ class totara_hierarchy_personal_goals_data_provider_testcase extends advanced_te
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
-        $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
+        $hierarchy_generator = generator::instance();
 
         $user_ids = collection::new([]);
         $goals = collection::new([]);

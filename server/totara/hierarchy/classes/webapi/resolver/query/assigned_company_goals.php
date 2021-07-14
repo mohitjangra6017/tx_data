@@ -23,6 +23,7 @@
 
 namespace totara_hierarchy\webapi\resolver\query;
 
+use coding_exception;
 use context_system;
 use context_user;
 use core\entity\user;
@@ -74,7 +75,12 @@ class assigned_company_goals implements query_resolver, has_middleware {
         }
         self::authorize($logged_on_user_id, $target_user_id);
 
-        $order_by = $input['order_by'] ?? 'userid';
+        $raw_order_by = strtolower($input['order_by'] ?? 'goal_name');
+        $order_by = assigned_company_goals_provider::SORT_FIELDS[$raw_order_by] ?? null;
+        if (!$order_by) {
+            throw new coding_exception("unknown sort order: $raw_order_by");
+        }
+
         $order_dir = $input['order_dir'] ?? 'ASC';
         $result_size = $input['result_size'] ?? goal_data_provider::DEFAULT_PAGE_SIZE;
 
@@ -124,7 +130,7 @@ class assigned_company_goals implements query_resolver, has_middleware {
                 ->all();
 
             $extended[] = new company_goal_assignment(
-                $assignment->id, $goal, $user, $types
+                $assignment->id, $goal, $user, $types, $assignment->scale_value
             );
         }
 

@@ -56,6 +56,7 @@ class personal_goal extends formatter {
             'target_date' => date_field_formatter::class,
             'scale_id' => null,
             'scale_value_id' => null,
+            'scale_value' => null,
             'deleted' => null,
             'type_id' => null,
             'visible' => null
@@ -79,7 +80,13 @@ class personal_goal extends formatter {
                 return $this->object->typeid;
 
             case 'target_date':
-                return $this->object->targetdate;
+                // Unlike company goals which stores nulls when there are no target
+                // dates, personal goals code stores 0s! So need to correct that
+                // irritating problem here. BTW, it is safe to assume that 0 is
+                // for unset values because the personal goals code also requires
+                // future values to make the target date valid.
+                $date = $this->object->targetdate;
+                return empty($date) ? null : $date;
 
             case 'scale_id':
                 return $this->object->scaleid;

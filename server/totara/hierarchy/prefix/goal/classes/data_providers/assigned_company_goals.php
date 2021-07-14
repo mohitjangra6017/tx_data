@@ -23,12 +23,25 @@
 
 namespace hierarchy_goal\data_providers;
 
+use Closure;
+
+use core\orm\entity\repository;
+
+use hierarchy_goal\entity\company_goal;
 use hierarchy_goal\entity\company_goal_assignment;
 
 /**
  * Handles company goal assignments.
  */
 class assigned_company_goals {
+    // Mapping of sort field display names to physical entity _columns_.
+    public const SORT_FIELDS = [
+        'assignment_id' => 'id',
+        'user_id' => 'userid',
+        'goal_id' => 'goalid',
+        'goal_name' => company_goal::TABLE . '.fullname'
+    ];
+
     /**
      * Creates an instance of the data provider.
      *
@@ -37,8 +50,23 @@ class assigned_company_goals {
     public static function create(): goal_data_provider {
         return new goal_data_provider(
             company_goal_assignment::class,
-            ['id', 'goalid', 'userid'],
-            'hierarchy_goal\entity\filters\company_goal_assignment_filters::for'
+            self::SORT_FIELDS,
+            'hierarchy_goal\entity\filters\company_goal_assignment_filters::for',
+            Closure::fromCallable([self::class, 'repo_factory'])
         );
+    }
+
+    /**
+     * Company goal assignment repository factory.
+     *
+     * @return repository the repository.
+     */
+    private static function repo_factory(): repository {
+        // The join with the goal table is needed so that results can be filtered
+        // and ordered by goal names.
+        return company_goal_assignment::repository()
+            ->join(company_goal::TABLE, 'goalid', '=', 'id')
+            ->select(company_goal_assignment::TABLE . '.*')
+            ->add_select(company_goal::TABLE . '.fullname as goal_fullname');
     }
 }

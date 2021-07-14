@@ -68,18 +68,21 @@
         checkbox-v-align="center"
         :select-all-enabled="true"
         :border-bottom-hidden="true"
+        :no-items-text="
+          $str('assigned_company_goal_adder_no_items', 'totara_hierarchy')
+        "
         @input="update($event)"
       >
         <template v-slot:header-row>
-          <HeaderCell size="8" valign="center">
+          <HeaderCell size="12" valign="center">
             {{
               $str('assigned_company_goal_adder_label_name', 'totara_hierarchy')
             }}
           </HeaderCell>
-          <HeaderCell size="8" valign="center">
+          <HeaderCell v-if="showMainTargetDates()" size="4" valign="center">
             {{
               $str(
-                'assigned_company_goal_adder_label_assignment_type',
+                'assigned_company_goal_adder_label_target_date',
                 'totara_hierarchy'
               )
             }}
@@ -88,7 +91,7 @@
 
         <template v-slot:row="{ row }">
           <Cell
-            size="8"
+            size="12"
             :column-header="
               $str('assigned_company_goal_adder_label_name', 'totara_hierarchy')
             "
@@ -98,21 +101,17 @@
           </Cell>
 
           <Cell
-            size="8"
+            v-if="showMainTargetDates()"
+            size="4"
             :column-header="
               $str(
-                'assigned_company_goal_adder_label_assignment_type',
+                'assigned_company_goal_adder_label_target_date',
                 'totara_hierarchy'
               )
             "
             valign="center"
           >
-            <div
-              v-for="(item, index) in row.assignment_types"
-              :key="'general' + index"
-            >
-              {{ item.description }}
-            </div>
+            {{ formatTargetDate(row.goal.target_date) }}
           </Cell>
         </template>
       </SelectTable>
@@ -131,15 +130,15 @@
         @input="update($event)"
       >
         <template v-slot:header-row>
-          <HeaderCell size="8" valign="center">
+          <HeaderCell size="12" valign="center">
             {{
               $str('assigned_company_goal_adder_label_name', 'totara_hierarchy')
             }}
           </HeaderCell>
-          <HeaderCell size="8" valign="center">
+          <HeaderCell v-if="showSelectedTargetDates()" size="4" valign="center">
             {{
               $str(
-                'assigned_company_goal_adder_label_assignment_type',
+                'assigned_company_goal_adder_label_target_date',
                 'totara_hierarchy'
               )
             }}
@@ -148,7 +147,7 @@
 
         <template v-slot:row="{ row }">
           <Cell
-            size="8"
+            size="12"
             :column-header="
               $str('assigned_company_goal_adder_label_name', 'totara_hierarchy')
             "
@@ -158,21 +157,17 @@
           </Cell>
 
           <Cell
-            size="8"
+            v-if="showSelectedTargetDates()"
+            size="4"
             :column-header="
               $str(
-                'assigned_company_goal_adder_label_assignment_type',
+                'assigned_company_goal_adder_label_target_date',
                 'totara_hierarchy'
               )
             "
             valign="center"
           >
-            <div
-              v-for="(item, index) in row.assignment_types"
-              :key="'general' + index"
-            >
-              {{ item.description }}
-            </div>
+            {{ formatTargetDate(row.goal.target_date) }}
           </Cell>
         </template>
       </SelectTable>
@@ -300,6 +295,23 @@ export default {
   },
 
   methods: {
+    formatTargetDate(date) {
+      return date ? date : '-';
+    },
+
+    showMainTargetDates() {
+      const items = this.goals && this.goals.items ? this.goals.items : [];
+      const dates = items.filter(item => item.goal.target_date);
+      return dates.length > 0;
+    },
+
+    showSelectedTargetDates() {
+      const dates = this.goalSelectedItems.filter(
+        item => item.goal.target_date
+      );
+      return dates.length > 0;
+    },
+
     async loadMoreItems() {
       if (!this.nextPage) {
         return;
@@ -382,13 +394,24 @@ export default {
 };
 </script>
 
+<style lang="scss">
+.tui-filterBar {
+  &__filters {
+    &-icon {
+      margin-right: var(--gap-4);
+    }
+  }
+}
+</style>
+
 <lang-strings>
   {
     "totara_hierarchy": [
       "assigned_company_goal_adder_filter_title",
       "assigned_company_goal_adder_filter_name",
-      "assigned_company_goal_adder_label_assignment_type",
       "assigned_company_goal_adder_label_name",
+      "assigned_company_goal_adder_label_target_date",
+      "assigned_company_goal_adder_no_items",
       "assigned_company_goal_adder_title"
     ]
   }

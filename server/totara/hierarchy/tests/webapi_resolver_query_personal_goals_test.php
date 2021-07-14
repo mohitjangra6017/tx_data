@@ -26,6 +26,7 @@ use hierarchy_goal\personal_goal_assignment_type;
 use hierarchy_goal\entity\personal_goal as personal_goal_entity;
 use totara_core\advanced_feature;
 use totara_webapi\phpunit\webapi_phpunit_helper;
+use totara_hierarchy\testing\generator;
 
 /**
  * Tests the totara_hierarchy_personal_goals resolver.
@@ -83,7 +84,7 @@ class totara_hierarchy_webapi_resolver_query_personal_goals_testcase extends adv
         $args = [
             'input' => [
                 'filters' => [],
-                'order_by' => 'id',
+                'order_by' => 'GOAL_NAME',
                 'order_dir' => $order_direction,
                 'result_size' => $page_size,
                 'cursor' => null
@@ -101,13 +102,13 @@ class totara_hierarchy_webapi_resolver_query_personal_goals_testcase extends adv
         $this->assertCount($page_size, $items, 'wrong current page count');
         $this->assertNotEmpty($enc_cursor, 'empty cursor');
 
-        $retrieved = array_column($items, 'id');
+        $retrieved = array_column($items, 'name');
 
         // 2nd round.
         $args = [
             'input' => [
                 'filters' => [],
-                'order_by' => 'id',
+                'order_by' => 'GOAL_NAME',
                 'order_dir' => $order_direction,
                 'result_size' => $page_size,
                 'cursor' => $enc_cursor
@@ -124,12 +125,12 @@ class totara_hierarchy_webapi_resolver_query_personal_goals_testcase extends adv
         $this->assertCount(1, $items, 'wrong current page count');
         $this->assertEmpty($enc_cursor, 'non empty cursor');
 
-        $retrieved = array_merge($retrieved, array_column($items, 'id'));
+        $retrieved = array_merge($retrieved, array_column($items, 'name'));
 
         // See if items were retrieved in the correct order.
         $goal_ids = $goals
-            ->sort('id', $order_direction)
-            ->pluck('id');
+            ->sort('name', $order_direction)
+            ->pluck('name');
         $this->assertEquals($goal_ids, $retrieved, 'retrieved in wrong order');
     }
 
@@ -340,7 +341,7 @@ class totara_hierarchy_webapi_resolver_query_personal_goals_testcase extends adv
         $this->setAdminUser();
 
         $generator = $this->getDataGenerator();
-        $hierarchy_generator = $generator->get_plugin_generator('totara_hierarchy');
+        $hierarchy_generator = generator::instance();
 
         $user_ids = collection::new([]);
         $goals = collection::new([]);

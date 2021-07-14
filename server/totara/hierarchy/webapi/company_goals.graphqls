@@ -1,4 +1,14 @@
 """
+Field on which to sort retrieved company goal assignments.
+"""
+enum totara_hierarchy_company_goal_assignment_order_field {
+  ID
+  USER_ID
+  GOAL_ID
+  GOAL_NAME
+}
+
+"""
 Details of a company goal
 """
 type totara_hierarchy_company_goal {
@@ -22,6 +32,10 @@ type totara_hierarchy_company_goal {
   Company goal description
   """
   description(format: core_format = HTML): String
+  """
+  Goal completion target date if any.
+  """
+  target_date(format: core_date_format = DATE): core_date
 }
 
 """
@@ -46,6 +60,10 @@ type totara_hierarchy_company_goal_assignment {
   ways.
   """
   assignment_types: [totara_hierarchy_goal_assignment_type_extended]!
+  """
+  Goal status.
+  """
+  scale_value: totara_hierarchy_goal_scale_value
 }
 
 """
@@ -95,7 +113,7 @@ input totara_hierarchy_company_goal_assignment_input {
   """
   Attribute on which to sort retrieved company goal assignments
   """
-  order_by: String
+  order_by: totara_hierarchy_company_goal_assignment_order_field
   """
   Whether to sort retrieved company goal assignments in ascending or descending
   order.

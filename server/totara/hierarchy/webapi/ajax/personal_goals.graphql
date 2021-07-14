@@ -6,12 +6,17 @@ query totara_hierarchy_personal_goals(
       id
       user_id
       name
+      description
       assignment_type {
         type {
           name
           value
         }
         description
+      }
+      target_date
+      scale_value {
+        name
       }
     }
     total

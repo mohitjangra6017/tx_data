@@ -35,15 +35,6 @@
         :title="$str('personal_goal_adder_filter_title', 'totara_hierarchy')"
       >
         <template v-slot:filters-left="{ stacked }">
-          <SelectFilter
-            v-model="selectedAssignmentType"
-            :label="$str('personal_goal_adder_filter_type', 'totara_hierarchy')"
-            :show-label="true"
-            :options="assignmentTypeFilterOptions"
-            :stacked="stacked"
-          />
-        </template>
-        <template v-slot:filters-right="{ stacked }">
           <SearchFilter
             v-model="searchDebounce"
             :label="$str('personal_goal_adder_filter_name', 'totara_hierarchy')"
@@ -67,25 +58,25 @@
         checkbox-v-align="center"
         :select-all-enabled="true"
         :border-bottom-hidden="true"
+        :no-items-text="
+          $str('personal_goal_adder_no_items', 'totara_hierarchy')
+        "
         @input="update($event)"
       >
         <template v-slot:header-row>
-          <HeaderCell size="8" valign="center">
+          <HeaderCell size="12" valign="center">
             {{ $str('personal_goal_adder_label_name', 'totara_hierarchy') }}
           </HeaderCell>
-          <HeaderCell size="8" valign="center">
+          <HeaderCell v-if="showMainTargetDates()" size="4" valign="center">
             {{
-              $str(
-                'personal_goal_adder_label_assignment_type',
-                'totara_hierarchy'
-              )
+              $str('personal_goal_adder_label_target_date', 'totara_hierarchy')
             }}
           </HeaderCell>
         </template>
 
         <template v-slot:row="{ row }">
           <Cell
-            size="8"
+            size="12"
             :column-header="
               $str('personal_goal_adder_label_name', 'totara_hierarchy')
             "
@@ -95,16 +86,14 @@
           </Cell>
 
           <Cell
-            size="8"
+            v-if="showMainTargetDates()"
+            size="4"
             :column-header="
-              $str(
-                'personal_goal_adder_label_assignment_type',
-                'totara_hierarchy'
-              )
+              $str('personal_goal_adder_label_target_date', 'totara_hierarchy')
             "
             valign="center"
           >
-            {{ row.assignment_type.description }}
+            {{ formatTargetDate(row.target_date) }}
           </Cell>
         </template>
       </SelectTable>
@@ -123,22 +112,19 @@
         @input="update($event)"
       >
         <template v-slot:header-row>
-          <HeaderCell size="8" valign="center">
+          <HeaderCell size="12" valign="center">
             {{ $str('personal_goal_adder_label_name', 'totara_hierarchy') }}
           </HeaderCell>
-          <HeaderCell size="8" valign="center">
+          <HeaderCell v-if="showSelectedTargetDates()" size="4" valign="center">
             {{
-              $str(
-                'personal_goal_adder_label_assignment_type',
-                'totara_hierarchy'
-              )
+              $str('personal_goal_adder_label_target_date', 'totara_hierarchy')
             }}
           </HeaderCell>
         </template>
 
         <template v-slot:row="{ row }">
           <Cell
-            size="8"
+            size="12"
             :column-header="
               $str('personal_goal_adder_label_name', 'totara_hierarchy')
             "
@@ -148,16 +134,14 @@
           </Cell>
 
           <Cell
-            size="8"
+            v-if="showSelectedTargetDates()"
+            size="4"
             :column-header="
-              $str(
-                'personal_goal_adder_label_assignment_type',
-                'totara_hierarchy'
-              )
+              $str('personal_goal_adder_label_target_date', 'totara_hierarchy')
             "
             valign="center"
           >
-            {{ row.assignment_type.description }}
+            {{ formatTargetDate(row.target_date) }}
           </Cell>
         </template>
       </SelectTable>
@@ -172,13 +156,11 @@ import Cell from 'tui/components/datatable/Cell';
 import FilterBar from 'tui/components/filters/FilterBar';
 import HeaderCell from 'tui/components/datatable/HeaderCell';
 import SearchFilter from 'tui/components/filters/SearchFilter';
-import SelectFilter from 'tui/components/filters/SelectFilter';
 import SelectTable from 'tui/components/datatable/SelectTable';
 import { debounce } from 'tui/util';
 
 //Queries
 import personal_goals from 'totara_hierarchy/graphql/personal_goals';
-import assignment_types from 'totara_hierarchy/graphql/goal_assignment_types';
 
 export default {
   components: {
@@ -187,7 +169,6 @@ export default {
     FilterBar,
     HeaderCell,
     SearchFilter,
-    SelectFilter,
     SelectTable,
   },
 
@@ -211,35 +192,14 @@ export default {
     return {
       goals: null,
       goalSelectedItems: [],
-      assignmentTypes: [],
-      selectedAssignmentType: '',
       filters: {
         search: '',
-        assignmentType: '',
       },
       nextPage: false,
       skipQueries: true,
       stacked: false,
       searchDebounce: '',
     };
-  },
-
-  computed: {
-    assignmentTypeFilterOptions() {
-      var options = this.assignmentTypes.map(type => {
-        return {
-          id: type.name,
-          label: type.label,
-        };
-      });
-
-      options.unshift({
-        id: '',
-        label: this.$str('all', 'core'),
-      });
-
-      return options;
-    },
   },
 
   watch: {
@@ -255,10 +215,6 @@ export default {
     searchDebounce(newValue) {
       this.updateFilterDebounced(newValue);
     },
-
-    selectedAssignmentType(newValue) {
-      this.filters.assignmentType = newValue;
-    },
   },
 
   created() {
@@ -272,7 +228,6 @@ export default {
           input: {
             filters: {
               name: this.filters.search,
-              assignment_type: this.filters.assignmentType,
               user_id: this.targetUserId,
             },
           },
@@ -311,27 +266,24 @@ export default {
         return selectedGoals;
       },
     });
-
-    this.$apollo.addSmartQuery('assignment_types', {
-      query: assignment_types,
-      skip() {
-        return this.skipQueries;
-      },
-      variables() {
-        return {
-          input: {
-            scope: 'PERSONAL',
-          },
-        };
-      },
-      update({ ['totara_hierarchy_goal_assignment_types']: types }) {
-        this.assignmentTypes = types;
-        return types;
-      },
-    });
   },
 
   methods: {
+    formatTargetDate(date) {
+      return date ? date : '-';
+    },
+
+    showMainTargetDates() {
+      const items = this.goals && this.goals.items ? this.goals.items : [];
+      const dates = items.filter(item => item.target_date);
+      return dates.length > 0;
+    },
+
+    showSelectedTargetDates() {
+      const dates = this.goalSelectedItems.filter(item => item.target_date);
+      return dates.length > 0;
+    },
+
     async loadMoreItems() {
       if (!this.nextPage) {
         return;
@@ -343,7 +295,6 @@ export default {
               cursor: this.nextPage,
               filters: {
                 name: this.filters.search,
-                assignment_type: this.filters.assignmentType,
                 user_id: this.targetUserId,
               },
             },
@@ -395,7 +346,6 @@ export default {
 
       try {
         data = await this.updateSelectedItems(selection);
-        this.selectedAssignmentType = '';
       } catch (error) {
         console.error(error);
         return;
@@ -404,7 +354,6 @@ export default {
     },
 
     cancelAdder() {
-      this.selectedAssignmentType = '';
       this.$emit('cancel');
     },
 
@@ -415,6 +364,16 @@ export default {
 };
 </script>
 
+<style lang="scss">
+.tui-filterBar {
+  &__filters {
+    &-icon {
+      margin-right: var(--gap-4);
+    }
+  }
+}
+</style>
+
 <lang-strings>
   {
     "core": [
@@ -423,9 +382,9 @@ export default {
     "totara_hierarchy": [
       "personal_goal_adder_filter_title",
       "personal_goal_adder_filter_name",
-      "personal_goal_adder_filter_type",
-      "personal_goal_adder_label_assignment_type",
       "personal_goal_adder_label_name",
+      "personal_goal_adder_label_target_date",
+      "personal_goal_adder_no_items",
       "personal_goal_adder_title"
     ]
   }

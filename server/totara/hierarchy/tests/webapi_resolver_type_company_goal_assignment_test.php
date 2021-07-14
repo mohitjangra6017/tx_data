@@ -28,7 +28,9 @@ use hierarchy_goal\company_goal_assignment;
 use hierarchy_goal\company_goal_assignment_type;
 use hierarchy_goal\entity\company_goal as company_goal_entity;
 use hierarchy_goal\entity\company_goal_assignment_type_extended;
+use hierarchy_goal\entity\scale_value as scale_value_entity;
 
+use totara_hierarchy\testing\generator;
 use totara_webapi\phpunit\webapi_phpunit_helper;
 
 /**
@@ -100,18 +102,32 @@ class totara_hierarchy_webapi_resolver_type_company_goal_assignment_testcase ext
             $assignment_type, $source
         );
 
+        $scale_values = [
+            1 => ['name' => 'This', 'proficient' => 1, 'sortorder' => 1, 'default' => 0],
+            2 => ['name' => 'That', 'proficient' => 0, 'sortorder' => 2, 'default' => 0],
+            3 => ['name' => 'Other', 'proficient' => 0, 'sortorder' => 3, 'default' => 1]
+        ];
+        generator::instance()
+            ->create_scale('goal', ['name' => 'test_company_goal_scale'], $scale_values);
+
+        $scale_value = scale_value_entity::repository()
+            ->where('name', 'This')
+            ->one(true);
+
         $assignment = new company_goal_assignment(
             3243,
             $goal,
             new user($user_id),
-            [$assignment_type_extended]
+            [$assignment_type_extended],
+            $scale_value
         );
 
         $testcases = [
             'id' => ['id', $assignment->get_id()],
             'user id' => ['user_id', $user_id],
             'assigned goal' => ['goal', $goal],
-            'assignment methods' => ['assignment_types', $assignment->get_assignment_types()]
+            'assignment methods' => ['assignment_types', $assignment->get_assignment_types()],
+            'scale value' => ['scale_value', $scale_value]
         ];
 
         foreach ($testcases as $id => $testcase) {

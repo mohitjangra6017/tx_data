@@ -29,6 +29,13 @@ use hierarchy_goal\entity\personal_goal;
  * Handles groups of personal goals.
  */
 class personal_goals {
+    // Mapping of sort field display names to physical entity _columns_.
+    public const SORT_FIELDS = [
+        'assignment_type' => 'assigntype',
+        'goal_id' => 'id',
+        'goal_name' => 'name'
+    ];
+
     /**
      * Creates an instance of the data provider.
      *
@@ -37,7 +44,7 @@ class personal_goals {
     public static function create(): goal_data_provider {
         return new goal_data_provider(
             personal_goal::class,
-            ['id', 'assigntype', 'name'],
+            self::SORT_FIELDS,
             'hierarchy_goal\entity\filters\personal_goal_filters::for'
         );
     }

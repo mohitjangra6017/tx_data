@@ -23,6 +23,7 @@
 
 namespace totara_hierarchy\webapi\resolver\query;
 
+use coding_exception;
 use context_system;
 use context_user;
 use core\entity\user;
@@ -57,7 +58,12 @@ class personal_goals implements query_resolver, has_middleware {
         }
         self::authorize($logged_on_user_id, $target_user_id);
 
-        $order_by = $input['order_by'] ?? 'name';
+        $raw_order_by = strtolower($input['order_by'] ?? 'goal_name');
+        $order_by = personal_goals_provider::SORT_FIELDS[$raw_order_by] ?? null;
+        if (!$order_by) {
+            throw new coding_exception("unknown sort order: $raw_order_by");
+        }
+
         $order_dir = $input['order_dir'] ?? 'ASC';
         $result_size = $input['result_size'] ?? goal_data_provider::DEFAULT_PAGE_SIZE;
 
