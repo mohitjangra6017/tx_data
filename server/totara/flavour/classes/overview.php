@@ -107,7 +107,7 @@ class overview implements \renderable {
                 'feature_facetoface'              => '1',   // Fake setting to mimic facetoface.
                 'enablebadges'                    => null,  // Totara.
                 'audiencevisibility'              => null,  // Totara.
-                'feature_reportbuilder'           => '1',   // Fake setting to mimic Report Builder.
+                'enableuser_reports'              => null,  // Totara.
                 'enableglobalrestrictions'        => null,  // Totara.
                 'enablepositions'                 => null,  // Totara.
                 'enablemyteam'                    => null,  // Totara.

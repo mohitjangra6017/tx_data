@@ -814,6 +814,7 @@ class totara_core_renderer extends plugin_renderer_base {
         $template_data->report_list = $this->report_list_export_for_template($reports, $canedit);
 
         $template_data->canedit = $canedit;
+        $template_data->cancreate = $canedit && !advanced_feature::is_disabled('user_reports');
         $template_data->isgrid = $defaultview === 'grid';
         $template_data->islist = $defaultview === 'list';
         $template_data->showdescription = $showdescription;

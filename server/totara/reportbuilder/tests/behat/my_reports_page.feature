@@ -51,3 +51,14 @@ Feature: Test my reports page
     And I click on "Reports" in the totara menu
     Then I should see "User report 1 abstract text"
     And  I should see "User report 2 abstract text"
+
+  Scenario: Disabling the create user reports feature
+    When I click on "Reports" in the totara menu
+    Then I should see "Create report"
+    When I navigate to "Manage user reports" node in "Site administration > Reports"
+    Then "input[value='Create report']" "css_element" should be visible
+    When I disable the "user_reports" advanced feature
+    And I click on "Reports" in the totara menu
+    Then I should not see "Create report"
+    When I navigate to "Manage user reports" node in "Site administration > Reports"
+    Then "input[value='Create report']" "css_element" should not be visible

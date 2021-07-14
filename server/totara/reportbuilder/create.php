@@ -25,6 +25,8 @@
  * Page containing new report form
  */
 
+use totara_core\advanced_feature;
+
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once($CFG->dirroot . '/totara/reportbuilder/lib.php');
@@ -41,6 +43,8 @@ echo $output->header();
 
 // User generated reports.
 echo $output->heading(get_string('createreport', 'totara_reportbuilder'));
+
+advanced_feature::require('user_reports');
 
 echo $output->render(\totara_reportbuilder\output\create_report::create());
 echo $output->footer();

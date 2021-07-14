@@ -21,6 +21,8 @@
  * @package totara_reportbuilder
  */
 
+use totara_core\advanced_feature;
+
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/totara/reportbuilder/lib.php');
 
@@ -67,7 +69,13 @@ echo $debughtml;
 
 echo $OUTPUT->heading(get_string('manageuserreports','totara_reportbuilder'));
 
-echo html_writer::tag('div', $renderer->single_button(new moodle_url('/totara/reportbuilder/create.php'), get_string('createreport', 'totara_reportbuilder'), 'get'), ['class'=>'pull-right']);
+if (!advanced_feature::is_disabled('user_reports')) {
+    echo html_writer::tag('div', $renderer->single_button(
+        new moodle_url('/totara/reportbuilder/create.php'),
+        get_string('createreport', 'totara_reportbuilder'),
+        'get'
+    ), ['class' => 'pull-right']);
+}
 
 $report->display_restrictions();
 

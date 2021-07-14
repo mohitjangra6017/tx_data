@@ -163,6 +163,15 @@ if ($hassiteconfig && isset($optionalsubsystems)) {
         )
     );
 
+    $optionalsubsystems->add(
+        new totara_core_admin_setting_feature_checkbox(
+            'enableuser_reports',
+            new lang_string('enableuser_reports', 'totara_reportbuilder'),
+            new lang_string('enableuser_reports_desc', 'totara_reportbuilder'),
+            advanced_feature::ENABLED
+        )
+    );
+
     // Audience visibility.
     $defaultenhanced = 0;
     $setting = new admin_setting_configcheckbox(
