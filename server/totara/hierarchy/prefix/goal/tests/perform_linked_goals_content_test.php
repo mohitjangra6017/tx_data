@@ -316,6 +316,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
                 'id' => $goal1->id,
                 'display_name' => $goal1->name,
                 'description' => $goal1->description,
+                'goal_scope' => 'PERSONAL',
             ],
             'status' => [
                 'id' => $goal1->scalevalueid,
@@ -341,6 +342,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
                 'id' => $goal2->id,
                 'display_name' => $goal2->name,
                 'description' => $goal2->description,
+                'goal_scope' => 'PERSONAL',
             ],
             'status' => null,
             'scale_values' => null,
@@ -465,6 +467,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
                 'id' => $goal_assignment_goal1->id,
                 'display_name' => $goal1->fullname,
                 'description' => $goal1->description,
+                'goal_scope' => 'COMPANY'
             ],
             'status' => [
                 'id' => $goal_assignment_goal1->scalevalueid,
@@ -490,6 +493,7 @@ class hierarchy_goal_perform_linked_goals_content_testcase extends perform_linke
                 'id' => $goal_assignment_goal2->id,
                 'display_name' => $goal2->fullname,
                 'description' => $goal2->description,
+                'goal_scope' => 'COMPANY'
             ],
             'status' => [
                 'id' => $goal_assignment_goal2->scalevalueid,

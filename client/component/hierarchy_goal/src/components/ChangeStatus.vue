@@ -37,7 +37,7 @@
       </span>
 
       <HelpIcon
-        v-if="!status && !fromPrint"
+        v-if="!fromPrint"
         class="tui-goalLinkedReviewChangeStatus__title-help"
         :desc-id="$id('change_status-help')"
         :helpmsg="$str('goal_change_status_help', 'hierarchy_goal')"
@@ -96,6 +96,12 @@ export default {
 
   & > * + * {
     margin-top: var(--gap-4);
+  }
+
+  &__form {
+    & > * + * {
+      margin-top: var(--gap-2);
+    }
   }
 
   &__title {

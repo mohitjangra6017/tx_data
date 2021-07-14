@@ -62,7 +62,7 @@ class company_goal extends hierarchy_item {
      *
      * @return string
      */
-    protected function get_goal_scope_attribute() {
+    protected function get_goal_scope_attribute(): string {
         return goal::GOAL_SCOPE_COMPANY;
     }
 

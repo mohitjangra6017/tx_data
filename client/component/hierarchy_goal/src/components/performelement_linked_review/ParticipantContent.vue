@@ -42,7 +42,7 @@
       <div v-if="!preview && content.status && content.target_date">
         {{ createdAt }}
       </div>
-      <div class="tui-linkedReviewViewGoal__bar">
+      <div v-if="goalBarVisible" class="tui-linkedReviewViewGoal__bar">
         <Grid :stack-at="600">
           <GridItem :units="3">
             <template v-if="content.status">
@@ -129,6 +129,15 @@ export default {
       } else {
         return this.content.goal ? true : false;
       }
+    },
+
+    /**
+     * Check if status or target date exists
+     *
+     * @return {Boolean}
+     */
+    goalBarVisible() {
+      return this.content.status || this.content.target_date;
     },
   },
 };
