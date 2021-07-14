@@ -23,6 +23,9 @@
 
 namespace totara_userdata\userdata;
 
+use core\orm\entity\repository;
+use core\orm\query\builder;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -106,7 +109,7 @@ abstract class item {
      * @return null|string SQL join fragment
      */
     public static final function get_courses_context_join(\context $context, $courseidfield, $contextalias = 'ctx') {
-        // NOTE: it is safe to user context properties in SQL code directly.
+        // NOTE: it is safe to use context properties in SQL code directly.
 
         if ($context->contextlevel == CONTEXT_SYSTEM) {
             return "JOIN {context} {$contextalias} ON ({$contextalias}.instanceid = {$courseidfield} AND {$contextalias}.contextlevel = " . CONTEXT_COURSE . ")";
@@ -133,7 +136,7 @@ abstract class item {
      * @return null|string SQL join fragment
      */
     public static final function get_activities_context_join(\context $context, $activitycmidfield, $contextalias = 'ctx') {
-        // NOTE: it is safe to user context properties in SQL code directly.
+        // NOTE: it is safe to use context properties in SQL code directly.
 
         if ($context->contextlevel == CONTEXT_SYSTEM) {
             return "JOIN {context} {$contextalias} ON ({$contextalias}.instanceid = {$activitycmidfield} AND {$contextalias}.contextlevel = " . CONTEXT_MODULE . ")";
@@ -154,9 +157,59 @@ abstract class item {
     /**
      * Returns join for all activities in given context.
      *
+     * @param repository $repo
+     * @param \context $context
+     * @param string $activitycmidfield sql field used directly in SQL join
+     * @param string $contextalias context table alias
+     * @return repository
+     */
+    public static final function get_activities_context_builder_join(
+        repository $repo,
+        \context $context,
+        string $activitycmidfield,
+        string $contextalias = 'ctx'
+    ): repository {
+        // NOTE: it is safe to use context properties in SQL code directly.
+
+        if ($context->contextlevel == CONTEXT_SYSTEM) {
+            $repo->join(['context', $contextalias], function (builder $builder) use ($activitycmidfield) {
+                $builder->where_field('instanceid', $activitycmidfield)
+                    ->where('contextlevel', '=', CONTEXT_MODULE);
+            });
+            return $repo;
+        }
+
+        if ($context->contextlevel == CONTEXT_COURSECAT or $context->contextlevel == CONTEXT_COURSE) {
+            $repo->join(['context', $contextalias], function (builder $builder) use ($activitycmidfield, $context) {
+                $builder->where_field('instanceid', $activitycmidfield)
+                    ->where('contextlevel', '=', CONTEXT_MODULE)
+                    ->where_like_raw('path', $context->path . '/%');
+            });
+            return $repo;
+        }
+
+        if ($context->contextlevel == CONTEXT_MODULE) {
+            $repo->join(['context', $contextalias], function (builder $builder) use ($activitycmidfield, $context) {
+                $builder->where_field('instanceid', $activitycmidfield)
+                    ->where('contextlevel', '=', CONTEXT_MODULE)
+                    ->where('id', '=', $context->id);
+            });
+            return $repo;
+        }
+
+        // Wrong context, return valid no match join.
+        $repo->join(['context', $contextalias], function (builder $builder) {
+            $builder->where('instanceid', '=', '-1');
+        });
+        return $repo;
+    }
+
+    /**
+     * Returns join for all activities in given context.
+     *
      * @param \context $context
      * @param string $module module name such as 'forum', 'glossary' - used directly in SQL
-     * @param int $activityidfield sql field used directly in SQL join
+     * @param string $activityidfield sql field used directly in SQL join
      * @param string $activityalias activity table alias
      * @param string $cmalias course module table alias
      * @param string $modulesalias modules table alias
@@ -170,6 +223,44 @@ abstract class item {
                 JOIN {modules} {$modulesalias} ON ({$modulesalias}.name = '{$module}')
                 JOIN {course_modules} {$cmalias} ON ({$cmalias}.module = {$modulesalias}.id AND {$cmalias}.instance = {$activityalias}.id)
                 ". self::get_activities_context_join($context, "{$cmalias}.id", $contextalias);
+    }
+
+    /**
+     * Returns join for all activities in given context.
+     *
+     * @param repository $repo
+     * @param \context $context
+     * @param string $module module name such as 'forum', 'glossary' - used directly in SQL
+     * @param string $activityidfield sql field used directly in SQL join
+     * @param string $activityalias activity table alias
+     * @param string $cmalias course module table alias
+     * @param string $modulesalias modules table alias
+     * @param string $contextalias context table alias
+     * @return repository
+     */
+    public static final function get_activities_builder_join(
+        repository $repo,
+        \context $context,
+        string $module,
+        string $activityidfield,
+        string $activityalias = 'act',
+        string $cmalias = 'cm',
+        string $modulesalias = 'modules',
+        string $contextalias = 'ctx'
+    ): repository {
+        $module = clean_param($module, PARAM_ALPHANUMEXT);
+
+        $repo
+            ->join([$module, $activityalias], "$activityalias.id", '=', $activityidfield)
+            ->join(['modules', $modulesalias], function (builder $builder) use ($modulesalias, $module) {
+                $builder->where("$modulesalias.name", '=', $module);
+            })
+            ->join(['course_modules', $cmalias], function (builder $builder) use ($modulesalias, $activityalias) {
+                $builder->where_field('module', "$modulesalias.id")
+                    ->where_field('instance', "$activityalias.id");
+            });
+
+        return self::get_activities_context_builder_join($repo, $context, "$cmalias.id", $contextalias);
     }
 
     /**

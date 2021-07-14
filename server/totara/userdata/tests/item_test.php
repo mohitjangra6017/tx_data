@@ -22,6 +22,8 @@
  * @category test
  */
 
+use core\orm\entity\entity;
+use core\orm\entity\repository;
 use totara_userdata\userdata\item;
 use totara_userdata\userdata\target_user;
 use totara_userdata\userdata\testitem;
@@ -356,6 +358,80 @@ class totara_userdata_item_testcase extends advanced_testcase {
         $this->assertCount(0, $cms);
     }
 
+    public function test_get_activities_context_builder_join() {
+        $syscontext = context_system::instance();
+
+        $user = $this->getDataGenerator()->create_user();
+        $usercontext = context_user::instance($user->id);
+
+        $category1 = $this->getDataGenerator()->create_category();
+        $categorycontext1 = context_coursecat::instance($category1->id);
+        $category2 = $this->getDataGenerator()->create_category();
+        $categorycontext2 = context_coursecat::instance($category2->id);
+
+        $course1 = $this->getDataGenerator()->create_course(array('category' => $category1->id));
+        $coursecontext1 = context_course::instance($course1->id);
+        $course2 = $this->getDataGenerator()->create_course(array('category' => $category2->id));
+        $coursecontext2 = context_course::instance($course2->id);
+
+        $forum1a = $this->getDataGenerator()->create_module('forum', array('course' => $course1->id));
+        $cm1a = get_coursemodule_from_instance('forum', $forum1a->id);
+        $modcontext1a = context_module::instance($cm1a->id);
+        $forum1b = $this->getDataGenerator()->create_module('forum', array('course' => $course1->id));
+        $cm1b = get_coursemodule_from_instance('forum', $forum1b->id);
+        $modcontext1b = context_module::instance($cm1b->id);
+        $glossary1c = $this->getDataGenerator()->create_module('glossary', array('course' => $course1->id));
+        $cm1c = get_coursemodule_from_instance('glossary', $glossary1c->id);
+        $modcontext1c = context_module::instance($cm1c->id);
+
+        $forum2a = $this->getDataGenerator()->create_module('forum', array('course' => $course2->id));
+        $cm2a = get_coursemodule_from_instance('forum', $forum2a->id);
+        $modcontext2a = context_module::instance($cm2a->id);
+        $forum2b = $this->getDataGenerator()->create_module('forum', array('course' => $course2->id));
+        $cm2b = get_coursemodule_from_instance('forum', $forum2b->id);
+        $modcontext2b = context_module::instance($cm2b->id);
+
+        $block = $this->getDataGenerator()->create_block('online_users', array('parentcontextid' => $modcontext1a->id));
+        $blockcontext = context_block::instance($block->id);
+
+        $repo = core_container\entity\module::repository();
+        $repo = item::get_activities_context_builder_join($repo, $syscontext, 'cm.id')->as('cm')->select('*');
+        $collection = $repo->get();
+        $this->assertEquals(5, $collection->count());
+
+        $repo = core_container\entity\module::repository();
+        $repo = item::get_activities_context_builder_join($repo, $categorycontext1, 'cm.id', 'xxx')->as('cm')->select('*');
+        $collection = $repo->get();
+        $this->assertEquals(3, $collection->count());
+        $this->assertTrue($collection->has('id', $cm1a->id));
+        $this->assertTrue($collection->has('id', $cm1b->id));
+        $this->assertTrue($collection->has('id', $cm1c->id));
+
+        $repo = core_container\entity\module::repository();
+        $repo = item::get_activities_context_builder_join($repo, $coursecontext1, 'cm.id')->as('cm')->select('*');
+        $collection = $repo->get();
+        $this->assertEquals(3, $collection->count());
+        $this->assertTrue($collection->has('id', $cm1a->id));
+        $this->assertTrue($collection->has('id', $cm1b->id));
+        $this->assertTrue($collection->has('id', $cm1c->id));
+
+        $repo = core_container\entity\module::repository();
+        $repo = item::get_activities_context_builder_join($repo, $modcontext1a, 'cm.id')->as('cm')->select('*');
+        $collection = $repo->get();
+        $this->assertEquals(1, $collection->count());
+        $this->assertTrue($collection->has('id', $cm1a->id));
+
+        $repo = core_container\entity\module::repository();
+        $repo = item::get_activities_context_builder_join($repo, $blockcontext, 'cm.id')->as('cm')->select('*');
+        $collection = $repo->get();
+        $this->assertEquals(0, $collection->count());
+
+        $repo = core_container\entity\module::repository();
+        $repo = item::get_activities_context_builder_join($repo, $usercontext, 'cm.id')->as('cm')->select('*');
+        $collection = $repo->get();
+        $this->assertEquals(0, $collection->count());
+    }
+
     public function test_get_activities_join() {
         global $DB;
 
@@ -424,4 +500,79 @@ class totara_userdata_item_testcase extends advanced_testcase {
         $this->assertCount(0, $forums);
     }
 
+    public function test_get_activities_builder_join() {
+        $syscontext = context_system::instance();
+
+        $user = $this->getDataGenerator()->create_user();
+        $usercontext = context_user::instance($user->id);
+
+        $category1 = $this->getDataGenerator()->create_category();
+        $categorycontext1 = context_coursecat::instance($category1->id);
+        $category2 = $this->getDataGenerator()->create_category();
+        $categorycontext2 = context_coursecat::instance($category2->id);
+
+        $course1 = $this->getDataGenerator()->create_course(array('category' => $category1->id));
+        $coursecontext1 = context_course::instance($course1->id);
+        $course2 = $this->getDataGenerator()->create_course(array('category' => $category2->id));
+        $coursecontext2 = context_course::instance($course2->id);
+
+        $forum1a = $this->getDataGenerator()->create_module('forum', array('course' => $course1->id));
+        $cm1a = get_coursemodule_from_instance('forum', $forum1a->id);
+        $modcontext1a = context_module::instance($cm1a->id);
+        $forum1b = $this->getDataGenerator()->create_module('forum', array('course' => $course1->id));
+        $cm1b = get_coursemodule_from_instance('forum', $forum1b->id);
+        $modcontext1b = context_module::instance($cm1b->id);
+        $glossary1c = $this->getDataGenerator()->create_module('glossary', array('course' => $course1->id));
+        $cm1c = get_coursemodule_from_instance('glossary', $glossary1c->id);
+        $modcontext1c = context_module::instance($cm1c->id);
+
+        $forum2a = $this->getDataGenerator()->create_module('forum', array('course' => $course2->id));
+        $cm2a = get_coursemodule_from_instance('forum', $forum2a->id);
+        $modcontext2a = context_module::instance($cm2a->id);
+        $forum2b = $this->getDataGenerator()->create_module('forum', array('course' => $course2->id));
+        $cm2b = get_coursemodule_from_instance('forum', $forum2b->id);
+        $modcontext2b = context_module::instance($cm2b->id);
+
+        $block = $this->getDataGenerator()->create_block('online_users', array('parentcontextid' => $modcontext1a->id));
+        $blockcontext = context_block::instance($block->id);
+
+        $repo = mod_forum_entity_forum_test::repository();
+        $repo = item::get_activities_builder_join($repo, $syscontext, 'forum', 'f.id')->as('f')->select('*');
+        $collection = $repo->get();
+        $this->assertEquals(4, $collection->count());
+
+        $repo = mod_forum_entity_forum_test::repository();
+        $repo = item::get_activities_builder_join($repo, $categorycontext1, 'forum', 'f.id', 'activity', 'coursemod', 'mods', 'xxx')->as('f')->select('*');
+        $collection = $repo->get();
+        $this->assertEquals(2, $collection->count());
+        $this->assertTrue($collection->has('id', $forum1a->id));
+        $this->assertTrue($collection->has('id', $forum1b->id));
+
+        $repo = mod_forum_entity_forum_test::repository();
+        $repo = item::get_activities_builder_join($repo, $coursecontext1, 'forum', 'f.id')->as('f')->select('*');
+        $collection = $repo->get();
+        $this->assertEquals(2, $collection->count());
+        $this->assertTrue($collection->has('id', $forum1a->id));
+        $this->assertTrue($collection->has('id', $forum1b->id));
+
+        $repo = mod_forum_entity_forum_test::repository();
+        $repo = item::get_activities_builder_join($repo, $modcontext1a, 'forum', 'f.id')->as('f')->select('*');
+        $collection = $repo->get();
+        $this->assertEquals(1, $collection->count());
+        $this->assertTrue($collection->has('id', $forum1a->id));
+
+        $repo = mod_forum_entity_forum_test::repository();
+        $repo = item::get_activities_builder_join($repo, $blockcontext, 'forum', 'f.id')->as('f')->select('*');
+        $collection = $repo->get();
+        $this->assertEquals(0, $collection->count());
+
+        $repo = mod_forum_entity_forum_test::repository();
+        $repo = item::get_activities_builder_join($repo, $usercontext, 'forum', 'f.id')->as('f')->select('*');
+        $collection = $repo->get();
+        $this->assertEquals(0, $collection->count());
+    }
+}
+
+class mod_forum_entity_forum_test extends entity {
+    public const TABLE = 'forum';
 }
