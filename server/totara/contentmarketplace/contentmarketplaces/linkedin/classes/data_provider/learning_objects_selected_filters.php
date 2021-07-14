@@ -62,7 +62,7 @@ class learning_objects_selected_filters extends learning_objects_filter_options 
     public function get(): array {
         return array_merge(
             $this->get_subject_labels(),
-            self::get_tree_labels_from_ids($this->get_asset_types(), $this->selected_filters['asset_type']),
+            self::get_tree_labels_from_ids($this->get_asset_types(), $this->selected_filters['asset_type'] ?? []),
             self::get_tree_labels_from_ids($this->get_time_to_complete(), $this->selected_filters['time_to_complete']),
         );
     }

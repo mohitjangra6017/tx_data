@@ -10,9 +10,6 @@ query contentmarketplace_linkedin_catalog_import_learning_objects_filter_options
         ...contentmarketplace_linkedin_catalog_import_filter_option
       }
     }
-    asset_type {
-      ...contentmarketplace_linkedin_catalog_import_filter_option
-    }
     time_to_complete {
       ...contentmarketplace_linkedin_catalog_import_filter_option
     }

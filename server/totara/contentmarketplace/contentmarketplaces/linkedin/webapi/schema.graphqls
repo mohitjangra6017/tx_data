@@ -107,7 +107,6 @@ Output of the learning objects filter options query.
 """
 type contentmarketplace_linkedin_catalog_import_learning_objects_filter_options_result {
   subjects: [totara_tui_tree_branch!]!
-  asset_type: [totara_tui_tree_branch!]!
   time_to_complete: [totara_tui_tree_branch!]!
 }
 
@@ -118,7 +117,6 @@ input contentmarketplace_linkedin_catalog_import_learning_objects_filters_input 
   language: String!
   search: String!
   subjects: [core_id!]!
-  asset_type: [contentmarketplace_linkedin_asset_type!]!
   time_to_complete: [String!]!
   ids: [core_id!]!
 }

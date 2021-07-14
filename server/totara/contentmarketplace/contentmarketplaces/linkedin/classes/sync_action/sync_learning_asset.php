@@ -87,7 +87,7 @@ class sync_learning_asset extends sync_action implements external_sync {
      * response when there are two or more asset types included in the query.
      * See https://docs.microsoft.com/en-us/linkedin/learning/reference/learningassets#limited-response-scenarios
      *
-     * By default we are going to query the COURSE, VIDEO and LEARNING_PATH.
+     * By default we are only going to query COURSE.
      *
      * @var array
      */
@@ -111,7 +111,6 @@ class sync_learning_asset extends sync_action implements external_sync {
 
         $this->asset_types = [
             constants::ASSET_TYPE_COURSE,
-            constants::ASSET_TYPE_VIDEO,
         ];
     }
 

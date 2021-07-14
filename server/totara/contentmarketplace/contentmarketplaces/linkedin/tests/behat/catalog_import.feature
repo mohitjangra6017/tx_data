@@ -196,26 +196,16 @@ Feature: Use the catalogue import page to create courses based upon LinkedIn Lea
       | Course B |
       | Course C |
     And I should see "3 items" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
-    When I click on "Courses" tui "checkbox" in the "Type" tui "tree"
-    Then I should see the tui select table contains:
-      | Course A |
-    And I should see "1 items matching \"Courses\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     When I click on "< 10 mins" tui "checkbox" in the "Time to Complete" tui "tree"
-    Then the tui basket should be empty
-    And I should see "0 items matching \"Courses\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
-    When I click on "Courses" tui "checkbox" in the "Type" tui "tree"
-    And I click on "Videos" tui "checkbox" in the "Type" tui "tree"
-    Then I should see the tui select table contains:
+    Then I should see "1 items matching \"< 10 mins\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
+    And I should see the tui select table contains:
       | Course C |
-    And I should see "1 items matching \"Videos\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     When I set the field "Search" to "   people    "
-    Then I should see the tui select table contains:
-      | Course C |
-    And I should see "1 items matching \"people\" AND \"Videos\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
+    And I should see "1 items matching \"people\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     When I reload the page
     Then I should see the tui select table contains:
       | Course C |
-    And I should see "1 items matching \"people\" AND \"Videos\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
+    And I should see "1 items matching \"people\" AND \"< 10 mins\"" in the ".tui-contentMarketplaceImportCountAndFilters" "css_element"
     When I click on "Clear all" "button" in the ".tui-filterSidePanel" "css_element"
     And I set the field "Search" to "photoshop"
     Then I should see the tui select table contains:

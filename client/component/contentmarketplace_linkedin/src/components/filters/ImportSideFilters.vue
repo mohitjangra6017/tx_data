@@ -50,24 +50,6 @@
         </template>
       </Tree>
 
-      <!-- Asset type tree filter -->
-      <Tree
-        v-model="openBranches.assetType"
-        :header-level="4"
-        :separator="true"
-        :tree-data="filters.assetType"
-      >
-        <template v-slot:content="{ content, label }">
-          <MultiSelectFilter
-            v-model="value.assetType"
-            :hidden-title="true"
-            :options="content.items"
-            :title="label"
-            :visible-item-limit="5"
-          />
-        </template>
-      </Tree>
-
       <!-- Time tree filter -->
       <Tree
         v-model="openBranches.timeToComplete"

@@ -195,7 +195,6 @@ export default {
     return {
       categoryOptions: [],
       filters: {
-        assetType: [],
         subjects: [],
         timeToComplete: [],
       },
@@ -216,7 +215,6 @@ export default {
       marketplace: 'linkedin',
       // Open Filter tree branches
       openBranches: {
-        assetType: [],
         subjects: ['subjects'],
         timeToComplete: [],
       },
@@ -246,7 +244,6 @@ export default {
         label: null,
       },
       selectedFilters: {
-        assetType: [],
         search: '',
         subjects: [],
         timeToComplete: [],
@@ -291,7 +288,6 @@ export default {
         return {
           input: {
             filters: {
-              asset_type: this.selectedFilters.assetType,
               ids: [],
               language: this.selectedLanguage,
               search: this.trimmedSearch,
@@ -330,7 +326,6 @@ export default {
         return {
           input: {
             filters: {
-              asset_type: [],
               ids: this.reviewingItemList,
               language: this.selectedLanguage,
               search: '',
@@ -364,7 +359,6 @@ export default {
         data = JSON.parse(JSON.stringify(data));
 
         let filterOptions = {
-          assetType: data.asset_type,
           subjects: data.subjects,
           timeToComplete: data.time_to_complete,
         };
@@ -488,7 +482,6 @@ export default {
      */
     resetPanelFilters() {
       this.selectedFilters = {
-        assetType: [],
         search: '',
         subjects: [],
         timeToComplete: [],
@@ -654,7 +647,6 @@ export default {
         variables: {
           input: {
             filters: {
-              asset_type: [],
               ids: this.reviewingItemList,
               language: this.selectedLanguage,
               search: '',
