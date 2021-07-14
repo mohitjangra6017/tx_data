@@ -145,6 +145,27 @@ export class EditorContent {
   }
 
   /**
+   * @typedef {Object} EditorContentJSON
+   * @property {?number} draft_id
+   * @property {number} format
+   * @property {object} content
+   */
+
+  /**
+   * Allows EditorContent to be stringified for sending over the wire
+   * or displayed in development tools.
+   *
+   * @returns EditorContentJSON
+   */
+  toJSON() {
+    return {
+      draft_id: this.fileItemId,
+      format: this.format,
+      content: this.getContent(),
+    };
+  }
+
+  /**
    * Get if there is any content.
    *
    * @returns {boolean}
