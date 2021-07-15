@@ -29,6 +29,21 @@
         :self-dismiss="selfDismiss"
         @dismiss="dismiss"
       />
+
+      <h3>Notification banner with custom slot content</h3>
+      <NotificationBanner
+        :dismissable="dismissable"
+        :type="type"
+        :self-dismiss="selfDismiss"
+        @dismiss="dismiss"
+      >
+        <template v-slot:body>
+          <Card :no-border="true" class="tui-sampleNotificationBannerCard">
+            <div>{{ message }}</div>
+            <Button text="button" />
+          </Card>
+        </template>
+      </NotificationBanner>
     </SamplesExample>
 
     <SamplesPropCtl>
@@ -68,6 +83,8 @@
 </template>
 
 <script>
+import Button from 'tui/components/buttons/Button';
+import Card from 'tui/components/card/Card';
 import NotificationBanner from 'tui/components/notifications/NotificationBanner';
 import SamplesExample from 'samples/components/sample_parts/misc/SamplesExample';
 import SamplesPropCtl from 'samples/components/sample_parts/misc/SamplesPropCtl';
@@ -79,6 +96,8 @@ import InputText from 'tui/components/form/InputText';
 
 export default {
   components: {
+    Button,
+    Card,
     NotificationBanner,
     SamplesExample,
     SamplesPropCtl,
@@ -113,3 +132,15 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.tui-sampleNotificationBannerCard {
+  align-items: center;
+  justify-content: center;
+  padding: var(--gap-4);
+
+  & > * + * {
+    margin-left: var(--gap-2);
+  }
+}
+</style>

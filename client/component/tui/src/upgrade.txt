@@ -16,6 +16,8 @@ information provided here is intended especially for developers.
   * Template and SCSS changes
 * Amended Lozenge.vue to correctly align with other elements
   * SCSS changes
+* Updated notification banner to provide a slot for custom content
+  * Template and SCSS changes
 
 === 14.0 ===
 

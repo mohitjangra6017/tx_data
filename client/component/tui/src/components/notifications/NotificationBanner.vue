@@ -31,7 +31,12 @@
         state="none"
       />
     </div>
-    <div class="tui-notificationBanner__message" v-html="message" />
+    <div v-if="$scopedSlots['body']" class="tui-notificationBanner__body">
+      <slot name="body" />
+    </div>
+
+    <div v-else class="tui-notificationBanner__message" v-html="message" />
+
     <div
       v-if="isDismissable"
       class="tui-notificationBanner__dismiss"
@@ -85,7 +90,7 @@ export default {
 
   computed: {
     /**
-     * Check if the notification can be manualy closed
+     * Check if the notification can be manually closed
      *
      * @returns {boolean}
      */
@@ -174,11 +179,15 @@ export default {
     padding: var(--gap-4);
     color: var(--color-neutral-1);
     background: var(--color-prompt-info);
-    // -1px to avoid isue with razor thin white line between icon container and notification border
+    // -1px to avoid issue with razor thin white line between icon container and notification border
     // prettier-ignore
     border-top-left-radius: calc(var(--border-radius-small) - var(--border-width-thin) - 1px);
     // prettier-ignore
     border-bottom-left-radius: calc(var(--border-radius-small) - var(--border-width-thin) - 1px);
+  }
+
+  &__body {
+    flex-grow: 1;
   }
 
   &__message {
@@ -208,7 +217,7 @@ export default {
     border-radius: var(--border-radius-normal);
 
     &__icon {
-      // -1px to avoid isue with razor thin white line between icon container and notification border
+      // -1px to avoid issue with razor thin white line between icon container and notification border
       // prettier-ignore
       border-top-left-radius: calc(var(--border-radius-normal) - var(--border-width-thin) - 1px);
       // prettier-ignore
